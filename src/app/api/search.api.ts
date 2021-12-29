@@ -8,13 +8,14 @@ import {
     PageInfoInterface, SearchDatasetByID, SearchMetadataNodeResponseInterface,
     SearchOverviewDatasetsInterface, SearchOverviewInterface, TypeNames,
 } from "../interface/search.interface";
+import { SearchAutocompleteGQL } from "./kamu.graphql";
 import AppValues from "../common/app.values";
 
 @Injectable()
 export class SearchApi {
     /* eslint-disable  @typescript-eslint/no-explicit-any */
 
-    constructor(private apollo: Apollo) {
+    constructor(private apollo: Apollo, private searchAutocompleteGQL: SearchAutocompleteGQL) {
         // this.apollo = this.apolloProvider.use('newClientName');
     }
 
@@ -106,38 +107,17 @@ export class SearchApi {
         if(id === '') {
             return of([]);
         }
-        const GET_DATA: DocumentNode = gql`
-{
-  search {
-    query(query: "${id}", perPage: 10) {
-      nodes {
-        ... on Dataset {
-          id
-        }
-      }
-    }
-  }
-}`
 
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
-        // @ts-ignore
-      return this.apollo.watchQuery({query: GET_DATA})
-            .valueChanges.pipe(map((result: ApolloQueryResult<any>) => {
-                if (result.data) {
-                    return SearchApi.searchValueAddToAutocomplete(result.data.search.query.nodes || [], id);
-                } else {
-                    return [];
-                }
-            }));
+        return this.searchAutocompleteGQL.watch({query: id, perPage: 10}).valueChanges.pipe(map(result => {
+            let results = result.data.search.query.nodes.map(
+                v => ({id: v.name, __typename: v.__typename as TypeNames})
+            );
+            // Add dummy result that opens search view
+            results.unshift({__typename: TypeNames.allDataType, id: id});
+            return results;
+        }));
     }
-    private static searchValueAddToAutocomplete(ngTypeaheadList: DatasetIDsInterface[], searchValue: string): DatasetIDsInterface[] {
-        const newArray: DatasetIDsInterface[] = JSON.parse(JSON.stringify(ngTypeaheadList));
-        if (searchValue) {
-            newArray.unshift({__typename: TypeNames.allDataType, id: searchValue});
-        }
-        return newArray;
-    }
-
+    
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     public searchLinageDataset(id: string): Observable<any> {
         if (typeof id !== 'string') {

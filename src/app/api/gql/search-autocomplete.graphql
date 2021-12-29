@@ -1,0 +1,14 @@
+query searchAutocomplete($query: String!, $perPage: Int) {
+  search {
+    query(query: $query, perPage: $perPage) {
+      nodes {
+        __typename
+        ... on Dataset {
+          id
+          name
+          kind
+        }
+      }
+    }
+  }
+}

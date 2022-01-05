@@ -8,6 +8,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {RepoListModule} from '../components/repo-list-component/repo-list.module';
 import {PaginationModule} from '../components/pagination-component/pagination.module';
 import {ModalModule} from '../components/modal/modal.module';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
     imports: [
@@ -18,7 +19,8 @@ import {ModalModule} from '../components/modal/modal.module';
         PaginationModule,
         MatChipsModule,
         RepoListModule,
-        ModalModule
+        ModalModule,
+        MatCheckboxModule
     ],
     exports: [SearchComponent],
     declarations: [SearchComponent]

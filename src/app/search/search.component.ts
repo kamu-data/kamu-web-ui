@@ -11,7 +11,15 @@ import {MatSidenav} from '@angular/material/sidenav';
 import {SideNavService} from '../services/sidenav.service';
 import {Router} from '@angular/router';
 import {AfterContentInit, Component, HostListener, OnInit, ViewChild} from '@angular/core';
+import {ThemePalette} from '@angular/material/core';
 
+export interface SearchFilters {
+  name?: string;
+  isTitle?: boolean;
+  completed?: boolean;
+  color?: ThemePalette;
+  subtasks?: SearchFilters[];
+}
 
 @Component({
   selector: 'app-search',
@@ -45,6 +53,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
       {value: 'least', label: 'Least recently indexed', active: false},
   ];
 
+  public allComplete: boolean = false;
   public tableData: {
     tableSource: SearchOverviewDatasetsInterface[],
     isResultQuantity: boolean,
@@ -54,6 +63,29 @@ export class SearchComponent implements OnInit, AfterContentInit {
     totalCount: number,
     sortOptions: {value: string, label: string, active: boolean}[]
   };
+  public filters: SearchFilters[] = [{
+    name: 'Search for:',
+    isTitle: true,
+    subtasks: [
+      {name: 'datasets', completed: false, color: 'primary'},
+      {name: 'collections', completed: false, color: 'primary'},
+      {name: 'users', completed: false, color: 'primary'},
+      {name: 'organizations', completed: false, color: 'primary'}
+    ],
+  },
+  {
+    name: 'Datasets:',
+    isTitle: true,
+    subtasks: [
+      {name: 'root', completed: false, color: 'primary'},
+      {name: 'derivative', completed: false, color: 'primary'},
+      {name: 'updated within:', isTitle: true, subtasks: [
+          {name: 'last day', completed: false, color: 'primary'},
+          {name: 'last month', completed: false, color: 'primary'},
+          {name: 'last year', completed: false, color: 'primary'},
+      ]},
+    ],
+  }];
   public searchData: SearchOverviewDatasetsInterface[] = [];
   private _window: Window;
 
@@ -154,6 +186,11 @@ export class SearchComponent implements OnInit, AfterContentInit {
 
   public onSearch(searchValue: string, page: number = 1): void {
     this.appSearchService.search(searchValue, page - 1);
+  }
+
+  updateAllComplete() {
+    debugger
+    this.allComplete = this.filters != null && this.filters.every(t => t.subtasks?.every(sub => sub.completed));
   }
 
 }

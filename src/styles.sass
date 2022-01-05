@@ -131,7 +131,7 @@ a:visited
   width: 100%
   position: absolute
   & .navbar
-    padding: 16px
+    padding: 20px
 
 .mat-drawer-inner-container
   & .navbar-nav
@@ -252,6 +252,10 @@ router-outlet
 
 #search .search-result-container
   grid-template-columns: 0.25fr 1fr
+  & ul
+    list-style-type: none
+  & .mat-checkbox-layout .mat-checkbox-label
+    font-size: 16px
 #dataset-viewer .search-result-container
   grid-template-columns: 0.25fr 1fr
 #search, #dataset-viewer

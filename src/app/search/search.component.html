@@ -6,26 +6,41 @@
                 <div class="card">
                     <nav class="navbar navbar-expand">
                         <div>
-                            <h3>Filters</h3>
-                            <h3>Search for:</h3>
-                            <ul>
-                                <li><h4>datasets</h4></li>
-                                <li><h4>collections</h4></li>
-                                <li><h4>users</h4></li>
-                                <li><h4>organizations</h4></li>
-                            </ul>
-                            <h3>Datasets::</h3>
-                            <ul>
-                                <li><h4>root</h4></li>
-                                <li><h4>derivative</h4></li>
-                                <li><h4>updated within:</h4>
-                                    <ul>
-                                        <li><h4>last day</h4></li>
-                                        <li><h4>last month</h4></li>
-                                        <li><h4>last year</h4></li>
-                                    </ul>
-                                </li>
-                            </ul>
+                            <h3 class="search-result-container__navbar__title">Filters</h3>
+                            <div *ngFor="let filter of filters">
+                            <span class="example-list-section">
+                                {{filter.name}}
+                            </span>
+                            <span class="example-list-section">
+                                <ul>
+                                  <li *ngFor="let subtask of filter.subtasks">
+                                      <ng-template [ngIf]="!subtask.isTitle">
+                                          <mat-checkbox [(ngModel)]="subtask.completed"
+                                                  [color]="subtask.color"
+                                                  (ngModelChange)="updateAllComplete()">
+                                            {{subtask.name}}
+                                          </mat-checkbox>
+                                      </ng-template>
+                                      <ng-template [ngIf]="subtask.isTitle">
+                                          <span class="example-list-section">
+                                            {{subtask.name}}
+                                          </span>
+                                      </ng-template>
+                                      <ng-template [ngIf]="subtask.subtasks && subtask.subtasks.length > 0">
+                                          <ul>
+                                              <li *ngFor="let sub_subtask of subtask.subtasks">
+                                                  <mat-checkbox [(ngModel)]="sub_subtask.completed"
+                                                          [color]="sub_subtask.color"
+                                                          (ngModelChange)="updateAllComplete()">
+                                                      {{sub_subtask.name}}
+                                                  </mat-checkbox>
+                                              </li>
+                                          </ul>
+                                      </ng-template>
+                                  </li>
+                                </ul>
+                            </span>
+                            </div>
                         </div>
                     </nav>
                 </div>
@@ -39,7 +54,8 @@
                                    (onSelectDatasetEmit)="onSelectDataset($event)"></app-repo-list>
 
                     <ng-template [ngIf]="tableData.tableSource.length > 0 && tableData.pageInfo">
-                        <app-pagination [currentPage]="currentPage" [pageInfo]="tableData.pageInfo" (pageChangeEvent)="onPageChange($event)"></app-pagination>
+                        <app-pagination [currentPage]="currentPage" [pageInfo]="tableData.pageInfo"
+                                        (pageChangeEvent)="onPageChange($event)"></app-pagination>
                     </ng-template>
                 </div>
             </div>

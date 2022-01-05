@@ -19,7 +19,7 @@
             <div class="repo-list-container__title-row__dataset-name">
                 <i class="bi bi-journal-album"></i>
                 <button class="repo-list-container__title mb-1 pl-0"
-                        (click)="isClickableRow && onSelectDataset(row.id)">{{row.id}}</button>
+                        (click)="isClickableRow && onSelectDataset(row.id)">anonymous/{{row.id}}</button>
             </div>
             <div>
                 <ng-template #popTitle class="signed-commit__popup-header">
@@ -72,12 +72,13 @@
             <div class="repo-list-container__additional-block mt-2">
                 <p class="text-small color-text-secondary mr-3">Updated
                     on {{momentConverDatetoLocalWithFormat(row.lastUpdatedAt)}}</p>
-                <p class="text-small color-text-secondary mr-3">MIT license</p>
                 <ngb-rating [rate]="4.5" [max]="5" [readonly]="true">
                     <ng-template let-fill="fill">
                         <span class="rating-star" [class.filled]="fill === 100">&#9733;</span>
                     </ng-template>
                 </ngb-rating>
+                <p class="text-small color-text-secondary mr-3">12 downstream</p>
+                <p class="text-small color-text-secondary mr-3">MIT license</p>
             </div>
         </div>
     </div>

@@ -17,6 +17,7 @@ export interface SearchFilters {
   name?: string;
   isTitle?: boolean;
   completed?: boolean;
+  disabled?: boolean;
   color?: ThemePalette;
   subtasks?: SearchFilters[];
 }
@@ -68,9 +69,9 @@ export class SearchComponent implements OnInit, AfterContentInit {
     isTitle: true,
     subtasks: [
       {name: 'datasets', completed: false, color: 'primary'},
-      {name: 'collections', completed: false, color: 'primary'},
-      {name: 'users', completed: false, color: 'primary'},
-      {name: 'organizations', completed: false, color: 'primary'}
+      {name: 'collections', completed: false, disabled: true, color: 'primary'},
+      {name: 'users', completed: false, disabled: true, color: 'primary'},
+      {name: 'organizations', completed: false, disabled: true, color: 'primary'}
     ],
   },
   {

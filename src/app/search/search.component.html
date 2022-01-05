@@ -17,6 +17,7 @@
                                       <ng-template [ngIf]="!subtask.isTitle">
                                           <mat-checkbox [(ngModel)]="subtask.completed"
                                                   [color]="subtask.color"
+                                                  [disabled]="subtask.disabled"
                                                   (ngModelChange)="updateAllComplete()">
                                             {{subtask.name}}
                                           </mat-checkbox>
@@ -31,6 +32,7 @@
                                               <li *ngFor="let sub_subtask of subtask.subtasks">
                                                   <mat-checkbox [(ngModel)]="sub_subtask.completed"
                                                           [color]="sub_subtask.color"
+                                                          [disabled]="subtask.disabled"
                                                           (ngModelChange)="updateAllComplete()">
                                                       {{sub_subtask.name}}
                                                   </mat-checkbox>

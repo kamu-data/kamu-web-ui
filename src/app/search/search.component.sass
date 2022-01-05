@@ -1,7 +1,9 @@
 @import src/assets/styles/var
-::ng-deep .mat-checkbox-checked .mat-checkbox-background
-  background-color: $app-navyBlue
-
+::ng-deep .mat-checkbox-checked
+  & .mat-checkbox-background
+    background-color: $app-navyBlue
+::ng-deep.mat-checkbox-disabled
+  color: $app-disabled
 nav.navbar.navbar-expand
   & *
     font-size: 16px

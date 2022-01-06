@@ -39,9 +39,11 @@ export class AppHeaderComponent {
 
     @ViewChild('appHeaderMenuButton') appHeaderMenuButton: ElementRef<HTMLElement>;
 
+    private _window: Window;
+
     public defaultUsername: string = AppValues.defaultUsername;
     public isSearchActive = false;
-    private _window: Window;
+    public isCollapsedAppHeaderMenu: boolean = false;
 
     constructor(private appSearchAPI: SearchApi) {
         this._window = window;
@@ -120,6 +122,8 @@ export class AppHeaderComponent {
         el.focus();
         el.click();
         el.blur();
+        debugger
+        this.isCollapsedAppHeaderMenu  = !this.isCollapsedAppHeaderMenu;
     }
     public onClickAppLogo(): void {
         this.onClickAppLogoEmitter.emit();

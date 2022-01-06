@@ -27,7 +27,17 @@ $app-harmonies: #2da44e
 
 
 .d-none
-  display: none !important
+  display: none
+.position-relative
+  position: relative !important
+.width-full
+  width: 100% !important
+.flex-auto
+  flex: auto !important
+.flex-order-2
+  order: 2 !important
+.flex-self-stretch
+  align-self: stretch !important
 .f6
   font-size: 12px !important
 .color-text-tertiary
@@ -36,6 +46,8 @@ $app-harmonies: #2da44e
   background-color: $app-aliceBlue
 .rounded-1
   border-radius: 4px !important
+.border-white-fade
+  border-color: $app-versatileBusinessDark
 @media (max-width: 480px)
   *
     font-size: 15px
@@ -43,3 +55,9 @@ $app-harmonies: #2da44e
 @media (min-width: 768px)
   .border-md-0
     border-top: none !important
+  .border-md-top-0
+    border-top: 0 !important
+  .flex-md-row
+    flex-direction: row !important
+  .flex-md-self-auto
+    align-self: auto !important

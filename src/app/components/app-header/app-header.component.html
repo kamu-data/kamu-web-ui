@@ -1,5 +1,5 @@
 <nav *ngIf="isVisible"
-     class="navbar navbar-expand-lg navbar-dark bg-dark Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap"
+     class="navbar navbar-expand-lg navbar-dark bg-dark Header Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap"
      id="app-header">
     <div class="Header-item mt-n1 mb-n1 d-none d-md-flex">
         <div [classList]="'app-brand'" id="appHeaderLogo">
@@ -10,7 +10,7 @@
     <div class="Header-item d-md-none">
         <button #appHeaderMenuButton id="appHeaderMenuButton" class="navbar-toggler" data-test-id="appHeaderMenuButton"
                 type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
-                (click)="isCollapsedAppHeaderMenu = !isCollapsedAppHeaderMenu"
+                (click)="toggleAppHeaderMenu()"
                 aria-controls="navbarNavDropdown" [attr.aria-expanded]="isCollapsedAppHeaderMenu"
                 aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -53,47 +53,43 @@
             </div>
         </div>
 
-        <nav class="d-flex flex-column flex-md-row flex-self-stretch flex-md-self-auto" aria-label="Global">
-            <a class="Header-link mt-md-n3 mb-md-n3 py-2 py-md-3 mr-0 mr-md-3 border-top border-md-top-0 border-white-fade"
-               data-ga-click="Header, click, Nav menu - item:explore"
-               data-selected-links="/explore /trending /trending/developers /integrations /integrations/feature/code /integrations/feature/collaborate /integrations/feature/ship showcases showcases_search showcases_landing /explore"
-               href="/explore">
-                Explore
-            </a>
-            <a class="Header-link mt-md-n3 mb-md-n3 py-2 py-md-3 mr-0 mr-md-3 border-top border-md-top-0 border-white-fade"
-               data-ga-click="Header, click, Nav menu - item:dashboard:user" aria-label="Dashboard" href="/dashboard">
-                My Datasets
-            </a>
+        <nav class="d-flex flex-column flex-md-row flex-self-stretch flex-md-self-auto width-full justify-content-between" aria-label="Global">
+            <div class="d-flex flex-column flex-md-row flex-self-stretch flex-md-self-auto">
+                <a class="Header-link py-2 py-md-3 mr-0 mr-md-3 border-top border-md-top-0 border-white-fade"
+                   data-ga-click="Header, click, Nav menu - item:explore"
+                   data-selected-links="/explore /trending /trending/developers /integrations /integrations/feature/code /integrations/feature/collaborate /integrations/feature/ship showcases showcases_search showcases_landing /explore"
+                   href="/explore">
+                    Explore
+                </a>
+                <a class="Header-link py-2 py-md-3 mr-0 mr-md-3 border-top border-md-top-0 border-white-fade"
+                   data-ga-click="Header, click, Nav menu - item:dashboard:user" aria-label="Dashboard"
+                   href="/dashboard">
+                    My Datasets
+                </a>
 
 
-            <a class="Header-link d-block d-md-none py-2 py-md-3 border-top border-md-top-0 border-white-fade"
-               data-ga-click="Header, click, Nav menu - item:workspaces context:user"
-               data-selected-links="/codespaces /codespaces" href="/codespaces">
-                Codespaces
-            </a>
-            <a class="Header-link d-block d-md-none py-2 py-md-3 border-top border-md-top-0 border-white-fade"
-               data-ga-click="Header, click, Nav menu - item:Sponsors"
-               data-hydro-click="{&quot;event_type&quot;:&quot;sponsors.button_click&quot;,&quot;payload&quot;:{&quot;button&quot;:&quot;HEADER_SPONSORS_DASHBOARD&quot;,&quot;sponsorable_login&quot;:&quot;kulykivska&quot;,&quot;originating_url&quot;:&quot;https://github.com/&quot;,&quot;user_id&quot;:87068546}}"
-               data-hydro-click-hmac="3a5945e7f28c1fa3354d931265cb76abf6f8eba1d759f38e427729abae013d3d"
-               data-selected-links=" /sponsors/accounts" href="/sponsors/accounts">Sponsors</a>
+                <a class="Header-link d-block d-md-none py-2 py-md-3 border-top border-md-top-0 border-white-fade" href="/codespaces">
+                    Add new dataset
+                </a>
 
-            <a class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
-               href="/settings/profile">
-                Settings
-            </a>
-            <a class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
-               href="/kulykivska">
-                <img class="avatar avatar-user" loading="lazy" decoding="async"
-                     src="https://avatars.githubusercontent.com/u/87068546?s=40&amp;v=4" width="20" height="20"
-                     alt="@kulykivska">
-                kulykivska
-            </a>
+                <a class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                   href="/settings/profile">
+                    Settings
+                </a>
+                <a class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                   href="/kulykivska">
+                    <img class="avatar avatar-user" loading="lazy" decoding="async"
+                         src="https://avatars.githubusercontent.com/u/87068546?s=40&amp;v=4" width="20" height="20"
+                         alt="@kulykivska">
+                    kulykivska
+                </a>
+            </div>
             <div id="appHeaderAdditionalBlock" class="app-header__right-column">
-                <button class="app-header__right-column__addnew-block" (click)="onAddNew()" data-test-id="addNewBlock">
+                <button class="app-header__right-column__addnew-block d-block d-sm-none d-md-flex" (click)="onAddNew()" data-test-id="addNewBlock">
                     <span><i class="bi bi-plus-circle"></i></span>
                     <span class="app-header__right-column__label">New</span>
                 </button>
-                <button class="button-round" data-test-id="openUserInfo" mat-button [matMenuTriggerFor]="menu">
+                <button class="button-round d-block d-sm-none d-md-block" data-test-id="openUserInfo" mat-button [matMenuTriggerFor]="menu">
                     <div class="img-container-round">
                         <img [src]="(userInfo && userInfo.avatarUrl) ? userInfo.avatarUrl : '../../../assets/icons/user_icon.png'"
                              (click)="onOpenUserInfo()" alt="User icon">
@@ -135,5 +131,7 @@
         </nav>
 
     </div>
+
+    <h1 class="d-block d-md-none">N</h1>
 
 </nav>

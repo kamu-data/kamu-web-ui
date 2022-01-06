@@ -84,6 +84,19 @@ export class AppHeaderComponent {
         }
     }
 
+    public toggleAppHeaderMenu(): void {
+        const appHeaderButton: HTMLElement | null = document.getElementById('app-header');
+
+        this.isCollapsedAppHeaderMenu = !this.isCollapsedAppHeaderMenu;
+        if (appHeaderButton) {
+            if (this.isCollapsedAppHeaderMenu) {
+                appHeaderButton.classList.add('Details--on');
+            } else {
+                appHeaderButton.classList.remove('Details--on');
+            }
+        }
+    }
+
     public onSearch(event: any, searchValue: DatasetIDsInterface | string): void {
         this.isSearchActive = false;
 

@@ -6,7 +6,7 @@
     <div class="select-block form-group">
         <div class="form-control input-group justify-content-left align-items-center">
             <p class="m-auto position-absolute">Sort:</p>
-            <select title="Bedrooms" id="sortOptions" class="border-0">
+            <select title="Sort options" id="sortOptions" class="border-0">
                 <option *ngFor="let keys of sortOptions"
                         value="{{keys?.value}}" [selected]="keys.active">{{keys?.label}}</option>
             </select>
@@ -63,11 +63,11 @@
             <p class="repo-list-container__description mb-2">Open-source data hub/platform that implements Open Data
                 Fabric protocol</p>
             <mat-chip-list aria-label="Tags selection">
-                <mat-chip>{{row.kind}}</mat-chip>
-                <mat-chip>medicine</mat-chip>
-                <mat-chip>covid</mat-chip>
-                <mat-chip>health</mat-chip>
-                <mat-chip>covid19</mat-chip>
+                <mat-chip (click)="selectTopic(row.kind)">{{row.kind}}</mat-chip>
+                <mat-chip (click)="selectTopic('medicine')">medicine</mat-chip>
+                <mat-chip (click)="selectTopic('covid')">covid</mat-chip>
+                <mat-chip (click)="selectTopic('health')">health</mat-chip>
+                <mat-chip (click)="selectTopic('covid19')">covid19</mat-chip>
             </mat-chip-list>
             <div class="repo-list-container__additional-block mt-2">
                 <p class="text-small color-text-secondary mr-3">Updated

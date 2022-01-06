@@ -68,7 +68,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
     name: 'Search for:',
     isTitle: true,
     subtasks: [
-      {name: 'datasets', completed: false, color: 'primary'},
+      {name: 'datasets', completed: true, color: 'primary'},
       {name: 'collections', completed: false, disabled: true, color: 'primary'},
       {name: 'users', completed: false, disabled: true, color: 'primary'},
       {name: 'organizations', completed: false, disabled: true, color: 'primary'}
@@ -78,8 +78,8 @@ export class SearchComponent implements OnInit, AfterContentInit {
     name: 'Datasets:',
     isTitle: true,
     subtasks: [
-      {name: 'root', completed: false, color: 'primary'},
-      {name: 'derivative', completed: false, color: 'primary'},
+      {name: 'root', completed: true, color: 'primary'},
+      {name: 'derivative', completed: true, color: 'primary'},
       {name: 'updated within:', isTitle: true, subtasks: [
           {name: 'last day', completed: false, color: 'primary'},
           {name: 'last month', completed: false, color: 'primary'},

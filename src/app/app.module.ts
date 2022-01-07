@@ -40,6 +40,7 @@ import {GithubCallbackComponent} from './auth/github-callback/github.callback';
 import {AuthApi} from './api/auth.api';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {ModalModule} from "./components/modal/modal.module";
+import {NotificationIndicatorComponent} from "./components/notification-indicator/notification-indicator.component";
 
 
 const Services = [
@@ -84,6 +85,7 @@ const MatModules = [
         LoginComponent,
         GithubCallbackComponent,
         AccountComponent,
+        NotificationIndicatorComponent
     ],
     imports: [
         AppRoutingModule,

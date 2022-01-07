@@ -85,7 +85,10 @@
                 </a>
             </div>
             <div id="appHeaderAdditionalBlock" class="app-header__right-column">
-                <button class="app-header__right-column__addnew-block d-block d-sm-none d-md-flex" (click)="onAddNew()" data-test-id="addNewBlock">
+                <div class="d-flex d-sm-none d-md-flex justify-content-center notification-indicator-container align-items-center m-0">
+                    <app-notification-indicator></app-notification-indicator>
+                </div>
+                <button class="app-header__right-column__addnew-block d-block d-sm-none d-md-flex m-2" (click)="onAddNew()" data-test-id="addNewBlock">
                     <span><i class="bi bi-plus-circle"></i></span>
                     <span class="app-header__right-column__label">New</span>
                 </button>
@@ -132,6 +135,14 @@
 
     </div>
 
-    <h1 class="d-block d-md-none">N</h1>
+    <div class="d-block d-md-none">
+        <div [classList]="'app-brand'">
+            <button (click)="onClickAppLogo()" data-test-id="appLogo"><img [src]="appLogo" alt="Application logo"/>
+            </button>
+        </div>
+    </div>
+    <div class="d-flex d-md-none justify-content-center notification-indicator-container align-items-center m-0">
+        <app-notification-indicator></app-notification-indicator>
+    </div>
 
 </nav>

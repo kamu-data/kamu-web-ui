@@ -53,7 +53,8 @@
             </div>
         </div>
 
-        <nav class="d-flex flex-column flex-md-row flex-self-stretch flex-md-self-auto width-full justify-content-between" aria-label="Global">
+        <nav class="d-flex flex-column flex-md-row flex-self-stretch flex-md-self-auto width-full justify-content-between"
+             aria-label="Global">
             <div class="d-flex flex-column flex-md-row flex-self-stretch flex-md-self-auto">
                 <a class="Header-link py-2 py-md-3 mr-0 mr-md-3 border-top border-md-top-0 border-white-fade"
                    data-ga-click="Header, click, Nav menu - item:explore"
@@ -61,38 +62,69 @@
                    href="/explore">
                     Explore
                 </a>
+
                 <a class="Header-link py-2 py-md-3 mr-0 mr-md-3 border-top border-md-top-0 border-white-fade"
                    data-ga-click="Header, click, Nav menu - item:dashboard:user" aria-label="Dashboard"
                    href="/dashboard">
-                    My Datasets
+                    Your Datasets
                 </a>
 
 
-                <a class="Header-link d-block d-md-none py-2 py-md-3 border-top border-md-top-0 border-white-fade" href="/codespaces">
-                    Add new dataset
+                <a class="Header-link d-block d-md-none py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                   href="/codespaces">
+                    Add New Dataset
                 </a>
 
-                <a class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
-                   href="/settings/profile">
-                    Settings
-                </a>
-                <a class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
-                   href="/kulykivska">
-                    <img class="avatar avatar-user" loading="lazy" decoding="async"
-                         src="https://avatars.githubusercontent.com/u/87068546?s=40&amp;v=4" width="20" height="20"
-                         alt="@kulykivska">
-                    kulykivska
-                </a>
+                <ng-template [ngIf]="!(userInfo && userInfo.name)">
+                    <a class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                       data-test-id="openBillingPlanHeader" (click)="onBilling()">Account & Billing</a>
+                    <a class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                       data-test-id="openHelpHeader" (click)="onHelp()">Help</a>
+                    <a class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                       data-test-id="openUserProfileHeader" (click)="onLogin()">Login</a>
+                </ng-template>
+
+                <ng-template [ngIf]="(userInfo && userInfo.name)">
+                    <a class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                       data-test-id="openUserProfileHeader" (click)="onUserProfile()">Your profile</a>
+                    <a class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                       data-test-id="openBillingPlanHeader" (click)="onBilling()">Account & Billing</a>
+                    <a class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                       data-test-id="openAnalyticsHeader" (click)="onAnalytics()">Analytics</a>
+                    <a class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                       data-test-id="openSettingsHeader" (click)="onSettings()">Settings</a>
+                    <a class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                       data-test-id="openHelpHeader" (click)="onHelp()">Help</a>
+                    <a class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                       data-test-id="userNameHeader"
+                       href="/kulykivska">
+                        <img class="avatar avatar-user" loading="lazy" decoding="async"
+                             src="https://avatars.githubusercontent.com/u/87068546?s=40&amp;v=4" width="20" height="20"
+                             alt="@kulykivska">
+                        {{(userInfo && userInfo.name) ? userInfo.name : defaultUsername}}
+                    </a>
+                    <button class="Header-link Header-signout-btn d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                            data-test-id="openSignOutHeader" (click)="onLogOut()">
+                        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                             data-view-component="true" class="octicon octicon-sign-out v-align-middle">
+                            <path fill-rule="evenodd"
+                                  d="M2 2.75C2 1.784 2.784 1 3.75 1h2.5a.75.75 0 010 1.5h-2.5a.25.25 0 00-.25.25v10.5c0 .138.112.25.25.25h2.5a.75.75 0 010 1.5h-2.5A1.75 1.75 0 012 13.25V2.75zm10.44 4.5H6.75a.75.75 0 000 1.5h5.69l-1.97 1.97a.75.75 0 101.06 1.06l3.25-3.25a.75.75 0 000-1.06l-3.25-3.25a.75.75 0 10-1.06 1.06l1.97 1.97z"></path>
+                        </svg>
+                        Sign out
+                    </button>
+                </ng-template>
             </div>
             <div id="appHeaderAdditionalBlock" class="app-header__right-column">
                 <div class="d-flex d-sm-none d-md-flex justify-content-center notification-indicator-container align-items-center m-0">
                     <app-notification-indicator></app-notification-indicator>
                 </div>
-                <button class="app-header__right-column__addnew-block d-block d-sm-none d-md-flex m-2" (click)="onAddNew()" data-test-id="addNewBlock">
+                <button class="app-header__right-column__addnew-block d-block d-sm-none d-md-flex m-2"
+                        (click)="onAddNew()" data-test-id="addNewBlock">
                     <span><i class="bi bi-plus-circle"></i></span>
                     <span class="app-header__right-column__label">New</span>
                 </button>
-                <button class="button-round d-block d-sm-none d-md-block" data-test-id="openUserInfo" mat-button [matMenuTriggerFor]="menu">
+                <button class="button-round d-block d-sm-none d-md-block" data-test-id="openUserInfo" mat-button
+                        [matMenuTriggerFor]="menu">
                     <div class="img-container-round">
                         <img [src]="(userInfo && userInfo.avatarUrl) ? userInfo.avatarUrl : '../../../assets/icons/user_icon.png'"
                              (click)="onOpenUserInfo()" alt="User icon">

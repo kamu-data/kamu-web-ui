@@ -1,12 +1,12 @@
-import {ModuleWithProviders, NgModule} from "@angular/core";
-import {MatIconModule} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
-import {CommonModule} from "@angular/common";
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {FormsModule} from "@angular/forms";
-import {MatChipsModule} from "@angular/material/chips";
-import {MatDividerModule} from '@angular/material/divider';
-import {PaginationComponent} from "./pagination.component";
+import { ModuleWithProviders, NgModule } from "@angular/core";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { CommonModule } from "@angular/common";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { FormsModule } from "@angular/forms";
+import { MatChipsModule } from "@angular/material/chips";
+import { MatDividerModule } from "@angular/material/divider";
+import { PaginationComponent } from "./pagination.component";
 
 @NgModule({
     imports: [
@@ -19,10 +19,10 @@ import {PaginationComponent} from "./pagination.component";
         MatChipsModule,
     ],
     exports: [PaginationComponent],
-    declarations: [PaginationComponent]
+    declarations: [PaginationComponent],
 })
 export class PaginationModule {
     public static forRoot(): ModuleWithProviders<PaginationModule> {
-        return {ngModule: PaginationModule};
+        return { ngModule: PaginationModule };
     }
 }

@@ -27,9 +27,7 @@ export class SearchApi {
     constructor(
         private apollo: Apollo,
         private searchAutocompleteGQL: SearchAutocompleteGQL,
-    ) {
-        // this.apollo = this.apolloProvider.use('newClientName');
-    }
+    ) {}
     private static searchOverviewData(
         dataset: SearchOverviewDatasetsInterface[],
         pageInfo: PageInfoInterface,
@@ -52,7 +50,7 @@ export class SearchApi {
     }
 
     // tslint:disable-next-line: no-any
-    public seatchIndex(): Observable<any> {
+    public searchIndex(): Observable<any> {
         const GET_DATA = gql``;
 
         /* eslint-disable  @typescript-eslint/no-explicit-any */

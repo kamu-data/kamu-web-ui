@@ -192,8 +192,8 @@ export class AppDatasetService {
                             .pipe(
                                 flatMap((result2: DatasetLinageResponse) => {
                                     this.changeDatasetTree(result2);
-                                    // @ts-ignore
                                     return from(
+                                        // @ts-ignore
                                         result2.metadata
                                             .currentDownstreamDependencies,
                                     ).pipe(
@@ -245,8 +245,8 @@ export class AppDatasetService {
                             .pipe(
                                 flatMap((result2: DatasetLinageResponse) => {
                                     this.changeDatasetTree(result2);
-                                    // @ts-ignore
                                     return from(
+                                        // @ts-ignore
                                         result2.metadata
                                             .currentUpstreamDependencies,
                                     ).pipe(

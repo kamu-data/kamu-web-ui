@@ -12,18 +12,45 @@ import {
     SearchOverviewInterface,
     TypeNames,
 } from "../interface/search.interface";
+import {
+    DatasetKind,
+    SearchAutocompleteGQL,
+    SearchAutocompleteQuery,
+} from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
+import { ApolloQuerySearchResultNodeInterface } from "./apolloQueryResult.interface";
 
 @Injectable()
 export class SearchApi {
     /* eslint-disable  @typescript-eslint/no-explicit-any */
 
-    constructor(private apollo: Apollo) {
-        // this.apollo = this.apolloProvider.use('newClientName');
+    constructor(
+        private apollo: Apollo,
+        private searchAutocompleteGQL: SearchAutocompleteGQL,
+    ) {}
+    private static searchOverviewData(
+        dataset: SearchOverviewDatasetsInterface[],
+        pageInfo: PageInfoInterface,
+        totalCount: number,
+        currentPage: number,
+    ): SearchOverviewInterface {
+        return {
+            dataset,
+            pageInfo,
+            totalCount,
+            currentPage: currentPage + 1,
+        };
+    }
+    private static pageInfoInit(): PageInfoInterface {
+        return {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            totalPages: 0,
+        };
     }
 
     // tslint:disable-next-line: no-any
-    public seatchIndex(): Observable<any> {
+    public searchIndex(): Observable<any> {
         const GET_DATA = gql``;
 
         /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -103,74 +130,32 @@ export class SearchApi {
             }),
         );
     }
-    private static searchOverviewData(
-        dataset: SearchOverviewDatasetsInterface[],
-        pageInfo: PageInfoInterface,
-        totalCount: number,
-        currentPage: number,
-    ): SearchOverviewInterface {
-        return {
-            dataset,
-            pageInfo,
-            totalCount,
-            currentPage: currentPage + 1,
-        };
-    }
-    private static pageInfoInit(): PageInfoInterface {
-        return {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            totalPages: 0,
-        };
-    }
     public autocompleteDatasetSearch(
         id: string,
     ): Observable<DatasetIDsInterface[]> {
         if (id === "") {
             return of([]);
         }
-        const GET_DATA: DocumentNode = gql`
-{
-  search {
-    query(query: "${id}", perPage: 10) {
-      nodes {
-        ... on Dataset {
-          id
-        }
-      }
-    }
-  }
-}`;
 
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
-        // @ts-ignore
-        return this.apollo.watchQuery({ query: GET_DATA }).valueChanges.pipe(
-            map((result: ApolloQueryResult<any>) => {
-                if (result.data) {
-                    return SearchApi.searchValueAddToAutocomplete(
-                        result.data.search.query.nodes || [],
+        return this.searchAutocompleteGQL
+            .watch({ query: id, perPage: 10 })
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<any>) => {
+                    const nodesList: DatasetIDsInterface[] =
+                        result.data.search.query.nodes.map(
+                            (node: ApolloQuerySearchResultNodeInterface) => ({
+                                id: node.name,
+                                __typename: node.__typename as TypeNames,
+                            }),
+                        );
+                    // Add dummy result that opens search view
+                    nodesList.unshift({
+                        __typename: TypeNames.allDataType,
                         id,
-                    );
-                } else {
-                    return [];
-                }
-            }),
-        );
-    }
-    private static searchValueAddToAutocomplete(
-        ngTypeaheadList: DatasetIDsInterface[],
-        searchValue: string,
-    ): DatasetIDsInterface[] {
-        const newArray: DatasetIDsInterface[] = JSON.parse(
-            JSON.stringify(ngTypeaheadList),
-        );
-        if (searchValue) {
-            newArray.unshift({
-                __typename: TypeNames.allDataType,
-                id: searchValue,
-            });
-        }
-        return newArray;
+                    });
+                    return nodesList;
+                }),
+            );
     }
 
     /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -296,11 +281,11 @@ export class SearchApi {
                     const datasets: any = AppValues.deepCopy(
                         result.data.datasets.byId,
                     );
-                    datasets["data"].tail.content = JSON.parse(
-                        result.data.datasets.byId["data"].tail.content,
+                    datasets.data.tail.content = JSON.parse(
+                        result.data.datasets.byId.data.tail.content,
                     );
-                    datasets["metadata"].currentSchema.content = JSON.parse(
-                        result.data.datasets.byId["metadata"].currentSchema
+                    datasets.metadata.currentSchema.content = JSON.parse(
+                        result.data.datasets.byId.metadata.currentSchema
                             .content,
                     );
 
@@ -344,8 +329,6 @@ export class SearchApi {
     }
   }
 }`;
-        let datasets: SearchOverviewInterface;
-
         // tslint:disable-next-line: no-any
         // @ts-ignore
         return this.apollo.watchQuery({ query: GET_DATA }).valueChanges.pipe(
@@ -353,7 +336,7 @@ export class SearchApi {
                 let dataset: SearchOverviewDatasetsInterface[] = [];
                 let pageInfo: PageInfoInterface = SearchApi.pageInfoInit();
                 let totalCount = 0;
-                let currentPage = params.page || 0;
+                const currentPage = params.page || 0;
 
                 if (result.data) {
                     // tslint:disable-next-line: no-any

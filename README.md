@@ -31,7 +31,25 @@
 
 1. Install packages that project depends on: `npm install`
 2. Run application locally: `ng serve` or `npm run start`
-   
+
+
+## GraphQL Schema and Code Generation
+We are using [graphql-codegen](https://www.graphql-code-generator.com/) project to generate typed interfaces based on server's GraphQL Schema and the query templates.
+
+The schema file is located in `resources/schema.graphql`. To refresh it with latest schema from a running server using:
+
+```bash
+npm run gql-update-schema
+```
+
+To regenerate types and query stubs use:
+
+```bash
+npm run gql-codegen
+```
+
+> Note: There is currently an issue with codegen where it generates outdated import `import { gql } from 'apollo-angular';`. To fix it we manually revert this line to `import { gql } from '@apollo/client/core';`.
+
 
 ## Development server
 

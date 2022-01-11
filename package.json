@@ -9,7 +9,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "prettier": "prettier --write '**/*.{ts,js,html,spec.ts}'",
-    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points"
+    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
+    "gql-update-schema": "npx rover graph introspect http://localhost:8080/graphql > resources/schema.graphql",
+    "gql-codegen": "graphql-codegen --config gql-codegen.yml"
   },
   "private": true,
   "dependencies": {
@@ -48,6 +50,11 @@
     "@angular/cli": "~9.0.0-rc.0",
     "@angular/compiler-cli": "~9.0.0-rc.0",
     "@angular/language-service": "~9.0.0-rc.0",
+    "@apollo/rover": "^0.4.1",
+    "@graphql-codegen/add": "^3.1.0",
+    "@graphql-codegen/cli": "^2.3.0",
+    "@graphql-codegen/typescript-apollo-angular": "^3.3.1",
+    "@graphql-codegen/typescript-operations": "^2.2.1",
     "@types/jasmine": "~3.4.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "9.6.0",

@@ -1,13 +1,13 @@
-import {ModuleWithProviders, NgModule} from "@angular/core";
-import {MatMenuModule} from "@angular/material/menu";
-import {MatIconModule} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
-import {CommonModule} from "@angular/common";
-import {DatasetCreateComponent} from "./dataset-create.component";
-import {SearchAdditionalButtonsModule} from "../components/search-additional-buttons/search-additional-buttons.module";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {FormsModule} from "@angular/forms";
+import { ModuleWithProviders, NgModule } from "@angular/core";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { CommonModule } from "@angular/common";
+import { DatasetCreateComponent } from "./dataset-create.component";
+import { SearchAdditionalButtonsModule } from "../components/search-additional-buttons/search-additional-buttons.module";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
     imports: [
@@ -20,11 +20,11 @@ import {FormsModule} from "@angular/forms";
         SearchAdditionalButtonsModule,
         FormsModule,
     ],
-  exports: [DatasetCreateComponent],
-  declarations: [DatasetCreateComponent]
+    exports: [DatasetCreateComponent],
+    declarations: [DatasetCreateComponent],
 })
 export class DatasetCreateModule {
     public static forRoot(): ModuleWithProviders<DatasetCreateModule> {
-    return { ngModule: DatasetCreateModule };
-  }
+        return { ngModule: DatasetCreateModule };
+    }
 }

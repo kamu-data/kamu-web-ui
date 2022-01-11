@@ -12,8 +12,13 @@ import {
     SearchOverviewInterface,
     TypeNames,
 } from "../interface/search.interface";
-import { SearchAutocompleteGQL } from "./kamu.graphql";
+import {
+    DatasetKind,
+    SearchAutocompleteGQL,
+    SearchAutocompleteQuery,
+} from "./kamu.graphql";
 import AppValues from "../common/app.values";
+import { ApolloQuerySearchResultNodeInterface } from "./apolloQueryResult.interface";
 
 @Injectable()
 export class SearchApi {
@@ -24,6 +29,26 @@ export class SearchApi {
         private searchAutocompleteGQL: SearchAutocompleteGQL,
     ) {
         // this.apollo = this.apolloProvider.use('newClientName');
+    }
+    private static searchOverviewData(
+        dataset: SearchOverviewDatasetsInterface[],
+        pageInfo: PageInfoInterface,
+        totalCount: number,
+        currentPage: number,
+    ): SearchOverviewInterface {
+        return {
+            dataset,
+            pageInfo,
+            totalCount,
+            currentPage: currentPage + 1,
+        };
+    }
+    private static pageInfoInit(): PageInfoInterface {
+        return {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            totalPages: 0,
+        };
     }
 
     // tslint:disable-next-line: no-any
@@ -107,26 +132,6 @@ export class SearchApi {
             }),
         );
     }
-    private static searchOverviewData(
-        dataset: SearchOverviewDatasetsInterface[],
-        pageInfo: PageInfoInterface,
-        totalCount: number,
-        currentPage: number,
-    ): SearchOverviewInterface {
-        return {
-            dataset,
-            pageInfo,
-            totalCount,
-            currentPage: currentPage + 1,
-        };
-    }
-    private static pageInfoInit(): PageInfoInterface {
-        return {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            totalPages: 0,
-        };
-    }
     public autocompleteDatasetSearch(
         id: string,
     ): Observable<DatasetIDsInterface[]> {
@@ -137,17 +142,20 @@ export class SearchApi {
         return this.searchAutocompleteGQL
             .watch({ query: id, perPage: 10 })
             .valueChanges.pipe(
-                map((result) => {
-                    let results = result.data.search.query.nodes.map((v) => ({
-                        id: v.name,
-                        __typename: v.__typename as TypeNames,
-                    }));
+                map((result: ApolloQueryResult<any>) => {
+                    const nodesList: DatasetIDsInterface[] =
+                        result.data.search.query.nodes.map(
+                            (node: ApolloQuerySearchResultNodeInterface) => ({
+                                id: node.name,
+                                __typename: node.__typename as TypeNames,
+                            }),
+                        );
                     // Add dummy result that opens search view
-                    results.unshift({
+                    nodesList.unshift({
                         __typename: TypeNames.allDataType,
-                        id: id,
+                        id,
                     });
-                    return results;
+                    return nodesList;
                 }),
             );
     }
@@ -275,11 +283,11 @@ export class SearchApi {
                     const datasets: any = AppValues.deepCopy(
                         result.data.datasets.byId,
                     );
-                    datasets["data"].tail.content = JSON.parse(
-                        result.data.datasets.byId["data"].tail.content,
+                    datasets.data.tail.content = JSON.parse(
+                        result.data.datasets.byId.data.tail.content,
                     );
-                    datasets["metadata"].currentSchema.content = JSON.parse(
-                        result.data.datasets.byId["metadata"].currentSchema
+                    datasets.metadata.currentSchema.content = JSON.parse(
+                        result.data.datasets.byId.metadata.currentSchema
                             .content,
                     );
 
@@ -323,8 +331,6 @@ export class SearchApi {
     }
   }
 }`;
-        let datasets: SearchOverviewInterface;
-
         // tslint:disable-next-line: no-any
         // @ts-ignore
         return this.apollo.watchQuery({ query: GET_DATA }).valueChanges.pipe(
@@ -332,7 +338,7 @@ export class SearchApi {
                 let dataset: SearchOverviewDatasetsInterface[] = [];
                 let pageInfo: PageInfoInterface = SearchApi.pageInfoInit();
                 let totalCount = 0;
-                let currentPage = params.page || 0;
+                const currentPage = params.page || 0;
 
                 if (result.data) {
                     // tslint:disable-next-line: no-any

@@ -14,7 +14,7 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
     [SubKey in K]: Maybe<T[SubKey]>;
 };
 /** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
+export interface Scalars {
     ID: string;
     String: string;
     Boolean: boolean;
@@ -29,9 +29,9 @@ export type Scalars = {
     DateTime: any;
     DatasetID: any;
     Sha3256: any;
-};
+}
 
-export type Query = {
+export interface Query {
     __typename?: "Query";
     /** Account-related functionality group */
     accounts: Accounts;
@@ -41,48 +41,48 @@ export type Query = {
     datasets: Datasets;
     /** Search-related functionality group */
     search: Search;
-};
+}
 
-export type Accounts = {
+export interface Accounts {
     __typename?: "Accounts";
     /** Returns account by its ID */
     byId?: Maybe<Account>;
     /** Returns account by its name */
     byName?: Maybe<Account>;
-};
+}
 
-export type AccountsByIdArgs = {
+export interface AccountsByIdArgs {
     accountId: Scalars["AccountID"];
-};
+}
 
-export type AccountsByNameArgs = {
+export interface AccountsByNameArgs {
     name: Scalars["String"];
-};
+}
 
-export type Account = {
+export interface Account {
     id: Scalars["AccountID"];
     name: Scalars["String"];
-};
+}
 
-export type Datasets = {
+export interface Datasets {
     __typename?: "Datasets";
     /** Returns datasets belonging to the specified account */
     byAccountId: DatasetConnection;
     /** Returns dataset by its ID */
     byId?: Maybe<Dataset>;
-};
+}
 
-export type DatasetsByAccountIdArgs = {
+export interface DatasetsByAccountIdArgs {
     accountId: Scalars["AccountID"];
     page?: InputMaybe<Scalars["Int"]>;
     perPage?: Scalars["Int"];
-};
+}
 
-export type DatasetsByIdArgs = {
+export interface DatasetsByIdArgs {
     datasetId: Scalars["DatasetID"];
-};
+}
 
-export type DatasetConnection = {
+export interface DatasetConnection {
     __typename?: "DatasetConnection";
     edges: Array<DatasetEdge>;
     /** A shorthand for `edges { node { ... } }` */
@@ -91,14 +91,14 @@ export type DatasetConnection = {
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
     totalCount?: Maybe<Scalars["Int"]>;
-};
+}
 
-export type DatasetEdge = {
+export interface DatasetEdge {
     __typename?: "DatasetEdge";
     node: Dataset;
-};
+}
 
-export type Dataset = {
+export interface Dataset {
     __typename?: "Dataset";
     /** Creation time of the first metadata block in the chain */
     createdAt: Scalars["DateTime"];
@@ -119,9 +119,9 @@ export type Dataset = {
     name: Scalars["String"];
     /** Returns the user or organization that owns this dataset */
     owner: Account;
-};
+}
 
-export type DatasetData = {
+export interface DatasetData {
     __typename?: "DatasetData";
     datasetId: Scalars["DatasetID"];
     /** An estimated size of data on disk not accounting for replication or caching */
@@ -133,12 +133,12 @@ export type DatasetData = {
      * This is equivalent to the SQL query: `SELECT * FROM dataset ORDER BY event_time DESC LIMIT N`
      */
     tail: DataSlice;
-};
+}
 
-export type DatasetDataTailArgs = {
+export interface DatasetDataTailArgs {
     format?: InputMaybe<DataSliceFormat>;
     numRecords?: InputMaybe<Scalars["Int"]>;
-};
+}
 
 export enum DataSliceFormat {
     Csv = "CSV",
@@ -147,18 +147,18 @@ export enum DataSliceFormat {
     JsonSoA = "JSON_SO_A",
 }
 
-export type DataSlice = {
+export interface DataSlice {
     __typename?: "DataSlice";
     content: Scalars["String"];
     format: DataSliceFormat;
-};
+}
 
 export enum DatasetKind {
     Derivative = "DERIVATIVE",
     Root = "ROOT",
 }
 
-export type DatasetMetadata = {
+export interface DatasetMetadata {
     __typename?: "DatasetMetadata";
     /** Access to the temporal metadata chain of the dataset */
     chain: MetadataChain;
@@ -171,13 +171,13 @@ export type DatasetMetadata = {
     /** Last recorded watermark */
     currentWatermark?: Maybe<Scalars["DateTime"]>;
     datasetId: Scalars["DatasetID"];
-};
+}
 
-export type DatasetMetadataCurrentSchemaArgs = {
+export interface DatasetMetadataCurrentSchemaArgs {
     format?: InputMaybe<DataSchemaFormat>;
-};
+}
 
-export type MetadataChain = {
+export interface MetadataChain {
     __typename?: "MetadataChain";
     /** Returns a metadata block corresponding to the specified hash */
     blockByHash?: Maybe<MetadataBlock>;
@@ -185,26 +185,26 @@ export type MetadataChain = {
     blocks: MetadataBlockConnection;
     /** Returns all named metadata block references */
     refs: Array<BlockRef>;
-};
+}
 
-export type MetadataChainBlockByHashArgs = {
+export interface MetadataChainBlockByHashArgs {
     hash: Scalars["Sha3256"];
-};
+}
 
-export type MetadataChainBlocksArgs = {
+export interface MetadataChainBlocksArgs {
     page?: InputMaybe<Scalars["Int"]>;
     perPage?: Scalars["Int"];
-};
+}
 
-export type MetadataBlock = {
+export interface MetadataBlock {
     __typename?: "MetadataBlock";
     blockHash: Scalars["Sha3256"];
     outputWatermark?: Maybe<Scalars["DateTime"]>;
     prevBlockHash?: Maybe<Scalars["Sha3256"]>;
     systemTime: Scalars["DateTime"];
-};
+}
 
-export type MetadataBlockConnection = {
+export interface MetadataBlockConnection {
     __typename?: "MetadataBlockConnection";
     edges: Array<MetadataBlockEdge>;
     /** A shorthand for `edges { node { ... } }` */
@@ -213,14 +213,14 @@ export type MetadataBlockConnection = {
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
     totalCount?: Maybe<Scalars["Int"]>;
-};
+}
 
-export type MetadataBlockEdge = {
+export interface MetadataBlockEdge {
     __typename?: "MetadataBlockEdge";
     node: MetadataBlock;
-};
+}
 
-export type PageBasedInfo = {
+export interface PageBasedInfo {
     __typename?: "PageBasedInfo";
     /** When paginating forwards, are there more items? */
     hasNextPage: Scalars["Boolean"];
@@ -228,38 +228,38 @@ export type PageBasedInfo = {
     hasPreviousPage: Scalars["Boolean"];
     /** Approximate number of total pages assuming number of nodes per page stays the same */
     totalPages?: Maybe<Scalars["Int"]>;
-};
+}
 
-export type BlockRef = {
+export interface BlockRef {
     __typename?: "BlockRef";
     blockHash: Scalars["Sha3256"];
     name: Scalars["String"];
-};
+}
 
 export enum DataSchemaFormat {
     Parquet = "PARQUET",
     ParquetJson = "PARQUET_JSON",
 }
 
-export type DataSchema = {
+export interface DataSchema {
     __typename?: "DataSchema";
     content: Scalars["String"];
     format: DataSchemaFormat;
-};
+}
 
-export type Search = {
+export interface Search {
     __typename?: "Search";
     /** Perform search across all resources */
     query: SearchResultConnection;
-};
+}
 
-export type SearchQueryArgs = {
+export interface SearchQueryArgs {
     page?: InputMaybe<Scalars["Int"]>;
     perPage?: Scalars["Int"];
     query: Scalars["String"];
-};
+}
 
-export type SearchResultConnection = {
+export interface SearchResultConnection {
     __typename?: "SearchResultConnection";
     edges: Array<SearchResultEdge>;
     /** A shorthand for `edges { node { ... } }` */
@@ -268,55 +268,55 @@ export type SearchResultConnection = {
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
     totalCount?: Maybe<Scalars["Int"]>;
-};
+}
 
-export type SearchResultEdge = {
+export interface SearchResultEdge {
     __typename?: "SearchResultEdge";
     node: SearchResult;
-};
+}
 
 export type SearchResult = Dataset;
 
-export type Mutation = {
+export interface Mutation {
     __typename?: "Mutation";
     auth: Auth;
-};
+}
 
-export type Auth = {
+export interface Auth {
     __typename?: "Auth";
     accountInfo: AccountInfo;
     githubLogin: LoginResponse;
-};
+}
 
-export type AuthAccountInfoArgs = {
+export interface AuthAccountInfoArgs {
     accessToken: Scalars["String"];
-};
+}
 
-export type AuthGithubLoginArgs = {
+export interface AuthGithubLoginArgs {
     code: Scalars["String"];
-};
+}
 
-export type AccountInfo = {
+export interface AccountInfo {
     __typename?: "AccountInfo";
     avatarUrl?: Maybe<Scalars["String"]>;
     email?: Maybe<Scalars["String"]>;
     gravatarId?: Maybe<Scalars["String"]>;
     login: Scalars["String"];
     name: Scalars["String"];
-};
+}
 
-export type LoginResponse = {
+export interface LoginResponse {
     __typename?: "LoginResponse";
     accountInfo: AccountInfo;
     token: AccessToken;
-};
+}
 
-export type AccessToken = {
+export interface AccessToken {
     __typename?: "AccessToken";
     accessToken: Scalars["String"];
     scope: Scalars["String"];
     tokenType: Scalars["String"];
-};
+}
 
 export type Organization = Account & {
     __typename?: "Organization";
@@ -339,7 +339,7 @@ export type SearchAutocompleteQueryVariables = Exact<{
     perPage?: InputMaybe<Scalars["Int"]>;
 }>;
 
-export type SearchAutocompleteQuery = {
+export interface SearchAutocompleteQuery {
     __typename?: "Query";
     search: {
         __typename?: "Search";
@@ -353,7 +353,7 @@ export type SearchAutocompleteQuery = {
             }>;
         };
     };
-};
+}
 
 export const SearchAutocompleteDocument = gql`
     query searchAutocomplete($query: String!, $perPage: Int) {

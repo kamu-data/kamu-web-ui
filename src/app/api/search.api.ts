@@ -16,7 +16,7 @@ import {
     DatasetKind,
     SearchAutocompleteGQL,
     SearchAutocompleteQuery,
-} from "./kamu.graphql";
+} from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { ApolloQuerySearchResultNodeInterface } from "./apolloQueryResult.interface";
 

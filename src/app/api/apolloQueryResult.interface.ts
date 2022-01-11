@@ -1,4 +1,4 @@
-import { DatasetKind, SearchAutocompleteQuery } from "./kamu.graphql";
+import { DatasetKind } from "./kamu.graphql.interface";
 
 export interface ApolloQuerySearchResultNodeInterface {
     __typename: "Dataset";

@@ -4,40 +4,56 @@ import {
     EventEmitter,
     Input,
     Output,
-    ViewChild
-} from '@angular/core';
-import {Observable, OperatorFunction} from 'rxjs';
-import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
-import {DatasetIDsInterface, TypeNames} from '../../interface/search.interface';
-import {SearchApi} from '../../api/search.api';
-import {UserInterface} from '../../interface/auth.interface';
+    ViewChild,
+} from "@angular/core";
+import { Observable, OperatorFunction } from "rxjs";
+import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
+import {
+    DatasetIDsInterface,
+    TypeNames,
+} from "../../interface/search.interface";
+import { SearchApi } from "../../api/search.api";
+import { UserInterface } from "../../interface/auth.interface";
 import AppValues from "../../common/app.values";
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './app-header.component.html'
+    selector: "app-header",
+    templateUrl: "./app-header.component.html",
 })
 export class AppHeaderComponent {
-    @Input() public searchValue: DatasetIDsInterface = {id: '', __typename: TypeNames.allDataType};
+    @Input() public searchValue: DatasetIDsInterface = {
+        id: "",
+        __typename: TypeNames.allDataType,
+    };
     @Input() public appLogo: string;
     @Input() public isMobileView: boolean;
     @Input() public isVisible: boolean;
     @Input() public userInfo: UserInterface;
 
-    @Output() public selectDatasetEmitter: EventEmitter<DatasetIDsInterface> = new EventEmitter();
+    @Output() public selectDatasetEmitter: EventEmitter<DatasetIDsInterface> =
+        new EventEmitter();
     @Output() public addNewEmitter: EventEmitter<null> = new EventEmitter();
     @Output() public loginEmitter: EventEmitter<null> = new EventEmitter();
     @Output() public logOutEmitter: EventEmitter<null> = new EventEmitter();
-    @Output() public userProfileEmitter: EventEmitter<null> = new EventEmitter();
-    @Output() public onClickAppLogoEmitter: EventEmitter<null> = new EventEmitter();
-    @Output() public onClickSettingsEmitter: EventEmitter<null> = new EventEmitter();
-    @Output() public onClickHelpEmitter: EventEmitter<null> = new EventEmitter();
-    @Output() public onClickAnalyticsEmitter: EventEmitter<null> = new EventEmitter();
-    @Output() public onClickBillingEmitter: EventEmitter<null> = new EventEmitter();
-    @Output() public onClickUserDatasetsEmitter: EventEmitter<null> = new EventEmitter();
-    @Output() public onClickUserProfileEmitter: EventEmitter<null> = new EventEmitter();
+    @Output() public userProfileEmitter: EventEmitter<null> =
+        new EventEmitter();
+    @Output() public onClickAppLogoEmitter: EventEmitter<null> =
+        new EventEmitter();
+    @Output() public onClickSettingsEmitter: EventEmitter<null> =
+        new EventEmitter();
+    @Output() public onClickHelpEmitter: EventEmitter<null> =
+        new EventEmitter();
+    @Output() public onClickAnalyticsEmitter: EventEmitter<null> =
+        new EventEmitter();
+    @Output() public onClickBillingEmitter: EventEmitter<null> =
+        new EventEmitter();
+    @Output() public onClickUserDatasetsEmitter: EventEmitter<null> =
+        new EventEmitter();
+    @Output() public onClickUserProfileEmitter: EventEmitter<null> =
+        new EventEmitter();
 
-    @ViewChild('appHeaderMenuButton') appHeaderMenuButton: ElementRef<HTMLElement>;
+    @ViewChild("appHeaderMenuButton")
+    appHeaderMenuButton: ElementRef<HTMLElement>;
 
     private _window: Window;
 
@@ -52,19 +68,25 @@ export class AppHeaderComponent {
     public isDatasetType(type: string): boolean {
         return type === TypeNames.datasetType;
     }
-    public search: OperatorFunction<string, readonly DatasetIDsInterface[]> = (text$: Observable<string>) => {
+    public search: OperatorFunction<string, readonly DatasetIDsInterface[]> = (
+        text$: Observable<string>,
+    ) => {
         return text$.pipe(
             debounceTime(300),
             distinctUntilChanged(),
-            switchMap(term => this.appSearchAPI.autocompleteDatasetSearch(term)));
-    }
+            switchMap((term) =>
+                this.appSearchAPI.autocompleteDatasetSearch(term),
+            ),
+        );
+    };
 
     public formatter(x: DatasetIDsInterface | string): string {
-        return typeof x !== 'string' ? x.id : x;
+        return typeof x !== "string" ? x.id : x;
     }
 
     public onClickInput(): void {
-        const typeaheadInput: HTMLElement | null = document.getElementById('typeahead-http');
+        const typeaheadInput: HTMLElement | null =
+            document.getElementById("typeahead-http");
         if (typeaheadInput) {
             typeaheadInput.focus();
         }
@@ -76,7 +98,8 @@ export class AppHeaderComponent {
             this.selectDatasetEmitter.emit(event.item);
 
             setTimeout(() => {
-                const typeaheadInput: HTMLElement | null = document.getElementById('typeahead-http');
+                const typeaheadInput: HTMLElement | null =
+                    document.getElementById("typeahead-http");
                 if (typeaheadInput) {
                     typeaheadInput.blur();
                 }
@@ -85,19 +108,23 @@ export class AppHeaderComponent {
     }
 
     public toggleAppHeaderMenu(): void {
-        const appHeaderButton: HTMLElement | null = document.getElementById('app-header');
+        const appHeaderButton: HTMLElement | null =
+            document.getElementById("app-header");
 
         this.isCollapsedAppHeaderMenu = !this.isCollapsedAppHeaderMenu;
         if (appHeaderButton) {
             if (this.isCollapsedAppHeaderMenu) {
-                appHeaderButton.classList.add('Details--on');
+                appHeaderButton.classList.add("Details--on");
             } else {
-                appHeaderButton.classList.remove('Details--on');
+                appHeaderButton.classList.remove("Details--on");
             }
         }
     }
 
-    public onSearch(event: any, searchValue: DatasetIDsInterface | string): void {
+    public onSearch(
+        event: any,
+        searchValue: DatasetIDsInterface | string,
+    ): void {
         this.isSearchActive = false;
 
         setTimeout(() => {
@@ -106,11 +133,15 @@ export class AppHeaderComponent {
             }
 
             (event.target as HTMLElement).blur();
-            const typeaheadInput: Element | null = document.querySelector('ngb-typeahead-window');
+            const typeaheadInput: Element | null = document.querySelector(
+                "ngb-typeahead-window",
+            );
             if (typeaheadInput) {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
-                document.querySelector('ngb-typeahead-window').classList.remove('show');
+                document
+                    .querySelector("ngb-typeahead-window")
+                    .classList.remove("show");
             }
         }, 200);
     }
@@ -135,8 +166,8 @@ export class AppHeaderComponent {
         el.focus();
         el.click();
         el.blur();
-        debugger
-        this.isCollapsedAppHeaderMenu  = !this.isCollapsedAppHeaderMenu;
+        debugger;
+        this.isCollapsedAppHeaderMenu = !this.isCollapsedAppHeaderMenu;
     }
     public onClickAppLogo(): void {
         this.onClickAppLogoEmitter.emit();

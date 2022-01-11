@@ -61,17 +61,18 @@
     "no-redundant-jsdoc": true,
     "no-switch-case-fall-through": true,
     "no-var-requires": false,
+    "no-unused-variable": true,
     "object-literal-key-quotes": [
       true,
-      "as-needed"
+      "consistent-as-needed"
     ],
     "object-literal-sort-keys": false,
     "ordered-imports": false,
     "quotemark": [
       true,
-      "single"
+      "double"
     ],
-    "trailing-comma": false,
+    "trailing-comma": true,
     "no-conflicting-lifecycle": true,
     "no-host-metadata-property": true,
     "no-input-rename": true,

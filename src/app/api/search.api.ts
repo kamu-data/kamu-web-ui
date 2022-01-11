@@ -1,45 +1,80 @@
-import {Injectable} from "@angular/core";
-import {Apollo, ApolloBase} from "apollo-angular";
-import {map} from "rxjs/operators";
-import {ApolloQueryResult, DocumentNode, gql} from "@apollo/client/core";
-import {Observable, of, throwError} from "rxjs";
+import { Injectable } from "@angular/core";
+import { Apollo, ApolloBase } from "apollo-angular";
+import { map } from "rxjs/operators";
+import { ApolloQueryResult, DocumentNode, gql } from "@apollo/client/core";
+import { Observable, of, throwError } from "rxjs";
 import {
     DatasetIDsInterface,
-    PageInfoInterface, SearchDatasetByID, SearchMetadataNodeResponseInterface,
-    SearchOverviewDatasetsInterface, SearchOverviewInterface, TypeNames,
+    PageInfoInterface,
+    SearchDatasetByID,
+    SearchMetadataNodeResponseInterface,
+    SearchOverviewDatasetsInterface,
+    SearchOverviewInterface,
+    TypeNames,
 } from "../interface/search.interface";
+import {
+    DatasetKind,
+    SearchAutocompleteGQL,
+    SearchAutocompleteQuery,
+} from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
+import { ApolloQuerySearchResultNodeInterface } from "./apolloQueryResult.interface";
 
 @Injectable()
 export class SearchApi {
     /* eslint-disable  @typescript-eslint/no-explicit-any */
 
-    constructor(private apollo: Apollo) {
-        // this.apollo = this.apolloProvider.use('newClientName');
+    constructor(
+        private apollo: Apollo,
+        private searchAutocompleteGQL: SearchAutocompleteGQL,
+    ) {}
+    private static searchOverviewData(
+        dataset: SearchOverviewDatasetsInterface[],
+        pageInfo: PageInfoInterface,
+        totalCount: number,
+        currentPage: number,
+    ): SearchOverviewInterface {
+        return {
+            dataset,
+            pageInfo,
+            totalCount,
+            currentPage: currentPage + 1,
+        };
+    }
+    private static pageInfoInit(): PageInfoInterface {
+        return {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            totalPages: 0,
+        };
     }
 
     // tslint:disable-next-line: no-any
-    public seatchIndex(): Observable<any> {
+    public searchIndex(): Observable<any> {
         const GET_DATA = gql``;
 
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         // @ts-ignore
-      return this.apollo.watchQuery({query: GET_DATA})
-            .valueChanges.pipe(map((result: any) => {
+        return this.apollo.watchQuery({ query: GET_DATA }).valueChanges.pipe(
+            map((result: any) => {
                 if (result.data) {
                     return result.data.search.query.edges.map((edge: any) => {
                         const d = Object();
                         d.id = edge.node.id;
                         return d;
-                    })
+                    });
                 }
-            }));
+            }),
+        );
     }
-    public searchOverview(searchQuery: string, page = 0): Observable<SearchOverviewInterface> {
+    public searchOverview(
+        searchQuery: string,
+        page = 0,
+    ): Observable<SearchOverviewInterface> {
         const GET_DATA: DocumentNode = gql`
   {
   search {
-    query(query: "${searchQuery}", perPage: 2, page: ${(page).toString()}) {
+    query(query: "${searchQuery}", perPage: 2, page: ${page.toString()}) {
      edges {
         node {
           __typename
@@ -67,8 +102,8 @@ export class SearchApi {
 `;
 
         // @ts-ignore
-      return this.apollo.watchQuery({query: GET_DATA})
-            .valueChanges.pipe(map((result: any) => {
+        return this.apollo.watchQuery({ query: GET_DATA }).valueChanges.pipe(
+            map((result: any) => {
                 let dataset: SearchOverviewDatasetsInterface[] = [];
                 let pageInfo: PageInfoInterface = SearchApi.pageInfoInit();
                 let totalCount = 0;
@@ -76,72 +111,57 @@ export class SearchApi {
 
                 if (result.data) {
                     // tslint:disable-next-line: no-any
-                    dataset = result.data.search.query.edges.map((edge: any) => {
-                        return this.clearlyData(edge.node);
-                    })
+                    dataset = result.data.search.query.edges.map(
+                        (edge: any) => {
+                            return this.clearlyData(edge.node);
+                        },
+                    );
                     pageInfo = result.data.search.query.pageInfo;
                     totalCount = result.data.search.query.totalCount;
                     currentPage = page;
                 }
 
-                return SearchApi.searchOverviewData(dataset, pageInfo, totalCount, currentPage);
-            }));
+                return SearchApi.searchOverviewData(
+                    dataset,
+                    pageInfo,
+                    totalCount,
+                    currentPage,
+                );
+            }),
+        );
     }
-    private static searchOverviewData(dataset: SearchOverviewDatasetsInterface[], pageInfo: PageInfoInterface, totalCount: number, currentPage: number): SearchOverviewInterface {
-        return {
-            dataset,
-            pageInfo,
-            totalCount,
-            currentPage: currentPage + 1
-        };
-    }
-    private static pageInfoInit(): PageInfoInterface {
-        return {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            totalPages: 0
-        }
-    }
-    public autocompleteDatasetSearch(id: string): Observable<DatasetIDsInterface[]> {
-        if(id === '') {
+    public autocompleteDatasetSearch(
+        id: string,
+    ): Observable<DatasetIDsInterface[]> {
+        if (id === "") {
             return of([]);
         }
-        const GET_DATA: DocumentNode = gql`
-{
-  search {
-    query(query: "${id}", perPage: 10) {
-      nodes {
-        ... on Dataset {
-          id
-        }
-      }
-    }
-  }
-}`
 
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
-        // @ts-ignore
-      return this.apollo.watchQuery({query: GET_DATA})
-            .valueChanges.pipe(map((result: ApolloQueryResult<any>) => {
-                if (result.data) {
-                    return SearchApi.searchValueAddToAutocomplete(result.data.search.query.nodes || [], id);
-                } else {
-                    return [];
-                }
-            }));
-    }
-    private static searchValueAddToAutocomplete(ngTypeaheadList: DatasetIDsInterface[], searchValue: string): DatasetIDsInterface[] {
-        const newArray: DatasetIDsInterface[] = JSON.parse(JSON.stringify(ngTypeaheadList));
-        if (searchValue) {
-            newArray.unshift({__typename: TypeNames.allDataType, id: searchValue});
-        }
-        return newArray;
+        return this.searchAutocompleteGQL
+            .watch({ query: id, perPage: 10 })
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<any>) => {
+                    const nodesList: DatasetIDsInterface[] =
+                        result.data.search.query.nodes.map(
+                            (node: ApolloQuerySearchResultNodeInterface) => ({
+                                id: node.name,
+                                __typename: node.__typename as TypeNames,
+                            }),
+                        );
+                    // Add dummy result that opens search view
+                    nodesList.unshift({
+                        __typename: TypeNames.allDataType,
+                        id,
+                    });
+                    return nodesList;
+                }),
+            );
     }
 
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     public searchLinageDataset(id: string): Observable<any> {
-        if (typeof id !== 'string') {
-            return throwError('Empty ID');
+        if (typeof id !== "string") {
+            return throwError("Empty ID");
         }
 
         const GET_DATA: DocumentNode = gql`
@@ -168,17 +188,20 @@ export class SearchApi {
 `;
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         // @ts-ignore
-      return this.apollo.watchQuery({query: GET_DATA})
-            .valueChanges.pipe(map((result: ApolloQueryResult<any>) => {
+        return this.apollo.watchQuery({ query: GET_DATA }).valueChanges.pipe(
+            map((result: ApolloQueryResult<any>) => {
                 if (result.data) {
                     return result.data.datasets.byId;
                 }
-            }));
+            }),
+        );
     }
 
-    public searchLinageDatasetUpstreamDependencies(id: string): Observable<any> {
-        if (typeof id !== 'string') {
-            return throwError('Empty ID');
+    public searchLinageDatasetUpstreamDependencies(
+        id: string,
+    ): Observable<any> {
+        if (typeof id !== "string") {
+            return throwError("Empty ID");
         }
         const GET_DATA: DocumentNode = gql`
 {
@@ -204,15 +227,20 @@ export class SearchApi {
 `;
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         // @ts-ignore
-        return this.apollo.watchQuery({query: GET_DATA})
-            .valueChanges.pipe(map((result: ApolloQueryResult<any>) => {
+        return this.apollo.watchQuery({ query: GET_DATA }).valueChanges.pipe(
+            map((result: ApolloQueryResult<any>) => {
                 if (result.data) {
                     return result.data.datasets.byId;
                 }
-            }));
+            }),
+        );
     }
 
-    public searchDataset(params: {id: string, numRecords?: number, page?: number}): Observable<SearchDatasetByID> {
+    public searchDataset(params: {
+        id: string;
+        numRecords?: number;
+        page?: number;
+    }): Observable<SearchDatasetByID> {
         const GET_DATA: DocumentNode = gql`
 {
   datasets {
@@ -244,25 +272,37 @@ export class SearchApi {
   __typename
 }
 
-}`
+}`;
         // @ts-ignore
-      return this.apollo.watchQuery({query: GET_DATA})
-            .valueChanges.pipe(map((result: ApolloQueryResult<any>) => {
+        return this.apollo.watchQuery({ query: GET_DATA }).valueChanges.pipe(
+            map((result: ApolloQueryResult<any>) => {
                 if (result.data) {
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
-                    const datasets: any = AppValues.deepCopy(result.data.datasets.byId);
-                    datasets['data'].tail.content = JSON.parse(result.data.datasets.byId['data'].tail.content);
-                    datasets['metadata'].currentSchema.content = JSON.parse(result.data.datasets.byId['metadata'].currentSchema.content);
+                    const datasets: any = AppValues.deepCopy(
+                        result.data.datasets.byId,
+                    );
+                    datasets.data.tail.content = JSON.parse(
+                        result.data.datasets.byId.data.tail.content,
+                    );
+                    datasets.metadata.currentSchema.content = JSON.parse(
+                        result.data.datasets.byId.metadata.currentSchema
+                            .content,
+                    );
 
                     return datasets as SearchDatasetByID;
                 }
                 /* eslint-disable  @typescript-eslint/no-explicit-any */
                 return {} as any;
-            }));
+            }),
+        );
     }
 
     // tslint:disable-next-line: no-any
-    public onSearchMetadata(params: {id: string, numRecords?: number, page?: number}): Observable<any> {
+    public onSearchMetadata(params: {
+        id: string;
+        numRecords?: number;
+        page?: number;
+    }): Observable<any> {
         const GET_DATA: DocumentNode = gql`
 {
   datasets {
@@ -270,7 +310,9 @@ export class SearchApi {
       id
       metadata {
         chain {
-          blocks(perPage: ${(params.numRecords || 5).toString()}, page: ${(params.page || 0).toString()}) {
+          blocks(perPage: ${(params.numRecords || 5).toString()}, page: ${(
+            params.page || 0
+        ).toString()}) {
             totalCount
             nodes {
               blockHash,
@@ -287,42 +329,54 @@ export class SearchApi {
     }
   }
 }`;
-        let datasets: SearchOverviewInterface;
-
         // tslint:disable-next-line: no-any
         // @ts-ignore
-      return this.apollo.watchQuery({query: GET_DATA})
-            .valueChanges.pipe(map((result: ApolloQueryResult<any>) => {
+        return this.apollo.watchQuery({ query: GET_DATA }).valueChanges.pipe(
+            map((result: ApolloQueryResult<any>) => {
                 let dataset: SearchOverviewDatasetsInterface[] = [];
                 let pageInfo: PageInfoInterface = SearchApi.pageInfoInit();
                 let totalCount = 0;
-                let currentPage = params.page || 0;
+                const currentPage = params.page || 0;
 
                 if (result.data) {
                     // tslint:disable-next-line: no-any
-                    dataset = result.data.datasets.byId.metadata.chain.blocks.nodes.map((node: SearchMetadataNodeResponseInterface) => {
-                        return this.clearlyData(node);
-                    });
-                    pageInfo = result.data.datasets.byId.metadata.chain.blocks.pageInfo;
-                    totalCount = result.data.datasets.byId.metadata.chain.blocks.totalCount;
+                    dataset =
+                        result.data.datasets.byId.metadata.chain.blocks.nodes.map(
+                            (node: SearchMetadataNodeResponseInterface) => {
+                                return this.clearlyData(node);
+                            },
+                        );
+                    pageInfo =
+                        result.data.datasets.byId.metadata.chain.blocks
+                            .pageInfo;
+                    totalCount =
+                        result.data.datasets.byId.metadata.chain.blocks
+                            .totalCount;
                 }
 
-                return SearchApi.searchOverviewData(dataset, pageInfo, totalCount, currentPage);
-            }));
+                return SearchApi.searchOverviewData(
+                    dataset,
+                    pageInfo,
+                    totalCount,
+                    currentPage,
+                );
+            }),
+        );
     }
 
     // tslint:disable-next-line: no-any
     clearlyData(edge: any) {
         const object = edge;
-        const value = 'typename';
-        const nodeKeys: string[] = Object.keys(object).filter(key => !key.includes(value));
+        const value = "typename";
+        const nodeKeys: string[] = Object.keys(object).filter(
+            (key) => !key.includes(value),
+        );
         const d = Object();
 
         nodeKeys.forEach((nodeKey: string) => {
             d[nodeKey] = (edge as any)[nodeKey];
-        })
+        });
 
         return d;
     }
-
 }

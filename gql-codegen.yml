@@ -1,0 +1,12 @@
+#schema: "http://localhost:8080/graphql"
+schema: "resources/schema.graphql"
+documents: "src/**/*.graphql"
+overwrite: true
+generates:
+  src/app/api/kamu.graphql.interface.ts:
+    plugins:
+      - add:
+          content: '// THIS FILE IS GENERATED, DO NOT EDIT!'
+      - "typescript"
+      - "typescript-operations"
+      - typescript-apollo-angular

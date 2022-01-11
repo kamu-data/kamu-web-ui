@@ -1,12 +1,16 @@
-import {Injectable} from "@angular/core";
-import {Apollo, ApolloBase} from "apollo-angular";
-import {map} from "rxjs/operators";
-import {ApolloQueryResult, DocumentNode, gql} from "@apollo/client/core";
-import {Observable, of, throwError} from "rxjs";
+import { Injectable } from "@angular/core";
+import { Apollo, ApolloBase } from "apollo-angular";
+import { map } from "rxjs/operators";
+import { ApolloQueryResult, DocumentNode, gql } from "@apollo/client/core";
+import { Observable, of, throwError } from "rxjs";
 import {
     DatasetIDsInterface,
-    PageInfoInterface, SearchDatasetByID, SearchMetadataNodeResponseInterface,
-    SearchOverviewDatasetsInterface, SearchOverviewInterface, TypeNames,
+    PageInfoInterface,
+    SearchDatasetByID,
+    SearchMetadataNodeResponseInterface,
+    SearchOverviewDatasetsInterface,
+    SearchOverviewInterface,
+    TypeNames,
 } from "../interface/search.interface";
 import { SearchAutocompleteGQL } from "./kamu.graphql";
 import AppValues from "../common/app.values";
@@ -117,7 +121,7 @@ export class SearchApi {
             return results;
         }));
     }
-    
+
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     public searchLinageDataset(id: string): Observable<any> {
         if (typeof id !== 'string') {

@@ -1,15 +1,14 @@
-import {ModalFilterComponent} from "../components/modal/modal-filter.component";
-import {ModalDialogComponent} from "../components/modal/modal-dialog.component";
-import {ModalImageComponent} from "../components/modal/modal-image.component";
-import {BlankComponent} from "../components/modal/blank.component";
-import {ModalSpinnerComponent} from "../components/modal/modal-spinner.component";
+import { ModalFilterComponent } from "../components/modal/modal-filter.component";
+import { ModalDialogComponent } from "../components/modal/modal-dialog.component";
+import { ModalImageComponent } from "../components/modal/modal-image.component";
+import { BlankComponent } from "../components/modal/blank.component";
+import { ModalSpinnerComponent } from "../components/modal/modal-spinner.component";
 
 export interface ModalCommandInterface {
     type: string;
     context?: ModalArgumentsInterface | {};
     buttonCount: number;
 }
-
 
 export interface ModalArgumentsInterface {
     buttonCount?: number;

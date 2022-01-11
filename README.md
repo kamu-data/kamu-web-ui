@@ -2,7 +2,7 @@
 
 ### Technologies:
 
-- TypeScript, version: 3.7.3; [Node.js](https://nodejs.org/en/download/releases/), version: 9.0.0;
+- TypeScript, version: 3.7.3; [Node.js](https://nodejs.org/en/download/releases/), version: 10.11.x;
 - [Angular CLI](https://github.com/angular/angular-cli), version 9.0.0.
 
 ### Libraries:
@@ -14,6 +14,7 @@
 - [Bootstrap](https://www.npmjs.com/package/bootstrap), version: 5.1.3; [Popper.js](https://www.npmjs.com/package/@popperjs/core), version: 2.10.2;
 - [Bootstrap Icons](https://www.npmjs.com/package/bootstrap-icons), version: 1.5.0;
 - [Angular powered Bootstrap widgets](https://www.npmjs.com/package/@ng-bootstrap/ng-bootstrap), version: 6.0.0;
+- [Prettier](https://www.npmjs.com/package/prettier), version: 2.5.1;
 - Karma, version: 4.3.0; Jasmine, version: 3.4.0; [Cypress Angular Schematic](https://www.npmjs.com/package/@cypress/schematic/v/1.5.1), version: 1.5.1.
 
 ## Steps for running:
@@ -53,6 +54,10 @@ npm run gql-codegen
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+## Code prettier
+
+Run `npm run prettier` for enforce consistent style by parsing your code and re-printing it with its own rules that take the maximum line length into account, wrapping code when necessary.
 
 ## Code scaffolding
 

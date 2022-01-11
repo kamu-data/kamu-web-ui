@@ -1,7 +1,8 @@
-<div class="d-flex flex-column flex-md-row flex-justify-between border-bottom pb-3 position-relative" *ngIf="isResultQuantity">
-    <h2>
-        {{ totalCount }} {{resultUnitText}}
-    </h2>
+<div
+    class="d-flex flex-column flex-md-row flex-justify-between border-bottom pb-3 position-relative"
+    *ngIf="isResultQuantity"
+>
+    <h2>{{ totalCount }} {{ resultUnitText }}</h2>
 </div>
 <div *ngFor="let row of dataSource; let rowIndex = index">
     <div class="repo-list-container py-2">
@@ -9,10 +10,18 @@
             <i class="bi bi-journal-album"></i>
         </div>
         <div>
-            <button class="repo-list-container__title mb-1 pl-0" (click)="isClickableRow && onSelectDataset(row.id)">{{row.id}}</button>
-            <p class="repo-list-container__description mb-2">Open-source data hub/platform that implements Open Data Fabric protocol</p>
+            <button
+                class="repo-list-container__title mb-1 pl-0"
+                (click)="isClickableRow && onSelectDataset(row.id)"
+            >
+                {{ row.id }}
+            </button>
+            <p class="repo-list-container__description mb-2">
+                Open-source data hub/platform that implements Open Data Fabric
+                protocol
+            </p>
             <mat-chip-list aria-label="Tags selection">
-                <mat-chip>{{row.kind}}</mat-chip>
+                <mat-chip>{{ row.kind }}</mat-chip>
                 <mat-chip>medicine</mat-chip>
                 <mat-chip>covid</mat-chip>
                 <mat-chip>health</mat-chip>
@@ -20,7 +29,10 @@
             </mat-chip-list>
             <div class="repo-list-container__additional-block mt-2">
                 <p class="text-small color-text-secondary mr-3">MIT license</p>
-                <p class="text-small color-text-secondary">Updated on {{momentConverDatetoLocalWithFormat(row.lastUpdatedAt)}}</p>
+                <p class="text-small color-text-secondary">
+                    Updated on
+                    {{ momentConverDatetoLocalWithFormat(row.lastUpdatedAt) }}
+                </p>
             </div>
         </div>
     </div>

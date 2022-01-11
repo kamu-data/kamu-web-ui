@@ -8,10 +8,10 @@ export interface SearchHistoryResponseInterface {
                 tail: {
                     __typename: string;
                     content: string;
-                }
-            }
-        }
-    }
+                };
+            };
+        };
+    };
 }
 
 export interface SearchResponse {
@@ -30,12 +30,14 @@ export interface SearchHistoryInterface {
 export interface SearchHistoryCurrentSchema {
     name: string;
     type: string;
-    fields: [{
-        name: string;
-        repetition: string;
-        type: string;
-        logicalType: string;
-    }]
+    fields: [
+        {
+            name: string;
+            repetition: string;
+            type: string;
+            logicalType: string;
+        },
+    ];
 }
 
 export interface SearchOverviewDatasetsInterface {
@@ -69,15 +71,15 @@ export interface DatasetIDsInterface {
 }
 
 export enum TypeNames {
-    allDataType = 'all',
-    datasetType = 'Dataset'
+    allDataType = "all",
+    datasetType = "Dataset",
 }
 
 export interface SearchDataset {
     datasets: {
         __typename: string;
         byId: SearchDatasetByID;
-    }
+    };
 }
 
 export interface SearchDatasetByID {
@@ -93,9 +95,9 @@ export interface SearchDatasetByID {
             _typename: string;
             content: SearchHistoryCurrentSchema[];
             format: string;
-        },
+        };
         currentWatermark: string;
-    }
+    };
 }
 export interface SearchMetadataNodeResponseInterface {
     blockHash: string;
@@ -109,7 +111,7 @@ export interface SearchDatasetByIDDataInterface {
         __typename: string;
         content: SearchHistoryInterface[];
         format: string;
-    }
+    };
 }
 export interface DatasetInfoInterface {
     __typename: string;
@@ -124,7 +126,7 @@ export interface DatasetInfoInterface {
             _typename: string;
             content: SearchHistoryCurrentSchema[];
             format: string;
-        },
+        };
         currentWatermark: string;
     };
 }
@@ -139,9 +141,9 @@ export interface DatasetCurrentUpstreamDependencies {
     id: string;
     kind: DatasetKindTypeNames;
     currentDownstreamDependencies?: DatasetLinageResponse[];
-    currentUpstreamDependencies?: DatasetLinageResponse[]
+    currentUpstreamDependencies?: DatasetLinageResponse[];
 }
 export enum DatasetKindTypeNames {
-    derivative = 'DERIVATIVE',
-    root = 'ROOT'
+    derivative = "DERIVATIVE",
+    root = "ROOT",
 }

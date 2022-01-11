@@ -1,0 +1,18 @@
+{
+  "semi": true,
+  "trailingComma": "all",
+  "overrides": [
+    {
+      "files": "*.test.ts",
+      "options": {
+        "semi": true
+      }
+    },
+    {
+      "files": ["*.html", "**/*.ts"],
+      "options": {
+        "tabWidth": 4
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { MatSidenav } from '@angular/material/sidenav';
-import {MatDrawerToggleResult} from "@angular/material/sidenav/drawer";
+import { Injectable } from "@angular/core";
+import { MatSidenav } from "@angular/material/sidenav";
+import { MatDrawerToggleResult } from "@angular/material/sidenav/drawer";
 
 @Injectable()
 export class SideNavService {
@@ -28,6 +28,6 @@ export class SideNavService {
     }
 
     private emptySidenav(): Promise<MatDrawerToggleResult> {
-        return Promise.resolve('open');
+        return Promise.resolve("open");
     }
 }

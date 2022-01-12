@@ -246,6 +246,12 @@ export class SearchApi {
   datasets {
   byId(datasetId: "${params.id}") {
     id
+    owner {
+      id
+      name
+    }
+    name
+    kind
     createdAt
     lastUpdatedAt
     metadata {

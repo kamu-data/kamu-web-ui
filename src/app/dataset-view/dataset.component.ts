@@ -43,20 +43,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.overview;
     public searchAdditionalButtonsData: SearchAdditionalButtonInterface[] = [
         {
-            textButton: searchAdditionalButtonsEnum.Descission,
-        },
-        {
-            textButton: searchAdditionalButtonsEnum.Reputation,
-        },
-        {
-            textButton: searchAdditionalButtonsEnum.Explore,
-            styleClassContainer: "app-active-button__container",
-            styleClassButton: "app-active-button",
-        },
-        {
             textButton: searchAdditionalButtonsEnum.DeriveForm,
-            styleClassContainer: "app-active-button__container",
-            styleClassButton: "app-active-button",
         },
     ];
 

@@ -88,6 +88,9 @@ export class AppDatasetService {
     ): DatasetInfoInterface {
         return {
             id: byID.id,
+            kind: byID.kind,
+            name: byID.name,
+            owner: byID.owner,
             __typename: byID.__typename,
             createdAt: byID.createdAt,
             lastUpdatedAt: byID.lastUpdatedAt,

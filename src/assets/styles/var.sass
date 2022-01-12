@@ -24,6 +24,18 @@ $verylightgrey:     #cccccc
 $darkgreentea:      rgb(142,195,79)
 $app-success: #1a7f37
 $app-harmonies: #2da44e
+$app-naples-yellow: #eac54f
+$app-color-btn-counter-bg: #1b1f2414
+$app-color-counter-border: #00000000
+$app-color-neutral-muted: #afb8c133
+$app-color-fg-default: #24292f
+$app-color-btn-hover-bg: #f3f4f6
+$app-color-btn-hover-border: #1b1f2426
+$app-color-border-default: #d0d7de
+$app-color-select-menu-backdrop-border: #00000000
+$app-color-canvas-overlay: #ffffff
+$app-color-border-muted: #d8dee4
+$app-color-shadow-large: 0 8px 24px rgba(140,149,159,0.2)
 
 
 .d-none
@@ -48,9 +60,141 @@ $app-harmonies: #2da44e
   border-radius: 4px !important
 .border-white-fade
   border-color: $app-versatileBusinessDark
-
+.rounded-2
+  border-radius: 6px !important
+.rounded-left-2
+  border-bottom-left-radius: 6px !important
+  border-top-left-radius: 6px !important
+.border-right-0
+  border-right: 0 !important
+.border-left-0
+  border-left: 0 !important
+.rounded-right-2
+  border-bottom-right-radius: 6px !important
+  border-top-right-radius: 6px !important
+.btnGroup-parent
+  float: left
+  height: 40px
+  background: none
+  & .btnGroup-item
+    border-right-width: 1px
+    border-radius: 1px
+    position: relative
+    float: left
+    border-color: $app-nero
+    height: inherit
+    background: $app-white
+    &:last-child
+      border-right-width: 1px
+      border-top-right-radius: 6px
+      border-bottom-right-radius: 6px
+    & span
+      font-size: 12px
 .mr-0
   margin-right: 0 !important
+.mr-1
+  margin-right: 6px !important
+.mr-2
+  margin-right: 8px !important
+.counter
+  display: inline-block
+  min-width: 20px
+  padding: 0 6px
+  font-size: 12px
+  font-weight: 500
+  line-height: 18px
+  color: $app-color-fg-default
+  text-align: center
+  background-color: $app-color-neutral-muted
+  border: 1px solid $app-color-counter-border
+  border-radius: 2em
+
+.btn .Counter
+  margin-left: 2px
+  color: inherit
+  text-shadow: none
+  vertical-align: top
+  background-color: $app-color-btn-counter-bg
+.btn:hover, .btn.hover, [open]>.btn
+  background-color: $app-color-btn-hover-bg
+  border-color: $app-color-btn-hover-border
+  transition-duration: .1s
+.SelectMenu-modal
+  position: relative
+  z-index: 99
+  display: flex
+  max-height: 66%
+  margin: auto 0
+  overflow: hidden
+  pointer-events: auto
+  flex-direction: column
+  background-color: $app-color-canvas-overlay
+  border: 1px solid $app-color-select-menu-backdrop-border
+  border-radius: 12px
+  animation: SelectMenu-modal-animation .12s cubic-bezier(0, 0.1, 0.1, 1) backwards
+.cdk-overlay-pane
+  box-shadow: $app-color-shadow-large
+.mat-menu-content:not(:empty)
+  padding-top: 0px !important
+  padding-bottom: 0px !important
+.SelectMenu-header
+  display: flex
+  padding: 16px
+  flex: none
+  align-items: center
+  border-bottom: 1px solid $app-color-border-muted
+.SelectMenu-title
+  flex: 1
+  font-size: 14px
+  font-weight: 600
+  margin: 0
+.SelectMenu-closeButton
+  padding: 16px
+  margin: -16px
+  line-height: 1
+  color: var(--color-fg-muted)
+  background-color: transparent
+  border: 0
+.SelectMenu-list
+  position: relative
+  padding: 0
+  margin: 0
+  margin-bottom: -1px
+  flex: auto
+  overflow-x: hidden
+  overflow-y: auto
+  background-color: $app-color-canvas-overlay
+  -webkit-overflow-scrolling: touch
+.SelectMenu-item
+  display: flex
+  align-items: center
+  width: 100%
+  padding: 16px
+  overflow: hidden
+  color: var(--color-fg-default)
+  text-align: left
+  cursor: pointer
+  background-color: $app-color-canvas-overlay
+  border: 0
+  border-bottom: 1px solid $app-color-border-muted
+.SelectMenu-icon
+  width: 16px
+  margin-right: 8px
+  flex-shrink: 0
+  &--check
+    visibility: hidden
+    transition: transform .12s cubic-bezier(0.5, 0.1, 1, 0.5),visibility 0s .12s linear
+    transform: scale(0)
+
+.SelectMenu-item[aria-checked="true"] .SelectMenu-icon--check
+  visibility: visible
+  transition: transform .12s cubic-bezier(0, 0, 0.2, 1),visibility 0s linear
+  transform: scale(1)
+
+@keyframes SelectMenu-modal-animation
+   0%
+    opacity: 0
+    transform: translateY(-16px)
 @media (max-width: 480px)
   *
     font-size: 15px

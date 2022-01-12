@@ -299,21 +299,24 @@ router-outlet
 .search-header-container-block
   margin-bottom: 20px
 
-#search .search-result-container
+#search .search-result-container, #search .dataset-result-container
   grid-template-columns: 0.25fr 1fr
   & ul
     list-style-type: none
   & .mat-checkbox-layout .mat-checkbox-label
     font-size: 16px
-#dataset-viewer .search-result-container
-  grid-template-columns: 0.25fr 1fr
+#dataset-viewer
+  & .search-result-container
+    grid-template-columns: 0.25fr 1fr
+  & .dataset-result-container
+    grid-template-columns: 1fr 0.25fr
 #search, #dataset-viewer
   & .nav-link
     cursor: pointer
   & .nav-tabs
     margin-bottom: 14px
     border-bottom: none
-  & .search-result-container
+  & .search-result-container, .dataset-result-container
     display: grid
     grid-gap: 25px
   & table
@@ -359,6 +362,8 @@ router-outlet
   margin-bottom: 20px
 #dataset-viewer, #search
   overflow: hidden
+.starred .starred-button-icon
+  color: $app-naples-yellow !important
 /*********** Search Page ******/
 .input-icon
   background: none

@@ -86,6 +86,12 @@ export interface SearchDatasetByID {
     __typename: string;
     createdAt: string;
     data: SearchDatasetByIDDataInterface;
+    kind: DatasetKindTypeNames;
+    name: string;
+    owner: {
+        id: string;
+        name: string;
+    };
     // ca.covid19.daily-cases
     id: string;
     lastUpdatedAt: string;
@@ -117,6 +123,12 @@ export interface DatasetInfoInterface {
     __typename: string;
     createdAt: string;
     id: string;
+    kind: DatasetKindTypeNames;
+    name: string;
+    owner: {
+        id: string;
+        name: string;
+    };
     lastUpdatedAt: string;
     estimatedSize: number;
     numRecordsTotal: number;

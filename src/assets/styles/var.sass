@@ -36,6 +36,7 @@ $app-color-select-menu-backdrop-border: #00000000
 $app-color-canvas-overlay: #ffffff
 $app-color-border-muted: #d8dee4
 $app-color-shadow-large: 0 8px 24px rgba(140,149,159,0.2)
+$app-color-fg-muted: #57606a
 
 
 .d-none
@@ -67,8 +68,12 @@ $app-color-shadow-large: 0 8px 24px rgba(140,149,159,0.2)
   border-top-left-radius: 6px !important
 .border-right-0
   border-right: 0 !important
+.border-right-1
+  border-right: 1px !important
 .border-left-0
   border-left: 0 !important
+.border-left-1
+  border-left: 1px !important
 .rounded-right-2
   border-bottom-right-radius: 6px !important
   border-top-right-radius: 6px !important
@@ -90,6 +95,9 @@ $app-color-shadow-large: 0 8px 24px rgba(140,149,159,0.2)
       border-bottom-right-radius: 6px
     & span
       font-size: 12px
+.BtnGroup-item:first-child
+  border-top-left-radius: 6px
+  border-bottom-left-radius: 6px
 .mr-0
   margin-right: 0 !important
 .mr-1
@@ -137,6 +145,18 @@ $app-color-shadow-large: 0 8px 24px rgba(140,149,159,0.2)
 .mat-menu-content:not(:empty)
   padding-top: 0px !important
   padding-bottom: 0px !important
+.label
+  display: inline-block
+  padding: 0 7px
+  font-size: 12px
+  font-weight: 500
+  line-height: 18px
+  border: 1px solid transparent
+  border-radius: 2em
+  border-color: $app-color-border-default
+.label--secondary
+  color: $app-color-fg-muted
+  border-color: $app-color-border-default
 .SelectMenu-header
   display: flex
   padding: 16px

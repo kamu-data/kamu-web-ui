@@ -1,4 +1,61 @@
-<div class="app-main-container" role="main">
+<div class="app-main-container" role="main" data-test-id="dataset-view">
+     <div class="app-content">
+        <div class="d-flex">
+        <div class="flex-auto min-width-0 width-fit mr-3">
+            <h1
+                class="d-flex flex-wrap flex-items-center wb-break-word f3 text-normal align-items-center"
+            >
+                <svg
+                    aria-hidden="true"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    width="16"
+                    data-view-component="true"
+                    class="octicon octicon-repo color-fg-muted mr-2"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"
+                    ></path>
+                </svg>
+                <span class="author flex-self-stretch" itemprop="author">
+                    <a
+                        class="url fn"
+                        rel="author"
+                        data-hovercard-type="organization"
+                        data-hovercard-url="/anonymous"
+                        href="/anonymous"
+                        >anonymous</a
+                    >
+                </span>
+                <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
+                <strong itemprop="name" class="mr-2 flex-self-stretch">
+                    <a
+                        data-pjax="#repo-content-pjax-container"
+                        [href]="'/anonymous/dataset-view?id=' + datasetInfo.id + '&type=overview'"
+                        >{{datasetInfo.id}}</a
+                    >
+                </strong>
+
+                <span></span
+                ><span class="label label--secondary v-align-middle mr-1"
+                    >Public</span
+                >
+            </h1>
+        </div>
+
+        <app-search-additional-buttons
+            [searchAdditionalButtonsData]="searchAdditionalButtonsData"
+            [isMinimizeSearchAdditionalButtons]="
+                isMinimizeSearchAdditionalButtons
+            "
+            (searchAdditionalButtonsMethod)="
+                onClickSearchAdditionalButton($event)
+            "
+        >
+        </app-search-additional-buttons>
+    </div>
+     </div>
     <div class="app-content">
         <div id="dataset-viewer">
             <div
@@ -57,16 +114,41 @@
                     </mat-button-toggle-group>
                 </div>
 
-                <app-search-additional-buttons
-                    [searchAdditionalButtonsData]="searchAdditionalButtonsData"
-                    [isMinimizeSearchAdditionalButtons]="
-                        isMinimizeSearchAdditionalButtons
-                    "
-                    (searchAdditionalButtonsMethod)="
-                        onClickSearchAdditionalButton($event)
-                    "
+                 <ul class="nav searchAdditionalButtons__nav">
+                    <li class="nav-item mr-2">
+                        <div class="btnGroup-parent">
+
+                            <button
+                    class="starred rounded-left-2 border-1 border-right-0 btn-sm btn btnGroup-item d-flex justify-content-center align-items-center"
                 >
-                </app-search-additional-buttons>
+                    <span class="d-inline mr-2">Download</span>
+                </button>
+                <button
+                    class="starred rounded-right-2 border-1 border border-dark btn-sm btn btnGroup-item d-flex justify-content-center align-items-center"
+                    mat-icon-button
+                    [matMenuTriggerFor]="menu2"
+                    aria-label="Example icon-button with a menu"
+                    data-test-id="searchAdditionalButtons"
+                >
+                    <mat-icon>arrow_drop_down</mat-icon>
+                </button>
+
+                <mat-menu #menu2="matMenu">
+                    <div
+                        class="SelectMenu-modal notifications-component-menu-modal"
+                    >
+                        <header class="SelectMenu-header">
+                            <h3 class="SelectMenu-title">Copy</h3>
+                            <h3 class="SelectMenu-title">Download Zip</h3>
+                        </header>
+
+                        <div class="SelectMenu-list">
+                        </div>
+                    </div>
+                </mat-menu>
+            </div>
+                    </li>
+                 </ul>
             </div>
             <div class="dataset-result-container">
                 <div

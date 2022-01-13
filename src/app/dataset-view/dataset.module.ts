@@ -10,6 +10,9 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { LinageGraphModule } from "../components/linage-graph/linage-graph.module";
 import { PaginationModule } from "../components/pagination-component/pagination.module";
+import {MatMenuModule} from "@angular/material/menu";
+import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
     imports: [
@@ -25,6 +28,9 @@ import { PaginationModule } from "../components/pagination-component/pagination.
         NgxGraphModule,
         LinageGraphModule,
         PaginationModule,
+        MatMenuModule,
+        MatButtonModule,
+        MatIconModule,
     ],
     exports: [DatasetComponent],
     declarations: [DatasetComponent],

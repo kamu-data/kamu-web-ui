@@ -56,7 +56,7 @@ const Services = [
             return {
                 cache: new InMemoryCache(),
                 link: httpLink.create({
-                    uri: "http://0.0.0.0:8080/graphql",
+                    uri: "http://localhost:8080/graphql",
                 }),
             };
         },

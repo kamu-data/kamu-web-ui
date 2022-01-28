@@ -19,6 +19,7 @@ type AccountInfo {
   avatarUrl: String
   gravatarId: String
 }
+scalar AccountName
 type Accounts {
   "Returns account by its ID"
   byId(accountId: AccountID!): Account
@@ -29,9 +30,13 @@ type Auth {
   githubLogin(code: String!): LoginResponse!
   accountInfo(accessToken: String!): AccountInfo!
 }
+type BlockInterval {
+  start: Multihash!
+  end: Multihash!
+}
 type BlockRef {
   name: String!
-  blockHash: Sha3256!
+  blockHash: Multihash!
 }
 type DataSchema {
   format: DataSchemaFormat!
@@ -51,16 +56,21 @@ enum DataSliceFormat {
   JSON_SO_A
   CSV
 }
+type DataSliceMetadata {
+  logicalHash: Multihash!
+  physicalHash: Multihash!
+  interval: OffsetInterval!
+}
 type Dataset {
   "Unique identifier of the dataset"
   id: DatasetID!
-  "Returns the user or organization that owns this dataset"
-  owner: Account!
   """
   Symbolic name of the dataset.
   Name can change over the dataset's lifetime. For unique identifier use `id()`.
   """
-  name: String!
+  name: DatasetName!
+  "Returns the user or organization that owns this dataset"
+  owner: Account!
   "Returns the kind of a dataset (Root or Derivative)"
   kind: DatasetKind!
   "Access to the data of the dataset"
@@ -82,7 +92,6 @@ type DatasetConnection {
   edges: [DatasetEdge!]!
 }
 type DatasetData {
-  datasetId: DatasetID!
   "Total number of records in this dataset"
   numRecordsTotal: Int!
   "An estimated size of data on disk not accounting for replication or caching"
@@ -102,7 +111,6 @@ enum DatasetKind {
   DERIVATIVE
 }
 type DatasetMetadata {
-  datasetId: DatasetID!
   "Access to the temporal metadata chain of the dataset"
   chain: MetadataChain!
   "Last recorded watermark"
@@ -114,11 +122,16 @@ type DatasetMetadata {
   "Current downstream dependencies of a dataset"
   currentDownstreamDependencies: [Dataset!]!
 }
+scalar DatasetName
 type Datasets {
   "Returns dataset by its ID"
   byId(datasetId: DatasetID!): Dataset
+  "Returns dataset by its owner and name"
+  byOwnerAndName(accountName: AccountName!, datasetName: DatasetName!): Dataset
   "Returns datasets belonging to the specified account"
   byAccountId(accountId: AccountID!, page: Int, perPage: Int! = 15): DatasetConnection!
+  "Returns datasets belonging to the specified account"
+  byAccountName(accountName: AccountName!, page: Int, perPage: Int! = 15): DatasetConnection!
 }
 """
 Implement the DateTime<Utc> scalar
@@ -128,15 +141,20 @@ The input/output is a string in RFC3339 format.
 scalar DateTime
 "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point)."
 scalar Float
+type InputSliceMetadata {
+  datasetId: DatasetID!
+  blockInterval: BlockInterval
+  dataInterval: OffsetInterval
+}
 type LoginResponse {
   token: AccessToken!
   accountInfo: AccountInfo!
 }
 type MetadataBlock {
-  blockHash: Sha3256!
-  prevBlockHash: Sha3256
   systemTime: DateTime!
-  outputWatermark: DateTime
+  blockHash: Multihash!
+  prevBlockHash: Multihash
+  event: MetadataEvent!
 }
 type MetadataBlockConnection {
   "A shorthand for `edges { node { ... } }`"
@@ -154,17 +172,57 @@ type MetadataChain {
   "Returns all named metadata block references"
   refs: [BlockRef!]!
   "Returns a metadata block corresponding to the specified hash"
-  blockByHash(hash: Sha3256!): MetadataBlock
+  blockByHash(hash: Multihash!): MetadataBlock
   "Iterates all metadata blocks in the reverse chronological order"
   blocks(page: Int, perPage: Int! = 20): MetadataBlockConnection!
 }
+interface MetadataEvent {
+  dummy: String!
+}
+type MetadataEventAddData implements MetadataEvent {
+  dummy: String!
+  outputData: DataSliceMetadata!
+  outputWatermark: DateTime
+}
+type MetadataEventExecuteQuery implements MetadataEvent {
+  dummy: String!
+  inputSlices: [InputSliceMetadata!]!
+  outputData: DataSliceMetadata
+  outputWatermark: DateTime
+}
+type MetadataEventSeed implements MetadataEvent {
+  dummy: String!
+  datasetId: DatasetID!
+  datasetKind: DatasetKind!
+}
+type MetadataEventSetPollingSource implements MetadataEvent {
+  dummy: String!
+}
+type MetadataEventSetTransform implements MetadataEvent {
+  dummy: String!
+}
+type MetadataEventSetVocab implements MetadataEvent {
+  dummy: String!
+}
+type MetadataEventSetWatermark implements MetadataEvent {
+  dummy: String!
+  outputWatermark: DateTime!
+}
+type MetadataEventUnsupported implements MetadataEvent {
+  dummy: String!
+}
+scalar Multihash
 type Mutation {
   auth: Auth!
 }
+type OffsetInterval {
+  start: Int!
+  end: Int!
+}
 type Organization implements Account {
-  "Unique identifier of this organization account"
+  "Unique and stable identitfier of this organization account"
   id: AccountID!
-  "Symbolic name"
+  "Symbolic account name"
   name: String!
 }
 type PageBasedInfo {
@@ -172,6 +230,8 @@ type PageBasedInfo {
   hasPreviousPage: Boolean!
   "When paginating forwards, are there more items?"
   hasNextPage: Boolean!
+  "Index of the current page"
+  currentPage: Int!
   "Approximate number of total pages assuming number of nodes per page stays the same"
   totalPages: Int
 }
@@ -202,10 +262,9 @@ type SearchResultConnection {
 type SearchResultEdge {
   node: SearchResult!
 }
-scalar Sha3256
 type User implements Account {
-  "Unique identifier of this user account"
+  "Unique and stable identitfier of this user account"
   id: AccountID!
-  "Symbolic name"
+  "Symbolic account name"
   name: String!
 }

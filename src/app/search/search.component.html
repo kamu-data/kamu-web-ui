@@ -91,7 +91,7 @@
                         [dataSource]="tableData.tableSource"
                         [sortOptions]="tableData.sortOptions"
                         [resultUnitText]="tableData.resultUnitText"
-                        [totalCount]="tableData.totalCount"
+                        [totalCount]="tableData.totalCount || 0"
                         [isResultQuantity]="tableData.isResultQuantity"
                         [isClickableRow]="tableData.isClickableRow"
                         (onSelectDatasetEmit)="onSelectDataset($event)"

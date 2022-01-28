@@ -43,6 +43,7 @@ export interface SearchHistoryCurrentSchema {
 export interface SearchOverviewDatasetsInterface {
     createdAt: string;
     id: string;
+    name: string;
     kind: string;
     lastUpdatedAt: string;
 }
@@ -62,7 +63,7 @@ export interface DatasetKindInterface {
 export interface PageInfoInterface {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
-    totalPages: number;
+    totalPages?: number | null | undefined;
 }
 
 export interface DatasetIDsInterface {

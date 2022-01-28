@@ -2,7 +2,6 @@ import { AppSearchService } from "./search.service";
 import {
     PageInfoInterface,
     SearchOverviewDatasetsInterface,
-    SearchOverviewInterface,
 } from "../interface/search.interface";
 import AppValues from "../common/app.values";
 import { searchAdditionalButtonsEnum } from "./search.interface";
@@ -37,7 +36,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     public isMobileView = false;
     public searchValue = "";
-    public currentPage = 1;
+    public currentPage = 1; // TODO: Should be zero-based and only offset for display
     public isMinimizeSearchAdditionalButtons = false;
     public searchAdditionalButtonsData: SearchAdditionalButtonInterface[] = [
         {
@@ -71,7 +70,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
         resultUnitText: string;
         isClickableRow: boolean;
         pageInfo: PageInfoInterface;
-        totalCount: number;
+        totalCount: number | null | undefined;
         sortOptions: { value: string; label: string; active: boolean }[];
     };
     public filters: SearchFilters[] = [
@@ -174,14 +173,12 @@ export class SearchComponent implements OnInit, AfterContentInit {
             this.onSearch(value, this.currentPage);
         });
 
-        this.appSearchService.onSearchDataChanges.subscribe(
-            (data: SearchOverviewInterface) => {
-                this.tableData.tableSource = data.dataset;
-                this.tableData.pageInfo = data.pageInfo;
-                this.tableData.totalCount = data.totalCount;
-                this.currentPage = data.currentPage;
-            },
-        );
+        this.appSearchService.onSearchDataChanges.subscribe((data) => {
+            this.tableData.tableSource = data.search.query.nodes;
+            this.tableData.pageInfo = data.search.query.pageInfo;
+            this.tableData.totalCount = data.search.query.totalCount;
+            this.currentPage = data.search.query.pageInfo.currentPage + 1;
+        });
     }
     private changePageAndSearch(): void {
         let page = 1;

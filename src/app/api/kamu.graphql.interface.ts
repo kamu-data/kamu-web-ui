@@ -14,7 +14,7 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
     [SubKey in K]: Maybe<T[SubKey]>;
 };
 /** All built-in and custom scalars, mapped to their actual values */
-export interface Scalars {
+export type Scalars = {
     ID: string;
     String: string;
     Boolean: boolean;
@@ -28,10 +28,12 @@ export interface Scalars {
      */
     DateTime: any;
     DatasetID: any;
-    Sha3256: any;
-}
+    Multihash: any;
+    DatasetName: any;
+    AccountName: any;
+};
 
-export interface Query {
+export type Query = {
     __typename?: "Query";
     /** Account-related functionality group */
     accounts: Accounts;
@@ -41,48 +43,63 @@ export interface Query {
     datasets: Datasets;
     /** Search-related functionality group */
     search: Search;
-}
+};
 
-export interface Accounts {
+export type Accounts = {
     __typename?: "Accounts";
     /** Returns account by its ID */
     byId?: Maybe<Account>;
     /** Returns account by its name */
     byName?: Maybe<Account>;
-}
+};
 
-export interface AccountsByIdArgs {
+export type AccountsByIdArgs = {
     accountId: Scalars["AccountID"];
-}
+};
 
-export interface AccountsByNameArgs {
+export type AccountsByNameArgs = {
     name: Scalars["String"];
-}
+};
 
-export interface Account {
+export type Account = {
     id: Scalars["AccountID"];
     name: Scalars["String"];
-}
+};
 
-export interface Datasets {
+export type Datasets = {
     __typename?: "Datasets";
     /** Returns datasets belonging to the specified account */
     byAccountId: DatasetConnection;
+    /** Returns datasets belonging to the specified account */
+    byAccountName: DatasetConnection;
     /** Returns dataset by its ID */
     byId?: Maybe<Dataset>;
-}
+    /** Returns dataset by its owner and name */
+    byOwnerAndName?: Maybe<Dataset>;
+};
 
-export interface DatasetsByAccountIdArgs {
+export type DatasetsByAccountIdArgs = {
     accountId: Scalars["AccountID"];
     page?: InputMaybe<Scalars["Int"]>;
     perPage?: Scalars["Int"];
-}
+};
 
-export interface DatasetsByIdArgs {
+export type DatasetsByAccountNameArgs = {
+    accountName: Scalars["AccountName"];
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: Scalars["Int"];
+};
+
+export type DatasetsByIdArgs = {
     datasetId: Scalars["DatasetID"];
-}
+};
 
-export interface DatasetConnection {
+export type DatasetsByOwnerAndNameArgs = {
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
+};
+
+export type DatasetConnection = {
     __typename?: "DatasetConnection";
     edges: Array<DatasetEdge>;
     /** A shorthand for `edges { node { ... } }` */
@@ -91,14 +108,14 @@ export interface DatasetConnection {
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
     totalCount?: Maybe<Scalars["Int"]>;
-}
+};
 
-export interface DatasetEdge {
+export type DatasetEdge = {
     __typename?: "DatasetEdge";
     node: Dataset;
-}
+};
 
-export interface Dataset {
+export type Dataset = {
     __typename?: "Dataset";
     /** Creation time of the first metadata block in the chain */
     createdAt: Scalars["DateTime"];
@@ -116,14 +133,13 @@ export interface Dataset {
      * Symbolic name of the dataset.
      * Name can change over the dataset's lifetime. For unique identifier use `id()`.
      */
-    name: Scalars["String"];
+    name: Scalars["DatasetName"];
     /** Returns the user or organization that owns this dataset */
     owner: Account;
-}
+};
 
-export interface DatasetData {
+export type DatasetData = {
     __typename?: "DatasetData";
-    datasetId: Scalars["DatasetID"];
     /** An estimated size of data on disk not accounting for replication or caching */
     estimatedSize: Scalars["Int"];
     /** Total number of records in this dataset */
@@ -133,12 +149,12 @@ export interface DatasetData {
      * This is equivalent to the SQL query: `SELECT * FROM dataset ORDER BY event_time DESC LIMIT N`
      */
     tail: DataSlice;
-}
+};
 
-export interface DatasetDataTailArgs {
+export type DatasetDataTailArgs = {
     format?: InputMaybe<DataSliceFormat>;
     numRecords?: InputMaybe<Scalars["Int"]>;
-}
+};
 
 export enum DataSliceFormat {
     Csv = "CSV",
@@ -147,18 +163,18 @@ export enum DataSliceFormat {
     JsonSoA = "JSON_SO_A",
 }
 
-export interface DataSlice {
+export type DataSlice = {
     __typename?: "DataSlice";
     content: Scalars["String"];
     format: DataSliceFormat;
-}
+};
 
 export enum DatasetKind {
     Derivative = "DERIVATIVE",
     Root = "ROOT",
 }
 
-export interface DatasetMetadata {
+export type DatasetMetadata = {
     __typename?: "DatasetMetadata";
     /** Access to the temporal metadata chain of the dataset */
     chain: MetadataChain;
@@ -170,14 +186,13 @@ export interface DatasetMetadata {
     currentUpstreamDependencies: Array<Dataset>;
     /** Last recorded watermark */
     currentWatermark?: Maybe<Scalars["DateTime"]>;
-    datasetId: Scalars["DatasetID"];
-}
+};
 
-export interface DatasetMetadataCurrentSchemaArgs {
+export type DatasetMetadataCurrentSchemaArgs = {
     format?: InputMaybe<DataSchemaFormat>;
-}
+};
 
-export interface MetadataChain {
+export type MetadataChain = {
     __typename?: "MetadataChain";
     /** Returns a metadata block corresponding to the specified hash */
     blockByHash?: Maybe<MetadataBlock>;
@@ -185,26 +200,30 @@ export interface MetadataChain {
     blocks: MetadataBlockConnection;
     /** Returns all named metadata block references */
     refs: Array<BlockRef>;
-}
+};
 
-export interface MetadataChainBlockByHashArgs {
-    hash: Scalars["Sha3256"];
-}
+export type MetadataChainBlockByHashArgs = {
+    hash: Scalars["Multihash"];
+};
 
-export interface MetadataChainBlocksArgs {
+export type MetadataChainBlocksArgs = {
     page?: InputMaybe<Scalars["Int"]>;
     perPage?: Scalars["Int"];
-}
+};
 
-export interface MetadataBlock {
+export type MetadataBlock = {
     __typename?: "MetadataBlock";
-    blockHash: Scalars["Sha3256"];
-    outputWatermark?: Maybe<Scalars["DateTime"]>;
-    prevBlockHash?: Maybe<Scalars["Sha3256"]>;
+    blockHash: Scalars["Multihash"];
+    event: MetadataEvent;
+    prevBlockHash?: Maybe<Scalars["Multihash"]>;
     systemTime: Scalars["DateTime"];
-}
+};
 
-export interface MetadataBlockConnection {
+export type MetadataEvent = {
+    dummy: Scalars["String"];
+};
+
+export type MetadataBlockConnection = {
     __typename?: "MetadataBlockConnection";
     edges: Array<MetadataBlockEdge>;
     /** A shorthand for `edges { node { ... } }` */
@@ -213,53 +232,55 @@ export interface MetadataBlockConnection {
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
     totalCount?: Maybe<Scalars["Int"]>;
-}
+};
 
-export interface MetadataBlockEdge {
+export type MetadataBlockEdge = {
     __typename?: "MetadataBlockEdge";
     node: MetadataBlock;
-}
+};
 
-export interface PageBasedInfo {
+export type PageBasedInfo = {
     __typename?: "PageBasedInfo";
+    /** Index of the current page */
+    currentPage: Scalars["Int"];
     /** When paginating forwards, are there more items? */
     hasNextPage: Scalars["Boolean"];
     /** When paginating backwards, are there more items? */
     hasPreviousPage: Scalars["Boolean"];
     /** Approximate number of total pages assuming number of nodes per page stays the same */
     totalPages?: Maybe<Scalars["Int"]>;
-}
+};
 
-export interface BlockRef {
+export type BlockRef = {
     __typename?: "BlockRef";
-    blockHash: Scalars["Sha3256"];
+    blockHash: Scalars["Multihash"];
     name: Scalars["String"];
-}
+};
 
 export enum DataSchemaFormat {
     Parquet = "PARQUET",
     ParquetJson = "PARQUET_JSON",
 }
 
-export interface DataSchema {
+export type DataSchema = {
     __typename?: "DataSchema";
     content: Scalars["String"];
     format: DataSchemaFormat;
-}
+};
 
-export interface Search {
+export type Search = {
     __typename?: "Search";
     /** Perform search across all resources */
     query: SearchResultConnection;
-}
+};
 
-export interface SearchQueryArgs {
+export type SearchQueryArgs = {
     page?: InputMaybe<Scalars["Int"]>;
     perPage?: Scalars["Int"];
     query: Scalars["String"];
-}
+};
 
-export interface SearchResultConnection {
+export type SearchResultConnection = {
     __typename?: "SearchResultConnection";
     edges: Array<SearchResultEdge>;
     /** A shorthand for `edges { node { ... } }` */
@@ -268,78 +289,153 @@ export interface SearchResultConnection {
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
     totalCount?: Maybe<Scalars["Int"]>;
-}
+};
 
-export interface SearchResultEdge {
+export type SearchResultEdge = {
     __typename?: "SearchResultEdge";
     node: SearchResult;
-}
+};
 
 export type SearchResult = Dataset;
 
-export interface Mutation {
+export type Mutation = {
     __typename?: "Mutation";
     auth: Auth;
-}
+};
 
-export interface Auth {
+export type Auth = {
     __typename?: "Auth";
     accountInfo: AccountInfo;
     githubLogin: LoginResponse;
-}
+};
 
-export interface AuthAccountInfoArgs {
+export type AuthAccountInfoArgs = {
     accessToken: Scalars["String"];
-}
+};
 
-export interface AuthGithubLoginArgs {
+export type AuthGithubLoginArgs = {
     code: Scalars["String"];
-}
+};
 
-export interface AccountInfo {
+export type AccountInfo = {
     __typename?: "AccountInfo";
     avatarUrl?: Maybe<Scalars["String"]>;
     email?: Maybe<Scalars["String"]>;
     gravatarId?: Maybe<Scalars["String"]>;
     login: Scalars["String"];
     name: Scalars["String"];
-}
+};
 
-export interface LoginResponse {
+export type LoginResponse = {
     __typename?: "LoginResponse";
     accountInfo: AccountInfo;
     token: AccessToken;
-}
+};
 
-export interface AccessToken {
+export type AccessToken = {
     __typename?: "AccessToken";
     accessToken: Scalars["String"];
     scope: Scalars["String"];
     tokenType: Scalars["String"];
-}
+};
+
+export type BlockInterval = {
+    __typename?: "BlockInterval";
+    end: Scalars["Multihash"];
+    start: Scalars["Multihash"];
+};
+
+export type DataSliceMetadata = {
+    __typename?: "DataSliceMetadata";
+    interval: OffsetInterval;
+    logicalHash: Scalars["Multihash"];
+    physicalHash: Scalars["Multihash"];
+};
+
+export type OffsetInterval = {
+    __typename?: "OffsetInterval";
+    end: Scalars["Int"];
+    start: Scalars["Int"];
+};
+
+export type InputSliceMetadata = {
+    __typename?: "InputSliceMetadata";
+    blockInterval?: Maybe<BlockInterval>;
+    dataInterval?: Maybe<OffsetInterval>;
+    datasetId: Scalars["DatasetID"];
+};
+
+export type MetadataEventAddData = MetadataEvent & {
+    __typename?: "MetadataEventAddData";
+    dummy: Scalars["String"];
+    outputData: DataSliceMetadata;
+    outputWatermark?: Maybe<Scalars["DateTime"]>;
+};
+
+export type MetadataEventExecuteQuery = MetadataEvent & {
+    __typename?: "MetadataEventExecuteQuery";
+    dummy: Scalars["String"];
+    inputSlices: Array<InputSliceMetadata>;
+    outputData?: Maybe<DataSliceMetadata>;
+    outputWatermark?: Maybe<Scalars["DateTime"]>;
+};
+
+export type MetadataEventSeed = MetadataEvent & {
+    __typename?: "MetadataEventSeed";
+    datasetId: Scalars["DatasetID"];
+    datasetKind: DatasetKind;
+    dummy: Scalars["String"];
+};
+
+export type MetadataEventSetPollingSource = MetadataEvent & {
+    __typename?: "MetadataEventSetPollingSource";
+    dummy: Scalars["String"];
+};
+
+export type MetadataEventSetTransform = MetadataEvent & {
+    __typename?: "MetadataEventSetTransform";
+    dummy: Scalars["String"];
+};
+
+export type MetadataEventSetVocab = MetadataEvent & {
+    __typename?: "MetadataEventSetVocab";
+    dummy: Scalars["String"];
+};
+
+export type MetadataEventSetWatermark = MetadataEvent & {
+    __typename?: "MetadataEventSetWatermark";
+    dummy: Scalars["String"];
+    outputWatermark: Scalars["DateTime"];
+};
+
+export type MetadataEventUnsupported = MetadataEvent & {
+    __typename?: "MetadataEventUnsupported";
+    dummy: Scalars["String"];
+};
 
 export type Organization = Account & {
     __typename?: "Organization";
-    /** Unique identifier of this organization account */
+    /** Unique and stable identitfier of this organization account */
     id: Scalars["AccountID"];
-    /** Symbolic name */
+    /** Symbolic account name */
     name: Scalars["String"];
 };
 
 export type User = Account & {
     __typename?: "User";
-    /** Unique identifier of this user account */
+    /** Unique and stable identitfier of this user account */
     id: Scalars["AccountID"];
-    /** Symbolic name */
+    /** Symbolic account name */
     name: Scalars["String"];
 };
 
-export type SearchAutocompleteQueryVariables = Exact<{
+export type SearchDatasetsAutocompleteQueryVariables = Exact<{
     query: Scalars["String"];
     perPage?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]>;
 }>;
 
-export interface SearchAutocompleteQuery {
+export type SearchDatasetsAutocompleteQuery = {
     __typename?: "Query";
     search: {
         __typename?: "Search";
@@ -348,17 +444,53 @@ export interface SearchAutocompleteQuery {
             nodes: Array<{
                 __typename: "Dataset";
                 id: any;
-                name: string;
+                name: any;
                 kind: DatasetKind;
             }>;
         };
     };
-}
+};
 
-export const SearchAutocompleteDocument = gql`
-    query searchAutocomplete($query: String!, $perPage: Int) {
+export type SearchDatasetsOverviewQueryVariables = Exact<{
+    query: Scalars["String"];
+    perPage?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type SearchDatasetsOverviewQuery = {
+    __typename?: "Query";
+    search: {
+        __typename?: "Search";
+        query: {
+            __typename?: "SearchResultConnection";
+            totalCount?: number | null | undefined;
+            nodes: Array<{
+                __typename: "Dataset";
+                id: any;
+                name: any;
+                kind: DatasetKind;
+                createdAt: any;
+                lastUpdatedAt: any;
+            }>;
+            pageInfo: {
+                __typename?: "PageBasedInfo";
+                hasNextPage: boolean;
+                hasPreviousPage: boolean;
+                currentPage: number;
+                totalPages?: number | null | undefined;
+            };
+        };
+    };
+};
+
+export const SearchDatasetsAutocompleteDocument = gql`
+    query searchDatasetsAutocomplete(
+        $query: String!
+        $perPage: Int
+        $page: Int
+    ) {
         search {
-            query(query: $query, perPage: $perPage) {
+            query(query: $query, perPage: $perPage, page: $page) {
                 nodes {
                     __typename
                     ... on Dataset {
@@ -375,11 +507,50 @@ export const SearchAutocompleteDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class SearchAutocompleteGQL extends Apollo.Query<
-    SearchAutocompleteQuery,
-    SearchAutocompleteQueryVariables
+export class SearchDatasetsAutocompleteGQL extends Apollo.Query<
+    SearchDatasetsAutocompleteQuery,
+    SearchDatasetsAutocompleteQueryVariables
 > {
-    document = SearchAutocompleteDocument;
+    document = SearchDatasetsAutocompleteDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SearchDatasetsOverviewDocument = gql`
+    query searchDatasetsOverview($query: String!, $perPage: Int, $page: Int) {
+        search {
+            query(query: $query, perPage: $perPage, page: $page) {
+                nodes {
+                    __typename
+                    ... on Dataset {
+                        id
+                        name
+                        kind
+                        createdAt
+                        lastUpdatedAt
+                    }
+                }
+                totalCount
+                pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    currentPage
+                    totalPages
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SearchDatasetsOverviewGQL extends Apollo.Query<
+    SearchDatasetsOverviewQuery,
+    SearchDatasetsOverviewQueryVariables
+> {
+    document = SearchDatasetsOverviewDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

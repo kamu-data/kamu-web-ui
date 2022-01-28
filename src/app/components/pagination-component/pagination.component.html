@@ -1,7 +1,8 @@
 <div class="paginate-container">
+    <!-- TODO: Handle case when number of totalPages is unknown -->
     <ngb-pagination
         class="pagination-custom"
-        [collectionSize]="pageInfo.totalPages * 10"
+        [collectionSize]="(pageInfo.totalPages || currentPage + 1) * 10"
         [maxSize]="7"
         [(page)]="currentPage"
         (pageChange)="onPageChange(currentPage)"

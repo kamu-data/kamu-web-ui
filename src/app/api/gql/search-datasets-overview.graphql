@@ -1,0 +1,23 @@
+query searchDatasetsOverview($query: String!, $perPage: Int, $page: Int) {
+  search {
+    query(query: $query, perPage: $perPage, page: $page) {
+      nodes {
+        __typename
+        ... on Dataset {
+          id
+          name
+          kind
+          createdAt
+          lastUpdatedAt
+        }
+      }
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        currentPage
+        totalPages
+      }
+    }
+  }
+}

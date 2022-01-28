@@ -1,6 +1,6 @@
-query searchAutocomplete($query: String!, $perPage: Int) {
+query searchDatasetsAutocomplete($query: String!, $perPage: Int, $page: Int) {
   search {
-    query(query: $query, perPage: $perPage) {
+    query(query: $query, perPage: $perPage, page: $page) {
       nodes {
         __typename
         ... on Dataset {

@@ -80,7 +80,19 @@ export class SearchApi {
           __typename
           ... on Dataset {
             id
+            name
+            owner {
+              id
+              name
+            }
             kind
+            metadata {
+                currentDownstreamDependencies {
+                  id
+                  kind
+                }
+            
+            }
             createdAt
             lastUpdatedAt
             __typename

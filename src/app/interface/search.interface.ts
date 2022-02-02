@@ -1,3 +1,5 @@
+import {DatasetMetadata} from "../api/kamu.graphql.interface";
+
 export interface SearchHistoryResponseInterface {
     datasets: {
         __typename: string;
@@ -41,12 +43,19 @@ export interface SearchHistoryCurrentSchema {
 }
 
 export interface SearchOverviewDatasetsInterface {
-    createdAt: string;
     id: string;
+    name: string;
+    owner: Account;
     kind: string;
+    metadata: DatasetMetadata;
+    createdAt: string;
     lastUpdatedAt: string;
 }
 
+export interface Account {
+    id: string;
+    name: string;
+}
 export interface SearchOverviewInterface {
     dataset: SearchOverviewDatasetsInterface[];
     totalCount: number;

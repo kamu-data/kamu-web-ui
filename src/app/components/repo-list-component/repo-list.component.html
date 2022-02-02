@@ -29,7 +29,7 @@
                     class="repo-list-container__title mb-1 pl-0"
                     (click)="isClickableRow && onSelectDataset(row.id)"
                 >
-                    anonymous/{{ row.id }}
+                    {{row.owner.name}}/{{ row.name }}
                 </button>
             </div>
             <div>
@@ -71,8 +71,8 @@
                             />
                         </a>
                         <span class="signed-commit-signer-name flex-1">
-                            <a class="signer" href="/sergiimk">sergiimk</a>
-                            Sergii Mikhtoniuk
+                            <a class="signer" [href]="'/' +row.owner.name">{{row.owner.name}}</a>
+                            {{row.owner.name}}
                         </span>
                     </div>
                     <div class="signed-commit-footer p-1">

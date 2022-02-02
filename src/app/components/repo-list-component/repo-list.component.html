@@ -27,7 +27,7 @@
                 <i class="bi bi-journal-album"></i>
                 <button
                     class="repo-list-container__title mb-1 pl-0"
-                    (click)="isClickableRow && onSelectDataset(row.id)"
+                    (click)="isClickableRow && onSelectDataset(row.owner.name, row.id)"
                 >
                     {{row.owner.name}}/{{ row.name }}
                 </button>

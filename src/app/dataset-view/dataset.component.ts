@@ -92,6 +92,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     public ngOnInit(): void {
+        debugger
         if (this.sidenav) {
             this.sidenavService.setSidenav(this.sidenav);
             this.checkWindowSize();
@@ -169,8 +170,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     public getResultUnitText(): string {
-        const searchDataset: string = this.getDatasetId();
-        return `results in ${searchDataset}`;
+        return `results in ${this.datasetInfo.name}`;
     }
 
     public momentConverDatetoLocalWithFormat(date: string): string {
@@ -490,14 +490,15 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     private initDatasetViewByType(currentPage?: number): void {
+        debugger
         if (this.appDatasetService.onSearchLinageDatasetSubscribtion) {
             this.appDatasetService.onSearchLinageDatasetSubscribtion.unsubscribe();
         }
         this.appDatasetService.resetDatasetTree();
         const searchParams: string[] =
-            this._window.location.search.split("&type=");
+            decodeURIComponent(this._window.location.search).split("&type=");
         const searchPageParams: string[] =
-            this._window.location.search.split("&p=");
+            decodeURIComponent(this._window.location.search).split("&p=");
         let page = 1;
         if (searchPageParams[1]) {
             page = currentPage || Number(searchPageParams[1].split("&")[0]);
@@ -526,13 +527,12 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     private getDatasetId(): string {
+        debugger
         const searchParams: string[] =
-            this._window.location.search.split("?id=");
+            decodeURIComponent(this._window.location.search).split("?id=");
 
         if (searchParams.length > 1) {
-            return AppValues.fixedEncodeURIComponent(
-                searchParams[1].split("&")[0],
-            );
+            return searchParams[1].split("&")[0];
         }
         return "";
     }

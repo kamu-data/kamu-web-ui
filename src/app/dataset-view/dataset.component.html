@@ -23,17 +23,17 @@
                         class="url fn"
                         rel="author"
                         data-hovercard-type="organization"
-                        data-hovercard-url="/anonymous"
-                        href="/anonymous"
-                        >anonymous</a
+                        [attr.data-hovercard-url]="'/' + datasetInfo.owner.name"
+                        [href]="'/' + datasetInfo.owner.name"
+                        >{{datasetInfo.owner.name}}</a
                     >
                 </span>
                 <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
                 <strong itemprop="name" class="mr-2 flex-self-stretch">
                     <a
                         data-pjax="#repo-content-pjax-container"
-                        [href]="'/anonymous/dataset-view?id=' + datasetInfo.id + '&type=overview'"
-                        >{{datasetInfo.id}}</a
+                        [href]="'/' + datasetInfo.owner.name +'/dataset-view?id=' + datasetInfo.name + '&type=overview'"
+                        >{{datasetInfo.name}}</a
                     >
                 </strong>
 

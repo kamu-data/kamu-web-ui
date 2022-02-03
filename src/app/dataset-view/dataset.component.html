@@ -20,27 +20,27 @@
                     </svg>
                     <span class="author flex-self-stretch" itemprop="author">
                         <a
-                                *ngIf="datasetInfo?.owner?.name"
+                                *ngIf="datasetName?.owner?.name"
                                 class="url fn"
                                 rel="author"
                                 data-hovercard-type="organization"
                                 (click)="showOwnerPage()"
-                        >{{ datasetInfo.owner.name }}</a
+                        >{{ datasetName.owner.name }}</a
                         >
                     </span>
                     <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
                     <strong itemprop="name" class="mr-2 flex-self-stretch">
                         <a
-                                *ngIf="datasetInfo?.owner?.name && datasetInfo?.name"
+                                *ngIf="datasetName?.owner?.name && datasetName?.name"
                                 data-pjax="#repo-content-pjax-container"
                                 [href]="
                                 '/' +
-                                datasetInfo.owner.name +
+                                datasetName.owner.name +
                                 '/dataset-view?id=' +
-                                datasetInfo.name +
+                                datasetName.name +
                                 '&type=overview'
                             "
-                        >{{ datasetInfo.name }}</a
+                        >{{ datasetName.name }}</a
                         >
                     </strong>
 
@@ -69,7 +69,7 @@
                     class="search-header-container-block"
                     [style]="
                     isMinimizeSearchAdditionalButtons
-                        ? 'grid-template-columns: 1fr 0.1fr; gap: 20px'
+                        ? 'grid-template-columns: 1fr 0.25fr; gap: 20px'
                         : ''
                 "
             >
@@ -157,7 +157,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="dataset-result-container">
+            <div [classList]="datasetViewTypeOverview ? 'dataset-result-container' : 'dataset-full-result-container'">
                 <div
                         class="search-result-container__content"
                         id="searchResultContainerContent"
@@ -243,7 +243,7 @@
                             <div
                                     class="file-info pr-4 d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto align-items-center"
                             >
-                                <span class="mr-1">
+                                <span class="mr-2">
                                     <svg
                                             aria-hidden="true"
                                             height="16"
@@ -293,7 +293,7 @@
                     </div>
                     </ng-template>
                 </div>
-                <div class="card">
+                <div class="card" *ngIf="datasetViewTypeOverview">
                     <nav class="navbar navbar-expand">
                         <div class="navbar-nav dataset-info">
                             <ng-template [ngIf]="datasetInfo">
@@ -311,7 +311,7 @@
                                     <b>Visibility:</b>
                                     <p>Public</p>
                                 </div>
-                                <div>
+                                <div *ngIf="datasetInfo.metadata">
                                     <b>License:</b>
                                     <p>
                                         {{

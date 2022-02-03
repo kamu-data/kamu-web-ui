@@ -46,7 +46,7 @@ export interface SearchOverviewDatasetsInterface {
     id: string;
     name: string;
     owner: Account;
-    kind: string;
+    kind: DatasetKindTypeNames;
     metadata: DatasetMetadata;
     createdAt: string;
     lastUpdatedAt: string;
@@ -57,11 +57,25 @@ export interface Account {
     name: string;
 }
 export interface SearchOverviewInterface {
+    id: string;
+    name: string;
+    owner: Account;
     dataset: SearchOverviewDatasetsInterface[];
     totalCount: number;
     pageInfo: PageInfoInterface;
     currentPage: number;
 }
+export interface SearchMetadataInterface {
+    id: string;
+    name: string;
+    owner: Account;
+    pageInfo: PageInfoInterface;
+    totalCount: number;
+    currentPage: number;
+    dataset: SearchOverviewDatasetsInterface[];
+}
+
+
 
 export interface DatasetKindInterface {
     id: string;
@@ -97,10 +111,7 @@ export interface SearchDatasetByID {
     data: SearchDatasetByIDDataInterface;
     kind: DatasetKindTypeNames;
     name: string;
-    owner: {
-        id: string;
-        name: string;
-    };
+    owner: Account;
     // ca.covid19.daily-cases
     id: string;
     lastUpdatedAt: string;
@@ -128,20 +139,22 @@ export interface SearchDatasetByIDDataInterface {
         format: string;
     };
 }
+export interface DatasetNameInterface {
+    id: string;
+    name: string;
+    owner: Account;
+}
 export interface DatasetInfoInterface {
-    __typename: string;
+    __typename?: string;
     createdAt: string;
     id: string;
     kind: DatasetKindTypeNames;
     name: string;
-    owner: {
-        id: string;
-        name: string;
-    };
+    owner: Account;
     lastUpdatedAt: string;
-    estimatedSize: number;
-    numRecordsTotal: number;
-    metadata: {
+    estimatedSize?: number;
+    numRecordsTotal?: number;
+    metadata?: {
         _typename: string;
         currentSchema: {
             _typename: string;

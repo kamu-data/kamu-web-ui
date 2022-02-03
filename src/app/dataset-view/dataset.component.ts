@@ -12,7 +12,7 @@ import {
 import {
     DatasetInfoInterface,
     DatasetKindInterface,
-    DatasetKindTypeNames,
+    DatasetKindTypeNames, DatasetNameInterface,
     PageInfoInterface,
     SearchHistoryInterface,
     SearchOverviewDatasetsInterface,
@@ -34,14 +34,13 @@ import { ModalService } from "../components/modal/modal.service";
 @Component({
     selector: "app-dataset",
     templateUrl: "./dataset.component.html",
-    styleUrls: ["./dataset-view.component.sass"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
+    styleUrls: ["./dataset-view.component.sass"]
 })
 export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     public isMobileView = false;
     public datasetInfo: DatasetInfoInterface;
+    public datasetName: DatasetNameInterface;
     public searchValue = "";
     public currentPage: number;
     public isMinimizeSearchAdditionalButtons = false;
@@ -134,7 +133,14 @@ const language = 'typescript';
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
             (info: DatasetInfoInterface) => {
+                debugger
                 this.datasetInfo = info;
+            },
+        );
+        this.appDatasetService.onSearchDatasetNameChanges.subscribe(
+            (datasetName: DatasetNameInterface) => {
+                debugger
+                this.datasetName = datasetName;
             },
         );
         this.appDatasetService.onSearchChanges.subscribe((value: string) => {
@@ -512,6 +518,7 @@ const language = 'typescript';
     }
 
     private initTableData(): void {
+        debugger
         this.tableData = {
             isTableHeader: true,
             tableSource: this.searchData,

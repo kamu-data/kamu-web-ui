@@ -301,9 +301,11 @@ router-outlet
       font-size: 30px
 .search-header-container-block
   margin-bottom: 20px
-
-#search .search-result-container, #search .dataset-result-container
+#search .dataset-full-result-container
+  grid-template-columns: 1fr
+#search .dataset-result-container
   grid-template-columns: 0.25fr 1fr
+#search .search-result-container, #search .dataset-result-container
   & ul
     list-style-type: none
   & .mat-checkbox-layout .mat-checkbox-label
@@ -329,7 +331,8 @@ router-outlet
     display: grid
     align-items: center
     justify-content: space-between
-    grid-template-columns: 1fr 1fr
+    grid-template-columns: 1fr 0.25fr
+    grid-gap: 25px
     > ul:first-child
       align-items: center
       margin-bottom: 9px

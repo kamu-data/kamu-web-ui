@@ -6,9 +6,9 @@ import {
     DatasetInfoInterface,
     DatasetKindInterface,
     DatasetKindTypeNames,
-    DatasetLinageResponse,
+    DatasetLinageResponse, DatasetNameInterface,
     SearchDatasetByID,
-    SearchHistoryInterface,
+    SearchHistoryInterface, SearchMetadataInterface,
     SearchOverviewDatasetsInterface,
     SearchOverviewInterface,
 } from "../interface/search.interface";
@@ -22,6 +22,9 @@ export class AppDatasetService {
 
     public get onSearchDatasetInfoChanges(): Observable<DatasetInfoInterface> {
         return this.searchDatasetInfoChanges$.asObservable();
+    }
+    public get onSearchDatasetNameChanges(): Observable<DatasetNameInterface> {
+        return this.searchDatasetNameChanges$.asObservable();
     }
 
     public get onSearchChanges(): Observable<string> {
@@ -75,6 +78,7 @@ export class AppDatasetService {
     private searchDataChanges$: Subject<any[]> = new Subject<any[]>();
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     private searchDatasetInfoChanges$: Subject<any> = new Subject<any>();
+    private searchDatasetNameChanges$: Subject<DatasetNameInterface> = new Subject<DatasetNameInterface>();
     private searchMetadataChanges$: Subject<SearchOverviewInterface> =
         new Subject<SearchOverviewInterface>();
     private datasetTreeChanges$: Subject<
@@ -103,7 +107,14 @@ export class AppDatasetService {
     public searchDatasetInfoChanges(
         searchDatasetInfo: DatasetInfoInterface,
     ): void {
+        debugger
         this.searchDatasetInfoChanges$.next(searchDatasetInfo);
+    }
+    public searchDatasetNameChanges(
+        searchDatasetName: DatasetNameInterface,
+    ): void {
+        debugger
+        this.searchDatasetNameChanges$.next(searchDatasetName);
     }
 
     public searchDataChanges(
@@ -119,6 +130,7 @@ export class AppDatasetService {
     }
 
     public searchMetadataChange(data: SearchOverviewInterface) {
+        debugger
         return this.searchMetadataChanges$.next(data);
     }
 
@@ -153,11 +165,13 @@ export class AppDatasetService {
     public searchDataset(id: string, page: number): void {
         this.searchApi
             .searchDataset({ id, page })
-            .subscribe((byID: SearchDatasetByID) => {
-                const datasetInfo = AppDatasetService.getDatasetInfo(byID);
+            .subscribe((data: SearchDatasetByID) => {
+                debugger
+                this.searchDatasetNameChanges({id: data.id, name: data.name, owner: data.owner});
+                const datasetInfo = AppDatasetService.getDatasetInfo(data);
                 this.searchDatasetInfoChanges(datasetInfo);
-                this.searchData = byID.data.tail.content;
-                this.searchDataChanges(byID.data.tail.content);
+                this.searchData = data.data.tail.content;
+                this.searchDataChanges(data.data.tail.content);
             });
     }
 
@@ -165,7 +179,9 @@ export class AppDatasetService {
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         this.searchApi
             .onSearchMetadata({ id, page })
-            .subscribe((data: SearchOverviewInterface) => {
+            .subscribe((data: SearchMetadataInterface) => {
+                debugger
+                this.searchDatasetNameChanges({id: data.id, name: data.name, owner: data.owner});
                 this.searchData = data.dataset;
                 this.searchMetadataChange(data);
             });

@@ -4,9 +4,10 @@ import { map } from "rxjs/operators";
 import { ApolloQueryResult, DocumentNode, gql } from "@apollo/client/core";
 import { Observable, of, throwError } from "rxjs";
 import {
+    Account,
     DatasetIDsInterface,
     PageInfoInterface,
-    SearchDatasetByID,
+    SearchDatasetByID, SearchMetadataInterface,
     SearchMetadataNodeResponseInterface,
     SearchOverviewDatasetsInterface,
     SearchOverviewInterface,
@@ -28,17 +29,43 @@ export class SearchApi {
         private apollo: Apollo,
         private searchAutocompleteGQL: SearchAutocompleteGQL,
     ) {}
-    private static searchOverviewData(
+    private static searchOverviewData(data: {
+                                          id: string,
+                                          name: string,
+                                          owner: Account,
+                                          dataset: SearchOverviewDatasetsInterface[],
+                                          pageInfo: PageInfoInterface,
+                                          totalCount: number,
+                                          currentPage: number
+                                      }
+    ): SearchOverviewInterface {
+        return {
+            id: data.id,
+            name: data.name,
+            owner: data.owner,
+            dataset: data.dataset,
+            pageInfo: data.pageInfo,
+            totalCount: data.totalCount,
+            currentPage: data.currentPage + 1,
+        };
+    }
+    private static searchMetadataData(data: {
+        id: string,
+        name: string,
+        owner: Account,
         dataset: SearchOverviewDatasetsInterface[],
         pageInfo: PageInfoInterface,
         totalCount: number,
-        currentPage: number,
-    ): SearchOverviewInterface {
+        currentPage: number
+    }): SearchMetadataInterface {
         return {
-            dataset,
-            pageInfo,
-            totalCount,
-            currentPage: currentPage + 1,
+            id: data.id,
+            name: data.name,
+            owner: data.owner,
+            dataset: data.dataset,
+            pageInfo: data.pageInfo,
+            totalCount: data.totalCount,
+            currentPage: data.currentPage + 1,
         };
     }
     private static pageInfoInit(): PageInfoInterface {
@@ -134,10 +161,15 @@ export class SearchApi {
                 }
 
                 return SearchApi.searchOverviewData(
-                    dataset,
-                    pageInfo,
-                    totalCount,
-                    currentPage,
+                    {
+                        id: result.data.datasets.byId.id,
+                        name: result.data.datasets.byId.name,
+                        owner: result.data.datasets.byId.owner,
+                        dataset,
+                        pageInfo,
+                        totalCount,
+                        currentPage,
+                    }
                 );
             }),
         );
@@ -326,6 +358,11 @@ export class SearchApi {
   datasets {
     byId(datasetId: "${params.id}") {
       id
+      owner {
+        id
+        name
+      }
+      name
       metadata {
         chain {
           blocks(perPage: ${(params.numRecords || 5).toString()}, page: ${(
@@ -372,11 +409,16 @@ export class SearchApi {
                             .totalCount;
                 }
 
-                return SearchApi.searchOverviewData(
-                    dataset,
-                    pageInfo,
-                    totalCount,
-                    currentPage,
+                return SearchApi.searchMetadataData(
+                    {
+                        id: result.data.datasets.byId.id,
+                        name: result.data.datasets.byId.name,
+                        owner: result.data.datasets.byId.owner,
+                        dataset,
+                        pageInfo,
+                        totalCount,
+                        currentPage
+                    }
                 );
             }),
         );

@@ -2,7 +2,7 @@
     class="d-flex flex-column flex-md-row flex-justify-between border-bottom pb-3 position-relative"
     *ngIf="isResultQuantity"
 >
-    <h2>{{ searchResultQuantity(tableSource) }} {{ resultUnitText }}</h2>
+    <h2 class="box-title align-items-center">{{ searchResultQuantity(tableSource) }} {{ resultUnitText }}</h2>
 </div>
 <table mat-table [dataSource]="dataSource">
     <ng-container

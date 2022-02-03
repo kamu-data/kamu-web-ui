@@ -1,4 +1,4 @@
-import {DatasetMetadata} from "../api/kamu.graphql.interface";
+import { DatasetMetadata } from "../api/kamu.graphql.interface";
 
 export interface SearchHistoryResponseInterface {
     datasets: {

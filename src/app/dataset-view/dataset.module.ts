@@ -10,9 +10,11 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { LinageGraphModule } from "../components/linage-graph/linage-graph.module";
 import { PaginationModule } from "../components/pagination-component/pagination.module";
-import {MatMenuModule} from "@angular/material/menu";
-import {MatButtonModule} from "@angular/material/button";
-import {MatIconModule} from "@angular/material/icon";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MarkdownModule } from "ngx-markdown";
+import {MatChipsModule} from "@angular/material/chips";
 
 @NgModule({
     imports: [
@@ -31,6 +33,8 @@ import {MatIconModule} from "@angular/material/icon";
         MatMenuModule,
         MatButtonModule,
         MatIconModule,
+        MarkdownModule,
+        MatChipsModule,
     ],
     exports: [DatasetComponent],
     declarations: [DatasetComponent],

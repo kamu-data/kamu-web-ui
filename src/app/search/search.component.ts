@@ -231,12 +231,11 @@ export class SearchComponent implements OnInit, AfterContentInit {
         });
     }
 
-    public onSelectDataset(data: {ownerName: string, id: string}): void {
+    public onSelectDataset(data: { ownerName: string; id: string }): void {
         const id: string = data.id;
-        this.router.navigate(
-            [data.ownerName, AppValues.urlDatasetView],
-            { queryParams: { id, type: AppValues.urlDatasetViewOverviewType } },
-        );
+        this.router.navigate([data.ownerName, AppValues.urlDatasetView], {
+            queryParams: { id, type: AppValues.urlDatasetViewOverviewType },
+        });
     }
 
     public onSearch(searchValue: string, page: number = 1): void {

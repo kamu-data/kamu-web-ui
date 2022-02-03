@@ -1,10 +1,13 @@
 import {
     AfterContentInit,
+    ChangeDetectionStrategy,
     Component,
+    ElementRef,
     HostListener,
     OnDestroy,
     OnInit,
     ViewChild,
+    ViewEncapsulation,
 } from "@angular/core";
 import {
     DatasetInfoInterface,
@@ -32,6 +35,8 @@ import { ModalService } from "../components/modal/modal.service";
     selector: "app-dataset",
     templateUrl: "./dataset.component.html",
     styleUrls: ["./dataset-view.component.sass"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
 })
 export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
@@ -66,6 +71,24 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public linageGraphNodes: Node[] = [];
     public linageGraphClusters: ClusterNode[] = [];
     public isAvailableLinageGraph = false;
+    public headings: Element[] | undefined;
+    public isMarkdownEditView: boolean = false;
+    public markdown = `## Markdown __rulez__!
+---
+
+### Syntax highlight
+\`\`\`typescript
+const language = 'typescript';
+\`\`\`
+
+### Lists
+1. Ordered list
+2. Another bullet point
+   - Unordered list
+   - Another unordered bullet
+
+### Blockquote
+> Blockquote to the max`;
 
     private _window: Window;
 
@@ -87,12 +110,13 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         private sidenavService: SideNavService,
         private router: Router,
         private modalService: ModalService,
+        private elementRef: ElementRef<HTMLElement>,
     ) {
         this._window = window;
     }
 
     public ngOnInit(): void {
-        debugger
+        debugger;
         if (this.sidenav) {
             this.sidenavService.setSidenav(this.sidenav);
             this.checkWindowSize();
@@ -170,7 +194,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     public getResultUnitText(): string {
-        return `results in ${this.datasetInfo.name}`;
+        return `results in ${this.datasetInfo?.name || ''}`;
     }
 
     public momentConverDatetoLocalWithFormat(date: string): string {
@@ -253,6 +277,19 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
 
     public onSearchDiscussions(): void {
         console.log("onSearchDiscussions");
+    }
+
+    public showOwnerPage(): void {
+        this.router.navigate([this.datasetInfo.owner.id]);
+    }
+    public toggleReadmeView(): void {
+        this.isMarkdownEditView = !this.isMarkdownEditView;
+    }
+    public selectTopic(topicName: string): void {
+        this.modalService.warning({
+            message: "Feature will be soon",
+            yesButtonText: "Ok",
+        });
     }
 
     public onSearchDataset(page = 0): void {
@@ -490,15 +527,17 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     private initDatasetViewByType(currentPage?: number): void {
-        debugger
+        debugger;
         if (this.appDatasetService.onSearchLinageDatasetSubscribtion) {
             this.appDatasetService.onSearchLinageDatasetSubscribtion.unsubscribe();
         }
         this.appDatasetService.resetDatasetTree();
-        const searchParams: string[] =
-            decodeURIComponent(this._window.location.search).split("&type=");
-        const searchPageParams: string[] =
-            decodeURIComponent(this._window.location.search).split("&p=");
+        const searchParams: string[] = decodeURIComponent(
+            this._window.location.search,
+        ).split("&type=");
+        const searchPageParams: string[] = decodeURIComponent(
+            this._window.location.search,
+        ).split("&p=");
         let page = 1;
         if (searchPageParams[1]) {
             page = currentPage || Number(searchPageParams[1].split("&")[0]);
@@ -527,9 +566,10 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     private getDatasetId(): string {
-        debugger
-        const searchParams: string[] =
-            decodeURIComponent(this._window.location.search).split("?id=");
+        debugger;
+        const searchParams: string[] = decodeURIComponent(
+            this._window.location.search,
+        ).split("?id=");
 
         if (searchParams.length > 1) {
             return searchParams[1].split("&")[0];

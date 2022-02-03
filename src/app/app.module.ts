@@ -12,7 +12,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { GraphQLModule } from "./graphql.module";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { MatTableModule } from "@angular/material/table";
 import { CdkTableModule } from "@angular/cdk/table";
 import { Apollo, APOLLO_NAMED_OPTIONS, APOLLO_OPTIONS } from "apollo-angular";
@@ -41,6 +41,8 @@ import { AuthApi } from "./api/auth.api";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { ModalModule } from "./components/modal/modal.module";
 import { NotificationIndicatorComponent } from "./components/notification-indicator/notification-indicator.component";
+import { MarkdownModule } from "ngx-markdown";
+import { SecurityContext } from "@angular/core";
 
 const Services = [
     Apollo,
@@ -92,6 +94,10 @@ const MatModules = [
         DatasetCreateModule,
         ModalModule.forRoot(),
         SearchModule.forRoot(),
+        MarkdownModule.forRoot({
+            loader: HttpClient,
+            sanitize: SecurityContext.NONE,
+        }),
 
         BrowserModule,
         BrowserAnimationsModule,

@@ -108,7 +108,7 @@
                 class="d-flex flex-column flex-md-row flex-self-stretch flex-md-self-auto"
             >
                 <a
-                    class="Header-link py-2 py-md-3 mr-0 mr-md-3 border-top border-md-top-0 border-white-fade"
+                    class="Header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
                     data-ga-click="Header, click, Nav menu - item:explore"
                     data-selected-links="/explore /trending /trending/developers /integrations /integrations/feature/code /integrations/feature/collaborate /integrations/feature/ship showcases showcases_search showcases_landing /explore"
                     href="/explore"
@@ -117,7 +117,7 @@
                 </a>
 
                 <a
-                    class="Header-link py-2 py-md-3 mr-0 mr-md-3 border-top border-md-top-0 border-white-fade"
+                    class="Header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
                     data-ga-click="Header, click, Nav menu - item:dashboard:user"
                     aria-label="Dashboard"
                     href="/dashboard"
@@ -126,7 +126,7 @@
                 </a>
 
                 <a
-                    class="Header-link d-block d-md-none py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                    class="Header-link d-block d-md-none py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                     (click)="onAddNew()"
                 >
                     Add New Dataset
@@ -134,19 +134,19 @@
 
                 <ng-template [ngIf]="!(userInfo && userInfo.name)">
                     <a
-                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="openBillingPlanHeader"
                         (click)="onBilling()"
                         >Account & Billing</a
                     >
                     <a
-                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="openHelpHeader"
                         (click)="onHelp()"
                         >Help</a
                     >
                     <a
-                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="openUserProfileHeader"
                         (click)="onLogin()"
                         >Login</a
@@ -155,37 +155,37 @@
 
                 <ng-template [ngIf]="userInfo && userInfo.name">
                     <a
-                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="openUserProfileHeader"
                         (click)="onUserProfile()"
                         >Your profile</a
                     >
                     <a
-                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="openBillingPlanHeader"
                         (click)="onBilling()"
                         >Account & Billing</a
                     >
                     <a
-                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="openAnalyticsHeader"
                         (click)="onAnalytics()"
                         >Analytics</a
                     >
                     <a
-                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="openSettingsHeader"
                         (click)="onSettings()"
                         >Settings</a
                     >
                     <a
-                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="openHelpHeader"
                         (click)="onHelp()"
                         >Help</a
                     >
                     <a
-                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="userNameHeader"
                         href="/kulykivska"
                     >
@@ -205,7 +205,7 @@
                         }}
                     </a>
                     <button
-                        class="Header-link Header-signout-btn d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade"
+                        class="Header-link Header-signout-btn d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-md-top-0 border-white-fade"
                         data-test-id="openSignOutHeader"
                         (click)="onLogOut()"
                     >

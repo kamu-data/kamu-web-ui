@@ -15,6 +15,7 @@
 - [Bootstrap Icons](https://www.npmjs.com/package/bootstrap-icons), version: 1.5.0;
 - [Angular powered Bootstrap widgets](https://www.npmjs.com/package/@ng-bootstrap/ng-bootstrap), version: 6.0.0;
 - [Prettier](https://www.npmjs.com/package/prettier), version: 2.5.1;
+- [ngx-markdown](https://www.npmjs.com/package/ngx-markdown), version: 9.1.1;
 - Karma, version: 4.3.0; Jasmine, version: 3.4.0; [Cypress Angular Schematic](https://www.npmjs.com/package/@cypress/schematic/v/1.5.1), version: 1.5.1.
 
 ## Steps for running:

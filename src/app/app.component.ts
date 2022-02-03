@@ -135,7 +135,7 @@ export class AppComponent implements OnInit {
     }
 
     public onAddNew(): void {
-        debugger
+        debugger;
         this.router.navigate([
             AppValues.defaultUsername,
             AppValues.urlDatasetCreate,

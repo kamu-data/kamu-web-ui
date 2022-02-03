@@ -38,7 +38,11 @@ $app-color-border-muted: #d8dee4
 $app-color-shadow-large: 0 8px 24px rgba(140,149,159,0.2)
 $app-color-fg-muted: #57606a
 
-
+.link--primary
+  color: $app-color-fg-default !important
+.box-title
+  font-size: 14px
+  font-weight: 600
 .d-none
   display: none
 .position-relative
@@ -104,6 +108,8 @@ $app-color-fg-muted: #57606a
   margin-right: 6px !important
 .mr-2
   margin-right: 8px !important
+.mb-n1
+  margin-bottom: -0.25rem !important
 .counter
   display: inline-block
   min-width: 20px
@@ -218,6 +224,12 @@ $app-color-fg-muted: #57606a
 @media (max-width: 480px)
   *
     font-size: 15px
+@media (max-width: 768px)
+  .border-sm-top
+    border-top: 1px solid #dee2e6 !important
+    border-top-width: 1px !important
+    border-top-style: solid !important
+    border-top-color: rgb(222, 226, 230) !important
 
 @media (min-width: 768px)
   .border-md-0
@@ -238,3 +250,56 @@ $app-color-fg-muted: #57606a
   .py-md-3
     padding-top: 16px !important
     padding-bottom: 16px !important
+
+
+// For Markdown editor
+.file
+  position: relative
+  margin-top: 16px
+  margin-bottom: 16px
+  border: 1px solid $app-color-border-default
+  border-radius: 6px
+  & .file-header
+    padding: 5px 10px
+    background-color: $app-aliceBlue
+    border-bottom: 1px solid $app-color-border-default
+    border-top-left-radius: 6px
+    border-top-right-radius: 6px
+  & .file-info
+    font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace
+    font-size: 12px
+    line-height: 32px
+  & .file-content
+    padding: 16px
+  & .variable-textarea
+    width: 100%
+    min-height: 300px
+    max-height: 600px
+    height: max-content
+    border: none
+markdown
+  & *
+    font: revert !important
+  & h1 a
+    text-decoration: none
+  & h1 a:hover
+    opacity: 0.87
+    text-decoration: underline
+  & blockquote
+    border-left: 3px solid rgba(0,0,0,0.21)
+    padding-left: 12px
+    color: rgba(0,0,0,0.54)
+
+// Material Chip
+.app-mat-chip
+  & ::ng-deep .mat-standard-chip
+    cursor: pointer
+::ng-deep .mat-standard-chip
+  cursor: pointer
+.mat-standard-chip
+  min-height: 25px
+  padding: 10px
+.mat-chip
+  color: $app-navyBlue
+  background: $app-aliceBlue
+  font-size: 12px

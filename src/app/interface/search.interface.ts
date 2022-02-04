@@ -57,9 +57,6 @@ export interface Account {
     name: string;
 }
 export interface SearchOverviewInterface {
-    id: string;
-    name: string;
-    owner: Account;
     dataset: SearchOverviewDatasetsInterface[];
     totalCount: number;
     pageInfo: PageInfoInterface;

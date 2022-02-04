@@ -30,9 +30,6 @@ export class SearchApi {
         private searchAutocompleteGQL: SearchAutocompleteGQL,
     ) {}
     private static searchOverviewData(data: {
-                                          id: string,
-                                          name: string,
-                                          owner: Account,
                                           dataset: SearchOverviewDatasetsInterface[],
                                           pageInfo: PageInfoInterface,
                                           totalCount: number,
@@ -40,9 +37,6 @@ export class SearchApi {
                                       }
     ): SearchOverviewInterface {
         return {
-            id: data.id,
-            name: data.name,
-            owner: data.owner,
             dataset: data.dataset,
             pageInfo: data.pageInfo,
             totalCount: data.totalCount,
@@ -162,9 +156,6 @@ export class SearchApi {
 
                 return SearchApi.searchOverviewData(
                     {
-                        id: result.data.datasets.byId.id,
-                        name: result.data.datasets.byId.name,
-                        owner: result.data.datasets.byId.owner,
                         dataset,
                         pageInfo,
                         totalCount,

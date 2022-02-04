@@ -1,9 +1,65 @@
 <div
-    class="d-flex flex-column flex-md-row flex-justify-between border-bottom pb-3 position-relative"
+    class="d-flex flex-column flex-md-row justify-content-between border-bottom pb-3 position-relative"
     *ngIf="isResultQuantity"
 >
     <h2 class="box-title align-items-center">{{ searchResultQuantity(tableSource) }} {{ resultUnitText }}</h2>
 </div>
+<div class="box-header position-relative" *ngIf="isLatestCommitDisplay">
+    <div class="d-flex rounded-top-1 border-bottom-0 align-items-center flex-wrap">
+
+
+  <div class="flex-shrink-0 ml-n1 mr-n1 mt-n1 mb-n1 hx_avatar_stack_commit">
+
+<div class="avatarStack align-self-start">
+  <div class="avatarStack__body" aria-label="kulykivska">
+      <a class="avatar avatar-user" style="width:24px;height:24px;" data-skip-pjax="true" data-test-selector="commits-avatar-stack-avatar-link" data-hovercard-type="user" data-hovercard-url="/users/kulykivska/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/kulykivska">
+        <img data-test-selector="commits-avatar-stack-avatar-image" src="https://avatars.githubusercontent.com/u/87068546?s=48&amp;v=4" width="24" height="24" alt="@kulykivska" class=" avatar-user">
+</a>  </div>
+</div>
+
+  </div>
+  <div class="flex-grow-1 d-flex align-items-center ml-3 min-width-0">
+    <div class="css-truncate css-truncate-overflow color-fg-muted">
+        <a class="commit-author user-mention" title="View all commits by kulykivska" href="/kamu-data/kamu-web-ui/commits?author=kulykivska">kulykivska</a>
+        <span class="d-none d-sm-inline mb-0 ml-3">
+          <a data-pjax="true" data-test-selector="commit-tease-commit-message" title="Styles was changed" class="link--primary" href="/kamu-data/kamu-web-ui/commit/c0b4277d69447ee4dd033947947b496247e89b60">Dataset was changed</a>
+        </span>
+    </div>
+    <span class="hidden-text-expander ml-2 d-inline-block d-inline-block d-lg-none">
+      <button type="button" class="color-fg-default ellipsis-expander js-details-target" aria-expanded="false">
+        …
+      </button>
+    </span>
+    <div class="d-flex flex-auto justify-content-end ml-3 align-items-baseline">
+
+      <a href="/kamu-data/kamu-web-ui/commit/c0b4277d69447ee4dd033947947b496247e89b60" class="f6 link--secondary text-mono ml-2 d-none d-lg-inline" data-pjax="#repo-content-pjax-container">
+        c0b4277
+      </a>
+      <a href="/kamu-data/kamu-web-ui/commit/c0b4277d69447ee4dd033947947b496247e89b60" class="link--secondary ml-3" data-pjax="#repo-content-pjax-container">
+        <time datetime="2022-02-03T19:39:43Z" class="no-wrap" title="3 Feb 2022, 21:39 EET">16 hours ago</time>
+      </a>
+    </div>
+  </div>
+      <div class="flex-shrink-0">
+        <h2 class="sr-only">Git stats</h2>
+        <ul class="list-unstyled d-flex mb-0 ml-3">
+          <li class="ml-0 ml-md-3">
+            <a data-pjax="#repo-content-pjax-container" href="/kamu-data/kamu-web-ui/commits/KAMU-58" class="pl-3 pr-3 py-3 p-md-0 mt-n3 mb-n3 mr-n3 m-md-0 link--primary text-decoration-none flex-nowrap">
+              <svg text="gray" aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-history">
+    <path fill-rule="evenodd" d="M1.643 3.143L.427 1.927A.25.25 0 000 2.104V5.75c0 .138.112.25.25.25h3.646a.25.25 0 00.177-.427L2.715 4.215a6.5 6.5 0 11-1.18 4.458.75.75 0 10-1.493.154 8.001 8.001 0 101.6-5.684zM7.75 4a.75.75 0 01.75.75v2.992l2.028.812a.75.75 0 01-.557 1.392l-2.5-1A.75.75 0 017 8.25v-3.5A.75.75 0 017.75 4z"></path>
+</svg>
+              <span class="d-none d-sm-inline">
+                    <strong>132</strong>
+                    <span aria-label="Commits on KAMU-58" class="color-fg-muted d-none d-lg-inline">
+                      commits
+                    </span>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 <table mat-table [dataSource]="dataSource">
     <ng-container
         *ngFor="let disCol of displayedColumns; let colIndex = index"

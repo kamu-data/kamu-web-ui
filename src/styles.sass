@@ -3,8 +3,16 @@
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap'
 @import "assets/styles/var"
+body
+  font-size: 14px
 *
-  font-size: 18px
+  font-size: 14px
+a
+  text-decoration: none
+  &:hover
+    text-decoration: underline
+  &:active, &:hover
+    outline-width: 0
 .sr-only
   display: none
 .color-text-secondary
@@ -304,6 +312,8 @@ router-outlet
 #search .dataset-full-result-container
   grid-template-columns: 1fr
 #search .dataset-result-container
+  grid-template-columns: 0.25fr 1fr
+#search .search-result-container
   grid-template-columns: 0.25fr 1fr
 #search .search-result-container, #search .dataset-result-container
   & ul

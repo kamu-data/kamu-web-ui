@@ -116,10 +116,14 @@
                     <mat-chip (click)="selectTopic(row.kind)">{{
                         row.kind
                     }}</mat-chip>
-                    <mat-chip (click)="selectTopic('medicine')">medicine</mat-chip>
+                    <mat-chip (click)="selectTopic('medicine')"
+                        >medicine</mat-chip
+                    >
                     <mat-chip (click)="selectTopic('covid')">covid</mat-chip>
                     <mat-chip (click)="selectTopic('health')">health</mat-chip>
-                    <mat-chip (click)="selectTopic('covid19')">covid19</mat-chip>
+                    <mat-chip (click)="selectTopic('covid19')"
+                        >covid19</mat-chip
+                    >
                 </mat-chip-list>
             </div>
             <div class="repo-list-container__additional-block mt-2">

@@ -157,7 +157,7 @@ a
 a:visited
   color: inherit
 .mat-app-background, .mat-drawer-container
-  background-color: $app-primary
+  background-color: $app-aliceBlue
 #app-header
   background-color: $app-dark
   & *
@@ -380,6 +380,12 @@ router-outlet
   overflow: hidden
 .starred .starred-button-icon
   color: $app-naples-yellow !important
+#metadata-block
+  & .page-item:last-child .page-link, .page-item:first-child .page-link
+    padding: 1px
+  & #pagination-block
+    display: flex
+    justify-content: flex-end
 /*********** Search Page ******/
 .input-icon
   background: none

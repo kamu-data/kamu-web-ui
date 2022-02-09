@@ -34,10 +34,17 @@ $app-color-btn-hover-border: #1b1f2426
 $app-color-border-default: #d0d7de
 $app-color-select-menu-backdrop-border: #00000000
 $app-color-canvas-overlay: #ffffff
+$app-color-canvas-subtle: #f6f8fa
 $app-color-border-muted: #d8dee4
 $app-color-shadow-large: 0 8px 24px rgba(140,149,159,0.2)
 $app-color-fg-muted: #57606a
+$app-color-btn-border: #ced4da
 
+
+.input-group-button
+  vertical-align: middle
+.color-bg-subtle
+  background-color: $app-color-canvas-subtle !important
 .color-fg-muted
   color: $app-color-fg-muted
 .link--primary
@@ -108,16 +115,16 @@ $app-color-fg-muted: #57606a
   border-top-right-radius: 6px !important
 .btnGroup-parent
   float: left
-  height: 40px
+  height: 28px
   background: none
   & .btnGroup-item
     border-right-width: 1px
     border-radius: 1px
     position: relative
     float: left
-    border-color: $app-nero
+    border-color: $app-color-border-default
     height: inherit
-    background: $app-white
+    background: $app-aliceBlue
     &:last-child
       border-right-width: 1px
       border-top-right-radius: 6px
@@ -127,6 +134,13 @@ $app-color-fg-muted: #57606a
 .BtnGroup-item:first-child
   border-top-left-radius: 6px
   border-bottom-left-radius: 6px
+.btn.btn-gray
+  background-color: $app-background-btn
+  border-color: $app-color-btn-border !important
+  &:hover
+    background-color: $app-color-btn-hover-border
+.clipboard-btn
+  height: 100%
 .mr-0
   margin-right: 0 !important
 .mr-1

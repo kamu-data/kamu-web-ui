@@ -7,7 +7,8 @@ import {
     Account,
     DatasetIDsInterface,
     PageInfoInterface,
-    SearchDatasetByID, SearchMetadataInterface,
+    SearchDatasetByID,
+    SearchMetadataInterface,
     SearchMetadataNodeResponseInterface,
     SearchOverviewDatasetsInterface,
     SearchOverviewInterface,
@@ -30,12 +31,11 @@ export class SearchApi {
         private searchAutocompleteGQL: SearchAutocompleteGQL,
     ) {}
     private static searchOverviewData(data: {
-                                          dataset: SearchOverviewDatasetsInterface[],
-                                          pageInfo: PageInfoInterface,
-                                          totalCount: number,
-                                          currentPage: number
-                                      }
-    ): SearchOverviewInterface {
+        dataset: SearchOverviewDatasetsInterface[];
+        pageInfo: PageInfoInterface;
+        totalCount: number;
+        currentPage: number;
+    }): SearchOverviewInterface {
         return {
             dataset: data.dataset,
             pageInfo: data.pageInfo,
@@ -44,13 +44,13 @@ export class SearchApi {
         };
     }
     private static searchMetadataData(data: {
-        id: string,
-        name: string,
-        owner: Account,
-        dataset: SearchOverviewDatasetsInterface[],
-        pageInfo: PageInfoInterface,
-        totalCount: number,
-        currentPage: number
+        id: string;
+        name: string;
+        owner: Account;
+        dataset: SearchOverviewDatasetsInterface[];
+        pageInfo: PageInfoInterface;
+        totalCount: number;
+        currentPage: number;
     }): SearchMetadataInterface {
         return {
             id: data.id,
@@ -154,14 +154,12 @@ export class SearchApi {
                     currentPage = page;
                 }
 
-                return SearchApi.searchOverviewData(
-                    {
-                        dataset,
-                        pageInfo,
-                        totalCount,
-                        currentPage,
-                    }
-                );
+                return SearchApi.searchOverviewData({
+                    dataset,
+                    pageInfo,
+                    totalCount,
+                    currentPage,
+                });
             }),
         );
     }
@@ -400,17 +398,15 @@ export class SearchApi {
                             .totalCount;
                 }
 
-                return SearchApi.searchMetadataData(
-                    {
-                        id: result.data.datasets.byId.id,
-                        name: result.data.datasets.byId.name,
-                        owner: result.data.datasets.byId.owner,
-                        dataset,
-                        pageInfo,
-                        totalCount,
-                        currentPage
-                    }
-                );
+                return SearchApi.searchMetadataData({
+                    id: result.data.datasets.byId.id,
+                    name: result.data.datasets.byId.name,
+                    owner: result.data.datasets.byId.owner,
+                    dataset,
+                    pageInfo,
+                    totalCount,
+                    currentPage,
+                });
             }),
         );
     }

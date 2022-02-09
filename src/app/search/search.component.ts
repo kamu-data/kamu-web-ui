@@ -243,7 +243,6 @@ export class SearchComponent implements OnInit, AfterContentInit {
     }
 
     updateAllComplete() {
-        debugger;
         this.allComplete =
             this.filters != null &&
             this.filters.every((t) =>

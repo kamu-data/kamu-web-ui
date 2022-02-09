@@ -14,7 +14,9 @@ import { MatMenuModule } from "@angular/material/menu";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MarkdownModule } from "ngx-markdown";
-import {MatChipsModule} from "@angular/material/chips";
+import { MatChipsModule } from "@angular/material/chips";
+import { MetadataComponent } from "./additional-components/metadata-component/metadata-component";
+import { ClipboardModule } from "@angular/cdk/clipboard";
 
 @NgModule({
     imports: [
@@ -35,9 +37,10 @@ import {MatChipsModule} from "@angular/material/chips";
         MatIconModule,
         MarkdownModule,
         MatChipsModule,
+        ClipboardModule,
     ],
-    exports: [DatasetComponent],
-    declarations: [DatasetComponent],
+    exports: [DatasetComponent, MetadataComponent],
+    declarations: [DatasetComponent, MetadataComponent],
 })
 export class DatasetModule {
     public static forRoot(): ModuleWithProviders<DatasetModule> {

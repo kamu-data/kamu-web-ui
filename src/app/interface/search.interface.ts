@@ -72,8 +72,6 @@ export interface SearchMetadataInterface {
     dataset: SearchOverviewDatasetsInterface[];
 }
 
-
-
 export interface DatasetKindInterface {
     id: string;
     kind: DatasetKindTypeNames;

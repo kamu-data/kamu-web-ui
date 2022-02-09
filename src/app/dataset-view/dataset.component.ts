@@ -12,7 +12,8 @@ import {
 import {
     DatasetInfoInterface,
     DatasetKindInterface,
-    DatasetKindTypeNames, DatasetNameInterface,
+    DatasetKindTypeNames,
+    DatasetNameInterface,
     PageInfoInterface,
     SearchHistoryInterface,
     SearchOverviewDatasetsInterface,
@@ -34,10 +35,12 @@ import { ModalService } from "../components/modal/modal.service";
 @Component({
     selector: "app-dataset",
     templateUrl: "./dataset.component.html",
-    styleUrls: ["./dataset-view.component.sass"]
+    styleUrls: ["./dataset-view.component.sass"],
+    encapsulation: ViewEncapsulation.None,
 })
 export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
+    @ViewChild("menuTrigger") trigger: any;
     public isMobileView = false;
     public datasetInfo: DatasetInfoInterface;
     public datasetName: DatasetNameInterface;
@@ -72,6 +75,8 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public isAvailableLinageGraph = false;
     public headings: Element[] | undefined;
     public isMarkdownEditView: boolean = false;
+    public clipboardKamuCli: string = "kamu pull account/dataset-alias";
+    public clipboardKafka: string = "https://api.kamu.dev/kafka/";
     public markdown = `## Markdown __rulez__!
 ---
 
@@ -115,7 +120,6 @@ const language = 'typescript';
     }
 
     public ngOnInit(): void {
-        debugger;
         if (this.sidenav) {
             this.sidenavService.setSidenav(this.sidenav);
             this.checkWindowSize();
@@ -133,13 +137,11 @@ const language = 'typescript';
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
             (info: DatasetInfoInterface) => {
-                debugger
                 this.datasetInfo = info;
             },
         );
         this.appDatasetService.onSearchDatasetNameChanges.subscribe(
             (datasetName: DatasetNameInterface) => {
-                debugger
                 this.datasetName = datasetName;
             },
         );
@@ -200,7 +202,7 @@ const language = 'typescript';
     }
 
     public getResultUnitText(): string {
-        return `results in ${this.datasetInfo?.name || ''}`;
+        return `results in ${this.datasetInfo?.name || ""}`;
     }
 
     public momentConverDatetoLocalWithFormat(date: string): string {
@@ -518,7 +520,6 @@ const language = 'typescript';
     }
 
     private initTableData(): void {
-        debugger
         this.tableData = {
             isTableHeader: true,
             tableSource: this.searchData,
@@ -534,7 +535,6 @@ const language = 'typescript';
     }
 
     private initDatasetViewByType(currentPage?: number): void {
-        debugger;
         if (this.appDatasetService.onSearchLinageDatasetSubscribtion) {
             this.appDatasetService.onSearchLinageDatasetSubscribtion.unsubscribe();
         }
@@ -573,7 +573,6 @@ const language = 'typescript';
     }
 
     private getDatasetId(): string {
-        debugger;
         const searchParams: string[] = decodeURIComponent(
             this._window.location.search,
         ).split("?id=");

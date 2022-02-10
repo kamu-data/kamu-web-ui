@@ -2,9 +2,94 @@
     <div class="app-content">
         <div id="search">
             <div class="search-result-container">
+                <div class="card">
+                    <nav class="navbar navbar-expand">
+                        <div>
+                            <h3 class="search-result-container__navbar__title">
+                                Filters
+                            </h3>
+                            <div *ngFor="let filter of filters">
+                                <span class="example-list-section">
+                                    {{ filter.name }}
+                                </span>
+                                <span class="example-list-section">
+                                    <ul>
+                                        <li
+                                            *ngFor="
+                                                let subtask of filter.subtasks
+                                            "
+                                        >
+                                            <ng-template
+                                                [ngIf]="!subtask.isTitle"
+                                            >
+                                                <mat-checkbox
+                                                    [(ngModel)]="
+                                                        subtask.completed
+                                                    "
+                                                    [color]="subtask.color"
+                                                    [disabled]="
+                                                        subtask.disabled
+                                                    "
+                                                    (ngModelChange)="
+                                                        updateAllComplete()
+                                                    "
+                                                >
+                                                    {{ subtask.name }}
+                                                </mat-checkbox>
+                                            </ng-template>
+                                            <ng-template
+                                                [ngIf]="subtask.isTitle"
+                                            >
+                                                <span
+                                                    class="example-list-section"
+                                                >
+                                                    {{ subtask.name }}
+                                                </span>
+                                            </ng-template>
+                                            <ng-template
+                                                [ngIf]="
+                                                    subtask.subtasks &&
+                                                    subtask.subtasks.length > 0
+                                                "
+                                            >
+                                                <ul>
+                                                    <li
+                                                        *ngFor="
+                                                            let sub_subtask of subtask.subtasks
+                                                        "
+                                                    >
+                                                        <mat-checkbox
+                                                            [(ngModel)]="
+                                                                sub_subtask.completed
+                                                            "
+                                                            [color]="
+                                                                sub_subtask.color
+                                                            "
+                                                            [disabled]="
+                                                                subtask.disabled
+                                                            "
+                                                            (ngModelChange)="
+                                                                updateAllComplete()
+                                                            "
+                                                        >
+                                                            {{
+                                                                sub_subtask.name
+                                                            }}
+                                                        </mat-checkbox>
+                                                    </li>
+                                                </ul>
+                                            </ng-template>
+                                        </li>
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
                 <div class="search-result-container__content">
                     <app-repo-list
                         [dataSource]="tableData.tableSource"
+                        [sortOptions]="tableData.sortOptions"
                         [resultUnitText]="tableData.resultUnitText"
                         [totalCount]="tableData.totalCount"
                         [isResultQuantity]="tableData.isResultQuantity"
@@ -25,14 +110,6 @@
                         ></app-pagination>
                     </ng-template>
                 </div>
-
-                <!--                <div class="card">-->
-                <!--                    <nav class="navbar navbar-expand">-->
-                <!--                        <div class="navbar-nav">-->
-                <!--                            <h3>Additional info block</h3>-->
-                <!--                        </div>-->
-                <!--                    </nav>-->
-                <!--                </div>-->
             </div>
         </div>
     </div>

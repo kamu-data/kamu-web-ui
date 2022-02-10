@@ -2,11 +2,24 @@
 .repo-list-container
   width: 100%
   display: grid
-  grid-template-columns: 0.01fr 1fr
+  grid-template-columns: 1fr
   grid-template-rows: 1fr
+
+.signed-commit__popup-header .mat-typography h3
+    margin: 0 !important
+
+::ng-deep ngb-popover-window.bs-popover-left>.arrow
+  display: none
+
+::ng-deep ngb-popover-window .popover-header
+  margin: 0
+
 .repo-list-container__title-row
   display: flex
-  justify-content: left
+  justify-content: space-between
+  &__dataset-name
+    display: flex
+    justify-content: left
   & i
     margin-right: 8px
 .repo-list-container__title
@@ -19,14 +32,83 @@
     cursor: pointer
     text-decoration: underline
     background: none
+.repo-list-total-count
+  margin: 0
+.select-block
+  background: transparent
+  > *
+    background: transparent
+  & p
+    z-index: 0
+  &:hover
+    background: $app-background-btn
+  &.form-group *
+    font-size: 16px
+.rating-star
+  font-size: 1rem
+  color: #b0c4de
+  &.filled
+    color: $app-cloudy
+.signer-block-info
+  grid-template-columns: 0.15fr 1fr
+.signed-commit-header
+  line-height: 1.3
+  white-space: normal
+  grid-template-columns: 0.15fr 1fr
+  border-top-left-radius: 6px
+  border-top-right-radius: 6px
+  & *
+    font-size: 15px
+.signed-commit-signer-name
+  font-size: 14px
+  text-align: left
+  & .signer
+    display: block
+    font-weight: 600
+    font-size: 14px
+.signed-commit-footer
+  &__id
+    color: $app-nero
+  & span, a
+    font-size: 12px
+    line-height: 1.5
+.signed-commit-badge
+  user-select: none
+  background: none
+  vertical-align: middle
+  border-color: $verylightgrey
+  &.verified
+    color: $app-success
+  &:hover
+    border-color: $app-harmonies
+    text-decoration: none
+.verified-commit
+  display: inline-block
+  overflow: visible !important
+  vertical-align: text-bottom
+  fill: currentColor
+.signed-commit-verified-label
+  color: $app-success
+  white-space: nowrap
+.signed-commit-badge-small
+  display: inline-block
+  padding: 0 7px
+  font-size: 12px
+  font-weight: 500
+  line-height: 18px
+  border: 1px solid $verylightgrey
+  border-radius: 2em
+#sortOptions
+  color: $app-dark
+  z-index: 1
+  background: transparent
+  padding-left: 50px
+  transition: .2s cubic-bezier(0.3, 0, 0.5, 1)
+  &:focus-visible
+    outline: none
 .repo-list-container__additional-block
   display: flex
+  > *
+    margin-right: 10px
 .repo-list-container__description
   font-size: 14px
-.mat-standard-chip
-  min-height: 25px
-  padding: 10px
-.mat-chip
-  color: $app-navyBlue
-  background: $app-aliceBlue
-  font-size: 12px

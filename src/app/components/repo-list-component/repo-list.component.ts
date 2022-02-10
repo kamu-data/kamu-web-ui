@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { SearchOverviewDatasetsInterface } from "../../interface/search.interface";
 import AppValues from "../../common/app.values";
+import { ModalService } from "../modal/modal.service";
 
 @Component({
     selector: "app-repo-list",
@@ -13,8 +14,17 @@ export class RepoListComponent {
     @Input() public resultUnitText: string;
     @Input() public isResultQuantity?: boolean = false;
     @Input() public isClickableRow?: boolean = false;
-    @Output() public onSelectDatasetEmit: EventEmitter<string> =
-        new EventEmitter();
+    @Output() public onSelectDatasetEmit: EventEmitter<{
+        ownerName: string;
+        id: string;
+    }> = new EventEmitter();
+    @Input() public sortOptions: {
+        value: string;
+        label: string;
+        active: boolean;
+    }[];
+
+    constructor(private modalService: ModalService) {}
 
     public momentConverDatetoLocalWithFormat(date: string): string {
         return AppValues.momentConverDatetoLocalWithFormat({
@@ -23,8 +33,8 @@ export class RepoListComponent {
             isTextDate: true,
         });
     }
-    public onSelectDataset(id: string): void {
-        this.onSelectDatasetEmit.emit(id);
+    public onSelectDataset(ownerName: string, id: string): void {
+        this.onSelectDatasetEmit.emit({ ownerName, id: id });
     }
 
     public searchResultQuantity(
@@ -34,5 +44,11 @@ export class RepoListComponent {
             return "0";
         }
         return dataSource.length.toString();
+    }
+    public selectTopic(topicName: string): void {
+        this.modalService.warning({
+            message: "Feature will be soon",
+            yesButtonText: "Ok",
+        });
     }
 }

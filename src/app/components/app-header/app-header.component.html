@@ -1,203 +1,370 @@
 <nav
     *ngIf="isVisible"
-    class="navbar navbar-expand-lg navbar-dark bg-dark"
+    class="navbar navbar-expand-lg navbar-dark bg-dark Header Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap"
     id="app-header"
 >
-    <button
-        #appHeaderMenuButton
-        id="appHeaderMenuButton"
-        class="navbar-toggler"
-        data-test-id="appHeaderMenuButton"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarNavDropdown"
-        aria-controls="navbarNavDropdown"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
+    <div class="Header-item mt-n1 mb-n1 d-none d-md-flex">
+        <div [classList]="'app-brand'" id="appHeaderLogo">
+            <button (click)="onClickAppLogo()" data-test-id="appLogo">
+                <img [src]="appLogo" alt="Application logo" />
+            </button>
+        </div>
+    </div>
+    <div class="Header-item d-md-none">
+        <button
+            #appHeaderMenuButton
+            id="appHeaderMenuButton"
+            class="navbar-toggler"
+            data-test-id="appHeaderMenuButton"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNavDropdown"
+            (click)="toggleAppHeaderMenu()"
+            aria-controls="navbarNavDropdown"
+            [attr.aria-expanded]="isCollapsedAppHeaderMenu"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+    <div
+        class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex"
     >
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div [classList]="'app-brand'" id="appHeaderLogo">
-        <button (click)="onClickAppLogo()" data-test-id="appLogo">
-            <img [src]="appLogo" alt="Application logo" />
-        </button>
-    </div>
-
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav">
-            <li
-                [classList]="
-                    'nav-item searchInputContainer ' +
-                    (isSearchActive ? 'active-search-input' : '')
-                "
-            >
+        <div
+            class="header-search flex-auto position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3"
+        >
+            <div class="position-relative">
                 <div
-                    class="input-group flex-nowrap flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 js-jump-to"
-                    id="searchInput"
+                    class="collapse show navbar-collapse"
+                    id="navbarNavDropdown"
                 >
-                    <input
-                        type="text"
-                        data-test-id="searchInput"
-                        class="form-control"
-                        id="typeahead-http"
-                        [ngbTypeahead]="search"
-                        [resultTemplate]="rt"
-                        placeholder="Search"
-                        [(ngModel)]="searchValue"
-                        [inputFormatter]="formatter"
-                        [focusFirst]="false"
-                        aria-label="Search"
-                        aria-describedby="addon-wrapping"
-                        (focusin)="isSearchActive = true"
-                        (click)="onClickInput()"
-                        (selectItem)="onSelectItem($event)"
-                        (keyup.enter)="onSearch($event, searchValue)"
-                        (blur)="onSearch($event, searchValue)"
-                    />
-                </div>
+                    <ul class="navbar-nav">
+                        <li
+                            [classList]="
+                                'nav-item searchInputContainer ' +
+                                (isSearchActive ? 'active-search-input' : '')
+                            "
+                        >
+                            <div
+                                class="input-group flex-nowrap flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 js-jump-to"
+                                id="searchInput"
+                            >
+                                <input
+                                    type="text"
+                                    data-test-id="searchInput"
+                                    class="form-control"
+                                    id="typeahead-http"
+                                    [ngbTypeahead]="search"
+                                    [resultTemplate]="rt"
+                                    placeholder="Search"
+                                    [(ngModel)]="searchValue"
+                                    [inputFormatter]="formatter"
+                                    [focusFirst]="false"
+                                    aria-label="Search"
+                                    aria-describedby="addon-wrapping"
+                                    (focusin)="isSearchActive = true"
+                                    (click)="onClickInput()"
+                                    (selectItem)="onSelectItem($event)"
+                                    (keyup.enter)="
+                                        onSearch($event, searchValue)
+                                    "
+                                    (blur)="onSearch($event, searchValue)"
+                                />
+                            </div>
 
-                <ng-template #rt let-r="result" let-t="term">
-                    <div>
-                        <i class="bi bi-journal-album mr-2"></i>
-                        <ngb-highlight
-                            [result]="r.id"
-                            [term]="t.id"
-                        ></ngb-highlight>
-                    </div>
-                    <div
-                        class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 f6 color-text-tertiary ml-1 jump-to-badge-jump"
+                            <ng-template #rt let-r="result" let-t="term">
+                                <div>
+                                    <i class="bi bi-journal-album mr-2"></i>
+                                    <ngb-highlight
+                                        [result]="r.id"
+                                        [term]="t.id"
+                                    ></ngb-highlight>
+                                </div>
+                                <div
+                                    class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 f6 color-text-tertiary ml-1 jump-to-badge-jump"
+                                >
+                                    {{
+                                        isDatasetType(r["__typename"])
+                                            ? "Jump to"
+                                            : "All Kamu"
+                                    }}
+                                    <span
+                                        class="d-inline-block ml-1 v-align-middle"
+                                        ><i class="bi bi-arrow-return-left"></i
+                                    ></span>
+                                </div>
+                            </ng-template>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <nav
+            class="d-flex flex-column flex-md-row flex-self-stretch flex-md-self-auto width-full justify-content-between"
+            aria-label="Global"
+        >
+            <div
+                class="d-flex flex-column flex-md-row flex-self-stretch flex-md-self-auto"
+            >
+                <a
+                    class="Header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
+                    data-ga-click="Header, click, Nav menu - item:explore"
+                    data-selected-links="/explore /trending /trending/developers /integrations /integrations/feature/code /integrations/feature/collaborate /integrations/feature/ship showcases showcases_search showcases_landing /explore"
+                    href="/explore"
+                >
+                    Explore
+                </a>
+
+                <a
+                    class="Header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
+                    data-ga-click="Header, click, Nav menu - item:dashboard:user"
+                    aria-label="Dashboard"
+                    href="/dashboard"
+                >
+                    Your Datasets
+                </a>
+
+                <a
+                    class="Header-link d-block d-md-none py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                    (click)="onAddNew()"
+                >
+                    Add New Dataset
+                </a>
+
+                <ng-template [ngIf]="!(userInfo && userInfo.name)">
+                    <a
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                        data-test-id="openBillingPlanHeader"
+                        (click)="onBilling()"
+                        >Account & Billing</a
                     >
-                        {{
-                            isDatasetType(r["__typename"])
-                                ? "Jump to"
-                                : "All Kamu"
-                        }}
-                        <span class="d-inline-block ml-1 v-align-middle"
-                            ><i class="bi bi-arrow-return-left"></i
-                        ></span>
-                    </div>
+                    <a
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                        data-test-id="openHelpHeader"
+                        (click)="onHelp()"
+                        >Help</a
+                    >
+                    <a
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                        data-test-id="openUserProfileHeader"
+                        (click)="onLogin()"
+                        >Login</a
+                    >
                 </ng-template>
-            </li>
-        </ul>
+
+                <ng-template [ngIf]="userInfo && userInfo.name">
+                    <a
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                        data-test-id="openUserProfileHeader"
+                        (click)="onUserProfile()"
+                        >Your profile</a
+                    >
+                    <a
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                        data-test-id="openBillingPlanHeader"
+                        (click)="onBilling()"
+                        >Account & Billing</a
+                    >
+                    <a
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                        data-test-id="openAnalyticsHeader"
+                        (click)="onAnalytics()"
+                        >Analytics</a
+                    >
+                    <a
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                        data-test-id="openSettingsHeader"
+                        (click)="onSettings()"
+                        >Settings</a
+                    >
+                    <a
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                        data-test-id="openHelpHeader"
+                        (click)="onHelp()"
+                        >Help</a
+                    >
+                    <a
+                        class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                        data-test-id="userNameHeader"
+                        href="/kulykivska"
+                    >
+                        <img
+                            class="avatar avatar-user"
+                            loading="lazy"
+                            decoding="async"
+                            src="https://avatars.githubusercontent.com/u/87068546?s=40&amp;v=4"
+                            width="20"
+                            height="20"
+                            alt="@kulykivska"
+                        />
+                        {{
+                            userInfo && userInfo.name
+                                ? userInfo.name
+                                : defaultUsername
+                        }}
+                    </a>
+                    <button
+                        class="Header-link Header-signout-btn d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-md-top-0 border-white-fade"
+                        data-test-id="openSignOutHeader"
+                        (click)="onLogOut()"
+                    >
+                        <svg
+                            aria-hidden="true"
+                            height="16"
+                            viewBox="0 0 16 16"
+                            version="1.1"
+                            width="16"
+                            data-view-component="true"
+                            class="octicon octicon-sign-out v-align-middle"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M2 2.75C2 1.784 2.784 1 3.75 1h2.5a.75.75 0 010 1.5h-2.5a.25.25 0 00-.25.25v10.5c0 .138.112.25.25.25h2.5a.75.75 0 010 1.5h-2.5A1.75 1.75 0 012 13.25V2.75zm10.44 4.5H6.75a.75.75 0 000 1.5h5.69l-1.97 1.97a.75.75 0 101.06 1.06l3.25-3.25a.75.75 0 000-1.06l-3.25-3.25a.75.75 0 10-1.06 1.06l1.97 1.97z"
+                            ></path>
+                        </svg>
+                        Sign out
+                    </button>
+                </ng-template>
+            </div>
+            <div id="appHeaderAdditionalBlock" class="app-header__right-column">
+                <div
+                    class="d-flex d-sm-none d-md-flex justify-content-center notification-indicator-container align-items-center m-0"
+                >
+                    <app-notification-indicator></app-notification-indicator>
+                </div>
+                <button
+                    class="app-header__right-column__addnew-block d-block d-sm-none d-md-flex m-2"
+                    (click)="onAddNew()"
+                    data-test-id="addNewBlock"
+                >
+                    <span><i class="bi bi-plus-circle"></i></span>
+                    <span class="app-header__right-column__label">New</span>
+                </button>
+                <button
+                    class="button-round d-block d-sm-none d-md-block"
+                    data-test-id="openUserInfo"
+                    mat-button
+                    [matMenuTriggerFor]="menu"
+                >
+                    <div class="img-container-round">
+                        <img
+                            [src]="
+                                userInfo && userInfo.avatarUrl
+                                    ? userInfo.avatarUrl
+                                    : '../../../assets/icons/user_icon.png'
+                            "
+                            (click)="onOpenUserInfo()"
+                            alt="User icon"
+                        />
+                    </div>
+                </button>
+                <mat-menu #menu="matMenu" class="app-header__user-menu">
+                    <p id="matmenu-signed-in-name">
+                        Signed in as
+                        <strong data-test-id="userName">{{
+                            userInfo && userInfo.name
+                                ? userInfo.name
+                                : defaultUsername
+                        }}</strong>
+                    </p>
+                    <div role="none" class="dropdown-divider"></div>
+
+                    <ng-template [ngIf]="!(userInfo && userInfo.name)">
+                        <button
+                            mat-menu-item
+                            data-test-id="openUserProfile"
+                            (click)="onLogin()"
+                        >
+                            Login
+                        </button>
+                        <div role="none" class="dropdown-divider"></div>
+                        <button
+                            mat-menu-item
+                            data-test-id="openBillingPlan"
+                            (click)="onBilling()"
+                        >
+                            Account & Billing
+                        </button>
+                        <button
+                            mat-menu-item
+                            data-test-id="openHelp"
+                            (click)="onHelp()"
+                        >
+                            Help
+                        </button>
+                    </ng-template>
+
+                    <ng-template [ngIf]="userInfo && userInfo.name">
+                        <button
+                            mat-menu-item
+                            data-test-id="openUserProfile"
+                            (click)="onUserProfile()"
+                        >
+                            Your profile
+                        </button>
+                        <button
+                            mat-menu-item
+                            data-test-id="openUserDatasets"
+                            (click)="onUserDatasets()"
+                        >
+                            Your datasets
+                        </button>
+
+                        <div role="none" class="dropdown-divider"></div>
+                        <button
+                            mat-menu-item
+                            data-test-id="openBillingPlan"
+                            (click)="onBilling()"
+                        >
+                            Account & Billing
+                        </button>
+                        <button
+                            mat-menu-item
+                            data-test-id="openAnalytics"
+                            (click)="onAnalytics()"
+                        >
+                            Analytics
+                        </button>
+                        <button
+                            mat-menu-item
+                            data-test-id="openSettings"
+                            (click)="onSettings()"
+                        >
+                            Settings
+                        </button>
+                        <button
+                            mat-menu-item
+                            data-test-id="openHelp"
+                            (click)="onHelp()"
+                        >
+                            Help
+                        </button>
+
+                        <div role="none" class="dropdown-divider"></div>
+                        <button
+                            mat-menu-item
+                            data-test-id="openSignOut"
+                            (click)="onLogOut()"
+                        >
+                            Sign out
+                        </button>
+                    </ng-template>
+                </mat-menu>
+            </div>
+        </nav>
     </div>
 
-    <div id="appHeaderAdditionalBlock" class="app-header__right-column">
-        <button
-            class="app-header__right-column__addnew-block"
-            (click)="onAddNew()"
-            data-test-id="addNewBlock"
-        >
-            <span><i class="bi bi-plus-circle"></i></span>
-            <span class="app-header__right-column__label">New</span>
-        </button>
-        <button
-            class="button-round"
-            data-test-id="openUserInfo"
-            mat-button
-            [matMenuTriggerFor]="menu"
-        >
-            <div class="img-container-round">
-                <img
-                    [src]="
-                        userInfo && userInfo.avatarUrl
-                            ? userInfo.avatarUrl
-                            : '../../../assets/icons/user_icon.png'
-                    "
-                    (click)="onOpenUserInfo()"
-                    alt="User icon"
-                />
-            </div>
-        </button>
-        <mat-menu #menu="matMenu" class="app-header__user-menu">
-            <p id="matmenu-signed-in-name">
-                Signed in as
-                <strong data-test-id="userName">{{
-                    userInfo && userInfo.name ? userInfo.name : defaultUsername
-                }}</strong>
-            </p>
-            <div role="none" class="dropdown-divider"></div>
-
-            <ng-template [ngIf]="!(userInfo && userInfo.name)">
-                <button
-                    mat-menu-item
-                    data-test-id="openUserProfile"
-                    (click)="onLogin()"
-                >
-                    Login
-                </button>
-                <div role="none" class="dropdown-divider"></div>
-                <button
-                    mat-menu-item
-                    data-test-id="openBillingPlan"
-                    (click)="onBilling()"
-                >
-                    Account & Billing
-                </button>
-                <button
-                    mat-menu-item
-                    data-test-id="openHelp"
-                    (click)="onHelp()"
-                >
-                    Help
-                </button>
-            </ng-template>
-
-            <ng-template [ngIf]="userInfo && userInfo.name">
-                <button
-                    mat-menu-item
-                    data-test-id="openUserProfile"
-                    (click)="onUserProfile()"
-                >
-                    Your profile
-                </button>
-                <button
-                    mat-menu-item
-                    data-test-id="openUserDatasets"
-                    (click)="onUserDatasets()"
-                >
-                    Your datasets
-                </button>
-
-                <div role="none" class="dropdown-divider"></div>
-                <button
-                    mat-menu-item
-                    data-test-id="openBillingPlan"
-                    (click)="onBilling()"
-                >
-                    Account & Billing
-                </button>
-                <button
-                    mat-menu-item
-                    data-test-id="openAnalytics"
-                    (click)="onAnalytics()"
-                >
-                    Analytics
-                </button>
-                <button
-                    mat-menu-item
-                    data-test-id="openSettings"
-                    (click)="onSettings()"
-                >
-                    Settings
-                </button>
-                <button
-                    mat-menu-item
-                    data-test-id="openHelp"
-                    (click)="onHelp()"
-                >
-                    Help
-                </button>
-
-                <div role="none" class="dropdown-divider"></div>
-                <button
-                    mat-menu-item
-                    data-test-id="openSignOut"
-                    (click)="onLogOut()"
-                >
-                    Sign out
-                </button>
-            </ng-template>
-        </mat-menu>
+    <div class="d-block d-md-none">
+        <div [classList]="'app-brand'">
+            <button (click)="onClickAppLogo()" data-test-id="appLogo">
+                <img [src]="appLogo" alt="Application logo" />
+            </button>
+        </div>
+    </div>
+    <div
+        class="d-flex d-md-none justify-content-center notification-indicator-container align-items-center m-0"
+    >
+        <app-notification-indicator></app-notification-indicator>
     </div>
 </nav>

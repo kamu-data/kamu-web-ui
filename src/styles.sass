@@ -3,8 +3,16 @@
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap'
 @import "assets/styles/var"
+body
+  font-size: 14px
 *
-  font-size: 18px
+  font-size: 14px
+a
+  text-decoration: none
+  &:hover
+    text-decoration: underline
+  &:active, &:hover
+    outline-width: 0
 .sr-only
   display: none
 .color-text-secondary
@@ -13,6 +21,10 @@
   font-size: 12px
 .mat-divider
   color: $app-lightGrayishBlue
+.datasetViewTypeToggleGroup
+  & .mat-button-toggle-disabled .mat-button-toggle-button
+    cursor: not-allowed
+    color: rgb(0 0 0 / 51%)
 .app-active-button
   background: $app-darkSeaGreen
   border-radius: 4px
@@ -48,10 +60,33 @@
   border: 1px solid $app-lightGrayishBlue
   & .mat-menu-item
     background-color: white
-
+#appHeaderLogo img
+  height: 32px
+  width: 32px
+.Header-item
+  display: flex
+  margin-right: 16px
+  align-self: stretch
+  align-items: center
+  flex-wrap: nowrap
+.Header-link
+  text-decoration: none
 #app-header
-  & .form-control
-    width: 300px
+  z-index: 32
+  display: flex
+  padding: 16px
+  font-size: 14px
+  line-height: 1.5
+  align-items: center
+  justify-content: space-between
+  & .Details:not(.Details--on) .Details-content--hidden-not-important
+    display: none
+  & .Header-item--full
+    flex: auto
+  & a, button
+    flex: none
+  //& .form-control
+  //  width: 300px
   & .input-control
     position: relative
     flex: 1 1 auto
@@ -65,20 +100,29 @@
     font-weight: 400
     line-height: 1.5
     border: 1px solid #ced4da
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out
+    //transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out
 .jump-to-badge-jump
   display: none
 .active-search-input input
   color: $app-white
+.octicon
+  display: inline-block
+  overflow: visible !important
+  vertical-align: text-bottom
+  fill: currentColor
+.Header-signout-btn
+  background: none
+  border: none
+  text-align: left
+  padding: initial
 #navbarNavDropdown .navbar-nav
   width: 100%
-  justify-content: center
   & .nav-item
-    width: 40%
+    width: 100%
     transition: all .5s linear
     line-height: 150px
   & .active-search-input
-    width: 80%
+      width: 100%
   & ngb-typeahead-window
     width: 100%
     line-height: 1
@@ -113,21 +157,30 @@
 a:visited
   color: inherit
 .mat-app-background, .mat-drawer-container
-  background-color: $app-primary
+  background-color: $app-aliceBlue
 #app-header
   background-color: $app-dark
   & *
     color: $app-primary
   & .navbar-nav
       margin: auto
-.border-white-fade
-  border-color: $app-versatileBusinessDark
+
+.Details:not(.Details--on) .Details-content--hidden-not-important
+  display: none
+.header-search
+  max-width: 100%
+  transition: all .5s linear
+.header-search:focus-within
+  max-width: 100%
+  width: 100%
+.notification-indicator-container
+  width: 1.5em
 .app-main-container
   height: 100%
   width: 100%
   position: absolute
   & .navbar
-    padding: 16px
+    padding: 20px
 
 .mat-drawer-inner-container
   & .navbar-nav
@@ -159,6 +212,9 @@ a:visited
   grid-gap: 24px
   //> *
   //  width: 100%
+#dataset-view
+  a:visited
+    color: inherit
 router-outlet
   display: none
 .app-content__card-columns
@@ -234,6 +290,14 @@ router-outlet
 #searchInput
   grid-area: appSearchInputArea
   width: 100%
+  min-height: 28px
+  line-height: 20px
+  max-width: 100%
+  padding: 0
+  font-size: inherit
+  font-weight: 400
+  vertical-align: middle
+  box-shadow: none
   @extend .searchInputContainer
 
 #mobileMenuButton
@@ -245,18 +309,29 @@ router-outlet
       font-size: 30px
 .search-header-container-block
   margin-bottom: 20px
-
-#search .search-result-container
+#search .dataset-full-result-container
   grid-template-columns: 1fr
-#dataset-viewer .search-result-container
-  grid-template-columns: 1fr 0.25fr
+#search .dataset-result-container
+  grid-template-columns: 0.25fr 1fr
+#search .search-result-container
+  grid-template-columns: 0.25fr 1fr
+#search .search-result-container, #search .dataset-result-container
+  & ul
+    list-style-type: none
+  & .mat-checkbox-layout .mat-checkbox-label
+    font-size: 16px
+#dataset-viewer
+  & .search-result-container
+    grid-template-columns: 0.25fr 1fr
+  & .dataset-result-container
+    grid-template-columns: 1fr 0.25fr
 #search, #dataset-viewer
   & .nav-link
     cursor: pointer
   & .nav-tabs
     margin-bottom: 14px
     border-bottom: none
-  & .search-result-container
+  & .search-result-container, .dataset-result-container
     display: grid
     grid-gap: 25px
   & table
@@ -266,7 +341,8 @@ router-outlet
     display: grid
     align-items: center
     justify-content: space-between
-    grid-template-columns: 1fr 1fr
+    grid-template-columns: 1fr 0.25fr
+    grid-gap: 25px
     > ul:first-child
       align-items: center
       margin-bottom: 9px
@@ -298,10 +374,18 @@ router-outlet
       height: 50px
 .datasetViewTypeToggleGroup
   width: 100%
-  overflow: auto
+  overflow: scroll
   margin-bottom: 20px
 #dataset-viewer, #search
   overflow: hidden
+.starred .starred-button-icon
+  color: $app-naples-yellow !important
+#metadata-block
+  & .page-item:last-child .page-link, .page-item:first-child .page-link
+    padding: 1px
+  & #pagination-block
+    display: flex
+    justify-content: flex-end
 /*********** Search Page ******/
 .input-icon
   background: none
@@ -370,7 +454,29 @@ router-outlet
       order: 1
     & .navbar-nav
       margin: 20px auto
-
+@media (min-width: 768px)
+  .header-search
+    max-width: 272px
+    width: 100%
+  .header-search:focus-within
+    max-width: 544px
+  #navbarNavDropdown .navbar-nav
+    & .active-search-input
+      width: 150%
+.avatar
+  display: inline-block
+  overflow: hidden
+  line-height: 1
+  vertical-align: middle
+  background-color: white
+  border-radius: 6px
+  flex-shrink: 0
+  box-shadow: 0 0 0 1px #1b1f2426
+.avatar-2
+  width: 20px
+  height: 20px
+.avatar-user
+  border-radius: 50% !important
 
 // MODAL MODULE
 

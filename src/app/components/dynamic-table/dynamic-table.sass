@@ -8,13 +8,20 @@
 table
   width: 100%
   & .mat-cell
-    border: 1px solid #bdc6d2
+    border: 1px solid
     padding: 0 15px
-    color: #667593
+    color: $app-color-fg-default
+    border-color: $app-color-border-default
 
 .mat-header-cell
-  background: #e9edf1
-  color: #667593
-  border: 1px solid #bdc6d2
+  color: $app-color-fg-default
+  border: 1px solid
   font-size: 15px
-  text-align: center
+  text-align: left
+  background: $app-aliceBlue
+  border-color: $app-color-border-default
+
+th.mat-header-cell
+  padding: 0 15px
+th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type
+  padding-left: 15px

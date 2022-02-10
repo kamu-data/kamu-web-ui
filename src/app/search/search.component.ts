@@ -17,6 +17,16 @@ import {
     OnInit,
     ViewChild,
 } from "@angular/core";
+import { ThemePalette } from "@angular/material/core";
+
+export interface SearchFilters {
+    name?: string;
+    isTitle?: boolean;
+    completed?: boolean;
+    disabled?: boolean;
+    color?: ThemePalette;
+    subtasks?: SearchFilters[];
+}
 
 @Component({
     selector: "app-search",
@@ -48,6 +58,13 @@ export class SearchComponent implements OnInit, AfterContentInit {
         },
     ];
 
+    private sortOptions: { value: string; label: string; active: boolean }[] = [
+        { value: "best", label: "Best match", active: true },
+        { value: "recently", label: "Recently indexed", active: false },
+        { value: "least", label: "Least recently indexed", active: false },
+    ];
+
+    public allComplete: boolean = false;
     public tableData: {
         tableSource: SearchOverviewDatasetsInterface[];
         isResultQuantity: boolean;
@@ -55,7 +72,64 @@ export class SearchComponent implements OnInit, AfterContentInit {
         isClickableRow: boolean;
         pageInfo: PageInfoInterface;
         totalCount: number;
+        sortOptions: { value: string; label: string; active: boolean }[];
     };
+    public filters: SearchFilters[] = [
+        {
+            name: "Search for:",
+            isTitle: true,
+            subtasks: [
+                { name: "datasets", completed: true, color: "primary" },
+                {
+                    name: "collections",
+                    completed: false,
+                    disabled: true,
+                    color: "primary",
+                },
+                {
+                    name: "users",
+                    completed: false,
+                    disabled: true,
+                    color: "primary",
+                },
+                {
+                    name: "organizations",
+                    completed: false,
+                    disabled: true,
+                    color: "primary",
+                },
+            ],
+        },
+        {
+            name: "Datasets:",
+            isTitle: true,
+            subtasks: [
+                { name: "root", completed: true, color: "primary" },
+                { name: "derivative", completed: true, color: "primary" },
+                {
+                    name: "updated within:",
+                    isTitle: true,
+                    subtasks: [
+                        {
+                            name: "last day",
+                            completed: false,
+                            color: "primary",
+                        },
+                        {
+                            name: "last month",
+                            completed: false,
+                            color: "primary",
+                        },
+                        {
+                            name: "last year",
+                            completed: false,
+                            color: "primary",
+                        },
+                    ],
+                },
+            ],
+        },
+    ];
     public searchData: SearchOverviewDatasetsInterface[] = [];
     private _window: Window;
 
@@ -142,6 +216,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
                 totalPages: 1,
             },
             totalCount: 0,
+            sortOptions: this.sortOptions,
         };
     }
 
@@ -156,14 +231,22 @@ export class SearchComponent implements OnInit, AfterContentInit {
         });
     }
 
-    public onSelectDataset(id: string): void {
-        this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
-            { queryParams: { id, type: AppValues.urlDatasetViewOverviewType } },
-        );
+    public onSelectDataset(data: { ownerName: string; id: string }): void {
+        const id: string = data.id;
+        this.router.navigate([data.ownerName, AppValues.urlDatasetView], {
+            queryParams: { id, type: AppValues.urlDatasetViewOverviewType },
+        });
     }
 
     public onSearch(searchValue: string, page: number = 1): void {
         this.appSearchService.search(searchValue, page - 1);
+    }
+
+    updateAllComplete() {
+        this.allComplete =
+            this.filters != null &&
+            this.filters.every((t) =>
+                t.subtasks?.every((sub) => sub.completed),
+            );
     }
 }

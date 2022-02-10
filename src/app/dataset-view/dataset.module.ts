@@ -17,7 +17,7 @@ import { MarkdownModule } from "ngx-markdown";
 import { MatChipsModule } from "@angular/material/chips";
 import { MetadataComponent } from "./additional-components/metadata-component/metadata-component";
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import {MatTabsModule} from "@angular/material/tabs";
+import { MatTabsModule } from "@angular/material/tabs";
 
 @NgModule({
     imports: [

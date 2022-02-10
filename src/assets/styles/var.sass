@@ -45,6 +45,8 @@ $app-color-btn-border: #ced4da
   vertical-align: middle
 .color-bg-subtle
   background-color: $app-color-canvas-subtle !important
+.color-fg-success
+  color: $app-harmonies
 .color-fg-muted
   color: $app-color-fg-muted
 .link--primary
@@ -141,6 +143,8 @@ $app-color-btn-border: #ced4da
     background-color: $app-color-btn-hover-border
 .clipboard-btn
   height: 100%
+  &.clipboard-btn--success
+    border-color: $app-harmonies !important
 .mr-0
   margin-right: 0 !important
 .mr-1
@@ -310,6 +314,13 @@ $app-color-btn-border: #ced4da
   visibility: visible
   transition: transform .12s cubic-bezier(0, 0, 0.2, 1),visibility 0s linear
   transform: scale(1)
+
+::ng-deep .mat-tab-header
+  padding-top: 0 !important
+  padding-bottom: 0 !important
+  padding-right: 16px
+  padding-left: 16px
+  border-bottom: 1px solid $app-color-border-muted
 
 @keyframes SelectMenu-modal-animation
    0%

@@ -31,6 +31,7 @@ import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
+import { Clipboard } from "@angular/cdk/clipboard";
 
 @Component({
     selector: "app-dataset",
@@ -74,9 +75,9 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public linageGraphClusters: ClusterNode[] = [];
     public isAvailableLinageGraph = false;
     public headings: Element[] | undefined;
-    public isMarkdownEditView: boolean = false;
-    public clipboardKamuCli: string = "kamu pull account/dataset-alias";
-    public clipboardKafka: string = "https://api.kamu.dev/kafka/";
+    public isMarkdownEditView = false;
+    public clipboardKamuCli = "kamu pull account/dataset-alias";
+    public clipboardKafka = "https://api.kamu.dev/kafka/";
     public markdown = `## Markdown __rulez__!
 ---
 
@@ -114,9 +115,41 @@ const language = 'typescript';
         private sidenavService: SideNavService,
         private router: Router,
         private modalService: ModalService,
-        private elementRef: ElementRef<HTMLElement>,
+        private clipboard: Clipboard
     ) {
         this._window = window;
+    }
+
+    public copyToClipboard(event: MouseEvent, text: string): void {
+        this.clipboard.copy(text);
+
+        const currentEvent: EventTarget | null = event.currentTarget;
+
+        debugger;
+        if (currentEvent !== null) {
+            debugger
+            setTimeout(() => {
+                // @ts-ignore
+                // tslint:disable-next-line:no-string-literal
+                currentEvent["children"][0].style.display = "inline-block";
+                // @ts-ignore
+                // tslint:disable-next-line:no-string-literal
+                currentEvent["children"][1].style.display = "none";
+                // @ts-ignore
+                // tslint:disable-next-line:no-string-literal
+                currentEvent["classList"].remove("clipboard-btn--success");
+            }, 2000);
+
+            // @ts-ignore
+            // tslint:disable-next-line:no-string-literal
+            currentEvent["children"][0].style.display = "none";
+            // @ts-ignore
+            // tslint:disable-next-line:no-string-literal
+            currentEvent["children"][1].style.display = "inline-block";
+            // @ts-ignore
+            // tslint:disable-next-line:no-string-literal
+            currentEvent["classList"].add("clipboard-btn--success");
+        }
     }
 
     public ngOnInit(): void {
@@ -164,6 +197,10 @@ const language = 'typescript';
                 setTimeout(() => (this.currentPage = data.currentPage));
             },
         );
+    }
+    public successCopyToClipboardCopied(): void {
+        debugger;
+        console.log("copy success");
     }
 
     public changeLinageGraphView(): void {

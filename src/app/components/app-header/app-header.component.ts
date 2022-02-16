@@ -166,7 +166,6 @@ export class AppHeaderComponent {
         el.focus();
         el.click();
         el.blur();
-        debugger;
         this.isCollapsedAppHeaderMenu = !this.isCollapsedAppHeaderMenu;
     }
     public onClickAppLogo(): void {

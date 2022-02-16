@@ -72,6 +72,8 @@ export class SearchComponent implements OnInit, AfterContentInit {
         pageInfo: PageInfoInterface;
         totalCount: number | null | undefined;
         sortOptions: { value: string; label: string; active: boolean }[];
+        totalCount: number;
+        sortOptions: { value: string; label: string; active: boolean }[];
     };
     public filters: SearchFilters[] = [
         {
@@ -228,11 +230,11 @@ export class SearchComponent implements OnInit, AfterContentInit {
         });
     }
 
-    public onSelectDataset(id: string): void {
-        this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
-            { queryParams: { id, type: AppValues.urlDatasetViewOverviewType } },
-        );
+    public onSelectDataset(data: { ownerName: string; id: string }): void {
+        const id: string = data.id;
+        this.router.navigate([data.ownerName, AppValues.urlDatasetView], {
+            queryParams: { id, type: AppValues.urlDatasetViewOverviewType },
+        });
     }
 
     public onSearch(searchValue: string, page: number = 1): void {
@@ -241,6 +243,14 @@ export class SearchComponent implements OnInit, AfterContentInit {
 
     updateAllComplete() {
         debugger;
+        this.allComplete =
+            this.filters != null &&
+            this.filters.every((t) =>
+                t.subtasks?.every((sub) => sub.completed),
+            );
+    }
+
+    updateAllComplete() {
         this.allComplete =
             this.filters != null &&
             this.filters.every((t) =>

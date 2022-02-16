@@ -3,8 +3,16 @@
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap'
 @import "assets/styles/var"
+body
+  font-size: 14px
 *
-  font-size: 18px
+  font-size: 14px
+a
+  text-decoration: none
+  &:hover
+    text-decoration: underline
+  &:active, &:hover
+    outline-width: 0
 .sr-only
   display: none
 .color-text-secondary
@@ -149,7 +157,7 @@
 a:visited
   color: inherit
 .mat-app-background, .mat-drawer-container
-  background-color: $app-primary
+  background-color: $app-aliceBlue
 #app-header
   background-color: $app-dark
   & *
@@ -301,9 +309,13 @@ router-outlet
       font-size: 30px
 .search-header-container-block
   margin-bottom: 20px
-
-#search .search-result-container, #search .dataset-result-container
+#search .dataset-full-result-container
+  grid-template-columns: 1fr
+#search .dataset-result-container
   grid-template-columns: 0.25fr 1fr
+#search .search-result-container
+  grid-template-columns: 0.25fr 1fr
+#search .search-result-container, #search .dataset-result-container
   & ul
     list-style-type: none
   & .mat-checkbox-layout .mat-checkbox-label
@@ -329,7 +341,8 @@ router-outlet
     display: grid
     align-items: center
     justify-content: space-between
-    grid-template-columns: 1fr 1fr
+    grid-template-columns: 1fr 0.25fr
+    grid-gap: 25px
     > ul:first-child
       align-items: center
       margin-bottom: 9px
@@ -367,6 +380,12 @@ router-outlet
   overflow: hidden
 .starred .starred-button-icon
   color: $app-naples-yellow !important
+#metadata-block
+  & .page-item:last-child .page-link, .page-item:first-child .page-link
+    padding: 1px
+  & #pagination-block
+    display: flex
+    justify-content: flex-end
 /*********** Search Page ******/
 .input-icon
   background: none

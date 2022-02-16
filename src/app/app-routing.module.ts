@@ -37,6 +37,10 @@ const routes: Routes = [
                 children: [{ path: ":id", component: DatasetComponent }],
             },
             {
+                path: AppValues.urlDatasetCreateSelectType,
+                component: DatasetCreateComponent,
+            },
+            {
                 path: AppValues.urlDatasetCreate,
                 component: DatasetCreateComponent,
                 children: [

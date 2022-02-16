@@ -14,8 +14,10 @@ export class RepoListComponent {
     @Input() public resultUnitText: string;
     @Input() public isResultQuantity?: boolean = false;
     @Input() public isClickableRow?: boolean = false;
-    @Output() public onSelectDatasetEmit: EventEmitter<string> =
-        new EventEmitter();
+    @Output() public onSelectDatasetEmit: EventEmitter<{
+        ownerName: string;
+        id: string;
+    }> = new EventEmitter();
     @Input() public sortOptions: {
         value: string;
         label: string;
@@ -31,8 +33,8 @@ export class RepoListComponent {
             isTextDate: true,
         });
     }
-    public onSelectDataset(id: string): void {
-        this.onSelectDatasetEmit.emit(id);
+    public onSelectDataset(ownerName: string, id: string): void {
+        this.onSelectDatasetEmit.emit({ ownerName, id: id });
     }
 
     public searchResultQuantity(

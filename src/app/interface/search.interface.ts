@@ -1,3 +1,5 @@
+import { DatasetMetadata } from "../api/kamu.graphql.interface";
+
 export interface SearchHistoryResponseInterface {
     datasets: {
         __typename: string;
@@ -41,18 +43,35 @@ export interface SearchHistoryCurrentSchema {
 }
 
 export interface SearchOverviewDatasetsInterface {
-    createdAt: string;
     id: string;
+    name: string;
+    owner: Account;
+    kind: DatasetKindTypeNames;
+    metadata: DatasetMetadata;
+    createdAt: string;
     name: string;
     kind: string;
     lastUpdatedAt: string;
 }
 
+export interface Account {
+    id: string;
+    name: string;
+}
 export interface SearchOverviewInterface {
     dataset: SearchOverviewDatasetsInterface[];
     totalCount: number;
     pageInfo: PageInfoInterface;
     currentPage: number;
+}
+export interface SearchMetadataInterface {
+    id: string;
+    name: string;
+    owner: Account;
+    pageInfo: PageInfoInterface;
+    totalCount: number;
+    currentPage: number;
+    dataset: SearchOverviewDatasetsInterface[];
 }
 
 export interface DatasetKindInterface {
@@ -89,10 +108,7 @@ export interface SearchDatasetByID {
     data: SearchDatasetByIDDataInterface;
     kind: DatasetKindTypeNames;
     name: string;
-    owner: {
-        id: string;
-        name: string;
-    };
+    owner: Account;
     // ca.covid19.daily-cases
     id: string;
     lastUpdatedAt: string;
@@ -119,6 +135,11 @@ export interface SearchDatasetByIDDataInterface {
         content: SearchHistoryInterface[];
         format: string;
     };
+}
+export interface DatasetNameInterface {
+    id: string;
+    name: string;
+    owner: Account;
 }
 export interface DatasetInfoInterface {
     __typename: string;

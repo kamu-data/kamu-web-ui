@@ -86,7 +86,11 @@ export class AppComponent implements OnInit {
                         AppValues.fixedEncodeURIComponent(
                             event.url.split("?id=")[1].split("&")[0],
                         );
-                    this.appSearchService.searchChanges(searchValue);
+                    if (event.url.find("search")) {
+                        this.appSearchService.searchChanges("");
+                    } else {
+                        this.appSearchService.searchChanges(searchValue);
+                    }
                 }
             });
     }

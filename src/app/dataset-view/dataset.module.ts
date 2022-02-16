@@ -10,6 +10,14 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { LinageGraphModule } from "../components/linage-graph/linage-graph.module";
 import { PaginationModule } from "../components/pagination-component/pagination.module";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MarkdownModule } from "ngx-markdown";
+import { MatChipsModule } from "@angular/material/chips";
+import { MetadataComponent } from "./additional-components/metadata-component/metadata-component";
+import { ClipboardModule } from "@angular/cdk/clipboard";
+import { MatTabsModule } from "@angular/material/tabs";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
@@ -31,9 +39,13 @@ import {MatIconModule} from "@angular/material/icon";
         MatMenuModule,
         MatButtonModule,
         MatIconModule,
+        MarkdownModule,
+        MatChipsModule,
+        ClipboardModule,
+        MatTabsModule,
     ],
-    exports: [DatasetComponent],
-    declarations: [DatasetComponent],
+    exports: [DatasetComponent, MetadataComponent],
+    declarations: [DatasetComponent, MetadataComponent],
 })
 export class DatasetModule {
     public static forRoot(): ModuleWithProviders<DatasetModule> {

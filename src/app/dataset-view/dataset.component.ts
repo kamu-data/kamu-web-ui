@@ -1,15 +1,19 @@
 import {
     AfterContentInit,
+    ChangeDetectionStrategy,
     Component,
+    ElementRef,
     HostListener,
     OnDestroy,
     OnInit,
     ViewChild,
+    ViewEncapsulation,
 } from "@angular/core";
 import {
     DatasetInfoInterface,
     DatasetKindInterface,
     DatasetKindTypeNames,
+    DatasetNameInterface,
     PageInfoInterface,
     SearchHistoryInterface,
     SearchOverviewDatasetsInterface,
@@ -27,16 +31,20 @@ import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
+import { Clipboard } from "@angular/cdk/clipboard";
 
 @Component({
     selector: "app-dataset",
     templateUrl: "./dataset.component.html",
     styleUrls: ["./dataset-view.component.sass"],
+    encapsulation: ViewEncapsulation.None,
 })
 export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
+    @ViewChild("menuTrigger") trigger: any;
     public isMobileView = false;
     public datasetInfo: DatasetInfoInterface;
+    public datasetName: DatasetNameInterface;
     public searchValue = "";
     public currentPage: number;
     public isMinimizeSearchAdditionalButtons = false;
@@ -66,6 +74,26 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public linageGraphNodes: Node[] = [];
     public linageGraphClusters: ClusterNode[] = [];
     public isAvailableLinageGraph = false;
+    public headings: Element[] | undefined;
+    public isMarkdownEditView = false;
+    public clipboardKamuCli = "kamu pull account/dataset-alias";
+    public clipboardKafka = "https://api.kamu.dev/kafka/";
+    public markdown = `## Markdown __rulez__!
+---
+
+### Syntax highlight
+\`\`\`typescript
+const language = 'typescript';
+\`\`\`
+
+### Lists
+1. Ordered list
+2. Another bullet point
+   - Unordered list
+   - Another unordered bullet
+
+### Blockquote
+> Blockquote to the max`;
 
     private _window: Window;
 
@@ -87,8 +115,41 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         private sidenavService: SideNavService,
         private router: Router,
         private modalService: ModalService,
+        private clipboard: Clipboard
     ) {
         this._window = window;
+    }
+
+    public copyToClipboard(event: MouseEvent, text: string): void {
+        this.clipboard.copy(text);
+
+        const currentEvent: EventTarget | null = event.currentTarget;
+
+        debugger;
+        if (currentEvent !== null) {
+            debugger
+            setTimeout(() => {
+                // @ts-ignore
+                // tslint:disable-next-line:no-string-literal
+                currentEvent["children"][0].style.display = "inline-block";
+                // @ts-ignore
+                // tslint:disable-next-line:no-string-literal
+                currentEvent["children"][1].style.display = "none";
+                // @ts-ignore
+                // tslint:disable-next-line:no-string-literal
+                currentEvent["classList"].remove("clipboard-btn--success");
+            }, 2000);
+
+            // @ts-ignore
+            // tslint:disable-next-line:no-string-literal
+            currentEvent["children"][0].style.display = "none";
+            // @ts-ignore
+            // tslint:disable-next-line:no-string-literal
+            currentEvent["children"][1].style.display = "inline-block";
+            // @ts-ignore
+            // tslint:disable-next-line:no-string-literal
+            currentEvent["classList"].add("clipboard-btn--success");
+        }
     }
 
     public ngOnInit(): void {
@@ -112,6 +173,11 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
                 this.datasetInfo = info;
             },
         );
+        this.appDatasetService.onSearchDatasetNameChanges.subscribe(
+            (datasetName: DatasetNameInterface) => {
+                this.datasetName = datasetName;
+            },
+        );
         this.appDatasetService.onSearchChanges.subscribe((value: string) => {
             this.searchValue = value;
         });
@@ -131,6 +197,10 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
                 setTimeout(() => (this.currentPage = data.currentPage));
             },
         );
+    }
+    public successCopyToClipboardCopied(): void {
+        debugger;
+        console.log("copy success");
     }
 
     public changeLinageGraphView(): void {
@@ -169,8 +239,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     public getResultUnitText(): string {
-        const searchDataset: string = this.getDatasetId();
-        return `results in ${searchDataset}`;
+        return `results in ${this.datasetInfo?.name || ""}`;
     }
 
     public momentConverDatetoLocalWithFormat(date: string): string {
@@ -253,6 +322,30 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
 
     public onSearchDiscussions(): void {
         console.log("onSearchDiscussions");
+    }
+    public onSearchDataForDataset(): void {
+        console.log("onSearchDataForDataset");
+    }
+
+    public onSearchDataForHistory(): void {
+        console.log("onSearchDataForHistory");
+    }
+
+    public onSearchDiscussions(): void {
+        console.log("onSearchDiscussions");
+    }
+
+    public showOwnerPage(): void {
+        this.router.navigate([this.datasetInfo.owner.id]);
+    }
+    public toggleReadmeView(): void {
+        this.isMarkdownEditView = !this.isMarkdownEditView;
+    }
+    public selectTopic(topicName: string): void {
+        this.modalService.warning({
+            message: "Feature will be soon",
+            yesButtonText: "Ok",
+        });
     }
 
     public onSearchDataset(page = 0): void {
@@ -494,10 +587,12 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
             this.appDatasetService.onSearchLinageDatasetSubscribtion.unsubscribe();
         }
         this.appDatasetService.resetDatasetTree();
-        const searchParams: string[] =
-            this._window.location.search.split("&type=");
-        const searchPageParams: string[] =
-            this._window.location.search.split("&p=");
+        const searchParams: string[] = decodeURIComponent(
+            this._window.location.search,
+        ).split("&type=");
+        const searchPageParams: string[] = decodeURIComponent(
+            this._window.location.search,
+        ).split("&p=");
         let page = 1;
         if (searchPageParams[1]) {
             page = currentPage || Number(searchPageParams[1].split("&")[0]);
@@ -526,13 +621,12 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     private getDatasetId(): string {
-        const searchParams: string[] =
-            this._window.location.search.split("?id=");
+        const searchParams: string[] = decodeURIComponent(
+            this._window.location.search,
+        ).split("?id=");
 
         if (searchParams.length > 1) {
-            return AppValues.fixedEncodeURIComponent(
-                searchParams[1].split("&")[0],
-            );
+            return searchParams[1].split("&")[0];
         }
         return "";
     }

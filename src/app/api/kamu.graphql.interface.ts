@@ -471,6 +471,17 @@ export type SearchDatasetsOverviewQuery = {
                 kind: DatasetKind;
                 createdAt: any;
                 lastUpdatedAt: any;
+                owner:
+                    | { __typename?: "Organization"; id: any; name: string }
+                    | { __typename?: "User"; id: any; name: string };
+                metadata: {
+                    __typename?: "DatasetMetadata";
+                    currentDownstreamDependencies: Array<{
+                        __typename?: "Dataset";
+                        id: any;
+                        kind: DatasetKind;
+                    }>;
+                };
             }>;
             pageInfo: {
                 __typename?: "PageBasedInfo";
@@ -526,9 +537,20 @@ export const SearchDatasetsOverviewDocument = gql`
                     ... on Dataset {
                         id
                         name
+                        owner {
+                            id
+                            name
+                        }
                         kind
+                        metadata {
+                            currentDownstreamDependencies {
+                                id
+                                kind
+                            }
+                        }
                         createdAt
                         lastUpdatedAt
+                        __typename
                     }
                 }
                 totalCount

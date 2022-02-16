@@ -40,7 +40,6 @@ import { GithubCallbackComponent } from "./auth/github-callback/github.callback"
 import { AuthApi } from "./api/auth.api";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { ModalModule } from "./components/modal/modal.module";
-import { NotificationIndicatorComponent } from "./components/notification-indicator/notification-indicator.component";
 import { MarkdownModule } from "ngx-markdown";
 import { SecurityContext } from "@angular/core";
 import { NotificationIndicatorComponent } from "./components/notification-indicator/notification-indicator.component";

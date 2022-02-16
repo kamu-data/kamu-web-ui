@@ -4,25 +4,21 @@ import { map } from "rxjs/operators";
 import { ApolloQueryResult, DocumentNode, gql } from "@apollo/client/core";
 import { Observable, of, throwError } from "rxjs";
 import {
-    Account,
     DatasetIDsInterface,
     PageInfoInterface,
     SearchDatasetByID,
-    SearchMetadataInterface,
     SearchMetadataNodeResponseInterface,
     SearchOverviewDatasetsInterface,
-    SearchOverviewInterface,
     TypeNames,
 } from "../interface/search.interface";
+
+import AppValues from "../common/app.values";
+import { ApolloQuerySearchResultNodeInterface } from "./apolloQueryResult.interface";
 import {
-    DatasetKind,
     SearchDatasetsAutocompleteGQL,
-    SearchDatasetsAutocompleteQuery,
     SearchDatasetsOverviewGQL,
     SearchDatasetsOverviewQuery,
 } from "./kamu.graphql.interface";
-import AppValues from "../common/app.values";
-import { ApolloQuerySearchResultNodeInterface } from "./apolloQueryResult.interface";
 
 @Injectable()
 export class SearchApi {
@@ -33,44 +29,44 @@ export class SearchApi {
         private searchDatasetsAutocompleteGQL: SearchDatasetsAutocompleteGQL,
         private searchDatasetsOverviewGQL: SearchDatasetsOverviewGQL,
     ) {}
-    private static searchOverviewData(data: {
-        dataset: SearchOverviewDatasetsInterface[];
-        pageInfo: PageInfoInterface;
-        totalCount: number;
-        currentPage: number;
-    }): SearchOverviewInterface {
-        return {
-            dataset: data.dataset,
-            pageInfo: data.pageInfo,
-            totalCount: data.totalCount,
-            currentPage: data.currentPage + 1,
-        };
-    }
-    private static searchMetadataData(data: {
-        id: string;
-        name: string;
-        owner: Account;
-        dataset: SearchOverviewDatasetsInterface[];
-        pageInfo: PageInfoInterface;
-        totalCount: number;
-        currentPage: number;
-    }): SearchMetadataInterface {
+    // private static searchOverviewData(data: {
+    //     dataset: SearchOverviewDatasetsInterface[];
+    //     pageInfo: PageInfoInterface;
+    //     totalCount: number;
+    //     currentPage: number;
+    // }): SearchOverviewInterface {
+    //     return {
+    //         dataset: data.dataset,
+    //         pageInfo: data.pageInfo,
+    //         totalCount: data.totalCount,
+    //         currentPage: data.currentPage + 1,
+    //     };
+    // }
+    // private static searchMetadataData(data: {
+    //     id: string;
+    //     name: string;
+    //     owner: Account;
+    //     dataset: SearchOverviewDatasetsInterface[];
+    //     pageInfo: PageInfoInterface;
+    //     totalCount: number;
+    //     currentPage: number;
+    // }): SearchMetadataInterface {
+    //
+    // private static searchOverviewData(
+    //     dataset: SearchOverviewDatasetsInterface[],
+    //     pageInfo: PageInfoInterface,
+    //     totalCount: number,
+    //     currentPage: number,
+    // ): SearchOverviewInterface {
+    //     return {
+    //         dataset,
+    //         pageInfo,
+    //         totalCount,
+    //         currentPage: currentPage + 1, // TODO: Use zero-based IDs and only offset for display
+    //     };
+    // }
 
-    private static searchOverviewData(
-        dataset: SearchOverviewDatasetsInterface[],
-        pageInfo: PageInfoInterface,
-        totalCount: number,
-        currentPage: number,
-    ): SearchOverviewInterface {
-        return {
-            dataset,
-            pageInfo,
-            totalCount,
-            currentPage: currentPage + 1, // TODO: Use zero-based IDs and only offset for display
-        };
-    }
-
-    private static pageInfoInit(): PageInfoInterface {
+    public pageInfoInit(): PageInfoInterface {
         return {
             hasNextPage: false,
             hasPreviousPage: false,
@@ -107,13 +103,18 @@ export class SearchApi {
         return this.searchDatasetsOverviewGQL
             .watch({
                 query: searchQuery,
-                perPage: perPage,
-                page: page,
+                perPage,
+                page,
             })
             .valueChanges.pipe(
-                map((result) => {
-                    return result.data;
-                }),
+                map(
+                    (
+                        result: ApolloQueryResult<SearchDatasetsOverviewQuery>,
+                    ) => {
+                        debugger;
+                        return result.data;
+                    },
+                ),
             );
     }
     public autocompleteDatasetSearch(
@@ -331,7 +332,7 @@ export class SearchApi {
         return this.apollo.watchQuery({ query: GET_DATA }).valueChanges.pipe(
             map((result: ApolloQueryResult<any>) => {
                 let dataset: SearchOverviewDatasetsInterface[] = [];
-                let pageInfo: PageInfoInterface = SearchApi.pageInfoInit();
+                let pageInfo: PageInfoInterface = this.pageInfoInit();
                 let totalCount = 0;
                 const currentPage = params.page || 0;
 
@@ -351,7 +352,7 @@ export class SearchApi {
                             .totalCount;
                 }
 
-                return SearchApi.searchMetadataData({
+                return {
                     id: result.data.datasets.byId.id,
                     name: result.data.datasets.byId.name,
                     owner: result.data.datasets.byId.owner,
@@ -359,13 +360,13 @@ export class SearchApi {
                     pageInfo,
                     totalCount,
                     currentPage,
-                });
+                };
             }),
         );
     }
 
     // tslint:disable-next-line: no-any
-    clearlyData(edge: any) {
+    public clearlyData(edge: any) {
         const object = edge;
         const value = "typename";
         const nodeKeys: string[] = Object.keys(object).filter(

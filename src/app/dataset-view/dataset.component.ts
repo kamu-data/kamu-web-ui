@@ -115,7 +115,7 @@ const language = 'typescript';
         private sidenavService: SideNavService,
         private router: Router,
         private modalService: ModalService,
-        private clipboard: Clipboard
+        private clipboard: Clipboard,
     ) {
         this._window = window;
     }
@@ -127,7 +127,7 @@ const language = 'typescript';
 
         debugger;
         if (currentEvent !== null) {
-            debugger
+            debugger;
             setTimeout(() => {
                 // @ts-ignore
                 // tslint:disable-next-line:no-string-literal
@@ -191,7 +191,7 @@ const language = 'typescript';
             (data: SearchOverviewInterface) => {
                 this.tableData.tableSource = data.dataset;
                 this.tableData.pageInfo = data.pageInfo;
-                this.tableData.totalCount = data.totalCount;
+                this.tableData.totalCount = data.totalCount as number;
                 this.searchData = data.dataset;
 
                 setTimeout(() => (this.currentPage = data.currentPage));
@@ -311,17 +311,6 @@ const language = 'typescript';
             this.getDatasetId(),
             currentPage - 1,
         );
-    }
-    public onSearchDataForDataset(): void {
-        console.log("onSearchDataForDataset");
-    }
-
-    public onSearchDataForHistory(): void {
-        console.log("onSearchDataForHistory");
-    }
-
-    public onSearchDiscussions(): void {
-        console.log("onSearchDiscussions");
     }
     public onSearchDataForDataset(): void {
         console.log("onSearchDataForDataset");

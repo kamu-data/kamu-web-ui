@@ -2,6 +2,7 @@ import { AppSearchService } from "./search.service";
 import {
     PageInfoInterface,
     SearchOverviewDatasetsInterface,
+    SearchOverviewInterface,
 } from "../interface/search.interface";
 import AppValues from "../common/app.values";
 import { searchAdditionalButtonsEnum } from "./search.interface";
@@ -70,8 +71,6 @@ export class SearchComponent implements OnInit, AfterContentInit {
         resultUnitText: string;
         isClickableRow: boolean;
         pageInfo: PageInfoInterface;
-        totalCount: number | null | undefined;
-        sortOptions: { value: string; label: string; active: boolean }[];
         totalCount: number;
         sortOptions: { value: string; label: string; active: boolean }[];
     };
@@ -171,16 +170,19 @@ export class SearchComponent implements OnInit, AfterContentInit {
         this.changePageAndSearch();
 
         this.appSearchService.onSearchChanges.subscribe((value: string) => {
+            debugger;
             this.searchValue = value;
             this.onSearch(value, this.currentPage);
         });
 
-        this.appSearchService.onSearchDataChanges.subscribe((data) => {
-            this.tableData.tableSource = data.search.query.nodes;
-            this.tableData.pageInfo = data.search.query.pageInfo;
-            this.tableData.totalCount = data.search.query.totalCount;
-            this.currentPage = data.search.query.pageInfo.currentPage + 1;
-        });
+        this.appSearchService.onSearchDataChanges.subscribe(
+            (data: SearchOverviewInterface) => {
+                this.tableData.tableSource = data.dataset;
+                this.tableData.pageInfo = data.pageInfo;
+                this.tableData.totalCount = data.totalCount as number;
+                this.currentPage = data.currentPage;
+            },
+        );
     }
     private changePageAndSearch(): void {
         let page = 1;
@@ -238,19 +240,11 @@ export class SearchComponent implements OnInit, AfterContentInit {
     }
 
     public onSearch(searchValue: string, page: number = 1): void {
+        debugger;
         this.appSearchService.search(searchValue, page - 1);
     }
 
-    updateAllComplete() {
-        debugger;
-        this.allComplete =
-            this.filters != null &&
-            this.filters.every((t) =>
-                t.subtasks?.every((sub) => sub.completed),
-            );
-    }
-
-    updateAllComplete() {
+    public updateAllComplete() {
         this.allComplete =
             this.filters != null &&
             this.filters.every((t) =>

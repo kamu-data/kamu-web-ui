@@ -1,15 +1,20 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { SearchApi } from "../api/search.api";
-import { DatasetIDsInterface } from "../interface/search.interface";
+import {
+    DatasetIDsInterface,
+    PageInfoInterface,
+    SearchOverviewDatasetsInterface,
+    SearchOverviewInterface,
+} from "../interface/search.interface";
 import { SearchDatasetsOverviewQuery } from "../api/kamu.graphql.interface";
 
 @Injectable()
 export class AppSearchService {
-    public searchData: SearchDatasetsOverviewQuery;
+    public searchData: SearchOverviewInterface;
     private searchChanges$: Subject<string> = new Subject<string>();
-    private searchDataChanges$: Subject<SearchDatasetsOverviewQuery> =
-        new Subject<SearchDatasetsOverviewQuery>();
+    private searchDataChanges$: Subject<SearchOverviewInterface> =
+        new Subject<SearchOverviewInterface>();
     private autocompleteDatasetChanges$: Subject<DatasetIDsInterface[]> =
         new Subject<DatasetIDsInterface[]>();
 
@@ -21,10 +26,10 @@ export class AppSearchService {
     public get onSearchChanges(): Observable<string> {
         return this.searchChanges$.asObservable();
     }
-    public searchDataChanges(searchData: SearchDatasetsOverviewQuery): void {
+    public searchDataChanges(searchData: SearchOverviewInterface): void {
         this.searchDataChanges$.next(searchData);
     }
-    public get onSearchDataChanges(): Observable<SearchDatasetsOverviewQuery> {
+    public get onSearchDataChanges(): Observable<SearchOverviewInterface> {
         return this.searchDataChanges$.asObservable();
     }
     public autocompleteDatasetChanges(searchData: DatasetIDsInterface[]) {
@@ -36,11 +41,31 @@ export class AppSearchService {
         return this.autocompleteDatasetChanges$.asObservable();
     }
     public search(searchValue: string, page = 0): void {
-        this.searchApi.searchOverview(searchValue, page).subscribe((data) => {
-            this.searchData = data;
-            this.searchDataChanges(data);
-        });
+        this.searchApi
+            .searchOverview(searchValue, page)
+            .subscribe((data: SearchDatasetsOverviewQuery) => {
+                let dataset: SearchOverviewDatasetsInterface[] = [];
+                let pageInfo = this.searchApi.pageInfoInit();
+                let totalCount: number | null | undefined = 0;
+
+                // @ts-ignore
+                dataset = data.search.query.nodes.map((node: Array<any>) => {
+                    return this.searchApi.clearlyData(node);
+                });
+                pageInfo = data.search.query.pageInfo;
+                totalCount = data.search.query.totalCount;
+
+                this.searchData = {
+                    dataset,
+                    pageInfo,
+                    totalCount,
+                    currentPage: page + 1 || 1,
+                };
+                debugger;
+                this.searchDataChanges(this.searchData);
+            });
     }
+
     public autocompleteDatasetSearch(search: string): void {
         this.searchApi.autocompleteDatasetSearch(search).subscribe(
             (data: DatasetIDsInterface[]) => {

@@ -4,11 +4,23 @@ query searchDatasetsOverview($query: String!, $perPage: Int, $page: Int) {
       nodes {
         __typename
         ... on Dataset {
-          id
-          name
-          kind
-          createdAt
-          lastUpdatedAt
+            id
+            name
+            owner {
+              id
+              name
+            }
+            kind
+            metadata {
+                currentDownstreamDependencies {
+                  id
+                  kind
+                }
+
+            }
+            createdAt
+            lastUpdatedAt
+            __typename
         }
       }
       totalCount

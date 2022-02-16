@@ -49,8 +49,6 @@ export interface SearchOverviewDatasetsInterface {
     kind: DatasetKindTypeNames;
     metadata: DatasetMetadata;
     createdAt: string;
-    name: string;
-    kind: string;
     lastUpdatedAt: string;
 }
 
@@ -60,7 +58,7 @@ export interface Account {
 }
 export interface SearchOverviewInterface {
     dataset: SearchOverviewDatasetsInterface[];
-    totalCount: number;
+    totalCount: number | null | undefined;
     pageInfo: PageInfoInterface;
     currentPage: number;
 }

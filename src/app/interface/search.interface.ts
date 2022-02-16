@@ -85,6 +85,7 @@ export interface PageInfoInterface {
 
 export interface DatasetIDsInterface {
     id: string;
+    name: string;
     __typename: TypeNames;
 }
 

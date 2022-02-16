@@ -1,0 +1,36 @@
+query datasetOverview($datasetId: DatasetID!, $numRecords: Int) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      id
+      owner {
+        id
+        name
+      }
+      name
+      kind
+      createdAt
+      lastUpdatedAt
+      metadata {
+        currentWatermark
+        currentSchema(format: PARQUET_JSON) {
+          format
+          content
+          __typename
+        }
+        __typename
+      }
+      data {
+        numRecordsTotal
+        estimatedSize
+        tail(numRecords: $numRecords, format: JSON) {
+          format
+          content
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}

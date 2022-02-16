@@ -73,26 +73,6 @@ export class SearchApi {
             totalPages: 0,
         };
     }
-
-    // tslint:disable-next-line: no-any
-    public searchIndex(): Observable<any> {
-        const GET_DATA = gql``;
-
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
-        // @ts-ignore
-        return this.apollo.watchQuery({ query: GET_DATA }).valueChanges.pipe(
-            map((result: any) => {
-                if (result.data) {
-                    return result.data.search.query.edges.map((edge: any) => {
-                        const d = Object();
-                        d.id = edge.node.id;
-                        return d;
-                    });
-                }
-            }),
-        );
-    }
-
     // Search query that returs high-level dataset information for displaying the dataaset badge
     public searchOverview(
         searchQuery: string,
@@ -111,7 +91,6 @@ export class SearchApi {
                     (
                         result: ApolloQueryResult<SearchDatasetsOverviewQuery>,
                     ) => {
-                        debugger;
                         return result.data;
                     },
                 ),
@@ -131,7 +110,8 @@ export class SearchApi {
                     const nodesList: DatasetIDsInterface[] =
                         result.data.search.query.nodes.map(
                             (node: ApolloQuerySearchResultNodeInterface) => ({
-                                id: node.name,
+                                name: node.name,
+                                id: node.id,
                                 __typename: node.__typename as TypeNames,
                             }),
                         );
@@ -139,6 +119,7 @@ export class SearchApi {
                     nodesList.unshift({
                         __typename: TypeNames.allDataType,
                         id,
+                        name: id
                     });
                     return nodesList;
                 }),
@@ -223,7 +204,7 @@ export class SearchApi {
         );
     }
 
-    public searchDataset(params: {
+    public getDatasetOverview(params: {
         id: string;
         numRecords?: number;
         page?: number;
@@ -269,6 +250,7 @@ export class SearchApi {
         // @ts-ignore
         return this.apollo.watchQuery({ query: GET_DATA }).valueChanges.pipe(
             map((result: ApolloQueryResult<any>) => {
+                debugger
                 if (result.data) {
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
                     const datasets: any = AppValues.deepCopy(

@@ -86,10 +86,11 @@ export class AppComponent implements OnInit {
                         AppValues.fixedEncodeURIComponent(
                             event.url.split("?id=")[1].split("&")[0],
                         );
-                    if (event.url.find("search")) {
-                        this.appSearchService.searchChanges("");
-                    } else {
+                    if (event.url.includes("search")) {
                         this.appSearchService.searchChanges(searchValue);
+                    }
+                    if (event.url.includes("dataset-view")) {
+                        this.appSearchService.searchChanges("");
                     }
                 }
             });

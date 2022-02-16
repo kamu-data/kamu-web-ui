@@ -1,0 +1,20 @@
+query datasetLinageUpstreamDependencies ($datasetId: DatasetID!) {
+datasets {
+    byId(datasetId: $datasetId) {
+      id
+      kind
+      metadata {
+        currentUpstreamDependencies {
+          id
+          kind
+          metadata {
+            currentUpstreamDependencies {
+              id
+              kind
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+query datasetMetadataDownstreamDependencies($datasetId: DatasetID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      id
+      kind
+      metadata {
+        currentDownstreamDependencies {
+          id
+          kind
+          metadata {
+            currentDownstreamDependencies {
+              id
+              kind
+            }
+          }
+        }
+      }
+    }
+  }
+}

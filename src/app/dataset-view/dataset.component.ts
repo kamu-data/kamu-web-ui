@@ -350,7 +350,7 @@ const language = 'typescript';
 
         this.datasetViewType = DatasetViewTypeEnum.overview;
 
-        this.appDatasetService.searchDataset(this.getDatasetId(), page);
+        this.appDatasetService.getDatasetOverview(this.getDatasetId(), page);
     }
 
     public onSearchLinageDataset(): void {

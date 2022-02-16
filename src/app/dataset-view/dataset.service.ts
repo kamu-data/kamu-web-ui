@@ -162,9 +162,9 @@ export class AppDatasetService {
         this.datasetTree = [];
     }
 
-    public searchDataset(id: string, page: number): void {
+    public getDatasetOverview(id: string, page: number): void {
         this.searchApi
-            .searchDataset({ id, page })
+            .getDatasetOverview({ id, page })
             .subscribe((data: SearchDatasetByID) => {
                 this.searchDatasetNameChanges({
                     id: data.id,

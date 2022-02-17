@@ -23,6 +23,7 @@ import AppValues from "../../common/app.values";
 export class AppHeaderComponent {
     @Input() public searchValue: DatasetIDsInterface = {
         id: "",
+        name: "",
         __typename: TypeNames.allDataType,
     };
     @Input() public appLogo: string;

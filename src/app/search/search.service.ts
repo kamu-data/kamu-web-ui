@@ -69,7 +69,7 @@ export class AppSearchService {
     public autocompleteDatasetSearch(search: string): void {
         this.searchApi.autocompleteDatasetSearch(search).subscribe(
             (data: DatasetIDsInterface[]) => {
-                debugger
+                debugger;
                 this.autocompleteDatasetChanges(data);
             },
             () => {

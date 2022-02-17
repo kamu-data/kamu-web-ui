@@ -225,7 +225,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
         currentPage: number;
         isClick: boolean;
     }): void {
-        debugger
+        debugger;
         this.currentPage = params.currentPage;
 
         this.router.navigate([AppValues.urlSearch], {

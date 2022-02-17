@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { empty, from, Observable, of, Subject, Subscription } from "rxjs";
-import { SearchApi } from "../api/search.api";
+import {Injectable} from "@angular/core";
+import {empty, from, Observable, of, Subject, Subscription} from "rxjs";
+import {SearchApi} from "../api/search.api";
 import {
     DatasetCurrentUpstreamDependencies,
     DatasetInfoInterface,
@@ -14,17 +14,21 @@ import {
     SearchOverviewDatasetsInterface,
     SearchOverviewInterface,
 } from "../interface/search.interface";
-import { expand, flatMap, map } from "rxjs/operators";
+import {expand, flatMap, map} from "rxjs/operators";
+import {DatasetOverviewQuery} from "../api/kamu.graphql.interface";
+import AppValues from "../common/app.values";
 
 @Injectable()
 export class AppDatasetService {
     public onSearchLinageDatasetSubscribtion: Subscription;
 
-    constructor(private searchApi: SearchApi) {}
+    constructor(private searchApi: SearchApi) {
+    }
 
     public get onSearchDatasetInfoChanges(): Observable<DatasetInfoInterface> {
         return this.searchDatasetInfoChanges$.asObservable();
     }
+
     public get onSearchDatasetNameChanges(): Observable<DatasetNameInterface> {
         return this.searchDatasetNameChanges$.asObservable();
     }
@@ -33,9 +37,7 @@ export class AppDatasetService {
         return this.searchChanges$.asObservable();
     }
 
-    public get onSearchDataChanges(): Observable<
-        SearchHistoryInterface[] | SearchOverviewDatasetsInterface[]
-    > {
+    public get onSearchDataChanges(): Observable<SearchHistoryInterface[] | SearchOverviewDatasetsInterface[]> {
         return this.searchDataChanges$.asObservable();
     }
 
@@ -53,9 +55,7 @@ export class AppDatasetService {
         return this.searchData;
     }
 
-    public get onDatasetTreeChanges(): Observable<
-        { id: string; kind: DatasetKindTypeNames }[][]
-    > {
+    public get onDatasetTreeChanges(): Observable<{ id: string; kind: DatasetKindTypeNames }[][]> {
         return this.datasetTreeChanges$.asObservable();
     }
 
@@ -72,9 +72,7 @@ export class AppDatasetService {
 
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     public searchData: any[] = [];
-    private kindInfoChanges$: Subject<DatasetKindInterface[]> = new Subject<
-        DatasetKindInterface[]
-    >();
+    private kindInfoChanges$: Subject<DatasetKindInterface[]> = new Subject<DatasetKindInterface[]>();
     private searchChanges$: Subject<string> = new Subject<string>();
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     private searchDataChanges$: Subject<any[]> = new Subject<any[]>();
@@ -84,9 +82,7 @@ export class AppDatasetService {
         new Subject<DatasetNameInterface>();
     private searchMetadataChanges$: Subject<SearchOverviewInterface> =
         new Subject<SearchOverviewInterface>();
-    private datasetTreeChanges$: Subject<
-        { id: string; kind: DatasetKindTypeNames }[][]
-    > = new Subject<{ id: string; kind: DatasetKindTypeNames }[][]>();
+    private datasetTreeChanges$: Subject<{ id: string; kind: DatasetKindTypeNames }[][]> = new Subject<{ id: string; kind: DatasetKindTypeNames }[][]>();
     private datasetTree: { id: string; kind: DatasetKindTypeNames }[][] = [];
     private datasetKindInfo: DatasetKindInterface[] = [];
 
@@ -112,6 +108,7 @@ export class AppDatasetService {
     ): void {
         this.searchDatasetInfoChanges$.next(searchDatasetInfo);
     }
+
     public searchDatasetNameChanges(
         searchDatasetName: DatasetNameInterface,
     ): void {
@@ -154,7 +151,7 @@ export class AppDatasetService {
         ) {
             return;
         }
-        this.datasetKindInfo.push({ id: dataset.id, kind: dataset.kind });
+        this.datasetKindInfo.push({id: dataset.id, kind: dataset.kind});
         this.kindInfoChanges(this.datasetKindInfo);
     }
 
@@ -164,24 +161,39 @@ export class AppDatasetService {
 
     public getDatasetOverview(id: string, page: number): void {
         this.searchApi
-            .getDatasetOverview({ id, page })
-            .subscribe((data: SearchDatasetByID) => {
-                this.searchDatasetNameChanges({
-                    id: data.id,
-                    name: data.name,
-                    owner: data.owner,
-                });
-                const datasetInfo = AppDatasetService.getDatasetInfo(data);
-                this.searchDatasetInfoChanges(datasetInfo);
-                this.searchData = data.data.tail.content;
-                this.searchDataChanges(data.data.tail.content);
+            .getDatasetOverview({id, page})
+            .subscribe((data: DatasetOverviewQuery | undefined) => {
+                let datasets: SearchDatasetByID;
+                if (data) {
+                    debugger
+                    /* eslint-disable  @typescript-eslint/no-explicit-any */
+                    datasets = AppValues.deepCopy(
+                        data.datasets.byId,
+                    );
+                    datasets.data.tail.content = data.datasets.byId ? JSON.parse(
+                        data.datasets?.byId?.data.tail.content,
+                    ) : {} as any;
+                    datasets.metadata.currentSchema.content = data.datasets.byId ? JSON.parse(
+                        data.datasets.byId.metadata.currentSchema.content,
+                    ) : {} as any;
+
+                    this.searchDatasetNameChanges({
+                        id: datasets.id,
+                        name: datasets.name,
+                        owner: datasets.owner,
+                    });
+                    const datasetInfo = AppDatasetService.getDatasetInfo(datasets);
+                    this.searchDatasetInfoChanges(datasetInfo);
+                    this.searchData = datasets.data.tail.content;
+                    this.searchDataChanges(datasets.data.tail.content);
+                }
             });
     }
 
     public onSearchMetadata(id: string, page: number): void {
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         this.searchApi
-            .onSearchMetadata({ id, page })
+            .onSearchMetadata({id, page})
             .subscribe((data: SearchMetadataInterface) => {
                 this.searchDatasetNameChanges({
                     id: data.id,
@@ -229,8 +241,8 @@ export class AppDatasetService {
                                                     .currentDownstreamDependencies
                                                     ?.length ||
                                                 (d.metadata
-                                                    .currentDownstreamDependencies
-                                                    ?.length &&
+                                                        .currentDownstreamDependencies
+                                                        ?.length &&
                                                     // @ts-ignore
                                                     d.metadata.currentDownstreamDependencies.some(
                                                         (
@@ -240,13 +252,9 @@ export class AppDatasetService {
                                                             DatasetKindTypeNames.root,
                                                     )) ||
                                                 // @ts-ignore
-                                                (d[
-                                                    "currentDownstreamDependencies"
-                                                ]?.length &&
+                                                (d.currentDownstreamDependencies?.length &&
                                                     // @ts-ignore
-                                                    d[
-                                                        "currentDownstreamDependencies"
-                                                    ].some(
+                                                    d.currentDownstreamDependencies.some(
                                                         (
                                                             upDep: DatasetLinageResponse,
                                                         ) =>
@@ -286,7 +294,7 @@ export class AppDatasetService {
                                                         }[],
                                                     ) =>
                                                         r[0].id ===
-                                                            result2.id &&
+                                                        result2.id &&
                                                         r[0].id === d.id,
                                                 )
                                             ) {
@@ -297,8 +305,8 @@ export class AppDatasetService {
                                                     .currentUpstreamDependencies
                                                     ?.length ||
                                                 (d.metadata
-                                                    .currentUpstreamDependencies
-                                                    ?.length &&
+                                                        .currentUpstreamDependencies
+                                                        ?.length &&
                                                     // @ts-ignore
                                                     d.metadata.currentUpstreamDependencies.some(
                                                         (
@@ -308,13 +316,9 @@ export class AppDatasetService {
                                                             DatasetKindTypeNames.root,
                                                     )) ||
                                                 // @ts-ignore
-                                                (d[
-                                                    "currentUpstreamDependencies"
-                                                ]?.length &&
+                                                (d.currentUpstreamDependencies?.length &&
                                                     // @ts-ignore
-                                                    d[
-                                                        "currentUpstreamDependencies"
-                                                    ].some(
+                                                    d.currentUpstreamDependencies.some(
                                                         (
                                                             upDep: DatasetLinageResponse,
                                                         ) =>
@@ -372,7 +376,7 @@ export class AppDatasetService {
             dataset.metadata.currentUpstreamDependencies.forEach(
                 (dependencies: DatasetCurrentUpstreamDependencies) => {
                     this.datasetTree.push([
-                        { id: dataset.id, kind: dataset.kind },
+                        {id: dataset.id, kind: dataset.kind},
                         {
                             id: dependencies.id,
                             kind: dependencies.kind,
@@ -387,7 +391,7 @@ export class AppDatasetService {
             dataset.metadata.currentDownstreamDependencies.forEach(
                 (dependencies: DatasetCurrentUpstreamDependencies) => {
                     this.datasetTree.push([
-                        { id: dataset.id, kind: dataset.kind },
+                        {id: dataset.id, kind: dataset.kind},
                         {
                             id: dependencies.id,
                             kind: dependencies.kind,

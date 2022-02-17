@@ -105,7 +105,7 @@
                         >Metadata
                         </mat-button-toggle>
                         <mat-button-toggle
-                                value="data"
+                                value="history"
                                 [checked]="datasetViewTypeHistory"
                                 (click)="onSearchDataForHistory()"
                                 disabled
@@ -431,8 +431,8 @@
                 </ul>
             </div>
 
-
-            <div
+            <ng-template [ngIf]="!datasetViewTypeData">
+                <div
                     [classList]="
                     datasetViewTypeOverview
                         ? 'dataset-result-container'
@@ -509,10 +509,6 @@
                         </div>
                     </ng-template>
 
-                    <ng-template [ngIf]="datasetViewTypeData">
-                        
-                    </ng-template>
-
                     <ng-template [ngIf]="datasetViewTypeMetadata">
                         <app-metadata
                                 [currentPage]="0"
@@ -553,7 +549,7 @@
                             <div class="gist-file">
 
                                 <div class="gist-data">
-                                    <article class="markdown-body entry-content container-lg" itemprop="text">
+                                    <article class="markdown-body entry-content" itemprop="text">
                                         <pre class="d-flex flex-column align-items-center">
                                             <code>Apache License</code>
                                             <code>Version 1.0, January 2022</code>
@@ -917,6 +913,24 @@
                     </nav>
                 </div>
             </div>
+            </ng-template>
+
+            <ng-template [ngIf]="datasetViewTypeData">
+                <div class="dataset-view-data-result-container">
+                    <div class="search-result-container__content">
+                        <h2 class="box-title align-items-center pb-3 m-0">Schema:</h2>
+                        <ngx-monaco-editor [options]="schemaOptions" [(ngModel)]="schemaCode"></ngx-monaco-editor>
+                    </div>
+                    <div class="search-result-container__content">
+
+                            <h2 class="box-title align-items-center pb-3 m-0">SQL Query Editor:</h2>
+                            <div class="sql-editor-block">
+                                <ngx-monaco-editor [options]="sqlEditorOptions" [(ngModel)]="sqlRequestCode"></ngx-monaco-editor>
+                            </div>
+                            <h2 class="box-title align-items-center pb-3 pt-3 m-0">Query Result Data:</h2>
+                    </div>
+                </div>
+            </ng-template>
         </div>
     </div>
 </div>

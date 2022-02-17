@@ -18,6 +18,7 @@ import { MatChipsModule } from "@angular/material/chips";
 import { MetadataComponent } from "./additional-components/metadata-component/metadata-component";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { MatTabsModule } from "@angular/material/tabs";
+import {MonacoEditorModule} from "ngx-monaco-editor";
 
 @NgModule({
     imports: [
@@ -40,6 +41,7 @@ import { MatTabsModule } from "@angular/material/tabs";
         MatChipsModule,
         ClipboardModule,
         MatTabsModule,
+        MonacoEditorModule,
     ],
     exports: [DatasetComponent, MetadataComponent],
     declarations: [DatasetComponent, MetadataComponent],

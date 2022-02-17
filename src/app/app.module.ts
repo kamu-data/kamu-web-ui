@@ -43,6 +43,7 @@ import { ModalModule } from "./components/modal/modal.module";
 import { MarkdownModule } from "ngx-markdown";
 import { SecurityContext } from "@angular/core";
 import { NotificationIndicatorComponent } from "./components/notification-indicator/notification-indicator.component";
+import {MonacoEditorModule} from "ngx-monaco-editor";
 
 const Services = [
     Apollo,
@@ -98,6 +99,7 @@ const MatModules = [
             loader: HttpClient,
             sanitize: SecurityContext.NONE,
         }),
+        MonacoEditorModule.forRoot(),
 
         BrowserModule,
         BrowserAnimationsModule,

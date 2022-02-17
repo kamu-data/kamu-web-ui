@@ -3,9 +3,14 @@
 @import 'node_modules/prismjs/themes/prism-okaidia'
 @import 'node_modules/prismjs/plugins/line-numbers/prism-line-numbers'
 @import 'node_modules/prismjs/plugins/line-highlight/prism-line-highlight'
+.sql-editor-block
+  height: 300px
+  overflow: hidden
+
 mat-button-toggle-group
   width: fit-content
-
+  & .mat-button-toggle-standalone.mat-button-toggle-appearance-standard, .mat-button-toggle-group-appearance-standard
+    border-radius: 0 !important
 #dataset-viewer
   & .dataset-info
     display: grid

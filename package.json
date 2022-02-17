@@ -42,6 +42,7 @@
     "graphql": "^14.7.0",
     "moment-timezone": "^0.5.31",
     "ngx-markdown": "^9.1.1",
+    "ngx-monaco-editor": "^9.0.0",
     "npx": "^10.2.2",
     "rxjs": "~6.5.3",
     "tslib": "^1.10.0",

@@ -1,8 +1,6 @@
 import {
     AfterContentInit,
-    ChangeDetectionStrategy,
     Component,
-    ElementRef,
     HostListener,
     OnDestroy,
     OnInit,
@@ -20,18 +18,18 @@ import {
     SearchOverviewInterface,
 } from "../interface/search.interface";
 import AppValues from "../common/app.values";
-import { SearchAdditionalButtonInterface } from "../components/search-additional-buttons/search-additional-buttons.interface";
-import { MatSidenav } from "@angular/material/sidenav";
-import { SideNavService } from "../services/sidenav.service";
-import { searchAdditionalButtonsEnum } from "../search/search.interface";
-import { DatasetViewTypeEnum } from "./dataset-view.interface";
-import { AppDatasetService } from "./dataset.service";
-import { NavigationEnd, Router } from "@angular/router";
-import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
-import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { filter } from "rxjs/operators";
-import { ModalService } from "../components/modal/modal.service";
-import { Clipboard } from "@angular/cdk/clipboard";
+import {SearchAdditionalButtonInterface} from "../components/search-additional-buttons/search-additional-buttons.interface";
+import {MatSidenav} from "@angular/material/sidenav";
+import {SideNavService} from "../services/sidenav.service";
+import {searchAdditionalButtonsEnum} from "../search/search.interface";
+import {DatasetViewTypeEnum} from "./dataset-view.interface";
+import {AppDatasetService} from "./dataset.service";
+import {NavigationEnd, Router} from "@angular/router";
+import {Edge} from "@swimlane/ngx-graph/lib/models/edge.model";
+import {ClusterNode, Node} from "@swimlane/ngx-graph/lib/models/node.model";
+import {filter} from "rxjs/operators";
+import {ModalService} from "../components/modal/modal.service";
+import {Clipboard} from "@angular/cdk/clipboard";
 
 @Component({
     selector: "app-dataset",
@@ -40,7 +38,7 @@ import { Clipboard } from "@angular/cdk/clipboard";
     encapsulation: ViewEncapsulation.None,
 })
 export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
-    @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
+    @ViewChild("sidenav", {static: true}) public sidenav?: MatSidenav;
     @ViewChild("menuTrigger") trigger: any;
     public isMobileView = false;
     public datasetInfo: DatasetInfoInterface;
@@ -76,6 +74,31 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public isAvailableLinageGraph = false;
     public headings: Element[] | undefined;
     public isMarkdownEditView = false;
+    public sqlEditorOptions = {
+        theme: 'vs',
+        language: 'sql',
+    };
+    public schemaOptions = {
+        theme: 'vs',
+        language: 'sql',
+        readOnly: true,
+        minimap: {
+            enabled: false
+        },
+        lineNumbers: "off",
+        lineDecorationsWidth: 0,
+        lineNumbersMinChars: 0
+    };
+    public schemaCode = ''
+    public sqlRequestCode: string = 'CREATE TABLE dbo.EmployeePhoto\n' +
+        '(\n' +
+        '    EmployeeId INT NOT NULL PRIMARY KEY,\n' +
+        '    Photo VARBINARY(MAX) FILESTREAM NULL,\n' +
+        '    MyRowGuidColumn UNIQUEIDENTIFIER NOT NULL ROWGUIDCOL\n' +
+        '                    UNIQUE DEFAULT NEWID()\n' +
+        ');\n' +
+        '\n' +
+        'GO\n}';
     public clipboardKamuCli = "kamu pull account/dataset-alias";
     public clipboardKafka = "https://api.kamu.dev/kafka/";
     public markdown = `## Markdown __rulez__!
@@ -196,6 +219,7 @@ const language = 'typescript';
             },
         );
     }
+
     public successCopyToClipboardCopied(): void {
         console.log("copy success");
     }
@@ -309,9 +333,18 @@ const language = 'typescript';
             currentPage - 1,
         );
     }
+
     public onSearchDataForDataset(): void {
+        this.router.navigate(
+            [AppValues.defaultUsername, AppValues.urlDatasetView],
+            {
+                queryParams: {
+                    id: this.getDatasetId(),
+                    type: AppValues.urlDatasetViewDataType
+                },
+            },
+        );
         this.datasetViewType = DatasetViewTypeEnum.data;
-        console.log("onSearchDataForDataset");
     }
 
     public onSearchDataForHistory(): void {
@@ -325,9 +358,11 @@ const language = 'typescript';
     public showOwnerPage(): void {
         this.router.navigate([this.datasetInfo.owner.id]);
     }
+
     public toggleReadmeView(): void {
         this.isMarkdownEditView = !this.isMarkdownEditView;
     }
+
     public selectTopic(topicName: string): void {
         this.modalService.warning({
             message: "Feature will be soon",
@@ -392,15 +427,15 @@ const language = 'typescript';
             {
                 id: DatasetKindTypeNames.root + "_cluster",
                 label: DatasetKindTypeNames.root,
-                data: { customColor: "#A52A2A59" },
-                position: { x: 10, y: 10 },
+                data: {customColor: "#A52A2A59"},
+                position: {x: 10, y: 10},
                 childNodeIds: [],
             },
             {
                 id: DatasetKindTypeNames.derivative + "_cluster",
                 label: DatasetKindTypeNames.derivative,
-                data: { customColor: "#00800039" },
-                position: { x: 10, y: 10 },
+                data: {customColor: "#00800039"},
+                position: {x: 10, y: 10},
                 childNodeIds: [],
             },
         ];
@@ -475,7 +510,7 @@ const language = 'typescript';
                                 customColor:
                                     oneOfTheKindInfo[0] &&
                                     oneOfTheKindInfo[0].kind ===
-                                        DatasetKindTypeNames.root
+                                    DatasetKindTypeNames.root
                                         ? "rgba(165,42,42,0.35)"
                                         : "#008000",
                             },
@@ -558,7 +593,7 @@ const language = 'typescript';
         this.tableData = {
             isTableHeader: true,
             tableSource: this.searchData,
-            isResultQuantity: true,
+            isResultQuantity: false,
             isClickableRow: false,
             pageInfo: {
                 hasNextPage: false,
@@ -593,6 +628,9 @@ const language = 'typescript';
             this.datasetViewType = type;
             if (type === DatasetViewTypeEnum.overview) {
                 this.onSearchDataset();
+            }
+            if (type === DatasetViewTypeEnum.data) {
+                this.onSearchDataForDataset();
             }
             if (type === DatasetViewTypeEnum.metadata) {
                 this.currentPage = page;
@@ -629,6 +667,7 @@ const language = 'typescript';
             },
         );
     }
+
     ngOnDestroy() {
         if (this.appDatasetService.onSearchLinageDatasetSubscribtion) {
             this.appDatasetService.onSearchLinageDatasetSubscribtion.unsubscribe();

@@ -325,13 +325,15 @@ router-outlet
     grid-template-columns: 0.25fr 1fr
   & .dataset-result-container
     grid-template-columns: 1fr 0.25fr
+  & .dataset-view-data-result-container
+    grid-template-columns: 0.25fr 1fr
 #search, #dataset-viewer
   & .nav-link
     cursor: pointer
   & .nav-tabs
     margin-bottom: 14px
     border-bottom: none
-  & .search-result-container, .dataset-result-container
+  & .search-result-container, .dataset-result-container, .dataset-view-data-result-container
     display: grid
     grid-gap: 25px
   & table
@@ -438,6 +440,8 @@ router-outlet
     border: 1px solid #ddd
     border-bottom: 1px solid #ccc
     border-radius: 6px
+    & article
+      padding: 6px
   & .gist-data
     overflow: auto
     word-wrap: normal
@@ -449,6 +453,13 @@ router-outlet
     font-size: 16px
     line-height: 1.5
     word-wrap: break-word
+    & pre
+      padding: 16px
+      overflow: auto
+      font-size: 85%
+      line-height: 1.45
+      background-color: $app-color-canvas-subtle
+      border-radius: 6px
 /*************************/
 @media (max-width: 480px)
   .app-header__right-column__label

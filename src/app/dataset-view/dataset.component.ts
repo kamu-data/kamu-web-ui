@@ -310,6 +310,7 @@ const language = 'typescript';
         );
     }
     public onSearchDataForDataset(): void {
+        this.datasetViewType = DatasetViewTypeEnum.data;
         console.log("onSearchDataForDataset");
     }
 

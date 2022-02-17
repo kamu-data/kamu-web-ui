@@ -30,6 +30,8 @@ import {ClusterNode, Node} from "@swimlane/ngx-graph/lib/models/node.model";
 import {filter} from "rxjs/operators";
 import {ModalService} from "../components/modal/modal.service";
 import {Clipboard} from "@angular/cdk/clipboard";
+import SchemaForDataTabs from "../common/schema.graphql";
+
 
 @Component({
     selector: "app-dataset",
@@ -80,7 +82,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     };
     public schemaOptions = {
         theme: 'vs',
-        language: 'sql',
+        language: 'graphql',
         readOnly: true,
         minimap: {
             enabled: false
@@ -89,7 +91,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         lineDecorationsWidth: 0,
         lineNumbersMinChars: 0
     };
-    public schemaCode = ''
+    public schemaCode = SchemaForDataTabs.schema;
     public sqlRequestCode: string = 'CREATE TABLE dbo.EmployeePhoto\n' +
         '(\n' +
         '    EmployeeId INT NOT NULL PRIMARY KEY,\n' +

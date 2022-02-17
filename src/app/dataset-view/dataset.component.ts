@@ -125,9 +125,7 @@ const language = 'typescript';
 
         const currentEvent: EventTarget | null = event.currentTarget;
 
-        debugger;
         if (currentEvent !== null) {
-            debugger;
             setTimeout(() => {
                 // @ts-ignore
                 // tslint:disable-next-line:no-string-literal
@@ -199,7 +197,6 @@ const language = 'typescript';
         );
     }
     public successCopyToClipboardCopied(): void {
-        debugger;
         console.log("copy success");
     }
 

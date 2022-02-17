@@ -165,7 +165,6 @@ export class AppDatasetService {
             .subscribe((data: DatasetOverviewQuery | undefined) => {
                 let datasets: SearchDatasetByID;
                 if (data) {
-                    debugger
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
                     datasets = AppValues.deepCopy(
                         data.datasets.byId,

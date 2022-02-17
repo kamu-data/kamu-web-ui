@@ -61,7 +61,6 @@ export class AppSearchService {
                     totalCount,
                     currentPage: page + 1 || 1,
                 };
-                debugger;
                 this.searchDataChanges(this.searchData);
             });
     }
@@ -69,7 +68,6 @@ export class AppSearchService {
     public autocompleteDatasetSearch(search: string): void {
         this.searchApi.autocompleteDatasetSearch(search).subscribe(
             (data: DatasetIDsInterface[]) => {
-                debugger;
                 this.autocompleteDatasetChanges(data);
             },
             () => {

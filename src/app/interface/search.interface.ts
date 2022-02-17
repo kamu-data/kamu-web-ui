@@ -1,4 +1,4 @@
-import { DatasetMetadata } from "../api/kamu.graphql.interface";
+import {DatasetMetadata, MetadataEvent} from "../api/kamu.graphql.interface";
 
 export interface SearchHistoryResponseInterface {
     datasets: {
@@ -124,6 +124,8 @@ export interface SearchDatasetByID {
 export interface SearchMetadataNodeResponseInterface {
     blockHash: string;
     systemTime: string;
+    event: any;
+    eventType?: string;
 }
 export interface SearchDatasetByIDDataInterface {
     __typename: string;

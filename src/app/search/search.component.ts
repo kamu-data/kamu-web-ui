@@ -170,7 +170,6 @@ export class SearchComponent implements OnInit, AfterContentInit {
         this.changePageAndSearch();
 
         this.appSearchService.onSearchChanges.subscribe((value: string) => {
-            debugger;
             this.searchValue = value;
             this.onSearch(value, this.currentPage);
         });
@@ -225,7 +224,6 @@ export class SearchComponent implements OnInit, AfterContentInit {
         currentPage: number;
         isClick: boolean;
     }): void {
-        debugger;
         this.currentPage = params.currentPage;
 
         this.router.navigate([AppValues.urlSearch], {
@@ -241,7 +239,6 @@ export class SearchComponent implements OnInit, AfterContentInit {
     }
 
     public onSearch(searchValue: string, page: number = 1): void {
-        debugger;
         this.appSearchService.search(searchValue, page - 1);
     }
 

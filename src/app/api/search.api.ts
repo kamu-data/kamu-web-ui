@@ -6,17 +6,16 @@ import {Observable, of, throwError} from "rxjs";
 import {
     DatasetIDsInterface,
     PageInfoInterface,
-    SearchDatasetByID,
     SearchMetadataNodeResponseInterface,
     SearchOverviewDatasetsInterface,
     TypeNames,
 } from "../interface/search.interface";
 
-import AppValues from "../common/app.values";
 import {ApolloQuerySearchResultNodeInterface} from "./apolloQueryResult.interface";
 import {
+    DatasetMetadataGQL,
     DatasetOverviewGQL, DatasetOverviewQuery,
-    SearchDatasetsAutocompleteGQL, SearchDatasetsAutocompleteQuery,
+    SearchDatasetsAutocompleteGQL,
     SearchDatasetsOverviewGQL,
     SearchDatasetsOverviewQuery,
 } from "./kamu.graphql.interface";
@@ -29,7 +28,8 @@ export class SearchApi {
         private apollo: Apollo,
         private searchDatasetsAutocompleteGQL: SearchDatasetsAutocompleteGQL,
         private searchDatasetsOverviewGQL: SearchDatasetsOverviewGQL,
-        private datasetOverviewGQL: DatasetOverviewGQL
+        private datasetOverviewGQL: DatasetOverviewGQL,
+        private datasetMetadataGQL: DatasetMetadataGQL,
     ) {
     }
 
@@ -114,7 +114,60 @@ export class SearchApi {
                 }),
             );
     }
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
+
+    // tslint:disable-next-line: no-any
+    public onSearchMetadata(params: {
+        id: string;
+        numRecords?: number;
+        page?: number;
+    }): Observable<any> {
+        return this.datasetMetadataGQL
+            // @ts-ignore
+            .watch({datasetId: params.id, $perPage: params.numRecords || 5, $page: params.page || 0})
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<DatasetOverviewQuery>) => {
+                    if (result.data) {
+                        // tslint:disable-next-line: no-any
+                        // @ts-ignore
+                        return this.apollo.watchQuery({query: GET_DATA}).valueChanges.pipe(
+                            map((result: ApolloQueryResult<any>) => {
+                                let dataset: SearchOverviewDatasetsInterface[] = [];
+                                let pageInfo: PageInfoInterface = this.pageInfoInit();
+                                let totalCount = 0;
+                                const currentPage = params.page || 0;
+
+                                if (result.data) {
+                                    // tslint:disable-next-line: no-any
+                                    dataset =
+                                        result.data.datasets.byId.metadata.chain.blocks.nodes.map(
+                                            (node: SearchMetadataNodeResponseInterface) => {
+                                                return this.clearlyData(node);
+                                            },
+                                        );
+                                    pageInfo =
+                                        result.data.datasets.byId.metadata.chain.blocks
+                                            .pageInfo;
+                                    totalCount =
+                                        result.data.datasets.byId.metadata.chain.blocks
+                                            .totalCount;
+                                }
+
+                                return {
+                                    id: result.data.datasets.byId.id,
+                                    name: result.data.datasets.byId.name,
+                                    owner: result.data.datasets.byId.owner,
+                                    dataset,
+                                    pageInfo,
+                                    totalCount,
+                                    currentPage,
+                                };
+                            }),
+                        );
+                    }
+                }));
+    }
+
+     /* eslint-disable  @typescript-eslint/no-explicit-any */
     public searchLinageDataset(id: string): Observable<any> {
         if (typeof id !== "string") {
             return throwError("Empty ID");
@@ -192,80 +245,6 @@ export class SearchApi {
         );
     }
 
-    // tslint:disable-next-line: no-any
-    public onSearchMetadata(params: {
-        id: string;
-        numRecords?: number;
-        page?: number;
-    }): Observable<any> {
-        const GET_DATA: DocumentNode = gql`
-            {
-                datasets {
-                    byId(datasetId: "${params.id}") {
-                        id
-                        owner {
-                            id
-                            name
-                        }
-                        name
-                        metadata {
-                            chain {
-                                blocks(perPage: ${(params.numRecords || 5).toString()}, page: ${(
-            params.page || 0
-        ).toString()}) {
-                                    totalCount
-                                    nodes {
-                                        blockHash,
-                                        systemTime
-                                    }
-                                    pageInfo {
-                                        hasNextPage
-                                        hasPreviousPage
-                                        totalPages
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }`;
-        // tslint:disable-next-line: no-any
-        // @ts-ignore
-        return this.apollo.watchQuery({query: GET_DATA}).valueChanges.pipe(
-            map((result: ApolloQueryResult<any>) => {
-                let dataset: SearchOverviewDatasetsInterface[] = [];
-                let pageInfo: PageInfoInterface = this.pageInfoInit();
-                let totalCount = 0;
-                const currentPage = params.page || 0;
-
-                if (result.data) {
-                    // tslint:disable-next-line: no-any
-                    dataset =
-                        result.data.datasets.byId.metadata.chain.blocks.nodes.map(
-                            (node: SearchMetadataNodeResponseInterface) => {
-                                return this.clearlyData(node);
-                            },
-                        );
-                    pageInfo =
-                        result.data.datasets.byId.metadata.chain.blocks
-                            .pageInfo;
-                    totalCount =
-                        result.data.datasets.byId.metadata.chain.blocks
-                            .totalCount;
-                }
-
-                return {
-                    id: result.data.datasets.byId.id,
-                    name: result.data.datasets.byId.name,
-                    owner: result.data.datasets.byId.owner,
-                    dataset,
-                    pageInfo,
-                    totalCount,
-                    currentPage,
-                };
-            }),
-        );
-    }
 
     // tslint:disable-next-line: no-any
     public clearlyData(edge: any) {

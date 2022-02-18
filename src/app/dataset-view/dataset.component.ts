@@ -30,8 +30,6 @@ import {ClusterNode, Node} from "@swimlane/ngx-graph/lib/models/node.model";
 import {filter} from "rxjs/operators";
 import {ModalService} from "../components/modal/modal.service";
 import {Clipboard} from "@angular/cdk/clipboard";
-import SchemaForDataTabs from "../common/schema.graphql";
-
 
 @Component({
     selector: "app-dataset",
@@ -76,31 +74,6 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public isAvailableLinageGraph = false;
     public headings: Element[] | undefined;
     public isMarkdownEditView = false;
-    public sqlEditorOptions = {
-        theme: 'vs',
-        language: 'sql',
-    };
-    public schemaOptions = {
-        theme: 'vs',
-        language: 'graphql',
-        readOnly: true,
-        minimap: {
-            enabled: false
-        },
-        lineNumbers: "off",
-        lineDecorationsWidth: 0,
-        lineNumbersMinChars: 0
-    };
-    public schemaCode = SchemaForDataTabs.schema;
-    public sqlRequestCode: string = 'CREATE TABLE dbo.EmployeePhoto\n' +
-        '(\n' +
-        '    EmployeeId INT NOT NULL PRIMARY KEY,\n' +
-        '    Photo VARBINARY(MAX) FILESTREAM NULL,\n' +
-        '    MyRowGuidColumn UNIQUEIDENTIFIER NOT NULL ROWGUIDCOL\n' +
-        '                    UNIQUE DEFAULT NEWID()\n' +
-        ');\n' +
-        '\n' +
-        'GO\n}';
     public clipboardKamuCli = "kamu pull account/dataset-alias";
     public clipboardKafka = "https://api.kamu.dev/kafka/";
     public markdown = `## Markdown __rulez__!

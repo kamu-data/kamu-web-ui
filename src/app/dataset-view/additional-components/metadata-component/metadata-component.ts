@@ -15,14 +15,29 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
 export class MetadataComponent {
     @Input() public currentPage: number;
     @Input() public pageInfo: PageInfoInterface;
+    @Input() public tableData: {
+        isTableHeader: boolean;
+        displayedColumns?: any[];
+        tableSource: any;
+        isResultQuantity: boolean;
+        isClickableRow: boolean;
+        pageInfo: PageInfoInterface;
+        totalCount: number;
+    };
     @Output() public pageChangeEvent: EventEmitter<{
         currentPage: number;
         isClick: boolean;
     }> = new EventEmitter();
+    @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
+    @Output() onPageChangeEmit: EventEmitter<{
+        currentPage: number;
+        isClick: boolean;
+    }> = new EventEmitter();
 
-    page = 4;
+    public page = 1;
+    private previousPage: number;
 
-    getPageSymbol(current: number) {
+    public getPageSymbol(current: number) {
         return ["A", "B", "C", "D", "E", "F", "G"][current - 1];
     }
 
@@ -33,6 +48,14 @@ export class MetadataComponent {
     formatInput(input: HTMLInputElement) {
         input.value = input.value.replace(FILTER_PAG_REGEX, "");
     }
-    private previousPage: number;
-    public onPageChange(currentPage: number): void {}
+    public onPageChange(params: {
+        currentPage: number;
+        isClick: boolean;
+    }): void {
+        this.onPageChangeEmit.emit(params);
+    }
+
+    public onSelectDataset(id: string): void {
+        this.onSelectDatasetEmit.emit(id);
+    }
 }

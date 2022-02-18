@@ -19,6 +19,7 @@ import { MetadataComponent } from "./additional-components/metadata-component/me
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { MatTabsModule } from "@angular/material/tabs";
 import {MonacoEditorModule} from "ngx-monaco-editor";
+import {DataComponent} from "./additional-components/data-component/data-component";
 
 @NgModule({
     imports: [
@@ -43,8 +44,8 @@ import {MonacoEditorModule} from "ngx-monaco-editor";
         MatTabsModule,
         MonacoEditorModule,
     ],
-    exports: [DatasetComponent, MetadataComponent],
-    declarations: [DatasetComponent, MetadataComponent],
+    exports: [DatasetComponent, MetadataComponent, DataComponent],
+    declarations: [DatasetComponent, MetadataComponent, DataComponent],
 })
 export class DatasetModule {
     public static forRoot(): ModuleWithProviders<DatasetModule> {

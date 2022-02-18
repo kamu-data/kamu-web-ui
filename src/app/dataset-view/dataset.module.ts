@@ -18,10 +18,10 @@ import { MatChipsModule } from "@angular/material/chips";
 import { MetadataComponent } from "./additional-components/metadata-component/metadata-component";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { MatTabsModule } from "@angular/material/tabs";
-import {MonacoEditorModule} from "ngx-monaco-editor";
-import {DataComponent} from "./additional-components/data-component/data-component";
-import {OverviewComponent} from "./additional-components/overview-component/overview-component";
-import {LinageComponent} from "./additional-components/linage-component/linage-component";
+import { MonacoEditorModule } from "ngx-monaco-editor";
+import { DataComponent } from "./additional-components/data-component/data-component";
+import { OverviewComponent } from "./additional-components/overview-component/overview-component";
+import { LinageComponent } from "./additional-components/linage-component/linage-component";
 
 @NgModule({
     imports: [
@@ -46,8 +46,20 @@ import {LinageComponent} from "./additional-components/linage-component/linage-c
         MatTabsModule,
         MonacoEditorModule,
     ],
-    exports: [DatasetComponent, MetadataComponent, DataComponent, OverviewComponent, LinageComponent],
-    declarations: [DatasetComponent, MetadataComponent, DataComponent, OverviewComponent, LinageComponent],
+    exports: [
+        DatasetComponent,
+        MetadataComponent,
+        DataComponent,
+        OverviewComponent,
+        LinageComponent,
+    ],
+    declarations: [
+        DatasetComponent,
+        MetadataComponent,
+        DataComponent,
+        OverviewComponent,
+        LinageComponent,
+    ],
 })
 export class DatasetModule {
     public static forRoot(): ModuleWithProviders<DatasetModule> {

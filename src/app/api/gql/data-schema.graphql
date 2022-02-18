@@ -1,4 +1,4 @@
-query datasetDataSchema($datasetId: DatasetID!, $numRecords: Int, $numPage: Int) {
+query getDatasetDataSchema($datasetId: DatasetID!, $numRecords: Int, $numPage: Int) {
   datasets {
     byId(datasetId: $datasetId) {
       id
@@ -11,24 +11,26 @@ query datasetDataSchema($datasetId: DatasetID!, $numRecords: Int, $numPage: Int)
       createdAt
       lastUpdatedAt
       metadata {
-        currentSchema (format: PARQUET_JSON) {
+        currentWatermark
+        currentSchema(format: PARQUET_JSON) {
+          format
           content
+          __typename
         }
-        chain {
-          blocks(perPage: $numRecords, page: $numPage) {
-            totalCount
-            nodes {
-              blockHash,
-              systemTime
-            }
-            pageInfo {
-              hasNextPage
-              hasPreviousPage
-              totalPages
-            }
-          }
-        }
+        __typename
       }
+      data {
+        numRecordsTotal
+        estimatedSize
+        tail(numRecords: $numRecords, format: JSON) {
+          format
+          content
+          __typename
+        }
+        __typename
+      }
+      __typename
     }
+    __typename
   }
 }

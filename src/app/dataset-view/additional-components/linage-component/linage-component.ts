@@ -1,9 +1,7 @@
-import {
-    Component, EventEmitter, Input, Output,
-} from "@angular/core";
-import {PageInfoInterface} from "../../../interface/search.interface";
-import {Edge} from "@swimlane/ngx-graph/lib/models/edge.model";
-import {ClusterNode, Node} from "@swimlane/ngx-graph/lib/models/node.model";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { PageInfoInterface } from "../../../interface/search.interface";
+import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
+import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 @Component({
     selector: "app-linage",
     templateUrl: "./linage-component.html",

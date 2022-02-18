@@ -1,7 +1,8 @@
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import {
-    Component, EventEmitter, Input, Output,
-} from "@angular/core";
-import {DatasetInfoInterface, PageInfoInterface} from "../../../interface/search.interface";
+    DatasetInfoInterface,
+    PageInfoInterface,
+} from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
 @Component({
     selector: "app-overview",

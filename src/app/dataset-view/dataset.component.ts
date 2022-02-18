@@ -18,18 +18,19 @@ import {
     SearchOverviewInterface,
 } from "../interface/search.interface";
 import AppValues from "../common/app.values";
-import {SearchAdditionalButtonInterface} from "../components/search-additional-buttons/search-additional-buttons.interface";
-import {MatSidenav} from "@angular/material/sidenav";
-import {SideNavService} from "../services/sidenav.service";
-import {searchAdditionalButtonsEnum} from "../search/search.interface";
-import {DatasetViewTypeEnum} from "./dataset-view.interface";
-import {AppDatasetService} from "./dataset.service";
-import {NavigationEnd, Router} from "@angular/router";
-import {Edge} from "@swimlane/ngx-graph/lib/models/edge.model";
-import {ClusterNode, Node} from "@swimlane/ngx-graph/lib/models/node.model";
-import {filter} from "rxjs/operators";
-import {ModalService} from "../components/modal/modal.service";
-import {Clipboard} from "@angular/cdk/clipboard";
+import { SearchAdditionalButtonInterface } from "../components/search-additional-buttons/search-additional-buttons.interface";
+import { MatSidenav } from "@angular/material/sidenav";
+import { SideNavService } from "../services/sidenav.service";
+import { searchAdditionalButtonsEnum } from "../search/search.interface";
+import { DatasetViewTypeEnum } from "./dataset-view.interface";
+import { AppDatasetService } from "./dataset.service";
+import { NavigationEnd, Router } from "@angular/router";
+import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
+import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
+import { filter } from "rxjs/operators";
+import { ModalService } from "../components/modal/modal.service";
+import { Clipboard } from "@angular/cdk/clipboard";
+import {DataSchema} from "../api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset",
@@ -38,13 +39,14 @@ import {Clipboard} from "@angular/cdk/clipboard";
     encapsulation: ViewEncapsulation.None,
 })
 export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
-    @ViewChild("sidenav", {static: true}) public sidenav?: MatSidenav;
+    @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     @ViewChild("menuTrigger") trigger: any;
     public isMobileView = false;
     public datasetInfo: DatasetInfoInterface;
     public datasetName: DatasetNameInterface;
     public searchValue = "";
     public currentPage: number;
+    public currentSchema: DataSchema;
     public isMinimizeSearchAdditionalButtons = false;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.overview;
     public searchAdditionalButtonsData: SearchAdditionalButtonInterface[] = [
@@ -163,6 +165,10 @@ const language = 'typescript';
         this.initTableData();
 
         this.prepareLinageGraph();
+
+        this.appDatasetService.onDataSchemaChanges.subscribe((schema: DataSchema) => {
+            this.currentSchema = schema;
+        })
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
             (info: DatasetInfoInterface) => {
@@ -307,11 +313,13 @@ const language = 'typescript';
             {
                 queryParams: {
                     id: this.getDatasetId(),
-                    type: AppValues.urlDatasetViewDataType
+                    type: AppValues.urlDatasetViewDataType,
                 },
             },
         );
         this.datasetViewType = DatasetViewTypeEnum.data;
+
+        this.appDatasetService.getDatasetDataSchema(this.getDatasetId(), 5, 0);
     }
 
     public onSearchDataForHistory(): void {
@@ -394,15 +402,15 @@ const language = 'typescript';
             {
                 id: DatasetKindTypeNames.root + "_cluster",
                 label: DatasetKindTypeNames.root,
-                data: {customColor: "#A52A2A59"},
-                position: {x: 10, y: 10},
+                data: { customColor: "#A52A2A59" },
+                position: { x: 10, y: 10 },
                 childNodeIds: [],
             },
             {
                 id: DatasetKindTypeNames.derivative + "_cluster",
                 label: DatasetKindTypeNames.derivative,
-                data: {customColor: "#00800039"},
-                position: {x: 10, y: 10},
+                data: { customColor: "#00800039" },
+                position: { x: 10, y: 10 },
                 childNodeIds: [],
             },
         ];
@@ -477,7 +485,7 @@ const language = 'typescript';
                                 customColor:
                                     oneOfTheKindInfo[0] &&
                                     oneOfTheKindInfo[0].kind ===
-                                    DatasetKindTypeNames.root
+                                        DatasetKindTypeNames.root
                                         ? "rgba(165,42,42,0.35)"
                                         : "#008000",
                             },

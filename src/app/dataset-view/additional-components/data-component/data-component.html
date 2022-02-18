@@ -1,15 +1,23 @@
 <div class="dataset-view-data-result-container">
     <div class="search-result-container__content">
         <h2 class="box-title align-items-center pb-3 m-0">Schema:</h2>
-        <ngx-monaco-editor [options]="schemaOptions" [(ngModel)]="sqlSchema"></ngx-monaco-editor>
-<!--        <h2 class="box-title align-items-center pb-3 m-0">Saved Queries / Notebooks</h2>-->
-<!--        <ngx-monaco-editor [options]="schemaOptions" [(ngModel)]="sqlRequestCode"></ngx-monaco-editor>-->
+        <ngx-monaco-editor
+            [options]="schemaOptions"
+            [(ngModel)]="currentSchema"
+        ></ngx-monaco-editor>
+        <!--        <h2 class="box-title align-items-center pb-3 m-0">Saved Queries / Notebooks</h2>-->
+        <!--        <ngx-monaco-editor [options]="schemaOptions" [(ngModel)]="sqlRequestCode"></ngx-monaco-editor>-->
     </div>
     <div class="search-result-container__content">
-
-            <h2 class="box-title align-items-center pb-3 m-0">SQL Query Editor:</h2>
-            <ngx-monaco-editor [options]="sqlEditorOptions" [(ngModel)]="sqlRequestCode"></ngx-monaco-editor>
-            <h2 class="box-title align-items-center pb-3 pt-3 m-0">Query Result Data:</h2>
+        <h2 class="box-title align-items-center pb-3 m-0">SQL Query Editor:</h2>
+        <ngx-monaco-editor
+            [options]="sqlEditorOptions"
+            [(ngModel)]="sqlRequestCode"
+        ></ngx-monaco-editor>
+        <h2 class="box-title align-items-center pb-3 pt-3 m-0">
+            Query Result Data:
+        </h2>
+        <ng-template [ngIf]="tableData">
             <app-dynamic-table
                 [isLatestCommitDisplay]="false"
                 [isResultQuantity]="tableData.isResultQuantity"
@@ -18,6 +26,7 @@
                 [isTableHeader]="tableData.isTableHeader"
                 [tableSource]="tableData.tableSource"
                 (onSelectDatasetEmit)="onSelectDataset($event)"
-        ></app-dynamic-table>
+            ></app-dynamic-table>
+        </ng-template>
     </div>
 </div>

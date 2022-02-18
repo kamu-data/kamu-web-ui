@@ -1,0 +1,30 @@
+<div
+                    class="search-result-container__content"
+                    id="searchResultContainerContent"
+            >
+                    <ng-template
+                            [ngIf]="
+                            isAvailableLinageGraph &&
+                            linageGraphLink.length !== 0
+                        "
+                    >
+                        <app-linage-graph
+                                [view]="linageGraphView"
+                                [links]="linageGraphLink"
+                                [nodes]="linageGraphNodes"
+                                [clusters]="linageGraphClusters"
+                                (onClickNodeEvent)="onClickNode($event)"
+                        ></app-linage-graph>
+                    </ng-template>
+                    <ng-template
+                            [ngIf]="
+                            !isAvailableLinageGraph &&
+                            linageGraphLink.length === 0
+                        "
+                    >
+                        <p>
+                            The current dataset is root. Not enough data to
+                            build the graph.
+                        </p>
+                    </ng-template>
+                </div>

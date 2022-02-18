@@ -21,6 +21,7 @@ import { MatTabsModule } from "@angular/material/tabs";
 import {MonacoEditorModule} from "ngx-monaco-editor";
 import {DataComponent} from "./additional-components/data-component/data-component";
 import {OverviewComponent} from "./additional-components/overview-component/overview-component";
+import {LinageComponent} from "./additional-components/linage-component/linage-component";
 
 @NgModule({
     imports: [
@@ -45,8 +46,8 @@ import {OverviewComponent} from "./additional-components/overview-component/over
         MatTabsModule,
         MonacoEditorModule,
     ],
-    exports: [DatasetComponent, MetadataComponent, DataComponent, OverviewComponent],
-    declarations: [DatasetComponent, MetadataComponent, DataComponent, OverviewComponent],
+    exports: [DatasetComponent, MetadataComponent, DataComponent, OverviewComponent, LinageComponent],
+    declarations: [DatasetComponent, MetadataComponent, DataComponent, OverviewComponent, LinageComponent],
 })
 export class DatasetModule {
     public static forRoot(): ModuleWithProviders<DatasetModule> {

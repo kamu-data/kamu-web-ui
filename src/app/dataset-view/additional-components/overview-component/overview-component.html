@@ -1,0 +1,197 @@
+<div class="dataset-result-container">
+<div
+        class="search-result-container__content"
+        id="searchResultContainerContent"
+>
+        <div>
+            <div
+                    class="d-flex flex-column flex-justify-between pb-3 mb-3 position-relative"
+            >
+                <h2 class="box-title align-items-center pb-3">
+                    Description
+                </h2>
+                <p>
+                    One Paragraph about data description goes here.
+                    You can also state why this data was collected.
+                    This description gives a detailed process on how
+                    the data was collected. It should describe the
+                    conditions under which the data was recorded and
+                    also the devices used to record the data.
+                </p>
+                <div class="app-mat-chip" *ngIf="datasetInfo">
+                    <mat-chip-list aria-label="Tags selection">
+                        <mat-chip
+                                (click)="selectTopic(datasetInfo.kind)"
+                        >{{ datasetInfo.kind }}</mat-chip
+                        >
+                        <mat-chip (click)="selectTopic('medicine')"
+                        >medicine
+                        </mat-chip>
+                        <mat-chip (click)="selectTopic('covid')"
+                        >covid
+                        </mat-chip>
+                        <mat-chip (click)="selectTopic('health')"
+                        >health
+                        </mat-chip>
+                        <mat-chip (click)="selectTopic('covid19')"
+                        >covid19
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+            <app-dynamic-table
+                    [isLatestCommitDisplay]="true"
+                    [isResultQuantity]="tableData.isResultQuantity"
+                    [isClickableRow]="tableData.isClickableRow"
+                    [resultUnitText]="resultUnitText"
+                    [isTableHeader]="tableData.isTableHeader"
+                    [tableSource]="tableData.tableSource"
+                    (onSelectDatasetEmit)="onSelectDataset($event)"
+            ></app-dynamic-table>
+            <div
+                    id="file-readme-dataset-template-md"
+                    class="file my-4"
+            >
+                <div
+                        class="file-header d-flex align-items-center"
+                >
+                    <div
+                            class="file-info pr-4 d-flex flex-order-1 flex-auto align-items-center"
+                    >
+                                    <span class="mr-2">
+                                        <svg
+                                                aria-hidden="true"
+                                                height="16"
+                                                viewBox="0 0 16 16"
+                                                version="1.1"
+                                                width="16"
+                                                data-view-component="true"
+                                                class="octicon octicon-code-square color-fg-muted"
+                                        >
+                                            <path
+                                                    fill-rule="evenodd"
+                                                    d="M1.75 1.5a.25.25 0 00-.25.25v12.5c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V1.75a.25.25 0 00-.25-.25H1.75zM0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v12.5A1.75 1.75 0 0114.25 16H1.75A1.75 1.75 0 010 14.25V1.75zm9.22 3.72a.75.75 0 000 1.06L10.69 8 9.22 9.47a.75.75 0 101.06 1.06l2-2a.75.75 0 000-1.06l-2-2a.75.75 0 00-1.06 0zM6.78 6.53a.75.75 0 00-1.06-1.06l-2 2a.75.75 0 000 1.06l2 2a.75.75 0 101.06-1.06L5.31 8l1.47-1.47z"
+                                            ></path>
+                                        </svg>
+                                    </span>
+                        <h2 class="box-title align-items-center m-0">
+                            <a
+                                    href="#readme"
+                                    data-view-component="true"
+                                    class="link--primary"
+                            >README-dataset-template.md</a
+                            >
+                        </h2>
+                    </div>
+                    <button
+                            class="starred rounded-2 btn-sm btn btnGroup-item d-flex justify-content-center align-items-center"
+                            aria-label="Edit this file"
+                            data-hotkey="e"
+                            data-disable-with=""
+                            (click)="toggleReadmeView()"
+                    >
+                        <svg
+                                aria-hidden="true"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                version="1.1"
+                                width="16"
+                                data-view-component="true"
+                                class="octicon octicon-pencil"
+                        >
+                            <path
+                                    fill-rule="evenodd"
+                                    d="M11.013 1.427a1.75 1.75 0 012.474 0l1.086 1.086a1.75 1.75 0 010 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 01-.927-.928l.929-3.25a1.75 1.75 0 01.445-.758l8.61-8.61zm1.414 1.06a.25.25 0 00-.354 0L10.811 3.75l1.439 1.44 1.263-1.263a.25.25 0 000-.354l-1.086-1.086zM11.189 6.25L9.75 4.81l-6.286 6.287a.25.25 0 00-.064.108l-.558 1.953 1.953-.558a.249.249 0 00.108-.064l6.286-6.286z"
+                            ></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="file-content">
+                    <ng-template [ngIf]="isMarkdownEditView">
+                                    <textarea
+                                            class="variable-textarea"
+                                            [(ngModel)]="markdownText"
+                                    ></textarea>
+                    </ng-template>
+                    <ng-template [ngIf]="!isMarkdownEditView">
+                        <markdown
+                                class="variable-binding"
+                                [data]="markdownText"
+                        ></markdown>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="card">
+    <nav class="navbar navbar-expand">
+        <div class="navbar-nav dataset-info">
+            <ng-template [ngIf]="datasetInfo">
+                <div>
+                    <b>Kind:</b>
+                    <p>
+                        {{ datasetInfo.kind }}
+                    </p>
+                </div>
+                <div>
+                    <b>Verified Badge:</b>
+                    <p>...</p>
+                </div>
+                <div>
+                    <b>Visibility:</b>
+                    <p>Public</p>
+                </div>
+                <div *ngIf="datasetInfo.metadata">
+                    <b>License:</b>
+                    <p>
+                        {{
+                        momentConverDatetoLocalWithFormat(
+                            datasetInfo.metadata
+                                .currentWatermark
+                        )
+                        }}
+                    </p>
+                </div>
+                <div>
+                    <b>Estimated Size:</b>
+                    <p>
+                        {{
+                        datasetInfo.estimatedSize
+                            | number: "1.0-0"
+                        }}
+                    </p>
+                </div>
+                <div>
+                    <b>Num Records Total:</b>
+                    <p>
+                        {{
+                        datasetInfo.numRecordsTotal
+                            | number: "1.0-0"
+                        }}
+                    </p>
+                </div>
+                <div>
+                    <b>Created At:</b>
+                    <p>
+                        {{
+                        momentConverDatetoLocalWithFormat(
+                            datasetInfo.createdAt
+                        )
+                        }}
+                    </p>
+                </div>
+                <div>
+                    <b>Last Updated At:</b>
+                    <p>
+                        {{
+                        momentConverDatetoLocalWithFormat(
+                            datasetInfo.lastUpdatedAt
+                        )
+                        }}
+                    </p>
+                </div>
+            </ng-template>
+        </div>
+    </nav>
+</div>
+</div>

@@ -76,7 +76,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public isMarkdownEditView = false;
     public clipboardKamuCli = "kamu pull account/dataset-alias";
     public clipboardKafka = "https://api.kamu.dev/kafka/";
-    public markdown = `## Markdown __rulez__!
+    public markdownText = `## Markdown __rulez__!
 ---
 
 ### Syntax highlight
@@ -236,14 +236,6 @@ const language = 'typescript';
 
     public getResultUnitText(): string {
         return `results in ${this.datasetInfo?.name || ""}`;
-    }
-
-    public momentConverDatetoLocalWithFormat(date: string): string {
-        return AppValues.momentConverDatetoLocalWithFormat({
-            date: new Date(String(date)),
-            format: "DD MMM YYYY",
-            isTextDate: true,
-        });
     }
 
     public onClickSearchAdditionalButton(method: string) {

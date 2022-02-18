@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { PageInfoInterface } from "../../../interface/search.interface";
-import {DataSchema} from "../../../api/kamu.graphql.interface";
+import {DataViewSchema, PageInfoInterface} from "../../../interface/search.interface";
+
 @Component({
     selector: "app-data",
     templateUrl: "./data-component.html",
@@ -15,22 +15,11 @@ export class DataComponent {
         pageInfo: PageInfoInterface;
         totalCount: number;
     };
-    @Input() public currentSchema: DataSchema;
+    @Input() public currentSchema: DataViewSchema;
     @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
     public sqlEditorOptions = {
         theme: "vs",
         language: "sql",
-    };
-    public schemaOptions = {
-        theme: "vs",
-        language: "json",
-        readOnly: true,
-        minimap: {
-            enabled: false,
-        },
-        lineNumbers: "off",
-        lineDecorationsWidth: 0,
-        lineNumbersMinChars: 0,
     };
     public sqlRequestCode: string =
         "CREATE TABLE dbo.EmployeePhoto\n" +

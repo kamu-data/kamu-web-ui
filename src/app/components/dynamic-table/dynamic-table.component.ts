@@ -30,6 +30,7 @@ export class DynamicTableComponent
     @Input() public resultUnitText: string;
     @Input() public isClickableRow = false;
     @Input() public isLatestCommitDisplay: boolean;
+    @Input() public idTable?: string;
     @Output() public onSelectDatasetEmit: EventEmitter<string> =
         new EventEmitter();
 

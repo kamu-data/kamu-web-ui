@@ -327,6 +327,10 @@ router-outlet
     grid-template-columns: 1fr 0.25fr
   & .dataset-view-data-result-container
     grid-template-columns: 0.3fr 1fr
+#schema-block-table *
+  padding: 0px 8px
+  font-size: 12px
+  height: 34px
 #search, #dataset-viewer
   & .nav-link
     cursor: pointer
@@ -479,7 +483,7 @@ router-outlet
   .app-content
     grid-template-columns: 1fr
   #search, #dataset-viewer
-    & .search-result-container
+    & .search-result-container, .dataset-view-data-result-container
       grid-template-columns: 1fr
 @media (max-width: 991px)
   #app-header

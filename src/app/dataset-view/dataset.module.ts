@@ -52,6 +52,7 @@ import { LinageComponent } from "./additional-components/linage-component/linage
         DataComponent,
         OverviewComponent,
         LinageComponent,
+        MonacoEditorModule,
     ],
     declarations: [
         DatasetComponent,

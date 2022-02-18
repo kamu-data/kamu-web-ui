@@ -11,7 +11,7 @@ import {
     DatasetInfoInterface,
     DatasetKindInterface,
     DatasetKindTypeNames,
-    DatasetNameInterface,
+    DatasetNameInterface, DataViewSchema,
     PageInfoInterface,
     SearchHistoryInterface,
     SearchOverviewDatasetsInterface,
@@ -46,7 +46,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public datasetName: DatasetNameInterface;
     public searchValue = "";
     public currentPage: number;
-    public currentSchema: DataSchema;
+    public currentSchema: DataViewSchema;
     public isMinimizeSearchAdditionalButtons = false;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.overview;
     public searchAdditionalButtonsData: SearchAdditionalButtonInterface[] = [
@@ -167,8 +167,8 @@ const language = 'typescript';
         this.prepareLinageGraph();
 
         this.appDatasetService.onDataSchemaChanges.subscribe((schema: DataSchema) => {
-            this.currentSchema = schema;
-        })
+            this.currentSchema = schema ? JSON.parse(schema.content) : {} as DataViewSchema;
+        });
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
             (info: DatasetInfoInterface) => {

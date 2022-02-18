@@ -178,6 +178,16 @@ export interface DatasetCurrentUpstreamDependencies {
     currentDownstreamDependencies?: DatasetLinageResponse[];
     currentUpstreamDependencies?: DatasetLinageResponse[];
 }
+export interface DataViewSchema {
+    name: string;
+    type: string;
+    fields: Array<DataSchemaField>;
+}
+export interface DataSchemaField {
+    name: string;
+    repetition: string;
+    type: string;
+}
 export enum DatasetKindTypeNames {
     derivative = "DERIVATIVE",
     root = "ROOT",

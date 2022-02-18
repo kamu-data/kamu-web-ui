@@ -21,6 +21,7 @@ export class DataComponent {
     };
     @Input() public currentSchema: DataViewSchema;
     @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
+    @Output() onRunSQLRequestEmit: EventEmitter<string> = new EventEmitter();
     public sqlEditorOptions = {
         theme: "vs",
         language: "sql",
@@ -29,5 +30,8 @@ export class DataComponent {
     public sqlRequestCode: string = DataTabValues.sqlRequestCode;
     public onSelectDataset(id: string): void {
         this.onSelectDatasetEmit.emit(id);
+    }
+    public onRunSQLRequest(sqlRequestCode?: string): void {
+        this.onRunSQLRequestEmit.emit(sqlRequestCode || this.sqlRequestCode);
     }
 }

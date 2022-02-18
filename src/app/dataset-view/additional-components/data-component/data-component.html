@@ -84,18 +84,29 @@
                     >
                         {{item.title}} <br>
                         <code>{{item.query}}</code>
+                        <div class="d-inline">
+                            <div class="btnGroup-parent float-none">
+                                <button mat-icon-button name="run sql button" (click)="onRunSQLRequest(item.query)"
+                                        class="sql-run-button rounded-2 btnGroup-item btn d-flex justify-content-center align-items-center">
+                                    <span>Run</span><mat-icon>play_arrow</mat-icon>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </cdk-accordion-item>
             </cdk-accordion>
         </div>
     </div>
     <div class="search-result-container__content">
-        <div>
-            <button name="run sql button" class="sql-run-button">
-                Run <mat-icon>play_arrow</mat-icon>
-            </button>
+        <div class="sql-query-editor-header flex-column justify-content-around">
+            <h2 class="box-title align-items-center pb-3 m-0">SQL Query Editor:</h2>
+            <div class="btnGroup-parent">
+                <button mat-icon-button name="run sql button" (click)="onRunSQLRequest()"
+                        class="sql-run-button rounded-2 btnGroup-item btn d-flex justify-content-center align-items-center">
+                    <span>Run</span><mat-icon>play_arrow</mat-icon>
+                </button>
+            </div>
         </div>
-        <h2 class="box-title align-items-center pb-3 m-0">SQL Query Editor:</h2>
 
         <ngx-monaco-editor
             [options]="sqlEditorOptions"

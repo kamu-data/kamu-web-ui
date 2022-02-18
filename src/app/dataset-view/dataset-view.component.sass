@@ -52,10 +52,20 @@ mat-button-toggle-group
       max-width: calc(100% - 86px)
     & .datatab-activity-title
       flex: 1 0 30%
+.sql-query-editor-header
+  & h2
+    width: max-content
+    display: inline-block
+  & .btnGroup-parent
+    float: right
+    & .btnGroup-item span
+      font-size: 17px
+      font-weight: 600
 
 .sql-run-button
   color: $app-success
-  background-color: $verylightgrey
+  width: min-content
+  padding: 5px
 mat-button-toggle-group
   box-shadow: none
   border-bottom: 1px solid

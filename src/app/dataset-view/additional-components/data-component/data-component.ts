@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import {DataViewSchema, PageInfoInterface} from "../../../interface/search.interface";
+import {
+    DataViewSchema,
+    PageInfoInterface,
+} from "../../../interface/search.interface";
+import DataTabValues from "./mock.data";
 
 @Component({
     selector: "app-data",
@@ -21,17 +25,8 @@ export class DataComponent {
         theme: "vs",
         language: "sql",
     };
-    public sqlRequestCode: string =
-        "CREATE TABLE dbo.EmployeePhoto\n" +
-        "(\n" +
-        "    EmployeeId INT NOT NULL PRIMARY KEY,\n" +
-        "    Photo VARBINARY(MAX) FILESTREAM NULL,\n" +
-        "    MyRowGuidColumn UNIQUEIDENTIFIER NOT NULL ROWGUIDCOL\n" +
-        "                    UNIQUE DEFAULT NEWID()\n" +
-        ");\n" +
-        "\n" +
-        "GO\n}";
-
+    public savedQueries = DataTabValues.savedQueries;
+    public sqlRequestCode: string = DataTabValues.sqlRequestCode;
     public onSelectDataset(id: string): void {
         this.onSelectDatasetEmit.emit(id);
     }

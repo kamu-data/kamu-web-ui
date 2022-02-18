@@ -2,20 +2,101 @@
     <div class="search-result-container__content">
         <h2 class="box-title align-items-center pb-3 m-0">Schema:</h2>
         <app-dynamic-table
-                [isLatestCommitDisplay]="false"
-                [isResultQuantity]="false"
-                [isClickableRow]="false"
-                [resultUnitText]="''"
-                [isTableHeader]="true"
-                [tableSource]="currentSchema.fields"
-                [idTable]="'schema-block-table'"
-                (onSelectDatasetEmit)="null"
-            ></app-dynamic-table>
-        <!--        <h2 class="box-title align-items-center pb-3 m-0">Saved Queries / Notebooks</h2>-->
-        <!--        <ngx-monaco-editor [options]="schemaOptions" [(ngModel)]="sqlRequestCode"></ngx-monaco-editor>-->
+            [isLatestCommitDisplay]="false"
+            [isResultQuantity]="false"
+            [isClickableRow]="false"
+            [resultUnitText]="''"
+            [isTableHeader]="true"
+            [tableSource]="currentSchema.fields"
+            [idTable]="'schema-block-table'"
+            (onSelectDatasetEmit)="null"
+        ></app-dynamic-table>
+        <div>
+            <h2 class="box-title align-items-center pb-3 pt-3 m-0">
+                Saved Queries / Notebooks
+            </h2>
+            <cdk-accordion class="example-accordion">
+                <cdk-accordion-item
+                    *ngFor="let item of savedQueries; let index = index;"
+                    #accordionItem="cdkAccordionItem"
+                    class="example-accordion-item"
+                    role="button"
+                    tabindex="0"
+                    [attr.id]="'accordion-header-' + index"
+                    [attr.aria-expanded]="accordionItem.expanded"
+                    [attr.aria-controls]="'accordion-body-' + index"
+                >
+                    <div class="datatab-activity-item">
+                        <div class="datatab-expanding-row">
+                            <div
+                                class="datatab-expanding-row-header"
+                                (click)="accordionItem.toggle()"
+                            >
+                                <div
+                                    class="datatab-expanding-row-header-content"
+                                >
+                                    <div class="datatab-activity-row-summary">
+                                        <div class="datatab-activity-timestamp">
+                                            {{item.time}}
+                                        </div>
+                                        <div class="datatab-activity-icon">
+                                            <div
+                                                class="ace-icon ace-icon-size-small cfc-color-active ace-icon-configuration ng-star-inserted"
+                                            >
+                                                <mat-icon class="datatab-activity-icon-size">build</mat-icon>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="datatab-activity-info-container"
+                                        >
+                                            <div
+                                                class="datatab-activity-title"
+                                                style="
+                                                    overflow: hidden;
+                                                    text-overflow: ellipsis;
+                                                    white-space: nowrap;
+                                                "
+                                                title=""
+                                            >
+                                                <span>
+                                                    {{item.title}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ng-template [ngIf]="!accordionItem.expanded">
+                                    <mat-icon>keyboard_arrow_down</mat-icon>
+                                </ng-template>
+                                <ng-template [ngIf]="accordionItem.expanded">
+                                    <mat-icon>keyboard_arrow_up</mat-icon>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="example-accordion-item-body pt-3 pb-3"
+                        role="region"
+                        [style.display]="accordionItem.expanded ? '' : 'none'"
+                        [attr.id]="'accordion-body-' + index"
+                        [attr.aria-labelledby]="'accordion-header-' + index"
+                    >
+                        {{item.title}} <br>
+                        <code>{{item.query}}</code>
+                    </div>
+                </cdk-accordion-item>
+            </cdk-accordion>
+        </div>
     </div>
     <div class="search-result-container__content">
+        <div>
+            <button name="run sql button" class="sql-run-button">
+                Run <mat-icon>play_arrow</mat-icon>
+            </button>
+        </div>
         <h2 class="box-title align-items-center pb-3 m-0">SQL Query Editor:</h2>
+
         <ngx-monaco-editor
             [options]="sqlEditorOptions"
             [(ngModel)]="sqlRequestCode"

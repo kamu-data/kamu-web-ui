@@ -22,6 +22,7 @@ import { MonacoEditorModule } from "ngx-monaco-editor";
 import { DataComponent } from "./additional-components/data-component/data-component";
 import { OverviewComponent } from "./additional-components/overview-component/overview-component";
 import { LinageComponent } from "./additional-components/linage-component/linage-component";
+import { CdkAccordionModule } from "@angular/cdk/accordion";
 
 @NgModule({
     imports: [
@@ -45,6 +46,7 @@ import { LinageComponent } from "./additional-components/linage-component/linage
         ClipboardModule,
         MatTabsModule,
         MonacoEditorModule,
+        CdkAccordionModule,
     ],
     exports: [
         DatasetComponent,

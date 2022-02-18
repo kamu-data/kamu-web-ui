@@ -15,7 +15,10 @@ import {
     SearchOverviewInterface,
 } from "../interface/search.interface";
 import { expand, flatMap, map } from "rxjs/operators";
-import {DataSchema, DatasetOverviewQuery} from "../api/kamu.graphql.interface";
+import {
+    DataSchema,
+    DatasetOverviewQuery,
+} from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { debug } from "util";
 
@@ -94,7 +97,8 @@ export class AppDatasetService {
     private datasetTreeChanges$: Subject<
         { id: string; kind: DatasetKindTypeNames }[][]
     > = new Subject<{ id: string; kind: DatasetKindTypeNames }[][]>();
-    private datasetSchemaChanges$: Subject<DataSchema> = new Subject<DataSchema>();
+    private datasetSchemaChanges$: Subject<DataSchema> =
+        new Subject<DataSchema>();
     private datasetTree: { id: string; kind: DatasetKindTypeNames }[][] = [];
     private datasetKindInfo: DatasetKindInterface[] = [];
 
@@ -182,7 +186,7 @@ export class AppDatasetService {
         this.searchApi
             .getDatasetOverview({ id, page })
             .subscribe((data: DatasetOverviewQuery | undefined) => {
-                debugger
+                debugger;
                 let datasets: SearchDatasetByID;
                 if (data) {
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -206,7 +210,10 @@ export class AppDatasetService {
                     this.searchDatasetInfoChanges(datasetInfo);
                     this.searchData = datasets.data.tail.content;
                     this.searchDataChanges(datasets.data.tail.content);
-                    this.datasetSchemaChanges(data.datasets.byId?.metadata?.currentSchema as DataSchema);
+                    this.datasetSchemaChanges(
+                        data.datasets.byId?.metadata
+                            ?.currentSchema as DataSchema,
+                    );
                 }
             });
     }

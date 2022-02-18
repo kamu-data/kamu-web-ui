@@ -11,7 +11,8 @@ import {
     DatasetInfoInterface,
     DatasetKindInterface,
     DatasetKindTypeNames,
-    DatasetNameInterface, DataViewSchema,
+    DatasetNameInterface,
+    DataViewSchema,
     PageInfoInterface,
     SearchHistoryInterface,
     SearchOverviewDatasetsInterface,
@@ -30,7 +31,7 @@ import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
-import {DataSchema} from "../api/kamu.graphql.interface";
+import { DataSchema } from "../api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset",
@@ -166,9 +167,13 @@ const language = 'typescript';
 
         this.prepareLinageGraph();
 
-        this.appDatasetService.onDataSchemaChanges.subscribe((schema: DataSchema) => {
-            this.currentSchema = schema ? JSON.parse(schema.content) : {} as DataViewSchema;
-        });
+        this.appDatasetService.onDataSchemaChanges.subscribe(
+            (schema: DataSchema) => {
+                this.currentSchema = schema
+                    ? JSON.parse(schema.content)
+                    : ({} as DataViewSchema);
+            },
+        );
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
             (info: DatasetInfoInterface) => {

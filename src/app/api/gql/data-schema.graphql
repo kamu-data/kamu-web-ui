@@ -1,0 +1,34 @@
+query datasetDataSchema($datasetId: DatasetID!, $numRecords: Int, $numPage: Int) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      id
+      owner {
+        id
+        name
+      }
+      name
+      kind
+      createdAt
+      lastUpdatedAt
+      metadata {
+        currentSchema (format: PARQUET_JSON) {
+          content
+        }
+        chain {
+          blocks(perPage: $numRecords, page: $numPage) {
+            totalCount
+            nodes {
+              blockHash,
+              systemTime
+            }
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              totalPages
+            }
+          }
+        }
+      }
+    }
+  }
+}

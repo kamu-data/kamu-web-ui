@@ -443,6 +443,15 @@ export type AccountInfoMutationVariables = Exact<{
 
 export type AccountInfoMutation = { __typename?: 'Mutation', auth: { __typename?: 'Auth', accountInfo: { __typename?: 'AccountInfo', login: string, name: string, email?: string | null | undefined, avatarUrl?: string | null | undefined, gravatarId?: string | null | undefined } } };
 
+export type DatasetDataSchemaQueryVariables = Exact<{
+  datasetId: Scalars['DatasetID'];
+  numRecords?: InputMaybe<Scalars['Int']>;
+  numPage?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type DatasetDataSchemaQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', id: any, name: any, kind: DatasetKind, createdAt: any, lastUpdatedAt: any, owner: { __typename?: 'Organization', id: any, name: string } | { __typename?: 'User', id: any, name: string }, metadata: { __typename?: 'DatasetMetadata', currentSchema: { __typename?: 'DataSchema', content: string }, chain: { __typename?: 'MetadataChain', blocks: { __typename?: 'MetadataBlockConnection', totalCount?: number | null | undefined, nodes: Array<{ __typename?: 'MetadataBlock', blockHash: any, systemTime: any }>, pageInfo: { __typename?: 'PageBasedInfo', hasNextPage: boolean, hasPreviousPage: boolean, totalPages?: number | null | undefined } } } } } | null | undefined } };
+
 export type DatasetLinageUpstreamDependenciesQueryVariables = Exact<{
   datasetId: Scalars['DatasetID'];
 }>;
@@ -511,6 +520,53 @@ export const AccountInfoDocument = gql`
   })
   export class AccountInfoGQL extends Apollo.Mutation<AccountInfoMutation, AccountInfoMutationVariables> {
     document = AccountInfoDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DatasetDataSchemaDocument = gql`
+    query datasetDataSchema($datasetId: DatasetID!, $numRecords: Int, $numPage: Int) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      id
+      owner {
+        id
+        name
+      }
+      name
+      kind
+      createdAt
+      lastUpdatedAt
+      metadata {
+        currentSchema(format: PARQUET_JSON) {
+          content
+        }
+        chain {
+          blocks(perPage: $numRecords, page: $numPage) {
+            totalCount
+            nodes {
+              blockHash
+              systemTime
+            }
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              totalPages
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DatasetDataSchemaGQL extends Apollo.Query<DatasetDataSchemaQuery, DatasetDataSchemaQueryVariables> {
+    document = DatasetDataSchemaDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

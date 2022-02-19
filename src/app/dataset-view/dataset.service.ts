@@ -17,7 +17,7 @@ import {
 import { expand, flatMap, map } from "rxjs/operators";
 import {
     DataSchema,
-    DatasetOverviewQuery,
+    DatasetOverviewQuery, GetDatasetHistoryQuery,
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { debug } from "util";
@@ -244,6 +244,23 @@ export class AppDatasetService {
                     this.searchDatasetInfoChanges(datasetInfo);
                     this.searchData = datasets.data.tail.content;
                     this.searchDataChanges(datasets.data.tail.content);
+                }
+            });
+    }
+
+    public onDatasetHistorySchema(id: string, numRecords: number, numPage: number): void {
+        /* eslint-disable  @typescript-eslint/no-explicit-any */
+        this.searchApi
+            .onDatasetHistory({ id, numRecords, numPage })
+            .subscribe((data: GetDatasetHistoryQuery) => {
+                if (data) {
+                    debugger
+                    this.searchDatasetNameChanges({
+                        id: data.datasets.byId?.id,
+                        name: data.datasets.byId?.name,
+                        owner: data.datasets.byId?.owner as any,
+                    });
+                    // this.searchData = data.datasets.byId?.metadata;
                 }
             });
     }

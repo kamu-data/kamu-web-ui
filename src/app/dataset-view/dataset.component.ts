@@ -19,19 +19,19 @@ import {
     SearchOverviewInterface,
 } from "../interface/search.interface";
 import AppValues from "../common/app.values";
-import { SearchAdditionalButtonInterface } from "../components/search-additional-buttons/search-additional-buttons.interface";
-import { MatSidenav } from "@angular/material/sidenav";
-import { SideNavService } from "../services/sidenav.service";
-import { searchAdditionalButtonsEnum } from "../search/search.interface";
-import { DatasetViewTypeEnum } from "./dataset-view.interface";
-import { AppDatasetService } from "./dataset.service";
-import { NavigationEnd, Router } from "@angular/router";
-import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
-import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { filter } from "rxjs/operators";
-import { ModalService } from "../components/modal/modal.service";
-import { Clipboard } from "@angular/cdk/clipboard";
-import { DataSchema } from "../api/kamu.graphql.interface";
+import {SearchAdditionalButtonInterface} from "../components/search-additional-buttons/search-additional-buttons.interface";
+import {MatSidenav} from "@angular/material/sidenav";
+import {SideNavService} from "../services/sidenav.service";
+import {searchAdditionalButtonsEnum} from "../search/search.interface";
+import {DatasetViewTypeEnum} from "./dataset-view.interface";
+import {AppDatasetService} from "./dataset.service";
+import {NavigationEnd, Router} from "@angular/router";
+import {Edge} from "@swimlane/ngx-graph/lib/models/edge.model";
+import {ClusterNode, Node} from "@swimlane/ngx-graph/lib/models/node.model";
+import {filter} from "rxjs/operators";
+import {ModalService} from "../components/modal/modal.service";
+import {Clipboard} from "@angular/cdk/clipboard";
+import {DataSchema} from "../api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset",
@@ -327,8 +327,21 @@ const language = 'typescript';
         this.appDatasetService.getDatasetDataSchema(this.getDatasetId(), 5, 0);
     }
 
-    public onSearchDataForHistory(): void {
-        console.log("onSearchDataForHistory");
+    public onSearchDataForHistory(currentPage: number): void {
+        this.router.navigate(
+            [AppValues.defaultUsername, AppValues.urlDatasetView],
+            {
+                queryParams: {
+                    id: this.getDatasetId(),
+                    type: AppValues.urlDatasetViewHistoryType,
+                    p: currentPage,
+                },
+            },
+        );
+        this.currentPage = currentPage;
+        this.datasetViewType = DatasetViewTypeEnum.history;
+
+        this.appDatasetService.onDatasetHistorySchema(this.getDatasetId(), 20, currentPage - 1);
     }
 
     public onSearchDiscussions(): void {
@@ -615,6 +628,9 @@ const language = 'typescript';
             if (type === DatasetViewTypeEnum.metadata) {
                 this.currentPage = page;
                 this.onSearchMetadata(page);
+            }
+            if (type === DatasetViewTypeEnum.history) {
+                this.onSearchDataForHistory(page);
             }
             if (type === DatasetViewTypeEnum.linage) {
                 this.onSearchLinageDataset();

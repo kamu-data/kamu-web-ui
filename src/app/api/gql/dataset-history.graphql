@@ -1,0 +1,44 @@
+query getDatasetHistory($datasetId: DatasetID!, $perPage: Int, $page: Int) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      id
+      owner {
+        id
+        name
+      }
+      name
+      metadata {
+        currentSchema(format: PARQUET_JSON) {
+          content
+        }
+        chain {
+          blocks(perPage: $perPage, page: $page) {
+            totalCount
+            nodes {
+              event {
+                __typename
+                ... on MetadataEventSeed {
+                  datasetId
+                  datasetKind
+                }
+                ... on MetadataEventAddData {
+                  outputData {
+                    logicalHash
+                  }
+                  outputWatermark
+                }
+              }
+              blockHash,
+              systemTime
+            }
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              totalPages
+            }
+          }
+        }
+      }
+    }
+  }
+}

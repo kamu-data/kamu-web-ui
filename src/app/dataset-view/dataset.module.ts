@@ -23,6 +23,7 @@ import { DataComponent } from "./additional-components/data-component/data-compo
 import { OverviewComponent } from "./additional-components/overview-component/overview-component";
 import { LinageComponent } from "./additional-components/linage-component/linage-component";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
+import {HistoryComponent} from "./additional-components/history-component/history-component";
 
 @NgModule({
     imports: [
@@ -54,6 +55,7 @@ import { CdkAccordionModule } from "@angular/cdk/accordion";
         DataComponent,
         OverviewComponent,
         LinageComponent,
+        HistoryComponent,
         MonacoEditorModule,
     ],
     declarations: [
@@ -62,6 +64,7 @@ import { CdkAccordionModule } from "@angular/cdk/accordion";
         DataComponent,
         OverviewComponent,
         LinageComponent,
+        HistoryComponent,
     ],
 })
 export class DatasetModule {

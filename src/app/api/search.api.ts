@@ -15,12 +15,14 @@ import {
 import { ApolloQuerySearchResultNodeInterface } from "./apolloQueryResult.interface";
 import {
     DatasetMetadataDownstreamDependenciesGQL,
-    DatasetMetadataGQL,
-    DatasetMetadataQuery,
     DatasetOverviewGQL,
     DatasetOverviewQuery,
     GetDatasetDataSchemaGQL,
     GetDatasetDataSchemaQuery,
+    GetDatasetHistoryGQL,
+    GetDatasetHistoryQuery,
+    GetDatasetMetadataSchemaGQL,
+    GetDatasetMetadataSchemaQuery,
     SearchDatasetsAutocompleteGQL,
     SearchDatasetsOverviewGQL,
     SearchDatasetsOverviewQuery,
@@ -34,11 +36,12 @@ export class SearchApi {
     constructor(
         private apollo: Apollo,
         private datasetOverviewGQL: DatasetOverviewGQL,
-        private datasetMetadataGQL: DatasetMetadataGQL,
+        private datasetMetadataGQL: GetDatasetMetadataSchemaGQL,
         private datasetMetadataDownstreamDependenciesGQL: DatasetMetadataDownstreamDependenciesGQL,
         private searchDatasetsAutocompleteGQL: SearchDatasetsAutocompleteGQL,
         private searchDatasetsOverviewGQL: SearchDatasetsOverviewGQL,
         private getDatasetDataSchemaGQL: GetDatasetDataSchemaGQL,
+        private getDatasetHistoryGQL: GetDatasetHistoryGQL
     ) {}
 
     public pageInfoInit(): PageInfoInterface {
@@ -124,6 +127,23 @@ export class SearchApi {
                 }),
             );
     }
+    public onDatasetHistory(params: { id: string, numRecords: number, numPage: number }): Observable<GetDatasetHistoryQuery> {
+        // @ts-ignore
+        return this.getDatasetHistoryGQL
+            .watch({
+                datasetId: params.id,
+                perPage: params.numRecords || 10,
+                page: params.numPage || 0,
+            })
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<GetDatasetHistoryQuery>) => {
+                    if (result.data) {
+                        return result.data;
+                    }
+                    return undefined;
+                }),
+            );
+    }
     public getDatasetDataSchema(params: {
         id: string;
         numRecords?: number;
@@ -154,11 +174,11 @@ export class SearchApi {
         return this.datasetMetadataGQL
             .watch({
                 datasetId: params.id,
-                page: params.page,
-                perPage: params.numRecords,
+                numPage: params.page,
+                numRecords: params.numRecords,
             })
             .valueChanges.pipe(
-                map((result: ApolloQueryResult<DatasetMetadataQuery>) => {
+                map((result: ApolloQueryResult<GetDatasetMetadataSchemaQuery>) => {
                     let dataset: SearchOverviewDatasetsInterface[] = [];
                     let pageInfo: PageInfoInterface = this.pageInfoInit();
                     let totalCount = 0;

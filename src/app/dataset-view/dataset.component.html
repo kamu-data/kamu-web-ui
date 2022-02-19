@@ -452,6 +452,10 @@
                 ></app-data>
             </ng-template>
 
+            <ng-template [ngIf]="datasetViewTypeHistory">
+                <app-history [currentPage]="currentPage" [pageInfo]="tableData.pageInfo" (onSelectDatasetEmit)="null" (onPageChangeEmit)="null"></app-history>
+            </ng-template>
+
             <ng-template [ngIf]="datasetViewTypeLinage">
                 <app-linage
                     [linageGraphView]="linageGraphView"

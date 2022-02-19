@@ -1,5 +1,5 @@
-query datasetLinageUpstreamDependencies ($datasetId: DatasetID!) {
-datasets {
+query datasetLinageUpstreamDependencies($datasetId: DatasetID!) {
+  datasets {
     byId(datasetId: $datasetId) {
       id
       kind

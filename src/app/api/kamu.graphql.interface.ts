@@ -457,10 +457,10 @@ export type GetDatasetDataSchemaQueryVariables = Exact<{
 export type GetDatasetDataSchemaQuery = {
     __typename?: "Query";
     datasets: {
-        __typename?: "Datasets";
+        __typename: "Datasets";
         byId?:
             | {
-                  __typename?: "Dataset";
+                  __typename: "Dataset";
                   id: any;
                   name: any;
                   kind: DatasetKind;
@@ -470,28 +470,22 @@ export type GetDatasetDataSchemaQuery = {
                       | { __typename?: "Organization"; id: any; name: string }
                       | { __typename?: "User"; id: any; name: string };
                   metadata: {
-                      __typename?: "DatasetMetadata";
+                      __typename: "DatasetMetadata";
+                      currentWatermark?: any | null | undefined;
                       currentSchema: {
-                          __typename?: "DataSchema";
+                          __typename: "DataSchema";
+                          format: DataSchemaFormat;
                           content: string;
                       };
-                      chain: {
-                          __typename?: "MetadataChain";
-                          blocks: {
-                              __typename?: "MetadataBlockConnection";
-                              totalCount?: number | null | undefined;
-                              nodes: Array<{
-                                  __typename?: "MetadataBlock";
-                                  blockHash: any;
-                                  systemTime: any;
-                              }>;
-                              pageInfo: {
-                                  __typename?: "PageBasedInfo";
-                                  hasNextPage: boolean;
-                                  hasPreviousPage: boolean;
-                                  totalPages?: number | null | undefined;
-                              };
-                          };
+                  };
+                  data: {
+                      __typename: "DatasetData";
+                      numRecordsTotal: number;
+                      estimatedSize: number;
+                      tail: {
+                          __typename: "DataSlice";
+                          format: DataSliceFormat;
+                          content: string;
                       };
                   };
               }
@@ -807,25 +801,27 @@ export const GetDatasetDataSchemaDocument = gql`
                 createdAt
                 lastUpdatedAt
                 metadata {
+                    currentWatermark
                     currentSchema(format: PARQUET_JSON) {
+                        format
                         content
+                        __typename
                     }
-                    chain {
-                        blocks(perPage: $numRecords, page: $numPage) {
-                            totalCount
-                            nodes {
-                                blockHash
-                                systemTime
-                            }
-                            pageInfo {
-                                hasNextPage
-                                hasPreviousPage
-                                totalPages
-                            }
-                        }
-                    }
+                    __typename
                 }
+                data {
+                    numRecordsTotal
+                    estimatedSize
+                    tail(numRecords: $numRecords, format: JSON) {
+                        format
+                        content
+                        __typename
+                    }
+                    __typename
+                }
+                __typename
             }
+            __typename
         }
     }
 `;

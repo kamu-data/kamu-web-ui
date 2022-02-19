@@ -186,7 +186,6 @@ export class AppDatasetService {
         this.searchApi
             .getDatasetOverview({ id, page })
             .subscribe((data: DatasetOverviewQuery | undefined) => {
-                debugger;
                 let datasets: SearchDatasetByID;
                 if (data) {
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -253,14 +252,16 @@ export class AppDatasetService {
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         this.searchApi
             .onSearchMetadata({ id, page })
-            .subscribe((data: SearchMetadataInterface) => {
-                this.searchDatasetNameChanges({
-                    id: data.id,
-                    name: data.name,
-                    owner: data.owner,
-                });
-                this.searchData = data.dataset;
-                this.searchMetadataChange(data);
+            .subscribe((data: SearchMetadataInterface | undefined) => {
+                if (data) {
+                    this.searchDatasetNameChanges({
+                        id: data.id,
+                        name: data.name,
+                        owner: data.owner,
+                    });
+                    this.searchData = data.dataset;
+                    this.searchMetadataChange(data);
+                }
             });
     }
 

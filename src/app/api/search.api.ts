@@ -6,6 +6,7 @@ import { Observable, of, throwError } from "rxjs";
 import {
     DatasetIDsInterface,
     PageInfoInterface,
+    SearchMetadataInterface,
     SearchMetadataNodeResponseInterface,
     SearchOverviewDatasetsInterface,
     TypeNames,
@@ -15,6 +16,7 @@ import { ApolloQuerySearchResultNodeInterface } from "./apolloQueryResult.interf
 import {
     DatasetMetadataDownstreamDependenciesGQL,
     DatasetMetadataGQL,
+    DatasetMetadataQuery,
     DatasetOverviewGQL,
     DatasetOverviewQuery,
     GetDatasetDataSchemaGQL,
@@ -148,98 +150,56 @@ export class SearchApi {
         id: string;
         numRecords?: number;
         page?: number;
-    }): Observable<any> {
-        const GET_DATA: DocumentNode = gql`{
-            datasets {
-                byId(datasetId: "${params.id}") {
-                    id
-                    owner {
-                        id
-                        name
-                    }
-                    name
-                    metadata {
-                        currentSchema(format: PARQUET_JSON) {
-                            content
-                        }
-                        chain {
-                            blocks(perPage: ${(
-                                params.numRecords || 5
-                            ).toString()}, page: ${(
-            params.page || 0
-        ).toString()}) {
-                                totalCount
-                                nodes {
-                                    event {
-                                        __typename
-                                        ... on MetadataEventSeed {
-                                            datasetId
-                                            datasetKind
-                                        }
-                                        ... on MetadataEventAddData {
-                                            outputData {
-                                                logicalHash
-                                            }
-                                            outputWatermark
-                                        }
-                                    }
-                                    blockHash,
-                                    systemTime
-                                }
-                                pageInfo {
-                                    hasNextPage
-                                    hasPreviousPage
-                                    totalPages
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }`;
-        // tslint:disable-next-line: no-any
-        // @ts-ignore
-        return this.apollo.watchQuery({ query: GET_DATA }).valueChanges.pipe(
-            map((result: ApolloQueryResult<any>) => {
-                let dataset: SearchOverviewDatasetsInterface[] = [];
-                let pageInfo: PageInfoInterface = this.pageInfoInit();
-                let totalCount = 0;
-                const currentPage = params.page || 0;
+    }): Observable<SearchMetadataInterface | undefined> {
+        return this.datasetMetadataGQL
+            .watch({
+                datasetId: params.id,
+                page: params.page,
+                perPage: params.numRecords,
+            })
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<DatasetMetadataQuery>) => {
+                    let dataset: SearchOverviewDatasetsInterface[] = [];
+                    let pageInfo: PageInfoInterface = this.pageInfoInit();
+                    let totalCount = 0;
+                    const currentPage = params.page || 0;
 
-                if (result.data) {
-                    // tslint:disable-next-line: no-any
-                    dataset =
-                        result.data.datasets.byId.metadata.chain.blocks.nodes.map(
-                            (node: SearchMetadataNodeResponseInterface) => {
-                                const eventType = node.event.__typename;
-                                const eventTypeObj = Object();
-                                eventTypeObj.event = eventType;
-                                const newNode = Object.assign(
-                                    AppValues.deepCopy(node),
-                                    eventTypeObj,
-                                );
-                                return this.clearlyData(newNode);
-                            },
-                        );
-                    pageInfo =
-                        result.data.datasets.byId.metadata.chain.blocks
-                            .pageInfo;
-                    totalCount =
-                        result.data.datasets.byId.metadata.chain.blocks
-                            .totalCount;
-                }
+                    if (result.data && result.data.datasets.byId) {
+                        // tslint:disable-next-line: no-any
+                        dataset =
+                            result.data.datasets.byId.metadata.chain.blocks.nodes.map(
+                                (node: SearchMetadataNodeResponseInterface) => {
+                                    const eventType = node.event.__typename;
+                                    const eventTypeObj = Object();
+                                    eventTypeObj.event = eventType;
+                                    const newNode = Object.assign(
+                                        AppValues.deepCopy(node),
+                                        eventTypeObj,
+                                    );
+                                    return this.clearlyData(newNode);
+                                },
+                            );
+                        pageInfo =
+                            result.data.datasets.byId.metadata.chain.blocks
+                                .pageInfo;
+                        totalCount =
+                            result.data.datasets.byId.metadata.chain.blocks
+                                .totalCount || 0;
 
-                return {
-                    id: result.data.datasets.byId.id,
-                    name: result.data.datasets.byId.name,
-                    owner: result.data.datasets.byId.owner,
-                    dataset,
-                    pageInfo,
-                    totalCount,
-                    currentPage,
-                };
-            }),
-        );
+                        return {
+                            id: result.data.datasets.byId.id,
+                            name: result.data.datasets.byId.name,
+                            owner: result.data.datasets.byId.owner,
+                            dataset,
+                            pageInfo,
+                            totalCount,
+                            currentPage,
+                        };
+                    } else {
+                        return undefined;
+                    }
+                }),
+            );
     }
 
     /* eslint-disable  @typescript-eslint/no-explicit-any */

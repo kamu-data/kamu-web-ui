@@ -17,7 +17,8 @@ import {
 import { expand, flatMap, map } from "rxjs/operators";
 import {
     DataSchema,
-    DatasetOverviewQuery, GetDatasetHistoryQuery,
+    DatasetOverviewQuery,
+    GetDatasetHistoryQuery,
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { debug } from "util";
@@ -248,13 +249,17 @@ export class AppDatasetService {
             });
     }
 
-    public onDatasetHistorySchema(id: string, numRecords: number, numPage: number): void {
+    public onDatasetHistorySchema(
+        id: string,
+        numRecords: number,
+        numPage: number,
+    ): void {
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         this.searchApi
             .onDatasetHistory({ id, numRecords, numPage })
             .subscribe((data: GetDatasetHistoryQuery) => {
                 if (data) {
-                    debugger
+                    debugger;
                     this.searchDatasetNameChanges({
                         id: data.datasets.byId?.id,
                         name: data.datasets.byId?.name,

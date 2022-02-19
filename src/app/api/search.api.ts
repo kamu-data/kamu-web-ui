@@ -41,7 +41,7 @@ export class SearchApi {
         private searchDatasetsAutocompleteGQL: SearchDatasetsAutocompleteGQL,
         private searchDatasetsOverviewGQL: SearchDatasetsOverviewGQL,
         private getDatasetDataSchemaGQL: GetDatasetDataSchemaGQL,
-        private getDatasetHistoryGQL: GetDatasetHistoryGQL
+        private getDatasetHistoryGQL: GetDatasetHistoryGQL,
     ) {}
 
     public pageInfoInit(): PageInfoInterface {
@@ -127,7 +127,11 @@ export class SearchApi {
                 }),
             );
     }
-    public onDatasetHistory(params: { id: string, numRecords: number, numPage: number }): Observable<GetDatasetHistoryQuery> {
+    public onDatasetHistory(params: {
+        id: string;
+        numRecords: number;
+        numPage: number;
+    }): Observable<GetDatasetHistoryQuery> {
         // @ts-ignore
         return this.getDatasetHistoryGQL
             .watch({
@@ -178,47 +182,53 @@ export class SearchApi {
                 numRecords: params.numRecords,
             })
             .valueChanges.pipe(
-                map((result: ApolloQueryResult<GetDatasetMetadataSchemaQuery>) => {
-                    let dataset: SearchOverviewDatasetsInterface[] = [];
-                    let pageInfo: PageInfoInterface = this.pageInfoInit();
-                    let totalCount = 0;
-                    const currentPage = params.page || 0;
+                map(
+                    (
+                        result: ApolloQueryResult<GetDatasetMetadataSchemaQuery>,
+                    ) => {
+                        let dataset: SearchOverviewDatasetsInterface[] = [];
+                        let pageInfo: PageInfoInterface = this.pageInfoInit();
+                        let totalCount = 0;
+                        const currentPage = params.page || 0;
 
-                    if (result.data && result.data.datasets.byId) {
-                        // tslint:disable-next-line: no-any
-                        dataset =
-                            result.data.datasets.byId.metadata.chain.blocks.nodes.map(
-                                (node: SearchMetadataNodeResponseInterface) => {
-                                    const eventType = node.event.__typename;
-                                    const eventTypeObj = Object();
-                                    eventTypeObj.event = eventType;
-                                    const newNode = Object.assign(
-                                        AppValues.deepCopy(node),
-                                        eventTypeObj,
-                                    );
-                                    return this.clearlyData(newNode);
-                                },
-                            );
-                        pageInfo =
-                            result.data.datasets.byId.metadata.chain.blocks
-                                .pageInfo;
-                        totalCount =
-                            result.data.datasets.byId.metadata.chain.blocks
-                                .totalCount || 0;
+                        if (result.data && result.data.datasets.byId) {
+                            // tslint:disable-next-line: no-any
+                            dataset =
+                                result.data.datasets.byId.metadata.chain.blocks.nodes.map(
+                                    (
+                                        node: SearchMetadataNodeResponseInterface,
+                                    ) => {
+                                        const eventType = node.event.__typename;
+                                        const eventTypeObj = Object();
+                                        eventTypeObj.event = eventType;
+                                        const newNode = Object.assign(
+                                            AppValues.deepCopy(node),
+                                            eventTypeObj,
+                                        );
+                                        return this.clearlyData(newNode);
+                                    },
+                                );
+                            pageInfo =
+                                result.data.datasets.byId.metadata.chain.blocks
+                                    .pageInfo;
+                            totalCount =
+                                result.data.datasets.byId.metadata.chain.blocks
+                                    .totalCount || 0;
 
-                        return {
-                            id: result.data.datasets.byId.id,
-                            name: result.data.datasets.byId.name,
-                            owner: result.data.datasets.byId.owner,
-                            dataset,
-                            pageInfo,
-                            totalCount,
-                            currentPage,
-                        };
-                    } else {
-                        return undefined;
-                    }
-                }),
+                            return {
+                                id: result.data.datasets.byId.id,
+                                name: result.data.datasets.byId.name,
+                                owner: result.data.datasets.byId.owner,
+                                dataset,
+                                pageInfo,
+                                totalCount,
+                                currentPage,
+                            };
+                        } else {
+                            return undefined;
+                        }
+                    },
+                ),
             );
     }
 

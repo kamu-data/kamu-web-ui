@@ -19,19 +19,19 @@ import {
     SearchOverviewInterface,
 } from "../interface/search.interface";
 import AppValues from "../common/app.values";
-import {SearchAdditionalButtonInterface} from "../components/search-additional-buttons/search-additional-buttons.interface";
-import {MatSidenav} from "@angular/material/sidenav";
-import {SideNavService} from "../services/sidenav.service";
-import {searchAdditionalButtonsEnum} from "../search/search.interface";
-import {DatasetViewTypeEnum} from "./dataset-view.interface";
-import {AppDatasetService} from "./dataset.service";
-import {NavigationEnd, Router} from "@angular/router";
-import {Edge} from "@swimlane/ngx-graph/lib/models/edge.model";
-import {ClusterNode, Node} from "@swimlane/ngx-graph/lib/models/node.model";
-import {filter} from "rxjs/operators";
-import {ModalService} from "../components/modal/modal.service";
-import {Clipboard} from "@angular/cdk/clipboard";
-import {DataSchema} from "../api/kamu.graphql.interface";
+import { SearchAdditionalButtonInterface } from "../components/search-additional-buttons/search-additional-buttons.interface";
+import { MatSidenav } from "@angular/material/sidenav";
+import { SideNavService } from "../services/sidenav.service";
+import { searchAdditionalButtonsEnum } from "../search/search.interface";
+import { DatasetViewTypeEnum } from "./dataset-view.interface";
+import { AppDatasetService } from "./dataset.service";
+import { NavigationEnd, Router } from "@angular/router";
+import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
+import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
+import { filter } from "rxjs/operators";
+import { ModalService } from "../components/modal/modal.service";
+import { Clipboard } from "@angular/cdk/clipboard";
+import { DataSchema } from "../api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset",
@@ -341,7 +341,11 @@ const language = 'typescript';
         this.currentPage = currentPage;
         this.datasetViewType = DatasetViewTypeEnum.history;
 
-        this.appDatasetService.onDatasetHistorySchema(this.getDatasetId(), 20, currentPage - 1);
+        this.appDatasetService.onDatasetHistorySchema(
+            this.getDatasetId(),
+            20,
+            currentPage - 1,
+        );
     }
 
     public onSearchDiscussions(): void {

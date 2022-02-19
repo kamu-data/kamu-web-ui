@@ -1,149 +1,267 @@
 <div class="timeline-block">
+    <div *ngFor="let item of [1, 2, 3, 4, 5]">
+        <div
+            class="timeline-block__item timeline-block__item--condensed pt-0 pb-2"
+        >
+            <div class="timeline-block__item-badge">
+                <svg
+                    aria-hidden="true"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    version="1.1"
+                    width="16"
+                    data-view-component="true"
+                    class="octicon octicon-git-commit"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        d="M10.5 7.75a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zm1.43.75a4.002 4.002 0 01-7.86 0H.75a.75.75 0 110-1.5h3.32a4.001 4.001 0 017.86 0h3.32a.75.75 0 110 1.5h-3.32z"
+                    ></path>
+                </svg>
+            </div>
+            <div class="timeline-block__body">
+                <h4 class="f5 font-weight-bold">
+                    Event desc. (e.g. “Added N records”)
+                </h4>
+                <ol
+                    class="mt-3 list-unstyled box box--condensed ml-n6 ml-sm-0 position-relative"
+                >
+                    <li
+                        class="box__row box__row--focus-gray mt-0 d-flex"
+                        data-url="/kamu-data/kamu-web-ui/commits/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d/commits_list_item"
+                    >
+                        <div class="flex-auto min-width-0 Details">
+                            <p class="mb-1">
+                                <a
+                                    class="link--primary font-weight-bold"
+                                    href="/kamu-data/kamu-web-ui/commit/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d"
+                                    >Update onSearchMetadata to use GQL codegen
+                                    query</a
+                                >
+                            </p>
 
-    <div *ngFor="let item of [1,2,3,4,5]">
-        <div class="timeline-block__item timeline-block__item--condensed pt-0 pb-2">
-        <div class="timeline-block__item-badge">
-            <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
-                 class="octicon octicon-git-commit">
-                <path fill-rule="evenodd"
-                      d="M10.5 7.75a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zm1.43.75a4.002 4.002 0 01-7.86 0H.75a.75.75 0 110-1.5h3.32a4.001 4.001 0 017.86 0h3.32a.75.75 0 110 1.5h-3.32z"></path>
-            </svg>
-        </div>
-        <div class="timeline-block__body">
-            <h2 class="f5 text-normal">Commits on Feb 19, 2022</h2>
-            <ol class="mt-3 list-style-none Box Box--condensed ml-n6 ml-sm-0 position-relative">
-                <li class="Box-row Box-row--focus-gray mt-0 d-flex js-commits-list-item js-navigation-item js-socket-channel js-updatable-content"
-                    data-channel="eyJjIjoicmVwbzo0Mzg3OTY0NDA6Y29tbWl0Ojc1ZTcxMWRmYjhlMzUzMzViNjIyZjBjNTZmZjU5ZmMzZmM3Y2VhN2QiLCJ0IjoxNjQ1Mjc2MTY3fQ==--3f7f561ce68787dc0f0a28499da96d1b27b34c2455d09b51f45a921ec41c9d11"
-                    data-url="/kamu-data/kamu-web-ui/commits/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d/commits_list_item">
-                    <div class="flex-auto min-width-0 js-details-container Details">
-                        <p class="mb-1">
-                            <a class="Link--primary text-bold js-navigation-open markdown-title" data-pjax="true"
-                               href="/kamu-data/kamu-web-ui/commit/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d">Update
-                                onSearchMetadata to use GQL codegen query</a>
-
-                        </p>
-
-
-                        <div class="d-flex flex-items-center mt-1">
-
-                            <div class="AvatarStack flex-self-start  ">
-                                <div class="AvatarStack-body" aria-label="sergiimk">
-                                    <a class="avatar avatar-user" style="width:20px;height:20px;" data-skip-pjax="true"
-                                       data-test-selector="commits-avatar-stack-avatar-link" data-hovercard-type="user"
-                                       data-hovercard-url="/users/sergiimk/hovercard"
-                                       data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self"
-                                       href="/sergiimk">
-                                        <img data-test-selector="commits-avatar-stack-avatar-image"
-                                             src="https://avatars.githubusercontent.com/u/204914?s=40&amp;v=4"
-                                             width="20" height="20" alt="@sergiimk" class=" avatar-user">
-                                    </a></div>
-                            </div>
-
-                            <div class="f6 color-fg-muted min-width-0">
-                                <a class="commit-author user-mention" title="View all commits by sergiimk"
-                                   href="/kamu-data/kamu-web-ui/commits?author=sergiimk">sergiimk</a>
-
-                                committed
-                                <time datetime="2022-02-19T03:09:35Z" class="no-wrap" title="19 Feb 2022, 05:09 EET">10
-                                    hours ago
-                                </time>
-
-                            </div>
-                            <div class="ml-1">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-none d-md-block flex-shrink-0">
-
-
-                        <details
-                                class="dropdown dropdown-signed-commit details-reset details-overlay js-dropdown-details d-inline-block ml-1">
-                            <summary class="signed-commit-badge signed-commit-badge-large verified "
-                                     title="Commit signature">
-                                Verified
-                            </summary>
-                            <div class="anim-scale-in" style="position: relative; z-index: 200;">
-                                <div class="dropdown-menu dropdown-menu-s py-0 color-fg-default text-left">
-                                    <div class="p-3 signed-commit-header d-flex">
-                                        <div class="pr-1">
-                                            <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1"
-                                                 width="16" data-view-component="true"
-                                                 class="octicon octicon-verified mr-2">
-                                                <path fill-rule="evenodd"
-                                                      d="M9.585.52a2.678 2.678 0 00-3.17 0l-.928.68a1.178 1.178 0 01-.518.215L3.83 1.59a2.678 2.678 0 00-2.24 2.24l-.175 1.14a1.178 1.178 0 01-.215.518l-.68.928a2.678 2.678 0 000 3.17l.68.928c.113.153.186.33.215.518l.175 1.138a2.678 2.678 0 002.24 2.24l1.138.175c.187.029.365.102.518.215l.928.68a2.678 2.678 0 003.17 0l.928-.68a1.17 1.17 0 01.518-.215l1.138-.175a2.678 2.678 0 002.241-2.241l.175-1.138c.029-.187.102-.365.215-.518l.68-.928a2.678 2.678 0 000-3.17l-.68-.928a1.179 1.179 0 01-.215-.518L14.41 3.83a2.678 2.678 0 00-2.24-2.24l-1.138-.175a1.179 1.179 0 01-.518-.215L9.585.52zM7.303 1.728c.415-.305.98-.305 1.394 0l.928.68c.348.256.752.423 1.18.489l1.136.174c.51.078.909.478.987.987l.174 1.137c.066.427.233.831.489 1.18l.68.927c.305.415.305.98 0 1.394l-.68.928a2.678 2.678 0 00-.489 1.18l-.174 1.136a1.178 1.178 0 01-.987.987l-1.137.174a2.678 2.678 0 00-1.18.489l-.927.68c-.415.305-.98.305-1.394 0l-.928-.68a2.678 2.678 0 00-1.18-.489l-1.136-.174a1.178 1.178 0 01-.987-.987l-.174-1.137a2.678 2.678 0 00-.489-1.18l-.68-.927a1.178 1.178 0 010-1.394l.68-.928c.256-.348.423-.752.489-1.18l.174-1.136c.078-.51.478-.909.987-.987l1.137-.174a2.678 2.678 0 001.18-.489l.927-.68zM11.28 6.78a.75.75 0 00-1.06-1.06L7 8.94 5.78 7.72a.75.75 0 00-1.06 1.06l1.75 1.75a.75.75 0 001.06 0l3.75-3.75z"></path>
-                                            </svg>
-                                        </div>
-                                        <div class="flex-1">
-                                            This commit was signed with the committer’s <strong
-                                                class="signed-commit-verified-label">verified signature</strong>.
-                                        </div>
-                                    </div>
-
-                                    <div class="px-3 pt-3 d-flex">
-                                        <a class="pr-1" aria-label="sergiimk" href="/sergiimk">
-                                            <img src="https://avatars.githubusercontent.com/u/204914?s=64&amp;v=4"
-                                                 alt="" class="avatar avatar-2 avatar-user mr-2">
+                            <div class="d-flex align-items-center mt-1">
+                                <div class="avatar-stack flex-self-start">
+                                    <div
+                                        class="avatar-stack__body"
+                                        aria-label="sergiimk"
+                                    >
+                                        <a
+                                            class="avatar avatar-user"
+                                            style="width: 20px; height: 20px"
+                                            data-skip-pjax="true"
+                                            data-test-selector="commits-avatar-stack-avatar-link"
+                                            data-hovercard-type="user"
+                                            data-hovercard-url="/users/sergiimk/hovercard"
+                                            data-octo-click="hovercard-link-click"
+                                            data-octo-dimensions="link_type:self"
+                                            href="/sergiimk"
+                                        >
+                                            <img
+                                                data-test-selector="commits-avatar-stack-avatar-image"
+                                                src="https://avatars.githubusercontent.com/u/204914?s=40&amp;v=4"
+                                                width="20"
+                                                height="20"
+                                                alt="@sergiimk"
+                                                class="avatar-user"
+                                            />
                                         </a>
-                                        <span class="signed-commit-signer-name flex-1">
-                <a class="signer" href="/sergiimk">sergiimk</a>
-                Sergii Mikhtoniuk
-              </span>
-                                    </div>
-
-                                    <div class="signed-commit-footer p-3 rounded-bottom-2">
-                                        <span class="d-block">GPG key ID: <span
-                                                class="color-fg-muted">7D279F791DB8E4F7</span></span>
-                                        <a href="https://docs.github.com/github/authenticating-to-github/displaying-verification-statuses-for-all-of-your-commits">Learn
-                                            about vigilant mode</a>.
                                     </div>
                                 </div>
+
+                                <div class="f6 color-fg-muted min-width-0">
+                                    <a
+                                        class="commit-author user-mention"
+                                        title="View all commits by sergiimk"
+                                        href="/kamu-data/kamu-web-ui/commits?author=sergiimk"
+                                        >sergiimk</a
+                                    >
+
+                                    committed
+                                    <time
+                                        datetime="2022-02-19T03:09:35Z"
+                                        class="no-wrap"
+                                        title="19 Feb 2022, 05:09 EET"
+                                        >10 hours ago
+                                    </time>
+                                </div>
+                                <div class="ml-1"></div>
                             </div>
-                        </details>
-
-
-                        <div data-view-component="true" class="BtnGroup">
-                            <button aria-label="Copy the full SHA" type="button" data-view-component="true"
-                                    class="tooltipped tooltipped-sw btn-outline btn BtnGroup-item px-0">
-                                <div aria-label="Copy the full SHA" value="75e711dfb8e35335b622f0c56ff59fc3fc7cea7d"
-                                     data-view-component="true" class="px-3 py-2" tabindex="0" role="button">
-                                    <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
-                                         data-view-component="true" class="octicon octicon-copy">
-                                        <path fill-rule="evenodd"
-                                              d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                                        <path fill-rule="evenodd"
-                                              d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                                    </svg>
-                                    <svg style="display: none;" aria-hidden="true" height="16" viewBox="0 0 16 16"
-                                         version="1.1" width="16" data-view-component="true"
-                                         class="octicon octicon-check color-fg-success">
-                                        <path fill-rule="evenodd"
-                                              d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path>
-                                    </svg>
-                                </div>
-                            </button>
-                            <a href="/kamu-data/kamu-web-ui/commit/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d"
-                               aria-label="View commit details" data-view-component="true"
-                               class="tooltipped tooltipped-sw btn-outline btn BtnGroup-item text-mono f6"> 75e711d
-                            </a>
                         </div>
-                        <div data-view-component="true" class="BtnGroup">
-                            <a href="/kamu-data/kamu-web-ui/tree/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d"
-                               aria-label="Browse the repository at this point in the history"
-                               data-view-component="true"
-                               class="tooltipped tooltipped-sw btn-outline btn BtnGroup-item">
-                                <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
-                                     data-view-component="true" class="octicon octicon-code">
-                                    <path fill-rule="evenodd"
-                                          d="M4.72 3.22a.75.75 0 011.06 1.06L2.06 8l3.72 3.72a.75.75 0 11-1.06 1.06L.47 8.53a.75.75 0 010-1.06l4.25-4.25zm6.56 0a.75.75 0 10-1.06 1.06L13.94 8l-3.72 3.72a.75.75 0 101.06 1.06l4.25-4.25a.75.75 0 000-1.06l-4.25-4.25z"></path>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </li>
 
-            </ol>
+                        <div class="d-none d-md-block flex-shrink-0">
+                            <div>
+                                <button
+                                    type="button"
+                                    class="signed-commit-badge verified signed-commit-badge-small"
+                                    placement="left"
+                                    ngbPopover="Verified"
+                                    [popoverTitle]="popTitle"
+                                    [ngbPopover]="popContent"
+                                >
+                                    Verified
+                                </button>
+                            </div>
+
+                            <div data-view-component="true" class="BtnGroup">
+                                <button
+                                    aria-label="Copy the full SHA"
+                                    type="button"
+                                    data-view-component="true"
+                                    class="tooltipped tooltipped-sw btn-outline btn BtnGroup-item px-0"
+                                >
+                                    <div
+                                        aria-label="Copy the full SHA"
+                                        value="75e711dfb8e35335b622f0c56ff59fc3fc7cea7d"
+                                        data-view-component="true"
+                                        class="px-3 py-2"
+                                        tabindex="0"
+                                        role="button"
+                                    >
+                                        <svg
+                                            aria-hidden="true"
+                                            height="16"
+                                            viewBox="0 0 16 16"
+                                            version="1.1"
+                                            width="16"
+                                            data-view-component="true"
+                                            class="octicon octicon-copy"
+                                        >
+                                            <path
+                                                fill-rule="evenodd"
+                                                d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"
+                                            ></path>
+                                            <path
+                                                fill-rule="evenodd"
+                                                d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"
+                                            ></path>
+                                        </svg>
+                                        <svg
+                                            style="display: none"
+                                            aria-hidden="true"
+                                            height="16"
+                                            viewBox="0 0 16 16"
+                                            version="1.1"
+                                            width="16"
+                                            data-view-component="true"
+                                            class="octicon octicon-check color-fg-success"
+                                        >
+                                            <path
+                                                fill-rule="evenodd"
+                                                d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"
+                                            ></path>
+                                        </svg>
+                                    </div>
+                                </button>
+                                <a
+                                    href="/kamu-data/kamu-web-ui/commit/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d"
+                                    aria-label="View commit details"
+                                    data-view-component="true"
+                                    class="tooltipped tooltipped-sw btn-outline btn BtnGroup-item text-mono f6"
+                                >
+                                    75e711d
+                                </a>
+                            </div>
+                            <div data-view-component="true" class="BtnGroup">
+                                <a
+                                    href="/kamu-data/kamu-web-ui/tree/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d"
+                                    aria-label="Browse the repository at this point in the history"
+                                    data-view-component="true"
+                                    class="tooltipped tooltipped-sw btn-outline btn BtnGroup-item"
+                                >
+                                    <svg
+                                        aria-hidden="true"
+                                        height="16"
+                                        viewBox="0 0 16 16"
+                                        version="1.1"
+                                        width="16"
+                                        data-view-component="true"
+                                        class="octicon octicon-code"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4.72 3.22a.75.75 0 011.06 1.06L2.06 8l3.72 3.72a.75.75 0 11-1.06 1.06L.47 8.53a.75.75 0 010-1.06l4.25-4.25zm6.56 0a.75.75 0 10-1.06 1.06L13.94 8l-3.72 3.72a.75.75 0 101.06 1.06l4.25-4.25a.75.75 0 000-1.06l-4.25-4.25z"
+                                        ></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                </ol>
+            </div>
         </div>
-    </div>
     </div>
 </div>
+
+<ng-template
+#popTitle
+class="signed-commit__popup-header"
+>
+<div class="signed-commit-header d-grid">
+    <div class="pr-1">
+        <svg
+            aria-hidden="true"
+            height="16"
+            viewBox="0 0 16 16"
+            version="1.1"
+            width="16"
+            data-view-component="true"
+            class="verified-commit verified mr-2"
+        >
+            <path
+                fill-rule="evenodd"
+                d="M9.585.52a2.678 2.678 0 00-3.17 0l-.928.68a1.178 1.178 0 01-.518.215L3.83 1.59a2.678 2.678 0 00-2.24 2.24l-.175 1.14a1.178 1.178 0 01-.215.518l-.68.928a2.678 2.678 0 000 3.17l.68.928c.113.153.186.33.215.518l.175 1.138a2.678 2.678 0 002.24 2.24l1.138.175c.187.029.365.102.518.215l.928.68a2.678 2.678 0 003.17 0l.928-.68a1.17 1.17 0 01.518-.215l1.138-.175a2.678 2.678 0 002.241-2.241l.175-1.138c.029-.187.102-.365.215-.518l.68-.928a2.678 2.678 0 000-3.17l-.68-.928a1.179 1.179 0 01-.215-.518L14.41 3.83a2.678 2.678 0 00-2.24-2.24l-1.138-.175a1.179 1.179 0 01-.518-.215L9.585.52zM7.303 1.728c.415-.305.98-.305 1.394 0l.928.68c.348.256.752.423 1.18.489l1.136.174c.51.078.909.478.987.987l.174 1.137c.066.427.233.831.489 1.18l.68.927c.305.415.305.98 0 1.394l-.68.928a2.678 2.678 0 00-.489 1.18l-.174 1.136a1.178 1.178 0 01-.987.987l-1.137.174a2.678 2.678 0 00-1.18.489l-.927.68c-.415.305-.98.305-1.394 0l-.928-.68a2.678 2.678 0 00-1.18-.489l-1.136-.174a1.178 1.178 0 01-.987-.987l-.174-1.137a2.678 2.678 0 00-.489-1.18l-.68-.927a1.178 1.178 0 010-1.394l.68-.928c.256-.348.423-.752.489-1.18l.174-1.136c.078-.51.478-.909.987-.987l1.137-.174a2.678 2.678 0 001.18-.489l.927-.68zM11.28 6.78a.75.75 0 00-1.06-1.06L7 8.94 5.78 7.72a.75.75 0 00-1.06 1.06l1.75 1.75a.75.75 0 001.06 0l3.75-3.75z"
+            ></path>
+        </svg>
+    </div>
+    <div class="flex-1">
+        This commit was signed with the
+        committer’s
+        <strong
+            class="signed-commit-verified-label"
+            >verified signature</strong
+        >.
+    </div>
+</div>
+</ng-template>
+<ng-template #popContent>
+                                    <div
+                                        class="signer-block-info d-grid justify-content-between align-items-center"
+                                    >
+                                        <a
+                                            class="pe-1"
+                                            aria-label="sergiimk"
+                                            href="/sergiimk"
+                                        >
+                                            <img
+                                                src="https://avatars.githubusercontent.com/u/204914?s=64&amp;v=4"
+                                                alt=""
+                                                class="avatar avatar-2 avatar-user mr-2"
+                                            />
+                                        </a>
+                                        <span
+                                            class="signed-commit-signer-name flex-1"
+                                        >
+                                            <a
+                                                class="signer"
+                                                [href]="'/'"
+                                                >owner.name</a
+                                            >
+                                            row.owner.name
+                                        </span>
+                                    </div>
+                                    <div class="signed-commit-footer p-1">
+                                        <span class="d-block"
+                                            >GPG key ID:
+                                            <span
+                                                class="signed-commit-footer__id"
+                                                >7D279F791DB8E4F7</span
+                                            ></span
+                                        >
+                                        <a
+                                            href="https://docs.github.com/github/authenticating-to-github/displaying-verification-statuses-for-all-of-your-commits"
+                                        >
+                                            Learn about vigilant mode</a
+                                        >.
+                                    </div>
+                                </ng-template>

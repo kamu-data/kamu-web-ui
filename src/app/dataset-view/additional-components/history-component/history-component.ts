@@ -1,9 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    Output,
-} from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { PageInfoInterface } from "../../../interface/search.interface";
 
 @Component({

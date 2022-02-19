@@ -23,10 +23,10 @@ import { DataComponent } from "./additional-components/data-component/data-compo
 import { OverviewComponent } from "./additional-components/overview-component/overview-component";
 import { LinageComponent } from "./additional-components/linage-component/linage-component";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
-import {HistoryComponent} from "./additional-components/history-component/history-component";
-import {AppModule} from "../app.module";
-import {TimelineComponent} from "../components/timeline-component/timeline.component";
-import {TimelineModule} from "../components/timeline-component/timeline.module";
+import { HistoryComponent } from "./additional-components/history-component/history-component";
+import { AppModule } from "../app.module";
+import { TimelineComponent } from "../components/timeline-component/timeline.component";
+import { TimelineModule } from "../components/timeline-component/timeline.module";
 
 @NgModule({
     imports: [

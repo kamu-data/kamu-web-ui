@@ -4,7 +4,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { CommonModule } from "@angular/common";
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
-import {TimelineComponent} from "./timeline.component";
+import { TimelineComponent } from "./timeline.component";
 
 @NgModule({
     imports: [

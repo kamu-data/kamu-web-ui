@@ -1,5 +1,6 @@
 import {Component, Input} from "@angular/core";
 import {PageInfoInterface} from "../../interface/search.interface";
+import AppValues from "../../common/app.values";
 
 @Component({
     selector: "app-timeline",
@@ -7,5 +8,13 @@ import {PageInfoInterface} from "../../interface/search.interface";
     styleUrls: ["timeline.component.sass"],
 })
 export class TimelineComponent {
+    @Input() public history: any[];
     @Input() public pageInfo: PageInfoInterface;
+    public momentConverDatetoLocalWithFormat(date: string): string {
+        return AppValues.momentConverDatetoLocalWithFormat({
+            date: new Date(String(date)),
+            format: "DD MMM YYYY",
+            isTextDate: true,
+        });
+    }
 }

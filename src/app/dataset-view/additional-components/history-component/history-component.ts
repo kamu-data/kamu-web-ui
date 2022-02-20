@@ -8,6 +8,7 @@ import { PageInfoInterface } from "../../../interface/search.interface";
 export class HistoryComponent {
     @Input() public currentPage: number;
     @Input() public pageInfo: PageInfoInterface;
+    @Input() public datasetHistory: any[];
     @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
     @Output() onPageChangeEmit: EventEmitter<{
         currentPage: number;

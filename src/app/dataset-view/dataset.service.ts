@@ -36,6 +36,9 @@ export class AppDatasetService {
     public get onSearchDatasetNameChanges(): Observable<DatasetNameInterface> {
         return this.searchDatasetNameChanges$.asObservable();
     }
+    public get onSearchDatasetHistoryChanges(): Observable<any[]> {
+        return this.searchDatasetHistoryChanges$.asObservable();
+    }
 
     public get onSearchChanges(): Observable<string> {
         return this.searchChanges$.asObservable();
@@ -91,6 +94,7 @@ export class AppDatasetService {
     private searchDataChanges$: Subject<any[]> = new Subject<any[]>();
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     private searchDatasetInfoChanges$: Subject<any> = new Subject<any>();
+    private searchDatasetHistoryChanges$: Subject<any[]> = new Subject<any[]>();
     private searchDatasetNameChanges$: Subject<DatasetNameInterface> =
         new Subject<DatasetNameInterface>();
     private searchMetadataChanges$: Subject<SearchOverviewInterface> =
@@ -130,6 +134,10 @@ export class AppDatasetService {
         searchDatasetName: DatasetNameInterface,
     ): void {
         this.searchDatasetNameChanges$.next(searchDatasetName);
+    }
+    public searchDatasetHistoryChanges(datasetNodes: any[]): void {
+        debugger
+        this.searchDatasetHistoryChanges$.next(datasetNodes);
     }
     public datasetSchemaChanges(schema: DataSchema): void {
         this.datasetSchemaChanges$.next(schema);
@@ -265,6 +273,7 @@ export class AppDatasetService {
                         name: data.datasets.byId?.name,
                         owner: data.datasets.byId?.owner as any,
                     });
+                    this.searchDatasetHistoryChanges(data.datasets.byId?.metadata.chain.blocks.nodes || []);
                     // this.searchData = data.datasets.byId?.metadata;
                 }
             });

@@ -1,5 +1,5 @@
 <div class="timeline-block">
-    <div *ngFor="let item of [1, 2, 3, 4, 5]">
+    <div *ngFor="let node of history">
         <div
             class="timeline-block__item timeline-block__item--condensed pt-0 pb-2"
         >
@@ -20,11 +20,8 @@
                 </svg>
             </div>
             <div class="timeline-block__body">
-                <h4 class="f5 font-weight-bold timeline-block__body__header">
-                    Event desc. (e.g. “Added N records”)
-                </h4>
                 <ol
-                    class="mt-3 list-unstyled box box--condensed ml-n6 ml-sm-0 position-relative"
+                    class="mt-2 list-unstyled box box--condensed ml-n6 ml-sm-0 position-relative"
                 >
                     <li
                         class="box__row box__row--focus-gray mt-0 d-flex"
@@ -35,8 +32,7 @@
                                 <a
                                     class="link--primary font-weight-bold"
                                     href="/kamu-data/kamu-web-ui/commit/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d"
-                                    >Update onSearchMetadata to use GQL codegen
-                                    query</a
+                                    >{{node['event']['__typename']}}</a
                                 >
                             </p>
 
@@ -82,7 +78,7 @@
                                         datetime="2022-02-19T03:09:35Z"
                                         class="no-wrap"
                                         title="19 Feb 2022, 05:09 EET"
-                                        >10 hours ago
+                                        >{{momentConverDatetoLocalWithFormat(node.systemTime)}}
                                     </time>
                                 </div>
                                 <div class="ml-1"></div>
@@ -159,7 +155,7 @@
                                     data-view-component="true"
                                     class="tooltipped tooltipped-sw btn-outline btn BtnGroup-item text-mono f6"
                                 >
-                                    75e711d
+                                    {{node['blockHash']}}
                                 </a>
                             </div>
                             <div data-view-component="true" class="BtnGroup">

@@ -45,6 +45,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public isMobileView = false;
     public datasetInfo: DatasetInfoInterface;
     public datasetName: DatasetNameInterface;
+    public datasetHistory: any[];
     public searchValue = "";
     public currentPage: number;
     public currentSchema: DataViewSchema;
@@ -174,6 +175,11 @@ const language = 'typescript';
                     : ({} as DataViewSchema);
             },
         );
+        this.appDatasetService.onSearchDatasetHistoryChanges.subscribe(
+            (history: any[]) => {
+                this.datasetHistory = history;
+            }
+        )
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
             (info: DatasetInfoInterface) => {

@@ -648,7 +648,10 @@ const language = 'typescript';
         );
     }
     public onRunSQLRequest(sqlCode: string): void {
-        this.appDatasetService.onGetDatasetDataSQLRun(this.datasetInfo, sqlCode);
+        this.appDatasetService.onGetDatasetDataSQLRun(
+            this.datasetInfo,
+            sqlCode,
+        );
     }
 
     ngOnDestroy() {

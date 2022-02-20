@@ -20,7 +20,9 @@ import {
     DatasetOverviewGQL,
     DatasetOverviewQuery,
     GetDatasetDataSchemaGQL,
-    GetDatasetDataSchemaQuery, GetDatasetDataSqlRunGQL, GetDatasetDataSqlRunQuery,
+    GetDatasetDataSchemaQuery,
+    GetDatasetDataSqlRunGQL,
+    GetDatasetDataSqlRunQuery,
     SearchDatasetsAutocompleteGQL,
     SearchDatasetsOverviewGQL,
     SearchDatasetsOverviewQuery,
@@ -39,7 +41,7 @@ export class SearchApi {
         private searchDatasetsAutocompleteGQL: SearchDatasetsAutocompleteGQL,
         private searchDatasetsOverviewGQL: SearchDatasetsOverviewGQL,
         private getDatasetDataSchemaGQL: GetDatasetDataSchemaGQL,
-        private getDatasetDataSQLRun: GetDatasetDataSqlRunGQL
+        private getDatasetDataSQLRun: GetDatasetDataSqlRunGQL,
     ) {}
 
     public pageInfoInit(): PageInfoInterface {
@@ -114,7 +116,7 @@ export class SearchApi {
         return this.datasetOverviewGQL
             .watch({
                 datasetId: params.id,
-                limit: params.numRecords || 10 as number,
+                limit: params.numRecords || (10 as number),
             })
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<DatasetOverviewQuery>) => {
@@ -125,9 +127,11 @@ export class SearchApi {
                 }),
             );
     }
-    public onGetDatasetDataSQLRun(sqlCode: string): Observable<GetDatasetDataSqlRunQuery | undefined> {
+    public onGetDatasetDataSQLRun(
+        sqlCode: string,
+    ): Observable<GetDatasetDataSqlRunQuery | undefined> {
         return this.getDatasetDataSQLRun
-            .watch({query: sqlCode})
+            .watch({ query: sqlCode })
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetDatasetDataSqlRunQuery>) => {
                     if (result.data) {

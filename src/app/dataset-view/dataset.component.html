@@ -444,8 +444,9 @@
                 ></app-overview>
             </ng-template>
 
-            <ng-template [ngIf]="datasetViewTypeData">
+            <ng-template [ngIf]="datasetViewTypeData && datasetName">
                 <app-data
+                    [datasetName]="datasetName"
                     [tableData]="tableData"
                     [currentSchema]="currentSchema"
                     (onSelectDatasetEmit)="onSelectDataset($event)"

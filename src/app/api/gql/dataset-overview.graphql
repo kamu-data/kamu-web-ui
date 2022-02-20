@@ -22,9 +22,16 @@ query datasetOverview($datasetId: DatasetID!, $numRecords: Int) {
       data {
         numRecordsTotal
         estimatedSize
-        tail(numRecords: $numRecords, format: JSON) {
-          format
-          content
+        tail(limit: $numRecords, dataFormat: JSON) {
+          schema {
+            format
+            content
+          }
+          data {
+            format
+            content
+            numRecords
+          }
           __typename
         }
         __typename

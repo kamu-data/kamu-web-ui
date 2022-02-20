@@ -21,11 +21,37 @@ query getDatasetHistory($datasetId: DatasetID!, $perPage: Int, $page: Int) {
                   datasetId
                   datasetKind
                 }
-                ... on MetadataEventAddData {
-                  outputData {
-                    logicalHash
+                ... on MetadataEventSetWatermark {
+                  dummy
+                  __typename
+                }
+                ... on MetadataEventSetTransform {
+                  dummy
+                  __typename
+                }
+                ... on MetadataEventExecuteQuery {
+                  queryOutputData: outputData {
+                    interval {
+                       start
+                       end
+                       __typename
+                      }
+                      logicalHash
+                      physicalHash
+                      __typename
                   }
-                  outputWatermark
+                }
+                ... on MetadataEventAddData {
+                  addedOutputData: outputData {
+                    interval {
+                       start
+                       end
+                       __typename
+                      }
+                      logicalHash
+                      physicalHash
+                      __typename
+                     }
                 }
               }
               blockHash,

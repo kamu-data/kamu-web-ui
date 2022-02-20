@@ -20,7 +20,7 @@ import {
     DatasetOverviewGQL,
     DatasetOverviewQuery,
     GetDatasetDataSchemaGQL,
-    GetDatasetDataSchemaQuery,
+    GetDatasetDataSchemaQuery, GetDatasetDataSqlRunGQL, GetDatasetDataSqlRunQuery,
     SearchDatasetsAutocompleteGQL,
     SearchDatasetsOverviewGQL,
     SearchDatasetsOverviewQuery,
@@ -39,6 +39,7 @@ export class SearchApi {
         private searchDatasetsAutocompleteGQL: SearchDatasetsAutocompleteGQL,
         private searchDatasetsOverviewGQL: SearchDatasetsOverviewGQL,
         private getDatasetDataSchemaGQL: GetDatasetDataSchemaGQL,
+        private getDatasetDataSQLRun: GetDatasetDataSqlRunGQL
     ) {}
 
     public pageInfoInit(): PageInfoInterface {
@@ -117,6 +118,18 @@ export class SearchApi {
             })
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<DatasetOverviewQuery>) => {
+                    if (result.data) {
+                        return result.data;
+                    }
+                    return undefined;
+                }),
+            );
+    }
+    public onGetDatasetDataSQLRun(sqlCode: string): Observable<GetDatasetDataSqlRunQuery | undefined> {
+        return this.getDatasetDataSQLRun
+            .watch({query: sqlCode})
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<GetDatasetDataSqlRunQuery>) => {
                     if (result.data) {
                         return result.data;
                     }

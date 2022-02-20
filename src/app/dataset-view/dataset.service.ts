@@ -8,7 +8,7 @@ import {
     DatasetKindTypeNames,
     DatasetLinageResponse,
     DatasetNameInterface,
-    SearchDatasetByID,
+    SearchDatasetByID, SearchHistoryCurrentSchema,
     SearchHistoryInterface,
     SearchMetadataInterface,
     SearchOverviewDatasetsInterface,
@@ -17,7 +17,7 @@ import {
 import { expand, flatMap, map } from "rxjs/operators";
 import {
     DataSchema,
-    DatasetOverviewQuery,
+    DatasetOverviewQuery, GetDatasetDataSqlRunQuery,
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { debug } from "util";
@@ -223,7 +223,6 @@ export class AppDatasetService {
             .subscribe((data: DatasetOverviewQuery | undefined) => {
                 let datasets: SearchDatasetByID;
                 if (data) {
-                    debugger
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
                     datasets = AppValues.deepCopy(data.datasets.byId);
                     datasets.data.tail.content = data.datasets.byId
@@ -262,6 +261,47 @@ export class AppDatasetService {
                     });
                     this.searchData = data.dataset;
                     this.searchMetadataChange(data);
+                }
+            });
+    }
+    public onGetDatasetDataSQLRun(currentDatasetInfo: DatasetInfoInterface, sqlCode: string): void {
+        /* eslint-disable  @typescript-eslint/no-explicit-any */
+        this.searchApi
+            .onGetDatasetDataSQLRun(sqlCode)
+            .subscribe((data: GetDatasetDataSqlRunQuery | undefined) => {
+                const datasets = {
+                    metadata: {
+                        currentSchema: {
+                            content: { }
+                        }
+                    },
+                    data: {
+                        tail: {
+                            content: []
+                        }
+
+                    }
+                };
+                if (data) {
+                    /* eslint-disable  @typescript-eslint/no-explicit-any */
+                    datasets.data.tail.content = data.data?.query.data
+                        ? JSON.parse(data.data?.query.data.content)
+                        : ({} as any);
+                    datasets.metadata.currentSchema.content = data.data.query.schema
+                        ? JSON.parse(
+                            data.data.query.schema.content,
+                        )
+                        : ({} as any);
+
+                    // @ts-ignore
+                    const datasetInfo = AppDatasetService.getDatasetInfo(Object.assign(currentDatasetInfo, datasets));
+                    this.searchDatasetInfoChanges(datasetInfo);
+                    this.searchData = datasets.data.tail.content;
+                    // @ts-ignore
+                    this.searchDataChanges(datasets.data.tail.content);
+                    this.datasetSchemaChanges(
+                        data.data.query.schema as DataSchema,
+                    );
                 }
             });
     }

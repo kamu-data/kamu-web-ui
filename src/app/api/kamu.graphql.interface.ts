@@ -514,11 +514,11 @@ export type DatasetMetadataQuery = { __typename?: 'Query', datasets: { __typenam
 
 export type DatasetOverviewQueryVariables = Exact<{
   datasetId: Scalars['DatasetID'];
-  numRecords?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type DatasetOverviewQuery = { __typename?: 'Query', datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', id: any, name: any, kind: DatasetKind, createdAt: any, lastUpdatedAt: any, owner: { __typename?: 'Organization', id: any, name: string } | { __typename?: 'User', id: any, name: string }, metadata: { __typename: 'DatasetMetadata', currentWatermark?: any | null | undefined, currentSchema: { __typename: 'DataSchema', format: DataSchemaFormat, content: string } }, data: { __typename: 'DatasetData', numRecordsTotal: number, estimatedSize: number, tail: { __typename: 'DataQueryResult', schema: { __typename?: 'DataSchema', format: DataSchemaFormat, content: string }, data: { __typename?: 'DataSlice', format: DataSliceFormat, content: string, numRecords: number } } } } | null | undefined } };
+export type DatasetOverviewQuery = { __typename?: 'Query', datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', id: any, name: any, kind: DatasetKind, createdAt: any, lastUpdatedAt: any, owner: { __typename?: 'Organization', id: any, name: string } | { __typename?: 'User', id: any, name: string }, metadata: { __typename: 'DatasetMetadata', currentWatermark?: any | null | undefined, currentSchema: { __typename: 'DataSchema', format: DataSchemaFormat, content: string } }, data: { __typename: 'DatasetData', numRecordsTotal: number, estimatedSize: number, tail: { __typename: 'DataQueryResult', schema: { __typename?: 'DataSchema', format: DataSchemaFormat, content: string }, data: { __typename?: 'DataSlice', format: DataSliceFormat, content: string } } } } | null | undefined } };
 
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
   query: Scalars['String'];
@@ -772,7 +772,7 @@ export const DatasetMetadataDocument = gql`
     }
   }
 export const DatasetOverviewDocument = gql`
-    query datasetOverview($datasetId: DatasetID!, $numRecords: Int) {
+    query datasetOverview($datasetId: DatasetID!, $limit: Int) {
   datasets {
     byId(datasetId: $datasetId) {
       id
@@ -796,7 +796,7 @@ export const DatasetOverviewDocument = gql`
       data {
         numRecordsTotal
         estimatedSize
-        tail(limit: $numRecords, dataFormat: JSON) {
+        tail(limit: $limit, dataFormat: JSON) {
           schema {
             format
             content
@@ -804,7 +804,6 @@ export const DatasetOverviewDocument = gql`
           data {
             format
             content
-            numRecords
           }
           __typename
         }

@@ -191,7 +191,7 @@ export class AppDatasetService {
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
                     datasets = AppValues.deepCopy(data.datasets.byId);
                     datasets.data.tail.content = data.datasets.byId
-                        ? JSON.parse(data.datasets?.byId?.data.tail.content)
+                        ? JSON.parse(data.datasets?.byId?.data.tail.data.content)
                         : ({} as any);
                     datasets.metadata.currentSchema.content = data.datasets.byId
                         ? JSON.parse(
@@ -223,10 +223,11 @@ export class AppDatasetService {
             .subscribe((data: DatasetOverviewQuery | undefined) => {
                 let datasets: SearchDatasetByID;
                 if (data) {
+                    debugger
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
                     datasets = AppValues.deepCopy(data.datasets.byId);
                     datasets.data.tail.content = data.datasets.byId
-                        ? JSON.parse(data.datasets?.byId?.data.tail.content)
+                        ? JSON.parse(data.datasets?.byId?.data.tail.data.content)
                         : ({} as any);
                     datasets.metadata.currentSchema.content = data.datasets.byId
                         ? JSON.parse(

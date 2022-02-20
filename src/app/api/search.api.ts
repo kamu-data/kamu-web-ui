@@ -113,7 +113,7 @@ export class SearchApi {
         return this.datasetOverviewGQL
             .watch({
                 datasetId: params.id,
-                numRecords: params.numRecords || 10,
+                limit: params.numRecords || 10 as number,
             })
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<DatasetOverviewQuery>) => {

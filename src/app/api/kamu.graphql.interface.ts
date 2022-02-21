@@ -39,6 +39,8 @@ export type Query = {
     accounts: Accounts;
     /** Returns the version of the GQL API */
     apiVersion: Scalars["String"];
+    /** Querying and data manipulations */
+    data: DataQueries;
     /** Dataset-related functionality group */
     datasets: Datasets;
     /** Search-related functionality group */
@@ -66,6 +68,56 @@ export type Account = {
     name: Scalars["String"];
 };
 
+export type DataQueries = {
+    __typename?: "DataQueries";
+    /** Executes a specified query and returns its result */
+    query: DataQueryResult;
+};
+
+export type DataQueriesQueryArgs = {
+    dataFormat?: InputMaybe<DataSliceFormat>;
+    limit?: InputMaybe<Scalars["Int"]>;
+    query: Scalars["String"];
+    queryDialect: QueryDialect;
+    schemaFormat?: InputMaybe<DataSchemaFormat>;
+};
+
+export enum DataSliceFormat {
+    Csv = "CSV",
+    Json = "JSON",
+    JsonLd = "JSON_LD",
+    JsonSoa = "JSON_SOA",
+}
+
+export enum QueryDialect {
+    DataFusion = "DATA_FUSION",
+}
+
+export enum DataSchemaFormat {
+    Parquet = "PARQUET",
+    ParquetJson = "PARQUET_JSON",
+}
+
+export type DataQueryResult = {
+    __typename?: "DataQueryResult";
+    data: DataSlice;
+    limit: Scalars["Int"];
+    schema: DataSchema;
+};
+
+export type DataSlice = {
+    __typename?: "DataSlice";
+    content: Scalars["String"];
+    format: DataSliceFormat;
+    numRecords: Scalars["Int"];
+};
+
+export type DataSchema = {
+    __typename?: "DataSchema";
+    content: Scalars["String"];
+    format: DataSchemaFormat;
+};
+
 export type Datasets = {
     __typename?: "Datasets";
     /** Returns datasets belonging to the specified account */
@@ -81,13 +133,13 @@ export type Datasets = {
 export type DatasetsByAccountIdArgs = {
     accountId: Scalars["AccountID"];
     page?: InputMaybe<Scalars["Int"]>;
-    perPage?: Scalars["Int"];
+    perPage?: InputMaybe<Scalars["Int"]>;
 };
 
 export type DatasetsByAccountNameArgs = {
     accountName: Scalars["AccountName"];
     page?: InputMaybe<Scalars["Int"]>;
-    perPage?: Scalars["Int"];
+    perPage?: InputMaybe<Scalars["Int"]>;
 };
 
 export type DatasetsByIdArgs = {
@@ -148,25 +200,13 @@ export type DatasetData = {
      * Returns the specified number of the latest records in the dataset
      * This is equivalent to the SQL query: `SELECT * FROM dataset ORDER BY event_time DESC LIMIT N`
      */
-    tail: DataSlice;
+    tail: DataQueryResult;
 };
 
 export type DatasetDataTailArgs = {
-    format?: InputMaybe<DataSliceFormat>;
-    numRecords?: InputMaybe<Scalars["Int"]>;
-};
-
-export enum DataSliceFormat {
-    Csv = "CSV",
-    Json = "JSON",
-    JsonLd = "JSON_LD",
-    JsonSoA = "JSON_SO_A",
-}
-
-export type DataSlice = {
-    __typename?: "DataSlice";
-    content: Scalars["String"];
-    format: DataSliceFormat;
+    dataFormat?: InputMaybe<DataSliceFormat>;
+    limit?: InputMaybe<Scalars["Int"]>;
+    schemaFormat?: InputMaybe<DataSchemaFormat>;
 };
 
 export enum DatasetKind {
@@ -208,7 +248,7 @@ export type MetadataChainBlockByHashArgs = {
 
 export type MetadataChainBlocksArgs = {
     page?: InputMaybe<Scalars["Int"]>;
-    perPage?: Scalars["Int"];
+    perPage?: InputMaybe<Scalars["Int"]>;
 };
 
 export type MetadataBlock = {
@@ -257,17 +297,6 @@ export type BlockRef = {
     name: Scalars["String"];
 };
 
-export enum DataSchemaFormat {
-    Parquet = "PARQUET",
-    ParquetJson = "PARQUET_JSON",
-}
-
-export type DataSchema = {
-    __typename?: "DataSchema";
-    content: Scalars["String"];
-    format: DataSchemaFormat;
-};
-
 export type Search = {
     __typename?: "Search";
     /** Perform search across all resources */
@@ -276,7 +305,7 @@ export type Search = {
 
 export type SearchQueryArgs = {
     page?: InputMaybe<Scalars["Int"]>;
-    perPage?: Scalars["Int"];
+    perPage?: InputMaybe<Scalars["Int"]>;
     query: Scalars["String"];
 };
 
@@ -483,14 +512,50 @@ export type GetDatasetDataSchemaQuery = {
                       numRecordsTotal: number;
                       estimatedSize: number;
                       tail: {
-                          __typename: "DataSlice";
-                          format: DataSliceFormat;
-                          content: string;
+                          __typename: "DataQueryResult";
+                          limit: number;
+                          schema: {
+                              __typename?: "DataSchema";
+                              format: DataSchemaFormat;
+                              content: string;
+                          };
+                          data: {
+                              __typename?: "DataSlice";
+                              format: DataSliceFormat;
+                              content: string;
+                              numRecords: number;
+                          };
                       };
                   };
               }
             | null
             | undefined;
+    };
+};
+
+export type GetDatasetDataSqlRunQueryVariables = Exact<{
+    query: Scalars["String"];
+}>;
+
+export type GetDatasetDataSqlRunQuery = {
+    __typename?: "Query";
+    data: {
+        __typename?: "DataQueries";
+        query: {
+            __typename?: "DataQueryResult";
+            limit: number;
+            schema: {
+                __typename?: "DataSchema";
+                format: DataSchemaFormat;
+                content: string;
+            };
+            data: {
+                __typename?: "DataSlice";
+                format: DataSliceFormat;
+                content: string;
+                numRecords: number;
+            };
+        };
     };
 };
 
@@ -648,7 +713,7 @@ export type DatasetMetadataQuery = {
 
 export type DatasetOverviewQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
-    numRecords?: InputMaybe<Scalars["Int"]>;
+    limit?: InputMaybe<Scalars["Int"]>;
 }>;
 
 export type DatasetOverviewQuery = {
@@ -680,9 +745,17 @@ export type DatasetOverviewQuery = {
                       numRecordsTotal: number;
                       estimatedSize: number;
                       tail: {
-                          __typename: "DataSlice";
-                          format: DataSliceFormat;
-                          content: string;
+                          __typename: "DataQueryResult";
+                          schema: {
+                              __typename?: "DataSchema";
+                              format: DataSchemaFormat;
+                              content: string;
+                          };
+                          data: {
+                              __typename?: "DataSlice";
+                              format: DataSliceFormat;
+                              content: string;
+                          };
                       };
                   };
               }
@@ -812,9 +885,17 @@ export const GetDatasetDataSchemaDocument = gql`
                 data {
                     numRecordsTotal
                     estimatedSize
-                    tail(numRecords: $numRecords, format: JSON) {
-                        format
-                        content
+                    tail(limit: $numRecords, dataFormat: JSON) {
+                        schema {
+                            format
+                            content
+                        }
+                        data {
+                            format
+                            content
+                            numRecords
+                        }
+                        limit
                         __typename
                     }
                     __typename
@@ -834,6 +915,44 @@ export class GetDatasetDataSchemaGQL extends Apollo.Query<
     GetDatasetDataSchemaQueryVariables
 > {
     document = GetDatasetDataSchemaDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const GetDatasetDataSqlRunDocument = gql`
+    query getDatasetDataSQLRun($query: String!) {
+        data {
+            query(
+                query: $query
+                queryDialect: DATA_FUSION
+                schemaFormat: PARQUET_JSON
+                dataFormat: JSON
+                limit: 5
+            ) {
+                schema {
+                    format
+                    content
+                }
+                data {
+                    format
+                    content
+                    numRecords
+                }
+                limit
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetDatasetDataSqlRunGQL extends Apollo.Query<
+    GetDatasetDataSqlRunQuery,
+    GetDatasetDataSqlRunQueryVariables
+> {
+    document = GetDatasetDataSqlRunDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
@@ -972,7 +1091,7 @@ export class DatasetMetadataGQL extends Apollo.Query<
     }
 }
 export const DatasetOverviewDocument = gql`
-    query datasetOverview($datasetId: DatasetID!, $numRecords: Int) {
+    query datasetOverview($datasetId: DatasetID!, $limit: Int) {
         datasets {
             byId(datasetId: $datasetId) {
                 id
@@ -996,9 +1115,15 @@ export const DatasetOverviewDocument = gql`
                 data {
                     numRecordsTotal
                     estimatedSize
-                    tail(numRecords: $numRecords, format: JSON) {
-                        format
-                        content
+                    tail(limit: $limit, dataFormat: JSON) {
+                        schema {
+                            format
+                            content
+                        }
+                        data {
+                            format
+                            content
+                        }
                         __typename
                     }
                     __typename

@@ -648,10 +648,10 @@ const language = 'typescript';
         );
     }
     public onRunSQLRequest(sqlCode: string): void {
-        this.modalService.warning({
-            message: "Feature will be soon",
-            yesButtonText: "Ok",
-        });
+        this.appDatasetService.onGetDatasetDataSQLRun(
+            this.datasetInfo,
+            sqlCode,
+        );
     }
 
     ngOnDestroy() {

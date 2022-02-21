@@ -177,7 +177,12 @@ const language = 'typescript';
         );
         this.appDatasetService.onSearchDatasetHistoryChanges.subscribe(
             (history: any[]) => {
-                this.datasetHistory = history;
+                const historyView = AppValues.deepCopy(history);
+                historyView.map((node: any) => {
+                    node.event = Object.assign({title: this.getTitle(node)}, node.event);
+                    return node;
+                });
+                this.datasetHistory = historyView;
             }
         )
 
@@ -210,6 +215,32 @@ const language = 'typescript';
                 setTimeout(() => (this.currentPage = data.currentPage));
             },
         );
+    }
+
+    public getTitle(node: any): string {
+        if (node.event.__typename === "MetadataEventAddData") {
+            return `${node.event.queryOutputData.interval.end - node.event.queryOutputData.interval.start} new records added`;
+        }
+        if (node.event.__typename === "MetadataEventExecuteQuery") {
+            return `Transformation produced ${node.event.queryOutputData ? node.event.queryOutputData.interval.end - node.event.queryOutputData.interval.start : 0} new records`;
+        }
+        if (node.event.__typename === "MetadataEventSeed") {
+            return `${node.event.datasetKind} dataset initialized with ID: ${node.event.datasetId}`;
+        }
+        if (node.event.__typename === "MetadataEventSetTransform") {
+            return `Query changed`;
+        }
+        if (node.event.__typename === "MetadataEventSetVocab") {
+            return `Vocabulary changed`;
+        }
+        if (node.event.__typename === "MetadataEventSetWatermar") {
+            return `Watermark updated to ${node.systemTime}`;
+        }
+        if (node.event.__typename === "MetadataEventSetPollingSource") {
+            return `Polling source changed`;
+        }
+
+        return node.event.__typename;
     }
 
     public successCopyToClipboardCopied(): void {

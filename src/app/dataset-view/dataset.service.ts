@@ -23,12 +23,13 @@ import {
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { debug } from "util";
+import {ModalService} from "../components/modal/modal.service";
 
 @Injectable()
 export class AppDatasetService {
     public onSearchLinageDatasetSubscribtion: Subscription;
 
-    constructor(private searchApi: SearchApi) {}
+    constructor(private searchApi: SearchApi, private modalService: ModalService) {}
 
     public get onSearchDatasetInfoChanges(): Observable<DatasetInfoInterface> {
         return this.searchDatasetInfoChanges$.asObservable();
@@ -312,6 +313,8 @@ export class AppDatasetService {
                         data.data.query.schema as DataSchema,
                     );
                 }
+            }, (error: {message: string}) => {
+                this.modalService.error({title: "Request was malformed.", message: error.message, yesButtonText: "Close"});
             });
     }
 

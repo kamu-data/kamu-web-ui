@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import {Component, EventEmitter, HostListener, Input, OnInit, Output} from "@angular/core";
 import {
     DatasetNameInterface,
     DataViewSchema,
@@ -32,6 +32,12 @@ export class DataComponent implements OnInit {
     };
     public savedQueries = DataTabValues.savedQueries;
     public sqlRequestCode: string = `select * from `;
+    @HostListener("document:keydown", ["$event"])
+    private checkCTRLEvent(event: KeyboardEvent): void {
+        if (event.ctrlKey && event.key === "Enter") {
+            this.onRunSQLRequest();
+        }
+    }
     public onSelectDataset(id: string): void {
         this.onSelectDatasetEmit.emit(id);
     }

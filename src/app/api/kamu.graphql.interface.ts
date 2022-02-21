@@ -28,17 +28,17 @@ export type Scalars = {
 };
 
 export type Query = {
-    __typename?: "Query";
-    /** Account-related functionality group */
-    accounts: Accounts;
-    /** Returns the version of the GQL API */
-    apiVersion: Scalars["String"];
-    /** Querying and data manipulations */
-    data: DataQueries;
-    /** Dataset-related functionality group */
-    datasets: Datasets;
-    /** Search-related functionality group */
-    search: Search;
+  __typename?: 'Query';
+  /** Account-related functionality group */
+  accounts: Accounts;
+  /** Returns the version of the GQL API */
+  apiVersion: Scalars['String'];
+  /** Querying and data manipulations */
+  data: DataQueries;
+  /** Dataset-related functionality group */
+  datasets: Datasets;
+  /** Search-related functionality group */
+  search: Search;
 };
 
 export type Accounts = {
@@ -65,53 +65,54 @@ export type Account = {
 };
 
 export type DataQueries = {
-    __typename?: "DataQueries";
-    /** Executes a specified query and returns its result */
-    query: DataQueryResult;
+  __typename?: 'DataQueries';
+  /** Executes a specified query and returns its result */
+  query: DataQueryResult;
 };
 
+
 export type DataQueriesQueryArgs = {
-    dataFormat?: InputMaybe<DataSliceFormat>;
-    limit?: InputMaybe<Scalars["Int"]>;
-    query: Scalars["String"];
-    queryDialect: QueryDialect;
-    schemaFormat?: InputMaybe<DataSchemaFormat>;
+  dataFormat?: InputMaybe<DataSliceFormat>;
+  limit?: InputMaybe<Scalars['Int']>;
+  query: Scalars['String'];
+  queryDialect: QueryDialect;
+  schemaFormat?: InputMaybe<DataSchemaFormat>;
 };
 
 export enum DataSliceFormat {
-    Csv = "CSV",
-    Json = "JSON",
-    JsonLd = "JSON_LD",
-    JsonSoa = "JSON_SOA",
+  Csv = 'CSV',
+  Json = 'JSON',
+  JsonLd = 'JSON_LD',
+  JsonSoa = 'JSON_SOA'
 }
 
 export enum QueryDialect {
-    DataFusion = "DATA_FUSION",
+  DataFusion = 'DATA_FUSION'
 }
 
 export enum DataSchemaFormat {
-    Parquet = "PARQUET",
-    ParquetJson = "PARQUET_JSON",
+  Parquet = 'PARQUET',
+  ParquetJson = 'PARQUET_JSON'
 }
 
 export type DataQueryResult = {
-    __typename?: "DataQueryResult";
-    data: DataSlice;
-    limit: Scalars["Int"];
-    schema: DataSchema;
+  __typename?: 'DataQueryResult';
+  data: DataSlice;
+  limit: Scalars['Int'];
+  schema: DataSchema;
 };
 
 export type DataSlice = {
-    __typename?: "DataSlice";
-    content: Scalars["String"];
-    format: DataSliceFormat;
-    numRecords: Scalars["Int"];
+  __typename?: 'DataSlice';
+  content: Scalars['String'];
+  format: DataSliceFormat;
+  numRecords: Scalars['Int'];
 };
 
 export type DataSchema = {
-    __typename?: "DataSchema";
-    content: Scalars["String"];
-    format: DataSchemaFormat;
+  __typename?: 'DataSchema';
+  content: Scalars['String'];
+  format: DataSchemaFormat;
 };
 
 export type Datasets = {
@@ -130,14 +131,14 @@ export type Datasets = {
 export type DatasetsByAccountIdArgs = {
   accountId: Scalars['AccountID'];
   page?: InputMaybe<Scalars['Int']>;
-  perPage?: Scalars['Int'];
+  perPage?: InputMaybe<Scalars['Int']>;
 };
 
 
 export type DatasetsByAccountNameArgs = {
-    accountName: Scalars["AccountName"];
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: Scalars["Int"];
+  accountName: Scalars['AccountName'];
+  page?: InputMaybe<Scalars['Int']>;
+  perPage?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -200,26 +201,14 @@ export type DatasetData = {
    * Returns the specified number of the latest records in the dataset
    * This is equivalent to the SQL query: `SELECT * FROM dataset ORDER BY event_time DESC LIMIT N`
    */
-  tail: DataSlice;
+  tail: DataQueryResult;
 };
 
 
 export type DatasetDataTailArgs = {
-  format?: InputMaybe<DataSliceFormat>;
-  numRecords?: InputMaybe<Scalars['Int']>;
-};
-
-export enum DataSliceFormat {
-  Csv = 'CSV',
-  Json = 'JSON',
-  JsonLd = 'JSON_LD',
-  JsonSoA = 'JSON_SO_A'
-}
-
-export type DataSlice = {
-  __typename?: 'DataSlice';
-  content: Scalars['String'];
-  format: DataSliceFormat;
+  dataFormat?: InputMaybe<DataSliceFormat>;
+  limit?: InputMaybe<Scalars['Int']>;
+  schemaFormat?: InputMaybe<DataSchemaFormat>;
 };
 
 export enum DatasetKind {
@@ -264,7 +253,7 @@ export type MetadataChainBlockByHashArgs = {
 
 export type MetadataChainBlocksArgs = {
   page?: InputMaybe<Scalars['Int']>;
-  perPage?: Scalars['Int'];
+  perPage?: InputMaybe<Scalars['Int']>;
 };
 
 export type MetadataBlock = {
@@ -313,17 +302,6 @@ export type BlockRef = {
   name: Scalars['String'];
 };
 
-export enum DataSchemaFormat {
-  Parquet = 'PARQUET',
-  ParquetJson = 'PARQUET_JSON'
-}
-
-export type DataSchema = {
-  __typename?: 'DataSchema';
-  content: Scalars['String'];
-  format: DataSchemaFormat;
-};
-
 export type Search = {
   __typename?: 'Search';
   /** Perform search across all resources */
@@ -333,7 +311,7 @@ export type Search = {
 
 export type SearchQueryArgs = {
   page?: InputMaybe<Scalars['Int']>;
-  perPage?: Scalars['Int'];
+  perPage?: InputMaybe<Scalars['Int']>;
   query: Scalars['String'];
 };
 
@@ -502,7 +480,14 @@ export type GetDatasetDataSchemaQueryVariables = Exact<{
 }>;
 
 
-export type GetDatasetDataSchemaQuery = { __typename?: 'Query', datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', id: any, name: any, kind: DatasetKind, createdAt: any, lastUpdatedAt: any, owner: { __typename?: 'Organization', id: any, name: string } | { __typename?: 'User', id: any, name: string }, metadata: { __typename: 'DatasetMetadata', currentWatermark?: any | null | undefined, currentSchema: { __typename: 'DataSchema', format: DataSchemaFormat, content: string } }, data: { __typename: 'DatasetData', numRecordsTotal: number, estimatedSize: number, tail: { __typename: 'DataSlice', format: DataSliceFormat, content: string } } } | null | undefined } };
+export type GetDatasetDataSchemaQuery = { __typename?: 'Query', datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', id: any, name: any, kind: DatasetKind, createdAt: any, lastUpdatedAt: any, owner: { __typename?: 'Organization', id: any, name: string } | { __typename?: 'User', id: any, name: string }, metadata: { __typename: 'DatasetMetadata', currentWatermark?: any | null | undefined, currentSchema: { __typename: 'DataSchema', format: DataSchemaFormat, content: string } }, data: { __typename: 'DatasetData', numRecordsTotal: number, estimatedSize: number, tail: { __typename: 'DataQueryResult', limit: number, schema: { __typename?: 'DataSchema', format: DataSchemaFormat, content: string }, data: { __typename?: 'DataSlice', format: DataSliceFormat, content: string, numRecords: number } } } } | null | undefined } };
+
+export type GetDatasetDataSqlRunQueryVariables = Exact<{
+  query: Scalars['String'];
+}>;
+
+
+export type GetDatasetDataSqlRunQuery = { __typename?: 'Query', data: { __typename?: 'DataQueries', query: { __typename?: 'DataQueryResult', limit: number, schema: { __typename?: 'DataSchema', format: DataSchemaFormat, content: string }, data: { __typename?: 'DataSlice', format: DataSliceFormat, content: string, numRecords: number } } } };
 
 export type GetDatasetHistoryQueryVariables = Exact<{
   datasetId: Scalars['DatasetID'];
@@ -512,32 +497,6 @@ export type GetDatasetHistoryQueryVariables = Exact<{
 
 
 export type GetDatasetHistoryQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', id: any, name: any, owner: { __typename?: 'Organization', id: any, name: string } | { __typename?: 'User', id: any, name: string }, metadata: { __typename?: 'DatasetMetadata', currentSchema: { __typename?: 'DataSchema', content: string }, chain: { __typename?: 'MetadataChain', blocks: { __typename?: 'MetadataBlockConnection', totalCount?: number | null | undefined, nodes: Array<{ __typename?: 'MetadataBlock', blockHash: any, systemTime: any, event: { __typename: 'MetadataEventAddData', addedOutputData: { __typename: 'DataSliceMetadata', logicalHash: any, physicalHash: any, interval: { __typename: 'OffsetInterval', start: number, end: number } } } | { __typename: 'MetadataEventExecuteQuery', queryOutputData?: { __typename: 'DataSliceMetadata', logicalHash: any, physicalHash: any, interval: { __typename: 'OffsetInterval', start: number, end: number } } | null | undefined } | { __typename: 'MetadataEventSeed', datasetId: any, datasetKind: DatasetKind } | { __typename: 'MetadataEventSetPollingSource' } | { __typename: 'MetadataEventSetTransform', dummy: string } | { __typename: 'MetadataEventSetVocab' } | { __typename: 'MetadataEventSetWatermark', dummy: string } | { __typename: 'MetadataEventUnsupported' } }>, pageInfo: { __typename?: 'PageBasedInfo', hasNextPage: boolean, hasPreviousPage: boolean, totalPages?: number | null | undefined } } } } } | null | undefined } };
-
-export type GetDatasetDataSqlRunQueryVariables = Exact<{
-    query: Scalars["String"];
-}>;
-
-export type GetDatasetDataSqlRunQuery = {
-    __typename?: "Query";
-    data: {
-        __typename?: "DataQueries";
-        query: {
-            __typename?: "DataQueryResult";
-            limit: number;
-            schema: {
-                __typename?: "DataSchema";
-                format: DataSchemaFormat;
-                content: string;
-            };
-            data: {
-                __typename?: "DataSlice";
-                format: DataSliceFormat;
-                content: string;
-                numRecords: number;
-            };
-        };
-    };
-};
 
 export type DatasetLinageUpstreamDependenciesQueryVariables = Exact<{
   datasetId: Scalars['DatasetID'];
@@ -564,11 +523,11 @@ export type GetDatasetMetadataSchemaQuery = { __typename?: 'Query', datasets: { 
 
 export type DatasetOverviewQueryVariables = Exact<{
   datasetId: Scalars['DatasetID'];
-  numRecords?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type DatasetOverviewQuery = { __typename?: 'Query', datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', id: any, name: any, kind: DatasetKind, createdAt: any, lastUpdatedAt: any, owner: { __typename?: 'Organization', id: any, name: string } | { __typename?: 'User', id: any, name: string }, metadata: { __typename: 'DatasetMetadata', currentWatermark?: any | null | undefined, currentSchema: { __typename: 'DataSchema', format: DataSchemaFormat, content: string } }, data: { __typename: 'DatasetData', numRecordsTotal: number, estimatedSize: number, tail: { __typename: 'DataSlice', format: DataSliceFormat, content: string } } } | null | undefined } };
+export type DatasetOverviewQuery = { __typename?: 'Query', datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', id: any, name: any, kind: DatasetKind, createdAt: any, lastUpdatedAt: any, owner: { __typename?: 'Organization', id: any, name: string } | { __typename?: 'User', id: any, name: string }, metadata: { __typename: 'DatasetMetadata', currentWatermark?: any | null | undefined, currentSchema: { __typename: 'DataSchema', format: DataSchemaFormat, content: string } }, data: { __typename: 'DatasetData', numRecordsTotal: number, estimatedSize: number, tail: { __typename: 'DataQueryResult', schema: { __typename?: 'DataSchema', format: DataSchemaFormat, content: string }, data: { __typename?: 'DataSlice', format: DataSliceFormat, content: string } } } } | null | undefined } };
 
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
   query: Scalars['String'];
@@ -607,7 +566,7 @@ export const AccountInfoDocument = gql`
   })
   export class AccountInfoGQL extends Apollo.Mutation<AccountInfoMutation, AccountInfoMutationVariables> {
     document = AccountInfoDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -637,9 +596,17 @@ export const GetDatasetDataSchemaDocument = gql`
       data {
         numRecordsTotal
         estimatedSize
-        tail(numRecords: $numRecords, format: JSON) {
-          format
-          content
+        tail(limit: $numRecords, dataFormat: JSON) {
+          schema {
+            format
+            content
+          }
+          data {
+            format
+            content
+            numRecords
+          }
+          limit
           __typename
         }
         __typename
@@ -656,7 +623,36 @@ export const GetDatasetDataSchemaDocument = gql`
   })
   export class GetDatasetDataSchemaGQL extends Apollo.Query<GetDatasetDataSchemaQuery, GetDatasetDataSchemaQueryVariables> {
     document = GetDatasetDataSchemaDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetDatasetDataSqlRunDocument = gql`
+    query getDatasetDataSQLRun($query: String!) {
+  data {
+    query(query: $query, queryDialect: DATA_FUSION, schemaFormat: PARQUET_JSON, dataFormat: JSON, limit: 5) {
+      schema {
+        format
+        content
+      }
+      data {
+        format
+        content
+        numRecords
+      }
+      limit
+    }
+  }
+}
+    `;
 
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetDatasetDataSqlRunGQL extends Apollo.Query<GetDatasetDataSqlRunQuery, GetDatasetDataSqlRunQueryVariables> {
+    document = GetDatasetDataSqlRunDocument;
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -734,50 +730,12 @@ export const GetDatasetHistoryDocument = gql`
 }
     `;
 
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const GetDatasetDataSqlRunDocument = gql`
-    query getDatasetDataSQLRun($query: String!) {
-        data {
-            query(
-                query: $query
-                queryDialect: DATA_FUSION
-                schemaFormat: PARQUET_JSON
-                dataFormat: JSON
-                limit: 5
-            ) {
-                schema {
-                    format
-                    content
-                }
-                data {
-                    format
-                    content
-                    numRecords
-                }
-                limit
-            }
-        }
-    }
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class GetDatasetDataSqlRunGQL extends Apollo.Query<
-    GetDatasetDataSqlRunQuery,
-    GetDatasetDataSqlRunQueryVariables
-> {
-    document = GetDatasetDataSqlRunDocument;
-
   @Injectable({
     providedIn: 'root'
   })
   export class GetDatasetHistoryGQL extends Apollo.Query<GetDatasetHistoryQuery, GetDatasetHistoryQueryVariables> {
     document = GetDatasetHistoryDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -810,7 +768,7 @@ export const DatasetLinageUpstreamDependenciesDocument = gql`
   })
   export class DatasetLinageUpstreamDependenciesGQL extends Apollo.Query<DatasetLinageUpstreamDependenciesQuery, DatasetLinageUpstreamDependenciesQueryVariables> {
     document = DatasetLinageUpstreamDependenciesDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -843,7 +801,7 @@ export const DatasetMetadataDownstreamDependenciesDocument = gql`
   })
   export class DatasetMetadataDownstreamDependenciesGQL extends Apollo.Query<DatasetMetadataDownstreamDependenciesQuery, DatasetMetadataDownstreamDependenciesQueryVariables> {
     document = DatasetMetadataDownstreamDependenciesDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -915,13 +873,13 @@ export const GetDatasetMetadataSchemaDocument = gql`
   })
   export class GetDatasetMetadataSchemaGQL extends Apollo.Query<GetDatasetMetadataSchemaQuery, GetDatasetMetadataSchemaQueryVariables> {
     document = GetDatasetMetadataSchemaDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
   }
 export const DatasetOverviewDocument = gql`
-    query datasetOverview($datasetId: DatasetID!, $numRecords: Int) {
+    query datasetOverview($datasetId: DatasetID!, $limit: Int) {
   datasets {
     byId(datasetId: $datasetId) {
       id
@@ -945,9 +903,15 @@ export const DatasetOverviewDocument = gql`
       data {
         numRecordsTotal
         estimatedSize
-        tail(numRecords: $numRecords, format: JSON) {
-          format
-          content
+        tail(limit: $limit, dataFormat: JSON) {
+          schema {
+            format
+            content
+          }
+          data {
+            format
+            content
+          }
           __typename
         }
         __typename
@@ -964,7 +928,7 @@ export const DatasetOverviewDocument = gql`
   })
   export class DatasetOverviewGQL extends Apollo.Query<DatasetOverviewQuery, DatasetOverviewQueryVariables> {
     document = DatasetOverviewDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -991,7 +955,7 @@ export const SearchDatasetsAutocompleteDocument = gql`
   })
   export class SearchDatasetsAutocompleteGQL extends Apollo.Query<SearchDatasetsAutocompleteQuery, SearchDatasetsAutocompleteQueryVariables> {
     document = SearchDatasetsAutocompleteDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1038,7 +1002,7 @@ export const SearchDatasetsOverviewDocument = gql`
   })
   export class SearchDatasetsOverviewGQL extends Apollo.Query<SearchDatasetsOverviewQuery, SearchDatasetsOverviewQueryVariables> {
     document = SearchDatasetsOverviewDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }

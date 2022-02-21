@@ -1,4 +1,4 @@
-query datasetOverview($datasetId: DatasetID!, $numRecords: Int) {
+query datasetOverview($datasetId: DatasetID!, $limit: Int) {
   datasets {
     byId(datasetId: $datasetId) {
       id
@@ -22,9 +22,15 @@ query datasetOverview($datasetId: DatasetID!, $numRecords: Int) {
       data {
         numRecordsTotal
         estimatedSize
-        tail(numRecords: $numRecords, format: JSON) {
-          format
-          content
+        tail(limit: $limit, dataFormat: JSON) {
+          schema {
+            format
+            content
+          }
+          data {
+            format
+            content
+          }
           __typename
         }
         __typename

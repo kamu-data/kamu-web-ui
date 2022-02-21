@@ -38,6 +38,15 @@ type BlockRef {
   name: String!
   blockHash: Multihash!
 }
+type DataQueries {
+  "Executes a specified query and returns its result"
+  query(query: String!, queryDialect: QueryDialect!, dataFormat: DataSliceFormat, schemaFormat: DataSchemaFormat, limit: Int): DataQueryResult!
+}
+type DataQueryResult {
+  schema: DataSchema!
+  data: DataSlice!
+  limit: Int!
+}
 type DataSchema {
   format: DataSchemaFormat!
   content: String!
@@ -49,11 +58,12 @@ enum DataSchemaFormat {
 type DataSlice {
   format: DataSliceFormat!
   content: String!
+  numRecords: Int!
 }
 enum DataSliceFormat {
   JSON
   JSON_LD
-  JSON_SO_A
+  JSON_SOA
   CSV
 }
 type DataSliceMetadata {
@@ -100,7 +110,7 @@ type DatasetData {
   Returns the specified number of the latest records in the dataset
   This is equivalent to the SQL query: `SELECT * FROM dataset ORDER BY event_time DESC LIMIT N`
   """
-  tail(numRecords: Int, format: DataSliceFormat): DataSlice!
+  tail(limit: Int, dataFormat: DataSliceFormat, schemaFormat: DataSchemaFormat): DataQueryResult!
 }
 type DatasetEdge {
   node: Dataset!
@@ -129,9 +139,9 @@ type Datasets {
   "Returns dataset by its owner and name"
   byOwnerAndName(accountName: AccountName!, datasetName: DatasetName!): Dataset
   "Returns datasets belonging to the specified account"
-  byAccountId(accountId: AccountID!, page: Int, perPage: Int! = 15): DatasetConnection!
+  byAccountId(accountId: AccountID!, page: Int, perPage: Int): DatasetConnection!
   "Returns datasets belonging to the specified account"
-  byAccountName(accountName: AccountName!, page: Int, perPage: Int! = 15): DatasetConnection!
+  byAccountName(accountName: AccountName!, page: Int, perPage: Int): DatasetConnection!
 }
 """
 Implement the DateTime<Utc> scalar
@@ -174,7 +184,7 @@ type MetadataChain {
   "Returns a metadata block corresponding to the specified hash"
   blockByHash(hash: Multihash!): MetadataBlock
   "Iterates all metadata blocks in the reverse chronological order"
-  blocks(page: Int, perPage: Int! = 20): MetadataBlockConnection!
+  blocks(page: Int, perPage: Int): MetadataBlockConnection!
 }
 interface MetadataEvent {
   dummy: String!
@@ -244,10 +254,15 @@ type Query {
   accounts: Accounts!
   "Search-related functionality group"
   search: Search!
+  "Querying and data manipulations"
+  data: DataQueries!
+}
+enum QueryDialect {
+  DATA_FUSION
 }
 type Search {
   "Perform search across all resources"
-  query(query: String!, page: Int, perPage: Int! = 15): SearchResultConnection!
+  query(query: String!, page: Int, perPage: Int): SearchResultConnection!
 }
 union SearchResult = Dataset
 type SearchResultConnection {

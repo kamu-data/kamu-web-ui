@@ -9,6 +9,7 @@ import {
     DatasetLinageResponse,
     DatasetNameInterface,
     SearchDatasetByID,
+    SearchHistoryCurrentSchema,
     SearchHistoryInterface,
     SearchMetadataInterface,
     SearchOverviewDatasetsInterface,
@@ -18,16 +19,18 @@ import { expand, flatMap, map } from "rxjs/operators";
 import {
     DataSchema,
     DatasetOverviewQuery,
+    GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { debug } from "util";
+import {ModalService} from "../components/modal/modal.service";
 
 @Injectable()
 export class AppDatasetService {
     public onSearchLinageDatasetSubscribtion: Subscription;
 
-    constructor(private searchApi: SearchApi) {}
+    constructor(private searchApi: SearchApi, private modalService: ModalService) {}
 
     public get onSearchDatasetInfoChanges(): Observable<DatasetInfoInterface> {
         return this.searchDatasetInfoChanges$.asObservable();
@@ -200,7 +203,9 @@ export class AppDatasetService {
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
                     datasets = AppValues.deepCopy(data.datasets.byId);
                     datasets.data.tail.content = data.datasets.byId
-                        ? JSON.parse(data.datasets?.byId?.data.tail.content)
+                        ? JSON.parse(
+                              data.datasets?.byId?.data.tail.data.content,
+                          )
                         : ({} as any);
                     datasets.metadata.currentSchema.content = data.datasets.byId
                         ? JSON.parse(
@@ -235,7 +240,9 @@ export class AppDatasetService {
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
                     datasets = AppValues.deepCopy(data.datasets.byId);
                     datasets.data.tail.content = data.datasets.byId
-                        ? JSON.parse(data.datasets?.byId?.data.tail.content)
+                        ? JSON.parse(
+                              data.datasets?.byId?.data.tail.data.content,
+                          )
                         : ({} as any);
                     datasets.metadata.currentSchema.content = data.datasets.byId
                         ? JSON.parse(
@@ -293,6 +300,52 @@ export class AppDatasetService {
                     this.searchData = data.dataset;
                     this.searchMetadataChange(data);
                 }
+            });
+    }
+    public onGetDatasetDataSQLRun(
+        currentDatasetInfo: DatasetInfoInterface,
+        sqlCode: string,
+    ): void {
+        /* eslint-disable  @typescript-eslint/no-explicit-any */
+        this.searchApi
+            .onGetDatasetDataSQLRun(sqlCode)
+            .subscribe((data: GetDatasetDataSqlRunQuery | undefined) => {
+                const datasets = {
+                    metadata: {
+                        currentSchema: {
+                            content: {},
+                        },
+                    },
+                    data: {
+                        tail: {
+                            content: [],
+                        },
+                    },
+                } as any;
+                if (data) {
+                    /* eslint-disable  @typescript-eslint/no-explicit-any */
+                    datasets.data.tail.content = data.data?.query.data
+                        ? JSON.parse(data.data?.query.data.content)
+                        : ({} as any);
+                    datasets.metadata.currentSchema.content = data.data.query
+                        .schema
+                        ? JSON.parse(data.data.query.schema.content)
+                        : ({} as any);
+
+                    // @ts-ignore
+                    const datasetInfo = AppDatasetService.getDatasetInfo(
+                        Object.assign(currentDatasetInfo, datasets),
+                    );
+                    this.searchDatasetInfoChanges(datasetInfo);
+                    this.searchData = datasets.data.tail.content;
+                    // @ts-ignore
+                    this.searchDataChanges(datasets.data.tail.content);
+                    this.datasetSchemaChanges(
+                        data.data.query.schema as DataSchema,
+                    );
+                }
+            }, (error: {message: string}) => {
+                this.modalService.error({title: "Request was malformed.", message: error.message, yesButtonText: "Close"});
             });
     }
 

@@ -1,0 +1,22 @@
+query getDatasetDataSQLRun($query: String!) {
+  data {
+    query(
+      query: $query
+      queryDialect: DATA_FUSION
+      schemaFormat: PARQUET_JSON
+      dataFormat: JSON
+      limit: 5
+    ) {
+      schema {
+        format
+        content
+      }
+      data {
+        format
+        content
+        numRecords
+      }
+      limit
+    }
+  }
+}

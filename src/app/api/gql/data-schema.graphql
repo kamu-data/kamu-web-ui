@@ -22,9 +22,17 @@ query getDatasetDataSchema($datasetId: DatasetID!, $numRecords: Int, $numPage: I
       data {
         numRecordsTotal
         estimatedSize
-        tail(numRecords: $numRecords, format: JSON) {
-          format
-          content
+        tail(limit: $numRecords, dataFormat: JSON) {
+          schema {
+            format
+            content
+          }
+          data {
+            format
+            content
+            numRecords
+          }
+          limit
           __typename
         }
         __typename

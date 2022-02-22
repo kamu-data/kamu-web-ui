@@ -12,6 +12,7 @@ export default class AppValues {
     public static urlDatasetViewOverviewType = "overview";
     public static urlDatasetViewMetadataType = "metadata";
     public static urlDatasetViewDataType = "data";
+    public static urlDatasetViewHistoryType = "history";
     public static urlDatasetCreate = "dataset-create";
     public static urlDatasetCreateSelectType = "select-type";
     public static urlDatasetCreateRoot = "root";

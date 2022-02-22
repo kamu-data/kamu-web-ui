@@ -559,6 +559,101 @@ export type GetDatasetDataSqlRunQuery = {
     };
 };
 
+export type GetDatasetHistoryQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    perPage?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type GetDatasetHistoryQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?:
+            | {
+                  __typename?: "Dataset";
+                  id: any;
+                  name: any;
+                  owner:
+                      | { __typename?: "Organization"; id: any; name: string }
+                      | { __typename?: "User"; id: any; name: string };
+                  metadata: {
+                      __typename?: "DatasetMetadata";
+                      chain: {
+                          __typename?: "MetadataChain";
+                          blocks: {
+                              __typename?: "MetadataBlockConnection";
+                              totalCount?: number | null | undefined;
+                              nodes: Array<{
+                                  __typename?: "MetadataBlock";
+                                  blockHash: any;
+                                  systemTime: any;
+                                  event:
+                                      | {
+                                            __typename: "MetadataEventAddData";
+                                            addedOutputData: {
+                                                __typename: "DataSliceMetadata";
+                                                logicalHash: any;
+                                                physicalHash: any;
+                                                interval: {
+                                                    __typename: "OffsetInterval";
+                                                    start: number;
+                                                    end: number;
+                                                };
+                                            };
+                                        }
+                                      | {
+                                            __typename: "MetadataEventExecuteQuery";
+                                            queryOutputData?:
+                                                | {
+                                                      __typename: "DataSliceMetadata";
+                                                      logicalHash: any;
+                                                      physicalHash: any;
+                                                      interval: {
+                                                          __typename: "OffsetInterval";
+                                                          start: number;
+                                                          end: number;
+                                                      };
+                                                  }
+                                                | null
+                                                | undefined;
+                                        }
+                                      | {
+                                            __typename: "MetadataEventSeed";
+                                            datasetId: any;
+                                            datasetKind: DatasetKind;
+                                        }
+                                      | {
+                                            __typename: "MetadataEventSetPollingSource";
+                                        }
+                                      | {
+                                            __typename: "MetadataEventSetTransform";
+                                            dummy: string;
+                                        }
+                                      | { __typename: "MetadataEventSetVocab" }
+                                      | {
+                                            __typename: "MetadataEventSetWatermark";
+                                            dummy: string;
+                                        }
+                                      | {
+                                            __typename: "MetadataEventUnsupported";
+                                        };
+                              }>;
+                              pageInfo: {
+                                  __typename?: "PageBasedInfo";
+                                  hasNextPage: boolean;
+                                  hasPreviousPage: boolean;
+                                  totalPages?: number | null | undefined;
+                              };
+                          };
+                      };
+                  };
+              }
+            | null
+            | undefined;
+    };
+};
+
 export type DatasetLinageUpstreamDependenciesQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
 }>;
@@ -629,13 +724,13 @@ export type DatasetMetadataDownstreamDependenciesQuery = {
     };
 };
 
-export type DatasetMetadataQueryVariables = Exact<{
+export type GetDatasetMetadataSchemaQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
-    perPage?: InputMaybe<Scalars["Int"]>;
-    page?: InputMaybe<Scalars["Int"]>;
+    numRecords?: InputMaybe<Scalars["Int"]>;
+    numPage?: InputMaybe<Scalars["Int"]>;
 }>;
 
-export type DatasetMetadataQuery = {
+export type GetDatasetMetadataSchemaQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
@@ -663,19 +758,22 @@ export type DatasetMetadataQuery = {
                                   blockHash: any;
                                   systemTime: any;
                                   event:
-                                      | {
-                                            __typename: "MetadataEventAddData";
-                                            outputWatermark?:
-                                                | any
-                                                | null
-                                                | undefined;
-                                            outputData: {
-                                                __typename?: "DataSliceMetadata";
-                                                logicalHash: any;
-                                            };
-                                        }
+                                      | { __typename: "MetadataEventAddData" }
                                       | {
                                             __typename: "MetadataEventExecuteQuery";
+                                            outputData?:
+                                                | {
+                                                      __typename: "DataSliceMetadata";
+                                                      logicalHash: any;
+                                                      physicalHash: any;
+                                                      interval: {
+                                                          __typename: "OffsetInterval";
+                                                          start: number;
+                                                          end: number;
+                                                      };
+                                                  }
+                                                | null
+                                                | undefined;
                                         }
                                       | {
                                             __typename: "MetadataEventSeed";
@@ -687,10 +785,12 @@ export type DatasetMetadataQuery = {
                                         }
                                       | {
                                             __typename: "MetadataEventSetTransform";
+                                            dummy: string;
                                         }
                                       | { __typename: "MetadataEventSetVocab" }
                                       | {
                                             __typename: "MetadataEventSetWatermark";
+                                            dummy: string;
                                         }
                                       | {
                                             __typename: "MetadataEventUnsupported";
@@ -958,6 +1058,89 @@ export class GetDatasetDataSqlRunGQL extends Apollo.Query<
         super(apollo);
     }
 }
+export const GetDatasetHistoryDocument = gql`
+    query getDatasetHistory($datasetId: DatasetID!, $perPage: Int, $page: Int) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                id
+                owner {
+                    id
+                    name
+                }
+                name
+                metadata {
+                    chain {
+                        blocks(perPage: $perPage, page: $page) {
+                            totalCount
+                            nodes {
+                                event {
+                                    __typename
+                                    ... on MetadataEventSeed {
+                                        datasetId
+                                        datasetKind
+                                    }
+                                    ... on MetadataEventSetWatermark {
+                                        dummy
+                                        __typename
+                                    }
+                                    ... on MetadataEventSetTransform {
+                                        dummy
+                                        __typename
+                                    }
+                                    ... on MetadataEventExecuteQuery {
+                                        queryOutputData: outputData {
+                                            interval {
+                                                start
+                                                end
+                                                __typename
+                                            }
+                                            logicalHash
+                                            physicalHash
+                                            __typename
+                                        }
+                                    }
+                                    ... on MetadataEventAddData {
+                                        addedOutputData: outputData {
+                                            interval {
+                                                start
+                                                end
+                                                __typename
+                                            }
+                                            logicalHash
+                                            physicalHash
+                                            __typename
+                                        }
+                                    }
+                                }
+                                blockHash
+                                systemTime
+                            }
+                            pageInfo {
+                                hasNextPage
+                                hasPreviousPage
+                                totalPages
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetDatasetHistoryGQL extends Apollo.Query<
+    GetDatasetHistoryQuery,
+    GetDatasetHistoryQueryVariables
+> {
+    document = GetDatasetHistoryDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const DatasetLinageUpstreamDependenciesDocument = gql`
     query datasetLinageUpstreamDependencies($datasetId: DatasetID!) {
         datasets {
@@ -1030,8 +1213,12 @@ export class DatasetMetadataDownstreamDependenciesGQL extends Apollo.Query<
         super(apollo);
     }
 }
-export const DatasetMetadataDocument = gql`
-    query datasetMetadata($datasetId: DatasetID!, $perPage: Int, $page: Int) {
+export const GetDatasetMetadataSchemaDocument = gql`
+    query getDatasetMetadataSchema(
+        $datasetId: DatasetID!
+        $numRecords: Int
+        $numPage: Int
+    ) {
         datasets {
             byId(datasetId: $datasetId) {
                 id
@@ -1045,7 +1232,7 @@ export const DatasetMetadataDocument = gql`
                         content
                     }
                     chain {
-                        blocks(perPage: $perPage, page: $page) {
+                        blocks(perPage: $numRecords, page: $numPage) {
                             totalCount
                             nodes {
                                 event {
@@ -1053,12 +1240,27 @@ export const DatasetMetadataDocument = gql`
                                     ... on MetadataEventSeed {
                                         datasetId
                                         datasetKind
+                                        __typename
                                     }
-                                    ... on MetadataEventAddData {
+                                    ... on MetadataEventSetTransform {
+                                        dummy
+                                        __typename
+                                    }
+                                    ... on MetadataEventSetWatermark {
+                                        dummy
+                                        __typename
+                                    }
+                                    ... on MetadataEventExecuteQuery {
                                         outputData {
+                                            interval {
+                                                start
+                                                end
+                                                __typename
+                                            }
                                             logicalHash
+                                            physicalHash
+                                            __typename
                                         }
-                                        outputWatermark
                                     }
                                 }
                                 blockHash
@@ -1080,11 +1282,11 @@ export const DatasetMetadataDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class DatasetMetadataGQL extends Apollo.Query<
-    DatasetMetadataQuery,
-    DatasetMetadataQueryVariables
+export class GetDatasetMetadataSchemaGQL extends Apollo.Query<
+    GetDatasetMetadataSchemaQuery,
+    GetDatasetMetadataSchemaQueryVariables
 > {
-    document = DatasetMetadataDocument;
+    document = GetDatasetMetadataSchemaDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

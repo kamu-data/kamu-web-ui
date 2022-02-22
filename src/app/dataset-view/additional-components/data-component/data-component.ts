@@ -1,4 +1,11 @@
-import {Component, EventEmitter, HostListener, Input, OnInit, Output} from "@angular/core";
+import {
+    Component,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnInit,
+    Output,
+} from "@angular/core";
 import {
     DatasetNameInterface,
     DataViewSchema,

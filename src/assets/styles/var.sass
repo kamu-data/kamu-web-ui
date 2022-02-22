@@ -39,6 +39,7 @@ $app-color-border-muted: #d8dee4
 $app-color-shadow-large: 0 8px 24px rgba(140,149,159,0.2)
 $app-color-fg-muted: #57606a
 $app-color-btn-border: #ced4da
+$app-color-timeline-badge-bg: #eaeef2
 
 
 .input-group-button
@@ -276,7 +277,7 @@ $app-color-btn-border: #ced4da
   padding: 16px
   margin: -16px
   line-height: 1
-  color: var(--color-fg-muted)
+  color: $app-color-fg-muted
   background-color: transparent
   border: 0
 .SelectMenu-list
@@ -415,3 +416,120 @@ markdown
   font-weight: 600
   color: $app-color-fg-default
   white-space: nowrap
+
+  ////// Boxes /////
+.box
+  background-color: $app-color-canvas-overlay
+  border-color: $app-color-border-default
+  border-style: solid
+  border-width: 1px
+  border-radius: 6px
+  &:focus, &:hover
+    background-color: $app-aliceBlue
+  &--condensed
+    line-height: 1.25
+    & .box__row
+      padding: 8px 16px
+  &__row
+    padding: 16px
+    margin-top: -1px
+    list-style-type: none
+    border-top-color: $app-color-border-muted
+    border-top-style: solid
+    border-top-width: 1px
+    &:first-of-type
+      border-top-left-radius: 6px
+      border-top-right-radius: 6px
+      border-top-color: transparent
+    &:last-of-type
+      border-bottom-right-radius: 6px
+      border-bottom-left-radius: 6px
+
+.avatar-stack
+  position: relative
+  min-width: 26px
+  height: 20px
+  &__body
+    display: flex
+    background: $app-color-canvas-overlay
+    & .avatar
+      position: relative
+      z-index: 2
+      display: flex
+      width: 20px
+      height: 20px
+      box-sizing: content-box
+      margin-right: -11px
+      background-color: $app-color-canvas-overlay
+      border-right: 1px solid $app-color-canvas-overlay
+      border-radius: 4px
+      box-shadow: none
+      transition: margin .1s ease-in-out
+      &:last-child
+        z-index: 1
+        border-right: 0
+      &:first-child
+        z-index: 3
+      &:not(:hover)
+        background-color: transparent
+  & .avatar-stack__body
+    position: absolute
+///////
+
+.signer-block-info
+  z-index: 999
+  grid-template-columns: 0.15fr 1fr
+.signed-commit-header
+  line-height: 1.3
+  white-space: normal
+  grid-template-columns: 0.15fr 1fr
+  border-top-left-radius: 6px
+  border-top-right-radius: 6px
+  & *
+    font-size: 15px
+.signed-commit-signer-name
+  font-size: 14px
+  text-align: left
+  & .signer
+    display: block
+    font-weight: 600
+    font-size: 14px
+.signed-commit-footer
+  &__id
+    color: $app-nero
+  & span, a
+    font-size: 12px
+    line-height: 1.5
+.signed-commit-badge
+  user-select: none
+  background: none
+  vertical-align: middle
+  border-color: $verylightgrey
+  &.verified
+    color: $app-success
+  &:hover
+    border-color: $app-harmonies
+    text-decoration: none
+.verified-commit
+  display: inline-block
+  overflow: visible !important
+  vertical-align: text-bottom
+  fill: currentColor
+.signed-commit-verified-label
+  color: $app-success
+  white-space: nowrap
+.signed-commit-badge-small
+  display: inline-block
+  padding: 0 7px
+  font-size: 12px
+  font-weight: 500
+  line-height: 18px
+  border: 1px solid $verylightgrey
+  border-radius: 2em
+.signed-commit__popup-header .mat-typography h3
+  margin: 0 !important
+::ng-deep ngb-popover-window.bs-popover-left>.arrow
+  display: none
+
+::ng-deep ngb-popover-window .popover-header
+  margin: 0

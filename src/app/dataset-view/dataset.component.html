@@ -107,8 +107,7 @@
                         <mat-button-toggle
                             value="history"
                             [checked]="datasetViewTypeHistory"
-                            (click)="onSearchDataForHistory()"
-                            disabled
+                            (click)="onSearchDataForHistory(1)"
                             >History
                         </mat-button-toggle>
                         <mat-button-toggle
@@ -452,6 +451,16 @@
                     (onSelectDatasetEmit)="onSelectDataset($event)"
                     (onRunSQLRequestEmit)="onRunSQLRequest($event)"
                 ></app-data>
+            </ng-template>
+
+            <ng-template [ngIf]="datasetViewTypeHistory">
+                <app-history
+                    [datasetHistory]="datasetHistory"
+                    [currentPage]="currentPage"
+                    [pageInfo]="tableData.pageInfo"
+                    (onSelectDatasetEmit)="(null)"
+                    (onPageChangeEmit)="onPageChange($event)"
+                ></app-history>
             </ng-template>
 
             <ng-template [ngIf]="datasetViewTypeLinage">

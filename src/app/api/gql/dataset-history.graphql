@@ -1,0 +1,67 @@
+query getDatasetHistory($datasetId: DatasetID!, $perPage: Int, $page: Int) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      id
+      owner {
+        id
+        name
+      }
+      name
+      metadata {
+        chain {
+          blocks(perPage: $perPage, page: $page) {
+            totalCount
+            nodes {
+              event {
+                __typename
+                ... on MetadataEventSeed {
+                  datasetId
+                  datasetKind
+                }
+                ... on MetadataEventSetWatermark {
+                  dummy
+                  __typename
+                }
+                ... on MetadataEventSetTransform {
+                  dummy
+                  __typename
+                }
+                ... on MetadataEventExecuteQuery {
+                  queryOutputData: outputData {
+                    interval {
+                       start
+                       end
+                       __typename
+                      }
+                      logicalHash
+                      physicalHash
+                      __typename
+                  }
+                }
+                ... on MetadataEventAddData {
+                  addedOutputData: outputData {
+                    interval {
+                       start
+                       end
+                       __typename
+                      }
+                      logicalHash
+                      physicalHash
+                      __typename
+                     }
+                }
+              }
+              blockHash,
+              systemTime
+            }
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              totalPages
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -15,12 +15,14 @@ import {
 import { ApolloQuerySearchResultNodeInterface } from "./apolloQueryResult.interface";
 import {
     DatasetMetadataDownstreamDependenciesGQL,
-    DatasetMetadataGQL,
-    DatasetMetadataQuery,
     DatasetOverviewGQL,
     DatasetOverviewQuery,
     GetDatasetDataSchemaGQL,
     GetDatasetDataSchemaQuery,
+    GetDatasetHistoryGQL,
+    GetDatasetHistoryQuery,
+    GetDatasetMetadataSchemaGQL,
+    GetDatasetMetadataSchemaQuery,
     GetDatasetDataSqlRunGQL,
     GetDatasetDataSqlRunQuery,
     SearchDatasetsAutocompleteGQL,
@@ -36,12 +38,13 @@ export class SearchApi {
     constructor(
         private apollo: Apollo,
         private datasetOverviewGQL: DatasetOverviewGQL,
-        private datasetMetadataGQL: DatasetMetadataGQL,
+        private datasetMetadataGQL: GetDatasetMetadataSchemaGQL,
         private datasetMetadataDownstreamDependenciesGQL: DatasetMetadataDownstreamDependenciesGQL,
         private searchDatasetsAutocompleteGQL: SearchDatasetsAutocompleteGQL,
         private searchDatasetsOverviewGQL: SearchDatasetsOverviewGQL,
         private getDatasetDataSchemaGQL: GetDatasetDataSchemaGQL,
         private getDatasetDataSQLRun: GetDatasetDataSqlRunGQL,
+        private getDatasetHistoryGQL: GetDatasetHistoryGQL,
     ) {}
 
     public pageInfoInit(): PageInfoInterface {
@@ -141,6 +144,27 @@ export class SearchApi {
                 }),
             );
     }
+    public onDatasetHistory(params: {
+        id: string;
+        numRecords: number;
+        numPage: number;
+    }): Observable<GetDatasetHistoryQuery> {
+        // @ts-ignore
+        return this.getDatasetHistoryGQL
+            .watch({
+                datasetId: params.id,
+                perPage: params.numRecords || 10,
+                page: params.numPage || 0,
+            })
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<GetDatasetHistoryQuery>) => {
+                    if (result.data) {
+                        return result.data;
+                    }
+                    return undefined;
+                }),
+            );
+    }
     public getDatasetDataSchema(params: {
         id: string;
         numRecords?: number;
@@ -171,51 +195,57 @@ export class SearchApi {
         return this.datasetMetadataGQL
             .watch({
                 datasetId: params.id,
-                page: params.page,
-                perPage: params.numRecords,
+                numPage: params.page,
+                numRecords: params.numRecords,
             })
             .valueChanges.pipe(
-                map((result: ApolloQueryResult<DatasetMetadataQuery>) => {
-                    let dataset: SearchOverviewDatasetsInterface[] = [];
-                    let pageInfo: PageInfoInterface = this.pageInfoInit();
-                    let totalCount = 0;
-                    const currentPage = params.page || 0;
+                map(
+                    (
+                        result: ApolloQueryResult<GetDatasetMetadataSchemaQuery>,
+                    ) => {
+                        let dataset: SearchOverviewDatasetsInterface[] = [];
+                        let pageInfo: PageInfoInterface = this.pageInfoInit();
+                        let totalCount = 0;
+                        const currentPage = params.page || 0;
 
-                    if (result.data && result.data.datasets.byId) {
-                        // tslint:disable-next-line: no-any
-                        dataset =
-                            result.data.datasets.byId.metadata.chain.blocks.nodes.map(
-                                (node: SearchMetadataNodeResponseInterface) => {
-                                    const eventType = node.event.__typename;
-                                    const eventTypeObj = Object();
-                                    eventTypeObj.event = eventType;
-                                    const newNode = Object.assign(
-                                        AppValues.deepCopy(node),
-                                        eventTypeObj,
-                                    );
-                                    return this.clearlyData(newNode);
-                                },
-                            );
-                        pageInfo =
-                            result.data.datasets.byId.metadata.chain.blocks
-                                .pageInfo;
-                        totalCount =
-                            result.data.datasets.byId.metadata.chain.blocks
-                                .totalCount || 0;
+                        if (result.data && result.data.datasets.byId) {
+                            // tslint:disable-next-line: no-any
+                            dataset =
+                                result.data.datasets.byId.metadata.chain.blocks.nodes.map(
+                                    (
+                                        node: SearchMetadataNodeResponseInterface,
+                                    ) => {
+                                        const eventType = node.event.__typename;
+                                        const eventTypeObj = Object();
+                                        eventTypeObj.event = eventType;
+                                        const newNode = Object.assign(
+                                            AppValues.deepCopy(node),
+                                            eventTypeObj,
+                                        );
+                                        return this.clearlyData(newNode);
+                                    },
+                                );
+                            pageInfo =
+                                result.data.datasets.byId.metadata.chain.blocks
+                                    .pageInfo;
+                            totalCount =
+                                result.data.datasets.byId.metadata.chain.blocks
+                                    .totalCount || 0;
 
-                        return {
-                            id: result.data.datasets.byId.id,
-                            name: result.data.datasets.byId.name,
-                            owner: result.data.datasets.byId.owner,
-                            dataset,
-                            pageInfo,
-                            totalCount,
-                            currentPage,
-                        };
-                    } else {
-                        return undefined;
-                    }
-                }),
+                            return {
+                                id: result.data.datasets.byId.id,
+                                name: result.data.datasets.byId.name,
+                                owner: result.data.datasets.byId.owner,
+                                dataset,
+                                pageInfo,
+                                totalCount,
+                                currentPage,
+                            };
+                        } else {
+                            return undefined;
+                        }
+                    },
+                ),
             );
     }
 

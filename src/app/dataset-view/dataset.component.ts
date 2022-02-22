@@ -45,6 +45,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public isMobileView = false;
     public datasetInfo: DatasetInfoInterface;
     public datasetName: DatasetNameInterface;
+    public datasetHistory: any[];
     public searchValue = "";
     public currentPage: number;
     public currentSchema: DataViewSchema;
@@ -174,6 +175,27 @@ const language = 'typescript';
                     : ({} as DataViewSchema);
             },
         );
+        this.appDatasetService.onSearchDatasetHistoryChanges.subscribe(
+            (history: any[]) => {
+                const historyView = AppValues.deepCopy(history);
+                historyView.map((node: any) => {
+                    node.event = Object.assign(
+                        { title: this.getTitle(node) },
+                        node.event,
+                    );
+                    return node;
+                });
+                this.datasetHistory = historyView;
+            },
+        );
+        this.appDatasetService.onDatasetPageInfoChanges.subscribe(
+            (info: PageInfoInterface) => {
+                this.tableData.pageInfo = info;
+                if (info.page) {
+                    this.currentPage = info.page + 1;
+                }
+            },
+        );
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
             (info: DatasetInfoInterface) => {
@@ -204,6 +226,40 @@ const language = 'typescript';
                 setTimeout(() => (this.currentPage = data.currentPage));
             },
         );
+    }
+
+    public getTitle(node: any): string {
+        switch (node.event.__typename) {
+            case "MetadataEventAddData":
+                return `${
+                    node.event.addedOutputData
+                        ? node.event.addedOutputData.interval.end -
+                          node.event.addedOutputData.interval.start
+                        : "0"
+                } new records added`;
+            case "MetadataEventExecuteQuery":
+                return `Transformation produced ${
+                    node.event.queryOutputData
+                        ? node.event.queryOutputData.interval.end -
+                          node.event.queryOutputData.interval.start
+                        : "0"
+                } new records`;
+            case "MetadataEventSeed":
+                return `${
+                    node.event.datasetKind[0] +
+                    node.event.datasetKind.slice(1).toLowerCase()
+                } dataset initialized with ID: ${node.event.datasetId}`;
+            case "MetadataEventSetTransform":
+                return `Query changed`;
+            case "MetadataEventSetVocab":
+                return `Vocabulary changed`;
+            case "MetadataEventSetWatermar":
+                return `Watermark updated to ${node.systemTime}`;
+            case "MetadataEventSetPollingSource":
+                return `Polling source changed`;
+            default:
+                return node.event.__typename;
+        }
     }
 
     public successCopyToClipboardCopied(): void {
@@ -327,8 +383,25 @@ const language = 'typescript';
         this.appDatasetService.getDatasetDataSchema(this.getDatasetId(), 5, 0);
     }
 
-    public onSearchDataForHistory(): void {
-        console.log("onSearchDataForHistory");
+    public onSearchDataForHistory(currentPage: number): void {
+        this.router.navigate(
+            [AppValues.defaultUsername, AppValues.urlDatasetView],
+            {
+                queryParams: {
+                    id: this.getDatasetId(),
+                    type: AppValues.urlDatasetViewHistoryType,
+                    p: currentPage,
+                },
+            },
+        );
+        this.currentPage = currentPage;
+        this.datasetViewType = DatasetViewTypeEnum.history;
+
+        this.appDatasetService.onDatasetHistorySchema(
+            this.getDatasetId(),
+            20,
+            currentPage - 1,
+        );
     }
 
     public onSearchDiscussions(): void {
@@ -615,6 +688,9 @@ const language = 'typescript';
             if (type === DatasetViewTypeEnum.metadata) {
                 this.currentPage = page;
                 this.onSearchMetadata(page);
+            }
+            if (type === DatasetViewTypeEnum.history) {
+                this.onSearchDataForHistory(page);
             }
             if (type === DatasetViewTypeEnum.linage) {
                 this.onSearchLinageDataset();

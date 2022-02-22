@@ -44,6 +44,7 @@ import { MarkdownModule } from "ngx-markdown";
 import { SecurityContext } from "@angular/core";
 import { NotificationIndicatorComponent } from "./components/notification-indicator/notification-indicator.component";
 import { MonacoEditorModule } from "ngx-monaco-editor";
+import { TimelineComponent } from "./components/timeline-component/timeline.component";
 
 const Services = [
     Apollo,

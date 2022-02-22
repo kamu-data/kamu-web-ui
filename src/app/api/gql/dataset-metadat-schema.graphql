@@ -1,4 +1,4 @@
-query datasetMetadata($datasetId: DatasetID!, $perPage: Int, $page: Int) {
+query getDatasetMetadataSchema($datasetId: DatasetID!, $numRecords: Int, $numPage: Int) {
   datasets {
     byId(datasetId: $datasetId) {
       id
@@ -12,7 +12,7 @@ query datasetMetadata($datasetId: DatasetID!, $perPage: Int, $page: Int) {
           content
         }
         chain {
-          blocks(perPage: $perPage, page: $page) {
+          blocks(perPage: $numRecords, page: $numPage) {
             totalCount
             nodes {
               event {
@@ -20,12 +20,27 @@ query datasetMetadata($datasetId: DatasetID!, $perPage: Int, $page: Int) {
                 ... on MetadataEventSeed {
                   datasetId
                   datasetKind
+                  __typename
                 }
-                ... on MetadataEventAddData {
+                ... on MetadataEventSetTransform {
+                  dummy
+                  __typename
+                }
+                ... on MetadataEventSetWatermark {
+                  dummy
+                  __typename
+                }
+                ... on MetadataEventExecuteQuery {
                   outputData {
+                    interval {
+                      start
+                      end
+                      __typename
+                    }
                     logicalHash
+                    physicalHash
+                    __typename
                   }
-                  outputWatermark
                 }
               }
               blockHash,

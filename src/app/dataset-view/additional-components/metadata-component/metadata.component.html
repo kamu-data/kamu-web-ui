@@ -4,6 +4,17 @@
             <app-custom-pagination [hash]="'hash'" [date]="'today'" [pageIndex]="currentPage" [limit]="5" [total]="pageInfo.totalPages || 1" (pageChange)="onPageChange($event)"></app-custom-pagination>
         </div>
 
+        <app-dynamic-table
+            [isLatestCommitDisplay]="false"
+            [isResultQuantity]="false"
+            [isClickableRow]="false"
+            [resultUnitText]="''"
+            [isTableHeader]="true"
+            [tableSource]="currentSchema.fields"
+            [idTable]="'schema-block-table'"
+            (onSelectDatasetEmit)="null"
+        ></app-dynamic-table>
+
         <!--    <ng-template [ngIf]="tableData.tableSource.length > 0">-->
         <!--        <app-pagination-->
         <!--            [currentPage]="currentPage"-->
@@ -12,15 +23,6 @@
         <!--            ></app-pagination>-->
         <!--    </ng-template>-->
 
-        <app-dynamic-table
-            [isLatestCommitDisplay]="false"
-            [isResultQuantity]="tableData.isResultQuantity"
-            [isClickableRow]="tableData.isClickableRow"
-            [resultUnitText]="''"
-            [isTableHeader]="tableData.isTableHeader"
-            [tableSource]="tableData.tableSource"
-            (onSelectDatasetEmit)="onSelectDataset($event)"
-        ></app-dynamic-table>
 
         <div class="gist">
             <div class="gist-file">

@@ -5,7 +5,7 @@ import {
     OnChanges,
     Output,
 } from "@angular/core";
-import { PageInfoInterface } from "../../../interface/search.interface";
+import {DataViewSchema, PageInfoInterface} from "../../../interface/search.interface";
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 @Component({
@@ -14,6 +14,7 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
 })
 export class MetadataComponent {
     @Input() public currentPage: number;
+    @Input() public currentSchema: DataViewSchema;
     @Input() public pageInfo: PageInfoInterface;
     @Input() public tableData: {
         isTableHeader: boolean;

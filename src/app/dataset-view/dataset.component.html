@@ -477,6 +477,7 @@
             <ng-template [ngIf]="datasetViewTypeMetadata">
                 <app-metadata
                     [tableData]="tableData"
+                    [currentSchema]="currentSchema"
                     [currentPage]="0"
                     [pageInfo]="tableData.pageInfo"
                     (onSelectDatasetEmit)="onSelectDataset($event)"

@@ -21,7 +21,7 @@ import {
     DataSchema,
     DatasetOverviewQuery,
     GetDatasetDataSqlRunQuery,
-    GetDatasetHistoryQuery,
+    GetDatasetHistoryQuery, GetDatasetMetadataSchemaQuery,
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { debug } from "util";
@@ -130,8 +130,8 @@ export class AppDatasetService {
             __typename: byID.__typename,
             createdAt: byID.createdAt,
             lastUpdatedAt: byID.lastUpdatedAt,
-            estimatedSize: byID.data.estimatedSize,
-            numRecordsTotal: byID.data.numRecordsTotal,
+            estimatedSize: byID.data.estimatedSize || 0,
+            numRecordsTotal: byID.data.numRecordsTotal || 0,
             metadata: byID.metadata,
         };
     }
@@ -322,15 +322,28 @@ export class AppDatasetService {
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         this.searchApi
             .onSearchMetadata({ id, page })
-            .subscribe((data: SearchMetadataInterface | undefined) => {
+            .subscribe((data: GetDatasetMetadataSchemaQuery | undefined) => {
+                debugger
+                let datasets: SearchDatasetByID;
                 if (data) {
+                    /* eslint-disable  @typescript-eslint/no-explicit-any */
+                    datasets = AppValues.deepCopy(data.datasets.byId);
                     this.searchDatasetNameChanges({
-                        id: data.id,
-                        name: data.name,
-                        owner: data.owner,
+                        id: datasets.id,
+                        name: datasets.name,
+                        owner: datasets.owner,
                     });
-                    this.searchData = data.dataset;
-                    this.searchMetadataChange(data);
+                    debugger
+                    this.datasetSchemaChanges(
+                        data.datasets.byId?.metadata
+                            ?.currentSchema as DataSchema,
+                    );
+                    const datasetInfo =
+                        AppDatasetService.getDatasetInfo(datasets);
+                    this.searchDatasetInfoChanges(datasetInfo);
+                    this.searchData = datasets.metadata['chain'].blocks.nodes;
+                    this.searchDataChanges(datasets.metadata['chain'].blocks.nodes);
+                    // this.searchMetadataChange(data);
                 }
             });
     }

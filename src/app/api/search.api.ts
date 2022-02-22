@@ -191,59 +191,22 @@ export class SearchApi {
         id: string;
         numRecords?: number;
         page?: number;
-    }): Observable<SearchMetadataInterface | undefined> {
+    }): Observable<GetDatasetMetadataSchemaQuery | undefined> {
         return this.datasetMetadataGQL
             .watch({
                 datasetId: params.id,
-                numPage: params.page,
-                numRecords: params.numRecords,
+                numPage: 0,
+                numRecords: 1,
             })
             .valueChanges.pipe(
                 map(
                     (
                         result: ApolloQueryResult<GetDatasetMetadataSchemaQuery>,
                     ) => {
-                        let dataset: SearchOverviewDatasetsInterface[] = [];
-                        let pageInfo: PageInfoInterface = this.pageInfoInit();
-                        let totalCount = 0;
-                        const currentPage = params.page || 0;
-
-                        if (result.data && result.data.datasets.byId) {
-                            // tslint:disable-next-line: no-any
-                            dataset =
-                                result.data.datasets.byId.metadata.chain.blocks.nodes.map(
-                                    (
-                                        node: SearchMetadataNodeResponseInterface,
-                                    ) => {
-                                        const eventType = node.event.__typename;
-                                        const eventTypeObj = Object();
-                                        eventTypeObj.event = eventType;
-                                        const newNode = Object.assign(
-                                            AppValues.deepCopy(node),
-                                            eventTypeObj,
-                                        );
-                                        return this.clearlyData(newNode);
-                                    },
-                                );
-                            pageInfo =
-                                result.data.datasets.byId.metadata.chain.blocks
-                                    .pageInfo;
-                            totalCount =
-                                result.data.datasets.byId.metadata.chain.blocks
-                                    .totalCount || 0;
-
-                            return {
-                                id: result.data.datasets.byId.id,
-                                name: result.data.datasets.byId.name,
-                                owner: result.data.datasets.byId.owner,
-                                dataset,
-                                pageInfo,
-                                totalCount,
-                                currentPage,
-                            };
-                        } else {
-                            return undefined;
+                        if (result.data) {
+                            return result.data;
                         }
+                        return undefined;
                     },
                 ),
             );

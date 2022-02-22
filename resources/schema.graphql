@@ -131,6 +131,9 @@ type DatasetMetadata {
   currentUpstreamDependencies: [Dataset!]!
   "Current downstream dependencies of a dataset"
   currentDownstreamDependencies: [Dataset!]!
+  currentSummary: String!
+  currentTopics: [String!]!
+  currentReadme: String!
 }
 scalar DatasetName
 type Datasets {

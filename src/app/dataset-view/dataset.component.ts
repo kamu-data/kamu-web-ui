@@ -179,12 +179,15 @@ const language = 'typescript';
             (history: any[]) => {
                 const historyView = AppValues.deepCopy(history);
                 historyView.map((node: any) => {
-                    node.event = Object.assign({title: this.getTitle(node)}, node.event);
+                    node.event = Object.assign(
+                        { title: this.getTitle(node) },
+                        node.event,
+                    );
                     return node;
                 });
                 this.datasetHistory = historyView;
-            }
-        )
+            },
+        );
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
             (info: DatasetInfoInterface) => {
@@ -219,10 +222,18 @@ const language = 'typescript';
 
     public getTitle(node: any): string {
         if (node.event.__typename === "MetadataEventAddData") {
-            return `${node.event.queryOutputData.interval.end - node.event.queryOutputData.interval.start} new records added`;
+            return `${
+                node.event.queryOutputData.interval.end -
+                node.event.queryOutputData.interval.start
+            } new records added`;
         }
         if (node.event.__typename === "MetadataEventExecuteQuery") {
-            return `Transformation produced ${node.event.queryOutputData ? node.event.queryOutputData.interval.end - node.event.queryOutputData.interval.start : 0} new records`;
+            return `Transformation produced ${
+                node.event.queryOutputData
+                    ? node.event.queryOutputData.interval.end -
+                      node.event.queryOutputData.interval.start
+                    : 0
+            } new records`;
         }
         if (node.event.__typename === "MetadataEventSeed") {
             return `${node.event.datasetKind} dataset initialized with ID: ${node.event.datasetId}`;
@@ -300,7 +311,7 @@ const language = 'typescript';
             this.onClickDescission();
         }
         this.modalService.warning({
-            message: "Feature will be soon",
+            message: "Feature coming soon",
             yesButtonText: "Ok",
         });
     }
@@ -399,7 +410,7 @@ const language = 'typescript';
 
     public selectTopic(topicName: string): void {
         this.modalService.warning({
-            message: "Feature will be soon",
+            message: "Feature coming soon",
             yesButtonText: "Ok",
         });
     }

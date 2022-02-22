@@ -113,6 +113,9 @@ export interface SearchDatasetByID {
     lastUpdatedAt: string;
     metadata: {
         _typename: string;
+        currentSummary: string;
+        currentTopics: string[];
+        currentReadme: string;
         currentSchema: {
             _typename: string;
             content: SearchHistoryCurrentSchema[];
@@ -157,6 +160,9 @@ export interface DatasetInfoInterface {
     numRecordsTotal: number;
     metadata: {
         _typename: string;
+        currentSummary: string;
+        currentTopics: string[];
+        currentReadme: string;
         currentSchema: {
             _typename: string;
             content: SearchHistoryCurrentSchema[];

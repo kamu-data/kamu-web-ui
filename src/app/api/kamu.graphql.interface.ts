@@ -222,8 +222,11 @@ export type DatasetMetadata = {
   chain: MetadataChain;
   /** Current downstream dependencies of a dataset */
   currentDownstreamDependencies: Array<Dataset>;
+  currentReadme: Scalars['String'];
   /** Latest data schema */
   currentSchema: DataSchema;
+  currentSummary: Scalars['String'];
+  currentTopics: Array<Scalars['String']>;
   /** Current upstream dependencies of a dataset */
   currentUpstreamDependencies: Array<Dataset>;
   /** Last recorded watermark */
@@ -527,7 +530,7 @@ export type DatasetOverviewQueryVariables = Exact<{
 }>;
 
 
-export type DatasetOverviewQuery = { __typename?: 'Query', datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', id: any, name: any, kind: DatasetKind, createdAt: any, lastUpdatedAt: any, owner: { __typename?: 'Organization', id: any, name: string } | { __typename?: 'User', id: any, name: string }, metadata: { __typename: 'DatasetMetadata', currentWatermark?: any | null | undefined, currentSchema: { __typename: 'DataSchema', format: DataSchemaFormat, content: string } }, data: { __typename: 'DatasetData', numRecordsTotal: number, estimatedSize: number, tail: { __typename: 'DataQueryResult', schema: { __typename?: 'DataSchema', format: DataSchemaFormat, content: string }, data: { __typename?: 'DataSlice', format: DataSliceFormat, content: string } } } } | null | undefined } };
+export type DatasetOverviewQuery = { __typename?: 'Query', datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', id: any, name: any, kind: DatasetKind, createdAt: any, lastUpdatedAt: any, owner: { __typename?: 'Organization', id: any, name: string } | { __typename?: 'User', id: any, name: string }, metadata: { __typename: 'DatasetMetadata', currentSummary: string, currentTopics: Array<string>, currentReadme: string, currentWatermark?: any | null | undefined, currentSchema: { __typename: 'DataSchema', format: DataSchemaFormat, content: string } }, data: { __typename: 'DatasetData', numRecordsTotal: number, estimatedSize: number, tail: { __typename: 'DataQueryResult', schema: { __typename?: 'DataSchema', format: DataSchemaFormat, content: string }, data: { __typename?: 'DataSlice', format: DataSliceFormat, content: string } } } } | null | undefined } };
 
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
   query: Scalars['String'];
@@ -545,7 +548,7 @@ export type SearchDatasetsOverviewQueryVariables = Exact<{
 }>;
 
 
-export type SearchDatasetsOverviewQuery = { __typename?: 'Query', search: { __typename?: 'Search', query: { __typename?: 'SearchResultConnection', totalCount?: number | null | undefined, nodes: Array<{ __typename: 'Dataset', id: any, name: any, kind: DatasetKind, createdAt: any, lastUpdatedAt: any, owner: { __typename?: 'Organization', id: any, name: string } | { __typename?: 'User', id: any, name: string }, metadata: { __typename?: 'DatasetMetadata', currentDownstreamDependencies: Array<{ __typename?: 'Dataset', id: any, kind: DatasetKind }> } }>, pageInfo: { __typename?: 'PageBasedInfo', hasNextPage: boolean, hasPreviousPage: boolean, currentPage: number, totalPages?: number | null | undefined } } } };
+export type SearchDatasetsOverviewQuery = { __typename?: 'Query', search: { __typename?: 'Search', query: { __typename?: 'SearchResultConnection', totalCount?: number | null | undefined, nodes: Array<{ __typename: 'Dataset', id: any, name: any, kind: DatasetKind, createdAt: any, lastUpdatedAt: any, owner: { __typename?: 'Organization', id: any, name: string } | { __typename?: 'User', id: any, name: string }, metadata: { __typename?: 'DatasetMetadata', currentSummary: string, currentTopics: Array<string>, currentDownstreamDependencies: Array<{ __typename?: 'Dataset', id: any, kind: DatasetKind }> } }>, pageInfo: { __typename?: 'PageBasedInfo', hasNextPage: boolean, hasPreviousPage: boolean, currentPage: number, totalPages?: number | null | undefined } } } };
 
 export const AccountInfoDocument = gql`
     mutation AccountInfo($accessToken: String!) {
@@ -892,6 +895,9 @@ export const DatasetOverviewDocument = gql`
       createdAt
       lastUpdatedAt
       metadata {
+        currentSummary
+        currentTopics
+        currentReadme
         currentWatermark
         currentSchema(format: PARQUET_JSON) {
           format
@@ -975,6 +981,8 @@ export const SearchDatasetsOverviewDocument = gql`
           }
           kind
           metadata {
+            currentSummary
+            currentTopics
             currentDownstreamDependencies {
               id
               kind

@@ -1,44 +1,7 @@
 <div class="search-result-container__content" id="searchResultContainerContent">
     <div id="metadata-block">
         <div id="pagination-block">
-            <ngb-pagination
-                [collectionSize]="70"
-                [(page)]="page"
-                [boundaryLinks]="true"
-            >
-                <ng-template ngbPaginationPages let-page let-pages="pages">
-                    <li class="ngb-custom-pages-item" *ngIf="pages.length > 0">
-                        <div class="form-group d-flex flex-nowrap px-2">
-                            <label
-                                id="paginationInputLabel"
-                                for="paginationInput"
-                                class="col-form-label mr-2 ml-1"
-                                >Page</label
-                            >
-                            <input
-                                #i
-                                type="text"
-                                inputmode="numeric"
-                                pattern="[0-9]*"
-                                class="form-control custom-pages-input"
-                                id="paginationInput"
-                                [value]="page"
-                                (keyup.enter)="selectPage(i.value)"
-                                (blur)="selectPage(i.value)"
-                                (input)="formatInput($any($event).target)"
-                                aria-labelledby="paginationInputLabel paginationDescription"
-                                style="width: 2.5rem"
-                            />
-                            <span
-                                id="paginationDescription"
-                                class="col-form-label text-nowrap px-2"
-                            >
-                                of {{ pages.length }}</span
-                            >
-                        </div>
-                    </li>
-                </ng-template>
-            </ngb-pagination>
+            <app-custom-pagination [hash]="'hash'" [date]="'today'" [pageIndex]="currentPage" [limit]="5" [total]="pageInfo.totalPages || 1" (pageChange)="onPageChange($event)"></app-custom-pagination>
         </div>
 
         <!--    <ng-template [ngIf]="tableData.tableSource.length > 0">-->

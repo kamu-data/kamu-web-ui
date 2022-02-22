@@ -128,10 +128,10 @@ export class AppDatasetService {
             name: byID.name,
             owner: byID.owner,
             __typename: byID.__typename,
-            createdAt: byID.createdAt,
-            lastUpdatedAt: byID.lastUpdatedAt,
-            estimatedSize: byID.data.estimatedSize || 0,
-            numRecordsTotal: byID.data.numRecordsTotal || 0,
+            createdAt: byID.createdAt || "",
+            lastUpdatedAt: byID.lastUpdatedAt || "",
+            estimatedSize: byID.data ? byID.data.estimatedSize : 0,
+            numRecordsTotal: byID.data ? byID.data.numRecordsTotal : 0,
             metadata: byID.metadata,
         };
     }
@@ -340,6 +340,7 @@ export class AppDatasetService {
                     );
                     const datasetInfo =
                         AppDatasetService.getDatasetInfo(datasets);
+                    debugger
                     this.searchDatasetInfoChanges(datasetInfo);
                     this.searchData = datasets.metadata['chain'].blocks.nodes;
                     this.searchDataChanges(datasets.metadata['chain'].blocks.nodes);

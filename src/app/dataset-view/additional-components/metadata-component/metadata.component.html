@@ -1,29 +1,33 @@
 <div class="search-result-container__content" id="searchResultContainerContent">
     <div id="metadata-block">
         <div id="pagination-block">
-            <app-custom-pagination [hash]="'hash'" [date]="'today'" [pageIndex]="currentPage" [limit]="5" [total]="pageInfo.totalPages || 1" (pageChange)="onPageChange($event)"></app-custom-pagination>
+            <app-custom-pagination [hash]="datasetInfo.metadata['chain'].blocks.nodes[0]['blockHash']" [date]="datasetInfo.metadata['chain'].blocks.nodes[0]['systemTime']" [pageIndex]="currentPage" [limit]="5" [total]="pageInfo.totalPages || 1" (pageChange)="onPageChange($event)"></app-custom-pagination>
         </div>
 
-        <app-dynamic-table
-            [isLatestCommitDisplay]="false"
-            [isResultQuantity]="false"
-            [isClickableRow]="false"
-            [resultUnitText]="''"
-            [isTableHeader]="true"
-            [tableSource]="currentSchema.fields"
-            [idTable]="'schema-block-table'"
-            (onSelectDatasetEmit)="null"
-        ></app-dynamic-table>
-
-        <!--    <ng-template [ngIf]="tableData.tableSource.length > 0">-->
-        <!--        <app-pagination-->
-        <!--            [currentPage]="currentPage"-->
-        <!--            [pageInfo]="tableData.pageInfo"-->
-        <!--            (pageChangeEvent)="onPageChange($event)"-->
-        <!--            ></app-pagination>-->
-        <!--    </ng-template>-->
-
-
+        <ng-template [ngIf]="currentSchema">
+            <app-dynamic-table
+                [isLatestCommitDisplay]="false"
+                [isResultQuantity]="false"
+                [isClickableRow]="false"
+                [resultUnitText]="''"
+                [isTableHeader]="true"
+                [tableSource]="currentSchema.fields"
+                [idTable]="'schema-block-table'"
+                (onSelectDatasetEmit)="null"
+            ></app-dynamic-table>
+        </ng-template>
+        <div *ngIf="datasetInfo && datasetInfo.kind === 'DERIVATIVE'">
+            <h3>Transformation (for derivative datasets only)</h3>
+            <h4>Input datasets</h4>
+            <div *ngFor="let dependency of datasetInfo.metadata['currentUpstreamDependencies']; let idx1 = index">
+                <p>{{dependency.name}} {{dependency.id}} {{dependency.kind}}</p>
+            </div>
+            <h4>SQL queries</h4>
+            <ngx-monaco-editor
+                [options]="sqlEditorOptions"
+                [(ngModel)]="sqlRequestCode"
+            ></ngx-monaco-editor>
+        </div>
         <div class="gist">
             <div class="gist-file">
                 <div class="gist-data">

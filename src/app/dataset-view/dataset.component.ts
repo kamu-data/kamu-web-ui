@@ -201,6 +201,7 @@ const language = 'typescript';
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
             (info: DatasetInfoInterface) => {
+                debugger
                 this.datasetInfo = info;
             },
         );

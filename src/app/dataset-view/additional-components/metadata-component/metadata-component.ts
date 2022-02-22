@@ -5,7 +5,7 @@ import {
     OnChanges,
     Output,
 } from "@angular/core";
-import {DataViewSchema, PageInfoInterface} from "../../../interface/search.interface";
+import {DatasetInfoInterface, DataViewSchema, PageInfoInterface} from "../../../interface/search.interface";
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 @Component({
@@ -16,6 +16,7 @@ export class MetadataComponent {
     @Input() public currentPage: number;
     @Input() public currentSchema: DataViewSchema;
     @Input() public pageInfo: PageInfoInterface;
+    @Input() public datasetInfo: DatasetInfoInterface;
     @Input() public tableData: {
         isTableHeader: boolean;
         displayedColumns?: any[];
@@ -37,6 +38,11 @@ export class MetadataComponent {
 
     public page = 1;
     private previousPage: number;
+    public sqlRequestCode: string = `select * from `;
+    public sqlEditorOptions = {
+        theme: "vs",
+        language: "sql",
+    };
 
     public getPageSymbol(current: number) {
         return ["A", "B", "C", "D", "E", "F", "G"][current - 1];

@@ -179,12 +179,15 @@ const language = 'typescript';
             (history: any[]) => {
                 const historyView = AppValues.deepCopy(history);
                 historyView.map((node: any) => {
-                    node.event = Object.assign({title: this.getTitle(node)}, node.event);
+                    node.event = Object.assign(
+                        { title: this.getTitle(node) },
+                        node.event,
+                    );
                     return node;
                 });
                 this.datasetHistory = historyView;
-            }
-        )
+            },
+        );
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
             (info: DatasetInfoInterface) => {
@@ -218,29 +221,37 @@ const language = 'typescript';
     }
 
     public getTitle(node: any): string {
-        if (node.event.__typename === "MetadataEventAddData") {
-            return `${node.event.queryOutputData.interval.end - node.event.queryOutputData.interval.start} new records added`;
+        switch (node.event.__typename) {
+            case "MetadataEventAddData":
+                return `${
+                    node.event.addedOutputData
+                        ? node.event.addedOutputData.interval.end -
+                          node.event.addedOutputData.interval.start
+                        : "0"
+                } new records added`;
+            case "MetadataEventExecuteQuery":
+                return `Transformation produced ${
+                    node.event.queryOutputData
+                        ? node.event.queryOutputData.interval.end -
+                          node.event.queryOutputData.interval.start
+                        : "0"
+                } new records`;
+            case "MetadataEventSeed":
+                return `${
+                    node.event.datasetKind[0] +
+                    node.event.datasetKind.slice(1).toLowerCase()
+                } dataset initialized with ID: ${node.event.datasetId}`;
+            case "MetadataEventSetTransform":
+                return `Query changed`;
+            case "MetadataEventSetVocab":
+                return `Vocabulary changed`;
+            case "MetadataEventSetWatermar":
+                return `Watermark updated to ${node.systemTime}`;
+            case "MetadataEventSetPollingSource":
+                return `Polling source changed`;
+            default:
+                return node.event.__typename;
         }
-        if (node.event.__typename === "MetadataEventExecuteQuery") {
-            return `Transformation produced ${node.event.queryOutputData ? node.event.queryOutputData.interval.end - node.event.queryOutputData.interval.start : 0} new records`;
-        }
-        if (node.event.__typename === "MetadataEventSeed") {
-            return `${node.event.datasetKind} dataset initialized with ID: ${node.event.datasetId}`;
-        }
-        if (node.event.__typename === "MetadataEventSetTransform") {
-            return `Query changed`;
-        }
-        if (node.event.__typename === "MetadataEventSetVocab") {
-            return `Vocabulary changed`;
-        }
-        if (node.event.__typename === "MetadataEventSetWatermar") {
-            return `Watermark updated to ${node.systemTime}`;
-        }
-        if (node.event.__typename === "MetadataEventSetPollingSource") {
-            return `Polling source changed`;
-        }
-
-        return node.event.__typename;
     }
 
     public successCopyToClipboardCopied(): void {

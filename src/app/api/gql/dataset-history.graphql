@@ -8,9 +8,6 @@ query getDatasetHistory($datasetId: DatasetID!, $perPage: Int, $page: Int) {
       }
       name
       metadata {
-        currentSchema(format: PARQUET_JSON) {
-          content
-        }
         chain {
           blocks(perPage: $perPage, page: $page) {
             totalCount

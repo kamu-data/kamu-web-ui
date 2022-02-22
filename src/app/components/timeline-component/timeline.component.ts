@@ -1,5 +1,5 @@
-import {Component, Input} from "@angular/core";
-import {PageInfoInterface} from "../../interface/search.interface";
+import { Component, Input } from "@angular/core";
+import { PageInfoInterface } from "../../interface/search.interface";
 import AppValues from "../../common/app.values";
 
 @Component({
@@ -16,5 +16,8 @@ export class TimelineComponent {
             format: "DD MMM YYYY",
             isTextDate: true,
         });
+    }
+    public shortHash(hash: string): string {
+        return hash.slice(-8);
     }
 }

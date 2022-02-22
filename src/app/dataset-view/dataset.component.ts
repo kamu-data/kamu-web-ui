@@ -188,6 +188,10 @@ const language = 'typescript';
                 this.datasetHistory = historyView;
             },
         );
+        this.appDatasetService.onDatasetPageInfoChanges.subscribe(
+            (info: PageInfoInterface) => {
+                this.tableData.pageInfo = info;
+        });
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
             (info: DatasetInfoInterface) => {

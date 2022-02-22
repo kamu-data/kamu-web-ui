@@ -4,5 +4,10 @@
             [history]="datasetHistory"
             [pageInfo]="pageInfo"
         ></app-timeline>
+        <app-pagination
+            [currentPage]="currentPage"
+            [pageInfo]="pageInfo"
+            (pageChangeEvent)="onPageChange($event)"
+        ></app-pagination>
     </div>
 </div>

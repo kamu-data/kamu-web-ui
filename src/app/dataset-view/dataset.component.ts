@@ -191,7 +191,11 @@ const language = 'typescript';
         this.appDatasetService.onDatasetPageInfoChanges.subscribe(
             (info: PageInfoInterface) => {
                 this.tableData.pageInfo = info;
-        });
+                if (info.page) {
+                    this.currentPage = info.page + 1;
+                }
+            },
+        );
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
             (info: DatasetInfoInterface) => {

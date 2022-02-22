@@ -7,7 +7,8 @@ import {
     DatasetKindInterface,
     DatasetKindTypeNames,
     DatasetLinageResponse,
-    DatasetNameInterface, PageInfoInterface,
+    DatasetNameInterface,
+    PageInfoInterface,
     SearchDatasetByID,
     SearchHistoryCurrentSchema,
     SearchHistoryInterface,
@@ -63,7 +64,7 @@ export class AppDatasetService {
     public get onSearchMetadataChanges(): Observable<SearchOverviewInterface> {
         return this.searchMetadataChanges$.asObservable();
     }
-    public get onDatasetPageInfoChanges(): Observable<PageInfoInterface>{
+    public get onDatasetPageInfoChanges(): Observable<PageInfoInterface> {
         return this.datasetPageInfoChanges$.asObservable();
     }
 
@@ -104,7 +105,8 @@ export class AppDatasetService {
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     private searchDatasetInfoChanges$: Subject<any> = new Subject<any>();
     private searchDatasetHistoryChanges$: Subject<any[]> = new Subject<any[]>();
-    private datasetPageInfoChanges$: Subject<PageInfoInterface> = new Subject<PageInfoInterface>();
+    private datasetPageInfoChanges$: Subject<PageInfoInterface> =
+        new Subject<PageInfoInterface>();
     private searchDatasetNameChanges$: Subject<DatasetNameInterface> =
         new Subject<DatasetNameInterface>();
     private searchMetadataChanges$: Subject<SearchOverviewInterface> =
@@ -155,7 +157,7 @@ export class AppDatasetService {
     public searchDatasetHistoryChanges(datasetNodes: any[]): void {
         this.searchDatasetHistoryChanges$.next(datasetNodes);
     }
-    public  datasetPageInfoChanges(pageInfo: PageInfoInterface): void {
+    public datasetPageInfoChanges(pageInfo: PageInfoInterface): void {
         this.datasetPageInfoChanges$.next(pageInfo);
     }
     public datasetSchemaChanges(schema: DataSchema): void {
@@ -290,7 +292,19 @@ export class AppDatasetService {
             .onDatasetHistory({ id, numRecords, numPage })
             .subscribe((data: GetDatasetHistoryQuery) => {
                 if (data) {
-                    debugger;
+                    const pageInfo = data.datasets.byId?.metadata.chain.blocks
+                        .pageInfo
+                        ? Object.assign(
+                              AppValues.deepCopy(
+                                  data.datasets.byId?.metadata.chain.blocks
+                                      .pageInfo,
+                              ),
+                              { page: numPage },
+                          )
+                        : Object.assign(this.defaultPageInfo, {
+                              page: numPage,
+                          });
+
                     this.searchDatasetNameChanges({
                         id: data.datasets.byId?.id,
                         name: data.datasets.byId?.name,
@@ -299,10 +313,7 @@ export class AppDatasetService {
                     this.searchDatasetHistoryChanges(
                         data.datasets.byId?.metadata.chain.blocks.nodes || [],
                     );
-                    this.datasetPageInfoChanges(
-                        data.datasets.byId?.metadata.chain.blocks.pageInfo || this.defaultPageInfo
-                    );
-                    // this.searchData = data.datasets.byId?.metadata;
+                    this.datasetPageInfoChanges(pageInfo);
                 }
             });
     }

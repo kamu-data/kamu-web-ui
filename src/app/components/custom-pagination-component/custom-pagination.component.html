@@ -1,0 +1,13 @@
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item" [class.disabled]="pageIndex === 1">
+            <a class="page-link" title="Go to previous page" (click)="pageChangeBackward()"><mat-icon>navigate_before</mat-icon></a>
+        </li>
+        <li class="page-item">
+            <span class="page-link" title="You are on page as of {{date}} {{hash}}">As of {{date}} {{hash}}</span>
+        </li>
+        <li class="page-item" [class.disabled]="pageIndex === totalSizeOfPages">
+            <a class="page-link" title="Go to next page" (click)="pageChangeForward()"><span><mat-icon>navigate_next</mat-icon></span></a>
+        </li>
+    </ul>
+</nav>

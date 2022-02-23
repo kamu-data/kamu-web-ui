@@ -1,0 +1,38 @@
+query getDatasetMetadataSchema($datasetId: DatasetID!, $numRecords: Int, $numPage: Int) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      id
+      kind
+      owner {
+        id
+        name
+      }
+      name
+      metadata {
+        chain {
+          blocks(perPage: $numRecords, page: $numPage) {
+            totalCount
+            nodes {
+              blockHash,
+              systemTime
+            }
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              totalPages
+            }
+          }
+        }
+
+        currentSchema(format: PARQUET_JSON) {
+          content
+        }
+        currentUpstreamDependencies {
+          name
+          kind
+          id
+        }
+      }
+    }
+  }
+}

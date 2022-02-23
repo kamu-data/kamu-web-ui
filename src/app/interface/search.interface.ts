@@ -148,7 +148,7 @@ export interface DatasetNameInterface {
 }
 export interface DatasetInfoInterface {
     __typename: string;
-    createdAt: string;
+    createdAt?: string;
     id: string;
     kind: DatasetKindTypeNames;
     name: string;
@@ -156,9 +156,9 @@ export interface DatasetInfoInterface {
         id: string;
         name: string;
     };
-    lastUpdatedAt: string;
-    estimatedSize: number;
-    numRecordsTotal: number;
+    lastUpdatedAt?: string;
+    estimatedSize?: number;
+    numRecordsTotal?: number;
     metadata: {
         _typename: string;
         currentSummary: string;
@@ -169,7 +169,7 @@ export interface DatasetInfoInterface {
             content: SearchHistoryCurrentSchema[];
             format: string;
         };
-        currentWatermark: string;
+        currentWatermark?: string;
     };
 }
 export interface DatasetLinageResponse {

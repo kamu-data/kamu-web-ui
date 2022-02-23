@@ -1,64 +1,36 @@
 <div class="search-result-container__content" id="searchResultContainerContent">
     <div id="metadata-block">
-        <div id="pagination-block">
-            <ngb-pagination
-                [collectionSize]="70"
-                [(page)]="page"
-                [boundaryLinks]="true"
-            >
-                <ng-template ngbPaginationPages let-page let-pages="pages">
-                    <li class="ngb-custom-pages-item" *ngIf="pages.length > 0">
-                        <div class="form-group d-flex flex-nowrap px-2">
-                            <label
-                                id="paginationInputLabel"
-                                for="paginationInput"
-                                class="col-form-label mr-2 ml-1"
-                                >Page</label
-                            >
-                            <input
-                                #i
-                                type="text"
-                                inputmode="numeric"
-                                pattern="[0-9]*"
-                                class="form-control custom-pages-input"
-                                id="paginationInput"
-                                [value]="page"
-                                (keyup.enter)="selectPage(i.value)"
-                                (blur)="selectPage(i.value)"
-                                (input)="formatInput($any($event).target)"
-                                aria-labelledby="paginationInputLabel paginationDescription"
-                                style="width: 2.5rem"
-                            />
-                            <span
-                                id="paginationDescription"
-                                class="col-form-label text-nowrap px-2"
-                            >
-                                of {{ pages.length }}</span
-                            >
-                        </div>
-                    </li>
-                </ng-template>
-            </ngb-pagination>
+        <div id="pagination-block" *ngIf="datasetInfo.metadata">
+            <app-custom-pagination [hash]="shortHash(datasetInfo.metadata['chain'].blocks.nodes[0]['blockHash'])" [date]="momentConverDatetoLocalWithFormat(datasetInfo.metadata['chain'].blocks.nodes[0]['systemTime'])" [pageIndex]="currentPage" [limit]="5" [total]="pageInfo.totalPages || 1" (pageChange)="onPageChange($event)"></app-custom-pagination>
         </div>
 
-        <!--    <ng-template [ngIf]="tableData.tableSource.length > 0">-->
-        <!--        <app-pagination-->
-        <!--            [currentPage]="currentPage"-->
-        <!--            [pageInfo]="tableData.pageInfo"-->
-        <!--            (pageChangeEvent)="onPageChange($event)"-->
-        <!--            ></app-pagination>-->
-        <!--    </ng-template>-->
-
-        <app-dynamic-table
-            [isLatestCommitDisplay]="false"
-            [isResultQuantity]="tableData.isResultQuantity"
-            [isClickableRow]="tableData.isClickableRow"
-            [resultUnitText]="''"
-            [isTableHeader]="tableData.isTableHeader"
-            [tableSource]="tableData.tableSource"
-            (onSelectDatasetEmit)="onSelectDataset($event)"
-        ></app-dynamic-table>
-
+        <ng-template [ngIf]="currentSchema">
+            <app-dynamic-table
+                [isLatestCommitDisplay]="false"
+                [isResultQuantity]="false"
+                [isClickableRow]="false"
+                [resultUnitText]="''"
+                [isTableHeader]="true"
+                [tableSource]="currentSchema.fields"
+                [idTable]="'schema-block-table'"
+                (onSelectDatasetEmit)="null"
+            ></app-dynamic-table>
+        </ng-template>
+        <div *ngIf="datasetInfo && datasetInfo.kind === 'DERIVATIVE'" class="mt-3">
+            <h2>Transformation (for derivative datasets only)</h2>
+            <h3>Input datasets:</h3>
+            <ul>
+                <li class="app-mat-chip input-datasets-list" *ngFor="let dependency of datasetInfo.metadata['currentUpstreamDependencies']; let idx1 = index">
+                    <mat-chip (click)="selectTopic(dependency.kind)">{{ dependency.kind }}</mat-chip>
+                    <a class="url" (click)="onClickDataset(dependency.id)">{{dependency.name}}</a>
+                </li>
+            </ul>
+            <h3>SQL queries:</h3>
+            <ngx-monaco-editor
+                [options]="sqlEditorOptions"
+                [(ngModel)]="sqlRequestCode"
+            ></ngx-monaco-editor>
+        </div>
         <div class="gist">
             <div class="gist-file">
                 <div class="gist-data">

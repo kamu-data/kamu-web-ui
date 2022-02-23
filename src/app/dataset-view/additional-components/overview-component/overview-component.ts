@@ -6,7 +6,7 @@ import {
 import AppValues from "../../../common/app.values";
 @Component({
     selector: "app-overview",
-    templateUrl: "./overview-component.html",
+    templateUrl: "overview-component.html",
 })
 export class OverviewComponent {
     @Input() public isMarkdownEditView: boolean;

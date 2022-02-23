@@ -27,6 +27,7 @@ import { HistoryComponent } from "./additional-components/history-component/hist
 import { AppModule } from "../app.module";
 import { TimelineComponent } from "../components/timeline-component/timeline.component";
 import { TimelineModule } from "../components/timeline-component/timeline.module";
+import {CustomPaginationModule} from "../components/custom-pagination-component/custom-pagination.module";
 
 @NgModule({
     imports: [
@@ -52,6 +53,7 @@ import { TimelineModule } from "../components/timeline-component/timeline.module
         MatTabsModule,
         MonacoEditorModule,
         CdkAccordionModule,
+        CustomPaginationModule,
     ],
     exports: [
         DatasetComponent,

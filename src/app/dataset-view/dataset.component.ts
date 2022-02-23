@@ -71,6 +71,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         | SearchOverviewDatasetsInterface[]
         | SearchHistoryInterface[] = [];
 
+    public datasetMetadata: {};
     public linageGraphView: [number, number] = [500, 600];
     public linageGraphLink: Edge[] = [];
     public linageGraphNodes: Node[] = [];
@@ -170,6 +171,7 @@ const language = 'typescript';
 
         this.appDatasetService.onDataSchemaChanges.subscribe(
             (schema: DataSchema) => {
+                debugger
                 this.currentSchema = schema
                     ? JSON.parse(schema.content)
                     : ({} as DataViewSchema);
@@ -199,6 +201,7 @@ const language = 'typescript';
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
             (info: DatasetInfoInterface) => {
+                debugger
                 this.datasetInfo = info;
             },
         );

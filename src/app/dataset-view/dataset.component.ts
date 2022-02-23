@@ -389,7 +389,7 @@ const language = 'typescript';
             {
                 queryParams: {
                     id: this.getDatasetId(),
-                    type: AppValues.urlDatasetViewHistoryType,
+                    type: DatasetViewTypeEnum.history,
                     p: currentPage,
                 },
             },

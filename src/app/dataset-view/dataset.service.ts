@@ -312,7 +312,7 @@ export class AppDatasetService {
                     });
                     this.searchDatasetHistoryChanges(
                         data.datasets.byId?.metadata.chain.blocks.nodes || [],
-                    );debugger
+                    );
                     this.datasetPageInfoChanges(pageInfo);
                 }
             });

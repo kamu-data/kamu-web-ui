@@ -220,8 +220,11 @@ export type DatasetMetadata = {
     chain: MetadataChain;
     /** Current downstream dependencies of a dataset */
     currentDownstreamDependencies: Array<Dataset>;
+    currentReadme: Scalars["String"];
     /** Latest data schema */
     currentSchema: DataSchema;
+    currentSummary: Scalars["String"];
+    currentTopics: Array<Scalars["String"]>;
     /** Current upstream dependencies of a dataset */
     currentUpstreamDependencies: Array<Dataset>;
     /** Last recorded watermark */
@@ -833,6 +836,9 @@ export type DatasetOverviewQuery = {
                       | { __typename?: "User"; id: any; name: string };
                   metadata: {
                       __typename: "DatasetMetadata";
+                      currentSummary: string;
+                      currentTopics: Array<string>;
+                      currentReadme: string;
                       currentWatermark?: any | null | undefined;
                       currentSchema: {
                           __typename: "DataSchema";
@@ -911,6 +917,8 @@ export type SearchDatasetsOverviewQuery = {
                     | { __typename?: "User"; id: any; name: string };
                 metadata: {
                     __typename?: "DatasetMetadata";
+                    currentSummary: string;
+                    currentTopics: Array<string>;
                     currentDownstreamDependencies: Array<{
                         __typename?: "Dataset";
                         id: any;
@@ -1306,6 +1314,9 @@ export const DatasetOverviewDocument = gql`
                 createdAt
                 lastUpdatedAt
                 metadata {
+                    currentSummary
+                    currentTopics
+                    currentReadme
                     currentWatermark
                     currentSchema(format: PARQUET_JSON) {
                         format
@@ -1399,6 +1410,8 @@ export const SearchDatasetsOverviewDocument = gql`
                         }
                         kind
                         metadata {
+                            currentSummary
+                            currentTopics
                             currentDownstreamDependencies {
                                 id
                                 kind

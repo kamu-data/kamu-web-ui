@@ -47,7 +47,7 @@ export class RepoListComponent {
     }
     public selectTopic(topicName: string): void {
         this.modalService.warning({
-            message: "Feature will be soon",
+            message: "Feature coming soon",
             yesButtonText: "Ok",
         });
     }

@@ -8,30 +8,16 @@
                 class="d-flex flex-column flex-justify-between pb-3 mb-3 position-relative"
             >
                 <h2 class="box-title align-items-center pb-3">Description</h2>
-                <p>
-                    One Paragraph about data description goes here. You can also
-                    state why this data was collected. This description gives a
-                    detailed process on how the data was collected. It should
-                    describe the conditions under which the data was recorded
-                    and also the devices used to record the data.
-                </p>
+                <p>{{ datasetInfo.metadata.currentSummary }}</p>
                 <div class="app-mat-chip" *ngIf="datasetInfo">
                     <mat-chip-list aria-label="Tags selection">
-                        <mat-chip (click)="selectTopic(datasetInfo.kind)"
-                            >{{ datasetInfo.kind }}</mat-chip
+                        <div
+                            *ngFor="let topic of datasetInfo.metadata.currentTopics"
                         >
-                        <mat-chip (click)="selectTopic('medicine')"
-                            >medicine
-                        </mat-chip>
-                        <mat-chip (click)="selectTopic('covid')"
-                            >covid
-                        </mat-chip>
-                        <mat-chip (click)="selectTopic('health')"
-                            >health
-                        </mat-chip>
-                        <mat-chip (click)="selectTopic('covid19')"
-                            >covid19
-                        </mat-chip>
+                            <mat-chip (click)="selectTopic(datasetInfo.kind)"
+                                >{{ topic }}</mat-chip
+                            >
+                        </div>
                     </mat-chip-list>
                 </div>
             </div>
@@ -70,7 +56,7 @@
                                 href="#readme"
                                 data-view-component="true"
                                 class="link--primary"
-                                >README-dataset-template.md</a
+                                >README.md</a
                             >
                         </h2>
                     </div>
@@ -101,13 +87,13 @@
                     <ng-template [ngIf]="isMarkdownEditView">
                         <textarea
                             class="variable-textarea"
-                            [(ngModel)]="markdownText"
+                            [(ngModel)]="datasetInfo.metadata.currentReadme"
                         ></textarea>
                     </ng-template>
                     <ng-template [ngIf]="!isMarkdownEditView">
                         <markdown
                             class="variable-binding"
-                            [data]="markdownText"
+                            [data]="datasetInfo.metadata.currentReadme"
                         ></markdown>
                     </ng-template>
                 </div>

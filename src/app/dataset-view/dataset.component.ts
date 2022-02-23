@@ -319,7 +319,7 @@ const language = 'typescript';
             this.onClickDescission();
         }
         this.modalService.warning({
-            message: "Feature will be soon",
+            message: "Feature coming soon",
             yesButtonText: "Ok",
         });
     }
@@ -389,7 +389,7 @@ const language = 'typescript';
             {
                 queryParams: {
                     id: this.getDatasetId(),
-                    type: AppValues.urlDatasetViewHistoryType,
+                    type: DatasetViewTypeEnum.history,
                     p: currentPage,
                 },
             },
@@ -418,7 +418,7 @@ const language = 'typescript';
 
     public selectTopic(topicName: string): void {
         this.modalService.warning({
-            message: "Feature will be soon",
+            message: "Feature coming soon",
             yesButtonText: "Ok",
         });
     }

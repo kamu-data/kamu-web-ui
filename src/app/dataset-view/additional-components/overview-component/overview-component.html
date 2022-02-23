@@ -28,7 +28,7 @@
                 [resultUnitText]="resultUnitText"
                 [isTableHeader]="tableData.isTableHeader"
                 [tableSource]="tableData.tableSource"
-                (onSelectDatasetEmit)="onSelectDataset($event)"
+                (onSelectDatasetEmit)="(null)"
             ></app-dynamic-table>
             <div id="file-readme-dataset-template-md" class="file my-4">
                 <div class="file-header d-flex align-items-center">
@@ -116,11 +116,10 @@
                         <b>Visibility:</b>
                         <p>Public</p>
                     </div>
-                    <div *ngIf="datasetInfo.metadata">
+                    <div *ngIf="datasetInfo.metadata && datasetInfo.metadata.currentWatermark">
                         <b>License:</b>
                         <p>
-                            {{ momentConverDatetoLocalWithFormat(
-                            datasetInfo.metadata .currentWatermark ) }}
+                            {{ momentConverDatetoLocalWithFormat(datasetInfo.metadata.currentWatermark) }}
                         </p>
                     </div>
                     <div>
@@ -133,14 +132,14 @@
                             {{ datasetInfo.numRecordsTotal | number: "1.0-0" }}
                         </p>
                     </div>
-                    <div>
+                    <div *ngIf="datasetInfo && datasetInfo.createdAt">
                         <b>Created At:</b>
                         <p>
                             {{ momentConverDatetoLocalWithFormat(
                             datasetInfo.createdAt ) }}
                         </p>
                     </div>
-                    <div>
+                    <div *ngIf="datasetInfo && datasetInfo.lastUpdatedAt">
                         <b>Last Updated At:</b>
                         <p>
                             {{ momentConverDatetoLocalWithFormat(

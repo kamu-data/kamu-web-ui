@@ -87,6 +87,9 @@ export class AppComponent implements OnInit {
                         AppValues.fixedEncodeURIComponent(
                             event.url.split("?id=")[1].split("&")[0],
                         );
+                    if (searchValue === "%5Bobject%20Object%5D") {
+                        this.router.navigate(["search"]);
+                    }
                     if (event.url.includes("search")) {
                         this.appSearchService.searchChanges(searchValue);
                     }

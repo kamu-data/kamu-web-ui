@@ -17,7 +17,7 @@ export class MetadataComponent {
     @Input() public currentPage: number;
     @Input() public currentSchema: DataViewSchema;
     @Input() public pageInfo: PageInfoInterface;
-    @Input() public datasetInfo: DatasetInfoInterface;
+    @Input() public datasetInfo: any;
     @Input() public tableData: {
         isTableHeader: boolean;
         displayedColumns?: any[];

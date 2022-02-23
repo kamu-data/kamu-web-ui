@@ -1,6 +1,6 @@
 <div class="search-result-container__content" id="searchResultContainerContent">
     <div id="metadata-block">
-        <div id="pagination-block">
+        <div id="pagination-block" *ngIf="datasetInfo.metadata">
             <app-custom-pagination [hash]="shortHash(datasetInfo.metadata['chain'].blocks.nodes[0]['blockHash'])" [date]="momentConverDatetoLocalWithFormat(datasetInfo.metadata['chain'].blocks.nodes[0]['systemTime'])" [pageIndex]="currentPage" [limit]="5" [total]="pageInfo.totalPages || 1" (pageChange)="onPageChange($event)"></app-custom-pagination>
         </div>
 

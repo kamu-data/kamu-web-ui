@@ -74,6 +74,7 @@ export interface SearchMetadataInterface {
 
 export interface DatasetKindInterface {
     id: string;
+    name: string;
     kind: DatasetKindTypeNames;
 }
 
@@ -176,12 +177,14 @@ export interface DatasetLinageResponse {
     __typename: string;
     id: string;
     kind: DatasetKindTypeNames;
+    name: string;
     metadata: DatasetCurrentUpstreamDependencies;
 }
 export interface DatasetCurrentUpstreamDependencies {
     __typename: string;
     id: string;
     kind: DatasetKindTypeNames;
+    name: string;
     currentDownstreamDependencies?: DatasetLinageResponse[];
     currentUpstreamDependencies?: DatasetLinageResponse[];
 }

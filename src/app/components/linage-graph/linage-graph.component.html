@@ -51,16 +51,36 @@
         </svg:g>
     </ng-template>
 
+<!--    <ng-template #linkTemplate let-link>-->
+<!--        <svg:g class="edge">-->
+<!--            <svg:path-->
+<!--                class="line"-->
+<!--                stroke-width="2"-->
+<!--                marker-end="url(#arrow)"-->
+<!--            ></svg:path>-->
+<!--            <svg:text class="edge-label" text-anchor="middle"></svg:text>-->
+<!--        </svg:g>-->
+<!--    </ng-template>-->
     <ng-template #linkTemplate let-link>
-        <svg:g class="edge">
-            <svg:path
-                class="line"
-                stroke-width="2"
-                marker-end="url(#arrow)"
-            ></svg:path>
-            <svg:text class="edge-label" text-anchor="middle"></svg:text>
-        </svg:g>
-    </ng-template>
+    <svg:g class="edge">
+      <svg:path
+        class="line"
+        tyle="fill: #666;"
+        stroke-width="2"
+        marker-end="url(#arrow)" >
+      </svg:path>
+      <svg:text
+        class="edge-label"
+        text-anchor="middle">
+      <textPath
+                style="fill: #666;"
+                [attr.href]="'#' + link.id"
+                startOffset="60%">
+{{link.label}}
+      </textPath>
+    </svg:text>
+    </svg:g>
+  </ng-template>
 
     <!--  <ng-template #clusterTemplate let-cluster>-->
     <!--    <svg:g class="node cluster">-->

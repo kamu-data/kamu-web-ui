@@ -224,14 +224,17 @@ export class SearchApi {
                     byId(datasetId: "${id}") {
                         id
                         kind
+                        name
                         metadata {
                             currentDownstreamDependencies {
                                 id
                                 kind
+                                name
                                 metadata {
                                     currentDownstreamDependencies {
                                         id
                                         kind
+                                        name
                                     }
                                 }
                             }
@@ -263,14 +266,17 @@ export class SearchApi {
                     byId(datasetId: "${id}") {
                         id
                         kind
+                        name
                         metadata {
                             currentUpstreamDependencies {
                                 id
                                 kind
+                                name
                                 metadata {
                                     currentUpstreamDependencies {
                                         id
                                         kind
+                                        name
                                     }
                                 }
                             }

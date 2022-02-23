@@ -3,14 +3,17 @@ query datasetMetadataDownstreamDependencies($datasetId: DatasetID!) {
     byId(datasetId: $datasetId) {
       id
       kind
+      name
       metadata {
         currentDownstreamDependencies {
           id
           kind
+          name
           metadata {
             currentDownstreamDependencies {
               id
               kind
+              name
             }
           }
         }

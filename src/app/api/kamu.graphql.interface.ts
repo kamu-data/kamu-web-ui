@@ -506,14 +506,14 @@ export type DatasetLinageUpstreamDependenciesQueryVariables = Exact<{
 }>;
 
 
-export type DatasetLinageUpstreamDependenciesQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', id: any, kind: DatasetKind, metadata: { __typename?: 'DatasetMetadata', currentUpstreamDependencies: Array<{ __typename?: 'Dataset', id: any, kind: DatasetKind, metadata: { __typename?: 'DatasetMetadata', currentUpstreamDependencies: Array<{ __typename?: 'Dataset', id: any, kind: DatasetKind }> } }> } } | null | undefined } };
+export type DatasetLinageUpstreamDependenciesQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', id: any, kind: DatasetKind, name: any, metadata: { __typename?: 'DatasetMetadata', currentUpstreamDependencies: Array<{ __typename?: 'Dataset', id: any, kind: DatasetKind, name: any, metadata: { __typename?: 'DatasetMetadata', currentUpstreamDependencies: Array<{ __typename?: 'Dataset', id: any, kind: DatasetKind, name: any }> } }> } } | null | undefined } };
 
 export type DatasetMetadataDownstreamDependenciesQueryVariables = Exact<{
   datasetId: Scalars['DatasetID'];
 }>;
 
 
-export type DatasetMetadataDownstreamDependenciesQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', id: any, kind: DatasetKind, metadata: { __typename?: 'DatasetMetadata', currentDownstreamDependencies: Array<{ __typename?: 'Dataset', id: any, kind: DatasetKind, metadata: { __typename?: 'DatasetMetadata', currentDownstreamDependencies: Array<{ __typename?: 'Dataset', id: any, kind: DatasetKind }> } }> } } | null | undefined } };
+export type DatasetMetadataDownstreamDependenciesQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', id: any, kind: DatasetKind, name: any, metadata: { __typename?: 'DatasetMetadata', currentDownstreamDependencies: Array<{ __typename?: 'Dataset', id: any, kind: DatasetKind, name: any, metadata: { __typename?: 'DatasetMetadata', currentDownstreamDependencies: Array<{ __typename?: 'Dataset', id: any, kind: DatasetKind, name: any }> } }> } } | null | undefined } };
 
 export type GetDatasetMetadataSchemaQueryVariables = Exact<{
   datasetId: Scalars['DatasetID'];
@@ -746,14 +746,17 @@ export const DatasetLinageUpstreamDependenciesDocument = gql`
     byId(datasetId: $datasetId) {
       id
       kind
+      name
       metadata {
         currentUpstreamDependencies {
           id
           kind
+          name
           metadata {
             currentUpstreamDependencies {
               id
               kind
+              name
             }
           }
         }
@@ -779,14 +782,17 @@ export const DatasetMetadataDownstreamDependenciesDocument = gql`
     byId(datasetId: $datasetId) {
       id
       kind
+      name
       metadata {
         currentDownstreamDependencies {
           id
           kind
+          name
           metadata {
             currentDownstreamDependencies {
               id
               kind
+              name
             }
           }
         }

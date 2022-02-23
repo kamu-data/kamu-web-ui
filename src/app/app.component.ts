@@ -14,6 +14,7 @@ import { ModalService } from "./components/modal/modal.service";
     styleUrls: ["./app.component.sass"],
 })
 export class AppComponent implements OnInit {
+    private unimplementedMessage = "Feature coming soon";
     public appLogo = `/${AppValues.appLogo}`;
     public isMobileView = false;
     public searchValue: any = "";
@@ -154,37 +155,37 @@ export class AppComponent implements OnInit {
     }
     public onUserProfile(): void {
         this.modalService.warning({
-            message: "Feature will be soon",
+            message: this.unimplementedMessage,
             yesButtonText: "Ok",
         });
     }
     public onUserDatasets(): void {
         this.modalService.warning({
-            message: "Feature will be soon",
+            message: this.unimplementedMessage,
             yesButtonText: "Ok",
         });
     }
     public onBilling(): void {
         this.modalService.warning({
-            message: "Feature will be soon",
+            message: this.unimplementedMessage,
             yesButtonText: "Ok",
         });
     }
     public onAnalytics(): void {
         this.modalService.warning({
-            message: "Feature will be soon",
+            message: this.unimplementedMessage,
             yesButtonText: "Ok",
         });
     }
     public onSettings(): void {
         this.modalService.warning({
-            message: "Feature will be soon",
+            message: this.unimplementedMessage,
             yesButtonText: "Ok",
         });
     }
     public onHelp(): void {
         this.modalService.warning({
-            message: "Feature will be soon",
+            message: this.unimplementedMessage,
             yesButtonText: "Ok",
         });
     }

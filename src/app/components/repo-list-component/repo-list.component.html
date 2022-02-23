@@ -108,22 +108,15 @@
         </div>
         <div>
             <p class="repo-list-container__description mb-2">
-                Open-source data hub/platform that implements Open Data Fabric
-                protocol
+                {{ row.metadata.currentSummary }}
             </p>
             <div class="app-mat-chip">
                 <mat-chip-list aria-label="Tags selection">
-                    <mat-chip (click)="selectTopic(row.kind)">{{
-                        row.kind
-                    }}</mat-chip>
-                    <mat-chip (click)="selectTopic('medicine')"
-                        >medicine</mat-chip
-                    >
-                    <mat-chip (click)="selectTopic('covid')">covid</mat-chip>
-                    <mat-chip (click)="selectTopic('health')">health</mat-chip>
-                    <mat-chip (click)="selectTopic('covid19')"
-                        >covid19</mat-chip
-                    >
+                    <div *ngFor="let topic of row.metadata.currentTopics">
+                        <mat-chip (click)="selectTopic(row.kind)">{{
+                            topic
+                        }}</mat-chip>
+                    </div>
                 </mat-chip-list>
             </div>
             <div class="repo-list-container__additional-block mt-2">

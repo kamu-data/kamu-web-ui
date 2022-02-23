@@ -81,6 +81,7 @@ export interface PageInfoInterface {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
     totalPages?: number | null | undefined;
+    page?: number;
 }
 
 export interface DatasetIDsInterface {

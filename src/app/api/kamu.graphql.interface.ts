@@ -501,6 +501,101 @@ export type GetDatasetHistoryQueryVariables = Exact<{
 
 export type GetDatasetHistoryQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', id: any, name: any, owner: { __typename?: 'Organization', id: any, name: string } | { __typename?: 'User', id: any, name: string }, metadata: { __typename?: 'DatasetMetadata', currentSchema: { __typename?: 'DataSchema', content: string }, chain: { __typename?: 'MetadataChain', blocks: { __typename?: 'MetadataBlockConnection', totalCount?: number | null | undefined, nodes: Array<{ __typename?: 'MetadataBlock', blockHash: any, systemTime: any, event: { __typename: 'MetadataEventAddData', addedOutputData: { __typename: 'DataSliceMetadata', logicalHash: any, physicalHash: any, interval: { __typename: 'OffsetInterval', start: number, end: number } } } | { __typename: 'MetadataEventExecuteQuery', queryOutputData?: { __typename: 'DataSliceMetadata', logicalHash: any, physicalHash: any, interval: { __typename: 'OffsetInterval', start: number, end: number } } | null | undefined } | { __typename: 'MetadataEventSeed', datasetId: any, datasetKind: DatasetKind } | { __typename: 'MetadataEventSetPollingSource' } | { __typename: 'MetadataEventSetTransform', dummy: string } | { __typename: 'MetadataEventSetVocab' } | { __typename: 'MetadataEventSetWatermark', dummy: string } | { __typename: 'MetadataEventUnsupported' } }>, pageInfo: { __typename?: 'PageBasedInfo', hasNextPage: boolean, hasPreviousPage: boolean, totalPages?: number | null | undefined } } } } } | null | undefined } };
 
+export type GetDatasetHistoryQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    perPage?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type GetDatasetHistoryQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?:
+            | {
+                  __typename?: "Dataset";
+                  id: any;
+                  name: any;
+                  owner:
+                      | { __typename?: "Organization"; id: any; name: string }
+                      | { __typename?: "User"; id: any; name: string };
+                  metadata: {
+                      __typename?: "DatasetMetadata";
+                      chain: {
+                          __typename?: "MetadataChain";
+                          blocks: {
+                              __typename?: "MetadataBlockConnection";
+                              totalCount?: number | null | undefined;
+                              nodes: Array<{
+                                  __typename?: "MetadataBlock";
+                                  blockHash: any;
+                                  systemTime: any;
+                                  event:
+                                      | {
+                                            __typename: "MetadataEventAddData";
+                                            addedOutputData: {
+                                                __typename: "DataSliceMetadata";
+                                                logicalHash: any;
+                                                physicalHash: any;
+                                                interval: {
+                                                    __typename: "OffsetInterval";
+                                                    start: number;
+                                                    end: number;
+                                                };
+                                            };
+                                        }
+                                      | {
+                                            __typename: "MetadataEventExecuteQuery";
+                                            queryOutputData?:
+                                                | {
+                                                      __typename: "DataSliceMetadata";
+                                                      logicalHash: any;
+                                                      physicalHash: any;
+                                                      interval: {
+                                                          __typename: "OffsetInterval";
+                                                          start: number;
+                                                          end: number;
+                                                      };
+                                                  }
+                                                | null
+                                                | undefined;
+                                        }
+                                      | {
+                                            __typename: "MetadataEventSeed";
+                                            datasetId: any;
+                                            datasetKind: DatasetKind;
+                                        }
+                                      | {
+                                            __typename: "MetadataEventSetPollingSource";
+                                        }
+                                      | {
+                                            __typename: "MetadataEventSetTransform";
+                                            dummy: string;
+                                        }
+                                      | { __typename: "MetadataEventSetVocab" }
+                                      | {
+                                            __typename: "MetadataEventSetWatermark";
+                                            dummy: string;
+                                        }
+                                      | {
+                                            __typename: "MetadataEventUnsupported";
+                                        };
+                              }>;
+                              pageInfo: {
+                                  __typename?: "PageBasedInfo";
+                                  hasNextPage: boolean;
+                                  hasPreviousPage: boolean;
+                                  totalPages?: number | null | undefined;
+                              };
+                          };
+                      };
+                  };
+              }
+            | null
+            | undefined;
+    };
+};
+
 export type DatasetLinageUpstreamDependenciesQueryVariables = Exact<{
   datasetId: Scalars['DatasetID'];
 }>;
@@ -521,8 +616,92 @@ export type GetDatasetMetadataSchemaQueryVariables = Exact<{
   numPage?: InputMaybe<Scalars['Int']>;
 }>;
 
+export type GetDatasetMetadataSchemaQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    numRecords?: InputMaybe<Scalars["Int"]>;
+    numPage?: InputMaybe<Scalars["Int"]>;
+}>;
 
-export type GetDatasetMetadataSchemaQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', id: any, name: any, owner: { __typename?: 'Organization', id: any, name: string } | { __typename?: 'User', id: any, name: string }, metadata: { __typename?: 'DatasetMetadata', currentSchema: { __typename?: 'DataSchema', content: string }, chain: { __typename?: 'MetadataChain', blocks: { __typename?: 'MetadataBlockConnection', totalCount?: number | null | undefined, nodes: Array<{ __typename?: 'MetadataBlock', blockHash: any, systemTime: any, event: { __typename: 'MetadataEventAddData' } | { __typename: 'MetadataEventExecuteQuery', outputData?: { __typename: 'DataSliceMetadata', logicalHash: any, physicalHash: any, interval: { __typename: 'OffsetInterval', start: number, end: number } } | null | undefined } | { __typename: 'MetadataEventSeed', datasetId: any, datasetKind: DatasetKind } | { __typename: 'MetadataEventSetPollingSource' } | { __typename: 'MetadataEventSetTransform', dummy: string } | { __typename: 'MetadataEventSetVocab' } | { __typename: 'MetadataEventSetWatermark', dummy: string } | { __typename: 'MetadataEventUnsupported' } }>, pageInfo: { __typename?: 'PageBasedInfo', hasNextPage: boolean, hasPreviousPage: boolean, totalPages?: number | null | undefined } } } } } | null | undefined } };
+export type GetDatasetMetadataSchemaQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?:
+            | {
+                  __typename?: "Dataset";
+                  id: any;
+                  name: any;
+                  owner:
+                      | { __typename?: "Organization"; id: any; name: string }
+                      | { __typename?: "User"; id: any; name: string };
+                  metadata: {
+                      __typename?: "DatasetMetadata";
+                      currentSchema: {
+                          __typename?: "DataSchema";
+                          content: string;
+                      };
+                      chain: {
+                          __typename?: "MetadataChain";
+                          blocks: {
+                              __typename?: "MetadataBlockConnection";
+                              totalCount?: number | null | undefined;
+                              nodes: Array<{
+                                  __typename?: "MetadataBlock";
+                                  blockHash: any;
+                                  systemTime: any;
+                                  event:
+                                      | { __typename: "MetadataEventAddData" }
+                                      | {
+                                            __typename: "MetadataEventExecuteQuery";
+                                            outputData?:
+                                                | {
+                                                      __typename: "DataSliceMetadata";
+                                                      logicalHash: any;
+                                                      physicalHash: any;
+                                                      interval: {
+                                                          __typename: "OffsetInterval";
+                                                          start: number;
+                                                          end: number;
+                                                      };
+                                                  }
+                                                | null
+                                                | undefined;
+                                        }
+                                      | {
+                                            __typename: "MetadataEventSeed";
+                                            datasetId: any;
+                                            datasetKind: DatasetKind;
+                                        }
+                                      | {
+                                            __typename: "MetadataEventSetPollingSource";
+                                        }
+                                      | {
+                                            __typename: "MetadataEventSetTransform";
+                                            dummy: string;
+                                        }
+                                      | { __typename: "MetadataEventSetVocab" }
+                                      | {
+                                            __typename: "MetadataEventSetWatermark";
+                                            dummy: string;
+                                        }
+                                      | {
+                                            __typename: "MetadataEventUnsupported";
+                                        };
+                              }>;
+                              pageInfo: {
+                                  __typename?: "PageBasedInfo";
+                                  hasNextPage: boolean;
+                                  hasPreviousPage: boolean;
+                                  totalPages?: number | null | undefined;
+                              };
+                          };
+                      };
+                  };
+              }
+            | null
+            | undefined;
+    };
+};
 
 export type DatasetOverviewQueryVariables = Exact<{
   datasetId: Scalars['DatasetID'];
@@ -569,7 +748,7 @@ export const AccountInfoDocument = gql`
   })
   export class AccountInfoGQL extends Apollo.Mutation<AccountInfoMutation, AccountInfoMutationVariables> {
     document = AccountInfoDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -626,7 +805,7 @@ export const GetDatasetDataSchemaDocument = gql`
   })
   export class GetDatasetDataSchemaGQL extends Apollo.Query<GetDatasetDataSchemaQuery, GetDatasetDataSchemaQueryVariables> {
     document = GetDatasetDataSchemaDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -655,7 +834,7 @@ export const GetDatasetDataSqlRunDocument = gql`
   })
   export class GetDatasetDataSqlRunGQL extends Apollo.Query<GetDatasetDataSqlRunQuery, GetDatasetDataSqlRunQueryVariables> {
     document = GetDatasetDataSqlRunDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -733,12 +912,95 @@ export const GetDatasetHistoryDocument = gql`
 }
     `;
 
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const GetDatasetHistoryDocument = gql`
+    query getDatasetHistory($datasetId: DatasetID!, $perPage: Int, $page: Int) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                id
+                owner {
+                    id
+                    name
+                }
+                name
+                metadata {
+                    chain {
+                        blocks(perPage: $perPage, page: $page) {
+                            totalCount
+                            nodes {
+                                event {
+                                    __typename
+                                    ... on MetadataEventSeed {
+                                        datasetId
+                                        datasetKind
+                                    }
+                                    ... on MetadataEventSetWatermark {
+                                        dummy
+                                        __typename
+                                    }
+                                    ... on MetadataEventSetTransform {
+                                        dummy
+                                        __typename
+                                    }
+                                    ... on MetadataEventExecuteQuery {
+                                        queryOutputData: outputData {
+                                            interval {
+                                                start
+                                                end
+                                                __typename
+                                            }
+                                            logicalHash
+                                            physicalHash
+                                            __typename
+                                        }
+                                    }
+                                    ... on MetadataEventAddData {
+                                        addedOutputData: outputData {
+                                            interval {
+                                                start
+                                                end
+                                                __typename
+                                            }
+                                            logicalHash
+                                            physicalHash
+                                            __typename
+                                        }
+                                    }
+                                }
+                                blockHash
+                                systemTime
+                            }
+                            pageInfo {
+                                hasNextPage
+                                hasPreviousPage
+                                totalPages
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetDatasetHistoryGQL extends Apollo.Query<
+    GetDatasetHistoryQuery,
+    GetDatasetHistoryQueryVariables
+> {
+    document = GetDatasetHistoryDocument;
+
   @Injectable({
     providedIn: 'root'
   })
   export class GetDatasetHistoryGQL extends Apollo.Query<GetDatasetHistoryQuery, GetDatasetHistoryQueryVariables> {
     document = GetDatasetHistoryDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -771,7 +1033,7 @@ export const DatasetLinageUpstreamDependenciesDocument = gql`
   })
   export class DatasetLinageUpstreamDependenciesGQL extends Apollo.Query<DatasetLinageUpstreamDependenciesQuery, DatasetLinageUpstreamDependenciesQueryVariables> {
     document = DatasetLinageUpstreamDependenciesDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -804,7 +1066,7 @@ export const DatasetMetadataDownstreamDependenciesDocument = gql`
   })
   export class DatasetMetadataDownstreamDependenciesGQL extends Apollo.Query<DatasetMetadataDownstreamDependenciesQuery, DatasetMetadataDownstreamDependenciesQueryVariables> {
     document = DatasetMetadataDownstreamDependenciesDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -871,12 +1133,15 @@ export const GetDatasetMetadataSchemaDocument = gql`
 }
     `;
 
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class GetDatasetMetadataSchemaGQL extends Apollo.Query<GetDatasetMetadataSchemaQuery, GetDatasetMetadataSchemaQueryVariables> {
+@Injectable({
+    providedIn: "root",
+})
+export class GetDatasetMetadataSchemaGQL extends Apollo.Query<
+    GetDatasetMetadataSchemaQuery,
+    GetDatasetMetadataSchemaQueryVariables
+> {
     document = GetDatasetMetadataSchemaDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -934,7 +1199,7 @@ export const DatasetOverviewDocument = gql`
   })
   export class DatasetOverviewGQL extends Apollo.Query<DatasetOverviewQuery, DatasetOverviewQueryVariables> {
     document = DatasetOverviewDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -961,7 +1226,7 @@ export const SearchDatasetsAutocompleteDocument = gql`
   })
   export class SearchDatasetsAutocompleteGQL extends Apollo.Query<SearchDatasetsAutocompleteQuery, SearchDatasetsAutocompleteQueryVariables> {
     document = SearchDatasetsAutocompleteDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1010,7 +1275,7 @@ export const SearchDatasetsOverviewDocument = gql`
   })
   export class SearchDatasetsOverviewGQL extends Apollo.Query<SearchDatasetsOverviewQuery, SearchDatasetsOverviewQueryVariables> {
     document = SearchDatasetsOverviewDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }

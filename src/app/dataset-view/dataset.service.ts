@@ -8,6 +8,7 @@ import {
     DatasetKindTypeNames,
     DatasetLinageResponse,
     DatasetNameInterface,
+    PageInfoInterface,
     SearchDatasetByID,
     SearchHistoryCurrentSchema,
     SearchHistoryInterface,
@@ -24,13 +25,16 @@ import {
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { debug } from "util";
-import {ModalService} from "../components/modal/modal.service";
+import { ModalService } from "../components/modal/modal.service";
 
 @Injectable()
 export class AppDatasetService {
     public onSearchLinageDatasetSubscribtion: Subscription;
 
-    constructor(private searchApi: SearchApi, private modalService: ModalService) {}
+    constructor(
+        private searchApi: SearchApi,
+        private modalService: ModalService,
+    ) {}
 
     public get onSearchDatasetInfoChanges(): Observable<DatasetInfoInterface> {
         return this.searchDatasetInfoChanges$.asObservable();
@@ -59,6 +63,9 @@ export class AppDatasetService {
 
     public get onSearchMetadataChanges(): Observable<SearchOverviewInterface> {
         return this.searchMetadataChanges$.asObservable();
+    }
+    public get onDatasetPageInfoChanges(): Observable<PageInfoInterface> {
+        return this.datasetPageInfoChanges$.asObservable();
     }
 
     public get getSearchData():
@@ -98,6 +105,8 @@ export class AppDatasetService {
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     private searchDatasetInfoChanges$: Subject<any> = new Subject<any>();
     private searchDatasetHistoryChanges$: Subject<any[]> = new Subject<any[]>();
+    private datasetPageInfoChanges$: Subject<PageInfoInterface> =
+        new Subject<PageInfoInterface>();
     private searchDatasetNameChanges$: Subject<DatasetNameInterface> =
         new Subject<DatasetNameInterface>();
     private searchMetadataChanges$: Subject<SearchOverviewInterface> =
@@ -126,6 +135,13 @@ export class AppDatasetService {
             metadata: byID.metadata,
         };
     }
+    public get defaultPageInfo(): PageInfoInterface {
+        return {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            totalPages: 1,
+        };
+    }
 
     public searchDatasetInfoChanges(
         searchDatasetInfo: DatasetInfoInterface,
@@ -139,8 +155,10 @@ export class AppDatasetService {
         this.searchDatasetNameChanges$.next(searchDatasetName);
     }
     public searchDatasetHistoryChanges(datasetNodes: any[]): void {
-        debugger
         this.searchDatasetHistoryChanges$.next(datasetNodes);
+    }
+    public datasetPageInfoChanges(pageInfo: PageInfoInterface): void {
+        this.datasetPageInfoChanges$.next(pageInfo);
     }
     public datasetSchemaChanges(schema: DataSchema): void {
         this.datasetSchemaChanges$.next(schema);
@@ -274,14 +292,28 @@ export class AppDatasetService {
             .onDatasetHistory({ id, numRecords, numPage })
             .subscribe((data: GetDatasetHistoryQuery) => {
                 if (data) {
-                    debugger;
+                    const pageInfo = data.datasets.byId?.metadata.chain.blocks
+                        .pageInfo
+                        ? Object.assign(
+                              AppValues.deepCopy(
+                                  data.datasets.byId?.metadata.chain.blocks
+                                      .pageInfo,
+                              ),
+                              { page: numPage },
+                          )
+                        : Object.assign(this.defaultPageInfo, {
+                              page: numPage,
+                          });
+
                     this.searchDatasetNameChanges({
                         id: data.datasets.byId?.id,
                         name: data.datasets.byId?.name,
                         owner: data.datasets.byId?.owner as any,
                     });
-                    this.searchDatasetHistoryChanges(data.datasets.byId?.metadata.chain.blocks.nodes || []);
-                    // this.searchData = data.datasets.byId?.metadata;
+                    this.searchDatasetHistoryChanges(
+                        data.datasets.byId?.metadata.chain.blocks.nodes || [],
+                    );
+                    this.datasetPageInfoChanges(pageInfo);
                 }
             });
     }
@@ -307,9 +339,8 @@ export class AppDatasetService {
         sqlCode: string,
     ): void {
         /* eslint-disable  @typescript-eslint/no-explicit-any */
-        this.searchApi
-            .onGetDatasetDataSQLRun(sqlCode)
-            .subscribe((data: GetDatasetDataSqlRunQuery | undefined) => {
+        this.searchApi.onGetDatasetDataSQLRun(sqlCode).subscribe(
+            (data: GetDatasetDataSqlRunQuery | undefined) => {
                 const datasets = {
                     metadata: {
                         currentSchema: {
@@ -344,9 +375,15 @@ export class AppDatasetService {
                         data.data.query.schema as DataSchema,
                     );
                 }
-            }, (error: {message: string}) => {
-                this.modalService.error({title: "Request was malformed.", message: error.message, yesButtonText: "Close"});
-            });
+            },
+            (error: { message: string }) => {
+                this.modalService.error({
+                    title: "Request was malformed.",
+                    message: error.message,
+                    yesButtonText: "Close",
+                });
+            },
+        );
     }
 
     public onSearchLinageDataset(id: string): void {

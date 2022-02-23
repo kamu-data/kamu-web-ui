@@ -1,5 +1,15 @@
 <div class="search-result-container__content" id="dataset-view-history">
     <div id="history-block">
-        <app-timeline [history]="datasetHistory" [pageInfo]="pageInfo"></app-timeline>
+        <ng-template [ngIf]="datasetHistory.length > 0">
+            <app-timeline
+                [history]="datasetHistory"
+                [pageInfo]="pageInfo"
+            ></app-timeline>
+            <app-pagination
+                [currentPage]="currentPage"
+                [pageInfo]="pageInfo"
+                (pageChangeEvent)="onPageChange($event)"
+            ></app-pagination>
+        </ng-template>
     </div>
 </div>

@@ -342,8 +342,8 @@ export class AppDatasetService {
                         AppDatasetService.getDatasetInfo(datasets);
                     debugger
                     this.searchDatasetInfoChanges(datasetInfo);
-                    this.searchData = datasets.metadata['chain'].blocks.nodes;
-                    this.searchDataChanges(datasets.metadata['chain'].blocks.nodes);
+                    this.searchData = datasets.metadata.chain.blocks.nodes;
+                    this.searchDataChanges(datasets.metadata.chain.blocks.nodes);
                     // this.searchMetadataChange(data);
                 }
             });

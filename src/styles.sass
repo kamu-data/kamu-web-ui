@@ -431,7 +431,12 @@ router-outlet
 [data-test-id="searchInput"], [data-test-id="addNewBlock"],
 [data-test-id="openUserInfo"], [data-test-id="appLogo"]
   cursor: pointer
-
+.input-datasets-list
+  justify-content: left
+  display: flex
+  align-items: baseline
+  & > *:last-child
+    margin-left: 16px
 .gist
   font-size: 16px
   color: #333

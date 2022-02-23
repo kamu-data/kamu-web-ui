@@ -476,13 +476,15 @@
 
             <ng-template [ngIf]="datasetViewTypeMetadata">
                 <app-metadata
-                        [datasetInfo]="datasetInfo"
+                    [datasetInfo]="datasetInfo"
                     [tableData]="tableData"
                     [currentSchema]="currentSchema"
                     [currentPage]="0"
                     [pageInfo]="tableData.pageInfo"
                     (onSelectDatasetEmit)="onSelectDataset($event)"
                     (onPageChangeEmit)="onPageChange($event)"
+                    (onSelectTopicEmit)="selectTopic($event)"
+                    (onClickDatasetEmit)="onClickNode($event)"
                 ></app-metadata>
             </ng-template>
         </div>

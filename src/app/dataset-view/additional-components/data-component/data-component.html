@@ -121,11 +121,12 @@
         </div>
 
         <ngx-monaco-editor
+            (onInit)="onInitEditor($event)"
             [options]="sqlEditorOptions"
             [(ngModel)]="sqlRequestCode"
         ></ngx-monaco-editor>
         <h2 class="box-title align-items-center pb-3 pt-3 m-0">
-            Query Result Data:
+            Query Result:
         </h2>
         <ng-template [ngIf]="tableData">
             <app-dynamic-table

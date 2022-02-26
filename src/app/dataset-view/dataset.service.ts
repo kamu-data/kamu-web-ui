@@ -21,7 +21,8 @@ import {
     DataSchema,
     DatasetOverviewQuery,
     GetDatasetDataSqlRunQuery,
-    GetDatasetHistoryQuery, GetDatasetMetadataSchemaQuery,
+    GetDatasetHistoryQuery,
+    GetDatasetMetadataSchemaQuery,
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { debug } from "util";
@@ -323,7 +324,6 @@ export class AppDatasetService {
         this.searchApi
             .onSearchMetadata({ id, page })
             .subscribe((data: GetDatasetMetadataSchemaQuery | undefined) => {
-                debugger
                 let datasets: SearchDatasetByID;
                 if (data) {
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -333,19 +333,17 @@ export class AppDatasetService {
                         name: datasets.name,
                         owner: datasets.owner,
                     });
-                    debugger
                     this.datasetSchemaChanges(
                         data.datasets.byId?.metadata
                             ?.currentSchema as DataSchema,
                     );
                     const datasetInfo =
                         AppDatasetService.getDatasetInfo(datasets);
-                    debugger
                     this.searchDatasetInfoChanges(datasetInfo);
                     // @ts-ignore
                     this.searchData = datasets.metadata["chain"].blocks.nodes;
                     // @ts-ignore
-                    this.searchDataChanges(datasets.metadata["chain"].blocks.nodes);
+                    this.searchDataChanges(this.searchData);
                 }
             });
     }

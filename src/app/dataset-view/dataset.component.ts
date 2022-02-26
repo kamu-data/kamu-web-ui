@@ -171,7 +171,6 @@ const language = 'typescript';
 
         this.appDatasetService.onDataSchemaChanges.subscribe(
             (schema: DataSchema) => {
-                debugger
                 this.currentSchema = schema
                     ? JSON.parse(schema.content)
                     : ({} as DataViewSchema);
@@ -201,7 +200,6 @@ const language = 'typescript';
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
             (info: DatasetInfoInterface) => {
-                debugger
                 this.datasetInfo = info;
             },
         );
@@ -234,12 +232,12 @@ const language = 'typescript';
     public getTitle(node: any): string {
         switch (node.event.__typename) {
             case "MetadataEventAddData":
-                return `${
+                return `Added ${
                     node.event.addedOutputData
                         ? node.event.addedOutputData.interval.end -
                           node.event.addedOutputData.interval.start
                         : "0"
-                } new records added`;
+                } new records`;
             case "MetadataEventExecuteQuery":
                 return `Transformation produced ${
                     node.event.queryOutputData
@@ -248,10 +246,7 @@ const language = 'typescript';
                         : "0"
                 } new records`;
             case "MetadataEventSeed":
-                return `${
-                    node.event.datasetKind[0] +
-                    node.event.datasetKind.slice(1).toLowerCase()
-                } dataset initialized with ID: ${node.event.datasetId}`;
+                return `Dataset initialized`;
             case "MetadataEventSetTransform":
                 return `Query changed`;
             case "MetadataEventSetVocab":

@@ -5,7 +5,11 @@ import {
     OnChanges,
     Output,
 } from "@angular/core";
-import {DatasetInfoInterface, DataViewSchema, PageInfoInterface} from "../../../interface/search.interface";
+import {
+    DatasetInfoInterface,
+    DataViewSchema,
+    PageInfoInterface,
+} from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
@@ -41,11 +45,13 @@ export class MetadataComponent {
 
     public page = 1;
     private previousPage: number;
-    public sqlRequestCode: string = `select * from `;
     public sqlEditorOptions = {
         theme: "vs",
         language: "sql",
-        readOnly: true
+        readOnly: true,
+        minimap: {
+            enabled: false,
+        },
     };
 
     public getPageSymbol(current: number) {

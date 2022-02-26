@@ -131,6 +131,8 @@ type DatasetMetadata {
   currentUpstreamDependencies: [Dataset!]!
   "Current downstream dependencies of a dataset"
   currentDownstreamDependencies: [Dataset!]!
+  "Current transformation used by the derivative dataset"
+  currentTransform: MetadataEventSetTransform
   currentSummary: String!
   currentTopics: [String!]!
   currentReadme: String!
@@ -189,39 +191,34 @@ type MetadataChain {
   "Iterates all metadata blocks in the reverse chronological order"
   blocks(page: Int, perPage: Int): MetadataBlockConnection!
 }
-interface MetadataEvent {
-  dummy: String!
-}
-type MetadataEventAddData implements MetadataEvent {
-  dummy: String!
+union MetadataEvent = MetadataEventAddData | MetadataEventExecuteQuery | MetadataEventSeed | MetadataEventSetPollingSource | MetadataEventSetTransform | MetadataEventSetVocab | MetadataEventSetWatermark | MetadataEventUnsupported
+type MetadataEventAddData {
   outputData: DataSliceMetadata!
   outputWatermark: DateTime
 }
-type MetadataEventExecuteQuery implements MetadataEvent {
-  dummy: String!
+type MetadataEventExecuteQuery {
   inputSlices: [InputSliceMetadata!]!
   outputData: DataSliceMetadata
   outputWatermark: DateTime
 }
-type MetadataEventSeed implements MetadataEvent {
-  dummy: String!
+type MetadataEventSeed {
   datasetId: DatasetID!
   datasetKind: DatasetKind!
 }
-type MetadataEventSetPollingSource implements MetadataEvent {
+type MetadataEventSetPollingSource {
   dummy: String!
 }
-type MetadataEventSetTransform implements MetadataEvent {
+type MetadataEventSetTransform {
+  inputs: [TransformInput!]!
+  transform: Transform!
+}
+type MetadataEventSetVocab {
   dummy: String!
 }
-type MetadataEventSetVocab implements MetadataEvent {
-  dummy: String!
-}
-type MetadataEventSetWatermark implements MetadataEvent {
-  dummy: String!
+type MetadataEventSetWatermark {
   outputWatermark: DateTime!
 }
-type MetadataEventUnsupported implements MetadataEvent {
+type MetadataEventUnsupported {
   dummy: String!
 }
 scalar Multihash
@@ -279,6 +276,18 @@ type SearchResultConnection {
 }
 type SearchResultEdge {
   node: SearchResult!
+}
+type SqlQueryStep {
+  alias: String
+  query: String!
+}
+union Transform = TransformSql
+type TransformInput {
+  dataset: Dataset!
+}
+type TransformSql {
+  engine: String!
+  queries: [SqlQueryStep!]!
 }
 type User implements Account {
   "Unique and stable identitfier of this user account"

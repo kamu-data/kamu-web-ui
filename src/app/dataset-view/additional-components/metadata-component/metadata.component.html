@@ -3,7 +3,7 @@
         <div id="pagination-block" *ngIf="datasetInfo.metadata">
             <app-custom-pagination [hash]="shortHash(datasetInfo.metadata['chain'].blocks.nodes[0]['blockHash'])" [date]="momentConverDatetoLocalWithFormat(datasetInfo.metadata['chain'].blocks.nodes[0]['systemTime'])" [pageIndex]="currentPage" [limit]="5" [total]="pageInfo.totalPages || 1" (pageChange)="onPageChange($event)"></app-custom-pagination>
         </div>
-
+        <h2>Schema</h2>
         <ng-template [ngIf]="currentSchema">
             <app-dynamic-table
                 [isLatestCommitDisplay]="false"
@@ -17,20 +17,23 @@
             ></app-dynamic-table>
         </ng-template>
         <div *ngIf="datasetInfo && datasetInfo.kind === 'DERIVATIVE'" class="mt-3">
-            <h2>Transformation (for derivative datasets only)</h2>
+            <h2>Derivative Transformation</h2>
             <h3>Input datasets:</h3>
             <ul>
-                <li class="app-mat-chip input-datasets-list" *ngFor="let dependency of datasetInfo.metadata['currentUpstreamDependencies']; let idx1 = index">
-                    <mat-chip (click)="selectTopic(dependency.kind)">{{ dependency.kind }}</mat-chip>
-                    <a class="url" (click)="onClickDataset(dependency.id)">{{dependency.name}}</a>
+                <li class="app-mat-chip input-datasets-list" *ngFor="let input of datasetInfo.metadata.currentTransform.inputs; let idx1 = index">
+                    <mat-chip (click)="selectTopic(input.dataset.kind)">{{ input.dataset.kind }}</mat-chip>
+                    <a class="url" (click)="onClickDataset(input.dataset.id)">{{input.dataset.owner.name}} / {{input.dataset.name}}</a>
                 </li>
             </ul>
             <h3>SQL queries:</h3>
-            <ngx-monaco-editor
-                [options]="sqlEditorOptions"
-                [(ngModel)]="sqlRequestCode"
-            ></ngx-monaco-editor>
+            <div *ngFor="let queryStep of datasetInfo.metadata.currentTransform.transform.queries">
+                <ngx-monaco-editor
+                    [options]="sqlEditorOptions"
+                    [(ngModel)]="queryStep.query"
+                ></ngx-monaco-editor>
+            </div>
         </div>
+        <h2>License</h2>
         <div class="gist">
             <div class="gist-file">
                 <div class="gist-data">

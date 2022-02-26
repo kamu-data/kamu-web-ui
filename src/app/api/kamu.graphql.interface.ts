@@ -693,18 +693,21 @@ export type DatasetLinageUpstreamDependenciesQuery = {
                   __typename?: "Dataset";
                   id: any;
                   kind: DatasetKind;
+                  name: any;
                   metadata: {
                       __typename?: "DatasetMetadata";
                       currentUpstreamDependencies: Array<{
                           __typename?: "Dataset";
                           id: any;
                           kind: DatasetKind;
+                          name: any;
                           metadata: {
                               __typename?: "DatasetMetadata";
                               currentUpstreamDependencies: Array<{
                                   __typename?: "Dataset";
                                   id: any;
                                   kind: DatasetKind;
+                                  name: any;
                               }>;
                           };
                       }>;
@@ -728,18 +731,21 @@ export type DatasetMetadataDownstreamDependenciesQuery = {
                   __typename?: "Dataset";
                   id: any;
                   kind: DatasetKind;
+                  name: any;
                   metadata: {
                       __typename?: "DatasetMetadata";
                       currentDownstreamDependencies: Array<{
                           __typename?: "Dataset";
                           id: any;
                           kind: DatasetKind;
+                          name: any;
                           metadata: {
                               __typename?: "DatasetMetadata";
                               currentDownstreamDependencies: Array<{
                                   __typename?: "Dataset";
                                   id: any;
                                   kind: DatasetKind;
+                                  name: any;
                               }>;
                           };
                       }>;
@@ -1173,14 +1179,17 @@ export const DatasetLinageUpstreamDependenciesDocument = gql`
             byId(datasetId: $datasetId) {
                 id
                 kind
+                name
                 metadata {
                     currentUpstreamDependencies {
                         id
                         kind
+                        name
                         metadata {
                             currentUpstreamDependencies {
                                 id
                                 kind
+                                name
                             }
                         }
                     }
@@ -1209,14 +1218,17 @@ export const DatasetMetadataDownstreamDependenciesDocument = gql`
             byId(datasetId: $datasetId) {
                 id
                 kind
+                name
                 metadata {
                     currentDownstreamDependencies {
                         id
                         kind
+                        name
                         metadata {
                             currentDownstreamDependencies {
                                 id
                                 kind
+                                name
                             }
                         }
                     }

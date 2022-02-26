@@ -3,14 +3,17 @@ query datasetLinageUpstreamDependencies($datasetId: DatasetID!) {
     byId(datasetId: $datasetId) {
       id
       kind
+      name
       metadata {
         currentUpstreamDependencies {
           id
           kind
+          name
           metadata {
             currentUpstreamDependencies {
               id
               kind
+              name
             }
           }
         }

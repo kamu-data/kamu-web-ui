@@ -76,7 +76,7 @@ export class AppDatasetService {
     }
 
     public get onDatasetTreeChanges(): Observable<
-        { id: string; kind: DatasetKindTypeNames }[][]
+        DatasetKindInterface[][]
     > {
         return this.datasetTreeChanges$.asObservable();
     }
@@ -113,11 +113,11 @@ export class AppDatasetService {
     private searchMetadataChanges$: Subject<SearchOverviewInterface> =
         new Subject<SearchOverviewInterface>();
     private datasetTreeChanges$: Subject<
-        { id: string; kind: DatasetKindTypeNames }[][]
-    > = new Subject<{ id: string; kind: DatasetKindTypeNames }[][]>();
+        DatasetKindInterface[][]
+    > = new Subject<DatasetKindInterface[][]>();
     private datasetSchemaChanges$: Subject<DataSchema> =
         new Subject<DataSchema>();
-    private datasetTree: { id: string; kind: DatasetKindTypeNames }[][] = [];
+    private datasetTree: DatasetKindInterface[][] = [];
     private datasetKindInfo: DatasetKindInterface[] = [];
 
     private static getDatasetInfo(
@@ -182,7 +182,7 @@ export class AppDatasetService {
     }
 
     public datasetTreeChange(
-        datasetTree: { id: string; kind: DatasetKindTypeNames }[][],
+        datasetTree: DatasetKindInterface[][],
     ): void {
         this.datasetTreeChanges$.next(datasetTree);
     }
@@ -201,7 +201,7 @@ export class AppDatasetService {
         ) {
             return;
         }
-        this.datasetKindInfo.push({ id: dataset.id, kind: dataset.kind });
+        this.datasetKindInfo.push({ id: dataset.id, kind: dataset.kind, name: dataset.name });
         this.kindInfoChanges(this.datasetKindInfo);
     }
 
@@ -486,6 +486,7 @@ export class AppDatasetService {
                                                         r: {
                                                             id: string;
                                                             kind: DatasetKindTypeNames;
+                                                            name: string;
                                                         }[],
                                                     ) =>
                                                         r[0].id ===
@@ -572,10 +573,11 @@ export class AppDatasetService {
             dataset.metadata.currentUpstreamDependencies.forEach(
                 (dependencies: DatasetCurrentUpstreamDependencies) => {
                     this.datasetTree.push([
-                        { id: dataset.id, kind: dataset.kind },
+                        { id: dataset.id, kind: dataset.kind, name: dataset.name },
                         {
                             id: dependencies.id,
                             kind: dependencies.kind,
+                            name: dependencies.name
                         },
                     ]);
                     this.setKindInfo(dataset);
@@ -587,10 +589,11 @@ export class AppDatasetService {
             dataset.metadata.currentDownstreamDependencies.forEach(
                 (dependencies: DatasetCurrentUpstreamDependencies) => {
                     this.datasetTree.push([
-                        { id: dataset.id, kind: dataset.kind },
+                        { id: dataset.id, kind: dataset.kind, name: dataset.name },
                         {
                             id: dependencies.id,
                             kind: dependencies.kind,
+                            name: dependencies.name
                         },
                     ]);
                     this.setKindInfo(dataset);

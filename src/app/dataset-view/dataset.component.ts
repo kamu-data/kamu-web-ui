@@ -494,15 +494,12 @@ const language = 'typescript';
         let uniqDatasetIdList: string[] = [];
 
         this.appDatasetService.onDatasetTreeChanges.subscribe(
-            (datasetTree: { id: string; kind: DatasetKindTypeNames }[][]) => {
+            (datasetTree: DatasetKindInterface[][]) => {
                 this.isAvailableLinageGraph = datasetTree.length !== 0;
                 datasetTree.forEach(
-                    (term: { id: string; kind: DatasetKindTypeNames }[]) =>
+                    (term: DatasetKindInterface[]) =>
                         term.forEach(
-                            (termInfo: {
-                                id: string;
-                                kind: DatasetKindTypeNames;
-                            }) => uniqDatasetIdList.push(termInfo.id),
+                            (termInfo: DatasetKindInterface) => uniqDatasetIdList.push(termInfo.id),
                         ),
                 );
                 uniqDatasetIdList = uniqDatasetIdList.filter(
@@ -514,16 +511,13 @@ const language = 'typescript';
                 if (datasetTree.length) {
                     datasetTree.forEach(
                         (
-                            term: { id: string; kind: DatasetKindTypeNames }[],
+                            term: DatasetKindInterface[],
                             index: number,
                         ) => {
                             let source: string = term[0].id;
                             let target: string = term[1].id;
                             term.forEach(
-                                (termInfo: {
-                                    id: string;
-                                    kind: DatasetKindTypeNames;
-                                }) => {
+                                (termInfo: DatasetKindInterface) => {
                                     if (
                                         termInfo.kind ===
                                         DatasetKindTypeNames.root
@@ -555,6 +549,8 @@ const language = 'typescript';
                             id,
                             label: id,
                             data: {
+                                name: oneOfTheKindInfo[0] &&
+                                    oneOfTheKindInfo[0].name,
                                 kind:
                                     oneOfTheKindInfo[0] &&
                                     oneOfTheKindInfo[0].kind,

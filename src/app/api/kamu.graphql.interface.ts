@@ -680,11 +680,21 @@ export type GetDatasetHistoryQuery = {
     };
 };
 
-export type DatasetLinageUpstreamDependenciesQueryVariables = Exact<{
+export type LineageDatasetInfoFragment = {
+    __typename?: "Dataset";
+    id: any;
+    kind: DatasetKind;
+    name: any;
+    owner:
+        | { __typename?: "Organization"; id: any; name: string }
+        | { __typename?: "User"; id: any; name: string };
+};
+
+export type GetDatasetLineageQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
 }>;
 
-export type DatasetLinageUpstreamDependenciesQuery = {
+export type GetDatasetLineageQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
@@ -708,32 +718,87 @@ export type DatasetLinageUpstreamDependenciesQuery = {
                                   id: any;
                                   kind: DatasetKind;
                                   name: any;
+                                  metadata: {
+                                      __typename?: "DatasetMetadata";
+                                      currentUpstreamDependencies: Array<{
+                                          __typename?: "Dataset";
+                                          id: any;
+                                          kind: DatasetKind;
+                                          name: any;
+                                          metadata: {
+                                              __typename?: "DatasetMetadata";
+                                              currentUpstreamDependencies: Array<{
+                                                  __typename?: "Dataset";
+                                                  id: any;
+                                                  kind: DatasetKind;
+                                                  name: any;
+                                                  metadata: {
+                                                      __typename?: "DatasetMetadata";
+                                                      currentUpstreamDependencies: Array<{
+                                                          __typename?: "Dataset";
+                                                          id: any;
+                                                          kind: DatasetKind;
+                                                          name: any;
+                                                          owner:
+                                                              | {
+                                                                    __typename?: "Organization";
+                                                                    id: any;
+                                                                    name: string;
+                                                                }
+                                                              | {
+                                                                    __typename?: "User";
+                                                                    id: any;
+                                                                    name: string;
+                                                                };
+                                                      }>;
+                                                  };
+                                                  owner:
+                                                      | {
+                                                            __typename?: "Organization";
+                                                            id: any;
+                                                            name: string;
+                                                        }
+                                                      | {
+                                                            __typename?: "User";
+                                                            id: any;
+                                                            name: string;
+                                                        };
+                                              }>;
+                                          };
+                                          owner:
+                                              | {
+                                                    __typename?: "Organization";
+                                                    id: any;
+                                                    name: string;
+                                                }
+                                              | {
+                                                    __typename?: "User";
+                                                    id: any;
+                                                    name: string;
+                                                };
+                                      }>;
+                                  };
+                                  owner:
+                                      | {
+                                            __typename?: "Organization";
+                                            id: any;
+                                            name: string;
+                                        }
+                                      | {
+                                            __typename?: "User";
+                                            id: any;
+                                            name: string;
+                                        };
                               }>;
                           };
+                          owner:
+                              | {
+                                    __typename?: "Organization";
+                                    id: any;
+                                    name: string;
+                                }
+                              | { __typename?: "User"; id: any; name: string };
                       }>;
-                  };
-              }
-            | null
-            | undefined;
-    };
-};
-
-export type DatasetMetadataDownstreamDependenciesQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-}>;
-
-export type DatasetMetadataDownstreamDependenciesQuery = {
-    __typename?: "Query";
-    datasets: {
-        __typename?: "Datasets";
-        byId?:
-            | {
-                  __typename?: "Dataset";
-                  id: any;
-                  kind: DatasetKind;
-                  name: any;
-                  metadata: {
-                      __typename?: "DatasetMetadata";
                       currentDownstreamDependencies: Array<{
                           __typename?: "Dataset";
                           id: any;
@@ -746,10 +811,91 @@ export type DatasetMetadataDownstreamDependenciesQuery = {
                                   id: any;
                                   kind: DatasetKind;
                                   name: any;
+                                  metadata: {
+                                      __typename?: "DatasetMetadata";
+                                      currentDownstreamDependencies: Array<{
+                                          __typename?: "Dataset";
+                                          id: any;
+                                          kind: DatasetKind;
+                                          name: any;
+                                          metadata: {
+                                              __typename?: "DatasetMetadata";
+                                              currentDownstreamDependencies: Array<{
+                                                  __typename?: "Dataset";
+                                                  id: any;
+                                                  kind: DatasetKind;
+                                                  name: any;
+                                                  metadata: {
+                                                      __typename?: "DatasetMetadata";
+                                                      currentDownstreamDependencies: Array<{
+                                                          __typename?: "Dataset";
+                                                          id: any;
+                                                          kind: DatasetKind;
+                                                          name: any;
+                                                          owner:
+                                                              | {
+                                                                    __typename?: "Organization";
+                                                                    id: any;
+                                                                    name: string;
+                                                                }
+                                                              | {
+                                                                    __typename?: "User";
+                                                                    id: any;
+                                                                    name: string;
+                                                                };
+                                                      }>;
+                                                  };
+                                                  owner:
+                                                      | {
+                                                            __typename?: "Organization";
+                                                            id: any;
+                                                            name: string;
+                                                        }
+                                                      | {
+                                                            __typename?: "User";
+                                                            id: any;
+                                                            name: string;
+                                                        };
+                                              }>;
+                                          };
+                                          owner:
+                                              | {
+                                                    __typename?: "Organization";
+                                                    id: any;
+                                                    name: string;
+                                                }
+                                              | {
+                                                    __typename?: "User";
+                                                    id: any;
+                                                    name: string;
+                                                };
+                                      }>;
+                                  };
+                                  owner:
+                                      | {
+                                            __typename?: "Organization";
+                                            id: any;
+                                            name: string;
+                                        }
+                                      | {
+                                            __typename?: "User";
+                                            id: any;
+                                            name: string;
+                                        };
                               }>;
                           };
+                          owner:
+                              | {
+                                    __typename?: "Organization";
+                                    id: any;
+                                    name: string;
+                                }
+                              | { __typename?: "User"; id: any; name: string };
                       }>;
                   };
+                  owner:
+                      | { __typename?: "Organization"; id: any; name: string }
+                      | { __typename?: "User"; id: any; name: string };
               }
             | null
             | undefined;
@@ -963,6 +1109,17 @@ export type SearchDatasetsOverviewQuery = {
     };
 };
 
+export const LineageDatasetInfoFragmentDoc = gql`
+    fragment LineageDatasetInfo on Dataset {
+        id
+        kind
+        name
+        owner {
+            id
+            name
+        }
+    }
+`;
 export const AccountInfoDocument = gql`
     mutation AccountInfo($accessToken: String!) {
         auth {
@@ -1173,62 +1330,55 @@ export class GetDatasetHistoryGQL extends Apollo.Query<
         super(apollo);
     }
 }
-export const DatasetLinageUpstreamDependenciesDocument = gql`
-    query datasetLinageUpstreamDependencies($datasetId: DatasetID!) {
+export const GetDatasetLineageDocument = gql`
+    query getDatasetLineage($datasetId: DatasetID!) {
         datasets {
             byId(datasetId: $datasetId) {
-                id
-                kind
-                name
+                ...LineageDatasetInfo
                 metadata {
                     currentUpstreamDependencies {
-                        id
-                        kind
-                        name
+                        ...LineageDatasetInfo
                         metadata {
                             currentUpstreamDependencies {
-                                id
-                                kind
-                                name
+                                ...LineageDatasetInfo
+                                metadata {
+                                    currentUpstreamDependencies {
+                                        ...LineageDatasetInfo
+                                        metadata {
+                                            currentUpstreamDependencies {
+                                                ...LineageDatasetInfo
+                                                metadata {
+                                                    currentUpstreamDependencies {
+                                                        ...LineageDatasetInfo
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
-                }
-            }
-        }
-    }
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class DatasetLinageUpstreamDependenciesGQL extends Apollo.Query<
-    DatasetLinageUpstreamDependenciesQuery,
-    DatasetLinageUpstreamDependenciesQueryVariables
-> {
-    document = DatasetLinageUpstreamDependenciesDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const DatasetMetadataDownstreamDependenciesDocument = gql`
-    query datasetMetadataDownstreamDependencies($datasetId: DatasetID!) {
-        datasets {
-            byId(datasetId: $datasetId) {
-                id
-                kind
-                name
-                metadata {
                     currentDownstreamDependencies {
-                        id
-                        kind
-                        name
+                        ...LineageDatasetInfo
                         metadata {
                             currentDownstreamDependencies {
-                                id
-                                kind
-                                name
+                                ...LineageDatasetInfo
+                                metadata {
+                                    currentDownstreamDependencies {
+                                        ...LineageDatasetInfo
+                                        metadata {
+                                            currentDownstreamDependencies {
+                                                ...LineageDatasetInfo
+                                                metadata {
+                                                    currentDownstreamDependencies {
+                                                        ...LineageDatasetInfo
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -1236,16 +1386,17 @@ export const DatasetMetadataDownstreamDependenciesDocument = gql`
             }
         }
     }
+    ${LineageDatasetInfoFragmentDoc}
 `;
 
 @Injectable({
     providedIn: "root",
 })
-export class DatasetMetadataDownstreamDependenciesGQL extends Apollo.Query<
-    DatasetMetadataDownstreamDependenciesQuery,
-    DatasetMetadataDownstreamDependenciesQueryVariables
+export class GetDatasetLineageGQL extends Apollo.Query<
+    GetDatasetLineageQuery,
+    GetDatasetLineageQueryVariables
 > {
-    document = DatasetMetadataDownstreamDependenciesDocument;
+    document = GetDatasetLineageDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

@@ -6,15 +6,11 @@ import { Observable, of, throwError } from "rxjs";
 import {
     DatasetIDsInterface,
     PageInfoInterface,
-    SearchMetadataInterface,
-    SearchMetadataNodeResponseInterface,
-    SearchOverviewDatasetsInterface,
     TypeNames,
 } from "../interface/search.interface";
 
 import { ApolloQuerySearchResultNodeInterface } from "./apolloQueryResult.interface";
 import {
-    DatasetMetadataDownstreamDependenciesGQL,
     DatasetOverviewGQL,
     DatasetOverviewQuery,
     GetDatasetDataSchemaGQL,
@@ -27,6 +23,8 @@ import {
     GetDatasetDataSqlRunQuery,
     SearchDatasetsAutocompleteGQL,
     SearchDatasetsOverviewGQL,
+    GetDatasetLineageGQL,
+    GetDatasetLineageQuery,
     SearchDatasetsOverviewQuery,
 } from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
@@ -39,12 +37,12 @@ export class SearchApi {
         private apollo: Apollo,
         private datasetOverviewGQL: DatasetOverviewGQL,
         private datasetMetadataGQL: GetDatasetMetadataSchemaGQL,
-        private datasetMetadataDownstreamDependenciesGQL: DatasetMetadataDownstreamDependenciesGQL,
         private searchDatasetsAutocompleteGQL: SearchDatasetsAutocompleteGQL,
         private searchDatasetsOverviewGQL: SearchDatasetsOverviewGQL,
         private getDatasetDataSchemaGQL: GetDatasetDataSchemaGQL,
         private getDatasetDataSQLRun: GetDatasetDataSqlRunGQL,
         private getDatasetHistoryGQL: GetDatasetHistoryGQL,
+        private getDatasetLineageGQL: GetDatasetLineageGQL,
     ) {}
 
     public pageInfoInit(): PageInfoInterface {
@@ -212,88 +210,21 @@ export class SearchApi {
             );
     }
 
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    public searchLinageDataset(id: string): Observable<any> {
-        if (typeof id !== "string") {
-            return throwError("Empty ID");
-        }
-
-        const GET_DATA: DocumentNode = gql`
-            {
-                datasets {
-                    byId(datasetId: "${id}") {
-                        id
-                        kind
-                        name
-                        metadata {
-                            currentDownstreamDependencies {
-                                id
-                                kind
-                                name
-                                metadata {
-                                    currentDownstreamDependencies {
-                                        id
-                                        kind
-                                        name
-                                    }
-                                }
-                            }
-                        }
+    public getDatasetLineage(params: {
+        id: string;
+    }): Observable<GetDatasetLineageQuery | undefined> {
+        return this.getDatasetLineageGQL
+            .watch({
+                datasetId: params.id,
+            })
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<GetDatasetLineageQuery>) => {
+                    if (result.data) {
+                        return result.data;
                     }
-                }
-            }
-        `;
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
-        // @ts-ignore
-        return this.apollo.watchQuery({ query: GET_DATA }).valueChanges.pipe(
-            map((result: ApolloQueryResult<any>) => {
-                if (result.data) {
-                    return result.data.datasets.byId;
-                }
-            }),
-        );
-    }
-
-    public searchLinageDatasetUpstreamDependencies(
-        id: string,
-    ): Observable<any> {
-        if (typeof id !== "string") {
-            return throwError("Empty ID");
-        }
-        const GET_DATA: DocumentNode = gql`
-            {
-                datasets {
-                    byId(datasetId: "${id}") {
-                        id
-                        kind
-                        name
-                        metadata {
-                            currentUpstreamDependencies {
-                                id
-                                kind
-                                name
-                                metadata {
-                                    currentUpstreamDependencies {
-                                        id
-                                        kind
-                                        name
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        `;
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
-        // @ts-ignore
-        return this.apollo.watchQuery({ query: GET_DATA }).valueChanges.pipe(
-            map((result: ApolloQueryResult<any>) => {
-                if (result.data) {
-                    return result.data.datasets.byId;
-                }
-            }),
-        );
+                    return undefined;
+                }),
+            );
     }
 
     // tslint:disable-next-line: no-any

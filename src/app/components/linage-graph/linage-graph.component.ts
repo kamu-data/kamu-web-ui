@@ -26,7 +26,7 @@ export class LinageGraphComponent implements OnChanges, OnInit {
     public draggingEnabled = false;
     public panningEnabled = true;
     public zoomEnabled = true;
-    public zoomSpeed = 0.1;
+    public zoomSpeed = 0.03;
     public minZoomLevel = 0.1;
     public maxZoomLevel = 4.0;
     public panOnZoom = true;

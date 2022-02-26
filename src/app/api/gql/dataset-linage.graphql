@@ -1,19 +1,61 @@
-query datasetMetadataDownstreamDependencies($datasetId: DatasetID!) {
+fragment LineageDatasetInfo on Dataset {
+  id
+  kind
+  name
+  owner {
+    id
+    name
+  }
+}
+
+query getDatasetLineage($datasetId: DatasetID!) {
   datasets {
     byId(datasetId: $datasetId) {
-      id
-      kind
-      name
+      ...LineageDatasetInfo
       metadata {
+        currentUpstreamDependencies {
+          ...LineageDatasetInfo
+          metadata {
+            currentUpstreamDependencies {
+              ...LineageDatasetInfo
+              metadata {
+                currentUpstreamDependencies {
+                  ...LineageDatasetInfo
+                  metadata {
+                    currentUpstreamDependencies {
+                      ...LineageDatasetInfo
+                      metadata {
+                        currentUpstreamDependencies {
+                          ...LineageDatasetInfo
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
         currentDownstreamDependencies {
-          id
-          kind
-          name
+          ...LineageDatasetInfo
           metadata {
             currentDownstreamDependencies {
-              id
-              kind
-              name
+              ...LineageDatasetInfo
+              metadata {
+                currentDownstreamDependencies {
+                  ...LineageDatasetInfo
+                  metadata {
+                    currentDownstreamDependencies {
+                      ...LineageDatasetInfo
+                      metadata {
+                        currentDownstreamDependencies {
+                          ...LineageDatasetInfo
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }

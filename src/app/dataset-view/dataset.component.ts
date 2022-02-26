@@ -31,7 +31,11 @@ import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
-import { DataSchema } from "../api/kamu.graphql.interface";
+import {
+    DataSchema,
+    GetDatasetLineageGQL,
+    GetDatasetLineageQuery,
+} from "../api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset",
@@ -450,7 +454,7 @@ const language = 'typescript';
 
         this.datasetViewType = DatasetViewTypeEnum.linage;
         this.appDatasetService.resetDatasetTree();
-        this.appDatasetService.onSearchLinageDataset(this.getDatasetId());
+        this.appDatasetService.onSearchLineage(this.getDatasetId());
 
         this.changeLinageGraphView();
     }
@@ -491,112 +495,46 @@ const language = 'typescript';
             },
         ];
 
-        let uniqDatasetIdList: string[] = [];
-
         this.appDatasetService.onDatasetTreeChanges.subscribe(
-            (datasetTree: DatasetKindInterface[][]) => {
-                this.isAvailableLinageGraph = datasetTree.length !== 0;
-                datasetTree.forEach(
-                    (term: DatasetKindInterface[]) =>
-                        term.forEach(
-                            (termInfo: DatasetKindInterface) => uniqDatasetIdList.push(termInfo.id),
-                        ),
-                );
-                uniqDatasetIdList = uniqDatasetIdList.filter(
-                    (x: any, y: number) => uniqDatasetIdList.indexOf(x) === y,
-                );
+            (args: [DatasetKindInterface[][], DatasetKindInterface]) => {
+                let edges = args[0];
+                let currentDataset = args[1];
 
                 this.initLinageGraphProperty();
 
-                if (datasetTree.length) {
-                    datasetTree.forEach(
-                        (
-                            term: DatasetKindInterface[],
-                            index: number,
-                        ) => {
-                            let source: string = term[0].id;
-                            let target: string = term[1].id;
-                            term.forEach(
-                                (termInfo: DatasetKindInterface) => {
-                                    if (
-                                        termInfo.kind ===
-                                        DatasetKindTypeNames.root
-                                    ) {
-                                        source = termInfo.id;
-                                    } else {
-                                        target = termInfo.id;
-                                    }
-                                },
-                            );
+                this.isAvailableLinageGraph = edges.length !== 0;
 
-                            this.linageGraphLink.push({
-                                id: `${source}__and__${target}`,
-                                source,
-                                target,
-                                label: `${source}__and__${target}`,
-                            });
+                let uniqueDatasets: { [id: string]: DatasetKindInterface } = {};
+                edges.forEach((edge: DatasetKindInterface[]) =>
+                    edge.forEach((dataset: DatasetKindInterface) => {
+                        uniqueDatasets[dataset.id] = dataset;
+                    }),
+                );
+
+                for (const [id, dataset] of Object.entries(uniqueDatasets)) {
+                    this.linageGraphNodes.push({
+                        id,
+                        label: dataset.name,
+                        data: {
+                            name: dataset.name,
+                            kind: dataset.kind,
+                            isRoot: dataset.kind === DatasetKindTypeNames.root,
+                            isCurrent: dataset.id === currentDataset.id,
                         },
-                    );
-
-                    uniqDatasetIdList.forEach((id: string) => {
-                        const oneOfTheKindInfo: DatasetKindInterface[] =
-                            this.appDatasetService.kindInfo.filter(
-                                (dataset: DatasetKindInterface) =>
-                                    dataset.id === id,
-                            );
-
-                        this.linageGraphNodes.push({
-                            id,
-                            label: id,
-                            data: {
-                                name: oneOfTheKindInfo[0] &&
-                                    oneOfTheKindInfo[0].name,
-                                kind:
-                                    oneOfTheKindInfo[0] &&
-                                    oneOfTheKindInfo[0].kind,
-                                customColor:
-                                    oneOfTheKindInfo[0] &&
-                                    oneOfTheKindInfo[0].kind ===
-                                        DatasetKindTypeNames.root
-                                        ? "rgba(165,42,42,0.35)"
-                                        : "#008000",
-                            },
-                        });
                     });
-
-                    if (this.linageGraphNodes.length >= 1) {
-                        const linageGraphAllNodes: Node[] =
-                            this.linageGraphNodes.filter(
-                                (n: Node) =>
-                                    n.data.kind === DatasetKindTypeNames.root,
-                            );
-                        const linageGraphDerivativeNodes: Node[] =
-                            this.linageGraphNodes.filter(
-                                (n: Node) =>
-                                    n.data.kind ===
-                                    DatasetKindTypeNames.derivative,
-                            );
-                        linageGraphDerivativeNodes.forEach((n: Node) => {
-                            linageGraphAllNodes.push(n);
-                        });
-
-                        linageGraphAllNodes.forEach(
-                            (n: Node, index: number) => {
-                                n.id = String(index);
-                                this.linageGraphLink.forEach((e: Edge) => {
-                                    if (e.source === n.label) {
-                                        e.source = n.id;
-                                    }
-                                    if (e.target === n.label) {
-                                        e.target = n.id;
-                                    }
-                                });
-                            },
-                        );
-
-                        this.linageGraphNodes = linageGraphAllNodes;
-                    }
                 }
+
+                edges.forEach((edge: DatasetKindInterface[]) => {
+                    let source: string = edge[0].id;
+                    let target: string = edge[1].id;
+
+                    this.linageGraphLink.push({
+                        id: `${source}__and__${target}`,
+                        source,
+                        target,
+                        label: `${source}__and__${target}`,
+                    });
+                });
             },
         );
 

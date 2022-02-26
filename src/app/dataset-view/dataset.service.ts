@@ -2,17 +2,13 @@ import { Injectable } from "@angular/core";
 import { empty, from, Observable, of, Subject, Subscription } from "rxjs";
 import { SearchApi } from "../api/search.api";
 import {
-    DatasetCurrentUpstreamDependencies,
     DatasetInfoInterface,
     DatasetKindInterface,
     DatasetKindTypeNames,
-    DatasetLinageResponse,
     DatasetNameInterface,
     PageInfoInterface,
     SearchDatasetByID,
-    SearchHistoryCurrentSchema,
     SearchHistoryInterface,
-    SearchMetadataInterface,
     SearchOverviewDatasetsInterface,
     SearchOverviewInterface,
 } from "../interface/search.interface";
@@ -22,10 +18,10 @@ import {
     DatasetOverviewQuery,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
+    GetDatasetLineageQuery,
     GetDatasetMetadataSchemaQuery,
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
-import { debug } from "util";
 import { ModalService } from "../components/modal/modal.service";
 
 @Injectable()
@@ -76,7 +72,7 @@ export class AppDatasetService {
     }
 
     public get onDatasetTreeChanges(): Observable<
-        DatasetKindInterface[][]
+        [DatasetKindInterface[][], DatasetKindInterface]
     > {
         return this.datasetTreeChanges$.asObservable();
     }
@@ -113,8 +109,8 @@ export class AppDatasetService {
     private searchMetadataChanges$: Subject<SearchOverviewInterface> =
         new Subject<SearchOverviewInterface>();
     private datasetTreeChanges$: Subject<
-        DatasetKindInterface[][]
-    > = new Subject<DatasetKindInterface[][]>();
+        [DatasetKindInterface[][], DatasetKindInterface]
+    > = new Subject<[DatasetKindInterface[][], DatasetKindInterface]>();
     private datasetSchemaChanges$: Subject<DataSchema> =
         new Subject<DataSchema>();
     private datasetTree: DatasetKindInterface[][] = [];
@@ -182,9 +178,10 @@ export class AppDatasetService {
     }
 
     public datasetTreeChange(
-        datasetTree: DatasetKindInterface[][],
+        edges: DatasetKindInterface[][],
+        origin: DatasetKindInterface,
     ): void {
-        this.datasetTreeChanges$.next(datasetTree);
+        this.datasetTreeChanges$.next([edges, origin]);
     }
 
     public resetKindInfo(): void {
@@ -201,7 +198,11 @@ export class AppDatasetService {
         ) {
             return;
         }
-        this.datasetKindInfo.push({ id: dataset.id, kind: dataset.kind, name: dataset.name });
+        this.datasetKindInfo.push({
+            id: dataset.id,
+            kind: dataset.kind,
+            name: dataset.name,
+        });
         this.kindInfoChanges(this.datasetKindInfo);
     }
 
@@ -399,244 +400,73 @@ export class AppDatasetService {
         );
     }
 
-    public onSearchLinageDataset(id: string): void {
+    // TODO: What is the naming convention here exactly?
+    public onSearchLineage(id: string): void {
+        // TODO: Do we have to reset these when switching tabs?
         this.resetDatasetTree();
         this.resetKindInfo();
-        this.onSearchLinageDatasetSubscribtion = this.searchApi
-            .searchLinageDatasetUpstreamDependencies(id)
+
+        this.searchApi
+            .getDatasetLineage({ id })
             .pipe(
-                map((result: DatasetLinageResponse) => {
+                map((result: GetDatasetLineageQuery | undefined) => {
                     return result;
                 }),
-                // @ts-ignore
-                expand((result: DatasetLinageResponse) => {
-                    if (
-                        (result.kind === DatasetKindTypeNames.root &&
-                            !result.metadata.currentUpstreamDependencies
-                                ?.length) ||
-                        (result.kind === DatasetKindTypeNames.derivative &&
-                            !result.metadata.currentUpstreamDependencies
-                                ?.length)
-                    ) {
-                        return this.searchApi
-                            .searchLinageDataset(result.id)
-                            .pipe(
-                                flatMap((result2: DatasetLinageResponse) => {
-                                    this.changeDatasetTree(result2);
-                                    return from(
-                                        // @ts-ignore
-                                        result2.metadata
-                                            .currentDownstreamDependencies,
-                                    ).pipe(
-                                        flatMap((d: DatasetLinageResponse) => {
-                                            // @ts-ignore
-                                            if (
-                                                !d.metadata
-                                                    .currentDownstreamDependencies
-                                                    ?.length ||
-                                                (d.metadata
-                                                    .currentDownstreamDependencies
-                                                    ?.length &&
-                                                    // @ts-ignore
-                                                    d.metadata.currentDownstreamDependencies.some(
-                                                        (
-                                                            upDep: DatasetLinageResponse,
-                                                        ) =>
-                                                            upDep.kind ===
-                                                            DatasetKindTypeNames.root,
-                                                    )) ||
-                                                // @ts-ignore
-                                                (d.currentDownstreamDependencies
-                                                    ?.length &&
-                                                    // @ts-ignore
-                                                    d.currentDownstreamDependencies.some(
-                                                        (
-                                                            upDep: DatasetLinageResponse,
-                                                        ) =>
-                                                            upDep.kind ===
-                                                            DatasetKindTypeNames.root,
-                                                    ))
-                                            ) {
-                                                return empty();
-                                            }
-                                            return of(d);
-                                        }),
-                                    );
-                                }),
-                            );
-                    } else if (
-                        result.kind === DatasetKindTypeNames.derivative &&
-                        result.metadata.currentUpstreamDependencies?.length
-                    ) {
-                        return this.searchApi
-                            .searchLinageDatasetUpstreamDependencies(result.id)
-                            .pipe(
-                                flatMap((result2: DatasetLinageResponse) => {
-                                    this.changeDatasetTree(result2);
-                                    return from(
-                                        // @ts-ignore
-                                        result2.metadata
-                                            .currentUpstreamDependencies,
-                                    ).pipe(
-                                        // @ts-ignore
-                                        flatMap((d: DatasetLinageResponse) => {
-                                            if (
-                                                this.datasetTree.some(
-                                                    (
-                                                        r: {
-                                                            id: string;
-                                                            kind: DatasetKindTypeNames;
-                                                            name: string;
-                                                        }[],
-                                                    ) =>
-                                                        r[0].id ===
-                                                            result2.id &&
-                                                        r[0].id === d.id,
-                                                )
-                                            ) {
-                                                return empty();
-                                            }
-                                            if (
-                                                !d.metadata
-                                                    .currentUpstreamDependencies
-                                                    ?.length ||
-                                                (d.metadata
-                                                    .currentUpstreamDependencies
-                                                    ?.length &&
-                                                    // @ts-ignore
-                                                    d.metadata.currentUpstreamDependencies.some(
-                                                        (
-                                                            upDep: DatasetLinageResponse,
-                                                        ) =>
-                                                            upDep.kind ===
-                                                            DatasetKindTypeNames.root,
-                                                    )) ||
-                                                // @ts-ignore
-                                                (d.currentUpstreamDependencies
-                                                    ?.length &&
-                                                    // @ts-ignore
-                                                    d.currentUpstreamDependencies.some(
-                                                        (
-                                                            upDep: DatasetLinageResponse,
-                                                        ) =>
-                                                            upDep.kind ===
-                                                            DatasetKindTypeNames.root,
-                                                    ))
-                                            ) {
-                                                return empty();
-                                            }
-                                            return of(d);
-                                        }),
-                                    );
-                                }),
-                            );
-                    }
-                }),
             )
-            .subscribe((r: any) => {
-                console.log(r);
+            .subscribe((result: GetDatasetLineageQuery | undefined) => {
+                if (result) {
+                    this.updateDatasetTree(result);
+                }
             });
     }
 
-    public onSearchLinageUpstreamDataset(id: string): void {
-        this.searchApi
-            .searchLinageDatasetUpstreamDependencies(id)
-            .pipe(
-                expand((result: DatasetLinageResponse) => {
-                    if (
-                        result.kind === DatasetKindTypeNames.root &&
-                        result.metadata.currentDownstreamDependencies &&
-                        result.metadata.currentDownstreamDependencies?.length
-                    ) {
-                        return of(
-                            result.metadata.currentDownstreamDependencies[0].id,
-                        );
-                    } else if (
-                        result.metadata.currentUpstreamDependencies &&
-                        result.metadata.currentUpstreamDependencies?.length
-                    ) {
-                        return of(
-                            result.metadata.currentUpstreamDependencies[0].id,
-                        );
-                    } else {
-                        return empty();
-                    }
-                }),
-            )
-            .subscribe((r) => {
-                console.log(r);
+    private updateDatasetTree(lineage: GetDatasetLineageQuery) {
+        let tree: DatasetKindInterface[][] = [];
+        let origin = lineage.datasets.byId;
+        this.updateDatasetTreeRec(tree, origin);
+        // @ts-ignore
+        this.datasetTreeChange(tree, origin);
+    }
+
+    private updateDatasetTreeRec(tree: DatasetKindInterface[][], origin: any) {
+        // TODO: Why is this needed to be called for every dataset in the graph?
+        this.setKindInfo(origin);
+
+        if (origin.metadata.currentDownstreamDependencies) {
+            origin.metadata.currentDownstreamDependencies.forEach(
+                (dep: any) => {
+                    tree.push([
+                        {
+                            id: origin.id,
+                            kind: origin.kind,
+                            name: origin.name,
+                        },
+                        {
+                            id: dep.id,
+                            kind: dep.kind,
+                            name: dep.name,
+                        },
+                    ]);
+                    this.updateDatasetTreeRec(tree, dep);
+                },
+            );
+        }
+        if (origin.metadata.currentUpstreamDependencies) {
+            origin.metadata.currentUpstreamDependencies.forEach((dep: any) => {
+                tree.push([
+                    {
+                        id: dep.id,
+                        kind: dep.kind,
+                        name: dep.name,
+                    },
+                    {
+                        id: origin.id,
+                        kind: origin.kind,
+                        name: origin.name,
+                    },
+                ]);
+                this.updateDatasetTreeRec(tree, dep);
             });
-    }
-
-    private changeDatasetTree(dataset: DatasetLinageResponse) {
-        if (dataset.metadata.currentUpstreamDependencies) {
-            dataset.metadata.currentUpstreamDependencies.forEach(
-                (dependencies: DatasetCurrentUpstreamDependencies) => {
-                    this.datasetTree.push([
-                        { id: dataset.id, kind: dataset.kind, name: dataset.name },
-                        {
-                            id: dependencies.id,
-                            kind: dependencies.kind,
-                            name: dependencies.name
-                        },
-                    ]);
-                    this.setKindInfo(dataset);
-                    this.setKindInfo(dependencies);
-                },
-            );
-        }
-        if (dataset.metadata.currentDownstreamDependencies) {
-            dataset.metadata.currentDownstreamDependencies.forEach(
-                (dependencies: DatasetCurrentUpstreamDependencies) => {
-                    this.datasetTree.push([
-                        { id: dataset.id, kind: dataset.kind, name: dataset.name },
-                        {
-                            id: dependencies.id,
-                            kind: dependencies.kind,
-                            name: dependencies.name
-                        },
-                    ]);
-                    this.setKindInfo(dataset);
-                    this.setKindInfo(dependencies);
-                },
-            );
-        }
-        this.datasetTreeChange(this.datasetTree);
-    }
-
-    private uniquedatasetTree(datasetTree: string[][]) {
-        return new Map(
-            datasetTree.map((p: string[]) => [p.join(), p]),
-        ).values();
-    }
-
-    private createDependenciesDerivativeList(dataset: DatasetLinageResponse) {
-        if (dataset.metadata.currentDownstreamDependencies) {
-            return dataset.metadata.currentDownstreamDependencies.filter(
-                (dependencies: DatasetCurrentUpstreamDependencies) =>
-                    dependencies.kind === DatasetKindTypeNames.derivative,
-            );
-        }
-        if (dataset.metadata.currentUpstreamDependencies) {
-            return dataset.metadata.currentUpstreamDependencies.filter(
-                (dependencies: DatasetCurrentUpstreamDependencies) =>
-                    dependencies.kind === DatasetKindTypeNames.derivative,
-            );
-        }
-    }
-
-    private createDependenciesRootList(dataset: DatasetLinageResponse) {
-        if (dataset.metadata.currentDownstreamDependencies) {
-            return dataset.metadata.currentDownstreamDependencies.filter(
-                (dependencies: DatasetCurrentUpstreamDependencies) =>
-                    dependencies.kind === DatasetKindTypeNames.root,
-            );
-        }
-        if (dataset.metadata.currentUpstreamDependencies) {
-            return dataset.metadata.currentUpstreamDependencies.filter(
-                (dependencies: DatasetCurrentUpstreamDependencies) =>
-                    dependencies.kind === DatasetKindTypeNames.root,
-            );
         }
     }
 }

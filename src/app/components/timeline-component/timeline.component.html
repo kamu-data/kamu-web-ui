@@ -28,13 +28,58 @@
                         data-url="/kamu-data/kamu-web-ui/commits/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d/commits_list_item"
                     >
                         <div class="flex-auto min-width-0 Details">
-                            <p class="mb-1">
+                            <div
+                                class="d-flex align-items-center mt-1"
+                                style="gap: 5px"
+                            >
+                                <mat-icon
+                                    *ngIf="
+                                        node.event.__typename ===
+                                        'MetadataEventSeed'
+                                    "
+                                    >add_circle_outline</mat-icon
+                                >
+                                <mat-icon
+                                    *ngIf="
+                                        node.event.__typename ===
+                                        'MetadataEventAddData'
+                                    "
+                                    >input</mat-icon
+                                >
+                                <mat-icon
+                                    *ngIf="
+                                        node.event.__typename ===
+                                        'MetadataEventExecuteQuery'
+                                    "
+                                    >call_merge</mat-icon
+                                >
+                                <mat-icon
+                                    *ngIf="
+                                        node.event.__typename ===
+                                        'MetadataEventSetVocab'
+                                    "
+                                    >more_horiz</mat-icon
+                                >
+                                <mat-icon
+                                    *ngIf="
+                                        node.event.__typename ===
+                                        'MetadataEventSetTransform'
+                                    "
+                                    >more_horiz</mat-icon
+                                >
+                                <mat-icon
+                                    *ngIf="
+                                        node.event.__typename ===
+                                        'MetadataEventSetPollingSource'
+                                    "
+                                    >more_horiz</mat-icon
+                                >
                                 <a
                                     class="link--primary font-weight-bold"
                                     href="/kamu-data/kamu-web-ui/commit/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d"
                                     >{{ node["event"]["title"] }}</a
                                 >
-                            </p>
+                            </div>
 
                             <div class="d-flex align-items-center mt-1">
                                 <div class="avatar-stack flex-self-start">

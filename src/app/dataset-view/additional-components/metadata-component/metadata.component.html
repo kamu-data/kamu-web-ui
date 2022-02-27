@@ -40,7 +40,7 @@
             class="mt-3"
         >
             <h2>Derivative Transformation</h2>
-            <h3>Input datasets:</h3>
+            <h3>Inputs:</h3>
             <ul>
                 <li
                     class="app-mat-chip input-datasets-list"
@@ -59,7 +59,7 @@
                     >
                 </li>
             </ul>
-            <h3>SQL queries:</h3>
+            <h3>Queries:</h3>
             <div
                 *ngFor="
                     let queryStep of datasetInfo.metadata.currentTransform
@@ -79,6 +79,7 @@
             <div class="gist-file">
                 <div class="gist-data">
                     <article
+                        style="max-height: 300px"
                         class="markdown-body entry-content"
                         itemprop="text"
                     >

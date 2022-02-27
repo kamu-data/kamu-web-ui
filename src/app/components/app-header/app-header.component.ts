@@ -82,7 +82,7 @@ export class AppHeaderComponent {
     };
 
     public formatter(x: DatasetIDsInterface | string): string {
-        return typeof x !== "string" ? x.id : x;
+        return typeof x !== "string" ? x.name : x;
     }
 
     public onClickInput(): void {

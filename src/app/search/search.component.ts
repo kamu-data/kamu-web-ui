@@ -79,21 +79,21 @@ export class SearchComponent implements OnInit, AfterContentInit {
             name: "Search for:",
             isTitle: true,
             subtasks: [
-                { name: "datasets", completed: true, color: "primary" },
+                { name: "Datasets", completed: true, color: "primary" },
                 {
-                    name: "collections",
+                    name: "Collections",
                     completed: false,
                     disabled: true,
                     color: "primary",
                 },
                 {
-                    name: "users",
+                    name: "Users",
                     completed: false,
                     disabled: true,
                     color: "primary",
                 },
                 {
-                    name: "organizations",
+                    name: "Organizations",
                     completed: false,
                     disabled: true,
                     color: "primary",
@@ -104,24 +104,24 @@ export class SearchComponent implements OnInit, AfterContentInit {
             name: "Datasets:",
             isTitle: true,
             subtasks: [
-                { name: "root", completed: true, color: "primary" },
-                { name: "derivative", completed: true, color: "primary" },
+                { name: "Root", completed: true, color: "primary" },
+                { name: "Derivative", completed: true, color: "primary" },
                 {
-                    name: "updated within:",
+                    name: "Updated within:",
                     isTitle: true,
                     subtasks: [
                         {
-                            name: "last day",
+                            name: "Last day",
                             completed: false,
                             color: "primary",
                         },
                         {
-                            name: "last month",
+                            name: "Last month",
                             completed: false,
                             color: "primary",
                         },
                         {
-                            name: "last year",
+                            name: "Last year",
                             completed: false,
                             color: "primary",
                         },
@@ -207,7 +207,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
     private initTableData(): void {
         this.tableData = {
             tableSource: this.searchData,
-            resultUnitText: "dataset results",
+            resultUnitText: "dataset(s) found",
             isResultQuantity: true,
             isClickableRow: true,
             pageInfo: {

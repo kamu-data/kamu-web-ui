@@ -57,7 +57,7 @@ export class SearchApi {
     public searchOverview(
         searchQuery: string,
         page = 0,
-        perPage = 2,
+        perPage = 10,
     ): Observable<SearchDatasetsOverviewQuery> {
         // @ts-ignore
         return this.searchDatasetsOverviewGQL

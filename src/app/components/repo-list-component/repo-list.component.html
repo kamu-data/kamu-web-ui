@@ -24,7 +24,8 @@
     <div class="repo-list-container py-2">
         <div class="repo-list-container__title-row">
             <div class="repo-list-container__title-row__dataset-name">
-                <i class="bi bi-journal-album"></i>
+                <i *ngIf="row.kind === 'ROOT'" class="bi bi-journal-album"></i>
+                <mat-icon *ngIf="row.kind === 'DERIVATIVE'">merge</mat-icon>
                 <button
                     class="repo-list-container__title mb-1 pl-0"
                     (click)="
@@ -121,7 +122,7 @@
             </div>
             <div class="repo-list-container__additional-block mt-2">
                 <p class="text-small color-text-secondary mr-3">
-                    Updated on
+                    Updated
                     {{ momentConverDatetoLocalWithFormat(row.lastUpdatedAt) }}
                 </p>
                 <ngb-rating [rate]="4.5" [max]="5" [readonly]="true">
@@ -132,9 +133,11 @@
                     </ng-template>
                 </ngb-rating>
                 <p class="text-small color-text-secondary mr-3">
-                    12 downstream
+                    12 Downstream
                 </p>
-                <p class="text-small color-text-secondary mr-3">MIT license</p>
+                <p class="text-small color-text-secondary mr-3">
+                    OGD/CA License
+                </p>
             </div>
         </div>
     </div>

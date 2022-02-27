@@ -89,7 +89,9 @@ export class AppComponent implements OnInit {
                         );
                     if (searchValue === "%255Bobject%2520Object%255D") {
                         this.router.navigate(["search"]);
-                        setTimeout(() => this.appSearchService.searchChanges(""));
+                        setTimeout(() =>
+                            this.appSearchService.searchChanges(""),
+                        );
                     }
                     if (event.url.includes("search")) {
                         this.appSearchService.searchChanges(searchValue);

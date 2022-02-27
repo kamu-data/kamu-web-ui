@@ -16,7 +16,7 @@
     [view]="view"
     layout="dagre"
 >
-    <!-- <ng-template #defsTemplate>
+    <ng-template #defsTemplate>
         <svg:marker
             id="arrow"
             viewBox="0 -5 10 10"
@@ -28,7 +28,7 @@
         >
             <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
         </svg:marker>
-    </ng-template> -->
+    </ng-template>
 
     <ng-template #nodeTemplate let-node>
         <svg:g class="node">
@@ -39,58 +39,71 @@
                 [attr.fill]="node.data.isRoot ? '#ffa500' : '#add8e6'"
                 [attr.cursor]="'pointer'"
                 [attr.stroke]="'black'"
-                [attr.stroke-width]="1"
-                (click)="onClickNode(node, node.id)"
+                [attr.stroke-width]="node.data.isCurrent ? 2 : 1"
+                (click)="
+                    !node.data.isCurrent && onClickNode(node, node.data.id)
+                "
             />
             <svg:text
                 alignment-baseline="central"
                 [attr.x]="10"
                 [attr.y]="node.dimension.height / 2"
-                [attr.font-weight]="node.data.isCurrent ? '550' : 'normal'"
+                [attr.font-weight]="node.data.isCurrent ? '500' : 'normal'"
                 [attr.cursor]="'pointer'"
-                (click)="onClickNode(node, node.id)"
+                (click)="
+                    !node.data.isCurrent && onClickNode(node, node.data.id)
+                "
             >
                 {{ node.label }}
             </svg:text>
         </svg:g>
     </ng-template>
 
-    <!-- <ng-template #linkTemplate let-link>
-        <svg:g class="edge">
-            <svg:path class="line" stroke-width="2"></svg:path>
-        </svg:g>
-    </ng-template> -->
-
-    <!-- <ng-template #linkTemplate let-link>
+    <ng-template #linkTemplate let-link>
         <svg:g class="edge">
             <svg:path
                 class="line"
                 stroke-width="2"
                 marker-end="url(#arrow)"
             ></svg:path>
-            <svg:text class="edge-label" text-anchor="middle"></svg:text>
-        </svg:g>
-    </ng-template> -->
-
-    <!-- <ng-template #linkTemplate let-link>
-        <svg:g class="edge">
-            <svg:path
-                class="line"
-                stroke="#666"
-                stroke-width="2"
-                marker-end="url(#arrow)"
-            ></svg:path>
-            <svg:text class="edge-label" text-anchor="middle">
+            <!--svg:text class="edge-label" text-anchor="middle">
                 <textPath
-                    style="fill: #666; font: italic 3px serif"
+                    class="text-path"
                     [attr.href]="'#' + link.id"
-                    startOffset="60%"
+                    [style.dominant-baseline]="link.dominantBaseline"
+                    startOffset="50%"
                 >
                     {{ link.label }}
                 </textPath>
-            </svg:text>
+            </svg:text-->
+            <svg:g
+                *ngIf="link.midPoint"
+                [attr.transform]="
+                    'translate(' +
+                    getXYForCenteredLinkCircle(link)[0] +
+                    ',' +
+                    getXYForCenteredLinkCircle(link)[1] +
+                    ')'
+                "
+            >
+                <circle
+                    r="15"
+                    [attr.stroke]="link.isLinkActive ? '#f49600' : '#262626'"
+                    stroke-width="1"
+                    fill="white"
+                />
+                <svg:text
+                    dominant-baseline="middle"
+                    text-anchor="middle"
+                    stroke="none"
+                    fill="black"
+                    style="font-size: 12px"
+                >
+                    SQL
+                </svg:text>
+            </svg:g>
         </svg:g>
-    </ng-template> -->
+    </ng-template>
 
     <!--  <ng-template #clusterTemplate let-cluster>-->
     <!--    <svg:g class="node cluster">-->

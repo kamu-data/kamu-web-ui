@@ -415,6 +415,11 @@ export class AppDatasetService {
             )
             .subscribe((result: GetDatasetLineageQuery | undefined) => {
                 if (result) {
+                    this.searchDatasetNameChanges({
+                        id: result.datasets.byId?.id,
+                        name: result.datasets.byId?.name,
+                        owner: result.datasets.byId?.owner as any,
+                    });
                     this.updateDatasetTree(result);
                 }
             });

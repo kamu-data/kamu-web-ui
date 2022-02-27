@@ -513,9 +513,10 @@ const language = 'typescript';
 
                 for (const [id, dataset] of Object.entries(uniqueDatasets)) {
                     this.linageGraphNodes.push({
-                        id,
+                        id: this.sanitizeID(id),
                         label: dataset.name,
                         data: {
+                            id: dataset.id,
                             name: dataset.name,
                             kind: dataset.kind,
                             isRoot: dataset.kind === DatasetKindTypeNames.root,
@@ -525,14 +526,13 @@ const language = 'typescript';
                 }
 
                 edges.forEach((edge: DatasetKindInterface[]) => {
-                    let source: string = edge[0].id;
-                    let target: string = edge[1].id;
+                    let source: string = this.sanitizeID(edge[0].id);
+                    let target: string = this.sanitizeID(edge[1].id);
 
                     this.linageGraphLink.push({
                         id: `${source}__and__${target}`,
                         source,
                         target,
-                        label: `${source}__and__${target}`,
                     });
                 });
             },
@@ -556,6 +556,17 @@ const language = 'typescript';
                 });
             },
         );
+    }
+
+    // TODO: Use `String.replaceAll()`
+    private sanitizeID(id: string): string {
+        while (true) {
+            let nid = id.replace(":", "");
+            if (nid === id) {
+                return id;
+            }
+            id = nid;
+        }
     }
 
     private onClickDeriveForm(): void {
@@ -650,7 +661,7 @@ const language = 'typescript';
             {
                 queryParams: {
                     id,
-                    type: AppValues.urlDatasetViewOverviewType,
+                    type: AppValues.urlDatasetViewLineageType,
                 },
             },
         );

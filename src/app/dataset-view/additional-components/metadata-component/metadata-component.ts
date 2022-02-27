@@ -49,6 +49,8 @@ export class MetadataComponent {
         theme: "vs",
         language: "sql",
         readOnly: true,
+        automaticLayout: true,
+        scrollBeyondLastLine: false,
         minimap: {
             enabled: false,
         },

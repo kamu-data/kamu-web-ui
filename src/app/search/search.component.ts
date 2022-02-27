@@ -52,7 +52,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
             styleClassButton: "app-active-button",
         },
         {
-            textButton: searchAdditionalButtonsEnum.DeriveForm,
+            textButton: searchAdditionalButtonsEnum.DeriveFrom,
             styleClassContainer: "app-active-button__container",
             styleClassButton: "app-active-button",
         },

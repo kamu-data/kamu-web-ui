@@ -113,10 +113,50 @@
                     mat-icon-button
                     name="run sql button"
                     (click)="onRunSQLRequest()"
-                    class="sql-run-button rounded-2 btnGroup-item btn d-flex justify-content-center align-items-center"
+                    class="sql-run-button rounded-left-2 border-right-0 btnGroup-item btn d-flex justify-content-center align-items-center"
                 >
                     <span>Run</span><mat-icon>play_arrow</mat-icon>
                 </button>
+                <button
+                    class="starred rounded-right-2 border-1 border btn-sm btn btnGroup-item d-flex justify-content-center align-items-center"
+                    mat-icon-button
+                    mat-button
+                    #menuTrigger="matMenuTrigger"
+                    [matMenuTriggerFor]="menu2"
+                    aria-label="Example icon-button with a menu"
+                    data-test-id="searchAdditionalButtons"
+                >
+                    <mat-icon>arrow_drop_down</mat-icon>
+                </button>
+                <mat-menu #menu2="matMenu">
+                    <div
+                        class="SelectMenu-modal notifications-component-menu-modal"
+                    >
+                        <div class="SelectMenu-list">
+                            <button
+                                type="submit"
+                                name="do"
+                                value="subscribed"
+                                class="SelectMenu-item flex-items-start"
+                                role="menuitemradio"
+                                aria-checked="true"
+                                data-targets="notifications-list-subscription-form.subscriptionButtons"
+                            >
+                                <div>
+                                    <div class="f5 text-bold">
+                                        New Dataset from Query
+                                    </div>
+                                    <div
+                                        class="text-small color-fg-muted text-normal pb-1"
+                                    >
+                                        Creates new derivative dataset using
+                                        current query as the transformation.
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </mat-menu>
             </div>
         </div>
 

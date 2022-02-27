@@ -57,7 +57,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.overview;
     public searchAdditionalButtonsData: SearchAdditionalButtonInterface[] = [
         {
-            textButton: searchAdditionalButtonsEnum.DeriveForm,
+            textButton: searchAdditionalButtonsEnum.DeriveFrom,
         },
     ];
 
@@ -83,8 +83,8 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public isAvailableLinageGraph = false;
     public headings: Element[] | undefined;
     public isMarkdownEditView = false;
-    public clipboardKamuCli = "kamu pull account/dataset-alias";
-    public clipboardKafka = "https://api.kamu.dev/kafka/";
+    public clipboardKamuCli = "kamu pull kamu.dev/anonymous/dataset";
+    public clipboardKafka = "https://api.kamu.dev/kafka/anonymous/dataset";
     public markdownText = `## Markdown __rulez__!
 ---
 
@@ -308,8 +308,8 @@ const language = 'typescript';
     }
 
     public onClickSearchAdditionalButton(method: string) {
-        if (method === searchAdditionalButtonsEnum.DeriveForm) {
-            this.onClickDeriveForm();
+        if (method === searchAdditionalButtonsEnum.DeriveFrom) {
+            this.onClickDeriveFrom();
         }
         if (method === searchAdditionalButtonsEnum.Reputation) {
             this.onClickReputation();
@@ -569,8 +569,8 @@ const language = 'typescript';
         }
     }
 
-    private onClickDeriveForm(): void {
-        console.log("onClickDeriveForm");
+    private onClickDeriveFrom(): void {
+        console.log("onClickDeriveFrom");
     }
 
     private onClickExplore(): void {

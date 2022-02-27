@@ -109,18 +109,12 @@
                         <p>{{ datasetInfo.kind }}</p>
                     </div>
                     <div>
-                        <b>Verified Badge:</b>
-                        <p>...</p>
-                    </div>
-                    <div>
                         <b>Visibility:</b>
                         <p>Public</p>
                     </div>
-                    <div *ngIf="datasetInfo.metadata && datasetInfo.metadata.currentWatermark">
+                    <div>
                         <b>License:</b>
-                        <p>
-                            {{ momentConverDatetoLocalWithFormat(datasetInfo.metadata.currentWatermark) }}
-                        </p>
+                        <p>Canada - Open Data License</p>
                     </div>
                     <div>
                         <b>Estimated Size:</b>
@@ -144,6 +138,16 @@
                         <p>
                             {{ momentConverDatetoLocalWithFormat(
                             datasetInfo.lastUpdatedAt ) }}
+                        </p>
+                    </div>
+                    <div
+                        *ngIf="datasetInfo.metadata && datasetInfo.metadata.currentWatermark"
+                    >
+                        <b>Watermark:</b>
+                        <p>
+                            {{
+                            momentConverDatetoLocalWithFormat(datasetInfo.metadata.currentWatermark)
+                            }}
                         </p>
                     </div>
                 </ng-template>

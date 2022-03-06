@@ -350,10 +350,11 @@ export class AppDatasetService {
     }
     public onGetDatasetDataSQLRun(
         currentDatasetInfo: DatasetInfoInterface,
-        sqlCode: string,
+        query: string,
+        limit: number,
     ): void {
         /* eslint-disable  @typescript-eslint/no-explicit-any */
-        this.searchApi.onGetDatasetDataSQLRun(sqlCode).subscribe(
+        this.searchApi.onGetDatasetDataSQLRun({ query, limit }).subscribe(
             (data: GetDatasetDataSqlRunQuery | undefined) => {
                 const datasets = {
                     metadata: {

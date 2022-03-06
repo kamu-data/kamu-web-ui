@@ -13,7 +13,7 @@
         ></app-dynamic-table>
         <div>
             <h2 class="box-title align-items-center pb-3 pt-3 m-0">
-                Saved Queries / Notebooks
+                Saved Queries
             </h2>
             <cdk-accordion class="example-accordion">
                 <cdk-accordion-item
@@ -45,7 +45,7 @@
                                             >
                                                 <mat-icon
                                                     class="datatab-activity-icon-size"
-                                                    >build</mat-icon
+                                                    >query_stats</mat-icon
                                                 >
                                             </div>
                                         </div>
@@ -84,7 +84,9 @@
                         [attr.aria-labelledby]="'accordion-header-' + index"
                     >
                         {{item.title}} <br />
-                        <code>{{item.query}}</code>
+                        <code style="display: block; white-space: pre-wrap"
+                            >{{item.query}}</code
+                        >
                         <div class="d-inline">
                             <div class="btnGroup-parent float-none">
                                 <button
@@ -105,9 +107,7 @@
     </div>
     <div class="search-result-container__content">
         <div class="sql-query-editor-header flex-column justify-content-around">
-            <h2 class="box-title align-items-center pb-3 m-0">
-                SQL Query Editor:
-            </h2>
+            <h2 class="box-title align-items-center pb-3 m-0">Query:</h2>
             <div class="btnGroup-parent">
                 <button
                     mat-icon-button
@@ -165,9 +165,7 @@
             [options]="sqlEditorOptions"
             [(ngModel)]="sqlRequestCode"
         ></ngx-monaco-editor>
-        <h2 class="box-title align-items-center pb-3 pt-3 m-0">
-            Query Result:
-        </h2>
+        <h2 class="box-title align-items-center pb-3 pt-3 m-0">Result:</h2>
         <ng-template [ngIf]="tableData">
             <app-dynamic-table
                 [isLatestCommitDisplay]="false"

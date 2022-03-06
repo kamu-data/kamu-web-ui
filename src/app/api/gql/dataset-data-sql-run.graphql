@@ -1,11 +1,11 @@
-query getDatasetDataSQLRun($query: String!) {
+query getDatasetDataSQLRun($query: String!, $limit: Int!) {
   data {
     query(
       query: $query
       queryDialect: DATA_FUSION
       schemaFormat: PARQUET_JSON
       dataFormat: JSON
-      limit: 5
+      limit: $limit
     ) {
       schema {
         format

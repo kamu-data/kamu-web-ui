@@ -128,11 +128,12 @@ export class SearchApi {
                 }),
             );
     }
-    public onGetDatasetDataSQLRun(
-        sqlCode: string,
-    ): Observable<GetDatasetDataSqlRunQuery | undefined> {
+    public onGetDatasetDataSQLRun(params: {
+        query: string;
+        limit: number;
+    }): Observable<GetDatasetDataSqlRunQuery | undefined> {
         return this.getDatasetDataSQLRun
-            .watch({ query: sqlCode })
+            .watch({ query: params.query, limit: params.limit })
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetDatasetDataSqlRunQuery>) => {
                     if (result.data) {

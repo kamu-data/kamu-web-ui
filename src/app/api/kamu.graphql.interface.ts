@@ -562,6 +562,7 @@ export type GetDatasetDataSchemaQuery = {
 
 export type GetDatasetDataSqlRunQueryVariables = Exact<{
     query: Scalars["String"];
+    limit: Scalars["Int"];
 }>;
 
 export type GetDatasetDataSqlRunQuery = {
@@ -1212,14 +1213,14 @@ export class GetDatasetDataSchemaGQL extends Apollo.Query<
     }
 }
 export const GetDatasetDataSqlRunDocument = gql`
-    query getDatasetDataSQLRun($query: String!) {
+    query getDatasetDataSQLRun($query: String!, $limit: Int!) {
         data {
             query(
                 query: $query
                 queryDialect: DATA_FUSION
                 schemaFormat: PARQUET_JSON
                 dataFormat: JSON
-                limit: 5
+                limit: $limit
             ) {
                 schema {
                     format

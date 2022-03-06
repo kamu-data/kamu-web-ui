@@ -666,10 +666,11 @@ const language = 'typescript';
             },
         );
     }
-    public onRunSQLRequest(sqlCode: string): void {
+    public onRunSQLRequest(query: string): void {
         this.appDatasetService.onGetDatasetDataSQLRun(
             this.datasetInfo,
-            sqlCode,
+            query,
+            50, // TODO: Propagate limit from UI and display when it was reached
         );
     }
 

@@ -101,54 +101,89 @@
         </div>
     </div>
     <div class="card">
-        <nav class="navbar navbar-expand">
-            <div class="navbar-nav dataset-info">
+        <nav class="flex-row mat-typography">
+            <div class="card--row card--title">
+                <h2>Details</h2>
+            </div>
+            <div class="card--row dataset-info">
                 <ng-template [ngIf]="datasetInfo">
-                    <div>
-                        <b>Kind:</b>
-                        <p>{{ datasetInfo.kind }}</p>
+                    <div class="dataset-info--block">
+                        <div class="dataset-info--sub-block">
+                            <h2 class="dataset-info--subtitle">Kind:</h2>
+                        </div>
+                        <div class="dataset-info--sub-block">
+                            <p class="dataset-info--text">{{ datasetInfo.kind }}</p>
+                        </div>
                     </div>
-                    <div>
-                        <b>Visibility:</b>
-                        <p>Public</p>
+                    <div class="dataset-info--block">
+                        <div class="dataset-info--sub-block">
+                            <h2 class="dataset-info--subtitle">Visibility:</h2>
+                        </div>
+                        <div class="dataset-info--sub-block">
+                            <p class="dataset-info--text">Public</p>
+                        </div>
                     </div>
-                    <div>
-                        <b>License:</b>
-                        <p>Canada - Open Data License</p>
+                    <div class="dataset-info--block">
+                        <div class="dataset-info--sub-block">
+                            <h2 class="dataset-info--subtitle">License:</h2>
+                        </div>
+                        <div class="dataset-info--sub-block">
+                            <p class="dataset-info--text">Canada - Open Data License</p>
+                        </div>
                     </div>
-                    <div>
-                        <b>Estimated Size:</b>
-                        <p>{{ datasetInfo.estimatedSize | number: "1.0-0" }}</p>
+                    <div class="dataset-info--block">
+                        <div class="dataset-info--sub-block">
+                            <h2 class="dataset-info--subtitle">Estimated Size:</h2>
+                        </div>
+                        <div class="dataset-info--sub-block">
+                            <p class="dataset-info--text">{{ datasetInfo.estimatedSize | number: "1.0-0" }}</p>
+                        </div>
                     </div>
-                    <div>
-                        <b>Num Records Total:</b>
-                        <p>
-                            {{ datasetInfo.numRecordsTotal | number: "1.0-0" }}
-                        </p>
+                    <div class="dataset-info--block">
+                        <div class="dataset-info--sub-block">
+                            <h2 class="dataset-info--subtitle">Num Records Total:</h2>
+                        </div>
+                        <div class="dataset-info--sub-block">
+                            <p class="dataset-info--text">
+                                {{ datasetInfo.numRecordsTotal | number: "1.0-0" }}
+                            </p>
+                        </div>
                     </div>
-                    <div *ngIf="datasetInfo && datasetInfo.createdAt">
-                        <b>Created At:</b>
-                        <p>
-                            {{ momentConverDatetoLocalWithFormat(
-                            datasetInfo.createdAt ) }}
-                        </p>
+                    <div class="dataset-info--block" *ngIf="datasetInfo && datasetInfo.createdAt">
+                        <div class="dataset-info--sub-block">
+                            <h2 class="dataset-info--subtitle">Created At:</h2>
+                        </div>
+                        <div class="dataset-info--sub-block">
+                            <p class="dataset-info--text">
+                                {{ momentConverDatetoLocalWithFormat(
+                                datasetInfo.createdAt ) }}
+                            </p>
+                        </div>
                     </div>
-                    <div *ngIf="datasetInfo && datasetInfo.lastUpdatedAt">
-                        <b>Last Updated At:</b>
-                        <p>
-                            {{ momentConverDatetoLocalWithFormat(
-                            datasetInfo.lastUpdatedAt ) }}
-                        </p>
+                    <div class="dataset-info--block" *ngIf="datasetInfo && datasetInfo.lastUpdatedAt">
+                        <div class="dataset-info--sub-block">
+                            <h2 class="dataset-info--subtitle">Last Updated At:</h2>
+                        </div>
+                        <div class="dataset-info--sub-block">
+                            <p class="dataset-info--text">
+                                {{ momentConverDatetoLocalWithFormat(
+                                datasetInfo.lastUpdatedAt ) }}
+                            </p>
+                        </div>
                     </div>
-                    <div
+                    <div class="dataset-info--block"
                         *ngIf="datasetInfo.metadata && datasetInfo.metadata.currentWatermark"
                     >
-                        <b>Watermark:</b>
-                        <p>
-                            {{
-                            momentConverDatetoLocalWithFormat(datasetInfo.metadata.currentWatermark)
-                            }}
-                        </p>
+                        <div class="dataset-info--sub-block">
+                            <h2 class="dataset-info--subtitle">Watermark:</h2>
+                        </div>
+                        <div class="dataset-info--sub-block">
+                            <p class="dataset-info--text">
+                                {{
+                                momentConverDatetoLocalWithFormat(datasetInfo.metadata.currentWatermark)
+                                }}
+                            </p>
+                        </div>
                     </div>
                 </ng-template>
             </div>

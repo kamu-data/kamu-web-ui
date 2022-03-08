@@ -1,12 +1,14 @@
 <ng-template [ngIf]="isMinimizeSearchAdditionalButtons">
-    <button
-        mat-icon-button
-        [matMenuTriggerFor]="menu"
-        aria-label="Example icon-button with a menu"
-        data-test-id="searchAdditionalButtons"
-    >
-        <mat-icon>more_horiz</mat-icon>
-    </button>
+    <div class="searchAdditionalButtonsBlock">
+        <button
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            aria-label="Example icon-button with a menu"
+            data-test-id="searchAdditionalButtons"
+        >
+            <mat-icon>more_horiz</mat-icon>
+        </button>
+    </div>
     <mat-menu #menu="matMenu">
         <ng-template
             ngFor
@@ -19,9 +21,9 @@
         </ng-template>
     </mat-menu>
 </ng-template>
-<ng-template [ngIf]="!isMinimizeSearchAdditionalButtons">
+<ng-template [ngIf]="!isMinimizeSearchAdditionalButtons" id="bigSearchAdditionalButtons">
     <ul class="nav searchAdditionalButtons__nav">
-        <li class="nav-item mr-2">
+        <li class="nav-item mr-2 pt-2">
             <div class="btnGroup-parent">
                 <button
                     class="starred rounded-2 btn-sm btn btnGroup-item d-flex justify-content-center align-items-center"
@@ -55,7 +57,7 @@
                 </button>
             </div>
         </li>
-        <li class="nav-item mr-2">
+        <li class="nav-item mr-2 pt-2">
             <div class="btnGroup-parent">
                 <button
                     class="starred rounded-left-2 border-right-0 btn-sm btn btnGroup-item d-flex justify-content-center align-items-center"
@@ -537,7 +539,7 @@
                 </mat-menu>
             </div>
         </li>
-        <li class="nav-item mr-2">
+        <li class="nav-item mr-2 pt-2">
             <div class="btnGroup-parent">
                 <button
                     class="starred rounded-2 btn-sm btn btnGroup-item d-flex justify-content-center align-items-center"
@@ -570,35 +572,5 @@
                 </button>
             </div>
         </li>
-        <!--ng-template
-            ngFor
-            let-searchAdditionalButtonData
-            [ngForOf]="searchAdditionalButtonsData"
-        >
-            <li
-                [classList]="
-                    searchAdditionalButtonData.styleClassContainer
-                        ? searchAdditionalButtonData.styleClassContainer +
-                          ' nav-item mr-2 '
-                        : 'nav-item mr-2'
-                "
-            >
-                <div class="btnGroup-parent">
-                    <button
-                        [classList]="
-                            searchAdditionalButtonData.styleClassButton
-                                ? searchAdditionalButtonData.styleClassButton +
-                                  ' rounded-2 btn-sm btn btnGroup-item d-flex justify-content-center align-items-center '
-                                : 'rounded-2 btn-sm btn btnGroup-item d-flex justify-content-center align-items-center'
-                        "
-                        (click)="onClick(searchAdditionalButtonData.textButton)"
-                    >
-                        <span class="d-inline">{{
-                            searchAdditionalButtonData.textButton
-                        }}</span>
-                    </button>
-                </div>
-            </li>
-        </ng-template-->
     </ul>
 </ng-template>

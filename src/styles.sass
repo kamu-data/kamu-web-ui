@@ -21,6 +21,63 @@ a
   font-size: 12px
 .mat-divider
   color: $app-lightGrayishBlue
+.card--title
+  position: relative
+  padding-top: 11px
+  padding-bottom: 11px
+  height: 48px
+  border-radius: 4px 4px 0px 0px
+  border-bottom: 1px solid $app-veryLightGray
+  align-items: center
+.card--row
+  padding: 11px
+#dataset-viewer
+  & .dataset-info
+    display: grid
+    &--subtitle
+      box-sizing: border-box
+      font-size: 0.857143em
+      font-style: inherit
+      font-weight: 600
+      color: $app-emperor
+      align-items: center
+      display: flex
+      margin: 0
+    &--text
+      align-items: center
+      background-color: transparent
+      border-color: transparent
+      border-radius: 3px
+      border-style: solid
+      box-sizing: border-box
+      display: flex
+      flex: 1 0 auto
+      font-size: 14px
+      justify-content: space-between
+      line-height: 1.42857
+      max-width: 100%
+      overflow: hidden
+      transition: background-color 0.2s ease-in-out 0s, border-color 0.2s ease-in-out 0s
+      overflow-wrap: break-word
+      border-width: 2px
+      padding: 6px
+      margin: 0
+    &--block
+      display: flex
+      flex-direction: row
+      height: auto
+      max-height: 100%
+      outline: 0px
+      pointer-events: auto
+    &--sub-block
+      position: relative
+      flex-grow: 1
+      box-sizing: border-box
+      padding-right: 10px
+      min-width: 100px
+      width: 40%
+      padding-top: 8px
+      line-height: 1
 .datasetViewTypeToggleGroup
   & .mat-button-toggle-disabled .mat-button-toggle-button
     cursor: not-allowed
@@ -210,8 +267,9 @@ a:visited
   width: 100%
   grid-template-columns: 1fr
   grid-gap: 24px
-  //> *
-  //  width: 100%
+  &--header
+    grid-template-columns: 1fr 1fr
+    display: grid
 #dataset-view
   a:visited
     color: inherit
@@ -470,6 +528,10 @@ router-outlet
       line-height: 1.45
       background-color: $app-color-canvas-subtle
       border-radius: 6px
+
+.searchAdditionalButtons__nav
+    justify-content: end
+    align-items: end
 /*************************/
 @media (max-width: 480px)
   .app-header__right-column__label
@@ -481,16 +543,24 @@ router-outlet
     height: 50px
   .app-active-button__container
     margin-top: 7px
-  #search, #dataset-viewer
-    & .search-header-container-block
-      grid-template-columns: 1fr
 
 @media (max-width: 768px)
   .app-content
     grid-template-columns: 1fr
+    &--header
+      grid-template-columns: 1fr 0.1fr
+      display: grid
   #search, #dataset-viewer
     & .search-result-container, .dataset-view-data-result-container
       grid-template-columns: 1fr
+    & .search-header-container-block
+      grid-template-columns: 1fr
+      > ul:last-child
+        justify-content: flex-start
+  .searchAdditionalButtonsBlock
+    display: flex
+    justify-content: flex-end
+    align-items: flex-end
 @media (max-width: 991px)
   #app-header
     & #appHeaderMenuButton, #appHeaderLogo, #appHeaderAdditionalBlock
@@ -499,6 +569,10 @@ router-outlet
       order: 1
     & .navbar-nav
       margin: 20px auto
+  #dataset-viewer
+    & .dataset-result-container
+      grid-template-columns: 1fr
+
 @media (min-width: 768px)
   .header-search
     max-width: 272px
@@ -713,6 +787,13 @@ router-outlet
 
 .upload
     background-color: black
+#more-button
+  background: $app-white
+  border: 1px solid $app-veryLightGray
+  box-sizing: border-box
+  box-shadow: 0 5px 4px $app-versatileBusinessDark
+  border-radius: 8px
+  color: $app-emperor
 .button
     height: 40px
     cursor: pointer

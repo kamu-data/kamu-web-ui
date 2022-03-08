@@ -57,10 +57,9 @@
                     >
                 </span>
             </div>
-            <span
-                class="hidden-text-expander ml-2 d-inline-block d-inline-block d-lg-none"
-            >
+            <span class="hidden-text-expander m-2 d-inline-block d-inline-block d-lg-none">
                 <button
+                    id="more-button"
                     type="button"
                     class="color-fg-default ellipsis-expander js-details-target"
                     aria-expanded="false"
@@ -131,7 +130,7 @@
         </div>
     </div>
 </div>
-<div [id]="idTable">
+<div [id]="idTable" style="width: 100%; overflow: auto;">
     <table mat-table [dataSource]="dataSource">
         <ng-container
             *ngFor="let disCol of displayedColumns; let colIndex = index"

@@ -838,6 +838,17 @@ router-outlet
         color: inherit
     &:active
         background: linear-gradient(to bottom, rgba(204,204,204,0.8) 100%, #eee 0%)
+.account-container
+  grid-template-columns: 0.5fr 1fr
+  display: grid !important
+.Layout.Layout--sidebarPosition-start .Layout-main
+  grid-column: 2/span 2
+.UnderlineNav
+  display: flex
+  overflow-x: auto
+  overflow-y: hidden
+  box-shadow: inset 0 -1px 0 $app-color-border-muted
+  justify-content: space-between
 /******** MIXINZ ********/
 %border-none
     border: 0px

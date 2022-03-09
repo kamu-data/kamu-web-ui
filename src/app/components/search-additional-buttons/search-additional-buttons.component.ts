@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import {
     SearchAdditionalButtonInterface,
-    SearchAdditionalHeaderButtonInterface
+    SearchAdditionalHeaderButtonInterface,
 } from "./search-additional-buttons.interface";
 
 @Component({

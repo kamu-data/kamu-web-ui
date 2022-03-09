@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import {
     SearchAdditionalButtonInterface,
-    SearchAdditionalHeaderButtonInterface
+    SearchAdditionalHeaderButtonInterface,
 } from "./search-additional-buttons.interface";
 
 @Component({
@@ -10,5 +10,6 @@ import {
     styleUrls: ["./search-additional-buttons.component.sass"],
 })
 export class SearchAdditionalButtonsNavComponent {
-    @Input() public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[];
+    @Input()
+    public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[];
 }

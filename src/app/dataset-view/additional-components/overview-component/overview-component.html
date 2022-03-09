@@ -112,7 +112,9 @@
                             <h2 class="dataset-info--subtitle">Kind:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">{{ datasetInfo.kind }}</p>
+                            <p class="dataset-info--text">
+                                {{ datasetInfo.kind }}
+                            </p>
                         </div>
                     </div>
                     <div class="dataset-info--block">
@@ -128,28 +130,41 @@
                             <h2 class="dataset-info--subtitle">License:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">Canada - Open Data License</p>
-                        </div>
-                    </div>
-                    <div class="dataset-info--block">
-                        <div class="dataset-info--sub-block">
-                            <h2 class="dataset-info--subtitle">Estimated Size:</h2>
-                        </div>
-                        <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">{{ datasetInfo.estimatedSize | number: "1.0-0" }}</p>
-                        </div>
-                    </div>
-                    <div class="dataset-info--block">
-                        <div class="dataset-info--sub-block">
-                            <h2 class="dataset-info--subtitle">Num Records Total:</h2>
-                        </div>
-                        <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ datasetInfo.numRecordsTotal | number: "1.0-0" }}
+                                Canada - Open Data License
                             </p>
                         </div>
                     </div>
-                    <div class="dataset-info--block" *ngIf="datasetInfo && datasetInfo.createdAt">
+                    <div class="dataset-info--block">
+                        <div class="dataset-info--sub-block">
+                            <h2 class="dataset-info--subtitle">
+                                Estimated Size:
+                            </h2>
+                        </div>
+                        <div class="dataset-info--sub-block">
+                            <p class="dataset-info--text">
+                                {{ datasetInfo.estimatedSize | number: "1.0-0"
+                                }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="dataset-info--block">
+                        <div class="dataset-info--sub-block">
+                            <h2 class="dataset-info--subtitle">
+                                Num Records Total:
+                            </h2>
+                        </div>
+                        <div class="dataset-info--sub-block">
+                            <p class="dataset-info--text">
+                                {{ datasetInfo.numRecordsTotal | number: "1.0-0"
+                                }}
+                            </p>
+                        </div>
+                    </div>
+                    <div
+                        class="dataset-info--block"
+                        *ngIf="datasetInfo && datasetInfo.createdAt"
+                    >
                         <div class="dataset-info--sub-block">
                             <h2 class="dataset-info--subtitle">Created At:</h2>
                         </div>
@@ -160,9 +175,14 @@
                             </p>
                         </div>
                     </div>
-                    <div class="dataset-info--block" *ngIf="datasetInfo && datasetInfo.lastUpdatedAt">
+                    <div
+                        class="dataset-info--block"
+                        *ngIf="datasetInfo && datasetInfo.lastUpdatedAt"
+                    >
                         <div class="dataset-info--sub-block">
-                            <h2 class="dataset-info--subtitle">Last Updated At:</h2>
+                            <h2 class="dataset-info--subtitle">
+                                Last Updated At:
+                            </h2>
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
@@ -171,7 +191,8 @@
                             </p>
                         </div>
                     </div>
-                    <div class="dataset-info--block"
+                    <div
+                        class="dataset-info--block"
                         *ngIf="datasetInfo.metadata && datasetInfo.metadata.currentWatermark"
                     >
                         <div class="dataset-info--sub-block">

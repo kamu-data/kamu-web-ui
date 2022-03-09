@@ -5,7 +5,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { CommonModule } from "@angular/common";
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
-import {SearchAdditionalButtonsNavComponent} from "./search-additional-buttons-nav.component";
+import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons-nav.component";
 
 @NgModule({
     imports: [
@@ -15,7 +15,13 @@ import {SearchAdditionalButtonsNavComponent} from "./search-additional-buttons-n
         CommonModule,
         NgbPopoverModule,
     ],
-    exports: [SearchAdditionalButtonsComponent, SearchAdditionalButtonsNavComponent],
-    declarations: [SearchAdditionalButtonsComponent, SearchAdditionalButtonsNavComponent],
+    exports: [
+        SearchAdditionalButtonsComponent,
+        SearchAdditionalButtonsNavComponent,
+    ],
+    declarations: [
+        SearchAdditionalButtonsComponent,
+        SearchAdditionalButtonsNavComponent,
+    ],
 })
 export class SearchAdditionalButtonsModule {}

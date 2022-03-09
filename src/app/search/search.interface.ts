@@ -4,5 +4,5 @@ export enum searchAdditionalButtonsEnum {
     Explore = "Explore",
     DeriveFrom = "Derive from",
     Starred = "Starred",
-    UnWatch = "Unwatch"
+    UnWatch = "Unwatch",
 }

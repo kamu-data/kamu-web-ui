@@ -10,9 +10,16 @@
         </button>
     </div>
     <mat-menu #menu="matMenu" class="searchAdditionalButtonsMinimizeBlock">
-        <app-search-additional-buttons-nav [searchAdditionalButtonsData]="searchAdditionalButtonsData"></app-search-additional-buttons-nav>
+        <app-search-additional-buttons-nav
+            [searchAdditionalButtonsData]="searchAdditionalButtonsData"
+        ></app-search-additional-buttons-nav>
     </mat-menu>
 </ng-template>
-<ng-template [ngIf]="!isMinimizeSearchAdditionalButtons" id="bigSearchAdditionalButtons">
-    <app-search-additional-buttons-nav [searchAdditionalButtonsData]="searchAdditionalButtonsData"></app-search-additional-buttons-nav>
+<ng-template
+    [ngIf]="!isMinimizeSearchAdditionalButtons"
+    id="bigSearchAdditionalButtons"
+>
+    <app-search-additional-buttons-nav
+        [searchAdditionalButtonsData]="searchAdditionalButtonsData"
+    ></app-search-additional-buttons-nav>
 </ng-template>

@@ -1,0 +1,524 @@
+<ul class="nav searchAdditionalButtons__nav">
+        <ng-template
+            ngFor
+            let-searchAdditionalData
+            [ngForOf]="searchAdditionalButtonsData"
+        >
+        <li class="nav-item mr-2 pt-2">
+            <div class="btnGroup-parent">
+                <button
+                    class="starred rounded-2 btn-sm btn btnGroup-item d-flex justify-content-center align-items-center"
+                >
+                    <svg
+                        aria-hidden="true"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        width="16"
+                        data-view-component="true"
+                        [classList]="searchAdditionalData.svgClass"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            [classList]="searchAdditionalData.iconSvgPathClass"
+                            [attr.d]="searchAdditionalData.iconSvgPath"
+                        ></path>
+                    </svg>
+                    <span class="d-inline mr-2">{{searchAdditionalData.textButton}}</span>
+                    <span
+                        id="repo-stars-counter-unstar"
+                        aria-label="2 users starred this repository"
+                        data-singular-suffix="user starred this repository"
+                        data-plural-suffix="users starred this repository"
+                        data-pjax-replace="true"
+                        title="2"
+                        data-view-component="true"
+                        class="counter"
+                        >{{searchAdditionalData.counter}}</span
+                    >
+                </button>
+            </div>
+        </li>
+<!--        <li class="nav-item mr-2 pt-2">-->
+<!--            <div class="btnGroup-parent">-->
+<!--                <button-->
+<!--                    class="starred rounded-left-2 border-right-0 btn-sm btn btnGroup-item d-flex justify-content-center align-items-center"-->
+<!--                >-->
+<!--                    <svg-->
+<!--                        aria-hidden="true"-->
+<!--                        height="16"-->
+<!--                        viewBox="0 0 16 16"-->
+<!--                        width="16"-->
+<!--                        data-view-component="true"-->
+<!--                        class="octicon octicon-eye mr-2"-->
+<!--                    >-->
+<!--                        <path-->
+<!--                            fill-rule="evenodd"-->
+<!--                            d=""-->
+<!--                        ></path>-->
+<!--                    </svg>-->
+<!--                    <span class="d-inline mr-2">Unwatch</span>-->
+<!--                    <span-->
+<!--                        id="repo-notifications-counter"-->
+<!--                        aria-label="2 users starred this repository"-->
+<!--                        data-singular-suffix="user starred this repository"-->
+<!--                        data-plural-suffix="users starred this repository"-->
+<!--                        data-pjax-replace="true"-->
+<!--                        title="2"-->
+<!--                        data-view-component="true"-->
+<!--                        class="counter"-->
+<!--                        >1</span-->
+<!--                    >-->
+<!--                </button>-->
+<!--                <button-->
+<!--                    class="starred rounded-right-2 btn-sm btn btnGroup-item d-flex justify-content-center align-items-center"-->
+<!--                    mat-icon-button-->
+<!--                    [matMenuTriggerFor]="menu2"-->
+<!--                    aria-label="Example icon-button with a menu"-->
+<!--                    data-test-id="searchAdditionalButtons"-->
+<!--                >-->
+<!--                    <mat-icon>arrow_drop_down</mat-icon>-->
+<!--                </button>-->
+
+<!--                <mat-menu #menu2="matMenu">-->
+<!--                    <div-->
+<!--                        class="SelectMenu-modal notifications-component-menu-modal"-->
+<!--                    >-->
+<!--                        <header class="SelectMenu-header">-->
+<!--                            <h3 class="SelectMenu-title">Notifications</h3>-->
+<!--                            <button-->
+<!--                                class="SelectMenu-closeButton"-->
+<!--                                type="button"-->
+<!--                                aria-label="Close menu"-->
+<!--                                data-action="click:notifications-list-subscription-form#closeMenu"-->
+<!--                            >-->
+<!--                                <svg-->
+<!--                                    aria-hidden="true"-->
+<!--                                    height="16"-->
+<!--                                    viewBox="0 0 16 16"-->
+<!--                                    width="16"-->
+<!--                                    data-view-component="true"-->
+<!--                                    class="octicon octicon-x"-->
+<!--                                >-->
+<!--                                    <path-->
+<!--                                        fill-rule="evenodd"-->
+<!--                                        d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"-->
+<!--                                    ></path>-->
+<!--                                </svg>-->
+<!--                            </button>-->
+<!--                        </header>-->
+
+<!--                        <div class="SelectMenu-list">-->
+<!--                            <form-->
+<!--                                data-target="notifications-list-subscription-form.form"-->
+<!--                                data-action="submit:notifications-list-subscription-form#submitForm"-->
+<!--                                action="/notifications/subscribe"-->
+<!--                                accept-charset="UTF-8"-->
+<!--                                method="post"-->
+<!--                            >-->
+<!--                                <input-->
+<!--                                    type="hidden"-->
+<!--                                    class="is-submit-button-value"-->
+<!--                                    name="do"-->
+<!--                                    value="subscribed"-->
+<!--                                /><input-->
+<!--                                    type="hidden"-->
+<!--                                    name="authenticity_token"-->
+<!--                                    value="ITn78US4LPVmiR4tLPTT-jewxxKwapB6KmPEGwwTrbTLwnA79muHfW11cOot4-iQz45inXV_XI_PaPngAGyI_Q"-->
+<!--                                    autocomplete="off"-->
+<!--                                />-->
+
+<!--                                <input-->
+<!--                                    type="hidden"-->
+<!--                                    name="repository_id"-->
+<!--                                    value="438796440"-->
+<!--                                />-->
+
+<!--                                <button-->
+<!--                                    type="submit"-->
+<!--                                    name="do"-->
+<!--                                    value="included"-->
+<!--                                    class="SelectMenu-item flex-items-start"-->
+<!--                                    role="menuitemradio"-->
+<!--                                    aria-checked="false"-->
+<!--                                    data-targets="notifications-list-subscription-form.subscriptionButtons"-->
+<!--                                >-->
+<!--                                    <span class="f5">-->
+<!--                                        <svg-->
+<!--                                            aria-hidden="true"-->
+<!--                                            height="16"-->
+<!--                                            viewBox="0 0 16 16"-->
+<!--                                            width="16"-->
+<!--                                            data-view-component="true"-->
+<!--                                            class="octicon octicon-check SelectMenu-icon SelectMenu-icon&#45;&#45;check"-->
+<!--                                        >-->
+<!--                                            <path-->
+<!--                                                fill-rule="evenodd"-->
+<!--                                                d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"-->
+<!--                                            ></path>-->
+<!--                                        </svg>-->
+<!--                                    </span>-->
+<!--                                    <div>-->
+<!--                                        <div class="f5 text-bold">-->
+<!--                                            Participating and @mentions-->
+<!--                                        </div>-->
+<!--                                        <div-->
+<!--                                            class="text-small color-fg-muted text-normal pb-1"-->
+<!--                                        >-->
+<!--                                            Only receive notifications from this-->
+<!--                                            repository when participating or-->
+<!--                                            @mentioned.-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </button>-->
+
+<!--                                <button-->
+<!--                                    type="submit"-->
+<!--                                    name="do"-->
+<!--                                    value="subscribed"-->
+<!--                                    class="SelectMenu-item flex-items-start"-->
+<!--                                    role="menuitemradio"-->
+<!--                                    aria-checked="true"-->
+<!--                                    data-targets="notifications-list-subscription-form.subscriptionButtons"-->
+<!--                                >-->
+<!--                                    <span class="f5">-->
+<!--                                        <svg-->
+<!--                                            aria-hidden="true"-->
+<!--                                            height="16"-->
+<!--                                            viewBox="0 0 16 16"-->
+<!--                                            width="16"-->
+<!--                                            data-view-component="true"-->
+<!--                                            class="octicon octicon-check SelectMenu-icon SelectMenu-icon&#45;&#45;check"-->
+<!--                                        >-->
+<!--                                            <path-->
+<!--                                                fill-rule="evenodd"-->
+<!--                                                d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"-->
+<!--                                            ></path>-->
+<!--                                        </svg>-->
+<!--                                    </span>-->
+<!--                                    <div>-->
+<!--                                        <div class="f5 text-bold">-->
+<!--                                            All Activity-->
+<!--                                        </div>-->
+<!--                                        <div-->
+<!--                                            class="text-small color-fg-muted text-normal pb-1"-->
+<!--                                        >-->
+<!--                                            Notified of all notifications on-->
+<!--                                            this repository.-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </button>-->
+
+<!--                                <button-->
+<!--                                    type="submit"-->
+<!--                                    name="do"-->
+<!--                                    value="ignore"-->
+<!--                                    class="SelectMenu-item flex-items-start"-->
+<!--                                    role="menuitemradio"-->
+<!--                                    aria-checked="false"-->
+<!--                                    data-targets="notifications-list-subscription-form.subscriptionButtons"-->
+<!--                                >-->
+<!--                                    <span class="f5">-->
+<!--                                        <svg-->
+<!--                                            aria-hidden="true"-->
+<!--                                            height="16"-->
+<!--                                            viewBox="0 0 16 16"-->
+<!--                                            width="16"-->
+<!--                                            data-view-component="true"-->
+<!--                                            class="octicon octicon-check SelectMenu-icon SelectMenu-icon&#45;&#45;check"-->
+<!--                                        >-->
+<!--                                            <path-->
+<!--                                                fill-rule="evenodd"-->
+<!--                                                d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"-->
+<!--                                            ></path>-->
+<!--                                        </svg>-->
+<!--                                    </span>-->
+<!--                                    <div>-->
+<!--                                        <div class="f5 text-bold">Ignore</div>-->
+<!--                                        <div-->
+<!--                                            class="text-small color-fg-muted text-normal pb-1"-->
+<!--                                        >-->
+<!--                                            Never be notified.-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </button>-->
+<!--                            </form>-->
+<!--                            <button-->
+<!--                                class="SelectMenu-item flex-items-start pr-3"-->
+<!--                                type="button"-->
+<!--                                role="menuitemradio"-->
+<!--                                data-target="notifications-list-subscription-form.customButton"-->
+<!--                                data-action="click:notifications-list-subscription-form#openCustomDialog"-->
+<!--                                aria-haspopup="true"-->
+<!--                                aria-checked="false"-->
+<!--                            >-->
+<!--                                <span class="f5">-->
+<!--                                    <svg-->
+<!--                                        aria-hidden="true"-->
+<!--                                        height="16"-->
+<!--                                        viewBox="0 0 16 16"-->
+<!--                                        width="16"-->
+<!--                                        data-view-component="true"-->
+<!--                                        class="octicon octicon-check SelectMenu-icon SelectMenu-icon&#45;&#45;check"-->
+<!--                                    >-->
+<!--                                        <path-->
+<!--                                            fill-rule="evenodd"-->
+<!--                                            d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"-->
+<!--                                        ></path>-->
+<!--                                    </svg>-->
+<!--                                </span>-->
+<!--                                <div>-->
+<!--                                    <div-->
+<!--                                        class="d-flex flex-items-start flex-justify-between"-->
+<!--                                    >-->
+<!--                                        <div class="f5 text-bold">Custom</div>-->
+<!--                                        <div class="f5 pr-1">-->
+<!--                                            <svg-->
+<!--                                                aria-hidden="true"-->
+<!--                                                height="16"-->
+<!--                                                viewBox="0 0 16 16"-->
+<!--                                                width="16"-->
+<!--                                                data-view-component="true"-->
+<!--                                                class="octicon octicon-arrow-right"-->
+<!--                                            >-->
+<!--                                                <path-->
+<!--                                                    fill-rule="evenodd"-->
+<!--                                                    d="M8.22 2.97a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06l2.97-2.97H3.75a.75.75 0 010-1.5h7.44L8.22 4.03a.75.75 0 010-1.06z"-->
+<!--                                                ></path>-->
+<!--                                            </svg>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div-->
+<!--                                        class="text-small color-fg-muted text-normal pb-1"-->
+<!--                                    >-->
+<!--                                        Select events you want to be notified of-->
+<!--                                        in addition to participating and-->
+<!--                                        @mentions.-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div> </mat-menu-->
+<!--                ><mat-menu #menu2="matMenu">-->
+<!--                    <div-->
+<!--                        class="SelectMenu-modal notifications-component-menu-modal"-->
+<!--                    >-->
+<!--                        <header class="SelectMenu-header">-->
+<!--                            <h3 class="SelectMenu-title">Notifications</h3>-->
+<!--                            <button-->
+<!--                                class="SelectMenu-closeButton"-->
+<!--                                type="button"-->
+<!--                                aria-label="Close menu"-->
+<!--                                data-action="click:notifications-list-subscription-form#closeMenu"-->
+<!--                            >-->
+<!--                                <svg-->
+<!--                                    aria-hidden="true"-->
+<!--                                    height="16"-->
+<!--                                    viewBox="0 0 16 16"-->
+<!--                                    width="16"-->
+<!--                                    data-view-component="true"-->
+<!--                                    class="octicon octicon-x"-->
+<!--                                >-->
+<!--                                    <path-->
+<!--                                        fill-rule="evenodd"-->
+<!--                                        d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"-->
+<!--                                    ></path>-->
+<!--                                </svg>-->
+<!--                            </button>-->
+<!--                        </header>-->
+
+<!--                        <div class="SelectMenu-list">-->
+<!--                            <form-->
+<!--                                data-target="notifications-list-subscription-form.form"-->
+<!--                                data-action="submit:notifications-list-subscription-form#submitForm"-->
+<!--                                action="/notifications/subscribe"-->
+<!--                                accept-charset="UTF-8"-->
+<!--                                method="post"-->
+<!--                            >-->
+<!--                                <input-->
+<!--                                    type="hidden"-->
+<!--                                    class="is-submit-button-value"-->
+<!--                                    name="do"-->
+<!--                                    value="subscribed"-->
+<!--                                /><input-->
+<!--                                    type="hidden"-->
+<!--                                    name="authenticity_token"-->
+<!--                                    value="ITn78US4LPVmiR4tLPTT-jewxxKwapB6KmPEGwwTrbTLwnA79muHfW11cOot4-iQz45inXV_XI_PaPngAGyI_Q"-->
+<!--                                    autocomplete="off"-->
+<!--                                />-->
+
+<!--                                <input-->
+<!--                                    type="hidden"-->
+<!--                                    name="repository_id"-->
+<!--                                    value="438796440"-->
+<!--                                />-->
+
+<!--                                <button-->
+<!--                                    type="submit"-->
+<!--                                    name="do"-->
+<!--                                    value="included"-->
+<!--                                    class="SelectMenu-item flex-items-start"-->
+<!--                                    role="menuitemradio"-->
+<!--                                    aria-checked="false"-->
+<!--                                    data-targets="notifications-list-subscription-form.subscriptionButtons"-->
+<!--                                >-->
+<!--                                    <span class="f5">-->
+<!--                                        <svg-->
+<!--                                            aria-hidden="true"-->
+<!--                                            height="16"-->
+<!--                                            viewBox="0 0 16 16"-->
+<!--                                            width="16"-->
+<!--                                            data-view-component="true"-->
+<!--                                            class="octicon octicon-check SelectMenu-icon SelectMenu-icon&#45;&#45;check"-->
+<!--                                        >-->
+<!--                                            <path-->
+<!--                                                fill-rule="evenodd"-->
+<!--                                                d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"-->
+<!--                                            ></path>-->
+<!--                                        </svg>-->
+<!--                                    </span>-->
+<!--                                    <div>-->
+<!--                                        <div class="f5 text-bold">-->
+<!--                                            Participating and @mentions-->
+<!--                                        </div>-->
+<!--                                        <div-->
+<!--                                            class="text-small color-fg-muted text-normal pb-1"-->
+<!--                                        >-->
+<!--                                            Only receive notifications from this-->
+<!--                                            repository when participating or-->
+<!--                                            @mentioned.-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </button>-->
+
+<!--                                <button-->
+<!--                                    type="submit"-->
+<!--                                    name="do"-->
+<!--                                    value="subscribed"-->
+<!--                                    class="SelectMenu-item flex-items-start"-->
+<!--                                    role="menuitemradio"-->
+<!--                                    aria-checked="true"-->
+<!--                                    data-targets="notifications-list-subscription-form.subscriptionButtons"-->
+<!--                                >-->
+<!--                                    <span class="f5">-->
+<!--                                        <svg-->
+<!--                                            aria-hidden="true"-->
+<!--                                            height="16"-->
+<!--                                            viewBox="0 0 16 16"-->
+<!--                                            width="16"-->
+<!--                                            data-view-component="true"-->
+<!--                                            class="octicon octicon-check SelectMenu-icon SelectMenu-icon&#45;&#45;check"-->
+<!--                                        >-->
+<!--                                            <path-->
+<!--                                                fill-rule="evenodd"-->
+<!--                                                d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"-->
+<!--                                            ></path>-->
+<!--                                        </svg>-->
+<!--                                    </span>-->
+<!--                                    <div>-->
+<!--                                        <div class="f5 text-bold">-->
+<!--                                            All Activity-->
+<!--                                        </div>-->
+<!--                                        <div-->
+<!--                                            class="text-small color-fg-muted text-normal pb-1"-->
+<!--                                        >-->
+<!--                                            Notified of all notifications on-->
+<!--                                            this repository.-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </button>-->
+
+<!--                                <button-->
+<!--                                    type="submit"-->
+<!--                                    name="do"-->
+<!--                                    value="ignore"-->
+<!--                                    class="SelectMenu-item flex-items-start"-->
+<!--                                    role="menuitemradio"-->
+<!--                                    aria-checked="false"-->
+<!--                                    data-targets="notifications-list-subscription-form.subscriptionButtons"-->
+<!--                                >-->
+<!--                                    <span class="f5">-->
+<!--                                        <svg-->
+<!--                                            aria-hidden="true"-->
+<!--                                            height="16"-->
+<!--                                            viewBox="0 0 16 16"-->
+<!--                                            width="16"-->
+<!--                                            data-view-component="true"-->
+<!--                                            class="octicon octicon-check SelectMenu-icon SelectMenu-icon&#45;&#45;check"-->
+<!--                                        >-->
+<!--                                            <path-->
+<!--                                                fill-rule="evenodd"-->
+<!--                                                d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"-->
+<!--                                            ></path>-->
+<!--                                        </svg>-->
+<!--                                    </span>-->
+<!--                                    <div>-->
+<!--                                        <div class="f5 text-bold">Ignore</div>-->
+<!--                                        <div-->
+<!--                                            class="text-small color-fg-muted text-normal pb-1"-->
+<!--                                        >-->
+<!--                                            Never be notified.-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </button>-->
+<!--                            </form>-->
+<!--                            <button-->
+<!--                                class="SelectMenu-item flex-items-start pr-3"-->
+<!--                                type="button"-->
+<!--                                role="menuitemradio"-->
+<!--                                data-target="notifications-list-subscription-form.customButton"-->
+<!--                                data-action="click:notifications-list-subscription-form#openCustomDialog"-->
+<!--                                aria-haspopup="true"-->
+<!--                                aria-checked="false"-->
+<!--                            >-->
+<!--                                <span class="f5">-->
+<!--                                    <svg-->
+<!--                                        aria-hidden="true"-->
+<!--                                        height="16"-->
+<!--                                        viewBox="0 0 16 16"-->
+<!--                                        width="16"-->
+<!--                                        data-view-component="true"-->
+<!--                                        class="octicon octicon-check SelectMenu-icon SelectMenu-icon&#45;&#45;check"-->
+<!--                                    >-->
+<!--                                        <path-->
+<!--                                            fill-rule="evenodd"-->
+<!--                                            d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"-->
+<!--                                        ></path>-->
+<!--                                    </svg>-->
+<!--                                </span>-->
+<!--                                <div>-->
+<!--                                    <div-->
+<!--                                        class="d-flex flex-items-start flex-justify-between"-->
+<!--                                    >-->
+<!--                                        <div class="f5 text-bold">Custom</div>-->
+<!--                                        <div class="f5 pr-1">-->
+<!--                                            <svg-->
+<!--                                                aria-hidden="true"-->
+<!--                                                height="16"-->
+<!--                                                viewBox="0 0 16 16"-->
+<!--                                                width="16"-->
+<!--                                                data-view-component="true"-->
+<!--                                                class="octicon octicon-arrow-right"-->
+<!--                                            >-->
+<!--                                                <path-->
+<!--                                                    fill-rule="evenodd"-->
+<!--                                                    d="M8.22 2.97a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06l2.97-2.97H3.75a.75.75 0 010-1.5h7.44L8.22 4.03a.75.75 0 010-1.06z"-->
+<!--                                                ></path>-->
+<!--                                            </svg>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div-->
+<!--                                        class="text-small color-fg-muted text-normal pb-1"-->
+<!--                                    >-->
+<!--                                        Select events you want to be notified of-->
+<!--                                        in addition to participating and-->
+<!--                                        @mentions.-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </mat-menu>-->
+<!--            </div>-->
+<!--        </li>-->
+        </ng-template>
+    </ul>

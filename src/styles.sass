@@ -445,6 +445,17 @@ router-outlet
   overflow: hidden
 .starred .starred-button-icon
   color: $app-naples-yellow !important
+.searchAdditionalButtonsMinimizeBlock .searchAdditionalButtons__nav
+  flex-direction: column
+  background: $app-white
+  & .btnGroup-item
+    width: 100%
+  & .btnGroup-parent
+    width: 100%
+  & .nav-item
+    width: 100%
+    margin: 0 !important
+    padding: 0 !important
 #metadata-block
   & .page-item:last-child .page-link, .page-item:first-child .page-link
     padding: 1px
@@ -532,6 +543,21 @@ router-outlet
 .searchAdditionalButtons__nav
     justify-content: end
     align-items: end
+.searchAdditionalButtonsMinimizeBlock
+  & ul
+    background: $app-white
+    border: 1px solid $app-veryLightGray
+    box-sizing: border-box
+    box-shadow: 0 5px 4px $app-versatileBusinessDark
+    border-radius: 5px
+  & li
+    border-radius: 0 !important
+    border: none
+    border-bottom: 1px solid #d0d7de !important
+    &:last-child
+      border-bottom: none !important
+    & .btnGroup-item
+      border: none
 /*************************/
 @media (max-width: 480px)
   .app-header__right-column__label

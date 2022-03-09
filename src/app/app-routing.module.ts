@@ -29,8 +29,8 @@ const routes: Routes = [
     },
     {
         path: ":username",
+        component: AccountComponent,
         children: [
-            { path: AppValues.urlProfile, component: AccountComponent },
             {
                 path: AppValues.urlDatasetView,
                 component: DatasetComponent,

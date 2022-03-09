@@ -28,13 +28,19 @@ const routes: Routes = [
         children: [{ path: ":id", component: SearchComponent }],
     },
     {
+        path: ":username/dataset-view/:id",
+        component: DatasetComponent
+    },
+    {
         path: ":username",
-        component: AccountComponent,
         children: [
             {
-                path: AppValues.urlDatasetView,
+                path: "",
+                component: AccountComponent,
+            },
+            {
+                path: "dataset-view",
                 component: DatasetComponent,
-                children: [{ path: ":id", component: DatasetComponent }],
             },
             {
                 path: AppValues.urlDatasetCreateSelectType,

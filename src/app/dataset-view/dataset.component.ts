@@ -86,6 +86,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
                         title: "All Activity",
                         text: "Notified of all notifications on this repository.",
                         value: "all",
+                        isSelected: true,
                     },
                     {
                         title: "Ignore",

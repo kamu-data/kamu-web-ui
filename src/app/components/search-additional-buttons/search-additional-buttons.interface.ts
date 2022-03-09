@@ -27,6 +27,7 @@ export interface SearchAdditionalHeaderButtonInterface {
         options?: {
             title?: string;
             text?: string;
+            isSelected?: boolean;
             value?: string;
             action?: void;
         }[];

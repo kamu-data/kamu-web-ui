@@ -160,10 +160,9 @@ export class AppComponent implements OnInit {
         this.authApi.logOut();
     }
     public onUserProfile(): void {
-        this.modalService.warning({
-            message: this.unimplementedMessage,
-            yesButtonText: "Ok",
-        });
+       if (this.user && this.user.login) {
+           this.router.navigate([`/${this.user.login}`]);
+       }
     }
     public onUserDatasets(): void {
         this.modalService.warning({

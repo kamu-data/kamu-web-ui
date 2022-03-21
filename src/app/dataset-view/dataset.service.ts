@@ -342,7 +342,7 @@ export class AppDatasetService {
                         AppDatasetService.getDatasetInfo(datasets);
                     this.searchDatasetInfoChanges(datasetInfo);
                     // @ts-ignore
-                    this.searchData = datasets.metadata["chain"].blocks.nodes;
+                    this.searchData = datasets.metadata.chain.blocks.nodes;
                     // @ts-ignore
                     this.searchDataChanges(this.searchData);
                 }
@@ -427,8 +427,8 @@ export class AppDatasetService {
     }
 
     private updateDatasetTree(lineage: GetDatasetLineageQuery) {
-        let tree: DatasetKindInterface[][] = [];
-        let origin = lineage.datasets.byId;
+        const tree: DatasetKindInterface[][] = [];
+        const origin = lineage.datasets.byId;
         this.updateDatasetTreeRec(tree, origin);
         // @ts-ignore
         this.datasetTreeChange(tree, origin);

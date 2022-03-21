@@ -1,5 +1,8 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { SearchAdditionalButtonInterface } from "./search-additional-buttons.interface";
+import {
+    SearchAdditionalButtonInterface,
+    SearchAdditionalHeaderButtonInterface,
+} from "./search-additional-buttons.interface";
 
 @Component({
     selector: "app-search-additional-buttons",
@@ -8,7 +11,7 @@ import { SearchAdditionalButtonInterface } from "./search-additional-buttons.int
 })
 export class SearchAdditionalButtonsComponent {
     @Input()
-    public searchAdditionalButtonsData: SearchAdditionalButtonInterface[];
+    public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[];
     @Input() public isMinimizeSearchAdditionalButtons: boolean;
     @Output() public searchAdditionalButtonsMethod: EventEmitter<string> =
         new EventEmitter();

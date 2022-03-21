@@ -1,7 +1,12 @@
 <div class="search-result-container__content" id="dataset-view-history">
     <div id="history-block">
         <ng-template
-            [ngIf]="datasetHistory && datasetHistory.length > 0 && currentPage && pageInfo"
+            [ngIf]="
+                datasetHistory &&
+                datasetHistory.length > 0 &&
+                currentPage &&
+                pageInfo
+            "
         >
             <app-timeline
                 [history]="datasetHistory"

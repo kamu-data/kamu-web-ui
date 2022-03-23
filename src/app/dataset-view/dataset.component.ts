@@ -461,7 +461,7 @@ const language = 'typescript';
     }
 
     public showOwnerPage(): void {
-        this.router.navigate([this.datasetInfo.owner.id]);
+        this.router.navigate([this.datasetInfo.owner.name]);
     }
 
     public toggleReadmeView(): void {

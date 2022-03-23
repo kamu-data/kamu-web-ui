@@ -8,6 +8,7 @@ import { AccountComponent } from "./auth/account/account.component";
 import AppValues from "./common/app.values";
 import { GithubCallbackComponent } from "./auth/github-callback/github.callback";
 import { environment } from "../environments/environment";
+import {SettingsComponent} from "./auth/settings/settings.component";
 
 const githubUrl = `https://github.com/login/oauth/authorize?scope=user:email&client_id=${environment.github_client_id}`;
 
@@ -26,6 +27,10 @@ const routes: Routes = [
         path: AppValues.urlSearch,
         component: SearchComponent,
         children: [{ path: ":id", component: SearchComponent }],
+    },
+    {
+        path: "settings/profile",
+        component: SettingsComponent
     },
     {
         path: ":username/dataset-view/:id",

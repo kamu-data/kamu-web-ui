@@ -183,10 +183,7 @@ export class AppComponent implements OnInit {
         });
     }
     public onSettings(): void {
-        this.modalService.warning({
-            message: this.unimplementedMessage,
-            yesButtonText: "Ok",
-        });
+        this.router.navigate(["settings/profile"]);
     }
     public onHelp(): void {
         this.modalService.warning({

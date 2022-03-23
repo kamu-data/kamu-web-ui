@@ -45,6 +45,8 @@ import { SecurityContext } from "@angular/core";
 import { NotificationIndicatorComponent } from "./components/notification-indicator/notification-indicator.component";
 import { MonacoEditorModule } from "ngx-monaco-editor";
 import { TimelineComponent } from "./components/timeline-component/timeline.component";
+import {RepoListModule} from "./components/repo-list-component/repo-list.module";
+import {SettingsComponent} from "./auth/settings/settings.component";
 
 const Services = [
     Apollo,
@@ -88,6 +90,7 @@ const MatModules = [
         LoginComponent,
         GithubCallbackComponent,
         AccountComponent,
+        SettingsComponent,
         NotificationIndicatorComponent,
     ],
     imports: [
@@ -119,6 +122,7 @@ const MatModules = [
         MatOptionModule,
         ReactiveFormsModule,
         NgxGraphModule,
+        RepoListModule,
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

@@ -86,8 +86,7 @@
                                         aria-label="User profile"
                                     >
                                         <button
-                                            aria-current="page"
-                                            class="UnderlineNav-item selected"
+                                            [ngClass]="selectedTabs(accountTabs.overview) === true ? 'UnderlineNav-item selected' : 'UnderlineNav-item'"
                                             data-tab-item="overview"
                                             (click)="onUserProfile()"
                                         >
@@ -95,7 +94,7 @@
                                             <span class="mx-2">Overview</span>
                                         </button>
                                         <button
-                                            class="UnderlineNav-item js-responsive-underlinenav-item"
+                                            [ngClass]="selectedTabs(accountTabs.datasets) === true ? 'UnderlineNav-item selected' : 'UnderlineNav-item'"
                                             data-tab-item="datasets"
                                             (click)="onUserDatasets()"
                                         >
@@ -105,11 +104,11 @@
                                                 title="1"
                                                 data-view-component="true"
                                                 class="Counter"
-                                                >1</span
+                                                >6</span
                                             >
                                         </button>
                                         <button
-                                            class="UnderlineNav-item js-responsive-underlinenav-item"
+                                            [ngClass]="selectedTabs(accountTabs.organizations) === true ? 'UnderlineNav-item selected' : 'UnderlineNav-item'"
                                             data-tab-item="organizations"
                                             (click)="onUserOrganizations()"
                                         >
@@ -117,14 +116,14 @@
                                             <span class="mx-2">Organizations</span>
                                             <span
                                                 title="0"
-                                                hidden="hidden"
+                                                [attr.hidden]="'hidden'"
                                                 data-view-component="true"
                                                 class="Counter"
                                                 >0</span
                                             >
                                         </button>
                                         <button
-                                            class="UnderlineNav-item js-responsive-underlinenav-item"
+                                            [ngClass]="selectedTabs(accountTabs.inbox) === true ? 'UnderlineNav-item selected' : 'UnderlineNav-item'"
                                             data-tab-item="inbox"
                                             (click)="onUserInbox()"
                                         >
@@ -139,7 +138,7 @@
                                             >
                                         </button>
                                         <button
-                                            class="UnderlineNav-item js-responsive-underlinenav-item"
+                                            [ngClass]="selectedTabs(accountTabs.stars) === true ? 'UnderlineNav-item selected' : 'UnderlineNav-item'"
                                             data-tab-item="stars"
                                             (click)="onUserStars()"
                                         >
@@ -149,120 +148,32 @@
                                                 title="2"
                                                 data-view-component="true"
                                                 class="Counter"
-                                                >2</span
+                                                >6</span
                                             >
                                         </button>
                                     </nav>
-
-                                    <div
-                                        class="position-absolute pr-3 pr-md-4 pr-lg-5 right-0 js-responsive-underlinenav-overflow"
-                                        style="visibility: hidden"
-                                    >
-                                        <details
-                                            data-view-component="true"
-                                            class="details-overlay details-reset position-relative"
-                                        >
-                                            <summary
-                                                role="button"
-                                                data-view-component="true"
-                                            >
-                                                <div
-                                                    class="UnderlineNav-item mr-0 border-0"
-                                                >
-                                                    <svg
-                                                        aria-hidden="true"
-                                                        height="16"
-                                                        viewBox="0 0 16 16"
-                                                        version="1.1"
-                                                        width="16"
-                                                        data-view-component="true"
-                                                        class="octicon octicon-kebab-horizontal"
-                                                    >
-                                                        <path
-                                                            d="M8 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM1.5 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm13 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"
-                                                        ></path>
-                                                    </svg>
-                                                    <span class="sr-only"
-                                                        >More</span
-                                                    >
-                                                </div>
-                                            </summary>
-                                            <div data-view-component="true">
-                                                <div
-                                                    role="menu"
-                                                    class="dropdown-menu dropdown-menu-sw"
-                                                >
-                                                    <ul>
-                                                        <li
-                                                            data-menu-item="overview"
-                                                            hidden=""
-                                                        >
-                                                            <a
-                                                                role="menuitem"
-                                                                class="js-selected-navigation-item selected dropdown-item"
-                                                                aria-current="page"
-                                                                data-selected-links=" /kulykivska"
-                                                                href="/kulykivska"
-                                                                >Overview</a
-                                                            >
-                                                        </li>
-                                                        <li
-                                                            data-menu-item="repositories"
-                                                            hidden=""
-                                                        >
-                                                            <a
-                                                                role="menuitem"
-                                                                class="js-selected-navigation-item dropdown-item"
-                                                                data-selected-links=" /kulykivska?tab=repositories"
-                                                                href="/kulykivska?tab=repositories"
-                                                                >Repositories</a
-                                                            >
-                                                        </li>
-                                                        <li
-                                                            data-menu-item="projects"
-                                                            hidden=""
-                                                        >
-                                                            <a
-                                                                role="menuitem"
-                                                                class="js-selected-navigation-item dropdown-item"
-                                                                data-selected-links=" /kulykivska?tab=projects&amp;type=beta"
-                                                                href="/kulykivska?tab=projects&amp;type=beta"
-                                                                >Projects</a
-                                                            >
-                                                        </li>
-                                                        <li
-                                                            data-menu-item="packages"
-                                                            hidden=""
-                                                        >
-                                                            <a
-                                                                role="menuitem"
-                                                                class="js-selected-navigation-item dropdown-item"
-                                                                data-selected-links=" /kulykivska?tab=packages"
-                                                                href="/kulykivska?tab=packages"
-                                                                >Packages</a
-                                                            >
-                                                        </li>
-                                                        <li
-                                                            data-menu-item="stars"
-                                                            hidden=""
-                                                        >
-                                                            <a
-                                                                role="menuitem"
-                                                                class="js-selected-navigation-item dropdown-item"
-                                                                data-selected-links=" /kulykivska?tab=stars"
-                                                                href="/kulykivska?tab=stars"
-                                                                >Stars</a
-                                                            >
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </details>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div
+            class="mt-4 position-sticky top-0 d-none d-md-block color-bg-default width-full"
+            style="z-index: 3"
+        >
+            <div class="container-xl px-3 px-md-4 px-lg-5">
+                <div *ngIf="selectedTabs(accountTabs.overview) || selectedTabs(accountTabs.organizations)">
+                    <p>Feature coming soon</p>
+                </div>
+                <div *ngIf="selectedTabs(accountTabs.datasets) || selectedTabs(accountTabs.stars)">
+                    <app-repo-list
+                        [dataSource]="datasets"
+                        [resultUnitText]="''"
+                        [isClickableRow]="true"
+                        (onSelectDatasetEmit)="onSelectDataset($event)"
+                    ></app-repo-list>
                 </div>
             </div>
         </div>

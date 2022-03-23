@@ -28,6 +28,7 @@ import { AppModule } from "../app.module";
 import { TimelineComponent } from "../components/timeline-component/timeline.component";
 import { TimelineModule } from "../components/timeline-component/timeline.module";
 import { CustomPaginationModule } from "../components/custom-pagination-component/custom-pagination.module";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
     imports: [
@@ -54,6 +55,7 @@ import { CustomPaginationModule } from "../components/custom-pagination-componen
         MonacoEditorModule,
         CdkAccordionModule,
         CustomPaginationModule,
+        MatProgressSpinnerModule,
     ],
     exports: [
         DatasetComponent,

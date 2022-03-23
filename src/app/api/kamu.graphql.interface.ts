@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from 'apollo-angular';
+import { gql } from "@apollo/client/core";
 import { Injectable } from '@angular/core';
 import * as Apollo from 'apollo-angular';
 export type Maybe<T> = T | null;
@@ -511,6 +511,16 @@ export type DatasetsByAccountIdQueryVariables = Exact<{
 
 export type DatasetsByAccountIdQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byAccountId: { __typename: 'DatasetConnection', totalCount?: number | null | undefined, nodes: Array<{ __typename: 'Dataset', id: any, name: any, kind: DatasetKind, createdAt: any, lastUpdatedAt: any, owner: { __typename?: 'Organization', id: any, name: string } | { __typename?: 'User', id: any, name: string }, metadata: { __typename: 'DatasetMetadata', currentSummary: string, currentTopics: Array<string>, currentReadme: string, currentWatermark?: any | null | undefined, currentSchema: { __typename: 'DataSchema', format: DataSchemaFormat, content: string } }, data: { __typename: 'DatasetData', numRecordsTotal: number, estimatedSize: number, tail: { __typename: 'DataQueryResult', schema: { __typename?: 'DataSchema', format: DataSchemaFormat, content: string }, data: { __typename?: 'DataSlice', format: DataSliceFormat, content: string } } } }>, pageInfo: { __typename?: 'PageBasedInfo', hasPreviousPage: boolean, hasNextPage: boolean, currentPage: number, totalPages?: number | null | undefined } } } };
 
+export type DatasetsByAccountNameQueryVariables = Exact<{
+  accountName: Scalars['AccountName'];
+  page?: InputMaybe<Scalars['Int']>;
+  perPage?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type DatasetsByAccountNameQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byAccountName: { __typename: 'DatasetConnection', totalCount?: number | null | undefined, nodes: Array<{ __typename: 'Dataset', id: any, name: any, kind: DatasetKind, createdAt: any, lastUpdatedAt: any, owner: { __typename?: 'Organization', id: any, name: string } | { __typename?: 'User', id: any, name: string }, metadata: { __typename: 'DatasetMetadata', currentSummary: string, currentTopics: Array<string>, currentReadme: string, currentWatermark?: any | null | undefined, currentSchema: { __typename: 'DataSchema', format: DataSchemaFormat, content: string } }, data: { __typename: 'DatasetData', numRecordsTotal: number, estimatedSize: number, tail: { __typename: 'DataQueryResult', schema: { __typename?: 'DataSchema', format: DataSchemaFormat, content: string }, data: { __typename?: 'DataSlice', format: DataSliceFormat, content: string } } } }>, pageInfo: { __typename?: 'PageBasedInfo', hasPreviousPage: boolean, hasNextPage: boolean, currentPage: number, totalPages?: number | null | undefined } } } };
+
 export type GetDatasetDataSqlRunQueryVariables = Exact<{
   query: Scalars['String'];
   limit: Scalars['Int'];
@@ -726,6 +736,73 @@ export const DatasetsByAccountIdDocument = gql`
   })
   export class DatasetsByAccountIdGQL extends Apollo.Query<DatasetsByAccountIdQuery, DatasetsByAccountIdQueryVariables> {
     document = DatasetsByAccountIdDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DatasetsByAccountNameDocument = gql`
+    query datasetsByAccountName($accountName: AccountName!, $page: Int, $perPage: Int, $limit: Int) {
+  datasets {
+    byAccountName(accountName: $accountName, page: $page, perPage: $perPage) {
+      nodes {
+        id
+        owner {
+          id
+          name
+        }
+        name
+        kind
+        createdAt
+        lastUpdatedAt
+        metadata {
+          currentSummary
+          currentTopics
+          currentReadme
+          currentWatermark
+          currentSchema(format: PARQUET_JSON) {
+            format
+            content
+            __typename
+          }
+          __typename
+        }
+        data {
+          numRecordsTotal
+          estimatedSize
+          tail(limit: $limit, dataFormat: JSON) {
+            schema {
+              format
+              content
+            }
+            data {
+              format
+              content
+            }
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
+      totalCount
+      pageInfo {
+        hasPreviousPage
+        hasNextPage
+        currentPage
+        totalPages
+      }
+      __typename
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DatasetsByAccountNameGQL extends Apollo.Query<DatasetsByAccountNameQuery, DatasetsByAccountNameQueryVariables> {
+    document = DatasetsByAccountNameDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

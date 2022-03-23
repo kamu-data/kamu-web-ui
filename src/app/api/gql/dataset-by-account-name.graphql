@@ -1,0 +1,54 @@
+query datasetsByAccountName($accountName: AccountName!, $page: Int, $perPage: Int, $limit: Int) {
+  datasets {
+    byAccountName(accountName: $accountName, page: $page, perPage: $perPage) {
+      nodes {
+        id
+        owner {
+          id
+          name
+        }
+        name
+        kind
+        createdAt
+        lastUpdatedAt
+        metadata {
+          currentSummary
+          currentTopics
+          currentReadme
+          currentWatermark
+          currentSchema(format: PARQUET_JSON) {
+            format
+            content
+            __typename
+          }
+          __typename
+        }
+        data {
+          numRecordsTotal
+          estimatedSize
+          tail(limit: $limit, dataFormat: JSON) {
+            schema {
+              format
+              content
+            }
+            data {
+              format
+              content
+            }
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
+      totalCount
+      pageInfo {
+        hasPreviousPage
+        hasNextPage
+        currentPage
+        totalPages
+      }
+      __typename
+    }
+  }
+}

@@ -1,12 +1,9 @@
 import {
-    ChangeDetectorRef,
     Component,
     ElementRef,
     HostListener,
     OnInit,
-    QueryList,
     ViewChild,
-    ViewChildren
 } from "@angular/core";
 import {UserInterface} from "../../interface/auth.interface";
 import AppValues from "../../common/app.values";
@@ -17,7 +14,6 @@ import {DatasetsByAccountNameQuery} from "../../api/kamu.graphql.interface";
 import {AccountTabs} from "./account.constants";
 // @ts-ignore
 import * as $ from "jquery";
-import {Element} from "@angular/compiler";
 
 @Component({
     selector: "app-account",
@@ -51,7 +47,6 @@ export class AccountComponent implements OnInit {
                 }
             });
 
-            debugger;
             const allNewList = $(".UnderlineNav-body > .UnderlineNav-item.hidden").get();
 
             if (this.dropdownMenu.nativeElement.children.length > 0) {
@@ -79,7 +74,6 @@ export class AccountComponent implements OnInit {
         private authApi: AuthApi,
         private route: ActivatedRoute,
         private router: Router,
-        private changeDetectorRef: ChangeDetectorRef
     ) {
         this._window = window;
         if (this.authApi.userModal) {
@@ -93,15 +87,10 @@ export class AccountComponent implements OnInit {
     public ngOnInit(): void {
         this.userName = this._window.location.pathname.split("?tab=")[0].slice(1);
 
-        if (!this._window.location.search.includes("tab")) {
-            this.router.navigate([this.userName], {
-                queryParams: {tab: AccountTabs.overview}
-            });
+        if (!this._window.location.pathname.includes("?tab=")) {
+            this.onUserProfile();
         }
 
-        if (this._window.location.search.includes(AccountTabs.datasets)) {
-            this.onUserDatasets();
-        }
         setTimeout(() => {
             if (this.containerMenu) {
                 this.menuRowWidth = this.containerMenu.nativeElement.getBoundingClientRect().width;
@@ -155,7 +144,6 @@ export class AccountComponent implements OnInit {
     }
 
     public onUserStars(): void {
-        debugger;
         this.router.navigate([this.userName], {
             queryParams: {tab: AccountTabs.stars}
         });

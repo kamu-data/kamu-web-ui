@@ -137,7 +137,7 @@ export class AppComponent implements OnInit {
         }
     }
     public onClickAppLogo(): void {
-        this.router.navigate([AppValues.urlSearch]);
+        this.router.navigate([""]);
         this.appSearchService.searchChanges("");
     }
 

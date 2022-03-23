@@ -33,40 +33,21 @@ const routes: Routes = [
         component: SettingsComponent
     },
     {
-        path: ":username/dataset-view/:id",
-        component: DatasetComponent
+        path: ":username/dataset-view",
+        component: DatasetComponent,
+        children: [{ path: ":id", component: DatasetComponent }],
+    },
+    {
+        path: ":username/" + AppValues.urlDatasetCreateSelectType,
+        component: DatasetCreateComponent,
+    },
+    {
+        path: ":username/" + AppValues.urlDatasetCreate,
+        component: DatasetCreateComponent,
     },
     {
         path: ":username",
-        children: [
-            {
-                path: "",
-                component: AccountComponent,
-            },
-            {
-                path: "dataset-view",
-                component: DatasetComponent,
-            },
-            {
-                path: AppValues.urlDatasetCreateSelectType,
-                component: DatasetCreateComponent,
-            },
-            {
-                path: AppValues.urlDatasetCreate,
-                component: DatasetCreateComponent,
-                children: [
-                    {
-                        path: "",
-                        redirectTo: AppValues.urlDatasetCreateSelectType,
-                        pathMatch: "full",
-                    },
-                    {
-                        path: AppValues.urlDatasetCreateRoot,
-                        component: DatasetCreateComponent,
-                    },
-                ],
-            },
-        ],
+        component: AccountComponent,
     },
 ];
 

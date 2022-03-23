@@ -17,18 +17,18 @@
                                     <img
                                             itemprop="image"
                                             class="avatar flex-shrink-0 mb-3 mr-3 mb-md-0 mr-md-4"
-                                            src="https://avatars.githubusercontent.com/u/50896974?s=200&amp;v=4"
+                                            [attr.src]="isCurrentUser && user ? user.avatarUrl : 'https://avatars.githubusercontent.com/u/50896974?s=200&amp;v=4'"
                                             width="100"
                                             height="100"
-                                            alt="@kamu-data"
+                                            [attr.alt]="'@' + isCurrentUser && user? user.login : 'kamu-data'"
                                     />
                                 </div>
                                 <div class="flex-1 mx-4">
-                                    <h1 class="h2 lh-condensed">kamu</h1>
+                                    <h1 class="h2 lh-condensed">{{ isCurrentUser && user ? user.name : 'kamu' }}</h1>
 
                                     <div class="color-fg-muted">
                                         <div>
-                                            Decentralized data supply chain
+                                            {{ isCurrentUser ? 'Here will be bio' : 'Decentralized data supply chain' }}
                                         </div>
                                     </div>
 
@@ -49,7 +49,7 @@
                                                         class="color-fg-default"
                                                         title="https://kamu.dev"
                                                         href="https://kamu.dev"
-                                                >https://kamu.dev</a
+                                                >{{ isCurrentUser ? 'https://example.dev' : 'https://kamu.dev' }}</a
                                                 >
                                             </li>
                                             <li
@@ -61,7 +61,7 @@
                                                         class="color-fg-default"
                                                         itemprop="email"
                                                         href="mailto:info@kamu.dev"
-                                                >info@kamu.dev</a
+                                                >{{ isCurrentUser ? 'example@dev.com' : 'info@kamu.dev' }}</a
                                                 >
                                             </li>
                                         </ul>
@@ -152,22 +152,22 @@
                         </div>
                     </div>
                     <div [className]="isDropdownMenu ? 'UnderlineNav-actions pr-3 pr-md-4 pr-lg-5 right-0 visible' : 'UnderlineNav-actions pr-3 pr-md-4 pr-lg-5 right-0 hidden'">
-                                    <details class="details-overlay details-reset position-relative d-block">
-                                        <summary role="button" data-view-component="true" aria-haspopup="menu">
-                                            <div class="UnderlineNav-item mr-0 border-0 justify-content-end">
-                                                <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1"
-                                                     width="16" data-view-component="true"
-                                                     class="octicon octicon-kebab-horizontal">
-                                                    <path d="M8 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM1.5 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm13 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path>
-                                                </svg>
-                                                <span class="sr-only">More</span>
-                                            </div>
-                                        </summary>
-                                        <div role="menu" data-view-component="true" id="dropdownMenu"
-                                             class="dropdown-menu dropdown-menu-sw d-flex flex-column" #dropdownMenu>
-                                        </div>
-                                    </details>
+                        <details class="details-overlay details-reset position-relative d-block">
+                            <summary role="button" data-view-component="true" aria-haspopup="menu">
+                                <div class="UnderlineNav-item mr-0 border-0 justify-content-end">
+                                    <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1"
+                                         width="16" data-view-component="true"
+                                         class="octicon octicon-kebab-horizontal">
+                                        <path d="M8 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM1.5 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm13 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path>
+                                    </svg>
+                                    <span class="sr-only">More</span>
                                 </div>
+                            </summary>
+                            <div role="menu" data-view-component="true" id="dropdownMenu"
+                                 class="dropdown-menu dropdown-menu-sw d-flex flex-column" #dropdownMenu>
+                            </div>
+                        </details>
+                    </div>
                 </div>
             </div>
         </div>

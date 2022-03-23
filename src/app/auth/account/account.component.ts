@@ -30,6 +30,7 @@ export class AccountComponent implements OnInit {
     public datasets: any;
     public accountTabs = AccountTabs;
     public isDropdownMenu = false;
+    public isCurrentUser = false;
 
     @ViewChild("containerMenu") containerMenu: ElementRef;
     @ViewChild("dropdownMenu") dropdownMenu: ElementRef;
@@ -49,22 +50,24 @@ export class AccountComponent implements OnInit {
 
             const allNewList = $(".UnderlineNav-body > .UnderlineNav-item.hidden").get();
 
-            if (this.dropdownMenu.nativeElement.children.length > 0) {
-                while (this.dropdownMenu.nativeElement.firstChild) {
-                    this.dropdownMenu.nativeElement.firstChild.remove();
+            if (this.dropdownMenu) {
+                if (this.dropdownMenu.nativeElement.children.length > 0) {
+                    while (this.dropdownMenu.nativeElement.firstChild) {
+                        this.dropdownMenu.nativeElement.firstChild.remove();
+                    }
                 }
+                allNewList.forEach((elem: any) => {
+                    this.dropdownMenu.nativeElement.insertAdjacentHTML("beforeend", elem.outerHTML);
+                });
+
+                const dropdownMenu = $("#dropdownMenu button").get();
+
+                dropdownMenu.forEach((elem: any) => {
+                    elem.classList.remove("hidden");
+                });
+
+                this.isDropdownMenu = dropdownMenu.length > 0;
             }
-            allNewList.forEach((elem: any) => {
-                this.dropdownMenu.nativeElement.insertAdjacentHTML("beforeend", elem.outerHTML);
-            });
-
-            const dropdownMenu = $("#dropdownMenu button").get();
-
-            dropdownMenu.forEach((elem: any) => {
-                elem.classList.remove("hidden");
-            });
-
-            this.isDropdownMenu = dropdownMenu.length > 0;
 
         }, 500);
     }
@@ -87,9 +90,7 @@ export class AccountComponent implements OnInit {
     public ngOnInit(): void {
         this.userName = this._window.location.pathname.split("?tab=")[0].slice(1);
 
-        if (!this._window.location.pathname.includes("?tab=")) {
-            this.onUserProfile();
-        }
+        this.setupUrl();
 
         setTimeout(() => {
             if (this.containerMenu) {
@@ -97,6 +98,21 @@ export class AccountComponent implements OnInit {
                 this.checkWindowSize();
             }
         });
+    }
+    private setupUrl(): void {
+        if (this._window.location.search.includes("type=currentUser")) {
+           this.isCurrentUser = true;
+        }
+        if (this._window.location.search.includes("type=currentUser") && !this._window.location.search.includes("tab=")) {
+            this.router.navigate([this.userName], {
+                queryParams: {tab: AccountTabs.overview, type: "currentUser"}
+            });
+            return;
+        }
+        if (!this._window.location.search.includes("tab=")) {
+            this.onUserProfile();
+            return;
+        }
     }
 
     public selectedTabs(accountTabKey: AccountTabs): boolean {

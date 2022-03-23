@@ -7,6 +7,7 @@ import { DatasetIDsInterface, TypeNames } from "./interface/search.interface";
 import { AuthApi } from "./api/auth.api";
 import { UserInterface } from "./interface/auth.interface";
 import { ModalService } from "./components/modal/modal.service";
+import {AccountTabs} from "./auth/account/account.constants";
 
 @Component({
     selector: "app-root",
@@ -161,7 +162,9 @@ export class AppComponent implements OnInit {
     }
     public onUserProfile(): void {
        if (this.user && this.user.login) {
-           this.router.navigate([`/${this.user.login}`]);
+           this.router.navigate([this.user.login], {
+            queryParams: {type: "currentUser"}
+        });
        }
     }
     public onUserDatasets(): void {

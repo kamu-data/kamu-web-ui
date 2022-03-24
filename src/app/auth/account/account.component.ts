@@ -49,24 +49,24 @@ export class AccountComponent implements OnInit {
             });
 
             const allNewList = $(".UnderlineNav-body > .UnderlineNav-item.hidden").get();
+            const hiddenButtonNames: string[] = [];
 
             if (this.dropdownMenu) {
-                if (this.dropdownMenu.nativeElement.children.length > 0) {
-                    while (this.dropdownMenu.nativeElement.firstChild) {
-                        this.dropdownMenu.nativeElement.firstChild.remove();
-                    }
-                }
                 allNewList.forEach((elem: any) => {
-                    this.dropdownMenu.nativeElement.insertAdjacentHTML("beforeend", elem.outerHTML);
+                    hiddenButtonNames.push(elem.getAttribute("data-tab-item"));
                 });
 
                 const dropdownMenu = $("#dropdownMenu button").get();
 
                 dropdownMenu.forEach((elem: any) => {
-                    elem.classList.remove("hidden");
+                    if (hiddenButtonNames.length && hiddenButtonNames.some((name: string) => name === elem.getAttribute("data-tab-item"))) {
+                        elem.classList.remove("hidden");
+                    } else {
+                        elem.classList.add("hidden");
+                    }
                 });
 
-                this.isDropdownMenu = dropdownMenu.length > 0;
+                this.isDropdownMenu = hiddenButtonNames.length > 0;
             }
 
         }, 500);
@@ -160,8 +160,15 @@ export class AccountComponent implements OnInit {
     }
 
     public onUserStars(): void {
-        this.router.navigate([this.userName], {
-            queryParams: {tab: AccountTabs.stars}
+        this.searchApi.datasetsByAccountName({accountName: this.userName, page: 0, perPage: 10, limit: 10})
+        .subscribe((res: DatasetsByAccountNameQuery | undefined) => {
+            if (res) {
+                this.datasets = res.datasets.byAccountName.nodes;
+            }
+
+            this.router.navigate([this.userName], {
+                queryParams: {tab: AccountTabs.stars}
+            });
         });
     }
 }

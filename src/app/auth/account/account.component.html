@@ -165,6 +165,77 @@
                             </summary>
                             <div role="menu" data-view-component="true" id="dropdownMenu"
                                  class="dropdown-menu dropdown-menu-sw d-flex flex-column" #dropdownMenu>
+                                <button
+                                                [ngClass]="selectedTabs(accountTabs.overview) === true ? 'UnderlineNav-item selected' : 'UnderlineNav-item'"
+                                                data-tab-item="overview"
+                                                data-test-id="overview"
+                                                (click)="onUserProfile()"
+                                        >
+                                            <mat-icon>my_library_books</mat-icon>
+                                            <span class="mx-2">Overview</span>
+                                        </button>
+                                        <button
+                                                [ngClass]="selectedTabs(accountTabs.datasets) === true ? 'UnderlineNav-item selected' : 'UnderlineNav-item'"
+                                                data-tab-item="datasets"
+                                                data-test-id="datasets"
+                                                (click)="onUserDatasets()"
+                                        >
+                                            <mat-icon>book</mat-icon>
+                                            <span class="mx-2">Datasets</span>
+                                            <span
+                                                    title="1"
+                                                    data-view-component="true"
+                                                    class="Counter"
+                                            >6</span
+                                            >
+                                        </button>
+                                        <button
+                                                [ngClass]="selectedTabs(accountTabs.organizations) === true ? 'UnderlineNav-item selected' : 'UnderlineNav-item'"
+                                                data-tab-item="organizations"
+                                                data-test-id="organizations"
+                                                (click)="onUserOrganizations()"
+                                        >
+                                            <mat-icon>people</mat-icon>
+                                            <span class="mx-2">Organizations</span>
+                                            <span
+                                                    title="0"
+                                                    [attr.hidden]="'hidden'"
+                                                    data-view-component="true"
+                                                    class="Counter"
+                                            >0</span
+                                            >
+                                        </button>
+                                        <button
+                                                [ngClass]="selectedTabs(accountTabs.inbox) === true ? 'UnderlineNav-item selected' : 'UnderlineNav-item'"
+                                                data-tab-item="inbox"
+                                                data-test-id="inbox"
+                                                (click)="onUserInbox()"
+                                        >
+                                            <mat-icon>inbox</mat-icon>
+                                            <span class="mx-2">Inbox</span>
+                                            <span
+                                                    title="0"
+                                                    hidden="hidden"
+                                                    data-view-component="true"
+                                                    class="Counter"
+                                            >0</span
+                                            >
+                                        </button>
+                                        <button
+                                                [ngClass]="selectedTabs(accountTabs.stars) === true ? 'UnderlineNav-item selected' : 'UnderlineNav-item'"
+                                                data-tab-item="stars"
+                                                data-test-id="stars"
+                                                (click)="onUserStars()"
+                                        >
+                                            <mat-icon>star_border</mat-icon>
+                                            <span class="mx-2">Starred</span>
+                                            <span
+                                                    title="2"
+                                                    data-view-component="true"
+                                                    class="Counter"
+                                            >6</span
+                                            >
+                                        </button>
                             </div>
                         </details>
                     </div>
@@ -176,7 +247,7 @@
                 style="z-index: 3"
         >
             <div class="container-xl px-3 px-md-4 px-lg-5">
-                <div *ngIf="selectedTabs(accountTabs.overview) || selectedTabs(accountTabs.organizations)">
+                <div *ngIf="selectedTabs(accountTabs.overview) || selectedTabs(accountTabs.organizations) || selectedTabs(accountTabs.inbox)">
                     <p>Feature coming soon</p>
                 </div>
                 <div *ngIf="selectedTabs(accountTabs.datasets) || selectedTabs(accountTabs.stars)">

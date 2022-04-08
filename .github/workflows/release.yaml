@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: "12"
       - run: npm install
-      - run: ng build
+      - run: npm run build
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ env.PACKAGE_NAME }}-${{ matrix.target }}

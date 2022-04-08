@@ -97,7 +97,7 @@ export class AppComponent implements OnInit {
                     if (event.url.includes("search")) {
                         this.appSearchService.searchChanges(searchValue);
                     }
-                    if (event.url.includes("dataset-view")) {
+                    if (event.url.includes("dataset-view") && searchValue === "%255Bobject%2520Object%255D") {
                         this.appSearchService.searchChanges("");
                     }
                 }

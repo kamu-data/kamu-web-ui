@@ -476,8 +476,10 @@ const language = 'typescript';
     }
 
     public onSearchDataset(page = 0): void {
+        debugger
+        const userName: string = this._window.location.href.split(':id')[0];
         this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
+            [userName || AppValues.defaultUsername, AppValues.urlDatasetView],
             {
                 queryParams: {
                     id: this.getDatasetId(),

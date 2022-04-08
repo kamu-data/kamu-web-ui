@@ -88,7 +88,7 @@ export class AccountComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.userName = this._window.location.pathname.split("?tab=")[0].slice(1);
+        this.userName = this._window.location.pathname.split("/")[1];
 
         this.setupUrl();
 
@@ -107,12 +107,31 @@ export class AccountComponent implements OnInit {
             this.router.navigate([this.userName], {
                 queryParams: {tab: AccountTabs.overview, type: "currentUser"}
             });
-            return;
         }
-        if (!this._window.location.search.includes("tab=")) {
-            this.onUserProfile();
-            return;
+        switch (true) {
+            case (this.isMatchTab(AccountTabs.overview)):
+                this.onUserProfile();
+                break;
+            case (this.isMatchTab(AccountTabs.datasets)):
+                this.onUserDatasets();
+                break;
+            case (this.isMatchTab(AccountTabs.organizations)):
+                this.onUserOrganizations();
+                break;
+            case (this.isMatchTab(AccountTabs.stars)):
+                this.onUserStars();
+                break;
+            case (this.isMatchTab(AccountTabs.inbox)):
+                this.onUserInbox();
+                break;
+            default:
+                this.onUserDatasets();
+                break;
         }
+    }
+
+    private isMatchTab(tabName: string): boolean {
+        return this._window.location.search.includes(`tab=${tabName}`);
     }
 
     public selectedTabs(accountTabKey: AccountTabs): boolean {
@@ -130,7 +149,7 @@ export class AccountComponent implements OnInit {
     public onSelectDataset(data: { ownerName: string; id: string }): void {
         const id: string = data.id;
         this.router.navigate([data.ownerName, AppValues.urlDatasetView], {
-            queryParams: { id, type: AppValues.urlDatasetViewOverviewType },
+            queryParams: { id: id, type: AppValues.urlDatasetViewOverviewType },
         });
     }
 

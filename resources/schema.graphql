@@ -228,7 +228,7 @@ type MergeStrategySnapshot {
 }
 type MetadataBlockConnection {
   "A shorthand for `edges { node { ... } }`"
-  nodes: [MetadataBlockHashed!]!
+  nodes: [MetadataBlockExtended!]!
   "Approximate number of total nodes"
   totalCount: Int
   "Page information"
@@ -236,19 +236,22 @@ type MetadataBlockConnection {
   edges: [MetadataBlockEdge!]!
 }
 type MetadataBlockEdge {
-  node: MetadataBlockHashed!
+  node: MetadataBlockExtended!
 }
-type MetadataBlockHashed {
+type MetadataBlockExtended {
   blockHash: Multihash!
-  systemTime: DateTime!
   prevBlockHash: Multihash
+  systemTime: DateTime!
+  author: Account!
   event: MetadataEvent!
 }
 type MetadataChain {
   "Returns all named metadata block references"
   refs: [BlockRef!]!
   "Returns a metadata block corresponding to the specified hash"
-  blockByHash(hash: Multihash!): MetadataBlockHashed
+  blockByHash(hash: Multihash!): MetadataBlockExtended
+  "Total number of blocks in the metadata chain"
+  numBlocksTotal: Int!
   "Iterates all metadata blocks in the reverse chronological order"
   blocks(page: Int, perPage: Int): MetadataBlockConnection!
 }

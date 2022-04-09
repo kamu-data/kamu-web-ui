@@ -1,4 +1,8 @@
-query getDatasetDataSchema($datasetId: DatasetID!, $numRecords: Int, $numPage: Int) {
+query getDatasetDataSchema(
+  $datasetId: DatasetID!
+  $numRecords: Int
+  $numPage: Int
+) {
   datasets {
     byId(datasetId: $datasetId) {
       id

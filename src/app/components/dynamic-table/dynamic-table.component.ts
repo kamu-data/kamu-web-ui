@@ -9,6 +9,8 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
+import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+import { DataHelpersService } from "src/app/services/datahelpers.service";
 import AppValues from "../../common/app.values";
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -26,10 +28,14 @@ export class DynamicTableComponent
     @Input() public tableColumns?: any[];
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     @Input() public tableSource: any[];
+
+    // TODO: These should be extracted into a separate component that wraps the table
+    @Input() public latestMetadataBlock?: MetadataBlockFragment;
+    @Input() public numBlocksTotal?: number;
+
     @Input() public isResultQuantity?: boolean = false;
     @Input() public resultUnitText: string;
     @Input() public isClickableRow = false;
-    @Input() public isLatestCommitDisplay: boolean;
     @Input() public idTable?: string;
     @Output() public onSelectDatasetEmit: EventEmitter<string> =
         new EventEmitter();
@@ -37,6 +43,8 @@ export class DynamicTableComponent
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     public dataSource = new MatTableDataSource<any>(ELEMENT_DATA);
     public displayedColumns: string[] = [];
+
+    constructor(public dataHelpers: DataHelpersService) {}
 
     public ngOnInit(): void {
         this.tableSource && this.renderTable(this.tableSource);

@@ -245,9 +245,11 @@ export type DatasetMetadataCurrentSchemaArgs = {
 export type MetadataChain = {
     __typename?: "MetadataChain";
     /** Returns a metadata block corresponding to the specified hash */
-    blockByHash?: Maybe<MetadataBlockHashed>;
+    blockByHash?: Maybe<MetadataBlockExtended>;
     /** Iterates all metadata blocks in the reverse chronological order */
     blocks: MetadataBlockConnection;
+    /** Total number of blocks in the metadata chain */
+    numBlocksTotal: Scalars["Int"];
     /** Returns all named metadata block references */
     refs: Array<BlockRef>;
 };
@@ -261,8 +263,9 @@ export type MetadataChainBlocksArgs = {
     perPage?: InputMaybe<Scalars["Int"]>;
 };
 
-export type MetadataBlockHashed = {
-    __typename?: "MetadataBlockHashed";
+export type MetadataBlockExtended = {
+    __typename?: "MetadataBlockExtended";
+    author: Account;
     blockHash: Scalars["Multihash"];
     event: MetadataEvent;
     prevBlockHash?: Maybe<Scalars["Multihash"]>;
@@ -555,7 +558,7 @@ export type MetadataBlockConnection = {
     __typename?: "MetadataBlockConnection";
     edges: Array<MetadataBlockEdge>;
     /** A shorthand for `edges { node { ... } }` */
-    nodes: Array<MetadataBlockHashed>;
+    nodes: Array<MetadataBlockExtended>;
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
@@ -564,7 +567,7 @@ export type MetadataBlockConnection = {
 
 export type MetadataBlockEdge = {
     __typename?: "MetadataBlockEdge";
-    node: MetadataBlockHashed;
+    node: MetadataBlockExtended;
 };
 
 export type PageBasedInfo = {
@@ -800,18 +803,30 @@ export type GetDatasetHistoryQuery = {
                               __typename?: "MetadataBlockConnection";
                               totalCount?: number | null | undefined;
                               nodes: Array<{
-                                  __typename?: "MetadataBlockHashed";
+                                  __typename?: "MetadataBlockExtended";
                                   blockHash: any;
+                                  prevBlockHash?: any | null | undefined;
                                   systemTime: any;
+                                  author:
+                                      | {
+                                            __typename: "Organization";
+                                            id: any;
+                                            name: string;
+                                        }
+                                      | {
+                                            __typename: "User";
+                                            id: any;
+                                            name: string;
+                                        };
                                   event:
                                       | {
                                             __typename: "AddData";
                                             addedOutputData: {
-                                                __typename: "DataSlice";
+                                                __typename?: "DataSlice";
                                                 logicalHash: any;
                                                 physicalHash: any;
                                                 interval: {
-                                                    __typename: "OffsetInterval";
+                                                    __typename?: "OffsetInterval";
                                                     start: number;
                                                     end: number;
                                                 };
@@ -821,11 +836,11 @@ export type GetDatasetHistoryQuery = {
                                             __typename: "ExecuteQuery";
                                             queryOutputData?:
                                                 | {
-                                                      __typename: "DataSlice";
+                                                      __typename?: "DataSlice";
                                                       logicalHash: any;
                                                       physicalHash: any;
                                                       interval: {
-                                                          __typename: "OffsetInterval";
+                                                          __typename?: "OffsetInterval";
                                                           start: number;
                                                           end: number;
                                                       };
@@ -1116,7 +1131,7 @@ export type GetDatasetMetadataSchemaQuery = {
                               __typename?: "MetadataBlockConnection";
                               totalCount?: number | null | undefined;
                               nodes: Array<{
-                                  __typename?: "MetadataBlockHashed";
+                                  __typename?: "MetadataBlockExtended";
                                   blockHash: any;
                                   systemTime: any;
                               }>;
@@ -1207,6 +1222,78 @@ export type DatasetOverviewQuery = {
                           format: DataSchemaFormat;
                           content: string;
                       };
+                      chain: {
+                          __typename?: "MetadataChain";
+                          numBlocksTotal: number;
+                          blocks: {
+                              __typename?: "MetadataBlockConnection";
+                              nodes: Array<{
+                                  __typename?: "MetadataBlockExtended";
+                                  blockHash: any;
+                                  prevBlockHash?: any | null | undefined;
+                                  systemTime: any;
+                                  author:
+                                      | {
+                                            __typename: "Organization";
+                                            id: any;
+                                            name: string;
+                                        }
+                                      | {
+                                            __typename: "User";
+                                            id: any;
+                                            name: string;
+                                        };
+                                  event:
+                                      | {
+                                            __typename: "AddData";
+                                            addedOutputData: {
+                                                __typename?: "DataSlice";
+                                                logicalHash: any;
+                                                physicalHash: any;
+                                                interval: {
+                                                    __typename?: "OffsetInterval";
+                                                    start: number;
+                                                    end: number;
+                                                };
+                                            };
+                                        }
+                                      | {
+                                            __typename: "ExecuteQuery";
+                                            queryOutputData?:
+                                                | {
+                                                      __typename?: "DataSlice";
+                                                      logicalHash: any;
+                                                      physicalHash: any;
+                                                      interval: {
+                                                          __typename?: "OffsetInterval";
+                                                          start: number;
+                                                          end: number;
+                                                      };
+                                                  }
+                                                | null
+                                                | undefined;
+                                        }
+                                      | {
+                                            __typename: "Seed";
+                                            datasetId: any;
+                                            datasetKind: DatasetKind;
+                                        }
+                                      | { __typename: "SetAttachments" }
+                                      | { __typename: "SetInfo" }
+                                      | {
+                                            __typename: "SetLicense";
+                                            name: string;
+                                        }
+                                      | { __typename: "SetPollingSource" }
+                                      | { __typename: "SetTransform" }
+                                      | { __typename: "SetVocab" }
+                                      | {
+                                            __typename: "SetWatermark";
+                                            outputWatermark: any;
+                                        };
+                              }>;
+                          };
+                      };
                   };
                   data: {
                       __typename: "DatasetData";
@@ -1230,6 +1317,54 @@ export type DatasetOverviewQuery = {
             | null
             | undefined;
     };
+};
+
+export type MetadataBlockFragment = {
+    __typename?: "MetadataBlockExtended";
+    blockHash: any;
+    prevBlockHash?: any | null | undefined;
+    systemTime: any;
+    author:
+        | { __typename: "Organization"; id: any; name: string }
+        | { __typename: "User"; id: any; name: string };
+    event:
+        | {
+              __typename: "AddData";
+              addedOutputData: {
+                  __typename?: "DataSlice";
+                  logicalHash: any;
+                  physicalHash: any;
+                  interval: {
+                      __typename?: "OffsetInterval";
+                      start: number;
+                      end: number;
+                  };
+              };
+          }
+        | {
+              __typename: "ExecuteQuery";
+              queryOutputData?:
+                  | {
+                        __typename?: "DataSlice";
+                        logicalHash: any;
+                        physicalHash: any;
+                        interval: {
+                            __typename?: "OffsetInterval";
+                            start: number;
+                            end: number;
+                        };
+                    }
+                  | null
+                  | undefined;
+          }
+        | { __typename: "Seed"; datasetId: any; datasetKind: DatasetKind }
+        | { __typename: "SetAttachments" }
+        | { __typename: "SetInfo" }
+        | { __typename: "SetLicense"; name: string }
+        | { __typename: "SetPollingSource" }
+        | { __typename: "SetTransform" }
+        | { __typename: "SetVocab" }
+        | { __typename: "SetWatermark"; outputWatermark: any };
 };
 
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
@@ -1310,6 +1445,60 @@ export const LineageDatasetInfoFragmentDoc = gql`
         owner {
             id
             name
+        }
+    }
+`;
+export const MetadataBlockFragmentDoc = gql`
+    fragment MetadataBlock on MetadataBlockExtended {
+        blockHash
+        prevBlockHash
+        systemTime
+        author {
+            __typename
+            id
+            name
+        }
+        event {
+            __typename
+            ... on Seed {
+                datasetId
+                datasetKind
+            }
+            ... on SetWatermark {
+                outputWatermark
+            }
+            ... on SetTransform {
+                __typename
+            }
+            ... on ExecuteQuery {
+                queryOutputData: outputData {
+                    interval {
+                        start
+                        end
+                    }
+                    logicalHash
+                    physicalHash
+                }
+            }
+            ... on AddData {
+                addedOutputData: outputData {
+                    interval {
+                        start
+                        end
+                    }
+                    logicalHash
+                    physicalHash
+                }
+            }
+            ... on SetAttachments {
+                __typename
+            }
+            ... on SetInfo {
+                __typename
+            }
+            ... on SetLicense {
+                name
+            }
         }
     }
 `;
@@ -1457,54 +1646,7 @@ export const GetDatasetHistoryDocument = gql`
                         blocks(perPage: $perPage, page: $page) {
                             totalCount
                             nodes {
-                                event {
-                                    __typename
-                                    ... on Seed {
-                                        datasetId
-                                        datasetKind
-                                    }
-                                    ... on SetWatermark {
-                                        outputWatermark
-                                    }
-                                    ... on SetTransform {
-                                        __typename
-                                    }
-                                    ... on ExecuteQuery {
-                                        queryOutputData: outputData {
-                                            interval {
-                                                start
-                                                end
-                                                __typename
-                                            }
-                                            logicalHash
-                                            physicalHash
-                                            __typename
-                                        }
-                                    }
-                                    ... on AddData {
-                                        addedOutputData: outputData {
-                                            interval {
-                                                start
-                                                end
-                                                __typename
-                                            }
-                                            logicalHash
-                                            physicalHash
-                                            __typename
-                                        }
-                                    }
-                                    ... on SetAttachments {
-                                        __typename
-                                    }
-                                    ... on SetInfo {
-                                        __typename
-                                    }
-                                    ... on SetLicense {
-                                        name
-                                    }
-                                }
-                                blockHash
-                                systemTime
+                                ...MetadataBlock
                             }
                             pageInfo {
                                 hasNextPage
@@ -1517,6 +1659,7 @@ export const GetDatasetHistoryDocument = gql`
             }
         }
     }
+    ${MetadataBlockFragmentDoc}
 `;
 
 @Injectable({
@@ -1703,6 +1846,14 @@ export const DatasetOverviewDocument = gql`
                         __typename
                     }
                     __typename
+                    chain {
+                        numBlocksTotal
+                        blocks(page: 0, perPage: 1) {
+                            nodes {
+                                ...MetadataBlock
+                            }
+                        }
+                    }
                 }
                 data {
                     numRecordsTotal
@@ -1725,6 +1876,7 @@ export const DatasetOverviewDocument = gql`
             __typename
         }
     }
+    ${MetadataBlockFragmentDoc}
 `;
 
 @Injectable({

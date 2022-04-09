@@ -1,6 +1,6 @@
 <div class="search-result-container__content" id="searchResultContainerContent">
     <div id="metadata-block">
-        <div id="pagination-block" *ngIf="datasetInfo.metadata">
+        <div id="pagination-block" *ngIf="datasetInfo && datasetInfo.metadata">
             <app-custom-pagination
                 [hash]="
                     shortHash(
@@ -25,7 +25,6 @@
         <h2>Schema</h2>
         <ng-template [ngIf]="currentSchema">
             <app-dynamic-table
-                [isLatestCommitDisplay]="false"
                 [isResultQuantity]="false"
                 [isClickableRow]="false"
                 [resultUnitText]="''"

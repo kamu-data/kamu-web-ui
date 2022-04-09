@@ -12,54 +12,7 @@ query getDatasetHistory($datasetId: DatasetID!, $perPage: Int, $page: Int) {
           blocks(perPage: $perPage, page: $page) {
             totalCount
             nodes {
-              event {
-                __typename
-                ... on Seed {
-                  datasetId
-                  datasetKind
-                }
-                ... on SetWatermark {
-                  outputWatermark
-                }
-                ... on SetTransform {
-                  __typename
-                }
-                ... on ExecuteQuery {
-                  queryOutputData: outputData {
-                    interval {
-                      start
-                      end
-                      __typename
-                    }
-                    logicalHash
-                    physicalHash
-                    __typename
-                  }
-                }
-                ... on AddData {
-                  addedOutputData: outputData {
-                    interval {
-                      start
-                      end
-                      __typename
-                    }
-                    logicalHash
-                    physicalHash
-                    __typename
-                  }
-                }
-                ... on SetAttachments {
-                  __typename
-                }
-                ... on SetInfo {
-                  __typename
-                }
-                ... on SetLicense {
-                  name
-                }
-              }
-              blockHash
-              systemTime
+              ...MetadataBlock
             }
             pageInfo {
               hasNextPage

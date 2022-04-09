@@ -23,10 +23,20 @@ query datasetOverview($datasetId: DatasetID!, $limit: Int) {
           __typename
         }
         __typename
+        # Last update
+        chain {
+          numBlocksTotal
+          blocks(page: 0, perPage: 1) {
+            nodes {
+              ...MetadataBlock
+            }
+          }
+        }
       }
       data {
         numRecordsTotal
         estimatedSize
+        # Data sample
         tail(limit: $limit, dataFormat: JSON) {
           schema {
             format

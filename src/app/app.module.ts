@@ -46,6 +46,7 @@ import { NotificationIndicatorComponent } from "./components/notification-indica
 import { MonacoEditorModule } from "ngx-monaco-editor";
 import { TimelineComponent } from "./components/timeline-component/timeline.component";
 import { AppConfigService } from "./app-config.service";
+import { DataHelpersService } from "./services/datahelpers.service";
 
 const Services = [
     {
@@ -60,6 +61,7 @@ const Services = [
     },
     Apollo,
     AuthApi,
+    DataHelpersService,
     SearchApi,
     HttpLink,
     AppSearchService,

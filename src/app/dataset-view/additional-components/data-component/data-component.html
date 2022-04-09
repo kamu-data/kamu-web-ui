@@ -2,7 +2,6 @@
     <div class="search-result-container__content">
         <h2 class="box-title align-items-center pb-3 m-0">Schema:</h2>
         <app-dynamic-table
-            [isLatestCommitDisplay]="false"
             [isResultQuantity]="false"
             [isClickableRow]="false"
             [resultUnitText]="''"
@@ -168,7 +167,6 @@
         <h2 class="box-title align-items-center pb-3 pt-3 m-0">Result:</h2>
         <ng-template [ngIf]="tableData">
             <app-dynamic-table
-                [isLatestCommitDisplay]="false"
                 [isResultQuantity]="tableData.isResultQuantity"
                 [isClickableRow]="tableData.isClickableRow"
                 [resultUnitText]="''"

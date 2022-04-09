@@ -6,6 +6,7 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
+import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import {
     DatasetNameInterface,
     DataViewSchema,
@@ -22,6 +23,7 @@ export class DataComponent implements OnInit {
         isTableHeader: boolean;
         displayedColumns?: any[];
         tableSource: any;
+        latestMetadataBlock?: MetadataBlockFragment;
         isResultQuantity: boolean;
         isClickableRow: boolean;
         pageInfo: PageInfoInterface;

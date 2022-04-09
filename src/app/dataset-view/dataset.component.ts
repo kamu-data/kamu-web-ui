@@ -38,7 +38,10 @@ import {
     DataSchema,
     GetDatasetLineageGQL,
     GetDatasetLineageQuery,
+    MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
+import { debug } from "console";
+import { DataHelpersService } from "../services/datahelpers.service";
 
 @Component({
     selector: "app-dataset",
@@ -116,6 +119,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         isTableHeader: boolean;
         displayedColumns?: any[];
         tableSource: any;
+        latestMetadataBlock?: MetadataBlockFragment;
         isResultQuantity: boolean;
         isClickableRow: boolean;
         pageInfo: PageInfoInterface;
@@ -173,6 +177,7 @@ const language = 'typescript';
         private router: Router,
         private modalService: ModalService,
         private clipboard: Clipboard,
+        private dataHelpers: DataHelpersService,
     ) {
         this._window = window;
     }
@@ -235,7 +240,12 @@ const language = 'typescript';
                 const historyView = AppValues.deepCopy(history);
                 historyView.map((node: any) => {
                     node.event = Object.assign(
-                        { title: this.getTitle(node) },
+                        // TODO: This is a view concern - should be moved out
+                        {
+                            title: this.dataHelpers.descriptionForMetadataBlock(
+                                node,
+                            ),
+                        },
                         node.event,
                     );
                     return node;
@@ -281,43 +291,6 @@ const language = 'typescript';
                 setTimeout(() => (this.currentPage = data.currentPage));
             },
         );
-    }
-
-    public getTitle(node: any): string {
-        switch (node.event.__typename) {
-            case "AddData":
-                return `Added ${
-                    node.event.addedOutputData
-                        ? node.event.addedOutputData.interval.end -
-                          node.event.addedOutputData.interval.start
-                        : "0"
-                } new records`;
-            case "ExecuteQuery":
-                return `Transformation produced ${
-                    node.event.queryOutputData
-                        ? node.event.queryOutputData.interval.end -
-                          node.event.queryOutputData.interval.start
-                        : "0"
-                } new records`;
-            case "Seed":
-                return `Dataset initialized`;
-            case "SetTransform":
-                return `Query changed`;
-            case "SetVocab":
-                return `Vocabulary changed`;
-            case "SetWatermar":
-                return `Watermark updated to ${node.systemTime}`;
-            case "SetPollingSource":
-                return `Polling source changed`;
-            case "SetInfo":
-                return `Basic information updated`;
-            case "SetLicense":
-                return `License updated: ${node.event.name}`;
-            case "SetAttachments":
-                return `Attachments updated`;
-            default:
-                return node.event.__typename;
-        }
     }
 
     public successCopyToClipboardCopied(): void {
@@ -646,6 +619,7 @@ const language = 'typescript';
         this.tableData = {
             isTableHeader: true,
             tableSource: this.searchData,
+            latestMetadataBlock: undefined,
             isResultQuantity: false,
             isClickableRow: false,
             pageInfo: {

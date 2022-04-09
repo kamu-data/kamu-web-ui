@@ -23,12 +23,13 @@
                 </div>
             </div>
             <app-dynamic-table
-                [isLatestCommitDisplay]="true"
                 [isResultQuantity]="tableData.isResultQuantity"
                 [isClickableRow]="tableData.isClickableRow"
                 [resultUnitText]="resultUnitText"
                 [isTableHeader]="tableData.isTableHeader"
                 [tableSource]="tableData.tableSource"
+                [latestMetadataBlock]="datasetInfo.latestMetadataBlock"
+                [numBlocksTotal]="datasetInfo.numBlocksTotal"
                 (onSelectDatasetEmit)="(null)"
             ></app-dynamic-table>
             <div id="file-readme-dataset-template-md" class="file my-4">

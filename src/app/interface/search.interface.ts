@@ -1,4 +1,8 @@
-import { DatasetMetadata, MetadataEvent } from "../api/kamu.graphql.interface";
+import {
+    DatasetMetadata,
+    MetadataBlockFragment,
+    MetadataEvent,
+} from "../api/kamu.graphql.interface";
 
 export interface SearchHistoryResponseInterface {
     datasets: {
@@ -112,6 +116,8 @@ export interface SearchDatasetByID {
     owner: Account;
     id: string;
     lastUpdatedAt: string;
+    latestMetadataBlock?: MetadataBlockFragment;
+    numBlocksTotal?: number;
     metadata: {
         _typename: string;
         currentInfo: {
@@ -159,6 +165,8 @@ export interface DatasetInfoInterface {
         name: string;
     };
     lastUpdatedAt?: string;
+    latestMetadataBlock?: MetadataBlockFragment;
+    numBlocksTotal?: number;
     estimatedSize?: number;
     numRecordsTotal?: number;
     metadata: {

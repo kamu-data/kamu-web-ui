@@ -75,14 +75,14 @@ export type DataQueries = {
 };
 
 export type DataQueriesQueryArgs = {
-    dataFormat?: InputMaybe<DataSliceFormat>;
+    dataFormat?: InputMaybe<DataBatchFormat>;
     limit?: InputMaybe<Scalars["Int"]>;
     query: Scalars["String"];
     queryDialect: QueryDialect;
     schemaFormat?: InputMaybe<DataSchemaFormat>;
 };
 
-export enum DataSliceFormat {
+export enum DataBatchFormat {
     Csv = "CSV",
     Json = "JSON",
     JsonLd = "JSON_LD",
@@ -100,15 +100,15 @@ export enum DataSchemaFormat {
 
 export type DataQueryResult = {
     __typename?: "DataQueryResult";
-    data: DataSlice;
+    data: DataBatch;
     limit: Scalars["Int"];
     schema: DataSchema;
 };
 
-export type DataSlice = {
-    __typename?: "DataSlice";
+export type DataBatch = {
+    __typename?: "DataBatch";
     content: Scalars["String"];
-    format: DataSliceFormat;
+    format: DataBatchFormat;
     numRecords: Scalars["Int"];
 };
 
@@ -204,7 +204,7 @@ export type DatasetData = {
 };
 
 export type DatasetDataTailArgs = {
-    dataFormat?: InputMaybe<DataSliceFormat>;
+    dataFormat?: InputMaybe<DataBatchFormat>;
     limit?: InputMaybe<Scalars["Int"]>;
     schemaFormat?: InputMaybe<DataSchemaFormat>;
 };
@@ -220,13 +220,18 @@ export type DatasetMetadata = {
     chain: MetadataChain;
     /** Current downstream dependencies of a dataset */
     currentDownstreamDependencies: Array<Dataset>;
-    currentReadme: Scalars["String"];
+    /** Current descriptive information about the dataset */
+    currentInfo: SetInfo;
+    /** Current license associated with the dataset */
+    currentLicense?: Maybe<SetLicense>;
+    /** Current readme file as discovered from attachments associated with the dataset */
+    currentReadme?: Maybe<Scalars["String"]>;
     /** Latest data schema */
     currentSchema: DataSchema;
-    currentSummary: Scalars["String"];
-    currentTopics: Array<Scalars["String"]>;
+    /** Current source used by the root dataset */
+    currentSource?: Maybe<SetPollingSource>;
     /** Current transformation used by the derivative dataset */
-    currentTransform?: Maybe<MetadataEventSetTransform>;
+    currentTransform?: Maybe<SetTransform>;
     /** Current upstream dependencies of a dataset */
     currentUpstreamDependencies: Array<Dataset>;
     /** Last recorded watermark */
@@ -240,7 +245,7 @@ export type DatasetMetadataCurrentSchemaArgs = {
 export type MetadataChain = {
     __typename?: "MetadataChain";
     /** Returns a metadata block corresponding to the specified hash */
-    blockByHash?: Maybe<MetadataBlock>;
+    blockByHash?: Maybe<MetadataBlockHashed>;
     /** Iterates all metadata blocks in the reverse chronological order */
     blocks: MetadataBlockConnection;
     /** Returns all named metadata block references */
@@ -256,8 +261,8 @@ export type MetadataChainBlocksArgs = {
     perPage?: InputMaybe<Scalars["Int"]>;
 };
 
-export type MetadataBlock = {
-    __typename?: "MetadataBlock";
+export type MetadataBlockHashed = {
+    __typename?: "MetadataBlockHashed";
     blockHash: Scalars["Multihash"];
     event: MetadataEvent;
     prevBlockHash?: Maybe<Scalars["Multihash"]>;
@@ -265,23 +270,25 @@ export type MetadataBlock = {
 };
 
 export type MetadataEvent =
-    | MetadataEventAddData
-    | MetadataEventExecuteQuery
-    | MetadataEventSeed
-    | MetadataEventSetPollingSource
-    | MetadataEventSetTransform
-    | MetadataEventSetVocab
-    | MetadataEventSetWatermark
-    | MetadataEventUnsupported;
+    | AddData
+    | ExecuteQuery
+    | Seed
+    | SetAttachments
+    | SetInfo
+    | SetLicense
+    | SetPollingSource
+    | SetTransform
+    | SetVocab
+    | SetWatermark;
 
-export type MetadataEventAddData = {
-    __typename?: "MetadataEventAddData";
-    outputData: DataSliceMetadata;
+export type AddData = {
+    __typename?: "AddData";
+    outputData: DataSlice;
     outputWatermark?: Maybe<Scalars["DateTime"]>;
 };
 
-export type DataSliceMetadata = {
-    __typename?: "DataSliceMetadata";
+export type DataSlice = {
+    __typename?: "DataSlice";
     interval: OffsetInterval;
     logicalHash: Scalars["Multihash"];
     physicalHash: Scalars["Multihash"];
@@ -293,15 +300,15 @@ export type OffsetInterval = {
     start: Scalars["Int"];
 };
 
-export type MetadataEventExecuteQuery = {
-    __typename?: "MetadataEventExecuteQuery";
-    inputSlices: Array<InputSliceMetadata>;
-    outputData?: Maybe<DataSliceMetadata>;
+export type ExecuteQuery = {
+    __typename?: "ExecuteQuery";
+    inputSlices: Array<InputSlice>;
+    outputData?: Maybe<DataSlice>;
     outputWatermark?: Maybe<Scalars["DateTime"]>;
 };
 
-export type InputSliceMetadata = {
-    __typename?: "InputSliceMetadata";
+export type InputSlice = {
+    __typename?: "InputSlice";
     blockInterval?: Maybe<BlockInterval>;
     dataInterval?: Maybe<OffsetInterval>;
     datasetId: Scalars["DatasetID"];
@@ -313,26 +320,138 @@ export type BlockInterval = {
     start: Scalars["Multihash"];
 };
 
-export type MetadataEventSeed = {
-    __typename?: "MetadataEventSeed";
+export type Seed = {
+    __typename?: "Seed";
     datasetId: Scalars["DatasetID"];
     datasetKind: DatasetKind;
 };
 
-export type MetadataEventSetPollingSource = {
-    __typename?: "MetadataEventSetPollingSource";
-    dummy: Scalars["String"];
+export type SetAttachments = {
+    __typename?: "SetAttachments";
+    attachments: Attachments;
 };
 
-export type MetadataEventSetTransform = {
-    __typename?: "MetadataEventSetTransform";
-    inputs: Array<TransformInput>;
-    transform: Transform;
+export type Attachments = AttachmentsEmbedded;
+
+export type AttachmentsEmbedded = {
+    __typename?: "AttachmentsEmbedded";
+    items: Array<AttachmentEmbedded>;
 };
 
-export type TransformInput = {
-    __typename?: "TransformInput";
-    dataset: Dataset;
+export type AttachmentEmbedded = {
+    __typename?: "AttachmentEmbedded";
+    content: Scalars["String"];
+    path: Scalars["String"];
+};
+
+export type SetInfo = {
+    __typename?: "SetInfo";
+    description?: Maybe<Scalars["String"]>;
+    keywords?: Maybe<Array<Scalars["String"]>>;
+};
+
+export type SetLicense = {
+    __typename?: "SetLicense";
+    name: Scalars["String"];
+    shortName: Scalars["String"];
+    spdxId?: Maybe<Scalars["String"]>;
+    websiteUrl: Scalars["String"];
+};
+
+export type SetPollingSource = {
+    __typename?: "SetPollingSource";
+    fetch: FetchStep;
+    merge: MergeStrategy;
+    prepare?: Maybe<Array<PrepStep>>;
+    preprocess?: Maybe<Transform>;
+    read: ReadStep;
+};
+
+export type FetchStep = FetchStepFilesGlob | FetchStepUrl;
+
+export type FetchStepFilesGlob = {
+    __typename?: "FetchStepFilesGlob";
+    cache?: Maybe<SourceCaching>;
+    eventTime?: Maybe<EventTimeSource>;
+    order?: Maybe<SourceOrdering>;
+    path: Scalars["String"];
+};
+
+export type SourceCaching = SourceCachingForever;
+
+export type SourceCachingForever = {
+    __typename?: "SourceCachingForever";
+    dummy?: Maybe<Scalars["String"]>;
+};
+
+export type EventTimeSource =
+    | EventTimeSourceFromMetadata
+    | EventTimeSourceFromPath;
+
+export type EventTimeSourceFromMetadata = {
+    __typename?: "EventTimeSourceFromMetadata";
+    dummy?: Maybe<Scalars["String"]>;
+};
+
+export type EventTimeSourceFromPath = {
+    __typename?: "EventTimeSourceFromPath";
+    pattern: Scalars["String"];
+    timestampFormat?: Maybe<Scalars["String"]>;
+};
+
+export enum SourceOrdering {
+    ByEventTime = "BY_EVENT_TIME",
+    ByName = "BY_NAME",
+}
+
+export type FetchStepUrl = {
+    __typename?: "FetchStepUrl";
+    cache?: Maybe<SourceCaching>;
+    eventTime?: Maybe<EventTimeSource>;
+    url: Scalars["String"];
+};
+
+export type MergeStrategy =
+    | MergeStrategyAppend
+    | MergeStrategyLedger
+    | MergeStrategySnapshot;
+
+export type MergeStrategyAppend = {
+    __typename?: "MergeStrategyAppend";
+    dummy?: Maybe<Scalars["String"]>;
+};
+
+export type MergeStrategyLedger = {
+    __typename?: "MergeStrategyLedger";
+    primaryKey: Array<Scalars["String"]>;
+};
+
+export type MergeStrategySnapshot = {
+    __typename?: "MergeStrategySnapshot";
+    compareColumns?: Maybe<Array<Scalars["String"]>>;
+    observationColumn?: Maybe<Scalars["String"]>;
+    obsvAdded?: Maybe<Scalars["String"]>;
+    obsvChanged?: Maybe<Scalars["String"]>;
+    obsvRemoved?: Maybe<Scalars["String"]>;
+    primaryKey: Array<Scalars["String"]>;
+};
+
+export type PrepStep = PrepStepDecompress | PrepStepPipe;
+
+export type PrepStepDecompress = {
+    __typename?: "PrepStepDecompress";
+    format: CompressionFormat;
+    subPath?: Maybe<Scalars["String"]>;
+};
+
+export enum CompressionFormat {
+    Gzip = "GZIP",
+    Zip = "ZIP",
+}
+
+export type PrepStepPipe = {
+    __typename?: "PrepStepPipe";
+    command: Array<Scalars["String"]>;
 };
 
 export type Transform = TransformSql;
@@ -341,6 +460,8 @@ export type TransformSql = {
     __typename?: "TransformSql";
     engine: Scalars["String"];
     queries: Array<SqlQueryStep>;
+    temporalTables?: Maybe<Array<TemporalTable>>;
+    version?: Maybe<Scalars["String"]>;
 };
 
 export type SqlQueryStep = {
@@ -349,26 +470,92 @@ export type SqlQueryStep = {
     query: Scalars["String"];
 };
 
-export type MetadataEventSetVocab = {
-    __typename?: "MetadataEventSetVocab";
-    dummy: Scalars["String"];
+export type TemporalTable = {
+    __typename?: "TemporalTable";
+    name: Scalars["String"];
+    primaryKey: Array<Scalars["String"]>;
 };
 
-export type MetadataEventSetWatermark = {
-    __typename?: "MetadataEventSetWatermark";
+export type ReadStep =
+    | ReadStepCsv
+    | ReadStepEsriShapefile
+    | ReadStepGeoJson
+    | ReadStepJsonLines;
+
+export type ReadStepCsv = {
+    __typename?: "ReadStepCsv";
+    comment?: Maybe<Scalars["String"]>;
+    dateFormat?: Maybe<Scalars["String"]>;
+    emptyValue?: Maybe<Scalars["String"]>;
+    encoding?: Maybe<Scalars["String"]>;
+    enforceSchema?: Maybe<Scalars["Boolean"]>;
+    escape?: Maybe<Scalars["String"]>;
+    header?: Maybe<Scalars["Boolean"]>;
+    ignoreLeadingWhiteSpace?: Maybe<Scalars["Boolean"]>;
+    ignoreTrailingWhiteSpace?: Maybe<Scalars["Boolean"]>;
+    inferSchema?: Maybe<Scalars["Boolean"]>;
+    multiLine?: Maybe<Scalars["Boolean"]>;
+    nanValue?: Maybe<Scalars["String"]>;
+    negativeInf?: Maybe<Scalars["String"]>;
+    nullValue?: Maybe<Scalars["String"]>;
+    positiveInf?: Maybe<Scalars["String"]>;
+    quote?: Maybe<Scalars["String"]>;
+    schema?: Maybe<Array<Scalars["String"]>>;
+    separator?: Maybe<Scalars["String"]>;
+    timestampFormat?: Maybe<Scalars["String"]>;
+};
+
+export type ReadStepEsriShapefile = {
+    __typename?: "ReadStepEsriShapefile";
+    schema?: Maybe<Array<Scalars["String"]>>;
+    subPath?: Maybe<Scalars["String"]>;
+};
+
+export type ReadStepGeoJson = {
+    __typename?: "ReadStepGeoJson";
+    schema?: Maybe<Array<Scalars["String"]>>;
+};
+
+export type ReadStepJsonLines = {
+    __typename?: "ReadStepJsonLines";
+    dateFormat?: Maybe<Scalars["String"]>;
+    encoding?: Maybe<Scalars["String"]>;
+    multiLine?: Maybe<Scalars["Boolean"]>;
+    primitivesAsString?: Maybe<Scalars["Boolean"]>;
+    schema?: Maybe<Array<Scalars["String"]>>;
+    timestampFormat?: Maybe<Scalars["String"]>;
+};
+
+export type SetTransform = {
+    __typename?: "SetTransform";
+    inputs: Array<TransformInput>;
+    transform: Transform;
+};
+
+export type TransformInput = {
+    __typename?: "TransformInput";
+    dataset: Dataset;
+    id?: Maybe<Scalars["DatasetID"]>;
+    name: Scalars["DatasetName"];
+};
+
+export type SetVocab = {
+    __typename?: "SetVocab";
+    eventTimeColumn?: Maybe<Scalars["String"]>;
+    offsetColumn?: Maybe<Scalars["String"]>;
+    systemTimeColumn?: Maybe<Scalars["String"]>;
+};
+
+export type SetWatermark = {
+    __typename?: "SetWatermark";
     outputWatermark: Scalars["DateTime"];
-};
-
-export type MetadataEventUnsupported = {
-    __typename?: "MetadataEventUnsupported";
-    dummy: Scalars["String"];
 };
 
 export type MetadataBlockConnection = {
     __typename?: "MetadataBlockConnection";
     edges: Array<MetadataBlockEdge>;
     /** A shorthand for `edges { node { ... } }` */
-    nodes: Array<MetadataBlock>;
+    nodes: Array<MetadataBlockHashed>;
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
@@ -377,7 +564,7 @@ export type MetadataBlockConnection = {
 
 export type MetadataBlockEdge = {
     __typename?: "MetadataBlockEdge";
-    node: MetadataBlock;
+    node: MetadataBlockHashed;
 };
 
 export type PageBasedInfo = {
@@ -547,8 +734,8 @@ export type GetDatasetDataSchemaQuery = {
                               content: string;
                           };
                           data: {
-                              __typename?: "DataSlice";
-                              format: DataSliceFormat;
+                              __typename?: "DataBatch";
+                              format: DataBatchFormat;
                               content: string;
                               numRecords: number;
                           };
@@ -578,8 +765,8 @@ export type GetDatasetDataSqlRunQuery = {
                 content: string;
             };
             data: {
-                __typename?: "DataSlice";
-                format: DataSliceFormat;
+                __typename?: "DataBatch";
+                format: DataBatchFormat;
                 content: string;
                 numRecords: number;
             };
@@ -613,14 +800,14 @@ export type GetDatasetHistoryQuery = {
                               __typename?: "MetadataBlockConnection";
                               totalCount?: number | null | undefined;
                               nodes: Array<{
-                                  __typename?: "MetadataBlock";
+                                  __typename?: "MetadataBlockHashed";
                                   blockHash: any;
                                   systemTime: any;
                                   event:
                                       | {
-                                            __typename: "MetadataEventAddData";
+                                            __typename: "AddData";
                                             addedOutputData: {
-                                                __typename: "DataSliceMetadata";
+                                                __typename: "DataSlice";
                                                 logicalHash: any;
                                                 physicalHash: any;
                                                 interval: {
@@ -631,10 +818,10 @@ export type GetDatasetHistoryQuery = {
                                             };
                                         }
                                       | {
-                                            __typename: "MetadataEventExecuteQuery";
+                                            __typename: "ExecuteQuery";
                                             queryOutputData?:
                                                 | {
-                                                      __typename: "DataSliceMetadata";
+                                                      __typename: "DataSlice";
                                                       logicalHash: any;
                                                       physicalHash: any;
                                                       interval: {
@@ -647,23 +834,22 @@ export type GetDatasetHistoryQuery = {
                                                 | undefined;
                                         }
                                       | {
-                                            __typename: "MetadataEventSeed";
+                                            __typename: "Seed";
                                             datasetId: any;
                                             datasetKind: DatasetKind;
                                         }
+                                      | { __typename: "SetAttachments" }
+                                      | { __typename: "SetInfo" }
                                       | {
-                                            __typename: "MetadataEventSetPollingSource";
+                                            __typename: "SetLicense";
+                                            name: string;
                                         }
+                                      | { __typename: "SetPollingSource" }
+                                      | { __typename: "SetTransform" }
+                                      | { __typename: "SetVocab" }
                                       | {
-                                            __typename: "MetadataEventSetTransform";
-                                        }
-                                      | { __typename: "MetadataEventSetVocab" }
-                                      | {
-                                            __typename: "MetadataEventSetWatermark";
+                                            __typename: "SetWatermark";
                                             outputWatermark: any;
-                                        }
-                                      | {
-                                            __typename: "MetadataEventUnsupported";
                                         };
                               }>;
                               pageInfo: {
@@ -930,7 +1116,7 @@ export type GetDatasetMetadataSchemaQuery = {
                               __typename?: "MetadataBlockConnection";
                               totalCount?: number | null | undefined;
                               nodes: Array<{
-                                  __typename?: "MetadataBlock";
+                                  __typename?: "MetadataBlockHashed";
                                   blockHash: any;
                                   systemTime: any;
                               }>;
@@ -948,7 +1134,7 @@ export type GetDatasetMetadataSchemaQuery = {
                       };
                       currentTransform?:
                           | {
-                                __typename?: "MetadataEventSetTransform";
+                                __typename?: "SetTransform";
                                 inputs: Array<{
                                     __typename?: "TransformInput";
                                     dataset: {
@@ -1009,10 +1195,13 @@ export type DatasetOverviewQuery = {
                       | { __typename?: "User"; id: any; name: string };
                   metadata: {
                       __typename: "DatasetMetadata";
-                      currentSummary: string;
-                      currentTopics: Array<string>;
-                      currentReadme: string;
+                      currentReadme?: string | null | undefined;
                       currentWatermark?: any | null | undefined;
+                      currentInfo: {
+                          __typename?: "SetInfo";
+                          description?: string | null | undefined;
+                          keywords?: Array<string> | null | undefined;
+                      };
                       currentSchema: {
                           __typename: "DataSchema";
                           format: DataSchemaFormat;
@@ -1031,8 +1220,8 @@ export type DatasetOverviewQuery = {
                               content: string;
                           };
                           data: {
-                              __typename?: "DataSlice";
-                              format: DataSliceFormat;
+                              __typename?: "DataBatch";
+                              format: DataBatchFormat;
                               content: string;
                           };
                       };
@@ -1090,8 +1279,11 @@ export type SearchDatasetsOverviewQuery = {
                     | { __typename?: "User"; id: any; name: string };
                 metadata: {
                     __typename?: "DatasetMetadata";
-                    currentSummary: string;
-                    currentTopics: Array<string>;
+                    currentInfo: {
+                        __typename?: "SetInfo";
+                        description?: string | null | undefined;
+                        keywords?: Array<string> | null | undefined;
+                    };
                     currentDownstreamDependencies: Array<{
                         __typename?: "Dataset";
                         id: any;
@@ -1267,17 +1459,17 @@ export const GetDatasetHistoryDocument = gql`
                             nodes {
                                 event {
                                     __typename
-                                    ... on MetadataEventSeed {
+                                    ... on Seed {
                                         datasetId
                                         datasetKind
                                     }
-                                    ... on MetadataEventSetWatermark {
+                                    ... on SetWatermark {
                                         outputWatermark
                                     }
-                                    ... on MetadataEventSetTransform {
+                                    ... on SetTransform {
                                         __typename
                                     }
-                                    ... on MetadataEventExecuteQuery {
+                                    ... on ExecuteQuery {
                                         queryOutputData: outputData {
                                             interval {
                                                 start
@@ -1289,7 +1481,7 @@ export const GetDatasetHistoryDocument = gql`
                                             __typename
                                         }
                                     }
-                                    ... on MetadataEventAddData {
+                                    ... on AddData {
                                         addedOutputData: outputData {
                                             interval {
                                                 start
@@ -1300,6 +1492,15 @@ export const GetDatasetHistoryDocument = gql`
                                             physicalHash
                                             __typename
                                         }
+                                    }
+                                    ... on SetAttachments {
+                                        __typename
+                                    }
+                                    ... on SetInfo {
+                                        __typename
+                                    }
+                                    ... on SetLicense {
+                                        name
                                     }
                                 }
                                 blockHash
@@ -1490,8 +1691,10 @@ export const DatasetOverviewDocument = gql`
                 createdAt
                 lastUpdatedAt
                 metadata {
-                    currentSummary
-                    currentTopics
+                    currentInfo {
+                        description
+                        keywords
+                    }
                     currentReadme
                     currentWatermark
                     currentSchema(format: PARQUET_JSON) {
@@ -1586,8 +1789,10 @@ export const SearchDatasetsOverviewDocument = gql`
                         }
                         kind
                         metadata {
-                            currentSummary
-                            currentTopics
+                            currentInfo {
+                                description
+                                keywords
+                            }
                             currentDownstreamDependencies {
                                 id
                                 kind

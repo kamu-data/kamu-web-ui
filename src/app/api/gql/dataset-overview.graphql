@@ -11,8 +11,10 @@ query datasetOverview($datasetId: DatasetID!, $limit: Int) {
       createdAt
       lastUpdatedAt
       metadata {
-        currentSummary
-        currentTopics
+        currentInfo {
+          description
+          keywords
+        }
         currentReadme
         currentWatermark
         currentSchema(format: PARQUET_JSON) {

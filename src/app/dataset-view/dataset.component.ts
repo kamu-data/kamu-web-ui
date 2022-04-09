@@ -285,30 +285,36 @@ const language = 'typescript';
 
     public getTitle(node: any): string {
         switch (node.event.__typename) {
-            case "MetadataEventAddData":
+            case "AddData":
                 return `Added ${
                     node.event.addedOutputData
                         ? node.event.addedOutputData.interval.end -
                           node.event.addedOutputData.interval.start
                         : "0"
                 } new records`;
-            case "MetadataEventExecuteQuery":
+            case "ExecuteQuery":
                 return `Transformation produced ${
                     node.event.queryOutputData
                         ? node.event.queryOutputData.interval.end -
                           node.event.queryOutputData.interval.start
                         : "0"
                 } new records`;
-            case "MetadataEventSeed":
+            case "Seed":
                 return `Dataset initialized`;
-            case "MetadataEventSetTransform":
+            case "SetTransform":
                 return `Query changed`;
-            case "MetadataEventSetVocab":
+            case "SetVocab":
                 return `Vocabulary changed`;
-            case "MetadataEventSetWatermar":
+            case "SetWatermar":
                 return `Watermark updated to ${node.systemTime}`;
-            case "MetadataEventSetPollingSource":
+            case "SetPollingSource":
                 return `Polling source changed`;
+            case "SetInfo":
+                return `Basic information updated`;
+            case "SetLicense":
+                return `License updated: ${node.event.name}`;
+            case "SetAttachments":
+                return `Attachments updated`;
             default:
                 return node.event.__typename;
         }

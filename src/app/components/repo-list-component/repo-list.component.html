@@ -109,13 +109,17 @@
         </div>
         <div>
             <p class="repo-list-container__description mb-2">
-                {{ row.metadata.currentSummary }}
+                {{ row.metadata.currentInfo.description }}
             </p>
             <div class="app-mat-chip">
                 <mat-chip-list aria-label="Tags selection">
-                    <div *ngFor="let topic of row.metadata.currentTopics">
+                    <div
+                        *ngFor="
+                            let keyword of row.metadata.currentInfo.keywords
+                        "
+                    >
                         <mat-chip (click)="selectTopic(row.kind)">{{
-                            topic
+                            keyword
                         }}</mat-chip>
                     </div>
                 </mat-chip-list>

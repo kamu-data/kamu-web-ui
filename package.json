@@ -11,7 +11,7 @@
     "prettier": "prettier --write '**/*.{ts,js,html,spec.ts}'",
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
     "gql-update-schema": "npx rover graph introspect http://localhost:8080/graphql > resources/schema.graphql",
-    "gql-codegen": "graphql-codegen --config gql-codegen.yml"
+    "gql-codegen": "graphql-codegen --config gql-codegen.yml && prettier --write src/app/api/kamu.graphql.interface.ts"
   },
   "private": true,
   "dependencies": {

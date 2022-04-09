@@ -33,44 +33,29 @@
                                 style="gap: 5px"
                             >
                                 <mat-icon
-                                    *ngIf="
-                                        node.event.__typename ===
-                                        'MetadataEventSeed'
-                                    "
+                                    *ngIf="node.event.__typename === 'Seed'"
                                     >add_circle_outline</mat-icon
                                 >
                                 <mat-icon
-                                    *ngIf="
-                                        node.event.__typename ===
-                                        'MetadataEventAddData'
-                                    "
+                                    *ngIf="node.event.__typename === 'AddData'"
                                     >input</mat-icon
                                 >
                                 <mat-icon
                                     *ngIf="
-                                        node.event.__typename ===
-                                        'MetadataEventExecuteQuery'
+                                        node.event.__typename === 'ExecuteQuery'
                                     "
                                     >call_merge</mat-icon
                                 >
                                 <mat-icon
                                     *ngIf="
-                                        node.event.__typename ===
-                                        'MetadataEventSetVocab'
-                                    "
-                                    >more_horiz</mat-icon
-                                >
-                                <mat-icon
-                                    *ngIf="
-                                        node.event.__typename ===
-                                        'MetadataEventSetTransform'
-                                    "
-                                    >more_horiz</mat-icon
-                                >
-                                <mat-icon
-                                    *ngIf="
-                                        node.event.__typename ===
-                                        'MetadataEventSetPollingSource'
+                                        [
+                                            'SetAttachments',
+                                            'SetInfo',
+                                            'SetLicense',
+                                            'SetVocab',
+                                            'SetTransform',
+                                            'SetPollingSource'
+                                        ].includes(node.event.__typename)
                                     "
                                     >more_horiz</mat-icon
                                 >

@@ -110,13 +110,14 @@ export interface SearchDatasetByID {
     kind: DatasetKindTypeNames;
     name: string;
     owner: Account;
-    // ca.covid19.daily-cases
     id: string;
     lastUpdatedAt: string;
     metadata: {
         _typename: string;
-        currentSummary: string;
-        currentTopics: string[];
+        currentInfo: {
+            description: string;
+            keywords: string[];
+        };
         currentReadme: string;
         currentSchema: {
             _typename: string;
@@ -162,8 +163,10 @@ export interface DatasetInfoInterface {
     numRecordsTotal?: number;
     metadata: {
         _typename: string;
-        currentSummary: string;
-        currentTopics: string[];
+        currentInfo: {
+            description: string;
+            keywords: string[];
+        };
         currentReadme: string;
         currentSchema: {
             _typename: string;

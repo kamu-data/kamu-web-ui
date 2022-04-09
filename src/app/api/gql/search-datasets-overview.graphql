@@ -12,8 +12,10 @@ query searchDatasetsOverview($query: String!, $perPage: Int, $page: Int) {
           }
           kind
           metadata {
-            currentSummary
-            currentTopics
+            currentInfo {
+              description
+              keywords
+            }
             currentDownstreamDependencies {
               id
               kind

@@ -14,17 +14,17 @@ query getDatasetHistory($datasetId: DatasetID!, $perPage: Int, $page: Int) {
             nodes {
               event {
                 __typename
-                ... on MetadataEventSeed {
+                ... on Seed {
                   datasetId
                   datasetKind
                 }
-                ... on MetadataEventSetWatermark {
+                ... on SetWatermark {
                   outputWatermark
                 }
-                ... on MetadataEventSetTransform {
+                ... on SetTransform {
                   __typename
                 }
-                ... on MetadataEventExecuteQuery {
+                ... on ExecuteQuery {
                   queryOutputData: outputData {
                     interval {
                       start
@@ -36,7 +36,7 @@ query getDatasetHistory($datasetId: DatasetID!, $perPage: Int, $page: Int) {
                     __typename
                   }
                 }
-                ... on MetadataEventAddData {
+                ... on AddData {
                   addedOutputData: outputData {
                     interval {
                       start
@@ -47,6 +47,15 @@ query getDatasetHistory($datasetId: DatasetID!, $perPage: Int, $page: Int) {
                     physicalHash
                     __typename
                   }
+                }
+                ... on SetAttachments {
+                  __typename
+                }
+                ... on SetInfo {
+                  __typename
+                }
+                ... on SetLicense {
+                  name
                 }
               }
               blockHash

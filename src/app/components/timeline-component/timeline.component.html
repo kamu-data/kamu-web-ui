@@ -1,5 +1,5 @@
 <div class="timeline-block">
-    <div *ngFor="let node of history">
+    <div *ngFor="let block of history">
         <div
             class="timeline-block__item timeline-block__item--condensed pt-0 pb-2"
         >
@@ -33,16 +33,17 @@
                                 style="gap: 5px"
                             >
                                 <mat-icon
-                                    *ngIf="node.event.__typename === 'Seed'"
+                                    *ngIf="block.event.__typename === 'Seed'"
                                     >add_circle_outline</mat-icon
                                 >
                                 <mat-icon
-                                    *ngIf="node.event.__typename === 'AddData'"
+                                    *ngIf="block.event.__typename === 'AddData'"
                                     >input</mat-icon
                                 >
                                 <mat-icon
                                     *ngIf="
-                                        node.event.__typename === 'ExecuteQuery'
+                                        block.event.__typename ===
+                                        'ExecuteQuery'
                                     "
                                     >call_merge</mat-icon
                                 >
@@ -55,14 +56,18 @@
                                             'SetVocab',
                                             'SetTransform',
                                             'SetPollingSource'
-                                        ].includes(node.event.__typename)
+                                        ].includes(block.event.__typename)
                                     "
                                     >more_horiz</mat-icon
                                 >
                                 <a
                                     class="link--primary font-weight-bold"
-                                    href="/kamu-data/kamu-web-ui/commit/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d"
-                                    >{{ node["event"]["title"] }}</a
+                                    href="#todo-navigate-to-block"
+                                    >{{
+                                        dataHelpers.descriptionForMetadataBlock(
+                                            block
+                                        )
+                                    }}</a
                                 >
                             </div>
 
@@ -70,7 +75,7 @@
                                 <div class="avatar-stack flex-self-start">
                                     <div
                                         class="avatar-stack__body"
-                                        aria-label="sergiimk"
+                                        aria-label=""
                                     >
                                         <a
                                             class="avatar avatar-user"
@@ -78,17 +83,17 @@
                                             data-skip-pjax="true"
                                             data-test-selector="commits-avatar-stack-avatar-link"
                                             data-hovercard-type="user"
-                                            data-hovercard-url="/users/sergiimk/hovercard"
+                                            data-hovercard-url="/users/_/hovercard"
                                             data-octo-click="hovercard-link-click"
                                             data-octo-dimensions="link_type:self"
-                                            href="/sergiimk"
+                                            href="/#todo-navigate-to-user"
                                         >
                                             <img
                                                 data-test-selector="commits-avatar-stack-avatar-image"
-                                                src="https://avatars.githubusercontent.com/u/204914?s=40&amp;v=4"
+                                                src="https://avatars.githubusercontent.com/u/50896974?s=48&v=4"
                                                 width="20"
                                                 height="20"
-                                                alt="@sergiimk"
+                                                [alt]="'@' + block.author.name"
                                                 class="avatar-user"
                                             />
                                         </a>
@@ -98,19 +103,21 @@
                                 <div class="f6 color-fg-muted min-width-0">
                                     <a
                                         class="commit-author user-mention"
-                                        title="View all commits by sergiimk"
-                                        href="/kamu-data/kamu-web-ui/commits?author=sergiimk"
-                                        >sergiimk</a
+                                        [title]="
+                                            'View all commits by ' +
+                                            block.author.name
+                                        "
+                                        href="#todo-navigate-to-user"
+                                        >{{ block.author.name }}</a
                                     >
 
                                     committed
                                     <time
-                                        datetime="2022-02-19T03:09:35Z"
                                         class="no-wrap"
-                                        title="19 Feb 2022, 05:09 EET"
+                                        [title]="block.systemTime"
                                         >{{
-                                            momentConverDatetoLocalWithFormat(
-                                                node.systemTime
+                                            dataHelpers.relativeTime(
+                                                block.systemTime
                                             )
                                         }}
                                     </time>
@@ -191,7 +198,7 @@
                                     data-view-component="true"
                                     class="tooltipped tooltipped-sw btn-outline btn BtnGroup-item text-mono f6 m-2"
                                 >
-                                    {{ shortHash(node["blockHash"]) }}
+                                    {{ dataHelpers.shortHash(block.blockHash) }}
                                 </a>
                             </div>
                             <div data-view-component="true" class="BtnGroup">

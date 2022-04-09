@@ -237,20 +237,7 @@ const language = 'typescript';
         );
         this.appDatasetService.onSearchDatasetHistoryChanges.subscribe(
             (history: any[]) => {
-                const historyView = AppValues.deepCopy(history);
-                historyView.map((node: any) => {
-                    node.event = Object.assign(
-                        // TODO: This is a view concern - should be moved out
-                        {
-                            title: this.dataHelpers.descriptionForMetadataBlock(
-                                node,
-                            ),
-                        },
-                        node.event,
-                    );
-                    return node;
-                });
-                this.datasetHistory = historyView;
+                this.datasetHistory = history;
             },
         );
         this.appDatasetService.onDatasetPageInfoChanges.subscribe(

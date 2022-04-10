@@ -1,7 +1,7 @@
 import {
+    DatasetKind,
     DatasetMetadata,
     MetadataBlockFragment,
-    MetadataEvent,
 } from "../api/kamu.graphql.interface";
 
 export interface SearchHistoryResponseInterface {
@@ -50,7 +50,7 @@ export interface SearchOverviewDatasetsInterface {
     id: string;
     name: string;
     owner: Account;
-    kind: DatasetKindTypeNames;
+    kind: DatasetKind;
     metadata: DatasetMetadata;
     createdAt: string;
     lastUpdatedAt: string;
@@ -79,7 +79,7 @@ export interface SearchMetadataInterface {
 export interface DatasetKindInterface {
     id: string;
     name: string;
-    kind: DatasetKindTypeNames;
+    kind: DatasetKind;
 }
 
 export interface PageInfoInterface {
@@ -111,7 +111,7 @@ export interface SearchDatasetByID {
     __typename: string;
     createdAt: string;
     data: SearchDatasetByIDDataInterface;
-    kind: DatasetKindTypeNames;
+    kind: DatasetKind;
     name: string;
     owner: Account;
     id: string;
@@ -158,7 +158,7 @@ export interface DatasetInfoInterface {
     __typename: string;
     createdAt?: string;
     id: string;
-    kind: DatasetKindTypeNames;
+    kind: DatasetKind;
     name: string;
     owner: {
         id: string;
@@ -187,14 +187,14 @@ export interface DatasetInfoInterface {
 export interface DatasetLinageResponse {
     __typename: string;
     id: string;
-    kind: DatasetKindTypeNames;
+    kind: DatasetKind;
     name: string;
     metadata: DatasetCurrentUpstreamDependencies;
 }
 export interface DatasetCurrentUpstreamDependencies {
     __typename: string;
     id: string;
-    kind: DatasetKindTypeNames;
+    kind: DatasetKind;
     name: string;
     currentDownstreamDependencies?: DatasetLinageResponse[];
     currentUpstreamDependencies?: DatasetLinageResponse[];
@@ -208,8 +208,4 @@ export interface DataSchemaField {
     name: string;
     repetition: string;
     type: string;
-}
-export enum DatasetKindTypeNames {
-    derivative = "DERIVATIVE",
-    root = "ROOT",
 }

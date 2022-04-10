@@ -10,7 +10,6 @@ import {
 import {
     DatasetInfoInterface,
     DatasetKindInterface,
-    DatasetKindTypeNames,
     DatasetNameInterface,
     DataViewSchema,
     PageInfoInterface,
@@ -36,6 +35,7 @@ import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import {
     DataSchema,
+    DatasetKind,
     GetDatasetLineageGQL,
     GetDatasetLineageQuery,
     MetadataBlockFragment,
@@ -303,7 +303,7 @@ const language = 'typescript';
         }
     }
 
-    public getDatasetTree(): { id: string; kind: DatasetKindTypeNames }[][] {
+    public getDatasetTree(): { id: string; kind: DatasetKind }[][] {
         return this.appDatasetService.getDatasetTree;
     }
 
@@ -496,15 +496,15 @@ const language = 'typescript';
         this.initLinageGraphProperty();
         this.linageGraphClusters = [
             {
-                id: DatasetKindTypeNames.root + "_cluster",
-                label: DatasetKindTypeNames.root,
+                id: DatasetKind.Root + "_cluster",
+                label: DatasetKind.Root,
                 data: { customColor: "#A52A2A59" },
                 position: { x: 10, y: 10 },
                 childNodeIds: [],
             },
             {
-                id: DatasetKindTypeNames.derivative + "_cluster",
-                label: DatasetKindTypeNames.derivative,
+                id: DatasetKind.Derivative + "_cluster",
+                label: DatasetKind.Derivative,
                 data: { customColor: "#00800039" },
                 position: { x: 10, y: 10 },
                 childNodeIds: [],
@@ -536,7 +536,7 @@ const language = 'typescript';
                             id: dataset.id,
                             name: dataset.name,
                             kind: dataset.kind,
-                            isRoot: dataset.kind === DatasetKindTypeNames.root,
+                            isRoot: dataset.kind === DatasetKind.Root,
                             isCurrent: dataset.id === currentDataset.id,
                         },
                     });

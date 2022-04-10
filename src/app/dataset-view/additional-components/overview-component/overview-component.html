@@ -115,7 +115,7 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ datasetInfo.kind }}
+                                {{ dataHelpers.datasetKind(datasetInfo.kind) }}
                             </p>
                         </div>
                     </div>
@@ -145,16 +145,15 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ datasetInfo.estimatedSize | number: "1.0-0"
-                                }}
+                                {{ datasetInfo.estimatedSize ?
+                                dataHelpers.dataSize(datasetInfo.estimatedSize)
+                                : "-" }}
                             </p>
                         </div>
                     </div>
                     <div class="dataset-info--block">
                         <div class="dataset-info--sub-block">
-                            <h2 class="dataset-info--subtitle">
-                                Num Records Total:
-                            </h2>
+                            <h2 class="dataset-info--subtitle">Records:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
@@ -171,10 +170,13 @@
                             <h2 class="dataset-info--subtitle">Created At:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">
-                                {{ momentConverDatetoLocalWithFormat(
-                                datasetInfo.createdAt ) }}
-                            </p>
+                            <time
+                                class="dataset-info--text"
+                                [title]="datasetInfo.createdAt"
+                                >{{
+                                dataHelpers.relativeTime(datasetInfo.createdAt,{w:
+                                1}) }}
+                            </time>
                         </div>
                     </div>
                     <div
@@ -187,10 +189,13 @@
                             </h2>
                         </div>
                         <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">
-                                {{ momentConverDatetoLocalWithFormat(
-                                datasetInfo.lastUpdatedAt ) }}
-                            </p>
+                            <time
+                                class="dataset-info--text"
+                                [title]="datasetInfo.lastUpdatedAt"
+                                >{{
+                                dataHelpers.relativeTime(datasetInfo.lastUpdatedAt,{w:
+                                1}) }}
+                            </time>
                         </div>
                     </div>
                     <div
@@ -201,11 +206,13 @@
                             <h2 class="dataset-info--subtitle">Watermark:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">
-                                {{
-                                momentConverDatetoLocalWithFormat(datasetInfo.metadata.currentWatermark)
-                                }}
-                            </p>
+                            <time
+                                class="dataset-info--text"
+                                [title]="datasetInfo.metadata.currentWatermark"
+                                >{{
+                                dataHelpers.relativeTime(datasetInfo.metadata.currentWatermark,
+                                {w: 1}) }}
+                            </time>
                         </div>
                     </div>
                 </ng-template>

@@ -4,7 +4,6 @@ import { SearchApi } from "../api/search.api";
 import {
     DatasetInfoInterface,
     DatasetKindInterface,
-    DatasetKindTypeNames,
     DatasetNameInterface,
     PageInfoInterface,
     SearchDatasetByID,
@@ -15,6 +14,7 @@ import {
 import { map } from "rxjs/operators";
 import {
     DataSchema,
+    DatasetKind,
     DatasetOverviewQuery,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
@@ -82,7 +82,7 @@ export class AppDatasetService {
 
     public get getDatasetTree(): {
         id: string;
-        kind: DatasetKindTypeNames;
+        kind: DatasetKind;
     }[][] {
         return this.datasetTree;
     }

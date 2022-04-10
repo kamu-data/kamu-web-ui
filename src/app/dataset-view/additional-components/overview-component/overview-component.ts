@@ -4,6 +4,7 @@ import {
     PageInfoInterface,
 } from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
+import { DataHelpersService } from "src/app/services/datahelpers.service";
 @Component({
     selector: "app-overview",
     templateUrl: "overview-component.html",
@@ -26,18 +27,13 @@ export class OverviewComponent {
     @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
     @Output() onSelectTopicEmit: EventEmitter<string> = new EventEmitter();
 
+    constructor(public dataHelpers: DataHelpersService) {}
+
     public onSelectDataset(id: string): void {
         this.onSelectDatasetEmit.emit(id);
     }
     public toggleReadmeView(): void {
         this.onToggleReadmeViewEmit.emit();
-    }
-    public momentConverDatetoLocalWithFormat(date: string): string {
-        return AppValues.momentConverDatetoLocalWithFormat({
-            date: new Date(String(date)),
-            format: "DD MMM YYYY",
-            isTextDate: true,
-        });
     }
     public selectTopic(topicName: string): void {
         this.onSelectTopicEmit.emit(topicName);

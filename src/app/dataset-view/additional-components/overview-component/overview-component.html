@@ -127,14 +127,28 @@
                             <p class="dataset-info--text">Public</p>
                         </div>
                     </div>
-                    <div class="dataset-info--block">
+                    <div
+                        class="dataset-info--block"
+                        *ngIf="datasetInfo && datasetInfo.metadata.currentLicense"
+                    >
                         <div class="dataset-info--sub-block">
                             <h2 class="dataset-info--subtitle">License:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">
-                                Canada - Open Data License
-                            </p>
+                            <a
+                                class="link--primary"
+                                [href]="datasetInfo.metadata.currentLicense.websiteUrl"
+                            >
+                                <p
+                                    class="dataset-info--text"
+                                    placement="bottom"
+                                    [ngbTooltip]="datasetInfo.metadata.currentLicense.name"
+                                >
+                                    {{
+                                    datasetInfo.metadata.currentLicense.shortName
+                                    }}
+                                </p>
+                            </a>
                         </div>
                     </div>
                     <div class="dataset-info--block">

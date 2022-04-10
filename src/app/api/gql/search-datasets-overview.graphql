@@ -16,6 +16,9 @@ query searchDatasetsOverview($query: String!, $perPage: Int, $page: Int) {
               description
               keywords
             }
+            currentLicense {
+              ...License
+            }
             currentDownstreamDependencies {
               id
               kind

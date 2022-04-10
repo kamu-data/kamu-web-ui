@@ -1,0 +1,6 @@
+fragment License on SetLicense {
+  shortName
+  name
+  spdxId
+  websiteUrl
+}

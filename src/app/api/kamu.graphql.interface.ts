@@ -248,8 +248,6 @@ export type MetadataChain = {
     blockByHash?: Maybe<MetadataBlockExtended>;
     /** Iterates all metadata blocks in the reverse chronological order */
     blocks: MetadataBlockConnection;
-    /** Total number of blocks in the metadata chain */
-    numBlocksTotal: Scalars["Int"];
     /** Returns all named metadata block references */
     refs: Array<BlockRef>;
 };
@@ -1181,6 +1179,16 @@ export type GetDatasetMetadataSchemaQuery = {
                             }
                           | null
                           | undefined;
+                      currentLicense?:
+                          | {
+                                __typename?: "SetLicense";
+                                shortName: string;
+                                name: string;
+                                spdxId?: string | null | undefined;
+                                websiteUrl: string;
+                            }
+                          | null
+                          | undefined;
                   };
               }
             | null
@@ -1217,6 +1225,16 @@ export type DatasetOverviewQuery = {
                           description?: string | null | undefined;
                           keywords?: Array<string> | null | undefined;
                       };
+                      currentLicense?:
+                          | {
+                                __typename?: "SetLicense";
+                                shortName: string;
+                                name: string;
+                                spdxId?: string | null | undefined;
+                                websiteUrl: string;
+                            }
+                          | null
+                          | undefined;
                       currentSchema: {
                           __typename: "DataSchema";
                           format: DataSchemaFormat;
@@ -1224,9 +1242,9 @@ export type DatasetOverviewQuery = {
                       };
                       chain: {
                           __typename?: "MetadataChain";
-                          numBlocksTotal: number;
                           blocks: {
                               __typename?: "MetadataBlockConnection";
+                              totalCount?: number | null | undefined;
                               nodes: Array<{
                                   __typename?: "MetadataBlockExtended";
                                   blockHash: any;
@@ -1317,6 +1335,14 @@ export type DatasetOverviewQuery = {
             | null
             | undefined;
     };
+};
+
+export type LicenseFragment = {
+    __typename?: "SetLicense";
+    shortName: string;
+    name: string;
+    spdxId?: string | null | undefined;
+    websiteUrl: string;
 };
 
 export type MetadataBlockFragment = {
@@ -1419,6 +1445,16 @@ export type SearchDatasetsOverviewQuery = {
                         description?: string | null | undefined;
                         keywords?: Array<string> | null | undefined;
                     };
+                    currentLicense?:
+                        | {
+                              __typename?: "SetLicense";
+                              shortName: string;
+                              name: string;
+                              spdxId?: string | null | undefined;
+                              websiteUrl: string;
+                          }
+                        | null
+                        | undefined;
                     currentDownstreamDependencies: Array<{
                         __typename?: "Dataset";
                         id: any;
@@ -1446,6 +1482,14 @@ export const LineageDatasetInfoFragmentDoc = gql`
             id
             name
         }
+    }
+`;
+export const LicenseFragmentDoc = gql`
+    fragment License on SetLicense {
+        shortName
+        name
+        spdxId
+        websiteUrl
     }
 `;
 export const MetadataBlockFragmentDoc = gql`
@@ -1801,10 +1845,14 @@ export const GetDatasetMetadataSchemaDocument = gql`
                             }
                         }
                     }
+                    currentLicense {
+                        ...License
+                    }
                 }
             }
         }
     }
+    ${LicenseFragmentDoc}
 `;
 
 @Injectable({
@@ -1838,6 +1886,9 @@ export const DatasetOverviewDocument = gql`
                         description
                         keywords
                     }
+                    currentLicense {
+                        ...License
+                    }
                     currentReadme
                     currentWatermark
                     currentSchema(format: PARQUET_JSON) {
@@ -1847,11 +1898,11 @@ export const DatasetOverviewDocument = gql`
                     }
                     __typename
                     chain {
-                        numBlocksTotal
                         blocks(page: 0, perPage: 1) {
                             nodes {
                                 ...MetadataBlock
                             }
+                            totalCount
                         }
                     }
                 }
@@ -1876,6 +1927,7 @@ export const DatasetOverviewDocument = gql`
             __typename
         }
     }
+    ${LicenseFragmentDoc}
     ${MetadataBlockFragmentDoc}
 `;
 
@@ -1945,6 +1997,9 @@ export const SearchDatasetsOverviewDocument = gql`
                                 description
                                 keywords
                             }
+                            currentLicense {
+                                ...License
+                            }
                             currentDownstreamDependencies {
                                 id
                                 kind
@@ -1965,6 +2020,7 @@ export const SearchDatasetsOverviewDocument = gql`
             }
         }
     }
+    ${LicenseFragmentDoc}
 `;
 
 @Injectable({

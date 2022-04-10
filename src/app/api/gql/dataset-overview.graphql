@@ -15,6 +15,9 @@ query datasetOverview($datasetId: DatasetID!, $limit: Int) {
           description
           keywords
         }
+        currentLicense {
+          ...License
+        }
         currentReadme
         currentWatermark
         currentSchema(format: PARQUET_JSON) {
@@ -25,11 +28,11 @@ query datasetOverview($datasetId: DatasetID!, $limit: Int) {
         __typename
         # Last update
         chain {
-          numBlocksTotal
           blocks(page: 0, perPage: 1) {
             nodes {
               ...MetadataBlock
             }
+            totalCount
           }
         }
       }

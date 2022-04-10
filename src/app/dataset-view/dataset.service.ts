@@ -271,7 +271,8 @@ export class AppDatasetService {
                     datasets.latestMetadataBlock =
                         data.datasets.byId?.metadata.chain.blocks.nodes[0];
                     datasets.numBlocksTotal =
-                        data.datasets.byId?.metadata.chain.numBlocksTotal;
+                        data.datasets.byId?.metadata.chain.blocks.totalCount ||
+                        0;
                     datasets.data.tail.content = data.datasets.byId
                         ? JSON.parse(
                               data.datasets?.byId?.data.tail.data.content,

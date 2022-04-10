@@ -51,6 +51,9 @@ query getDatasetMetadataSchema(
             }
           }
         }
+        currentLicense {
+          ...License
+        }
       }
     }
   }

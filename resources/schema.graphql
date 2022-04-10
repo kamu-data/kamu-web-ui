@@ -250,8 +250,6 @@ type MetadataChain {
   refs: [BlockRef!]!
   "Returns a metadata block corresponding to the specified hash"
   blockByHash(hash: Multihash!): MetadataBlockExtended
-  "Total number of blocks in the metadata chain"
-  numBlocksTotal: Int!
   "Iterates all metadata blocks in the reverse chronological order"
   blocks(page: Int, perPage: Int): MetadataBlockConnection!
 }

@@ -1,6 +1,7 @@
 import {
     DatasetKind,
     DatasetMetadata,
+    LicenseFragment,
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
 
@@ -124,6 +125,7 @@ export interface SearchDatasetByID {
             description: string;
             keywords: string[];
         };
+        currentLicense: LicenseFragment;
         currentReadme: string;
         currentSchema: {
             _typename: string;
@@ -175,6 +177,7 @@ export interface DatasetInfoInterface {
             description: string;
             keywords: string[];
         };
+        currentLicense: LicenseFragment;
         currentReadme: string;
         currentSchema: {
             _typename: string;

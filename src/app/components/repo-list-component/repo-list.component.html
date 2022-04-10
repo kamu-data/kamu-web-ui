@@ -137,7 +137,10 @@
                     </ng-template>
                 </ngb-rating>
                 <p class="text-small color-text-secondary mr-3">
-                    12 Downstream
+                    {{
+                        row.metadata.currentDownstreamDependencies.length
+                    }}
+                    Downstream
                 </p>
                 <p
                     class="text-small color-text-secondary mr-3"

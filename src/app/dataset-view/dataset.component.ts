@@ -166,6 +166,7 @@ const language = 'typescript';
         }
         this.changeLinageGraphView();
     }
+    private prevUrl?: any = undefined;
 
     constructor(
         private appDatasetService: AppDatasetService,
@@ -208,15 +209,11 @@ const language = 'typescript';
     }
 
     public ngOnInit(): void {
+        debugger
         this.checkWindowSize();
         if (this.sidenav) {
             this.sidenavService.setSidenav(this.sidenav);
         }
-        this.router.events
-            .pipe(filter((event) => event instanceof NavigationEnd))
-            .subscribe((event: any) => {
-                this.initDatasetViewByType();
-            });
         this.initDatasetViewByType();
 
         this.initTableData();
@@ -422,7 +419,7 @@ const language = 'typescript';
 
     public onSearchDataForDataset(): void {
         this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
+            ['dataset', AppValues.defaultUsername, AppValues.urlDatasetView],
             {
                 queryParams: {
                     id: this.getDatasetId(),
@@ -461,7 +458,9 @@ const language = 'typescript';
     }
 
     public showOwnerPage(): void {
-        this.router.navigate([this.datasetInfo.owner.name]);
+        this.router.navigate(['username', this.datasetInfo.owner.name], {
+                    queryParams: {tab: 'datasets'}
+        });
     }
 
     public toggleReadmeView(): void {
@@ -477,16 +476,18 @@ const language = 'typescript';
 
     public onSearchDataset(page = 0): void {
         debugger
-        const userName: string = this._window.location.href.split(':id')[0];
-        this.router.navigate(
-            [userName || AppValues.defaultUsername, AppValues.urlDatasetView],
-            {
-                queryParams: {
-                    id: this.getDatasetId(),
-                    type: AppValues.urlDatasetViewOverviewType,
-                },
-            },
-        );
+        const userName: string = this._window.location.pathname.split('/')[1];
+        // if (!this._window.location.href.includes(AppValues.urlDatasetViewOverviewType)) {
+        //     this.router.navigate(
+        //         ['dataset', userName || AppValues.defaultUsername, AppValues.urlDatasetView],
+        //         {
+        //             queryParams: {
+        //                 id: this.getDatasetId(),
+        //                 type: AppValues.urlDatasetViewOverviewType,
+        //             },
+        //         },
+        //     );
+        // }
 
         this.datasetViewType = DatasetViewTypeEnum.overview;
 
@@ -654,9 +655,11 @@ const language = 'typescript';
     }
 
     private initDatasetViewByType(currentPage?: number): void {
-        if (this.appDatasetService.onSearchLinageDatasetSubscribtion) {
-            this.appDatasetService.onSearchLinageDatasetSubscribtion.unsubscribe();
-        }
+        debugger
+
+        // if (this.appDatasetService.onSearchLinageDatasetSubscribtion) {
+        //     this.appDatasetService.onSearchLinageDatasetSubscribtion.unsubscribe();
+        // }
         this.appDatasetService.resetDatasetTree();
         const searchParams: string[] = decodeURIComponent(
             this._window.location.search,
@@ -678,22 +681,22 @@ const language = 'typescript';
             if (type === DatasetViewTypeEnum.overview) {
                 this.onSearchDataset();
             }
-            if (type === DatasetViewTypeEnum.data) {
-                this.onSearchDataForDataset();
-            }
-            if (type === DatasetViewTypeEnum.metadata) {
-                this.currentPage = page;
-                this.onSearchMetadata(page);
-            }
-            if (type === DatasetViewTypeEnum.history) {
-                this.onSearchDataForHistory(page);
-            }
-            if (type === DatasetViewTypeEnum.linage) {
-                this.onSearchLinageDataset();
-            }
-            if (type === DatasetViewTypeEnum.discussions) {
-                this.onSearchDiscussions();
-            }
+        //     if (type === DatasetViewTypeEnum.data) {
+        //         this.onSearchDataForDataset();
+        //     }
+        //     if (type === DatasetViewTypeEnum.metadata) {
+        //         this.currentPage = page;
+        //         this.onSearchMetadata(page);
+        //     }
+        //     if (type === DatasetViewTypeEnum.history) {
+        //         this.onSearchDataForHistory(page);
+        //     }
+        //     if (type === DatasetViewTypeEnum.linage) {
+        //         this.onSearchLinageDataset();
+        //     }
+        //     if (type === DatasetViewTypeEnum.discussions) {
+        //         this.onSearchDiscussions();
+        //     }
         }
     }
 

@@ -47,6 +47,8 @@ import { MonacoEditorModule } from "ngx-monaco-editor";
 import { TimelineComponent } from "./components/timeline-component/timeline.component";
 import {RepoListModule} from "./components/repo-list-component/repo-list.module";
 import {SettingsComponent} from "./auth/settings/settings.component";
+import {DatasetComponent} from "./dataset-view/dataset.component";
+import {AccountModule} from "./auth/account/account.module";
 
 const Services = [
     Apollo,
@@ -89,13 +91,13 @@ const MatModules = [
         AppHeaderComponent,
         LoginComponent,
         GithubCallbackComponent,
-        AccountComponent,
         SettingsComponent,
         NotificationIndicatorComponent,
     ],
-    imports: [
+    imports: [BrowserModule, HttpClientModule,
         AppRoutingModule,
         DatasetModule,
+        AccountModule,
         DatasetCreateModule,
         ModalModule.forRoot(),
         SearchModule.forRoot(),
@@ -105,7 +107,6 @@ const MatModules = [
         }),
         MonacoEditorModule.forRoot(),
 
-        BrowserModule,
         BrowserAnimationsModule,
         ServiceWorkerModule.register("ngsw-worker.js", {
             enabled: environment.production,

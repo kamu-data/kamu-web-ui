@@ -14,6 +14,7 @@ import {DatasetsByAccountNameQuery} from "../../api/kamu.graphql.interface";
 import {AccountTabs} from "./account.constants";
 // @ts-ignore
 import * as $ from "jquery";
+import {Location} from '@angular/common';
 
 @Component({
     selector: "app-account",
@@ -75,9 +76,11 @@ export class AccountComponent implements OnInit {
     constructor(
         private searchApi: SearchApi,
         private authApi: AuthApi,
-        private route: ActivatedRoute,
         private router: Router,
+        private route: ActivatedRoute,
+        private location: Location
     ) {
+        debugger
         this._window = window;
         if (this.authApi.userModal) {
             this.user = AppValues.deepCopy(this.authApi.userModal);
@@ -88,9 +91,11 @@ export class AccountComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.userName = this._window.location.pathname.split("/")[1];
+        debugger
+        this.userName = this._window.location.pathname.split("/username/")[1];
 
         this.setupUrl();
+        this.onUserDatasets();
 
         setTimeout(() => {
             if (this.containerMenu) {
@@ -100,14 +105,14 @@ export class AccountComponent implements OnInit {
         });
     }
     private setupUrl(): void {
-        if (this._window.location.search.includes("type=currentUser")) {
-           this.isCurrentUser = true;
-        }
-        if (this._window.location.search.includes("type=currentUser") && !this._window.location.search.includes("tab=")) {
-            this.router.navigate([this.userName], {
-                queryParams: {tab: AccountTabs.overview, type: "currentUser"}
-            });
-        }
+        // if (this._window.location.search.includes("type=currentUser")) {
+        //    this.isCurrentUser = true;
+        // }
+        // if (this._window.location.search.includes("type=currentUser") && !this._window.location.search.includes("tab=")) {
+        //     this.router.navigate([this.userName], {
+        //         queryParams: {tab: AccountTabs.overview, type: "currentUser"}
+        //     });
+        // }
         switch (true) {
             case (this.isMatchTab(AccountTabs.overview)):
                 this.onUserProfile();
@@ -142,52 +147,40 @@ export class AccountComponent implements OnInit {
     }
 
     public onUserProfile(): void {
-        this.router.navigate([this.userName], {
-            queryParams: {tab: AccountTabs.overview}
-        });
+        this.router.navigate(['.'], { relativeTo: this.route, queryParams: {tab: AccountTabs.overview}});
     }
     public onSelectDataset(data: { ownerName: string; id: string }): void {
         const id: string = data.id;
-        this.router.navigate([data.ownerName, AppValues.urlDatasetView], {
-            queryParams: { id: id, type: AppValues.urlDatasetViewOverviewType },
-        });
+        this.router.navigateByUrl(`/dataset/${data.ownerName}/${id}?id=${id}&type=${AppValues.urlDatasetViewOverviewType}`);
     }
 
     public onUserDatasets(): void {
+        this.router.navigate(['.'], { relativeTo: this.route, queryParams: {tab: AccountTabs.datasets}});
+
         this.searchApi.datasetsByAccountName({accountName: this.userName, page: 0, perPage: 10, limit: 10})
         .subscribe((res: DatasetsByAccountNameQuery | undefined) => {
             if (res) {
                 this.datasets = res.datasets.byAccountName.nodes;
             }
-
-            this.router.navigate([this.userName], {
-                queryParams: {tab: AccountTabs.datasets}
-            });
         });
     }
 
     public onUserOrganizations(): void {
-        this.router.navigate([this.userName], {
-            queryParams: {tab: AccountTabs.organizations}
-        });
+        this.router.navigate(['.'], { relativeTo: this.route, queryParams: {tab: AccountTabs.organizations}});
     }
 
     public onUserInbox(): void {
-        this.router.navigate([this.userName], {
-            queryParams: {tab: AccountTabs.inbox}
-        });
+        this.router.navigate(['.'], { relativeTo: this.route, queryParams: {tab: AccountTabs.inbox}});
     }
 
     public onUserStars(): void {
+        this.router.navigate(['.'], { relativeTo: this.route, queryParams: {tab: AccountTabs.stars}});
+
         this.searchApi.datasetsByAccountName({accountName: this.userName, page: 0, perPage: 10, limit: 10})
         .subscribe((res: DatasetsByAccountNameQuery | undefined) => {
             if (res) {
                 this.datasets = res.datasets.byAccountName.nodes;
             }
-
-            this.router.navigate([this.userName], {
-                queryParams: {tab: AccountTabs.stars}
-            });
         });
     }
 }

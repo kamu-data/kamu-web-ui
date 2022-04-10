@@ -1,5 +1,13 @@
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
+import {Injectable, NgModule} from "@angular/core";
+import {
+    ActivatedRouteSnapshot,
+    CanActivate,
+    Router,
+    RouterModule,
+    RouterStateSnapshot,
+    Routes,
+    UrlSegment
+} from "@angular/router";
 import { SearchComponent } from "./search/search.component";
 import { LoginComponent } from "./auth/login/login.component";
 import { DatasetComponent } from "./dataset-view/dataset.component";
@@ -13,7 +21,16 @@ import {SettingsComponent} from "./auth/settings/settings.component";
 const githubUrl = `https://github.com/login/oauth/authorize?scope=user:email&client_id=${environment.github_client_id}`;
 
 const routes: Routes = [
-    { path: "", redirectTo: AppValues.urlSearch, pathMatch: "full" },
+     {
+
+         path: 'dataset/:user/:id', component: DatasetComponent, children: [
+                     {
+                         path: ':id',
+                         component: DatasetComponent
+                     },
+                 ]
+    },
+    // { path: "**", redirectTo: AppValues.urlSearch},
     { path: AppValues.urlGithubCallback, component: GithubCallbackComponent },
     {
         path: AppValues.urlLogin,
@@ -25,30 +42,31 @@ const routes: Routes = [
     },
     {
         path: AppValues.urlSearch,
+        pathMatch: 'full',
         component: SearchComponent,
         children: [{ path: ":id", component: SearchComponent }],
     },
     {
         path: "settings/profile",
+        pathMatch: 'full',
         component: SettingsComponent
     },
     {
-        path: ":username/dataset-view",
-        component: DatasetComponent,
-        children: [{ path: ":id", component: DatasetComponent }],
-    },
-    {
-        path: ":username/" + AppValues.urlDatasetCreateSelectType,
-        component: DatasetCreateComponent,
-    },
-    {
-        path: ":username/" + AppValues.urlDatasetCreate,
-        component: DatasetCreateComponent,
-    },
-    {
-        path: ":username",
+        path: "username/:id",
         component: AccountComponent,
+        children: [
+            { path: ':id', component: AccountComponent },
+        ]
     },
+    // {
+    //     path: ":username/" + AppValues.urlDatasetCreateSelectType,
+    //     component: DatasetCreateComponent,
+    // },
+    // {
+    //     path: ":username/" + AppValues.urlDatasetCreate,
+    //     component: DatasetCreateComponent,
+    // },
+    { path: "", redirectTo: AppValues.urlSearch, pathMatch: "full" },
 ];
 
 @NgModule({

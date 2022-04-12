@@ -91,15 +91,15 @@ export class AppComponent implements OnInit {
                             event.url.split("?id=")[1].split("&")[0],
                         );
                     if (searchValue === "%255Bobject%2520Object%255D") {
-                        this.router.navigate(["search"]);
+                        this.router.navigate([AppValues.urlSearch]);
                         setTimeout(() =>
                             this.appSearchService.searchChanges(""),
                         );
                     }
-                    if (event.url.includes("search")) {
+                    if (event.url.includes(AppValues.urlSearch)) {
                         this.appSearchService.searchChanges(searchValue);
                     }
-                    if (!event.url.includes("search") && searchValue === "%255Bobject%2520Object%255D") {
+                    if (!event.url.includes(AppValues.urlSearch) && searchValue === "%255Bobject%2520Object%255D") {
                         this.appSearchService.searchChanges("");
                     }
                 }
@@ -164,8 +164,8 @@ export class AppComponent implements OnInit {
     }
     public onUserProfile(): void {
        if (this.user && this.user.login) {
-           this.router.navigate([this.user.login], {
-            queryParams: {type: "currentUser"}
+           this.router.navigate([AppValues.urlUsername, this.user.login], {
+            queryParams: {type: AccountTabs.currentUser}
         });
        }
     }
@@ -188,7 +188,7 @@ export class AppComponent implements OnInit {
         });
     }
     public onSettings(): void {
-        this.router.navigate(["settings/profile"]);
+        this.router.navigate([AppValues.urlSettings, AppValues.urlProfile]);
     }
     public onHelp(): void {
         this.modalService.warning({

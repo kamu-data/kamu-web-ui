@@ -18,6 +18,7 @@ export default class AppValues {
     public static urlDatasetCreateSelectType = "select-type";
     public static urlDatasetCreateRoot = "root";
     public static urlUsername = "username";
+    public static urlSettings = "settings";
 
     public static localStorageCode = "code";
     public static localStorageAccessToken = "code";

@@ -39,14 +39,10 @@ export class LinageGraphComponent implements OnChanges, OnInit {
     public graphNodes: any[];
 
     public ngOnInit(): void {
-        console.log(this.links);
-        console.log(this.nodes);
         this.graphNodes = this.nodes || [];
         this.graphClusters = this.graphClusters || [];
     }
     public ngOnChanges(changes: SimpleChanges): void {
-        console.log(this.links);
-        console.log(this.nodes);
         const clusters: SimpleChange = changes.clusters;
         const nodes: SimpleChange = changes.nodes;
         if (clusters) {
@@ -76,20 +72,18 @@ export class LinageGraphComponent implements OnChanges, OnInit {
     }
 
     public onClickNode(node: any, label: string): void {
-        console.log(node);
         this.onClickNodeEvent.emit(label);
     }
 
     // See: https://stackoverflow.com/questions/62874476/ngx-graph-linktemplate-links-middle-pointer-alignment-issue
-    getXYForCenteredLinkCircle(link: Edge): [number, number] {
-        var myPath = document.createElementNS(
+    public getXYForCenteredLinkCircle(link: Edge): [number, number] {
+        const myPath: SVGPathElement = document.createElementNS(
             "http://www.w3.org/2000/svg",
             "path",
         );
-        // @ts-ignore
-        myPath.setAttributeNS(null, "d", link.line);
-        var length = myPath.getTotalLength();
-        let p = myPath.getPointAtLength(length / 2);
+        myPath.setAttributeNS(null, "d", link.line as string);
+        const length: number = myPath.getTotalLength();
+        const p: DOMPoint = myPath.getPointAtLength(length / 2);
         return [p.x, p.y]; // Consider the center coordinates of the circle
     }
 }

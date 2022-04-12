@@ -36,8 +36,8 @@
                         <span class="author flex-self-stretch" itemprop="author">
                             <a
                                 *ngIf="datasetName?.owner?.name"
-                                class="url fn"
-                                rel="author"
+                                rel="organization"
+                                type="button"
                                 data-hovercard-type="organization"
                                 (click)="showOwnerPage()"
                                 >{{ datasetName.owner.name }}</a
@@ -49,7 +49,9 @@
                                 *ngIf="
                                     datasetName?.owner?.name && datasetName?.name
                                 "
-                                data-pjax="#repo-content-pjax-container"
+                                rel="datasetName"
+                                type="button"
+                                data-hovercard-type="datasetName"
                                 [href]="
                                     '/' +
                                     datasetName.owner.name +

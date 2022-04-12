@@ -103,14 +103,14 @@ export class AccountComponent implements OnInit {
         });
     }
     private setupUrl(): void {
-        // if (this._window.location.search.includes("type=currentUser")) {
-        //    this.isCurrentUser = true;
-        // }
-        // if (this._window.location.search.includes("type=currentUser") && !this._window.location.search.includes("tab=")) {
-        //     this.router.navigate([this.userName], {
-        //         queryParams: {tab: AccountTabs.overview, type: "currentUser"}
-        //     });
-        // }
+        if (this._window.location.search.includes("type=currentUser")) {
+           this.isCurrentUser = true;
+        }
+        if (this._window.location.search.includes("type=currentUser") && !this._window.location.search.includes("tab=")) {
+            this.router.navigate([this.userName], {
+                queryParams: {tab: AccountTabs.overview, type: "currentUser"}
+            });
+        }
         switch (true) {
             case (this.isMatchTab(AccountTabs.overview)):
                 this.onUserProfile();

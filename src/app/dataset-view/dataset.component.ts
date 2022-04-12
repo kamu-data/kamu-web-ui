@@ -262,6 +262,7 @@ const language = 'typescript';
     public ngOnInit(): void {
         debugger;
         this.checkWindowSize();
+        this.checkWindowSize();
         if (this.sidenav) {
             this.sidenavService.setSidenav(this.sidenav);
         }
@@ -283,7 +284,7 @@ const language = 'typescript';
                 const historyView = AppValues.deepCopy(history);
                 historyView.map((node: any) => {
                     node.event = Object.assign(
-                        { title: DatasetComponent.getTitle(node) },
+                        { title: this.getTitle(node) },
                         node.event,
                     );
                     return node;

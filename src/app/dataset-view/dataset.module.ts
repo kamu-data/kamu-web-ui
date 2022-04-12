@@ -29,6 +29,7 @@ import { TimelineComponent } from "../components/timeline-component/timeline.com
 import { TimelineModule } from "../components/timeline-component/timeline.module";
 import { CustomPaginationModule } from "../components/custom-pagination-component/custom-pagination.module";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { CustomPaginationModule } from "../components/custom-pagination-component/custom-pagination.module";
 
 @NgModule({
     imports: [

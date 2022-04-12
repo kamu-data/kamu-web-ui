@@ -1,4 +1,4 @@
-import { NgModule } from "@angular/core";
+import { APP_INITIALIZER, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { AppRoutingModule } from "./app-routing.module";
@@ -45,11 +45,22 @@ import { SecurityContext } from "@angular/core";
 import { NotificationIndicatorComponent } from "./components/notification-indicator/notification-indicator.component";
 import { MonacoEditorModule } from "ngx-monaco-editor";
 import { TimelineComponent } from "./components/timeline-component/timeline.component";
+import { AppConfigService } from "./app-config.service";
 import {RepoListModule} from "./components/repo-list-component/repo-list.module";
 import {SettingsComponent} from "./auth/settings/settings.component";
 import {AccountModule} from "./auth/account/account.module";
 
 const Services = [
+    {
+        provide: APP_INITIALIZER,
+        multi: true,
+        deps: [AppConfigService],
+        useFactory: (appConfigService: AppConfigService) => {
+            return () => {
+                return appConfigService.loadAppConfig();
+            };
+        },
+    },
     Apollo,
     AuthApi,
     SearchApi,
@@ -59,15 +70,15 @@ const Services = [
     SideNavService,
     {
         provide: APOLLO_OPTIONS,
-        useFactory: (httpLink: HttpLink) => {
+        useFactory: (httpLink: HttpLink, appConfig: AppConfigService) => {
             return {
                 cache: new InMemoryCache(),
                 link: httpLink.create({
-                    uri: "http://localhost:8080/graphql",
+                    uri: appConfig.apiServerGqlUrl,
                 }),
             };
         },
-        deps: [HttpLink],
+        deps: [HttpLink, AppConfigService],
     },
 ];
 const MatModules = [

@@ -284,7 +284,7 @@ const language = 'typescript';
                 const historyView = AppValues.deepCopy(history);
                 historyView.map((node: any) => {
                     node.event = Object.assign(
-                        { title: this.getTitle(node) },
+                        { title: DatasetComponent.getTitle(node) },
                         node.event,
                     );
                     return node;

@@ -85,24 +85,24 @@ export class AppComponent implements OnInit {
                 if (event instanceof NavigationEnd) {
                     console.log(event.url);
                 }
-                // if (event.url.split("?id=").length > 1) {
-                //     const searchValue: string =
-                //         AppValues.fixedEncodeURIComponent(
-                //             event.url.split("?id=")[1].split("&")[0],
-                //         );
-                //     if (searchValue === "%255Bobject%2520Object%255D") {
-                //         this.router.navigate(["search"]);
-                //         setTimeout(() =>
-                //             this.appSearchService.searchChanges(""),
-                //         );
-                //     }
-                //     if (event.url.includes("search")) {
-                //         this.appSearchService.searchChanges(searchValue);
-                //     }
-                //     if (event.url.includes("dataset-view") && searchValue === "%255Bobject%2520Object%255D") {
-                //         this.appSearchService.searchChanges("");
-                //     }
-                // }
+                if (event.url.split("?id=").length > 1) {
+                    const searchValue: string =
+                        AppValues.fixedEncodeURIComponent(
+                            event.url.split("?id=")[1].split("&")[0],
+                        );
+                    if (searchValue === "%255Bobject%2520Object%255D") {
+                        this.router.navigate(["search"]);
+                        setTimeout(() =>
+                            this.appSearchService.searchChanges(""),
+                        );
+                    }
+                    if (event.url.includes("search")) {
+                        this.appSearchService.searchChanges(searchValue);
+                    }
+                    if (!event.url.includes("search") && searchValue === "%255Bobject%2520Object%255D") {
+                        this.appSearchService.searchChanges("");
+                    }
+                }
             });
     }
 
@@ -125,7 +125,7 @@ export class AppComponent implements OnInit {
         );
         if (item.__typename === TypeNames.datasetType) {
             this.router.navigate(
-                [AppValues.defaultUsername, AppValues.urlDatasetView],
+                [AppValues.urlDatasetView, AppValues.defaultUsername, item.id],
                 {
                     queryParams: {
                         id: item.id,

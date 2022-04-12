@@ -310,11 +310,6 @@ const language = 'typescript';
                 return node.event.__typename;
         }
     }
-
-    public successCopyToClipboardCopied(): void {
-        console.log("copy success");
-    }
-
     public changeLinageGraphView(): void {
         if (this.datasetViewType === DatasetViewTypeEnum.linage) {
             setTimeout(() => {
@@ -399,10 +394,9 @@ const language = 'typescript';
 
     public onSearchMetadata(currentPage: number): void {
         this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
+            [AppValues.urlDatasetView, this.getOwnerName(), this.getDatasetId()],
             {
                 queryParams: {
-                    id: this.getDatasetId(),
                     type: AppValues.urlDatasetViewMetadataType,
                     p: currentPage,
                 },
@@ -419,10 +413,9 @@ const language = 'typescript';
 
     public onSearchDataForDataset(): void {
         this.router.navigate(
-            ['dataset', AppValues.defaultUsername, AppValues.urlDatasetView],
+            [AppValues.urlDatasetView, this.getOwnerName(), this.getDatasetId()],
             {
                 queryParams: {
-                    id: this.getDatasetId(),
                     type: AppValues.urlDatasetViewDataType,
                 },
             },
@@ -434,10 +427,9 @@ const language = 'typescript';
 
     public onSearchDataForHistory(currentPage: number): void {
         this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
+            [AppValues.urlDatasetView, this.getOwnerName(), this.getDatasetId()],
             {
                 queryParams: {
-                    id: this.getDatasetId(),
                     type: DatasetViewTypeEnum.history,
                     p: currentPage,
                 },
@@ -496,10 +488,9 @@ const language = 'typescript';
 
     public onSearchLinageDataset(): void {
         this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
+            [AppValues.urlDatasetView, this.getOwnerName(), this.getDatasetId()],
             {
                 queryParams: {
-                    id: this.getDatasetId(),
                     type: DatasetViewTypeEnum.linage,
                 },
             },
@@ -653,20 +644,24 @@ const language = 'typescript';
             totalCount: 0,
         };
     }
+    private getOwnerName(): string {
+        debugger
+        return decodeURIComponent(this._window.location.pathname
+            .split(`/${AppValues.urlDatasetView}/`)[1].split('/')[0]);
+    }
 
     private initDatasetViewByType(currentPage?: number): void {
         debugger
-
-        // if (this.appDatasetService.onSearchLinageDatasetSubscribtion) {
-        //     this.appDatasetService.onSearchLinageDatasetSubscribtion.unsubscribe();
-        // }
+        if (this.appDatasetService.onSearchLinageDatasetSubscribtion) {
+            this.appDatasetService.onSearchLinageDatasetSubscribtion.unsubscribe();
+        }
         this.appDatasetService.resetDatasetTree();
         const searchParams: string[] = decodeURIComponent(
             this._window.location.search,
-        ).split("&type=");
+        ).split("type=");
         const searchPageParams: string[] = decodeURIComponent(
             this._window.location.search,
-        ).split("&p=");
+        ).split("p=");
         let page = 1;
         if (searchPageParams[1]) {
             page = currentPage || Number(searchPageParams[1].split("&")[0]);
@@ -701,22 +696,20 @@ const language = 'typescript';
     }
 
     private getDatasetId(): string {
-        const searchParams: string[] = decodeURIComponent(
-            this._window.location.search,
-        ).split("?id=");
+        const searchParams: string[] = this._window.location.pathname
+            .split(`/${AppValues.urlDatasetView}/`)[1].split("/");
 
         if (searchParams.length > 1) {
-            return searchParams[1].split("&")[0];
+            return decodeURIComponent(searchParams[1]);
         }
         return "";
     }
 
     public onSelectDataset(id: string): void {
         this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
+            [AppValues.urlDatasetView, this.getOwnerName(), id],
             {
                 queryParams: {
-                    id,
                     type: AppValues.urlDatasetViewLineageType,
                 },
             },

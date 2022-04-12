@@ -47,7 +47,6 @@ import { MonacoEditorModule } from "ngx-monaco-editor";
 import { TimelineComponent } from "./components/timeline-component/timeline.component";
 import {RepoListModule} from "./components/repo-list-component/repo-list.module";
 import {SettingsComponent} from "./auth/settings/settings.component";
-import {DatasetComponent} from "./dataset-view/dataset.component";
 import {AccountModule} from "./auth/account/account.module";
 
 const Services = [

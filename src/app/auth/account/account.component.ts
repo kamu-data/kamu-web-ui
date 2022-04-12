@@ -14,7 +14,6 @@ import {DatasetsByAccountNameQuery} from "../../api/kamu.graphql.interface";
 import {AccountTabs} from "./account.constants";
 // @ts-ignore
 import * as $ from "jquery";
-import {Location} from '@angular/common';
 
 @Component({
     selector: "app-account",
@@ -78,7 +77,6 @@ export class AccountComponent implements OnInit {
         private authApi: AuthApi,
         private router: Router,
         private route: ActivatedRoute,
-        private location: Location
     ) {
         debugger
         this._window = window;

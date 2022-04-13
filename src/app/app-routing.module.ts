@@ -53,9 +53,17 @@ const routes: Routes = [
         children: [{path: ":id", component: SearchComponent}],
     },
     {
-        path: "settings/profile",
-        pathMatch: 'full',
-        component: SettingsComponent
+        path: "settings",
+        component: SettingsComponent,
+        children: [{
+                path: "profile",
+                component: SettingsComponent,
+            },
+            {
+                path: "notifications",
+                component: SettingsComponent
+            }
+        ]
     },
     {
         path: "username/:id",

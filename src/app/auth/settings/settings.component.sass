@@ -1,0 +1,53 @@
+@import src/assets/styles/var
+.ActionList
+    padding: 0
+.ActionList-item
+    position: relative
+    list-style: none
+    border-radius: 6px
+.ActionList-content
+    position: relative
+    display: grid
+    width: 100%
+    padding: 6px 8px
+    font-size: 14px
+    font-weight: 400
+    color: $app-color-fg-default
+    text-align: left
+    user-select: none
+    background-color: transparent
+    border: none
+    border-radius: 6px
+    transition: background 33.333ms linear
+    touch-action: manipulation
+    grid-template-rows: min-content
+    grid-template-areas: "leadingAction leadingVisual label trailingVisual trailingAction"
+    grid-template-columns: min-content max-content
+    align-items: start
+.ActionList-content.active
+    background: $app-color-action-list-item-default-selected-bg
+    &::after
+        position: absolute
+        top: calc(50% - 12px)
+        left: -8px
+        width: 4px
+        height: 24px
+        content: ""
+        background: $app-color-accent-fg
+        border-radius: 6px
+
+.ActionList-sectionDivider:empty
+    display: block
+    height: 1px
+    padding: 0
+    margin: 7px -8px 8px
+    list-style: none
+    background: $app-color-action-list-item-inline-divider
+    border: 0
+.ActionList-sectionDivider:not(:empty)
+    display: flex
+    padding: 6px 8px
+    font-size: 12px
+    font-weight: 600
+    color: $app-color-fg-muted
+    flex-direction: column

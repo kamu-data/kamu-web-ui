@@ -8,6 +8,7 @@ import {SearchApi} from "../../api/search.api";
 @Component({
     selector: "app-settings",
     templateUrl: "./settings.component.html",
+    styleUrls: ["settings.component.sass"]
 })
 export class SettingsComponent implements OnInit {
 
@@ -17,8 +18,6 @@ export class SettingsComponent implements OnInit {
     constructor(
         private searchApi: SearchApi,
         private authApi: AuthApi,
-        private route: ActivatedRoute,
-        private router: Router,
     ) {
         this._window = window;
         if (this.authApi.userModal) {

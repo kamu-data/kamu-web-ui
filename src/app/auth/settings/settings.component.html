@@ -16,8 +16,8 @@
             </div>
         </div>
     </div>
-    <div class="Layout Layout--flowRow-until-md Layout--sidebarPosition-start Layout--sidebarPosition-flowRow-start">
-        <div data-view-component="true" class="Layout-sidebar">
+    <div class="d-flex Layout Layout--flowRow-until-md Layout--sidebarPosition-start Layout--sidebarPosition-flowRow-start">
+        <div class="Layout-sidebar">
             <div class="pr-md-4 pr-0">
                 <div data-catalyst="">
                     <nav aria-label="User settings" data-view-component="true" class="NavigationList">
@@ -25,7 +25,8 @@
                             class="ActionList">
                             <li data-item-id="settings_user_profile" data-view-component="true"
                                 class="ActionList-item--navActive ActionList-item org-menu-item">
-                                <a href="/settings/profile" aria-current="page" data-view-component="true"
+                                <a routerLinkActive="active" routerLink="/settings/profile" aria-current="page"
+                                   data-view-component="true"
                                    class="ActionList-content ActionList-content--visual16">
       <span class="ActionList-item-visual ActionList-item-visual--leading">
         <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
@@ -40,7 +41,7 @@
     </span>
                                 </a></li>
                             <li data-item-id="" data-view-component="true" class="ActionList-item org-menu-item">
-                                <a href="/settings/admin" data-view-component="true"
+                                <a routerLinkActive="active" routerLink="/settings/admin" data-view-component="true"
                                    class="ActionList-content ActionList-content--visual16">
       <span class="ActionList-item-visual ActionList-item-visual--leading">
         <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
@@ -55,7 +56,8 @@
     </span>
                                 </a></li>
                             <li data-item-id="" data-view-component="true" class="ActionList-item org-menu-item">
-                                <a href="/settings/appearance" data-view-component="true"
+                                <a routerLinkActive="active" routerLink="/settings/appearance"
+                                   data-view-component="true"
                                    class="ActionList-content ActionList-content--visual16">
       <span class="ActionList-item-visual ActionList-item-visual--leading">
         <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
@@ -70,7 +72,8 @@
     </span>
                                 </a></li>
                             <li data-item-id="" data-view-component="true" class="ActionList-item org-menu-item">
-                                <a href="/settings/accessibility" data-view-component="true"
+                                <a routerLinkActive="active" routerLink="/settings/accessibility"
+                                   data-view-component="true"
                                    class="ActionList-content ActionList-content--visual16">
       <span class="ActionList-item-visual ActionList-item-visual--leading">
         <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
@@ -85,7 +88,8 @@
     </span>
                                 </a></li>
                             <li data-item-id="" data-view-component="true" class="ActionList-item org-menu-item">
-                                <a href="/settings/notifications" data-view-component="true"
+                                <a routerLinkActive="active" routerLink="/settings/notifications"
+                                   data-view-component="true"
                                    class="ActionList-content ActionList-content--visual16">
       <span class="ActionList-item-visual ActionList-item-visual--leading">
         <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
@@ -158,22 +162,6 @@
 
     </span>
                                         </a></li>
-                                    <li data-item-id="ssh_and_gpg_keys gpg_keys ssh_keys" data-view-component="true"
-                                        class="ActionList-item org-menu-item">
-                                        <a href="/settings/keys" data-view-component="true"
-                                           class="ActionList-content ActionList-content--visual16">
-      <span class="ActionList-item-visual ActionList-item-visual--leading">
-        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
-             class="octicon octicon-key">
-    <path fill-rule="evenodd"
-          d="M6.5 5.5a4 4 0 112.731 3.795.75.75 0 00-.768.18L7.44 10.5H6.25a.75.75 0 00-.75.75v1.19l-.06.06H4.25a.75.75 0 00-.75.75v1.19l-.06.06H1.75a.25.25 0 01-.25-.25v-1.69l5.024-5.023a.75.75 0 00.181-.768A3.995 3.995 0 016.5 5.5zm4-5.5a5.5 5.5 0 00-5.348 6.788L.22 11.72a.75.75 0 00-.22.53v2C0 15.216.784 16 1.75 16h2a.75.75 0 00.53-.22l.5-.5a.75.75 0 00.22-.53V14h.75a.75.75 0 00.53-.22l.5-.5a.75.75 0 00.22-.53V12h.75a.75.75 0 00.53-.22l.932-.932A5.5 5.5 0 1010.5 0zm.5 6a1 1 0 100-2 1 1 0 000 2z"></path>
-</svg>
-      </span>
-                                            <span class="ActionList-item-label">
-              SSH and GPG keys
-
-    </span>
-                                        </a></li>
                                     <li data-item-id="" data-view-component="true"
                                         class="ActionList-item org-menu-item">
                                         <a href="/settings/organizations" data-view-component="true"
@@ -238,234 +226,9 @@
 
     </span>
                                                 </a></li>
-                                            <li data-item-id="code_review_limits" data-view-component="true"
-                                                class="ActionList-item ActionList-item--subItem">
-                                                <a href="/settings/code_review_limits" data-view-component="true"
-                                                   class="ActionList-content ActionList-content--visual16">
-    <span class="ActionList-item-label">
-                      Code review limits
 
-    </span>
-                                                </a></li>
                                         </ul>
                                     </li>
-                                </ul>
-                            </li>
-                            <li role="separator" aria-hidden="true" data-view-component="true"
-                                class="ActionList-sectionDivider"></li>
-                            <li data-view-component="true" class="ActionList-sectionDivider">
-                                <h3 id="nav-list-section-ae2ba543-491d-454e-aa9c-38b374bc141f"
-                                    data-view-component="true" class="ActionList-sectionDivider-title">
-                                    Code, planning, and automation
-                                </h3></li>
-                            <li data-view-component="true" class="ActionList-item ActionList-item--hasSubItem">
-                                <ul aria-labelledby="nav-list-section-ae2ba543-491d-454e-aa9c-38b374bc141f"
-                                    data-view-component="true" class="ActionList ActionList--subGroup">
-                                    <li data-item-id="" data-view-component="true"
-                                        class="ActionList-item org-menu-item">
-                                        <a href="/settings/repositories" data-view-component="true"
-                                           class="ActionList-content ActionList-content--visual16">
-      <span class="ActionList-item-visual ActionList-item-visual--leading">
-        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
-             class="octicon octicon-repo">
-    <path fill-rule="evenodd"
-          d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"></path>
-</svg>
-      </span>
-                                            <span class="ActionList-item-label">
-              Repositories
-
-    </span>
-                                        </a></li>
-                                    <li data-item-id="" data-view-component="true"
-                                        class="ActionList-item org-menu-item">
-                                        <a href="/settings/deleted_packages" data-view-component="true"
-                                           class="ActionList-content ActionList-content--visual16">
-      <span class="ActionList-item-visual ActionList-item-visual--leading">
-        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
-             class="octicon octicon-package">
-    <path fill-rule="evenodd"
-          d="M8.878.392a1.75 1.75 0 00-1.756 0l-5.25 3.045A1.75 1.75 0 001 4.951v6.098c0 .624.332 1.2.872 1.514l5.25 3.045a1.75 1.75 0 001.756 0l5.25-3.045c.54-.313.872-.89.872-1.514V4.951c0-.624-.332-1.2-.872-1.514L8.878.392zM7.875 1.69a.25.25 0 01.25 0l4.63 2.685L8 7.133 3.245 4.375l4.63-2.685zM2.5 5.677v5.372c0 .09.047.171.125.216l4.625 2.683V8.432L2.5 5.677zm6.25 8.271l4.625-2.683a.25.25 0 00.125-.216V5.677L8.75 8.432v5.516z"></path>
-</svg>
-      </span>
-                                            <span class="ActionList-item-label">
-              Packages
-
-    </span>
-                                        </a></li>
-                                    <li data-item-id="" data-view-component="true"
-                                        class="ActionList-item org-menu-item">
-                                        <a href="/settings/pages" data-view-component="true"
-                                           class="ActionList-content ActionList-content--visual16">
-      <span class="ActionList-item-visual ActionList-item-visual--leading">
-        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
-             class="octicon octicon-browser">
-    <path fill-rule="evenodd"
-          d="M0 2.75C0 1.784.784 1 1.75 1h12.5c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0114.25 15H1.75A1.75 1.75 0 010 13.25V2.75zm1.75-.25a.25.25 0 00-.25.25V4.5h2v-2H1.75zM5 2.5v2h2v-2H5zm3.5 0v2h6V2.75a.25.25 0 00-.25-.25H8.5zm6 3.5h-13v7.25c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V6z"></path>
-</svg>
-      </span>
-                                            <span class="ActionList-item-label">
-                Pages
-
-    </span>
-                                        </a></li>
-                                    <li data-item-id="edit_saved_reply saved_replies" data-view-component="true"
-                                        class="ActionList-item org-menu-item">
-                                        <a href="/settings/replies" data-view-component="true"
-                                           class="ActionList-content ActionList-content--visual16">
-      <span class="ActionList-item-visual ActionList-item-visual--leading">
-        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
-             class="octicon octicon-reply">
-    <path fill-rule="evenodd"
-          d="M6.78 1.97a.75.75 0 010 1.06L3.81 6h6.44A4.75 4.75 0 0115 10.75v2.5a.75.75 0 01-1.5 0v-2.5a3.25 3.25 0 00-3.25-3.25H3.81l2.97 2.97a.75.75 0 11-1.06 1.06L1.47 7.28a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 0z"></path>
-</svg>
-      </span>
-                                            <span class="ActionList-item-label">
-              Saved replies
-
-    </span>
-                                        </a></li>
-                                </ul>
-                            </li>
-                            <li role="separator" aria-hidden="true" data-view-component="true"
-                                class="ActionList-sectionDivider"></li>
-                            <li data-view-component="true" class="ActionList-sectionDivider">
-                                <h3 id="nav-list-section-93e503a7-edec-46c0-80ec-8aef9f049209"
-                                    data-view-component="true" class="ActionList-sectionDivider-title">
-                                    Security
-                                </h3></li>
-                            <li data-view-component="true" class="ActionList-item ActionList-item--hasSubItem">
-                                <ul aria-labelledby="nav-list-section-93e503a7-edec-46c0-80ec-8aef9f049209"
-                                    data-view-component="true" class="ActionList ActionList--subGroup">
-                                    <li data-item-id="" data-view-component="true"
-                                        class="ActionList-item org-menu-item">
-                                        <a href="/settings/security_analysis" data-view-component="true"
-                                           class="ActionList-content ActionList-content--visual16">
-      <span class="ActionList-item-visual ActionList-item-visual--leading">
-        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
-             class="octicon octicon-shield-lock">
-    <path fill-rule="evenodd"
-          d="M8.533.133a1.75 1.75 0 00-1.066 0l-5.25 1.68A1.75 1.75 0 001 3.48V7c0 1.566.32 3.182 1.303 4.682.983 1.498 2.585 2.813 5.032 3.855a1.7 1.7 0 001.33 0c2.447-1.042 4.049-2.357 5.032-3.855C14.68 10.182 15 8.566 15 7V3.48a1.75 1.75 0 00-1.217-1.667L8.533.133zm-.61 1.429a.25.25 0 01.153 0l5.25 1.68a.25.25 0 01.174.238V7c0 1.358-.275 2.666-1.057 3.86-.784 1.194-2.121 2.34-4.366 3.297a.2.2 0 01-.154 0c-2.245-.956-3.582-2.104-4.366-3.298C2.775 9.666 2.5 8.36 2.5 7V3.48a.25.25 0 01.174-.237l5.25-1.68zM9.5 6.5a1.5 1.5 0 01-.75 1.3v2.45a.75.75 0 01-1.5 0V7.8A1.5 1.5 0 119.5 6.5z"></path>
-</svg>
-      </span>
-                                            <span class="ActionList-item-label">
-              Code security and analysis
-
-    </span>
-                                        </a></li>
-                                </ul>
-                            </li>
-                            <li role="separator" aria-hidden="true" data-view-component="true"
-                                class="ActionList-sectionDivider"></li>
-                            <li data-view-component="true" class="ActionList-sectionDivider">
-                                <h3 id="nav-list-section-ea778385-b91f-40b4-aa6b-9edb33ced63a"
-                                    data-view-component="true" class="ActionList-sectionDivider-title">
-                                    Integrations
-                                </h3></li>
-                            <li data-view-component="true" class="ActionList-item ActionList-item--hasSubItem">
-                                <ul aria-labelledby="nav-list-section-ea778385-b91f-40b4-aa6b-9edb33ced63a"
-                                    data-view-component="true" class="ActionList ActionList--subGroup">
-                                    <li data-item-id="applications_settings integration_installations"
-                                        data-view-component="true" class="ActionList-item org-menu-item">
-                                        <a href="/settings/installations" data-view-component="true"
-                                           class="ActionList-content ActionList-content--visual16">
-      <span class="ActionList-item-visual ActionList-item-visual--leading">
-        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
-             class="octicon octicon-apps">
-    <path fill-rule="evenodd"
-          d="M1.5 3.25c0-.966.784-1.75 1.75-1.75h2.5c.966 0 1.75.784 1.75 1.75v2.5A1.75 1.75 0 015.75 7.5h-2.5A1.75 1.75 0 011.5 5.75v-2.5zM3.25 3a.25.25 0 00-.25.25v2.5c0 .138.112.25.25.25h2.5A.25.25 0 006 5.75v-2.5A.25.25 0 005.75 3h-2.5zM1.5 10.25c0-.966.784-1.75 1.75-1.75h2.5c.966 0 1.75.784 1.75 1.75v2.5a1.75 1.75 0 01-1.75 1.75h-2.5a1.75 1.75 0 01-1.75-1.75v-2.5zM3.25 10a.25.25 0 00-.25.25v2.5c0 .138.112.25.25.25h2.5a.25.25 0 00.25-.25v-2.5a.25.25 0 00-.25-.25h-2.5zM8.5 3.25c0-.966.784-1.75 1.75-1.75h2.5c.966 0 1.75.784 1.75 1.75v2.5a1.75 1.75 0 01-1.75 1.75h-2.5A1.75 1.75 0 018.5 5.75v-2.5zM10.25 3a.25.25 0 00-.25.25v2.5c0 .138.112.25.25.25h2.5a.25.25 0 00.25-.25v-2.5a.25.25 0 00-.25-.25h-2.5zM8.5 10.25c0-.966.784-1.75 1.75-1.75h2.5c.966 0 1.75.784 1.75 1.75v2.5a1.75 1.75 0 01-1.75 1.75h-2.5a1.75 1.75 0 01-1.75-1.75v-2.5zm1.75-.25a.25.25 0 00-.25.25v2.5c0 .138.112.25.25.25h2.5a.25.25 0 00.25-.25v-2.5a.25.25 0 00-.25-.25h-2.5z"></path>
-</svg>
-      </span>
-                                            <span class="ActionList-item-label">
-              Applications
-
-    </span>
-                                        </a></li>
-                                    <li data-item-id="reminders" data-view-component="true"
-                                        class="ActionList-item org-menu-item">
-                                        <a href="/settings/reminders" data-view-component="true"
-                                           class="ActionList-content ActionList-content--visual16">
-      <span class="ActionList-item-visual ActionList-item-visual--leading">
-        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
-             class="octicon octicon-clock">
-    <path fill-rule="evenodd"
-          d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z"></path>
-</svg>
-      </span>
-                                            <span class="ActionList-item-label">
-                Scheduled reminders
-
-    </span>
-                                        </a></li>
-                                </ul>
-                            </li>
-                            <li role="separator" aria-hidden="true" data-view-component="true"
-                                class="ActionList-sectionDivider"></li>
-                            <li data-view-component="true" class="ActionList-sectionDivider">
-                                <h3 id="nav-list-section-64a4d4d9-1e4f-4143-8157-03f85911e825"
-                                    data-view-component="true" class="ActionList-sectionDivider-title">
-                                    Archives
-                                </h3></li>
-                            <li data-view-component="true" class="ActionList-item ActionList-item--hasSubItem">
-                                <ul aria-labelledby="nav-list-section-64a4d4d9-1e4f-4143-8157-03f85911e825"
-                                    data-view-component="true" class="ActionList ActionList--subGroup">
-                                    <li data-item-id="" data-view-component="true"
-                                        class="ActionList-item org-menu-item">
-                                        <a href="/settings/security-log" data-view-component="true"
-                                           class="ActionList-content ActionList-content--visual16">
-      <span class="ActionList-item-visual ActionList-item-visual--leading">
-        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
-             class="octicon octicon-log">
-    <path d="M5 8.25a.75.75 0 01.75-.75h4a.75.75 0 010 1.5h-4A.75.75 0 015 8.25zM4 10.5A.75.75 0 004 12h4a.75.75 0 000-1.5H4z"></path><path
-                fill-rule="evenodd"
-                d="M13-.005H3a3 3 0 00-3 3c0 .676.224 1.254.603 1.722.526.65 1.331.783 1.907.783h1.177c-.364.662-.814 1.339-1.287 2.048-.205.309-.414.624-.623.946C.891 9.865 0 11.418 0 13a3 3 0 003 3h10a3 3 0 001.667-5.494.75.75 0 00-.834 1.246A1.5 1.5 0 1111.5 13c0-.642.225-1.347.623-2.136.397-.787.933-1.593 1.501-2.446l.011-.017c.554-.83 1.139-1.709 1.582-2.588.445-.885.783-1.836.783-2.818 0-1.672-1.346-3-3-3zm-10 1.5a1.5 1.5 0 00-1.5 1.5c0 .321.1.569.27.778.097.12.325.227.74.227h7.674A2.737 2.737 0 0110 2.995c0-.546.146-1.059.401-1.5H3zm10 0c.831 0 1.5.662 1.5 1.5 0 .646-.225 1.353-.623 2.143-.398.79-.933 1.595-1.501 2.448l-.017.026c-.552.828-1.134 1.702-1.575 2.576C10.338 11.072 10 12.021 10 13c0 .546.146 1.059.401 1.5H3A1.5 1.5 0 011.5 13c0-1.084.63-2.289 1.537-3.692.177-.274.366-.556.558-.845.632-.948 1.306-1.96 1.773-2.963h6.382a.75.75 0 00.417-1.373c-.444-.298-.667-.656-.667-1.132a1.5 1.5 0 011.5-1.5z"></path>
-</svg>
-      </span>
-                                            <span class="ActionList-item-label">
-              Security log
-
-    </span>
-                                        </a></li>
-                                    <li data-item-id="" data-view-component="true"
-                                        class="ActionList-item org-menu-item">
-                                        <a href="/settings/sponsors-log" data-view-component="true"
-                                           class="ActionList-content ActionList-content--visual16">
-      <span class="ActionList-item-visual ActionList-item-visual--leading">
-        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
-             class="octicon octicon-log">
-    <path d="M5 8.25a.75.75 0 01.75-.75h4a.75.75 0 010 1.5h-4A.75.75 0 015 8.25zM4 10.5A.75.75 0 004 12h4a.75.75 0 000-1.5H4z"></path><path
-                fill-rule="evenodd"
-                d="M13-.005H3a3 3 0 00-3 3c0 .676.224 1.254.603 1.722.526.65 1.331.783 1.907.783h1.177c-.364.662-.814 1.339-1.287 2.048-.205.309-.414.624-.623.946C.891 9.865 0 11.418 0 13a3 3 0 003 3h10a3 3 0 001.667-5.494.75.75 0 00-.834 1.246A1.5 1.5 0 1111.5 13c0-.642.225-1.347.623-2.136.397-.787.933-1.593 1.501-2.446l.011-.017c.554-.83 1.139-1.709 1.582-2.588.445-.885.783-1.836.783-2.818 0-1.672-1.346-3-3-3zm-10 1.5a1.5 1.5 0 00-1.5 1.5c0 .321.1.569.27.778.097.12.325.227.74.227h7.674A2.737 2.737 0 0110 2.995c0-.546.146-1.059.401-1.5H3zm10 0c.831 0 1.5.662 1.5 1.5 0 .646-.225 1.353-.623 2.143-.398.79-.933 1.595-1.501 2.448l-.017.026c-.552.828-1.134 1.702-1.575 2.576C10.338 11.072 10 12.021 10 13c0 .546.146 1.059.401 1.5H3A1.5 1.5 0 011.5 13c0-1.084.63-2.289 1.537-3.692.177-.274.366-.556.558-.845.632-.948 1.306-1.96 1.773-2.963h6.382a.75.75 0 00.417-1.373c-.444-.298-.667-.656-.667-1.132a1.5 1.5 0 011.5-1.5z"></path>
-</svg>
-      </span>
-                                            <span class="ActionList-item-label">
-                Sponsorship log
-
-    </span>
-                                        </a></li>
-                                </ul>
-                            </li>
-                            <li role="separator" aria-hidden="true" data-view-component="true"
-                                class="ActionList-sectionDivider"></li>
-                            <li data-view-component="true" class="ActionList-item ActionList-item--hasSubItem">
-                                <ul aria-label="Other" data-view-component="true"
-                                    class="ActionList ActionList--subGroup">
-                                    <li data-item-id="" data-view-component="true"
-                                        class="ActionList-item org-menu-item">
-                                        <a href="/settings/apps" data-view-component="true"
-                                           class="ActionList-content ActionList-content--visual16">
-      <span class="ActionList-item-visual ActionList-item-visual--leading">
-        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
-             class="octicon octicon-code">
-    <path fill-rule="evenodd"
-          d="M4.72 3.22a.75.75 0 011.06 1.06L2.06 8l3.72 3.72a.75.75 0 11-1.06 1.06L.47 8.53a.75.75 0 010-1.06l4.25-4.25zm6.56 0a.75.75 0 10-1.06 1.06L13.94 8l-3.72 3.72a.75.75 0 101.06 1.06l4.25-4.25a.75.75 0 000-1.06l-4.25-4.25z"></path>
-</svg>
-      </span>
-                                            <span class="ActionList-item-label">
-              Developer settings
-
-    </span>
-                                        </a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -474,5 +237,6 @@
             </div>
 
         </div>
+        <div class="app-content"></div>
     </div>
 </div>

@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
-import { empty, from, Observable, of, Subject, Subscription } from "rxjs";
+import { Observable, Subject, Subscription } from "rxjs";
 import { SearchApi } from "../api/search.api";
 import {
     DatasetInfoInterface,
     DatasetKindInterface,
-    DatasetKindTypeNames,
     DatasetNameInterface,
     PageInfoInterface,
     SearchDatasetByID,
@@ -12,9 +11,10 @@ import {
     SearchOverviewDatasetsInterface,
     SearchOverviewInterface,
 } from "../interface/search.interface";
-import { expand, flatMap, map } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import {
     DataSchema,
+    DatasetKind,
     DatasetOverviewQuery,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
@@ -82,7 +82,7 @@ export class AppDatasetService {
 
     public get getDatasetTree(): {
         id: string;
-        kind: DatasetKindTypeNames;
+        kind: DatasetKind;
     }[][] {
         return this.datasetTree;
     }
@@ -127,6 +127,8 @@ export class AppDatasetService {
             __typename: byID.__typename,
             createdAt: byID.createdAt || "",
             lastUpdatedAt: byID.lastUpdatedAt || "",
+            latestMetadataBlock: byID.latestMetadataBlock,
+            numBlocksTotal: byID.numBlocksTotal,
             estimatedSize: byID.data ? byID.data.estimatedSize : 0,
             numRecordsTotal: byID.data ? byID.data.numRecordsTotal : 0,
             metadata: byID.metadata,
@@ -161,6 +163,13 @@ export class AppDatasetService {
         this.datasetSchemaChanges$.next(schema);
     }
 
+    // TODO: "SearchData" is currently propagating a lot of different kinds of information
+    // It can be:
+    // - MetadataBlocks in "History" tab
+    // - Single MetadataBlock to display current hash of "Metadata" tab
+    // - Sample data records to be displayed on "Overview" tab
+    // - Data records that come as result of a query on "Data" tab
+    // This has to be refactored!!!
     public searchDataChanges(
         searchData:
             | SearchHistoryInterface[]
@@ -259,6 +268,11 @@ export class AppDatasetService {
                 if (data) {
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
                     datasets = AppValues.deepCopy(data.datasets.byId);
+                    datasets.latestMetadataBlock =
+                        data.datasets.byId?.metadata.chain.blocks.nodes[0];
+                    datasets.numBlocksTotal =
+                        data.datasets.byId?.metadata.chain.blocks.totalCount ||
+                        0;
                     datasets.data.tail.content = data.datasets.byId
                         ? JSON.parse(
                               data.datasets?.byId?.data.tail.data.content,

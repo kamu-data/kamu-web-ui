@@ -12,45 +12,7 @@ query getDatasetHistory($datasetId: DatasetID!, $perPage: Int, $page: Int) {
           blocks(perPage: $perPage, page: $page) {
             totalCount
             nodes {
-              event {
-                __typename
-                ... on MetadataEventSeed {
-                  datasetId
-                  datasetKind
-                }
-                ... on MetadataEventSetWatermark {
-                  outputWatermark
-                }
-                ... on MetadataEventSetTransform {
-                  __typename
-                }
-                ... on MetadataEventExecuteQuery {
-                  queryOutputData: outputData {
-                    interval {
-                      start
-                      end
-                      __typename
-                    }
-                    logicalHash
-                    physicalHash
-                    __typename
-                  }
-                }
-                ... on MetadataEventAddData {
-                  addedOutputData: outputData {
-                    interval {
-                      start
-                      end
-                      __typename
-                    }
-                    logicalHash
-                    physicalHash
-                    __typename
-                  }
-                }
-              }
-              blockHash
-              systemTime
+              ...MetadataBlock
             }
             pageInfo {
               hasNextPage

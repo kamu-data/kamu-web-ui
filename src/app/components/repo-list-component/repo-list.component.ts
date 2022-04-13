@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { SearchOverviewDatasetsInterface } from "../../interface/search.interface";
 import AppValues from "../../common/app.values";
 import { ModalService } from "../modal/modal.service";
+import { DataHelpersService } from "src/app/services/datahelpers.service";
 
 @Component({
     selector: "app-repo-list",
@@ -24,15 +25,11 @@ export class RepoListComponent {
         active: boolean;
     }[];
 
-    constructor(private modalService: ModalService) {}
+    constructor(
+        private modalService: ModalService,
+        public dataHelpers: DataHelpersService,
+    ) {}
 
-    public momentConverDatetoLocalWithFormat(date: string): string {
-        return AppValues.momentConverDatetoLocalWithFormat({
-            date: new Date(String(date)),
-            format: "DD MMM YYYY",
-            isTextDate: true,
-        });
-    }
     public onSelectDataset(ownerName: string, id: string): void {
         this.onSelectDatasetEmit.emit({ ownerName, id: id });
     }

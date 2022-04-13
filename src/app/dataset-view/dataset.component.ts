@@ -10,7 +10,6 @@ import {
 import {
     DatasetInfoInterface,
     DatasetKindInterface,
-    DatasetKindTypeNames,
     DatasetNameInterface,
     DataViewSchema,
     PageInfoInterface,
@@ -35,8 +34,14 @@ import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import {
     DataSchema,
+    DatasetKind,
+    GetDatasetLineageGQL,
+    GetDatasetLineageQuery,
+    MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
 import {AccountTabs} from "../auth/account/account.constants";
+import { debug } from "console";
+import { DataHelpersService } from "../services/datahelpers.service";
 
 @Component({
     selector: "app-dataset",
@@ -148,6 +153,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         isTableHeader: boolean;
         displayedColumns?: any[];
         tableSource: any;
+        latestMetadataBlock?: MetadataBlockFragment;
         isResultQuantity: boolean;
         isClickableRow: boolean;
         pageInfo: PageInfoInterface;
@@ -229,6 +235,17 @@ const language = 'typescript';
         this.changeLinageGraphView();
     }
 
+    constructor(
+        private appDatasetService: AppDatasetService,
+        private sidenavService: SideNavService,
+        private router: Router,
+        private modalService: ModalService,
+        private clipboard: Clipboard,
+        private dataHelpers: DataHelpersService,
+    ) {
+        this._window = window;
+    }
+
     public copyToClipboard(event: MouseEvent, text: string): void {
         this.clipboard.copy(text);
 
@@ -281,15 +298,7 @@ const language = 'typescript';
         );
         this.appDatasetService.onSearchDatasetHistoryChanges.subscribe(
             (history: any[]) => {
-                const historyView = AppValues.deepCopy(history);
-                historyView.map((node: any) => {
-                    node.event = Object.assign(
-                        { title: DatasetComponent.getTitle(node) },
-                        node.event,
-                    );
-                    return node;
-                });
-                this.datasetHistory = historyView;
+                this.datasetHistory = history;
             },
         );
         this.appDatasetService.onDatasetPageInfoChanges.subscribe(
@@ -335,6 +344,12 @@ const language = 'typescript';
         this.tableData.tableSource = this.searchData;
     }
     private changeLinageGraphView(): void {
+
+    public successCopyToClipboardCopied(): void {
+        console.log("copy success");
+    }
+
+    public changeLinageGraphView(): void {
         if (this.datasetViewType === DatasetViewTypeEnum.linage) {
             setTimeout(() => {
                 const searchResultContainer: HTMLElement | null =
@@ -351,6 +366,14 @@ const language = 'typescript';
                 }
             });
         }
+    }
+
+    public getDatasetTree(): { id: string; kind: DatasetKind }[][] {
+        return this.appDatasetService.getDatasetTree;
+    }
+
+    public ngAfterContentInit(): void {
+        this.tableData.tableSource = this.searchData;
     }
 
     public onPageChange(params: {
@@ -489,15 +512,15 @@ const language = 'typescript';
         this.initLinageGraphProperty();
         this.linageGraphClusters = [
             {
-                id: DatasetKindTypeNames.root + "_cluster",
-                label: DatasetKindTypeNames.root,
+                id: DatasetKind.Root + "_cluster",
+                label: DatasetKind.Root,
                 data: { customColor: "#A52A2A59" },
                 position: { x: 10, y: 10 },
                 childNodeIds: [],
             },
             {
-                id: DatasetKindTypeNames.derivative + "_cluster",
-                label: DatasetKindTypeNames.derivative,
+                id: DatasetKind.Derivative + "_cluster",
+                label: DatasetKind.Derivative,
                 data: { customColor: "#00800039" },
                 position: { x: 10, y: 10 },
                 childNodeIds: [],
@@ -528,7 +551,7 @@ const language = 'typescript';
                             id: dataset.id,
                             name: dataset.name,
                             kind: dataset.kind,
-                            isRoot: dataset.kind === DatasetKindTypeNames.root,
+                            isRoot: dataset.kind === DatasetKind.Root,
                             isCurrent: dataset.id === currentDataset.id,
                         },
                     });
@@ -598,6 +621,7 @@ const language = 'typescript';
         this.tableData = {
             isTableHeader: true,
             tableSource: this.searchData,
+            latestMetadataBlock: undefined,
             isResultQuantity: false,
             isClickableRow: false,
             pageInfo: {

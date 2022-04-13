@@ -1,4 +1,9 @@
-import { DatasetMetadata, MetadataEvent } from "../api/kamu.graphql.interface";
+import {
+    DatasetKind,
+    DatasetMetadata,
+    LicenseFragment,
+    MetadataBlockFragment,
+} from "../api/kamu.graphql.interface";
 
 export interface SearchHistoryResponseInterface {
     datasets: {
@@ -46,7 +51,7 @@ export interface SearchOverviewDatasetsInterface {
     id: string;
     name: string;
     owner: Account;
-    kind: DatasetKindTypeNames;
+    kind: DatasetKind;
     metadata: DatasetMetadata;
     createdAt: string;
     lastUpdatedAt: string;
@@ -75,7 +80,7 @@ export interface SearchMetadataInterface {
 export interface DatasetKindInterface {
     id: string;
     name: string;
-    kind: DatasetKindTypeNames;
+    kind: DatasetKind;
 }
 
 export interface PageInfoInterface {
@@ -107,16 +112,20 @@ export interface SearchDatasetByID {
     __typename: string;
     createdAt: string;
     data: SearchDatasetByIDDataInterface;
-    kind: DatasetKindTypeNames;
+    kind: DatasetKind;
     name: string;
     owner: Account;
-    // ca.covid19.daily-cases
     id: string;
     lastUpdatedAt: string;
+    latestMetadataBlock?: MetadataBlockFragment;
+    numBlocksTotal?: number;
     metadata: {
         _typename: string;
-        currentSummary: string;
-        currentTopics: string[];
+        currentInfo: {
+            description: string;
+            keywords: string[];
+        };
+        currentLicense: LicenseFragment;
         currentReadme: string;
         currentSchema: {
             _typename: string;
@@ -151,19 +160,24 @@ export interface DatasetInfoInterface {
     __typename: string;
     createdAt?: string;
     id: string;
-    kind: DatasetKindTypeNames;
+    kind: DatasetKind;
     name: string;
     owner: {
         id: string;
         name: string;
     };
     lastUpdatedAt?: string;
+    latestMetadataBlock?: MetadataBlockFragment;
+    numBlocksTotal?: number;
     estimatedSize?: number;
     numRecordsTotal?: number;
     metadata: {
         _typename: string;
-        currentSummary: string;
-        currentTopics: string[];
+        currentInfo: {
+            description: string;
+            keywords: string[];
+        };
+        currentLicense: LicenseFragment;
         currentReadme: string;
         currentSchema: {
             _typename: string;
@@ -176,14 +190,14 @@ export interface DatasetInfoInterface {
 export interface DatasetLinageResponse {
     __typename: string;
     id: string;
-    kind: DatasetKindTypeNames;
+    kind: DatasetKind;
     name: string;
     metadata: DatasetCurrentUpstreamDependencies;
 }
 export interface DatasetCurrentUpstreamDependencies {
     __typename: string;
     id: string;
-    kind: DatasetKindTypeNames;
+    kind: DatasetKind;
     name: string;
     currentDownstreamDependencies?: DatasetLinageResponse[];
     currentUpstreamDependencies?: DatasetLinageResponse[];
@@ -197,8 +211,4 @@ export interface DataSchemaField {
     name: string;
     repetition: string;
     type: string;
-}
-export enum DatasetKindTypeNames {
-    derivative = "DERIVATIVE",
-    root = "ROOT",
 }

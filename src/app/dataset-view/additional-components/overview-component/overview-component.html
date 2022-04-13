@@ -2,32 +2,34 @@
     <div
         class="search-result-container__content"
         id="searchResultContainerContent"
+        *ngIf="datasetInfo"
     >
         <div>
             <div
                 class="d-flex flex-column flex-justify-between pb-3 mb-3 position-relative"
             >
                 <h2 class="box-title align-items-center pb-3">Description</h2>
-                <p>{{ datasetInfo.metadata.currentSummary }}</p>
-                <div class="app-mat-chip" *ngIf="datasetInfo">
+                <p>{{ datasetInfo.metadata.currentInfo.description }}</p>
+                <div class="app-mat-chip">
                     <mat-chip-list aria-label="Tags selection">
                         <div
-                            *ngFor="let topic of datasetInfo.metadata.currentTopics"
+                            *ngFor="let keyword of datasetInfo.metadata.currentInfo.keywords"
                         >
                             <mat-chip (click)="selectTopic(datasetInfo.kind)"
-                                >{{ topic }}</mat-chip
+                                >{{ keyword }}</mat-chip
                             >
                         </div>
                     </mat-chip-list>
                 </div>
             </div>
             <app-dynamic-table
-                [isLatestCommitDisplay]="true"
                 [isResultQuantity]="tableData.isResultQuantity"
                 [isClickableRow]="tableData.isClickableRow"
                 [resultUnitText]="resultUnitText"
                 [isTableHeader]="tableData.isTableHeader"
                 [tableSource]="tableData.tableSource"
+                [latestMetadataBlock]="datasetInfo.latestMetadataBlock"
+                [numBlocksTotal]="datasetInfo.numBlocksTotal"
                 (onSelectDatasetEmit)="(null)"
             ></app-dynamic-table>
             <div id="file-readme-dataset-template-md" class="file my-4">
@@ -113,7 +115,7 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ datasetInfo.kind }}
+                                {{ dataHelpers.datasetKind(datasetInfo.kind) }}
                             </p>
                         </div>
                     </div>
@@ -125,14 +127,28 @@
                             <p class="dataset-info--text">Public</p>
                         </div>
                     </div>
-                    <div class="dataset-info--block">
+                    <div
+                        class="dataset-info--block"
+                        *ngIf="datasetInfo && datasetInfo.metadata.currentLicense"
+                    >
                         <div class="dataset-info--sub-block">
                             <h2 class="dataset-info--subtitle">License:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">
-                                Canada - Open Data License
-                            </p>
+                            <a
+                                class="link--primary"
+                                [href]="datasetInfo.metadata.currentLicense.websiteUrl"
+                            >
+                                <p
+                                    class="dataset-info--text"
+                                    placement="bottom"
+                                    [ngbTooltip]="datasetInfo.metadata.currentLicense.name"
+                                >
+                                    {{
+                                    datasetInfo.metadata.currentLicense.shortName
+                                    }}
+                                </p>
+                            </a>
                         </div>
                     </div>
                     <div class="dataset-info--block">
@@ -143,16 +159,15 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ datasetInfo.estimatedSize | number: "1.0-0"
-                                }}
+                                {{ datasetInfo.estimatedSize ?
+                                dataHelpers.dataSize(datasetInfo.estimatedSize)
+                                : "-" }}
                             </p>
                         </div>
                     </div>
                     <div class="dataset-info--block">
                         <div class="dataset-info--sub-block">
-                            <h2 class="dataset-info--subtitle">
-                                Num Records Total:
-                            </h2>
+                            <h2 class="dataset-info--subtitle">Records:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
@@ -169,10 +184,13 @@
                             <h2 class="dataset-info--subtitle">Created At:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">
-                                {{ momentConverDatetoLocalWithFormat(
-                                datasetInfo.createdAt ) }}
-                            </p>
+                            <time
+                                class="dataset-info--text"
+                                [title]="datasetInfo.createdAt"
+                                >{{
+                                dataHelpers.relativeTime(datasetInfo.createdAt,{w:
+                                1}) }}
+                            </time>
                         </div>
                     </div>
                     <div
@@ -185,10 +203,13 @@
                             </h2>
                         </div>
                         <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">
-                                {{ momentConverDatetoLocalWithFormat(
-                                datasetInfo.lastUpdatedAt ) }}
-                            </p>
+                            <time
+                                class="dataset-info--text"
+                                [title]="datasetInfo.lastUpdatedAt"
+                                >{{
+                                dataHelpers.relativeTime(datasetInfo.lastUpdatedAt,{w:
+                                1}) }}
+                            </time>
                         </div>
                     </div>
                     <div
@@ -199,11 +220,13 @@
                             <h2 class="dataset-info--subtitle">Watermark:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">
-                                {{
-                                momentConverDatetoLocalWithFormat(datasetInfo.metadata.currentWatermark)
-                                }}
-                            </p>
+                            <time
+                                class="dataset-info--text"
+                                [title]="datasetInfo.metadata.currentWatermark"
+                                >{{
+                                dataHelpers.relativeTime(datasetInfo.metadata.currentWatermark,
+                                {w: 1}) }}
+                            </time>
                         </div>
                     </div>
                 </ng-template>

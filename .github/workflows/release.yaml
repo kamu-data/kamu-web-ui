@@ -19,6 +19,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "12"
+      - uses: actions/cache@v3 # Source: https://github.com/actions/cache/blob/main/examples.md#node---npm
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - run: npm install
       - run: npm run build
       - uses: actions/upload-artifact@v2

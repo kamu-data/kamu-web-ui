@@ -11,8 +11,13 @@ query datasetOverview($datasetId: DatasetID!, $limit: Int) {
       createdAt
       lastUpdatedAt
       metadata {
-        currentSummary
-        currentTopics
+        currentInfo {
+          description
+          keywords
+        }
+        currentLicense {
+          ...License
+        }
         currentReadme
         currentWatermark
         currentSchema(format: PARQUET_JSON) {
@@ -21,10 +26,20 @@ query datasetOverview($datasetId: DatasetID!, $limit: Int) {
           __typename
         }
         __typename
+        # Last update
+        chain {
+          blocks(page: 0, perPage: 1) {
+            nodes {
+              ...MetadataBlock
+            }
+            totalCount
+          }
+        }
       }
       data {
         numRecordsTotal
         estimatedSize
+        # Data sample
         tail(limit: $limit, dataFormat: JSON) {
           schema {
             format

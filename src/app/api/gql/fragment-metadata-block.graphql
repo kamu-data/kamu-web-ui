@@ -1,0 +1,52 @@
+fragment MetadataBlock on MetadataBlockExtended {
+  blockHash
+  prevBlockHash
+  systemTime
+  author {
+    __typename
+    id
+    name
+  }
+  event {
+    __typename
+    ... on Seed {
+      datasetId
+      datasetKind
+    }
+    ... on SetWatermark {
+      outputWatermark
+    }
+    ... on SetTransform {
+      __typename
+    }
+    ... on ExecuteQuery {
+      queryOutputData: outputData {
+        interval {
+          start
+          end
+        }
+        logicalHash
+        physicalHash
+      }
+    }
+    ... on AddData {
+      addedOutputData: outputData {
+        interval {
+          start
+          end
+        }
+        logicalHash
+        physicalHash
+      }
+    }
+    ... on SetAttachments {
+      __typename
+    }
+    ... on SetInfo {
+      __typename
+    }
+    ... on SetLicense {
+      name
+    }
+  }
+}

@@ -109,13 +109,17 @@
         </div>
         <div>
             <p class="repo-list-container__description mb-2">
-                {{ row.metadata.currentSummary }}
+                {{ row.metadata.currentInfo.description }}
             </p>
             <div class="app-mat-chip">
                 <mat-chip-list aria-label="Tags selection">
-                    <div *ngFor="let topic of row.metadata.currentTopics">
+                    <div
+                        *ngFor="
+                            let keyword of row.metadata.currentInfo.keywords
+                        "
+                    >
                         <mat-chip (click)="selectTopic(row.kind)">{{
-                            topic
+                            keyword
                         }}</mat-chip>
                     </div>
                 </mat-chip-list>
@@ -123,7 +127,7 @@
             <div class="repo-list-container__additional-block mt-2">
                 <p class="text-small color-text-secondary mr-3">
                     Updated
-                    {{ momentConverDatetoLocalWithFormat(row.lastUpdatedAt) }}
+                    {{ dataHelpers.relativeTime(row.lastUpdatedAt) }}
                 </p>
                 <ngb-rating [rate]="4.5" [max]="5" [readonly]="true">
                     <ng-template let-fill="fill">
@@ -133,10 +137,16 @@
                     </ng-template>
                 </ngb-rating>
                 <p class="text-small color-text-secondary mr-3">
-                    12 Downstream
+                    {{
+                        row.metadata.currentDownstreamDependencies.length
+                    }}
+                    Downstream
                 </p>
-                <p class="text-small color-text-secondary mr-3">
-                    OGD/CA License
+                <p
+                    class="text-small color-text-secondary mr-3"
+                    *ngIf="row.metadata.currentLicense"
+                >
+                    {{ row.metadata.currentLicense.shortName }}
                 </p>
             </div>
         </div>

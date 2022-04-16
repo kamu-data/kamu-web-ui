@@ -17,16 +17,30 @@ export class AppConfigService {
         return this.http
             .get("/assets/runtime-config.json")
             .toPromise()
-            .then((data) => {
+            .then((data: any) => {
+                data.apiServerGqlUrl = this.toRemoteURL(data.apiServerGqlUrl);
                 this.appConfig = data as AppConfig;
             });
     }
 
     get apiServerGqlUrl() {
         if (!this.appConfig) {
-            throw Error("Config file not loaded!");
+            throw Error("Config is not loaded!");
         }
 
         return this.appConfig.apiServerGqlUrl;
+    }
+
+    // If loopback or any address is used - replace hostname with hostname from the browser
+    private toRemoteURL(url: string): string {
+        let turl = new URL(url);
+        if (
+            ["localhost", "127.0.0.1", "0.0.0.0", "[::]"].includes(
+                turl.hostname,
+            )
+        ) {
+            turl.hostname = window.location.hostname;
+        }
+        return turl.toString();
     }
 }

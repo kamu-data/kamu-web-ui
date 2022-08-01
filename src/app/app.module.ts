@@ -47,6 +47,9 @@ import { MonacoEditorModule } from "ngx-monaco-editor";
 import { TimelineComponent } from "./components/timeline-component/timeline.component";
 import { AppConfigService } from "./app-config.service";
 import { DataHelpersService } from "./services/datahelpers.service";
+import {RepoListModule} from "./components/repo-list-component/repo-list.module";
+import {SettingsComponent} from "./auth/settings/settings.component";
+import {AccountModule} from "./auth/account/account.module";
 
 const Services = [
     {
@@ -100,12 +103,13 @@ const MatModules = [
         AppHeaderComponent,
         LoginComponent,
         GithubCallbackComponent,
-        AccountComponent,
+        SettingsComponent,
         NotificationIndicatorComponent,
     ],
-    imports: [
+    imports: [BrowserModule, HttpClientModule,
         AppRoutingModule,
         DatasetModule,
+        AccountModule,
         DatasetCreateModule,
         ModalModule.forRoot(),
         SearchModule.forRoot(),
@@ -115,7 +119,6 @@ const MatModules = [
         }),
         MonacoEditorModule.forRoot(),
 
-        BrowserModule,
         BrowserAnimationsModule,
         ServiceWorkerModule.register("ngsw-worker.js", {
             enabled: environment.production,
@@ -132,6 +135,7 @@ const MatModules = [
         MatOptionModule,
         ReactiveFormsModule,
         NgxGraphModule,
+        RepoListModule,
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

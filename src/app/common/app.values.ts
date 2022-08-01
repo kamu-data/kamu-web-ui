@@ -8,7 +8,7 @@ export default class AppValues {
     public static urlLogin = "login";
     public static urlGithubCallback = "github_callback";
     public static urlSearch = "search";
-    public static urlDatasetView = "dataset-view";
+    public static urlDatasetView = "dataset";
     public static urlDatasetViewOverviewType = "overview";
     public static urlDatasetViewMetadataType = "metadata";
     public static urlDatasetViewDataType = "data";
@@ -17,6 +17,8 @@ export default class AppValues {
     public static urlDatasetCreate = "dataset-create";
     public static urlDatasetCreateSelectType = "select-type";
     public static urlDatasetCreateRoot = "root";
+    public static urlUsername = "username";
+    public static urlSettings = "settings";
 
     public static localStorageCode = "code";
     public static localStorageAccessToken = "code";

@@ -24,10 +24,9 @@ import { OverviewComponent } from "./additional-components/overview-component/ov
 import { LinageComponent } from "./additional-components/linage-component/linage-component";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { HistoryComponent } from "./additional-components/history-component/history-component";
-import { AppModule } from "../app.module";
-import { TimelineComponent } from "../components/timeline-component/timeline.component";
 import { TimelineModule } from "../components/timeline-component/timeline.module";
 import { CustomPaginationModule } from "../components/custom-pagination-component/custom-pagination.module";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
     imports: [
@@ -54,6 +53,7 @@ import { CustomPaginationModule } from "../components/custom-pagination-componen
         MonacoEditorModule,
         CdkAccordionModule,
         CustomPaginationModule,
+        MatProgressSpinnerModule,
     ],
     exports: [
         DatasetComponent,

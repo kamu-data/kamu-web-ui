@@ -7,6 +7,7 @@ import { DatasetIDsInterface, TypeNames } from "./interface/search.interface";
 import { AuthApi } from "./api/auth.api";
 import { UserInterface } from "./interface/auth.interface";
 import { ModalService } from "./components/modal/modal.service";
+import {AccountTabs} from "./auth/account/account.constants";
 
 @Component({
     selector: "app-root",
@@ -81,22 +82,24 @@ export class AppComponent implements OnInit {
             .pipe(filter((event) => event instanceof NavigationEnd))
             .subscribe((event: any) => {
                 this.isVisible = this.isAvailableAppHeaderUrl(event.url);
-
+                if (event instanceof NavigationEnd) {
+                    console.log(event.url);
+                }
                 if (event.url.split("?id=").length > 1) {
                     const searchValue: string =
                         AppValues.fixedEncodeURIComponent(
                             event.url.split("?id=")[1].split("&")[0],
                         );
                     if (searchValue === "%255Bobject%2520Object%255D") {
-                        this.router.navigate(["search"]);
+                        this.router.navigate([AppValues.urlSearch]);
                         setTimeout(() =>
                             this.appSearchService.searchChanges(""),
                         );
                     }
-                    if (event.url.includes("search")) {
+                    if (event.url.includes(AppValues.urlSearch)) {
                         this.appSearchService.searchChanges(searchValue);
                     }
-                    if (event.url.includes("dataset-view")) {
+                    if (!event.url.includes(AppValues.urlSearch) && searchValue === "%255Bobject%2520Object%255D") {
                         this.appSearchService.searchChanges("");
                     }
                 }
@@ -122,7 +125,7 @@ export class AppComponent implements OnInit {
         );
         if (item.__typename === TypeNames.datasetType) {
             this.router.navigate(
-                [AppValues.defaultUsername, AppValues.urlDatasetView],
+                [AppValues.urlDatasetView, AppValues.defaultUsername, item.id],
                 {
                     queryParams: {
                         id: item.id,
@@ -137,7 +140,7 @@ export class AppComponent implements OnInit {
         }
     }
     public onClickAppLogo(): void {
-        this.router.navigate([AppValues.urlSearch]);
+        this.router.navigate([""]);
         this.appSearchService.searchChanges("");
     }
 
@@ -160,10 +163,11 @@ export class AppComponent implements OnInit {
         this.authApi.logOut();
     }
     public onUserProfile(): void {
-        this.modalService.warning({
-            message: this.unimplementedMessage,
-            yesButtonText: "Ok",
+       if (this.user && this.user.login) {
+           this.router.navigate([AppValues.urlUsername, this.user.login], {
+            queryParams: {type: AccountTabs.currentUser}
         });
+       }
     }
     public onUserDatasets(): void {
         this.modalService.warning({
@@ -184,10 +188,7 @@ export class AppComponent implements OnInit {
         });
     }
     public onSettings(): void {
-        this.modalService.warning({
-            message: this.unimplementedMessage,
-            yesButtonText: "Ok",
-        });
+        this.router.navigate([AppValues.urlSettings, AppValues.urlProfile]);
     }
     public onHelp(): void {
         this.modalService.warning({

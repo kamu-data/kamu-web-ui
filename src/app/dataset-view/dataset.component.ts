@@ -129,7 +129,6 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         | SearchOverviewDatasetsInterface[]
         | SearchHistoryInterface[] = [];
 
-    public datasetMetadata: {};
     public linageGraphView: [number, number] = [500, 600];
     public linageGraphLink: Edge[] = [];
     public linageGraphNodes: Node[] = [];
@@ -217,11 +216,6 @@ const language = 'typescript';
         if (this.sidenav) {
             this.sidenavService.setSidenav(this.sidenav);
         }
-        this.router.events
-            .pipe(filter((event) => event instanceof NavigationEnd))
-            .subscribe((event: any) => {
-                this.initDatasetViewByType();
-            });
         this.initDatasetViewByType();
 
         this.initTableData();
@@ -278,10 +272,6 @@ const language = 'typescript';
                 setTimeout(() => (this.currentPage = data.currentPage));
             },
         );
-    }
-
-    public successCopyToClipboardCopied(): void {
-        console.log("copy success");
     }
 
     public changeLinageGraphView(): void {
@@ -520,8 +510,7 @@ const language = 'typescript';
 
                 this.isAvailableLinageGraph = edges.length !== 0;
 
-                const uniqueDatasets: { [id: string]: DatasetKindInterface } =
-                    {};
+                const uniqueDatasets: { [id: string]: DatasetKindInterface } = {};
                 edges.forEach((edge: DatasetKindInterface[]) =>
                     edge.forEach((dataset: DatasetKindInterface) => {
                         uniqueDatasets[dataset.id] = dataset;

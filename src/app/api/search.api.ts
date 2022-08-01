@@ -26,6 +26,10 @@ import {
     GetDatasetLineageGQL,
     GetDatasetLineageQuery,
     SearchDatasetsOverviewQuery,
+    DatasetsByAccountIdGQL,
+    DatasetsByAccountIdQuery,
+    DatasetsByAccountNameGQL,
+    DatasetsByAccountNameQuery,
 } from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
 
@@ -43,6 +47,7 @@ export class SearchApi {
         private getDatasetDataSQLRun: GetDatasetDataSqlRunGQL,
         private getDatasetHistoryGQL: GetDatasetHistoryGQL,
         private getDatasetLineageGQL: GetDatasetLineageGQL,
+        private datasetsByAccountNameGQL: DatasetsByAccountNameGQL
     ) {}
 
     public pageInfoInit(): PageInfoInterface {
@@ -121,6 +126,28 @@ export class SearchApi {
             })
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<DatasetOverviewQuery>) => {
+                    if (result.data) {
+                        return result.data;
+                    }
+                    return undefined;
+                }),
+            );
+    }
+     public datasetsByAccountName(params: {
+        accountName: any;
+        page: number;
+        perPage: number;
+        limit: number;
+    }): Observable<DatasetsByAccountNameQuery | undefined> {
+        return this.datasetsByAccountNameGQL
+            .watch({
+                accountName: params.accountName,
+                page: params.page,
+                perPage: params.perPage,
+                limit: params.limit || (10 as number),
+            })
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<DatasetsByAccountNameQuery>) => {
                     if (result.data) {
                         return result.data;
                     }

@@ -27,9 +27,10 @@ import { SideNavService } from "../services/sidenav.service";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { AppDatasetService } from "./dataset.service";
-import { Router } from "@angular/router";
+import { NavigationEnd, Router } from "@angular/router";
 import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
+import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import {
@@ -39,7 +40,6 @@ import {
     GetDatasetLineageQuery,
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
-import {AccountTabs} from "../auth/account/account.constants";
 import { debug } from "console";
 import { DataHelpersService } from "../services/datahelpers.service";
 
@@ -50,40 +50,6 @@ import { DataHelpersService } from "../services/datahelpers.service";
     encapsulation: ViewEncapsulation.None,
 })
 export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
-
-    constructor(
-        private appDatasetService: AppDatasetService,
-        private sidenavService: SideNavService,
-        private router: Router,
-        private modalService: ModalService,
-        private clipboard: Clipboard,
-    ) {
-        this._window = window;
-    }
-
-    public get datasetViewTypeOverview(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.overview;
-    }
-
-    public get datasetViewTypeData(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.data;
-    }
-
-    public get datasetViewTypeMetadata(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.metadata;
-    }
-
-    public get datasetViewTypeHistory(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.history;
-    }
-
-    public get datasetViewTypeLinage(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.linage;
-    }
-
-    public get datasetViewTypeDiscussions(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.discussions;
-    }
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     @ViewChild("menuTrigger") trigger: any;
     public isMobileView = false;
@@ -191,37 +157,6 @@ const language = 'typescript';
 
     private _window: Window;
 
-    private static getTitle(node: any): string {
-        switch (node.event.__typename) {
-            case "MetadataEventAddData":
-                return `Added ${
-                    node.event.addedOutputData
-                        ? node.event.addedOutputData.interval.end -
-                          node.event.addedOutputData.interval.start
-                        : "0"
-                } new records`;
-            case "MetadataEventExecuteQuery":
-                return `Transformation produced ${
-                    node.event.queryOutputData
-                        ? node.event.queryOutputData.interval.end -
-                          node.event.queryOutputData.interval.start
-                        : "0"
-                } new records`;
-            case "MetadataEventSeed":
-                return `Dataset initialized`;
-            case "MetadataEventSetTransform":
-                return `Query changed`;
-            case "MetadataEventSetVocab":
-                return `Vocabulary changed`;
-            case "MetadataEventSetWatermar":
-                return `Watermark updated to ${node.systemTime}`;
-            case "MetadataEventSetPollingSource":
-                return `Polling source changed`;
-            default:
-                return node.event.__typename;
-        }
-    }
-
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
         this.isMinimizeSearchAdditionalButtons = AppValues.isMobileView();
@@ -277,8 +212,6 @@ const language = 'typescript';
     }
 
     public ngOnInit(): void {
-        debugger;
-        this.checkWindowSize();
         this.checkWindowSize();
         if (this.sidenav) {
             this.sidenavService.setSidenav(this.sidenav);
@@ -340,14 +273,6 @@ const language = 'typescript';
             },
         );
     }
-    public ngAfterContentInit(): void {
-        this.tableData.tableSource = this.searchData;
-    }
-    private changeLinageGraphView(): void {
-
-    public successCopyToClipboardCopied(): void {
-        console.log("copy success");
-    }
 
     public changeLinageGraphView(): void {
         if (this.datasetViewType === DatasetViewTypeEnum.linage) {
@@ -406,53 +331,45 @@ const language = 'typescript';
             yesButtonText: "Ok",
         });
     }
-    private changeRoutingAndViewType(queryParams: {type: string, page?: number}, datasetViewType: DatasetViewTypeEnum): void {
-        this.router.navigate(
-            [AppValues.urlDatasetView, this.getOwnerName(), this.getDatasetId()],
-            {
-                queryParams: {
-                    type: queryParams.type,
-                },
-            },
-        );
-        if (queryParams.page) {
-            this.router.navigate(
-                [AppValues.urlDatasetView, this.getOwnerName(), this.getDatasetId()],
-                {
-                    queryParams: {
-                        type: AppValues.urlDatasetViewMetadataType,
-                        p: queryParams.page,
-                    },
-                },
-            );
-            this.currentPage = queryParams.page;
-        }
-        this.datasetViewType = datasetViewType;
+
+    public get datasetViewTypeOverview(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.overview;
     }
 
-    public onSearchDataset(page = 0): void {
-        this.changeRoutingAndViewType({type: AppValues.urlDatasetViewOverviewType}, DatasetViewTypeEnum.overview);
-
-        this.appDatasetService.getDatasetOverview(this.getDatasetId(), page);
+    public get datasetViewTypeData(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.data;
     }
 
-    public onSearchLinageDataset(): void {
-        this.changeRoutingAndViewType({type: DatasetViewTypeEnum.linage}, DatasetViewTypeEnum.linage);
-
-        this.appDatasetService.resetDatasetTree();
-        this.appDatasetService.onSearchLineage(this.getDatasetId());
-
-        this.changeLinageGraphView();
+    public get datasetViewTypeMetadata(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.metadata;
     }
 
-    public onSearcDiscussions(): void {
-        console.log("Projections Tab");
-        this.onSearchDataset();
+    public get datasetViewTypeHistory(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.history;
+    }
+
+    public get datasetViewTypeLinage(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.linage;
+    }
+
+    public get datasetViewTypeDiscussions(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.discussions;
     }
 
     public onSearchMetadata(currentPage: number): void {
-        this.changeRoutingAndViewType({type: AppValues.urlDatasetViewMetadataType, page: currentPage}, DatasetViewTypeEnum.metadata);
+        this.router.navigate(
+            [AppValues.defaultUsername, AppValues.urlDatasetView],
+            {
+                queryParams: {
+                    id: this.getDatasetId(),
+                    type: AppValues.urlDatasetViewMetadataType,
+                    p: currentPage,
+                },
+            },
+        );
+        this.currentPage = currentPage;
 
+        this.datasetViewType = DatasetViewTypeEnum.metadata;
         this.appDatasetService.onSearchMetadata(
             this.getDatasetId(),
             currentPage - 1,
@@ -460,13 +377,33 @@ const language = 'typescript';
     }
 
     public onSearchDataForDataset(): void {
-        this.changeRoutingAndViewType({type: AppValues.urlDatasetViewDataType}, DatasetViewTypeEnum.data);
+        this.router.navigate(
+            [AppValues.defaultUsername, AppValues.urlDatasetView],
+            {
+                queryParams: {
+                    id: this.getDatasetId(),
+                    type: AppValues.urlDatasetViewDataType,
+                },
+            },
+        );
+        this.datasetViewType = DatasetViewTypeEnum.data;
 
         this.appDatasetService.getDatasetDataSchema(this.getDatasetId(), 5, 0);
     }
 
     public onSearchDataForHistory(currentPage: number): void {
-        this.changeRoutingAndViewType({type: DatasetViewTypeEnum.history, page: currentPage}, DatasetViewTypeEnum.history);
+        this.router.navigate(
+            [AppValues.defaultUsername, AppValues.urlDatasetView],
+            {
+                queryParams: {
+                    id: this.getDatasetId(),
+                    type: DatasetViewTypeEnum.history,
+                    p: currentPage,
+                },
+            },
+        );
+        this.currentPage = currentPage;
+        this.datasetViewType = DatasetViewTypeEnum.history;
 
         this.appDatasetService.onDatasetHistorySchema(
             this.getDatasetId(),
@@ -480,9 +417,7 @@ const language = 'typescript';
     }
 
     public showOwnerPage(): void {
-        this.router.navigate([AppValues.urlUsername, this.datasetInfo.owner.name], {
-            queryParams: {tab: AccountTabs.datasets}
-        });
+        this.router.navigate([this.datasetInfo.owner.id]);
     }
 
     public toggleReadmeView(): void {
@@ -494,6 +429,45 @@ const language = 'typescript';
             message: "Feature coming soon",
             yesButtonText: "Ok",
         });
+    }
+
+    public onSearchDataset(page = 0): void {
+        this.router.navigate(
+            [AppValues.defaultUsername, AppValues.urlDatasetView],
+            {
+                queryParams: {
+                    id: this.getDatasetId(),
+                    type: AppValues.urlDatasetViewOverviewType,
+                },
+            },
+        );
+
+        this.datasetViewType = DatasetViewTypeEnum.overview;
+
+        this.appDatasetService.getDatasetOverview(this.getDatasetId(), page);
+    }
+
+    public onSearchLinageDataset(): void {
+        this.router.navigate(
+            [AppValues.defaultUsername, AppValues.urlDatasetView],
+            {
+                queryParams: {
+                    id: this.getDatasetId(),
+                    type: DatasetViewTypeEnum.linage,
+                },
+            },
+        );
+
+        this.datasetViewType = DatasetViewTypeEnum.linage;
+        this.appDatasetService.resetDatasetTree();
+        this.appDatasetService.onSearchLineage(this.getDatasetId());
+
+        this.changeLinageGraphView();
+    }
+
+    public onSearcDiscussions(): void {
+        console.log("Projections Tab");
+        this.onSearchDataset();
     }
 
     public onClickNode(idDataset: string): void {
@@ -632,10 +606,6 @@ const language = 'typescript';
             totalCount: 0,
         };
     }
-    private getOwnerName(): string {
-        return decodeURIComponent(this._window.location.pathname
-            .split(`/${AppValues.urlDatasetView}/`)[1].split("/")[0]);
-    }
 
     private initDatasetViewByType(currentPage?: number): void {
         if (this.appDatasetService.onSearchLinageDatasetSubscribtion) {
@@ -644,10 +614,10 @@ const language = 'typescript';
         this.appDatasetService.resetDatasetTree();
         const searchParams: string[] = decodeURIComponent(
             this._window.location.search,
-        ).split("type=");
+        ).split("&type=");
         const searchPageParams: string[] = decodeURIComponent(
             this._window.location.search,
-        ).split("p=");
+        ).split("&p=");
         let page = 1;
         if (searchPageParams[1]) {
             page = currentPage || Number(searchPageParams[1].split("&")[0]);
@@ -682,20 +652,22 @@ const language = 'typescript';
     }
 
     private getDatasetId(): string {
-        const searchParams: string[] = this._window.location.pathname
-            .split(`/${AppValues.urlDatasetView}/`)[1].split("/");
+        const searchParams: string[] = decodeURIComponent(
+            this._window.location.search,
+        ).split("?id=");
 
         if (searchParams.length > 1) {
-            return decodeURIComponent(searchParams[1]);
+            return searchParams[1].split("&")[0];
         }
         return "";
     }
 
     public onSelectDataset(id: string): void {
         this.router.navigate(
-            [AppValues.urlDatasetView, this.getOwnerName(), id],
+            [AppValues.defaultUsername, AppValues.urlDatasetView],
             {
                 queryParams: {
+                    id,
                     type: AppValues.urlDatasetViewLineageType,
                 },
             },

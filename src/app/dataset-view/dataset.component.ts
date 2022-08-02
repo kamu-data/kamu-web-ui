@@ -25,7 +25,7 @@ import {
 import { MatSidenav } from "@angular/material/sidenav";
 import { SideNavService } from "../services/sidenav.service";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
-import { DatasetViewTypeEnum } from "./dataset-view.interface";
+import {DatasetViewContentInterface, DatasetViewTypeEnum} from "./dataset-view.interface";
 import { AppDatasetService } from "./dataset.service";
 import { NavigationEnd, Router } from "@angular/router";
 import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
@@ -42,6 +42,7 @@ import {
 } from "../api/kamu.graphql.interface";
 import { debug } from "console";
 import { DataHelpersService } from "../services/datahelpers.service";
+import {AppDatasetOverviewService} from "./datasetOverview.service";
 
 @Component({
     selector: "app-dataset",
@@ -55,7 +56,6 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public isMobileView = false;
     public datasetInfo: DatasetInfoInterface;
     public datasetName: DatasetNameInterface;
-    public datasetHistory: any[];
     public searchValue = "";
     public currentPage: number;
     public currentSchema: DataViewSchema;
@@ -115,21 +115,12 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         ];
 
     /* eslint-disable  @typescript-eslint/no-explicit-any */
-    public tableData: {
-        isTableHeader: boolean;
-        displayedColumns?: any[];
-        tableSource: any;
-        latestMetadataBlock?: MetadataBlockFragment;
-        isResultQuantity: boolean;
-        isClickableRow: boolean;
-        pageInfo: PageInfoInterface;
-        totalCount: number;
-    };
-    public searchData:
-        | SearchOverviewDatasetsInterface[]
-        | SearchHistoryInterface[] = [];
+    public tableData: DatasetViewContentInterface;
+    public datasetHistory: SearchHistoryInterface[];
+    private searchOverviewDatasets: SearchHistoryInterface[] = [];
+    private searchDataDatasets: SearchHistoryInterface[] = [];
+    private searchMetadata: SearchOverviewDatasetsInterface[] = [];
 
-    public datasetMetadata: {};
     public linageGraphView: [number, number] = [500, 600];
     public linageGraphLink: Edge[] = [];
     public linageGraphNodes: Node[] = [];
@@ -139,22 +130,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public isMarkdownEditView = false;
     public clipboardKamuCli = "kamu pull kamu.dev/anonymous/dataset";
     public clipboardKafka = "https://api.kamu.dev/kafka/anonymous/dataset";
-    public markdownText = `## Markdown __rulez__!
----
-
-### Syntax highlight
-\`\`\`typescript
-const language = 'typescript';
-\`\`\`
-
-### Lists
-1. Ordered list
-2. Another bullet point
-   - Unordered list
-   - Another unordered bullet
-
-### Blockquote
-> Blockquote to the max`;
+    public markdownText = AppValues.markdownContain;
 
     private _window: Window;
 
@@ -178,6 +154,7 @@ const language = 'typescript';
         private modalService: ModalService,
         private clipboard: Clipboard,
         private dataHelpers: DataHelpersService,
+        private datasetOverviewService: AppDatasetOverviewService
     ) {
         this._window = window;
     }
@@ -235,11 +212,7 @@ const language = 'typescript';
                     : ({} as DataViewSchema);
             },
         );
-        this.appDatasetService.onSearchDatasetHistoryChanges.subscribe(
-            (history: any[]) => {
-                this.datasetHistory = history;
-            },
-        );
+
         this.appDatasetService.onDatasetPageInfoChanges.subscribe(
             (info: PageInfoInterface) => {
                 this.tableData.pageInfo = info;
@@ -264,16 +237,29 @@ const language = 'typescript';
         });
 
         /* eslint-disable  @typescript-eslint/no-explicit-any */
-        this.appDatasetService.onSearchDataChanges.subscribe((data: any[]) => {
-            this.tableData.tableSource = data;
+
+        this.datasetOverviewService.onDatasetOverviewChanges.subscribe((overview: SearchHistoryInterface[]) => {
+            this.tableData.datasetOverviewSource = overview;
+            this.searchOverviewDatasets = overview;
         });
 
-        this.appDatasetService.onSearchMetadataChanges.subscribe(
+        this.datasetOverviewService.onDatasetDataChanges.subscribe((history: SearchHistoryInterface[]) => {
+            this.tableData.datasetDataSource = history;
+            this.searchDataDatasets = history;
+        });
+
+        this.datasetOverviewService.onDatasetHistoryChanges.subscribe(
+            (history: SearchHistoryInterface[]) => {
+                this.datasetHistory = history;
+            },
+        );
+
+        this.datasetOverviewService.onDatasetMetadataChanges.subscribe(
             (data: SearchOverviewInterface) => {
-                this.tableData.tableSource = data.dataset;
+                this.tableData.datasetMetadataSource = data.dataset;
                 this.tableData.pageInfo = data.pageInfo;
                 this.tableData.totalCount = data.totalCount as number;
-                this.searchData = data.dataset;
+                this.searchMetadata = data.dataset;
 
                 setTimeout(() => (this.currentPage = data.currentPage));
             },
@@ -308,7 +294,9 @@ const language = 'typescript';
     }
 
     public ngAfterContentInit(): void {
-        this.tableData.tableSource = this.searchData;
+        this.tableData.datasetOverviewSource = this.searchOverviewDatasets;
+        this.tableData.datasetDataSource = this.searchDataDatasets;
+        this.tableData.datasetMetadataSource = this.searchMetadata;
     }
 
     public onPageChange(params: {
@@ -520,8 +508,7 @@ const language = 'typescript';
 
                 this.isAvailableLinageGraph = edges.length !== 0;
 
-                const uniqueDatasets: { [id: string]: DatasetKindInterface } =
-                    {};
+                const uniqueDatasets: { [id: string]: DatasetKindInterface } = {};
                 edges.forEach((edge: DatasetKindInterface[]) =>
                     edge.forEach((dataset: DatasetKindInterface) => {
                         uniqueDatasets[dataset.id] = dataset;
@@ -605,7 +592,7 @@ const language = 'typescript';
     private initTableData(): void {
         this.tableData = {
             isTableHeader: true,
-            tableSource: this.searchData,
+            datasetOverviewSource: this.searchOverviewDatasets,
             latestMetadataBlock: undefined,
             isResultQuantity: false,
             isClickableRow: false,

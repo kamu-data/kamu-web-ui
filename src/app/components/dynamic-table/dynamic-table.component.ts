@@ -12,6 +12,11 @@ import { MatTableDataSource } from "@angular/material/table";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
 import AppValues from "../../common/app.values";
+import {
+    DataSchemaField,
+    SearchHistoryInterface,
+    SearchOverviewDatasetsInterface
+} from "../../interface/search.interface";
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 const ELEMENT_DATA: any[] = [];
@@ -27,7 +32,7 @@ export class DynamicTableComponent
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     @Input() public tableColumns?: any[];
     /* eslint-disable  @typescript-eslint/no-explicit-any */
-    @Input() public tableSource: any[];
+    @Input() public tableSource: (SearchOverviewDatasetsInterface[] | SearchHistoryInterface[] | DataSchemaField[] | undefined);
 
     // TODO: These should be extracted into a separate component that wraps the table
     @Input() public latestMetadataBlock?: MetadataBlockFragment;

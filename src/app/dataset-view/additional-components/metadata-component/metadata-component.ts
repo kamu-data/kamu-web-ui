@@ -11,6 +11,7 @@ import {
     PageInfoInterface,
 } from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
+import {DatasetViewContentInterface} from "../../dataset-view.interface";
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 @Component({
@@ -22,15 +23,7 @@ export class MetadataComponent {
     @Input() public currentSchema: DataViewSchema;
     @Input() public pageInfo: PageInfoInterface;
     @Input() public datasetInfo: any;
-    @Input() public tableData: {
-        isTableHeader: boolean;
-        displayedColumns?: any[];
-        tableSource: any;
-        isResultQuantity: boolean;
-        isClickableRow: boolean;
-        pageInfo: PageInfoInterface;
-        totalCount: number;
-    };
+    @Input() public tableData: DatasetViewContentInterface;
     @Output() public pageChangeEvent: EventEmitter<{
         currentPage: number;
         isClick: boolean;

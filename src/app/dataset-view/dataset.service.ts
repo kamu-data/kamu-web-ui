@@ -23,6 +23,7 @@ import {
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { ModalService } from "../components/modal/modal.service";
+import {AppDatasetOverviewService} from "./datasetOverview.service";
 
 @Injectable()
 export class AppDatasetService {
@@ -31,6 +32,7 @@ export class AppDatasetService {
     constructor(
         private searchApi: SearchApi,
         private modalService: ModalService,
+        private datasetOverviewService: AppDatasetOverviewService
     ) {}
 
     public get onSearchDatasetInfoChanges(): Observable<DatasetInfoInterface> {
@@ -39,9 +41,6 @@ export class AppDatasetService {
 
     public get onSearchDatasetNameChanges(): Observable<DatasetNameInterface> {
         return this.searchDatasetNameChanges$.asObservable();
-    }
-    public get onSearchDatasetHistoryChanges(): Observable<any[]> {
-        return this.searchDatasetHistoryChanges$.asObservable();
     }
 
     public get onSearchChanges(): Observable<string> {
@@ -58,17 +57,8 @@ export class AppDatasetService {
         return this.kindInfoChanges$.asObservable();
     }
 
-    public get onSearchMetadataChanges(): Observable<SearchOverviewInterface> {
-        return this.searchMetadataChanges$.asObservable();
-    }
     public get onDatasetPageInfoChanges(): Observable<PageInfoInterface> {
         return this.datasetPageInfoChanges$.asObservable();
-    }
-
-    public get getSearchData():
-        | SearchHistoryInterface[]
-        | SearchOverviewDatasetsInterface[] {
-        return this.searchData;
     }
 
     public get onDatasetTreeChanges(): Observable<
@@ -91,8 +81,6 @@ export class AppDatasetService {
         return this.datasetKindInfo;
     }
 
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    public searchData: any[] = [];
     private kindInfoChanges$: Subject<DatasetKindInterface[]> = new Subject<
         DatasetKindInterface[]
     >();
@@ -100,14 +88,11 @@ export class AppDatasetService {
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     private searchDataChanges$: Subject<any[]> = new Subject<any[]>();
     /* eslint-disable  @typescript-eslint/no-explicit-any */
-    private searchDatasetInfoChanges$: Subject<any> = new Subject<any>();
-    private searchDatasetHistoryChanges$: Subject<any[]> = new Subject<any[]>();
+    private searchDatasetInfoChanges$: Subject<DatasetInfoInterface> = new Subject<DatasetInfoInterface>();
     private datasetPageInfoChanges$: Subject<PageInfoInterface> =
         new Subject<PageInfoInterface>();
     private searchDatasetNameChanges$: Subject<DatasetNameInterface> =
         new Subject<DatasetNameInterface>();
-    private searchMetadataChanges$: Subject<SearchOverviewInterface> =
-        new Subject<SearchOverviewInterface>();
     private datasetTreeChanges$: Subject<
         [DatasetKindInterface[][], DatasetKindInterface]
     > = new Subject<[DatasetKindInterface[][], DatasetKindInterface]>();
@@ -153,9 +138,6 @@ export class AppDatasetService {
     ): void {
         this.searchDatasetNameChanges$.next(searchDatasetName);
     }
-    public searchDatasetHistoryChanges(datasetNodes: any[]): void {
-        this.searchDatasetHistoryChanges$.next(datasetNodes);
-    }
     public datasetPageInfoChanges(pageInfo: PageInfoInterface): void {
         this.datasetPageInfoChanges$.next(pageInfo);
     }
@@ -163,27 +145,8 @@ export class AppDatasetService {
         this.datasetSchemaChanges$.next(schema);
     }
 
-    // TODO: "SearchData" is currently propagating a lot of different kinds of information
-    // It can be:
-    // - MetadataBlocks in "History" tab
-    // - Single MetadataBlock to display current hash of "Metadata" tab
-    // - Sample data records to be displayed on "Overview" tab
-    // - Data records that come as result of a query on "Data" tab
-    // This has to be refactored!!!
-    public searchDataChanges(
-        searchData:
-            | SearchHistoryInterface[]
-            | SearchOverviewDatasetsInterface[],
-    ): void {
-        this.searchDataChanges$.next(searchData);
-    }
-
     public kindInfoChanges(datasetList: DatasetKindInterface[]): void {
         this.kindInfoChanges$.next(datasetList);
-    }
-
-    public searchMetadataChange(data: SearchOverviewInterface) {
-        return this.searchMetadataChanges$.next(data);
     }
 
     public datasetTreeChange(
@@ -250,8 +213,7 @@ export class AppDatasetService {
                     const datasetInfo =
                         AppDatasetService.getDatasetInfo(datasets);
                     this.searchDatasetInfoChanges(datasetInfo);
-                    this.searchData = datasets.data.tail.content;
-                    this.searchDataChanges(datasets.data.tail.content);
+                    this.datasetOverviewService.changeDatasetData(datasets.data.tail.content);
                     this.datasetSchemaChanges(
                         data.datasets.byId?.metadata
                             ?.currentSchema as DataSchema,
@@ -261,6 +223,7 @@ export class AppDatasetService {
     }
 
     public getDatasetOverview(id: string, page: number): void {
+        debugger
         this.searchApi
             .getDatasetOverview({ id, page })
             .subscribe((data: DatasetOverviewQuery | undefined) => {
@@ -292,8 +255,7 @@ export class AppDatasetService {
                     const datasetInfo =
                         AppDatasetService.getDatasetInfo(datasets);
                     this.searchDatasetInfoChanges(datasetInfo);
-                    this.searchData = datasets.data.tail.content;
-                    this.searchDataChanges(datasets.data.tail.content);
+                    this.datasetOverviewService.changeDatasetOverview(datasets.data.tail.content);
                 }
             });
     }
@@ -326,9 +288,7 @@ export class AppDatasetService {
                         name: data.datasets.byId?.name,
                         owner: data.datasets.byId?.owner as any,
                     });
-                    this.searchDatasetHistoryChanges(
-                        data.datasets.byId?.metadata.chain.blocks.nodes || [],
-                    );
+                    this.datasetOverviewService.changeDatasetHistory(data.datasets.byId?.metadata.chain.blocks.nodes || []);
                     this.datasetPageInfoChanges(pageInfo);
                 }
             });
@@ -356,9 +316,7 @@ export class AppDatasetService {
                         AppDatasetService.getDatasetInfo(datasets);
                     this.searchDatasetInfoChanges(datasetInfo);
                     // @ts-ignore
-                    this.searchData = datasets.metadata.chain.blocks.nodes;
-                    // @ts-ignore
-                    this.searchDataChanges(this.searchData);
+                    this.datasetOverviewService.changeDatasetMetadata(datasets.metadata.chain.blocks.nodes);
                 }
             });
     }
@@ -397,9 +355,8 @@ export class AppDatasetService {
                         Object.assign(currentDatasetInfo, datasets),
                     );
                     this.searchDatasetInfoChanges(datasetInfo);
-                    this.searchData = datasets.data.tail.content;
                     // @ts-ignore
-                    this.searchDataChanges(datasets.data.tail.content);
+                    this.datasetOverviewService.changeDatasetDataSQL(datasets.data.tail.content);
                     this.datasetSchemaChanges(
                         data.data.query.schema as DataSchema,
                     );

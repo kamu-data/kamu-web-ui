@@ -13,22 +13,14 @@ import {
     PageInfoInterface,
 } from "../../../interface/search.interface";
 import DataTabValues from "./mock.data";
+import {DatasetViewContentInterface} from "../../dataset-view.interface";
 
 @Component({
     selector: "app-data",
     templateUrl: "./data-component.html",
 })
 export class DataComponent implements OnInit {
-    @Input() public tableData: {
-        isTableHeader: boolean;
-        displayedColumns?: any[];
-        tableSource: any;
-        latestMetadataBlock?: MetadataBlockFragment;
-        isResultQuantity: boolean;
-        isClickableRow: boolean;
-        pageInfo: PageInfoInterface;
-        totalCount: number;
-    };
+    @Input() public tableData: DatasetViewContentInterface;
     @Input() public datasetName: DatasetNameInterface;
     @Input() public currentSchema: DataViewSchema;
     // tslint:disable-next-line:no-output-on-prefix

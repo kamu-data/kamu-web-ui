@@ -25,6 +25,23 @@ export default class AppValues {
 
     public static httpPattern = new RegExp(/^(http:\/\/)|(https:\/\/)/i);
 
+    public static markdownContain = `## Markdown __rulez__!
+---
+
+### Syntax highlight
+\`\`\`typescript
+const language = 'typescript';
+\`\`\`
+
+### Lists
+1. Ordered list
+2. Another bullet point
+   - Unordered list
+   - Another unordered bullet
+
+### Blockquote
+> Blockquote to the max`;
+
     public static capitalizeFirstLetter(text: string): string {
         return text.charAt(0).toUpperCase() + text.slice(1);
     }

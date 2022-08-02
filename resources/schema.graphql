@@ -27,7 +27,9 @@ type Accounts {
   byName(name: String!): Account
 }
 type AddData {
+  inputCheckpoint: Multihash
   outputData: DataSlice!
+  outputCheckpoint: Checkpoint
   outputWatermark: DateTime
 }
 type AttachmentEmbedded {
@@ -49,6 +51,10 @@ type BlockInterval {
 type BlockRef {
   name: String!
   blockHash: Multihash!
+}
+type Checkpoint {
+  physicalHash: Multihash!
+  size: Int!
 }
 enum CompressionFormat {
   GZIP
@@ -86,6 +92,7 @@ type DataSlice {
   logicalHash: Multihash!
   physicalHash: Multihash!
   interval: OffsetInterval!
+  size: Int!
 }
 type Dataset {
   "Unique identifier of the dataset"
@@ -175,6 +182,10 @@ Implement the DateTime<Utc> scalar
 The input/output is a string in RFC3339 format.
 """
 scalar DateTime
+type EnvVar {
+  name: String!
+  value: String
+}
 union EventTimeSource = EventTimeSourceFromMetadata | EventTimeSourceFromPath
 type EventTimeSourceFromMetadata {
   dummy: String
@@ -185,10 +196,18 @@ type EventTimeSourceFromPath {
 }
 type ExecuteQuery {
   inputSlices: [InputSlice!]!
+  inputCheckpoint: Multihash
   outputData: DataSlice
+  outputCheckpoint: Checkpoint
   outputWatermark: DateTime
 }
-union FetchStep = FetchStepUrl | FetchStepFilesGlob
+union FetchStep = FetchStepUrl | FetchStepFilesGlob | FetchStepContainer
+type FetchStepContainer {
+  image: String!
+  command: [String!]
+  args: [String!]
+  env: [EnvVar!]
+}
 type FetchStepFilesGlob {
   path: String!
   eventTime: EventTimeSource
@@ -301,7 +320,7 @@ type Query {
 enum QueryDialect {
   DATA_FUSION
 }
-union ReadStep = ReadStepCsv | ReadStepJsonLines | ReadStepGeoJson | ReadStepEsriShapefile
+union ReadStep = ReadStepCsv | ReadStepJsonLines | ReadStepGeoJson | ReadStepEsriShapefile | ReadStepParquet
 type ReadStepCsv {
   schema: [String!]
   separator: String
@@ -337,6 +356,9 @@ type ReadStepJsonLines {
   multiLine: Boolean
   primitivesAsString: Boolean
   timestampFormat: String
+}
+type ReadStepParquet {
+  schema: [String!]
 }
 type Search {
   "Perform search across all resources"

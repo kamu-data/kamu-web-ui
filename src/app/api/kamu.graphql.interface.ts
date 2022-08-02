@@ -284,8 +284,16 @@ export type MetadataEvent =
 
 export type AddData = {
     __typename?: "AddData";
+    inputCheckpoint?: Maybe<Scalars["Multihash"]>;
+    outputCheckpoint?: Maybe<Checkpoint>;
     outputData: DataSlice;
     outputWatermark?: Maybe<Scalars["DateTime"]>;
+};
+
+export type Checkpoint = {
+    __typename?: "Checkpoint";
+    physicalHash: Scalars["Multihash"];
+    size: Scalars["Int"];
 };
 
 export type DataSlice = {
@@ -293,6 +301,7 @@ export type DataSlice = {
     interval: OffsetInterval;
     logicalHash: Scalars["Multihash"];
     physicalHash: Scalars["Multihash"];
+    size: Scalars["Int"];
 };
 
 export type OffsetInterval = {
@@ -303,7 +312,9 @@ export type OffsetInterval = {
 
 export type ExecuteQuery = {
     __typename?: "ExecuteQuery";
+    inputCheckpoint?: Maybe<Scalars["Multihash"]>;
     inputSlices: Array<InputSlice>;
+    outputCheckpoint?: Maybe<Checkpoint>;
     outputData?: Maybe<DataSlice>;
     outputWatermark?: Maybe<Scalars["DateTime"]>;
 };
@@ -368,7 +379,21 @@ export type SetPollingSource = {
     read: ReadStep;
 };
 
-export type FetchStep = FetchStepFilesGlob | FetchStepUrl;
+export type FetchStep = FetchStepContainer | FetchStepFilesGlob | FetchStepUrl;
+
+export type FetchStepContainer = {
+    __typename?: "FetchStepContainer";
+    args?: Maybe<Array<Scalars["String"]>>;
+    command?: Maybe<Array<Scalars["String"]>>;
+    env?: Maybe<Array<EnvVar>>;
+    image: Scalars["String"];
+};
+
+export type EnvVar = {
+    __typename?: "EnvVar";
+    name: Scalars["String"];
+    value?: Maybe<Scalars["String"]>;
+};
 
 export type FetchStepFilesGlob = {
     __typename?: "FetchStepFilesGlob";
@@ -481,7 +506,8 @@ export type ReadStep =
     | ReadStepCsv
     | ReadStepEsriShapefile
     | ReadStepGeoJson
-    | ReadStepJsonLines;
+    | ReadStepJsonLines
+    | ReadStepParquet;
 
 export type ReadStepCsv = {
     __typename?: "ReadStepCsv";
@@ -525,6 +551,11 @@ export type ReadStepJsonLines = {
     primitivesAsString?: Maybe<Scalars["Boolean"]>;
     schema?: Maybe<Array<Scalars["String"]>>;
     timestampFormat?: Maybe<Scalars["String"]>;
+};
+
+export type ReadStepParquet = {
+    __typename?: "ReadStepParquet";
+    schema?: Maybe<Array<Scalars["String"]>>;
 };
 
 export type SetTransform = {
@@ -703,48 +734,48 @@ export type GetDatasetDataSchemaQuery = {
     datasets: {
         __typename: "Datasets";
         byId?:
-            | {
-                  __typename: "Dataset";
-                  id: any;
-                  name: any;
-                  kind: DatasetKind;
-                  createdAt: any;
-                  lastUpdatedAt: any;
-                  owner:
-                      | { __typename?: "Organization"; id: any; name: string }
-                      | { __typename?: "User"; id: any; name: string };
-                  metadata: {
-                      __typename: "DatasetMetadata";
-                      currentWatermark?: any | null | undefined;
-                      currentSchema: {
-                          __typename: "DataSchema";
-                          format: DataSchemaFormat;
-                          content: string;
-                      };
-                  };
-                  data: {
-                      __typename: "DatasetData";
-                      numRecordsTotal: number;
-                      estimatedSize: number;
-                      tail: {
-                          __typename: "DataQueryResult";
-                          limit: number;
-                          schema: {
-                              __typename?: "DataSchema";
-                              format: DataSchemaFormat;
-                              content: string;
-                          };
-                          data: {
-                              __typename?: "DataBatch";
-                              format: DataBatchFormat;
-                              content: string;
-                              numRecords: number;
-                          };
-                      };
-                  };
-              }
-            | null
-            | undefined;
+        | {
+            __typename: "Dataset";
+            id: any;
+            name: any;
+            kind: DatasetKind;
+            createdAt: any;
+            lastUpdatedAt: any;
+            owner:
+            | { __typename?: "Organization"; id: any; name: string }
+            | { __typename?: "User"; id: any; name: string };
+            metadata: {
+                __typename: "DatasetMetadata";
+                currentWatermark?: any | null | undefined;
+                currentSchema: {
+                    __typename: "DataSchema";
+                    format: DataSchemaFormat;
+                    content: string;
+                };
+            };
+            data: {
+                __typename: "DatasetData";
+                numRecordsTotal: number;
+                estimatedSize: number;
+                tail: {
+                    __typename: "DataQueryResult";
+                    limit: number;
+                    schema: {
+                        __typename?: "DataSchema";
+                        format: DataSchemaFormat;
+                        content: string;
+                    };
+                    data: {
+                        __typename?: "DataBatch";
+                        format: DataBatchFormat;
+                        content: string;
+                        numRecords: number;
+                    };
+                };
+            };
+        }
+        | null
+        | undefined;
     };
 };
 
@@ -786,97 +817,97 @@ export type GetDatasetHistoryQuery = {
     datasets: {
         __typename?: "Datasets";
         byId?:
-            | {
-                  __typename?: "Dataset";
-                  id: any;
-                  name: any;
-                  owner:
-                      | { __typename?: "Organization"; id: any; name: string }
-                      | { __typename?: "User"; id: any; name: string };
-                  metadata: {
-                      __typename?: "DatasetMetadata";
-                      chain: {
-                          __typename?: "MetadataChain";
-                          blocks: {
-                              __typename?: "MetadataBlockConnection";
-                              totalCount?: number | null | undefined;
-                              nodes: Array<{
-                                  __typename?: "MetadataBlockExtended";
-                                  blockHash: any;
-                                  prevBlockHash?: any | null | undefined;
-                                  systemTime: any;
-                                  author:
-                                      | {
-                                            __typename: "Organization";
-                                            id: any;
-                                            name: string;
-                                        }
-                                      | {
-                                            __typename: "User";
-                                            id: any;
-                                            name: string;
-                                        };
-                                  event:
-                                      | {
-                                            __typename: "AddData";
-                                            addedOutputData: {
-                                                __typename?: "DataSlice";
-                                                logicalHash: any;
-                                                physicalHash: any;
-                                                interval: {
-                                                    __typename?: "OffsetInterval";
-                                                    start: number;
-                                                    end: number;
-                                                };
-                                            };
-                                        }
-                                      | {
-                                            __typename: "ExecuteQuery";
-                                            queryOutputData?:
-                                                | {
-                                                      __typename?: "DataSlice";
-                                                      logicalHash: any;
-                                                      physicalHash: any;
-                                                      interval: {
-                                                          __typename?: "OffsetInterval";
-                                                          start: number;
-                                                          end: number;
-                                                      };
-                                                  }
-                                                | null
-                                                | undefined;
-                                        }
-                                      | {
-                                            __typename: "Seed";
-                                            datasetId: any;
-                                            datasetKind: DatasetKind;
-                                        }
-                                      | { __typename: "SetAttachments" }
-                                      | { __typename: "SetInfo" }
-                                      | {
-                                            __typename: "SetLicense";
-                                            name: string;
-                                        }
-                                      | { __typename: "SetPollingSource" }
-                                      | { __typename: "SetTransform" }
-                                      | { __typename: "SetVocab" }
-                                      | {
-                                            __typename: "SetWatermark";
-                                            outputWatermark: any;
-                                        };
-                              }>;
-                              pageInfo: {
-                                  __typename?: "PageBasedInfo";
-                                  hasNextPage: boolean;
-                                  hasPreviousPage: boolean;
-                                  totalPages?: number | null | undefined;
-                              };
-                          };
-                      };
-                  };
-              }
-            | null
-            | undefined;
+        | {
+            __typename?: "Dataset";
+            id: any;
+            name: any;
+            owner:
+            | { __typename?: "Organization"; id: any; name: string }
+            | { __typename?: "User"; id: any; name: string };
+            metadata: {
+                __typename?: "DatasetMetadata";
+                chain: {
+                    __typename?: "MetadataChain";
+                    blocks: {
+                        __typename?: "MetadataBlockConnection";
+                        totalCount?: number | null | undefined;
+                        nodes: Array<{
+                            __typename?: "MetadataBlockExtended";
+                            blockHash: any;
+                            prevBlockHash?: any | null | undefined;
+                            systemTime: any;
+                            author:
+                            | {
+                                __typename: "Organization";
+                                id: any;
+                                name: string;
+                            }
+                            | {
+                                __typename: "User";
+                                id: any;
+                                name: string;
+                            };
+                            event:
+                            | {
+                                __typename: "AddData";
+                                addedOutputData: {
+                                    __typename?: "DataSlice";
+                                    logicalHash: any;
+                                    physicalHash: any;
+                                    interval: {
+                                        __typename?: "OffsetInterval";
+                                        start: number;
+                                        end: number;
+                                    };
+                                };
+                            }
+                            | {
+                                __typename: "ExecuteQuery";
+                                queryOutputData?:
+                                | {
+                                    __typename?: "DataSlice";
+                                    logicalHash: any;
+                                    physicalHash: any;
+                                    interval: {
+                                        __typename?: "OffsetInterval";
+                                        start: number;
+                                        end: number;
+                                    };
+                                }
+                                | null
+                                | undefined;
+                            }
+                            | {
+                                __typename: "Seed";
+                                datasetId: any;
+                                datasetKind: DatasetKind;
+                            }
+                            | { __typename: "SetAttachments" }
+                            | { __typename: "SetInfo" }
+                            | {
+                                __typename: "SetLicense";
+                                name: string;
+                            }
+                            | { __typename: "SetPollingSource" }
+                            | { __typename: "SetTransform" }
+                            | { __typename: "SetVocab" }
+                            | {
+                                __typename: "SetWatermark";
+                                outputWatermark: any;
+                            };
+                        }>;
+                        pageInfo: {
+                            __typename?: "PageBasedInfo";
+                            hasNextPage: boolean;
+                            hasPreviousPage: boolean;
+                            totalPages?: number | null | undefined;
+                        };
+                    };
+                };
+            };
+        }
+        | null
+        | undefined;
     };
 };
 
@@ -886,8 +917,8 @@ export type LineageDatasetInfoFragment = {
     kind: DatasetKind;
     name: any;
     owner:
-        | { __typename?: "Organization"; id: any; name: string }
-        | { __typename?: "User"; id: any; name: string };
+    | { __typename?: "Organization"; id: any; name: string }
+    | { __typename?: "User"; id: any; name: string };
 };
 
 export type GetDatasetLineageQueryVariables = Exact<{
@@ -899,206 +930,206 @@ export type GetDatasetLineageQuery = {
     datasets: {
         __typename?: "Datasets";
         byId?:
-            | {
-                  __typename?: "Dataset";
-                  id: any;
-                  kind: DatasetKind;
-                  name: any;
-                  metadata: {
-                      __typename?: "DatasetMetadata";
-                      currentUpstreamDependencies: Array<{
-                          __typename?: "Dataset";
-                          id: any;
-                          kind: DatasetKind;
-                          name: any;
-                          metadata: {
-                              __typename?: "DatasetMetadata";
-                              currentUpstreamDependencies: Array<{
-                                  __typename?: "Dataset";
-                                  id: any;
-                                  kind: DatasetKind;
-                                  name: any;
-                                  metadata: {
-                                      __typename?: "DatasetMetadata";
-                                      currentUpstreamDependencies: Array<{
-                                          __typename?: "Dataset";
-                                          id: any;
-                                          kind: DatasetKind;
-                                          name: any;
-                                          metadata: {
-                                              __typename?: "DatasetMetadata";
-                                              currentUpstreamDependencies: Array<{
-                                                  __typename?: "Dataset";
-                                                  id: any;
-                                                  kind: DatasetKind;
-                                                  name: any;
-                                                  metadata: {
-                                                      __typename?: "DatasetMetadata";
-                                                      currentUpstreamDependencies: Array<{
-                                                          __typename?: "Dataset";
-                                                          id: any;
-                                                          kind: DatasetKind;
-                                                          name: any;
-                                                          owner:
-                                                              | {
-                                                                    __typename?: "Organization";
-                                                                    id: any;
-                                                                    name: string;
-                                                                }
-                                                              | {
-                                                                    __typename?: "User";
-                                                                    id: any;
-                                                                    name: string;
-                                                                };
-                                                      }>;
-                                                  };
-                                                  owner:
-                                                      | {
-                                                            __typename?: "Organization";
-                                                            id: any;
-                                                            name: string;
-                                                        }
-                                                      | {
-                                                            __typename?: "User";
-                                                            id: any;
-                                                            name: string;
-                                                        };
-                                              }>;
-                                          };
-                                          owner:
-                                              | {
-                                                    __typename?: "Organization";
-                                                    id: any;
-                                                    name: string;
-                                                }
-                                              | {
-                                                    __typename?: "User";
-                                                    id: any;
-                                                    name: string;
-                                                };
-                                      }>;
-                                  };
-                                  owner:
-                                      | {
-                                            __typename?: "Organization";
-                                            id: any;
-                                            name: string;
-                                        }
-                                      | {
-                                            __typename?: "User";
-                                            id: any;
-                                            name: string;
-                                        };
-                              }>;
-                          };
-                          owner:
-                              | {
-                                    __typename?: "Organization";
+        | {
+            __typename?: "Dataset";
+            id: any;
+            kind: DatasetKind;
+            name: any;
+            metadata: {
+                __typename?: "DatasetMetadata";
+                currentUpstreamDependencies: Array<{
+                    __typename?: "Dataset";
+                    id: any;
+                    kind: DatasetKind;
+                    name: any;
+                    metadata: {
+                        __typename?: "DatasetMetadata";
+                        currentUpstreamDependencies: Array<{
+                            __typename?: "Dataset";
+                            id: any;
+                            kind: DatasetKind;
+                            name: any;
+                            metadata: {
+                                __typename?: "DatasetMetadata";
+                                currentUpstreamDependencies: Array<{
+                                    __typename?: "Dataset";
                                     id: any;
-                                    name: string;
-                                }
-                              | { __typename?: "User"; id: any; name: string };
-                      }>;
-                      currentDownstreamDependencies: Array<{
-                          __typename?: "Dataset";
-                          id: any;
-                          kind: DatasetKind;
-                          name: any;
-                          metadata: {
-                              __typename?: "DatasetMetadata";
-                              currentDownstreamDependencies: Array<{
-                                  __typename?: "Dataset";
-                                  id: any;
-                                  kind: DatasetKind;
-                                  name: any;
-                                  metadata: {
-                                      __typename?: "DatasetMetadata";
-                                      currentDownstreamDependencies: Array<{
-                                          __typename?: "Dataset";
-                                          id: any;
-                                          kind: DatasetKind;
-                                          name: any;
-                                          metadata: {
-                                              __typename?: "DatasetMetadata";
-                                              currentDownstreamDependencies: Array<{
-                                                  __typename?: "Dataset";
-                                                  id: any;
-                                                  kind: DatasetKind;
-                                                  name: any;
-                                                  metadata: {
-                                                      __typename?: "DatasetMetadata";
-                                                      currentDownstreamDependencies: Array<{
-                                                          __typename?: "Dataset";
-                                                          id: any;
-                                                          kind: DatasetKind;
-                                                          name: any;
-                                                          owner:
-                                                              | {
-                                                                    __typename?: "Organization";
-                                                                    id: any;
-                                                                    name: string;
-                                                                }
-                                                              | {
-                                                                    __typename?: "User";
-                                                                    id: any;
-                                                                    name: string;
-                                                                };
-                                                      }>;
-                                                  };
-                                                  owner:
-                                                      | {
-                                                            __typename?: "Organization";
-                                                            id: any;
-                                                            name: string;
-                                                        }
-                                                      | {
-                                                            __typename?: "User";
-                                                            id: any;
-                                                            name: string;
-                                                        };
-                                              }>;
-                                          };
-                                          owner:
-                                              | {
-                                                    __typename?: "Organization";
-                                                    id: any;
-                                                    name: string;
-                                                }
-                                              | {
-                                                    __typename?: "User";
-                                                    id: any;
-                                                    name: string;
-                                                };
-                                      }>;
-                                  };
-                                  owner:
-                                      | {
-                                            __typename?: "Organization";
+                                    kind: DatasetKind;
+                                    name: any;
+                                    metadata: {
+                                        __typename?: "DatasetMetadata";
+                                        currentUpstreamDependencies: Array<{
+                                            __typename?: "Dataset";
                                             id: any;
-                                            name: string;
-                                        }
-                                      | {
-                                            __typename?: "User";
-                                            id: any;
-                                            name: string;
-                                        };
-                              }>;
-                          };
-                          owner:
-                              | {
-                                    __typename?: "Organization";
+                                            kind: DatasetKind;
+                                            name: any;
+                                            metadata: {
+                                                __typename?: "DatasetMetadata";
+                                                currentUpstreamDependencies: Array<{
+                                                    __typename?: "Dataset";
+                                                    id: any;
+                                                    kind: DatasetKind;
+                                                    name: any;
+                                                    owner:
+                                                    | {
+                                                        __typename?: "Organization";
+                                                        id: any;
+                                                        name: string;
+                                                    }
+                                                    | {
+                                                        __typename?: "User";
+                                                        id: any;
+                                                        name: string;
+                                                    };
+                                                }>;
+                                            };
+                                            owner:
+                                            | {
+                                                __typename?: "Organization";
+                                                id: any;
+                                                name: string;
+                                            }
+                                            | {
+                                                __typename?: "User";
+                                                id: any;
+                                                name: string;
+                                            };
+                                        }>;
+                                    };
+                                    owner:
+                                    | {
+                                        __typename?: "Organization";
+                                        id: any;
+                                        name: string;
+                                    }
+                                    | {
+                                        __typename?: "User";
+                                        id: any;
+                                        name: string;
+                                    };
+                                }>;
+                            };
+                            owner:
+                            | {
+                                __typename?: "Organization";
+                                id: any;
+                                name: string;
+                            }
+                            | {
+                                __typename?: "User";
+                                id: any;
+                                name: string;
+                            };
+                        }>;
+                    };
+                    owner:
+                    | {
+                        __typename?: "Organization";
+                        id: any;
+                        name: string;
+                    }
+                    | { __typename?: "User"; id: any; name: string };
+                }>;
+                currentDownstreamDependencies: Array<{
+                    __typename?: "Dataset";
+                    id: any;
+                    kind: DatasetKind;
+                    name: any;
+                    metadata: {
+                        __typename?: "DatasetMetadata";
+                        currentDownstreamDependencies: Array<{
+                            __typename?: "Dataset";
+                            id: any;
+                            kind: DatasetKind;
+                            name: any;
+                            metadata: {
+                                __typename?: "DatasetMetadata";
+                                currentDownstreamDependencies: Array<{
+                                    __typename?: "Dataset";
                                     id: any;
-                                    name: string;
-                                }
-                              | { __typename?: "User"; id: any; name: string };
-                      }>;
-                  };
-                  owner:
-                      | { __typename?: "Organization"; id: any; name: string }
-                      | { __typename?: "User"; id: any; name: string };
-              }
-            | null
-            | undefined;
+                                    kind: DatasetKind;
+                                    name: any;
+                                    metadata: {
+                                        __typename?: "DatasetMetadata";
+                                        currentDownstreamDependencies: Array<{
+                                            __typename?: "Dataset";
+                                            id: any;
+                                            kind: DatasetKind;
+                                            name: any;
+                                            metadata: {
+                                                __typename?: "DatasetMetadata";
+                                                currentDownstreamDependencies: Array<{
+                                                    __typename?: "Dataset";
+                                                    id: any;
+                                                    kind: DatasetKind;
+                                                    name: any;
+                                                    owner:
+                                                    | {
+                                                        __typename?: "Organization";
+                                                        id: any;
+                                                        name: string;
+                                                    }
+                                                    | {
+                                                        __typename?: "User";
+                                                        id: any;
+                                                        name: string;
+                                                    };
+                                                }>;
+                                            };
+                                            owner:
+                                            | {
+                                                __typename?: "Organization";
+                                                id: any;
+                                                name: string;
+                                            }
+                                            | {
+                                                __typename?: "User";
+                                                id: any;
+                                                name: string;
+                                            };
+                                        }>;
+                                    };
+                                    owner:
+                                    | {
+                                        __typename?: "Organization";
+                                        id: any;
+                                        name: string;
+                                    }
+                                    | {
+                                        __typename?: "User";
+                                        id: any;
+                                        name: string;
+                                    };
+                                }>;
+                            };
+                            owner:
+                            | {
+                                __typename?: "Organization";
+                                id: any;
+                                name: string;
+                            }
+                            | {
+                                __typename?: "User";
+                                id: any;
+                                name: string;
+                            };
+                        }>;
+                    };
+                    owner:
+                    | {
+                        __typename?: "Organization";
+                        id: any;
+                        name: string;
+                    }
+                    | { __typename?: "User"; id: any; name: string };
+                }>;
+            };
+            owner:
+            | { __typename?: "Organization"; id: any; name: string }
+            | { __typename?: "User"; id: any; name: string };
+        }
+        | null
+        | undefined;
     };
 };
 
@@ -1113,86 +1144,86 @@ export type GetDatasetMetadataSchemaQuery = {
     datasets: {
         __typename?: "Datasets";
         byId?:
-            | {
-                  __typename?: "Dataset";
-                  id: any;
-                  name: any;
-                  kind: DatasetKind;
-                  owner:
-                      | { __typename?: "Organization"; id: any; name: string }
-                      | { __typename?: "User"; id: any; name: string };
-                  metadata: {
-                      __typename?: "DatasetMetadata";
-                      chain: {
-                          __typename?: "MetadataChain";
-                          blocks: {
-                              __typename?: "MetadataBlockConnection";
-                              totalCount?: number | null | undefined;
-                              nodes: Array<{
-                                  __typename?: "MetadataBlockExtended";
-                                  blockHash: any;
-                                  systemTime: any;
-                              }>;
-                              pageInfo: {
-                                  __typename?: "PageBasedInfo";
-                                  hasNextPage: boolean;
-                                  hasPreviousPage: boolean;
-                                  totalPages?: number | null | undefined;
-                              };
-                          };
-                      };
-                      currentSchema: {
-                          __typename?: "DataSchema";
-                          content: string;
-                      };
-                      currentTransform?:
-                          | {
-                                __typename?: "SetTransform";
-                                inputs: Array<{
-                                    __typename?: "TransformInput";
-                                    dataset: {
-                                        __typename?: "Dataset";
-                                        id: any;
-                                        name: any;
-                                        kind: DatasetKind;
-                                        owner:
-                                            | {
-                                                  __typename?: "Organization";
-                                                  id: any;
-                                                  name: string;
-                                              }
-                                            | {
-                                                  __typename?: "User";
-                                                  id: any;
-                                                  name: string;
-                                              };
-                                    };
-                                }>;
-                                transform: {
-                                    __typename?: "TransformSql";
-                                    queries: Array<{
-                                        __typename?: "SqlQueryStep";
-                                        alias?: string | null | undefined;
-                                        query: string;
-                                    }>;
-                                };
-                            }
-                          | null
-                          | undefined;
-                      currentLicense?:
-                          | {
-                                __typename?: "SetLicense";
-                                shortName: string;
+        | {
+            __typename?: "Dataset";
+            id: any;
+            name: any;
+            kind: DatasetKind;
+            owner:
+            | { __typename?: "Organization"; id: any; name: string }
+            | { __typename?: "User"; id: any; name: string };
+            metadata: {
+                __typename?: "DatasetMetadata";
+                chain: {
+                    __typename?: "MetadataChain";
+                    blocks: {
+                        __typename?: "MetadataBlockConnection";
+                        totalCount?: number | null | undefined;
+                        nodes: Array<{
+                            __typename?: "MetadataBlockExtended";
+                            blockHash: any;
+                            systemTime: any;
+                        }>;
+                        pageInfo: {
+                            __typename?: "PageBasedInfo";
+                            hasNextPage: boolean;
+                            hasPreviousPage: boolean;
+                            totalPages?: number | null | undefined;
+                        };
+                    };
+                };
+                currentSchema: {
+                    __typename?: "DataSchema";
+                    content: string;
+                };
+                currentTransform?:
+                | {
+                    __typename?: "SetTransform";
+                    inputs: Array<{
+                        __typename?: "TransformInput";
+                        dataset: {
+                            __typename?: "Dataset";
+                            id: any;
+                            name: any;
+                            kind: DatasetKind;
+                            owner:
+                            | {
+                                __typename?: "Organization";
+                                id: any;
                                 name: string;
-                                spdxId?: string | null | undefined;
-                                websiteUrl: string;
                             }
-                          | null
-                          | undefined;
-                  };
-              }
-            | null
-            | undefined;
+                            | {
+                                __typename?: "User";
+                                id: any;
+                                name: string;
+                            };
+                        };
+                    }>;
+                    transform: {
+                        __typename?: "TransformSql";
+                        queries: Array<{
+                            __typename?: "SqlQueryStep";
+                            alias?: string | null | undefined;
+                            query: string;
+                        }>;
+                    };
+                }
+                | null
+                | undefined;
+                currentLicense?:
+                | {
+                    __typename?: "SetLicense";
+                    shortName: string;
+                    name: string;
+                    spdxId?: string | null | undefined;
+                    websiteUrl: string;
+                }
+                | null
+                | undefined;
+            };
+        }
+        | null
+        | undefined;
     };
 };
 
@@ -1206,134 +1237,134 @@ export type DatasetOverviewQuery = {
     datasets: {
         __typename: "Datasets";
         byId?:
-            | {
-                  __typename: "Dataset";
-                  id: any;
-                  name: any;
-                  kind: DatasetKind;
-                  createdAt: any;
-                  lastUpdatedAt: any;
-                  owner:
-                      | { __typename?: "Organization"; id: any; name: string }
-                      | { __typename?: "User"; id: any; name: string };
-                  metadata: {
-                      __typename: "DatasetMetadata";
-                      currentReadme?: string | null | undefined;
-                      currentWatermark?: any | null | undefined;
-                      currentInfo: {
-                          __typename?: "SetInfo";
-                          description?: string | null | undefined;
-                          keywords?: Array<string> | null | undefined;
-                      };
-                      currentLicense?:
-                          | {
-                                __typename?: "SetLicense";
-                                shortName: string;
+        | {
+            __typename: "Dataset";
+            id: any;
+            name: any;
+            kind: DatasetKind;
+            createdAt: any;
+            lastUpdatedAt: any;
+            owner:
+            | { __typename?: "Organization"; id: any; name: string }
+            | { __typename?: "User"; id: any; name: string };
+            metadata: {
+                __typename: "DatasetMetadata";
+                currentReadme?: string | null | undefined;
+                currentWatermark?: any | null | undefined;
+                currentInfo: {
+                    __typename?: "SetInfo";
+                    description?: string | null | undefined;
+                    keywords?: Array<string> | null | undefined;
+                };
+                currentLicense?:
+                | {
+                    __typename?: "SetLicense";
+                    shortName: string;
+                    name: string;
+                    spdxId?: string | null | undefined;
+                    websiteUrl: string;
+                }
+                | null
+                | undefined;
+                currentSchema: {
+                    __typename: "DataSchema";
+                    format: DataSchemaFormat;
+                    content: string;
+                };
+                chain: {
+                    __typename?: "MetadataChain";
+                    blocks: {
+                        __typename?: "MetadataBlockConnection";
+                        totalCount?: number | null | undefined;
+                        nodes: Array<{
+                            __typename?: "MetadataBlockExtended";
+                            blockHash: any;
+                            prevBlockHash?: any | null | undefined;
+                            systemTime: any;
+                            author:
+                            | {
+                                __typename: "Organization";
+                                id: any;
                                 name: string;
-                                spdxId?: string | null | undefined;
-                                websiteUrl: string;
                             }
-                          | null
-                          | undefined;
-                      currentSchema: {
-                          __typename: "DataSchema";
-                          format: DataSchemaFormat;
-                          content: string;
-                      };
-                      chain: {
-                          __typename?: "MetadataChain";
-                          blocks: {
-                              __typename?: "MetadataBlockConnection";
-                              totalCount?: number | null | undefined;
-                              nodes: Array<{
-                                  __typename?: "MetadataBlockExtended";
-                                  blockHash: any;
-                                  prevBlockHash?: any | null | undefined;
-                                  systemTime: any;
-                                  author:
-                                      | {
-                                            __typename: "Organization";
-                                            id: any;
-                                            name: string;
-                                        }
-                                      | {
-                                            __typename: "User";
-                                            id: any;
-                                            name: string;
-                                        };
-                                  event:
-                                      | {
-                                            __typename: "AddData";
-                                            addedOutputData: {
-                                                __typename?: "DataSlice";
-                                                logicalHash: any;
-                                                physicalHash: any;
-                                                interval: {
-                                                    __typename?: "OffsetInterval";
-                                                    start: number;
-                                                    end: number;
-                                                };
-                                            };
-                                        }
-                                      | {
-                                            __typename: "ExecuteQuery";
-                                            queryOutputData?:
-                                                | {
-                                                      __typename?: "DataSlice";
-                                                      logicalHash: any;
-                                                      physicalHash: any;
-                                                      interval: {
-                                                          __typename?: "OffsetInterval";
-                                                          start: number;
-                                                          end: number;
-                                                      };
-                                                  }
-                                                | null
-                                                | undefined;
-                                        }
-                                      | {
-                                            __typename: "Seed";
-                                            datasetId: any;
-                                            datasetKind: DatasetKind;
-                                        }
-                                      | { __typename: "SetAttachments" }
-                                      | { __typename: "SetInfo" }
-                                      | {
-                                            __typename: "SetLicense";
-                                            name: string;
-                                        }
-                                      | { __typename: "SetPollingSource" }
-                                      | { __typename: "SetTransform" }
-                                      | { __typename: "SetVocab" }
-                                      | {
-                                            __typename: "SetWatermark";
-                                            outputWatermark: any;
-                                        };
-                              }>;
-                          };
-                      };
-                  };
-                  data: {
-                      __typename: "DatasetData";
-                      numRecordsTotal: number;
-                      estimatedSize: number;
-                      tail: {
-                          __typename: "DataQueryResult";
-                          schema: {
-                              __typename?: "DataSchema";
-                              format: DataSchemaFormat;
-                              content: string;
-                          };
-                          data: {
-                              __typename?: "DataBatch";
-                              format: DataBatchFormat;
-                              content: string;
-                          };
-                      };
-                  };
-              }
-            | null
-            | undefined;
+                            | {
+                                __typename: "User";
+                                id: any;
+                                name: string;
+                            };
+                            event:
+                            | {
+                                __typename: "AddData";
+                                addedOutputData: {
+                                    __typename?: "DataSlice";
+                                    logicalHash: any;
+                                    physicalHash: any;
+                                    interval: {
+                                        __typename?: "OffsetInterval";
+                                        start: number;
+                                        end: number;
+                                    };
+                                };
+                            }
+                            | {
+                                __typename: "ExecuteQuery";
+                                queryOutputData?:
+                                | {
+                                    __typename?: "DataSlice";
+                                    logicalHash: any;
+                                    physicalHash: any;
+                                    interval: {
+                                        __typename?: "OffsetInterval";
+                                        start: number;
+                                        end: number;
+                                    };
+                                }
+                                | null
+                                | undefined;
+                            }
+                            | {
+                                __typename: "Seed";
+                                datasetId: any;
+                                datasetKind: DatasetKind;
+                            }
+                            | { __typename: "SetAttachments" }
+                            | { __typename: "SetInfo" }
+                            | {
+                                __typename: "SetLicense";
+                                name: string;
+                            }
+                            | { __typename: "SetPollingSource" }
+                            | { __typename: "SetTransform" }
+                            | { __typename: "SetVocab" }
+                            | {
+                                __typename: "SetWatermark";
+                                outputWatermark: any;
+                            };
+                        }>;
+                    };
+                };
+            };
+            data: {
+                __typename: "DatasetData";
+                numRecordsTotal: number;
+                estimatedSize: number;
+                tail: {
+                    __typename: "DataQueryResult";
+                    schema: {
+                        __typename?: "DataSchema";
+                        format: DataSchemaFormat;
+                        content: string;
+                    };
+                    data: {
+                        __typename?: "DataBatch";
+                        format: DataBatchFormat;
+                        content: string;
+                    };
+                };
+            };
+        }
+        | null
+        | undefined;
     };
 };
 
@@ -1351,46 +1382,46 @@ export type MetadataBlockFragment = {
     prevBlockHash?: any | null | undefined;
     systemTime: any;
     author:
-        | { __typename: "Organization"; id: any; name: string }
-        | { __typename: "User"; id: any; name: string };
+    | { __typename: "Organization"; id: any; name: string }
+    | { __typename: "User"; id: any; name: string };
     event:
+    | {
+        __typename: "AddData";
+        addedOutputData: {
+            __typename?: "DataSlice";
+            logicalHash: any;
+            physicalHash: any;
+            interval: {
+                __typename?: "OffsetInterval";
+                start: number;
+                end: number;
+            };
+        };
+    }
+    | {
+        __typename: "ExecuteQuery";
+        queryOutputData?:
         | {
-              __typename: "AddData";
-              addedOutputData: {
-                  __typename?: "DataSlice";
-                  logicalHash: any;
-                  physicalHash: any;
-                  interval: {
-                      __typename?: "OffsetInterval";
-                      start: number;
-                      end: number;
-                  };
-              };
-          }
-        | {
-              __typename: "ExecuteQuery";
-              queryOutputData?:
-                  | {
-                        __typename?: "DataSlice";
-                        logicalHash: any;
-                        physicalHash: any;
-                        interval: {
-                            __typename?: "OffsetInterval";
-                            start: number;
-                            end: number;
-                        };
-                    }
-                  | null
-                  | undefined;
-          }
-        | { __typename: "Seed"; datasetId: any; datasetKind: DatasetKind }
-        | { __typename: "SetAttachments" }
-        | { __typename: "SetInfo" }
-        | { __typename: "SetLicense"; name: string }
-        | { __typename: "SetPollingSource" }
-        | { __typename: "SetTransform" }
-        | { __typename: "SetVocab" }
-        | { __typename: "SetWatermark"; outputWatermark: any };
+            __typename?: "DataSlice";
+            logicalHash: any;
+            physicalHash: any;
+            interval: {
+                __typename?: "OffsetInterval";
+                start: number;
+                end: number;
+            };
+        }
+        | null
+        | undefined;
+    }
+    | { __typename: "Seed"; datasetId: any; datasetKind: DatasetKind }
+    | { __typename: "SetAttachments" }
+    | { __typename: "SetInfo" }
+    | { __typename: "SetLicense"; name: string }
+    | { __typename: "SetPollingSource" }
+    | { __typename: "SetTransform" }
+    | { __typename: "SetVocab" }
+    | { __typename: "SetWatermark"; outputWatermark: any };
 };
 
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
@@ -1436,8 +1467,8 @@ export type SearchDatasetsOverviewQuery = {
                 createdAt: any;
                 lastUpdatedAt: any;
                 owner:
-                    | { __typename?: "Organization"; id: any; name: string }
-                    | { __typename?: "User"; id: any; name: string };
+                | { __typename?: "Organization"; id: any; name: string }
+                | { __typename?: "User"; id: any; name: string };
                 metadata: {
                     __typename?: "DatasetMetadata";
                     currentInfo: {
@@ -1446,15 +1477,15 @@ export type SearchDatasetsOverviewQuery = {
                         keywords?: Array<string> | null | undefined;
                     };
                     currentLicense?:
-                        | {
-                              __typename?: "SetLicense";
-                              shortName: string;
-                              name: string;
-                              spdxId?: string | null | undefined;
-                              websiteUrl: string;
-                          }
-                        | null
-                        | undefined;
+                    | {
+                        __typename?: "SetLicense";
+                        shortName: string;
+                        name: string;
+                        spdxId?: string | null | undefined;
+                        websiteUrl: string;
+                    }
+                    | null
+                    | undefined;
                     currentDownstreamDependencies: Array<{
                         __typename?: "Dataset";
                         id: any;
@@ -1564,8 +1595,8 @@ export const AccountInfoDocument = gql`
     providedIn: "root",
 })
 export class AccountInfoGQL extends Apollo.Mutation<
-    AccountInfoMutation,
-    AccountInfoMutationVariables
+AccountInfoMutation,
+AccountInfoMutationVariables
 > {
     document = AccountInfoDocument;
 
@@ -1628,8 +1659,8 @@ export const GetDatasetDataSchemaDocument = gql`
     providedIn: "root",
 })
 export class GetDatasetDataSchemaGQL extends Apollo.Query<
-    GetDatasetDataSchemaQuery,
-    GetDatasetDataSchemaQueryVariables
+GetDatasetDataSchemaQuery,
+GetDatasetDataSchemaQueryVariables
 > {
     document = GetDatasetDataSchemaDocument;
 
@@ -1666,8 +1697,8 @@ export const GetDatasetDataSqlRunDocument = gql`
     providedIn: "root",
 })
 export class GetDatasetDataSqlRunGQL extends Apollo.Query<
-    GetDatasetDataSqlRunQuery,
-    GetDatasetDataSqlRunQueryVariables
+GetDatasetDataSqlRunQuery,
+GetDatasetDataSqlRunQueryVariables
 > {
     document = GetDatasetDataSqlRunDocument;
 
@@ -1710,8 +1741,8 @@ export const GetDatasetHistoryDocument = gql`
     providedIn: "root",
 })
 export class GetDatasetHistoryGQL extends Apollo.Query<
-    GetDatasetHistoryQuery,
-    GetDatasetHistoryQueryVariables
+GetDatasetHistoryQuery,
+GetDatasetHistoryQueryVariables
 > {
     document = GetDatasetHistoryDocument;
 
@@ -1782,8 +1813,8 @@ export const GetDatasetLineageDocument = gql`
     providedIn: "root",
 })
 export class GetDatasetLineageGQL extends Apollo.Query<
-    GetDatasetLineageQuery,
-    GetDatasetLineageQueryVariables
+GetDatasetLineageQuery,
+GetDatasetLineageQueryVariables
 > {
     document = GetDatasetLineageDocument;
 
@@ -1859,8 +1890,8 @@ export const GetDatasetMetadataSchemaDocument = gql`
     providedIn: "root",
 })
 export class GetDatasetMetadataSchemaGQL extends Apollo.Query<
-    GetDatasetMetadataSchemaQuery,
-    GetDatasetMetadataSchemaQueryVariables
+GetDatasetMetadataSchemaQuery,
+GetDatasetMetadataSchemaQueryVariables
 > {
     document = GetDatasetMetadataSchemaDocument;
 
@@ -1935,8 +1966,8 @@ export const DatasetOverviewDocument = gql`
     providedIn: "root",
 })
 export class DatasetOverviewGQL extends Apollo.Query<
-    DatasetOverviewQuery,
-    DatasetOverviewQueryVariables
+DatasetOverviewQuery,
+DatasetOverviewQueryVariables
 > {
     document = DatasetOverviewDocument;
 
@@ -1969,8 +2000,8 @@ export const SearchDatasetsAutocompleteDocument = gql`
     providedIn: "root",
 })
 export class SearchDatasetsAutocompleteGQL extends Apollo.Query<
-    SearchDatasetsAutocompleteQuery,
-    SearchDatasetsAutocompleteQueryVariables
+SearchDatasetsAutocompleteQuery,
+SearchDatasetsAutocompleteQueryVariables
 > {
     document = SearchDatasetsAutocompleteDocument;
 
@@ -2027,8 +2058,8 @@ export const SearchDatasetsOverviewDocument = gql`
     providedIn: "root",
 })
 export class SearchDatasetsOverviewGQL extends Apollo.Query<
-    SearchDatasetsOverviewQuery,
-    SearchDatasetsOverviewQueryVariables
+SearchDatasetsOverviewQuery,
+SearchDatasetsOverviewQueryVariables
 > {
     document = SearchDatasetsOverviewDocument;
 

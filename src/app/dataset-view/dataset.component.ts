@@ -12,20 +12,18 @@ import {
     DatasetKindInterface,
     DatasetNameInterface,
     DataViewSchema,
-    PageInfoInterface,
     SearchHistoryInterface,
     SearchOverviewDatasetsInterface,
     SearchOverviewInterface,
 } from "../interface/search.interface";
 import AppValues from "../common/app.values";
 import {
-    SearchAdditionalButtonInterface,
     SearchAdditionalHeaderButtonInterface,
 } from "../components/search-additional-buttons/search-additional-buttons.interface";
 import { MatSidenav } from "@angular/material/sidenav";
 import { SideNavService } from "../services/sidenav.service";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
-import {DatasetViewContentInterface, DatasetViewTypeEnum} from "./dataset-view.interface";
+import {DatasetViewContentInterface, DatasetViewTypeEnum, PaginationInfoInterface} from "./dataset-view.interface";
 import { AppDatasetService } from "./dataset.service";
 import { NavigationEnd, Router } from "@angular/router";
 import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
@@ -35,12 +33,8 @@ import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import {
     DataSchema,
-    DatasetKind,
-    GetDatasetLineageGQL,
-    GetDatasetLineageQuery,
-    MetadataBlockFragment,
+    DatasetKind, PageBasedInfo,
 } from "../api/kamu.graphql.interface";
-import { debug } from "console";
 import { DataHelpersService } from "../services/datahelpers.service";
 import {AppDatasetOverviewService} from "./datasetOverview.service";
 
@@ -214,7 +208,8 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         );
 
         this.appDatasetService.onDatasetPageInfoChanges.subscribe(
-            (info: PageInfoInterface) => {
+            (info: PaginationInfoInterface) => {
+                debugger
                 this.tableData.pageInfo = info;
                 if (info.page) {
                     this.currentPage = info.page + 1;
@@ -355,6 +350,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     public onSearchMetadata(currentPage: number): void {
+        debugger
         this.router.navigate(
             [AppValues.defaultUsername, AppValues.urlDatasetView],
             {
@@ -600,6 +596,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
                 hasNextPage: false,
                 hasPreviousPage: false,
                 totalPages: 1,
+                currentPage: 1,
             },
             totalCount: 0,
         };

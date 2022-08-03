@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { PageInfoInterface } from "../../../interface/search.interface";
 import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
+import {SearchResultConnection} from "../../../api/kamu.graphql.interface";
 @Component({
     selector: "app-linage",
     templateUrl: "./linage-component.html",
@@ -18,7 +18,7 @@ export class LinageComponent {
         tableSource: any;
         isResultQuantity: boolean;
         isClickableRow: boolean;
-        pageInfo: PageInfoInterface;
+        pageInfo: SearchResultConnection;
         totalCount: number;
     };
     @Output() onClickNodeEmit: EventEmitter<string> = new EventEmitter();

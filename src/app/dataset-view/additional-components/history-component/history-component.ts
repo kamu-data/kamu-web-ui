@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { PageInfoInterface } from "../../../interface/search.interface";
+import {PaginationInfoInterface} from "../../dataset-view.interface";
 
 @Component({
     selector: "app-history",
@@ -7,7 +7,7 @@ import { PageInfoInterface } from "../../../interface/search.interface";
 })
 export class HistoryComponent {
     @Input() public currentPage: number;
-    @Input() public pageInfo: PageInfoInterface;
+    @Input() public pageInfo: PaginationInfoInterface;
     @Input() public datasetHistory: any[];
     @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
     @Output() onPageChangeEmit: EventEmitter<{

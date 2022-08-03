@@ -2,8 +2,9 @@ import {
     DatasetKind,
     DatasetMetadata,
     LicenseFragment,
-    MetadataBlockFragment,
+    MetadataBlockFragment, PageBasedInfo, Scalars,
 } from "../api/kamu.graphql.interface";
+import Maybe from "graphql/tsutils/Maybe";
 
 export interface SearchHistoryResponseInterface {
     datasets: {
@@ -63,15 +64,15 @@ export interface Account {
 }
 export interface SearchOverviewInterface {
     dataset: SearchOverviewDatasetsInterface[];
-    totalCount: number | null | undefined;
-    pageInfo: PageInfoInterface;
+    totalCount: Maybe<Scalars["Int"]>;
+    pageInfo: PageBasedInfo;
     currentPage: number;
 }
 export interface SearchMetadataInterface {
     id: string;
     name: string;
     owner: Account;
-    pageInfo: PageInfoInterface;
+    pageInfo: PageBasedInfo;
     totalCount: number;
     currentPage: number;
     dataset: SearchOverviewDatasetsInterface[];
@@ -83,12 +84,6 @@ export interface DatasetKindInterface {
     kind: DatasetKind;
 }
 
-export interface PageInfoInterface {
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-    totalPages?: number | null | undefined;
-    page?: number;
-}
 
 export interface DatasetIDsInterface {
     id: string;

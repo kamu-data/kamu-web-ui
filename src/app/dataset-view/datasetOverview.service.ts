@@ -6,7 +6,7 @@ export class AppDatasetOverviewService {
     private datasetOverviewChanges$: BehaviorSubject<SearchHistoryInterface[]> = new BehaviorSubject<SearchHistoryInterface[]>([]);
     private datasetDataChanges$: BehaviorSubject<SearchHistoryInterface[]> = new BehaviorSubject<SearchHistoryInterface[]>([]);
     private datasetHistoryChanges$: BehaviorSubject<SearchHistoryInterface[]> = new BehaviorSubject<SearchHistoryInterface[]>([]);
-    private datasetMetadataChanges$: BehaviorSubject<SearchOverviewInterface> = new BehaviorSubject<SearchOverviewInterface>(null);
+    private datasetMetadataChanges$: BehaviorSubject<SearchOverviewInterface> = new BehaviorSubject<SearchOverviewInterface>({} as SearchOverviewInterface);
     private datasetDataSQLChanges$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
     public changeDatasetOverview(searchData: SearchHistoryInterface[]): void {
@@ -45,8 +45,8 @@ export class AppDatasetOverviewService {
 
     // TODO
     // Should be changed after new code generation configuration by creating codegen.yml
-    public changeDatasetDataSQL(searchData: any[]): void {
-        this.datasetDataSQLChanges$.next(searchData);
+    public changeDatasetDataSQL(datasets: any[]): void {
+        this.datasetDataSQLChanges$.next(datasets);
     }
 
     // TODO

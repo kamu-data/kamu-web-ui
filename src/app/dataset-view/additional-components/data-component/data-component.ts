@@ -6,14 +6,12 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import {
     DatasetNameInterface,
     DataViewSchema,
-    PageInfoInterface,
 } from "../../../interface/search.interface";
 import DataTabValues from "./mock.data";
-import {DatasetViewContentInterface} from "../../dataset-view.interface";
+import { DatasetViewContentInterface } from "../../dataset-view.interface";
 
 @Component({
     selector: "app-data",

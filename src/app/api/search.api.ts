@@ -5,7 +5,6 @@ import { ApolloQueryResult, DocumentNode, gql } from "@apollo/client/core";
 import { Observable, of, throwError } from "rxjs";
 import {
     DatasetIDsInterface,
-    PageInfoInterface,
     TypeNames,
 } from "../interface/search.interface";
 
@@ -18,14 +17,13 @@ import {
     GetDatasetHistoryGQL,
     GetDatasetHistoryQuery,
     GetDatasetMetadataSchemaGQL,
-    GetDatasetMetadataSchemaQuery,
     GetDatasetDataSqlRunGQL,
     GetDatasetDataSqlRunQuery,
     SearchDatasetsAutocompleteGQL,
     SearchDatasetsOverviewGQL,
     GetDatasetLineageGQL,
     GetDatasetLineageQuery,
-    SearchDatasetsOverviewQuery,
+    SearchDatasetsOverviewQuery, Datasets, PageBasedInfo, Search,
 } from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
 
@@ -45,11 +43,12 @@ export class SearchApi {
         private getDatasetLineageGQL: GetDatasetLineageGQL,
     ) {}
 
-    public pageInfoInit(): PageInfoInterface {
+    public pageInfoInit(): PageBasedInfo {
         return {
             hasNextPage: false,
             hasPreviousPage: false,
             totalPages: 0,
+            currentPage: 0,
         };
     }
 
@@ -58,7 +57,7 @@ export class SearchApi {
         searchQuery: string,
         page = 0,
         perPage = 10,
-    ): Observable<SearchDatasetsOverviewQuery> {
+    ): Observable<{search: Search}> {
         // @ts-ignore
         return this.searchDatasetsOverviewGQL
             .watch({
@@ -132,6 +131,7 @@ export class SearchApi {
         query: string;
         limit: number;
     }): Observable<GetDatasetDataSqlRunQuery | undefined> {
+        debugger
         return this.getDatasetDataSQLRun
             .watch({ query: params.query, limit: params.limit })
             .valueChanges.pipe(
@@ -190,7 +190,7 @@ export class SearchApi {
         id: string;
         numRecords?: number;
         page?: number;
-    }): Observable<GetDatasetMetadataSchemaQuery | undefined> {
+    }): Observable<{ datasets: Datasets } | undefined> {
         return this.datasetMetadataGQL
             .watch({
                 datasetId: params.id,
@@ -200,7 +200,7 @@ export class SearchApi {
             .valueChanges.pipe(
                 map(
                     (
-                        result: ApolloQueryResult<GetDatasetMetadataSchemaQuery>,
+                        result: ApolloQueryResult<any>,
                     ) => {
                         if (result.data) {
                             return result.data;

@@ -1,6 +1,5 @@
 import { AppSearchService } from "./search.service";
 import {
-    PageInfoInterface,
     SearchOverviewDatasetsInterface,
     SearchOverviewInterface,
 } from "../interface/search.interface";
@@ -18,6 +17,7 @@ import {
     ViewChild,
 } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
+import {PaginationInfoInterface} from "../dataset-view/dataset-view.interface";
 
 export interface SearchFilters {
     name?: string;
@@ -70,7 +70,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
         isResultQuantity: boolean;
         resultUnitText: string;
         isClickableRow: boolean;
-        pageInfo: PageInfoInterface;
+        pageInfo: PaginationInfoInterface;
         totalCount: number;
         sortOptions: { value: string; label: string; active: boolean }[];
     };
@@ -214,6 +214,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
                 hasNextPage: false,
                 hasPreviousPage: false,
                 totalPages: 1,
+                currentPage: 1,
             },
             totalCount: 0,
             sortOptions: this.sortOptions,

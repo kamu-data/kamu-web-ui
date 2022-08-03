@@ -1,9 +1,8 @@
 import {
-    PageInfoInterface,
     SearchHistoryInterface,
     SearchOverviewDatasetsInterface
 } from "../interface/search.interface";
-import {GetDatasetHistoryQuery, MetadataBlockFragment} from "../api/kamu.graphql.interface";
+import {GetDatasetHistoryQuery, MetadataBlockFragment, PageBasedInfo} from "../api/kamu.graphql.interface";
 
 export enum DatasetViewTypeEnum {
     overview = "overview",
@@ -23,6 +22,10 @@ export interface DatasetViewContentInterface {
     latestMetadataBlock?: MetadataBlockFragment;
     isResultQuantity: boolean;
     isClickableRow: boolean;
-    pageInfo: PageInfoInterface;
+    pageInfo: PaginationInfoInterface;
     totalCount: number;
+}
+
+export interface PaginationInfoInterface extends PageBasedInfo {
+    page?: number;
 }

@@ -2,16 +2,13 @@ import {
     Component,
     EventEmitter,
     Input,
-    OnChanges,
     Output,
 } from "@angular/core";
 import {
-    DatasetInfoInterface,
     DataViewSchema,
-    PageInfoInterface,
 } from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
-import {DatasetViewContentInterface} from "../../dataset-view.interface";
+import {DatasetViewContentInterface, PaginationInfoInterface} from "../../dataset-view.interface";
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 @Component({
@@ -21,7 +18,7 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
 export class MetadataComponent {
     @Input() public currentPage: number;
     @Input() public currentSchema: DataViewSchema;
-    @Input() public pageInfo: PageInfoInterface;
+    @Input() public pageInfo: PaginationInfoInterface;
     @Input() public datasetInfo: any;
     @Input() public tableData: DatasetViewContentInterface;
     @Output() public pageChangeEvent: EventEmitter<{

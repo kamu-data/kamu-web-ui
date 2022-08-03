@@ -3,11 +3,11 @@ import { Observable, Subject } from "rxjs";
 import { SearchApi } from "../api/search.api";
 import {
     DatasetIDsInterface,
-    PageInfoInterface,
     SearchOverviewDatasetsInterface,
     SearchOverviewInterface,
 } from "../interface/search.interface";
-import { SearchDatasetsOverviewQuery } from "../api/kamu.graphql.interface";
+import {Scalars, Search} from "../api/kamu.graphql.interface";
+import Maybe from "graphql/tsutils/Maybe";
 
 @Injectable()
 export class AppSearchService {
@@ -43,10 +43,10 @@ export class AppSearchService {
     public search(searchValue: string, page = 0): void {
         this.searchApi
             .searchOverview(searchValue, page)
-            .subscribe((data: SearchDatasetsOverviewQuery) => {
+            .subscribe((data: { search: Search }) => {
                 let dataset: SearchOverviewDatasetsInterface[] = [];
                 let pageInfo = this.searchApi.pageInfoInit();
-                let totalCount: number | null | undefined = 0;
+                let totalCount: Maybe<Scalars["Int"]> = 0;
 
                 // @ts-ignore
                 dataset = data.search.query.nodes.map((node: Array<any>) => {

@@ -5,25 +5,23 @@ import {
     DatasetInfoInterface,
     DatasetKindInterface,
     DatasetNameInterface,
-    PageInfoInterface,
     SearchDatasetByID,
     SearchHistoryInterface,
     SearchOverviewDatasetsInterface,
-    SearchOverviewInterface,
 } from "../interface/search.interface";
 import { map } from "rxjs/operators";
 import {
+    DataQueries,
     DataSchema,
     DatasetKind,
-    DatasetOverviewQuery,
-    GetDatasetDataSqlRunQuery,
+    DatasetOverviewQuery, Datasets,
     GetDatasetHistoryQuery,
-    GetDatasetLineageQuery,
-    GetDatasetMetadataSchemaQuery,
+    GetDatasetLineageQuery, PageBasedInfo, SearchResultConnection,
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { ModalService } from "../components/modal/modal.service";
 import {AppDatasetOverviewService} from "./datasetOverview.service";
+import {PaginationInfoInterface} from "./dataset-view.interface";
 
 @Injectable()
 export class AppDatasetService {
@@ -57,7 +55,7 @@ export class AppDatasetService {
         return this.kindInfoChanges$.asObservable();
     }
 
-    public get onDatasetPageInfoChanges(): Observable<PageInfoInterface> {
+    public get onDatasetPageInfoChanges(): Observable<PaginationInfoInterface> {
         return this.datasetPageInfoChanges$.asObservable();
     }
 
@@ -89,8 +87,8 @@ export class AppDatasetService {
     private searchDataChanges$: Subject<any[]> = new Subject<any[]>();
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     private searchDatasetInfoChanges$: Subject<DatasetInfoInterface> = new Subject<DatasetInfoInterface>();
-    private datasetPageInfoChanges$: Subject<PageInfoInterface> =
-        new Subject<PageInfoInterface>();
+    private datasetPageInfoChanges$: Subject<PaginationInfoInterface> =
+        new Subject<PaginationInfoInterface>();
     private searchDatasetNameChanges$: Subject<DatasetNameInterface> =
         new Subject<DatasetNameInterface>();
     private datasetTreeChanges$: Subject<
@@ -119,11 +117,12 @@ export class AppDatasetService {
             metadata: byID.metadata,
         };
     }
-    public get defaultPageInfo(): PageInfoInterface {
+    public get defaultPageInfo(): PageBasedInfo {
         return {
             hasNextPage: false,
             hasPreviousPage: false,
             totalPages: 1,
+            currentPage: 1
         };
     }
 
@@ -138,7 +137,7 @@ export class AppDatasetService {
     ): void {
         this.searchDatasetNameChanges$.next(searchDatasetName);
     }
-    public datasetPageInfoChanges(pageInfo: PageInfoInterface): void {
+    public datasetPageInfoChanges(pageInfo: PaginationInfoInterface): void {
         this.datasetPageInfoChanges$.next(pageInfo);
     }
     public datasetSchemaChanges(schema: DataSchema): void {
@@ -231,6 +230,7 @@ export class AppDatasetService {
                 if (data) {
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
                     datasets = AppValues.deepCopy(data.datasets.byId);
+                    debugger
                     datasets.latestMetadataBlock =
                         data.datasets.byId?.metadata.chain.blocks.nodes[0];
                     datasets.numBlocksTotal =
@@ -270,7 +270,8 @@ export class AppDatasetService {
             .onDatasetHistory({ id, numRecords, numPage })
             .subscribe((data: GetDatasetHistoryQuery) => {
                 if (data) {
-                    const pageInfo = data.datasets.byId?.metadata.chain.blocks
+                    debugger
+                    const pageInfo: PaginationInfoInterface = data.datasets.byId?.metadata.chain.blocks
                         .pageInfo
                         ? Object.assign(
                               AppValues.deepCopy(
@@ -298,7 +299,8 @@ export class AppDatasetService {
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         this.searchApi
             .onSearchMetadata({ id, page })
-            .subscribe((data: GetDatasetMetadataSchemaQuery | undefined) => {
+            .subscribe((data: { datasets: Datasets } | undefined) => {
+                debugger
                 let datasets: SearchDatasetByID;
                 if (data) {
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -325,9 +327,11 @@ export class AppDatasetService {
         query: string,
         limit: number,
     ): void {
+        debugger
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         this.searchApi.onGetDatasetDataSQLRun({ query, limit }).subscribe(
-            (data: GetDatasetDataSqlRunQuery | undefined) => {
+            (data: {data: DataQueries} | undefined) => {
+                debugger
                 const datasets = {
                     metadata: {
                         currentSchema: {

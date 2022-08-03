@@ -6,7 +6,7 @@ import {
     Output,
     SimpleChanges,
 } from "@angular/core";
-import { PageInfoInterface } from "../../interface/search.interface";
+import {PaginationInfoInterface} from "../../dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-pagination",
@@ -15,7 +15,7 @@ import { PageInfoInterface } from "../../interface/search.interface";
 })
 export class PaginationComponent implements OnChanges {
     @Input() public currentPage: number;
-    @Input() public pageInfo: PageInfoInterface;
+    @Input() public pageInfo: PaginationInfoInterface;
     @Output() public pageChangeEvent: EventEmitter<{
         currentPage: number;
         isClick: boolean;

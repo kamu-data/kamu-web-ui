@@ -23,7 +23,7 @@ import {
     SearchDatasetsOverviewGQL,
     GetDatasetLineageGQL,
     GetDatasetLineageQuery,
-    SearchDatasetsOverviewQuery, Datasets, PageBasedInfo, Search,
+    SearchDatasetsOverviewQuery, Datasets, PageBasedInfo, Search, DataQueries,
 } from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
 
@@ -108,6 +108,7 @@ export class SearchApi {
 
     //////////////////// Datasets Viewer //////////////////////////////
 
+    // TODO DatasetOverviewQuery should be changed
     public getDatasetOverview(params: {
         id: string;
         numRecords?: number;
@@ -130,8 +131,7 @@ export class SearchApi {
     public onGetDatasetDataSQLRun(params: {
         query: string;
         limit: number;
-    }): Observable<GetDatasetDataSqlRunQuery | undefined> {
-        debugger
+    }): Observable<{data: DataQueries} | undefined> {
         return this.getDatasetDataSQLRun
             .watch({ query: params.query, limit: params.limit })
             .valueChanges.pipe(

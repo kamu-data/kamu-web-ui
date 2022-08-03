@@ -222,7 +222,8 @@ export class AppDatasetService {
     }
 
     public getDatasetOverview(id: string, page: number): void {
-        debugger
+
+        // TODO DatasetOverviewQuery should be changed
         this.searchApi
             .getDatasetOverview({ id, page })
             .subscribe((data: DatasetOverviewQuery | undefined) => {
@@ -230,7 +231,6 @@ export class AppDatasetService {
                 if (data) {
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
                     datasets = AppValues.deepCopy(data.datasets.byId);
-                    debugger
                     datasets.latestMetadataBlock =
                         data.datasets.byId?.metadata.chain.blocks.nodes[0];
                     datasets.numBlocksTotal =
@@ -265,12 +265,10 @@ export class AppDatasetService {
         numRecords: number,
         numPage: number,
     ): void {
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
         this.searchApi
             .onDatasetHistory({ id, numRecords, numPage })
             .subscribe((data: { datasets: Datasets }) => {
                 if (data) {
-                    debugger
                     const pageInfo: PaginationInfoInterface = data.datasets.byId?.metadata.chain.blocks
                         .pageInfo
                         ? Object.assign(
@@ -296,11 +294,9 @@ export class AppDatasetService {
     }
 
     public onSearchMetadata(id: string, page: number): void {
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
         this.searchApi
             .onSearchMetadata({ id, page })
             .subscribe((data: { datasets: Datasets } | undefined) => {
-                debugger
                 let datasets: SearchDatasetByID;
                 if (data) {
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -327,11 +323,8 @@ export class AppDatasetService {
         query: string,
         limit: number,
     ): void {
-        debugger
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
         this.searchApi.onGetDatasetDataSQLRun({ query, limit }).subscribe(
             (data: {data: DataQueries} | undefined) => {
-                debugger
                 const datasets = {
                     metadata: {
                         currentSchema: {

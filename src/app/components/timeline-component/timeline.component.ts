@@ -1,7 +1,7 @@
 import { Component, Input } from "@angular/core";
 import AppValues from "../../common/app.values";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
-import {SearchResultConnection} from "../../api/kamu.graphql.interface";
+import {PaginationInfoInterface} from "../../dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-timeline",
@@ -10,7 +10,7 @@ import {SearchResultConnection} from "../../api/kamu.graphql.interface";
 })
 export class TimelineComponent {
     @Input() public history: any[];
-    @Input() public pageInfo: SearchResultConnection;
+    @Input() public pageInfo: PaginationInfoInterface;
 
     constructor(public dataHelpers: DataHelpersService) {}
 

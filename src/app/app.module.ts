@@ -47,7 +47,7 @@ import { MonacoEditorModule } from "ngx-monaco-editor";
 import { TimelineComponent } from "./components/timeline-component/timeline.component";
 import { AppConfigService } from "./app-config.service";
 import { DataHelpersService } from "./services/datahelpers.service";
-import {AppDatasetOverviewService} from "./dataset-view/datasetOverview.service";
+import {AppDatasetSubsService} from "./dataset-view/datasetSubs.service";
 
 const Services = [
     {
@@ -67,7 +67,7 @@ const Services = [
     HttpLink,
     AppSearchService,
     AppDatasetService,
-    AppDatasetOverviewService,
+    AppDatasetSubsService,
     SideNavService,
     {
         provide: APOLLO_OPTIONS,

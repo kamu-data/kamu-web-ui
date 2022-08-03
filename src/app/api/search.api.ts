@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import { map } from "rxjs/operators";
-import { ApolloQueryResult, DocumentNode, gql } from "@apollo/client/core";
-import { Observable, of, throwError } from "rxjs";
+import { ApolloQueryResult } from "@apollo/client/core";
+import { Observable, of } from "rxjs";
 import {
     DatasetIDsInterface,
     TypeNames,
@@ -147,7 +147,7 @@ export class SearchApi {
         id: string;
         numRecords: number;
         numPage: number;
-    }): Observable<GetDatasetHistoryQuery> {
+    }): Observable<{ datasets: Datasets }> {
         // @ts-ignore
         return this.getDatasetHistoryGQL
             .watch({

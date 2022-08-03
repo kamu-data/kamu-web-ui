@@ -2,7 +2,13 @@ import {
     SearchHistoryInterface,
     SearchOverviewDatasetsInterface
 } from "../interface/search.interface";
-import {GetDatasetHistoryQuery, MetadataBlockFragment, PageBasedInfo} from "../api/kamu.graphql.interface";
+import {
+    Dataset,
+    Datasets,
+    GetDatasetHistoryQuery, MetadataBlockExtended,
+    MetadataBlockFragment,
+    PageBasedInfo
+} from "../api/kamu.graphql.interface";
 
 export enum DatasetViewTypeEnum {
     overview = "overview",
@@ -19,7 +25,7 @@ export interface DatasetViewContentInterface {
     datasetDataSource?: SearchHistoryInterface[];
     datasetOverviewSource?: SearchHistoryInterface[];
     datasetMetadataSource?: SearchOverviewDatasetsInterface[];
-    datasetHistorySource?: SearchHistoryInterface[];
+    datasetHistorySource?: MetadataBlockExtended[];
     latestMetadataBlock?: MetadataBlockFragment;
     isResultQuantity: boolean;
     isClickableRow: boolean;

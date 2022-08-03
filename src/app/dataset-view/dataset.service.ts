@@ -20,7 +20,7 @@ import {
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { ModalService } from "../components/modal/modal.service";
-import {AppDatasetOverviewService} from "./datasetOverview.service";
+import {AppDatasetSubsService} from "./datasetSubs.service";
 import {PaginationInfoInterface} from "./dataset-view.interface";
 
 @Injectable()
@@ -30,7 +30,7 @@ export class AppDatasetService {
     constructor(
         private searchApi: SearchApi,
         private modalService: ModalService,
-        private datasetOverviewService: AppDatasetOverviewService
+        private datasetOverviewService: AppDatasetSubsService
     ) {}
 
     public get onSearchDatasetInfoChanges(): Observable<DatasetInfoInterface> {
@@ -268,7 +268,7 @@ export class AppDatasetService {
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         this.searchApi
             .onDatasetHistory({ id, numRecords, numPage })
-            .subscribe((data: GetDatasetHistoryQuery) => {
+            .subscribe((data: { datasets: Datasets }) => {
                 if (data) {
                     debugger
                     const pageInfo: PaginationInfoInterface = data.datasets.byId?.metadata.chain.blocks

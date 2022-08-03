@@ -32,11 +32,11 @@ import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import {
-    DataSchema,
-    DatasetKind, Datasets,
+    DataSchema, Dataset,
+    DatasetKind, Datasets, MetadataBlockExtended,
 } from "../api/kamu.graphql.interface";
 import { DataHelpersService } from "../services/datahelpers.service";
-import {AppDatasetOverviewService} from "./datasetOverview.service";
+import {AppDatasetSubsService} from "./datasetSubs.service";
 
 @Component({
     selector: "app-dataset",
@@ -110,7 +110,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
 
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     public tableData: DatasetViewContentInterface;
-    public datasetHistory: SearchHistoryInterface[];
+    public datasetHistory: MetadataBlockExtended[];
     private searchOverviewDatasets: SearchHistoryInterface[] = [];
     private searchDataDatasets: SearchHistoryInterface[] = [];
     private searchMetadata: SearchOverviewDatasetsInterface[] = [];
@@ -148,7 +148,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         private modalService: ModalService,
         private clipboard: Clipboard,
         private dataHelpers: DataHelpersService,
-        private datasetOverviewService: AppDatasetOverviewService
+        private datasetOverviewService: AppDatasetSubsService
     ) {
         this._window = window;
     }
@@ -244,7 +244,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         });
 
         this.datasetOverviewService.onDatasetHistoryChanges.subscribe(
-            (history: {datasets: Datasets}) => {
+            (history: MetadataBlockExtended[]) => {
                 this.tableData.datasetHistorySource = history;
                 this.datasetHistory = history;
             },

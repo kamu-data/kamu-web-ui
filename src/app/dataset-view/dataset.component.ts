@@ -33,7 +33,7 @@ import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import {
     DataSchema,
-    DatasetKind, PageBasedInfo,
+    DatasetKind, Datasets,
 } from "../api/kamu.graphql.interface";
 import { DataHelpersService } from "../services/datahelpers.service";
 import {AppDatasetOverviewService} from "./datasetOverview.service";
@@ -244,19 +244,22 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         });
 
         this.datasetOverviewService.onDatasetHistoryChanges.subscribe(
-            (history: SearchHistoryInterface[]) => {
+            (history: {datasets: Datasets}) => {
+                this.tableData.datasetHistorySource = history;
                 this.datasetHistory = history;
             },
         );
 
         this.datasetOverviewService.onDatasetMetadataChanges.subscribe(
             (data: SearchOverviewInterface) => {
-                this.tableData.datasetMetadataSource = data.dataset;
-                this.tableData.pageInfo = data.pageInfo;
-                this.tableData.totalCount = data.totalCount as number;
-                this.searchMetadata = data.dataset;
+                if (data.dataset) {
+                    this.tableData.datasetMetadataSource = data.dataset;
+                    this.tableData.pageInfo = data.pageInfo;
+                    this.tableData.totalCount = data.totalCount as number;
+                    this.searchMetadata = data.dataset;
 
-                setTimeout(() => (this.currentPage = data.currentPage));
+                    setTimeout(() => (this.currentPage = data.currentPage));
+                }
             },
         );
     }
@@ -292,6 +295,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         this.tableData.datasetOverviewSource = this.searchOverviewDatasets;
         this.tableData.datasetDataSource = this.searchDataDatasets;
         this.tableData.datasetMetadataSource = this.searchMetadata;
+        this.tableData.datasetHistorySource = this.datasetHistory;
     }
 
     public onPageChange(params: {

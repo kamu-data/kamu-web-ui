@@ -19,6 +19,7 @@ export interface DatasetViewContentInterface {
     datasetDataSource?: SearchHistoryInterface[];
     datasetOverviewSource?: SearchHistoryInterface[];
     datasetMetadataSource?: SearchOverviewDatasetsInterface[];
+    datasetHistorySource?: SearchHistoryInterface[];
     latestMetadataBlock?: MetadataBlockFragment;
     isResultQuantity: boolean;
     isClickableRow: boolean;

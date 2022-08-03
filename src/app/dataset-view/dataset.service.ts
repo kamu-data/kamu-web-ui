@@ -348,11 +348,10 @@ export class AppDatasetService {
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
                     datasets.data.tail.content = data.data?.query.data
                         ? JSON.parse(data.data?.query.data.content)
-                        : ({} as any);
-                    datasets.metadata.currentSchema.content = data.data.query
-                        .schema
+                        : "";
+                    datasets.metadata.currentSchema.content = data.data.query.schema
                         ? JSON.parse(data.data.query.schema.content)
-                        : ({} as any);
+                        : "";
 
                     // @ts-ignore
                     const datasetInfo = AppDatasetService.getDatasetInfo(

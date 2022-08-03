@@ -1,14 +1,14 @@
 import {BehaviorSubject, Observable} from "rxjs";
 import {Injectable} from "@angular/core";
 import {SearchHistoryInterface, SearchOverviewInterface} from "../interface/search.interface";
-import {MetadataBlockExtended} from "../api/kamu.graphql.interface";
+import {MetadataBlockExtended, Scalars} from "../api/kamu.graphql.interface";
 @Injectable()
 export class AppDatasetSubsService {
     private datasetOverviewChanges$: BehaviorSubject<SearchHistoryInterface[]> = new BehaviorSubject<SearchHistoryInterface[]>([]);
     private datasetDataChanges$: BehaviorSubject<SearchHistoryInterface[]> = new BehaviorSubject<SearchHistoryInterface[]>([]);
     private datasetHistoryChanges$: BehaviorSubject<MetadataBlockExtended[]> = new BehaviorSubject<MetadataBlockExtended[]>([]);
     private datasetMetadataChanges$: BehaviorSubject<SearchOverviewInterface> = new BehaviorSubject<SearchOverviewInterface>({} as SearchOverviewInterface);
-    private datasetDataSQLChanges$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+    private datasetDataSQLChanges$: BehaviorSubject<Scalars["String"]> = new BehaviorSubject<Scalars["String"]>("");
 
     public changeDatasetOverview(searchData: SearchHistoryInterface[]): void {
         this.datasetOverviewChanges$.next(searchData);
@@ -42,15 +42,11 @@ export class AppDatasetSubsService {
         return this.datasetMetadataChanges$.asObservable();
     }
 
-    // TODO
-    // Should be changed after new code generation configuration by creating codegen.yml
-    public changeDatasetDataSQL(datasets: any[]): void {
+    public changeDatasetDataSQL(datasets: Scalars["String"]): void {
         this.datasetDataSQLChanges$.next(datasets);
     }
 
-    // TODO
-    // Should be changed after new code generation configuration by creating codegen.yml
-    public get onDatasetDataSQLChanges(): Observable<any[]> {
+    public get onDatasetDataSQLChanges(): Observable<Scalars["String"]> {
         return this.datasetDataSQLChanges$.asObservable();
     }
 }

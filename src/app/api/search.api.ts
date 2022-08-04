@@ -23,7 +23,14 @@ import {
     SearchDatasetsOverviewGQL,
     GetDatasetLineageGQL,
     GetDatasetLineageQuery,
-    SearchDatasetsOverviewQuery, Datasets, PageBasedInfo, Search, DataQueries, SearchDatasetsAutocompleteQuery, Dataset,
+    SearchDatasetsOverviewQuery,
+    Datasets,
+    PageBasedInfo,
+    Search,
+    DataQueries,
+    SearchDatasetsAutocompleteQuery,
+    Dataset,
+    GetDatasetMetadataSchemaQuery,
 } from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
 
@@ -152,8 +159,7 @@ export class SearchApi {
         id: string;
         numRecords: number;
         numPage: number;
-    }): Observable<{ datasets: Datasets }> {
-        // @ts-ignore
+    }): Observable<{ datasets: Datasets } | undefined> {
         return this.getDatasetHistoryGQL
             .watch({
                 datasetId: params.id,
@@ -163,7 +169,7 @@ export class SearchApi {
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetDatasetHistoryQuery>) => {
                     if (result.data) {
-                        return result.data;
+                        return result.data as { datasets: Datasets };
                     }
                     return undefined;
                 }),
@@ -173,7 +179,7 @@ export class SearchApi {
         id: string;
         numRecords?: number;
         page?: number;
-    }): Observable<GetDatasetDataSchemaQuery | undefined> {
+    }): Observable<{ datasets: Datasets } | undefined> {
         return this.getDatasetDataSchemaGQL
             .watch({
                 datasetId: params.id,
@@ -183,14 +189,13 @@ export class SearchApi {
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetDatasetDataSchemaQuery>) => {
                     if (result.data) {
-                        return result.data;
+                        return result.data as { datasets: Datasets };
                     }
                     return undefined;
                 }),
             );
     }
 
-    // tslint:disable-next-line: no-any
     public onSearchMetadata(params: {
         id: string;
         numRecords?: number;
@@ -205,10 +210,10 @@ export class SearchApi {
             .valueChanges.pipe(
                 map(
                     (
-                        result: ApolloQueryResult<any>,
+                        result: ApolloQueryResult<GetDatasetMetadataSchemaQuery>,
                     ) => {
                         if (result.data) {
-                            return result.data;
+                            return result.data as { datasets: Datasets };
                         }
                         return undefined;
                     },
@@ -216,9 +221,7 @@ export class SearchApi {
             );
     }
 
-    public getDatasetLineage(params: {
-        id: string;
-    }): Observable<GetDatasetLineageQuery | undefined> {
+    public getDatasetLineage(params: { id: string; }): Observable<{ datasets: Datasets } | undefined> {
         return this.getDatasetLineageGQL
             .watch({
                 datasetId: params.id,
@@ -226,7 +229,7 @@ export class SearchApi {
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetDatasetLineageQuery>) => {
                     if (result.data) {
-                        return result.data;
+                        return result.data as { datasets: Datasets };
                     }
                     return undefined;
                 }),
@@ -234,7 +237,7 @@ export class SearchApi {
     }
 
     // tslint:disable-next-line: no-any
-    public clearlyData(edge: any) {
+    public clearlyData(edge: any): any {
         const object = edge;
         const value = "typename";
         const nodeKeys: string[] = Object.keys(object).filter(

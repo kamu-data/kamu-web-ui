@@ -266,21 +266,25 @@ export class AppDatasetService {
         numPage: number,
     ): void {
         this.searchApi
-            .onDatasetHistory({ id, numRecords, numPage })
-            .subscribe((data: { datasets: Datasets }) => {
-                if (data) {
-                    const pageInfo: PaginationInfoInterface = data.datasets.byId?.metadata.chain.blocks
+            .onDatasetHistory({id, numRecords, numPage})
+            .subscribe((data: { datasets: Datasets } | undefined) => {
+                let pageInfo: PaginationInfoInterface = Object.assign(this.defaultPageInfo, {
+                    page: numPage,
+                });
+
+                if (typeof data !== "undefined") {
+                    pageInfo = data.datasets.byId?.metadata.chain.blocks
                         .pageInfo
                         ? Object.assign(
-                              AppValues.deepCopy(
-                                  data.datasets.byId?.metadata.chain.blocks
-                                      .pageInfo,
-                              ),
-                              { page: numPage },
-                          )
+                            AppValues.deepCopy(
+                                data.datasets.byId?.metadata.chain.blocks
+                                    .pageInfo,
+                            ),
+                            {page: numPage},
+                        )
                         : Object.assign(this.defaultPageInfo, {
-                              page: numPage,
-                          });
+                            page: numPage,
+                        });
 
                     this.searchDatasetNameChanges({
                         id: data.datasets.byId?.id,
@@ -288,8 +292,10 @@ export class AppDatasetService {
                         owner: data.datasets.byId?.owner as any,
                     });
                     this.datasetOverviewService.changeDatasetHistory(data.datasets.byId?.metadata.chain.blocks.nodes || []);
-                    this.datasetPageInfoChanges(pageInfo);
+                } else {
+                    this.datasetOverviewService.changeDatasetHistory([]);
                 }
+                this.datasetPageInfoChanges(pageInfo);
             });
     }
 
@@ -298,7 +304,7 @@ export class AppDatasetService {
             .onSearchMetadata({ id, page })
             .subscribe((data: { datasets: Datasets } | undefined) => {
                 let datasets: SearchDatasetByID;
-                if (data) {
+                if (typeof data !== "undefined") {
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
                     datasets = AppValues.deepCopy(data.datasets.byId);
                     this.searchDatasetNameChanges({
@@ -376,12 +382,7 @@ export class AppDatasetService {
 
         this.searchApi
             .getDatasetLineage({ id })
-            .pipe(
-                map((result: GetDatasetLineageQuery | undefined) => {
-                    return result;
-                }),
-            )
-            .subscribe((result: GetDatasetLineageQuery | undefined) => {
+            .subscribe((result: { datasets: Datasets } | undefined) => {
                 if (result) {
                     this.searchDatasetNameChanges({
                         id: result.datasets.byId?.id,

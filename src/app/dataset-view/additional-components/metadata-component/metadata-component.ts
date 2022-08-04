@@ -45,11 +45,6 @@ export class MetadataComponent {
             enabled: false,
         },
     };
-
-    public getPageSymbol(current: number) {
-        return ["A", "B", "C", "D", "E", "F", "G"][current - 1];
-    }
-
     public selectPage(page: string) {
         this.page = parseInt(page, 10) || 1;
     }

@@ -607,6 +607,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     private initDatasetViewByType(currentPage?: number): void {
+        debugger
         if (this.appDatasetService.onSearchLinageDatasetSubscription) {
             this.appDatasetService.onSearchLinageDatasetSubscription.unsubscribe();
         }

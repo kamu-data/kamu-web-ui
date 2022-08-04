@@ -112,7 +112,7 @@ export interface SearchDatasetByID {
     owner: Account;
     id: string;
     lastUpdatedAt: string;
-    latestMetadataBlock?: MetadataBlockExtended;
+    latestMetadataBlock?: MetadataBlockExtended | MetadataBlockFragment;
     numBlocksTotal?: number;
     metadata: {
         _typename: string;
@@ -162,7 +162,7 @@ export interface DatasetInfoInterface {
         name: string;
     };
     lastUpdatedAt?: string;
-    latestMetadataBlock?: MetadataBlockExtended;
+    latestMetadataBlock?: (MetadataBlockExtended | MetadataBlockFragment | any);
     numBlocksTotal?: number;
     estimatedSize?: number;
     numRecordsTotal?: number;

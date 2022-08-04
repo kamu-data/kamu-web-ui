@@ -23,7 +23,7 @@ import {
     SearchDatasetsOverviewGQL,
     GetDatasetLineageGQL,
     GetDatasetLineageQuery,
-    SearchDatasetsOverviewQuery, Datasets, PageBasedInfo, Search, DataQueries,
+    SearchDatasetsOverviewQuery, Datasets, PageBasedInfo, Search, DataQueries, SearchDatasetsAutocompleteQuery, Dataset,
 } from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
 
@@ -52,13 +52,12 @@ export class SearchApi {
         };
     }
 
-    // Search query that returs high-level dataset information for displaying the dataaset badge
+    // Search query that returns high-level dataset information for displaying the dataset badge
     public searchOverview(
         searchQuery: string,
         page = 0,
         perPage = 10,
-    ): Observable<{search: Search}> {
-        // @ts-ignore
+    ): Observable<{search: Search} | undefined> {
         return this.searchDatasetsOverviewGQL
             .watch({
                 query: searchQuery,
@@ -70,7 +69,10 @@ export class SearchApi {
                     (
                         result: ApolloQueryResult<SearchDatasetsOverviewQuery>,
                     ) => {
-                        return result.data;
+                        if (result.data) {
+                            return result.data as {search: Search};
+                        }
+                        return undefined;
                     },
                 ),
             );
@@ -86,21 +88,24 @@ export class SearchApi {
         return this.searchDatasetsAutocompleteGQL
             .watch({ query: id, perPage: 10 })
             .valueChanges.pipe(
-                map((result: ApolloQueryResult<any>) => {
-                    const nodesList: DatasetIDsInterface[] =
-                        result.data.search.query.nodes.map(
-                            (node: ApolloQuerySearchResultNodeInterface) => ({
+                map((result: ApolloQueryResult<SearchDatasetsAutocompleteQuery>) => {
+                    let nodesList: DatasetIDsInterface[] = [];
+                    if ( result.data ) {
+                        nodesList = result.data.search.query.nodes.map(
+                            (node) => ({
                                 name: node.name,
                                 id: node.id,
                                 __typename: node.__typename as TypeNames,
                             }),
                         );
-                    // Add dummy result that opens search view
-                    nodesList.unshift({
-                        __typename: TypeNames.allDataType,
-                        id,
-                        name: id,
-                    });
+                        // Add dummy result that opens search view
+                        nodesList.unshift({
+                            __typename: TypeNames.allDataType,
+                            id,
+                            name: id,
+                        });
+                    }
+
                     return nodesList;
                 }),
             );

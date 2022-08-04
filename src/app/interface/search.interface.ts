@@ -1,7 +1,7 @@
 import {
     DatasetKind,
     DatasetMetadata,
-    LicenseFragment,
+    LicenseFragment, MetadataBlockExtended,
     MetadataBlockFragment, PageBasedInfo, Scalars,
 } from "../api/kamu.graphql.interface";
 import Maybe from "graphql/tsutils/Maybe";
@@ -112,7 +112,7 @@ export interface SearchDatasetByID {
     owner: Account;
     id: string;
     lastUpdatedAt: string;
-    latestMetadataBlock?: MetadataBlockFragment;
+    latestMetadataBlock?: MetadataBlockExtended;
     numBlocksTotal?: number;
     metadata: {
         _typename: string;
@@ -162,7 +162,7 @@ export interface DatasetInfoInterface {
         name: string;
     };
     lastUpdatedAt?: string;
-    latestMetadataBlock?: MetadataBlockFragment;
+    latestMetadataBlock?: MetadataBlockExtended;
     numBlocksTotal?: number;
     estimatedSize?: number;
     numRecordsTotal?: number;

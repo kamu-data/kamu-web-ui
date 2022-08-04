@@ -607,8 +607,8 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     private initDatasetViewByType(currentPage?: number): void {
-        if (this.appDatasetService.onSearchLinageDatasetSubscribtion) {
-            this.appDatasetService.onSearchLinageDatasetSubscribtion.unsubscribe();
+        if (this.appDatasetService.onSearchLinageDatasetSubscription) {
+            this.appDatasetService.onSearchLinageDatasetSubscription.unsubscribe();
         }
         this.appDatasetService.resetDatasetTree();
         const searchParams: string[] = decodeURIComponent(
@@ -681,8 +681,8 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        if (this.appDatasetService.onSearchLinageDatasetSubscribtion) {
-            this.appDatasetService.onSearchLinageDatasetSubscribtion.unsubscribe();
+        if (this.appDatasetService.onSearchLinageDatasetSubscription) {
+            this.appDatasetService.onSearchLinageDatasetSubscription.unsubscribe();
         }
     }
 }

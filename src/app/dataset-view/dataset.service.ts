@@ -6,26 +6,23 @@ import {
     DatasetKindInterface,
     DatasetNameInterface,
     SearchDatasetByID,
-    SearchHistoryInterface,
-    SearchOverviewDatasetsInterface,
 } from "../interface/search.interface";
-import { map } from "rxjs/operators";
 import {
     DataQueries,
     DataSchema,
     DatasetKind,
-    DatasetOverviewQuery, Datasets,
-    GetDatasetHistoryQuery,
-    GetDatasetLineageQuery, PageBasedInfo, SearchResultConnection,
+    Datasets,
+    GetDatasetLineageQuery, PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { ModalService } from "../components/modal/modal.service";
 import {AppDatasetSubsService} from "./datasetSubs.service";
 import {PaginationInfoInterface} from "./dataset-view.interface";
+import * as _ from "lodash";
 
 @Injectable()
 export class AppDatasetService {
-    public onSearchLinageDatasetSubscribtion: Subscription;
+    public onSearchLinageDatasetSubscription: Subscription;
 
     constructor(
         private searchApi: SearchApi,
@@ -43,12 +40,6 @@ export class AppDatasetService {
 
     public get onSearchChanges(): Observable<string> {
         return this.searchChanges$.asObservable();
-    }
-
-    public get onSearchDataChanges(): Observable<
-        SearchHistoryInterface[] | SearchOverviewDatasetsInterface[]
-    > {
-        return this.searchDataChanges$.asObservable();
     }
 
     public get onKindInfoChanges(): Observable<DatasetKindInterface[]> {
@@ -83,9 +74,6 @@ export class AppDatasetService {
         DatasetKindInterface[]
     >();
     private searchChanges$: Subject<string> = new Subject<string>();
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    private searchDataChanges$: Subject<any[]> = new Subject<any[]>();
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
     private searchDatasetInfoChanges$: Subject<DatasetInfoInterface> = new Subject<DatasetInfoInterface>();
     private datasetPageInfoChanges$: Subject<PaginationInfoInterface> =
         new Subject<PaginationInfoInterface>();
@@ -188,9 +176,9 @@ export class AppDatasetService {
     ): void {
         this.searchApi
             .getDatasetOverview({ id, page })
-            .subscribe((data: DatasetOverviewQuery | undefined) => {
+            .subscribe((data: {datasets: Datasets} | undefined) => {
                 let datasets: SearchDatasetByID;
-                if (data) {
+                if (!_.isNil(data)) {
                     /* eslint-disable  @typescript-eslint/no-explicit-any */
                     datasets = AppValues.deepCopy(data.datasets.byId);
                     datasets.data.tail.content = data.datasets.byId
@@ -222,14 +210,11 @@ export class AppDatasetService {
     }
 
     public getDatasetOverview(id: string, page: number): void {
-
-        // TODO DatasetOverviewQuery should be changed
         this.searchApi
             .getDatasetOverview({ id, page })
-            .subscribe((data: DatasetOverviewQuery | undefined) => {
+            .subscribe((data: {datasets: Datasets} | undefined) => {
                 let datasets: SearchDatasetByID;
-                if (data) {
-                    /* eslint-disable  @typescript-eslint/no-explicit-any */
+                if (!_.isNil(data)) {
                     datasets = AppValues.deepCopy(data.datasets.byId);
                     datasets.latestMetadataBlock =
                         data.datasets.byId?.metadata.chain.blocks.nodes[0];
@@ -272,7 +257,7 @@ export class AppDatasetService {
                     page: numPage,
                 });
 
-                if (typeof data !== "undefined") {
+                if (!_.isNil(data)) {
                     pageInfo = data.datasets.byId?.metadata.chain.blocks
                         .pageInfo
                         ? Object.assign(
@@ -304,8 +289,7 @@ export class AppDatasetService {
             .onSearchMetadata({ id, page })
             .subscribe((data: { datasets: Datasets } | undefined) => {
                 let datasets: SearchDatasetByID;
-                if (typeof data !== "undefined") {
-                    /* eslint-disable  @typescript-eslint/no-explicit-any */
+                if (!_.isNil(data)) {
                     datasets = AppValues.deepCopy(data.datasets.byId);
                     this.searchDatasetNameChanges({
                         id: datasets.id,
@@ -343,8 +327,7 @@ export class AppDatasetService {
                         },
                     },
                 } as any;
-                if (data) {
-                    /* eslint-disable  @typescript-eslint/no-explicit-any */
+                if (!_.isNil(data)) {
                     datasets.data.tail.content = data.data?.query.data
                         ? JSON.parse(data.data?.query.data.content)
                         : "";
@@ -352,12 +335,10 @@ export class AppDatasetService {
                         ? JSON.parse(data.data.query.schema.content)
                         : "";
 
-                    // @ts-ignore
-                    const datasetInfo = AppDatasetService.getDatasetInfo(
+                    const datasetInfo: DatasetInfoInterface = AppDatasetService.getDatasetInfo(
                         Object.assign(currentDatasetInfo, datasets),
                     );
                     this.searchDatasetInfoChanges(datasetInfo);
-                    // @ts-ignore
                     this.datasetOverviewService.changeDatasetDataSQL(datasets.data.tail.content);
                     this.datasetSchemaChanges(
                         data.data.query.schema as DataSchema,
@@ -383,7 +364,7 @@ export class AppDatasetService {
         this.searchApi
             .getDatasetLineage({ id })
             .subscribe((result: { datasets: Datasets } | undefined) => {
-                if (result) {
+                if (!_.isNil(result)) {
                     this.searchDatasetNameChanges({
                         id: result.datasets.byId?.id,
                         name: result.datasets.byId?.name,

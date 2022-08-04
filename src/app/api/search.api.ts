@@ -120,12 +120,11 @@ export class SearchApi {
 
     //////////////////// Datasets Viewer //////////////////////////////
 
-    // TODO DatasetOverviewQuery should be changed
     public getDatasetOverview(params: {
         id: string;
         numRecords?: number;
         page?: number;
-    }): Observable<DatasetOverviewQuery | undefined> {
+    }): Observable<{datasets: Datasets} | undefined> {
         return this.datasetOverviewGQL
             .watch({
                 datasetId: params.id,
@@ -134,7 +133,7 @@ export class SearchApi {
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<DatasetOverviewQuery>) => {
                     if (result.data) {
-                        return result.data;
+                        return result.data as {datasets: Datasets};
                     }
                     return undefined;
                 }),

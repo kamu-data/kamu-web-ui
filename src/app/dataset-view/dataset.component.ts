@@ -208,7 +208,6 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
 
         this.appDatasetService.onDatasetPageInfoChanges.subscribe(
             (info: PaginationInfoInterface) => {
-                debugger
                 this.tableData.pageInfo = info;
                 if (info.page) {
                     this.currentPage = info.page + 1;
@@ -353,7 +352,6 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     public onSearchMetadata(currentPage: number): void {
-        debugger
         this.router.navigate(
             [AppValues.defaultUsername, AppValues.urlDatasetView],
             {
@@ -606,7 +604,6 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     private initDatasetViewByType(currentPage?: number): void {
-        debugger
         if (this.appDatasetService.onSearchLinageDatasetSubscription) {
             this.appDatasetService.onSearchLinageDatasetSubscription.unsubscribe();
         }

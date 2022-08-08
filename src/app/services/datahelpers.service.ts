@@ -2,8 +2,7 @@ import { Injectable } from "@angular/core";
 import * as moment from "moment-timezone";
 import {
     AddData,
-    DatasetKind, DataSlice, MetadataBlockExtended,
-    MetadataBlockFragment, MetadataEvent,
+    DatasetKind, MetadataEvent,
 } from "../api/kamu.graphql.interface";
 import {MetadataBlockExtendedFragment} from "../interface/metadata.interface";
 

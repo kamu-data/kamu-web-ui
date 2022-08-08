@@ -1,7 +1,7 @@
 import {BehaviorSubject, Observable} from "rxjs";
 import {Injectable} from "@angular/core";
 import {SearchHistoryInterface, SearchOverviewInterface} from "../interface/search.interface";
-import {MetadataBlockExtended, Scalars} from "../api/kamu.graphql.interface";
+import { MetadataBlockExtended } from "../api/kamu.graphql.interface";
 @Injectable()
 export class AppDatasetSubsService {
     private datasetOverviewChanges$: BehaviorSubject<SearchHistoryInterface[]> = new BehaviorSubject<SearchHistoryInterface[]>([]);

@@ -3,10 +3,7 @@ import {
     SearchOverviewDatasetsInterface
 } from "../interface/search.interface";
 import {
-    Dataset,
-    Datasets,
-    GetDatasetHistoryQuery, MetadataBlockExtended,
-    MetadataBlockFragment,
+    MetadataBlockExtended,
     PageBasedInfo
 } from "../api/kamu.graphql.interface";
 

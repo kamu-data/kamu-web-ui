@@ -33,6 +33,7 @@ import {
     GetDatasetMetadataSchemaQuery,
 } from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
+import {DatasetFragment} from "../interface/metadata.interface";
 
 @Injectable()
 export class SearchApi {
@@ -124,7 +125,7 @@ export class SearchApi {
         id: string;
         numRecords?: number;
         page?: number;
-    }): Observable<{datasets: Datasets} | undefined> {
+    }): Observable<DatasetOverviewQuery | undefined> {
         return this.datasetOverviewGQL
             .watch({
                 datasetId: params.id,
@@ -132,10 +133,7 @@ export class SearchApi {
             })
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<DatasetOverviewQuery>) => {
-                    if (result.data) {
-                        return result.data as {datasets: Datasets};
-                    }
-                    return undefined;
+                    return result.data;
                 }),
             );
     }

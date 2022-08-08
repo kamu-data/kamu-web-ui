@@ -216,7 +216,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         );
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
-            (info: Dataset) => {
+            (info: any) => {
                 this.datasetInfo = info;
             },
         );

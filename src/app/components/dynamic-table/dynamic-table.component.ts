@@ -36,7 +36,7 @@ export class DynamicTableComponent
     @Input() public author: Account;
     @Input() public blockHash: Scalars["Multihash"];
     @Input() public systemTime: Scalars["DateTime"];
-    @Input() public latestMetadataBlock?: MetadataBlockExtended;
+    @Input() public latestMetadataBlock?: MetadataBlockFragment;
     @Input() public numBlocksTotal?: number;
 
     @Input() public isResultQuantity?: boolean = false;

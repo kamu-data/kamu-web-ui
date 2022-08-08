@@ -33,7 +33,7 @@
                 [systemTime]="systemTime"
                 [author]="authorInfo"
                 [blockHash]="blockHash"
-                [latestMetadataBlock]="datasetInfo.metadata.chain.blocks.nodes[0]"
+                [latestMetadataBlock]="metadataFragmentBlock"
                 [numBlocksTotal]="datasetInfo.metadata.chain.blocks.totalCount || 0"
                 (onSelectDatasetEmit)="(null)"
             ></app-dynamic-table>

@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import * as moment from "moment-timezone";
 import {
     AddData,
-    DatasetKind, MetadataEvent,
+    DatasetKind, MetadataBlockFragment, MetadataEvent,
 } from "../api/kamu.graphql.interface";
 import {MetadataBlockExtendedFragment} from "../interface/metadata.interface";
 
@@ -80,7 +80,7 @@ export class DataHelpersService {
 
     // What is the MetadataBlockFragment? Why not MetadataBlockExtended?
     // Need to resolve!!!
-    public descriptionForMetadataBlock(block: MetadataBlockExtendedFragment): string {
+    public descriptionForMetadataBlock(block: MetadataBlockFragment): string {
         const event: MetadataEvent = block.event as MetadataEvent;
         switch (event.__typename) {
             case "AddData":

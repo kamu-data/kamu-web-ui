@@ -8,15 +8,16 @@ import {
 import {
     DataQueries,
     DataSchema, Dataset,
-    DatasetKind,
+    DatasetKind, DatasetOverviewQuery,
     Datasets,
-    GetDatasetLineageQuery, PageBasedInfo,
+    GetDatasetLineageQuery, MetadataBlockFragment, PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { ModalService } from "../components/modal/modal.service";
 import {AppDatasetSubsService} from "./datasetSubs.service";
 import {PaginationInfoInterface} from "./dataset-view.interface";
 import * as _ from "lodash";
+import {DatasetFragment} from "../interface/metadata.interface";
 
 @Injectable()
 export class AppDatasetService {
@@ -86,7 +87,7 @@ export class AppDatasetService {
     private datasetKindInfo: DatasetKindInterface[] = [];
 
 
-    private static parseContentOfDataset(data: {datasets: Datasets}): SearchHistoryInterface[] {
+    private static parseContentOfDataset(data: DatasetOverviewQuery): SearchHistoryInterface[] {
         return data.datasets.byId
             ? JSON.parse(
                 data.datasets?.byId?.data.tail.data.content,
@@ -163,7 +164,7 @@ export class AppDatasetService {
     ): void {
         this.searchApi
             .getDatasetOverview({ id, page })
-            .subscribe((data: {datasets: Datasets} | undefined) => {
+            .subscribe((data: DatasetOverviewQuery | undefined) => {
                 if (!_.isNil(data)) {
                     const dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
                     const content: SearchHistoryInterface[] = AppDatasetService.parseContentOfDataset(data);
@@ -187,7 +188,7 @@ export class AppDatasetService {
     public getDatasetOverview(id: string, page: number): void {
         this.searchApi
             .getDatasetOverview({ id, page })
-            .subscribe((data: {datasets: Datasets} | undefined) => {
+            .subscribe((data: DatasetOverviewQuery | undefined) => {
                 if (!_.isNil(data)) {
                     const dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
                     const content: SearchHistoryInterface[] = AppDatasetService.parseContentOfDataset(data);

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
 import {DatasetViewContentInterface} from "../../dataset-view.interface";
-import {Dataset, Scalars, Account} from "../../../api/kamu.graphql.interface";
+import {Dataset, Scalars, Account, MetadataBlockFragment} from "../../../api/kamu.graphql.interface";
 import AppValues from "../../../common/app.values";
 
 @Component({
@@ -46,5 +46,8 @@ export class OverviewComponent {
         return this.datasetInfo.metadata.chain.blocks.nodes.length > 0
             ? this.datasetInfo.metadata.chain.blocks.nodes[0].blockHash
             : "";
+    }
+    get metadataFragmentBlock(): MetadataBlockFragment {
+        return this.datasetInfo.metadata.chain.blocks.nodes[0] as MetadataBlockFragment;
     }
 }

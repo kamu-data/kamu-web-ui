@@ -8,7 +8,6 @@ import {
     ViewEncapsulation,
 } from "@angular/core";
 import {
-    DatasetInfoInterface,
     DatasetKindInterface,
     DatasetNameInterface,
     DataViewSchema,
@@ -48,7 +47,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     @ViewChild("menuTrigger") trigger: any;
     public isMobileView = false;
-    public datasetInfo: DatasetInfoInterface;
+    public datasetInfo: Dataset;
     public datasetName: DatasetNameInterface;
     public searchValue = "";
     public currentPage: number;
@@ -218,7 +217,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         );
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
-            (info: DatasetInfoInterface) => {
+            (info: Dataset) => {
                 this.datasetInfo = info;
             },
         );

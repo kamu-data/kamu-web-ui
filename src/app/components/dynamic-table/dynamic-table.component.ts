@@ -9,7 +9,7 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+import {Account, MetadataBlockExtended, MetadataBlockFragment, Scalars} from "src/app/api/kamu.graphql.interface";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
 import AppValues from "../../common/app.values";
 import {
@@ -35,7 +35,10 @@ export class DynamicTableComponent
     @Input() public tableSource: (SearchOverviewDatasetsInterface[] | SearchHistoryInterface[] | DataSchemaField[] | undefined);
 
     // TODO: These should be extracted into a separate component that wraps the table
-    @Input() public latestMetadataBlock?: MetadataBlockFragment;
+    @Input() public author: Account;
+    @Input() public blockHash: Scalars["Multihash"];
+    @Input() public systemTime: Scalars["DateTime"];
+    @Input() public latestMetadataBlock?: MetadataBlockExtended;
     @Input() public numBlocksTotal?: number;
 
     @Input() public isResultQuantity?: boolean = false;

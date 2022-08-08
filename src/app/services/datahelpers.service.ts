@@ -1,9 +1,11 @@
 import { Injectable } from "@angular/core";
 import * as moment from "moment-timezone";
 import {
-    DatasetKind,
-    MetadataBlockFragment,
+    AddData,
+    DatasetKind, DataSlice, MetadataBlockExtended,
+    MetadataBlockFragment, MetadataEvent,
 } from "../api/kamu.graphql.interface";
+import {MetadataBlockExtendedFragment} from "../interface/metadata.interface";
 
 @Injectable()
 export class DataHelpersService {
@@ -77,21 +79,23 @@ export class DataHelpersService {
         return bytes.toFixed(decimal_places) + " " + units[u];
     }
 
-    public descriptionForMetadataBlock(block: MetadataBlockFragment): string {
-        const event = block.event;
+    // What is the MetadataBlockFragment? Why not MetadataBlockExtended?
+    // Need to resolve!!!
+    public descriptionForMetadataBlock(block: MetadataBlockExtendedFragment): string {
+        const event: MetadataEvent = block.event as MetadataEvent;
         switch (event.__typename) {
             case "AddData":
                 return `Added ${
-                    event.addedOutputData
-                        ? event.addedOutputData.interval.end -
-                          event.addedOutputData.interval.start
+                    event.outputData
+                        ? event.outputData.interval.end -
+                          event.outputData.interval.start
                         : "0"
                 } new records`;
             case "ExecuteQuery":
                 return `Transformation produced ${
-                    event.queryOutputData
-                        ? event.queryOutputData.interval.end -
-                          event.queryOutputData.interval.start
+                    event.outputData
+                        ? event.outputData.interval.end -
+                          event.outputData.interval.start
                         : "0"
                 } new records`;
             case "Seed":
@@ -110,6 +114,9 @@ export class DataHelpersService {
                 return `License updated: ${event.name}`;
             case "SetAttachments":
                 return `Attachments updated`;
+
+            default:
+                return "";
         }
     }
 }

@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import {
-    DatasetInfoInterface,
-} from "../../../interface/search.interface";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
 import {DatasetViewContentInterface} from "../../dataset-view.interface";
+import {Dataset, Scalars, Account} from "../../../api/kamu.graphql.interface";
+import AppValues from "../../../common/app.values";
 
 @Component({
     selector: "app-overview",
@@ -12,7 +11,7 @@ import {DatasetViewContentInterface} from "../../dataset-view.interface";
 export class OverviewComponent {
     @Input() public isMarkdownEditView: boolean;
     @Input() public markdownText: any;
-    @Input() public datasetInfo: DatasetInfoInterface;
+    @Input() public datasetInfo: Dataset;
     @Input() public resultUnitText: string;
     @Input() public tableData: DatasetViewContentInterface;
     @Output() onToggleReadmeViewEmit: EventEmitter<null> = new EventEmitter();
@@ -29,5 +28,23 @@ export class OverviewComponent {
     }
     public selectTopic(topicName: string): void {
         this.onSelectTopicEmit.emit(topicName);
+    }
+
+    get systemTime(): Scalars["DateTime"] {
+        return this.datasetInfo.metadata.chain.blocks.nodes.length > 0
+            ? this.datasetInfo.metadata.chain.blocks.nodes[0].systemTime
+            : "";
+    }
+
+    get authorInfo(): Account {
+        return this.datasetInfo.metadata.chain.blocks.nodes.length > 0
+            ? this.datasetInfo.metadata.chain.blocks.nodes[0].author
+            : { id: "", name: AppValues.defaultUsername };
+    }
+
+    get blockHash(): Scalars["Multihash"] {
+        return this.datasetInfo.metadata.chain.blocks.nodes.length > 0
+            ? this.datasetInfo.metadata.chain.blocks.nodes[0].blockHash
+            : "";
     }
 }

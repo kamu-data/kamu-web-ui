@@ -22,14 +22,18 @@
                     </mat-chip-list>
                 </div>
             </div>
+<!--            latestMetadataBlock should be separate (not object param)-->
             <app-dynamic-table
                 [isResultQuantity]="tableData.isResultQuantity"
                 [isClickableRow]="tableData.isClickableRow"
                 [resultUnitText]="resultUnitText"
                 [isTableHeader]="tableData.isTableHeader"
                 [tableSource]="tableData.datasetOverviewSource"
-                [latestMetadataBlock]="datasetInfo.latestMetadataBlock"
-                [numBlocksTotal]="datasetInfo.numBlocksTotal"
+                [systemTime]="systemTime"
+                [author]="authorInfo"
+                [blockHash]="blockHash"
+                [latestMetadataBlock]="datasetInfo.metadata.chain.blocks.nodes[0]"
+                [numBlocksTotal]="datasetInfo.metadata.chain.blocks.totalCount || 0"
                 (onSelectDatasetEmit)="(null)"
             ></app-dynamic-table>
             <div id="file-readme-dataset-template-md" class="file my-4">
@@ -85,7 +89,7 @@
                         </svg>
                     </button>
                 </div>
-                <div class="file-content">
+                <div class="file-content" *ngIf="datasetInfo.metadata.currentReadme">
                     <ng-template [ngIf]="isMarkdownEditView">
                         <textarea
                             class="variable-textarea"
@@ -159,8 +163,8 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ datasetInfo.estimatedSize ?
-                                dataHelpers.dataSize(datasetInfo.estimatedSize)
+                                {{ datasetInfo.data.estimatedSize ?
+                                dataHelpers.dataSize(datasetInfo.data.estimatedSize)
                                 : "-" }}
                             </p>
                         </div>
@@ -171,7 +175,7 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ datasetInfo.numRecordsTotal | number: "1.0-0"
+                                {{ datasetInfo.data.numRecordsTotal | number: "1.0-0"
                                 }}
                             </p>
                         </div>

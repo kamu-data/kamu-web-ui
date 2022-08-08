@@ -43,10 +43,10 @@
                 <a
                     class="commit-author user-mention"
                     [title]="
-                        'View all commits by ' + latestMetadataBlock.author.name
+                        'View all commits by ' + author.name
                     "
                     href="#todo-navigate-to-user"
-                    >{{ latestMetadataBlock.author.name }}</a
+                    >{{ author.name }}</a
                 >
                 <span class="d-none d-sm-inline mb-0 ml-3">
                     <a
@@ -84,7 +84,7 @@
                     class="f6 link--secondary text-mono ml-2 d-none d-lg-inline"
                     data-pjax="#repo-content-pjax-container"
                 >
-                    {{ dataHelpers.shortHash(latestMetadataBlock.blockHash) }}
+                    {{ dataHelpers.shortHash(blockHash) }}
                 </a>
                 <a
                     href="#todo-navigate-to-block"
@@ -93,10 +93,10 @@
                 >
                     <time
                         class="no-wrap"
-                        [title]="latestMetadataBlock.systemTime"
+                        [title]="systemTime"
                         >{{
                             dataHelpers.relativeTime(
-                                latestMetadataBlock.systemTime
+                                systemTime
                             )
                         }}</time
                     >

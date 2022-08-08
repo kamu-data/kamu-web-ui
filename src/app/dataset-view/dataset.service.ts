@@ -292,7 +292,7 @@ export class AppDatasetService {
                         : "";
 
                     this.searchDatasetInfoChanges(dataset);
-                    this.datasetOverviewService.changeDatasetDataSQL(dataset.data.tail.content);
+                    this.datasetOverviewService.changeDatasetData(dataset.data.tail.content);
                     this.datasetSchemaChanges(
                         data.data.query.schema as DataSchema,
                     );

@@ -172,8 +172,9 @@ export class AppDatasetService {
                         name: dataset.name,
                         owner: dataset.owner,
                     });
+                    // TODO splite searchDatasetInfoChanges Subject for Overview nd Metadata
                     this.searchDatasetInfoChanges(dataset);
-                    // TODO splite changeDatasetData Subject for Overview nd Metadata
+
                     this.datasetOverviewService.changeDatasetData(content);
                     this.datasetSchemaChanges(
                         data.datasets.byId?.metadata
@@ -270,7 +271,7 @@ export class AppDatasetService {
     ): void {
         this.searchApi.onGetDatasetDataSQLRun({ query, limit }).subscribe(
             (data: {data: DataQueries} | undefined) => {
-                const datasets = {
+                const dataset = {
                     metadata: {
                         currentSchema: {
                             content: {},
@@ -283,18 +284,15 @@ export class AppDatasetService {
                     },
                 } as any;
                 if (!_.isNil(data)) {
-                    datasets.data.tail.content = data.data?.query.data
+                    dataset.data.tail.content = data.data?.query.data
                         ? JSON.parse(data.data?.query.data.content)
                         : "";
-                    datasets.metadata.currentSchema.content = data.data.query.schema
+                    dataset.metadata.currentSchema.content = data.data.query.schema
                         ? JSON.parse(data.data.query.schema.content)
                         : "";
 
-                    // Need to check
-                    const datasetInfo: Dataset = Object.assign(currentDatasetInfo, datasets);
-
-                    this.searchDatasetInfoChanges(datasetInfo);
-                    this.datasetOverviewService.changeDatasetDataSQL(datasets.data.tail.content);
+                    this.searchDatasetInfoChanges(dataset);
+                    this.datasetOverviewService.changeDatasetDataSQL(dataset.data.tail.content);
                     this.datasetSchemaChanges(
                         data.data.query.schema as DataSchema,
                     );

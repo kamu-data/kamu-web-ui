@@ -8,7 +8,7 @@ export class AppDatasetSubsService {
     private datasetDataChanges$: BehaviorSubject<SearchHistoryInterface[]> = new BehaviorSubject<SearchHistoryInterface[]>([]);
     private datasetHistoryChanges$: BehaviorSubject<MetadataBlockExtended[]> = new BehaviorSubject<MetadataBlockExtended[]>([]);
     private datasetMetadataChanges$: BehaviorSubject<SearchOverviewInterface> = new BehaviorSubject<SearchOverviewInterface>({} as SearchOverviewInterface);
-    private datasetDataSQLChanges$: BehaviorSubject<Scalars["String"]> = new BehaviorSubject<Scalars["String"]>("");
+    private datasetDataSQLChanges$: BehaviorSubject<SearchHistoryInterface[]> = new BehaviorSubject<SearchHistoryInterface[]>([]);
 
     public changeDatasetOverview(searchData: SearchHistoryInterface[]): void {
         this.datasetOverviewChanges$.next(searchData);
@@ -42,11 +42,11 @@ export class AppDatasetSubsService {
         return this.datasetMetadataChanges$.asObservable();
     }
 
-    public changeDatasetDataSQL(datasets: Scalars["String"]): void {
+    public changeDatasetDataSQL(datasets: SearchHistoryInterface[]): void {
         this.datasetDataSQLChanges$.next(datasets);
     }
 
-    public get onDatasetDataSQLChanges(): Observable<Scalars["String"]> {
+    public get onDatasetDataSQLChanges(): Observable<SearchHistoryInterface[]> {
         return this.datasetDataSQLChanges$.asObservable();
     }
 }

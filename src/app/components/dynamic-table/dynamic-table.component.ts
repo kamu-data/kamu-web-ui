@@ -31,10 +31,8 @@ export class DynamicTableComponent
     @Input() public isTableHeader: boolean;
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     @Input() public tableColumns?: any[];
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
     @Input() public tableSource: (SearchOverviewDatasetsInterface[] | SearchHistoryInterface[] | DataSchemaField[] | undefined);
 
-    // TODO: These should be extracted into a separate component that wraps the table
     @Input() public author: Account;
     @Input() public blockHash: Scalars["Multihash"];
     @Input() public systemTime: Scalars["DateTime"];

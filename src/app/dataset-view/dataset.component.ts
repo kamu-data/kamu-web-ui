@@ -242,6 +242,11 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
             this.searchDataDatasets = history;
         });
 
+        this.datasetOverviewService.onDatasetDataSQLChanges.subscribe((datasets: SearchHistoryInterface[]) => {
+            this.tableData.datasetDataSource = datasets;
+            this.searchDataDatasets = datasets;
+        });
+
         this.datasetOverviewService.onDatasetHistoryChanges.subscribe(
             (history: MetadataBlockExtended[]) => {
                 this.tableData.datasetHistorySource = history;

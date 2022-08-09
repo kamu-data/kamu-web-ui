@@ -33,7 +33,7 @@ export class DynamicTableComponent
     @Input() public isResultQuantity?: boolean = false;
     @Input() public resultUnitText: string;
     @Input() public isClickableRow = false;
-    @Input() public idTable?: string;
+    @Input() public idTable = '';
     @Output() public onSelectDatasetEmit: EventEmitter<string> =
         new EventEmitter();
 

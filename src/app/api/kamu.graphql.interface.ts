@@ -284,8 +284,16 @@ export type MetadataEvent =
 
 export type AddData = {
     __typename?: "AddData";
+    inputCheckpoint?: Maybe<Scalars["Multihash"]>;
+    outputCheckpoint?: Maybe<Checkpoint>;
     outputData: DataSlice;
     outputWatermark?: Maybe<Scalars["DateTime"]>;
+};
+
+export type Checkpoint = {
+    __typename?: "Checkpoint";
+    physicalHash: Scalars["Multihash"];
+    size: Scalars["Int"];
 };
 
 export type DataSlice = {
@@ -293,6 +301,7 @@ export type DataSlice = {
     interval: OffsetInterval;
     logicalHash: Scalars["Multihash"];
     physicalHash: Scalars["Multihash"];
+    size: Scalars["Int"];
 };
 
 export type OffsetInterval = {
@@ -303,7 +312,9 @@ export type OffsetInterval = {
 
 export type ExecuteQuery = {
     __typename?: "ExecuteQuery";
+    inputCheckpoint?: Maybe<Scalars["Multihash"]>;
     inputSlices: Array<InputSlice>;
+    outputCheckpoint?: Maybe<Checkpoint>;
     outputData?: Maybe<DataSlice>;
     outputWatermark?: Maybe<Scalars["DateTime"]>;
 };
@@ -368,7 +379,21 @@ export type SetPollingSource = {
     read: ReadStep;
 };
 
-export type FetchStep = FetchStepFilesGlob | FetchStepUrl;
+export type FetchStep = FetchStepContainer | FetchStepFilesGlob | FetchStepUrl;
+
+export type FetchStepContainer = {
+    __typename?: "FetchStepContainer";
+    args?: Maybe<Array<Scalars["String"]>>;
+    command?: Maybe<Array<Scalars["String"]>>;
+    env?: Maybe<Array<EnvVar>>;
+    image: Scalars["String"];
+};
+
+export type EnvVar = {
+    __typename?: "EnvVar";
+    name: Scalars["String"];
+    value?: Maybe<Scalars["String"]>;
+};
 
 export type FetchStepFilesGlob = {
     __typename?: "FetchStepFilesGlob";
@@ -481,7 +506,8 @@ export type ReadStep =
     | ReadStepCsv
     | ReadStepEsriShapefile
     | ReadStepGeoJson
-    | ReadStepJsonLines;
+    | ReadStepJsonLines
+    | ReadStepParquet;
 
 export type ReadStepCsv = {
     __typename?: "ReadStepCsv";
@@ -525,6 +551,11 @@ export type ReadStepJsonLines = {
     primitivesAsString?: Maybe<Scalars["Boolean"]>;
     schema?: Maybe<Array<Scalars["String"]>>;
     timestampFormat?: Maybe<Scalars["String"]>;
+};
+
+export type ReadStepParquet = {
+    __typename?: "ReadStepParquet";
+    schema?: Maybe<Array<Scalars["String"]>>;
 };
 
 export type SetTransform = {

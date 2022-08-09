@@ -125,7 +125,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public clipboardKafka = "https://api.kamu.dev/kafka/anonymous/dataset";
     public markdownText = AppValues.markdownContain;
 
-    private _window: Window;
+    private w: Window;
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
@@ -147,9 +147,9 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         private modalService: ModalService,
         private clipboard: Clipboard,
         private dataHelpers: DataHelpersService,
-        private datasetOverviewService: AppDatasetSubsService
+        private appDatasetSubsService: AppDatasetSubsService
     ) {
-        this._window = window;
+        this.w = window;
     }
 
     public copyToClipboard(event: MouseEvent, text: string): void {
@@ -231,24 +231,24 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
 
         /* eslint-disable  @typescript-eslint/no-explicit-any */
 
-        this.datasetOverviewService.onDatasetOverviewChanges.subscribe((overview: SearchHistoryInterface[]) => {
+        this.appDatasetSubsService.onDatasetOverviewChanges.subscribe((overview: SearchHistoryInterface[]) => {
             this.tableData.datasetOverviewSource = overview;
             this.searchOverviewDatasets = overview;
         });
 
-        this.datasetOverviewService.onDatasetDataChanges.subscribe((history: SearchHistoryInterface[]) => {
+        this.appDatasetSubsService.onDatasetDataChanges.subscribe((history: SearchHistoryInterface[]) => {
             this.tableData.datasetDataSource = history;
             this.searchDataDatasets = history;
         });
 
-        this.datasetOverviewService.onDatasetHistoryChanges.subscribe(
+        this.appDatasetSubsService.onDatasetHistoryChanges.subscribe(
             (history: MetadataBlockExtended[]) => {
                 this.tableData.datasetHistorySource = history;
                 this.datasetHistory = history;
             },
         );
 
-        this.datasetOverviewService.onDatasetMetadataChanges.subscribe(
+        this.appDatasetSubsService.onDatasetMetadataChanges.subscribe(
             (data: SearchOverviewInterface) => {
                 if (data.dataset) {
                     this.tableData.datasetMetadataSource = data.dataset;
@@ -604,15 +604,15 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     private initDatasetViewByType(currentPage?: number): void {
-        if (this.appDatasetService.onSearchLinageDatasetSubscription) {
-            this.appDatasetService.onSearchLinageDatasetSubscription.unsubscribe();
+        if (this.appDatasetService.onSearchLineageDatasetSubscription) {
+            this.appDatasetService.onSearchLineageDatasetSubscription.unsubscribe();
         }
         this.appDatasetService.resetDatasetTree();
         const searchParams: string[] = decodeURIComponent(
-            this._window.location.search,
+            this.w.location.search,
         ).split("&type=");
         const searchPageParams: string[] = decodeURIComponent(
-            this._window.location.search,
+            this.w.location.search,
         ).split("&p=");
         let page = 1;
         if (searchPageParams[1]) {
@@ -649,7 +649,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
 
     private getDatasetId(): string {
         const searchParams: string[] = decodeURIComponent(
-            this._window.location.search,
+            this.w.location.search,
         ).split("?id=");
 
         if (searchParams.length > 1) {
@@ -678,8 +678,8 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        if (this.appDatasetService.onSearchLinageDatasetSubscription) {
-            this.appDatasetService.onSearchLinageDatasetSubscription.unsubscribe();
+        if (this.appDatasetService.onSearchLineageDatasetSubscription) {
+            this.appDatasetService.onSearchLineageDatasetSubscription.unsubscribe();
         }
     }
 }

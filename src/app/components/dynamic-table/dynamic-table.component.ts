@@ -9,14 +9,10 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import {Account, MetadataBlockExtended, MetadataBlockFragment, Scalars} from "src/app/api/kamu.graphql.interface";
+import {Account, MetadataBlockFragment, Scalars} from "src/app/api/kamu.graphql.interface";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
 import AppValues from "../../common/app.values";
-import {
-    DataSchemaField,
-    SearchHistoryInterface,
-    SearchOverviewDatasetsInterface
-} from "../../interface/search.interface";
+import {TableSourceInterface} from "./dynmic-table.interface";
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 const ELEMENT_DATA: any[] = [];
@@ -26,12 +22,9 @@ const ELEMENT_DATA: any[] = [];
     styleUrls: ["./dynamic-table.sass"],
 })
 export class DynamicTableComponent
-    implements OnInit, OnChanges, AfterContentInit
-{
+    implements OnInit, OnChanges, AfterContentInit {
     @Input() public isTableHeader: boolean;
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    @Input() public tableColumns?: any[];
-    @Input() public tableSource: (SearchOverviewDatasetsInterface[] | SearchHistoryInterface[] | DataSchemaField[] | undefined);
+    @Input() public tableSource?: TableSourceInterface;
 
     @Input() public author: Account;
     @Input() public blockHash: Scalars["Multihash"];

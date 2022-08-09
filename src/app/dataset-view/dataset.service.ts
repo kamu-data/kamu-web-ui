@@ -10,23 +10,22 @@ import {
     DataSchema, Dataset,
     DatasetKind, DatasetOverviewQuery,
     Datasets,
-    GetDatasetLineageQuery, MetadataBlockFragment, PageBasedInfo,
+    GetDatasetLineageQuery, PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { ModalService } from "../components/modal/modal.service";
 import {AppDatasetSubsService} from "./datasetSubs.service";
 import {PaginationInfoInterface} from "./dataset-view.interface";
 import * as _ from "lodash";
-import {DatasetFragment} from "../interface/metadata.interface";
 
 @Injectable()
 export class AppDatasetService {
-    public onSearchLinageDatasetSubscription: Subscription;
+    public onSearchLineageDatasetSubscription: Subscription;
 
     constructor(
         private searchApi: SearchApi,
         private modalService: ModalService,
-        private datasetOverviewService: AppDatasetSubsService
+        private appDatasetSubsService: AppDatasetSubsService
     ) {}
 
     public get onSearchDatasetInfoChanges(): Observable<Dataset> {
@@ -176,7 +175,7 @@ export class AppDatasetService {
                     // TODO splite searchDatasetInfoChanges Subject for Overview nd Metadata
                     this.searchDatasetInfoChanges(dataset);
 
-                    this.datasetOverviewService.changeDatasetData(content);
+                    this.appDatasetSubsService.changeDatasetData(content);
                     this.datasetSchemaChanges(
                         data.datasets.byId?.metadata
                             ?.currentSchema as DataSchema,
@@ -199,7 +198,7 @@ export class AppDatasetService {
                     });
                     this.searchDatasetInfoChanges(dataset);
                     // TODO splite changeDatasetData Subject for Overview nd Metadata
-                    this.datasetOverviewService.changeDatasetOverview(content);
+                    this.appDatasetSubsService.changeDatasetOverview(content);
                 }
             });
     }
@@ -235,9 +234,9 @@ export class AppDatasetService {
                         name: data.datasets.byId?.name,
                         owner: data.datasets.byId?.owner as any,
                     });
-                    this.datasetOverviewService.changeDatasetHistory(data.datasets.byId?.metadata.chain.blocks.nodes || []);
+                    this.appDatasetSubsService.changeDatasetHistory(data.datasets.byId?.metadata.chain.blocks.nodes || []);
                 } else {
-                    this.datasetOverviewService.changeDatasetHistory([]);
+                    this.appDatasetSubsService.changeDatasetHistory([]);
                 }
                 this.datasetPageInfoChanges(pageInfo);
             });
@@ -261,7 +260,7 @@ export class AppDatasetService {
                     );
                     this.searchDatasetInfoChanges(dataset);
                     // @ts-ignore
-                    this.datasetOverviewService.changeDatasetMetadata(dataset.metadata.chain.blocks.nodes);
+                    this.appDatasetSubsService.changeDatasetMetadata(dataset.metadata.chain.blocks.nodes);
                 }
             });
     }
@@ -293,7 +292,7 @@ export class AppDatasetService {
                         : "";
 
                     this.searchDatasetInfoChanges(dataset);
-                    this.datasetOverviewService.changeDatasetData(dataset.data.tail.content);
+                    this.appDatasetSubsService.changeDatasetData(dataset.data.tail.content);
                     this.datasetSchemaChanges(
                         data.data.query.schema as DataSchema,
                     );

@@ -1,12 +1,12 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import {Component, EventEmitter, Input, Output, ViewEncapsulation} from "@angular/core";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
 import {DatasetViewContentInterface} from "../../dataset-view.interface";
-import {Dataset, Scalars, Account, MetadataBlockFragment} from "../../../api/kamu.graphql.interface";
-import AppValues from "../../../common/app.values";
+import {Dataset, MetadataBlockFragment} from "../../../api/kamu.graphql.interface";
 
 @Component({
     selector: "app-overview",
     templateUrl: "overview-component.html",
+    encapsulation: ViewEncapsulation.None,
 })
 export class OverviewComponent {
     @Input() public isMarkdownEditView: boolean;

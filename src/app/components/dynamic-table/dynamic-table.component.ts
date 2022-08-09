@@ -6,7 +6,7 @@ import {
     OnChanges,
     OnInit,
     Output,
-    SimpleChanges,
+    SimpleChanges, ViewEncapsulation,
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import {Account, MetadataBlockFragment, Scalars} from "src/app/api/kamu.graphql.interface";
@@ -20,6 +20,7 @@ const ELEMENT_DATA: any[] = [];
     selector: "app-dynamic-table",
     templateUrl: "./dynamic-table.component.html",
     styleUrls: ["./dynamic-table.sass"],
+    encapsulation: ViewEncapsulation.None,
 })
 export class DynamicTableComponent
     implements OnInit, OnChanges, AfterContentInit {

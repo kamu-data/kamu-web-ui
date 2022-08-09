@@ -32,7 +32,7 @@ import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import {
     DataSchema, Dataset,
-    DatasetKind, MetadataBlockExtended, MetadataBlockFragment,
+    DatasetKind, MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
 import { DataHelpersService } from "../services/datahelpers.service";
 import {AppDatasetSubsService} from "./datasetSubs.service";

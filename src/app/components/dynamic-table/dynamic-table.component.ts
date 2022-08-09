@@ -26,10 +26,7 @@ export class DynamicTableComponent
     @Input() public isTableHeader: boolean;
     @Input() public tableSource?: TableSourceInterface;
 
-    @Input() public author: Account;
-    @Input() public blockHash: Scalars["Multihash"];
-    @Input() public systemTime: Scalars["DateTime"];
-    @Input() public latestMetadataBlock?: MetadataBlockFragment;
+    @Input() public metadataBlockFragment?: MetadataBlockFragment;
     @Input() public numBlocksTotal?: number;
 
     @Input() public isResultQuantity?: boolean = false;
@@ -99,5 +96,17 @@ export class DynamicTableComponent
             return "0";
         }
         return tableSource.length.toString();
+    }
+
+    get systemTime(): Scalars["DateTime"] {
+        return this.metadataBlockFragment ? this.metadataBlockFragment.systemTime : "";
+    }
+
+    get authorInfo(): Account {
+        return this.metadataBlockFragment ? this.metadataBlockFragment.author : { id: "", name: AppValues.defaultUsername };
+    }
+
+    get blockHash(): Scalars["Multihash"] {
+        return this.metadataBlockFragment ? this.metadataBlockFragment.blockHash : "";
     }
 }

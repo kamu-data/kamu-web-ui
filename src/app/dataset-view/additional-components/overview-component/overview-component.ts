@@ -30,23 +30,6 @@ export class OverviewComponent {
         this.onSelectTopicEmit.emit(topicName);
     }
 
-    get systemTime(): Scalars["DateTime"] {
-        return this.datasetInfo.metadata.chain.blocks.nodes.length > 0
-            ? this.datasetInfo.metadata.chain.blocks.nodes[0].systemTime
-            : "";
-    }
-
-    get authorInfo(): Account {
-        return this.datasetInfo.metadata.chain.blocks.nodes.length > 0
-            ? this.datasetInfo.metadata.chain.blocks.nodes[0].author
-            : { id: "", name: AppValues.defaultUsername };
-    }
-
-    get blockHash(): Scalars["Multihash"] {
-        return this.datasetInfo.metadata.chain.blocks.nodes.length > 0
-            ? this.datasetInfo.metadata.chain.blocks.nodes[0].blockHash
-            : "";
-    }
     get metadataFragmentBlock(): MetadataBlockFragment {
         return this.datasetInfo.metadata.chain.blocks.nodes[0] as MetadataBlockFragment;
     }

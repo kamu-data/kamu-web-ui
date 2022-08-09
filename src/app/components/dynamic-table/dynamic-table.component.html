@@ -6,7 +6,7 @@
         {{ searchResultQuantity(tableSource) }} {{ resultUnitText }}
     </h2>
 </div>
-<div class="box-header position-relative" *ngIf="latestMetadataBlock">
+<div class="box-header position-relative" *ngIf="metadataBlockFragment">
     <div
         class="d-flex rounded-top-1 border-bottom-0 align-items-center flex-wrap"
     >
@@ -43,10 +43,10 @@
                 <a
                     class="commit-author user-mention"
                     [title]="
-                        'View all commits by ' + author.name
+                        'View all commits by ' + authorInfo.name
                     "
                     href="#todo-navigate-to-user"
-                    >{{ author.name }}</a
+                    >{{ authorInfo.name }}</a
                 >
                 <span class="d-none d-sm-inline mb-0 ml-3">
                     <a
@@ -57,7 +57,7 @@
                         href="#todo-navigate-to-block"
                         >{{
                             dataHelpers.descriptionForMetadataBlock(
-                                latestMetadataBlock
+                                metadataBlockFragment
                             )
                         }}</a
                     >
@@ -76,7 +76,7 @@
                 </button>
             </span>
             <div
-                    *ngIf="latestMetadataBlock"
+                    *ngIf="metadataBlockFragment"
                 class="d-flex flex-auto justify-content-end ml-3 align-items-baseline"
             >
                 <a

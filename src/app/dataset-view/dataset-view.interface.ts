@@ -3,7 +3,7 @@ import {
     SearchOverviewDatasetsInterface
 } from "../interface/search.interface";
 import {
-    MetadataBlockExtended,
+    MetadataBlockExtended, MetadataBlockFragment,
     PageBasedInfo
 } from "../api/kamu.graphql.interface";
 
@@ -22,7 +22,7 @@ export interface DatasetViewContentInterface {
     datasetDataSource?: SearchHistoryInterface[];
     datasetOverviewSource?: SearchHistoryInterface[];
     datasetMetadataSource?: SearchOverviewDatasetsInterface[];
-    datasetHistorySource?: MetadataBlockExtended[];
+    datasetHistorySource?: MetadataBlockFragment[];
     latestMetadataBlock?: MetadataBlockExtended;
     isResultQuantity: boolean;
     isClickableRow: boolean;

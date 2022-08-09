@@ -8,7 +8,6 @@ import {
     TypeNames,
 } from "../interface/search.interface";
 
-import { ApolloQuerySearchResultNodeInterface } from "./apolloQueryResult.interface";
 import {
     DatasetOverviewGQL,
     DatasetOverviewQuery,
@@ -24,20 +23,13 @@ import {
     GetDatasetLineageGQL,
     GetDatasetLineageQuery,
     SearchDatasetsOverviewQuery,
-    Datasets,
     PageBasedInfo,
-    Search,
-    DataQueries,
     SearchDatasetsAutocompleteQuery,
-    Dataset,
     GetDatasetMetadataSchemaQuery,
 } from "./kamu.graphql.interface";
-import AppValues from "../common/app.values";
-import {DatasetFragment} from "../interface/metadata.interface";
 
 @Injectable()
 export class SearchApi {
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
 
     constructor(
         private apollo: Apollo,
@@ -65,7 +57,7 @@ export class SearchApi {
         searchQuery: string,
         page = 0,
         perPage = 10,
-    ): Observable<{search: Search} | undefined> {
+    ): Observable<SearchDatasetsOverviewQuery | undefined> {
         return this.searchDatasetsOverviewGQL
             .watch({
                 query: searchQuery,
@@ -77,10 +69,7 @@ export class SearchApi {
                     (
                         result: ApolloQueryResult<SearchDatasetsOverviewQuery>,
                     ) => {
-                        if (result.data) {
-                            return result.data as {search: Search};
-                        }
-                        return undefined;
+                        return result.data;
                     },
                 ),
             );
@@ -140,15 +129,12 @@ export class SearchApi {
     public onGetDatasetDataSQLRun(params: {
         query: string;
         limit: number;
-    }): Observable<{data: DataQueries} | undefined> {
+    }): Observable<GetDatasetDataSqlRunQuery | undefined> {
         return this.getDatasetDataSQLRun
             .watch({ query: params.query, limit: params.limit })
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetDatasetDataSqlRunQuery>) => {
-                    if (result.data) {
-                        return result.data;
-                    }
-                    return undefined;
+                    return result.data;
                 }),
             );
     }
@@ -156,7 +142,7 @@ export class SearchApi {
         id: string;
         numRecords: number;
         numPage: number;
-    }): Observable<{ datasets: Datasets } | undefined> {
+    }): Observable<GetDatasetHistoryQuery | undefined> {
         return this.getDatasetHistoryGQL
             .watch({
                 datasetId: params.id,
@@ -165,10 +151,7 @@ export class SearchApi {
             })
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetDatasetHistoryQuery>) => {
-                    if (result.data) {
-                        return result.data as { datasets: Datasets };
-                    }
-                    return undefined;
+                    return result.data;
                 }),
             );
     }
@@ -176,7 +159,7 @@ export class SearchApi {
         id: string;
         numRecords?: number;
         page?: number;
-    }): Observable<{ datasets: Datasets } | undefined> {
+    }): Observable<GetDatasetDataSchemaQuery | undefined> {
         return this.getDatasetDataSchemaGQL
             .watch({
                 datasetId: params.id,
@@ -185,10 +168,7 @@ export class SearchApi {
             })
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetDatasetDataSchemaQuery>) => {
-                    if (result.data) {
-                        return result.data as { datasets: Datasets };
-                    }
-                    return undefined;
+                    return result.data;
                 }),
             );
     }
@@ -197,7 +177,7 @@ export class SearchApi {
         id: string;
         numRecords?: number;
         page?: number;
-    }): Observable<{ datasets: Datasets } | undefined> {
+    }): Observable<GetDatasetMetadataSchemaQuery | undefined> {
         return this.datasetMetadataGQL
             .watch({
                 datasetId: params.id,
@@ -209,26 +189,20 @@ export class SearchApi {
                     (
                         result: ApolloQueryResult<GetDatasetMetadataSchemaQuery>,
                     ) => {
-                        if (result.data) {
-                            return result.data as { datasets: Datasets };
-                        }
-                        return undefined;
+                        return result.data;
                     },
                 ),
             );
     }
 
-    public getDatasetLineage(params: { id: string; }): Observable<{ datasets: Datasets } | undefined> {
+    public getDatasetLineage(params: { id: string; }): Observable<GetDatasetLineageQuery | undefined> {
         return this.getDatasetLineageGQL
             .watch({
                 datasetId: params.id,
             })
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetDatasetLineageQuery>) => {
-                    if (result.data) {
-                        return result.data as { datasets: Datasets };
-                    }
-                    return undefined;
+                    return result.data;
                 }),
             );
     }
@@ -247,10 +221,5 @@ export class SearchApi {
         });
 
         return d;
-    }
-    getTypeNameBlock(node: any): string[] {
-        const object = node;
-        const value = "typename";
-        return Object.keys(object).filter((key) => key.includes(value));
     }
 }

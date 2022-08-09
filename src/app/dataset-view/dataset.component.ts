@@ -32,7 +32,7 @@ import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import {
     DataSchema, Dataset,
-    DatasetKind, MetadataBlockExtended,
+    DatasetKind, MetadataBlockExtended, MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
 import { DataHelpersService } from "../services/datahelpers.service";
 import {AppDatasetSubsService} from "./datasetSubs.service";
@@ -107,9 +107,8 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
             },
         ];
 
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
     public tableData: DatasetViewContentInterface;
-    public datasetHistory: MetadataBlockExtended[];
+    public datasetHistory: MetadataBlockFragment[];
     private searchOverviewDatasets: SearchHistoryInterface[] = [];
     private searchDataDatasets: SearchHistoryInterface[] = [];
     private searchMetadata: SearchOverviewDatasetsInterface[] = [];
@@ -216,7 +215,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         );
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
-            (info: any) => {
+            (info: Dataset) => {
                 this.datasetInfo = info;
             },
         );
@@ -242,7 +241,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         });
 
         this.appDatasetSubsService.onDatasetHistoryChanges.subscribe(
-            (history: MetadataBlockExtended[]) => {
+            (history: MetadataBlockFragment[]) => {
                 this.tableData.datasetHistorySource = history;
                 this.datasetHistory = history;
             },

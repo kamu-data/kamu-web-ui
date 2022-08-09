@@ -1,12 +1,12 @@
 import {BehaviorSubject, Observable} from "rxjs";
 import {Injectable} from "@angular/core";
 import {SearchHistoryInterface, SearchOverviewInterface} from "../interface/search.interface";
-import { MetadataBlockExtended } from "../api/kamu.graphql.interface";
+import {MetadataBlockFragment} from "../api/kamu.graphql.interface";
 @Injectable()
 export class AppDatasetSubsService {
     private datasetOverviewChanges$: BehaviorSubject<SearchHistoryInterface[]> = new BehaviorSubject<SearchHistoryInterface[]>([]);
     private datasetDataChanges$: BehaviorSubject<SearchHistoryInterface[]> = new BehaviorSubject<SearchHistoryInterface[]>([]);
-    private datasetHistoryChanges$: BehaviorSubject<MetadataBlockExtended[]> = new BehaviorSubject<MetadataBlockExtended[]>([]);
+    private datasetHistoryChanges$: BehaviorSubject<MetadataBlockFragment[]> = new BehaviorSubject<MetadataBlockFragment[]>([]);
     private datasetMetadataChanges$: BehaviorSubject<SearchOverviewInterface> = new BehaviorSubject<SearchOverviewInterface>({} as SearchOverviewInterface);
 
     public changeDatasetOverview(searchData: SearchHistoryInterface[]): void {
@@ -25,11 +25,11 @@ export class AppDatasetSubsService {
         return this.datasetDataChanges$.asObservable();
     }
 
-    public changeDatasetHistory(searchData: MetadataBlockExtended[]): void {
+    public changeDatasetHistory(searchData: MetadataBlockFragment[]): void {
         this.datasetHistoryChanges$.next(searchData);
     }
 
-    public get onDatasetHistoryChanges(): Observable<MetadataBlockExtended[]> {
+    public get onDatasetHistoryChanges(): Observable<MetadataBlockFragment[]> {
         return this.datasetHistoryChanges$.asObservable();
     }
 

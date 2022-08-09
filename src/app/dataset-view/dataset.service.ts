@@ -9,8 +9,8 @@ import {
     DataQueries,
     DataSchema, Dataset,
     DatasetKind, DatasetOverviewQuery,
-    Datasets,
-    GetDatasetLineageQuery, PageBasedInfo,
+    Datasets, GetDatasetDataSqlRunQuery, GetDatasetHistoryQuery,
+    GetDatasetLineageQuery, GetDatasetMetadataSchemaQuery, MetadataBlockFragment, PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { ModalService } from "../components/modal/modal.service";
@@ -210,7 +210,7 @@ export class AppDatasetService {
     ): void {
         this.searchApi
             .onDatasetHistory({id, numRecords, numPage})
-            .subscribe((data: { datasets: Datasets } | undefined) => {
+            .subscribe((data: GetDatasetHistoryQuery | undefined) => {
                 let pageInfo: PaginationInfoInterface = Object.assign(this.defaultPageInfo, {
                     page: numPage,
                 });
@@ -234,7 +234,10 @@ export class AppDatasetService {
                         name: data.datasets.byId?.name,
                         owner: data.datasets.byId?.owner as any,
                     });
-                    this.appDatasetSubsService.changeDatasetHistory(data.datasets.byId?.metadata.chain.blocks.nodes || []);
+                    this.appDatasetSubsService.changeDatasetHistory(
+                        (data.datasets.byId?.metadata.chain.blocks.nodes as MetadataBlockFragment[])
+                        || []
+                    );
                 } else {
                     this.appDatasetSubsService.changeDatasetHistory([]);
                 }
@@ -245,7 +248,7 @@ export class AppDatasetService {
     public onSearchMetadata(id: string, page: number): void {
         this.searchApi
             .onSearchMetadata({ id, page })
-            .subscribe((data: { datasets: Datasets } | undefined) => {
+            .subscribe((data: GetDatasetMetadataSchemaQuery | undefined) => {
                 let dataset: Dataset;
                 if (!_.isNil(data)) {
                     dataset = AppValues.deepCopy(data.datasets.byId);
@@ -270,7 +273,7 @@ export class AppDatasetService {
         limit: number,
     ): void {
         this.searchApi.onGetDatasetDataSQLRun({ query, limit }).subscribe(
-            (data: {data: DataQueries} | undefined) => {
+            (data: GetDatasetDataSqlRunQuery | undefined) => {
                 const dataset = {
                     metadata: {
                         currentSchema: {
@@ -316,7 +319,7 @@ export class AppDatasetService {
 
         this.searchApi
             .getDatasetLineage({ id })
-            .subscribe((result: { datasets: Datasets } | undefined) => {
+            .subscribe((result: GetDatasetLineageQuery | undefined) => {
                 if (!_.isNil(result)) {
                     this.searchDatasetNameChanges({
                         id: result.datasets.byId?.id,

@@ -8,14 +8,14 @@
             <div
                 class="d-flex flex-column flex-justify-between pb-3 mb-3 position-relative"
             >
-                <ng-container *ngIf="datasetInfo.metadata.currentInfo.description">
+                <ng-container *ngIf="datasetInfo.metadata?.currentInfo?.description">
                     <h2 class="box-title align-items-center pb-3">Description</h2>
                     <p>{{ datasetInfo.metadata.currentInfo.description }}</p>
                 </ng-container>
                 <div class="app-mat-chip">
                     <mat-chip-list aria-label="Tags selection">
                         <div
-                            *ngFor="let keyword of datasetInfo.metadata.currentInfo.keywords"
+                            *ngFor="let keyword of datasetInfo.metadata?.currentInfo?.keywords"
                         >
                             <mat-chip (click)="selectTopic(datasetInfo.kind)"
                                 >{{ keyword }}</mat-chip
@@ -161,7 +161,7 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ datasetInfo.data.estimatedSize ?
+                                {{ datasetInfo?.data?.estimatedSize ?
                                 dataHelpers.dataSize(datasetInfo.data.estimatedSize)
                                 : "-" }}
                             </p>
@@ -173,7 +173,7 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ datasetInfo.data.numRecordsTotal | number: "1.0-0"
+                                {{ datasetInfo?.data?.numRecordsTotal || 0 | number: "1.0-0"
                                 }}
                             </p>
                         </div>

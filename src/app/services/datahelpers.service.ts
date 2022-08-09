@@ -74,8 +74,6 @@ export class DataHelpersService {
         return bytes.toFixed(decimal_places) + " " + units[u];
     }
 
-    // What is the MetadataBlockFragment? Why not MetadataBlockExtended?
-    // Need to resolve!!!
     public descriptionForMetadataBlock(block: MetadataBlockFragment): string {
         const event: MetadataEvent = block.event as MetadataEvent;
         switch (event.__typename) {

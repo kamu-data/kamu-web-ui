@@ -29,7 +29,7 @@
                 [isClickableRow]="false"
                 [resultUnitText]="''"
                 [isTableHeader]="true"
-                [tableSource]="currentSchema.fields"
+                [tableSource]="currentSchema.fields || []"
                 [idTable]="'schema-block-table'"
                 (onSelectDatasetEmit)="(null)"
             ></app-dynamic-table>

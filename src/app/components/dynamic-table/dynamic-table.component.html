@@ -41,7 +41,7 @@
         <div class="flex-grow-1 d-flex align-items-center ml-3 min-width-0">
             <div class="css-truncate css-truncate-overflow color-fg-muted">
                 <a
-                    class="commit-author user-mention"
+                    class="commit-author user-mention" *ngIf="authorInfo?.name"
                     [title]="
                         'View all commits by ' + authorInfo.name
                     "
@@ -49,7 +49,7 @@
                     >{{ authorInfo.name }}</a
                 >
                 <span class="d-none d-sm-inline mb-0 ml-3">
-                    <a
+                    <a *ngIf="metadataBlockFragment?.event"
                         data-pjax="true"
                         data-test-selector="commit-tease-commit-message"
                         title="Styles was changed"
@@ -142,7 +142,7 @@
         </div>
     </div>
 </div>
-<div [id]="idTable" style="width: 100%; overflow: auto">
+<div [id]="idTable" style="width: 100%; overflow: auto" class="dynamic-table">
     <table mat-table [dataSource]="dataSource">
         <ng-container
             *ngFor="let disCol of displayedColumns; let colIndex = index"

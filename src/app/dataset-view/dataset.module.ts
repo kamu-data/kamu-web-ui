@@ -28,6 +28,8 @@ import { AppModule } from "../app.module";
 import { TimelineComponent } from "../components/timeline-component/timeline.component";
 import { TimelineModule } from "../components/timeline-component/timeline.module";
 import { CustomPaginationModule } from "../components/custom-pagination-component/custom-pagination.module";
+import {DatasetViewHeaderComponent} from "./dataset-view-header/dataset-view-header-component";
+import {DatasetViewMenuComponent} from "./dataset-view-menu/dataset-view-menu-component";
 
 @NgModule({
     imports: [
@@ -56,7 +58,9 @@ import { CustomPaginationModule } from "../components/custom-pagination-componen
         CustomPaginationModule,
     ],
     exports: [
+        DatasetViewHeaderComponent,
         DatasetComponent,
+        DatasetViewMenuComponent,
         MetadataComponent,
         DataComponent,
         OverviewComponent,
@@ -65,7 +69,9 @@ import { CustomPaginationModule } from "../components/custom-pagination-componen
         MonacoEditorModule,
     ],
     declarations: [
+        DatasetViewHeaderComponent,
         DatasetComponent,
+        DatasetViewMenuComponent,
         MetadataComponent,
         DataComponent,
         OverviewComponent,

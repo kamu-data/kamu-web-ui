@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { DataViewSchema } from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
 import {
-    DatasetViewContentInterface,
+    TableContentInterface,
     PaginationInfoInterface,
 } from "../../dataset-view.interface";
 
@@ -16,7 +16,7 @@ export class MetadataComponent {
     @Input() public currentSchema: DataViewSchema;
     @Input() public pageInfo: PaginationInfoInterface;
     @Input() public datasetInfo: any;
-    @Input() public tableData: DatasetViewContentInterface;
+    @Input() public tableData: TableContentInterface;
     @Output() public pageChangeEvent: EventEmitter<{
         currentPage: number;
         isClick: boolean;

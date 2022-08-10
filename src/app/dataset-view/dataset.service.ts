@@ -7,12 +7,10 @@ import {
     SearchHistoryInterface,
 } from "../interface/search.interface";
 import {
-    DataQueries,
     DataSchema,
     Dataset,
     DatasetKind,
     DatasetOverviewQuery,
-    Datasets,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
     GetDatasetLineageQuery,
@@ -182,7 +180,7 @@ export class AppDatasetService {
                         name: dataset.name,
                         owner: dataset.owner,
                     });
-                    // TODO splite searchDatasetInfoChanges Subject for Overview nd Metadata
+                    // TODO: split searchDatasetInfoChanges Subject for Overview nd Metadata
                     this.searchDatasetInfoChanges(dataset);
 
                     this.appDatasetSubsService.changeDatasetData(content);
@@ -210,7 +208,8 @@ export class AppDatasetService {
                         owner: dataset.owner,
                     });
                     this.searchDatasetInfoChanges(dataset);
-                    // TODO splite changeDatasetData Subject for Overview nd Metadata
+
+                    // TODO: split changeDatasetData Subject for Overview nd Metadata
                     this.appDatasetSubsService.changeDatasetOverview(content);
                 }
             });
@@ -278,8 +277,10 @@ export class AppDatasetService {
                             ?.currentSchema as DataSchema,
                     );
                     this.searchDatasetInfoChanges(dataset);
-                    // @ts-ignore
+
+                    // TODO: Should be refactoring
                     this.appDatasetSubsService.changeDatasetMetadata(
+                        // @ts-ignore
                         dataset.metadata.chain.blocks.nodes,
                     );
                 }

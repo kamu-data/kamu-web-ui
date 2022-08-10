@@ -21,7 +21,7 @@ import { MatSidenav } from "@angular/material/sidenav";
 import { SideNavService } from "../services/sidenav.service";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
 import {
-    DatasetViewContentInterface,
+    TableContentInterface,
     DatasetViewTypeEnum,
     PaginationInfoInterface,
 } from "./dataset-view.interface";
@@ -111,7 +111,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
             },
         ];
 
-    public tableData: DatasetViewContentInterface;
+    public tableData: TableContentInterface;
     public datasetHistory: MetadataBlockFragment[];
     private searchOverviewDatasets: SearchHistoryInterface[] = [];
     private searchDataDatasets: SearchHistoryInterface[] = [];

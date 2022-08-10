@@ -17,7 +17,7 @@ export enum DatasetViewTypeEnum {
     history = "history",
 }
 
-export interface DatasetViewContentInterface {
+export interface TableContentInterface {
     isTableHeader: boolean;
     displayedColumns?: any[];
     datasetDataSource?: SearchHistoryInterface[];

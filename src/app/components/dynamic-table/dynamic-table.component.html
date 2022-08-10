@@ -1,6 +1,6 @@
 <div
     class="d-flex flex-column flex-md-row justify-content-between pb-3 position-relative"
-    *ngIf="isResultQuantity"
+    *ngIf="hasResultQuantity"
 >
     <h2 class="box-title align-items-center">
         {{ searchResultQuantity(tableSource) }} {{ resultUnitText }}
@@ -148,7 +148,7 @@
             <td mat-cell *matCellDef="let element">{{ element[disCol] }}</td>
         </ng-container>
 
-        <ng-container *ngIf="isTableHeader">
+        <ng-container *ngIf="hasTableHeader">
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         </ng-container>
         <tr

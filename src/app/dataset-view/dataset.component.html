@@ -445,7 +445,6 @@
                     [markdownText]="markdownText"
                     [datasetInfo]="datasetInfo"
                     [resultUnitText]="getResultUnitText()"
-                    [tableData]="tableData"
                     (onToggleReadmeViewEmit)="toggleReadmeView()"
                     (onSelectTopicEmit)="selectTopic($event)"
                     (onSelectDatasetEmit)="onSelectDataset($event)"
@@ -455,7 +454,6 @@
             <ng-template [ngIf]="datasetViewTypeData && datasetName">
                 <app-data
                     [datasetName]="datasetName"
-                    [tableData]="tableData"
                     (onSelectDatasetEmit)="onSelectDataset($event)"
                     (onRunSQLRequestEmit)="onRunSQLRequest($event)"
                 ></app-data>
@@ -482,7 +480,6 @@
             <ng-template [ngIf]="datasetViewTypeMetadata">
                 <app-metadata
                     [datasetInfo]="datasetInfo"
-                    [tableData]="tableData"
                     (onSelectDatasetEmit)="onSelectDataset($event)"
                     (onPageChangeEmit)="onPageChange($event)"
                     (onSelectTopicEmit)="selectTopic($event)"

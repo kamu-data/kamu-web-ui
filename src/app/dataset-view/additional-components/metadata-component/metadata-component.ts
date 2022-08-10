@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DataViewSchema } from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
-import { TableContentInterface } from "../../dataset-view.interface";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
 import { MetadataSchemaUpdate } from "../../datasetSubs.interface";
 import { PageBasedInfo } from "src/app/api/kamu.graphql.interface";
@@ -13,7 +12,6 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
 })
 export class MetadataComponent implements OnInit {
     @Input() public datasetInfo: any;
-    @Input() public tableData: TableContentInterface;
     @Output() public pageChangeEvent: EventEmitter<{
         currentPage: number;
         isClick: boolean;

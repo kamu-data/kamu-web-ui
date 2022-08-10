@@ -12,7 +12,7 @@ export class RepoListComponent {
     @Input() public dataSource: SearchOverviewDatasetsInterface[];
     @Input() public totalCount = 0;
     @Input() public resultUnitText: string;
-    @Input() public isResultQuantity?: boolean = false;
+    @Input() public hasResultQuantity?: boolean = false;
     @Input() public isClickableRow?: boolean = false;
     @Output() public onSelectDatasetEmit: EventEmitter<{
         ownerName: string;

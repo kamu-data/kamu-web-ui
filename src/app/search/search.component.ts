@@ -67,7 +67,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
     public allComplete: boolean = false;
     public tableData: {
         tableSource: SearchOverviewDatasetsInterface[];
-        isResultQuantity: boolean;
+        hasResultQuantity: boolean;
         resultUnitText: string;
         isClickableRow: boolean;
         pageInfo: PageBasedInfo;
@@ -208,7 +208,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
         this.tableData = {
             tableSource: this.searchData,
             resultUnitText: "dataset(s) found",
-            isResultQuantity: true,
+            hasResultQuantity: true,
             isClickableRow: true,
             pageInfo: {
                 hasNextPage: false,

@@ -7,7 +7,6 @@ import {
     ViewEncapsulation,
 } from "@angular/core";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
-import { TableContentInterface } from "../../dataset-view.interface";
 import {
     Dataset,
     MetadataBlockFragment,
@@ -24,7 +23,6 @@ export class OverviewComponent implements OnInit {
     @Input() public markdownText: any;
     @Input() public datasetInfo: Dataset;
     @Input() public resultUnitText: string;
-    @Input() public tableData: TableContentInterface;
     @Output() onToggleReadmeViewEmit: EventEmitter<null> = new EventEmitter();
     @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
     @Output() onSelectTopicEmit: EventEmitter<string> = new EventEmitter();

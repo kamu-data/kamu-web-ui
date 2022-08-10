@@ -3,10 +3,10 @@
         <h2 class="box-title align-items-center pb-3 m-0">Schema:</h2>
         <ng-template [ngIf]="currentSchema">
             <app-dynamic-table
-                [isResultQuantity]="false"
+                [hasResultQuantity]="false"
                 [isClickableRow]="false"
                 [resultUnitText]="''"
-                [isTableHeader]="true"
+                [hasTableHeader]="true"
                 [tableSource]="currentSchema.fields"
                 [idTable]="'schema-block-table'"
                 (onSelectDatasetEmit)="null"
@@ -167,15 +167,13 @@
             [(ngModel)]="sqlRequestCode"
         ></ngx-monaco-editor>
         <h2 class="box-title align-items-center pb-3 pt-3 m-0">Result:</h2>
-        <ng-template [ngIf]="tableData">
-            <app-dynamic-table
-                [isResultQuantity]="tableData.isResultQuantity"
-                [isClickableRow]="tableData.isClickableRow"
-                [resultUnitText]="''"
-                [isTableHeader]="tableData.isTableHeader"
-                [tableSource]="currentData"
-                (onSelectDatasetEmit)="null"
-            ></app-dynamic-table>
-        </ng-template>
+        <app-dynamic-table
+            [hasResultQuantity]="false"
+            [isClickableRow]="false"
+            [resultUnitText]="''"
+            [hasTableHeader]="true"
+            [tableSource]="currentData"
+            (onSelectDatasetEmit)="null"
+        ></app-dynamic-table>
     </div>
 </div>

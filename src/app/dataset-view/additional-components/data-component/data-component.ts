@@ -4,7 +4,6 @@ import {
     DataViewSchema,
 } from "../../../interface/search.interface";
 import DataTabValues from "./mock.data";
-import { TableContentInterface } from "../../dataset-view.interface";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
 
 @Component({
@@ -12,7 +11,6 @@ import { AppDatasetSubsService } from "../../datasetSubs.service";
     templateUrl: "./data-component.html",
 })
 export class DataComponent implements OnInit {
-    @Input() public tableData: TableContentInterface;
     @Input() public datasetName: DatasetNameInterface;
     // tslint:disable-next-line:no-output-on-prefix
     @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();

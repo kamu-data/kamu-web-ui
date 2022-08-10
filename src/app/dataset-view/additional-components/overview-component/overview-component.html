@@ -29,10 +29,10 @@
                 </div>
             </div>
             <app-dynamic-table
-                [isResultQuantity]="tableData.isResultQuantity"
-                [isClickableRow]="tableData.isClickableRow"
+                [hasResultQuantity]="false"
+                [isClickableRow]="false"
                 [resultUnitText]="resultUnitText"
-                [isTableHeader]="tableData.isTableHeader"
+                [hasTableHeader]="true"
                 [tableSource]="currentOverviewData"
                 [metadataBlockFragment]="metadataFragmentBlock"
                 [numBlocksTotal]="datasetInfo.metadata.chain.blocks.totalCount || 0"

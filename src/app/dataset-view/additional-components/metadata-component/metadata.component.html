@@ -25,10 +25,10 @@
         <h2>Schema</h2>
         <ng-template [ngIf]="currentSchema">
             <app-dynamic-table
-                [isResultQuantity]="false"
+                [hasResultQuantity]="false"
                 [isClickableRow]="false"
                 [resultUnitText]="''"
-                [isTableHeader]="true"
+                [hasTableHeader]="true"
                 [tableSource]="currentSchema.fields || []"
                 [idTable]="'schema-block-table'"
                 (onSelectDatasetEmit)="(null)"

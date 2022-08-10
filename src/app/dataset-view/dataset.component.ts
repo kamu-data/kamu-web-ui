@@ -15,10 +15,7 @@ import { SearchAdditionalHeaderButtonInterface } from "../components/search-addi
 import { MatSidenav } from "@angular/material/sidenav";
 import { SideNavService } from "../services/sidenav.service";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
-import {
-    TableContentInterface,
-    DatasetViewTypeEnum,
-} from "./dataset-view.interface";
+import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { AppDatasetService } from "./dataset.service";
 import { NavigationEnd, Router } from "@angular/router";
 import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
@@ -95,8 +92,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
                 iconSvgPathClass: "",
             },
         ];
-
-    public tableData: TableContentInterface;
 
     public linageGraphView: [number, number] = [500, 600];
     public linageGraphLink: Edge[] = [];
@@ -175,8 +170,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
                 this.initDatasetViewByType();
             });
         this.initDatasetViewByType();
-
-        this.initTableData();
 
         this.prepareLinageGraph();
 
@@ -510,15 +503,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
 
     private onClickDescission(): void {
         console.log("onClickDescission");
-    }
-
-    private initTableData(): void {
-        this.tableData = {
-            isTableHeader: true,
-            isResultQuantity: false,
-            isClickableRow: false,
-            totalCount: 0,
-        };
     }
 
     private initDatasetViewByType(currentPage?: number): void {

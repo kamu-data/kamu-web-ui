@@ -1,5 +1,3 @@
-import { PageBasedInfo } from "../api/kamu.graphql.interface";
-
 export enum DatasetViewTypeEnum {
     overview = "overview",
     data = "data",
@@ -7,12 +5,4 @@ export enum DatasetViewTypeEnum {
     linage = "linage",
     discussions = "discussions",
     history = "history",
-}
-
-export interface TableContentInterface {
-    isTableHeader: boolean;
-    displayedColumns?: any[];
-    isResultQuantity: boolean;
-    isClickableRow: boolean;
-    totalCount: number;
 }

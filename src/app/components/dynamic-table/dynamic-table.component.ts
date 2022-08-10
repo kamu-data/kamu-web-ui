@@ -30,13 +30,13 @@ const ELEMENT_DATA: any[] = [];
 export class DynamicTableComponent
     implements OnInit, OnChanges, AfterContentInit
 {
-    @Input() public isTableHeader: boolean;
+    @Input() public hasTableHeader: boolean;
     @Input() public tableSource?: TableSourceInterface;
 
     @Input() public metadataBlockFragment?: MetadataBlockFragment;
     @Input() public numBlocksTotal?: number;
 
-    @Input() public isResultQuantity?: boolean = false;
+    @Input() public hasResultQuantity?: boolean = false;
     @Input() public resultUnitText: string;
     @Input() public isClickableRow = false;
     @Input() public idTable?: string;

@@ -1,36 +1,17 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    Output,
-} from "@angular/core";
-import {
-    DatasetInfoInterface,
-    DataViewSchema,
-    PageInfoInterface,
-} from "../../../interface/search.interface";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { DataViewSchema } from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
+import { AppDatasetSubsService } from "../../datasetSubs.service";
+import { MetadataSchemaUpdate } from "../../datasetSubs.interface";
+import { Dataset, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 @Component({
     selector: "app-metadata",
     templateUrl: "./metadata.component.html",
 })
-export class MetadataComponent {
-    @Input() public currentPage: number;
-    @Input() public currentSchema: DataViewSchema;
-    @Input() public pageInfo: PageInfoInterface;
-    @Input() public datasetInfo: any;
-    @Input() public tableData: {
-        isTableHeader: boolean;
-        displayedColumns?: any[];
-        tableSource: any;
-        isResultQuantity: boolean;
-        isClickableRow: boolean;
-        pageInfo: PageInfoInterface;
-        totalCount: number;
-    };
+export class MetadataComponent implements OnInit {
+    @Input() public datasetInfo: Dataset;
     @Output() public pageChangeEvent: EventEmitter<{
         currentPage: number;
         isClick: boolean;
@@ -56,8 +37,20 @@ export class MetadataComponent {
         },
     };
 
-    public getPageSymbol(current: number) {
-        return ["A", "B", "C", "D", "E", "F", "G"][current - 1];
+    public currentSchema?: DataViewSchema;
+    public pageInfo: PageBasedInfo;
+    public currentPage: number = 0;
+
+    constructor(private appDatasetSubsService: AppDatasetSubsService) {}
+
+    ngOnInit() {
+        this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
+            (schemaUpdate: MetadataSchemaUpdate) => {
+                this.currentSchema = schemaUpdate.schema;
+                this.pageInfo = schemaUpdate.pageInfo;
+                this.currentPage = this.pageInfo.currentPage + 1;
+            },
+        );
     }
 
     public selectPage(page: string) {

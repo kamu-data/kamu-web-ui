@@ -1,7 +1,10 @@
 import { Component, Input } from "@angular/core";
-import { PageInfoInterface } from "../../interface/search.interface";
 import AppValues from "../../common/app.values";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
+import {
+    MetadataBlockFragment,
+    PageBasedInfo,
+} from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-timeline",
@@ -9,8 +12,8 @@ import { DataHelpersService } from "src/app/services/datahelpers.service";
     styleUrls: ["timeline.component.sass"],
 })
 export class TimelineComponent {
-    @Input() public history: any[];
-    @Input() public pageInfo: PageInfoInterface;
+    @Input() public history: MetadataBlockFragment[];
+    @Input() public pageInfo: PageBasedInfo;
 
     constructor(public dataHelpers: DataHelpersService) {}
 

@@ -3,11 +3,16 @@ import { Observable, Subject } from "rxjs";
 import { SearchApi } from "../api/search.api";
 import {
     DatasetIDsInterface,
-    PageInfoInterface,
     SearchOverviewDatasetsInterface,
     SearchOverviewInterface,
 } from "../interface/search.interface";
-import { SearchDatasetsOverviewQuery } from "../api/kamu.graphql.interface";
+import {
+    Dataset,
+    Scalars,
+    Search,
+    SearchDatasetsOverviewQuery,
+} from "../api/kamu.graphql.interface";
+import Maybe from "graphql/tsutils/Maybe";
 
 @Injectable()
 export class AppSearchService {
@@ -44,16 +49,14 @@ export class AppSearchService {
         this.searchApi
             .searchOverview(searchValue, page)
             .subscribe((data: SearchDatasetsOverviewQuery) => {
-                let dataset: SearchOverviewDatasetsInterface[] = [];
-                let pageInfo = this.searchApi.pageInfoInit();
-                let totalCount: number | null | undefined = 0;
-
-                // @ts-ignore
-                dataset = data.search.query.nodes.map((node: Array<any>) => {
-                    return this.searchApi.clearlyData(node);
+                let dataset: SearchOverviewDatasetsInterface[] = (
+                    data.search.query.nodes as Dataset[]
+                ).map((node: Dataset) => {
+                    return this.convertNodeToSearchView(node);
                 });
-                pageInfo = data.search.query.pageInfo;
-                totalCount = data.search.query.totalCount;
+                let pageInfo = data.search.query.pageInfo;
+                let totalCount: Maybe<Scalars["Int"]> =
+                    data.search.query.totalCount;
 
                 this.searchData = {
                     dataset,
@@ -74,5 +77,22 @@ export class AppSearchService {
                 this.autocompleteDatasetChanges([]);
             },
         );
+    }
+
+    private convertNodeToSearchView(
+        node: Dataset,
+    ): SearchOverviewDatasetsInterface {
+        const object = node;
+        const value = "typename";
+        const nodeKeys: string[] = Object.keys(object).filter(
+            (key) => !key.includes(value),
+        );
+        const searchDataset = Object();
+
+        nodeKeys.forEach((nodeKey: string) => {
+            searchDataset[nodeKey] = (node as any)[nodeKey];
+        });
+
+        return searchDataset;
     }
 }

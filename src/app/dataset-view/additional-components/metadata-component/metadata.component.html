@@ -25,17 +25,21 @@
         <h2>Schema</h2>
         <ng-template [ngIf]="currentSchema">
             <app-dynamic-table
-                [isResultQuantity]="false"
+                [hasResultQuantity]="false"
                 [isClickableRow]="false"
                 [resultUnitText]="''"
-                [isTableHeader]="true"
-                [tableSource]="currentSchema.fields"
+                [hasTableHeader]="true"
+                [tableSource]="currentSchema.fields || []"
                 [idTable]="'schema-block-table'"
                 (onSelectDatasetEmit)="(null)"
             ></app-dynamic-table>
         </ng-template>
         <div
-            *ngIf="datasetInfo && datasetInfo.kind === 'DERIVATIVE'"
+            *ngIf="
+                datasetInfo &&
+                datasetInfo.kind === 'DERIVATIVE' &&
+                datasetInfo.metadata.currentTransform
+            "
             class="mt-3"
         >
             <h2>Derivative Transformation</h2>

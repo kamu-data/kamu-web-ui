@@ -2,82 +2,61 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject, Subscription } from "rxjs";
 import { SearchApi } from "../api/search.api";
 import {
-    DatasetInfoInterface,
     DatasetKindInterface,
     DatasetNameInterface,
-    PageInfoInterface,
-    SearchDatasetByID,
-    SearchHistoryInterface,
-    SearchOverviewDatasetsInterface,
-    SearchOverviewInterface,
+    DataViewSchema,
 } from "../interface/search.interface";
-import { map } from "rxjs/operators";
 import {
-    DataSchema,
+    Dataset,
     DatasetKind,
     DatasetOverviewQuery,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
     GetDatasetLineageQuery,
     GetDatasetMetadataSchemaQuery,
+    MetadataBlockFragment,
+    PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { ModalService } from "../components/modal/modal.service";
+import { AppDatasetSubsService } from "./datasetSubs.service";
+import {
+    DatasetHistoryUpdate,
+    DataUpdate,
+    MetadataSchemaUpdate,
+    OverviewDataUpdate,
+} from "./datasetSubs.interface";
 
 @Injectable()
 export class AppDatasetService {
-    public onSearchLinageDatasetSubscribtion: Subscription;
+    public onSearchLineageDatasetSubscription: Subscription;
 
     constructor(
         private searchApi: SearchApi,
         private modalService: ModalService,
+        private appDatasetSubsService: AppDatasetSubsService,
     ) {}
 
-    public get onSearchDatasetInfoChanges(): Observable<DatasetInfoInterface> {
+    public get onSearchDatasetInfoChanges(): Observable<Dataset> {
         return this.searchDatasetInfoChanges$.asObservable();
     }
 
     public get onSearchDatasetNameChanges(): Observable<DatasetNameInterface> {
         return this.searchDatasetNameChanges$.asObservable();
     }
-    public get onSearchDatasetHistoryChanges(): Observable<any[]> {
-        return this.searchDatasetHistoryChanges$.asObservable();
-    }
 
     public get onSearchChanges(): Observable<string> {
         return this.searchChanges$.asObservable();
-    }
-
-    public get onSearchDataChanges(): Observable<
-        SearchHistoryInterface[] | SearchOverviewDatasetsInterface[]
-    > {
-        return this.searchDataChanges$.asObservable();
     }
 
     public get onKindInfoChanges(): Observable<DatasetKindInterface[]> {
         return this.kindInfoChanges$.asObservable();
     }
 
-    public get onSearchMetadataChanges(): Observable<SearchOverviewInterface> {
-        return this.searchMetadataChanges$.asObservable();
-    }
-    public get onDatasetPageInfoChanges(): Observable<PageInfoInterface> {
-        return this.datasetPageInfoChanges$.asObservable();
-    }
-
-    public get getSearchData():
-        | SearchHistoryInterface[]
-        | SearchOverviewDatasetsInterface[] {
-        return this.searchData;
-    }
-
     public get onDatasetTreeChanges(): Observable<
         [DatasetKindInterface[][], DatasetKindInterface]
     > {
         return this.datasetTreeChanges$.asObservable();
-    }
-    public get onDataSchemaChanges(): Observable<DataSchema> {
-        return this.datasetSchemaChanges$.asObservable();
     }
 
     public get getDatasetTree(): {
@@ -91,60 +70,36 @@ export class AppDatasetService {
         return this.datasetKindInfo;
     }
 
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    public searchData: any[] = [];
     private kindInfoChanges$: Subject<DatasetKindInterface[]> = new Subject<
         DatasetKindInterface[]
     >();
     private searchChanges$: Subject<string> = new Subject<string>();
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    private searchDataChanges$: Subject<any[]> = new Subject<any[]>();
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    private searchDatasetInfoChanges$: Subject<any> = new Subject<any>();
-    private searchDatasetHistoryChanges$: Subject<any[]> = new Subject<any[]>();
-    private datasetPageInfoChanges$: Subject<PageInfoInterface> =
-        new Subject<PageInfoInterface>();
+    private searchDatasetInfoChanges$: Subject<Dataset> =
+        new Subject<Dataset>();
     private searchDatasetNameChanges$: Subject<DatasetNameInterface> =
         new Subject<DatasetNameInterface>();
-    private searchMetadataChanges$: Subject<SearchOverviewInterface> =
-        new Subject<SearchOverviewInterface>();
     private datasetTreeChanges$: Subject<
         [DatasetKindInterface[][], DatasetKindInterface]
     > = new Subject<[DatasetKindInterface[][], DatasetKindInterface]>();
-    private datasetSchemaChanges$: Subject<DataSchema> =
-        new Subject<DataSchema>();
+
     private datasetTree: DatasetKindInterface[][] = [];
     private datasetKindInfo: DatasetKindInterface[] = [];
 
-    private static getDatasetInfo(
-        byID: SearchDatasetByID,
-    ): DatasetInfoInterface {
-        return {
-            id: byID.id,
-            kind: byID.kind,
-            name: byID.name,
-            owner: byID.owner,
-            __typename: byID.__typename,
-            createdAt: byID.createdAt || "",
-            lastUpdatedAt: byID.lastUpdatedAt || "",
-            latestMetadataBlock: byID.latestMetadataBlock,
-            numBlocksTotal: byID.numBlocksTotal,
-            estimatedSize: byID.data ? byID.data.estimatedSize : 0,
-            numRecordsTotal: byID.data ? byID.data.numRecordsTotal : 0,
-            metadata: byID.metadata,
-        };
+    private static parseContentOfDataset(data: DatasetOverviewQuery): Object[] {
+        return data.datasets.byId
+            ? JSON.parse(data.datasets?.byId?.data.tail.data.content)
+            : [];
     }
-    public get defaultPageInfo(): PageInfoInterface {
+    public get defaultPageInfo(): PageBasedInfo {
         return {
             hasNextPage: false,
             hasPreviousPage: false,
             totalPages: 1,
+            currentPage: 1,
         };
     }
 
-    public searchDatasetInfoChanges(
-        searchDatasetInfo: DatasetInfoInterface,
-    ): void {
+    public searchDatasetInfoChanges(searchDatasetInfo: Dataset): void {
         this.searchDatasetInfoChanges$.next(searchDatasetInfo);
     }
 
@@ -153,37 +108,9 @@ export class AppDatasetService {
     ): void {
         this.searchDatasetNameChanges$.next(searchDatasetName);
     }
-    public searchDatasetHistoryChanges(datasetNodes: any[]): void {
-        this.searchDatasetHistoryChanges$.next(datasetNodes);
-    }
-    public datasetPageInfoChanges(pageInfo: PageInfoInterface): void {
-        this.datasetPageInfoChanges$.next(pageInfo);
-    }
-    public datasetSchemaChanges(schema: DataSchema): void {
-        this.datasetSchemaChanges$.next(schema);
-    }
-
-    // TODO: "SearchData" is currently propagating a lot of different kinds of information
-    // It can be:
-    // - MetadataBlocks in "History" tab
-    // - Single MetadataBlock to display current hash of "Metadata" tab
-    // - Sample data records to be displayed on "Overview" tab
-    // - Data records that come as result of a query on "Data" tab
-    // This has to be refactored!!!
-    public searchDataChanges(
-        searchData:
-            | SearchHistoryInterface[]
-            | SearchOverviewDatasetsInterface[],
-    ): void {
-        this.searchDataChanges$.next(searchData);
-    }
 
     public kindInfoChanges(datasetList: DatasetKindInterface[]): void {
         this.kindInfoChanges$.next(datasetList);
-    }
-
-    public searchMetadataChange(data: SearchOverviewInterface) {
-        return this.searchMetadataChanges$.next(data);
     }
 
     public datasetTreeChange(
@@ -226,75 +153,43 @@ export class AppDatasetService {
     ): void {
         this.searchApi
             .getDatasetOverview({ id, page })
-            .subscribe((data: DatasetOverviewQuery | undefined) => {
-                let datasets: SearchDatasetByID;
-                if (data) {
-                    /* eslint-disable  @typescript-eslint/no-explicit-any */
-                    datasets = AppValues.deepCopy(data.datasets.byId);
-                    datasets.data.tail.content = data.datasets.byId
-                        ? JSON.parse(
-                              data.datasets?.byId?.data.tail.data.content,
-                          )
-                        : ({} as any);
-                    datasets.metadata.currentSchema.content = data.datasets.byId
-                        ? JSON.parse(
-                              data.datasets.byId.metadata.currentSchema.content,
-                          )
-                        : ({} as any);
+            .subscribe((data: DatasetOverviewQuery) => {
+                const dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
+                this.searchDatasetNameChanges({
+                    id: dataset.id,
+                    name: dataset.name,
+                    owner: dataset.owner,
+                });
+                this.searchDatasetInfoChanges(dataset);
 
-                    this.searchDatasetNameChanges({
-                        id: datasets.id,
-                        name: datasets.name,
-                        owner: datasets.owner,
-                    });
-                    const datasetInfo =
-                        AppDatasetService.getDatasetInfo(datasets);
-                    this.searchDatasetInfoChanges(datasetInfo);
-                    this.searchData = datasets.data.tail.content;
-                    this.searchDataChanges(datasets.data.tail.content);
-                    this.datasetSchemaChanges(
-                        data.datasets.byId?.metadata
-                            ?.currentSchema as DataSchema,
-                    );
-                }
+                const content: Object[] =
+                    AppDatasetService.parseContentOfDataset(data);
+                const schema: DataViewSchema = JSON.parse(
+                    dataset.metadata?.currentSchema.content,
+                );
+                const dataUpdate: DataUpdate = { content, schema };
+                this.appDatasetSubsService.changeDatasetData(dataUpdate);
             });
     }
 
     public getDatasetOverview(id: string, page: number): void {
         this.searchApi
             .getDatasetOverview({ id, page })
-            .subscribe((data: DatasetOverviewQuery | undefined) => {
-                let datasets: SearchDatasetByID;
-                if (data) {
-                    /* eslint-disable  @typescript-eslint/no-explicit-any */
-                    datasets = AppValues.deepCopy(data.datasets.byId);
-                    datasets.latestMetadataBlock =
-                        data.datasets.byId?.metadata.chain.blocks.nodes[0];
-                    datasets.numBlocksTotal =
-                        data.datasets.byId?.metadata.chain.blocks.totalCount ||
-                        0;
-                    datasets.data.tail.content = data.datasets.byId
-                        ? JSON.parse(
-                              data.datasets?.byId?.data.tail.data.content,
-                          )
-                        : ({} as any);
-                    datasets.metadata.currentSchema.content = data.datasets.byId
-                        ? JSON.parse(
-                              data.datasets.byId.metadata.currentSchema.content,
-                          )
-                        : ({} as any);
+            .subscribe((data: DatasetOverviewQuery) => {
+                const dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
+                this.searchDatasetNameChanges({
+                    id: dataset.id,
+                    name: dataset.name,
+                    owner: dataset.owner,
+                });
+                this.searchDatasetInfoChanges(dataset);
 
-                    this.searchDatasetNameChanges({
-                        id: datasets.id,
-                        name: datasets.name,
-                        owner: datasets.owner,
-                    });
-                    const datasetInfo =
-                        AppDatasetService.getDatasetInfo(datasets);
-                    this.searchDatasetInfoChanges(datasetInfo);
-                    this.searchData = datasets.data.tail.content;
-                    this.searchDataChanges(datasets.data.tail.content);
-                }
+                const content: Object[] =
+                    AppDatasetService.parseContentOfDataset(data);
+                const overviewDataUpdate: OverviewDataUpdate = { content };
+                this.appDatasetSubsService.changeDatasetOverviewData(
+                    overviewDataUpdate,
+                );
             });
     }
 
@@ -303,74 +198,75 @@ export class AppDatasetService {
         numRecords: number,
         numPage: number,
     ): void {
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
         this.searchApi
             .onDatasetHistory({ id, numRecords, numPage })
             .subscribe((data: GetDatasetHistoryQuery) => {
-                if (data) {
-                    const pageInfo = data.datasets.byId?.metadata.chain.blocks
-                        .pageInfo
-                        ? Object.assign(
-                              AppValues.deepCopy(
-                                  data.datasets.byId?.metadata.chain.blocks
-                                      .pageInfo,
-                              ),
-                              { page: numPage },
-                          )
-                        : Object.assign(this.defaultPageInfo, {
-                              page: numPage,
-                          });
+                this.searchDatasetNameChanges({
+                    id: data.datasets.byId?.id,
+                    name: data.datasets.byId?.name,
+                    owner: data.datasets.byId?.owner as any,
+                });
 
-                    this.searchDatasetNameChanges({
-                        id: data.datasets.byId?.id,
-                        name: data.datasets.byId?.name,
-                        owner: data.datasets.byId?.owner as any,
-                    });
-                    this.searchDatasetHistoryChanges(
-                        data.datasets.byId?.metadata.chain.blocks.nodes || [],
-                    );
-                    this.datasetPageInfoChanges(pageInfo);
-                }
+                let pageInfo: PageBasedInfo = data.datasets.byId?.metadata.chain
+                    .blocks.pageInfo
+                    ? Object.assign(
+                          AppValues.deepCopy(
+                              data.datasets.byId?.metadata.chain.blocks
+                                  .pageInfo,
+                          ),
+                          { currentPage: numPage },
+                      )
+                    : Object.assign(this.defaultPageInfo, {
+                          currentPage: numPage,
+                      });
+                let historyUpdate: DatasetHistoryUpdate = {
+                    history:
+                        (data.datasets.byId?.metadata.chain.blocks
+                            .nodes as MetadataBlockFragment[]) || [],
+                    pageInfo: pageInfo,
+                };
+                this.appDatasetSubsService.changeDatasetHistory(historyUpdate);
             });
     }
 
     public onSearchMetadata(id: string, page: number): void {
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
         this.searchApi
             .onSearchMetadata({ id, page })
-            .subscribe((data: GetDatasetMetadataSchemaQuery | undefined) => {
-                let datasets: SearchDatasetByID;
-                if (data) {
-                    /* eslint-disable  @typescript-eslint/no-explicit-any */
-                    datasets = AppValues.deepCopy(data.datasets.byId);
-                    this.searchDatasetNameChanges({
-                        id: datasets.id,
-                        name: datasets.name,
-                        owner: datasets.owner,
-                    });
-                    this.datasetSchemaChanges(
-                        data.datasets.byId?.metadata
-                            ?.currentSchema as DataSchema,
-                    );
-                    const datasetInfo =
-                        AppDatasetService.getDatasetInfo(datasets);
-                    this.searchDatasetInfoChanges(datasetInfo);
-                    // @ts-ignore
-                    this.searchData = datasets.metadata.chain.blocks.nodes;
-                    // @ts-ignore
-                    this.searchDataChanges(this.searchData);
-                }
+            .subscribe((data: GetDatasetMetadataSchemaQuery) => {
+                let dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
+                this.searchDatasetNameChanges({
+                    id: dataset.id,
+                    name: dataset.name,
+                    owner: dataset.owner,
+                });
+
+                let schema: DataViewSchema = JSON.parse(
+                    dataset.metadata?.currentSchema.content,
+                );
+                let pageInfo: PageBasedInfo = Object.assign(
+                    this.defaultPageInfo,
+                    {
+                        currentPage: page,
+                    },
+                );
+                let metadataSchemaUpdate: MetadataSchemaUpdate = {
+                    schema,
+                    pageInfo,
+                };
+                this.appDatasetSubsService.metadataSchemaChanges(
+                    metadataSchemaUpdate,
+                );
+                this.searchDatasetInfoChanges(dataset);
             });
     }
     public onGetDatasetDataSQLRun(
-        currentDatasetInfo: DatasetInfoInterface,
+        currentDatasetInfo: Dataset,
         query: string,
         limit: number,
     ): void {
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
         this.searchApi.onGetDatasetDataSQLRun({ query, limit }).subscribe(
-            (data: GetDatasetDataSqlRunQuery | undefined) => {
-                const datasets = {
+            (data: GetDatasetDataSqlRunQuery) => {
+                const dataset = {
                     metadata: {
                         currentSchema: {
                             content: {},
@@ -382,28 +278,20 @@ export class AppDatasetService {
                         },
                     },
                 } as any;
-                if (data) {
-                    /* eslint-disable  @typescript-eslint/no-explicit-any */
-                    datasets.data.tail.content = data.data?.query.data
-                        ? JSON.parse(data.data?.query.data.content)
-                        : ({} as any);
-                    datasets.metadata.currentSchema.content = data.data.query
-                        .schema
-                        ? JSON.parse(data.data.query.schema.content)
-                        : ({} as any);
+                dataset.data.tail.content = data.data?.query.data
+                    ? JSON.parse(data.data?.query.data.content)
+                    : "";
+                dataset.metadata.currentSchema.content = data.data.query.schema
+                    ? JSON.parse(data.data.query.schema.content)
+                    : "";
 
-                    // @ts-ignore
-                    const datasetInfo = AppDatasetService.getDatasetInfo(
-                        Object.assign(currentDatasetInfo, datasets),
-                    );
-                    this.searchDatasetInfoChanges(datasetInfo);
-                    this.searchData = datasets.data.tail.content;
-                    // @ts-ignore
-                    this.searchDataChanges(datasets.data.tail.content);
-                    this.datasetSchemaChanges(
-                        data.data.query.schema as DataSchema,
-                    );
-                }
+                this.searchDatasetInfoChanges(dataset);
+
+                const dataUpdate: DataUpdate = {
+                    content: dataset.data.tail.content,
+                    schema: dataset.metadata.currentSchema.content,
+                };
+                this.appDatasetSubsService.changeDatasetData(dataUpdate);
             },
             (error: { message: string }) => {
                 this.modalService.error({
@@ -423,20 +311,13 @@ export class AppDatasetService {
 
         this.searchApi
             .getDatasetLineage({ id })
-            .pipe(
-                map((result: GetDatasetLineageQuery | undefined) => {
-                    return result;
-                }),
-            )
-            .subscribe((result: GetDatasetLineageQuery | undefined) => {
-                if (result) {
-                    this.searchDatasetNameChanges({
-                        id: result.datasets.byId?.id,
-                        name: result.datasets.byId?.name,
-                        owner: result.datasets.byId?.owner as any,
-                    });
-                    this.updateDatasetTree(result);
-                }
+            .subscribe((result: GetDatasetLineageQuery) => {
+                this.searchDatasetNameChanges({
+                    id: result.datasets.byId?.id,
+                    name: result.datasets.byId?.name,
+                    owner: result.datasets.byId?.owner as any,
+                });
+                this.updateDatasetTree(result);
             });
     }
 

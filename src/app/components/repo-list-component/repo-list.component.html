@@ -1,6 +1,6 @@
 <div
     class="d-flex flex-column flex-md-row flex-justify-between border-bottom pb-3 position-relative justify-content-between align-content-center align-items-baseline"
-    *ngIf="isResultQuantity"
+    *ngIf="hasResultQuantity"
 >
     <h2 class="repo-list-total-count">{{ totalCount }} {{ resultUnitText }}</h2>
     <div class="select-block form-group">
@@ -137,9 +137,7 @@
                     </ng-template>
                 </ngb-rating>
                 <p class="text-small color-text-secondary mr-3">
-                    {{
-                        row.metadata.currentDownstreamDependencies.length
-                    }}
+                    {{ row.metadata.currentDownstreamDependencies.length }}
                     Downstream
                 </p>
                 <p

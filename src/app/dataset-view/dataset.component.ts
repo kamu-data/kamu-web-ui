@@ -1,5 +1,4 @@
 import {
-    AfterContentInit,
     Component,
     HostListener,
     OnDestroy,
@@ -8,20 +7,11 @@ import {
     ViewEncapsulation,
 } from "@angular/core";
 import {
-    DatasetInfoInterface,
     DatasetKindInterface,
     DatasetNameInterface,
-    DataViewSchema,
-    PageInfoInterface,
-    SearchHistoryInterface,
-    SearchOverviewDatasetsInterface,
-    SearchOverviewInterface,
 } from "../interface/search.interface";
 import AppValues from "../common/app.values";
-import {
-    SearchAdditionalButtonInterface,
-    SearchAdditionalHeaderButtonInterface,
-} from "../components/search-additional-buttons/search-additional-buttons.interface";
+import { SearchAdditionalHeaderButtonInterface } from "../components/search-additional-buttons/search-additional-buttons.interface";
 import { MatSidenav } from "@angular/material/sidenav";
 import { SideNavService } from "../services/sidenav.service";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
@@ -33,15 +23,7 @@ import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
-import {
-    DataSchema,
-    DatasetKind,
-    GetDatasetLineageGQL,
-    GetDatasetLineageQuery,
-    MetadataBlockFragment,
-} from "../api/kamu.graphql.interface";
-import { debug } from "console";
-import { DataHelpersService } from "../services/datahelpers.service";
+import { Dataset, DatasetKind } from "../api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset",
@@ -49,16 +31,13 @@ import { DataHelpersService } from "../services/datahelpers.service";
     styleUrls: ["./dataset-view.component.sass"],
     encapsulation: ViewEncapsulation.None,
 })
-export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
+export class DatasetComponent implements OnInit, OnDestroy {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     @ViewChild("menuTrigger") trigger: any;
     public isMobileView = false;
-    public datasetInfo: DatasetInfoInterface;
+    public datasetInfo: Dataset;
     public datasetName: DatasetNameInterface;
-    public datasetHistory: any[];
     public searchValue = "";
-    public currentPage: number;
-    public currentSchema: DataViewSchema;
     public isMinimizeSearchAdditionalButtons = false;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.overview;
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[] =
@@ -114,22 +93,6 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
             },
         ];
 
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    public tableData: {
-        isTableHeader: boolean;
-        displayedColumns?: any[];
-        tableSource: any;
-        latestMetadataBlock?: MetadataBlockFragment;
-        isResultQuantity: boolean;
-        isClickableRow: boolean;
-        pageInfo: PageInfoInterface;
-        totalCount: number;
-    };
-    public searchData:
-        | SearchOverviewDatasetsInterface[]
-        | SearchHistoryInterface[] = [];
-
-    public datasetMetadata: {};
     public linageGraphView: [number, number] = [500, 600];
     public linageGraphLink: Edge[] = [];
     public linageGraphNodes: Node[] = [];
@@ -139,24 +102,9 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public isMarkdownEditView = false;
     public clipboardKamuCli = "kamu pull kamu.dev/anonymous/dataset";
     public clipboardKafka = "https://api.kamu.dev/kafka/anonymous/dataset";
-    public markdownText = `## Markdown __rulez__!
----
+    public markdownText = AppValues.markdownContain;
 
-### Syntax highlight
-\`\`\`typescript
-const language = 'typescript';
-\`\`\`
-
-### Lists
-1. Ordered list
-2. Another bullet point
-   - Unordered list
-   - Another unordered bullet
-
-### Blockquote
-> Blockquote to the max`;
-
-    private _window: Window;
+    private w: Window;
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
@@ -177,9 +125,8 @@ const language = 'typescript';
         private router: Router,
         private modalService: ModalService,
         private clipboard: Clipboard,
-        private dataHelpers: DataHelpersService,
     ) {
-        this._window = window;
+        this.w = window;
     }
 
     public copyToClipboard(event: MouseEvent, text: string): void {
@@ -224,33 +171,10 @@ const language = 'typescript';
             });
         this.initDatasetViewByType();
 
-        this.initTableData();
-
         this.prepareLinageGraph();
 
-        this.appDatasetService.onDataSchemaChanges.subscribe(
-            (schema: DataSchema) => {
-                this.currentSchema = schema
-                    ? JSON.parse(schema.content)
-                    : ({} as DataViewSchema);
-            },
-        );
-        this.appDatasetService.onSearchDatasetHistoryChanges.subscribe(
-            (history: any[]) => {
-                this.datasetHistory = history;
-            },
-        );
-        this.appDatasetService.onDatasetPageInfoChanges.subscribe(
-            (info: PageInfoInterface) => {
-                this.tableData.pageInfo = info;
-                if (info.page) {
-                    this.currentPage = info.page + 1;
-                }
-            },
-        );
-
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
-            (info: DatasetInfoInterface) => {
+            (info: Dataset) => {
                 this.datasetInfo = info;
             },
         );
@@ -264,20 +188,6 @@ const language = 'typescript';
         });
 
         /* eslint-disable  @typescript-eslint/no-explicit-any */
-        this.appDatasetService.onSearchDataChanges.subscribe((data: any[]) => {
-            this.tableData.tableSource = data;
-        });
-
-        this.appDatasetService.onSearchMetadataChanges.subscribe(
-            (data: SearchOverviewInterface) => {
-                this.tableData.tableSource = data.dataset;
-                this.tableData.pageInfo = data.pageInfo;
-                this.tableData.totalCount = data.totalCount as number;
-                this.searchData = data.dataset;
-
-                setTimeout(() => (this.currentPage = data.currentPage));
-            },
-        );
     }
 
     public successCopyToClipboardCopied(): void {
@@ -307,15 +217,10 @@ const language = 'typescript';
         return this.appDatasetService.getDatasetTree;
     }
 
-    public ngAfterContentInit(): void {
-        this.tableData.tableSource = this.searchData;
-    }
-
     public onPageChange(params: {
         currentPage: number;
         isClick: boolean;
     }): void {
-        this.currentPage = params.currentPage;
         this.initDatasetViewByType(params.currentPage);
     }
 
@@ -377,7 +282,6 @@ const language = 'typescript';
                 },
             },
         );
-        this.currentPage = currentPage;
 
         this.datasetViewType = DatasetViewTypeEnum.metadata;
         this.appDatasetService.onSearchMetadata(
@@ -412,7 +316,6 @@ const language = 'typescript';
                 },
             },
         );
-        this.currentPage = currentPage;
         this.datasetViewType = DatasetViewTypeEnum.history;
 
         this.appDatasetService.onDatasetHistorySchema(
@@ -602,32 +505,16 @@ const language = 'typescript';
         console.log("onClickDescission");
     }
 
-    private initTableData(): void {
-        this.tableData = {
-            isTableHeader: true,
-            tableSource: this.searchData,
-            latestMetadataBlock: undefined,
-            isResultQuantity: false,
-            isClickableRow: false,
-            pageInfo: {
-                hasNextPage: false,
-                hasPreviousPage: false,
-                totalPages: 1,
-            },
-            totalCount: 0,
-        };
-    }
-
     private initDatasetViewByType(currentPage?: number): void {
-        if (this.appDatasetService.onSearchLinageDatasetSubscribtion) {
-            this.appDatasetService.onSearchLinageDatasetSubscribtion.unsubscribe();
+        if (this.appDatasetService.onSearchLineageDatasetSubscription) {
+            this.appDatasetService.onSearchLineageDatasetSubscription.unsubscribe();
         }
         this.appDatasetService.resetDatasetTree();
         const searchParams: string[] = decodeURIComponent(
-            this._window.location.search,
+            this.w.location.search,
         ).split("&type=");
         const searchPageParams: string[] = decodeURIComponent(
-            this._window.location.search,
+            this.w.location.search,
         ).split("&p=");
         let page = 1;
         if (searchPageParams[1]) {
@@ -647,7 +534,6 @@ const language = 'typescript';
                 this.onSearchDataForDataset();
             }
             if (type === DatasetViewTypeEnum.metadata) {
-                this.currentPage = page;
                 this.onSearchMetadata(page);
             }
             if (type === DatasetViewTypeEnum.history) {
@@ -664,7 +550,7 @@ const language = 'typescript';
 
     private getDatasetId(): string {
         const searchParams: string[] = decodeURIComponent(
-            this._window.location.search,
+            this.w.location.search,
         ).split("?id=");
 
         if (searchParams.length > 1) {
@@ -693,8 +579,8 @@ const language = 'typescript';
     }
 
     ngOnDestroy() {
-        if (this.appDatasetService.onSearchLinageDatasetSubscribtion) {
-            this.appDatasetService.onSearchLinageDatasetSubscribtion.unsubscribe();
+        if (this.appDatasetService.onSearchLineageDatasetSubscription) {
+            this.appDatasetService.onSearchLineageDatasetSubscription.unsubscribe();
         }
     }
 }

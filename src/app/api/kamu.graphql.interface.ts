@@ -831,71 +831,11 @@ export type GetDatasetHistoryQuery = {
                           blocks: {
                               __typename?: "MetadataBlockConnection";
                               totalCount?: number | null | undefined;
-                              nodes: Array<{
-                                  __typename?: "MetadataBlockExtended";
-                                  blockHash: any;
-                                  prevBlockHash?: any | null | undefined;
-                                  systemTime: any;
-                                  author:
-                                      | {
-                                            __typename: "Organization";
-                                            id: any;
-                                            name: string;
-                                        }
-                                      | {
-                                            __typename: "User";
-                                            id: any;
-                                            name: string;
-                                        };
-                                  event:
-                                      | {
-                                            __typename: "AddData";
-                                            addedOutputData: {
-                                                __typename?: "DataSlice";
-                                                logicalHash: any;
-                                                physicalHash: any;
-                                                interval: {
-                                                    __typename?: "OffsetInterval";
-                                                    start: number;
-                                                    end: number;
-                                                };
-                                            };
-                                        }
-                                      | {
-                                            __typename: "ExecuteQuery";
-                                            queryOutputData?:
-                                                | {
-                                                      __typename?: "DataSlice";
-                                                      logicalHash: any;
-                                                      physicalHash: any;
-                                                      interval: {
-                                                          __typename?: "OffsetInterval";
-                                                          start: number;
-                                                          end: number;
-                                                      };
-                                                  }
-                                                | null
-                                                | undefined;
-                                        }
-                                      | {
-                                            __typename: "Seed";
-                                            datasetId: any;
-                                            datasetKind: DatasetKind;
-                                        }
-                                      | { __typename: "SetAttachments" }
-                                      | { __typename: "SetInfo" }
-                                      | {
-                                            __typename: "SetLicense";
-                                            name: string;
-                                        }
-                                      | { __typename: "SetPollingSource" }
-                                      | { __typename: "SetTransform" }
-                                      | { __typename: "SetVocab" }
-                                      | {
-                                            __typename: "SetWatermark";
-                                            outputWatermark: any;
-                                        };
-                              }>;
+                              nodes: Array<
+                                  {
+                                      __typename?: "MetadataBlockExtended";
+                                  } & MetadataBlockFragment
+                              >;
                               pageInfo: {
                                   __typename?: "PageBasedInfo";
                                   hasNextPage: boolean;
@@ -930,204 +870,86 @@ export type GetDatasetLineageQuery = {
     datasets: {
         __typename?: "Datasets";
         byId?:
-            | {
+            | ({
                   __typename?: "Dataset";
-                  id: any;
-                  kind: DatasetKind;
-                  name: any;
                   metadata: {
                       __typename?: "DatasetMetadata";
-                      currentUpstreamDependencies: Array<{
-                          __typename?: "Dataset";
-                          id: any;
-                          kind: DatasetKind;
-                          name: any;
-                          metadata: {
-                              __typename?: "DatasetMetadata";
-                              currentUpstreamDependencies: Array<{
-                                  __typename?: "Dataset";
-                                  id: any;
-                                  kind: DatasetKind;
-                                  name: any;
-                                  metadata: {
-                                      __typename?: "DatasetMetadata";
-                                      currentUpstreamDependencies: Array<{
+                      currentUpstreamDependencies: Array<
+                          {
+                              __typename?: "Dataset";
+                              metadata: {
+                                  __typename?: "DatasetMetadata";
+                                  currentUpstreamDependencies: Array<
+                                      {
                                           __typename?: "Dataset";
-                                          id: any;
-                                          kind: DatasetKind;
-                                          name: any;
                                           metadata: {
                                               __typename?: "DatasetMetadata";
-                                              currentUpstreamDependencies: Array<{
-                                                  __typename?: "Dataset";
-                                                  id: any;
-                                                  kind: DatasetKind;
-                                                  name: any;
-                                                  metadata: {
-                                                      __typename?: "DatasetMetadata";
-                                                      currentUpstreamDependencies: Array<{
-                                                          __typename?: "Dataset";
-                                                          id: any;
-                                                          kind: DatasetKind;
-                                                          name: any;
-                                                          owner:
-                                                              | {
-                                                                    __typename?: "Organization";
-                                                                    id: any;
-                                                                    name: string;
-                                                                }
-                                                              | {
-                                                                    __typename?: "User";
-                                                                    id: any;
-                                                                    name: string;
-                                                                };
-                                                      }>;
-                                                  };
-                                                  owner:
-                                                      | {
-                                                            __typename?: "Organization";
-                                                            id: any;
-                                                            name: string;
-                                                        }
-                                                      | {
-                                                            __typename?: "User";
-                                                            id: any;
-                                                            name: string;
-                                                        };
-                                              }>;
+                                              currentUpstreamDependencies: Array<
+                                                  {
+                                                      __typename?: "Dataset";
+                                                      metadata: {
+                                                          __typename?: "DatasetMetadata";
+                                                          currentUpstreamDependencies: Array<
+                                                              {
+                                                                  __typename?: "Dataset";
+                                                                  metadata: {
+                                                                      __typename?: "DatasetMetadata";
+                                                                      currentUpstreamDependencies: Array<
+                                                                          {
+                                                                              __typename?: "Dataset";
+                                                                          } & LineageDatasetInfoFragment
+                                                                      >;
+                                                                  };
+                                                              } & LineageDatasetInfoFragment
+                                                          >;
+                                                      };
+                                                  } & LineageDatasetInfoFragment
+                                              >;
                                           };
-                                          owner:
-                                              | {
-                                                    __typename?: "Organization";
-                                                    id: any;
-                                                    name: string;
-                                                }
-                                              | {
-                                                    __typename?: "User";
-                                                    id: any;
-                                                    name: string;
-                                                };
-                                      }>;
-                                  };
-                                  owner:
-                                      | {
-                                            __typename?: "Organization";
-                                            id: any;
-                                            name: string;
-                                        }
-                                      | {
-                                            __typename?: "User";
-                                            id: any;
-                                            name: string;
-                                        };
-                              }>;
-                          };
-                          owner:
-                              | {
-                                    __typename?: "Organization";
-                                    id: any;
-                                    name: string;
-                                }
-                              | { __typename?: "User"; id: any; name: string };
-                      }>;
-                      currentDownstreamDependencies: Array<{
-                          __typename?: "Dataset";
-                          id: any;
-                          kind: DatasetKind;
-                          name: any;
-                          metadata: {
-                              __typename?: "DatasetMetadata";
-                              currentDownstreamDependencies: Array<{
-                                  __typename?: "Dataset";
-                                  id: any;
-                                  kind: DatasetKind;
-                                  name: any;
-                                  metadata: {
-                                      __typename?: "DatasetMetadata";
-                                      currentDownstreamDependencies: Array<{
+                                      } & LineageDatasetInfoFragment
+                                  >;
+                              };
+                          } & LineageDatasetInfoFragment
+                      >;
+                      currentDownstreamDependencies: Array<
+                          {
+                              __typename?: "Dataset";
+                              metadata: {
+                                  __typename?: "DatasetMetadata";
+                                  currentDownstreamDependencies: Array<
+                                      {
                                           __typename?: "Dataset";
-                                          id: any;
-                                          kind: DatasetKind;
-                                          name: any;
                                           metadata: {
                                               __typename?: "DatasetMetadata";
-                                              currentDownstreamDependencies: Array<{
-                                                  __typename?: "Dataset";
-                                                  id: any;
-                                                  kind: DatasetKind;
-                                                  name: any;
-                                                  metadata: {
-                                                      __typename?: "DatasetMetadata";
-                                                      currentDownstreamDependencies: Array<{
-                                                          __typename?: "Dataset";
-                                                          id: any;
-                                                          kind: DatasetKind;
-                                                          name: any;
-                                                          owner:
-                                                              | {
-                                                                    __typename?: "Organization";
-                                                                    id: any;
-                                                                    name: string;
-                                                                }
-                                                              | {
-                                                                    __typename?: "User";
-                                                                    id: any;
-                                                                    name: string;
-                                                                };
-                                                      }>;
-                                                  };
-                                                  owner:
-                                                      | {
-                                                            __typename?: "Organization";
-                                                            id: any;
-                                                            name: string;
-                                                        }
-                                                      | {
-                                                            __typename?: "User";
-                                                            id: any;
-                                                            name: string;
-                                                        };
-                                              }>;
+                                              currentDownstreamDependencies: Array<
+                                                  {
+                                                      __typename?: "Dataset";
+                                                      metadata: {
+                                                          __typename?: "DatasetMetadata";
+                                                          currentDownstreamDependencies: Array<
+                                                              {
+                                                                  __typename?: "Dataset";
+                                                                  metadata: {
+                                                                      __typename?: "DatasetMetadata";
+                                                                      currentDownstreamDependencies: Array<
+                                                                          {
+                                                                              __typename?: "Dataset";
+                                                                          } & LineageDatasetInfoFragment
+                                                                      >;
+                                                                  };
+                                                              } & LineageDatasetInfoFragment
+                                                          >;
+                                                      };
+                                                  } & LineageDatasetInfoFragment
+                                              >;
                                           };
-                                          owner:
-                                              | {
-                                                    __typename?: "Organization";
-                                                    id: any;
-                                                    name: string;
-                                                }
-                                              | {
-                                                    __typename?: "User";
-                                                    id: any;
-                                                    name: string;
-                                                };
-                                      }>;
-                                  };
-                                  owner:
-                                      | {
-                                            __typename?: "Organization";
-                                            id: any;
-                                            name: string;
-                                        }
-                                      | {
-                                            __typename?: "User";
-                                            id: any;
-                                            name: string;
-                                        };
-                              }>;
-                          };
-                          owner:
-                              | {
-                                    __typename?: "Organization";
-                                    id: any;
-                                    name: string;
-                                }
-                              | { __typename?: "User"; id: any; name: string };
-                      }>;
+                                      } & LineageDatasetInfoFragment
+                                  >;
+                              };
+                          } & LineageDatasetInfoFragment
+                      >;
                   };
-                  owner:
-                      | { __typename?: "Organization"; id: any; name: string }
-                      | { __typename?: "User"; id: any; name: string };
-              }
+              } & LineageDatasetInfoFragment)
             | null
             | undefined;
     };
@@ -1211,13 +1033,7 @@ export type GetDatasetMetadataSchemaQuery = {
                           | null
                           | undefined;
                       currentLicense?:
-                          | {
-                                __typename?: "SetLicense";
-                                shortName: string;
-                                name: string;
-                                spdxId?: string | null | undefined;
-                                websiteUrl: string;
-                            }
+                          | ({ __typename?: "SetLicense" } & LicenseFragment)
                           | null
                           | undefined;
                   };
@@ -1257,13 +1073,7 @@ export type DatasetOverviewQuery = {
                           keywords?: Array<string> | null | undefined;
                       };
                       currentLicense?:
-                          | {
-                                __typename?: "SetLicense";
-                                shortName: string;
-                                name: string;
-                                spdxId?: string | null | undefined;
-                                websiteUrl: string;
-                            }
+                          | ({ __typename?: "SetLicense" } & LicenseFragment)
                           | null
                           | undefined;
                       currentSchema: {
@@ -1276,71 +1086,11 @@ export type DatasetOverviewQuery = {
                           blocks: {
                               __typename?: "MetadataBlockConnection";
                               totalCount?: number | null | undefined;
-                              nodes: Array<{
-                                  __typename?: "MetadataBlockExtended";
-                                  blockHash: any;
-                                  prevBlockHash?: any | null | undefined;
-                                  systemTime: any;
-                                  author:
-                                      | {
-                                            __typename: "Organization";
-                                            id: any;
-                                            name: string;
-                                        }
-                                      | {
-                                            __typename: "User";
-                                            id: any;
-                                            name: string;
-                                        };
-                                  event:
-                                      | {
-                                            __typename: "AddData";
-                                            addedOutputData: {
-                                                __typename?: "DataSlice";
-                                                logicalHash: any;
-                                                physicalHash: any;
-                                                interval: {
-                                                    __typename?: "OffsetInterval";
-                                                    start: number;
-                                                    end: number;
-                                                };
-                                            };
-                                        }
-                                      | {
-                                            __typename: "ExecuteQuery";
-                                            queryOutputData?:
-                                                | {
-                                                      __typename?: "DataSlice";
-                                                      logicalHash: any;
-                                                      physicalHash: any;
-                                                      interval: {
-                                                          __typename?: "OffsetInterval";
-                                                          start: number;
-                                                          end: number;
-                                                      };
-                                                  }
-                                                | null
-                                                | undefined;
-                                        }
-                                      | {
-                                            __typename: "Seed";
-                                            datasetId: any;
-                                            datasetKind: DatasetKind;
-                                        }
-                                      | { __typename: "SetAttachments" }
-                                      | { __typename: "SetInfo" }
-                                      | {
-                                            __typename: "SetLicense";
-                                            name: string;
-                                        }
-                                      | { __typename: "SetPollingSource" }
-                                      | { __typename: "SetTransform" }
-                                      | { __typename: "SetVocab" }
-                                      | {
-                                            __typename: "SetWatermark";
-                                            outputWatermark: any;
-                                        };
-                              }>;
+                              nodes: Array<
+                                  {
+                                      __typename?: "MetadataBlockExtended";
+                                  } & MetadataBlockFragment
+                              >;
                           };
                       };
                   };
@@ -1477,13 +1227,7 @@ export type SearchDatasetsOverviewQuery = {
                         keywords?: Array<string> | null | undefined;
                     };
                     currentLicense?:
-                        | {
-                              __typename?: "SetLicense";
-                              shortName: string;
-                              name: string;
-                              spdxId?: string | null | undefined;
-                              websiteUrl: string;
-                          }
+                        | ({ __typename?: "SetLicense" } & LicenseFragment)
                         | null
                         | undefined;
                     currentDownstreamDependencies: Array<{

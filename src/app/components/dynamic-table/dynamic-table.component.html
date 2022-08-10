@@ -1,12 +1,12 @@
 <div
     class="d-flex flex-column flex-md-row justify-content-between pb-3 position-relative"
-    *ngIf="isResultQuantity"
+    *ngIf="hasResultQuantity"
 >
     <h2 class="box-title align-items-center">
         {{ searchResultQuantity(tableSource) }} {{ resultUnitText }}
     </h2>
 </div>
-<div class="box-header position-relative" *ngIf="latestMetadataBlock">
+<div class="box-header position-relative" *ngIf="metadataBlockFragment">
     <div
         class="d-flex rounded-top-1 border-bottom-0 align-items-center flex-wrap"
     >
@@ -42,14 +42,14 @@
             <div class="css-truncate css-truncate-overflow color-fg-muted">
                 <a
                     class="commit-author user-mention"
-                    [title]="
-                        'View all commits by ' + latestMetadataBlock.author.name
-                    "
+                    *ngIf="authorInfo?.name"
+                    [title]="'View all commits by ' + authorInfo.name"
                     href="#todo-navigate-to-user"
-                    >{{ latestMetadataBlock.author.name }}</a
+                    >{{ authorInfo.name }}</a
                 >
                 <span class="d-none d-sm-inline mb-0 ml-3">
                     <a
+                        *ngIf="metadataBlockFragment?.event"
                         data-pjax="true"
                         data-test-selector="commit-tease-commit-message"
                         title="Styles was changed"
@@ -57,7 +57,7 @@
                         href="#todo-navigate-to-block"
                         >{{
                             dataHelpers.descriptionForMetadataBlock(
-                                latestMetadataBlock
+                                metadataBlockFragment
                             )
                         }}</a
                     >
@@ -76,6 +76,7 @@
                 </button>
             </span>
             <div
+                *ngIf="metadataBlockFragment"
                 class="d-flex flex-auto justify-content-end ml-3 align-items-baseline"
             >
                 <a
@@ -83,22 +84,16 @@
                     class="f6 link--secondary text-mono ml-2 d-none d-lg-inline"
                     data-pjax="#repo-content-pjax-container"
                 >
-                    {{ dataHelpers.shortHash(latestMetadataBlock.blockHash) }}
+                    {{ dataHelpers.shortHash(blockHash) }}
                 </a>
                 <a
                     href="#todo-navigate-to-block"
                     class="link--secondary ml-3"
                     data-pjax="#repo-content-pjax-container"
                 >
-                    <time
-                        class="no-wrap"
-                        [title]="latestMetadataBlock.systemTime"
-                        >{{
-                            dataHelpers.relativeTime(
-                                latestMetadataBlock.systemTime
-                            )
-                        }}</time
-                    >
+                    <time class="no-wrap" [title]="systemTime">{{
+                        dataHelpers.relativeTime(systemTime)
+                    }}</time>
                 </a>
             </div>
         </div>
@@ -141,7 +136,7 @@
         </div>
     </div>
 </div>
-<div [id]="idTable" style="width: 100%; overflow: auto">
+<div [id]="idTable" style="width: 100%; overflow: auto" class="dynamic-table">
     <table mat-table [dataSource]="dataSource">
         <ng-container
             *ngFor="let disCol of displayedColumns; let colIndex = index"
@@ -153,7 +148,7 @@
             <td mat-cell *matCellDef="let element">{{ element[disCol] }}</td>
         </ng-container>
 
-        <ng-container *ngIf="isTableHeader">
+        <ng-container *ngIf="hasTableHeader">
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         </ng-container>
         <tr

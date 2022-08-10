@@ -3,6 +3,7 @@ import * as moment from "moment-timezone";
 import {
     DatasetKind,
     MetadataBlockFragment,
+    MetadataEvent,
 } from "../api/kamu.graphql.interface";
 
 @Injectable()
@@ -78,20 +79,20 @@ export class DataHelpersService {
     }
 
     public descriptionForMetadataBlock(block: MetadataBlockFragment): string {
-        const event = block.event;
+        const event: MetadataEvent = block.event as MetadataEvent;
         switch (event.__typename) {
             case "AddData":
                 return `Added ${
-                    event.addedOutputData
-                        ? event.addedOutputData.interval.end -
-                          event.addedOutputData.interval.start
+                    event.outputData
+                        ? event.outputData.interval.end -
+                          event.outputData.interval.start
                         : "0"
                 } new records`;
             case "ExecuteQuery":
                 return `Transformation produced ${
-                    event.queryOutputData
-                        ? event.queryOutputData.interval.end -
-                          event.queryOutputData.interval.start
+                    event.outputData
+                        ? event.outputData.interval.end -
+                          event.outputData.interval.start
                         : "0"
                 } new records`;
             case "Seed":
@@ -110,6 +111,9 @@ export class DataHelpersService {
                 return `License updated: ${event.name}`;
             case "SetAttachments":
                 return `Attachments updated`;
+
+            default:
+                return "";
         }
     }
 }

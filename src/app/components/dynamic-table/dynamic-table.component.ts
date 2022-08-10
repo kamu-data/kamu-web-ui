@@ -7,11 +7,17 @@ import {
     OnInit,
     Output,
     SimpleChanges,
+    ViewEncapsulation,
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+import {
+    Account,
+    MetadataBlockFragment,
+    Scalars,
+} from "src/app/api/kamu.graphql.interface";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
 import AppValues from "../../common/app.values";
+import { TableSourceInterface } from "./dynamic-table.interface";
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 const ELEMENT_DATA: any[] = [];
@@ -19,21 +25,18 @@ const ELEMENT_DATA: any[] = [];
     selector: "app-dynamic-table",
     templateUrl: "./dynamic-table.component.html",
     styleUrls: ["./dynamic-table.sass"],
+    encapsulation: ViewEncapsulation.None,
 })
 export class DynamicTableComponent
     implements OnInit, OnChanges, AfterContentInit
 {
-    @Input() public isTableHeader: boolean;
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    @Input() public tableColumns?: any[];
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    @Input() public tableSource: any[];
+    @Input() public hasTableHeader: boolean;
+    @Input() public tableSource?: TableSourceInterface;
 
-    // TODO: These should be extracted into a separate component that wraps the table
-    @Input() public latestMetadataBlock?: MetadataBlockFragment;
+    @Input() public metadataBlockFragment?: MetadataBlockFragment;
     @Input() public numBlocksTotal?: number;
 
-    @Input() public isResultQuantity?: boolean = false;
+    @Input() public hasResultQuantity?: boolean = false;
     @Input() public resultUnitText: string;
     @Input() public isClickableRow = false;
     @Input() public idTable?: string;
@@ -100,5 +103,23 @@ export class DynamicTableComponent
             return "0";
         }
         return tableSource.length.toString();
+    }
+
+    get systemTime(): Scalars["DateTime"] {
+        return this.metadataBlockFragment
+            ? this.metadataBlockFragment.systemTime
+            : "";
+    }
+
+    get authorInfo(): Account {
+        return this.metadataBlockFragment
+            ? this.metadataBlockFragment.author
+            : { id: "", name: AppValues.defaultUsername };
+    }
+
+    get blockHash(): Scalars["Multihash"] {
+        return this.metadataBlockFragment
+            ? this.metadataBlockFragment.blockHash
+            : "";
     }
 }

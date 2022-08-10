@@ -35,7 +35,11 @@
             ></app-dynamic-table>
         </ng-template>
         <div
-            *ngIf="datasetInfo && datasetInfo.kind === 'DERIVATIVE'"
+            *ngIf="
+                datasetInfo &&
+                datasetInfo.kind === 'DERIVATIVE' &&
+                datasetInfo.metadata.currentTransform
+            "
             class="mt-3"
         >
             <h2>Derivative Transformation</h2>

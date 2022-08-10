@@ -5,6 +5,7 @@ import {
 } from "../../../interface/search.interface";
 import DataTabValues from "./mock.data";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
+import { DataUpdate } from "../../datasetSubs.interface";
 
 @Component({
     selector: "app-data",
@@ -42,14 +43,10 @@ export class DataComponent implements OnInit {
         if (this.datasetName) {
             this.sqlRequestCode += `'${this.datasetName.name}'`;
         }
-        this.appDatasetSubsService.onDataQuerySchemaChanges.subscribe(
-            (schema: DataViewSchema) => {
-                this.currentSchema = schema;
-            },
-        );
         this.appDatasetSubsService.onDatasetDataChanges.subscribe(
-            (data: Object[]) => {
-                this.currentData = data;
+            (dataUpdate: DataUpdate) => {
+                this.currentData = dataUpdate.content;
+                this.currentSchema = dataUpdate.schema;
             },
         );
     }

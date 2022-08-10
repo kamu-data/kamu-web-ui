@@ -3,7 +3,7 @@ import { DataViewSchema } from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
 import { MetadataSchemaUpdate } from "../../datasetSubs.interface";
-import { PageBasedInfo } from "src/app/api/kamu.graphql.interface";
+import { Dataset, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 @Component({
@@ -11,7 +11,7 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
     templateUrl: "./metadata.component.html",
 })
 export class MetadataComponent implements OnInit {
-    @Input() public datasetInfo: any;
+    @Input() public datasetInfo: Dataset;
     @Output() public pageChangeEvent: EventEmitter<{
         currentPage: number;
         isClick: boolean;

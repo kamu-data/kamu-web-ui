@@ -11,6 +11,7 @@ import {
     Dataset,
     MetadataBlockFragment,
 } from "../../../api/kamu.graphql.interface";
+import { OverviewDataUpdate } from "../../datasetSubs.interface";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
 
 @Component({
@@ -36,8 +37,8 @@ export class OverviewComponent implements OnInit {
 
     ngOnInit(): void {
         this.appDatasetSubsService.onDatasetOverviewDataChanges.subscribe(
-            (overview: Object[]) => {
-                this.currentOverviewData = overview;
+            (overviewUpdate: OverviewDataUpdate) => {
+                this.currentOverviewData = overviewUpdate.content;
             },
         );
     }

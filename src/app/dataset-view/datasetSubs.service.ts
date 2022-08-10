@@ -1,36 +1,35 @@
-import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { Injectable } from "@angular/core";
-import { DataViewSchema } from "../interface/search.interface";
 import {
     DatasetHistoryUpdate,
+    DataUpdate,
     MetadataSchemaUpdate,
+    OverviewDataUpdate,
 } from "./datasetSubs.interface";
 @Injectable()
 export class AppDatasetSubsService {
-    private datasetOverviewDataChanges$: BehaviorSubject<Object[]> =
-        new BehaviorSubject<Object[]>([]);
-    private datasetDataChanges$: BehaviorSubject<Object[]> =
-        new BehaviorSubject<Object[]>([]);
+    private datasetOverviewDataChanges$: Subject<OverviewDataUpdate> =
+        new Subject<OverviewDataUpdate>();
+    private datasetDataChanges$: Subject<DataUpdate> =
+        new Subject<DataUpdate>();
     private datasetHistoryChanges$: Subject<DatasetHistoryUpdate> =
         new Subject<DatasetHistoryUpdate>();
-    private dataQuerySchemaChanges$: Subject<DataViewSchema> =
-        new Subject<DataViewSchema>();
     private metadataSchemaChanges$: Subject<MetadataSchemaUpdate> =
         new Subject<MetadataSchemaUpdate>();
 
-    public changeDatasetOverviewData(data: Object[]): void {
+    public changeDatasetOverviewData(data: OverviewDataUpdate): void {
         this.datasetOverviewDataChanges$.next(data);
     }
 
-    public get onDatasetOverviewDataChanges(): Observable<Object[]> {
+    public get onDatasetOverviewDataChanges(): Observable<OverviewDataUpdate> {
         return this.datasetOverviewDataChanges$.asObservable();
     }
 
-    public changeDatasetData(searchData: Object[]): void {
-        this.datasetDataChanges$.next(searchData);
+    public changeDatasetData(dataUpdate: DataUpdate): void {
+        this.datasetDataChanges$.next(dataUpdate);
     }
 
-    public get onDatasetDataChanges(): Observable<Object[]> {
+    public get onDatasetDataChanges(): Observable<DataUpdate> {
         return this.datasetDataChanges$.asObservable();
     }
 
@@ -40,14 +39,6 @@ export class AppDatasetSubsService {
 
     public get onDatasetHistoryChanges(): Observable<DatasetHistoryUpdate> {
         return this.datasetHistoryChanges$.asObservable();
-    }
-
-    public get onDataQuerySchemaChanges(): Observable<DataViewSchema> {
-        return this.dataQuerySchemaChanges$.asObservable();
-    }
-
-    public dataQuerySchemaChanges(schema: DataViewSchema): void {
-        this.dataQuerySchemaChanges$.next(schema);
     }
 
     public get onMetadataSchemaChanges(): Observable<MetadataSchemaUpdate> {

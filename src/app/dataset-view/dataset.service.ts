@@ -22,7 +22,9 @@ import { ModalService } from "../components/modal/modal.service";
 import { AppDatasetSubsService } from "./datasetSubs.service";
 import {
     DatasetHistoryUpdate,
+    DataUpdate,
     MetadataSchemaUpdate,
+    OverviewDataUpdate,
 } from "./datasetSubs.interface";
 
 @Injectable()
@@ -153,22 +155,20 @@ export class AppDatasetService {
             .getDatasetOverview({ id, page })
             .subscribe((data: DatasetOverviewQuery) => {
                 const dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
-                const content: Object[] =
-                    AppDatasetService.parseContentOfDataset(data);
                 this.searchDatasetNameChanges({
                     id: dataset.id,
                     name: dataset.name,
                     owner: dataset.owner,
                 });
-                // TODO: split searchDatasetInfoChanges Subject for Overview nd Metadata
                 this.searchDatasetInfoChanges(dataset);
 
-                this.appDatasetSubsService.changeDatasetData(content);
-
-                let schema: DataViewSchema = JSON.parse(
+                const content: Object[] =
+                    AppDatasetService.parseContentOfDataset(data);
+                const schema: DataViewSchema = JSON.parse(
                     dataset.metadata?.currentSchema.content,
                 );
-                this.appDatasetSubsService.dataQuerySchemaChanges(schema);
+                const dataUpdate: DataUpdate = { content, schema };
+                this.appDatasetSubsService.changeDatasetData(dataUpdate);
             });
     }
 
@@ -177,8 +177,6 @@ export class AppDatasetService {
             .getDatasetOverview({ id, page })
             .subscribe((data: DatasetOverviewQuery) => {
                 const dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
-                const content: Object[] =
-                    AppDatasetService.parseContentOfDataset(data);
                 this.searchDatasetNameChanges({
                     id: dataset.id,
                     name: dataset.name,
@@ -186,7 +184,12 @@ export class AppDatasetService {
                 });
                 this.searchDatasetInfoChanges(dataset);
 
-                this.appDatasetSubsService.changeDatasetOverviewData(content);
+                const content: Object[] =
+                    AppDatasetService.parseContentOfDataset(data);
+                const overviewDataUpdate: OverviewDataUpdate = { content };
+                this.appDatasetSubsService.changeDatasetOverviewData(
+                    overviewDataUpdate,
+                );
             });
     }
 
@@ -198,6 +201,12 @@ export class AppDatasetService {
         this.searchApi
             .onDatasetHistory({ id, numRecords, numPage })
             .subscribe((data: GetDatasetHistoryQuery) => {
+                this.searchDatasetNameChanges({
+                    id: data.datasets.byId?.id,
+                    name: data.datasets.byId?.name,
+                    owner: data.datasets.byId?.owner as any,
+                });
+
                 let pageInfo: PageBasedInfo = data.datasets.byId?.metadata.chain
                     .blocks.pageInfo
                     ? Object.assign(
@@ -210,12 +219,6 @@ export class AppDatasetService {
                     : Object.assign(this.defaultPageInfo, {
                           currentPage: numPage,
                       });
-
-                this.searchDatasetNameChanges({
-                    id: data.datasets.byId?.id,
-                    name: data.datasets.byId?.name,
-                    owner: data.datasets.byId?.owner as any,
-                });
                 let historyUpdate: DatasetHistoryUpdate = {
                     history:
                         (data.datasets.byId?.metadata.chain.blocks
@@ -283,13 +286,12 @@ export class AppDatasetService {
                     : "";
 
                 this.searchDatasetInfoChanges(dataset);
-                this.appDatasetSubsService.changeDatasetData(
-                    dataset.data.tail.content,
-                );
 
-                this.appDatasetSubsService.dataQuerySchemaChanges(
-                    dataset.metadata.currentSchema.content,
-                );
+                const dataUpdate: DataUpdate = {
+                    content: dataset.data.tail.content,
+                    schema: dataset.metadata.currentSchema.content,
+                };
+                this.appDatasetSubsService.changeDatasetData(dataUpdate);
             },
             (error: { message: string }) => {
                 this.modalService.error({

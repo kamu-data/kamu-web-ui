@@ -1,6 +1,10 @@
 import { Injectable } from "@angular/core";
 import * as moment from "moment-timezone";
-import { DatasetKind, MetadataBlockFragment, MetadataEvent } from "../api/kamu.graphql.interface";
+import {
+    DatasetKind,
+    MetadataBlockFragment,
+    MetadataEvent,
+} from "../api/kamu.graphql.interface";
 
 @Injectable()
 export class DataHelpersService {
@@ -78,17 +82,19 @@ export class DataHelpersService {
         const event: MetadataEvent = block.event as MetadataEvent;
         switch (event.__typename) {
             case "AddData":
-                return `Added ${event.outputData
+                return `Added ${
+                    event.outputData
                         ? event.outputData.interval.end -
-                        event.outputData.interval.start
+                          event.outputData.interval.start
                         : "0"
-                    } new records`;
+                } new records`;
             case "ExecuteQuery":
-                return `Transformation produced ${event.outputData
+                return `Transformation produced ${
+                    event.outputData
                         ? event.outputData.interval.end -
-                        event.outputData.interval.start
+                          event.outputData.interval.start
                         : "0"
-                    } new records`;
+                } new records`;
             case "Seed":
                 return `Dataset initialized`;
             case "SetTransform":

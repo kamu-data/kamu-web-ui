@@ -1,7 +1,7 @@
 import { Component, Input } from "@angular/core";
 import AppValues from "../../common/app.values";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
-import {PaginationInfoInterface} from "../../dataset-view/dataset-view.interface";
+import { PaginationInfoInterface } from "../../dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-timeline",

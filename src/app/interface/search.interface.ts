@@ -1,9 +1,11 @@
 import {
+    Account,
     DatasetKind,
-    DatasetMetadata, PageBasedInfo, Scalars,
+    DatasetMetadata,
+    PageBasedInfo,
+    Scalars,
 } from "../api/kamu.graphql.interface";
 import Maybe from "graphql/tsutils/Maybe";
-
 
 export interface SearchHistoryInterface {
     province: string;
@@ -12,6 +14,7 @@ export interface SearchHistoryInterface {
     total_daily: number;
 }
 
+// Should be refactoring
 export interface SearchOverviewDatasetsInterface {
     id: string;
     name: string;
@@ -22,10 +25,7 @@ export interface SearchOverviewDatasetsInterface {
     lastUpdatedAt: string;
 }
 
-export interface Account {
-    id: string;
-    name: string;
-}
+// Should be refactoring
 export interface SearchOverviewInterface {
     dataset: SearchOverviewDatasetsInterface[];
     totalCount: Maybe<Scalars["Int"]>;
@@ -38,7 +38,6 @@ export interface DatasetKindInterface {
     name: string;
     kind: DatasetKind;
 }
-
 
 export interface DatasetIDsInterface {
     id: string;

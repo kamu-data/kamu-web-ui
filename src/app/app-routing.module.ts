@@ -29,7 +29,7 @@ const routes: Routes = [
     },
     {
         path: ":username/dataset-view/:id",
-        component: DatasetComponent
+        component: DatasetComponent,
     },
     {
         path: ":username",

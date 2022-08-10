@@ -6,7 +6,7 @@ import {
     Output,
     SimpleChanges,
 } from "@angular/core";
-import {PaginationInfoInterface} from "../../dataset-view/dataset-view.interface";
+import { PaginationInfoInterface } from "../../dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-pagination",

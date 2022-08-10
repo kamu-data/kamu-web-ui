@@ -3,19 +3,27 @@ import { Observable, Subject, Subscription } from "rxjs";
 import { SearchApi } from "../api/search.api";
 import {
     DatasetKindInterface,
-    DatasetNameInterface, SearchHistoryInterface,
+    DatasetNameInterface,
+    SearchHistoryInterface,
 } from "../interface/search.interface";
 import {
     DataQueries,
-    DataSchema, Dataset,
-    DatasetKind, DatasetOverviewQuery,
-    Datasets, GetDatasetDataSqlRunQuery, GetDatasetHistoryQuery,
-    GetDatasetLineageQuery, GetDatasetMetadataSchemaQuery, MetadataBlockFragment, PageBasedInfo,
+    DataSchema,
+    Dataset,
+    DatasetKind,
+    DatasetOverviewQuery,
+    Datasets,
+    GetDatasetDataSqlRunQuery,
+    GetDatasetHistoryQuery,
+    GetDatasetLineageQuery,
+    GetDatasetMetadataSchemaQuery,
+    MetadataBlockFragment,
+    PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { ModalService } from "../components/modal/modal.service";
-import {AppDatasetSubsService} from "./datasetSubs.service";
-import {PaginationInfoInterface} from "./dataset-view.interface";
+import { AppDatasetSubsService } from "./datasetSubs.service";
+import { PaginationInfoInterface } from "./dataset-view.interface";
 import * as _ from "lodash";
 
 @Injectable()
@@ -25,7 +33,7 @@ export class AppDatasetService {
     constructor(
         private searchApi: SearchApi,
         private modalService: ModalService,
-        private appDatasetSubsService: AppDatasetSubsService
+        private appDatasetSubsService: AppDatasetSubsService,
     ) {}
 
     public get onSearchDatasetInfoChanges(): Observable<Dataset> {
@@ -72,7 +80,8 @@ export class AppDatasetService {
         DatasetKindInterface[]
     >();
     private searchChanges$: Subject<string> = new Subject<string>();
-    private searchDatasetInfoChanges$: Subject<Dataset> = new Subject<Dataset>();
+    private searchDatasetInfoChanges$: Subject<Dataset> =
+        new Subject<Dataset>();
     private datasetPageInfoChanges$: Subject<PaginationInfoInterface> =
         new Subject<PaginationInfoInterface>();
     private searchDatasetNameChanges$: Subject<DatasetNameInterface> =
@@ -85,25 +94,23 @@ export class AppDatasetService {
     private datasetTree: DatasetKindInterface[][] = [];
     private datasetKindInfo: DatasetKindInterface[] = [];
 
-
-    private static parseContentOfDataset(data: DatasetOverviewQuery): SearchHistoryInterface[] {
+    private static parseContentOfDataset(
+        data: DatasetOverviewQuery,
+    ): SearchHistoryInterface[] {
         return data.datasets.byId
-            ? JSON.parse(
-                data.datasets?.byId?.data.tail.data.content,
-            ) : [];
+            ? JSON.parse(data.datasets?.byId?.data.tail.data.content)
+            : [];
     }
     public get defaultPageInfo(): PageBasedInfo {
         return {
             hasNextPage: false,
             hasPreviousPage: false,
             totalPages: 1,
-            currentPage: 1
+            currentPage: 1,
         };
     }
 
-    public searchDatasetInfoChanges(
-        searchDatasetInfo: Dataset,
-    ): void {
+    public searchDatasetInfoChanges(searchDatasetInfo: Dataset): void {
         this.searchDatasetInfoChanges$.next(searchDatasetInfo);
     }
 
@@ -165,8 +172,11 @@ export class AppDatasetService {
             .getDatasetOverview({ id, page })
             .subscribe((data: DatasetOverviewQuery | undefined) => {
                 if (!_.isNil(data)) {
-                    const dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
-                    const content: SearchHistoryInterface[] = AppDatasetService.parseContentOfDataset(data);
+                    const dataset: Dataset = AppValues.deepCopy(
+                        data.datasets.byId,
+                    );
+                    const content: SearchHistoryInterface[] =
+                        AppDatasetService.parseContentOfDataset(data);
                     this.searchDatasetNameChanges({
                         id: dataset.id,
                         name: dataset.name,
@@ -189,8 +199,11 @@ export class AppDatasetService {
             .getDatasetOverview({ id, page })
             .subscribe((data: DatasetOverviewQuery | undefined) => {
                 if (!_.isNil(data)) {
-                    const dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
-                    const content: SearchHistoryInterface[] = AppDatasetService.parseContentOfDataset(data);
+                    const dataset: Dataset = AppValues.deepCopy(
+                        data.datasets.byId,
+                    );
+                    const content: SearchHistoryInterface[] =
+                        AppDatasetService.parseContentOfDataset(data);
                     this.searchDatasetNameChanges({
                         id: dataset.id,
                         name: dataset.name,
@@ -209,25 +222,28 @@ export class AppDatasetService {
         numPage: number,
     ): void {
         this.searchApi
-            .onDatasetHistory({id, numRecords, numPage})
+            .onDatasetHistory({ id, numRecords, numPage })
             .subscribe((data: GetDatasetHistoryQuery | undefined) => {
-                let pageInfo: PaginationInfoInterface = Object.assign(this.defaultPageInfo, {
-                    page: numPage,
-                });
+                let pageInfo: PaginationInfoInterface = Object.assign(
+                    this.defaultPageInfo,
+                    {
+                        page: numPage,
+                    },
+                );
 
                 if (!_.isNil(data)) {
                     pageInfo = data.datasets.byId?.metadata.chain.blocks
                         .pageInfo
                         ? Object.assign(
-                            AppValues.deepCopy(
-                                data.datasets.byId?.metadata.chain.blocks
-                                    .pageInfo,
-                            ),
-                            {page: numPage},
-                        )
+                              AppValues.deepCopy(
+                                  data.datasets.byId?.metadata.chain.blocks
+                                      .pageInfo,
+                              ),
+                              { page: numPage },
+                          )
                         : Object.assign(this.defaultPageInfo, {
-                            page: numPage,
-                        });
+                              page: numPage,
+                          });
 
                     this.searchDatasetNameChanges({
                         id: data.datasets.byId?.id,
@@ -235,8 +251,8 @@ export class AppDatasetService {
                         owner: data.datasets.byId?.owner as any,
                     });
                     this.appDatasetSubsService.changeDatasetHistory(
-                        (data.datasets.byId?.metadata.chain.blocks.nodes as MetadataBlockFragment[])
-                        || []
+                        (data.datasets.byId?.metadata.chain.blocks
+                            .nodes as MetadataBlockFragment[]) || [],
                     );
                 } else {
                     this.appDatasetSubsService.changeDatasetHistory([]);
@@ -263,7 +279,9 @@ export class AppDatasetService {
                     );
                     this.searchDatasetInfoChanges(dataset);
                     // @ts-ignore
-                    this.appDatasetSubsService.changeDatasetMetadata(dataset.metadata.chain.blocks.nodes);
+                    this.appDatasetSubsService.changeDatasetMetadata(
+                        dataset.metadata.chain.blocks.nodes,
+                    );
                 }
             });
     }
@@ -290,12 +308,15 @@ export class AppDatasetService {
                     dataset.data.tail.content = data.data?.query.data
                         ? JSON.parse(data.data?.query.data.content)
                         : "";
-                    dataset.metadata.currentSchema.content = data.data.query.schema
+                    dataset.metadata.currentSchema.content = data.data.query
+                        .schema
                         ? JSON.parse(data.data.query.schema.content)
                         : "";
 
                     this.searchDatasetInfoChanges(dataset);
-                    this.appDatasetSubsService.changeDatasetData(dataset.data.tail.content);
+                    this.appDatasetSubsService.changeDatasetData(
+                        dataset.data.tail.content,
+                    );
                     this.datasetSchemaChanges(
                         data.data.query.schema as DataSchema,
                     );

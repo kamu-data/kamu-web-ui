@@ -16,13 +16,15 @@ import {
     SearchOverviewInterface,
 } from "../interface/search.interface";
 import AppValues from "../common/app.values";
-import {
-    SearchAdditionalHeaderButtonInterface,
-} from "../components/search-additional-buttons/search-additional-buttons.interface";
+import { SearchAdditionalHeaderButtonInterface } from "../components/search-additional-buttons/search-additional-buttons.interface";
 import { MatSidenav } from "@angular/material/sidenav";
 import { SideNavService } from "../services/sidenav.service";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
-import {DatasetViewContentInterface, DatasetViewTypeEnum, PaginationInfoInterface} from "./dataset-view.interface";
+import {
+    DatasetViewContentInterface,
+    DatasetViewTypeEnum,
+    PaginationInfoInterface,
+} from "./dataset-view.interface";
 import { AppDatasetService } from "./dataset.service";
 import { NavigationEnd, Router } from "@angular/router";
 import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
@@ -31,11 +33,13 @@ import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import {
-    DataSchema, Dataset,
-    DatasetKind, MetadataBlockFragment,
+    DataSchema,
+    Dataset,
+    DatasetKind,
+    MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
 import { DataHelpersService } from "../services/datahelpers.service";
-import {AppDatasetSubsService} from "./datasetSubs.service";
+import { AppDatasetSubsService } from "./datasetSubs.service";
 
 @Component({
     selector: "app-dataset",
@@ -146,7 +150,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         private modalService: ModalService,
         private clipboard: Clipboard,
         private dataHelpers: DataHelpersService,
-        private appDatasetSubsService: AppDatasetSubsService
+        private appDatasetSubsService: AppDatasetSubsService,
     ) {
         this.w = window;
     }
@@ -230,15 +234,19 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
 
         /* eslint-disable  @typescript-eslint/no-explicit-any */
 
-        this.appDatasetSubsService.onDatasetOverviewChanges.subscribe((overview: SearchHistoryInterface[]) => {
-            this.tableData.datasetOverviewSource = overview;
-            this.searchOverviewDatasets = overview;
-        });
+        this.appDatasetSubsService.onDatasetOverviewChanges.subscribe(
+            (overview: SearchHistoryInterface[]) => {
+                this.tableData.datasetOverviewSource = overview;
+                this.searchOverviewDatasets = overview;
+            },
+        );
 
-        this.appDatasetSubsService.onDatasetDataChanges.subscribe((history: SearchHistoryInterface[]) => {
-            this.tableData.datasetDataSource = history;
-            this.searchDataDatasets = history;
-        });
+        this.appDatasetSubsService.onDatasetDataChanges.subscribe(
+            (history: SearchHistoryInterface[]) => {
+                this.tableData.datasetDataSource = history;
+                this.searchDataDatasets = history;
+            },
+        );
 
         this.appDatasetSubsService.onDatasetHistoryChanges.subscribe(
             (history: MetadataBlockFragment[]) => {
@@ -504,7 +512,8 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
 
                 this.isAvailableLinageGraph = edges.length !== 0;
 
-                const uniqueDatasets: { [id: string]: DatasetKindInterface } = {};
+                const uniqueDatasets: { [id: string]: DatasetKindInterface } =
+                    {};
                 edges.forEach((edge: DatasetKindInterface[]) =>
                     edge.forEach((dataset: DatasetKindInterface) => {
                         uniqueDatasets[dataset.id] = dataset;

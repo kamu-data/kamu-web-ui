@@ -26,11 +26,11 @@ import {
     PageBasedInfo,
     SearchDatasetsAutocompleteQuery,
     GetDatasetMetadataSchemaQuery,
+    Dataset,
 } from "./kamu.graphql.interface";
 
 @Injectable()
 export class SearchApi {
-
     constructor(
         private apollo: Apollo,
         private datasetOverviewGQL: DatasetOverviewGQL,
@@ -85,26 +85,30 @@ export class SearchApi {
         return this.searchDatasetsAutocompleteGQL
             .watch({ query: id, perPage: 10 })
             .valueChanges.pipe(
-                map((result: ApolloQueryResult<SearchDatasetsAutocompleteQuery>) => {
-                    let nodesList: DatasetIDsInterface[] = [];
-                    if ( result.data ) {
-                        nodesList = result.data.search.query.nodes.map(
-                            (node) => ({
-                                name: node.name,
-                                id: node.id,
-                                __typename: node.__typename as TypeNames,
-                            }),
-                        );
-                        // Add dummy result that opens search view
-                        nodesList.unshift({
-                            __typename: TypeNames.allDataType,
-                            id,
-                            name: id,
-                        });
-                    }
+                map(
+                    (
+                        result: ApolloQueryResult<SearchDatasetsAutocompleteQuery>,
+                    ) => {
+                        let nodesList: DatasetIDsInterface[] = [];
+                        if (result.data) {
+                            nodesList = result.data.search.query.nodes.map(
+                                (node) => ({
+                                    name: node.name,
+                                    id: node.id,
+                                    __typename: node.__typename as TypeNames,
+                                }),
+                            );
+                            // Add dummy result that opens search view
+                            nodesList.unshift({
+                                __typename: TypeNames.allDataType,
+                                id,
+                                name: id,
+                            });
+                        }
 
-                    return nodesList;
-                }),
+                        return nodesList;
+                    },
+                ),
             );
     }
 
@@ -195,7 +199,9 @@ export class SearchApi {
             );
     }
 
-    public getDatasetLineage(params: { id: string; }): Observable<GetDatasetLineageQuery | undefined> {
+    public getDatasetLineage(params: {
+        id: string;
+    }): Observable<GetDatasetLineageQuery | undefined> {
         return this.getDatasetLineageGQL
             .watch({
                 datasetId: params.id,
@@ -205,21 +211,5 @@ export class SearchApi {
                     return result.data;
                 }),
             );
-    }
-
-    // tslint:disable-next-line: no-any
-    public clearlyData(edge: any): any {
-        const object = edge;
-        const value = "typename";
-        const nodeKeys: string[] = Object.keys(object).filter(
-            (key) => !key.includes(value),
-        );
-        const d = Object();
-
-        nodeKeys.forEach((nodeKey: string) => {
-            d[nodeKey] = (edge as any)[nodeKey];
-        });
-
-        return d;
     }
 }

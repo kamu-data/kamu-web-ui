@@ -41,15 +41,15 @@
         <div class="flex-grow-1 d-flex align-items-center ml-3 min-width-0">
             <div class="css-truncate css-truncate-overflow color-fg-muted">
                 <a
-                    class="commit-author user-mention" *ngIf="authorInfo?.name"
-                    [title]="
-                        'View all commits by ' + authorInfo.name
-                    "
+                    class="commit-author user-mention"
+                    *ngIf="authorInfo?.name"
+                    [title]="'View all commits by ' + authorInfo.name"
                     href="#todo-navigate-to-user"
                     >{{ authorInfo.name }}</a
                 >
                 <span class="d-none d-sm-inline mb-0 ml-3">
-                    <a *ngIf="metadataBlockFragment?.event"
+                    <a
+                        *ngIf="metadataBlockFragment?.event"
                         data-pjax="true"
                         data-test-selector="commit-tease-commit-message"
                         title="Styles was changed"
@@ -76,7 +76,7 @@
                 </button>
             </span>
             <div
-                    *ngIf="metadataBlockFragment"
+                *ngIf="metadataBlockFragment"
                 class="d-flex flex-auto justify-content-end ml-3 align-items-baseline"
             >
                 <a
@@ -91,15 +91,9 @@
                     class="link--secondary ml-3"
                     data-pjax="#repo-content-pjax-container"
                 >
-                    <time
-                        class="no-wrap"
-                        [title]="systemTime"
-                        >{{
-                            dataHelpers.relativeTime(
-                                systemTime
-                            )
-                        }}</time
-                    >
+                    <time class="no-wrap" [title]="systemTime">{{
+                        dataHelpers.relativeTime(systemTime)
+                    }}</time>
                 </a>
             </div>
         </div>

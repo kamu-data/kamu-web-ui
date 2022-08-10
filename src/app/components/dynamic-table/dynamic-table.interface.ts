@@ -1,7 +1,10 @@
 import {
     DataSchemaField,
     SearchHistoryInterface,
-    SearchOverviewDatasetsInterface
+    SearchOverviewDatasetsInterface,
 } from "../../interface/search.interface";
 
-export type TableSourceInterface = SearchOverviewDatasetsInterface[] | SearchHistoryInterface[] | DataSchemaField[];
+export type TableSourceInterface =
+    | SearchOverviewDatasetsInterface[]
+    | SearchHistoryInterface[]
+    | DataSchemaField[];

@@ -6,10 +6,15 @@ import {
     OnChanges,
     OnInit,
     Output,
-    SimpleChanges, ViewEncapsulation,
+    SimpleChanges,
+    ViewEncapsulation,
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import { Account, MetadataBlockFragment, Scalars } from "src/app/api/kamu.graphql.interface";
+import {
+    Account,
+    MetadataBlockFragment,
+    Scalars,
+} from "src/app/api/kamu.graphql.interface";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
 import AppValues from "../../common/app.values";
 import { TableSourceInterface } from "./dynamic-table.interface";
@@ -23,7 +28,8 @@ const ELEMENT_DATA: any[] = [];
     encapsulation: ViewEncapsulation.None,
 })
 export class DynamicTableComponent
-    implements OnInit, OnChanges, AfterContentInit {
+    implements OnInit, OnChanges, AfterContentInit
+{
     @Input() public isTableHeader: boolean;
     @Input() public tableSource?: TableSourceInterface;
 
@@ -41,7 +47,7 @@ export class DynamicTableComponent
     public dataSource = new MatTableDataSource<any>(ELEMENT_DATA);
     public displayedColumns: string[] = [];
 
-    constructor(public dataHelpers: DataHelpersService) { }
+    constructor(public dataHelpers: DataHelpersService) {}
 
     public ngOnInit(): void {
         this.tableSource && this.renderTable(this.tableSource);
@@ -100,14 +106,20 @@ export class DynamicTableComponent
     }
 
     get systemTime(): Scalars["DateTime"] {
-        return this.metadataBlockFragment ? this.metadataBlockFragment.systemTime : "";
+        return this.metadataBlockFragment
+            ? this.metadataBlockFragment.systemTime
+            : "";
     }
 
     get authorInfo(): Account {
-        return this.metadataBlockFragment ? this.metadataBlockFragment.author : { id: "", name: AppValues.defaultUsername };
+        return this.metadataBlockFragment
+            ? this.metadataBlockFragment.author
+            : { id: "", name: AppValues.defaultUsername };
     }
 
     get blockHash(): Scalars["Multihash"] {
-        return this.metadataBlockFragment ? this.metadataBlockFragment.blockHash : "";
+        return this.metadataBlockFragment
+            ? this.metadataBlockFragment.blockHash
+            : "";
     }
 }

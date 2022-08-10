@@ -17,7 +17,7 @@ import {
     ViewChild,
 } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
-import {PaginationInfoInterface} from "../dataset-view/dataset-view.interface";
+import { PaginationInfoInterface } from "../dataset-view/dataset-view.interface";
 
 export interface SearchFilters {
     name?: string;

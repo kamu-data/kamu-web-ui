@@ -1,7 +1,16 @@
-import {Component, EventEmitter, Input, Output, ViewEncapsulation} from "@angular/core";
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ViewEncapsulation,
+} from "@angular/core";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
-import {DatasetViewContentInterface} from "../../dataset-view.interface";
-import {Dataset, MetadataBlockFragment} from "../../../api/kamu.graphql.interface";
+import { DatasetViewContentInterface } from "../../dataset-view.interface";
+import {
+    Dataset,
+    MetadataBlockFragment,
+} from "../../../api/kamu.graphql.interface";
 
 @Component({
     selector: "app-overview",
@@ -31,6 +40,7 @@ export class OverviewComponent {
     }
 
     get metadataFragmentBlock(): MetadataBlockFragment {
-        return this.datasetInfo.metadata.chain.blocks.nodes[0] as MetadataBlockFragment;
+        return this.datasetInfo.metadata.chain.blocks
+            .nodes[0] as MetadataBlockFragment;
     }
 }

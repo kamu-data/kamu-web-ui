@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import {SearchResultConnection} from "../../../api/kamu.graphql.interface";
+import { SearchResultConnection } from "../../../api/kamu.graphql.interface";
 @Component({
     selector: "app-linage",
     templateUrl: "./linage-component.html",

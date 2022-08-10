@@ -1,14 +1,10 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    Output,
-} from "@angular/core";
-import {
-    DataViewSchema,
-} from "../../../interface/search.interface";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { DataViewSchema } from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
-import {DatasetViewContentInterface, PaginationInfoInterface} from "../../dataset-view.interface";
+import {
+    DatasetViewContentInterface,
+    PaginationInfoInterface,
+} from "../../dataset-view.interface";
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 @Component({

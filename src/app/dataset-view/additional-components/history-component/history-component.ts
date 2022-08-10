@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import {PaginationInfoInterface} from "../../dataset-view.interface";
+import { PaginationInfoInterface } from "../../dataset-view.interface";
 
 @Component({
     selector: "app-history",

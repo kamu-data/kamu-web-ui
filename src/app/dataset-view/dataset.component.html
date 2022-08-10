@@ -456,7 +456,6 @@
                 <app-data
                     [datasetName]="datasetName"
                     [tableData]="tableData"
-                    [currentSchema]="currentSchema"
                     (onSelectDatasetEmit)="onSelectDataset($event)"
                     (onRunSQLRequestEmit)="onRunSQLRequest($event)"
                 ></app-data>
@@ -487,7 +486,6 @@
                 <app-metadata
                     [datasetInfo]="datasetInfo"
                     [tableData]="tableData"
-                    [currentSchema]="currentSchema"
                     [currentPage]="0"
                     [pageInfo]="tableData.pageInfo"
                     (onSelectDatasetEmit)="onSelectDataset($event)"

@@ -58,9 +58,6 @@ export class AppDatasetService {
     > {
         return this.datasetTreeChanges$.asObservable();
     }
-    public get onDataSchemaChanges(): Observable<DataSchema> {
-        return this.datasetSchemaChanges$.asObservable();
-    }
 
     public get getDatasetTree(): {
         id: string;
@@ -86,8 +83,7 @@ export class AppDatasetService {
     private datasetTreeChanges$: Subject<
         [DatasetKindInterface[][], DatasetKindInterface]
     > = new Subject<[DatasetKindInterface[][], DatasetKindInterface]>();
-    private datasetSchemaChanges$: Subject<DataSchema> =
-        new Subject<DataSchema>();
+
     private datasetTree: DatasetKindInterface[][] = [];
     private datasetKindInfo: DatasetKindInterface[] = [];
 
@@ -118,9 +114,6 @@ export class AppDatasetService {
     }
     public datasetPageInfoChanges(pageInfo: PaginationInfoInterface): void {
         this.datasetPageInfoChanges$.next(pageInfo);
-    }
-    public datasetSchemaChanges(schema: DataSchema): void {
-        this.datasetSchemaChanges$.next(schema);
     }
 
     public kindInfoChanges(datasetList: DatasetKindInterface[]): void {
@@ -180,7 +173,7 @@ export class AppDatasetService {
                 this.searchDatasetInfoChanges(dataset);
 
                 this.appDatasetSubsService.changeDatasetData(content);
-                this.datasetSchemaChanges(
+                this.appDatasetSubsService.dataQuerySchemaChanges(
                     data.datasets.byId?.metadata?.currentSchema as DataSchema,
                 );
             });
@@ -255,16 +248,10 @@ export class AppDatasetService {
                     name: dataset.name,
                     owner: dataset.owner,
                 });
-                this.datasetSchemaChanges(
+                this.appDatasetSubsService.metadataSchemaChanges(
                     data.datasets.byId?.metadata?.currentSchema as DataSchema,
                 );
                 this.searchDatasetInfoChanges(dataset);
-
-                // TODO: Should be refactoring
-                this.appDatasetSubsService.changeDatasetMetadata(
-                    // @ts-ignore
-                    dataset.metadata.chain.blocks.nodes,
-                );
             });
     }
     public onGetDatasetDataSQLRun(
@@ -297,7 +284,9 @@ export class AppDatasetService {
                 this.appDatasetSubsService.changeDatasetData(
                     dataset.data.tail.content,
                 );
-                this.datasetSchemaChanges(data.data.query.schema as DataSchema);
+                this.appDatasetSubsService.dataQuerySchemaChanges(
+                    data.data.query.schema as DataSchema,
+                );
             },
             (error: { message: string }) => {
                 this.modalService.error({

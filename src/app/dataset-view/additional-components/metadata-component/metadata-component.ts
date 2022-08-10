@@ -1,19 +1,20 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DataViewSchema } from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
 import {
     TableContentInterface,
     PaginationInfoInterface,
 } from "../../dataset-view.interface";
+import { AppDatasetSubsService } from "../../datasetSubs.service";
+import { DataSchema } from "src/app/api/kamu.graphql.interface";
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 @Component({
     selector: "app-metadata",
     templateUrl: "./metadata.component.html",
 })
-export class MetadataComponent {
+export class MetadataComponent implements OnInit {
     @Input() public currentPage: number;
-    @Input() public currentSchema: DataViewSchema;
     @Input() public pageInfo: PaginationInfoInterface;
     @Input() public datasetInfo: any;
     @Input() public tableData: TableContentInterface;
@@ -41,6 +42,21 @@ export class MetadataComponent {
             enabled: false,
         },
     };
+
+    public currentSchema?: DataViewSchema;
+
+    constructor(private appDatasetSubsService: AppDatasetSubsService) {}
+
+    ngOnInit() {
+        this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
+            (schema: DataSchema) => {
+                this.currentSchema = schema
+                    ? JSON.parse(schema.content)
+                    : ({} as DataViewSchema);
+            },
+        );
+    }
+
     public selectPage(page: string) {
         this.page = parseInt(page, 10) || 1;
     }

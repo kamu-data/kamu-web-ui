@@ -1,15 +1,17 @@
 <div class="dataset-view-data-result-container">
     <div class="search-result-container__content">
         <h2 class="box-title align-items-center pb-3 m-0">Schema:</h2>
-        <app-dynamic-table
-            [isResultQuantity]="false"
-            [isClickableRow]="false"
-            [resultUnitText]="''"
-            [isTableHeader]="true"
-            [tableSource]="currentSchema.fields || []"
-            [idTable]="'schema-block-table'"
-            (onSelectDatasetEmit)="null"
-        ></app-dynamic-table>
+        <ng-template [ngIf]="currentSchema">
+            <app-dynamic-table
+                [isResultQuantity]="false"
+                [isClickableRow]="false"
+                [resultUnitText]="''"
+                [isTableHeader]="true"
+                [tableSource]="currentSchema.fields"
+                [idTable]="'schema-block-table'"
+                (onSelectDatasetEmit)="null"
+            ></app-dynamic-table>
+        </ng-template>
         <div>
             <h2 class="box-title align-items-center pb-3 pt-3 m-0">
                 Saved Queries

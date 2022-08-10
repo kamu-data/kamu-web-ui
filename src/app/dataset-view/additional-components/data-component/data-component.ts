@@ -5,6 +5,8 @@ import {
 } from "../../../interface/search.interface";
 import DataTabValues from "./mock.data";
 import { TableContentInterface } from "../../dataset-view.interface";
+import { AppDatasetSubsService } from "../../datasetSubs.service";
+import { DataSchema } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-data",
@@ -13,7 +15,6 @@ import { TableContentInterface } from "../../dataset-view.interface";
 export class DataComponent implements OnInit {
     @Input() public tableData: TableContentInterface;
     @Input() public datasetName: DatasetNameInterface;
-    @Input() public currentSchema: DataViewSchema;
     // tslint:disable-next-line:no-output-on-prefix
     @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
     // tslint:disable-next-line:no-output-on-prefix
@@ -27,6 +28,9 @@ export class DataComponent implements OnInit {
     };
     public savedQueries = DataTabValues.savedQueries;
     public sqlRequestCode: string = `select\n  *\nfrom `;
+    public currentSchema?: DataViewSchema;
+
+    constructor(private appDatasetSubsService: AppDatasetSubsService) {}
 
     public onSelectDataset(id: string): void {
         this.onSelectDatasetEmit.emit(id);
@@ -40,6 +44,13 @@ export class DataComponent implements OnInit {
         if (this.datasetName) {
             this.sqlRequestCode += `'${this.datasetName.name}'`;
         }
+        this.appDatasetSubsService.onDataQuerySchemaChanges.subscribe(
+            (schema: DataSchema) => {
+                this.currentSchema = schema
+                    ? JSON.parse(schema.content)
+                    : ({} as DataViewSchema);
+            },
+        );
     }
 
     onInitEditor(editor: any): void {

@@ -31,7 +31,6 @@ import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import {
-    DataSchema,
     Dataset,
     DatasetKind,
     MetadataBlockFragment,
@@ -53,7 +52,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
     public datasetName: DatasetNameInterface;
     public searchValue = "";
     public currentPage: number;
-    public currentSchema: DataViewSchema;
     public isMinimizeSearchAdditionalButtons = false;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.overview;
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[] =
@@ -195,14 +193,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
 
         this.prepareLinageGraph();
 
-        this.appDatasetService.onDataSchemaChanges.subscribe(
-            (schema: DataSchema) => {
-                this.currentSchema = schema
-                    ? JSON.parse(schema.content)
-                    : ({} as DataViewSchema);
-            },
-        );
-
         this.appDatasetService.onDatasetPageInfoChanges.subscribe(
             (info: PaginationInfoInterface) => {
                 this.tableData.pageInfo = info;
@@ -243,18 +233,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
         this.appDatasetSubsService.onDatasetHistoryChanges.subscribe(
             (history: MetadataBlockFragment[]) => {
                 this.tableData.datasetHistorySource = history;
-            },
-        );
-
-        this.appDatasetSubsService.onDatasetMetadataChanges.subscribe(
-            (data: SearchOverviewInterface) => {
-                if (data.dataset) {
-                    this.tableData.datasetMetadataSource = data.dataset;
-                    this.tableData.pageInfo = data.pageInfo;
-                    this.tableData.totalCount = data.totalCount as number;
-
-                    setTimeout(() => (this.currentPage = data.currentPage));
-                }
             },
         );
     }
@@ -495,7 +473,8 @@ export class DatasetComponent implements OnInit, OnDestroy {
 
                 this.isAvailableLinageGraph = edges.length !== 0;
 
-                const uniqueDatasets: { [id: string]: DatasetKindInterface } = {};
+                const uniqueDatasets: { [id: string]: DatasetKindInterface } =
+                    {};
                 edges.forEach((edge: DatasetKindInterface[]) =>
                     edge.forEach((dataset: DatasetKindInterface) => {
                         uniqueDatasets[dataset.id] = dataset;

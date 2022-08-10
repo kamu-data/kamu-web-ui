@@ -1,10 +1,13 @@
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { Injectable } from "@angular/core";
 import {
     SearchHistoryInterface,
     SearchOverviewInterface,
 } from "../interface/search.interface";
-import { MetadataBlockFragment } from "../api/kamu.graphql.interface";
+import {
+    DataSchema,
+    MetadataBlockFragment,
+} from "../api/kamu.graphql.interface";
 @Injectable()
 export class AppDatasetSubsService {
     private datasetOverviewChanges$: BehaviorSubject<SearchHistoryInterface[]> =
@@ -13,10 +16,11 @@ export class AppDatasetSubsService {
         new BehaviorSubject<SearchHistoryInterface[]>([]);
     private datasetHistoryChanges$: BehaviorSubject<MetadataBlockFragment[]> =
         new BehaviorSubject<MetadataBlockFragment[]>([]);
-    private datasetMetadataChanges$: BehaviorSubject<SearchOverviewInterface> =
-        new BehaviorSubject<SearchOverviewInterface>(
-            {} as SearchOverviewInterface,
-        );
+
+    private dataQuerySchemaChanges$: Subject<DataSchema> =
+        new Subject<DataSchema>();
+    private metadataSchemaChanges$: Subject<DataSchema> =
+        new Subject<DataSchema>();
 
     public changeDatasetOverview(searchData: SearchHistoryInterface[]): void {
         this.datasetOverviewChanges$.next(searchData);
@@ -44,11 +48,19 @@ export class AppDatasetSubsService {
         return this.datasetHistoryChanges$.asObservable();
     }
 
-    public changeDatasetMetadata(searchData: SearchOverviewInterface): void {
-        this.datasetMetadataChanges$.next(searchData);
+    public get onDataQuerySchemaChanges(): Observable<DataSchema> {
+        return this.dataQuerySchemaChanges$.asObservable();
     }
 
-    public get onDatasetMetadataChanges(): Observable<SearchOverviewInterface> {
-        return this.datasetMetadataChanges$.asObservable();
+    public dataQuerySchemaChanges(schema: DataSchema): void {
+        this.dataQuerySchemaChanges$.next(schema);
+    }
+
+    public get onMetadataSchemaChanges(): Observable<DataSchema> {
+        return this.metadataSchemaChanges$.asObservable();
+    }
+
+    public metadataSchemaChanges(schema: DataSchema): void {
+        this.metadataSchemaChanges$.next(schema);
     }
 }

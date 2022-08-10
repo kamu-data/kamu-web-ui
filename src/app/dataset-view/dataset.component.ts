@@ -23,6 +23,7 @@ import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
 import { Dataset, DatasetKind } from "../api/kamu.graphql.interface";
 import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu-component";
+import { SubSink } from "subsink";
 
 @Component({
     selector: "app-dataset",
@@ -52,6 +53,7 @@ export class DatasetComponent implements OnInit, OnDestroy {
     public markdownText = AppValues.markdownContain;
 
     private w: Window;
+    private subs: SubSink = new SubSink();
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
@@ -89,19 +91,23 @@ export class DatasetComponent implements OnInit, OnDestroy {
 
         this.prepareLinageGraph();
 
-        this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
-            (info: Dataset) => {
-                this.datasetInfo = info;
-            },
+        this.subs.add(
+            this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
+                (info: Dataset) => {
+                    this.datasetInfo = info;
+                },
+            ),
+            this.appDatasetService.onSearchDatasetNameChanges.subscribe(
+                (datasetName: DatasetNameInterface) => {
+                    this.datasetName = datasetName;
+                },
+            ),
+            this.appDatasetService.onSearchChanges.subscribe(
+                (value: string) => {
+                    this.searchValue = value;
+                },
+            ),
         );
-        this.appDatasetService.onSearchDatasetNameChanges.subscribe(
-            (datasetName: DatasetNameInterface) => {
-                this.datasetName = datasetName;
-            },
-        );
-        this.appDatasetService.onSearchChanges.subscribe((value: string) => {
-            this.searchValue = value;
-        });
 
         /* eslint-disable  @typescript-eslint/no-explicit-any */
     }
@@ -349,67 +355,73 @@ export class DatasetComponent implements OnInit, OnDestroy {
             },
         ];
 
-        this.appDatasetService.onDatasetTreeChanges.subscribe(
-            (args: [DatasetKindInterface[][], DatasetKindInterface]) => {
-                const edges = args[0];
-                const currentDataset = args[1];
+        this.subs.add(
+            this.appDatasetService.onDatasetTreeChanges.subscribe(
+                (args: [DatasetKindInterface[][], DatasetKindInterface]) => {
+                    const edges = args[0];
+                    const currentDataset = args[1];
 
-                this.initLinageGraphProperty();
+                    this.initLinageGraphProperty();
 
-                this.isAvailableLinageGraph = edges.length !== 0;
+                    this.isAvailableLinageGraph = edges.length !== 0;
 
-                const uniqueDatasets: { [id: string]: DatasetKindInterface } =
-                    {};
-                edges.forEach((edge: DatasetKindInterface[]) =>
-                    edge.forEach((dataset: DatasetKindInterface) => {
-                        uniqueDatasets[dataset.id] = dataset;
-                    }),
-                );
-
-                for (const [id, dataset] of Object.entries(uniqueDatasets)) {
-                    this.linageGraphNodes.push({
-                        id: this.sanitizeID(id),
-                        label: dataset.name,
-                        data: {
-                            id: dataset.id,
-                            name: dataset.name,
-                            kind: dataset.kind,
-                            isRoot: dataset.kind === DatasetKind.Root,
-                            isCurrent: dataset.id === currentDataset.id,
-                        },
-                    });
-                }
-
-                edges.forEach((edge: DatasetKindInterface[]) => {
-                    const source: string = this.sanitizeID(edge[0].id);
-                    const target: string = this.sanitizeID(edge[1].id);
-
-                    this.linageGraphLink.push({
-                        id: `${source}__and__${target}`,
-                        source,
-                        target,
-                    });
-                });
-            },
-        );
-
-        this.appDatasetService.onKindInfoChanges.subscribe(
-            (datasetList: DatasetKindInterface[]) => {
-                datasetList.forEach((dataset: DatasetKindInterface) => {
-                    this.linageGraphClusters = this.linageGraphClusters.map(
-                        (cluster: ClusterNode) => {
-                            if (typeof cluster.childNodeIds === "undefined") {
-                                cluster.childNodeIds = [];
-                            }
-
-                            if (cluster.label === dataset.kind) {
-                                cluster.childNodeIds.push(dataset.id);
-                            }
-                            return cluster;
-                        },
+                    const uniqueDatasets: {
+                        [id: string]: DatasetKindInterface;
+                    } = {};
+                    edges.forEach((edge: DatasetKindInterface[]) =>
+                        edge.forEach((dataset: DatasetKindInterface) => {
+                            uniqueDatasets[dataset.id] = dataset;
+                        }),
                     );
-                });
-            },
+
+                    for (const [id, dataset] of Object.entries(
+                        uniqueDatasets,
+                    )) {
+                        this.linageGraphNodes.push({
+                            id: this.sanitizeID(id),
+                            label: dataset.name,
+                            data: {
+                                id: dataset.id,
+                                name: dataset.name,
+                                kind: dataset.kind,
+                                isRoot: dataset.kind === DatasetKind.Root,
+                                isCurrent: dataset.id === currentDataset.id,
+                            },
+                        });
+                    }
+
+                    edges.forEach((edge: DatasetKindInterface[]) => {
+                        const source: string = this.sanitizeID(edge[0].id);
+                        const target: string = this.sanitizeID(edge[1].id);
+
+                        this.linageGraphLink.push({
+                            id: `${source}__and__${target}`,
+                            source,
+                            target,
+                        });
+                    });
+                },
+            ),
+            this.appDatasetService.onKindInfoChanges.subscribe(
+                (datasetList: DatasetKindInterface[]) => {
+                    datasetList.forEach((dataset: DatasetKindInterface) => {
+                        this.linageGraphClusters = this.linageGraphClusters.map(
+                            (cluster: ClusterNode) => {
+                                if (
+                                    typeof cluster.childNodeIds === "undefined"
+                                ) {
+                                    cluster.childNodeIds = [];
+                                }
+
+                                if (cluster.label === dataset.kind) {
+                                    cluster.childNodeIds.push(dataset.id);
+                                }
+                                return cluster;
+                            },
+                        );
+                    });
+                },
+            ),
         );
     }
 
@@ -517,5 +529,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
         if (this.appDatasetService.onSearchLineageDatasetSubscription) {
             this.appDatasetService.onSearchLineageDatasetSubscription.unsubscribe();
         }
+        this.subs.unsubscribe();
     }
 }

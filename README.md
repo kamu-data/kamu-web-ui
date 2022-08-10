@@ -33,7 +33,7 @@
 
      To install a specific version of node: `nvm install 14.20`
 
-1. Install packages that project depends on: `npm install`
+1. Install packages that project depends on: `npm install` and `npm run install_pretty_quick`
 2. Run application locally: `ng serve` or `npm run start`
 
 ## GraphQL Schema and Code Generation

@@ -1,10 +1,6 @@
-import {
-    SearchHistoryInterface,
-    SearchOverviewDatasetsInterface,
-} from "../interface/search.interface";
+import { SearchOverviewDatasetsInterface } from "../interface/search.interface";
 import {
     MetadataBlockExtended,
-    MetadataBlockFragment,
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 
@@ -20,8 +16,6 @@ export enum DatasetViewTypeEnum {
 export interface TableContentInterface {
     isTableHeader: boolean;
     displayedColumns?: any[];
-    datasetDataSource?: SearchHistoryInterface[];
-    datasetOverviewSource?: SearchHistoryInterface[];
     datasetMetadataSource?: SearchOverviewDatasetsInterface[];
     latestMetadataBlock?: MetadataBlockExtended;
     isResultQuantity: boolean;

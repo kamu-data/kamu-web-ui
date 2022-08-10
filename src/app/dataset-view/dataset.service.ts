@@ -5,10 +5,8 @@ import {
     DatasetKindInterface,
     DatasetNameInterface,
     DataViewSchema,
-    SearchHistoryInterface,
 } from "../interface/search.interface";
 import {
-    DataSchema,
     Dataset,
     DatasetKind,
     DatasetOverviewQuery,
@@ -88,9 +86,7 @@ export class AppDatasetService {
     private datasetTree: DatasetKindInterface[][] = [];
     private datasetKindInfo: DatasetKindInterface[] = [];
 
-    private static parseContentOfDataset(
-        data: DatasetOverviewQuery,
-    ): SearchHistoryInterface[] {
+    private static parseContentOfDataset(data: DatasetOverviewQuery): Object[] {
         return data.datasets.byId
             ? JSON.parse(data.datasets?.byId?.data.tail.data.content)
             : [];
@@ -163,7 +159,7 @@ export class AppDatasetService {
             .getDatasetOverview({ id, page })
             .subscribe((data: DatasetOverviewQuery) => {
                 const dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
-                const content: SearchHistoryInterface[] =
+                const content: Object[] =
                     AppDatasetService.parseContentOfDataset(data);
                 this.searchDatasetNameChanges({
                     id: dataset.id,
@@ -187,7 +183,7 @@ export class AppDatasetService {
             .getDatasetOverview({ id, page })
             .subscribe((data: DatasetOverviewQuery) => {
                 const dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
-                const content: SearchHistoryInterface[] =
+                const content: Object[] =
                     AppDatasetService.parseContentOfDataset(data);
                 this.searchDatasetNameChanges({
                     id: dataset.id,
@@ -196,8 +192,7 @@ export class AppDatasetService {
                 });
                 this.searchDatasetInfoChanges(dataset);
 
-                // TODO: split changeDatasetData Subject for Overview nd Metadata
-                this.appDatasetSubsService.changeDatasetOverview(content);
+                this.appDatasetSubsService.changeDatasetOverviewData(content);
             });
     }
 

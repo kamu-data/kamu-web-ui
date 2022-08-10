@@ -28,6 +28,7 @@ export class DataComponent implements OnInit {
     public savedQueries = DataTabValues.savedQueries;
     public sqlRequestCode: string = `select\n  *\nfrom `;
     public currentSchema?: DataViewSchema;
+    public currentData: Object[] = [];
 
     constructor(private appDatasetSubsService: AppDatasetSubsService) {}
 
@@ -46,6 +47,11 @@ export class DataComponent implements OnInit {
         this.appDatasetSubsService.onDataQuerySchemaChanges.subscribe(
             (schema: DataViewSchema) => {
                 this.currentSchema = schema;
+            },
+        );
+        this.appDatasetSubsService.onDatasetDataChanges.subscribe(
+            (data: Object[]) => {
+                this.currentData = data;
             },
         );
     }

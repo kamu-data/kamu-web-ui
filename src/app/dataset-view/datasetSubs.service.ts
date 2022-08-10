@@ -1,16 +1,13 @@
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { Injectable } from "@angular/core";
-import {
-    DataViewSchema,
-    SearchHistoryInterface,
-} from "../interface/search.interface";
+import { DataViewSchema } from "../interface/search.interface";
 import { MetadataBlockFragment } from "../api/kamu.graphql.interface";
 @Injectable()
 export class AppDatasetSubsService {
-    private datasetOverviewChanges$: BehaviorSubject<SearchHistoryInterface[]> =
-        new BehaviorSubject<SearchHistoryInterface[]>([]);
-    private datasetDataChanges$: BehaviorSubject<SearchHistoryInterface[]> =
-        new BehaviorSubject<SearchHistoryInterface[]>([]);
+    private datasetOverviewDataChanges$: BehaviorSubject<Object[]> =
+        new BehaviorSubject<Object[]>([]);
+    private datasetDataChanges$: BehaviorSubject<Object[]> =
+        new BehaviorSubject<Object[]>([]);
     private datasetHistoryChanges$: BehaviorSubject<MetadataBlockFragment[]> =
         new BehaviorSubject<MetadataBlockFragment[]>([]);
 
@@ -19,21 +16,19 @@ export class AppDatasetSubsService {
     private metadataSchemaChanges$: Subject<DataViewSchema> =
         new Subject<DataViewSchema>();
 
-    public changeDatasetOverview(searchData: SearchHistoryInterface[]): void {
-        this.datasetOverviewChanges$.next(searchData);
+    public changeDatasetOverviewData(data: Object[]): void {
+        this.datasetOverviewDataChanges$.next(data);
     }
 
-    public get onDatasetOverviewChanges(): Observable<
-        SearchHistoryInterface[]
-    > {
-        return this.datasetOverviewChanges$.asObservable();
+    public get onDatasetOverviewDataChanges(): Observable<Object[]> {
+        return this.datasetOverviewDataChanges$.asObservable();
     }
 
-    public changeDatasetData(searchData: SearchHistoryInterface[]): void {
+    public changeDatasetData(searchData: Object[]): void {
         this.datasetDataChanges$.next(searchData);
     }
 
-    public get onDatasetDataChanges(): Observable<SearchHistoryInterface[]> {
+    public get onDatasetDataChanges(): Observable<Object[]> {
         return this.datasetDataChanges$.asObservable();
     }
 

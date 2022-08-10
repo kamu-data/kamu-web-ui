@@ -9,7 +9,6 @@ import {
 import {
     DatasetKindInterface,
     DatasetNameInterface,
-    SearchHistoryInterface,
 } from "../interface/search.interface";
 import AppValues from "../common/app.values";
 import { SearchAdditionalHeaderButtonInterface } from "../components/search-additional-buttons/search-additional-buttons.interface";
@@ -28,11 +27,7 @@ import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
-import {
-    Dataset,
-    DatasetKind,
-    MetadataBlockFragment,
-} from "../api/kamu.graphql.interface";
+import { Dataset, DatasetKind } from "../api/kamu.graphql.interface";
 import { DataHelpersService } from "../services/datahelpers.service";
 import { AppDatasetSubsService } from "./datasetSubs.service";
 
@@ -215,18 +210,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
         });
 
         /* eslint-disable  @typescript-eslint/no-explicit-any */
-
-        this.appDatasetSubsService.onDatasetOverviewChanges.subscribe(
-            (overview: SearchHistoryInterface[]) => {
-                this.tableData.datasetOverviewSource = overview;
-            },
-        );
-
-        this.appDatasetSubsService.onDatasetDataChanges.subscribe(
-            (history: SearchHistoryInterface[]) => {
-                this.tableData.datasetDataSource = history;
-            },
-        );
     }
 
     public successCopyToClipboardCopied(): void {
@@ -550,7 +533,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
     private initTableData(): void {
         this.tableData = {
             isTableHeader: true,
-            datasetOverviewSource: [],
             latestMetadataBlock: undefined,
             isResultQuantity: false,
             isClickableRow: false,

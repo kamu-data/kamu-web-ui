@@ -33,7 +33,7 @@
                 [isClickableRow]="tableData.isClickableRow"
                 [resultUnitText]="resultUnitText"
                 [isTableHeader]="tableData.isTableHeader"
-                [tableSource]="tableData.datasetOverviewSource"
+                [tableSource]="currentOverviewData"
                 [metadataBlockFragment]="metadataFragmentBlock"
                 [numBlocksTotal]="datasetInfo.metadata.chain.blocks.totalCount || 0"
                 (onSelectDatasetEmit)="(null)"

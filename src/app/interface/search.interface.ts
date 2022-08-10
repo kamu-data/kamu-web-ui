@@ -7,13 +7,6 @@ import {
 } from "../api/kamu.graphql.interface";
 import Maybe from "graphql/tsutils/Maybe";
 
-export interface SearchHistoryInterface {
-    province: string;
-    reported_date: string;
-    system_time: string;
-    total_daily: number;
-}
-
 // Should be refactoring
 export interface SearchOverviewDatasetsInterface {
     id: string;

@@ -1,12 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
+import { ApolloQueryResult } from "apollo-client";
 import { map } from "rxjs/operators";
-import { ApolloQueryResult } from "@apollo/client/core";
 import { Observable, of } from "rxjs";
-import {
-    DatasetIDsInterface,
-    TypeNames,
-} from "../interface/search.interface";
+import { DatasetIDsInterface, TypeNames } from "../interface/search.interface";
 
 import {
     DatasetOverviewGQL,
@@ -26,7 +23,6 @@ import {
     PageBasedInfo,
     SearchDatasetsAutocompleteQuery,
     GetDatasetMetadataSchemaQuery,
-    Dataset,
 } from "./kamu.graphql.interface";
 
 @Injectable()
@@ -57,7 +53,7 @@ export class SearchApi {
         searchQuery: string,
         page = 0,
         perPage = 10,
-    ): Observable<SearchDatasetsOverviewQuery | undefined> {
+    ): Observable<SearchDatasetsOverviewQuery> {
         return this.searchDatasetsOverviewGQL
             .watch({
                 query: searchQuery,
@@ -118,7 +114,7 @@ export class SearchApi {
         id: string;
         numRecords?: number;
         page?: number;
-    }): Observable<DatasetOverviewQuery | undefined> {
+    }): Observable<DatasetOverviewQuery> {
         return this.datasetOverviewGQL
             .watch({
                 datasetId: params.id,
@@ -133,7 +129,7 @@ export class SearchApi {
     public onGetDatasetDataSQLRun(params: {
         query: string;
         limit: number;
-    }): Observable<GetDatasetDataSqlRunQuery | undefined> {
+    }): Observable<GetDatasetDataSqlRunQuery> {
         return this.getDatasetDataSQLRun
             .watch({ query: params.query, limit: params.limit })
             .valueChanges.pipe(
@@ -146,7 +142,7 @@ export class SearchApi {
         id: string;
         numRecords: number;
         numPage: number;
-    }): Observable<GetDatasetHistoryQuery | undefined> {
+    }): Observable<GetDatasetHistoryQuery> {
         return this.getDatasetHistoryGQL
             .watch({
                 datasetId: params.id,
@@ -163,7 +159,7 @@ export class SearchApi {
         id: string;
         numRecords?: number;
         page?: number;
-    }): Observable<GetDatasetDataSchemaQuery | undefined> {
+    }): Observable<GetDatasetDataSchemaQuery> {
         return this.getDatasetDataSchemaGQL
             .watch({
                 datasetId: params.id,
@@ -181,7 +177,7 @@ export class SearchApi {
         id: string;
         numRecords?: number;
         page?: number;
-    }): Observable<GetDatasetMetadataSchemaQuery | undefined> {
+    }): Observable<GetDatasetMetadataSchemaQuery> {
         return this.datasetMetadataGQL
             .watch({
                 datasetId: params.id,
@@ -201,7 +197,7 @@ export class SearchApi {
 
     public getDatasetLineage(params: {
         id: string;
-    }): Observable<GetDatasetLineageQuery | undefined> {
+    }): Observable<GetDatasetLineageQuery> {
         return this.getDatasetLineageGQL
             .watch({
                 datasetId: params.id,

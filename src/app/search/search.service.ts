@@ -48,20 +48,15 @@ export class AppSearchService {
     public search(searchValue: string, page = 0): void {
         this.searchApi
             .searchOverview(searchValue, page)
-            .subscribe((data: SearchDatasetsOverviewQuery | undefined) => {
-                let dataset: SearchOverviewDatasetsInterface[] = [];
-                let pageInfo = this.searchApi.pageInfoInit();
-                let totalCount: Maybe<Scalars["Int"]> = 0;
-
-                if (data) {
-                    dataset = (data.search.query.nodes as Dataset[]).map(
-                        (node: Dataset) => {
-                            return this.convertNodeToSearchView(node);
-                        },
-                    );
-                    pageInfo = data.search.query.pageInfo;
-                    totalCount = data.search.query.totalCount;
-                }
+            .subscribe((data: SearchDatasetsOverviewQuery) => {
+                let dataset: SearchOverviewDatasetsInterface[] = (
+                    data.search.query.nodes as Dataset[]
+                ).map((node: Dataset) => {
+                    return this.convertNodeToSearchView(node);
+                });
+                let pageInfo = data.search.query.pageInfo;
+                let totalCount: Maybe<Scalars["Int"]> =
+                    data.search.query.totalCount;
 
                 this.searchData = {
                     dataset,

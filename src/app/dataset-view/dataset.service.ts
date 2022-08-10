@@ -20,7 +20,10 @@ import {
 import AppValues from "../common/app.values";
 import { ModalService } from "../components/modal/modal.service";
 import { AppDatasetSubsService } from "./datasetSubs.service";
-import { PaginationInfoInterface } from "./dataset-view.interface";
+import {
+    DatasetHistoryUpdate,
+    MetadataSchemaUpdate,
+} from "./datasetSubs.interface";
 
 @Injectable()
 export class AppDatasetService {
@@ -48,10 +51,6 @@ export class AppDatasetService {
         return this.kindInfoChanges$.asObservable();
     }
 
-    public get onDatasetPageInfoChanges(): Observable<PaginationInfoInterface> {
-        return this.datasetPageInfoChanges$.asObservable();
-    }
-
     public get onDatasetTreeChanges(): Observable<
         [DatasetKindInterface[][], DatasetKindInterface]
     > {
@@ -75,8 +74,6 @@ export class AppDatasetService {
     private searchChanges$: Subject<string> = new Subject<string>();
     private searchDatasetInfoChanges$: Subject<Dataset> =
         new Subject<Dataset>();
-    private datasetPageInfoChanges$: Subject<PaginationInfoInterface> =
-        new Subject<PaginationInfoInterface>();
     private searchDatasetNameChanges$: Subject<DatasetNameInterface> =
         new Subject<DatasetNameInterface>();
     private datasetTreeChanges$: Subject<
@@ -108,9 +105,6 @@ export class AppDatasetService {
         searchDatasetName: DatasetNameInterface,
     ): void {
         this.searchDatasetNameChanges$.next(searchDatasetName);
-    }
-    public datasetPageInfoChanges(pageInfo: PaginationInfoInterface): void {
-        this.datasetPageInfoChanges$.next(pageInfo);
     }
 
     public kindInfoChanges(datasetList: DatasetKindInterface[]): void {
@@ -204,23 +198,17 @@ export class AppDatasetService {
         this.searchApi
             .onDatasetHistory({ id, numRecords, numPage })
             .subscribe((data: GetDatasetHistoryQuery) => {
-                let pageInfo: PaginationInfoInterface = Object.assign(
-                    this.defaultPageInfo,
-                    {
-                        page: numPage,
-                    },
-                );
-
-                pageInfo = data.datasets.byId?.metadata.chain.blocks.pageInfo
+                let pageInfo: PageBasedInfo = data.datasets.byId?.metadata.chain
+                    .blocks.pageInfo
                     ? Object.assign(
                           AppValues.deepCopy(
                               data.datasets.byId?.metadata.chain.blocks
                                   .pageInfo,
                           ),
-                          { page: numPage },
+                          { currentPage: numPage },
                       )
                     : Object.assign(this.defaultPageInfo, {
-                          page: numPage,
+                          currentPage: numPage,
                       });
 
                 this.searchDatasetNameChanges({
@@ -228,11 +216,13 @@ export class AppDatasetService {
                     name: data.datasets.byId?.name,
                     owner: data.datasets.byId?.owner as any,
                 });
-                this.appDatasetSubsService.changeDatasetHistory(
-                    (data.datasets.byId?.metadata.chain.blocks
-                        .nodes as MetadataBlockFragment[]) || [],
-                );
-                this.datasetPageInfoChanges(pageInfo);
+                let historyUpdate: DatasetHistoryUpdate = {
+                    history:
+                        (data.datasets.byId?.metadata.chain.blocks
+                            .nodes as MetadataBlockFragment[]) || [],
+                    pageInfo: pageInfo,
+                };
+                this.appDatasetSubsService.changeDatasetHistory(historyUpdate);
             });
     }
 
@@ -250,7 +240,19 @@ export class AppDatasetService {
                 let schema: DataViewSchema = JSON.parse(
                     dataset.metadata?.currentSchema.content,
                 );
-                this.appDatasetSubsService.metadataSchemaChanges(schema);
+                let pageInfo: PageBasedInfo = Object.assign(
+                    this.defaultPageInfo,
+                    {
+                        currentPage: page,
+                    },
+                );
+                let metadataSchemaUpdate: MetadataSchemaUpdate = {
+                    schema,
+                    pageInfo,
+                };
+                this.appDatasetSubsService.metadataSchemaChanges(
+                    metadataSchemaUpdate,
+                );
                 this.searchDatasetInfoChanges(dataset);
             });
     }

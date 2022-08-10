@@ -463,8 +463,6 @@
 
             <ng-template [ngIf]="datasetViewTypeHistory">
                 <app-history
-                    [currentPage]="currentPage"
-                    [pageInfo]="tableData.pageInfo"
                     (onSelectDatasetEmit)="(null)"
                     (onPageChangeEmit)="onPageChange($event)"
                 ></app-history>
@@ -485,8 +483,6 @@
                 <app-metadata
                     [datasetInfo]="datasetInfo"
                     [tableData]="tableData"
-                    [currentPage]="0"
-                    [pageInfo]="tableData.pageInfo"
                     (onSelectDatasetEmit)="onSelectDataset($event)"
                     (onPageChangeEmit)="onPageChange($event)"
                     (onSelectTopicEmit)="selectTopic($event)"

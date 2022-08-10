@@ -18,7 +18,6 @@ import { searchAdditionalButtonsEnum } from "../search/search.interface";
 import {
     TableContentInterface,
     DatasetViewTypeEnum,
-    PaginationInfoInterface,
 } from "./dataset-view.interface";
 import { AppDatasetService } from "./dataset.service";
 import { NavigationEnd, Router } from "@angular/router";
@@ -28,8 +27,6 @@ import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { Dataset, DatasetKind } from "../api/kamu.graphql.interface";
-import { DataHelpersService } from "../services/datahelpers.service";
-import { AppDatasetSubsService } from "./datasetSubs.service";
 
 @Component({
     selector: "app-dataset",
@@ -44,7 +41,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
     public datasetInfo: Dataset;
     public datasetName: DatasetNameInterface;
     public searchValue = "";
-    public currentPage: number;
     public isMinimizeSearchAdditionalButtons = false;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.overview;
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[] =
@@ -134,8 +130,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
         private router: Router,
         private modalService: ModalService,
         private clipboard: Clipboard,
-        private dataHelpers: DataHelpersService,
-        private appDatasetSubsService: AppDatasetSubsService,
     ) {
         this.w = window;
     }
@@ -186,15 +180,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
 
         this.prepareLinageGraph();
 
-        this.appDatasetService.onDatasetPageInfoChanges.subscribe(
-            (info: PaginationInfoInterface) => {
-                this.tableData.pageInfo = info;
-                if (info.page) {
-                    this.currentPage = info.page + 1;
-                }
-            },
-        );
-
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
             (info: Dataset) => {
                 this.datasetInfo = info;
@@ -243,7 +228,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
         currentPage: number;
         isClick: boolean;
     }): void {
-        this.currentPage = params.currentPage;
         this.initDatasetViewByType(params.currentPage);
     }
 
@@ -305,7 +289,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
                 },
             },
         );
-        this.currentPage = currentPage;
 
         this.datasetViewType = DatasetViewTypeEnum.metadata;
         this.appDatasetService.onSearchMetadata(
@@ -340,7 +323,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
                 },
             },
         );
-        this.currentPage = currentPage;
         this.datasetViewType = DatasetViewTypeEnum.history;
 
         this.appDatasetService.onDatasetHistorySchema(
@@ -533,15 +515,8 @@ export class DatasetComponent implements OnInit, OnDestroy {
     private initTableData(): void {
         this.tableData = {
             isTableHeader: true,
-            latestMetadataBlock: undefined,
             isResultQuantity: false,
             isClickableRow: false,
-            pageInfo: {
-                hasNextPage: false,
-                hasPreviousPage: false,
-                totalPages: 1,
-                currentPage: 1,
-            },
             totalCount: 0,
         };
     }
@@ -575,7 +550,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
                 this.onSearchDataForDataset();
             }
             if (type === DatasetViewTypeEnum.metadata) {
-                this.currentPage = page;
                 this.onSearchMetadata(page);
             }
             if (type === DatasetViewTypeEnum.history) {

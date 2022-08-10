@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { SearchOverviewDatasetsInterface } from "../../interface/search.interface";
-import AppValues from "../../common/app.values";
 import { ModalService } from "../modal/modal.service";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
 

@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import { PaginationInfoInterface } from "../../dataset-view.interface";
+import {
+    MetadataBlockFragment,
+    PageBasedInfo,
+} from "src/app/api/kamu.graphql.interface";
+import { DatasetHistoryUpdate } from "../../datasetSubs.interface";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
 
 @Component({
@@ -8,8 +11,6 @@ import { AppDatasetSubsService } from "../../datasetSubs.service";
     templateUrl: "./history.component.html",
 })
 export class HistoryComponent implements OnInit {
-    @Input() public currentPage: number;
-    @Input() public pageInfo: PaginationInfoInterface;
     @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
     @Output() onPageChangeEmit: EventEmitter<{
         currentPage: number;
@@ -17,14 +18,18 @@ export class HistoryComponent implements OnInit {
     }> = new EventEmitter();
 
     public page = 1;
+    public currentPage: number = 1;
+    public pageInfo: PageBasedInfo;
     public history: MetadataBlockFragment[] = [];
 
     constructor(private appDatasetSubsService: AppDatasetSubsService) {}
 
     ngOnInit(): void {
         this.appDatasetSubsService.onDatasetHistoryChanges.subscribe(
-            (history: MetadataBlockFragment[]) => {
-                this.history = history;
+            (historyUpdate: DatasetHistoryUpdate) => {
+                this.history = historyUpdate.history;
+                this.pageInfo = historyUpdate.pageInfo;
+                this.currentPage = this.pageInfo.currentPage + 1;
             },
         );
     }

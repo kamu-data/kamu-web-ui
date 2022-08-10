@@ -6,7 +6,7 @@ import {
     Output,
     SimpleChanges,
 } from "@angular/core";
-import { PaginationInfoInterface } from "../../dataset-view/dataset-view.interface";
+import { PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-pagination",
@@ -15,7 +15,7 @@ import { PaginationInfoInterface } from "../../dataset-view/dataset-view.interfa
 })
 export class PaginationComponent implements OnChanges {
     @Input() public currentPage: number;
-    @Input() public pageInfo: PaginationInfoInterface;
+    @Input() public pageInfo: PageBasedInfo;
     @Output() public pageChangeEvent: EventEmitter<{
         currentPage: number;
         isClick: boolean;

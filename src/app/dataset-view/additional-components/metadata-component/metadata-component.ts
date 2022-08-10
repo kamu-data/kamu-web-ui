@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DataViewSchema } from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
-import {
-    TableContentInterface,
-    PaginationInfoInterface,
-} from "../../dataset-view.interface";
+import { TableContentInterface } from "../../dataset-view.interface";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
+import { MetadataSchemaUpdate } from "../../datasetSubs.interface";
+import { PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 @Component({
@@ -13,8 +12,6 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
     templateUrl: "./metadata.component.html",
 })
 export class MetadataComponent implements OnInit {
-    @Input() public currentPage: number;
-    @Input() public pageInfo: PaginationInfoInterface;
     @Input() public datasetInfo: any;
     @Input() public tableData: TableContentInterface;
     @Output() public pageChangeEvent: EventEmitter<{
@@ -43,13 +40,17 @@ export class MetadataComponent implements OnInit {
     };
 
     public currentSchema?: DataViewSchema;
+    public pageInfo: PageBasedInfo;
+    public currentPage: number = 0;
 
     constructor(private appDatasetSubsService: AppDatasetSubsService) {}
 
     ngOnInit() {
         this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
-            (schema: DataViewSchema) => {
-                this.currentSchema = schema;
+            (schemaUpdate: MetadataSchemaUpdate) => {
+                this.currentSchema = schemaUpdate.schema;
+                this.pageInfo = schemaUpdate.pageInfo;
+                this.currentPage = this.pageInfo.currentPage + 1;
             },
         );
     }

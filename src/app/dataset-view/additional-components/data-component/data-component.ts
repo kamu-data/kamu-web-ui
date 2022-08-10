@@ -6,7 +6,6 @@ import {
 import DataTabValues from "./mock.data";
 import { TableContentInterface } from "../../dataset-view.interface";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
-import AppValues from "src/app/common/app.values";
 
 @Component({
     selector: "app-data",
@@ -46,7 +45,7 @@ export class DataComponent implements OnInit {
         }
         this.appDatasetSubsService.onDataQuerySchemaChanges.subscribe(
             (schema: DataViewSchema) => {
-                this.currentSchema = AppValues.deepCopy(schema);
+                this.currentSchema = schema;
             },
         );
     }

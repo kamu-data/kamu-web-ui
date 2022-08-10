@@ -23,7 +23,6 @@ export interface TableContentInterface {
     datasetDataSource?: SearchHistoryInterface[];
     datasetOverviewSource?: SearchHistoryInterface[];
     datasetMetadataSource?: SearchOverviewDatasetsInterface[];
-    datasetHistorySource?: MetadataBlockFragment[];
     latestMetadataBlock?: MetadataBlockExtended;
     isResultQuantity: boolean;
     isClickableRow: boolean;

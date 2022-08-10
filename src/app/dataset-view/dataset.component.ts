@@ -9,9 +9,7 @@ import {
 import {
     DatasetKindInterface,
     DatasetNameInterface,
-    DataViewSchema,
     SearchHistoryInterface,
-    SearchOverviewInterface,
 } from "../interface/search.interface";
 import AppValues from "../common/app.values";
 import { SearchAdditionalHeaderButtonInterface } from "../components/search-additional-buttons/search-additional-buttons.interface";
@@ -227,12 +225,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
         this.appDatasetSubsService.onDatasetDataChanges.subscribe(
             (history: SearchHistoryInterface[]) => {
                 this.tableData.datasetDataSource = history;
-            },
-        );
-
-        this.appDatasetSubsService.onDatasetHistoryChanges.subscribe(
-            (history: MetadataBlockFragment[]) => {
-                this.tableData.datasetHistorySource = history;
             },
         );
     }

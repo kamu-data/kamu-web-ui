@@ -49,7 +49,7 @@ export class MetadataComponent implements OnInit {
     ngOnInit() {
         this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
             (schema: DataViewSchema) => {
-                this.currentSchema = AppValues.deepCopy(schema);
+                this.currentSchema = schema;
             },
         );
     }

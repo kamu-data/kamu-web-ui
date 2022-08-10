@@ -11,23 +11,18 @@ import {
     DatasetNameInterface,
 } from "../interface/search.interface";
 import AppValues from "../common/app.values";
-import { SearchAdditionalHeaderButtonInterface } from "../components/search-additional-buttons/search-additional-buttons.interface";
 import { MatSidenav } from "@angular/material/sidenav";
 import { SideNavService } from "../services/sidenav.service";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
-import {
-    DatasetViewContentInterface,
-    DatasetViewTypeEnum,
-    PaginationInfoInterface,
-} from "./dataset-view.interface";
+import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { AppDatasetService } from "./dataset.service";
 import { NavigationEnd, Router } from "@angular/router";
 import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
-import { Clipboard } from "@angular/cdk/clipboard";
 import { Dataset, DatasetKind } from "../api/kamu.graphql.interface";
+import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu-component";
 
 @Component({
     selector: "app-dataset",
@@ -54,8 +49,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
     public isAvailableLinageGraph = false;
     public headings: Element[] | undefined;
     public isMarkdownEditView = false;
-    public clipboardKamuCli = "kamu pull kamu.dev/anonymous/dataset";
-    public clipboardKafka = "https://api.kamu.dev/kafka/anonymous/dataset";
     public markdownText = AppValues.markdownContain;
 
     private w: Window;
@@ -78,41 +71,7 @@ export class DatasetComponent implements OnInit, OnDestroy {
         private sidenavService: SideNavService,
         private router: Router,
         private modalService: ModalService,
-        private clipboard: Clipboard,
-        private dataHelpers: DataHelpersService,
-        private appDatasetSubsService: AppDatasetSubsService,
     ) {
-        this.w = window;
-    }
-
-    public copyToClipboard(event: MouseEvent, text: string): void {
-        this.clipboard.copy(text);
-
-        const currentEvent: EventTarget | null = event.currentTarget;
-
-        if (currentEvent !== null) {
-            setTimeout(() => {
-                // @ts-ignore
-                // tslint:disable-next-line:no-string-literal
-                currentEvent["children"][0].style.display = "inline-block";
-                // @ts-ignore
-                // tslint:disable-next-line:no-string-literal
-                currentEvent["children"][1].style.display = "none";
-                // @ts-ignore
-                // tslint:disable-next-line:no-string-literal
-                currentEvent["classList"].remove("clipboard-btn--success");
-            }, 2000);
-
-            // @ts-ignore
-            // tslint:disable-next-line:no-string-literal
-            currentEvent["children"][0].style.display = "none";
-            // @ts-ignore
-            // tslint:disable-next-line:no-string-literal
-            currentEvent["children"][1].style.display = "inline-block";
-            // @ts-ignore
-            // tslint:disable-next-line:no-string-literal
-            currentEvent["classList"].add("clipboard-btn--success");
-        }
         this.w = window;
     }
 

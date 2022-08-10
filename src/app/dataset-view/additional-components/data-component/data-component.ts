@@ -6,7 +6,6 @@ import {
 import DataTabValues from "./mock.data";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
 import { DataUpdate } from "../../datasetSubs.interface";
-import { DatasetViewContentInterface } from "../../dataset-view.interface";
 
 @Component({
     selector: "app-data",

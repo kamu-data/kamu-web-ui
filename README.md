@@ -2,14 +2,15 @@
 
 ### Technologies:
 
-- TypeScript, version: 3.7.3; [Node.js](https://nodejs.org/en/download/releases/), version: 10.11.x;
+- TypeScript, version: 3.7.3;
+- [Node.js](https://nodejs.org/en/download/releases/), version: 14.20.x;
 - [Angular CLI](https://github.com/angular/angular-cli), version 9.0.0.
 
 ### Libraries:
 
 - [Angular Material Design](https://material.angular.io/), version: 9.0.0;
 - [Angular Service Worker](https://www.npmjs.com/package/@angular/service-worker), version: 9.1.6;
-- [Apollo Angular (GQL client)](https://apollo-angular.com/docs/), version: 1.8.0; 
+- [Apollo Angular (GQL client)](https://apollo-angular.com/docs/), version: 1.8.0;
 - [GraphQL](https://www.npmjs.com/package/graphql), version: 14.7.0;
 - [Bootstrap](https://www.npmjs.com/package/bootstrap), version: 5.1.3; [Popper.js](https://www.npmjs.com/package/@popperjs/core), version: 2.10.2;
 - [Bootstrap Icons](https://www.npmjs.com/package/bootstrap-icons), version: 1.5.0;
@@ -19,22 +20,24 @@
 - Karma, version: 4.3.0; Jasmine, version: 3.4.0; [Cypress Angular Schematic](https://www.npmjs.com/package/@cypress/schematic/v/1.5.1), version: 1.5.1.
 
 ## Steps for running:
-0. Do it once: 
-   - download and install [Node.js](https://nodejs.org/en/download/releases/), version: 10.11.x
-     
-    or 
-   - install Node.js with [Node.js Version Manager](https://github.com/nvm-sh/nvm). 
-     
-        Using `nvm` (Node.js Version Manager) makes it easier to install and manage multiple versions of Node.js on a single local environment.
-    
-        To install a specific version of node: `nvm install 10.11`
 
+0. Do it once:
+
+   - download and install [Node.js](https://nodejs.org/en/download/releases/), version: 14.20.x
+
+   or
+
+   - install Node.js with [Node.js Version Manager](https://github.com/nvm-sh/nvm).
+
+     Using `nvm` (Node.js Version Manager) makes it easier to install and manage multiple versions of Node.js on a single local environment.
+
+     To install a specific version of node: `nvm install 14.20`
 
 1. Install packages that project depends on: `npm install`
 2. Run application locally: `ng serve` or `npm run start`
 
-
 ## GraphQL Schema and Code Generation
+
 We are using [graphql-codegen](https://www.graphql-code-generator.com/) project to generate typed interfaces based on server's GraphQL Schema and the query templates.
 
 The schema file is located in `resources/schema.graphql`. To refresh it with latest schema from a running server using:
@@ -50,7 +53,6 @@ npm run gql-codegen
 ```
 
 > Note: There is currently an issue with codegen where it generates outdated import `import { gql } from 'apollo-angular';`. To fix it we manually revert this line to `import { gql } from '@apollo/client/core';`.
-
 
 ## Development server
 

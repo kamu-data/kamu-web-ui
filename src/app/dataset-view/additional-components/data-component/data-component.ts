@@ -1,15 +1,11 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-} from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import {
     DatasetNameInterface,
     DataViewSchema,
 } from "../../../interface/search.interface";
 import DataTabValues from "./mock.data";
+import { AppDatasetSubsService } from "../../datasetSubs.service";
+import { DataUpdate } from "../../datasetSubs.interface";
 import { DatasetViewContentInterface } from "../../dataset-view.interface";
 
 @Component({
@@ -17,9 +13,7 @@ import { DatasetViewContentInterface } from "../../dataset-view.interface";
     templateUrl: "./data-component.html",
 })
 export class DataComponent implements OnInit {
-    @Input() public tableData: DatasetViewContentInterface;
     @Input() public datasetName: DatasetNameInterface;
-    @Input() public currentSchema: DataViewSchema;
     // tslint:disable-next-line:no-output-on-prefix
     @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
     // tslint:disable-next-line:no-output-on-prefix
@@ -33,6 +27,10 @@ export class DataComponent implements OnInit {
     };
     public savedQueries = DataTabValues.savedQueries;
     public sqlRequestCode: string = `select\n  *\nfrom `;
+    public currentSchema?: DataViewSchema;
+    public currentData: Object[] = [];
+
+    constructor(private appDatasetSubsService: AppDatasetSubsService) {}
 
     public onSelectDataset(id: string): void {
         this.onSelectDatasetEmit.emit(id);
@@ -46,6 +44,12 @@ export class DataComponent implements OnInit {
         if (this.datasetName) {
             this.sqlRequestCode += `'${this.datasetName.name}'`;
         }
+        this.appDatasetSubsService.onDatasetDataChanges.subscribe(
+            (dataUpdate: DataUpdate) => {
+                this.currentData = dataUpdate.content;
+                this.currentSchema = dataUpdate.schema;
+            },
+        );
     }
 
     onInitEditor(editor: any): void {

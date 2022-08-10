@@ -6,16 +6,23 @@
 >
     <div class="app-content">
         <app-dataset-view-header
-                [datasetName]="datasetName"
-                [isMinimizeSearchAdditionalButtons]="isMinimizeSearchAdditionalButtons"
-                (showOwnerPageEmit)="showOwnerPage()"
-                (onClickSearchAdditionalButtonEmit)="onClickSearchAdditionalButton($event)"
+            [datasetName]="datasetName"
+            [isMinimizeSearchAdditionalButtons]="
+                isMinimizeSearchAdditionalButtons
+            "
+            (showOwnerPageEmit)="showOwnerPage()"
+            (onClickSearchAdditionalButtonEmit)="
+                onClickSearchAdditionalButton($event)
+            "
         ></app-dataset-view-header>
     </div>
 
     <div class="app-content">
         <div id="dataset-viewer">
-            <app-dataset-view-menu [datasetViewType]="datasetViewType" [parentShareMethods]="getParentMethod()"></app-dataset-view-menu>
+            <app-dataset-view-menu
+                [datasetViewType]="datasetViewType"
+                [parentShareMethods]="getParentMethod()"
+            ></app-dataset-view-menu>
 
             <ng-template [ngIf]="isDatasetViewTypeOverview">
                 <app-overview
@@ -23,7 +30,6 @@
                     [markdownText]="markdownText"
                     [datasetInfo]="datasetInfo"
                     [resultUnitText]="getResultUnitText()"
-                    [tableData]="tableData"
                     (onToggleReadmeViewEmit)="toggleReadmeView()"
                     (onSelectTopicEmit)="selectTopic($event)"
                     (onSelectDatasetEmit)="onSelectDataset($event)"
@@ -33,8 +39,6 @@
             <ng-template [ngIf]="isDatasetViewTypeData && datasetName">
                 <app-data
                     [datasetName]="datasetName"
-                    [tableData]="tableData"
-                    [currentSchema]="currentSchema"
                     (onSelectDatasetEmit)="onSelectDataset($event)"
                     (onRunSQLRequestEmit)="onRunSQLRequest($event)"
                 ></app-data>
@@ -42,9 +46,6 @@
 
             <ng-template [ngIf]="isDatasetViewTypeHistory">
                 <app-history
-                    [datasetHistory]="datasetHistory"
-                    [currentPage]="currentPage"
-                    [pageInfo]="tableData.pageInfo"
                     (onSelectDatasetEmit)="(null)"
                     (onPageChangeEmit)="onPageChange($event)"
                 ></app-history>
@@ -64,10 +65,6 @@
             <ng-template [ngIf]="isDatasetViewTypeMetadata">
                 <app-metadata
                     [datasetInfo]="datasetInfo"
-                    [tableData]="tableData"
-                    [currentSchema]="currentSchema"
-                    [currentPage]="0"
-                    [pageInfo]="tableData.pageInfo"
                     (onSelectDatasetEmit)="onSelectDataset($event)"
                     (onPageChangeEmit)="onPageChange($event)"
                     (onSelectTopicEmit)="selectTopic($event)"

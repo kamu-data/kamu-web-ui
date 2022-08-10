@@ -1,6 +1,6 @@
 <div
     class="d-flex flex-column flex-md-row justify-content-between pb-3 position-relative"
-    *ngIf="isResultQuantity"
+    *ngIf="hasResultQuantity"
 >
     <h2 class="box-title align-items-center">
         {{ searchResultQuantity(tableSource) }} {{ resultUnitText }}
@@ -42,14 +42,14 @@
             <div class="css-truncate css-truncate-overflow color-fg-muted">
                 <a
                     class="commit-author user-mention"
-                    [title]="
-                        'View all commits by ' + authorInfo.name
-                    "
+                    *ngIf="authorInfo?.name"
+                    [title]="'View all commits by ' + authorInfo.name"
                     href="#todo-navigate-to-user"
                     >{{ authorInfo.name }}</a
                 >
                 <span class="d-none d-sm-inline mb-0 ml-3">
                     <a
+                        *ngIf="metadataBlockFragment?.event"
                         data-pjax="true"
                         data-test-selector="commit-tease-commit-message"
                         title="Styles was changed"
@@ -76,7 +76,7 @@
                 </button>
             </span>
             <div
-                    *ngIf="metadataBlockFragment"
+                *ngIf="metadataBlockFragment"
                 class="d-flex flex-auto justify-content-end ml-3 align-items-baseline"
             >
                 <a
@@ -91,15 +91,9 @@
                     class="link--secondary ml-3"
                     data-pjax="#repo-content-pjax-container"
                 >
-                    <time
-                        class="no-wrap"
-                        [title]="systemTime"
-                        >{{
-                            dataHelpers.relativeTime(
-                                systemTime
-                            )
-                        }}</time
-                    >
+                    <time class="no-wrap" [title]="systemTime">{{
+                        dataHelpers.relativeTime(systemTime)
+                    }}</time>
                 </a>
             </div>
         </div>
@@ -154,7 +148,7 @@
             <td mat-cell *matCellDef="let element">{{ element[disCol] }}</td>
         </ng-container>
 
-        <ng-container *ngIf="isTableHeader">
+        <ng-container *ngIf="hasTableHeader">
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         </ng-container>
         <tr

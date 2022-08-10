@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import { map, tap } from "rxjs/operators";
-import { ApolloQueryResult, DocumentNode, gql } from "@apollo/client/core";
+import { DocumentNode, gql } from "@apollo/client/core";
+import { ApolloQueryResult } from "apollo-client";
 import { Observable, of, Subject, throwError } from "rxjs";
 import { AuthQueryResult, UserInterface } from "../interface/auth.interface";
 import { HttpClient } from "@angular/common/http";
@@ -91,14 +92,12 @@ export class AuthApi {
         // @ts-ignore
         return this.apollo.mutate({ mutation: GET_DATA }).pipe(
             // @ts-ignore
-            map((result: ApolloQueryResult<any>) => {
-                const login = result as AuthQueryResult;
-                if (login.data) {
-                    const accountInfo: UserInterface =
-                        login.data.auth.githubLogin.accountInfo;
-                    this.userChange(accountInfo);
-                    return login.data.auth.githubLogin.token.accessToken;
-                }
+            map((result: ApolloQueryResult<AuthQueryResult>) => {
+                const login = result.data;
+                const accountInfo: UserInterface =
+                    login.data.auth.githubLogin.accountInfo;
+                this.userChange(accountInfo);
+                return login.data.auth.githubLogin.token.accessToken;
             }),
         );
 

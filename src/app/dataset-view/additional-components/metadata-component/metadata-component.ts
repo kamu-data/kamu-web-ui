@@ -1,26 +1,17 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    Output,
-} from "@angular/core";
-import {
-    DataViewSchema,
-} from "../../../interface/search.interface";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { DataViewSchema } from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
-import {DatasetViewContentInterface, PaginationInfoInterface} from "../../dataset-view.interface";
+import { AppDatasetSubsService } from "../../datasetSubs.service";
+import { MetadataSchemaUpdate } from "../../datasetSubs.interface";
+import { Dataset, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 @Component({
     selector: "app-metadata",
     templateUrl: "./metadata.component.html",
 })
-export class MetadataComponent {
-    @Input() public currentPage: number;
-    @Input() public currentSchema: DataViewSchema;
-    @Input() public pageInfo: PaginationInfoInterface;
-    @Input() public datasetInfo: any;
-    @Input() public tableData: DatasetViewContentInterface;
+export class MetadataComponent implements OnInit {
+    @Input() public datasetInfo: Dataset;
     @Output() public pageChangeEvent: EventEmitter<{
         currentPage: number;
         isClick: boolean;
@@ -45,6 +36,23 @@ export class MetadataComponent {
             enabled: false,
         },
     };
+
+    public currentSchema?: DataViewSchema;
+    public pageInfo: PageBasedInfo;
+    public currentPage: number = 0;
+
+    constructor(private appDatasetSubsService: AppDatasetSubsService) {}
+
+    ngOnInit() {
+        this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
+            (schemaUpdate: MetadataSchemaUpdate) => {
+                this.currentSchema = schemaUpdate.schema;
+                this.pageInfo = schemaUpdate.pageInfo;
+                this.currentPage = this.pageInfo.currentPage + 1;
+            },
+        );
+    }
+
     public selectPage(page: string) {
         this.page = parseInt(page, 10) || 1;
     }

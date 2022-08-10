@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { SearchOverviewDatasetsInterface } from "../../interface/search.interface";
-import AppValues from "../../common/app.values";
 import { ModalService } from "../modal/modal.service";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
 
@@ -13,7 +12,7 @@ export class RepoListComponent {
     @Input() public dataSource: SearchOverviewDatasetsInterface[];
     @Input() public totalCount = 0;
     @Input() public resultUnitText: string;
-    @Input() public isResultQuantity?: boolean = false;
+    @Input() public hasResultQuantity?: boolean = false;
     @Input() public isClickableRow?: boolean = false;
     @Output() public onSelectDatasetEmit: EventEmitter<{
         ownerName: string;

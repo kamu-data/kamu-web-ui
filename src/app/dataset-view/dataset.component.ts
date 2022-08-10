@@ -1,5 +1,4 @@
 import {
-    AfterContentInit,
     Component,
     HostListener,
     OnDestroy,
@@ -10,29 +9,25 @@ import {
 import {
     DatasetKindInterface,
     DatasetNameInterface,
-    DataViewSchema,
-    SearchHistoryInterface,
-    SearchOverviewDatasetsInterface,
-    SearchOverviewInterface,
 } from "../interface/search.interface";
 import AppValues from "../common/app.values";
+import { SearchAdditionalHeaderButtonInterface } from "../components/search-additional-buttons/search-additional-buttons.interface";
 import { MatSidenav } from "@angular/material/sidenav";
 import { SideNavService } from "../services/sidenav.service";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
-import {DatasetViewContentInterface, DatasetViewTypeEnum, PaginationInfoInterface} from "./dataset-view.interface";
+import {
+    DatasetViewContentInterface,
+    DatasetViewTypeEnum,
+    PaginationInfoInterface,
+} from "./dataset-view.interface";
 import { AppDatasetService } from "./dataset.service";
 import { NavigationEnd, Router } from "@angular/router";
 import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
-import {
-    DataSchema, Dataset,
-    DatasetKind, MetadataBlockFragment,
-} from "../api/kamu.graphql.interface";
-import { DataHelpersService } from "../services/datahelpers.service";
-import {AppDatasetSubsService} from "./datasetSubs.service";
-import {DatasetViewMenuComponent} from "./dataset-view-menu/dataset-view-menu-component";
+import { Clipboard } from "@angular/cdk/clipboard";
+import { Dataset, DatasetKind } from "../api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset",
@@ -40,7 +35,7 @@ import {DatasetViewMenuComponent} from "./dataset-view-menu/dataset-view-menu-co
     styleUrls: ["./dataset-view.component.sass"],
     encapsulation: ViewEncapsulation.None,
 })
-export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
+export class DatasetComponent implements OnInit, OnDestroy {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     @ViewChild("menuTrigger") trigger: any;
     @ViewChild(DatasetViewMenuComponent) datasetViewMenuComponent!: any;
@@ -49,16 +44,8 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public datasetInfo: Dataset;
     public datasetName: DatasetNameInterface;
     public searchValue = "";
-    public currentPage: number;
-    public currentSchema: DataViewSchema;
     public isMinimizeSearchAdditionalButtons = false;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.overview;
-
-    public tableData: DatasetViewContentInterface;
-    public datasetHistory: MetadataBlockFragment[];
-    private searchOverviewDatasets: SearchHistoryInterface[] = [];
-    private searchDataDatasets: SearchHistoryInterface[] = [];
-    private searchMetadata: SearchOverviewDatasetsInterface[] = [];
 
     public linageGraphView: [number, number] = [500, 600];
     public linageGraphLink: Edge[] = [];
@@ -67,6 +54,8 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     public isAvailableLinageGraph = false;
     public headings: Element[] | undefined;
     public isMarkdownEditView = false;
+    public clipboardKamuCli = "kamu pull kamu.dev/anonymous/dataset";
+    public clipboardKafka = "https://api.kamu.dev/kafka/anonymous/dataset";
     public markdownText = AppValues.markdownContain;
 
     private w: Window;
@@ -89,9 +78,41 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         private sidenavService: SideNavService,
         private router: Router,
         private modalService: ModalService,
+        private clipboard: Clipboard,
         private dataHelpers: DataHelpersService,
-        private appDatasetSubsService: AppDatasetSubsService
+        private appDatasetSubsService: AppDatasetSubsService,
     ) {
+        this.w = window;
+    }
+
+    public copyToClipboard(event: MouseEvent, text: string): void {
+        this.clipboard.copy(text);
+
+        const currentEvent: EventTarget | null = event.currentTarget;
+
+        if (currentEvent !== null) {
+            setTimeout(() => {
+                // @ts-ignore
+                // tslint:disable-next-line:no-string-literal
+                currentEvent["children"][0].style.display = "inline-block";
+                // @ts-ignore
+                // tslint:disable-next-line:no-string-literal
+                currentEvent["children"][1].style.display = "none";
+                // @ts-ignore
+                // tslint:disable-next-line:no-string-literal
+                currentEvent["classList"].remove("clipboard-btn--success");
+            }, 2000);
+
+            // @ts-ignore
+            // tslint:disable-next-line:no-string-literal
+            currentEvent["children"][0].style.display = "none";
+            // @ts-ignore
+            // tslint:disable-next-line:no-string-literal
+            currentEvent["children"][1].style.display = "inline-block";
+            // @ts-ignore
+            // tslint:disable-next-line:no-string-literal
+            currentEvent["classList"].add("clipboard-btn--success");
+        }
         this.w = window;
     }
 
@@ -107,26 +128,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
             });
         this.initDatasetViewByType();
 
-        this.initTableData();
-
         this.prepareLinageGraph();
-
-        this.appDatasetService.onDataSchemaChanges.subscribe(
-            (schema: DataSchema) => {
-                this.currentSchema = schema
-                    ? JSON.parse(schema.content)
-                    : ({} as DataViewSchema);
-            },
-        );
-
-        this.appDatasetService.onDatasetPageInfoChanges.subscribe(
-            (info: PaginationInfoInterface) => {
-                this.tableData.pageInfo = info;
-                if (info.page) {
-                    this.currentPage = info.page + 1;
-                }
-            },
-        );
 
         this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
             (info: Dataset) => {
@@ -143,36 +145,6 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         });
 
         /* eslint-disable  @typescript-eslint/no-explicit-any */
-
-        this.appDatasetSubsService.onDatasetOverviewChanges.subscribe((overview: SearchHistoryInterface[]) => {
-            this.tableData.datasetOverviewSource = overview;
-            this.searchOverviewDatasets = overview;
-        });
-
-        this.appDatasetSubsService.onDatasetDataChanges.subscribe((history: SearchHistoryInterface[]) => {
-            this.tableData.datasetDataSource = history;
-            this.searchDataDatasets = history;
-        });
-
-        this.appDatasetSubsService.onDatasetHistoryChanges.subscribe(
-            (history: MetadataBlockFragment[]) => {
-                this.tableData.datasetHistorySource = history;
-                this.datasetHistory = history;
-            },
-        );
-
-        this.appDatasetSubsService.onDatasetMetadataChanges.subscribe(
-            (data: SearchOverviewInterface) => {
-                if (data.dataset) {
-                    this.tableData.datasetMetadataSource = data.dataset;
-                    this.tableData.pageInfo = data.pageInfo;
-                    this.tableData.totalCount = data.totalCount as number;
-                    this.searchMetadata = data.dataset;
-
-                    setTimeout(() => (this.currentPage = data.currentPage));
-                }
-            },
-        );
     }
 
     public changeLinageGraphView(): void {
@@ -198,18 +170,10 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         return this.appDatasetService.getDatasetTree;
     }
 
-    public ngAfterContentInit(): void {
-        this.tableData.datasetOverviewSource = this.searchOverviewDatasets;
-        this.tableData.datasetDataSource = this.searchDataDatasets;
-        this.tableData.datasetMetadataSource = this.searchMetadata;
-        this.tableData.datasetHistorySource = this.datasetHistory;
-    }
-
     public onPageChange(params: {
         currentPage: number;
         isClick: boolean;
     }): void {
-        this.currentPage = params.currentPage;
         this.initDatasetViewByType(params.currentPage);
     }
 
@@ -247,7 +211,6 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
                 },
             },
         );
-        this.currentPage = currentPage;
 
         this.datasetViewType = DatasetViewTypeEnum.metadata;
         this.appDatasetService.onSearchMetadata(
@@ -282,7 +245,6 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
                 },
             },
         );
-        this.currentPage = currentPage;
         this.datasetViewType = DatasetViewTypeEnum.history;
 
         this.appDatasetService.onDatasetHistorySchema(
@@ -355,7 +317,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         this.onSelectDataset(idDataset);
     }
 
-    public getParentMethod(): { [key: string]: (...args: any[]) => any; } {
+    public getParentMethod(): { [key: string]: (...args: any[]) => any } {
         return {
             onSearchDataset: () => {
                 this.onSearchDataset();
@@ -402,8 +364,6 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         return this.datasetViewType === DatasetViewTypeEnum.discussions;
     }
 
-
-
     private initLinageGraphProperty(): void {
         this.linageGraphNodes = [];
         this.linageGraphLink = [];
@@ -439,7 +399,8 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
 
                 this.isAvailableLinageGraph = edges.length !== 0;
 
-                const uniqueDatasets: { [id: string]: DatasetKindInterface } = {};
+                const uniqueDatasets: { [id: string]: DatasetKindInterface } =
+                    {};
                 edges.forEach((edge: DatasetKindInterface[]) =>
                     edge.forEach((dataset: DatasetKindInterface) => {
                         uniqueDatasets[dataset.id] = dataset;
@@ -520,23 +481,6 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         console.log("onClickDescission");
     }
 
-    private initTableData(): void {
-        this.tableData = {
-            isTableHeader: true,
-            datasetOverviewSource: this.searchOverviewDatasets,
-            latestMetadataBlock: undefined,
-            isResultQuantity: false,
-            isClickableRow: false,
-            pageInfo: {
-                hasNextPage: false,
-                hasPreviousPage: false,
-                totalPages: 1,
-                currentPage: 1,
-            },
-            totalCount: 0,
-        };
-    }
-
     private initDatasetViewByType(currentPage?: number): void {
         if (this.appDatasetService.onSearchLineageDatasetSubscription) {
             this.appDatasetService.onSearchLineageDatasetSubscription.unsubscribe();
@@ -566,7 +510,6 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
                 this.onSearchDataForDataset();
             }
             if (type === DatasetViewTypeEnum.metadata) {
-                this.currentPage = page;
                 this.onSearchMetadata(page);
             }
             if (type === DatasetViewTypeEnum.history) {

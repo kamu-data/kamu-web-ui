@@ -1,43 +1,51 @@
-import {BehaviorSubject, Observable} from "rxjs";
-import {Injectable} from "@angular/core";
-import {SearchHistoryInterface, SearchOverviewInterface} from "../interface/search.interface";
-import {MetadataBlockFragment} from "../api/kamu.graphql.interface";
+import { Observable, Subject } from "rxjs";
+import { Injectable } from "@angular/core";
+import {
+    DatasetHistoryUpdate,
+    DataUpdate,
+    MetadataSchemaUpdate,
+    OverviewDataUpdate,
+} from "./datasetSubs.interface";
 @Injectable()
 export class AppDatasetSubsService {
-    private datasetOverviewChanges$: BehaviorSubject<SearchHistoryInterface[]> = new BehaviorSubject<SearchHistoryInterface[]>([]);
-    private datasetDataChanges$: BehaviorSubject<SearchHistoryInterface[]> = new BehaviorSubject<SearchHistoryInterface[]>([]);
-    private datasetHistoryChanges$: BehaviorSubject<MetadataBlockFragment[]> = new BehaviorSubject<MetadataBlockFragment[]>([]);
-    private datasetMetadataChanges$: BehaviorSubject<SearchOverviewInterface> = new BehaviorSubject<SearchOverviewInterface>({} as SearchOverviewInterface);
+    private datasetOverviewDataChanges$: Subject<OverviewDataUpdate> =
+        new Subject<OverviewDataUpdate>();
+    private datasetDataChanges$: Subject<DataUpdate> =
+        new Subject<DataUpdate>();
+    private datasetHistoryChanges$: Subject<DatasetHistoryUpdate> =
+        new Subject<DatasetHistoryUpdate>();
+    private metadataSchemaChanges$: Subject<MetadataSchemaUpdate> =
+        new Subject<MetadataSchemaUpdate>();
 
-    public changeDatasetOverview(searchData: SearchHistoryInterface[]): void {
-        this.datasetOverviewChanges$.next(searchData);
+    public changeDatasetOverviewData(data: OverviewDataUpdate): void {
+        this.datasetOverviewDataChanges$.next(data);
     }
 
-    public get onDatasetOverviewChanges(): Observable<SearchHistoryInterface[]> {
-        return this.datasetOverviewChanges$.asObservable();
+    public get onDatasetOverviewDataChanges(): Observable<OverviewDataUpdate> {
+        return this.datasetOverviewDataChanges$.asObservable();
     }
 
-    public changeDatasetData(searchData: SearchHistoryInterface[]): void {
-        this.datasetDataChanges$.next(searchData);
+    public changeDatasetData(dataUpdate: DataUpdate): void {
+        this.datasetDataChanges$.next(dataUpdate);
     }
 
-    public get onDatasetDataChanges(): Observable<SearchHistoryInterface[]> {
+    public get onDatasetDataChanges(): Observable<DataUpdate> {
         return this.datasetDataChanges$.asObservable();
     }
 
-    public changeDatasetHistory(searchData: MetadataBlockFragment[]): void {
-        this.datasetHistoryChanges$.next(searchData);
+    public changeDatasetHistory(historyUpdate: DatasetHistoryUpdate): void {
+        this.datasetHistoryChanges$.next(historyUpdate);
     }
 
-    public get onDatasetHistoryChanges(): Observable<MetadataBlockFragment[]> {
+    public get onDatasetHistoryChanges(): Observable<DatasetHistoryUpdate> {
         return this.datasetHistoryChanges$.asObservable();
     }
 
-    public changeDatasetMetadata(searchData: SearchOverviewInterface): void {
-        this.datasetMetadataChanges$.next(searchData);
+    public get onMetadataSchemaChanges(): Observable<MetadataSchemaUpdate> {
+        return this.metadataSchemaChanges$.asObservable();
     }
 
-    public get onDatasetMetadataChanges(): Observable<SearchOverviewInterface> {
-        return this.datasetMetadataChanges$.asObservable();
+    public metadataSchemaChanges(schema: MetadataSchemaUpdate): void {
+        this.metadataSchemaChanges$.next(schema);
     }
 }

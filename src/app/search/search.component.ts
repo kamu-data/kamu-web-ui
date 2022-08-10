@@ -17,7 +17,7 @@ import {
     ViewChild,
 } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
-import {PaginationInfoInterface} from "../dataset-view/dataset-view.interface";
+import { PageBasedInfo } from "../api/kamu.graphql.interface";
 
 export interface SearchFilters {
     name?: string;
@@ -67,10 +67,10 @@ export class SearchComponent implements OnInit, AfterContentInit {
     public allComplete: boolean = false;
     public tableData: {
         tableSource: SearchOverviewDatasetsInterface[];
-        isResultQuantity: boolean;
+        hasResultQuantity: boolean;
         resultUnitText: string;
         isClickableRow: boolean;
-        pageInfo: PaginationInfoInterface;
+        pageInfo: PageBasedInfo;
         totalCount: number;
         sortOptions: { value: string; label: string; active: boolean }[];
     };
@@ -208,7 +208,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
         this.tableData = {
             tableSource: this.searchData,
             resultUnitText: "dataset(s) found",
-            isResultQuantity: true,
+            hasResultQuantity: true,
             isClickableRow: true,
             pageInfo: {
                 hasNextPage: false,

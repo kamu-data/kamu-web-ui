@@ -1,5 +1,4 @@
 import {
-    AfterContentInit,
     Component,
     HostListener,
     OnDestroy,
@@ -12,7 +11,6 @@ import {
     DatasetNameInterface,
     DataViewSchema,
     SearchHistoryInterface,
-    SearchOverviewDatasetsInterface,
     SearchOverviewInterface,
 } from "../interface/search.interface";
 import AppValues from "../common/app.values";
@@ -47,7 +45,7 @@ import { AppDatasetSubsService } from "./datasetSubs.service";
     styleUrls: ["./dataset-view.component.sass"],
     encapsulation: ViewEncapsulation.None,
 })
-export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
+export class DatasetComponent implements OnInit, OnDestroy {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     @ViewChild("menuTrigger") trigger: any;
     public isMobileView = false;
@@ -112,10 +110,6 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         ];
 
     public tableData: TableContentInterface;
-    public datasetHistory: MetadataBlockFragment[];
-    private searchOverviewDatasets: SearchHistoryInterface[] = [];
-    private searchDataDatasets: SearchHistoryInterface[] = [];
-    private searchMetadata: SearchOverviewDatasetsInterface[] = [];
 
     public linageGraphView: [number, number] = [500, 600];
     public linageGraphLink: Edge[] = [];
@@ -237,21 +231,18 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
         this.appDatasetSubsService.onDatasetOverviewChanges.subscribe(
             (overview: SearchHistoryInterface[]) => {
                 this.tableData.datasetOverviewSource = overview;
-                this.searchOverviewDatasets = overview;
             },
         );
 
         this.appDatasetSubsService.onDatasetDataChanges.subscribe(
             (history: SearchHistoryInterface[]) => {
                 this.tableData.datasetDataSource = history;
-                this.searchDataDatasets = history;
             },
         );
 
         this.appDatasetSubsService.onDatasetHistoryChanges.subscribe(
             (history: MetadataBlockFragment[]) => {
                 this.tableData.datasetHistorySource = history;
-                this.datasetHistory = history;
             },
         );
 
@@ -261,7 +252,6 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
                     this.tableData.datasetMetadataSource = data.dataset;
                     this.tableData.pageInfo = data.pageInfo;
                     this.tableData.totalCount = data.totalCount as number;
-                    this.searchMetadata = data.dataset;
 
                     setTimeout(() => (this.currentPage = data.currentPage));
                 }
@@ -294,13 +284,6 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
 
     public getDatasetTree(): { id: string; kind: DatasetKind }[][] {
         return this.appDatasetService.getDatasetTree;
-    }
-
-    public ngAfterContentInit(): void {
-        this.tableData.datasetOverviewSource = this.searchOverviewDatasets;
-        this.tableData.datasetDataSource = this.searchDataDatasets;
-        this.tableData.datasetMetadataSource = this.searchMetadata;
-        this.tableData.datasetHistorySource = this.datasetHistory;
     }
 
     public onPageChange(params: {
@@ -512,8 +495,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
 
                 this.isAvailableLinageGraph = edges.length !== 0;
 
-                const uniqueDatasets: { [id: string]: DatasetKindInterface } =
-                    {};
+                const uniqueDatasets: { [id: string]: DatasetKindInterface } = {};
                 edges.forEach((edge: DatasetKindInterface[]) =>
                     edge.forEach((dataset: DatasetKindInterface) => {
                         uniqueDatasets[dataset.id] = dataset;
@@ -597,7 +579,7 @@ export class DatasetComponent implements OnInit, AfterContentInit, OnDestroy {
     private initTableData(): void {
         this.tableData = {
             isTableHeader: true,
-            datasetOverviewSource: this.searchOverviewDatasets,
+            datasetOverviewSource: [],
             latestMetadataBlock: undefined,
             isResultQuantity: false,
             isClickableRow: false,

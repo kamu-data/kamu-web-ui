@@ -464,7 +464,7 @@
 
             <ng-template [ngIf]="datasetViewTypeHistory">
                 <app-history
-                    [datasetHistory]="datasetHistory"
+                    [datasetHistory]="tableData.datasetHistorySource || []"
                     [currentPage]="currentPage"
                     [pageInfo]="tableData.pageInfo"
                     (onSelectDatasetEmit)="(null)"

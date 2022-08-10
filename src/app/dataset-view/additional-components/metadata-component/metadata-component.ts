@@ -6,7 +6,6 @@ import {
     PaginationInfoInterface,
 } from "../../dataset-view.interface";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
-import { DataSchema } from "src/app/api/kamu.graphql.interface";
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 @Component({
@@ -49,10 +48,8 @@ export class MetadataComponent implements OnInit {
 
     ngOnInit() {
         this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
-            (schema: DataSchema) => {
-                this.currentSchema = schema
-                    ? JSON.parse(schema.content)
-                    : ({} as DataViewSchema);
+            (schema: DataViewSchema) => {
+                this.currentSchema = AppValues.deepCopy(schema);
             },
         );
     }

@@ -6,7 +6,7 @@ import {
 import DataTabValues from "./mock.data";
 import { TableContentInterface } from "../../dataset-view.interface";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
-import { DataSchema } from "src/app/api/kamu.graphql.interface";
+import AppValues from "src/app/common/app.values";
 
 @Component({
     selector: "app-data",
@@ -45,10 +45,8 @@ export class DataComponent implements OnInit {
             this.sqlRequestCode += `'${this.datasetName.name}'`;
         }
         this.appDatasetSubsService.onDataQuerySchemaChanges.subscribe(
-            (schema: DataSchema) => {
-                this.currentSchema = schema
-                    ? JSON.parse(schema.content)
-                    : ({} as DataViewSchema);
+            (schema: DataViewSchema) => {
+                this.currentSchema = AppValues.deepCopy(schema);
             },
         );
     }

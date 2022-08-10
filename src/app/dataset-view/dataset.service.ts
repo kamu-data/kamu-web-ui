@@ -4,6 +4,7 @@ import { SearchApi } from "../api/search.api";
 import {
     DatasetKindInterface,
     DatasetNameInterface,
+    DataViewSchema,
     SearchHistoryInterface,
 } from "../interface/search.interface";
 import {
@@ -173,9 +174,11 @@ export class AppDatasetService {
                 this.searchDatasetInfoChanges(dataset);
 
                 this.appDatasetSubsService.changeDatasetData(content);
-                this.appDatasetSubsService.dataQuerySchemaChanges(
-                    data.datasets.byId?.metadata?.currentSchema as DataSchema,
+
+                let schema: DataViewSchema = JSON.parse(
+                    dataset.metadata?.currentSchema.content,
                 );
+                this.appDatasetSubsService.dataQuerySchemaChanges(schema);
             });
     }
 
@@ -248,9 +251,11 @@ export class AppDatasetService {
                     name: dataset.name,
                     owner: dataset.owner,
                 });
-                this.appDatasetSubsService.metadataSchemaChanges(
-                    data.datasets.byId?.metadata?.currentSchema as DataSchema,
+
+                let schema: DataViewSchema = JSON.parse(
+                    dataset.metadata?.currentSchema.content,
                 );
+                this.appDatasetSubsService.metadataSchemaChanges(schema);
                 this.searchDatasetInfoChanges(dataset);
             });
     }
@@ -284,8 +289,9 @@ export class AppDatasetService {
                 this.appDatasetSubsService.changeDatasetData(
                     dataset.data.tail.content,
                 );
+
                 this.appDatasetSubsService.dataQuerySchemaChanges(
-                    data.data.query.schema as DataSchema,
+                    dataset.metadata.currentSchema.content,
                 );
             },
             (error: { message: string }) => {

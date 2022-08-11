@@ -41,6 +41,8 @@ export class DatasetComponent implements OnInit, OnDestroy {
     public datasetName: DatasetNameInterface;
     public searchValue = "";
     public isMinimizeSearchAdditionalButtons = false;
+    public initialDatasetViewType: typeof DatasetViewTypeEnum =
+        DatasetViewTypeEnum;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.overview;
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[] =
         [
@@ -287,6 +289,10 @@ const language = 'typescript';
 
     public get datasetViewTypeDiscussions(): boolean {
         return this.datasetViewType === DatasetViewTypeEnum.discussions;
+    }
+
+    public get datasetLink(): string {
+        return `/${this.datasetName.owner?.name}/${ProjectLinks.urlDatasetView}`;
     }
 
     public onSearchMetadata(currentPage: number): void {

@@ -126,13 +126,11 @@ export class AppComponent implements OnInit {
         if (item.__typename === TypeNames.datasetType) {
             this.navigationService.navigateToDatasetView(
                 AppValues.defaultUsername,
-                {
-                    id: item.id,
-                    type: ProjectLinks.urlDatasetViewOverviewType,
-                },
+                item.id,
+                ProjectLinks.urlDatasetViewOverviewType,
             );
         } else {
-            this.navigationService.navigateToSearch({ id: item.id, p: 1 });
+            this.navigationService.navigateToSearch(item.id, 1);
         }
     }
     public onClickAppLogo(): void {
@@ -146,7 +144,9 @@ export class AppComponent implements OnInit {
     }
 
     public onAddNew(): void {
-        this.navigationService.navigateToDatasetCreate();
+        this.navigationService.navigateToDatasetCreate(
+            AppValues.defaultUsername,
+        );
     }
 
     public onLogin(): void {

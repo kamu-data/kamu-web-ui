@@ -279,21 +279,17 @@ export class DatasetComponent implements OnInit, OnDestroy {
     public showDatasetView(): void {
         this.navigationService.navigateToDatasetView(
             this.datasetName.owner?.name,
-            {
-                id: this.datasetName.id,
-                type: this.initialDatasetViewType.overview,
-            },
+            this.datasetName.id,
+            this.initialDatasetViewType.overview,
         );
     }
 
     public onSearchMetadata(currentPage: number): void {
         this.navigationService.navigateToDatasetView(
             AppValues.defaultUsername,
-            {
-                id: this.getDatasetId(),
-                type: ProjectLinks.urlDatasetViewMetadataType,
-                p: currentPage,
-            },
+            this.getDatasetId(),
+            ProjectLinks.urlDatasetViewMetadataType,
+            currentPage,
         );
 
         this.datasetViewType = DatasetViewTypeEnum.metadata;
@@ -306,10 +302,8 @@ export class DatasetComponent implements OnInit, OnDestroy {
     public onSearchDataForDataset(): void {
         this.navigationService.navigateToDatasetView(
             AppValues.defaultUsername,
-            {
-                id: this.getDatasetId(),
-                type: ProjectLinks.urlDatasetViewDataType,
-            },
+            this.getDatasetId(),
+            ProjectLinks.urlDatasetViewDataType,
         );
         this.datasetViewType = DatasetViewTypeEnum.data;
 
@@ -319,11 +313,9 @@ export class DatasetComponent implements OnInit, OnDestroy {
     public onSearchDataForHistory(currentPage: number): void {
         this.navigationService.navigateToDatasetView(
             AppValues.defaultUsername,
-            {
-                id: this.getDatasetId(),
-                type: DatasetViewTypeEnum.history,
-                p: currentPage,
-            },
+            this.getDatasetId(),
+            DatasetViewTypeEnum.history,
+            currentPage,
         );
         this.datasetViewType = DatasetViewTypeEnum.history;
 
@@ -358,10 +350,8 @@ export class DatasetComponent implements OnInit, OnDestroy {
     public onSearchDataset(page = 0): void {
         this.navigationService.navigateToDatasetView(
             AppValues.defaultUsername,
-            {
-                id: this.getDatasetId(),
-                type: ProjectLinks.urlDatasetViewOverviewType,
-            },
+            this.getDatasetId(),
+            ProjectLinks.urlDatasetViewOverviewType,
         );
 
         this.datasetViewType = DatasetViewTypeEnum.overview;
@@ -372,10 +362,8 @@ export class DatasetComponent implements OnInit, OnDestroy {
     public onSearchLinageDataset(): void {
         this.navigationService.navigateToDatasetView(
             AppValues.defaultUsername,
-            {
-                id: this.getDatasetId(),
-                type: DatasetViewTypeEnum.linage,
-            },
+            this.getDatasetId(),
+            DatasetViewTypeEnum.linage,
         );
 
         this.datasetViewType = DatasetViewTypeEnum.linage;
@@ -569,10 +557,8 @@ export class DatasetComponent implements OnInit, OnDestroy {
     public onSelectDataset(id: string): void {
         this.navigationService.navigateToDatasetView(
             AppValues.defaultUsername,
-            {
-                id,
-                type: ProjectLinks.urlDatasetViewLineageType,
-            },
+            id,
+            ProjectLinks.urlDatasetViewLineageType,
         );
     }
     public onRunSQLRequest(query: string): void {

@@ -229,18 +229,19 @@ export class SearchComponent implements OnInit, AfterContentInit {
         isClick: boolean;
     }): void {
         this.currentPage = params.currentPage;
-        this.navigationService.navigateToSearch({
-            id: this.searchValue,
-            p: params.currentPage,
-        });
+        this.navigationService.navigateToSearch(
+            this.searchValue,
+            params.currentPage,
+        );
     }
 
     public onSelectDataset(data: { ownerName: string; id: string }): void {
         const id: string = data.id;
-        this.navigationService.navigateToDatasetView(data.ownerName, {
+        this.navigationService.navigateToDatasetView(
+            data.ownerName,
             id,
-            type: ProjectLinks.urlDatasetViewOverviewType,
-        });
+            ProjectLinks.urlDatasetViewOverviewType,
+        );
     }
 
     public onSearch(searchValue: string, page: number = 1): void {

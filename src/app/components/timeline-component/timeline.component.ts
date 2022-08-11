@@ -21,8 +21,8 @@ export class TimelineComponent {
         private navigationService: NavigationService,
     ) {}
 
-    public showOwnerPage(ownerName: string): void {
-        this.navigationService.navigateToOwnerView([ownerName]);
+    public navigateToOwnerView(ownerName: string): void {
+        this.navigationService.navigateToOwnerView(ownerName);
     }
 
     public momentConverDatetoLocalWithFormat(date: string): string {

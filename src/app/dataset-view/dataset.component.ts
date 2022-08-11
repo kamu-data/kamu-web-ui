@@ -331,9 +331,7 @@ export class DatasetComponent implements OnInit, OnDestroy {
     }
 
     public showOwnerPage(): void {
-        this.navigationService.navigateToOwnerView([
-            this.datasetInfo.owner.name,
-        ]);
+        this.navigationService.navigateToOwnerView(this.datasetInfo.owner.name);
     }
 
     public toggleReadmeView(): void {

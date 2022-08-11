@@ -57,7 +57,7 @@ export class MetadataComponent implements OnInit {
         );
     }
 
-    public showWebsite(url: string): void {
+    public navigateToWebsite(url: string): void {
         this.navigationService.navigateToWebsite(url);
     }
 

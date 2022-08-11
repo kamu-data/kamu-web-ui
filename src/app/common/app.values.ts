@@ -4,19 +4,6 @@ import * as moment from "moment-timezone";
 @Injectable()
 export default class AppValues {
     public static appLogo = "assets/icons/kamu_logo_icon.svg";
-    public static urlProfile = "profile";
-    public static urlLogin = "login";
-    public static urlGithubCallback = "github_callback";
-    public static urlSearch = "search";
-    public static urlDatasetView = "dataset-view";
-    public static urlDatasetViewOverviewType = "overview";
-    public static urlDatasetViewMetadataType = "metadata";
-    public static urlDatasetViewDataType = "data";
-    public static urlDatasetViewHistoryType = "history";
-    public static urlDatasetViewLineageType = "linage"; //TODO: Spelling
-    public static urlDatasetCreate = "dataset-create";
-    public static urlDatasetCreateSelectType = "select-type";
-    public static urlDatasetCreateRoot = "root";
 
     public static localStorageCode = "code";
     public static localStorageAccessToken = "code";

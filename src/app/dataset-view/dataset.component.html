@@ -40,8 +40,7 @@
                                 datasetName?.owner?.name && datasetName?.name
                             "
                             data-pjax="#repo-content-pjax-container"
-                            [routerLink]="[datasetLink]"
-                            [queryParams]="{id:datasetName.id,type:initialDatasetViewType.overview}"
+                            (click)="showDatasetView()"
                             >{{ datasetName.name }}</a
                         >
                     </strong>

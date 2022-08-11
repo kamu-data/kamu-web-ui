@@ -93,7 +93,7 @@
             </p>
             <p>
                 <strong>Website:</strong>
-                <a [href]="datasetInfo.metadata.currentLicense.websiteUrl">{{
+                <a (click)="showWebsite(datasetInfo.metadata.currentLicense.websiteUrl)">{{
                     datasetInfo.metadata.currentLicense.websiteUrl
                 }}</a>
             </p>

@@ -146,7 +146,7 @@
                         <div class="dataset-info--sub-block">
                             <a
                                 class="link--primary"
-                                [href]="datasetInfo.metadata.currentLicense.websiteUrl"
+                                (click)="showWebsite(datasetInfo.metadata.currentLicense.websiteUrl)"
                             >
                                 <p
                                     class="dataset-info--text"

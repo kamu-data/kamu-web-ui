@@ -75,7 +75,7 @@
                             />
                         </a>
                         <span class="signed-commit-signer-name flex-1">
-                            <a class="signer" [href]="'/' + row.owner.name">{{
+                            <a class="signer" (click)="showOwnerPage(row.owner.name)">{{
                                 row.owner.name
                             }}</a>
                             {{ row.owner.name }}

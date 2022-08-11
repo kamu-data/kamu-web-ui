@@ -104,24 +104,9 @@ export class DatasetComponent implements OnInit, OnDestroy {
     public isAvailableLinageGraph = false;
     public headings: Element[] | undefined;
     public isMarkdownEditView = false;
-    public clipboardKamuCli = "kamu pull kamu.dev/anonymous/dataset";
-    public clipboardKafka = "https://api.kamu.dev/kafka/anonymous/dataset";
-    public markdownText = `## Markdown __rulez__!
----
-
-### Syntax highlight
-\`\`\`typescript
-const language = 'typescript';
-\`\`\`
-
-### Lists
-1. Ordered list
-2. Another bullet point
-   - Unordered list
-   - Another unordered bullet
-
-### Blockquote
-> Blockquote to the max`;
+    public clipboardKamuCli = AppValues.clipboardKamuCli;
+    public clipboardKafka = AppValues.clipboardKafka;
+    public markdownText = AppValues.markdownContain;
 
     private w: Window;
 
@@ -291,8 +276,14 @@ const language = 'typescript';
         return this.datasetViewType === DatasetViewTypeEnum.discussions;
     }
 
-    public get datasetLink(): string {
-        return `/${this.datasetName.owner?.name}/${ProjectLinks.urlDatasetView}`;
+    public showDatasetView(): void {
+        this.navigationService.navigateToDatasetView(
+            this.datasetName.owner?.name,
+            {
+                id: this.datasetName.id,
+                type: this.initialDatasetViewType.overview,
+            },
+        );
     }
 
     public onSearchMetadata(currentPage: number): void {

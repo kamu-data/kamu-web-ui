@@ -1,3 +1,4 @@
+import { NavigationService } from "src/app/services/navigation.service";
 import { Component, Input } from "@angular/core";
 import AppValues from "../../common/app.values";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
@@ -15,7 +16,14 @@ export class TimelineComponent {
     @Input() public history: MetadataBlockFragment[];
     @Input() public pageInfo: PageBasedInfo;
 
-    constructor(public dataHelpers: DataHelpersService) {}
+    constructor(
+        public dataHelpers: DataHelpersService,
+        private navigationService: NavigationService,
+    ) {}
+
+    public showOwnerPage(ownerName: string): void {
+        this.navigationService.navigateToOwnerView([ownerName]);
+    }
 
     public momentConverDatetoLocalWithFormat(date: string): string {
         return AppValues.momentConverDatetoLocalWithFormat({

@@ -1,3 +1,4 @@
+import { NavigationService } from "src/app/services/navigation.service";
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DataViewSchema } from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
@@ -41,7 +42,10 @@ export class MetadataComponent implements OnInit {
     public pageInfo: PageBasedInfo;
     public currentPage: number = 0;
 
-    constructor(private appDatasetSubsService: AppDatasetSubsService) {}
+    constructor(
+        private appDatasetSubsService: AppDatasetSubsService,
+        private navigationService: NavigationService,
+    ) {}
 
     ngOnInit() {
         this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
@@ -53,18 +57,26 @@ export class MetadataComponent implements OnInit {
         );
     }
 
+    public showWebsite(url: string): void {
+        this.navigationService.navigateToWebsite(url);
+    }
+
     public selectPage(page: string) {
         this.page = parseInt(page, 10) || 1;
     }
+
     public selectTopic(topicName: string): void {
         this.onSelectTopicEmit.emit(topicName);
     }
+
     public onClickDataset(idDataset: string): void {
         this.onClickDatasetEmit.emit(idDataset);
     }
+
     public shortHash(hash: string): string {
         return hash.slice(-8);
     }
+
     public momentConverDatetoLocalWithFormat(date: string): string {
         return AppValues.momentConverDatetoLocalWithFormat({
             date: new Date(String(date)),
@@ -76,6 +88,7 @@ export class MetadataComponent implements OnInit {
     formatInput(input: HTMLInputElement) {
         input.value = input.value.replace(FILTER_PAG_REGEX, "");
     }
+
     public onPageChange(params: {
         currentPage: number;
         isClick: boolean;

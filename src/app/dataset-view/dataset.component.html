@@ -40,13 +40,7 @@
                                 datasetName?.owner?.name && datasetName?.name
                             "
                             data-pjax="#repo-content-pjax-container"
-                            [href]="
-                                '/' +
-                                datasetName.owner.name +
-                                '/dataset-view?id=' +
-                                datasetName.id +
-                                '&type=overview'
-                            "
+                            (click)="showDatasetView()"
                             >{{ datasetName.name }}</a
                         >
                     </strong>

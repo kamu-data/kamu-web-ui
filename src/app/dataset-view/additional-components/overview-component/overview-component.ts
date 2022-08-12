@@ -7,6 +7,7 @@ import {
     ViewEncapsulation,
 } from "@angular/core";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
+import { NavigationService } from "src/app/services/navigation.service";
 import {
     Dataset,
     MetadataBlockFragment,
@@ -33,6 +34,7 @@ export class OverviewComponent implements OnInit {
     constructor(
         public dataHelpers: DataHelpersService,
         private appDatasetSubsService: AppDatasetSubsService,
+        private navigationService: NavigationService,
     ) {}
 
     ngOnInit(): void {
@@ -41,6 +43,10 @@ export class OverviewComponent implements OnInit {
                 this.currentOverviewData = overviewUpdate.content;
             },
         );
+    }
+
+    public showWebsite(url: string): void {
+        this.navigationService.navigateToWebsite(url);
     }
 
     public onSelectDataset(id: string): void {

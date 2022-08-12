@@ -1,3 +1,4 @@
+import { NavigationService } from "./../../services/navigation.service";
 import { Component, OnInit } from "@angular/core";
 import { Observable, of, Subscription, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
@@ -15,7 +16,7 @@ export class GithubCallbackComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private router: Router,
+        private navigationService: NavigationService,
         private httpClient: HttpClient,
         private authApi: AuthApi,
     ) {
@@ -24,12 +25,12 @@ export class GithubCallbackComponent implements OnInit {
 
     ngOnInit() {
         if (!this._window.location.search.includes("?code=")) {
-            this.router.navigate(["/"]);
+            this.navigationService.navigateToHome();
         }
         this.route.queryParams.subscribe((param: any) => {
             this.authApi
                 .getUserInfoAndToken(param.code)
-                .subscribe(() => this.router.navigate(["/"]));
+                .subscribe(() => this.navigationService.navigateToHome());
         });
     }
 }

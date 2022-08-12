@@ -8,14 +8,18 @@ import { AccountComponent } from "./auth/account/account.component";
 import AppValues from "./common/app.values";
 import { GithubCallbackComponent } from "./auth/github-callback/github.callback";
 import { environment } from "../environments/environment";
+import ProjectLinks from "./project-links";
 
 const githubUrl = `https://github.com/login/oauth/authorize?scope=user:email&client_id=${environment.github_client_id}`;
 
 const routes: Routes = [
-    { path: "", redirectTo: AppValues.urlSearch, pathMatch: "full" },
-    { path: AppValues.urlGithubCallback, component: GithubCallbackComponent },
+    { path: "", redirectTo: ProjectLinks.urlSearch, pathMatch: "full" },
     {
-        path: AppValues.urlLogin,
+        path: ProjectLinks.urlGithubCallback,
+        component: GithubCallbackComponent,
+    },
+    {
+        path: ProjectLinks.urlLogin,
         component: LoginComponent,
         loadChildren: () =>
             new Promise(() => {
@@ -23,7 +27,7 @@ const routes: Routes = [
             }),
     },
     {
-        path: AppValues.urlSearch,
+        path: ProjectLinks.urlSearch,
         component: SearchComponent,
         children: [{ path: ":id", component: SearchComponent }],
     },
@@ -39,24 +43,24 @@ const routes: Routes = [
                 component: AccountComponent,
             },
             {
-                path: "dataset-view",
+                path: ProjectLinks.urlDatasetView,
                 component: DatasetComponent,
             },
             {
-                path: AppValues.urlDatasetCreateSelectType,
+                path: ProjectLinks.urlDatasetCreateSelectType,
                 component: DatasetCreateComponent,
             },
             {
-                path: AppValues.urlDatasetCreate,
+                path: ProjectLinks.urlDatasetCreate,
                 component: DatasetCreateComponent,
                 children: [
                     {
                         path: "",
-                        redirectTo: AppValues.urlDatasetCreateSelectType,
+                        redirectTo: ProjectLinks.urlDatasetCreateSelectType,
                         pathMatch: "full",
                     },
                     {
-                        path: AppValues.urlDatasetCreateRoot,
+                        path: ProjectLinks.urlDatasetCreateRoot,
                         component: DatasetCreateComponent,
                     },
                 ],

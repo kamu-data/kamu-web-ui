@@ -1,3 +1,4 @@
+import { NavigationService } from "./../../services/navigation.service";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { SearchOverviewDatasetsInterface } from "../../interface/search.interface";
 import { ModalService } from "../modal/modal.service";
@@ -27,10 +28,15 @@ export class RepoListComponent {
     constructor(
         private modalService: ModalService,
         public dataHelpers: DataHelpersService,
+        public navigationService: NavigationService,
     ) {}
 
+    public navigateToOwnerView(ownerName: string): void {
+        this.navigationService.navigateToOwnerView(ownerName);
+    }
+
     public onSelectDataset(ownerName: string, id: string): void {
-        this.onSelectDatasetEmit.emit({ ownerName, id: id });
+        this.onSelectDatasetEmit.emit({ ownerName, id });
     }
 
     public searchResultQuantity(

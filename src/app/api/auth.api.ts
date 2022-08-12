@@ -10,12 +10,13 @@ import { Router } from "@angular/router";
 import { userResponse } from "./mock.user";
 import { subscribe } from "graphql";
 import AppValues from "../common/app.values";
+import { NavigationService } from "../services/navigation.service";
 @Injectable()
 export class AuthApi {
     constructor(
         private apollo: Apollo,
         private httpClient: HttpClient,
-        private router: Router,
+        private navigationService: NavigationService,
     ) {}
 
     public get onUserChanges(): Observable<UserInterface | {}> {
@@ -126,6 +127,6 @@ export class AuthApi {
         this.userChange({});
         localStorage.removeItem(AppValues.localStorageAccessToken);
         localStorage.removeItem(AppValues.localStorageCode);
-        this.router.navigate(["/"]);
+        this.navigationService.navigateToHome();
     }
 }

@@ -17,6 +17,8 @@ import {
     ViewChild,
 } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
+import ProjectLinks from "../project-links";
+import { NavigationService } from "../services/navigation.service";
 import { PageBasedInfo } from "../api/kamu.graphql.interface";
 
 export interface SearchFilters {
@@ -147,6 +149,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
 
     constructor(
         private router: Router,
+        private navigationService: NavigationService,
         private appSearchService: AppSearchService,
         private sidenavService: SideNavService,
     ) {
@@ -226,17 +229,19 @@ export class SearchComponent implements OnInit, AfterContentInit {
         isClick: boolean;
     }): void {
         this.currentPage = params.currentPage;
-
-        this.router.navigate([AppValues.urlSearch], {
-            queryParams: { id: this.searchValue, p: params.currentPage },
-        });
+        this.navigationService.navigateToSearch(
+            this.searchValue,
+            params.currentPage,
+        );
     }
 
     public onSelectDataset(data: { ownerName: string; id: string }): void {
         const id: string = data.id;
-        this.router.navigate([data.ownerName, AppValues.urlDatasetView], {
-            queryParams: { id, type: AppValues.urlDatasetViewOverviewType },
-        });
+        this.navigationService.navigateToDatasetView(
+            data.ownerName,
+            id,
+            ProjectLinks.urlDatasetViewOverviewType,
+        );
     }
 
     public onSearch(searchValue: string, page: number = 1): void {

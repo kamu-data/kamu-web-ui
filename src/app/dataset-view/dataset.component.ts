@@ -1,3 +1,4 @@
+import { NavigationService } from "./../services/navigation.service";
 import {
     Component,
     HostListener,
@@ -24,6 +25,7 @@ import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { Dataset, DatasetKind } from "../api/kamu.graphql.interface";
+import ProjectLinks from "../project-links";
 
 @Component({
     selector: "app-dataset",
@@ -39,6 +41,8 @@ export class DatasetComponent implements OnInit, OnDestroy {
     public datasetName: DatasetNameInterface;
     public searchValue = "";
     public isMinimizeSearchAdditionalButtons = false;
+    public initialDatasetViewType: typeof DatasetViewTypeEnum =
+        DatasetViewTypeEnum;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.overview;
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[] =
         [
@@ -100,8 +104,8 @@ export class DatasetComponent implements OnInit, OnDestroy {
     public isAvailableLinageGraph = false;
     public headings: Element[] | undefined;
     public isMarkdownEditView = false;
-    public clipboardKamuCli = "kamu pull kamu.dev/anonymous/dataset";
-    public clipboardKafka = "https://api.kamu.dev/kafka/anonymous/dataset";
+    public clipboardKamuCli = AppValues.clipboardKamuCli;
+    public clipboardKafka = AppValues.clipboardKafka;
     public markdownText = AppValues.markdownContain;
 
     private w: Window;
@@ -123,6 +127,7 @@ export class DatasetComponent implements OnInit, OnDestroy {
         private appDatasetService: AppDatasetService,
         private sidenavService: SideNavService,
         private router: Router,
+        private navigationService: NavigationService,
         private modalService: ModalService,
         private clipboard: Clipboard,
     ) {
@@ -271,16 +276,20 @@ export class DatasetComponent implements OnInit, OnDestroy {
         return this.datasetViewType === DatasetViewTypeEnum.discussions;
     }
 
+    public showDatasetView(): void {
+        this.navigationService.navigateToDatasetView(
+            this.datasetName.owner?.name,
+            this.datasetName.id,
+            this.initialDatasetViewType.overview,
+        );
+    }
+
     public onSearchMetadata(currentPage: number): void {
-        this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
-            {
-                queryParams: {
-                    id: this.getDatasetId(),
-                    type: AppValues.urlDatasetViewMetadataType,
-                    p: currentPage,
-                },
-            },
+        this.navigationService.navigateToDatasetView(
+            AppValues.defaultUsername,
+            this.getDatasetId(),
+            ProjectLinks.urlDatasetViewMetadataType,
+            currentPage,
         );
 
         this.datasetViewType = DatasetViewTypeEnum.metadata;
@@ -291,14 +300,10 @@ export class DatasetComponent implements OnInit, OnDestroy {
     }
 
     public onSearchDataForDataset(): void {
-        this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
-            {
-                queryParams: {
-                    id: this.getDatasetId(),
-                    type: AppValues.urlDatasetViewDataType,
-                },
-            },
+        this.navigationService.navigateToDatasetView(
+            AppValues.defaultUsername,
+            this.getDatasetId(),
+            ProjectLinks.urlDatasetViewDataType,
         );
         this.datasetViewType = DatasetViewTypeEnum.data;
 
@@ -306,15 +311,11 @@ export class DatasetComponent implements OnInit, OnDestroy {
     }
 
     public onSearchDataForHistory(currentPage: number): void {
-        this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
-            {
-                queryParams: {
-                    id: this.getDatasetId(),
-                    type: DatasetViewTypeEnum.history,
-                    p: currentPage,
-                },
-            },
+        this.navigationService.navigateToDatasetView(
+            AppValues.defaultUsername,
+            this.getDatasetId(),
+            DatasetViewTypeEnum.history,
+            currentPage,
         );
         this.datasetViewType = DatasetViewTypeEnum.history;
 
@@ -330,7 +331,7 @@ export class DatasetComponent implements OnInit, OnDestroy {
     }
 
     public showOwnerPage(): void {
-        this.router.navigate([this.datasetInfo.owner.id]);
+        this.navigationService.navigateToOwnerView(this.datasetInfo.owner.name);
     }
 
     public toggleReadmeView(): void {
@@ -345,14 +346,10 @@ export class DatasetComponent implements OnInit, OnDestroy {
     }
 
     public onSearchDataset(page = 0): void {
-        this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
-            {
-                queryParams: {
-                    id: this.getDatasetId(),
-                    type: AppValues.urlDatasetViewOverviewType,
-                },
-            },
+        this.navigationService.navigateToDatasetView(
+            AppValues.defaultUsername,
+            this.getDatasetId(),
+            ProjectLinks.urlDatasetViewOverviewType,
         );
 
         this.datasetViewType = DatasetViewTypeEnum.overview;
@@ -361,14 +358,10 @@ export class DatasetComponent implements OnInit, OnDestroy {
     }
 
     public onSearchLinageDataset(): void {
-        this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
-            {
-                queryParams: {
-                    id: this.getDatasetId(),
-                    type: DatasetViewTypeEnum.linage,
-                },
-            },
+        this.navigationService.navigateToDatasetView(
+            AppValues.defaultUsername,
+            this.getDatasetId(),
+            DatasetViewTypeEnum.linage,
         );
 
         this.datasetViewType = DatasetViewTypeEnum.linage;
@@ -560,14 +553,10 @@ export class DatasetComponent implements OnInit, OnDestroy {
     }
 
     public onSelectDataset(id: string): void {
-        this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
-            {
-                queryParams: {
-                    id,
-                    type: AppValues.urlDatasetViewLineageType,
-                },
-            },
+        this.navigationService.navigateToDatasetView(
+            AppValues.defaultUsername,
+            id,
+            ProjectLinks.urlDatasetViewLineageType,
         );
     }
     public onRunSQLRequest(query: string): void {

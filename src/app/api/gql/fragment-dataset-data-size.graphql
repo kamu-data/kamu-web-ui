@@ -1,0 +1,4 @@
+fragment DatasetDataSize on DatasetData {
+  numRecordsTotal
+  estimatedSize
+}

@@ -1,32 +1,22 @@
-fragment LineageDatasetInfo on Dataset {
-  id
-  kind
-  name
-  owner {
-    id
-    name
-  }
-}
-
 query getDatasetLineage($datasetId: DatasetID!) {
   datasets {
     byId(datasetId: $datasetId) {
-      ...LineageDatasetInfo
+      ...DatasetBasics
       metadata {
         currentUpstreamDependencies {
-          ...LineageDatasetInfo
+          ...DatasetBasics
           metadata {
             currentUpstreamDependencies {
-              ...LineageDatasetInfo
+              ...DatasetBasics
               metadata {
                 currentUpstreamDependencies {
-                  ...LineageDatasetInfo
+                  ...DatasetBasics
                   metadata {
                     currentUpstreamDependencies {
-                      ...LineageDatasetInfo
+                      ...DatasetBasics
                       metadata {
                         currentUpstreamDependencies {
-                          ...LineageDatasetInfo
+                          ...DatasetBasics
                         }
                       }
                     }
@@ -37,19 +27,19 @@ query getDatasetLineage($datasetId: DatasetID!) {
           }
         }
         currentDownstreamDependencies {
-          ...LineageDatasetInfo
+          ...DatasetBasics
           metadata {
             currentDownstreamDependencies {
-              ...LineageDatasetInfo
+              ...DatasetBasics
               metadata {
                 currentDownstreamDependencies {
-                  ...LineageDatasetInfo
+                  ...DatasetBasics
                   metadata {
                     currentDownstreamDependencies {
-                      ...LineageDatasetInfo
+                      ...DatasetBasics
                       metadata {
                         currentDownstreamDependencies {
-                          ...LineageDatasetInfo
+                          ...DatasetBasics
                         }
                       }
                     }

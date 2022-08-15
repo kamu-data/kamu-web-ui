@@ -5,10 +5,12 @@ import { AppSearchService } from "./search/search.service";
 import { filter } from "rxjs/operators";
 import { Router, NavigationEnd } from "@angular/router";
 import { DatasetIDsInterface, TypeNames } from "./interface/search.interface";
-import { AccountInfoOptional, AuthApi } from "./api/auth.api";
+import { AuthApi } from "./api/auth.api";
 import { ModalService } from "./components/modal/modal.service";
 import ProjectLinks from "./project-links";
-import { AccountInfo } from "./api/kamu.graphql.interface";
+import { Account, AccountInfo } from "./api/kamu.graphql.interface";
+import { deepCopy } from "deep-copy-ts";
+import { Optional } from "./common/app.types";
 
 @Component({
     selector: "app-root",
@@ -51,10 +53,8 @@ export class AppComponent implements OnInit {
     public ngOnInit(): void {
         this.checkView();
         this.appHeaderInit();
-        this.authApi.onUserChanges.subscribe((user: AccountInfoOptional) => {
-            this.user = user
-                ? AppValues.deepCopy(user)
-                : this.AnonymousAccountInfo;
+        this.authApi.onUserChanges.subscribe((user: Optional<AccountInfo>) => {
+            this.user = user ? deepCopy(user) : this.AnonymousAccountInfo;
         });
         this.authentification();
     }

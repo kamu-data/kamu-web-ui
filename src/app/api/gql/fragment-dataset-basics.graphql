@@ -1,0 +1,9 @@
+fragment DatasetBasics on Dataset {
+  id
+  kind
+  name
+  owner {
+    id
+    name
+  }
+}

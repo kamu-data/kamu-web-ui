@@ -1,12 +1,7 @@
 query getDatasetHistory($datasetId: DatasetID!, $perPage: Int, $page: Int) {
   datasets {
     byId(datasetId: $datasetId) {
-      id
-      owner {
-        id
-        name
-      }
-      name
+      ...DatasetBasics
       metadata {
         chain {
           blocks(perPage: $perPage, page: $page) {

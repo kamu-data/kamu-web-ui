@@ -3,14 +3,14 @@ import { DataViewSchema } from "../../../interface/search.interface";
 import DataTabValues from "./mock.data";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
 import { DataUpdate } from "../../datasetSubs.interface";
-import { Dataset } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-data",
     templateUrl: "./data-component.html",
 })
 export class DataComponent implements OnInit {
-    @Input() public dataset: Dataset;
+    @Input() public datasetBasics?: DatasetBasicsFragment;
     // tslint:disable-next-line:no-output-on-prefix
     @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
     // tslint:disable-next-line:no-output-on-prefix
@@ -38,7 +38,9 @@ export class DataComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.sqlRequestCode += `'${this.dataset.name}'`;
+        if (this.datasetBasics) {
+            this.sqlRequestCode += `'${this.datasetBasics.name}'`;
+        }
         this.appDatasetSubsService.onDatasetDataChanges.subscribe(
             (dataUpdate: DataUpdate) => {
                 this.currentData = dataUpdate.content;

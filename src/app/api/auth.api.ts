@@ -9,8 +9,7 @@ import {
 } from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { FetchResult } from "apollo-link";
-
-export type AccountInfoOptional = AccountInfo | null;
+import { Optional } from "../common/app.types";
 
 @Injectable()
 export class AuthApi {
@@ -19,7 +18,7 @@ export class AuthApi {
         private navigationService: NavigationService,
     ) {}
 
-    public get onUserChanges(): Observable<AccountInfoOptional> {
+    public get onUserChanges(): Observable<Optional<AccountInfo>> {
         return this.userChanges$.asObservable();
     }
 
@@ -33,15 +32,16 @@ export class AuthApi {
     public get isAuthUser(): boolean {
         return this.isAuthenticated;
     }
-    private user: AccountInfoOptional;
+    private user: Optional<AccountInfo>;
     private isAuthenticated: boolean;
-    private userChanges$: Subject<AccountInfoOptional> =
-        new Subject<AccountInfoOptional>();
+    private userChanges$: Subject<Optional<AccountInfo>> = new Subject<
+        Optional<AccountInfo>
+    >();
 
     static handleError(error: Response): Observable<never> {
         return throwError(`GitHub ${error.statusText || "Server error"}`);
     }
-    public userChange(user: AccountInfoOptional) {
+    public userChange(user: Optional<AccountInfo>) {
         this.user = user;
         this.userChanges$.next(user);
     }

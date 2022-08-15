@@ -21,7 +21,10 @@ import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
 import { Clipboard } from "@angular/cdk/clipboard";
-import { Dataset, DatasetKind } from "../api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    DatasetKind,
+} from "../api/kamu.graphql.interface";
 import ProjectLinks from "../project-links";
 
 @Component({
@@ -34,7 +37,7 @@ export class DatasetComponent implements OnInit, OnDestroy {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     @ViewChild("menuTrigger") trigger: any;
     public isMobileView = false;
-    public datasetInfo: Dataset;
+    public datasetBasics?: DatasetBasicsFragment;
     public searchValue = "";
     public isMinimizeSearchAdditionalButtons = false;
     public initialDatasetViewType: typeof DatasetViewTypeEnum =
@@ -174,9 +177,9 @@ export class DatasetComponent implements OnInit, OnDestroy {
 
         this.prepareLinageGraph();
 
-        this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
-            (info: Dataset) => {
-                this.datasetInfo = info;
+        this.appDatasetService.onSearchDatasetBasicsChanges.subscribe(
+            (basics: DatasetBasicsFragment) => {
+                this.datasetBasics = basics;
             },
         );
         this.appDatasetService.onSearchChanges.subscribe((value: string) => {
@@ -221,7 +224,7 @@ export class DatasetComponent implements OnInit, OnDestroy {
     }
 
     public getResultUnitText(): string {
-        return `results in ${this.datasetInfo?.name || ""}`;
+        return `results in ${this.datasetBasics?.name || ""}`;
     }
 
     public onClickSearchAdditionalButton(method: string) {
@@ -268,11 +271,13 @@ export class DatasetComponent implements OnInit, OnDestroy {
     }
 
     public showDatasetView(): void {
-        this.navigationService.navigateToDatasetView(
-            this.datasetInfo.owner?.name,
-            this.datasetInfo.id,
-            this.initialDatasetViewType.overview,
-        );
+        if (this.datasetBasics) {
+            this.navigationService.navigateToDatasetView(
+                this.datasetBasics.owner?.name,
+                this.datasetBasics.id,
+                this.initialDatasetViewType.overview,
+            );
+        }
     }
 
     public onSearchMetadata(currentPage: number): void {
@@ -322,7 +327,11 @@ export class DatasetComponent implements OnInit, OnDestroy {
     }
 
     public showOwnerPage(): void {
-        this.navigationService.navigateToOwnerView(this.datasetInfo.owner.name);
+        if (this.datasetBasics) {
+            this.navigationService.navigateToOwnerView(
+                this.datasetBasics.owner.name,
+            );
+        }
     }
 
     public toggleReadmeView(): void {
@@ -551,11 +560,13 @@ export class DatasetComponent implements OnInit, OnDestroy {
         );
     }
     public onRunSQLRequest(query: string): void {
-        this.appDatasetService.onGetDatasetDataSQLRun(
-            this.datasetInfo,
-            query,
-            50, // TODO: Propagate limit from UI and display when it was reached
-        );
+        if (this.datasetBasics) {
+            this.appDatasetService.onGetDatasetDataSQLRun(
+                this.datasetBasics,
+                query,
+                50, // TODO: Propagate limit from UI and display when it was reached
+            );
+        }
     }
 
     ngOnDestroy() {

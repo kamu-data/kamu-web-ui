@@ -4,7 +4,11 @@ import { DataViewSchema } from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
 import { MetadataSchemaUpdate } from "../../datasetSubs.interface";
-import { Dataset, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    DatasetMetadataDetailsFragment,
+    PageBasedInfo,
+} from "src/app/api/kamu.graphql.interface";
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 @Component({
@@ -12,7 +16,7 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
     templateUrl: "./metadata.component.html",
 })
 export class MetadataComponent implements OnInit {
-    @Input() public datasetInfo: Dataset;
+    @Input() public datasetBasics?: DatasetBasicsFragment;
     @Output() public pageChangeEvent: EventEmitter<{
         currentPage: number;
         isClick: boolean;
@@ -26,7 +30,6 @@ export class MetadataComponent implements OnInit {
     @Output() onClickDatasetEmit: EventEmitter<string> = new EventEmitter();
 
     public page = 1;
-    private previousPage: number;
     public sqlEditorOptions = {
         theme: "vs",
         language: "sql",
@@ -39,6 +42,7 @@ export class MetadataComponent implements OnInit {
     };
 
     public currentSchema?: DataViewSchema;
+    public currentMetadata?: DatasetMetadataDetailsFragment;
     public pageInfo: PageBasedInfo;
     public currentPage: number = 0;
 
@@ -51,6 +55,7 @@ export class MetadataComponent implements OnInit {
         this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
             (schemaUpdate: MetadataSchemaUpdate) => {
                 this.currentSchema = schemaUpdate.schema;
+                this.currentMetadata = schemaUpdate.metadata;
                 this.pageInfo = schemaUpdate.pageInfo;
                 this.currentPage = this.pageInfo.currentPage + 1;
             },

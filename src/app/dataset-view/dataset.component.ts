@@ -7,10 +7,7 @@ import {
     ViewChild,
     ViewEncapsulation,
 } from "@angular/core";
-import {
-    DatasetKindInterface,
-    DatasetNameInterface,
-} from "../interface/search.interface";
+import { DatasetKindInterface } from "../interface/search.interface";
 import AppValues from "../common/app.values";
 import { SearchAdditionalHeaderButtonInterface } from "../components/search-additional-buttons/search-additional-buttons.interface";
 import { MatSidenav } from "@angular/material/sidenav";
@@ -38,7 +35,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
     @ViewChild("menuTrigger") trigger: any;
     public isMobileView = false;
     public datasetInfo: Dataset;
-    public datasetName: DatasetNameInterface;
     public searchValue = "";
     public isMinimizeSearchAdditionalButtons = false;
     public initialDatasetViewType: typeof DatasetViewTypeEnum =
@@ -183,11 +179,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
                 this.datasetInfo = info;
             },
         );
-        this.appDatasetService.onSearchDatasetNameChanges.subscribe(
-            (datasetName: DatasetNameInterface) => {
-                this.datasetName = datasetName;
-            },
-        );
         this.appDatasetService.onSearchChanges.subscribe((value: string) => {
             this.searchValue = value;
         });
@@ -278,8 +269,8 @@ export class DatasetComponent implements OnInit, OnDestroy {
 
     public showDatasetView(): void {
         this.navigationService.navigateToDatasetView(
-            this.datasetName.owner?.name,
-            this.datasetName.id,
+            this.datasetInfo.owner?.name,
+            this.datasetInfo.id,
             this.initialDatasetViewType.overview,
         );
     }

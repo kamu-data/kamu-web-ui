@@ -1,26 +1,14 @@
 import {
-    Account,
+    Dataset,
     DatasetKind,
-    DatasetMetadata,
     PageBasedInfo,
     Scalars,
 } from "../api/kamu.graphql.interface";
 import Maybe from "graphql/tsutils/Maybe";
 
 // Should be refactoring
-export interface SearchOverviewDatasetsInterface {
-    id: string;
-    name: string;
-    owner: Account;
-    kind: DatasetKind;
-    metadata: DatasetMetadata;
-    createdAt: string;
-    lastUpdatedAt: string;
-}
-
-// Should be refactoring
 export interface SearchOverviewInterface {
-    dataset: SearchOverviewDatasetsInterface[];
+    datasets: Dataset[];
     totalCount: Maybe<Scalars["Int"]>;
     pageInfo: PageBasedInfo;
     currentPage: number;
@@ -43,11 +31,6 @@ export enum TypeNames {
     datasetType = "Dataset",
 }
 
-export interface DatasetNameInterface {
-    id: string;
-    name: string;
-    owner: Account;
-}
 export interface DatasetLinageResponse {
     __typename: string;
     id: string;
@@ -55,6 +38,7 @@ export interface DatasetLinageResponse {
     name: string;
     metadata: DatasetCurrentUpstreamDependencies;
 }
+
 export interface DatasetCurrentUpstreamDependencies {
     __typename: string;
     id: string;
@@ -63,11 +47,13 @@ export interface DatasetCurrentUpstreamDependencies {
     currentDownstreamDependencies?: DatasetLinageResponse[];
     currentUpstreamDependencies?: DatasetLinageResponse[];
 }
+
 export interface DataViewSchema {
     name: string;
     type: string;
     fields: Array<DataSchemaField>;
 }
+
 export interface DataSchemaField {
     name: string;
     repetition: string;

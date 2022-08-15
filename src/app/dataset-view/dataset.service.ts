@@ -3,7 +3,6 @@ import { Observable, Subject, Subscription } from "rxjs";
 import { SearchApi } from "../api/search.api";
 import {
     DatasetKindInterface,
-    DatasetNameInterface,
     DataViewSchema,
 } from "../interface/search.interface";
 import {
@@ -41,10 +40,6 @@ export class AppDatasetService {
         return this.searchDatasetInfoChanges$.asObservable();
     }
 
-    public get onSearchDatasetNameChanges(): Observable<DatasetNameInterface> {
-        return this.searchDatasetNameChanges$.asObservable();
-    }
-
     public get onSearchChanges(): Observable<string> {
         return this.searchChanges$.asObservable();
     }
@@ -76,8 +71,6 @@ export class AppDatasetService {
     private searchChanges$: Subject<string> = new Subject<string>();
     private searchDatasetInfoChanges$: Subject<Dataset> =
         new Subject<Dataset>();
-    private searchDatasetNameChanges$: Subject<DatasetNameInterface> =
-        new Subject<DatasetNameInterface>();
     private datasetTreeChanges$: Subject<
         [DatasetKindInterface[][], DatasetKindInterface]
     > = new Subject<[DatasetKindInterface[][], DatasetKindInterface]>();
@@ -101,12 +94,6 @@ export class AppDatasetService {
 
     public searchDatasetInfoChanges(searchDatasetInfo: Dataset): void {
         this.searchDatasetInfoChanges$.next(searchDatasetInfo);
-    }
-
-    public searchDatasetNameChanges(
-        searchDatasetName: DatasetNameInterface,
-    ): void {
-        this.searchDatasetNameChanges$.next(searchDatasetName);
     }
 
     public kindInfoChanges(datasetList: DatasetKindInterface[]): void {
@@ -155,11 +142,6 @@ export class AppDatasetService {
             .getDatasetOverview({ id, page })
             .subscribe((data: DatasetOverviewQuery) => {
                 const dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
-                this.searchDatasetNameChanges({
-                    id: dataset.id,
-                    name: dataset.name,
-                    owner: dataset.owner,
-                });
                 this.searchDatasetInfoChanges(dataset);
 
                 const content: Object[] =
@@ -177,11 +159,6 @@ export class AppDatasetService {
             .getDatasetOverview({ id, page })
             .subscribe((data: DatasetOverviewQuery) => {
                 const dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
-                this.searchDatasetNameChanges({
-                    id: dataset.id,
-                    name: dataset.name,
-                    owner: dataset.owner,
-                });
                 this.searchDatasetInfoChanges(dataset);
 
                 const content: Object[] =
@@ -201,12 +178,6 @@ export class AppDatasetService {
         this.searchApi
             .onDatasetHistory({ id, numRecords, numPage })
             .subscribe((data: GetDatasetHistoryQuery) => {
-                this.searchDatasetNameChanges({
-                    id: data.datasets.byId?.id,
-                    name: data.datasets.byId?.name,
-                    owner: data.datasets.byId?.owner as any,
-                });
-
                 let pageInfo: PageBasedInfo = data.datasets.byId?.metadata.chain
                     .blocks.pageInfo
                     ? Object.assign(
@@ -234,12 +205,6 @@ export class AppDatasetService {
             .onSearchMetadata({ id, page })
             .subscribe((data: GetDatasetMetadataSchemaQuery) => {
                 let dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
-                this.searchDatasetNameChanges({
-                    id: dataset.id,
-                    name: dataset.name,
-                    owner: dataset.owner,
-                });
-
                 let schema: DataViewSchema = JSON.parse(
                     dataset.metadata?.currentSchema.content,
                 );
@@ -312,11 +277,10 @@ export class AppDatasetService {
         this.searchApi
             .getDatasetLineage({ id })
             .subscribe((result: GetDatasetLineageQuery) => {
-                this.searchDatasetNameChanges({
-                    id: result.datasets.byId?.id,
-                    name: result.datasets.byId?.name,
-                    owner: result.datasets.byId?.owner as any,
-                });
+                const dataset: Dataset = AppValues.deepCopy(
+                    result.datasets.byId,
+                );
+                this.searchDatasetInfoChanges(dataset);
                 this.updateDatasetTree(result);
             });
     }

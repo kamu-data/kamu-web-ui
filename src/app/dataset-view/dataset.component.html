@@ -25,23 +25,23 @@
                     </svg>
                     <span class="author flex-self-stretch" itemprop="author">
                         <a
-                            *ngIf="datasetName?.owner?.name"
+                            *ngIf="datasetInfo?.owner?.name"
                             class="url fn"
                             rel="author"
                             data-hovercard-type="organization"
                             (click)="showOwnerPage()"
-                            >{{ datasetName.owner.name }}</a
+                            >{{ datasetInfo.owner.name }}</a
                         >
                     </span>
                     <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
                     <strong itemprop="name" class="mr-2 flex-self-stretch">
                         <a
                             *ngIf="
-                                datasetName?.owner?.name && datasetName?.name
+                                datasetInfo?.owner?.name && datasetInfo?.name
                             "
                             data-pjax="#repo-content-pjax-container"
                             (click)="showDatasetView()"
-                            >{{ datasetName.name }}</a
+                            >{{ datasetInfo.name }}</a
                         >
                     </strong>
 
@@ -445,9 +445,9 @@
                 ></app-overview>
             </ng-template>
 
-            <ng-template [ngIf]="datasetViewTypeData && datasetName">
+            <ng-template [ngIf]="datasetViewTypeData && datasetInfo">
                 <app-data
-                    [datasetName]="datasetName"
+                    [dataset]="datasetInfo"
                     (onSelectDatasetEmit)="onSelectDataset($event)"
                     (onRunSQLRequestEmit)="onRunSQLRequest($event)"
                 ></app-data>

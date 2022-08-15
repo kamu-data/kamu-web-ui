@@ -38,18 +38,3 @@ export interface UserInterface {
     created_at?: string;
     updated_at?: string;
 }
-
-export interface AuthQueryResult {
-    data: {
-        auth: {
-            githubLogin: {
-                token: {
-                    accessToken: string;
-                    scope: string;
-                    tokenType: string;
-                };
-                accountInfo: UserInterface;
-            };
-        };
-    };
-}

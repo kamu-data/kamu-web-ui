@@ -6,7 +6,6 @@ import {
 } from "../api/kamu.graphql.interface";
 import Maybe from "graphql/tsutils/Maybe";
 
-// Should be refactoring
 export interface SearchOverviewInterface {
     datasets: Dataset[];
     totalCount: Maybe<Scalars["Int"]>;

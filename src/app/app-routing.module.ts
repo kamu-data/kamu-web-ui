@@ -29,7 +29,10 @@ const routes: Routes = [
     {
         path: ProjectLinks.urlSearch,
         component: SearchComponent,
-        children: [{ path: ":id", component: SearchComponent }],
+    },
+    {
+        path: ProjectLinks.urlDatasetCreate,
+        component: DatasetCreateComponent,
     },
     {
         path: ":username/dataset-view/:id",
@@ -43,6 +46,7 @@ const routes: Routes = [
                 component: AccountComponent,
             },
             {
+                // path: ":datasetName",
                 path: ProjectLinks.urlDatasetView,
                 component: DatasetComponent,
             },
@@ -50,21 +54,21 @@ const routes: Routes = [
                 path: ProjectLinks.urlDatasetCreateSelectType,
                 component: DatasetCreateComponent,
             },
-            {
-                path: ProjectLinks.urlDatasetCreate,
-                component: DatasetCreateComponent,
-                children: [
-                    {
-                        path: "",
-                        redirectTo: ProjectLinks.urlDatasetCreateSelectType,
-                        pathMatch: "full",
-                    },
-                    {
-                        path: ProjectLinks.urlDatasetCreateRoot,
-                        component: DatasetCreateComponent,
-                    },
-                ],
-            },
+            // {
+            //     path: ProjectLinks.urlDatasetCreate,
+            //     component: DatasetCreateComponent,
+            //     children: [
+            //         {
+            //             path: "",
+            //             redirectTo: ProjectLinks.urlDatasetCreateSelectType,
+            //             pathMatch: "full",
+            //         },
+            //         {
+            //             path: ProjectLinks.urlDatasetCreateRoot,
+            //             component: DatasetCreateComponent,
+            //         },
+            //     ],
+            // },
         ],
     },
 ];

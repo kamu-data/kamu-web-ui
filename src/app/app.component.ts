@@ -3,12 +3,12 @@ import { Component, HostListener, OnInit } from "@angular/core";
 import AppValues from "./common/app.values";
 import { AppSearchService } from "./search/search.service";
 import { filter } from "rxjs/operators";
-import { Router, NavigationEnd, ActivatedRoute } from "@angular/router";
+import { Router, NavigationEnd } from "@angular/router";
 import { DatasetIDsInterface, TypeNames } from "./interface/search.interface";
-import { AuthApi } from "./api/auth.api";
-import { UserInterface } from "./interface/auth.interface";
+import { AccountInfoOptional, AuthApi } from "./api/auth.api";
 import { ModalService } from "./components/modal/modal.service";
 import ProjectLinks from "./project-links";
+import { AccountInfo } from "./api/kamu.graphql.interface";
 
 @Component({
     selector: "app-root",
@@ -16,12 +16,16 @@ import ProjectLinks from "./project-links";
     styleUrls: ["./app.component.sass"],
 })
 export class AppComponent implements OnInit {
+    private readonly AnonymousAccountInfo: AccountInfo = {
+        login: "",
+        name: AppValues.defaultUsername,
+    };
     private unimplementedMessage = "Feature coming soon";
     public appLogo = `/${AppValues.appLogo}`;
     public isMobileView = false;
     public searchValue: any = "";
     public isVisible = true;
-    public user: UserInterface;
+    public user: AccountInfo;
     private appHeaderNotVisiblePages: string[] = [
         ProjectLinks.urlDatasetCreate,
         ProjectLinks.urlLogin,
@@ -35,7 +39,6 @@ export class AppComponent implements OnInit {
     }
 
     constructor(
-        private route: ActivatedRoute,
         private router: Router,
         private appSearchService: AppSearchService,
         private authApi: AuthApi,
@@ -48,8 +51,10 @@ export class AppComponent implements OnInit {
     public ngOnInit(): void {
         this.checkView();
         this.appHeaderInit();
-        this.authApi.onUserChanges.subscribe((user: UserInterface | {}) => {
-            this.user = AppValues.deepCopy(user);
+        this.authApi.onUserChanges.subscribe((user: AccountInfoOptional) => {
+            this.user = user
+                ? AppValues.deepCopy(user)
+                : this.AnonymousAccountInfo;
         });
         this.authentification();
     }

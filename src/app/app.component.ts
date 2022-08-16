@@ -99,9 +99,6 @@ export class AppComponent implements OnInit {
                     if (event.url.includes("v/search")) {
                         this.appSearchService.searchChanges(searchValue);
                     }
-                    if (event.url.includes("dataset-view")) {
-                        this.appSearchService.searchChanges("");
-                    }
                 }
             });
     }
@@ -126,6 +123,7 @@ export class AppComponent implements OnInit {
         if (item.__typename === TypeNames.datasetType) {
             this.navigationService.navigateToDatasetView(
                 AppValues.defaultUsername,
+                item?.name,
                 item.id,
                 ProjectLinks.urlDatasetViewOverviewType,
             );

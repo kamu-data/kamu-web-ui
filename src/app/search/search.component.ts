@@ -235,10 +235,15 @@ export class SearchComponent implements OnInit, AfterContentInit {
         );
     }
 
-    public onSelectDataset(data: { ownerName: string; id: string }): void {
+    public onSelectDataset(data: {
+        ownerName: string;
+        id: string;
+        datasetName: string;
+    }): void {
         const id: string = data.id;
         this.navigationService.navigateToDatasetView(
-            data.ownerName,
+            AppValues.defaultUsername,
+            data?.datasetName,
             id,
             ProjectLinks.urlDatasetViewOverviewType,
         );

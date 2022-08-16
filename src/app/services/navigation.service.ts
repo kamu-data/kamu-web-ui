@@ -26,11 +26,12 @@ export class NavigationService {
 
     public navigateToDatasetView(
         name: string,
+        datasetName: string,
         id: string,
         type: string,
         p?: number,
     ): void {
-        this.router.navigate([name, ProjectLinks.urlDatasetView], {
+        this.router.navigate([name, datasetName], {
             queryParams: { id, type, p },
         });
     }

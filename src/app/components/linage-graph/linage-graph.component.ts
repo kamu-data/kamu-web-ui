@@ -21,8 +21,7 @@ export class LinageGraphComponent implements OnChanges, OnInit {
     @Input() public nodes: any[];
     @Input() public clusters: any[];
 
-    @Output() public onClickNodeEvent: EventEmitter<string> =
-        new EventEmitter();
+    @Output() public onClickNodeEvent: EventEmitter<any> = new EventEmitter();
 
     public draggingEnabled = false;
     public panningEnabled = true;
@@ -76,8 +75,8 @@ export class LinageGraphComponent implements OnChanges, OnInit {
     }
 
     public onClickNode(node: any, label: string): void {
-        console.log(node);
-        this.onClickNodeEvent.emit(label);
+        console.log("label", node);
+        this.onClickNodeEvent.emit(node);
     }
 
     // See: https://stackoverflow.com/questions/62874476/ngx-graph-linktemplate-links-middle-pointer-alignment-issue

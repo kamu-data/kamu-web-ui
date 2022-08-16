@@ -17,6 +17,7 @@ export class RepoListComponent {
     @Input() public isClickableRow?: boolean = false;
     @Output() public onSelectDatasetEmit: EventEmitter<{
         ownerName: string;
+        datasetName: string;
         id: string;
     }> = new EventEmitter();
     @Input() public sortOptions: {
@@ -35,8 +36,12 @@ export class RepoListComponent {
         this.navigationService.navigateToOwnerView(ownerName);
     }
 
-    public onSelectDataset(ownerName: string, id: string): void {
-        this.onSelectDatasetEmit.emit({ ownerName, id });
+    public onSelectDataset(
+        ownerName: string,
+        id: string,
+        datasetName: string,
+    ): void {
+        this.onSelectDatasetEmit.emit({ ownerName, id, datasetName });
     }
 
     public searchResultQuantity(

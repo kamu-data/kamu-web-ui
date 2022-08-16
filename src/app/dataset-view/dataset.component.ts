@@ -522,10 +522,10 @@ export class DatasetComponent implements OnInit, OnDestroy {
         this.appDatasetService.resetDatasetTree();
         const searchParams: string[] = decodeURIComponent(
             this.w.location.search,
-        ).split("&type=");
+        ).split("&tab=");
         const searchPageParams: string[] = decodeURIComponent(
             this.w.location.search,
-        ).split("&p=");
+        ).split("&page=");
         let page = 1;
         if (searchPageParams[1]) {
             page = currentPage || Number(searchPageParams[1].split("&")[0]);

@@ -197,7 +197,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
             this.searchValue = currentId;
 
             const searchPageParams: string[] =
-                this._window.location.search.split("&p=");
+                this._window.location.search.split("&page=");
             if (searchPageParams[1]) {
                 page = Number(searchPageParams[1].split("&")[0]);
             }

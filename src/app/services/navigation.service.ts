@@ -28,11 +28,11 @@ export class NavigationService {
         name: string,
         datasetName: string,
         id: string,
-        type: string,
-        p?: number,
+        tab: string,
+        page?: number,
     ): void {
         this.router.navigate([name, datasetName], {
-            queryParams: { id, type, p },
+            queryParams: { id, tab, page },
         });
     }
 

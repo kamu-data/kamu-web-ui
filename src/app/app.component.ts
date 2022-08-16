@@ -8,9 +8,9 @@ import { DatasetIDsInterface, TypeNames } from "./interface/search.interface";
 import { AuthApi } from "./api/auth.api";
 import { ModalService } from "./components/modal/modal.service";
 import ProjectLinks from "./project-links";
-import { Account, AccountInfo } from "./api/kamu.graphql.interface";
-import { deepCopy } from "deep-copy-ts";
+import { AccountInfo } from "./api/kamu.graphql.interface";
 import { Optional } from "./common/app.types";
+import _ from "lodash";
 
 @Component({
     selector: "app-root",
@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
         this.checkView();
         this.appHeaderInit();
         this.authApi.onUserChanges.subscribe((user: Optional<AccountInfo>) => {
-            this.user = user ? deepCopy(user) : this.AnonymousAccountInfo;
+            this.user = user ? _.cloneDeep(user) : this.AnonymousAccountInfo;
         });
         this.authentification();
     }

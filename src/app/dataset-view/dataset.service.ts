@@ -28,9 +28,8 @@ import {
     MetadataSchemaUpdate,
     OverviewDataUpdate,
 } from "./datasetSubs.interface";
-import { deepCopy } from "deep-copy-ts";
 import { isNil } from "lodash";
-import { Optional } from "../common/app.types";
+import _ from "lodash";
 
 @Injectable()
 export class AppDatasetService {
@@ -153,7 +152,7 @@ export class AppDatasetService {
                     throw new Error("Dataset not resolved by ID");
                 }
                 const dataset: DatasetBasicsFragment =
-                    deepCopy<DatasetBasicsFragment>(data.datasets.byId);
+                    _.cloneDeep<DatasetBasicsFragment>(data.datasets.byId);
                 this.searchDatasetInfoChanges(dataset);
 
                 const content: Object[] =
@@ -174,15 +173,17 @@ export class AppDatasetService {
                     throw new Error("Dataset not resolved by ID");
                 }
                 const dataset: DatasetBasicsFragment =
-                    deepCopy<DatasetBasicsFragment>(data.datasets.byId);
+                    _.cloneDeep<DatasetBasicsFragment>(data.datasets.byId);
                 this.searchDatasetInfoChanges(dataset);
 
                 const content: Object[] =
                     AppDatasetService.parseContentOfDataset(data);
                 const overview: DatasetOverviewFragment =
-                    deepCopy<DatasetOverviewFragment>(data.datasets.byId);
+                    _.cloneDeep<DatasetOverviewFragment>(data.datasets.byId);
                 const size: DatasetDataSizeFragment =
-                    deepCopy<DatasetDataSizeFragment>(data.datasets.byId.data);
+                    _.cloneDeep<DatasetDataSizeFragment>(
+                        data.datasets.byId.data,
+                    );
                 const overviewDataUpdate: OverviewDataUpdate = {
                     content,
                     overview,
@@ -205,7 +206,7 @@ export class AppDatasetService {
                 const pageInfo: PageBasedInfo = data.datasets.byId?.metadata
                     .chain.blocks.pageInfo
                     ? Object.assign(
-                          deepCopy(
+                          _.cloneDeep(
                               data.datasets.byId?.metadata.chain.blocks
                                   .pageInfo,
                           ),
@@ -232,11 +233,11 @@ export class AppDatasetService {
                     throw new Error("Dataset not resolved by ID");
                 }
                 const dataset: DatasetBasicsFragment =
-                    deepCopy<DatasetBasicsFragment>(data.datasets.byId);
+                    _.cloneDeep<DatasetBasicsFragment>(data.datasets.byId);
                 const schema: DataViewSchema = JSON.parse(
                     data.datasets.byId.metadata.currentSchema.content,
                 );
-                const metadata: DatasetMetadataDetailsFragment = deepCopy(
+                const metadata: DatasetMetadataDetailsFragment = _.cloneDeep(
                     data.datasets.byId.metadata,
                 );
                 const pageInfo: PageBasedInfo = Object.assign(
@@ -313,7 +314,7 @@ export class AppDatasetService {
                     throw new Error("Dataset not resolved by ID");
                 }
                 const dataset: DatasetBasicsFragment =
-                    deepCopy<DatasetBasicsFragment>(data.datasets.byId);
+                    _.cloneDeep<DatasetBasicsFragment>(data.datasets.byId);
                 this.searchDatasetInfoChanges(dataset);
 
                 this.updateDatasetTree(data);

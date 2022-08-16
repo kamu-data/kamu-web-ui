@@ -175,6 +175,7 @@ export class DatasetComponent implements OnInit, OnDestroy {
             .subscribe((event: any) => {
                 this.initDatasetViewByType();
             });
+        this.initDatasetViewByType();
 
         this.prepareLinageGraph();
 

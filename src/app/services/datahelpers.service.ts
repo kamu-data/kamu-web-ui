@@ -79,20 +79,20 @@ export class DataHelpersService {
     }
 
     public descriptionForMetadataBlock(block: MetadataBlockFragment): string {
-        const event: MetadataEvent = block.event as MetadataEvent;
+        const event = block.event;
         switch (event.__typename) {
             case "AddData":
                 return `Added ${
-                    event.outputData
-                        ? event.outputData.interval.end -
-                          event.outputData.interval.start
+                    event.addedOutputData
+                        ? event.addedOutputData.interval.end -
+                          event.addedOutputData.interval.start
                         : "0"
                 } new records`;
             case "ExecuteQuery":
                 return `Transformation produced ${
-                    event.outputData
-                        ? event.outputData.interval.end -
-                          event.outputData.interval.start
+                    event.queryOutputData
+                        ? event.queryOutputData.interval.end -
+                          event.queryOutputData.interval.start
                         : "0"
                 } new records`;
             case "Seed":

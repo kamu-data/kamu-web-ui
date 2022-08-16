@@ -103,48 +103,7 @@ const language = 'typescript';
                 return "%" + c.charCodeAt(0).toString(16);
             });
     }
-    /**
-     * Makes deep copy of item without binding to its memory link
-     * @param {T} item
-     * @returns {T}
-     */
-    /* eslint-disable  @typescript-eslint/no-explicit-any, @typescript-eslint/ban-ts-comment */
-    // @ts-ignore
-    public static deepCopy<T>(item: T): any {
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
-        let copy: any;
 
-        if (null == item || "object" !== typeof item) {
-            /* eslint-disable  @typescript-eslint/no-explicit-any */
-            return item;
-        }
-
-        if (item instanceof Array) {
-            copy = [];
-            /* eslint-disable  @typescript-eslint/no-explicit-any */
-            item.forEach((obj: any) => {
-                return (copy as Array<any>).push(this.deepCopy(obj));
-            });
-
-            return copy;
-        }
-
-        if (item instanceof Object) {
-            copy = {};
-            for (const attr in item) {
-                /* eslint-disable  @typescript-eslint/no-explicit-any, @typescript-eslint/ban-ts-comment, no-prototype-builtins */
-                // @ts-ignore
-                if ((item as any).hasOwnProperty(attr)) {
-                    /* eslint-disable  @typescript-eslint/no-explicit-any */
-                    (copy as any)[attr] = this.deepCopy(item[attr]);
-                }
-            }
-
-            return copy;
-        }
-
-        throw new Error("Unable to copy obj! Its type isn't supported.");
-    }
     /* eslint-disable  @typescript-eslint/no-explicit-any, @typescript-eslint/ban-ts-comment */
     // @ts-ignore
     public static shellSort(arr: any[]) {

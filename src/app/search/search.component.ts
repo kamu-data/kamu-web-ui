@@ -1,14 +1,10 @@
 import { AppSearchService } from "./search.service";
-import {
-    SearchOverviewDatasetsInterface,
-    SearchOverviewInterface,
-} from "../interface/search.interface";
+import { SearchOverviewInterface } from "../interface/search.interface";
 import AppValues from "../common/app.values";
 import { searchAdditionalButtonsEnum } from "./search.interface";
 import { SearchAdditionalButtonInterface } from "../components/search-additional-buttons/search-additional-buttons.interface";
 import { MatSidenav } from "@angular/material/sidenav";
 import { SideNavService } from "../services/sidenav.service";
-import { Router } from "@angular/router";
 import {
     AfterContentInit,
     Component,
@@ -19,7 +15,7 @@ import {
 import { ThemePalette } from "@angular/material/core";
 import ProjectLinks from "../project-links";
 import { NavigationService } from "../services/navigation.service";
-import { PageBasedInfo } from "../api/kamu.graphql.interface";
+import { Dataset, PageBasedInfo } from "../api/kamu.graphql.interface";
 
 export interface SearchFilters {
     name?: string;
@@ -68,7 +64,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
 
     public allComplete: boolean = false;
     public tableData: {
-        tableSource: SearchOverviewDatasetsInterface[];
+        tableSource: Dataset[];
         hasResultQuantity: boolean;
         resultUnitText: string;
         isClickableRow: boolean;
@@ -132,7 +128,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
             ],
         },
     ];
-    public searchData: SearchOverviewDatasetsInterface[] = [];
+    public searchData: Dataset[] = [];
     private _window: Window;
 
     @HostListener("window:resize", ["$event"])
@@ -148,7 +144,6 @@ export class SearchComponent implements OnInit, AfterContentInit {
     }
 
     constructor(
-        private router: Router,
         private navigationService: NavigationService,
         private appSearchService: AppSearchService,
         private sidenavService: SideNavService,
@@ -179,7 +174,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
 
         this.appSearchService.onSearchDataChanges.subscribe(
             (data: SearchOverviewInterface) => {
-                this.tableData.tableSource = data.dataset;
+                this.tableData.tableSource = data.datasets;
                 this.tableData.pageInfo = data.pageInfo;
                 this.tableData.totalCount = data.totalCount as number;
                 this.currentPage = data.currentPage;

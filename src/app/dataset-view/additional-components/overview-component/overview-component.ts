@@ -9,7 +9,9 @@ import {
 import { DataHelpersService } from "src/app/services/datahelpers.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import {
-    Dataset,
+    DatasetBasicsFragment,
+    DatasetDataSizeFragment,
+    DatasetOverviewFragment,
     MetadataBlockFragment,
 } from "../../../api/kamu.graphql.interface";
 import { OverviewDataUpdate } from "../../datasetSubs.interface";
@@ -23,13 +25,16 @@ import { AppDatasetSubsService } from "../../datasetSubs.service";
 export class OverviewComponent implements OnInit {
     @Input() public isMarkdownEditView: boolean;
     @Input() public markdownText: any;
-    @Input() public datasetInfo: Dataset;
+    @Input() public datasetBasics?: DatasetBasicsFragment;
     @Input() public resultUnitText: string;
     @Output() onToggleReadmeViewEmit: EventEmitter<null> = new EventEmitter();
-    @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
     @Output() onSelectTopicEmit: EventEmitter<string> = new EventEmitter();
 
-    public currentOverviewData: Object[] = [];
+    public currentState?: {
+        data: Object[];
+        overview: DatasetOverviewFragment;
+        size: DatasetDataSizeFragment;
+    };
 
     constructor(
         public dataHelpers: DataHelpersService,
@@ -40,7 +45,11 @@ export class OverviewComponent implements OnInit {
     ngOnInit(): void {
         this.appDatasetSubsService.onDatasetOverviewDataChanges.subscribe(
             (overviewUpdate: OverviewDataUpdate) => {
-                this.currentOverviewData = overviewUpdate.content;
+                this.currentState = {
+                    data: overviewUpdate.content,
+                    size: overviewUpdate.size,
+                    overview: overviewUpdate.overview,
+                };
             },
         );
     }
@@ -49,18 +58,17 @@ export class OverviewComponent implements OnInit {
         this.navigationService.navigateToWebsite(url);
     }
 
-    public onSelectDataset(id: string): void {
-        this.onSelectDatasetEmit.emit(id);
-    }
     public toggleReadmeView(): void {
         this.onToggleReadmeViewEmit.emit();
     }
+
     public selectTopic(topicName: string): void {
         this.onSelectTopicEmit.emit(topicName);
     }
 
-    get metadataFragmentBlock(): MetadataBlockFragment {
-        return this.datasetInfo.metadata.chain.blocks
-            .nodes[0] as MetadataBlockFragment;
+    get metadataFragmentBlock(): MetadataBlockFragment | undefined {
+        return this.currentState
+            ? this.currentState.overview.metadata.chain.blocks.nodes[0]
+            : undefined;
     }
 }

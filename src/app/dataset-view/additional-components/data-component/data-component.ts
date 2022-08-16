@@ -1,20 +1,16 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import {
-    DatasetNameInterface,
-    DataViewSchema,
-} from "../../../interface/search.interface";
+import { DataViewSchema } from "../../../interface/search.interface";
 import DataTabValues from "./mock.data";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
 import { DataUpdate } from "../../datasetSubs.interface";
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-data",
     templateUrl: "./data-component.html",
 })
 export class DataComponent implements OnInit {
-    @Input() public datasetName: DatasetNameInterface;
-    // tslint:disable-next-line:no-output-on-prefix
-    @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
+    @Input() public datasetBasics?: DatasetBasicsFragment;
     // tslint:disable-next-line:no-output-on-prefix
     @Output() onRunSQLRequestEmit: EventEmitter<string> = new EventEmitter();
     public sqlEditorOptions = {
@@ -31,17 +27,13 @@ export class DataComponent implements OnInit {
 
     constructor(private appDatasetSubsService: AppDatasetSubsService) {}
 
-    public onSelectDataset(id: string): void {
-        this.onSelectDatasetEmit.emit(id);
-    }
-
     public onRunSQLRequest(sqlRequestCode?: string): void {
         this.onRunSQLRequestEmit.emit(sqlRequestCode || this.sqlRequestCode);
     }
 
     public ngOnInit(): void {
-        if (this.datasetName) {
-            this.sqlRequestCode += `'${this.datasetName.name}'`;
+        if (this.datasetBasics) {
+            this.sqlRequestCode += `'${this.datasetBasics.name}'`;
         }
         this.appDatasetSubsService.onDatasetDataChanges.subscribe(
             (dataUpdate: DataUpdate) => {

@@ -25,23 +25,25 @@
                     </svg>
                     <span class="author flex-self-stretch" itemprop="author">
                         <a
-                            *ngIf="datasetName?.owner?.name"
+                            *ngIf="datasetBasics && datasetBasics.owner?.name"
                             class="url fn"
                             rel="author"
                             data-hovercard-type="organization"
                             (click)="showOwnerPage()"
-                            >{{ datasetName.owner.name }}</a
+                            >{{ datasetBasics.owner.name }}</a
                         >
                     </span>
                     <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
                     <strong itemprop="name" class="mr-2 flex-self-stretch">
                         <a
                             *ngIf="
-                                datasetName?.owner?.name && datasetName?.name
+                                datasetBasics &&
+                                datasetBasics.owner?.name &&
+                                datasetBasics.name
                             "
                             data-pjax="#repo-content-pjax-container"
                             (click)="showDatasetView()"
-                            >{{ datasetName.name }}</a
+                            >{{ datasetBasics.name }}</a
                         >
                     </strong>
 
@@ -437,25 +439,22 @@
                 <app-overview
                     [isMarkdownEditView]="isMarkdownEditView"
                     [markdownText]="markdownText"
-                    [datasetInfo]="datasetInfo"
+                    [datasetBasics]="datasetBasics"
                     [resultUnitText]="getResultUnitText()"
                     (onToggleReadmeViewEmit)="toggleReadmeView()"
                     (onSelectTopicEmit)="selectTopic($event)"
-                    (onSelectDatasetEmit)="onSelectDataset($event)"
                 ></app-overview>
             </ng-template>
 
-            <ng-template [ngIf]="datasetViewTypeData && datasetName">
+            <ng-template [ngIf]="datasetViewTypeData && datasetBasics">
                 <app-data
-                    [datasetName]="datasetName"
-                    (onSelectDatasetEmit)="onSelectDataset($event)"
+                    [datasetBasics]="datasetBasics"
                     (onRunSQLRequestEmit)="onRunSQLRequest($event)"
                 ></app-data>
             </ng-template>
 
             <ng-template [ngIf]="datasetViewTypeHistory">
                 <app-history
-                    (onSelectDatasetEmit)="(null)"
                     (onPageChangeEmit)="onPageChange($event)"
                 ></app-history>
             </ng-template>
@@ -473,8 +472,7 @@
 
             <ng-template [ngIf]="datasetViewTypeMetadata">
                 <app-metadata
-                    [datasetInfo]="datasetInfo"
-                    (onSelectDatasetEmit)="onSelectDataset($event)"
+                    [datasetBasics]="datasetBasics"
                     (onPageChangeEmit)="onPageChange($event)"
                     (onSelectTopicEmit)="selectTopic($event)"
                     (onClickDatasetEmit)="onClickNode($event)"

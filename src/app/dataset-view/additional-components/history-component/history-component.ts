@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import {
     MetadataBlockFragment,
     PageBasedInfo,
@@ -11,25 +11,25 @@ import { AppDatasetSubsService } from "../../datasetSubs.service";
     templateUrl: "./history.component.html",
 })
 export class HistoryComponent implements OnInit {
-    @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
     @Output() onPageChangeEmit: EventEmitter<{
         currentPage: number;
         isClick: boolean;
     }> = new EventEmitter();
 
-    public page = 1;
-    public currentPage: number = 1;
-    public pageInfo: PageBasedInfo;
-    public history: MetadataBlockFragment[] = [];
+    public currentState?: {
+        pageInfo: PageBasedInfo;
+        history: MetadataBlockFragment[];
+    };
 
     constructor(private appDatasetSubsService: AppDatasetSubsService) {}
 
     ngOnInit(): void {
         this.appDatasetSubsService.onDatasetHistoryChanges.subscribe(
             (historyUpdate: DatasetHistoryUpdate) => {
-                this.history = historyUpdate.history;
-                this.pageInfo = historyUpdate.pageInfo;
-                this.currentPage = this.pageInfo.currentPage + 1;
+                this.currentState = {
+                    pageInfo: historyUpdate.pageInfo,
+                    history: historyUpdate.history,
+                };
             },
         );
     }
@@ -40,7 +40,9 @@ export class HistoryComponent implements OnInit {
         this.onPageChangeEmit.emit(params);
     }
 
-    public onSelectDataset(id: string): void {
-        this.onSelectDatasetEmit.emit(id);
+    public get currentPage(): number {
+        return this.currentState
+            ? this.currentState.pageInfo.currentPage + 1
+            : 1;
     }
 }

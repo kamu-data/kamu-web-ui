@@ -1174,6 +1174,34 @@ export type MetadataBlockFragment = {
         | { __typename: "SetWatermark"; outputWatermark: any };
 };
 
+export type GithubLoginMutationVariables = Exact<{
+    code: Scalars["String"];
+}>;
+
+export type GithubLoginMutation = {
+    __typename?: "Mutation";
+    auth: {
+        __typename?: "Auth";
+        githubLogin: {
+            __typename?: "LoginResponse";
+            token: {
+                __typename?: "AccessToken";
+                accessToken: string;
+                scope: string;
+                tokenType: string;
+            };
+            accountInfo: {
+                __typename?: "AccountInfo";
+                login: string;
+                email?: string | null | undefined;
+                name: string;
+                avatarUrl?: string | null | undefined;
+                gravatarId?: string | null | undefined;
+            };
+        };
+    };
+};
+
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
     query: Scalars["String"];
     perPage?: InputMaybe<Scalars["Int"]>;
@@ -1714,6 +1742,40 @@ export class DatasetOverviewGQL extends Apollo.Query<
     DatasetOverviewQueryVariables
 > {
     document = DatasetOverviewDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const GithubLoginDocument = gql`
+    mutation GithubLogin($code: String!) {
+        auth {
+            githubLogin(code: $code) {
+                token {
+                    accessToken
+                    scope
+                    tokenType
+                }
+                accountInfo {
+                    login
+                    email
+                    name
+                    avatarUrl
+                    gravatarId
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GithubLoginGQL extends Apollo.Mutation<
+    GithubLoginMutation,
+    GithubLoginMutationVariables
+> {
+    document = GithubLoginDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

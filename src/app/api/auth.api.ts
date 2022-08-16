@@ -1,21 +1,20 @@
 import { Injectable } from "@angular/core";
-import { Apollo } from "apollo-angular";
-import { map, tap } from "rxjs/operators";
-import { DocumentNode, gql } from "@apollo/client/core";
-import { ApolloQueryResult } from "apollo-client";
-import { Observable, of, Subject, throwError } from "rxjs";
-import { AuthQueryResult, UserInterface } from "../interface/auth.interface";
-import { HttpClient } from "@angular/common/http";
-import { Router } from "@angular/router";
-import { userResponse } from "./mock.user";
-import { subscribe } from "graphql";
-import AppValues from "../common/app.values";
+import { map } from "rxjs/operators";
+import { Observable, Subject, throwError } from "rxjs";
+import { UserInterface } from "../interface/auth.interface";
 import { NavigationService } from "../services/navigation.service";
+import {
+    AccountInfo,
+    GithubLoginGQL,
+    GithubLoginMutation,
+} from "./kamu.graphql.interface";
+import AppValues from "../common/app.values";
+import { FetchResult } from "apollo-link";
+
 @Injectable()
 export class AuthApi {
     constructor(
-        private apollo: Apollo,
-        private httpClient: HttpClient,
+        private githubLoginGQL: GithubLoginGQL,
         private navigationService: NavigationService,
     ) {}
 
@@ -70,40 +69,21 @@ export class AuthApi {
     }
 
     public getAccessToken(code: string): Observable<string> {
-        const GET_DATA: DocumentNode = gql`mutation GithubLogin {
-  auth {
-    githubLogin(code: "${code}") {
-      token {
-        accessToken
-        scope
-        tokenType
-      }
-      accountInfo {
-        login
-        email
-        name
-        avatarUrl
-        gravatarId
-      }
-    }
-  }
-}`;
-
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         // @ts-ignore
-        return this.apollo.mutate({ mutation: GET_DATA }).pipe(
-            // @ts-ignore
-            map((result: ApolloQueryResult<AuthQueryResult>) => {
-                const login = result.data;
-                const accountInfo: UserInterface =
-                    login.data.auth.githubLogin.accountInfo;
-                this.userChange(accountInfo);
-                return login.data.auth.githubLogin.token.accessToken;
+        return this.githubLoginGQL.mutate({ code: code }).pipe(
+            map((result: FetchResult<GithubLoginMutation>) => {
+                if (result.data) {
+                    const login: GithubLoginMutation = result.data;
+                    const accountInfo: AccountInfo =
+                        login.auth.githubLogin.accountInfo;
+                    this.userChange(accountInfo);
+                    return login.auth.githubLogin.token.accessToken;
+                } else {
+                    throw new Error("GraphQL query failed");
+                }
             }),
         );
-
-        // this.userChange(userResponse);
-        // return of('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');
     }
 
     public getUser(token: string = ""): void {

@@ -14,7 +14,10 @@ import AppValues from "../common/app.values";
 import { MatSidenav } from "@angular/material/sidenav";
 import { SideNavService } from "../services/sidenav.service";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
-import { DatasetViewTypeEnum } from "./dataset-view.interface";
+import {
+    DatasetControlInterface,
+    DatasetViewTypeEnum,
+} from "./dataset-view.interface";
 import { AppDatasetService } from "./dataset.service";
 import { NavigationEnd, Router } from "@angular/router";
 import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
@@ -34,7 +37,6 @@ import { SubSink } from "subsink";
 export class DatasetComponent implements OnInit, OnDestroy {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     @ViewChild("menuTrigger") trigger: any;
-    @ViewChild(DatasetViewMenuComponent) datasetViewMenuComponent!: any;
 
     public isMobileView = false;
     public datasetInfo: Dataset;
@@ -82,11 +84,13 @@ export class DatasetComponent implements OnInit, OnDestroy {
         if (this.sidenav) {
             this.sidenavService.setSidenav(this.sidenav);
         }
-        this.router.events
-            .pipe(filter((event) => event instanceof NavigationEnd))
-            .subscribe((event: any) => {
-                this.initDatasetViewByType();
-            });
+        this.subs.add(
+            this.router.events
+                .pipe(filter((event) => event instanceof NavigationEnd))
+                .subscribe((event: any) => {
+                    this.initDatasetViewByType();
+                }),
+        );
         this.initDatasetViewByType();
 
         this.prepareLinageGraph();
@@ -282,7 +286,7 @@ export class DatasetComponent implements OnInit, OnDestroy {
         this.onSelectDataset(idDataset);
     }
 
-    public getParentMethod(): { [key: string]: (...args: any[]) => any } {
+    public getParentMethod(): DatasetControlInterface {
         return {
             onSearchDataset: () => {
                 this.onSearchDataset();

@@ -3,7 +3,6 @@ import {
     HostListener,
     OnDestroy,
     OnInit,
-    ViewChild,
     ViewEncapsulation,
 } from "@angular/core";
 import {
@@ -11,8 +10,6 @@ import {
     DatasetNameInterface,
 } from "../interface/search.interface";
 import AppValues from "../common/app.values";
-import { MatSidenav } from "@angular/material/sidenav";
-import { SideNavService } from "../services/sidenav.service";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
 import {
     DatasetControlInterface,
@@ -25,7 +22,6 @@ import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
 import { Dataset, DatasetKind } from "../api/kamu.graphql.interface";
-import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu-component";
 import { SubSink } from "subsink";
 
 @Component({
@@ -35,14 +31,9 @@ import { SubSink } from "subsink";
     encapsulation: ViewEncapsulation.None,
 })
 export class DatasetComponent implements OnInit, OnDestroy {
-    @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
-    @ViewChild("menuTrigger") trigger: any;
-
-    public isMobileView = false;
     public datasetInfo: Dataset;
     public datasetName: DatasetNameInterface;
     public searchValue = "";
-    public isMinimizeSearchAdditionalButtons = false;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.overview;
 
     public linageGraphView: [number, number] = [500, 600];
@@ -50,7 +41,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
     public linageGraphNodes: Node[] = [];
     public linageGraphClusters: ClusterNode[] = [];
     public isAvailableLinageGraph = false;
-    public headings: Element[] | undefined;
     public isMarkdownEditView = false;
     public markdownText = AppValues.markdownContain;
 
@@ -59,20 +49,11 @@ export class DatasetComponent implements OnInit, OnDestroy {
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
-        this.isMinimizeSearchAdditionalButtons = AppValues.isMobileView();
-        this.isMobileView = AppValues.isMobileView();
-
-        if (AppValues.isMobileView()) {
-            this.sidenavService.close();
-        } else {
-            this.sidenavService.open();
-        }
         this.changeLinageGraphView();
     }
 
     constructor(
         private appDatasetService: AppDatasetService,
-        private sidenavService: SideNavService,
         private router: Router,
         private modalService: ModalService,
     ) {
@@ -81,9 +62,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.checkWindowSize();
-        if (this.sidenav) {
-            this.sidenavService.setSidenav(this.sidenav);
-        }
         this.subs.add(
             this.router.events
                 .pipe(filter((event) => event instanceof NavigationEnd))
@@ -112,8 +90,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
                 },
             ),
         );
-
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
     }
 
     public changeLinageGraphView(): void {

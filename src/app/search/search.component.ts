@@ -39,24 +39,6 @@ export class SearchComponent implements OnInit, AfterContentInit {
     public searchValue = "";
     public currentPage = 1; // TODO: Should be zero-based and only offset for display
     public isMinimizeSearchAdditionalButtons = false;
-    public searchAdditionalButtonsData: SearchAdditionalButtonInterface[] = [
-        {
-            textButton: searchAdditionalButtonsEnum.Descission,
-        },
-        {
-            textButton: searchAdditionalButtonsEnum.Reputation,
-        },
-        {
-            textButton: searchAdditionalButtonsEnum.Explore,
-            styleClassContainer: "app-active-button__container",
-            styleClassButton: "app-active-button",
-        },
-        {
-            textButton: searchAdditionalButtonsEnum.DeriveFrom,
-            styleClassContainer: "app-active-button__container",
-            styleClassButton: "app-active-button",
-        },
-    ];
 
     private sortOptions: { value: string; label: string; active: boolean }[] = [
         { value: "best", label: "Best match", active: true },

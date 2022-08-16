@@ -443,21 +443,18 @@
                     [resultUnitText]="getResultUnitText()"
                     (onToggleReadmeViewEmit)="toggleReadmeView()"
                     (onSelectTopicEmit)="selectTopic($event)"
-                    (onSelectDatasetEmit)="onSelectDataset($event)"
                 ></app-overview>
             </ng-template>
 
             <ng-template [ngIf]="datasetViewTypeData && datasetBasics">
                 <app-data
                     [datasetBasics]="datasetBasics"
-                    (onSelectDatasetEmit)="onSelectDataset($event)"
                     (onRunSQLRequestEmit)="onRunSQLRequest($event)"
                 ></app-data>
             </ng-template>
 
             <ng-template [ngIf]="datasetViewTypeHistory">
                 <app-history
-                    (onSelectDatasetEmit)="(null)"
                     (onPageChangeEmit)="onPageChange($event)"
                 ></app-history>
             </ng-template>
@@ -476,7 +473,6 @@
             <ng-template [ngIf]="datasetViewTypeMetadata">
                 <app-metadata
                     [datasetBasics]="datasetBasics"
-                    (onSelectDatasetEmit)="onSelectDataset($event)"
                     (onPageChangeEmit)="onPageChange($event)"
                     (onSelectTopicEmit)="selectTopic($event)"
                     (onClickDatasetEmit)="onClickNode($event)"

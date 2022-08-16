@@ -151,11 +151,6 @@
         <ng-container *ngIf="hasTableHeader">
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         </ng-container>
-        <tr
-            mat-row
-            *matRowDef="let row; columns: displayedColumns"
-            (click)="onSelectDataset(row)"
-            [class.clickable-row]="isClickableRow"
-        ></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 </div>

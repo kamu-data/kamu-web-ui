@@ -5,7 +5,6 @@ import { searchAdditionalButtonsEnum } from "./search.interface";
 import { SearchAdditionalButtonInterface } from "../components/search-additional-buttons/search-additional-buttons.interface";
 import { MatSidenav } from "@angular/material/sidenav";
 import { SideNavService } from "../services/sidenav.service";
-import { Router } from "@angular/router";
 import {
     AfterContentInit,
     Component,
@@ -145,7 +144,6 @@ export class SearchComponent implements OnInit, AfterContentInit {
     }
 
     constructor(
-        private router: Router,
         private navigationService: NavigationService,
         private appSearchService: AppSearchService,
         private sidenavService: SideNavService,

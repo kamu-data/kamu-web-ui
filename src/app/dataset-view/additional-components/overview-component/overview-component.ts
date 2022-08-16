@@ -17,12 +17,6 @@ import {
 import { OverviewDataUpdate } from "../../datasetSubs.interface";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
 
-interface OverviewState {
-    data: Object[];
-    overview: DatasetOverviewFragment;
-    size: DatasetDataSizeFragment;
-}
-
 @Component({
     selector: "app-overview",
     templateUrl: "overview-component.html",
@@ -34,10 +28,13 @@ export class OverviewComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;
     @Input() public resultUnitText: string;
     @Output() onToggleReadmeViewEmit: EventEmitter<null> = new EventEmitter();
-    @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
     @Output() onSelectTopicEmit: EventEmitter<string> = new EventEmitter();
 
-    public currentState?: OverviewState;
+    public currentState?: {
+        data: Object[];
+        overview: DatasetOverviewFragment;
+        size: DatasetDataSizeFragment;
+    };
 
     constructor(
         public dataHelpers: DataHelpersService,
@@ -59,10 +56,6 @@ export class OverviewComponent implements OnInit {
 
     public showWebsite(url: string): void {
         this.navigationService.navigateToWebsite(url);
-    }
-
-    public onSelectDataset(id: string): void {
-        this.onSelectDatasetEmit.emit(id);
     }
 
     public toggleReadmeView(): void {

@@ -12,8 +12,6 @@ import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 export class DataComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;
     // tslint:disable-next-line:no-output-on-prefix
-    @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
-    // tslint:disable-next-line:no-output-on-prefix
     @Output() onRunSQLRequestEmit: EventEmitter<string> = new EventEmitter();
     public sqlEditorOptions = {
         theme: "vs",
@@ -28,10 +26,6 @@ export class DataComponent implements OnInit {
     public currentData: Object[] = [];
 
     constructor(private appDatasetSubsService: AppDatasetSubsService) {}
-
-    public onSelectDataset(id: string): void {
-        this.onSelectDatasetEmit.emit(id);
-    }
 
     public onRunSQLRequest(sqlRequestCode?: string): void {
         this.onRunSQLRequestEmit.emit(sqlRequestCode || this.sqlRequestCode);

@@ -1,41 +1,31 @@
 <div class="search-result-container__content" id="searchResultContainerContent">
     <div id="metadata-block">
-        <div id="pagination-block" *ngIf="currentMetadata">
+        <div id="pagination-block" *ngIf="currentState">
             <app-custom-pagination
-                [hash]="
-                    shortHash(
-                        currentMetadata['chain'].blocks.nodes[0]['blockHash']
-                    )
-                "
-                [date]="
-                    momentConverDatetoLocalWithFormat(
-                        currentMetadata['chain'].blocks.nodes[0]['systemTime']
-                    )
-                "
+                [hash]="latestBlockhash"
+                [date]="latestBlockSystemTime"
                 [pageIndex]="currentPage"
                 [limit]="5"
-                [total]="pageInfo.totalPages || 1"
+                [total]="totalPages"
                 (pageChange)="onPageChange($event)"
             ></app-custom-pagination>
         </div>
         <h2>Schema</h2>
-        <ng-template [ngIf]="currentSchema">
+        <ng-template [ngIf]="currentState">
             <app-dynamic-table
                 [hasResultQuantity]="false"
-                [isClickableRow]="false"
                 [resultUnitText]="''"
                 [hasTableHeader]="true"
-                [tableSource]="currentSchema.fields || []"
+                [tableSource]="currentState.schema.fields || []"
                 [idTable]="'schema-block-table'"
-                (onSelectDatasetEmit)="(null)"
             ></app-dynamic-table>
         </ng-template>
         <div
             *ngIf="
                 datasetBasics &&
                 datasetBasics.kind === 'DERIVATIVE' &&
-                currentMetadata &&
-                currentMetadata.currentTransform
+                currentState &&
+                currentState.metadata.currentTransform
             "
             class="mt-3"
         >
@@ -45,7 +35,8 @@
                 <li
                     class="app-mat-chip input-datasets-list"
                     *ngFor="
-                        let input of currentMetadata.currentTransform.inputs;
+                        let input of currentState.metadata.currentTransform
+                            .inputs;
                         let idx1 = index
                     "
                 >
@@ -61,8 +52,8 @@
             <h3>Queries:</h3>
             <div
                 *ngFor="
-                    let queryStep of currentMetadata.currentTransform.transform
-                        .queries
+                    let queryStep of currentState.metadata.currentTransform
+                        .transform.queries
                 "
                 style="height: 400px"
             >
@@ -73,29 +64,30 @@
                 ></ngx-monaco-editor>
             </div>
         </div>
-        <div *ngIf="currentMetadata && currentMetadata.currentLicense">
+        <div *ngIf="currentState && currentState.metadata.currentLicense">
             <h2>License</h2>
             <p>
                 <strong>ID:</strong>
-                {{ currentMetadata.currentLicense.shortName }}
+                {{ currentState.metadata.currentLicense.shortName }}
             </p>
             <p>
                 <strong>Name:</strong>
-                {{ currentMetadata.currentLicense.name }}
+                {{ currentState.metadata.currentLicense.name }}
             </p>
-            <p *ngIf="currentMetadata.currentLicense.spdxId">
+            <p *ngIf="currentState.metadata.currentLicense.spdxId">
                 <strong>SPDX ID:</strong>
-                {{ currentMetadata.currentLicense.spdxId }}
+                {{ currentState.metadata.currentLicense.spdxId }}
             </p>
             <p>
-                <strong>Website:</strong>
+                <strong>Website: </strong>
                 <a
+                    class="url"
                     (click)="
                         navigateToWebsite(
-                            currentMetadata.currentLicense.websiteUrl
+                            currentState.metadata.currentLicense.websiteUrl
                         )
                     "
-                    >{{ currentMetadata.currentLicense.websiteUrl }}</a
+                    >{{ currentState.metadata.currentLicense.websiteUrl }}</a
                 >
             </p>
         </div>

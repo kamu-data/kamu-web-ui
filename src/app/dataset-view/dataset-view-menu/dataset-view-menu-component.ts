@@ -1,18 +1,25 @@
 import {
-    Component, EventEmitter, Input, Output, ViewChild,
+    Component,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnInit,
+    Output,
+    ViewChild,
 } from "@angular/core";
-import {MatSidenav} from "@angular/material/sidenav";
-import {DatasetViewTypeEnum} from "../dataset-view.interface";
-import {Clipboard} from "@angular/cdk/clipboard";
+import { MatSidenav } from "@angular/material/sidenav";
+import { DatasetViewTypeEnum } from "../dataset-view.interface";
+import { Clipboard } from "@angular/cdk/clipboard";
+import AppValues from "../../common/app.values";
+import { SideNavService } from "../../services/sidenav.service";
 
 @Component({
     selector: "app-dataset-view-menu",
     templateUrl: "./dataset-view-menu.html",
 })
-export class DatasetViewMenuComponent {
+export class DatasetViewMenuComponent implements OnInit {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     @ViewChild("menuTrigger") trigger: any;
-
 
     @Input() parentShareMethods!: any;
     @Input() datasetViewType: DatasetViewTypeEnum;
@@ -21,8 +28,28 @@ export class DatasetViewMenuComponent {
     public clipboardKamuCli = "kamu pull kamu.dev/anonymous/dataset";
     public clipboardKafka = "https://api.kamu.dev/kafka/anonymous/dataset";
 
-    constructor(private clipboard: Clipboard) { }
+    @HostListener("window:resize", ["$event"])
+    private checkWindowSize(): void {
+        this.isMinimizeSearchAdditionalButtons = AppValues.isMobileView();
 
+        if (AppValues.isMobileView()) {
+            this.sidenavService.close();
+        } else {
+            this.sidenavService.open();
+        }
+    }
+
+    constructor(
+        private clipboard: Clipboard,
+        private sidenavService: SideNavService,
+    ) {}
+
+    public ngOnInit(): void {
+        this.checkWindowSize();
+        if (this.sidenav) {
+            this.sidenavService.setSidenav(this.sidenav);
+        }
+    }
 
     public copyToClipboard(event: MouseEvent, text: string): void {
         this.clipboard.copy(text);
@@ -101,5 +128,4 @@ export class DatasetViewMenuComponent {
     public onSearchDiscussions(): void {
         this.parentShareMethods.onSearchDiscussions();
     }
-
 }

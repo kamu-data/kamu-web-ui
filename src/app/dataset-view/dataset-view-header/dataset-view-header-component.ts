@@ -18,17 +18,12 @@ import { SideNavService } from "../../services/sidenav.service";
     selector: "app-dataset-view-header",
     templateUrl: "./dataset-view-header.html",
 })
-export class DatasetViewHeaderComponent implements OnInit {
-    @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
-    @ViewChild("menuTrigger") trigger: any;
-
+export class DatasetViewHeaderComponent {
     @Input() datasetName: DatasetNameInterface;
     @Output() public showOwnerPageEmit: EventEmitter<null> = new EventEmitter();
     @Output() public onClickSearchAdditionalButtonEmit: EventEmitter<string> =
         new EventEmitter();
 
-    public isMinimizeSearchAdditionalButtons = false;
-    public isMobileView = false;
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[] =
         [
             {
@@ -81,27 +76,6 @@ export class DatasetViewHeaderComponent implements OnInit {
                 iconSvgPathClass: "",
             },
         ];
-
-    @HostListener("window:resize", ["$event"])
-    private checkWindowSize(): void {
-        this.isMinimizeSearchAdditionalButtons = AppValues.isMobileView();
-        this.isMobileView = AppValues.isMobileView();
-
-        if (AppValues.isMobileView()) {
-            this.sidenavService.close();
-        } else {
-            this.sidenavService.open();
-        }
-    }
-
-    constructor(private sidenavService: SideNavService) {}
-
-    public ngOnInit(): void {
-        this.checkWindowSize();
-        if (this.sidenav) {
-            this.sidenavService.setSidenav(this.sidenav);
-        }
-    }
 
     public showOwnerPage(): void {
         this.showOwnerPageEmit.emit();

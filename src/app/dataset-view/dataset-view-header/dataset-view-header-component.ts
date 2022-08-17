@@ -1,28 +1,21 @@
-import {
-    Component,
-    EventEmitter,
-    HostListener,
-    Input,
-    OnInit,
-    Output,
-    ViewChild,
-} from "@angular/core";
-import { DatasetNameInterface } from "../../interface/search.interface";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { SearchAdditionalHeaderButtonInterface } from "../../components/search-additional-buttons/search-additional-buttons.interface";
 import { searchAdditionalButtonsEnum } from "../../search/search.interface";
-import { MatSidenav } from "@angular/material/sidenav";
-import AppValues from "../../common/app.values";
-import { SideNavService } from "../../services/sidenav.service";
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { NavigationService } from "src/app/services/navigation.service";
+import { DatasetViewTypeEnum } from "../dataset-view.interface";
 
 @Component({
     selector: "app-dataset-view-header",
     templateUrl: "./dataset-view-header.html",
 })
 export class DatasetViewHeaderComponent {
-    @Input() datasetName: DatasetNameInterface;
+    @Input() datasetBasics?: DatasetBasicsFragment;
     @Output() public showOwnerPageEmit: EventEmitter<null> = new EventEmitter();
     @Output() public onClickSearchAdditionalButtonEmit: EventEmitter<string> =
         new EventEmitter();
+
+    constructor(private navigationService: NavigationService) {}
 
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[] =
         [
@@ -80,7 +73,18 @@ export class DatasetViewHeaderComponent {
     public showOwnerPage(): void {
         this.showOwnerPageEmit.emit();
     }
+
     public onClickSearchAdditionalButton(method: string): void {
         this.onClickSearchAdditionalButtonEmit.emit(method);
+    }
+
+    public showDatasetView(): void {
+        if (this.datasetBasics) {
+            this.navigationService.navigateToDatasetView(
+                this.datasetBasics.owner?.name,
+                this.datasetBasics.id,
+                DatasetViewTypeEnum.overview,
+            );
+        }
     }
 }

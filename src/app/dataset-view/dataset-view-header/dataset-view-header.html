@@ -18,29 +18,21 @@
             </svg>
             <span class="author flex-self-stretch" itemprop="author">
                 <a
-                    *ngIf="datasetName?.owner?.name"
+                    *ngIf="datasetBasics && datasetBasics.owner && datasetBasics.owner.name"
                     class="url fn"
                     rel="author"
                     data-hovercard-type="organization"
                     (click)="showOwnerPage()"
-                    >{{ datasetName.owner.name }}</a
+                    >{{ datasetBasics.owner.name }}</a
                 >
             </span>
             <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
             <strong itemprop="name" class="mr-2 flex-self-stretch">
                 <a
-                    *ngIf="
-                        datasetName?.owner?.name && datasetName?.name
-                    "
+                    *ngIf="datasetBasics && datasetBasics.name"
                     data-pjax="#repo-content-pjax-container"
-                    [href]="
-                        '/' +
-                        datasetName.owner.name +
-                        '/dataset-view?id=' +
-                        datasetName.id +
-                        '&type=overview'
-                    "
-                    >{{ datasetName.name }}</a
+                    (click)="showDatasetView()"
+                    >{{ datasetBasics.name }}</a
                 >
             </strong>
 

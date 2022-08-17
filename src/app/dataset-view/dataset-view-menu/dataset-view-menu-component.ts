@@ -1,14 +1,12 @@
 import {
     Component,
-    EventEmitter,
     HostListener,
     Input,
     OnInit,
-    Output,
     ViewChild,
 } from "@angular/core";
 import { MatSidenav } from "@angular/material/sidenav";
-import { DatasetViewTypeEnum } from "../dataset-view.interface";
+import { DatasetNavigationInterface, DatasetViewTypeEnum } from "../dataset-view.interface";
 import { Clipboard } from "@angular/cdk/clipboard";
 import AppValues from "../../common/app.values";
 import { SideNavService } from "../../services/sidenav.service";
@@ -21,7 +19,7 @@ export class DatasetViewMenuComponent implements OnInit {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     @ViewChild("menuTrigger") trigger: any;
 
-    @Input() parentShareMethods!: any;
+    @Input() datasetNavigation: DatasetNavigationInterface;
     @Input() datasetViewType: DatasetViewTypeEnum;
     @Input() isMinimizeSearchAdditionalButtons: boolean;
 
@@ -42,7 +40,7 @@ export class DatasetViewMenuComponent implements OnInit {
     constructor(
         private clipboard: Clipboard,
         private sidenavService: SideNavService,
-    ) {}
+    ) { }
 
     public ngOnInit(): void {
         this.checkWindowSize();
@@ -97,7 +95,7 @@ export class DatasetViewMenuComponent implements OnInit {
         return this.datasetViewType === DatasetViewTypeEnum.history;
     }
 
-    public get isDatasetViewTypeLinage(): boolean {
+    public get isDatasetViewTypeLineage(): boolean {
         return this.datasetViewType === DatasetViewTypeEnum.linage;
     }
 
@@ -105,27 +103,27 @@ export class DatasetViewMenuComponent implements OnInit {
         return this.datasetViewType === DatasetViewTypeEnum.discussions;
     }
 
-    public onSearchDataset(): void {
-        this.parentShareMethods.onSearchDataset();
+    public onNavigateToOverview(): void {
+        this.datasetNavigation.navigateToOverview();
     }
 
-    public onSearchDataForDataset(): void {
-        this.parentShareMethods.onSearchDataForDataset();
+    public onNavigateToData(): void {
+        this.datasetNavigation.navigateToData();
     }
 
-    public onSearchMetadata(currentPage: number): void {
-        this.parentShareMethods.onSearchMetadata(currentPage);
+    public onNavigateToMetadata(): void {
+        this.datasetNavigation.navigateToMetadata(1);
     }
 
-    public onSearchDataForHistory(currentPage: number): void {
-        this.parentShareMethods.onSearchDataForHistory(currentPage);
+    public onNavigateToHistory(): void {
+        this.datasetNavigation.navigateToHistory(1);
     }
 
-    public onSearchLinageDataset(): void {
-        this.parentShareMethods.onSearchLinageDataset();
+    public onNavigateToLineage(): void {
+        this.datasetNavigation.navigateToLineage();
     }
 
-    public onSearchDiscussions(): void {
-        this.parentShareMethods.onSearchDiscussions();
+    public onNavigateToDiscussions(): void {
+        this.datasetNavigation.navigateToDiscussions();
     }
 }

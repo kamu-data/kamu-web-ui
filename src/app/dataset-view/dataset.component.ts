@@ -10,7 +10,7 @@ import { DatasetKindInterface } from "../interface/search.interface";
 import AppValues from "../common/app.values";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
 import {
-    DatasetControlInterface,
+    DatasetNavigationInterface,
     DatasetViewTypeEnum,
 } from "./dataset-view.interface";
 import { AppDatasetService } from "./dataset.service";
@@ -34,8 +34,7 @@ import ProjectLinks from "../project-links";
 })
 export class DatasetComponent
     extends BaseComponent
-    implements OnInit, OnDestroy
-{
+    implements OnInit, OnDestroy {
     public datasetBasics?: DatasetBasicsFragment;
     public searchValue = "";
     public isMinimizeSearchAdditionalButtons = false;
@@ -145,7 +144,17 @@ export class DatasetComponent
         });
     }
 
-    public onSearchMetadata(currentPage: number): void {
+    private initOverviewTab(): void {
+        this.datasetViewType = DatasetViewTypeEnum.overview;
+        this.appDatasetService.getDatasetOverview(this.getDatasetId());
+    }
+
+    private initDataTab(): void {
+        this.datasetViewType = DatasetViewTypeEnum.data;
+        this.appDatasetService.getDatasetDataSchema(this.getDatasetId());
+    }
+
+    private initMetadataTab(currentPage: number): void {
         this.navigationService.navigateToDatasetView(
             AppValues.defaultUsername,
             this.getDatasetId(),
@@ -160,26 +169,8 @@ export class DatasetComponent
         );
     }
 
-    public onSearchDataForDataset(): void {
-        this.navigationService.navigateToDatasetView(
-            AppValues.defaultUsername,
-            this.getDatasetId(),
-            ProjectLinks.urlDatasetViewDataType,
-        );
-        this.datasetViewType = DatasetViewTypeEnum.data;
-
-        this.appDatasetService.getDatasetDataSchema(this.getDatasetId(), 5, 0);
-    }
-
-    public onSearchDataForHistory(currentPage: number): void {
-        this.navigationService.navigateToDatasetView(
-            AppValues.defaultUsername,
-            this.getDatasetId(),
-            DatasetViewTypeEnum.history,
-            currentPage,
-        );
+    private initHistoryTab(currentPage: number): void {
         this.datasetViewType = DatasetViewTypeEnum.history;
-
         this.appDatasetService.onDatasetHistorySchema(
             this.getDatasetId(),
             20,
@@ -187,8 +178,16 @@ export class DatasetComponent
         );
     }
 
-    public onSearchDiscussions(): void {
-        console.log("onSearchDiscussions");
+    private initLineageTab(): void {
+        this.datasetViewType = DatasetViewTypeEnum.linage;
+        this.appDatasetService.resetDatasetTree();
+        this.appDatasetService.onSearchLineage(this.getDatasetId());
+
+        this.changeLinageGraphView();
+    }
+
+    public initDiscussionsTab(): void {
+        console.log("initDiscussionsTab");
     }
 
     public showOwnerPage(): void {
@@ -210,61 +209,52 @@ export class DatasetComponent
         });
     }
 
-    public onSearchDataset(page = 0): void {
-        this.navigationService.navigateToDatasetView(
-            AppValues.defaultUsername,
-            this.getDatasetId(),
-            ProjectLinks.urlDatasetViewOverviewType,
-        );
-
-        this.datasetViewType = DatasetViewTypeEnum.overview;
-
-        this.appDatasetService.getDatasetOverview(this.getDatasetId(), page);
-    }
-
-    public onSearchLinageDataset(): void {
-        this.navigationService.navigateToDatasetView(
-            AppValues.defaultUsername,
-            this.getDatasetId(),
-            DatasetViewTypeEnum.linage,
-        );
-
-        this.datasetViewType = DatasetViewTypeEnum.linage;
-        this.appDatasetService.resetDatasetTree();
-        this.appDatasetService.onSearchLineage(this.getDatasetId());
-
-        this.changeLinageGraphView();
-    }
-
-    public onSearcDiscussions(): void {
-        console.log("Projections Tab");
-        this.onSearchDataset();
-    }
-
     public onClickNode(idDataset: string): void {
         this.datasetViewType = DatasetViewTypeEnum.overview;
         this.onSelectDataset(idDataset);
     }
 
-    public getParentMethod(): DatasetControlInterface {
+    public getDatasetNavigation(): DatasetNavigationInterface {
         return {
-            onSearchDataset: () => {
-                this.onSearchDataset();
+            navigateToOverview: () => {
+                this.navigationService.navigateToDatasetView(
+                    AppValues.defaultUsername,
+                    this.getDatasetId(),
+                    ProjectLinks.urlDatasetViewOverviewType,
+                );
             },
-            onSearchDataForDataset: () => {
-                this.onSearchDataForDataset();
+            navigateToData: () => {
+                this.navigationService.navigateToDatasetView(
+                    AppValues.defaultUsername,
+                    this.getDatasetId(),
+                    ProjectLinks.urlDatasetViewDataType,
+                );
             },
-            onSearchMetadata: (currentPage: number) => {
-                this.onSearchMetadata(currentPage);
+            navigateToMetadata: (currentPage: number) => {
+                this.navigationService.navigateToDatasetView(
+                    AppValues.defaultUsername,
+                    this.getDatasetId(),
+                    ProjectLinks.urlDatasetViewMetadataType,
+                    currentPage
+                );
             },
-            onSearchDataForHistory: (currentPage: number) => {
-                this.onSearchDataForHistory(currentPage);
+            navigateToHistory: (currentPage: number) => {
+                this.navigationService.navigateToDatasetView(
+                    AppValues.defaultUsername,
+                    this.getDatasetId(),
+                    ProjectLinks.urlDatasetViewHistoryType,
+                    currentPage
+                );
             },
-            onSearchLinageDataset: () => {
-                this.onSearchLinageDataset();
+            navigateToLineage: () => {
+                this.navigationService.navigateToDatasetView(
+                    AppValues.defaultUsername,
+                    this.getDatasetId(),
+                    ProjectLinks.urlDatasetViewLineageType,
+                );
             },
-            onSearchDiscussions: () => {
-                this.onSearchDiscussions();
+            navigateToDiscussions: () => {
+                console.log("Navigate to discussions");
             },
         };
     }
@@ -439,22 +429,22 @@ export class DatasetComponent
 
             this.datasetViewType = type;
             if (type === DatasetViewTypeEnum.overview) {
-                this.onSearchDataset();
+                this.initOverviewTab();
             }
             if (type === DatasetViewTypeEnum.data) {
-                this.onSearchDataForDataset();
+                this.initDataTab();
             }
             if (type === DatasetViewTypeEnum.metadata) {
-                this.onSearchMetadata(page);
+                this.initMetadataTab(page);
             }
             if (type === DatasetViewTypeEnum.history) {
-                this.onSearchDataForHistory(page);
+                this.initHistoryTab(page);
             }
             if (type === DatasetViewTypeEnum.linage) {
-                this.onSearchLinageDataset();
+                this.initLineageTab();
             }
             if (type === DatasetViewTypeEnum.discussions) {
-                this.onSearchDiscussions();
+                this.initDiscussionsTab();
             }
         }
     }

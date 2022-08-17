@@ -39,7 +39,7 @@ export class AppDatasetService {
         private searchApi: SearchApi,
         private modalService: ModalService,
         private appDatasetSubsService: AppDatasetSubsService,
-    ) {}
+    ) { }
 
     public get onSearchDatasetBasicsChanges(): Observable<DatasetBasicsFragment> {
         return this.searchDatasetInfoChanges$.asObservable();
@@ -142,11 +142,9 @@ export class AppDatasetService {
 
     public getDatasetDataSchema(
         id: string,
-        numRecords: number,
-        page: number,
     ): void {
         this.searchApi
-            .getDatasetOverview({ id, page })
+            .getDatasetOverview({ id })
             .subscribe((data: DatasetOverviewQuery) => {
                 if (isNil(data.datasets.byId)) {
                     throw new Error("Dataset not resolved by ID");
@@ -165,9 +163,9 @@ export class AppDatasetService {
             });
     }
 
-    public getDatasetOverview(id: string, page: number): void {
+    public getDatasetOverview(id: string): void {
         this.searchApi
-            .getDatasetOverview({ id, page })
+            .getDatasetOverview({ id })
             .subscribe((data: DatasetOverviewQuery) => {
                 if (isNil(data.datasets.byId)) {
                     throw new Error("Dataset not resolved by ID");
@@ -206,15 +204,15 @@ export class AppDatasetService {
                 const pageInfo: PageBasedInfo = data.datasets.byId?.metadata
                     .chain.blocks.pageInfo
                     ? Object.assign(
-                          _.cloneDeep(
-                              data.datasets.byId?.metadata.chain.blocks
-                                  .pageInfo,
-                          ),
-                          { currentPage: numPage },
-                      )
+                        _.cloneDeep(
+                            data.datasets.byId?.metadata.chain.blocks
+                                .pageInfo,
+                        ),
+                        { currentPage: numPage },
+                    )
                     : Object.assign(this.defaultPageInfo, {
-                          currentPage: numPage,
-                      });
+                        currentPage: numPage,
+                    });
                 const historyUpdate: DatasetHistoryUpdate = {
                     history:
                         (data.datasets.byId?.metadata.chain.blocks

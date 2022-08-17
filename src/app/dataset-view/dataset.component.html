@@ -18,7 +18,7 @@
         <div id="dataset-viewer">
             <app-dataset-view-menu
                 [datasetViewType]="datasetViewType"
-                [parentShareMethods]="getParentMethod()"
+                [datasetNavigation]="getDatasetNavigation()"
             ></app-dataset-view-menu>
 
             <ng-template [ngIf]="isDatasetViewTypeOverview">

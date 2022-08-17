@@ -7,11 +7,11 @@ export enum DatasetViewTypeEnum {
     history = "history",
 }
 
-export interface DatasetControlInterface {
-    onSearchDataset: () => void;
-    onSearchDataForDataset: () => void;
-    onSearchMetadata: (currentPage: number) => void;
-    onSearchDataForHistory: (currentPage: number) => void;
-    onSearchLinageDataset: () => void;
-    onSearchDiscussions: () => void;
+export interface DatasetNavigationInterface {
+    navigateToOverview: () => void;
+    navigateToData: () => void;
+    navigateToMetadata: (currentPage: number) => void;
+    navigateToHistory: (currentPage: number) => void;
+    navigateToLineage: () => void;
+    navigateToDiscussions: () => void;
 }

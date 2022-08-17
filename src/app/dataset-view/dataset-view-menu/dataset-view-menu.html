@@ -15,37 +15,37 @@
             <mat-button-toggle
                     value="overview"
                     [checked]="isDatasetViewTypeOverview"
-                    (click)="onSearchDataset()"
+                    (click)="onNavigateToOverview()"
             >Overview
             </mat-button-toggle>
             <mat-button-toggle
                     value="data"
                     [checked]="isDatasetViewTypeData"
-                    (click)="onSearchDataForDataset()"
+                    (click)="onNavigateToData()"
             >Data
             </mat-button-toggle>
             <mat-button-toggle
                     value="metadata"
                     [checked]="isDatasetViewTypeMetadata"
-                    (click)="onSearchMetadata(1)"
+                    (click)="onNavigateToMetadata()"
             >Metadata
             </mat-button-toggle>
             <mat-button-toggle
                     value="history"
                     [checked]="isDatasetViewTypeHistory"
-                    (click)="onSearchDataForHistory(1)"
+                    (click)="onNavigateToHistory()"
             >History
             </mat-button-toggle>
             <mat-button-toggle
-                    value="linage"
-                    [checked]="isDatasetViewTypeLinage"
-                    (click)="onSearchLinageDataset()"
+                    value="lineage"
+                    [checked]="isDatasetViewTypeLineage"
+                    (click)="onNavigateToLineage()"
             >Lineage
             </mat-button-toggle>
             <mat-button-toggle
                     value="discussions"
                     [checked]="isDatasetViewTypeDiscussions"
-                    (click)="onSearchDiscussions()"
+                    (click)="onNavigateToDiscussions()"
                     disabled
             >Discussions
             </mat-button-toggle>

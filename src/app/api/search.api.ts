@@ -37,7 +37,7 @@ export class SearchApi {
         private getDatasetDataSQLRun: GetDatasetDataSqlRunGQL,
         private getDatasetHistoryGQL: GetDatasetHistoryGQL,
         private getDatasetLineageGQL: GetDatasetLineageGQL,
-    ) {}
+    ) { }
 
     public pageInfoInit(): PageBasedInfo {
         return {
@@ -113,7 +113,6 @@ export class SearchApi {
     public getDatasetOverview(params: {
         id: string;
         numRecords?: number;
-        page?: number;
     }): Observable<DatasetOverviewQuery> {
         return this.datasetOverviewGQL
             .watch({

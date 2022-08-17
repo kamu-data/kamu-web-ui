@@ -2,26 +2,30 @@
     <div
         class="search-result-container__content"
         id="searchResultContainerContent"
-        *ngIf="datasetInfo"
+        *ngIf="datasetBasics && currentState"
     >
         <div>
             <div
                 class="d-flex flex-column flex-justify-between pb-3 mb-3 position-relative"
             >
                 <ng-container
-                    *ngIf="datasetInfo.metadata?.currentInfo?.description"
+                    *ngIf="currentState.overview.metadata.currentInfo?.description"
                 >
                     <h2 class="box-title align-items-center pb-3">
                         Description
                     </h2>
-                    <p>{{ datasetInfo.metadata.currentInfo.description }}</p>
+                    <p>
+                        {{
+                        currentState.overview.metadata.currentInfo.description
+                        }}
+                    </p>
                 </ng-container>
                 <div class="app-mat-chip">
                     <mat-chip-list aria-label="Tags selection">
                         <div
-                            *ngFor="let keyword of datasetInfo.metadata?.currentInfo?.keywords"
+                            *ngFor="let keyword of currentState.overview.metadata.currentInfo?.keywords"
                         >
-                            <mat-chip (click)="selectTopic(datasetInfo.kind)"
+                            <mat-chip (click)="selectTopic(datasetBasics.kind)"
                                 >{{ keyword }}</mat-chip
                             >
                         </div>
@@ -30,13 +34,11 @@
             </div>
             <app-dynamic-table
                 [hasResultQuantity]="false"
-                [isClickableRow]="false"
                 [resultUnitText]="resultUnitText"
                 [hasTableHeader]="true"
-                [tableSource]="currentOverviewData"
+                [tableSource]="currentState.data"
                 [metadataBlockFragment]="metadataFragmentBlock"
-                [numBlocksTotal]="datasetInfo.metadata.chain.blocks.totalCount || 0"
-                (onSelectDatasetEmit)="(null)"
+                [numBlocksTotal]="currentState.overview.metadata.chain.blocks.totalCount || 0"
             ></app-dynamic-table>
             <div id="file-readme-dataset-template-md" class="file my-4">
                 <div class="file-header d-flex align-items-center">
@@ -93,18 +95,18 @@
                 </div>
                 <div
                     class="file-content"
-                    *ngIf="datasetInfo.metadata.currentReadme"
+                    *ngIf="currentState.overview.metadata.currentReadme"
                 >
                     <ng-template [ngIf]="isMarkdownEditView">
                         <textarea
                             class="variable-textarea"
-                            [(ngModel)]="datasetInfo.metadata.currentReadme"
+                            [(ngModel)]="currentState.overview.metadata.currentReadme"
                         ></textarea>
                     </ng-template>
                     <ng-template [ngIf]="!isMarkdownEditView">
                         <markdown
                             class="variable-binding"
-                            [data]="datasetInfo.metadata.currentReadme"
+                            [data]="currentState.overview.metadata.currentReadme"
                         ></markdown>
                     </ng-template>
                 </div>
@@ -117,14 +119,15 @@
                 <h2>Details</h2>
             </div>
             <div class="card--row dataset-info">
-                <ng-template [ngIf]="datasetInfo">
+                <ng-template [ngIf]="datasetBasics && currentState">
                     <div class="dataset-info--block">
                         <div class="dataset-info--sub-block">
                             <h2 class="dataset-info--subtitle">Kind:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ dataHelpers.datasetKind(datasetInfo.kind) }}
+                                {{ dataHelpers.datasetKind(datasetBasics.kind)
+                                }}
                             </p>
                         </div>
                     </div>
@@ -138,7 +141,7 @@
                     </div>
                     <div
                         class="dataset-info--block"
-                        *ngIf="datasetInfo && datasetInfo.metadata.currentLicense"
+                        *ngIf="currentState.overview.metadata.currentLicense"
                     >
                         <div class="dataset-info--sub-block">
                             <h2 class="dataset-info--subtitle">License:</h2>
@@ -146,15 +149,15 @@
                         <div class="dataset-info--sub-block">
                             <a
                                 class="link--primary"
-                                [href]="datasetInfo.metadata.currentLicense.websiteUrl"
+                                (click)="showWebsite(currentState.overview.metadata.currentLicense.websiteUrl)"
                             >
                                 <p
                                     class="dataset-info--text"
                                     placement="bottom"
-                                    [ngbTooltip]="datasetInfo.metadata.currentLicense.name"
+                                    [ngbTooltip]="currentState.overview.metadata.currentLicense.name"
                                 >
                                     {{
-                                    datasetInfo.metadata.currentLicense.shortName
+                                    currentState.overview.metadata.currentLicense.shortName
                                     }}
                                 </p>
                             </a>
@@ -168,8 +171,8 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ datasetInfo?.data?.estimatedSize ?
-                                dataHelpers.dataSize(datasetInfo.data.estimatedSize)
+                                {{ currentState?.size?.estimatedSize ?
+                                dataHelpers.dataSize(currentState.size.estimatedSize)
                                 : "-" }}
                             </p>
                         </div>
@@ -180,32 +183,26 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ datasetInfo?.data?.numRecordsTotal || 0 |
+                                {{ currentState?.size?.numRecordsTotal || 0 |
                                 number: "1.0-0" }}
                             </p>
                         </div>
                     </div>
-                    <div
-                        class="dataset-info--block"
-                        *ngIf="datasetInfo && datasetInfo.createdAt"
-                    >
+                    <div class="dataset-info--block" *ngIf="currentState">
                         <div class="dataset-info--sub-block">
                             <h2 class="dataset-info--subtitle">Created At:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
                             <time
                                 class="dataset-info--text"
-                                [title]="datasetInfo.createdAt"
+                                [title]="currentState.overview.createdAt"
                                 >{{
-                                dataHelpers.relativeTime(datasetInfo.createdAt,{w:
-                                1}) }}
+                                dataHelpers.relativeTime(currentState.overview.createdAt,
+                                {w:1}) }}
                             </time>
                         </div>
                     </div>
-                    <div
-                        class="dataset-info--block"
-                        *ngIf="datasetInfo && datasetInfo.lastUpdatedAt"
-                    >
+                    <div class="dataset-info--block" *ngIf="currentState">
                         <div class="dataset-info--sub-block">
                             <h2 class="dataset-info--subtitle">
                                 Last Updated At:
@@ -214,16 +211,16 @@
                         <div class="dataset-info--sub-block">
                             <time
                                 class="dataset-info--text"
-                                [title]="datasetInfo.lastUpdatedAt"
+                                [title]="currentState.overview.lastUpdatedAt"
                                 >{{
-                                dataHelpers.relativeTime(datasetInfo.lastUpdatedAt,{w:
-                                1}) }}
+                                dataHelpers.relativeTime(currentState.overview.lastUpdatedAt,
+                                {w:1}) }}
                             </time>
                         </div>
                     </div>
                     <div
                         class="dataset-info--block"
-                        *ngIf="datasetInfo.metadata && datasetInfo.metadata.currentWatermark"
+                        *ngIf="currentState && currentState.overview.metadata.currentWatermark"
                     >
                         <div class="dataset-info--sub-block">
                             <h2 class="dataset-info--subtitle">Watermark:</h2>
@@ -231,9 +228,9 @@
                         <div class="dataset-info--sub-block">
                             <time
                                 class="dataset-info--text"
-                                [title]="datasetInfo.metadata.currentWatermark"
+                                [title]="currentState.overview.metadata.currentWatermark"
                                 >{{
-                                dataHelpers.relativeTime(datasetInfo.metadata.currentWatermark,
+                                dataHelpers.relativeTime(currentState.overview.metadata.currentWatermark,
                                 {w: 1}) }}
                             </time>
                         </div>

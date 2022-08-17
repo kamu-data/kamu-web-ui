@@ -1,24 +1,24 @@
 import { Injectable } from "@angular/core";
-import { Apollo } from "apollo-angular";
-import { map, tap } from "rxjs/operators";
-import { DocumentNode, gql } from "@apollo/client/core";
-import { ApolloQueryResult } from "apollo-client";
-import { Observable, of, Subject, throwError } from "rxjs";
-import { AuthQueryResult, UserInterface } from "../interface/auth.interface";
-import { HttpClient } from "@angular/common/http";
-import { Router } from "@angular/router";
-import { userResponse } from "./mock.user";
-import { subscribe } from "graphql";
+import { map } from "rxjs/operators";
+import { Observable, Subject, throwError } from "rxjs";
+import { NavigationService } from "../services/navigation.service";
+import {
+    AccountInfo,
+    GithubLoginGQL,
+    GithubLoginMutation,
+} from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
+import { FetchResult } from "apollo-link";
+import { Optional } from "../common/app.types";
+
 @Injectable()
 export class AuthApi {
     constructor(
-        private apollo: Apollo,
-        private httpClient: HttpClient,
-        private router: Router,
+        private githubLoginGQL: GithubLoginGQL,
+        private navigationService: NavigationService,
     ) {}
 
-    public get onUserChanges(): Observable<UserInterface | {}> {
+    public get onUserChanges(): Observable<Optional<AccountInfo>> {
         return this.userChanges$.asObservable();
     }
 
@@ -32,16 +32,16 @@ export class AuthApi {
     public get isAuthUser(): boolean {
         return this.isAuthenticated;
     }
-    private user: UserInterface | {};
+    private user: Optional<AccountInfo>;
     private isAuthenticated: boolean;
-    private userChanges$: Subject<UserInterface | {}> = new Subject<
-        UserInterface | {}
+    private userChanges$: Subject<Optional<AccountInfo>> = new Subject<
+        Optional<AccountInfo>
     >();
 
     static handleError(error: Response): Observable<never> {
         return throwError(`GitHub ${error.statusText || "Server error"}`);
     }
-    public userChange(user: UserInterface | {}) {
+    public userChange(user: Optional<AccountInfo>) {
         this.user = user;
         this.userChanges$.next(user);
     }
@@ -69,63 +69,27 @@ export class AuthApi {
     }
 
     public getAccessToken(code: string): Observable<string> {
-        const GET_DATA: DocumentNode = gql`mutation GithubLogin {
-  auth {
-    githubLogin(code: "${code}") {
-      token {
-        accessToken
-        scope
-        tokenType
-      }
-      accountInfo {
-        login
-        email
-        name
-        avatarUrl
-        gravatarId
-      }
-    }
-  }
-}`;
-
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         // @ts-ignore
-        return this.apollo.mutate({ mutation: GET_DATA }).pipe(
-            // @ts-ignore
-            map((result: ApolloQueryResult<AuthQueryResult>) => {
-                const login = result.data;
-                const accountInfo: UserInterface =
-                    login.data.auth.githubLogin.accountInfo;
-                this.userChange(accountInfo);
-                return login.data.auth.githubLogin.token.accessToken;
+        return this.githubLoginGQL.mutate({ code: code }).pipe(
+            map((result: FetchResult<GithubLoginMutation>) => {
+                if (result.data) {
+                    const login: GithubLoginMutation = result.data;
+                    const accountInfo: AccountInfo =
+                        login.auth.githubLogin.accountInfo;
+                    this.userChange(accountInfo);
+                    return login.auth.githubLogin.token.accessToken;
+                } else {
+                    throw new Error("GraphQL query failed");
+                }
             }),
         );
-
-        // this.userChange(userResponse);
-        // return of('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');
-    }
-
-    public getUser(token: string = ""): void {
-        const localStorageAccessToken: string | null = localStorage.getItem(
-            AppValues.localStorageAccessToken,
-        );
-        const accessToken: string =
-            token === "" && localStorageAccessToken
-                ? localStorageAccessToken
-                : token;
-
-        //   this.getUserRequest(accessToken).subscribe((user: UserInterface) => {
-        //       debugger
-        //       this.userChange(user);
-        //       localStorage.setItem('access_token', accessToken);
-        //       this.router.navigate(['/']);
-        // });
     }
 
     public logOut(): void {
-        this.userChange({});
+        this.userChange(null);
         localStorage.removeItem(AppValues.localStorageAccessToken);
         localStorage.removeItem(AppValues.localStorageCode);
-        this.router.navigate(["/"]);
+        this.navigationService.navigateToHome();
     }
 }

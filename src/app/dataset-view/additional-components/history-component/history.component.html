@@ -1,13 +1,13 @@
 <div class="search-result-container__content" id="dataset-view-history">
     <div id="history-block">
-        <ng-template [ngIf]="history.length > 0 && pageInfo">
+        <ng-template [ngIf]="currentState && currentState.history.length > 0">
             <app-timeline
-                [history]="history"
-                [pageInfo]="pageInfo"
+                [history]="currentState.history"
+                [pageInfo]="currentState.pageInfo"
             ></app-timeline>
             <app-pagination
                 [currentPage]="currentPage"
-                [pageInfo]="pageInfo"
+                [pageInfo]="currentState.pageInfo"
                 (pageChangeEvent)="onPageChange($event)"
             ></app-pagination>
         </ng-template>

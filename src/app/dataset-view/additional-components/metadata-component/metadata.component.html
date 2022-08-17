@@ -1,44 +1,31 @@
 <div class="search-result-container__content" id="searchResultContainerContent">
     <div id="metadata-block">
-        <div id="pagination-block" *ngIf="datasetInfo && datasetInfo.metadata">
+        <div id="pagination-block" *ngIf="currentState">
             <app-custom-pagination
-                [hash]="
-                    shortHash(
-                        datasetInfo.metadata['chain'].blocks.nodes[0][
-                            'blockHash'
-                        ]
-                    )
-                "
-                [date]="
-                    momentConverDatetoLocalWithFormat(
-                        datasetInfo.metadata['chain'].blocks.nodes[0][
-                            'systemTime'
-                        ]
-                    )
-                "
+                [hash]="latestBlockhash"
+                [date]="latestBlockSystemTime"
                 [pageIndex]="currentPage"
                 [limit]="5"
-                [total]="pageInfo.totalPages || 1"
+                [total]="totalPages"
                 (pageChange)="onPageChange($event)"
             ></app-custom-pagination>
         </div>
         <h2>Schema</h2>
-        <ng-template [ngIf]="currentSchema">
+        <ng-template [ngIf]="currentState">
             <app-dynamic-table
                 [hasResultQuantity]="false"
-                [isClickableRow]="false"
                 [resultUnitText]="''"
                 [hasTableHeader]="true"
-                [tableSource]="currentSchema.fields || []"
+                [tableSource]="currentState.schema.fields || []"
                 [idTable]="'schema-block-table'"
-                (onSelectDatasetEmit)="(null)"
             ></app-dynamic-table>
         </ng-template>
         <div
             *ngIf="
-                datasetInfo &&
-                datasetInfo.kind === 'DERIVATIVE' &&
-                datasetInfo.metadata.currentTransform
+                datasetBasics &&
+                datasetBasics.kind === 'DERIVATIVE' &&
+                currentState &&
+                currentState.metadata.currentTransform
             "
             class="mt-3"
         >
@@ -48,7 +35,7 @@
                 <li
                     class="app-mat-chip input-datasets-list"
                     *ngFor="
-                        let input of datasetInfo.metadata.currentTransform
+                        let input of currentState.metadata.currentTransform
                             .inputs;
                         let idx1 = index
                     "
@@ -65,7 +52,7 @@
             <h3>Queries:</h3>
             <div
                 *ngFor="
-                    let queryStep of datasetInfo.metadata.currentTransform
+                    let queryStep of currentState.metadata.currentTransform
                         .transform.queries
                 "
                 style="height: 400px"
@@ -77,25 +64,31 @@
                 ></ngx-monaco-editor>
             </div>
         </div>
-        <div *ngIf="datasetInfo && datasetInfo.metadata.currentLicense">
+        <div *ngIf="currentState && currentState.metadata.currentLicense">
             <h2>License</h2>
             <p>
                 <strong>ID:</strong>
-                {{ datasetInfo.metadata.currentLicense.shortName }}
+                {{ currentState.metadata.currentLicense.shortName }}
             </p>
             <p>
                 <strong>Name:</strong>
-                {{ datasetInfo.metadata.currentLicense.name }}
+                {{ currentState.metadata.currentLicense.name }}
             </p>
-            <p *ngIf="datasetInfo.metadata.currentLicense.spdxId">
+            <p *ngIf="currentState.metadata.currentLicense.spdxId">
                 <strong>SPDX ID:</strong>
-                {{ datasetInfo.metadata.currentLicense.spdxId }}
+                {{ currentState.metadata.currentLicense.spdxId }}
             </p>
             <p>
-                <strong>Website:</strong>
-                <a [href]="datasetInfo.metadata.currentLicense.websiteUrl">{{
-                    datasetInfo.metadata.currentLicense.websiteUrl
-                }}</a>
+                <strong>Website: </strong>
+                <a
+                    class="url"
+                    (click)="
+                        navigateToWebsite(
+                            currentState.metadata.currentLicense.websiteUrl
+                        )
+                    "
+                    >{{ currentState.metadata.currentLicense.websiteUrl }}</a
+                >
             </p>
         </div>
     </div>

@@ -1,23 +1,25 @@
 import { Injectable } from "@angular/core";
-import { Observable, Subject, Subscription } from "rxjs";
+import { Observable, Subject, Subscription, throwError } from "rxjs";
 import { SearchApi } from "../api/search.api";
 import {
     DatasetKindInterface,
-    DatasetNameInterface,
     DataViewSchema,
 } from "../interface/search.interface";
 import {
-    Dataset,
+    DatasetBasicsFragment,
+    DatasetDataSizeFragment,
     DatasetKind,
+    DatasetMetadataDetailsFragment,
+    DatasetOverviewFragment,
     DatasetOverviewQuery,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
     GetDatasetLineageQuery,
     GetDatasetMetadataSchemaQuery,
+    Maybe,
     MetadataBlockFragment,
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
-import AppValues from "../common/app.values";
 import { ModalService } from "../components/modal/modal.service";
 import { AppDatasetSubsService } from "./datasetSubs.service";
 import {
@@ -26,6 +28,8 @@ import {
     MetadataSchemaUpdate,
     OverviewDataUpdate,
 } from "./datasetSubs.interface";
+import { isNil } from "lodash";
+import _ from "lodash";
 
 @Injectable()
 export class AppDatasetService {
@@ -37,12 +41,8 @@ export class AppDatasetService {
         private appDatasetSubsService: AppDatasetSubsService,
     ) {}
 
-    public get onSearchDatasetInfoChanges(): Observable<Dataset> {
+    public get onSearchDatasetBasicsChanges(): Observable<DatasetBasicsFragment> {
         return this.searchDatasetInfoChanges$.asObservable();
-    }
-
-    public get onSearchDatasetNameChanges(): Observable<DatasetNameInterface> {
-        return this.searchDatasetNameChanges$.asObservable();
     }
 
     public get onSearchChanges(): Observable<string> {
@@ -74,10 +74,8 @@ export class AppDatasetService {
         DatasetKindInterface[]
     >();
     private searchChanges$: Subject<string> = new Subject<string>();
-    private searchDatasetInfoChanges$: Subject<Dataset> =
-        new Subject<Dataset>();
-    private searchDatasetNameChanges$: Subject<DatasetNameInterface> =
-        new Subject<DatasetNameInterface>();
+    private searchDatasetInfoChanges$: Subject<DatasetBasicsFragment> =
+        new Subject<DatasetBasicsFragment>();
     private datasetTreeChanges$: Subject<
         [DatasetKindInterface[][], DatasetKindInterface]
     > = new Subject<[DatasetKindInterface[][], DatasetKindInterface]>();
@@ -99,14 +97,10 @@ export class AppDatasetService {
         };
     }
 
-    public searchDatasetInfoChanges(searchDatasetInfo: Dataset): void {
-        this.searchDatasetInfoChanges$.next(searchDatasetInfo);
-    }
-
-    public searchDatasetNameChanges(
-        searchDatasetName: DatasetNameInterface,
+    public searchDatasetInfoChanges(
+        searchDatasetInfo: DatasetBasicsFragment,
     ): void {
-        this.searchDatasetNameChanges$.next(searchDatasetName);
+        this.searchDatasetInfoChanges$.next(searchDatasetInfo);
     }
 
     public kindInfoChanges(datasetList: DatasetKindInterface[]): void {
@@ -154,18 +148,17 @@ export class AppDatasetService {
         this.searchApi
             .getDatasetOverview({ id, page })
             .subscribe((data: DatasetOverviewQuery) => {
-                const dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
-                this.searchDatasetNameChanges({
-                    id: dataset.id,
-                    name: dataset.name,
-                    owner: dataset.owner,
-                });
+                if (isNil(data.datasets.byId)) {
+                    throw new Error("Dataset not resolved by ID");
+                }
+                const dataset: DatasetBasicsFragment =
+                    _.cloneDeep<DatasetBasicsFragment>(data.datasets.byId);
                 this.searchDatasetInfoChanges(dataset);
 
                 const content: Object[] =
                     AppDatasetService.parseContentOfDataset(data);
                 const schema: DataViewSchema = JSON.parse(
-                    dataset.metadata?.currentSchema.content,
+                    data.datasets.byId.metadata.currentSchema.content,
                 );
                 const dataUpdate: DataUpdate = { content, schema };
                 this.appDatasetSubsService.changeDatasetData(dataUpdate);
@@ -176,17 +169,26 @@ export class AppDatasetService {
         this.searchApi
             .getDatasetOverview({ id, page })
             .subscribe((data: DatasetOverviewQuery) => {
-                const dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
-                this.searchDatasetNameChanges({
-                    id: dataset.id,
-                    name: dataset.name,
-                    owner: dataset.owner,
-                });
+                if (isNil(data.datasets.byId)) {
+                    throw new Error("Dataset not resolved by ID");
+                }
+                const dataset: DatasetBasicsFragment =
+                    _.cloneDeep<DatasetBasicsFragment>(data.datasets.byId);
                 this.searchDatasetInfoChanges(dataset);
 
                 const content: Object[] =
                     AppDatasetService.parseContentOfDataset(data);
-                const overviewDataUpdate: OverviewDataUpdate = { content };
+                const overview: DatasetOverviewFragment =
+                    _.cloneDeep<DatasetOverviewFragment>(data.datasets.byId);
+                const size: DatasetDataSizeFragment =
+                    _.cloneDeep<DatasetDataSizeFragment>(
+                        data.datasets.byId.data,
+                    );
+                const overviewDataUpdate: OverviewDataUpdate = {
+                    content,
+                    overview,
+                    size,
+                };
                 this.appDatasetSubsService.changeDatasetOverviewData(
                     overviewDataUpdate,
                 );
@@ -201,16 +203,10 @@ export class AppDatasetService {
         this.searchApi
             .onDatasetHistory({ id, numRecords, numPage })
             .subscribe((data: GetDatasetHistoryQuery) => {
-                this.searchDatasetNameChanges({
-                    id: data.datasets.byId?.id,
-                    name: data.datasets.byId?.name,
-                    owner: data.datasets.byId?.owner as any,
-                });
-
-                let pageInfo: PageBasedInfo = data.datasets.byId?.metadata.chain
-                    .blocks.pageInfo
+                const pageInfo: PageBasedInfo = data.datasets.byId?.metadata
+                    .chain.blocks.pageInfo
                     ? Object.assign(
-                          AppValues.deepCopy(
+                          _.cloneDeep(
                               data.datasets.byId?.metadata.chain.blocks
                                   .pageInfo,
                           ),
@@ -219,7 +215,7 @@ export class AppDatasetService {
                     : Object.assign(this.defaultPageInfo, {
                           currentPage: numPage,
                       });
-                let historyUpdate: DatasetHistoryUpdate = {
+                const historyUpdate: DatasetHistoryUpdate = {
                     history:
                         (data.datasets.byId?.metadata.chain.blocks
                             .nodes as MetadataBlockFragment[]) || [],
@@ -233,25 +229,27 @@ export class AppDatasetService {
         this.searchApi
             .onSearchMetadata({ id, page })
             .subscribe((data: GetDatasetMetadataSchemaQuery) => {
-                let dataset: Dataset = AppValues.deepCopy(data.datasets.byId);
-                this.searchDatasetNameChanges({
-                    id: dataset.id,
-                    name: dataset.name,
-                    owner: dataset.owner,
-                });
-
-                let schema: DataViewSchema = JSON.parse(
-                    dataset.metadata?.currentSchema.content,
+                if (isNil(data.datasets.byId)) {
+                    throw new Error("Dataset not resolved by ID");
+                }
+                const dataset: DatasetBasicsFragment =
+                    _.cloneDeep<DatasetBasicsFragment>(data.datasets.byId);
+                const schema: DataViewSchema = JSON.parse(
+                    data.datasets.byId.metadata.currentSchema.content,
                 );
-                let pageInfo: PageBasedInfo = Object.assign(
+                const metadata: DatasetMetadataDetailsFragment = _.cloneDeep(
+                    data.datasets.byId.metadata,
+                );
+                const pageInfo: PageBasedInfo = Object.assign(
                     this.defaultPageInfo,
                     {
                         currentPage: page,
                     },
                 );
-                let metadataSchemaUpdate: MetadataSchemaUpdate = {
+                const metadataSchemaUpdate: MetadataSchemaUpdate = {
                     schema,
                     pageInfo,
+                    metadata,
                 };
                 this.appDatasetSubsService.metadataSchemaChanges(
                     metadataSchemaUpdate,
@@ -260,7 +258,7 @@ export class AppDatasetService {
             });
     }
     public onGetDatasetDataSQLRun(
-        currentDatasetInfo: Dataset,
+        currentDatasetInfo: DatasetBasicsFragment,
         query: string,
         limit: number,
     ): void {
@@ -311,13 +309,15 @@ export class AppDatasetService {
 
         this.searchApi
             .getDatasetLineage({ id })
-            .subscribe((result: GetDatasetLineageQuery) => {
-                this.searchDatasetNameChanges({
-                    id: result.datasets.byId?.id,
-                    name: result.datasets.byId?.name,
-                    owner: result.datasets.byId?.owner as any,
-                });
-                this.updateDatasetTree(result);
+            .subscribe((data: GetDatasetLineageQuery) => {
+                if (isNil(data.datasets.byId)) {
+                    throw new Error("Dataset not resolved by ID");
+                }
+                const dataset: DatasetBasicsFragment =
+                    _.cloneDeep<DatasetBasicsFragment>(data.datasets.byId);
+                this.searchDatasetInfoChanges(dataset);
+
+                this.updateDatasetTree(data);
             });
     }
 

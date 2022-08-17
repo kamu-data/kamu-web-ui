@@ -1,12 +1,8 @@
 import { AppSearchService } from "./search.service";
-import {
-    SearchOverviewDatasetsInterface,
-    SearchOverviewInterface,
-} from "../interface/search.interface";
+import { SearchOverviewInterface } from "../interface/search.interface";
 import AppValues from "../common/app.values";
 import { MatSidenav } from "@angular/material/sidenav";
 import { SideNavService } from "../services/sidenav.service";
-import { Router } from "@angular/router";
 import {
     AfterContentInit,
     Component,
@@ -15,8 +11,10 @@ import {
     ViewChild,
 } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
-import { PageBasedInfo } from "../api/kamu.graphql.interface";
 import { BaseComponent } from "../common/base.component";
+import ProjectLinks from "../project-links";
+import { NavigationService } from "../services/navigation.service";
+import { Dataset, PageBasedInfo } from "../api/kamu.graphql.interface";
 
 export interface SearchFilters {
     name?: string;
@@ -50,7 +48,7 @@ export class SearchComponent
 
     public allComplete: boolean = false;
     public tableData: {
-        tableSource: SearchOverviewDatasetsInterface[];
+        tableSource: Dataset[];
         hasResultQuantity: boolean;
         resultUnitText: string;
         isClickableRow: boolean;
@@ -114,7 +112,8 @@ export class SearchComponent
             ],
         },
     ];
-    public searchData: SearchOverviewDatasetsInterface[] = [];
+
+    public searchData: Dataset[] = [];
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
@@ -129,7 +128,7 @@ export class SearchComponent
     }
 
     constructor(
-        private router: Router,
+        private navigationService: NavigationService,
         private appSearchService: AppSearchService,
         private sidenavService: SideNavService,
     ) {
@@ -159,7 +158,7 @@ export class SearchComponent
             }),
             this.appSearchService.onSearchDataChanges.subscribe(
                 (data: SearchOverviewInterface) => {
-                    this.tableData.tableSource = data.dataset;
+                    this.tableData.tableSource = data.datasets;
                     this.tableData.pageInfo = data.pageInfo;
                     this.tableData.totalCount = data.totalCount as number;
                     this.currentPage = data.currentPage;
@@ -208,17 +207,19 @@ export class SearchComponent
         isClick: boolean;
     }): void {
         this.currentPage = params.currentPage;
-
-        this.router.navigate([AppValues.urlSearch], {
-            queryParams: { id: this.searchValue, p: params.currentPage },
-        });
+        this.navigationService.navigateToSearch(
+            this.searchValue,
+            params.currentPage,
+        );
     }
 
     public onSelectDataset(data: { ownerName: string; id: string }): void {
         const id: string = data.id;
-        this.router.navigate([data.ownerName, AppValues.urlDatasetView], {
-            queryParams: { id, type: AppValues.urlDatasetViewOverviewType },
-        });
+        this.navigationService.navigateToDatasetView(
+            data.ownerName,
+            id,
+            ProjectLinks.urlDatasetViewOverviewType,
+        );
     }
 
     public onSearch(searchValue: string, page: number = 1): void {

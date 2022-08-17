@@ -1,44 +1,9 @@
 query datasetOverview($datasetId: DatasetID!, $limit: Int) {
   datasets {
     byId(datasetId: $datasetId) {
-      id
-      owner {
-        id
-        name
-      }
-      name
-      kind
-      createdAt
-      lastUpdatedAt
-      metadata {
-        currentInfo {
-          description
-          keywords
-        }
-        currentLicense {
-          ...License
-        }
-        currentReadme
-        currentWatermark
-        currentSchema(format: PARQUET_JSON) {
-          format
-          content
-          __typename
-        }
-        __typename
-        # Last update
-        chain {
-          blocks(page: 0, perPage: 1) {
-            nodes {
-              ...MetadataBlock
-            }
-            totalCount
-          }
-        }
-      }
+      ...DatasetOverview
       data {
-        numRecordsTotal
-        estimatedSize
+        ...DatasetDataSize
         # Data sample
         tail(limit: $limit, dataFormat: JSON) {
           schema {
@@ -55,6 +20,5 @@ query datasetOverview($datasetId: DatasetID!, $limit: Int) {
       }
       __typename
     }
-    __typename
   }
 }

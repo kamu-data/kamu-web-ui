@@ -25,25 +25,22 @@
                 <app-overview
                     [isMarkdownEditView]="isMarkdownEditView"
                     [markdownText]="markdownText"
-                    [datasetInfo]="datasetInfo"
+                    [datasetBasics]="datasetBasics"
                     [resultUnitText]="getResultUnitText()"
                     (onToggleReadmeViewEmit)="toggleReadmeView()"
                     (onSelectTopicEmit)="selectTopic($event)"
-                    (onSelectDatasetEmit)="onSelectDataset($event)"
                 ></app-overview>
             </ng-template>
 
-            <ng-template [ngIf]="isDatasetViewTypeData && datasetName">
+            <ng-template [ngIf]="isDatasetViewTypeData && datasetBasics">
                 <app-data
-                    [datasetName]="datasetName"
-                    (onSelectDatasetEmit)="onSelectDataset($event)"
+                    [datasetBasics]="datasetBasics"
                     (onRunSQLRequestEmit)="onRunSQLRequest($event)"
                 ></app-data>
             </ng-template>
 
             <ng-template [ngIf]="isDatasetViewTypeHistory">
                 <app-history
-                    (onSelectDatasetEmit)="(null)"
                     (onPageChangeEmit)="onPageChange($event)"
                 ></app-history>
             </ng-template>
@@ -61,8 +58,7 @@
 
             <ng-template [ngIf]="isDatasetViewTypeMetadata">
                 <app-metadata
-                    [datasetInfo]="datasetInfo"
-                    (onSelectDatasetEmit)="onSelectDataset($event)"
+                    [datasetBasics]="datasetBasics"
                     (onPageChangeEmit)="onPageChange($event)"
                     (onSelectTopicEmit)="selectTopic($event)"
                     (onClickDatasetEmit)="onClickNode($event)"

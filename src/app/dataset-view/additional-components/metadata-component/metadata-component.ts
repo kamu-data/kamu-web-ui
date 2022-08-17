@@ -1,23 +1,27 @@
+import { NavigationService } from "src/app/services/navigation.service";
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DataViewSchema } from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
 import { MetadataSchemaUpdate } from "../../datasetSubs.interface";
-import { Dataset, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
+import {
+    DatasetBasicsFragment,
+    DatasetMetadataDetailsFragment,
+    PageBasedInfo,
+} from "src/app/api/kamu.graphql.interface";
+import { DataHelpersService } from "src/app/services/datahelpers.service";
 
-const FILTER_PAG_REGEX = /[^0-9]/g;
 @Component({
     selector: "app-metadata",
     templateUrl: "./metadata.component.html",
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
-    @Input() public datasetInfo: Dataset;
+    @Input() public datasetBasics?: DatasetBasicsFragment;
     @Output() public pageChangeEvent: EventEmitter<{
         currentPage: number;
         isClick: boolean;
     }> = new EventEmitter();
-    @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
     @Output() onPageChangeEmit: EventEmitter<{
         currentPage: number;
         isClick: boolean;
@@ -25,8 +29,6 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     @Output() onSelectTopicEmit: EventEmitter<string> = new EventEmitter();
     @Output() onClickDatasetEmit: EventEmitter<string> = new EventEmitter();
 
-    public page = 1;
-    private previousPage: number;
     public sqlEditorOptions = {
         theme: "vs",
         language: "sql",
@@ -38,11 +40,17 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         },
     };
 
-    public currentSchema?: DataViewSchema;
-    public pageInfo: PageBasedInfo;
-    public currentPage: number = 0;
+    public currentState?: {
+        schema: DataViewSchema;
+        metadata: DatasetMetadataDetailsFragment;
+        pageInfo: PageBasedInfo;
+    };
 
-    constructor(private appDatasetSubsService: AppDatasetSubsService) {
+    constructor(
+        private dataHelpers: DataHelpersService,
+        private appDatasetSubsService: AppDatasetSubsService,
+        private navigationService: NavigationService,
+    ) {
         super();
     }
 
@@ -50,37 +58,28 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         this.trackSubscription(
             this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
                 (schemaUpdate: MetadataSchemaUpdate) => {
-                    this.currentSchema = schemaUpdate.schema;
-                    this.pageInfo = schemaUpdate.pageInfo;
-                    this.currentPage = this.pageInfo.currentPage + 1;
+                    this.currentState = {
+                        schema: schemaUpdate.schema,
+                        metadata: schemaUpdate.metadata,
+                        pageInfo: schemaUpdate.pageInfo,
+                    };
                 },
             ),
         );
     }
 
-    public selectPage(page: string) {
-        this.page = parseInt(page, 10) || 1;
+    public navigateToWebsite(url: string): void {
+        this.navigationService.navigateToWebsite(url);
     }
+
     public selectTopic(topicName: string): void {
         this.onSelectTopicEmit.emit(topicName);
     }
+
     public onClickDataset(idDataset: string): void {
         this.onClickDatasetEmit.emit(idDataset);
     }
-    public shortHash(hash: string): string {
-        return hash.slice(-8);
-    }
-    public momentConverDatetoLocalWithFormat(date: string): string {
-        return AppValues.momentConverDatetoLocalWithFormat({
-            date: new Date(String(date)),
-            format: "DD MMM YYYY",
-            isTextDate: true,
-        });
-    }
 
-    formatInput(input: HTMLInputElement) {
-        input.value = input.value.replace(FILTER_PAG_REGEX, "");
-    }
     public onPageChange(params: {
         currentPage: number;
         isClick: boolean;
@@ -88,7 +87,35 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         this.onPageChangeEmit.emit(params);
     }
 
-    public onSelectDataset(id: string): void {
-        this.onSelectDatasetEmit.emit(id);
+    public get currentPage(): number {
+        return this.currentState
+            ? this.currentState.pageInfo.currentPage + 1
+            : 1;
+    }
+
+    public get totalPages(): number {
+        const totalPages = this.currentState?.pageInfo.totalPages;
+        return totalPages ?? 1;
+    }
+
+    public get latestBlockhash(): string {
+        return this.currentState
+            ? this.dataHelpers.shortHash(
+                  this.currentState.metadata.chain.blocks.nodes[0].blockHash,
+              )
+            : "";
+    }
+
+    public get latestBlockSystemTime(): string {
+        const systemTimeAsString: string | undefined =
+            this.currentState?.metadata.chain.blocks.nodes[0].systemTime;
+
+        return systemTimeAsString
+            ? AppValues.momentConverDatetoLocalWithFormat({
+                  date: new Date(String(systemTimeAsString)),
+                  format: "DD MMM YYYY",
+                  isTextDate: true,
+              })
+            : "";
     }
 }

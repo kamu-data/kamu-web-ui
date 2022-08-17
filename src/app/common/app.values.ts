@@ -4,27 +4,13 @@ import * as moment from "moment-timezone";
 @Injectable()
 export default class AppValues {
     public static appLogo = "assets/icons/kamu_logo_icon.svg";
-    public static urlProfile = "profile";
-    public static urlLogin = "login";
-    public static urlGithubCallback = "github_callback";
-    public static urlSearch = "search";
-    public static urlDatasetView = "dataset-view";
-    public static urlDatasetViewOverviewType = "overview";
-    public static urlDatasetViewMetadataType = "metadata";
-    public static urlDatasetViewDataType = "data";
-    public static urlDatasetViewHistoryType = "history";
-    public static urlDatasetViewLineageType = "linage"; //TODO: Spelling
-    public static urlDatasetCreate = "dataset-create";
-    public static urlDatasetCreateSelectType = "select-type";
-    public static urlDatasetCreateRoot = "root";
-
     public static localStorageCode = "code";
     public static localStorageAccessToken = "code";
-
     public static defaultUsername = "anonymous";
-
     public static httpPattern = new RegExp(/^(http:\/\/)|(https:\/\/)/i);
-
+    public static clipboardKamuCli = "kamu pull kamu.dev/anonymous/dataset";
+    public static clipboardKafka =
+        "https://api.kamu.dev/kafka/anonymous/dataset";
     public static markdownContain = `## Markdown __rulez__!
 ---
 
@@ -117,62 +103,21 @@ const language = 'typescript';
                 return "%" + c.charCodeAt(0).toString(16);
             });
     }
-    /**
-     * Makes deep copy of item without binding to its memory link
-     * @param {T} item
-     * @returns {T}
-     */
-    /* eslint-disable  @typescript-eslint/no-explicit-any, @typescript-eslint/ban-ts-comment */
-    // @ts-ignore
-    public static deepCopy<T>(item: T): any {
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
-        let copy: any;
 
-        if (null == item || "object" !== typeof item) {
-            /* eslint-disable  @typescript-eslint/no-explicit-any */
-            return item;
-        }
-
-        if (item instanceof Array) {
-            copy = [];
-            /* eslint-disable  @typescript-eslint/no-explicit-any */
-            item.forEach((obj: any) => {
-                return (copy as Array<any>).push(this.deepCopy(obj));
-            });
-
-            return copy;
-        }
-
-        if (item instanceof Object) {
-            copy = {};
-            for (const attr in item) {
-                /* eslint-disable  @typescript-eslint/no-explicit-any, @typescript-eslint/ban-ts-comment, no-prototype-builtins */
-                // @ts-ignore
-                if ((item as any).hasOwnProperty(attr)) {
-                    /* eslint-disable  @typescript-eslint/no-explicit-any */
-                    (copy as any)[attr] = this.deepCopy(item[attr]);
-                }
-            }
-
-            return copy;
-        }
-
-        throw new Error("Unable to copy obj! Its type isn't supported.");
-    }
     /* eslint-disable  @typescript-eslint/no-explicit-any, @typescript-eslint/ban-ts-comment */
     // @ts-ignore
     public static shellSort(arr: any[]) {
         const n: number = arr.length;
 
-        //Start with a really large gap, and then reduce the gap until there isn't any
-        //With this, the gap starts as half of the array length, and then half of that every time
+        // Start with a really large gap, and then reduce the gap until there isn't any
+        // With this, the gap starts as half of the array length, and then half of that every time
         for (let gap = Math.floor(n / 2); gap > 0; gap = Math.floor(gap / 2)) {
-            //Do a insertion sort for each of the section the gap ends up dividing
+            // Do a insertion sort for each of the section the gap ends up dividing
             for (let i = gap; i < n; i += 1) {
-                //We store the current varible
+                // We store the current varible
                 const temp = arr[i];
 
-                //This is the insection sort to sort the section into order
+                // This is the insection sort to sort the section into order
                 let j;
                 for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
                     arr[j] = arr[j - gap];

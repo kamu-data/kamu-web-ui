@@ -2,7 +2,7 @@ export enum DatasetViewTypeEnum {
     overview = "overview",
     data = "data",
     metadata = "metadata",
-    linage = "linage",
+    linage = "lineage",
     discussions = "discussions",
     history = "history",
 }

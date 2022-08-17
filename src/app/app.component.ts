@@ -1,13 +1,17 @@
+import { NavigationService } from "./services/navigation.service";
 import { Component, HostListener, OnInit } from "@angular/core";
 import AppValues from "./common/app.values";
 import { AppSearchService } from "./search/search.service";
 import { filter } from "rxjs/operators";
-import { Router, NavigationEnd, ActivatedRoute } from "@angular/router";
+import { Router, NavigationEnd } from "@angular/router";
 import { DatasetIDsInterface, TypeNames } from "./interface/search.interface";
 import { AuthApi } from "./api/auth.api";
-import { UserInterface } from "./interface/auth.interface";
 import { ModalService } from "./components/modal/modal.service";
 import { BaseComponent } from "./common/base.component";
+import ProjectLinks from "./project-links";
+import { AccountInfo } from "./api/kamu.graphql.interface";
+import { Optional } from "./common/app.types";
+import _ from "lodash";
 
 @Component({
     selector: "app-root",
@@ -15,16 +19,20 @@ import { BaseComponent } from "./common/base.component";
     styleUrls: ["./app.component.sass"],
 })
 export class AppComponent extends BaseComponent implements OnInit {
+    private readonly AnonymousAccountInfo: AccountInfo = {
+        login: "",
+        name: AppValues.defaultUsername,
+    };
     private unimplementedMessage = "Feature coming soon";
     public appLogo = `/${AppValues.appLogo}`;
     public isMobileView = false;
     public searchValue: any = "";
     public isVisible = true;
-    public user: UserInterface;
+    public user: AccountInfo;
     private appHeaderNotVisiblePages: string[] = [
-        AppValues.urlDatasetCreate,
-        AppValues.urlLogin,
-        AppValues.urlGithubCallback,
+        ProjectLinks.urlDatasetCreate,
+        ProjectLinks.urlLogin,
+        ProjectLinks.urlGithubCallback,
     ];
 
     @HostListener("window:resize", ["$event"])
@@ -33,11 +41,11 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     constructor(
-        private route: ActivatedRoute,
         private router: Router,
         private appSearchService: AppSearchService,
         private authApi: AuthApi,
         private modalService: ModalService,
+        private navigationService: NavigationService,
     ) {
         super();
     }
@@ -46,9 +54,13 @@ export class AppComponent extends BaseComponent implements OnInit {
         this.checkView();
         this.appHeaderInit();
         this.trackSubscription(
-            this.authApi.onUserChanges.subscribe((user: UserInterface | {}) => {
-                this.user = AppValues.deepCopy(user);
-            }),
+            this.authApi.onUserChanges.subscribe(
+                (user: Optional<AccountInfo>) => {
+                    this.user = user
+                        ? _.cloneDeep(user)
+                        : this.AnonymousAccountInfo;
+                },
+            ),
         );
         this.authentification();
     }
@@ -59,8 +71,8 @@ export class AppComponent extends BaseComponent implements OnInit {
         );
 
         if (
-            location.href.includes(AppValues.urlLogin) ||
-            location.href.includes(AppValues.urlGithubCallback)
+            location.href.includes(ProjectLinks.urlLogin) ||
+            location.href.includes(ProjectLinks.urlGithubCallback)
         ) {
             return;
         } else {
@@ -93,7 +105,7 @@ export class AppComponent extends BaseComponent implements OnInit {
                                 event.url.split("?id=")[1].split("&")[0],
                             );
                         if (searchValue === "%255Bobject%2520Object%255D") {
-                            this.router.navigate(["search"]);
+                            this.navigationService.navigateToSearch();
                             setTimeout(() =>
                                 this.appSearchService.searchChanges(""),
                             );
@@ -127,23 +139,17 @@ export class AppComponent extends BaseComponent implements OnInit {
                 item.id,
         );
         if (item.__typename === TypeNames.datasetType) {
-            this.router.navigate(
-                [AppValues.defaultUsername, AppValues.urlDatasetView],
-                {
-                    queryParams: {
-                        id: item.id,
-                        type: AppValues.urlDatasetViewOverviewType,
-                    },
-                },
+            this.navigationService.navigateToDatasetView(
+                AppValues.defaultUsername,
+                item.id,
+                ProjectLinks.urlDatasetViewOverviewType,
             );
         } else {
-            this.router.navigate([AppValues.urlSearch], {
-                queryParams: { id: item.id, p: 1 },
-            });
+            this.navigationService.navigateToSearch(item.id, 1);
         }
     }
     public onClickAppLogo(): void {
-        this.router.navigate([AppValues.urlSearch]);
+        this.navigationService.navigateToSearch();
         this.appSearchService.searchChanges("");
     }
 
@@ -153,14 +159,13 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onAddNew(): void {
-        this.router.navigate([
+        this.navigationService.navigateToDatasetCreate(
             AppValues.defaultUsername,
-            AppValues.urlDatasetCreate,
-        ]);
+        );
     }
 
     public onLogin(): void {
-        this.router.navigate([AppValues.urlLogin]);
+        this.navigationService.navigateToLogin();
     }
     public onLogOut(): void {
         this.authApi.logOut();

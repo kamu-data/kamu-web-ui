@@ -1,7 +1,8 @@
+import { NavigationService } from "./../../services/navigation.service";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { SearchOverviewDatasetsInterface } from "../../interface/search.interface";
 import { ModalService } from "../modal/modal.service";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
+import { Dataset } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-repo-list",
@@ -9,7 +10,7 @@ import { DataHelpersService } from "src/app/services/datahelpers.service";
     styleUrls: ["./repo-list.sass"],
 })
 export class RepoListComponent {
-    @Input() public dataSource: SearchOverviewDatasetsInterface[];
+    @Input() public dataSource: Dataset[];
     @Input() public totalCount = 0;
     @Input() public resultUnitText: string;
     @Input() public hasResultQuantity?: boolean = false;
@@ -27,15 +28,18 @@ export class RepoListComponent {
     constructor(
         private modalService: ModalService,
         public dataHelpers: DataHelpersService,
+        public navigationService: NavigationService,
     ) {}
 
-    public onSelectDataset(ownerName: string, id: string): void {
-        this.onSelectDatasetEmit.emit({ ownerName, id: id });
+    public navigateToOwnerView(ownerName: string): void {
+        this.navigationService.navigateToOwnerView(ownerName);
     }
 
-    public searchResultQuantity(
-        dataSource: SearchOverviewDatasetsInterface[] = [],
-    ): string {
+    public onSelectDataset(ownerName: string, id: string): void {
+        this.onSelectDatasetEmit.emit({ ownerName, id });
+    }
+
+    public searchResultQuantity(dataSource: Dataset[] = []): string {
         if (!Array.isArray(dataSource)) {
             return "0";
         }

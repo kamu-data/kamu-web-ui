@@ -1,13 +1,12 @@
+import { NavigationService } from "./../services/navigation.service";
 import {
     Component,
     HostListener,
+    OnDestroy,
     OnInit,
     ViewEncapsulation,
 } from "@angular/core";
-import {
-    DatasetKindInterface,
-    DatasetNameInterface,
-} from "../interface/search.interface";
+import { DatasetKindInterface } from "../interface/search.interface";
 import AppValues from "../common/app.values";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
 import {
@@ -20,8 +19,12 @@ import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
-import { Dataset, DatasetKind } from "../api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    DatasetKind,
+} from "../api/kamu.graphql.interface";
 import { BaseComponent } from "../common/base.component";
+import ProjectLinks from "../project-links";
 
 @Component({
     selector: "app-dataset",
@@ -29,10 +32,15 @@ import { BaseComponent } from "../common/base.component";
     styleUrls: ["./dataset-view.component.sass"],
     encapsulation: ViewEncapsulation.None,
 })
-export class DatasetComponent extends BaseComponent implements OnInit {
-    public datasetInfo: Dataset;
-    public datasetName: DatasetNameInterface;
+export class DatasetComponent
+    extends BaseComponent
+    implements OnInit, OnDestroy
+{
+    public datasetBasics?: DatasetBasicsFragment;
     public searchValue = "";
+    public isMinimizeSearchAdditionalButtons = false;
+    public initialDatasetViewType: typeof DatasetViewTypeEnum =
+        DatasetViewTypeEnum;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.overview;
 
     public linageGraphView: [number, number] = [500, 600];
@@ -51,6 +59,7 @@ export class DatasetComponent extends BaseComponent implements OnInit {
     constructor(
         private appDatasetService: AppDatasetService,
         private router: Router,
+        private navigationService: NavigationService,
         private modalService: ModalService,
     ) {
         super();
@@ -70,14 +79,9 @@ export class DatasetComponent extends BaseComponent implements OnInit {
         this.prepareLinageGraph();
 
         this.trackSubscriptions(
-            this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
-                (info: Dataset) => {
-                    this.datasetInfo = info;
-                },
-            ),
-            this.appDatasetService.onSearchDatasetNameChanges.subscribe(
-                (datasetName: DatasetNameInterface) => {
-                    this.datasetName = datasetName;
+            this.appDatasetService.onSearchDatasetBasicsChanges.subscribe(
+                (basics: DatasetBasicsFragment) => {
+                    this.datasetBasics = basics;
                 },
             ),
             this.appDatasetService.onSearchChanges.subscribe(
@@ -119,7 +123,7 @@ export class DatasetComponent extends BaseComponent implements OnInit {
     }
 
     public getResultUnitText(): string {
-        return `results in ${this.datasetInfo?.name || ""}`;
+        return `results in ${this.datasetBasics?.name || ""}`;
     }
 
     public onClickSearchAdditionalButton(method: string) {
@@ -142,15 +146,11 @@ export class DatasetComponent extends BaseComponent implements OnInit {
     }
 
     public onSearchMetadata(currentPage: number): void {
-        this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
-            {
-                queryParams: {
-                    id: this.getDatasetId(),
-                    type: AppValues.urlDatasetViewMetadataType,
-                    p: currentPage,
-                },
-            },
+        this.navigationService.navigateToDatasetView(
+            AppValues.defaultUsername,
+            this.getDatasetId(),
+            ProjectLinks.urlDatasetViewMetadataType,
+            currentPage,
         );
 
         this.datasetViewType = DatasetViewTypeEnum.metadata;
@@ -161,14 +161,10 @@ export class DatasetComponent extends BaseComponent implements OnInit {
     }
 
     public onSearchDataForDataset(): void {
-        this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
-            {
-                queryParams: {
-                    id: this.getDatasetId(),
-                    type: AppValues.urlDatasetViewDataType,
-                },
-            },
+        this.navigationService.navigateToDatasetView(
+            AppValues.defaultUsername,
+            this.getDatasetId(),
+            ProjectLinks.urlDatasetViewDataType,
         );
         this.datasetViewType = DatasetViewTypeEnum.data;
 
@@ -176,15 +172,11 @@ export class DatasetComponent extends BaseComponent implements OnInit {
     }
 
     public onSearchDataForHistory(currentPage: number): void {
-        this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
-            {
-                queryParams: {
-                    id: this.getDatasetId(),
-                    type: DatasetViewTypeEnum.history,
-                    p: currentPage,
-                },
-            },
+        this.navigationService.navigateToDatasetView(
+            AppValues.defaultUsername,
+            this.getDatasetId(),
+            DatasetViewTypeEnum.history,
+            currentPage,
         );
         this.datasetViewType = DatasetViewTypeEnum.history;
 
@@ -200,7 +192,11 @@ export class DatasetComponent extends BaseComponent implements OnInit {
     }
 
     public showOwnerPage(): void {
-        this.router.navigate([this.datasetInfo.owner.id]);
+        if (this.datasetBasics) {
+            this.navigationService.navigateToOwnerView(
+                this.datasetBasics.owner.name,
+            );
+        }
     }
 
     public toggleReadmeView(): void {
@@ -215,14 +211,10 @@ export class DatasetComponent extends BaseComponent implements OnInit {
     }
 
     public onSearchDataset(page = 0): void {
-        this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
-            {
-                queryParams: {
-                    id: this.getDatasetId(),
-                    type: AppValues.urlDatasetViewOverviewType,
-                },
-            },
+        this.navigationService.navigateToDatasetView(
+            AppValues.defaultUsername,
+            this.getDatasetId(),
+            ProjectLinks.urlDatasetViewOverviewType,
         );
 
         this.datasetViewType = DatasetViewTypeEnum.overview;
@@ -231,14 +223,10 @@ export class DatasetComponent extends BaseComponent implements OnInit {
     }
 
     public onSearchLinageDataset(): void {
-        this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
-            {
-                queryParams: {
-                    id: this.getDatasetId(),
-                    type: DatasetViewTypeEnum.linage,
-                },
-            },
+        this.navigationService.navigateToDatasetView(
+            AppValues.defaultUsername,
+            this.getDatasetId(),
+            DatasetViewTypeEnum.linage,
         );
 
         this.datasetViewType = DatasetViewTypeEnum.linage;
@@ -483,22 +471,20 @@ export class DatasetComponent extends BaseComponent implements OnInit {
     }
 
     public onSelectDataset(id: string): void {
-        this.router.navigate(
-            [AppValues.defaultUsername, AppValues.urlDatasetView],
-            {
-                queryParams: {
-                    id,
-                    type: AppValues.urlDatasetViewLineageType,
-                },
-            },
+        this.navigationService.navigateToDatasetView(
+            AppValues.defaultUsername,
+            id,
+            ProjectLinks.urlDatasetViewLineageType,
         );
     }
     public onRunSQLRequest(query: string): void {
-        this.appDatasetService.onGetDatasetDataSQLRun(
-            this.datasetInfo,
-            query,
-            50, // TODO: Propagate limit from UI and display when it was reached
-        );
+        if (this.datasetBasics) {
+            this.appDatasetService.onGetDatasetDataSQLRun(
+                this.datasetBasics,
+                query,
+                50, // TODO: Propagate limit from UI and display when it was reached
+            );
+        }
     }
 
     ngOnDestroy() {

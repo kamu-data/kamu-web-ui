@@ -13,9 +13,9 @@ import {
     TypeNames,
 } from "../../interface/search.interface";
 import { SearchApi } from "../../api/search.api";
-import { UserInterface } from "../../interface/auth.interface";
 import AppValues from "../../common/app.values";
 import { BaseComponent } from "src/app/common/base.component";
+import { AccountInfo } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-header",
@@ -30,7 +30,7 @@ export class AppHeaderComponent extends BaseComponent {
     @Input() public appLogo: string;
     @Input() public isMobileView: boolean;
     @Input() public isVisible: boolean;
-    @Input() public userInfo: UserInterface;
+    @Input() public userInfo: AccountInfo;
 
     @Output() public selectDatasetEmitter: EventEmitter<DatasetIDsInterface> =
         new EventEmitter();

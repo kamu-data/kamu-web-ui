@@ -7,7 +7,6 @@ import {
     OnInit,
     Output,
     SimpleChanges,
-    ViewEncapsulation,
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import {
@@ -37,10 +36,8 @@ export class DynamicTableComponent
 
     @Input() public hasResultQuantity?: boolean = false;
     @Input() public resultUnitText: string;
-    @Input() public isClickableRow = false;
     @Input() public idTable = "";
-    @Output() public onSelectDatasetEmit: EventEmitter<string> =
-        new EventEmitter();
+    @Output() public onSelectRowEmit: EventEmitter<string> = new EventEmitter();
 
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     public dataSource = new MatTableDataSource<any>(ELEMENT_DATA);
@@ -74,8 +71,8 @@ export class DynamicTableComponent
     }
 
     /* eslint-disable  @typescript-eslint/no-explicit-any */
-    public onSelectDataset(dataset: any): void {
-        this.onSelectDatasetEmit.emit(dataset);
+    public onSelectRow(row: any): void {
+        this.onSelectRowEmit.emit(row);
     }
 
     /* eslint-disable  @typescript-eslint/no-explicit-any */

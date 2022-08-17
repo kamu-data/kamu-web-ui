@@ -1,3 +1,4 @@
+import { NavigationService } from "./../../services/navigation.service";
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AuthApi } from "../../api/auth.api";
@@ -10,7 +11,7 @@ import { BaseComponent } from "src/app/common/base.component";
 export class GithubCallbackComponent extends BaseComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
-        private router: Router,
+        private navigationService: NavigationService,
         private authApi: AuthApi,
     ) {
         super();
@@ -18,13 +19,13 @@ export class GithubCallbackComponent extends BaseComponent implements OnInit {
 
     ngOnInit() {
         if (!this.searchString.includes("?code=")) {
-            this.router.navigate(["/"]);
+            this.navigationService.navigateToHome();
         }
         this.trackSubscription(
             this.route.queryParams.subscribe((param: any) => {
                 this.authApi
                     .getUserInfoAndToken(param.code)
-                    .subscribe(() => this.router.navigate(["/"]));
+                    .subscribe(() => this.navigationService.navigateToHome());
             }),
         );
     }

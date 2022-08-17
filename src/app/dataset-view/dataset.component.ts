@@ -1,7 +1,6 @@
 import {
     Component,
     HostListener,
-    OnDestroy,
     OnInit,
     ViewEncapsulation,
 } from "@angular/core";
@@ -22,7 +21,7 @@ import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
 import { Dataset, DatasetKind } from "../api/kamu.graphql.interface";
-import { SubSink } from "subsink";
+import { BaseComponent } from "../common/base.component";
 
 @Component({
     selector: "app-dataset",
@@ -30,7 +29,7 @@ import { SubSink } from "subsink";
     styleUrls: ["./dataset-view.component.sass"],
     encapsulation: ViewEncapsulation.None,
 })
-export class DatasetComponent implements OnInit, OnDestroy {
+export class DatasetComponent extends BaseComponent implements OnInit {
     public datasetInfo: Dataset;
     public datasetName: DatasetNameInterface;
     public searchValue = "";
@@ -44,9 +43,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
     public isMarkdownEditView = false;
     public markdownText = AppValues.markdownContain;
 
-    private w: Window;
-    private subs: SubSink = new SubSink();
-
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
         this.changeLinageGraphView();
@@ -57,12 +53,12 @@ export class DatasetComponent implements OnInit, OnDestroy {
         private router: Router,
         private modalService: ModalService,
     ) {
-        this.w = window;
+        super();
     }
 
     public ngOnInit(): void {
         this.checkWindowSize();
-        this.subs.add(
+        this.trackSubscription(
             this.router.events
                 .pipe(filter((event) => event instanceof NavigationEnd))
                 .subscribe((event: any) => {
@@ -73,7 +69,7 @@ export class DatasetComponent implements OnInit, OnDestroy {
 
         this.prepareLinageGraph();
 
-        this.subs.add(
+        this.trackSubscriptions(
             this.appDatasetService.onSearchDatasetInfoChanges.subscribe(
                 (info: Dataset) => {
                     this.datasetInfo = info;
@@ -335,7 +331,7 @@ export class DatasetComponent implements OnInit, OnDestroy {
             },
         ];
 
-        this.subs.add(
+        this.trackSubscriptions(
             this.appDatasetService.onDatasetTreeChanges.subscribe(
                 (args: [DatasetKindInterface[][], DatasetKindInterface]) => {
                     const edges = args[0];
@@ -438,10 +434,10 @@ export class DatasetComponent implements OnInit, OnDestroy {
         }
         this.appDatasetService.resetDatasetTree();
         const searchParams: string[] = decodeURIComponent(
-            this.w.location.search,
+            this.searchString,
         ).split("&type=");
         const searchPageParams: string[] = decodeURIComponent(
-            this.w.location.search,
+            this.searchString,
         ).split("&p=");
         let page = 1;
         if (searchPageParams[1]) {
@@ -477,7 +473,7 @@ export class DatasetComponent implements OnInit, OnDestroy {
 
     private getDatasetId(): string {
         const searchParams: string[] = decodeURIComponent(
-            this.w.location.search,
+            this.searchString,
         ).split("?id=");
 
         if (searchParams.length > 1) {
@@ -509,6 +505,6 @@ export class DatasetComponent implements OnInit, OnDestroy {
         if (this.appDatasetService.onSearchLineageDatasetSubscription) {
             this.appDatasetService.onSearchLineageDatasetSubscription.unsubscribe();
         }
-        this.subs.unsubscribe();
+        super.ngOnDestroy();
     }
 }

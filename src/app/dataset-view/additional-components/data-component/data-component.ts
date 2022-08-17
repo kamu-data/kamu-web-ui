@@ -6,12 +6,13 @@ import {
 import DataTabValues from "./mock.data";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
 import { DataUpdate } from "../../datasetSubs.interface";
+import { BaseComponent } from "src/app/common/base.component";
 
 @Component({
     selector: "app-data",
     templateUrl: "./data-component.html",
 })
-export class DataComponent implements OnInit {
+export class DataComponent extends BaseComponent implements OnInit {
     @Input() public datasetName: DatasetNameInterface;
     // tslint:disable-next-line:no-output-on-prefix
     @Output() onSelectDatasetEmit: EventEmitter<string> = new EventEmitter();
@@ -29,7 +30,9 @@ export class DataComponent implements OnInit {
     public currentSchema?: DataViewSchema;
     public currentData: Object[] = [];
 
-    constructor(private appDatasetSubsService: AppDatasetSubsService) {}
+    constructor(private appDatasetSubsService: AppDatasetSubsService) {
+        super();
+    }
 
     public onSelectDataset(id: string): void {
         this.onSelectDatasetEmit.emit(id);
@@ -43,11 +46,13 @@ export class DataComponent implements OnInit {
         if (this.datasetName) {
             this.sqlRequestCode += `'${this.datasetName.name}'`;
         }
-        this.appDatasetSubsService.onDatasetDataChanges.subscribe(
-            (dataUpdate: DataUpdate) => {
-                this.currentData = dataUpdate.content;
-                this.currentSchema = dataUpdate.schema;
-            },
+        this.trackSubscription(
+            this.appDatasetSubsService.onDatasetDataChanges.subscribe(
+                (dataUpdate: DataUpdate) => {
+                    this.currentData = dataUpdate.content;
+                    this.currentSchema = dataUpdate.schema;
+                },
+            ),
         );
     }
 

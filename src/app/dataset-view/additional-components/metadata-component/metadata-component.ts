@@ -4,13 +4,14 @@ import AppValues from "../../../common/app.values";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
 import { MetadataSchemaUpdate } from "../../datasetSubs.interface";
 import { Dataset, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
+import { BaseComponent } from "src/app/common/base.component";
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 @Component({
     selector: "app-metadata",
     templateUrl: "./metadata.component.html",
 })
-export class MetadataComponent implements OnInit {
+export class MetadataComponent extends BaseComponent implements OnInit {
     @Input() public datasetInfo: Dataset;
     @Output() public pageChangeEvent: EventEmitter<{
         currentPage: number;
@@ -41,15 +42,19 @@ export class MetadataComponent implements OnInit {
     public pageInfo: PageBasedInfo;
     public currentPage: number = 0;
 
-    constructor(private appDatasetSubsService: AppDatasetSubsService) {}
+    constructor(private appDatasetSubsService: AppDatasetSubsService) {
+        super();
+    }
 
     ngOnInit() {
-        this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
-            (schemaUpdate: MetadataSchemaUpdate) => {
-                this.currentSchema = schemaUpdate.schema;
-                this.pageInfo = schemaUpdate.pageInfo;
-                this.currentPage = this.pageInfo.currentPage + 1;
-            },
+        this.trackSubscription(
+            this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
+                (schemaUpdate: MetadataSchemaUpdate) => {
+                    this.currentSchema = schemaUpdate.schema;
+                    this.pageInfo = schemaUpdate.pageInfo;
+                    this.currentPage = this.pageInfo.currentPage + 1;
+                },
+            ),
         );
     }
 

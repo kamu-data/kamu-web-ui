@@ -7,13 +7,14 @@ import { DatasetIDsInterface, TypeNames } from "./interface/search.interface";
 import { AuthApi } from "./api/auth.api";
 import { UserInterface } from "./interface/auth.interface";
 import { ModalService } from "./components/modal/modal.service";
+import { BaseComponent } from "./common/base.component";
 
 @Component({
     selector: "app-root",
     templateUrl: "./app.component.html",
     styleUrls: ["./app.component.sass"],
 })
-export class AppComponent implements OnInit {
+export class AppComponent extends BaseComponent implements OnInit {
     private unimplementedMessage = "Feature coming soon";
     public appLogo = `/${AppValues.appLogo}`;
     public isMobileView = false;
@@ -25,7 +26,6 @@ export class AppComponent implements OnInit {
         AppValues.urlLogin,
         AppValues.urlGithubCallback,
     ];
-    private _window: Window;
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
@@ -39,15 +39,17 @@ export class AppComponent implements OnInit {
         private authApi: AuthApi,
         private modalService: ModalService,
     ) {
-        this._window = window;
+        super();
     }
 
     public ngOnInit(): void {
         this.checkView();
         this.appHeaderInit();
-        this.authApi.onUserChanges.subscribe((user: UserInterface | {}) => {
-            this.user = AppValues.deepCopy(user);
-        });
+        this.trackSubscription(
+            this.authApi.onUserChanges.subscribe((user: UserInterface | {}) => {
+                this.user = AppValues.deepCopy(user);
+            }),
+        );
         this.authentification();
     }
 
@@ -63,44 +65,48 @@ export class AppComponent implements OnInit {
             return;
         } else {
             if (typeof code === "string" && !this.authApi.isAuthUser) {
-                this.authApi.getUserInfoAndToken(code).subscribe();
+                this.trackSubscription(
+                    this.authApi.getUserInfoAndToken(code).subscribe(),
+                );
                 return;
             }
         }
     }
 
     private appHeaderInit(): void {
-        this.appSearchService.onSearchChanges.subscribe(
-            (searchValue: string) => {
-                this.searchValue = searchValue;
-            },
+        this.trackSubscriptions(
+            this.appSearchService.onSearchChanges.subscribe(
+                (searchValue: string) => {
+                    this.searchValue = searchValue;
+                },
+            ),
+
+            /* eslint-disable  @typescript-eslint/no-explicit-any */
+            this.router.events
+                .pipe(filter((event) => event instanceof NavigationEnd))
+                .subscribe((event: any) => {
+                    this.isVisible = this.isAvailableAppHeaderUrl(event.url);
+
+                    if (event.url.split("?id=").length > 1) {
+                        const searchValue: string =
+                            AppValues.fixedEncodeURIComponent(
+                                event.url.split("?id=")[1].split("&")[0],
+                            );
+                        if (searchValue === "%255Bobject%2520Object%255D") {
+                            this.router.navigate(["search"]);
+                            setTimeout(() =>
+                                this.appSearchService.searchChanges(""),
+                            );
+                        }
+                        if (event.url.includes("search")) {
+                            this.appSearchService.searchChanges(searchValue);
+                        }
+                        if (event.url.includes("dataset-view")) {
+                            this.appSearchService.searchChanges("");
+                        }
+                    }
+                }),
         );
-
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
-        this.router.events
-            .pipe(filter((event) => event instanceof NavigationEnd))
-            .subscribe((event: any) => {
-                this.isVisible = this.isAvailableAppHeaderUrl(event.url);
-
-                if (event.url.split("?id=").length > 1) {
-                    const searchValue: string =
-                        AppValues.fixedEncodeURIComponent(
-                            event.url.split("?id=")[1].split("&")[0],
-                        );
-                    if (searchValue === "%255Bobject%2520Object%255D") {
-                        this.router.navigate(["search"]);
-                        setTimeout(() =>
-                            this.appSearchService.searchChanges(""),
-                        );
-                    }
-                    if (event.url.includes("search")) {
-                        this.appSearchService.searchChanges(searchValue);
-                    }
-                    if (event.url.includes("dataset-view")) {
-                        this.appSearchService.searchChanges("");
-                    }
-                }
-            });
     }
 
     private checkView(): void {

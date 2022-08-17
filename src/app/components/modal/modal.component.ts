@@ -17,6 +17,7 @@ import { ModalSpinnerComponent } from "./modal-spinner.component";
 import { Location } from "@angular/common";
 import { ModalFilterComponent } from "./modal-filter.component";
 import { ModalMappingsComponent } from "../../interface/modal.interface";
+import { BaseComponent } from "src/app/common/base.component";
 
 @Component({
     selector: "modal",
@@ -29,7 +30,7 @@ import { ModalMappingsComponent } from "../../interface/modal.interface";
         ></div>
     `,
 })
-export class ModalComponent implements OnInit {
+export class ModalComponent extends BaseComponent implements OnInit {
     @ViewChild("container", { read: ViewContainerRef })
     container: ViewContainerRef;
     isVisible: boolean;
@@ -47,30 +48,34 @@ export class ModalComponent implements OnInit {
         private componentFactoryResolver: ComponentFactoryResolver,
         private modalService: ModalService,
         private location: Location,
-    ) {}
+    ) {
+        super();
+    }
 
     ngOnInit() {
-        this.modalService
-            .getCommand()
-            .subscribe((command: ModalCommandInterface) => {
-                if (command.context) {
-                    // @ts-ignore
-                    command.context.buttonCount = 0;
-                    [
-                        "yesButtonText",
-                        "noButtonText",
-                        "lastButtonText",
-                        "tooLastButtonText",
-                    ].forEach((btnName: string) => {
+        this.trackSubscription(
+            this.modalService
+                .getCommand()
+                .subscribe((command: ModalCommandInterface) => {
+                    if (command.context) {
                         // @ts-ignore
-                        if (command.context[btnName]) {
+                        command.context.buttonCount = 0;
+                        [
+                            "yesButtonText",
+                            "noButtonText",
+                            "lastButtonText",
+                            "tooLastButtonText",
+                        ].forEach((btnName: string) => {
                             // @ts-ignore
-                            command.context.buttonCount += 1;
-                        }
-                    });
-                }
-                this._execute(command);
-            });
+                            if (command.context[btnName]) {
+                                // @ts-ignore
+                                command.context.buttonCount += 1;
+                            }
+                        });
+                    }
+                    this._execute(command);
+                }),
+        );
     }
 
     _execute(command: ModalCommandInterface) {

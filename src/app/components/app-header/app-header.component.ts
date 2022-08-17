@@ -15,12 +15,13 @@ import {
 import { SearchApi } from "../../api/search.api";
 import { UserInterface } from "../../interface/auth.interface";
 import AppValues from "../../common/app.values";
+import { BaseComponent } from "src/app/common/base.component";
 
 @Component({
     selector: "app-header",
     templateUrl: "./app-header.component.html",
 })
-export class AppHeaderComponent {
+export class AppHeaderComponent extends BaseComponent {
     @Input() public searchValue: DatasetIDsInterface = {
         id: "",
         name: "",
@@ -56,14 +57,12 @@ export class AppHeaderComponent {
     @ViewChild("appHeaderMenuButton")
     appHeaderMenuButton: ElementRef<HTMLElement>;
 
-    private _window: Window;
-
     public defaultUsername: string = AppValues.defaultUsername;
     public isSearchActive = false;
     public isCollapsedAppHeaderMenu: boolean = false;
 
     constructor(private appSearchAPI: SearchApi) {
-        this._window = window;
+        super();
     }
 
     public isDatasetType(type: string): boolean {

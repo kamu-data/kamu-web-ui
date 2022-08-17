@@ -37,6 +37,7 @@
 2. Run application locally: `ng serve` or `npm run start`
 
 ## Runing with Local GQL Server
+
 The web UI will by default attempt to connect to the GraphQL server running on `http://localhost:8080`.
 
 If you have the `kamu` tool installed you can use it to serve GraphQL API directly from your workspace using:
@@ -56,10 +57,11 @@ docker run -it --rm -p 8080:8080 kamudata/kamu-base:latest-with-data kamu system
 ```
 
 ## GitHub Auth
+
 To authenticate user via GitHub you will also need to pass the following environment variables when running the API server:
+
 - `KAMU_AUTH_GITHUB_CLIENT_ID` - Client ID of your GitHub OAuth app
 - `KAMU_AUTH_GITHUB_CLIENT_SECRET` - Client secret of your GitHub OAuth app
-
 
 ## GraphQL Schema and Code Generation
 

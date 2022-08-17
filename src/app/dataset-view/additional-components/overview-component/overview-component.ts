@@ -6,6 +6,7 @@ import {
     Output,
     ViewEncapsulation,
 } from "@angular/core";
+import { BaseComponent } from "src/app/common/base.component";
 import { DataHelpersService } from "src/app/services/datahelpers.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import {
@@ -22,7 +23,7 @@ import { AppDatasetSubsService } from "../../datasetSubs.service";
     templateUrl: "overview-component.html",
     encapsulation: ViewEncapsulation.None,
 })
-export class OverviewComponent implements OnInit {
+export class OverviewComponent extends BaseComponent implements OnInit {
     @Input() public isMarkdownEditView: boolean;
     @Input() public markdownText: any;
     @Input() public datasetBasics?: DatasetBasicsFragment;
@@ -40,17 +41,21 @@ export class OverviewComponent implements OnInit {
         public dataHelpers: DataHelpersService,
         private appDatasetSubsService: AppDatasetSubsService,
         private navigationService: NavigationService,
-    ) {}
+    ) {
+        super();
+    }
 
     ngOnInit(): void {
-        this.appDatasetSubsService.onDatasetOverviewDataChanges.subscribe(
-            (overviewUpdate: OverviewDataUpdate) => {
-                this.currentState = {
-                    data: overviewUpdate.content,
-                    size: overviewUpdate.size,
-                    overview: overviewUpdate.overview,
-                };
-            },
+        this.trackSubscription(
+            this.appDatasetSubsService.onDatasetOverviewDataChanges.subscribe(
+                (overviewUpdate: OverviewDataUpdate) => {
+                    this.currentState = {
+                        data: overviewUpdate.content,
+                        size: overviewUpdate.size,
+                        overview: overviewUpdate.overview,
+                    };
+                },
+            ),
         );
     }
 

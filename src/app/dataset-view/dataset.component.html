@@ -5,437 +5,23 @@
     id="dataset-view"
 >
     <div class="app-content">
-        <div class="app-content--header">
-            <div class="flex-auto min-width-0 width-fit mr-3">
-                <h1
-                    class="d-flex flex-wrap flex-items-center wb-break-word f3 text-normal align-items-center"
-                >
-                    <svg
-                        aria-hidden="true"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        width="16"
-                        data-view-component="true"
-                        class="octicon octicon-repo color-fg-muted mr-2"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"
-                        ></path>
-                    </svg>
-                    <span class="author flex-self-stretch" itemprop="author">
-                        <a
-                            *ngIf="datasetBasics && datasetBasics.owner?.name"
-                            class="url fn"
-                            rel="author"
-                            data-hovercard-type="organization"
-                            (click)="showOwnerPage()"
-                            >{{ datasetBasics.owner.name }}</a
-                        >
-                    </span>
-                    <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
-                    <strong itemprop="name" class="mr-2 flex-self-stretch">
-                        <a
-                            *ngIf="
-                                datasetBasics &&
-                                datasetBasics.owner?.name &&
-                                datasetBasics.name
-                            "
-                            data-pjax="#repo-content-pjax-container"
-                            (click)="showDatasetView()"
-                            >{{ datasetBasics.name }}</a
-                        >
-                    </strong>
-
-                    <span></span
-                    ><span class="label label--secondary v-align-middle mr-1"
-                        >Public</span
-                    >
-
-                    <button
-                        type="button"
-                        class="signed-commit-badge verified signed-commit-badge-small"
-                        placement="left"
-                        ngbPopover="Verified"
-                    >
-                        Verified
-                    </button>
-                </h1>
-            </div>
-
-            <app-search-additional-buttons
-                [searchAdditionalButtonsData]="searchAdditionalButtonsData"
-                [isMinimizeSearchAdditionalButtons]="
-                    isMinimizeSearchAdditionalButtons
-                "
-                (searchAdditionalButtonsMethod)="
-                    onClickSearchAdditionalButton($event)
-                "
-            >
-            </app-search-additional-buttons>
-        </div>
+        <app-dataset-view-header
+            [datasetBasics]="datasetBasics"
+            (showOwnerPageEmit)="showOwnerPage()"
+            (onClickSearchAdditionalButtonEmit)="
+                onClickSearchAdditionalButton($event)
+            "
+        ></app-dataset-view-header>
     </div>
+
     <div class="app-content">
         <div id="dataset-viewer">
-            <div
-                class="search-header-container-block"
-                [style]="
-                    isMinimizeSearchAdditionalButtons
-                        ? 'grid-template-columns: 1fr;'
-                        : ''
-                "
-            >
-                <div class="datasetViewTypeToggleGroup">
-                    <mat-button-toggle-group
-                        name="datasetViewType"
-                        aria-label="Dataset View Type"
-                        [value]="datasetViewType"
-                    >
-                        <mat-button-toggle
-                            value="overview"
-                            [checked]="datasetViewTypeOverview"
-                            (click)="onSearchDataset()"
-                            >Overview
-                        </mat-button-toggle>
-                        <mat-button-toggle
-                            value="data"
-                            [checked]="datasetViewTypeData"
-                            (click)="onSearchDataForDataset()"
-                            >Data
-                        </mat-button-toggle>
-                        <mat-button-toggle
-                            value="metadata"
-                            [checked]="datasetViewTypeMetadata"
-                            (click)="onSearchMetadata(1)"
-                            >Metadata
-                        </mat-button-toggle>
-                        <mat-button-toggle
-                            value="history"
-                            [checked]="datasetViewTypeHistory"
-                            (click)="onSearchDataForHistory(1)"
-                            >History
-                        </mat-button-toggle>
-                        <mat-button-toggle
-                            value="linage"
-                            [checked]="datasetViewTypeLinage"
-                            (click)="onSearchLinageDataset()"
-                            >Lineage
-                        </mat-button-toggle>
-                        <mat-button-toggle
-                            value="discussions"
-                            [checked]="datasetViewTypeDiscussions"
-                            (click)="onSearchDiscussions()"
-                            disabled
-                            >Discussions
-                        </mat-button-toggle>
-                    </mat-button-toggle-group>
-                </div>
+            <app-dataset-view-menu
+                [datasetViewType]="datasetViewType"
+                [datasetNavigation]="getDatasetNavigation()"
+            ></app-dataset-view-menu>
 
-                <ul class="nav searchAdditionalButtons__nav">
-                    <li class="nav-item mr-2">
-                        <div class="btnGroup-parent">
-                            <button
-                                class="dataset-download-button starred rounded-left-2 border-1 border-right-0 btn-sm btn btnGroup-item d-flex justify-content-center align-items-center"
-                            >
-                                <span class="d-inline mr-2">Download</span>
-                            </button>
-                            <button
-                                class="starred rounded-right-2 border-1 border btn-sm btn btnGroup-item d-flex justify-content-center align-items-center"
-                                mat-icon-button
-                                mat-button
-                                #menuTrigger="matMenuTrigger"
-                                [matMenuTriggerFor]="menu2"
-                                aria-label="Example icon-button with a menu"
-                                data-test-id="searchAdditionalButtons"
-                            >
-                                <mat-icon>arrow_drop_down</mat-icon>
-                            </button>
-
-                            <mat-menu #menu2="matMenu" [hasBackdrop]="false">
-                                <div
-                                    class="SelectMenu-modal notifications-component-menu-modal"
-                                >
-                                    <header class="SelectMenu-header">
-                                        <div class="SelectMenu-title text-bold">
-                                            <svg
-                                                aria-hidden="true"
-                                                height="16"
-                                                viewBox="0 0 16 16"
-                                                version="1.1"
-                                                width="16"
-                                                data-view-component="true"
-                                                class="octicon octicon-terminal mr-2"
-                                            >
-                                                <path
-                                                    fill-rule="evenodd"
-                                                    d="M0 2.75C0 1.784.784 1 1.75 1h12.5c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0114.25 15H1.75A1.75 1.75 0 010 13.25V2.75zm1.75-.25a.25.25 0 00-.25.25v10.5c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V2.75a.25.25 0 00-.25-.25H1.75zM7.25 8a.75.75 0 01-.22.53l-2.25 2.25a.75.75 0 11-1.06-1.06L5.44 8 3.72 6.28a.75.75 0 111.06-1.06l2.25 2.25c.141.14.22.331.22.53zm1.5 1.5a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z"
-                                                ></path>
-                                            </svg>
-                                            Download / Cite
-                                        </div>
-                                        <button
-                                            class="SelectMenu-closeButton"
-                                            type="button"
-                                            aria-label="Close menu"
-                                            data-action="click:notifications-list-subscription-form#closeMenu"
-                                        >
-                                            <svg
-                                                aria-hidden="true"
-                                                height="16"
-                                                viewBox="0 0 16 16"
-                                                width="16"
-                                                data-view-component="true"
-                                                class="octicon octicon-x"
-                                            >
-                                                <path
-                                                    fill-rule="evenodd"
-                                                    d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"
-                                                ></path>
-                                            </svg>
-                                        </button>
-                                    </header>
-                                    <div
-                                        class="SelectMenu-list"
-                                        (click)="$event.stopPropagation()"
-                                        (keydown)="$event.stopPropagation()"
-                                    >
-                                        <mat-tab-group>
-                                            <mat-tab label="Download">
-                                                <div
-                                                    class="SelectMenu-item flex-column"
-                                                >
-                                                    <div
-                                                        class="SelectMenu-item align-items-start p-0 border-0"
-                                                        (click)="
-                                                            $event.stopPropagation()
-                                                        "
-                                                        (keydown)="
-                                                            $event.stopPropagation()
-                                                        "
-                                                    >
-                                                        <p>Using kamu-cli:</p>
-                                                    </div>
-                                                    <div
-                                                        class="SelectMenu-item align-items-start p-0 border-0"
-                                                        (click)="
-                                                            $event.stopPropagation()
-                                                        "
-                                                        (keydown)="
-                                                            $event.stopPropagation()
-                                                        "
-                                                    >
-                                                        <div
-                                                            class="input-group"
-                                                        >
-                                                            <input
-                                                                type="text"
-                                                                class="form-control input-monospace input-sm color-bg-subtle"
-                                                                data-autoselect=""
-                                                                [(ngModel)]="
-                                                                    clipboardKamuCli
-                                                                "
-                                                                readonly=""
-                                                            />
-                                                            <div
-                                                                class="input-group-button"
-                                                            >
-                                                                <button
-                                                                    (click)="
-                                                                        copyToClipboard(
-                                                                            $event,
-                                                                            clipboardKamuCli
-                                                                        )
-                                                                    "
-                                                                    aria-label="Copy to clipboard"
-                                                                    class="btn btn-sm btn-gray clipboard-btn"
-                                                                    data-copy-feedback="Copied!"
-                                                                    data-tooltip-direction="n"
-                                                                    data-hydro-click='{"event_type":"clone_or_download.click","payload":{"feature_clicked":"COPY_URL","git_repository_type":"REPOSITORY","repository_id":438796440,"originating_url":"https://github.com/kamu-data/kamu-web-ui","user_id":87068546}}'
-                                                                    data-hydro-click-hmac="ba6892cc9a34fb462286b03347d845fd8b6d059f3433fdcc2719ccd72b1b896d"
-                                                                    tabindex="0"
-                                                                    role="button"
-                                                                >
-                                                                    <div
-                                                                        style="
-                                                                            position: relative;
-                                                                            display: inline-block;
-                                                                        "
-                                                                    >
-                                                                        <svg
-                                                                            aria-hidden="true"
-                                                                            height="16"
-                                                                            viewBox="0 0 16 16"
-                                                                            version="1.1"
-                                                                            width="16"
-                                                                            data-view-component="true"
-                                                                            class="octicon octicon-copy d-inline-block"
-                                                                        >
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"
-                                                                            ></path>
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"
-                                                                            ></path>
-                                                                        </svg>
-                                                                    </div>
-                                                                    <div
-                                                                        style="
-                                                                            position: relative;
-                                                                            display: none;
-                                                                        "
-                                                                    >
-                                                                        <svg
-                                                                            aria-hidden="true"
-                                                                            height="16"
-                                                                            viewBox="0 0 16 16"
-                                                                            version="1.1"
-                                                                            width="16"
-                                                                            data-view-component="true"
-                                                                            class="octicon octicon-check color-fg-success d-inline-block"
-                                                                        >
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"
-                                                                            ></path>
-                                                                        </svg>
-                                                                    </div>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="SelectMenu-item flex-column"
-                                                >
-                                                    <div
-                                                        class="SelectMenu-item align-items-start p-0 border-0"
-                                                        (click)="
-                                                            $event.stopPropagation()
-                                                        "
-                                                        (keydown)="
-                                                            $event.stopPropagation()
-                                                        "
-                                                    >
-                                                        <p>Using Kafka:</p>
-                                                    </div>
-                                                    <div
-                                                        class="SelectMenu-item align-items-start p-0 border-0"
-                                                        (click)="
-                                                            $event.stopPropagation()
-                                                        "
-                                                        (keydown)="
-                                                            $event.stopPropagation()
-                                                        "
-                                                    >
-                                                        <div
-                                                            class="input-group"
-                                                        >
-                                                            <input
-                                                                type="text"
-                                                                class="form-control input-monospace input-sm color-bg-subtle"
-                                                                data-autoselect=""
-                                                                [(ngModel)]="
-                                                                    clipboardKafka
-                                                                "
-                                                                readonly=""
-                                                            />
-                                                            <div
-                                                                class="input-group-button"
-                                                            >
-                                                                <button
-                                                                    (click)="
-                                                                        copyToClipboard(
-                                                                            $event,
-                                                                            clipboardKamuCli
-                                                                        )
-                                                                    "
-                                                                    aria-label="Copy to clipboard"
-                                                                    class="btn btn-sm btn-gray clipboard-btn"
-                                                                    data-copy-feedback="Copied!"
-                                                                    data-tooltip-direction="n"
-                                                                    data-hydro-click='{"event_type":"clone_or_download.click","payload":{"feature_clicked":"COPY_URL","git_repository_type":"REPOSITORY","repository_id":438796440,"originating_url":"https://github.com/kamu-data/kamu-web-ui","user_id":87068546}}'
-                                                                    data-hydro-click-hmac="ba6892cc9a34fb462286b03347d845fd8b6d059f3433fdcc2719ccd72b1b896d"
-                                                                    tabindex="0"
-                                                                    role="button"
-                                                                >
-                                                                    <div
-                                                                        style="
-                                                                            position: relative;
-                                                                            display: inline-block;
-                                                                        "
-                                                                    >
-                                                                        <svg
-                                                                            aria-hidden="true"
-                                                                            height="16"
-                                                                            viewBox="0 0 16 16"
-                                                                            version="1.1"
-                                                                            width="16"
-                                                                            data-view-component="true"
-                                                                            class="octicon octicon-copy d-inline-block"
-                                                                        >
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"
-                                                                            ></path>
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"
-                                                                            ></path>
-                                                                        </svg>
-                                                                    </div>
-                                                                    <div
-                                                                        style="
-                                                                            position: relative;
-                                                                            display: none;
-                                                                        "
-                                                                    >
-                                                                        <svg
-                                                                            aria-hidden="true"
-                                                                            height="16"
-                                                                            viewBox="0 0 16 16"
-                                                                            version="1.1"
-                                                                            width="16"
-                                                                            data-view-component="true"
-                                                                            class="octicon octicon-check color-fg-success d-inline-block"
-                                                                        >
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"
-                                                                            ></path>
-                                                                        </svg>
-                                                                    </div>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <button class="SelectMenu-item">
-                                                    As Parquet
-                                                </button>
-                                                <button class="SelectMenu-item">
-                                                    As CSV
-                                                </button>
-                                            </mat-tab>
-                                            <mat-tab label="Cite">
-                                                <button class="SelectMenu-item">
-                                                    DOI
-                                                </button>
-                                                <button class="SelectMenu-item">
-                                                    Bibtech
-                                                </button>
-                                            </mat-tab>
-                                        </mat-tab-group>
-                                    </div>
-                                </div>
-                            </mat-menu>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
-            <ng-template [ngIf]="datasetViewTypeOverview">
+            <ng-template [ngIf]="isDatasetViewTypeOverview">
                 <app-overview
                     [isMarkdownEditView]="isMarkdownEditView"
                     [markdownText]="markdownText"
@@ -446,20 +32,20 @@
                 ></app-overview>
             </ng-template>
 
-            <ng-template [ngIf]="datasetViewTypeData && datasetBasics">
+            <ng-template [ngIf]="isDatasetViewTypeData && datasetBasics">
                 <app-data
                     [datasetBasics]="datasetBasics"
                     (onRunSQLRequestEmit)="onRunSQLRequest($event)"
                 ></app-data>
             </ng-template>
 
-            <ng-template [ngIf]="datasetViewTypeHistory">
+            <ng-template [ngIf]="isDatasetViewTypeHistory">
                 <app-history
                     (onPageChangeEmit)="onPageChange($event)"
                 ></app-history>
             </ng-template>
 
-            <ng-template [ngIf]="datasetViewTypeLinage">
+            <ng-template [ngIf]="isDatasetViewTypeLinage">
                 <app-linage
                     [linageGraphView]="linageGraphView"
                     [isAvailableLinageGraph]="isAvailableLinageGraph"
@@ -470,7 +56,7 @@
                 ></app-linage>
             </ng-template>
 
-            <ng-template [ngIf]="datasetViewTypeMetadata">
+            <ng-template [ngIf]="isDatasetViewTypeMetadata">
                 <app-metadata
                     [datasetBasics]="datasetBasics"
                     (onPageChangeEmit)="onPageChange($event)"

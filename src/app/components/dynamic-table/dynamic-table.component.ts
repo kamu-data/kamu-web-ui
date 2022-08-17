@@ -7,7 +7,6 @@ import {
     OnInit,
     Output,
     SimpleChanges,
-    ViewEncapsulation,
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import {
@@ -25,7 +24,6 @@ const ELEMENT_DATA: any[] = [];
     selector: "app-dynamic-table",
     templateUrl: "./dynamic-table.component.html",
     styleUrls: ["./dynamic-table.sass"],
-    encapsulation: ViewEncapsulation.None,
 })
 export class DynamicTableComponent
     implements OnInit, OnChanges, AfterContentInit
@@ -38,7 +36,7 @@ export class DynamicTableComponent
 
     @Input() public hasResultQuantity?: boolean = false;
     @Input() public resultUnitText: string;
-    @Input() public idTable?: string;
+    @Input() public idTable = "";
     @Output() public onSelectRowEmit: EventEmitter<string> = new EventEmitter();
 
     /* eslint-disable  @typescript-eslint/no-explicit-any */

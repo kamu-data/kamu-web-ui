@@ -140,13 +140,9 @@ export class AppDatasetService {
         this.datasetTree = [];
     }
 
-    public getDatasetDataSchema(
-        id: string,
-        numRecords: number,
-        page: number,
-    ): void {
+    public getDatasetDataSchema(id: string): void {
         this.searchApi
-            .getDatasetOverview({ id, page })
+            .getDatasetOverview({ id })
             .subscribe((data: DatasetOverviewQuery) => {
                 if (isNil(data.datasets.byId)) {
                     throw new Error("Dataset not resolved by ID");
@@ -165,9 +161,9 @@ export class AppDatasetService {
             });
     }
 
-    public getDatasetOverview(id: string, page: number): void {
+    public getDatasetOverview(id: string): void {
         this.searchApi
-            .getDatasetOverview({ id, page })
+            .getDatasetOverview({ id })
             .subscribe((data: DatasetOverviewQuery) => {
                 if (isNil(data.datasets.byId)) {
                     throw new Error("Dataset not resolved by ID");

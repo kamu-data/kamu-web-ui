@@ -4,6 +4,7 @@ import { DataViewSchema } from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
 import { MetadataSchemaUpdate } from "../../datasetSubs.interface";
+import { BaseComponent } from "src/app/common/base.component";
 import {
     DatasetBasicsFragment,
     DatasetMetadataDetailsFragment,
@@ -15,7 +16,7 @@ import { DataHelpersService } from "src/app/services/datahelpers.service";
     selector: "app-metadata",
     templateUrl: "./metadata.component.html",
 })
-export class MetadataComponent implements OnInit {
+export class MetadataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;
     @Output() public pageChangeEvent: EventEmitter<{
         currentPage: number;
@@ -49,17 +50,21 @@ export class MetadataComponent implements OnInit {
         private dataHelpers: DataHelpersService,
         private appDatasetSubsService: AppDatasetSubsService,
         private navigationService: NavigationService,
-    ) {}
+    ) {
+        super();
+    }
 
     ngOnInit() {
-        this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
-            (schemaUpdate: MetadataSchemaUpdate) => {
-                this.currentState = {
-                    schema: schemaUpdate.schema,
-                    metadata: schemaUpdate.metadata,
-                    pageInfo: schemaUpdate.pageInfo,
-                };
-            },
+        this.trackSubscription(
+            this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
+                (schemaUpdate: MetadataSchemaUpdate) => {
+                    this.currentState = {
+                        schema: schemaUpdate.schema,
+                        metadata: schemaUpdate.metadata,
+                        pageInfo: schemaUpdate.pageInfo,
+                    };
+                },
+            ),
         );
     }
 

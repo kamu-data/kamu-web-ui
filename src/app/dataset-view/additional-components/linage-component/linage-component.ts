@@ -6,7 +6,6 @@ import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
     selector: "app-linage",
     templateUrl: "./linage-component.html",
 })
-
 export class LinageComponent {
     @Input() public linageGraphView: [number, number];
     @Input() public isAvailableLinageGraph: boolean;

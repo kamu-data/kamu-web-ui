@@ -113,7 +113,6 @@ export class SearchApi {
     public getDatasetOverview(params: {
         id: string;
         numRecords?: number;
-        page?: number;
     }): Observable<DatasetOverviewQuery> {
         return this.datasetOverviewGQL
             .watch({

@@ -1,36 +1,32 @@
 import { NavigationService } from "./../../services/navigation.service";
 import { Component, OnInit } from "@angular/core";
-import { Observable, of, Subscription, throwError } from "rxjs";
-import { environment } from "../../../environments/environment";
-import { HttpClient } from "@angular/common/http";
-import { catchError, map } from "rxjs/operators";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AuthApi } from "../../api/auth.api";
+import { BaseComponent } from "src/app/common/base.component";
 
 @Component({
     selector: "app-github-callback",
     templateUrl: "./github-callback.component.html",
 })
-export class GithubCallbackComponent implements OnInit {
-    private _window: Window;
-
+export class GithubCallbackComponent extends BaseComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private navigationService: NavigationService,
-        private httpClient: HttpClient,
         private authApi: AuthApi,
     ) {
-        this._window = window;
+        super();
     }
 
     ngOnInit() {
-        if (!this._window.location.search.includes("?code=")) {
+        if (!this.searchString.includes("?code=")) {
             this.navigationService.navigateToHome();
         }
-        this.route.queryParams.subscribe((param: any) => {
-            this.authApi
-                .getUserInfoAndToken(param.code)
-                .subscribe(() => this.navigationService.navigateToHome());
-        });
+        this.trackSubscription(
+            this.route.queryParams.subscribe((param: any) => {
+                this.authApi
+                    .getUserInfoAndToken(param.code)
+                    .subscribe(() => this.navigationService.navigateToHome());
+            }),
+        );
     }
 }

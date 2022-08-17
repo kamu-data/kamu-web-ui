@@ -75,9 +75,11 @@
                             />
                         </a>
                         <span class="signed-commit-signer-name flex-1">
-                            <a class="signer" (click)="navigateToOwnerView(row.owner.name)">{{
-                                row.owner.name
-                            }}</a>
+                            <a
+                                class="signer"
+                                (click)="navigateToOwnerView(row.owner.name)"
+                                >{{ row.owner.name }}</a
+                            >
                             {{ row.owner.name }}
                         </span>
                     </div>

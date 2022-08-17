@@ -3,6 +3,7 @@ import {
     MetadataBlockFragment,
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
+import { BaseComponent } from "src/app/common/base.component";
 import { DatasetHistoryUpdate } from "../../datasetSubs.interface";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
 
@@ -10,7 +11,7 @@ import { AppDatasetSubsService } from "../../datasetSubs.service";
     selector: "app-history",
     templateUrl: "./history.component.html",
 })
-export class HistoryComponent implements OnInit {
+export class HistoryComponent extends BaseComponent implements OnInit {
     @Output() onPageChangeEmit: EventEmitter<{
         currentPage: number;
         isClick: boolean;
@@ -21,16 +22,20 @@ export class HistoryComponent implements OnInit {
         history: MetadataBlockFragment[];
     };
 
-    constructor(private appDatasetSubsService: AppDatasetSubsService) {}
+    constructor(private appDatasetSubsService: AppDatasetSubsService) {
+        super();
+    }
 
     ngOnInit(): void {
-        this.appDatasetSubsService.onDatasetHistoryChanges.subscribe(
-            (historyUpdate: DatasetHistoryUpdate) => {
-                this.currentState = {
-                    pageInfo: historyUpdate.pageInfo,
-                    history: historyUpdate.history,
-                };
-            },
+        this.trackSubscription(
+            this.appDatasetSubsService.onDatasetHistoryChanges.subscribe(
+                (historyUpdate: DatasetHistoryUpdate) => {
+                    this.currentState = {
+                        pageInfo: historyUpdate.pageInfo,
+                        history: historyUpdate.history,
+                    };
+                },
+            ),
         );
     }
     public onPageChange(params: {

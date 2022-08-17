@@ -1,8 +1,6 @@
 import { AppSearchService } from "./search.service";
 import { SearchOverviewInterface } from "../interface/search.interface";
 import AppValues from "../common/app.values";
-import { searchAdditionalButtonsEnum } from "./search.interface";
-import { SearchAdditionalButtonInterface } from "../components/search-additional-buttons/search-additional-buttons.interface";
 import { MatSidenav } from "@angular/material/sidenav";
 import { SideNavService } from "../services/sidenav.service";
 import {
@@ -13,6 +11,7 @@ import {
     ViewChild,
 } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
+import { BaseComponent } from "../common/base.component";
 import ProjectLinks from "../project-links";
 import { NavigationService } from "../services/navigation.service";
 import { Dataset, PageBasedInfo } from "../api/kamu.graphql.interface";
@@ -31,30 +30,15 @@ export interface SearchFilters {
     templateUrl: "./search.component.html",
     styleUrls: ["./search.component.sass"],
 })
-export class SearchComponent implements OnInit, AfterContentInit {
+export class SearchComponent
+    extends BaseComponent
+    implements OnInit, AfterContentInit
+{
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     public isMobileView = false;
     public searchValue = "";
     public currentPage = 1; // TODO: Should be zero-based and only offset for display
     public isMinimizeSearchAdditionalButtons = false;
-    public searchAdditionalButtonsData: SearchAdditionalButtonInterface[] = [
-        {
-            textButton: searchAdditionalButtonsEnum.Descission,
-        },
-        {
-            textButton: searchAdditionalButtonsEnum.Reputation,
-        },
-        {
-            textButton: searchAdditionalButtonsEnum.Explore,
-            styleClassContainer: "app-active-button__container",
-            styleClassButton: "app-active-button",
-        },
-        {
-            textButton: searchAdditionalButtonsEnum.DeriveFrom,
-            styleClassContainer: "app-active-button__container",
-            styleClassButton: "app-active-button",
-        },
-    ];
 
     private sortOptions: { value: string; label: string; active: boolean }[] = [
         { value: "best", label: "Best match", active: true },
@@ -128,8 +112,8 @@ export class SearchComponent implements OnInit, AfterContentInit {
             ],
         },
     ];
+
     public searchData: Dataset[] = [];
-    private _window: Window;
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
@@ -148,7 +132,7 @@ export class SearchComponent implements OnInit, AfterContentInit {
         private appSearchService: AppSearchService,
         private sidenavService: SideNavService,
     ) {
-        this._window = window;
+        super();
     }
 
     public ngAfterContentInit(): void {
@@ -167,32 +151,31 @@ export class SearchComponent implements OnInit, AfterContentInit {
 
         this.changePageAndSearch();
 
-        this.appSearchService.onSearchChanges.subscribe((value: string) => {
-            this.searchValue = value;
-            this.onSearch(value, this.currentPage);
-        });
-
-        this.appSearchService.onSearchDataChanges.subscribe(
-            (data: SearchOverviewInterface) => {
-                this.tableData.tableSource = data.datasets;
-                this.tableData.pageInfo = data.pageInfo;
-                this.tableData.totalCount = data.totalCount as number;
-                this.currentPage = data.currentPage;
-            },
+        this.trackSubscriptions(
+            this.appSearchService.onSearchChanges.subscribe((value: string) => {
+                this.searchValue = value;
+                this.onSearch(value, this.currentPage);
+            }),
+            this.appSearchService.onSearchDataChanges.subscribe(
+                (data: SearchOverviewInterface) => {
+                    this.tableData.tableSource = data.datasets;
+                    this.tableData.pageInfo = data.pageInfo;
+                    this.tableData.totalCount = data.totalCount as number;
+                    this.currentPage = data.currentPage;
+                },
+            ),
         );
     }
+
     private changePageAndSearch(): void {
         let page = 1;
         let currentId = "";
 
-        if (this._window.location.search.split("?id=").length > 1) {
-            currentId = this._window.location.search
-                .split("?id=")[1]
-                .split("&")[0];
+        if (this.searchString.split("?id=").length > 1) {
+            currentId = this.searchString.split("?id=")[1].split("&")[0];
             this.searchValue = currentId;
 
-            const searchPageParams: string[] =
-                this._window.location.search.split("&p=");
+            const searchPageParams: string[] = this.searchString.split("&p=");
             if (searchPageParams[1]) {
                 page = Number(searchPageParams[1].split("&")[0]);
             }

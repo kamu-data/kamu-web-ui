@@ -7,6 +7,7 @@ import { Router, NavigationEnd } from "@angular/router";
 import { DatasetIDsInterface, TypeNames } from "./interface/search.interface";
 import { AuthApi } from "./api/auth.api";
 import { ModalService } from "./components/modal/modal.service";
+import { BaseComponent } from "./common/base.component";
 import ProjectLinks from "./project-links";
 import { AccountInfo } from "./api/kamu.graphql.interface";
 import { Optional } from "./common/app.types";
@@ -17,7 +18,7 @@ import _ from "lodash";
     templateUrl: "./app.component.html",
     styleUrls: ["./app.component.sass"],
 })
-export class AppComponent implements OnInit {
+export class AppComponent extends BaseComponent implements OnInit {
     private readonly AnonymousAccountInfo: AccountInfo = {
         login: "",
         name: AppValues.defaultUsername,
@@ -33,7 +34,6 @@ export class AppComponent implements OnInit {
         ProjectLinks.urlLogin,
         ProjectLinks.urlGithubCallback,
     ];
-    private _window: Window;
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
@@ -47,15 +47,21 @@ export class AppComponent implements OnInit {
         private modalService: ModalService,
         private navigationService: NavigationService,
     ) {
-        this._window = window;
+        super();
     }
 
     public ngOnInit(): void {
         this.checkView();
         this.appHeaderInit();
-        this.authApi.onUserChanges.subscribe((user: Optional<AccountInfo>) => {
-            this.user = user ? _.cloneDeep(user) : this.AnonymousAccountInfo;
-        });
+        this.trackSubscription(
+            this.authApi.onUserChanges.subscribe(
+                (user: Optional<AccountInfo>) => {
+                    this.user = user
+                        ? _.cloneDeep(user)
+                        : this.AnonymousAccountInfo;
+                },
+            ),
+        );
         this.authentification();
     }
 
@@ -71,44 +77,48 @@ export class AppComponent implements OnInit {
             return;
         } else {
             if (typeof code === "string" && !this.authApi.isAuthUser) {
-                this.authApi.getUserInfoAndToken(code).subscribe();
+                this.trackSubscription(
+                    this.authApi.getUserInfoAndToken(code).subscribe(),
+                );
                 return;
             }
         }
     }
 
     private appHeaderInit(): void {
-        this.appSearchService.onSearchChanges.subscribe(
-            (searchValue: string) => {
-                this.searchValue = searchValue;
-            },
+        this.trackSubscriptions(
+            this.appSearchService.onSearchChanges.subscribe(
+                (searchValue: string) => {
+                    this.searchValue = searchValue;
+                },
+            ),
+
+            /* eslint-disable  @typescript-eslint/no-explicit-any */
+            this.router.events
+                .pipe(filter((event) => event instanceof NavigationEnd))
+                .subscribe((event: any) => {
+                    this.isVisible = this.isAvailableAppHeaderUrl(event.url);
+
+                    if (event.url.split("?id=").length > 1) {
+                        const searchValue: string =
+                            AppValues.fixedEncodeURIComponent(
+                                event.url.split("?id=")[1].split("&")[0],
+                            );
+                        if (searchValue === "%255Bobject%2520Object%255D") {
+                            this.navigationService.navigateToSearch();
+                            setTimeout(() =>
+                                this.appSearchService.searchChanges(""),
+                            );
+                        }
+                        if (event.url.includes("search")) {
+                            this.appSearchService.searchChanges(searchValue);
+                        }
+                        if (event.url.includes("dataset-view")) {
+                            this.appSearchService.searchChanges("");
+                        }
+                    }
+                }),
         );
-
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
-        this.router.events
-            .pipe(filter((event) => event instanceof NavigationEnd))
-            .subscribe((event: any) => {
-                this.isVisible = this.isAvailableAppHeaderUrl(event.url);
-
-                if (event.url.split("?id=").length > 1) {
-                    const searchValue: string =
-                        AppValues.fixedEncodeURIComponent(
-                            event.url.split("?id=")[1].split("&")[0],
-                        );
-                    if (searchValue === "%255Bobject%2520Object%255D") {
-                        this.navigationService.navigateToSearch();
-                        setTimeout(() =>
-                            this.appSearchService.searchChanges(""),
-                        );
-                    }
-                    if (event.url.includes("search")) {
-                        this.appSearchService.searchChanges(searchValue);
-                    }
-                    if (event.url.includes("dataset-view")) {
-                        this.appSearchService.searchChanges("");
-                    }
-                }
-            });
     }
 
     private checkView(): void {

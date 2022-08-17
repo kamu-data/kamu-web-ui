@@ -6,7 +6,10 @@ import {
     ViewChild,
 } from "@angular/core";
 import { MatSidenav } from "@angular/material/sidenav";
-import { DatasetNavigationInterface, DatasetViewTypeEnum } from "../dataset-view.interface";
+import {
+    DatasetNavigationInterface,
+    DatasetViewTypeEnum,
+} from "../dataset-view.interface";
 import { Clipboard } from "@angular/cdk/clipboard";
 import AppValues from "../../common/app.values";
 import { SideNavService } from "../../services/sidenav.service";
@@ -40,7 +43,7 @@ export class DatasetViewMenuComponent implements OnInit {
     constructor(
         private clipboard: Clipboard,
         private sidenavService: SideNavService,
-    ) { }
+    ) {}
 
     public ngOnInit(): void {
         this.checkWindowSize();

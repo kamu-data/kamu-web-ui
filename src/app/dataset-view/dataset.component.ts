@@ -34,7 +34,8 @@ import ProjectLinks from "../project-links";
 })
 export class DatasetComponent
     extends BaseComponent
-    implements OnInit, OnDestroy {
+    implements OnInit, OnDestroy
+{
     public datasetBasics?: DatasetBasicsFragment;
     public searchValue = "";
     public isMinimizeSearchAdditionalButtons = false;
@@ -235,7 +236,7 @@ export class DatasetComponent
                     AppValues.defaultUsername,
                     this.getDatasetId(),
                     ProjectLinks.urlDatasetViewMetadataType,
-                    currentPage
+                    currentPage,
                 );
             },
             navigateToHistory: (currentPage: number) => {
@@ -243,7 +244,7 @@ export class DatasetComponent
                     AppValues.defaultUsername,
                     this.getDatasetId(),
                     ProjectLinks.urlDatasetViewHistoryType,
-                    currentPage
+                    currentPage,
                 );
             },
             navigateToLineage: () => {

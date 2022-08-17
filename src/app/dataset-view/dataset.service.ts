@@ -39,7 +39,7 @@ export class AppDatasetService {
         private searchApi: SearchApi,
         private modalService: ModalService,
         private appDatasetSubsService: AppDatasetSubsService,
-    ) { }
+    ) {}
 
     public get onSearchDatasetBasicsChanges(): Observable<DatasetBasicsFragment> {
         return this.searchDatasetInfoChanges$.asObservable();
@@ -140,9 +140,7 @@ export class AppDatasetService {
         this.datasetTree = [];
     }
 
-    public getDatasetDataSchema(
-        id: string,
-    ): void {
+    public getDatasetDataSchema(id: string): void {
         this.searchApi
             .getDatasetOverview({ id })
             .subscribe((data: DatasetOverviewQuery) => {
@@ -204,15 +202,15 @@ export class AppDatasetService {
                 const pageInfo: PageBasedInfo = data.datasets.byId?.metadata
                     .chain.blocks.pageInfo
                     ? Object.assign(
-                        _.cloneDeep(
-                            data.datasets.byId?.metadata.chain.blocks
-                                .pageInfo,
-                        ),
-                        { currentPage: numPage },
-                    )
+                          _.cloneDeep(
+                              data.datasets.byId?.metadata.chain.blocks
+                                  .pageInfo,
+                          ),
+                          { currentPage: numPage },
+                      )
                     : Object.assign(this.defaultPageInfo, {
-                        currentPage: numPage,
-                    });
+                          currentPage: numPage,
+                      });
                 const historyUpdate: DatasetHistoryUpdate = {
                     history:
                         (data.datasets.byId?.metadata.chain.blocks

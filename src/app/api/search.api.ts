@@ -37,7 +37,7 @@ export class SearchApi {
         private getDatasetDataSQLRun: GetDatasetDataSqlRunGQL,
         private getDatasetHistoryGQL: GetDatasetHistoryGQL,
         private getDatasetLineageGQL: GetDatasetLineageGQL,
-    ) { }
+    ) {}
 
     public pageInfoInit(): PageBasedInfo {
         return {

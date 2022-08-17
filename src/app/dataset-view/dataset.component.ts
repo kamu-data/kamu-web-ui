@@ -51,6 +51,8 @@ export class DatasetComponent
     public isMarkdownEditView = false;
     public markdownText = AppValues.markdownContain;
 
+    private selectedDatasetName: string;
+
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
         this.changeLinageGraphView();
@@ -156,12 +158,15 @@ export class DatasetComponent
     }
 
     private initMetadataTab(currentPage: number): void {
-        this.navigationService.navigateToDatasetView(
-            AppValues.defaultUsername,
-            this.getDatasetId(),
-            ProjectLinks.urlDatasetViewMetadataType,
-            currentPage,
-        );
+        if (this.datasetBasics) {
+            this.navigationService.navigateToDatasetView(
+                AppValues.defaultUsername,
+                this.datasetBasics?.name,
+                this.getDatasetId(),
+                ProjectLinks.urlDatasetViewMetadataType,
+                currentPage,
+            );
+        }
 
         this.datasetViewType = DatasetViewTypeEnum.metadata;
         this.appDatasetService.onSearchMetadata(
@@ -210,49 +215,65 @@ export class DatasetComponent
         });
     }
 
-    public onClickNode(idDataset: string): void {
+    public onClickNode(node: any): void {
+        this.selectedDatasetName = node.label;
         this.datasetViewType = DatasetViewTypeEnum.overview;
-        this.onSelectDataset(idDataset);
+        this.onSelectDataset(node?.data.id);
     }
 
     public getDatasetNavigation(): DatasetNavigationInterface {
         return {
             navigateToOverview: () => {
-                this.navigationService.navigateToDatasetView(
-                    AppValues.defaultUsername,
-                    this.getDatasetId(),
-                    ProjectLinks.urlDatasetViewOverviewType,
-                );
+                if (this.datasetBasics) {
+                    this.navigationService.navigateToDatasetView(
+                        AppValues.defaultUsername,
+                        this.datasetBasics?.name,
+                        this.getDatasetId(),
+                        ProjectLinks.urlDatasetViewOverviewType,
+                    );
+                }
             },
             navigateToData: () => {
-                this.navigationService.navigateToDatasetView(
-                    AppValues.defaultUsername,
-                    this.getDatasetId(),
-                    ProjectLinks.urlDatasetViewDataType,
-                );
+                if (this.datasetBasics) {
+                    this.navigationService.navigateToDatasetView(
+                        AppValues.defaultUsername,
+                        this.datasetBasics?.name,
+                        this.getDatasetId(),
+                        ProjectLinks.urlDatasetViewDataType,
+                    );
+                }
             },
             navigateToMetadata: (currentPage: number) => {
-                this.navigationService.navigateToDatasetView(
-                    AppValues.defaultUsername,
-                    this.getDatasetId(),
-                    ProjectLinks.urlDatasetViewMetadataType,
-                    currentPage,
-                );
+                if (this.datasetBasics) {
+                    this.navigationService.navigateToDatasetView(
+                        AppValues.defaultUsername,
+                        this.datasetBasics?.name,
+                        this.getDatasetId(),
+                        ProjectLinks.urlDatasetViewMetadataType,
+                        currentPage,
+                    );
+                }
             },
             navigateToHistory: (currentPage: number) => {
-                this.navigationService.navigateToDatasetView(
-                    AppValues.defaultUsername,
-                    this.getDatasetId(),
-                    ProjectLinks.urlDatasetViewHistoryType,
-                    currentPage,
-                );
+                if (this.datasetBasics) {
+                    this.navigationService.navigateToDatasetView(
+                        AppValues.defaultUsername,
+                        this.datasetBasics?.name,
+                        this.getDatasetId(),
+                        ProjectLinks.urlDatasetViewHistoryType,
+                        currentPage,
+                    );
+                }
             },
             navigateToLineage: () => {
-                this.navigationService.navigateToDatasetView(
-                    AppValues.defaultUsername,
-                    this.getDatasetId(),
-                    ProjectLinks.urlDatasetViewLineageType,
-                );
+                if (this.datasetBasics) {
+                    this.navigationService.navigateToDatasetView(
+                        AppValues.defaultUsername,
+                        this.datasetBasics?.name,
+                        this.getDatasetId(),
+                        ProjectLinks.urlDatasetViewLineageType,
+                    );
+                }
             },
             navigateToDiscussions: () => {
                 console.log("Navigate to discussions");
@@ -414,10 +435,10 @@ export class DatasetComponent
         this.appDatasetService.resetDatasetTree();
         const searchParams: string[] = decodeURIComponent(
             this.searchString,
-        ).split("&type=");
+        ).split("&tab=");
         const searchPageParams: string[] = decodeURIComponent(
             this.searchString,
-        ).split("&p=");
+        ).split("&page=");
         let page = 1;
         if (searchPageParams[1]) {
             page = currentPage || Number(searchPageParams[1].split("&")[0]);
@@ -462,11 +483,16 @@ export class DatasetComponent
     }
 
     public onSelectDataset(id: string): void {
-        this.navigationService.navigateToDatasetView(
-            AppValues.defaultUsername,
-            id,
-            ProjectLinks.urlDatasetViewLineageType,
-        );
+        if (this.datasetBasics) {
+            this.navigationService.navigateToDatasetView(
+                AppValues.defaultUsername,
+                this.selectedDatasetName
+                    ? this.selectedDatasetName
+                    : this.datasetBasics?.name,
+                id,
+                ProjectLinks.urlDatasetViewLineageType,
+            );
+        }
     }
     public onRunSQLRequest(query: string): void {
         if (this.datasetBasics) {

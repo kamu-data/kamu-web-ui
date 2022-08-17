@@ -35,8 +35,8 @@ export class RepoListComponent {
         this.navigationService.navigateToOwnerView(ownerName);
     }
 
-    public onSelectDataset(ownerName: string, id: string): void {
-        this.onSelectDatasetEmit.emit({ ownerName, id });
+    public onSelectDataset(row: Dataset): void {
+        this.onSelectDatasetEmit.emit({ ownerName: row.name, id: row.id });
     }
 
     public searchResultQuantity(dataSource: Dataset[] = []): string {

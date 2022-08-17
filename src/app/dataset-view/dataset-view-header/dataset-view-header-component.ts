@@ -4,6 +4,7 @@ import { searchAdditionalButtonsEnum } from "../../search/search.interface";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../dataset-view.interface";
+import AppValues from "src/app/common/app.values";
 
 @Component({
     selector: "app-dataset-view-header",
@@ -81,7 +82,8 @@ export class DatasetViewHeaderComponent {
     public showDatasetView(): void {
         if (this.datasetBasics) {
             this.navigationService.navigateToDatasetView(
-                this.datasetBasics.owner?.name,
+                AppValues.defaultUsername,
+                this.datasetBasics?.name,
                 this.datasetBasics.id,
                 DatasetViewTypeEnum.overview,
             );

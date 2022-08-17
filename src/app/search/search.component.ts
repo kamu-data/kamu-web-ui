@@ -214,10 +214,10 @@ export class SearchComponent
     }
 
     public onSelectDataset(data: { ownerName: string; id: string }): void {
-        const id: string = data.id;
         this.navigationService.navigateToDatasetView(
+            AppValues.defaultUsername,
             data.ownerName,
-            id,
+            data.id,
             ProjectLinks.urlDatasetViewOverviewType,
         );
     }

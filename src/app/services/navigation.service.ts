@@ -14,24 +14,25 @@ export class NavigationService {
         this.router.navigate([ProjectLinks.urlHome]);
     }
 
-    public navigateToSearch(id?: string, p?: number): void {
+    public navigateToSearch(query?: string, page?: number): void {
         this.router.navigate([ProjectLinks.urlSearch], {
-            queryParams: { id, p },
+            queryParams: { query, page },
         });
     }
 
-    public navigateToDatasetCreate(name: string): void {
-        this.router.navigate([name, ProjectLinks.urlDatasetCreate]);
+    public navigateToDatasetCreate(): void {
+        this.router.navigate([ProjectLinks.urlDatasetCreate]);
     }
 
     public navigateToDatasetView(
         name: string,
+        datasetName: string,
         id: string,
-        type: string,
-        p?: number,
+        tab: string,
+        page?: number,
     ): void {
-        this.router.navigate([name, ProjectLinks.urlDatasetView], {
-            queryParams: { id, type, p },
+        this.router.navigate([name, datasetName], {
+            queryParams: { id, tab, page },
         });
     }
 

@@ -30,7 +30,7 @@
                     class="repo-list-container__title mb-1 pl-0"
                     (click)="
                         isClickableRow &&
-                            onSelectDataset(row.owner.name, row.id)
+                            onSelectDataset(row)
                     "
                 >
                     {{ row.owner.name }}/{{ row.name }}

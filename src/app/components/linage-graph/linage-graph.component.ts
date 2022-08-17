@@ -10,6 +10,7 @@ import {
 } from "@angular/core";
 import { Edge } from "@swimlane/ngx-graph";
 import { ClusterNode } from "@swimlane/ngx-graph/lib/models/node.model";
+import { Dataset } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-linage-graph",
@@ -21,7 +22,7 @@ export class LinageGraphComponent implements OnChanges, OnInit {
     @Input() public nodes: any[];
     @Input() public clusters: any[];
 
-    @Output() public onClickNodeEvent: EventEmitter<string> =
+    @Output() public onClickNodeEvent: EventEmitter<Dataset> =
         new EventEmitter();
 
     public draggingEnabled = false;
@@ -75,9 +76,8 @@ export class LinageGraphComponent implements OnChanges, OnInit {
         }
     }
 
-    public onClickNode(node: any, label: string): void {
-        console.log(node);
-        this.onClickNodeEvent.emit(label);
+    public onClickNode(node: any): void {
+        this.onClickNodeEvent.emit(node);
     }
 
     // See: https://stackoverflow.com/questions/62874476/ngx-graph-linktemplate-links-middle-pointer-alignment-issue

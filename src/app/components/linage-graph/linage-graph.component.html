@@ -41,7 +41,7 @@
                 [attr.stroke]="'black'"
                 [attr.stroke-width]="node.data.isCurrent ? 2 : 1"
                 (click)="
-                    !node.data.isCurrent && onClickNode(node, node.data.id)
+                    !node.data.isCurrent && onClickNode(node)
                 "
             />
             <svg:text
@@ -51,7 +51,7 @@
                 [attr.font-weight]="node.data.isCurrent ? '500' : 'normal'"
                 [attr.cursor]="'pointer'"
                 (click)="
-                    !node.data.isCurrent && onClickNode(node, node.data.id)
+                    !node.data.isCurrent && onClickNode(node)
                 "
             >
                 {{ node.label }}

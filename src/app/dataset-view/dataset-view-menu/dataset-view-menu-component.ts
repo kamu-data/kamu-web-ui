@@ -26,8 +26,8 @@ export class DatasetViewMenuComponent implements OnInit {
     @Input() datasetViewType: DatasetViewTypeEnum;
     @Input() isMinimizeSearchAdditionalButtons: boolean;
 
-    public clipboardKamuCli = "kamu pull kamu.dev/anonymous/dataset";
-    public clipboardKafka = "https://api.kamu.dev/kafka/anonymous/dataset";
+    public clipboardKamuCli = AppValues.clipboardKamuCli;
+    public clipboardKafka = AppValues.clipboardKafka;
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {

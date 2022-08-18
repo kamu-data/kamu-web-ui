@@ -214,12 +214,12 @@ export class SearchComponent
     }
 
     public onSelectDataset(data: { ownerName: string; id: string }): void {
-        this.navigationService.navigateToDatasetView(
-            AppValues.defaultUsername,
-            data.ownerName,
-            data.id,
-            ProjectLinks.urlDatasetViewOverviewType,
-        );
+        this.navigationService.navigateToDatasetView({
+            accountName: AppValues.defaultUsername,
+            datasetName: data.ownerName,
+            id: data.id,
+            tab: ProjectLinks.urlDatasetViewOverviewType,
+        });
     }
 
     public onSearch(searchValue: string, page: number = 1): void {

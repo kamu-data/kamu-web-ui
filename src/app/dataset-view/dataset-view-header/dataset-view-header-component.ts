@@ -81,12 +81,12 @@ export class DatasetViewHeaderComponent {
 
     public showDatasetView(): void {
         if (this.datasetBasics) {
-            this.navigationService.navigateToDatasetView(
-                AppValues.defaultUsername,
-                this.datasetBasics?.name,
-                this.datasetBasics.id,
-                DatasetViewTypeEnum.overview,
-            );
+            this.navigationService.navigateToDatasetView({
+                accountName: AppValues.defaultUsername,
+                datasetName: this.datasetBasics.name,
+                id: this.datasetBasics.id,
+                tab: DatasetViewTypeEnum.overview,
+            });
         }
     }
 }

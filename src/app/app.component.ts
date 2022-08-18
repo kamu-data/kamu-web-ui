@@ -139,12 +139,12 @@ export class AppComponent extends BaseComponent implements OnInit {
                 item.id,
         );
         if (item.__typename === TypeNames.datasetType) {
-            this.navigationService.navigateToDatasetView(
-                AppValues.defaultUsername,
-                item.name,
-                item.id,
-                ProjectLinks.urlDatasetViewOverviewType,
-            );
+            this.navigationService.navigateToDatasetView({
+                accountName: AppValues.defaultUsername,
+                datasetName: item.name,
+                id: item.id,
+                tab: ProjectLinks.urlDatasetViewOverviewType,
+            });
         } else {
             this.navigationService.navigateToSearch(item.id, 1);
         }

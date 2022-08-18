@@ -25,6 +25,7 @@ import {
 } from "../api/kamu.graphql.interface";
 import { BaseComponent } from "../common/base.component";
 import ProjectLinks from "../project-links";
+import { DatasetInfo } from "../interface/navigation.interface";
 
 @Component({
     selector: "app-dataset",
@@ -52,8 +53,7 @@ export class DatasetComponent
     public markdownText = AppValues.markdownContain;
 
     private selectedDatasetName: string;
-    private datasetId: string;
-    private urlDatasetName: string;
+    private datasetInfo: DatasetInfo;
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
@@ -96,8 +96,13 @@ export class DatasetComponent
                 },
             ),
             this.activatedRoute.paramMap.subscribe(({ params }: Params) => {
-                this.urlDatasetName = params.datasetName;
-                console.log("qqqqq", this.urlDatasetName);
+                if (params) {
+                    const { accountName, datasetName } = params;
+                    this.datasetInfo = {
+                        accountName,
+                        datasetName,
+                    };
+                }
             }),
         );
     }

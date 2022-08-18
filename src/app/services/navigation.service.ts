@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { DatasetViewType } from "../interface/navigation.interface";
+import { NavigationParams } from "../interface/navigation.interface";
 import ProjectLinks from "../project-links";
 
 @Injectable()
@@ -25,7 +25,7 @@ export class NavigationService {
         this.router.navigate([ProjectLinks.urlDatasetCreate]);
     }
 
-    public navigateToDatasetView(params: DatasetViewType): void {
+    public navigateToDatasetView(params: NavigationParams): void {
         this.router.navigate([params.accountName, params.datasetName], {
             queryParams: { id: params.id, tab: params.tab, page: params.page },
         });

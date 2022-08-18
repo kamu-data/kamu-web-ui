@@ -36,7 +36,7 @@ const routes: Routes = [
         component: DatasetCreateComponent,
     },
     {
-        path: ":username",
+        path: ":accountName",
         children: [
             {
                 path: "",

@@ -1,7 +1,6 @@
 export interface NavigationParams {
     accountName: string;
     datasetName: string;
-    id: string;
     tab: string;
     page?: number;
 }

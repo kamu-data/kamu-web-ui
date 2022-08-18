@@ -217,7 +217,6 @@ export class SearchComponent
         this.navigationService.navigateToDatasetView({
             accountName: AppValues.defaultUsername,
             datasetName: data.ownerName,
-            id: data.id,
             tab: ProjectLinks.urlDatasetViewOverviewType,
         });
     }

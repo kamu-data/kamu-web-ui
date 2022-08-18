@@ -27,7 +27,7 @@ export class NavigationService {
 
     public navigateToDatasetView(params: NavigationParams): void {
         this.router.navigate([params.accountName, params.datasetName], {
-            queryParams: { id: params.id, tab: params.tab, page: params.page },
+            queryParams: { tab: params.tab, page: params.page },
         });
     }
 

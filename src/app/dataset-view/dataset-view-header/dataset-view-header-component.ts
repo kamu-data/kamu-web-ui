@@ -84,7 +84,6 @@ export class DatasetViewHeaderComponent {
             this.navigationService.navigateToDatasetView({
                 accountName: AppValues.defaultUsername,
                 datasetName: this.datasetBasics.name,
-                id: this.datasetBasics.id,
                 tab: DatasetViewTypeEnum.overview,
             });
         }

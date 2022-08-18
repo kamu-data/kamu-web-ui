@@ -142,7 +142,6 @@ export class AppComponent extends BaseComponent implements OnInit {
             this.navigationService.navigateToDatasetView({
                 accountName: AppValues.defaultUsername,
                 datasetName: item.name,
-                id: item.id,
                 tab: ProjectLinks.urlDatasetViewOverviewType,
             });
         } else {

@@ -36,14 +36,14 @@ const routes: Routes = [
         component: DatasetCreateComponent,
     },
     {
-        path: ":accountName",
+        path: `:${ProjectLinks.urlAccountName}`,
         children: [
             {
                 path: "",
                 component: AccountComponent,
             },
             {
-                path: ":datasetName",
+                path: `:${ProjectLinks.urlDatasetName}`,
                 component: DatasetComponent,
             },
         ],

@@ -1,3 +1,4 @@
+import { DatasetInfo } from "./../../interface/navigation.interface";
 import { NavigationService } from "./../../services/navigation.service";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { ModalService } from "../modal/modal.service";
@@ -15,10 +16,8 @@ export class RepoListComponent {
     @Input() public resultUnitText: string;
     @Input() public hasResultQuantity?: boolean = false;
     @Input() public isClickableRow?: boolean = false;
-    @Output() public onSelectDatasetEmit: EventEmitter<{
-        ownerName: string;
-        id: string;
-    }> = new EventEmitter();
+    @Output() public onSelectDatasetEmit: EventEmitter<DatasetInfo> =
+        new EventEmitter();
     @Input() public sortOptions: {
         value: string;
         label: string;
@@ -36,7 +35,10 @@ export class RepoListComponent {
     }
 
     public onSelectDataset(row: Dataset): void {
-        this.onSelectDatasetEmit.emit({ ownerName: row.name, id: row.id });
+        this.onSelectDatasetEmit.emit({
+            datasetName: row.name,
+            accountName: row.owner?.name,
+        });
     }
 
     public searchResultQuantity(dataSource: Dataset[] = []): string {

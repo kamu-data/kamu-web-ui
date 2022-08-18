@@ -15,6 +15,7 @@ import { BaseComponent } from "../common/base.component";
 import ProjectLinks from "../project-links";
 import { NavigationService } from "../services/navigation.service";
 import { Dataset, PageBasedInfo } from "../api/kamu.graphql.interface";
+import { DatasetInfo } from "../interface/navigation.interface";
 
 export interface SearchFilters {
     name?: string;
@@ -213,10 +214,10 @@ export class SearchComponent
         );
     }
 
-    public onSelectDataset(data: { ownerName: string; id: string }): void {
+    public onSelectDataset(data: DatasetInfo): void {
         this.navigationService.navigateToDatasetView({
-            accountName: AppValues.defaultUsername,
-            datasetName: data.ownerName,
+            accountName: data.accountName,
+            datasetName: data.datasetName,
             tab: ProjectLinks.urlDatasetViewOverviewType,
         });
     }

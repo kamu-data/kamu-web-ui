@@ -12,9 +12,9 @@ export class LinageComponent {
     @Input() public linageGraphLink: Edge[];
     @Input() public linageGraphNodes: Node[];
     @Input() public linageGraphClusters: ClusterNode[];
-    @Output() onClickNodeEmit: EventEmitter<any> = new EventEmitter();
+    @Output() onClickNodeEmit: EventEmitter<Node> = new EventEmitter();
 
-    public onClickNode(node: any): void {
+    public onClickNode(node: Node): void {
         this.onClickNodeEmit.emit(node);
     }
 }

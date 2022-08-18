@@ -206,6 +206,11 @@ export class AppDatasetService {
         this.searchApi
             .onDatasetHistory({ ...info, numRecords, numPage })
             .subscribe((data: GetDatasetHistoryQuery) => {
+                const dataset: DatasetBasicsFragment =
+                    _.cloneDeep<DatasetBasicsFragment>(
+                        data.datasets.byOwnerAndName!,
+                    );
+                this.searchDatasetInfoChanges(dataset);
                 const pageInfo: PageBasedInfo = data.datasets.byOwnerAndName
                     ?.metadata.chain.blocks.pageInfo
                     ? Object.assign(

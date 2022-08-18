@@ -9,8 +9,7 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { Edge } from "@swimlane/ngx-graph";
-import { ClusterNode } from "@swimlane/ngx-graph/lib/models/node.model";
-import { Dataset } from "src/app/api/kamu.graphql.interface";
+import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 
 @Component({
     selector: "app-linage-graph",
@@ -22,7 +21,7 @@ export class LinageGraphComponent implements OnChanges, OnInit {
     @Input() public nodes: any[];
     @Input() public clusters: any[];
 
-    @Output() public onClickNodeEvent: EventEmitter<any> = new EventEmitter();
+    @Output() public onClickNodeEvent: EventEmitter<Node> = new EventEmitter();
 
     public draggingEnabled = false;
     public panningEnabled = true;
@@ -71,7 +70,7 @@ export class LinageGraphComponent implements OnChanges, OnInit {
         }
     }
 
-    public onClickNode(node: any): void {
+    public onClickNode(node: Node): void {
         this.onClickNodeEvent.emit(node);
     }
 

@@ -52,7 +52,7 @@
                     [linageGraphClusters]="linageGraphClusters"
                     [linageGraphLink]="linageGraphLink"
                     [linageGraphNodes]="linageGraphNodes"
-                    (onClickNodeEmit)="onClickNode($event)"
+                    (onClickNodeEmit)="onClickLineageNode($event)"
                 ></app-linage>
             </ng-template>
 
@@ -61,7 +61,7 @@
                     [datasetBasics]="datasetBasics"
                     (onPageChangeEmit)="onPageChange($event)"
                     (onSelectTopicEmit)="selectTopic($event)"
-                    (onClickDatasetEmit)="onClickNode($event)"
+                    (onClickDatasetEmit)="onClickMetadataNode($event)"
                 ></app-metadata>
             </ng-template>
         </div>

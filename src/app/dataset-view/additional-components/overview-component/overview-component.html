@@ -32,13 +32,16 @@
                     </mat-chip-list>
                 </div>
             </div>
+            <app-overview-history-summary-header
+            [hasResultQuantity]="false"
+            [tableSource]="currentState.data"
+            [resultUnitText]="resultUnitText"
+            [metadataBlockFragment]="metadataFragmentBlock"
+            [numBlocksTotal]="currentState.overview.metadata.chain.blocks.totalCount || 0"
+            ></app-overview-history-summary-header>
             <app-dynamic-table
-                [hasResultQuantity]="false"
-                [resultUnitText]="resultUnitText"
                 [hasTableHeader]="true"
                 [tableSource]="currentState.data"
-                [metadataBlockFragment]="metadataFragmentBlock"
-                [numBlocksTotal]="currentState.overview.metadata.chain.blocks.totalCount || 0"
             ></app-dynamic-table>
             <div id="file-readme-dataset-template-md" class="file my-4">
                 <div class="file-header d-flex align-items-center">

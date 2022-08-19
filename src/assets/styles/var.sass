@@ -20,8 +20,8 @@ $app-accent: mat-palette($mat-pink, A200, A100, A400)
 // The "warn" palette is optional and defaults to red if not specified.
 $app-warn: mat-palette($mat-red)
 $my-theme: mat-light-theme($app-primary, $app-accent, $app-warn)
-$verylightgrey:     #cccccc
-$darkgreentea:      rgb(142,195,79)
+$verylightgrey: #cccccc
+$darkgreentea: rgb(142,195,79)
 $app-success: #1a7f37
 $app-harmonies: #2da44e
 $app-naples-yellow: #eac54f
@@ -40,7 +40,8 @@ $app-color-shadow-large: 0 8px 24px rgba(140,149,159,0.2)
 $app-color-fg-muted: #57606a
 $app-color-btn-border: #ced4da
 $app-color-timeline-badge-bg: #eaeef2
-
+$app--color-overview-history-summary-bg: #ddf4ff
+$app--color-table-header-bg: #f6f8fa
 
 .input-group-button
   vertical-align: middle
@@ -325,7 +326,7 @@ $app-color-timeline-badge-bg: #eaeef2
   border-bottom: 1px solid $app-color-border-muted
 
 @keyframes SelectMenu-modal-animation
-   0%
+  0%
     opacity: 0
     transform: translateY(-16px)
 @media (max-width: 480px)
@@ -357,7 +358,6 @@ $app-color-timeline-badge-bg: #eaeef2
   .py-md-3
     padding-top: 16px !important
     padding-bottom: 16px !important
-
 
 // For Markdown editor
 .file
@@ -411,7 +411,6 @@ markdown
   background: $app-aliceBlue
   font-size: 12px
 /////
-
 
 .user-mention, .team-mention
   font-weight: 600

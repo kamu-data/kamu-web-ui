@@ -3,8 +3,6 @@
         <h2 class="box-title align-items-center pb-3 m-0">Schema:</h2>
         <ng-template [ngIf]="currentSchema">
             <app-dynamic-table
-                [hasResultQuantity]="false"
-                [resultUnitText]="''"
                 [hasTableHeader]="true"
                 [tableSource]="currentSchema.fields"
                 [idTable]="'schema-block-table'"
@@ -166,8 +164,6 @@
         ></ngx-monaco-editor>
         <h2 class="box-title align-items-center pb-3 pt-3 m-0">Result:</h2>
         <app-dynamic-table
-            [hasResultQuantity]="false"
-            [resultUnitText]="''"
             [hasTableHeader]="true"
             [tableSource]="currentData"
         ></app-dynamic-table>

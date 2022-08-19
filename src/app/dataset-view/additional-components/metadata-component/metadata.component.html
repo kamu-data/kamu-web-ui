@@ -13,8 +13,6 @@
         <h2>Schema</h2>
         <ng-template [ngIf]="currentState">
             <app-dynamic-table
-                [hasResultQuantity]="false"
-                [resultUnitText]="''"
                 [hasTableHeader]="true"
                 [tableSource]="currentState.schema.fields || []"
                 [idTable]="'schema-block-table'"

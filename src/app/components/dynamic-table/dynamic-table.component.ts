@@ -30,12 +30,6 @@ export class DynamicTableComponent
 {
     @Input() public hasTableHeader: boolean;
     @Input() public tableSource?: TableSourceInterface;
-
-    @Input() public metadataBlockFragment?: MetadataBlockFragment;
-    @Input() public numBlocksTotal?: number;
-
-    @Input() public hasResultQuantity?: boolean = false;
-    @Input() public resultUnitText: string;
     @Input() public idTable = "";
     @Output() public onSelectRowEmit: EventEmitter<string> = new EventEmitter();
 
@@ -91,31 +85,5 @@ export class DynamicTableComponent
         });
         this.dataSource.data = dataSource;
         this.dataSource = new MatTableDataSource(dataSource);
-    }
-
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    public searchResultQuantity(tableSource: any[] = []): string {
-        if (!Array.isArray(tableSource)) {
-            return "0";
-        }
-        return tableSource.length.toString();
-    }
-
-    get systemTime(): Scalars["DateTime"] {
-        return this.metadataBlockFragment
-            ? this.metadataBlockFragment.systemTime
-            : "";
-    }
-
-    get authorInfo(): Account {
-        return this.metadataBlockFragment
-            ? this.metadataBlockFragment.author
-            : { id: "", name: AppValues.defaultUsername };
-    }
-
-    get blockHash(): Scalars["Multihash"] {
-        return this.metadataBlockFragment
-            ? this.metadataBlockFragment.blockHash
-            : "";
     }
 }

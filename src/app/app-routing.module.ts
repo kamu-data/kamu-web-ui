@@ -1,3 +1,4 @@
+import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { SearchComponent } from "./search/search.component";
@@ -46,6 +47,10 @@ const routes: Routes = [
                 component: DatasetComponent,
             },
         ],
+    },
+    {
+        path: "**",
+        component: PageNotFoundComponent,
     },
 ];
 

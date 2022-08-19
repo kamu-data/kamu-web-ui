@@ -1,4 +1,8 @@
-query datasetOverview($accountName: AccountName!, $datasetName: DatasetName!, $limit: Int) {
+query datasetOverview(
+  $accountName: AccountName!
+  $datasetName: DatasetName!
+  $limit: Int
+) {
   datasets {
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       ...DatasetOverview

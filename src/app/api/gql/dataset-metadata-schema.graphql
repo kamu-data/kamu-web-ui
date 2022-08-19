@@ -1,11 +1,11 @@
 query getDatasetMetadataSchema(
   $accountName: AccountName!
-  $datasetName: DatasetName!,
+  $datasetName: DatasetName!
   $numRecords: Int
   $numPage: Int
 ) {
   datasets {
-      byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       ...DatasetBasics
       metadata {
         ...DatasetMetadataDetails

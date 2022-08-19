@@ -12,10 +12,10 @@ import {
 } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
 import { BaseComponent } from "../common/base.component";
-import ProjectLinks from "../project-links";
 import { NavigationService } from "../services/navigation.service";
 import { Dataset, PageBasedInfo } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
+import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 
 export interface SearchFilters {
     name?: string;
@@ -218,7 +218,7 @@ export class SearchComponent
         this.navigationService.navigateToDatasetView({
             accountName: data.accountName,
             datasetName: data.datasetName,
-            tab: ProjectLinks.urlDatasetViewOverviewType,
+            tab: DatasetViewTypeEnum.Overview,
         });
     }
 

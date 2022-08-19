@@ -28,10 +28,7 @@
                 <mat-icon *ngIf="row.kind === 'DERIVATIVE'">merge</mat-icon>
                 <button
                     class="repo-list-container__title mb-1 pl-0"
-                    (click)="
-                        isClickableRow &&
-                            onSelectDataset(row)
-                    "
+                    (click)="isClickableRow && onSelectDataset(row)"
                 >
                     {{ row.owner.name }}/{{ row.name }}
                 </button>

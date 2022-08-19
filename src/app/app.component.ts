@@ -12,6 +12,7 @@ import ProjectLinks from "./project-links";
 import { AccountInfo } from "./api/kamu.graphql.interface";
 import { Optional } from "./common/app.types";
 import _ from "lodash";
+import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-root",
@@ -142,7 +143,7 @@ export class AppComponent extends BaseComponent implements OnInit {
             this.navigationService.navigateToDatasetView({
                 accountName: AppValues.defaultUsername,
                 datasetName: item.name,
-                tab: ProjectLinks.urlDatasetViewOverviewType,
+                tab: DatasetViewTypeEnum.Overview,
             });
         } else {
             this.navigationService.navigateToSearch(item.id, 1);

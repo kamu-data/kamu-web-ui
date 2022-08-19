@@ -1,5 +1,5 @@
 export interface DatasetNavigationParams {
-    accountName: string | undefined;
+    accountName: string;
     datasetName: string;
     tab: string;
     page?: number;

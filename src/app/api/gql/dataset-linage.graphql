@@ -1,6 +1,9 @@
-query getDatasetLineage($accountName: AccountName!, $datasetName: DatasetName!) {
+query getDatasetLineage(
+  $accountName: AccountName!
+  $datasetName: DatasetName!
+) {
   datasets {
-   byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       ...DatasetBasics
       metadata {
         currentUpstreamDependencies {

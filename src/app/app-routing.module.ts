@@ -5,7 +5,6 @@ import { LoginComponent } from "./auth/login/login.component";
 import { DatasetComponent } from "./dataset-view/dataset.component";
 import { DatasetCreateComponent } from "./dataset-create/dataset-create.component";
 import { AccountComponent } from "./auth/account/account.component";
-import AppValues from "./common/app.values";
 import { GithubCallbackComponent } from "./auth/github-callback/github.callback";
 import { environment } from "../environments/environment";
 import ProjectLinks from "./project-links";
@@ -36,14 +35,14 @@ const routes: Routes = [
         component: DatasetCreateComponent,
     },
     {
-        path: `:${ProjectLinks.urlAccountName}`,
+        path: `:${ProjectLinks.urlParamAccountName}`,
         children: [
             {
                 path: "",
                 component: AccountComponent,
             },
             {
-                path: `:${ProjectLinks.urlDatasetName}`,
+                path: `:${ProjectLinks.urlParamDatasetName}`,
                 component: DatasetComponent,
             },
         ],

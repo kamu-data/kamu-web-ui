@@ -267,38 +267,17 @@ export class AppDatasetService {
                 this.searchDatasetInfoChanges(dataset);
             });
     }
-    public onGetDatasetDataSQLRun(
-        currentDatasetInfo: DatasetBasicsFragment,
-        query: string,
-        limit: number,
-    ): void {
+    public onGetDatasetDataSQLRun(query: string, limit: number): void {
         this.searchApi.onGetDatasetDataSQLRun({ query, limit }).subscribe(
             (data: GetDatasetDataSqlRunQuery) => {
-                const dataset = {
-                    metadata: {
-                        currentSchema: {
-                            content: {},
-                        },
-                    },
-                    data: {
-                        tail: {
-                            content: [],
-                        },
-                    },
-                } as any;
-                dataset.data.tail.content = data.data?.query.data
+                const content: Object[] = data.data?.query.data
                     ? JSON.parse(data.data?.query.data.content)
                     : "";
-                dataset.metadata.currentSchema.content = data.data.query.schema
+                const schema: DataViewSchema = data.data.query.schema
                     ? JSON.parse(data.data.query.schema.content)
                     : "";
 
-                this.searchDatasetInfoChanges(dataset);
-
-                const dataUpdate: DataUpdate = {
-                    content: dataset.data.tail.content,
-                    schema: dataset.metadata.currentSchema.content,
-                };
+                const dataUpdate: DataUpdate = { content, schema };
                 this.appDatasetSubsService.changeDatasetData(dataUpdate);
             },
             (error: { message: string }) => {

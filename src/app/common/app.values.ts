@@ -8,6 +8,7 @@ export default class AppValues {
     public static localStorageAccessToken = "code";
     public static defaultUsername = "anonymous";
     public static httpPattern = new RegExp(/^(http:\/\/)|(https:\/\/)/i);
+    public static displayDateFormat = "DD MMM YYYY";
     public static clipboardKamuCli = "kamu pull kamu.dev/anonymous/dataset";
     public static clipboardKafka =
         "https://api.kamu.dev/kafka/anonymous/dataset";

@@ -26,8 +26,8 @@ export class DatasetViewMenuComponent implements OnInit {
     @Input() datasetViewType: DatasetViewTypeEnum;
     @Input() isMinimizeSearchAdditionalButtons: boolean;
 
-    public clipboardKamuCli = "kamu pull kamu.dev/anonymous/dataset";
-    public clipboardKafka = "https://api.kamu.dev/kafka/anonymous/dataset";
+    public clipboardKamuCli = AppValues.clipboardKamuCli;
+    public clipboardKafka = AppValues.clipboardKafka;
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
@@ -83,27 +83,27 @@ export class DatasetViewMenuComponent implements OnInit {
     }
 
     public get isDatasetViewTypeOverview(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.overview;
+        return this.datasetViewType === DatasetViewTypeEnum.Overview;
     }
 
     public get isDatasetViewTypeData(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.data;
+        return this.datasetViewType === DatasetViewTypeEnum.Data;
     }
 
     public get isDatasetViewTypeMetadata(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.metadata;
+        return this.datasetViewType === DatasetViewTypeEnum.Metadata;
     }
 
     public get isDatasetViewTypeHistory(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.history;
+        return this.datasetViewType === DatasetViewTypeEnum.History;
     }
 
     public get isDatasetViewTypeLineage(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.linage;
+        return this.datasetViewType === DatasetViewTypeEnum.Lineage;
     }
 
     public get isDatasetViewTypeDiscussions(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.discussions;
+        return this.datasetViewType === DatasetViewTypeEnum.Discussions;
     }
 
     public onNavigateToOverview(): void {

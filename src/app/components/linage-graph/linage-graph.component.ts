@@ -9,7 +9,7 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { Edge } from "@swimlane/ngx-graph";
-import { ClusterNode } from "@swimlane/ngx-graph/lib/models/node.model";
+import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 
 @Component({
     selector: "app-linage-graph",
@@ -21,8 +21,7 @@ export class LinageGraphComponent implements OnChanges, OnInit {
     @Input() public nodes: any[];
     @Input() public clusters: any[];
 
-    @Output() public onClickNodeEvent: EventEmitter<string> =
-        new EventEmitter();
+    @Output() public onClickNodeEvent: EventEmitter<Node> = new EventEmitter();
 
     public draggingEnabled = false;
     public panningEnabled = true;
@@ -39,14 +38,10 @@ export class LinageGraphComponent implements OnChanges, OnInit {
     public graphNodes: any[];
 
     public ngOnInit(): void {
-        console.log(this.links);
-        console.log(this.nodes);
         this.graphNodes = this.nodes || [];
         this.graphClusters = this.graphClusters || [];
     }
     public ngOnChanges(changes: SimpleChanges): void {
-        console.log(this.links);
-        console.log(this.nodes);
         const clusters: SimpleChange = changes.clusters;
         const nodes: SimpleChange = changes.nodes;
         if (clusters) {
@@ -75,9 +70,8 @@ export class LinageGraphComponent implements OnChanges, OnInit {
         }
     }
 
-    public onClickNode(node: any, label: string): void {
-        console.log(node);
-        this.onClickNodeEvent.emit(label);
+    public onClickNode(node: Node): void {
+        this.onClickNodeEvent.emit(node);
     }
 
     // See: https://stackoverflow.com/questions/62874476/ngx-graph-linktemplate-links-middle-pointer-alignment-issue

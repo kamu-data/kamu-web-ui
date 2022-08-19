@@ -111,12 +111,14 @@ export class SearchApi {
     //////////////////// Datasets Viewer //////////////////////////////
 
     public getDatasetOverview(params: {
-        id: string;
+        accountName: string;
+        datasetName: string;
         numRecords?: number;
     }): Observable<DatasetOverviewQuery> {
         return this.datasetOverviewGQL
             .watch({
-                datasetId: params.id,
+                accountName: params.accountName,
+                datasetName: params.datasetName,
                 limit: params.numRecords || (10 as number),
             })
             .valueChanges.pipe(
@@ -138,13 +140,15 @@ export class SearchApi {
             );
     }
     public onDatasetHistory(params: {
-        id: string;
+        accountName: string;
+        datasetName: string;
         numRecords: number;
         numPage: number;
     }): Observable<GetDatasetHistoryQuery> {
         return this.getDatasetHistoryGQL
             .watch({
-                datasetId: params.id,
+                accountName: params.accountName,
+                datasetName: params.datasetName,
                 perPage: params.numRecords || 10,
                 page: params.numPage || 0,
             })
@@ -173,13 +177,15 @@ export class SearchApi {
     }
 
     public onSearchMetadata(params: {
-        id: string;
+        accountName: string;
+        datasetName: string;
         numRecords?: number;
         page?: number;
     }): Observable<GetDatasetMetadataSchemaQuery> {
         return this.datasetMetadataGQL
             .watch({
-                datasetId: params.id,
+                accountName: params.accountName,
+                datasetName: params.datasetName,
                 numPage: 0,
                 numRecords: 1,
             })
@@ -195,11 +201,13 @@ export class SearchApi {
     }
 
     public getDatasetLineage(params: {
-        id: string;
+        accountName: string;
+        datasetName: string;
     }): Observable<GetDatasetLineageQuery> {
         return this.getDatasetLineageGQL
             .watch({
-                datasetId: params.id,
+                accountName: params.accountName,
+                datasetName: params.datasetName,
             })
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetDatasetLineageQuery>) => {

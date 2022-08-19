@@ -6,6 +6,7 @@ import { AppDatasetSubsService } from "../../datasetSubs.service";
 import { MetadataSchemaUpdate } from "../../datasetSubs.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import {
+    Dataset,
     DatasetBasicsFragment,
     DatasetMetadataDetailsFragment,
     PageBasedInfo,
@@ -27,7 +28,8 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         isClick: boolean;
     }> = new EventEmitter();
     @Output() onSelectTopicEmit: EventEmitter<string> = new EventEmitter();
-    @Output() onClickDatasetEmit: EventEmitter<string> = new EventEmitter();
+    @Output() onClickDatasetEmit: EventEmitter<DatasetBasicsFragment> =
+        new EventEmitter();
 
     public sqlEditorOptions = {
         theme: "vs",
@@ -76,8 +78,8 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         this.onSelectTopicEmit.emit(topicName);
     }
 
-    public onClickDataset(idDataset: string): void {
-        this.onClickDatasetEmit.emit(idDataset);
+    public onClickDataset(dataset: DatasetBasicsFragment): void {
+        this.onClickDatasetEmit.emit(dataset);
     }
 
     public onPageChange(params: {

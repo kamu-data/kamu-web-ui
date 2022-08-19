@@ -1,10 +1,10 @@
 export enum DatasetViewTypeEnum {
-    overview = "overview",
-    data = "data",
-    metadata = "metadata",
-    linage = "lineage",
-    discussions = "discussions",
-    history = "history",
+    Overview = "overview",
+    Data = "data",
+    Metadata = "metadata",
+    Lineage = "lineage",
+    Discussions = "discussions",
+    History = "history",
 }
 
 export interface DatasetNavigationInterface {

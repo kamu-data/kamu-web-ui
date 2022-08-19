@@ -807,7 +807,8 @@ export type GetDatasetDataSqlRunQuery = {
 };
 
 export type GetDatasetHistoryQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
     perPage?: InputMaybe<Scalars["Int"]>;
     page?: InputMaybe<Scalars["Int"]>;
 }>;
@@ -816,7 +817,7 @@ export type GetDatasetHistoryQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
-        byId?:
+        byOwnerAndName?:
             | ({
                   __typename?: "Dataset";
                   metadata: {
@@ -847,14 +848,15 @@ export type GetDatasetHistoryQuery = {
 };
 
 export type GetDatasetLineageQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
 }>;
 
 export type GetDatasetLineageQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
-        byId?:
+        byOwnerAndName?:
             | ({
                   __typename?: "Dataset";
                   metadata: {
@@ -941,7 +943,8 @@ export type GetDatasetLineageQuery = {
 };
 
 export type GetDatasetMetadataSchemaQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
     numRecords?: InputMaybe<Scalars["Int"]>;
     numPage?: InputMaybe<Scalars["Int"]>;
 }>;
@@ -950,7 +953,7 @@ export type GetDatasetMetadataSchemaQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
-        byId?:
+        byOwnerAndName?:
             | ({
                   __typename?: "Dataset";
                   metadata: {
@@ -963,7 +966,8 @@ export type GetDatasetMetadataSchemaQuery = {
 };
 
 export type DatasetOverviewQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
     limit?: InputMaybe<Scalars["Int"]>;
 }>;
 
@@ -971,7 +975,7 @@ export type DatasetOverviewQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
-        byId?:
+        byOwnerAndName?:
             | ({
                   __typename: "Dataset";
                   data: {
@@ -1554,9 +1558,17 @@ export class GetDatasetDataSqlRunGQL extends Apollo.Query<
     }
 }
 export const GetDatasetHistoryDocument = gql`
-    query getDatasetHistory($datasetId: DatasetID!, $perPage: Int, $page: Int) {
+    query getDatasetHistory(
+        $accountName: AccountName!
+        $datasetName: DatasetName!
+        $perPage: Int
+        $page: Int
+    ) {
         datasets {
-            byId(datasetId: $datasetId) {
+            byOwnerAndName(
+                accountName: $accountName
+                datasetName: $datasetName
+            ) {
                 ...DatasetBasics
                 metadata {
                     chain {
@@ -1594,9 +1606,15 @@ export class GetDatasetHistoryGQL extends Apollo.Query<
     }
 }
 export const GetDatasetLineageDocument = gql`
-    query getDatasetLineage($datasetId: DatasetID!) {
+    query getDatasetLineage(
+        $accountName: AccountName!
+        $datasetName: DatasetName!
+    ) {
         datasets {
-            byId(datasetId: $datasetId) {
+            byOwnerAndName(
+                accountName: $accountName
+                datasetName: $datasetName
+            ) {
                 ...DatasetBasics
                 metadata {
                     currentUpstreamDependencies {
@@ -1667,12 +1685,16 @@ export class GetDatasetLineageGQL extends Apollo.Query<
 }
 export const GetDatasetMetadataSchemaDocument = gql`
     query getDatasetMetadataSchema(
-        $datasetId: DatasetID!
+        $accountName: AccountName!
+        $datasetName: DatasetName!
         $numRecords: Int
         $numPage: Int
     ) {
         datasets {
-            byId(datasetId: $datasetId) {
+            byOwnerAndName(
+                accountName: $accountName
+                datasetName: $datasetName
+            ) {
                 ...DatasetBasics
                 metadata {
                     ...DatasetMetadataDetails
@@ -1698,9 +1720,16 @@ export class GetDatasetMetadataSchemaGQL extends Apollo.Query<
     }
 }
 export const DatasetOverviewDocument = gql`
-    query datasetOverview($datasetId: DatasetID!, $limit: Int) {
+    query datasetOverview(
+        $accountName: AccountName!
+        $datasetName: DatasetName!
+        $limit: Int
+    ) {
         datasets {
-            byId(datasetId: $datasetId) {
+            byOwnerAndName(
+                accountName: $accountName
+                datasetName: $datasetName
+            ) {
                 ...DatasetOverview
                 data {
                     ...DatasetDataSize

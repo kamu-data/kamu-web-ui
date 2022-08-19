@@ -12,6 +12,7 @@ import ProjectLinks from "./project-links";
 import { AccountInfo } from "./api/kamu.graphql.interface";
 import { Optional } from "./common/app.types";
 import _ from "lodash";
+import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-root",
@@ -99,10 +100,10 @@ export class AppComponent extends BaseComponent implements OnInit {
                 .subscribe((event: any) => {
                     this.isVisible = this.isAvailableAppHeaderUrl(event.url);
 
-                    if (event.url.split("?id=").length > 1) {
+                    if (event.url.split("?query=").length > 1) {
                         const searchValue: string =
                             AppValues.fixedEncodeURIComponent(
-                                event.url.split("?id=")[1].split("&")[0],
+                                event.url.split("?query=")[1].split("&")[0],
                             );
                         if (searchValue === "%255Bobject%2520Object%255D") {
                             this.navigationService.navigateToSearch();
@@ -110,10 +111,10 @@ export class AppComponent extends BaseComponent implements OnInit {
                                 this.appSearchService.searchChanges(""),
                             );
                         }
-                        if (event.url.includes("search")) {
+                        if (event.url.includes(ProjectLinks.urlSearch)) {
                             this.appSearchService.searchChanges(searchValue);
                         }
-                        if (event.url.includes("dataset-view")) {
+                        if (!event.url.includes(ProjectLinks.urlSearch)) {
                             this.appSearchService.searchChanges("");
                         }
                     }
@@ -139,11 +140,11 @@ export class AppComponent extends BaseComponent implements OnInit {
                 item.id,
         );
         if (item.__typename === TypeNames.datasetType) {
-            this.navigationService.navigateToDatasetView(
-                AppValues.defaultUsername,
-                item.id,
-                ProjectLinks.urlDatasetViewOverviewType,
-            );
+            this.navigationService.navigateToDatasetView({
+                accountName: AppValues.defaultUsername,
+                datasetName: item.name,
+                tab: DatasetViewTypeEnum.Overview,
+            });
         } else {
             this.navigationService.navigateToSearch(item.id, 1);
         }
@@ -159,9 +160,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onAddNew(): void {
-        this.navigationService.navigateToDatasetCreate(
-            AppValues.defaultUsername,
-        );
+        this.navigationService.navigateToDatasetCreate();
     }
 
     public onLogin(): void {

@@ -1,6 +1,11 @@
-query getDatasetHistory($datasetId: DatasetID!, $perPage: Int, $page: Int) {
+query getDatasetHistory(
+  $accountName: AccountName!
+  $datasetName: DatasetName!
+  $perPage: Int
+  $page: Int
+) {
   datasets {
-    byId(datasetId: $datasetId) {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       ...DatasetBasics
       metadata {
         chain {

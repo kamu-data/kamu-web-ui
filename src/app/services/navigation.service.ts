@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
+import { DatasetNavigationParams } from "../interface/navigation.interface";
 import ProjectLinks from "../project-links";
 
 @Injectable()
@@ -14,24 +15,19 @@ export class NavigationService {
         this.router.navigate([ProjectLinks.urlHome]);
     }
 
-    public navigateToSearch(id?: string, p?: number): void {
+    public navigateToSearch(query?: string, page?: number): void {
         this.router.navigate([ProjectLinks.urlSearch], {
-            queryParams: { id, p },
+            queryParams: { query, page },
         });
     }
 
-    public navigateToDatasetCreate(name: string): void {
-        this.router.navigate([name, ProjectLinks.urlDatasetCreate]);
+    public navigateToDatasetCreate(): void {
+        this.router.navigate([ProjectLinks.urlDatasetCreate]);
     }
 
-    public navigateToDatasetView(
-        name: string,
-        id: string,
-        type: string,
-        p?: number,
-    ): void {
-        this.router.navigate([name, ProjectLinks.urlDatasetView], {
-            queryParams: { id, type, p },
+    public navigateToDatasetView(params: DatasetNavigationParams): void {
+        this.router.navigate([params.accountName, params.datasetName], {
+            queryParams: { tab: params.tab, page: params.page },
         });
     }
 

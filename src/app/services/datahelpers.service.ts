@@ -1,3 +1,4 @@
+import AppValues from "src/app/common/app.values";
 import { Injectable } from "@angular/core";
 import * as moment from "moment-timezone";
 import {
@@ -18,7 +19,7 @@ export class DataHelpersService {
 
     public dateTime(rfc3339: string): string {
         const dt = moment(rfc3339);
-        return dt.format("YYYY-MM-DD");
+        return dt.format(AppValues.displayDateFormat);
     }
 
     public relativeTime(

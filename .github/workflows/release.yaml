@@ -16,17 +16,31 @@ jobs:
           - any
     steps:
       - uses: actions/checkout@v2
+
       - uses: actions/setup-node@v3
         with:
-          node-version: "12"
-      - uses: actions/cache@v3 # Source: https://github.com/actions/cache/blob/main/examples.md#node---npm
+          node-version: "14"
+
+      - uses: actions/cache@v3 # Source: https://gist.github.com/rupeshtiwari/44ebec690f2c01bf1df9b1d215a0e723
+        id: cache-nodemodules
+        env:
+          cache-name: cache-node-modules
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          # caching node_modules
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-
-      - run: npm install
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: npm ci
+
+      # TODO: linting & tests
       - run: npm run build
+      - run: npm run build-prod
+
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ env.PACKAGE_NAME }}-${{ matrix.target }}

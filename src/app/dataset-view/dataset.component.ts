@@ -475,7 +475,7 @@ export class DatasetComponent
             this.activatedRoute.snapshot.queryParamMap.get(
                 ProjectLinks.urlQueryParamPage,
             );
-        return page ? Number(page) : 0;
+        return page ? Number(page) : 1;
     }
 
     private getDatasetViewTypeFromUrl(): DatasetViewTypeEnum {

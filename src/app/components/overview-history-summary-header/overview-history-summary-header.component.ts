@@ -5,7 +5,7 @@ import {
     Scalars,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
-import { DataHelpersService } from "src/app/services/datahelpers.service";
+import { DataHelpers } from "src/app/common/data.helpers";
 import { TableSourceInterface } from "../dynamic-table/dynamic-table.interface";
 
 @Component({
@@ -19,8 +19,9 @@ export class OverviewHistorySummaryHeaderComponent implements OnInit {
     @Input() public metadataBlockFragment?: MetadataBlockFragment;
     @Input() public hasResultQuantity?: boolean = false;
     @Input() public numBlocksTotal?: number;
+    public appLogo = `/${AppValues.appLogo}`;
 
-    constructor(public dataHelpers: DataHelpersService) {}
+    constructor() {}
 
     ngOnInit(): void {}
 
@@ -48,5 +49,19 @@ export class OverviewHistorySummaryHeaderComponent implements OnInit {
         return this.metadataBlockFragment
             ? this.metadataBlockFragment.blockHash
             : "";
+    }
+
+    get relativeTime(): string {
+        return DataHelpers.relativeTime(this.systemTime);
+    }
+
+    get shortHash(): string {
+        return DataHelpers.shortHash(this.systemTime);
+    }
+
+    get descriptionForMetadataBlock(): string {
+        return DataHelpers.descriptionForMetadataBlock(
+            this.metadataBlockFragment || null,
+        );
     }
 }

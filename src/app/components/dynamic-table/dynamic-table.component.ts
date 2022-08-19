@@ -9,12 +9,6 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import {
-    Account,
-    MetadataBlockFragment,
-    Scalars,
-} from "src/app/api/kamu.graphql.interface";
-import { DataHelpersService } from "src/app/services/datahelpers.service";
 import AppValues from "../../common/app.values";
 import { TableSourceInterface } from "./dynamic-table.interface";
 
@@ -37,7 +31,7 @@ export class DynamicTableComponent
     public dataSource = new MatTableDataSource<any>(ELEMENT_DATA);
     public displayedColumns: string[] = [];
 
-    constructor(public dataHelpers: DataHelpersService) {}
+    constructor() {}
 
     public ngOnInit(): void {
         this.tableSource && this.renderTable(this.tableSource);

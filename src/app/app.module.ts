@@ -45,7 +45,6 @@ import { SecurityContext } from "@angular/core";
 import { NotificationIndicatorComponent } from "./components/notification-indicator/notification-indicator.component";
 import { MonacoEditorModule } from "ngx-monaco-editor";
 import { AppConfigService } from "./app-config.service";
-import { DataHelpersService } from "./services/datahelpers.service";
 import { NavigationService } from "./services/navigation.service";
 import { AppDatasetSubsService } from "./dataset-view/datasetSubs.service";
 
@@ -62,7 +61,6 @@ const Services = [
     },
     Apollo,
     AuthApi,
-    DataHelpersService,
     SearchApi,
     HttpLink,
     AppSearchService,

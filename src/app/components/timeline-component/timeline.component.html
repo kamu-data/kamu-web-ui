@@ -64,9 +64,7 @@
                                     class="link--primary font-weight-bold"
                                     href="#todo-navigate-to-block"
                                     >{{
-                                        dataHelpers.descriptionForMetadataBlock(
-                                            block
-                                        )
+                                        descriptionForMetadataBlock(block)
                                     }}</a
                                 >
                             </div>
@@ -116,7 +114,7 @@
                                         class="no-wrap"
                                         [title]="block.systemTime"
                                         >{{
-                                            dataHelpers.relativeTime(
+                                           relativeTime(
                                                 block.systemTime
                                             )
                                         }}
@@ -198,7 +196,7 @@
                                     data-view-component="true"
                                     class="tooltipped tooltipped-sw btn-outline btn BtnGroup-item text-mono f6 m-2"
                                 >
-                                    {{ dataHelpers.shortHash(block.blockHash) }}
+                                    {{ shortHash(block.blockHash) }}
                                 </a>
                             </div>
                             <div data-view-component="true" class="BtnGroup">

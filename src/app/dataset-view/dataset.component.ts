@@ -458,6 +458,7 @@ export class DatasetComponent
         this.datasetViewType = this.getDatasetViewTypeFromUrl();
 
         this.appDatasetService.resetDatasetTree();
+       
         mapperTabs[this.datasetViewType]();
     }
 
@@ -479,11 +480,16 @@ export class DatasetComponent
     }
 
     private getDatasetViewTypeFromUrl(): DatasetViewTypeEnum {
-        return (
-            (this.activatedRoute.snapshot.queryParamMap.get(
-                ProjectLinks.urlQueryParamTab,
-            ) as DatasetViewTypeEnum) || DatasetViewTypeEnum.Overview
-        );
+        const tabValue: string | null = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.urlQueryParamTab);
+        if (tabValue) {
+            const tab = tabValue as DatasetViewTypeEnum;
+            if (Object.values(DatasetViewTypeEnum).includes(tab)) {
+                return tab;
+            }
+            console.error(`Unrecognized tab '${tabValue}'`);
+        }
+        
+        return DatasetViewTypeEnum.Overview;
     }
 
     public onSelectDataset(datasetName?: string): void {

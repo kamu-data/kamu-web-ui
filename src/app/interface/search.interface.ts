@@ -30,7 +30,7 @@ export enum TypeNames {
     datasetType = "Dataset",
 }
 
-export interface DatasetLinageResponse {
+export interface DatasetLineageResponse {
     __typename: string;
     id: string;
     kind: DatasetKind;
@@ -43,8 +43,8 @@ export interface DatasetCurrentUpstreamDependencies {
     id: string;
     kind: DatasetKind;
     name: string;
-    currentDownstreamDependencies?: DatasetLinageResponse[];
-    currentUpstreamDependencies?: DatasetLinageResponse[];
+    currentDownstreamDependencies?: DatasetLineageResponse[];
+    currentUpstreamDependencies?: DatasetLineageResponse[];
 }
 
 export interface DataViewSchema {

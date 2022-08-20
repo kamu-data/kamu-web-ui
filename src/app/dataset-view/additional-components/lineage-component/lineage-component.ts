@@ -3,15 +3,15 @@ import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 
 @Component({
-    selector: "app-linage",
-    templateUrl: "./linage-component.html",
+    selector: "app-lineage",
+    templateUrl: "./lineage-component.html",
 })
-export class LinageComponent {
-    @Input() public linageGraphView: [number, number];
-    @Input() public isAvailableLinageGraph: boolean;
-    @Input() public linageGraphLink: Edge[];
-    @Input() public linageGraphNodes: Node[];
-    @Input() public linageGraphClusters: ClusterNode[];
+export class LineageComponent {
+    @Input() public lineageGraphView: [number, number];
+    @Input() public isAvailableLineageGraph: boolean;
+    @Input() public lineageGraphLink: Edge[];
+    @Input() public lineageGraphNodes: Node[];
+    @Input() public lineageGraphClusters: ClusterNode[];
     @Output() onClickNodeEmit: EventEmitter<Node> = new EventEmitter();
 
     public onClickNode(node: Node): void {

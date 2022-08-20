@@ -43,15 +43,15 @@
                 ></app-history>
             </ng-template>
 
-            <ng-template [ngIf]="isDatasetViewTypeLinage">
-                <app-linage
-                    [linageGraphView]="linageGraphView"
-                    [isAvailableLinageGraph]="isAvailableLinageGraph"
-                    [linageGraphClusters]="linageGraphClusters"
-                    [linageGraphLink]="linageGraphLink"
-                    [linageGraphNodes]="linageGraphNodes"
+            <ng-template [ngIf]="isDatasetViewTypeLineage">
+                <app-lineage
+                    [lineageGraphView]="lineageGraphView"
+                    [isAvailableLineageGraph]="isAvailableLineageGraph"
+                    [lineageGraphClusters]="lineageGraphClusters"
+                    [lineageGraphLink]="lineageGraphLink"
+                    [lineageGraphNodes]="lineageGraphNodes"
                     (onClickNodeEmit)="onClickLineageNode($event)"
-                ></app-linage>
+                ></app-lineage>
             </ng-template>
 
             <ng-template [ngIf]="isDatasetViewTypeMetadata">

@@ -12,10 +12,10 @@ import { Edge } from "@swimlane/ngx-graph";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 
 @Component({
-    selector: "app-linage-graph",
-    templateUrl: "./linage-graph.component.html",
+    selector: "app-lineage-graph",
+    templateUrl: "./lineage-graph.component.html",
 })
-export class LinageGraphComponent implements OnChanges, OnInit {
+export class LineageGraphComponent implements OnChanges, OnInit {
     @Input() public view: [number, number];
     @Input() public links: any[];
     @Input() public nodes: any[];

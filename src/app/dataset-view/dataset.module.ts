@@ -8,7 +8,7 @@ import { DynamicTableModule } from "../components/dynamic-table/dynamic-table.mo
 import { SearchSidenavModule } from "../components/search-sidenav/search-sidenav.module";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
-import { LinageGraphModule } from "../components/linage-graph/linage-graph.module";
+import { LineageGraphModule } from "../components/lineage-graph/lineage-graph.module";
 import { PaginationModule } from "../components/pagination-component/pagination.module";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatButtonModule } from "@angular/material/button";
@@ -21,7 +21,7 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { MonacoEditorModule } from "ngx-monaco-editor";
 import { DataComponent } from "./additional-components/data-component/data-component";
 import { OverviewComponent } from "./additional-components/overview-component/overview-component";
-import { LinageComponent } from "./additional-components/linage-component/linage-component";
+import { LineageComponent as LineageComponent } from "./additional-components/lineage-component/lineage-component";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { HistoryComponent } from "./additional-components/history-component/history-component";
 import { TimelineModule } from "../components/timeline-component/timeline.module";
@@ -47,7 +47,7 @@ import { OverviewHistorySummaryHeaderComponent } from "../components/overview-hi
         SearchAdditionalButtonsModule,
         TimelineModule,
         NgxGraphModule,
-        LinageGraphModule,
+        LineageGraphModule,
         PaginationModule,
         MatMenuModule,
         MatButtonModule,
@@ -69,7 +69,7 @@ import { OverviewHistorySummaryHeaderComponent } from "../components/overview-hi
         MetadataComponent,
         DataComponent,
         OverviewComponent,
-        LinageComponent,
+        LineageComponent,
         HistoryComponent,
         MonacoEditorModule,
     ],
@@ -81,7 +81,7 @@ import { OverviewHistorySummaryHeaderComponent } from "../components/overview-hi
         MetadataComponent,
         DataComponent,
         OverviewComponent,
-        LinageComponent,
+        LineageComponent,
         HistoryComponent,
     ],
 })

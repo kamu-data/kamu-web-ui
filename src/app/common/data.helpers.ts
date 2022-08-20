@@ -1,12 +1,10 @@
 import AppValues from "src/app/common/app.values";
-import { Injectable } from "@angular/core";
 import * as moment from "moment-timezone";
 import {
     DatasetKind,
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
 
-@Injectable()
 export class DataHelpers {
     public static datasetKind(kind: DatasetKind): string {
         return kind.charAt(0).toUpperCase() + kind.slice(1).toLowerCase();
@@ -79,10 +77,10 @@ export class DataHelpers {
     }
 
     public static descriptionForMetadataBlock(
-        block: MetadataBlockFragment | null,
+        block: MetadataBlockFragment,
     ): string {
-        const event = block?.event;
-        switch (event?.__typename) {
+        const event = block.event;
+        switch (event.__typename) {
             case "AddData":
                 return `Added ${
                     event.addedOutputData

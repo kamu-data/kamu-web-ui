@@ -1,4 +1,3 @@
-
 <div [id]="idTable" style="width: 100%; overflow: auto" class="dynamic-table">
     <table mat-table [dataSource]="dataSource">
         <ng-container
@@ -12,7 +11,11 @@
         </ng-container>
 
         <ng-container *ngIf="hasTableHeader">
-            <tr class="table-header-background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr
+                class="table-header-background"
+                mat-header-row
+                *matHeaderRowDef="displayedColumns"
+            ></tr>
         </ng-container>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>

@@ -1,12 +1,4 @@
 <div class="overview-summary-background">
-    <div
-        class="d-flex flex-column flex-md-row justify-content-between pb-3 position-relative"
-        *ngIf="hasResultQuantity"
-    >
-        <h2 class="box-title align-items-center">
-            {{ searchResultQuantity(tableSource) }} {{ resultUnitText }}
-        </h2>
-    </div>
     <div class="box-header position-relative" *ngIf="metadataBlockFragment">
         <div
             class="d-flex rounded-top-1 border-bottom-0 align-items-center flex-wrap"
@@ -54,9 +46,7 @@
                             title="Styles was changed"
                             class="link--primary"
                             href="#todo-navigate-to-block"
-                            >{{
-                                descriptionForMetadataBlock
-                            }}</a
+                            >{{ descriptionForMetadataBlock }}</a
                         >
                     </span>
                 </div>

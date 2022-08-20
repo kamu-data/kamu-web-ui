@@ -63,9 +63,7 @@
                                 <a
                                     class="link--primary font-weight-bold"
                                     href="#todo-navigate-to-block"
-                                    >{{
-                                        descriptionForMetadataBlock(block)
-                                    }}</a
+                                    >{{ descriptionForMetadataBlock(block) }}</a
                                 >
                             </div>
 
@@ -113,11 +111,7 @@
                                     <time
                                         class="no-wrap"
                                         [title]="block.systemTime"
-                                        >{{
-                                           relativeTime(
-                                                block.systemTime
-                                            )
-                                        }}
+                                        >{{ relativeTime(block.systemTime) }}
                                     </time>
                                 </div>
                                 <div class="ml-1"></div>

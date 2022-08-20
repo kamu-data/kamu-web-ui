@@ -24,9 +24,7 @@
             <ng-template [ngIf]="isDatasetViewTypeOverview">
                 <app-overview
                     [isMarkdownEditView]="isMarkdownEditView"
-                    [markdownText]="markdownText"
                     [datasetBasics]="datasetBasics"
-                    [resultUnitText]="getResultUnitText()"
                     (onToggleReadmeViewEmit)="toggleReadmeView()"
                     (onSelectTopicEmit)="selectTopic($event)"
                 ></app-overview>

@@ -1,7 +1,13 @@
 import { DataHelpers } from "src/app/common/data.helpers";
 import { DatasetInfo } from "./../../interface/navigation.interface";
 import { NavigationService } from "./../../services/navigation.service";
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+} from "@angular/core";
 import { ModalService } from "../modal/modal.service";
 import { Dataset } from "src/app/api/kamu.graphql.interface";
 
@@ -9,7 +15,7 @@ import { Dataset } from "src/app/api/kamu.graphql.interface";
     selector: "app-repo-list",
     templateUrl: "./repo-list.component.html",
     styleUrls: ["./repo-list.sass"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RepoListComponent {
     @Input() public dataSource: Dataset[];

@@ -28,9 +28,7 @@ import { AppDatasetSubsService } from "../../datasetSubs.service";
 })
 export class OverviewComponent extends BaseComponent implements OnInit {
     @Input() public isMarkdownEditView: boolean;
-    @Input() public markdownText: any;
     @Input() public datasetBasics?: DatasetBasicsFragment;
-    @Input() public resultUnitText: string;
     @Output() onToggleReadmeViewEmit: EventEmitter<null> = new EventEmitter();
     @Output() onSelectTopicEmit: EventEmitter<string> = new EventEmitter();
 

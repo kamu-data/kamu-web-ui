@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import {
     Account,
     MetadataBlockFragment,
@@ -6,32 +6,16 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
-import { TableSourceInterface } from "../dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-overview-history-summary-header",
     templateUrl: "./overview-history-summary-header.component.html",
     styleUrls: ["./overview-history-summary-header.component.sass"],
 })
-export class OverviewHistorySummaryHeaderComponent implements OnInit {
-    @Input() public tableSource?: TableSourceInterface;
-    @Input() public resultUnitText: string;
+export class OverviewHistorySummaryHeaderComponent {
     @Input() public metadataBlockFragment?: MetadataBlockFragment;
-    @Input() public hasResultQuantity?: boolean = false;
-    @Input() public numBlocksTotal?: number;
+    @Input() public numBlocksTotal: number;
     public appLogo = `/${AppValues.appLogo}`;
-
-    constructor() {}
-
-    ngOnInit(): void {}
-
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    public searchResultQuantity(tableSource: any[] = []): string {
-        if (!Array.isArray(tableSource)) {
-            return "0";
-        }
-        return tableSource.length.toString();
-    }
 
     get systemTime(): Scalars["DateTime"] {
         return this.metadataBlockFragment
@@ -56,12 +40,14 @@ export class OverviewHistorySummaryHeaderComponent implements OnInit {
     }
 
     get shortHash(): string {
-        return DataHelpers.shortHash(this.systemTime);
+        return DataHelpers.shortHash(this.blockHash);
     }
 
     get descriptionForMetadataBlock(): string {
-        return DataHelpers.descriptionForMetadataBlock(
-            this.metadataBlockFragment || null,
-        );
+        return this.metadataBlockFragment
+            ? DataHelpers.descriptionForMetadataBlock(
+                  this.metadataBlockFragment,
+              )
+            : "";
     }
 }

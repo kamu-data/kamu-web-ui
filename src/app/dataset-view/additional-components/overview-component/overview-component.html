@@ -33,11 +33,8 @@
                 </div>
             </div>
             <app-overview-history-summary-header
-            [hasResultQuantity]="false"
-            [tableSource]="currentState.data"
-            [resultUnitText]="resultUnitText"
-            [metadataBlockFragment]="metadataFragmentBlock"
-            [numBlocksTotal]="currentState.overview.metadata.chain.blocks.totalCount || 0"
+                [metadataBlockFragment]="metadataFragmentBlock"
+                [numBlocksTotal]="currentState.overview.metadata.chain.blocks.totalCount || 0"
             ></app-overview-history-summary-header>
             <app-dynamic-table
                 [hasTableHeader]="true"
@@ -174,8 +171,8 @@
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
                                 {{ currentState?.size?.estimatedSize ?
-                                    dataSize(currentState.size.estimatedSize)
-                                : "-" }}
+                                dataSize(currentState.size.estimatedSize) : "-"
+                                }}
                             </p>
                         </div>
                     </div>
@@ -198,7 +195,8 @@
                             <time
                                 class="dataset-info--text"
                                 [title]="currentState.overview.createdAt"
-                                >{{ relativeTime(currentState.overview.createdAt) }}
+                                >{{
+                                relativeTime(currentState.overview.createdAt) }}
                             </time>
                         </div>
                     </div>
@@ -212,7 +210,9 @@
                             <time
                                 class="dataset-info--text"
                                 [title]="currentState.overview.lastUpdatedAt"
-                                >{{ relativeTime(currentState.overview.lastUpdatedAt) }}
+                                >{{
+                                relativeTime(currentState.overview.lastUpdatedAt)
+                                }}
                             </time>
                         </div>
                     </div>
@@ -228,7 +228,8 @@
                                 class="dataset-info--text"
                                 [title]="currentState.overview.metadata.currentWatermark"
                                 >{{
-                                    relativeTime(currentState.overview.metadata.currentWatermark) }}
+                                relativeTime(currentState.overview.metadata.currentWatermark)
+                                }}
                             </time>
                         </div>
                     </div>

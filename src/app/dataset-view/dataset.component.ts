@@ -7,7 +7,6 @@ import {
     ViewEncapsulation,
 } from "@angular/core";
 import { DatasetKindInterface } from "../interface/search.interface";
-import AppValues from "../common/app.values";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
 import {
     DatasetNavigationInterface,
@@ -53,7 +52,6 @@ export class DatasetComponent
     public linageGraphClusters: ClusterNode[] = [];
     public isAvailableLinageGraph = false;
     public isMarkdownEditView = false;
-    public markdownText = AppValues.markdownContain;
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
@@ -140,10 +138,6 @@ export class DatasetComponent
                 params.currentPage,
             );
         }
-    }
-
-    public getResultUnitText(): string {
-        return `results in ${this.datasetBasics?.name || ""}`;
     }
 
     public onClickSearchAdditionalButton(method: string) {
@@ -458,7 +452,7 @@ export class DatasetComponent
         this.datasetViewType = this.getDatasetViewTypeFromUrl();
 
         this.appDatasetService.resetDatasetTree();
-       
+
         mapperTabs[this.datasetViewType]();
     }
 
@@ -480,7 +474,10 @@ export class DatasetComponent
     }
 
     private getDatasetViewTypeFromUrl(): DatasetViewTypeEnum {
-        const tabValue: string | null = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.urlQueryParamTab);
+        const tabValue: string | null =
+            this.activatedRoute.snapshot.queryParamMap.get(
+                ProjectLinks.urlQueryParamTab,
+            );
         if (tabValue) {
             const tab = tabValue as DatasetViewTypeEnum;
             if (Object.values(DatasetViewTypeEnum).includes(tab)) {
@@ -488,7 +485,7 @@ export class DatasetComponent
             }
             console.error(`Unrecognized tab '${tabValue}'`);
         }
-        
+
         return DatasetViewTypeEnum.Overview;
     }
 

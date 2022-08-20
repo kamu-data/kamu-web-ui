@@ -1,4 +1,6 @@
+import { DatasetKind } from "./../../../api/kamu.graphql.interface";
 import {
+    ChangeDetectionStrategy,
     Component,
     EventEmitter,
     Input,
@@ -7,7 +9,7 @@ import {
     ViewEncapsulation,
 } from "@angular/core";
 import { BaseComponent } from "src/app/common/base.component";
-import { DataHelpersService } from "src/app/services/datahelpers.service";
+import { DataHelpers } from "src/app/common/data.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 import {
     DatasetBasicsFragment,
@@ -22,12 +24,11 @@ import { AppDatasetSubsService } from "../../datasetSubs.service";
     selector: "app-overview",
     templateUrl: "overview-component.html",
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewComponent extends BaseComponent implements OnInit {
     @Input() public isMarkdownEditView: boolean;
-    @Input() public markdownText: any;
     @Input() public datasetBasics?: DatasetBasicsFragment;
-    @Input() public resultUnitText: string;
     @Output() onToggleReadmeViewEmit: EventEmitter<null> = new EventEmitter();
     @Output() onSelectTopicEmit: EventEmitter<string> = new EventEmitter();
 
@@ -38,7 +39,6 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     };
 
     constructor(
-        public dataHelpers: DataHelpersService,
         private appDatasetSubsService: AppDatasetSubsService,
         private navigationService: NavigationService,
     ) {
@@ -71,9 +71,21 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         this.onSelectTopicEmit.emit(topicName);
     }
 
+    public datasetKind(kind: DatasetKind): string {
+        return DataHelpers.datasetKind(kind);
+    }
+
     get metadataFragmentBlock(): MetadataBlockFragment | undefined {
         return this.currentState
             ? this.currentState.overview.metadata.chain.blocks.nodes[0]
             : undefined;
+    }
+
+    public dataSize(estimatedSize: number): string {
+        return DataHelpers.dataSize(estimatedSize);
+    }
+
+    public relativeTime(time: string): string {
+        return DataHelpers.relativeTime(time, { w: 1 });
     }
 }

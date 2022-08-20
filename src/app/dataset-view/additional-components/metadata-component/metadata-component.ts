@@ -1,3 +1,4 @@
+import { DataHelpers } from "src/app/common/data.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DataViewSchema } from "../../../interface/search.interface";
@@ -6,12 +7,10 @@ import { AppDatasetSubsService } from "../../datasetSubs.service";
 import { MetadataSchemaUpdate } from "../../datasetSubs.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import {
-    Dataset,
     DatasetBasicsFragment,
     DatasetMetadataDetailsFragment,
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
-import { DataHelpersService } from "src/app/services/datahelpers.service";
 
 @Component({
     selector: "app-metadata",
@@ -49,7 +48,6 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     };
 
     constructor(
-        private dataHelpers: DataHelpersService,
         private appDatasetSubsService: AppDatasetSubsService,
         private navigationService: NavigationService,
     ) {
@@ -102,7 +100,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
 
     public get latestBlockhash(): string {
         return this.currentState
-            ? this.dataHelpers.shortHash(
+            ? DataHelpers.shortHash(
                   this.currentState.metadata.chain.blocks.nodes[0].blockHash,
               )
             : "";

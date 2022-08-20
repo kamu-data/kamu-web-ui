@@ -126,7 +126,7 @@
             <div class="repo-list-container__additional-block mt-2">
                 <p class="text-small color-text-secondary mr-3">
                     Updated
-                    {{ dataHelpers.relativeTime(row.lastUpdatedAt) }}
+                    {{ getRelativeTime(row.lastUpdatedAt) }}
                 </p>
                 <ngb-rating [rate]="4.5" [max]="5" [readonly]="true">
                     <ng-template let-fill="fill">

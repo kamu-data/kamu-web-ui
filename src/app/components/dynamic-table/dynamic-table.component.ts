@@ -9,12 +9,6 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import {
-    Account,
-    MetadataBlockFragment,
-    Scalars,
-} from "src/app/api/kamu.graphql.interface";
-import { DataHelpersService } from "src/app/services/datahelpers.service";
 import AppValues from "../../common/app.values";
 import { TableSourceInterface } from "./dynamic-table.interface";
 
@@ -30,12 +24,6 @@ export class DynamicTableComponent
 {
     @Input() public hasTableHeader: boolean;
     @Input() public tableSource?: TableSourceInterface;
-
-    @Input() public metadataBlockFragment?: MetadataBlockFragment;
-    @Input() public numBlocksTotal?: number;
-
-    @Input() public hasResultQuantity?: boolean = false;
-    @Input() public resultUnitText: string;
     @Input() public idTable = "";
     @Output() public onSelectRowEmit: EventEmitter<string> = new EventEmitter();
 
@@ -43,7 +31,7 @@ export class DynamicTableComponent
     public dataSource = new MatTableDataSource<any>(ELEMENT_DATA);
     public displayedColumns: string[] = [];
 
-    constructor(public dataHelpers: DataHelpersService) {}
+    constructor() {}
 
     public ngOnInit(): void {
         this.tableSource && this.renderTable(this.tableSource);
@@ -91,31 +79,5 @@ export class DynamicTableComponent
         });
         this.dataSource.data = dataSource;
         this.dataSource = new MatTableDataSource(dataSource);
-    }
-
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    public searchResultQuantity(tableSource: any[] = []): string {
-        if (!Array.isArray(tableSource)) {
-            return "0";
-        }
-        return tableSource.length.toString();
-    }
-
-    get systemTime(): Scalars["DateTime"] {
-        return this.metadataBlockFragment
-            ? this.metadataBlockFragment.systemTime
-            : "";
-    }
-
-    get authorInfo(): Account {
-        return this.metadataBlockFragment
-            ? this.metadataBlockFragment.author
-            : { id: "", name: AppValues.defaultUsername };
-    }
-
-    get blockHash(): Scalars["Multihash"] {
-        return this.metadataBlockFragment
-            ? this.metadataBlockFragment.blockHash
-            : "";
     }
 }

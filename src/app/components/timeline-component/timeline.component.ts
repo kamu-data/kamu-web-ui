@@ -1,25 +1,23 @@
 import { NavigationService } from "src/app/services/navigation.service";
-import { Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import AppValues from "../../common/app.values";
-import { DataHelpersService } from "src/app/services/datahelpers.service";
 import {
     MetadataBlockFragment,
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
+import { DataHelpers } from "src/app/common/data.helpers";
 
 @Component({
     selector: "app-timeline",
     templateUrl: "./timeline.component.html",
     styleUrls: ["timeline.component.sass"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimelineComponent {
     @Input() public history: MetadataBlockFragment[];
     @Input() public pageInfo: PageBasedInfo;
 
-    constructor(
-        public dataHelpers: DataHelpersService,
-        private navigationService: NavigationService,
-    ) {}
+    constructor(private navigationService: NavigationService) {}
 
     public navigateToOwnerView(ownerName: string): void {
         this.navigationService.navigateToOwnerView(ownerName);
@@ -32,7 +30,18 @@ export class TimelineComponent {
             isTextDate: true,
         });
     }
+
+    public descriptionForMetadataBlock(block: MetadataBlockFragment): string {
+        return DataHelpers.descriptionForMetadataBlock(block);
+    }
+
+    public relativeTime(time: string): string {
+        return DataHelpers.relativeTime(time);
+    }
+
     public shortHash(hash: string): string {
-        return hash.slice(-8);
+        console.log("sssss");
+
+        return DataHelpers.shortHash(hash);
     }
 }

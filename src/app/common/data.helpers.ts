@@ -1,28 +1,25 @@
 import AppValues from "src/app/common/app.values";
-import { Injectable } from "@angular/core";
 import * as moment from "moment-timezone";
 import {
     DatasetKind,
     MetadataBlockFragment,
-    MetadataEvent,
 } from "../api/kamu.graphql.interface";
 
-@Injectable()
-export class DataHelpersService {
-    public datasetKind(kind: DatasetKind): string {
+export class DataHelpers {
+    public static datasetKind(kind: DatasetKind): string {
         return kind.charAt(0).toUpperCase() + kind.slice(1).toLowerCase();
     }
 
-    public shortHash(hash: string): string {
+    public static shortHash(hash: string): string {
         return hash.slice(-8);
     }
 
-    public dateTime(rfc3339: string): string {
+    public static dateTime(rfc3339: string): string {
         const dt = moment(rfc3339);
         return dt.format(AppValues.displayDateFormat);
     }
 
-    public relativeTime(
+    public static relativeTime(
         rfc3339: string,
         threshold?: moment.argThresholdOpts,
     ): string {
@@ -51,11 +48,11 @@ export class DataHelpersService {
      *
      * @return Formatted string.
      */
-    public dataSize(
+    public static dataSize(
         bytes: number,
         si: boolean = false,
         decimal_places: number = 1,
-    ) {
+    ): string {
         const thresh = si ? 1000 : 1024;
 
         if (Math.abs(bytes) < thresh) {
@@ -79,7 +76,9 @@ export class DataHelpersService {
         return bytes.toFixed(decimal_places) + " " + units[u];
     }
 
-    public descriptionForMetadataBlock(block: MetadataBlockFragment): string {
+    public static descriptionForMetadataBlock(
+        block: MetadataBlockFragment,
+    ): string {
         const event = block.event;
         switch (event.__typename) {
             case "AddData":

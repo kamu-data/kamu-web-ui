@@ -31,6 +31,8 @@ a
   align-items: center
 .card--row
   padding: 11px
+.table-header-background
+  background-color: $app--color-table-header-bg
 #dataset-viewer
   & .dataset-info
     display: grid
@@ -179,7 +181,7 @@ a
     transition: all .5s linear
     line-height: 150px
   & .active-search-input
-      width: 100%
+    width: 100%
   & ngb-typeahead-window
     width: 100%
     line-height: 1
@@ -220,7 +222,7 @@ a:visited
   & *
     color: $app-primary
   & .navbar-nav
-      margin: auto
+    margin: auto
 
 .Details:not(.Details--on) .Details-content--hidden-not-important
   display: none
@@ -274,7 +276,7 @@ a:visited
   a:visited
     color: inherit
 router-outlet
-  display: none
+    display: none
 .app-content__card-columns
   column-count: 1
   grid-column-gap: 1.25rem
@@ -428,15 +430,15 @@ router-outlet
       &:hover, &:focus, &:active
         text-decoration: underline
 .search-result-container__content
-    overflow: auto
-    padding: 20px 28px
-    background: $app-white
-    border: 1px solid $app-veryLightGray
-    box-sizing: border-box
-    box-shadow: 0px 5px 4px $app-versatileBusinessDark
-    border-radius: 8px
-    & [data-test-id="searchInput"]
-      height: 50px
+  overflow: auto
+  padding: 20px 28px
+  background: $app-white
+  border: 1px solid $app-veryLightGray
+  box-sizing: border-box
+  box-shadow: 0px 5px 4px $app-versatileBusinessDark
+  border-radius: 8px
+  & [data-test-id="searchInput"]
+    height: 50px
 .datasetViewTypeToggleGroup
   width: 100%
   overflow: auto
@@ -482,11 +484,11 @@ router-outlet
     color: $app-white
 
 #searchInput.searchSidenav .input-group > [data-test-id="searchInput"].form-control
-    background: $app-white
-    color: $app-emperor
-    box-shadow: 0px 5px 4px $app-versatileBusinessDark
-    &::placeholder
-      color: $app-white
+  background: $app-white
+  color: $app-emperor
+  box-shadow: 0px 5px 4px $app-versatileBusinessDark
+  &::placeholder
+    color: $app-white
 .input-group > [data-test-id="searchInput"].form-control
   border-radius: 0.25rem
   border-color: transparent
@@ -541,8 +543,8 @@ router-outlet
       border-radius: 6px
 
 .searchAdditionalButtons__nav
-    justify-content: end
-    align-items: end
+  justify-content: end
+  align-items: end
 .searchAdditionalButtonsMinimizeBlock
   & ul
     background: $app-white
@@ -630,26 +632,26 @@ router-outlet
 // MODAL MODULE
 
 .modal__dialog, .modal__bigtest-dialog
-    margin: 0 auto
-    background: white
-    box-sizing: border-box
+  margin: 0 auto
+  background: white
+  box-sizing: border-box
     //width: 70%
-    max-width: 300px
-    min-height: 80px
-    border: 1px solid $app-nero
-    border-radius: 4px
-    text-align: center
-    opacity: 0
-    transition: transform 1s linear
-    animation: ani 1.5s forwards
+  max-width: 300px
+  min-height: 80px
+  border: 1px solid $app-nero
+  border-radius: 4px
+  text-align: center
+  opacity: 0
+  transition: transform 1s linear
+  animation: ani 1.5s forwards
 .modal__dialog__header-block
   width: 100%
   padding: 1.5em
 .modal__dialog__footer-block
   width: 100%
 .modal__content .modal__bigtest-dialog
-    width: 90vw
-    max-width: none
+  width: 90vw
+  max-width: none
 @keyframes ani
   0%
     opacity: 0
@@ -658,165 +660,165 @@ router-outlet
     opacity: 1
     transform: translateY(0%)
 .modal__bigtext-block
-    display: block
-    width: 100%
-    height: 60vh
-    overflow-y: scroll
-    margin-bottom: 26px
+  display: block
+  width: 100%
+  height: 60vh
+  overflow-y: scroll
+  margin-bottom: 26px
 .modal__bigtext-block__container
-    text-align: left
-    font-size: 14pt
-    font-family: "Helvetica Neue"
-    a
-        color: #0087ff
-        text-decoration: underline
-        vertical-align: baseline
-        text-decoration-skip-ink: none
-        font-style: normal
+  text-align: left
+  font-size: 14pt
+  font-family: "Helvetica Neue"
+  a
+    color: #0087ff
+    text-decoration: underline
+    vertical-align: baseline
+    text-decoration-skip-ink: none
+    font-style: normal
 
 .modal__header
-    font-size: 1.25em
-    margin-bottom: 1em
+  font-size: 1.25em
+  margin-bottom: 1em
 
 .modal__header-black
-    @extend .modal__header
-    color: black
-    font-size: 1.4em
+  @extend .modal__header
+  color: black
+  font-size: 1.4em
 
 .modal__header-error
-    @extend .modal__header
-    color: red
+  @extend .modal__header
+  color: red
 
 .modal__header-warning
-    @extend .modal__header
-    color: $warning
+  @extend .modal__header
+  color: $warning
 
 .modal__header-ok
-    @extend .modal__header
-    color: darkgreen
+  @extend .modal__header
+  color: darkgreen
 
 .modal__header-info
-    @extend .modal__header
-    color: #4494ff
+  @extend .modal__header
+  color: #4494ff
 .link-green
-    color: $green-100
-    &__inline
-        border-bottom: 1px $green-100 solid
+  color: $green-100
+  &__inline
+    border-bottom: 1px $green-100 solid
 .cache-modal
-    &__content
-        flex-direction: column
-        justify-content: center
-        align-items: center
-        position: fixed
-        right: 0
-        left: 0
-        bottom: 0
-        display: flex
-        z-index: 2000
-        max-width: 560px
-        min-width: 320px
-        margin: 0 auto
-        background: white
-        box-sizing: border-box
-        border: 1px solid #c9c7cb
-        &__header
-            width: 100%
-            text-align: right
-        &__dialog
-            margin: 0
-            text-align: center
-            width: 100%
-            &__privacy-policy-text
-                margin: 20px 2%
-                > a
-                    @extend .link-green
-                    @extend .link-green__inline
-    &__close-btn
-        background: transparent
-        border: none
-        cursor: pointer
-        display: flex
-        justify-content: flex-end
-        align-items: center
-        color: $app-nero
-        font-size: 24px
-        width: 100%
-.base_modal__content
-    background: #0000007a
+  &__content
     flex-direction: column
     justify-content: center
     align-items: center
     position: fixed
-    top: 0
     right: 0
     left: 0
+    bottom: 0
     display: flex
-
-.modal__content
-    @extend .base_modal__content
-    bottom: 0
     z-index: 2000
-.modal__content__unsupported-account
-    @extend .base_modal__content
-    bottom: 0
-    z-index: 1001
-
-.modal__body
-    @extend .text-center
+    max-width: 560px
+    min-width: 320px
     margin: 0 auto
     background: white
-    width: 70%
-    max-width: 320px
-    min-height: 80px
-    padding: 1.5em 2em 1em
-    border-radius: 20px
+    box-sizing: border-box
+    border: 1px solid #c9c7cb
+    &__header
+      width: 100%
+      text-align: right
+      &__dialog
+        margin: 0
+        text-align: center
+        width: 100%
+        &__privacy-policy-text
+          margin: 20px 2%
+          > a
+            @extend .link-green
+            @extend .link-green__inline
+    &__close-btn
+      background: transparent
+      border: none
+      cursor: pointer
+      display: flex
+      justify-content: flex-end
+      align-items: center
+      color: $app-nero
+      font-size: 24px
+      width: 100%
+.base_modal__content
+  background: #0000007a
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  position: fixed
+  top: 0
+  right: 0
+  left: 0
+  display: flex
+
+.modal__content
+  @extend .base_modal__content
+  bottom: 0
+  z-index: 2000
+.modal__content__unsupported-account
+  @extend .base_modal__content
+  bottom: 0
+  z-index: 1001
+
+.modal__body
+  @extend .text-center
+  margin: 0 auto
+  background: white
+  width: 70%
+  max-width: 320px
+  min-height: 80px
+  padding: 1.5em 2em 1em
+  border-radius: 20px
 
 .modal__img
-    display: flex
-    width: auto
-    padding: 0 0 1em
-    min-width: 30%
-    min-height: 13%
-    position: relative
-    background: url(./assets/icons/loadinfo.net.gif) no-repeat center
-    & img
-        max-height: calc(100vh - 180px)
-        max-width: 100%
-        margin: 0 auto
+  display: flex
+  width: auto
+  padding: 0 0 1em
+  min-width: 30%
+  min-height: 13%
+  position: relative
+  background: url(./assets/icons/loadinfo.net.gif) no-repeat center
+  & img
+    max-height: calc(100vh - 180px)
+    max-width: 100%
+    margin: 0 auto
     //& .modal__btn
     //    position: absolute
     //    bottom: 0
     //    left: calc(50%)
     //    transform: translateX(-40px)
 .modal__dialog__unsupported-account
-    @extend .modal__dialog
-    & a
-        color: $blue
+  @extend .modal__dialog
+  & a
+    color: $blue
 
 .modal__msg
-    margin: 1em 0
-    word-break: break-word
+  margin: 1em 0
+  word-break: break-word
 .button__default
-    background-color: white
-    @extend .button
-    @extend %border-gray
+  background-color: white
+  @extend .button
+  @extend %border-gray
 
 .modal__btn
-    @extend .button__default
-    border-radius: 0px 0px 4px 4px
-    min-width: 100%
-    font-weight: bold
+  @extend .button__default
+  border-radius: 0px 0px 4px 4px
+  min-width: 100%
+  font-weight: bold
 
 .modal__btn-first
-    width: 100%
-    margin: 0
+  width: 100%
+  margin: 0
 
 .modal__btn-last
-    @extend .modal__btn-first
-    margin-top: 1em
+  @extend .modal__btn-first
+  margin-top: 1em
 
 .upload
-    background-color: black
+  background-color: black
 #more-button
   background: $app-white
   border: 1px solid $app-veryLightGray
@@ -825,28 +827,28 @@ router-outlet
   border-radius: 8px
   color: $app-emperor
 .button
-    height: 40px
-    cursor: pointer
-    font-family: 'Avenir', sans-serif
-    &:focus
-        outline: none
+  height: 40px
+  cursor: pointer
+  font-family: 'Avenir', sans-serif
+  &:focus
+    outline: none
     &[disabled]
-        opacity: 0.7
+      opacity: 0.7
     & img
-        height: 100%
+      height: 100%
     & .fa
-        color: inherit
+      color: inherit
     &:active
-        background: linear-gradient(to bottom, rgba(204,204,204,0.8) 100%, #eee 0%)
+      background: linear-gradient(to bottom, rgba(204,204,204,0.8) 100%, #eee 0%)
 /******** MIXINZ ********/
 %border-none
-    border: 0px
+  border: 0px
 %border-gray
-    border: 1px solid $verylightgrey
+  border: 1px solid $verylightgrey
 %border-green
-    border-radius: 5px
-    border: 1px solid #CEE794
+  border-radius: 5px
+  border: 1px solid #CEE794
 %border-darkgreentea
-    border: 1px solid $darkgreentea
+  border: 1px solid $darkgreentea
 %button-gradient
-    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(237,237,237,1) 100%)
+  background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(237,237,237,1) 100%)

@@ -1,14 +1,21 @@
+import { DataHelpers } from "src/app/common/data.helpers";
 import { DatasetInfo } from "./../../interface/navigation.interface";
 import { NavigationService } from "./../../services/navigation.service";
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+} from "@angular/core";
 import { ModalService } from "../modal/modal.service";
-import { DataHelpersService } from "src/app/services/datahelpers.service";
 import { Dataset } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-repo-list",
     templateUrl: "./repo-list.component.html",
     styleUrls: ["./repo-list.sass"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RepoListComponent {
     @Input() public dataSource: Dataset[];
@@ -26,7 +33,6 @@ export class RepoListComponent {
 
     constructor(
         private modalService: ModalService,
-        public dataHelpers: DataHelpersService,
         public navigationService: NavigationService,
     ) {}
 
@@ -39,6 +45,10 @@ export class RepoListComponent {
             datasetName: row.name,
             accountName: row.owner?.name,
         });
+    }
+
+    public getRelativeTime(time: string): string {
+        return DataHelpers.relativeTime(time);
     }
 
     public searchResultQuantity(dataSource: Dataset[] = []): string {

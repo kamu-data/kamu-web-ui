@@ -32,13 +32,13 @@
                     </mat-chip-list>
                 </div>
             </div>
-            <app-dynamic-table
-                [hasResultQuantity]="false"
-                [resultUnitText]="resultUnitText"
-                [hasTableHeader]="true"
-                [tableSource]="currentState.data"
+            <app-overview-history-summary-header
                 [metadataBlockFragment]="metadataFragmentBlock"
                 [numBlocksTotal]="currentState.overview.metadata.chain.blocks.totalCount || 0"
+            ></app-overview-history-summary-header>
+            <app-dynamic-table
+                [hasTableHeader]="true"
+                [tableSource]="currentState.data"
             ></app-dynamic-table>
             <div id="file-readme-dataset-template-md" class="file my-4">
                 <div class="file-header d-flex align-items-center">
@@ -126,8 +126,7 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ dataHelpers.datasetKind(datasetBasics.kind)
-                                }}
+                                {{ datasetKind(datasetBasics.kind) }}
                             </p>
                         </div>
                     </div>
@@ -172,8 +171,8 @@
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
                                 {{ currentState?.size?.estimatedSize ?
-                                dataHelpers.dataSize(currentState.size.estimatedSize)
-                                : "-" }}
+                                dataSize(currentState.size.estimatedSize) : "-"
+                                }}
                             </p>
                         </div>
                     </div>
@@ -197,8 +196,7 @@
                                 class="dataset-info--text"
                                 [title]="currentState.overview.createdAt"
                                 >{{
-                                dataHelpers.relativeTime(currentState.overview.createdAt,
-                                {w:1}) }}
+                                relativeTime(currentState.overview.createdAt) }}
                             </time>
                         </div>
                     </div>
@@ -213,8 +211,8 @@
                                 class="dataset-info--text"
                                 [title]="currentState.overview.lastUpdatedAt"
                                 >{{
-                                dataHelpers.relativeTime(currentState.overview.lastUpdatedAt,
-                                {w:1}) }}
+                                relativeTime(currentState.overview.lastUpdatedAt)
+                                }}
                             </time>
                         </div>
                     </div>
@@ -230,8 +228,8 @@
                                 class="dataset-info--text"
                                 [title]="currentState.overview.metadata.currentWatermark"
                                 >{{
-                                dataHelpers.relativeTime(currentState.overview.metadata.currentWatermark,
-                                {w: 1}) }}
+                                relativeTime(currentState.overview.metadata.currentWatermark)
+                                }}
                             </time>
                         </div>
                     </div>

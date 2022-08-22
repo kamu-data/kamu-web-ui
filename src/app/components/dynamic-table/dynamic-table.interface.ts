@@ -1,3 +1,6 @@
-import { DataSchemaField } from "../../interface/search.interface";
+import {
+    DataSchemaField,
+    OverviewSchemaField,
+} from "../../interface/search.interface";
 
-export type TableSourceInterface = Object[] | DataSchemaField[];
+export type TableSourceInterface = OverviewSchemaField[] | DataSchemaField[];

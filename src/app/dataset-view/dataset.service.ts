@@ -1,6 +1,7 @@
+import { DataBatch } from "./../api/kamu.graphql.interface";
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { Injectable } from "@angular/core";
-import { Observable, Subject, Subscription, throwError } from "rxjs";
+import { Observable, Subject, Subscription } from "rxjs";
 import { SearchApi } from "../api/search.api";
 import {
     DatasetKindInterface,
@@ -17,7 +18,6 @@ import {
     GetDatasetHistoryQuery,
     GetDatasetLineageQuery,
     GetDatasetMetadataSchemaQuery,
-    Maybe,
     MetadataBlockFragment,
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
@@ -84,7 +84,9 @@ export class AppDatasetService {
     private datasetTree: DatasetKindInterface[][] = [];
     private datasetKindInfo: DatasetKindInterface[] = [];
 
-    private static parseContentOfDataset(data: DatasetOverviewQuery): Object[] {
+    private static parseContentOfDataset(
+        data: DatasetOverviewQuery,
+    ): DataBatch {
         return data.datasets.byOwnerAndName
             ? JSON.parse(data.datasets?.byOwnerAndName?.data.tail.data.content)
             : [];
@@ -154,7 +156,7 @@ export class AppDatasetService {
                     );
                 this.searchDatasetInfoChanges(dataset);
 
-                const content: Object[] =
+                const content: DataBatch =
                     AppDatasetService.parseContentOfDataset(data);
                 const schema: DataViewSchema = JSON.parse(
                     data.datasets.byOwnerAndName.metadata.currentSchema.content,
@@ -177,7 +179,7 @@ export class AppDatasetService {
                     );
                 this.searchDatasetInfoChanges(dataset);
 
-                const content: Object[] =
+                const content: any =
                     AppDatasetService.parseContentOfDataset(data);
                 const overview: DatasetOverviewFragment =
                     _.cloneDeep<DatasetOverviewFragment>(
@@ -227,7 +229,7 @@ export class AppDatasetService {
                     history:
                         (data.datasets.byOwnerAndName?.metadata.chain.blocks
                             .nodes as MetadataBlockFragment[]) || [],
-                    pageInfo: pageInfo,
+                    pageInfo,
                 };
                 this.appDatasetSubsService.changeDatasetHistory(historyUpdate);
             });
@@ -270,7 +272,7 @@ export class AppDatasetService {
     public onGetDatasetDataSQLRun(query: string, limit: number): void {
         this.searchApi.onGetDatasetDataSQLRun({ query, limit }).subscribe(
             (data: GetDatasetDataSqlRunQuery) => {
-                const content: Object[] = data.data?.query.data
+                const content: any = data.data?.query.data
                     ? JSON.parse(data.data?.query.data.content)
                     : "";
                 const schema: DataViewSchema = data.data.query.schema
@@ -316,6 +318,7 @@ export class AppDatasetService {
         const tree: DatasetKindInterface[][] = [];
         const origin = lineage.datasets.byOwnerAndName;
         this.updateDatasetTreeRec(tree, origin);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.datasetTreeChange(tree, origin);
     }

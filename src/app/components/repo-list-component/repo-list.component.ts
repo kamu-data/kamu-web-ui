@@ -61,6 +61,7 @@ export class RepoListComponent {
         this.modalService.warning({
             message: "Feature coming soon",
             yesButtonText: "Ok",
+            title: topicName,
         });
     }
 }

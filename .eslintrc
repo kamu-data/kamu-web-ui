@@ -6,12 +6,15 @@
     },
     "extends": [
         "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "plugins": [
         "@typescript-eslint"
     ],
-    "rules": {},
-    "ignorePatterns": ["ngx-graph", "node_modules", "src/**/**.spec.ts"]
+    "rules": {
+        "no-bitwise": 0
+    },
+    "ignorePatterns": ["ngx-graph", "node_modules", "src/**/**.spec.ts", "kamu.graphql.interface.ts"]
 }

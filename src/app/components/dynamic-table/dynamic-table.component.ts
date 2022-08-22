@@ -31,8 +31,6 @@ export class DynamicTableComponent
     public dataSource = new MatTableDataSource<any>(ELEMENT_DATA);
     public displayedColumns: string[] = [];
 
-    constructor() {}
-
     public ngOnInit(): void {
         this.tableSource && this.renderTable(this.tableSource);
     }

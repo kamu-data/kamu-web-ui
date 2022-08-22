@@ -52,33 +52,45 @@ export class ModalService {
         });
     }
 
-    public success(options: ModalArgumentsInterface): Promise<{}> {
+    public success(
+        options: ModalArgumentsInterface,
+    ): Promise<ModalArgumentsInterface> {
         return this._showDialog(Object.assign(options, { status: "ok" }));
     }
 
-    public warning(options: ModalArgumentsInterface): Promise<{}> {
+    public warning(
+        options: ModalArgumentsInterface,
+    ): Promise<ModalArgumentsInterface> {
         return this._showDialog(Object.assign(options, { status: "warning" }));
     }
 
-    public error(options: ModalArgumentsInterface): Promise<{}> {
+    public error(
+        options: ModalArgumentsInterface,
+    ): Promise<ModalArgumentsInterface> {
         return this._showDialog(Object.assign(options, { status: "error" }));
     }
 
-    public dialog_question(options: ModalArgumentsInterface): Promise<{}> {
+    public dialog_question(
+        options: ModalArgumentsInterface,
+    ): Promise<ModalArgumentsInterface> {
         return this._showDialog(
             Object.assign(options, { status: "dialog_question" }),
         );
     }
 
-    public filter_modal(options: ModalArgumentsInterface): Promise<{}> {
+    public filter_modal(
+        options: ModalArgumentsInterface,
+    ): Promise<ModalArgumentsInterface> {
         return this._showFilter(
             Object.assign(options, { status: "filter_modal" }),
         );
     }
 
-    private _showDialog(context: ModalArgumentsInterface): Promise<{}> {
+    private _showDialog(
+        context: ModalArgumentsInterface,
+    ): Promise<ModalArgumentsInterface> {
         if (context.message === "Check the Internet connection") {
-            return new Promise((resolve) => {});
+            return new Promise(() => null);
         }
         this.showModal$.next({
             type: "dialog",
@@ -91,7 +103,9 @@ export class ModalService {
         });
     }
 
-    private _showFilter(context: ModalArgumentsInterface): Promise<{}> {
+    private _showFilter(
+        context: ModalArgumentsInterface,
+    ): Promise<ModalArgumentsInterface> {
         this.showModal$.next({
             type: "filter",
             context,

@@ -1,5 +1,6 @@
 import {
     Component,
+    ElementRef,
     HostListener,
     Input,
     OnInit,
@@ -20,7 +21,7 @@ import { SideNavService } from "../../services/sidenav.service";
 })
 export class DatasetViewMenuComponent implements OnInit {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
-    @ViewChild("menuTrigger") trigger: any;
+    @ViewChild("menuTrigger") trigger: ElementRef;
 
     @Input() datasetNavigation: DatasetNavigationInterface;
     @Input() datasetViewType: DatasetViewTypeEnum;
@@ -59,23 +60,29 @@ export class DatasetViewMenuComponent implements OnInit {
 
         if (currentEvent !== null) {
             setTimeout(() => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 // tslint:disable-next-line:no-string-literal
                 currentEvent["children"][0].style.display = "inline-block";
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 // tslint:disable-next-line:no-string-literal
                 currentEvent["children"][1].style.display = "none";
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 // tslint:disable-next-line:no-string-literal
                 currentEvent["classList"].remove("clipboard-btn--success");
             }, 2000);
 
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             // tslint:disable-next-line:no-string-literal
             currentEvent["children"][0].style.display = "none";
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             // tslint:disable-next-line:no-string-literal
             currentEvent["children"][1].style.display = "inline-block";
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             // tslint:disable-next-line:no-string-literal
             currentEvent["classList"].add("clipboard-btn--success");

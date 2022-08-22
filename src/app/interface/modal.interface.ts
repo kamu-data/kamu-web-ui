@@ -6,7 +6,7 @@ import { ModalSpinnerComponent } from "../components/modal/modal-spinner.compone
 
 export interface ModalCommandInterface {
     type: string;
-    context?: ModalArgumentsInterface | {};
+    context?: ModalArgumentsInterface;
     buttonCount: number;
 }
 
@@ -20,8 +20,8 @@ export interface ModalArgumentsInterface {
     noButtonText?: string;
     lastButtonText?: string;
     tooLastButtonText?: string;
-    handler?: Function;
-    data?: any;
+    handler?: (arg: unknown) => void;
+    data?: undefined;
     locationBack?: boolean;
     idFilterButton?: string;
     filter_data?: ModalFilterArgumentInterface[][];

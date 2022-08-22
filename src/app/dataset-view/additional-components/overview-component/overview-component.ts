@@ -33,7 +33,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     @Output() onSelectTopicEmit: EventEmitter<string> = new EventEmitter();
 
     public currentState?: {
-        data: Object[];
+        data: any[];
         overview: DatasetOverviewFragment;
         size: DatasetDataSizeFragment;
     };

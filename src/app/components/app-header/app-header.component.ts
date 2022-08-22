@@ -59,7 +59,7 @@ export class AppHeaderComponent extends BaseComponent {
 
     public defaultUsername: string = AppValues.defaultUsername;
     public isSearchActive = false;
-    public isCollapsedAppHeaderMenu: boolean = false;
+    public isCollapsedAppHeaderMenu = false;
 
     constructor(private appSearchAPI: SearchApi) {
         super();

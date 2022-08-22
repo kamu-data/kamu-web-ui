@@ -1,3 +1,4 @@
+import { DataBatch } from "./../../../api/kamu.graphql.interface";
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DataViewSchema } from "../../../interface/search.interface";
 import DataTabValues from "./mock.data";
@@ -22,9 +23,9 @@ export class DataComponent extends BaseComponent implements OnInit {
         },
     };
     public savedQueries = DataTabValues.savedQueries;
-    public sqlRequestCode: string = `select\n  *\nfrom `;
+    public sqlRequestCode = `select\n  *\nfrom `;
     public currentSchema?: DataViewSchema;
-    public currentData: Object[] = [];
+    public currentData: any;
 
     constructor(private appDatasetSubsService: AppDatasetSubsService) {
         super();
@@ -49,9 +50,8 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     onInitEditor(editor: any): void {
-        let self = this;
-        let runQueryFn = function (_editor: any) {
-            self.onRunSQLRequest();
+        const runQueryFn = () => {
+            this.onRunSQLRequest();
         };
         editor.addAction({
             // An unique identifier of the contributed action.
@@ -59,6 +59,7 @@ export class DataComponent extends BaseComponent implements OnInit {
             // A label of the action that will be presented to the user.
             label: "Run SQL",
             // An optional array of keybindings for the action.
+            // tslint:disable-next-line: no-bitwise
             keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
             // A precondition for this action.
             precondition: null,

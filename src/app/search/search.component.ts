@@ -47,7 +47,7 @@ export class SearchComponent
         { value: "least", label: "Least recently indexed", active: false },
     ];
 
-    public allComplete: boolean = false;
+    public allComplete = false;
     public tableData: {
         tableSource: Dataset[];
         hasResultQuantity: boolean;
@@ -222,7 +222,7 @@ export class SearchComponent
         });
     }
 
-    public onSearch(searchValue: string, page: number = 1): void {
+    public onSearch(searchValue: string, page = 1): void {
         this.appSearchService.search(searchValue, page - 1);
     }
 

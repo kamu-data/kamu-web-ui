@@ -15,9 +15,9 @@ export class AppConfigService {
 
     loadAppConfig() {
         return this.http
-            .get("/assets/runtime-config.json")
+            .get<AppConfig>("/assets/runtime-config.json")
             .toPromise()
-            .then((data: any) => {
+            .then((data: AppConfig) => {
                 data.apiServerGqlUrl = this.toRemoteURL(data.apiServerGqlUrl);
                 this.appConfig = data as AppConfig;
             });
@@ -33,7 +33,7 @@ export class AppConfigService {
 
     // If loopback or any address is used - replace hostname with hostname from the browser
     private toRemoteURL(url: string): string {
-        let turl = new URL(url);
+        const turl = new URL(url);
         if (
             ["localhost", "127.0.0.1", "0.0.0.0", "[::]"].includes(
                 turl.hostname,

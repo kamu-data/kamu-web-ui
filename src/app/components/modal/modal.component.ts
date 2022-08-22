@@ -20,6 +20,7 @@ import { ModalMappingsComponent } from "../../interface/modal.interface";
 import { BaseComponent } from "src/app/common/base.component";
 
 @Component({
+    // tslint:disable-next-line: component-selector
     selector: "modal",
     template: `
         <div
@@ -58,6 +59,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
                 .getCommand()
                 .subscribe((command: ModalCommandInterface) => {
                     if (command.context) {
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
                         command.context.buttonCount = 0;
                         [
@@ -66,8 +68,10 @@ export class ModalComponent extends BaseComponent implements OnInit {
                             "lastButtonText",
                             "tooLastButtonText",
                         ].forEach((btnName: string) => {
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore
                             if (command.context[btnName]) {
+                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                 // @ts-ignore
                                 command.context.buttonCount += 1;
                             }
@@ -98,7 +102,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
         this.componentRef = this.container.createComponent(factory);
 
         const instance = this.componentRef.instance as DynamicComponent;
-        instance.context = Object.assign(command.context, {
+        instance.context = Object.assign(command.context || {}, {
             _close: this._close.bind(this),
         });
 
@@ -106,12 +110,13 @@ export class ModalComponent extends BaseComponent implements OnInit {
     }
 
     _getComponentType(typeName: string) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const type = this.mappings[typeName];
         return type || BlankComponent;
     }
 
-    _handleKBD(type: string) {
+    _handleKBD(type?: string) {
         this.isVisible = true;
         document.addEventListener("keydown", this._processKDB.bind(this));
     }

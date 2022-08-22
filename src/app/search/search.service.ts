@@ -47,9 +47,9 @@ export class AppSearchService {
         this.searchApi
             .searchOverview(searchValue, page)
             .subscribe((data: SearchDatasetsOverviewQuery) => {
-                let datasets: Dataset[] = data.search.query.nodes as Dataset[];
-                let pageInfo = data.search.query.pageInfo;
-                let totalCount: Maybe<Scalars["Int"]> =
+                const datasets: Dataset[] = data.search.query.nodes as Dataset[];
+                const pageInfo = data.search.query.pageInfo;
+                const totalCount: Maybe<Scalars["Int"]> =
                     data.search.query.totalCount;
 
                 this.searchData = {

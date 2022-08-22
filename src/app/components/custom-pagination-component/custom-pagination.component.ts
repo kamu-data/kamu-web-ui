@@ -12,8 +12,8 @@ import {
     styleUrls: ["custom-pagination.component.sass"],
 })
 export class CustomPaginationComponent implements OnChanges {
-    @Input() date: string = "";
-    @Input() hash: string = "";
+    @Input() date = "";
+    @Input() hash = "";
     @Input() pageIndex: number; // current offset
     @Input() limit: number; // record per page
     @Input() total: number; // total records

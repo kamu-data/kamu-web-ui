@@ -40,8 +40,6 @@ export class TimelineComponent {
     }
 
     public shortHash(hash: string): string {
-        console.log("sssss");
-
         return DataHelpers.shortHash(hash);
     }
 }

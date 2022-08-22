@@ -8,14 +8,14 @@ import {
 import { DataViewSchema } from "../interface/search.interface";
 
 export interface OverviewDataUpdate {
-    content: Object[];
+    content: any[];
     overview: DatasetOverviewFragment;
     size: DatasetDataSizeFragment;
 }
 
 export interface DataUpdate {
     schema: DataViewSchema;
-    content: Object[];
+    content: any;
 }
 
 export interface MetadataSchemaUpdate {

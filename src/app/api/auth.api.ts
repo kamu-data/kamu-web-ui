@@ -10,6 +10,7 @@ import {
 import AppValues from "../common/app.values";
 import { FetchResult } from "apollo-link";
 import { Optional } from "../common/app.types";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Injectable()
 export class AuthApi {
@@ -59,7 +60,7 @@ export class AuthApi {
                     this.isAuthUser = true;
                     // this.authApi.getUser(accessToken);
                 },
-                (err: any) => {
+                (err: Response) => {
                     this.isAuthUser = false;
                     localStorage.removeItem(AppValues.localStorageAccessToken);
                     AuthApi.handleError(err);
@@ -69,9 +70,7 @@ export class AuthApi {
     }
 
     public getAccessToken(code: string): Observable<string> {
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
-        // @ts-ignore
-        return this.githubLoginGQL.mutate({ code: code }).pipe(
+        return this.githubLoginGQL.mutate({ code }).pipe(
             map((result: FetchResult<GithubLoginMutation>) => {
                 if (result.data) {
                     const login: GithubLoginMutation = result.data;

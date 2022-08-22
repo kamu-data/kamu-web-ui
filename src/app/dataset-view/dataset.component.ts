@@ -383,20 +383,22 @@ export class DatasetComponent
             this.appDatasetService.onKindInfoChanges.subscribe(
                 (datasetList: DatasetKindInterface[]) => {
                     datasetList.forEach((dataset: DatasetKindInterface) => {
-                        this.lineageGraphClusters = this.lineageGraphClusters.map(
-                            (cluster: ClusterNode) => {
-                                if (
-                                    typeof cluster.childNodeIds === "undefined"
-                                ) {
-                                    cluster.childNodeIds = [];
-                                }
+                        this.lineageGraphClusters =
+                            this.lineageGraphClusters.map(
+                                (cluster: ClusterNode) => {
+                                    if (
+                                        typeof cluster.childNodeIds ===
+                                        "undefined"
+                                    ) {
+                                        cluster.childNodeIds = [];
+                                    }
 
-                                if (cluster.label === dataset.kind) {
-                                    cluster.childNodeIds.push(dataset.id);
-                                }
-                                return cluster;
-                            },
-                        );
+                                    if (cluster.label === dataset.kind) {
+                                        cluster.childNodeIds.push(dataset.id);
+                                    }
+                                    return cluster;
+                                },
+                            );
                     });
                 },
             ),
@@ -405,13 +407,7 @@ export class DatasetComponent
 
     // TODO: Use `String.replaceAll()`
     private sanitizeID(id: string): string {
-        while (true) {
-            const nid = id.replace(":", "");
-            if (nid === id) {
-                return id;
-            }
-            id = nid;
-        }
+        return id.replace(/:/g, "");
     }
 
     private onClickDeriveFrom(): void {

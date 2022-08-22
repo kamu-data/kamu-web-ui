@@ -8,7 +8,7 @@ import {
     SimpleChange,
     SimpleChanges,
 } from "@angular/core";
-import { Edge } from "@swimlane/ngx-graph";
+import { Edge, MiniMapPosition } from "@swimlane/ngx-graph";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 
 @Component({
@@ -17,9 +17,9 @@ import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 })
 export class LineageGraphComponent implements OnChanges, OnInit {
     @Input() public view: [number, number];
-    @Input() public links: any[];
-    @Input() public nodes: any[];
-    @Input() public clusters: any[];
+    @Input() public links: Edge[];
+    @Input() public nodes: Node[];
+    @Input() public clusters: ClusterNode[];
 
     @Output() public onClickNodeEvent: EventEmitter<Node> = new EventEmitter();
 
@@ -33,9 +33,9 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public autoZoom = true;
     public autoCenter = true;
     public showMiniMap = true;
-    public miniMapPosition: any;
-    public graphClusters: any[];
-    public graphNodes: any[];
+    public miniMapPosition: MiniMapPosition;
+    public graphClusters: ClusterNode[];
+    public graphNodes: Node[];
 
     public ngOnInit(): void {
         this.graphNodes = this.nodes || [];
@@ -76,14 +76,13 @@ export class LineageGraphComponent implements OnChanges, OnInit {
 
     // See: https://stackoverflow.com/questions/62874476/ngx-graph-linktemplate-links-middle-pointer-alignment-issue
     getXYForCenteredLinkCircle(link: Edge): [number, number] {
-        var myPath = document.createElementNS(
+        const myPath = document.createElementNS(
             "http://www.w3.org/2000/svg",
             "path",
         );
-        // @ts-ignore
-        myPath.setAttributeNS(null, "d", link.line);
-        var length = myPath.getTotalLength();
-        let p = myPath.getPointAtLength(length / 2);
+        myPath.setAttributeNS(null, "d", link.line ?? "");
+        const length = myPath.getTotalLength();
+        const p = myPath.getPointAtLength(length / 2);
         return [p.x, p.y]; // Consider the center coordinates of the circle
     }
 }

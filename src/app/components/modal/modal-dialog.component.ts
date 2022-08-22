@@ -1,7 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { DynamicComponent } from "./dynamic.component";
 
 @Component({
+    // tslint:disable-next-line: component-selector
     selector: "modal-dialog",
     template: `
         <div class="modal__content" (click)="hideAll()">
@@ -97,7 +98,8 @@ export class ModalDialogComponent extends DynamicComponent {
     }
 
     hideAll() {
-        // tslint:disable-next-line:no-unused-expression
-        this.context.title === "Search for:" && this.context._close();
+        if (this.context.title === "Search for:") {
+            this.context._close();
+        }
     }
 }

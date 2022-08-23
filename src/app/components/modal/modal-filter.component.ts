@@ -1,8 +1,10 @@
 import { Component } from "@angular/core";
 import { DynamicComponent } from "./dynamic.component";
 import { ModalArgumentsInterface } from "../../interface/modal.interface";
+import { ObjectInterface } from "src/app/dataset-view/datasetSubs.interface";
 
 @Component({
+    // tslint:disable-next-line: component-selector
     selector: "modal-dialog",
     template: `
         <div>
@@ -76,7 +78,7 @@ export class ModalFilterComponent extends DynamicComponent {
         if (this.context) {
             if (this.context.idFilterButton) {
                 const element: Element | null = document.querySelector(
-                    '[data-test-id="' + this.context.idFilterButton + '"]',
+                    `[data-test-id=${this.context.idFilterButton}]`,
                 );
                 return element !== null && element.getBoundingClientRect();
             }
@@ -89,14 +91,15 @@ export class ModalFilterComponent extends DynamicComponent {
     }
 
     hideAll() {
-        // tslint:disable-next-line:no-unused-expression
-        this.context && this.context._close();
+        if (this.context) {
+            this.context._close();
+        }
     }
 
     onSortChange(action: boolean | string, locationBack?: boolean) {
         if (this.context) {
             this.context._close(locationBack);
-            this.context.handler(action);
+            this.context?.handler(action);
         }
     }
 
@@ -118,7 +121,7 @@ export class ModalFilterComponent extends DynamicComponent {
     }
 
     styleFilterModal() {
-        const styleModal: any = {};
+        const styleModal: ObjectInterface = {};
 
         if (this.context) {
             if (this.context.style && this.context.style.isMinContent) {
@@ -136,8 +139,9 @@ export class ModalFilterComponent extends DynamicComponent {
                 styleModal["border-radius"] =
                     borderRadius + " 0 " + borderRadius + " " + borderRadius;
 
-                const modalDialog: any =
-                    document.getElementsByClassName("modal__dialog")[0];
+                const modalDialog = document.getElementsByClassName(
+                    "modal__dialog",
+                )[0] as HTMLElement;
 
                 if (modalDialog !== null) {
                     if (modalDialog.offsetWidth !== 0) {
@@ -163,14 +167,15 @@ export class ModalFilterComponent extends DynamicComponent {
         return styleModal;
     }
 
-    closeButtonPosition() {
+    closeButtonPosition(): ObjectInterface {
+        const buttonPosition: ObjectInterface = {};
         const borderRadius = this.context ? this.context.style.borderRadius : 0;
-        return {
-            top: this.getElementPosition().top + "px",
-            width: this.getElementPosition().width - 2 + "px",
-            left: this.getElementPosition().left + "px",
-            height: this.getElementPosition().height + "px",
-            "border-radius": borderRadius + " " + borderRadius + " 0px 0px",
-        };
+        buttonPosition.top = this.getElementPosition().top + "px";
+        buttonPosition.width = this.getElementPosition().width - 2 + "px";
+        buttonPosition.left = this.getElementPosition().left + "px";
+        buttonPosition.height = this.getElementPosition().height + "px";
+        buttonPosition["border-radius"] =
+            borderRadius + " " + borderRadius + " 0px 0px";
+        return buttonPosition;
     }
 }

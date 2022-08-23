@@ -73,7 +73,7 @@ export class DatasetComponent
         this.trackSubscription(
             this.router.events
                 .pipe(filter((event) => event instanceof NavigationEnd))
-                .subscribe((_: any) => {
+                .subscribe(() => {
                     this.initDatasetViewByType(
                         this.getDatasetInfoFromUrl(),
                         this.getCurrentPageFromUrl(),
@@ -113,8 +113,8 @@ export class DatasetComponent
                     );
                     this.lineageGraphView[0] =
                         searchResultContainer.offsetWidth -
-                        parseInt(styleElement.paddingLeft) -
-                        parseInt(styleElement.paddingRight);
+                        parseInt(styleElement.paddingLeft, 10) -
+                        parseInt(styleElement.paddingRight, 10);
                     this.lineageGraphView[1] = 400;
                 }
             });
@@ -217,6 +217,7 @@ export class DatasetComponent
         this.modalService.warning({
             message: "Feature coming soon",
             yesButtonText: "Ok",
+            title: topicName,
         });
     }
 
@@ -456,8 +457,8 @@ export class DatasetComponent
         const paramMap: ParamMap = this.activatedRoute.snapshot.paramMap;
         return {
             // Both parameters are mandatory in URL, router would not activate this component otherwise
-            accountName: paramMap.get(ProjectLinks.urlParamAccountName)!,
-            datasetName: paramMap.get(ProjectLinks.urlParamDatasetName)!,
+            accountName: paramMap.get(ProjectLinks.urlParamAccountName) || "",
+            datasetName: paramMap.get(ProjectLinks.urlParamDatasetName) || "",
         };
     }
 

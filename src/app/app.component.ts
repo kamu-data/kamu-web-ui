@@ -27,7 +27,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     private unimplementedMessage = "Feature coming soon";
     public appLogo = `/${AppValues.appLogo}`;
     public isMobileView = false;
-    public searchValue: any = "";
+    public searchValue = "";
     public isVisible = true;
     public user: AccountInfo;
     private appHeaderNotVisiblePages: string[] = [

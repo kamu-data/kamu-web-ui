@@ -1,4 +1,3 @@
-import { DataBatch } from "./../api/kamu.graphql.interface";
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { Injectable } from "@angular/core";
 import { Observable, Subject, Subscription } from "rxjs";
@@ -8,6 +7,7 @@ import {
     DataViewSchema,
 } from "../interface/search.interface";
 import {
+    Dataset,
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
     DatasetKind,
@@ -27,6 +27,7 @@ import {
     DatasetHistoryUpdate,
     DataUpdate,
     MetadataSchemaUpdate,
+    ObjectInterface,
     OverviewDataUpdate,
 } from "./datasetSubs.interface";
 import { isNil } from "lodash";
@@ -86,7 +87,7 @@ export class AppDatasetService {
 
     private static parseContentOfDataset(
         data: DatasetOverviewQuery,
-    ): DataBatch {
+    ): ObjectInterface[] {
         return data.datasets.byOwnerAndName
             ? JSON.parse(data.datasets?.byOwnerAndName?.data.tail.data.content)
             : [];
@@ -122,7 +123,7 @@ export class AppDatasetService {
         this.kindInfoChanges([]);
     }
 
-    public setKindInfo(dataset: DatasetKindInterface): void {
+    public setKindInfo(dataset: Dataset): void {
         if (
             this.datasetKindInfo.some(
                 (realDataset: DatasetKindInterface) =>
@@ -156,7 +157,7 @@ export class AppDatasetService {
                     );
                 this.searchDatasetInfoChanges(dataset);
 
-                const content: DataBatch =
+                const content: ObjectInterface[] =
                     AppDatasetService.parseContentOfDataset(data);
                 const schema: DataViewSchema = JSON.parse(
                     data.datasets.byOwnerAndName.metadata.currentSchema.content,
@@ -179,7 +180,7 @@ export class AppDatasetService {
                     );
                 this.searchDatasetInfoChanges(dataset);
 
-                const content: any =
+                const content: ObjectInterface[] =
                     AppDatasetService.parseContentOfDataset(data);
                 const overview: DatasetOverviewFragment =
                     _.cloneDeep<DatasetOverviewFragment>(
@@ -208,30 +209,34 @@ export class AppDatasetService {
         this.searchApi
             .onDatasetHistory({ ...info, numRecords, numPage })
             .subscribe((data: GetDatasetHistoryQuery) => {
-                const dataset: DatasetBasicsFragment =
-                    _.cloneDeep<DatasetBasicsFragment>(
-                        data.datasets.byOwnerAndName!,
+                if (data.datasets.byOwnerAndName) {
+                    const dataset: DatasetBasicsFragment =
+                        _.cloneDeep<DatasetBasicsFragment>(
+                            data.datasets.byOwnerAndName,
+                        );
+                    this.searchDatasetInfoChanges(dataset);
+                    const pageInfo: PageBasedInfo = data.datasets.byOwnerAndName
+                        ?.metadata.chain.blocks.pageInfo
+                        ? Object.assign(
+                              _.cloneDeep(
+                                  data.datasets.byOwnerAndName?.metadata.chain
+                                      .blocks.pageInfo,
+                              ),
+                              { currentPage: numPage },
+                          )
+                        : Object.assign(this.defaultPageInfo, {
+                              currentPage: numPage,
+                          });
+                    const historyUpdate: DatasetHistoryUpdate = {
+                        history:
+                            (data.datasets.byOwnerAndName?.metadata.chain.blocks
+                                .nodes as MetadataBlockFragment[]) || [],
+                        pageInfo,
+                    };
+                    this.appDatasetSubsService.changeDatasetHistory(
+                        historyUpdate,
                     );
-                this.searchDatasetInfoChanges(dataset);
-                const pageInfo: PageBasedInfo = data.datasets.byOwnerAndName
-                    ?.metadata.chain.blocks.pageInfo
-                    ? Object.assign(
-                          _.cloneDeep(
-                              data.datasets.byOwnerAndName?.metadata.chain
-                                  .blocks.pageInfo,
-                          ),
-                          { currentPage: numPage },
-                      )
-                    : Object.assign(this.defaultPageInfo, {
-                          currentPage: numPage,
-                      });
-                const historyUpdate: DatasetHistoryUpdate = {
-                    history:
-                        (data.datasets.byOwnerAndName?.metadata.chain.blocks
-                            .nodes as MetadataBlockFragment[]) || [],
-                    pageInfo,
-                };
-                this.appDatasetSubsService.changeDatasetHistory(historyUpdate);
+                }
             });
     }
 
@@ -272,7 +277,7 @@ export class AppDatasetService {
     public onGetDatasetDataSQLRun(query: string, limit: number): void {
         this.searchApi.onGetDatasetDataSQLRun({ query, limit }).subscribe(
             (data: GetDatasetDataSqlRunQuery) => {
-                const content: any = data.data?.query.data
+                const content: ObjectInterface[] = data.data?.query.data
                     ? JSON.parse(data.data?.query.data.content)
                     : "";
                 const schema: DataViewSchema = data.data.query.schema
@@ -316,20 +321,23 @@ export class AppDatasetService {
 
     private updateDatasetTree(lineage: GetDatasetLineageQuery) {
         const tree: DatasetKindInterface[][] = [];
-        const origin = lineage.datasets.byOwnerAndName;
+        const origin = lineage.datasets.byOwnerAndName as Dataset;
         this.updateDatasetTreeRec(tree, origin);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.datasetTreeChange(tree, origin);
     }
 
-    private updateDatasetTreeRec(tree: DatasetKindInterface[][], origin: any) {
+    private updateDatasetTreeRec(
+        tree: DatasetKindInterface[][],
+        origin: Dataset,
+    ) {
         // TODO: Why is this needed to be called for every dataset in the graph?
         this.setKindInfo(origin);
 
         if (origin.metadata.currentDownstreamDependencies) {
             origin.metadata.currentDownstreamDependencies.forEach(
-                (dep: any) => {
+                (dep: Dataset) => {
                     tree.push([
                         {
                             id: origin.id,
@@ -347,21 +355,23 @@ export class AppDatasetService {
             );
         }
         if (origin.metadata.currentUpstreamDependencies) {
-            origin.metadata.currentUpstreamDependencies.forEach((dep: any) => {
-                tree.push([
-                    {
-                        id: dep.id,
-                        kind: dep.kind,
-                        name: dep.name,
-                    },
-                    {
-                        id: origin.id,
-                        kind: origin.kind,
-                        name: origin.name,
-                    },
-                ]);
-                this.updateDatasetTreeRec(tree, dep);
-            });
+            origin.metadata.currentUpstreamDependencies.forEach(
+                (dep: Dataset) => {
+                    tree.push([
+                        {
+                            id: dep.id,
+                            kind: dep.kind,
+                            name: dep.name,
+                        },
+                        {
+                            id: origin.id,
+                            kind: origin.kind,
+                            name: origin.name,
+                        },
+                    ]);
+                    this.updateDatasetTreeRec(tree, dep);
+                },
+            );
         }
     }
 }

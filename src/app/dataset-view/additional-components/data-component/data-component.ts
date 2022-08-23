@@ -1,9 +1,11 @@
-import { DataBatch } from "./../../../api/kamu.graphql.interface";
+import {
+    DataUpdate,
+    ObjectInterface,
+} from "src/app/dataset-view/datasetSubs.interface";
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DataViewSchema } from "../../../interface/search.interface";
 import DataTabValues from "./mock.data";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
-import { DataUpdate } from "../../datasetSubs.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 
@@ -25,7 +27,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     public savedQueries = DataTabValues.savedQueries;
     public sqlRequestCode = `select\n  *\nfrom `;
     public currentSchema?: DataViewSchema;
-    public currentData: any;
+    public currentData: ObjectInterface[];
 
     constructor(private appDatasetSubsService: AppDatasetSubsService) {
         super();
@@ -49,7 +51,7 @@ export class DataComponent extends BaseComponent implements OnInit {
         );
     }
 
-    onInitEditor(editor: any): void {
+    onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
         const runQueryFn = () => {
             this.onRunSQLRequest();
         };
@@ -59,12 +61,11 @@ export class DataComponent extends BaseComponent implements OnInit {
             // A label of the action that will be presented to the user.
             label: "Run SQL",
             // An optional array of keybindings for the action.
-            // tslint:disable-next-line: no-bitwise
-            keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
+            keybindings: [monaco.KeyMod.CtrlCmd, monaco.KeyCode.Enter],
             // A precondition for this action.
-            precondition: null,
+            precondition: null || undefined,
             // A rule to evaluate on top of the precondition in order to dispatch the keybindings.
-            keybindingContext: null,
+            keybindingContext: null || undefined,
             contextMenuGroupId: "navigation",
             contextMenuOrder: 1.5,
             // Method that will be executed when the action is triggered.

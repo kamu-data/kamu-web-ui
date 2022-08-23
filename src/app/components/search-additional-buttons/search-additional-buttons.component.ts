@@ -1,5 +1,6 @@
 import {
     Component,
+    ElementRef,
     EventEmitter,
     HostListener,
     Input,
@@ -7,10 +8,7 @@ import {
     Output,
     ViewChild,
 } from "@angular/core";
-import {
-    SearchAdditionalButtonInterface,
-    SearchAdditionalHeaderButtonInterface,
-} from "./search-additional-buttons.interface";
+import { SearchAdditionalHeaderButtonInterface } from "./search-additional-buttons.interface";
 import { MatSidenav } from "@angular/material/sidenav";
 import AppValues from "../../common/app.values";
 import { SideNavService } from "../../services/sidenav.service";
@@ -27,7 +25,7 @@ export class SearchAdditionalButtonsComponent implements OnInit {
         new EventEmitter();
     public isMinimizeSearchAdditionalButtons = false;
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
-    @ViewChild("menuTrigger") trigger: any;
+    @ViewChild("menuTrigger") trigger: ElementRef;
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {

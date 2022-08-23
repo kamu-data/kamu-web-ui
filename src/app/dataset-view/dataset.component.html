@@ -26,7 +26,7 @@
                     [isMarkdownEditView]="isMarkdownEditView"
                     [datasetBasics]="datasetBasics"
                     (onToggleReadmeViewEmit)="toggleReadmeView()"
-                    (onSelectTopicEmit)="selectTopic($event)"
+                    (selectTopicEmit)="selectTopic($event)"
                 ></app-overview>
             </ng-template>
 
@@ -57,9 +57,9 @@
             <ng-template [ngIf]="isDatasetViewTypeMetadata">
                 <app-metadata
                     [datasetBasics]="datasetBasics"
-                    (onPageChangeEmit)="onPageChange($event)"
-                    (onSelectTopicEmit)="selectTopic($event)"
-                    (onClickDatasetEmit)="onClickMetadataNode($event)"
+                    (pageChangeEmit)="onPageChange($event)"
+                    (selectTopicEmit)="selectTopic($event)"
+                    (clickDatasetEmit)="onClickMetadataNode($event)"
                 ></app-metadata>
             </ng-template>
         </div>

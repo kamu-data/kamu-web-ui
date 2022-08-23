@@ -25,21 +25,28 @@ export class DynamicTableComponent
     @Input() public hasTableHeader: boolean;
     @Input() public tableSource?: TableSourceInterface;
     @Input() public idTable = "";
-    @Output() public onSelectRowEmit: EventEmitter<string> = new EventEmitter();
+    @Output() public selectRowEmit: EventEmitter<string> = new EventEmitter();
 
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    public dataSource = new MatTableDataSource<any>(ELEMENT_DATA);
+    public dataSource = new MatTableDataSource<TableSourceInterface>(
+        ELEMENT_DATA,
+    );
     public displayedColumns: string[] = [];
 
     public ngOnInit(): void {
-        this.tableSource && this.renderTable(this.tableSource);
+        if (this.tableSource) {
+            this.renderTable(this.tableSource);
+        }
     }
     public ngOnChanges(changes: SimpleChanges): void {
-        this.tableSource && changes && this.renderTable(this.tableSource);
+        if (this.tableSource && changes) {
+            this.renderTable(this.tableSource);
+        }
     }
 
     public ngAfterContentInit(): void {
-        this.tableSource && this.renderTable(this.tableSource);
+        if (this.tableSource) {
+            this.renderTable(this.tableSource);
+        }
     }
 
     public changeColumnName(columnName: string): string {
@@ -49,19 +56,19 @@ export class DynamicTableComponent
         for (let i = 0; i < columnName.length; i++) {
             if (columnName.charAt(i) === columnName.charAt(i).toUpperCase()) {
                 newColumnName += " " + columnName.charAt(i);
-            } else newColumnName += columnName.charAt(i);
+            } else {
+                newColumnName += columnName.charAt(i);
+            }
         }
         newColumnName = newColumnName.toLocaleLowerCase();
 
         return AppValues.capitalizeFirstLetter(newColumnName);
     }
 
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    public onSelectRow(row: any): void {
-        this.onSelectRowEmit.emit(row);
+    public onSelectRow(row: string): void {
+        this.selectRowEmit.emit(row);
     }
 
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
     private renderTable(data: any[]): void {
         if (data.length === 0) {
             this.dataSource.data = [];
@@ -70,7 +77,6 @@ export class DynamicTableComponent
         this.dataSource.data = [];
         this.displayedColumns = Object.keys(data[0]);
 
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
         const dataSource = this.dataSource.data;
         data.forEach((field: any) => {
             dataSource.push(field);

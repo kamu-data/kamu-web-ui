@@ -18,14 +18,20 @@ export class CustomPaginationComponent implements OnChanges {
     @Input() limit: number; // record per page
     @Input() total: number; // total records
     @Input() range = 5;
-    @Output() pageChange: EventEmitter<any>;
+    @Output() pageChange: EventEmitter<{
+        currentPage: number;
+        isClick: boolean;
+    }>;
     totalPageNo: number[];
     totalSizeOfPages: number;
 
     constructor() {
         this.totalSizeOfPages = 0;
         this.totalPageNo = [];
-        this.pageChange = new EventEmitter<any>();
+        this.pageChange = new EventEmitter<{
+            currentPage: number;
+            isClick: boolean;
+        }>();
     }
 
     public ngOnChanges() {
@@ -42,18 +48,18 @@ export class CustomPaginationComponent implements OnChanges {
         if (this.pageIndex > 0) {
             this.pageIndex = this.pageIndex - 1;
         }
-        this.pageChange.emit(this.pageIndex);
+        this.pageChange.emit({ currentPage: this.pageIndex, isClick: true });
     }
 
     pageChangeIndex(index: number) {
         this.pageIndex = index;
-        this.pageChange.emit(this.pageIndex);
+        this.pageChange.emit({ currentPage: this.pageIndex, isClick: true });
     }
 
     pageChangeForward() {
         if (this.pageIndex < this.totalSizeOfPages) {
             this.pageIndex = this.pageIndex + 1;
         }
-        this.pageChange.emit(this.pageIndex);
+        this.pageChange.emit({ currentPage: this.pageIndex, isClick: true });
     }
 }

@@ -10,7 +10,6 @@ import {
 import AppValues from "../common/app.values";
 import { FetchResult } from "apollo-link";
 import { Optional } from "../common/app.types";
-import { HttpErrorResponse } from "@angular/common/http";
 
 @Injectable()
 export class AuthApi {

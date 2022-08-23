@@ -8,14 +8,14 @@ import {
 import { DataViewSchema } from "../interface/search.interface";
 
 export interface OverviewDataUpdate {
-    content: any[];
+    content: ObjectInterface[];
     overview: DatasetOverviewFragment;
     size: DatasetDataSizeFragment;
 }
 
 export interface DataUpdate {
     schema: DataViewSchema;
-    content: any;
+    content: ObjectInterface[];
 }
 
 export interface MetadataSchemaUpdate {
@@ -27,4 +27,10 @@ export interface MetadataSchemaUpdate {
 export interface DatasetHistoryUpdate {
     history: MetadataBlockFragment[];
     pageInfo: PageBasedInfo;
+}
+
+export type DataRow = Record<string, unknown>;
+
+export interface ObjectInterface {
+    [key: string]: string | number;
 }

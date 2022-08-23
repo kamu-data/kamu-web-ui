@@ -58,13 +58,3 @@ export interface DataSchemaField {
     repetition: string;
     type: string;
 }
-
-export interface OverviewSchemaField {
-    offset: string;
-    system_time: string;
-    id: string;
-    reported_date: string;
-    gender: string;
-    age_group: string;
-    location: string;
-}

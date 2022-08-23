@@ -99,7 +99,7 @@ export class ModalService {
         });
 
         return new Promise((resolve) => {
-            context.handler = (arg: any) => resolve(arg);
+            context.handler = (arg: ModalArgumentsInterface) => resolve(arg);
         });
     }
 
@@ -113,7 +113,7 @@ export class ModalService {
         });
 
         return new Promise((resolve) => {
-            context.handler = (arg: any) => resolve(arg);
+            context.handler = (arg: ModalArgumentsInterface) => resolve(arg);
         });
     }
 

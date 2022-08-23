@@ -22,12 +22,12 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         currentPage: number;
         isClick: boolean;
     }> = new EventEmitter();
-    @Output() onPageChangeEmit: EventEmitter<{
+    @Output() pageChangeEmit: EventEmitter<{
         currentPage: number;
         isClick: boolean;
     }> = new EventEmitter();
-    @Output() onSelectTopicEmit: EventEmitter<string> = new EventEmitter();
-    @Output() onClickDatasetEmit: EventEmitter<DatasetBasicsFragment> =
+    @Output() selectTopicEmit: EventEmitter<string> = new EventEmitter();
+    @Output() clickDatasetEmit: EventEmitter<DatasetBasicsFragment> =
         new EventEmitter();
 
     public sqlEditorOptions = {
@@ -73,18 +73,18 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     }
 
     public selectTopic(topicName: string): void {
-        this.onSelectTopicEmit.emit(topicName);
+        this.selectTopicEmit.emit(topicName);
     }
 
     public onClickDataset(dataset: DatasetBasicsFragment): void {
-        this.onClickDatasetEmit.emit(dataset);
+        this.clickDatasetEmit.emit(dataset);
     }
 
     public onPageChange(params: {
         currentPage: number;
         isClick: boolean;
     }): void {
-        this.onPageChangeEmit.emit(params);
+        this.pageChangeEmit.emit(params);
     }
 
     public get currentPage(): number {

@@ -23,7 +23,7 @@ export class RepoListComponent {
     @Input() public resultUnitText: string;
     @Input() public hasResultQuantity?: boolean = false;
     @Input() public isClickableRow?: boolean = false;
-    @Output() public onSelectDatasetEmit: EventEmitter<DatasetInfo> =
+    @Output() public selectDatasetEmit: EventEmitter<DatasetInfo> =
         new EventEmitter();
     @Input() public sortOptions: {
         value: string;
@@ -41,7 +41,7 @@ export class RepoListComponent {
     }
 
     public onSelectDataset(row: Dataset): void {
-        this.onSelectDatasetEmit.emit({
+        this.selectDatasetEmit.emit({
             datasetName: row.name,
             accountName: row.owner?.name,
         });

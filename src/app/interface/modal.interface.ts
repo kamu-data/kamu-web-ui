@@ -20,7 +20,7 @@ export interface ModalArgumentsInterface {
     noButtonText?: string;
     lastButtonText?: string;
     tooLastButtonText?: string;
-    handler?: (arg: unknown) => void;
+    handler?: (arg: ModalArgumentsInterface) => void;
     data?: undefined;
     locationBack?: boolean;
     idFilterButton?: string;

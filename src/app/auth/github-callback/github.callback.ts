@@ -1,6 +1,6 @@
 import { NavigationService } from "./../../services/navigation.service";
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Params } from "@angular/router";
 import { AuthApi } from "../../api/auth.api";
 import { BaseComponent } from "src/app/common/base.component";
 
@@ -22,7 +22,7 @@ export class GithubCallbackComponent extends BaseComponent implements OnInit {
             this.navigationService.navigateToHome();
         }
         this.trackSubscription(
-            this.route.queryParams.subscribe((param: any) => {
+            this.route.queryParams.subscribe((param: Params) => {
                 this.authApi
                     .getUserInfoAndToken(param.code)
                     .subscribe(() => this.navigationService.navigateToHome());

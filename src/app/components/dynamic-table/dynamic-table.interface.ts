@@ -1,6 +1,4 @@
-import {
-    DataSchemaField,
-    OverviewSchemaField,
-} from "../../interface/search.interface";
+import { ObjectInterface } from "src/app/dataset-view/datasetSubs.interface";
+import { DataSchemaField } from "../../interface/search.interface";
 
-export type TableSourceInterface = OverviewSchemaField[] | DataSchemaField[];
+export type TableSourceInterface = DataSchemaField[] | ObjectInterface[];

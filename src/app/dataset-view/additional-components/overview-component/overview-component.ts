@@ -1,3 +1,7 @@
+import {
+    ObjectInterface,
+    OverviewDataUpdate,
+} from "src/app/dataset-view/datasetSubs.interface";
 import { DatasetKind } from "./../../../api/kamu.graphql.interface";
 import {
     ChangeDetectionStrategy,
@@ -17,7 +21,6 @@ import {
     DatasetOverviewFragment,
     MetadataBlockFragment,
 } from "../../../api/kamu.graphql.interface";
-import { OverviewDataUpdate } from "../../datasetSubs.interface";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
 
 @Component({
@@ -29,11 +32,11 @@ import { AppDatasetSubsService } from "../../datasetSubs.service";
 export class OverviewComponent extends BaseComponent implements OnInit {
     @Input() public isMarkdownEditView: boolean;
     @Input() public datasetBasics?: DatasetBasicsFragment;
-    @Output() onToggleReadmeViewEmit: EventEmitter<null> = new EventEmitter();
-    @Output() onSelectTopicEmit: EventEmitter<string> = new EventEmitter();
+    @Output() toggleReadmeViewEmit: EventEmitter<null> = new EventEmitter();
+    @Output() selectTopicEmit: EventEmitter<string> = new EventEmitter();
 
     public currentState?: {
-        data: any[];
+        data: ObjectInterface[];
         overview: DatasetOverviewFragment;
         size: DatasetDataSizeFragment;
     };
@@ -64,11 +67,11 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public toggleReadmeView(): void {
-        this.onToggleReadmeViewEmit.emit();
+        this.toggleReadmeViewEmit.emit();
     }
 
     public selectTopic(topicName: string): void {
-        this.onSelectTopicEmit.emit(topicName);
+        this.selectTopicEmit.emit(topicName);
     }
 
     public datasetKind(kind: DatasetKind): string {

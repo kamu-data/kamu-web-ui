@@ -40,7 +40,9 @@ import { DynamicComponent } from "./dynamic.component";
                 <div
                     class="modal__dialog__footer-block"
                     [style]="{
-                        width: 100 / context.buttonCount + '%',
+                        width:
+                            context.buttonCount &&
+                            100 / context.buttonCount + '%',
                         display: 'flex',
                         alignItems: 'center'
                     }"
@@ -93,13 +95,13 @@ import { DynamicComponent } from "./dynamic.component";
 })
 export class ModalDialogComponent extends DynamicComponent {
     onClick(action: boolean | string, locationBack?: boolean) {
-        this.context._close(locationBack);
-        this.context.handler(action);
+        this.context._close?.(locationBack);
+        this.context.handler?.(action);
     }
 
     hideAll() {
         if (this.context.title === "Search for:") {
-            this.context._close();
+            this.context._close?.();
         }
     }
 }

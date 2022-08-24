@@ -54,25 +54,23 @@ export class ModalService {
 
     public success(
         options: ModalArgumentsInterface,
-    ): Promise<ModalArgumentsInterface> {
+    ): Promise<boolean | string> {
         return this._showDialog(Object.assign(options, { status: "ok" }));
     }
 
     public warning(
         options: ModalArgumentsInterface,
-    ): Promise<ModalArgumentsInterface> {
+    ): Promise<boolean | string> {
         return this._showDialog(Object.assign(options, { status: "warning" }));
     }
 
-    public error(
-        options: ModalArgumentsInterface,
-    ): Promise<ModalArgumentsInterface> {
+    public error(options: ModalArgumentsInterface): Promise<boolean | string> {
         return this._showDialog(Object.assign(options, { status: "error" }));
     }
 
     public dialog_question(
         options: ModalArgumentsInterface,
-    ): Promise<ModalArgumentsInterface> {
+    ): Promise<boolean | string> {
         return this._showDialog(
             Object.assign(options, { status: "dialog_question" }),
         );
@@ -80,7 +78,7 @@ export class ModalService {
 
     public filter_modal(
         options: ModalArgumentsInterface,
-    ): Promise<ModalArgumentsInterface> {
+    ): Promise<boolean | string> {
         return this._showFilter(
             Object.assign(options, { status: "filter_modal" }),
         );
@@ -88,7 +86,7 @@ export class ModalService {
 
     private _showDialog(
         context: ModalArgumentsInterface,
-    ): Promise<ModalArgumentsInterface> {
+    ): Promise<boolean | string> {
         if (context.message === "Check the Internet connection") {
             return new Promise(() => null);
         }
@@ -99,13 +97,13 @@ export class ModalService {
         });
 
         return new Promise((resolve) => {
-            context.handler = (arg: ModalArgumentsInterface) => resolve(arg);
+            context.handler = (arg: boolean | string) => resolve(arg);
         });
     }
 
     private _showFilter(
         context: ModalArgumentsInterface,
-    ): Promise<ModalArgumentsInterface> {
+    ): Promise<boolean | string> {
         this.showModal$.next({
             type: "filter",
             context,
@@ -113,7 +111,7 @@ export class ModalService {
         });
 
         return new Promise((resolve) => {
-            context.handler = (arg: ModalArgumentsInterface) => resolve(arg);
+            context.handler = (arg: boolean | string) => resolve(arg);
         });
     }
 

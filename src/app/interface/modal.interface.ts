@@ -20,7 +20,7 @@ export interface ModalArgumentsInterface {
     noButtonText?: string;
     lastButtonText?: string;
     tooLastButtonText?: string;
-    handler?: (arg: ModalArgumentsInterface) => void;
+    handler?: (arg: string | boolean) => void;
     data?: undefined;
     locationBack?: boolean;
     idFilterButton?: string;
@@ -28,6 +28,7 @@ export interface ModalArgumentsInterface {
     position?: ModalPosition;
     style?: ModalStyles;
     type?: string;
+    _close?: (locationBack?: boolean) => void;
 }
 
 export interface ModalPosition {

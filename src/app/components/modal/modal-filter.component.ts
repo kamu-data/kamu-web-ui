@@ -29,7 +29,7 @@ import { ObjectInterface } from "src/app/dataset-view/datasetSubs.interface";
                     [ngClass]="'modal__dialog'"
                     [ngStyle]="styleFilterModal()"
                     [style.display]="
-                        context && !context.filter_data.length && 'none'
+                        context && !context.filter_data?.length && 'none'
                     "
                 >
                     <ul
@@ -80,7 +80,9 @@ export class ModalFilterComponent extends DynamicComponent {
                 const element: Element | null = document.querySelector(
                     `[data-test-id=${this.context.idFilterButton}]`,
                 );
-                return element !== null && element.getBoundingClientRect();
+                if (element !== null) {
+                    return element.getBoundingClientRect();
+                }
             }
             if (this.context.position) {
                 return this.context.position;
@@ -92,14 +94,14 @@ export class ModalFilterComponent extends DynamicComponent {
 
     hideAll() {
         if (this.context) {
-            this.context._close();
+            this.context._close?.();
         }
     }
 
     onSortChange(action: boolean | string, locationBack?: boolean) {
-        if (this.context) {
-            this.context._close(locationBack);
-            this.context?.handler(action);
+        if (this.context && this.context.handler) {
+            this.context._close?.(locationBack);
+            this.context.handler(action);
         }
     }
 
@@ -112,17 +114,18 @@ export class ModalFilterComponent extends DynamicComponent {
     }
 
     positionStartModal() {
-        return {
-            top:
-                this.getElementPosition().top +
-                this.getElementPosition().height +
-                "px",
-        };
+        const elementPosition = this.getElementPosition();
+        if (elementPosition?.top && elementPosition?.height) {
+            return {
+                top: elementPosition.top + elementPosition.height + "px",
+            };
+        }
+        return {};
     }
 
     styleFilterModal() {
         const styleModal: ObjectInterface = {};
-
+        const elementPosition = this.getElementPosition();
         if (this.context) {
             if (this.context.style && this.context.style.isMinContent) {
                 styleModal["max-width"] = "min-content";
@@ -130,11 +133,11 @@ export class ModalFilterComponent extends DynamicComponent {
             if (window.innerWidth < 568) {
                 styleModal["max-width"] = "91%";
             }
-            if (this.context.style.width) {
-                styleModal.width = this.context.style.width;
+            if (this.context.style?.width) {
+                styleModal.width = this.context.style.width || "";
             }
 
-            if (this.context.idFilterButton) {
+            if (this.context.idFilterButton && this.context.style) {
                 const borderRadius = this.context.style.borderRadius;
                 styleModal["border-radius"] =
                     borderRadius + " 0 " + borderRadius + " " + borderRadius;
@@ -143,39 +146,46 @@ export class ModalFilterComponent extends DynamicComponent {
                     "modal__dialog",
                 )[0] as HTMLElement;
 
-                if (modalDialog !== null) {
+                if (modalDialog !== null && elementPosition) {
                     if (modalDialog.offsetWidth !== 0) {
                         styleModal.position = "absolute";
                         styleModal.right =
-                            this.getElementPosition().right -
-                            modalDialog.offsetWidth +
-                            4 +
-                            "px";
+                            elementPosition.right ||
+                            0 - modalDialog.offsetWidth + 4 + "px";
                     }
                 }
             }
 
-            if (this.context.style.width) {
+            if (
+                this.context.style &&
+                this.context.style.width &&
+                elementPosition
+            ) {
                 styleModal.position = "absolute";
                 styleModal.left =
-                    this.getElementPosition().right -
-                    Number(this.context.style.width.split("px")[0]) +
-                    "px";
+                    elementPosition.right ||
+                    0 - Number(this.context.style.width.split("px")[0]) + "px";
             }
         }
 
         return styleModal;
     }
 
-    closeButtonPosition(): ObjectInterface {
+    closeButtonPosition() {
         const buttonPosition: ObjectInterface = {};
-        const borderRadius = this.context ? this.context.style.borderRadius : 0;
-        buttonPosition.top = this.getElementPosition().top + "px";
-        buttonPosition.width = this.getElementPosition().width - 2 + "px";
-        buttonPosition.left = this.getElementPosition().left + "px";
-        buttonPosition.height = this.getElementPosition().height + "px";
-        buttonPosition["border-radius"] =
-            borderRadius + " " + borderRadius + " 0px 0px";
-        return buttonPosition;
+        const elementPosition = this.getElementPosition();
+        if (this.context.style && elementPosition) {
+            const borderRadius = this.context
+                ? this.context.style.borderRadius
+                : 0;
+            buttonPosition.top = elementPosition.top + "px";
+            buttonPosition.width = elementPosition.width || 0 - 2 + "px";
+            buttonPosition.left = elementPosition.left + "px";
+            buttonPosition.height = elementPosition.height + "px";
+            buttonPosition["border-radius"] =
+                borderRadius + " " + borderRadius + " 0px 0px";
+            return buttonPosition;
+        }
+        return {};
     }
 }

@@ -133,14 +133,6 @@ export class ModalService {
         });
     }
 
-    public showUpload(): void {
-        this.showModal$.next({
-            type: "upload",
-            context: {},
-            buttonCount: 0,
-        });
-    }
-
     getCommand() {
         return this.showModal$.asObservable();
     }

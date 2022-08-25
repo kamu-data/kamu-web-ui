@@ -56,36 +56,20 @@ export class DatasetViewMenuComponent implements OnInit {
     public copyToClipboard(event: MouseEvent, text: string): void {
         this.clipboard.copy(text);
 
-        const currentEvent: EventTarget | null = event.currentTarget;
-
-        if (currentEvent !== null) {
+        if (event.currentTarget !== null) {
+            const currentElement: HTMLButtonElement =
+                event.currentTarget as HTMLButtonElement;
+            const currentElementChildren: HTMLCollectionOf<HTMLElement> =
+                currentElement.children as HTMLCollectionOf<HTMLElement>;
             setTimeout(() => {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                // tslint:disable-next-line:no-string-literal
-                currentEvent["children"][0].style.display = "inline-block";
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                // tslint:disable-next-line:no-string-literal
-                currentEvent["children"][1].style.display = "none";
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                // tslint:disable-next-line:no-string-literal
-                currentEvent["classList"].remove("clipboard-btn--success");
+                currentElementChildren[0].style.display = "inline-block";
+                currentElementChildren[1].style.display = "none";
+                currentElement["classList"].remove("clipboard-btn--success");
             }, 2000);
 
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            // tslint:disable-next-line:no-string-literal
-            currentEvent["children"][0].style.display = "none";
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            // tslint:disable-next-line:no-string-literal
-            currentEvent["children"][1].style.display = "inline-block";
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            // tslint:disable-next-line:no-string-literal
-            currentEvent["classList"].add("clipboard-btn--success");
+            currentElementChildren[0].style.display = "none";
+            currentElementChildren[1].style.display = "inline-block";
+            currentElement["classList"].add("clipboard-btn--success");
         }
     }
 

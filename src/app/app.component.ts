@@ -2,8 +2,8 @@ import { NavigationService } from "./services/navigation.service";
 import { Component, HostListener, OnInit } from "@angular/core";
 import AppValues from "./common/app.values";
 import { AppSearchService } from "./search/search.service";
-import { filter } from "rxjs/operators";
-import { Router, NavigationEnd } from "@angular/router";
+import { filter, map } from "rxjs/operators";
+import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { DatasetIDsInterface, TypeNames } from "./interface/search.interface";
 import { AuthApi } from "./api/auth.api";
 import { ModalService } from "./components/modal/modal.service";
@@ -93,11 +93,12 @@ export class AppComponent extends BaseComponent implements OnInit {
                     this.searchValue = searchValue;
                 },
             ),
-
-            /* eslint-disable  @typescript-eslint/no-explicit-any */
             this.router.events
-                .pipe(filter((event) => event instanceof NavigationEnd))
-                .subscribe((event: any) => {
+                .pipe(
+                    filter((event) => event instanceof NavigationEnd),
+                    map((event) => event as RouterEvent),
+                )
+                .subscribe((event: RouterEvent) => {
                     this.isVisible = this.isAvailableAppHeaderUrl(event.url);
 
                     if (event.url.split("?query=").length > 1) {
@@ -132,13 +133,6 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onSelectDataset(item: DatasetIDsInterface): void {
-        console.log(
-            "item.__typename: " +
-                item.__typename +
-                " ; " +
-                "item.id:" +
-                item.id,
-        );
         if (item.__typename === TypeNames.datasetType) {
             this.navigationService.navigateToDatasetView({
                 accountName: AppValues.defaultUsername,

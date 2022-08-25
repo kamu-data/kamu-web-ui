@@ -323,8 +323,6 @@ export class AppDatasetService {
         const tree: DatasetKindInterface[][] = [];
         const origin = lineage.datasets.byOwnerAndName as Dataset;
         this.updateDatasetTreeRec(tree, origin);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         this.datasetTreeChange(tree, origin);
     }
 

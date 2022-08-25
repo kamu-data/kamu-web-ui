@@ -9,7 +9,10 @@ import {
 
 import { BlankComponent } from "./blank.component";
 import { DynamicComponent } from "./dynamic.component";
-import { ModalCommandInterface } from "../../interface/modal.interface";
+import {
+    ModalCommandInterface,
+    ModalComponentType,
+} from "../../interface/modal.interface";
 import { ModalDialogComponent } from "./modal-dialog.component";
 import { ModalImageComponent } from "./modal-image.component";
 import { ModalService } from "./modal.service";
@@ -58,23 +61,6 @@ export class ModalComponent extends BaseComponent implements OnInit {
             this.modalService
                 .getCommand()
                 .subscribe((command: ModalCommandInterface) => {
-                    if (command?.context) {
-                        command.context.buttonCount = 0;
-                        [
-                            "yesButtonText",
-                            "noButtonText",
-                            "lastButtonText",
-                            "tooLastButtonText",
-                        ].forEach((btnName: string) => {
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-ignore
-                            if (command.context[btnName]) {
-                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                // @ts-ignore
-                                command.context.buttonCount += 1;
-                            }
-                        });
-                    }
                     this._execute(command);
                 }),
         );
@@ -107,9 +93,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
         this._handleKBD(command.type);
     }
 
-    _getComponentType(typeName: string) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+    _getComponentType(typeName: ModalComponentType) {
         const type = this.mappings[typeName];
         return type || BlankComponent;
     }
@@ -132,9 +116,10 @@ export class ModalComponent extends BaseComponent implements OnInit {
     }
 
     _processKDB(e: KeyboardEvent) {
-        // if (e.key === "Escape") { // escape
-        //     this._close();
-        // }
+        if (e.key === "Escape") {
+            // escape
+            this._close();
+        }
 
         if (e.key === "Tab") {
             // tab

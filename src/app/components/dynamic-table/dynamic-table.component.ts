@@ -9,11 +9,12 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
+import { ObjectInterface } from "src/app/dataset-view/datasetSubs.interface";
+import { DataSchemaField } from "src/app/interface/search.interface";
 import AppValues from "../../common/app.values";
 import { TableSourceInterface } from "./dynamic-table.interface";
 
-/* eslint-disable  @typescript-eslint/no-explicit-any */
-const ELEMENT_DATA: any[] = [];
+const ELEMENT_DATA: TableSourceInterface = [];
 @Component({
     selector: "app-dynamic-table",
     templateUrl: "./dynamic-table.component.html",
@@ -27,9 +28,9 @@ export class DynamicTableComponent
     @Input() public idTable = "";
     @Output() public selectRowEmit: EventEmitter<string> = new EventEmitter();
 
-    public dataSource = new MatTableDataSource<TableSourceInterface>(
-        ELEMENT_DATA,
-    );
+    public dataSource = new MatTableDataSource<
+        DataSchemaField | ObjectInterface
+    >(ELEMENT_DATA);
     public displayedColumns: string[] = [];
 
     public ngOnInit(): void {
@@ -69,7 +70,7 @@ export class DynamicTableComponent
         this.selectRowEmit.emit(row);
     }
 
-    private renderTable(data: any[]): void {
+    private renderTable(data: TableSourceInterface): void {
         if (data.length === 0) {
             this.dataSource.data = [];
             return;
@@ -78,7 +79,7 @@ export class DynamicTableComponent
         this.displayedColumns = Object.keys(data[0]);
 
         const dataSource = this.dataSource.data;
-        data.forEach((field: any) => {
+        data.forEach((field: DataSchemaField | ObjectInterface) => {
             dataSource.push(field);
         });
         this.dataSource.data = dataSource;

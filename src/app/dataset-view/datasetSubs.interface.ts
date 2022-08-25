@@ -34,3 +34,5 @@ export type DataRow = Record<string, unknown>;
 export interface ObjectInterface {
     [key: string]: string | number;
 }
+
+export type NgStyleValue = { [klass: string]: string } | null;

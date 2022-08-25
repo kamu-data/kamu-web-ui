@@ -16,5 +16,5 @@
     "rules": {
         "no-bitwise": 0
     },
-    "ignorePatterns": ["ngx-graph", "node_modules", "src/**/**.spec.ts", "kamu.graphql.interface.ts"]
+    "ignorePatterns": ["ngx-graph", "node_modules", "kamu.graphql.interface.ts"]
 }

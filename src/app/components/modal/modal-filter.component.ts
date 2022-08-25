@@ -1,10 +1,9 @@
 import { Component } from "@angular/core";
 import { DynamicComponent } from "./dynamic.component";
 import { ModalArgumentsInterface } from "../../interface/modal.interface";
-import { ObjectInterface } from "src/app/dataset-view/datasetSubs.interface";
+import { NgStyleValue } from "src/app/dataset-view/datasetSubs.interface";
 
 @Component({
-    // tslint:disable-next-line: component-selector
     selector: "modal-dialog",
     template: `
         <div>
@@ -113,7 +112,7 @@ export class ModalFilterComponent extends DynamicComponent {
         );
     }
 
-    positionStartModal() {
+    positionStartModal(): NgStyleValue {
         const elementPosition = this.getElementPosition();
         if (elementPosition?.top && elementPosition?.height) {
             return {
@@ -123,8 +122,8 @@ export class ModalFilterComponent extends DynamicComponent {
         return {};
     }
 
-    styleFilterModal() {
-        const styleModal: ObjectInterface = {};
+    styleFilterModal(): NgStyleValue {
+        const styleModal: NgStyleValue = {};
         const elementPosition = this.getElementPosition();
         if (this.context) {
             if (this.context.style && this.context.style.isMinContent) {
@@ -149,9 +148,10 @@ export class ModalFilterComponent extends DynamicComponent {
                 if (modalDialog !== null && elementPosition) {
                     if (modalDialog.offsetWidth !== 0) {
                         styleModal.position = "absolute";
-                        styleModal.right =
+                        styleModal.right = String(
                             elementPosition.right ||
-                            0 - modalDialog.offsetWidth + 4 + "px";
+                                0 - modalDialog.offsetWidth + 4 + "px",
+                        );
                     }
                 }
             }
@@ -163,8 +163,9 @@ export class ModalFilterComponent extends DynamicComponent {
             ) {
                 styleModal.position = "absolute";
                 styleModal.left =
-                    elementPosition.right ||
-                    0 - Number(this.context.style.width.split("px")[0]) + "px";
+                    (elementPosition.right ||
+                        0 - Number(this.context.style.width.split("px")[0])) +
+                    "px";
             }
         }
 
@@ -172,19 +173,20 @@ export class ModalFilterComponent extends DynamicComponent {
     }
 
     closeButtonPosition() {
-        const buttonPosition: ObjectInterface = {};
+        const buttonPositionStyle: NgStyleValue = {};
         const elementPosition = this.getElementPosition();
         if (this.context.style && elementPosition) {
             const borderRadius = this.context
                 ? this.context.style.borderRadius
                 : 0;
-            buttonPosition.top = elementPosition.top + "px";
-            buttonPosition.width = elementPosition.width || 0 - 2 + "px";
-            buttonPosition.left = elementPosition.left + "px";
-            buttonPosition.height = elementPosition.height + "px";
-            buttonPosition["border-radius"] =
+            buttonPositionStyle.top = elementPosition.top + "px";
+            (buttonPositionStyle.width =
+                (elementPosition.width || 0 - 2) + "px"),
+                (buttonPositionStyle.left = elementPosition.left + "px");
+            buttonPositionStyle.height = elementPosition.height + "px";
+            buttonPositionStyle["border-radius"] =
                 borderRadius + " " + borderRadius + " 0px 0px";
-            return buttonPosition;
+            return buttonPositionStyle;
         }
         return {};
     }

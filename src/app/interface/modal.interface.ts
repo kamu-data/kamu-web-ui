@@ -5,13 +5,12 @@ import { BlankComponent } from "../components/modal/blank.component";
 import { ModalSpinnerComponent } from "../components/modal/modal-spinner.component";
 
 export interface ModalCommandInterface {
-    type: string;
+    type: ModalComponentType;
     context?: ModalArgumentsInterface;
     buttonCount: number;
 }
 
 export interface ModalArgumentsInterface {
-    buttonCount?: number;
     title?: string;
     message?: string;
     bigTextBlock?: string;
@@ -59,3 +58,10 @@ export interface ModalMappingsComponent {
     blank: typeof BlankComponent;
     spinner: typeof ModalSpinnerComponent;
 }
+
+export type ModalComponentType =
+    | "blank"
+    | "dialog"
+    | "image"
+    | "spinner"
+    | "filter";

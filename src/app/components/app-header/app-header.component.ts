@@ -23,11 +23,7 @@ import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
     templateUrl: "./app-header.component.html",
 })
 export class AppHeaderComponent extends BaseComponent {
-    @Input() public searchValue: DatasetIDsInterface | string = {
-        id: "",
-        name: "",
-        __typename: TypeNames.allDataType,
-    };
+    @Input() public searchValue: string;
     @Input() public appLogo: string;
     @Input() public isMobileView: boolean;
     @Input() public isVisible: boolean;

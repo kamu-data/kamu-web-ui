@@ -321,40 +321,48 @@ export class AppDatasetService {
         // TODO: Why is this needed to be called for every dataset in the graph?
         this.setKindInfo(origin);
 
-        origin.metadata.currentDownstreamDependencies.forEach(
-            (dep: Dataset) => {
-                tree.push([
-                    {
-                        id: origin.id as string,
-                        kind: origin.kind,
-                        name: origin.name as string,
-                    },
-                    {
-                        id: dep.id as string,
-                        kind: dep.kind,
-                        name: dep.name as string,
-                    },
-                ]);
-                this.updateDatasetTreeRec(tree, dep);
-            },
-        );
+        // TODO: we are actually doing a bad cast here, fragment is not a full Dataset
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (origin.metadata.currentDownstreamDependencies) {
+            origin.metadata.currentDownstreamDependencies.forEach(
+                (dep: Dataset) => {
+                    tree.push([
+                        {
+                            id: origin.id as string,
+                            kind: origin.kind,
+                            name: origin.name as string,
+                        },
+                        {
+                            id: dep.id as string,
+                            kind: dep.kind,
+                            name: dep.name as string,
+                        },
+                    ]);
+                    this.updateDatasetTreeRec(tree, dep);
+                },
+            );
+        }
 
-        origin.metadata.currentUpstreamDependencies.forEach(
-            (dep: Dataset) => {
-                tree.push([
-                    {
-                        id: dep.id as string,
-                        kind: dep.kind,
-                        name: dep.name as string,
-                    },
-                    {
-                        id: origin.id as string,
-                        kind: origin.kind,
-                        name: origin.name as string,
-                    },
-                ]);
-                this.updateDatasetTreeRec(tree, dep);
-            },
-        );
+        // TODO: we are actually doing a bad cast here, fragment is not a full Dataset
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (origin.metadata.currentUpstreamDependencies) {
+            origin.metadata.currentUpstreamDependencies.forEach(
+                (dep: Dataset) => {
+                    tree.push([
+                        {
+                            id: dep.id as string,
+                            kind: dep.kind,
+                            name: dep.name as string,
+                        },
+                        {
+                            id: origin.id as string,
+                            kind: origin.kind,
+                            name: origin.name as string,
+                        },
+                    ]);
+                    this.updateDatasetTreeRec(tree, dep);
+                },
+            );
+        }
     }
 }

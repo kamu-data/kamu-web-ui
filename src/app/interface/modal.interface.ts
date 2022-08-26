@@ -6,7 +6,7 @@ import { ModalSpinnerComponent } from "../components/modal/modal-spinner.compone
 
 export interface ModalCommandInterface {
     type: ModalComponentType;
-    context?: ModalArgumentsInterface;
+    context: ModalArgumentsInterface;
 }
 
 export interface ModalArgumentsInterface {
@@ -56,4 +56,4 @@ export type ModalComponentType =
     | "spinner"
     | "filter";
 
-export type NgStyleValue = { [klass: string]: string } | null;
+export type NgStyleValue = Record<string, string> | null;

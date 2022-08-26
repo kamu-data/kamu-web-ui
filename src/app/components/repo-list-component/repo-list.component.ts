@@ -1,4 +1,4 @@
-import { DataHelpers } from "src/app/common/data.helpers";
+import { relativeTime } from "src/app/common/data.helpers";
 import { DatasetInfo } from "./../../interface/navigation.interface";
 import { NavigationService } from "./../../services/navigation.service";
 import {
@@ -23,8 +23,7 @@ export class RepoListComponent {
     @Input() public resultUnitText: string;
     @Input() public hasResultQuantity?: boolean = false;
     @Input() public isClickableRow?: boolean = false;
-    @Output() public selectDatasetEmit: EventEmitter<DatasetInfo> =
-        new EventEmitter();
+    @Output() public selectDatasetEmit = new EventEmitter<DatasetInfo>();
     @Input() public sortOptions: {
         value: string;
         label: string;
@@ -42,13 +41,13 @@ export class RepoListComponent {
 
     public onSelectDataset(row: Dataset): void {
         this.selectDatasetEmit.emit({
-            datasetName: row.name,
-            accountName: row.owner?.name,
+            datasetName: row.name as string,
+            accountName: row.owner.name,
         });
     }
 
     public getRelativeTime(time: string): string {
-        return DataHelpers.relativeTime(time);
+        return relativeTime(time);
     }
 
     public searchResultQuantity(dataSource: Dataset[] = []): string {

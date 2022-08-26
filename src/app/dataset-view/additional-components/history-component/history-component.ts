@@ -12,10 +12,10 @@ import { AppDatasetSubsService } from "../../datasetSubs.service";
     templateUrl: "./history.component.html",
 })
 export class HistoryComponent extends BaseComponent implements OnInit {
-    @Output() onPageChangeEmit: EventEmitter<{
+    @Output() onPageChangeEmit = new EventEmitter<{
         currentPage: number;
         isClick: boolean;
-    }> = new EventEmitter();
+    }>();
 
     public currentState?: {
         pageInfo: PageBasedInfo;

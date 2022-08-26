@@ -7,7 +7,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 export class SearchSidenavComponent {
     @Input() public searchValue: string;
     @Input() public isMobileView: boolean;
-    @Output() public onInputSearch: EventEmitter<string> = new EventEmitter();
+    @Output() public onInputSearch = new EventEmitter<string>();
 
     public onSearch(value: string): void {
         this.onInputSearch.emit(value);

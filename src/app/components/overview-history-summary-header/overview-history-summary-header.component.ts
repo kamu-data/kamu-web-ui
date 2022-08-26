@@ -2,10 +2,9 @@ import { Component, Input } from "@angular/core";
 import {
     Account,
     MetadataBlockFragment,
-    Scalars,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
-import { DataHelpers } from "src/app/common/data.helpers";
+import { descriptionForMetadataBlock, relativeTime, shortHash } from "src/app/common/data.helpers";
 
 @Component({
     selector: "app-overview-history-summary-header",
@@ -17,9 +16,9 @@ export class OverviewHistorySummaryHeaderComponent {
     @Input() public numBlocksTotal: number;
     public appLogo = `/${AppValues.appLogo}`;
 
-    get systemTime(): Scalars["DateTime"] {
+    get systemTime(): string {
         return this.metadataBlockFragment
-            ? this.metadataBlockFragment.systemTime
+            ? this.metadataBlockFragment.systemTime as string
             : "";
     }
 
@@ -29,25 +28,23 @@ export class OverviewHistorySummaryHeaderComponent {
             : { id: "", name: AppValues.defaultUsername };
     }
 
-    get blockHash(): Scalars["Multihash"] {
+    get blockHash(): string {
         return this.metadataBlockFragment
-            ? this.metadataBlockFragment.blockHash
+            ? this.metadataBlockFragment.blockHash as string
             : "";
     }
 
     get relativeTime(): string {
-        return DataHelpers.relativeTime(this.systemTime);
+        return relativeTime(this.systemTime);
     }
 
     get shortHash(): string {
-        return DataHelpers.shortHash(this.blockHash);
+        return shortHash(this.blockHash);
     }
 
     get descriptionForMetadataBlock(): string {
         return this.metadataBlockFragment
-            ? DataHelpers.descriptionForMetadataBlock(
-                  this.metadataBlockFragment,
-              )
+            ? descriptionForMetadataBlock(this.metadataBlockFragment)
             : "";
     }
 }

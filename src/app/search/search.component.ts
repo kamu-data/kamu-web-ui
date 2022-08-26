@@ -161,7 +161,7 @@ export class SearchComponent
                 (data: SearchOverviewInterface) => {
                     this.tableData.tableSource = data.datasets;
                     this.tableData.pageInfo = data.pageInfo;
-                    this.tableData.totalCount = data.totalCount as number;
+                    this.tableData.totalCount = data.totalCount;
                     this.currentPage = data.currentPage;
                 },
             ),
@@ -228,7 +228,6 @@ export class SearchComponent
 
     public updateAllComplete() {
         this.allComplete =
-            this.filters != null &&
             this.filters.every((t) =>
                 t.subtasks?.every((sub) => sub.completed),
             );

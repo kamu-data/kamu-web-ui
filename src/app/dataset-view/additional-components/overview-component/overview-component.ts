@@ -13,7 +13,7 @@ import {
     ViewEncapsulation,
 } from "@angular/core";
 import { BaseComponent } from "src/app/common/base.component";
-import { DataHelpers } from "src/app/common/data.helpers";
+import { datasetKind2String, dataSize, relativeTime } from "src/app/common/data.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 import {
     DatasetBasicsFragment,
@@ -32,8 +32,8 @@ import { AppDatasetSubsService } from "../../datasetSubs.service";
 export class OverviewComponent extends BaseComponent implements OnInit {
     @Input() public isMarkdownEditView: boolean;
     @Input() public datasetBasics?: DatasetBasicsFragment;
-    @Output() toggleReadmeViewEmit: EventEmitter<null> = new EventEmitter();
-    @Output() selectTopicEmit: EventEmitter<string> = new EventEmitter();
+    @Output() toggleReadmeViewEmit = new EventEmitter<null>();
+    @Output() selectTopicEmit = new EventEmitter<string>();
 
     public currentState?: {
         data: DataRow[];
@@ -75,7 +75,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public datasetKind(kind: DatasetKind): string {
-        return DataHelpers.datasetKind(kind);
+        return datasetKind2String(kind);
     }
 
     get metadataFragmentBlock(): MetadataBlockFragment | undefined {
@@ -85,10 +85,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public dataSize(estimatedSize: number): string {
-        return DataHelpers.dataSize(estimatedSize);
+        return dataSize(estimatedSize);
     }
 
     public relativeTime(time: string): string {
-        return DataHelpers.relativeTime(time, { w: 1 });
+        return relativeTime(time, { w: 1 });
     }
 }

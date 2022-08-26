@@ -5,8 +5,7 @@ import {
     Input,
     OnChanges,
     OnInit,
-    Output,
-    SimpleChanges,
+    Output
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import AppValues from "../../common/app.values";
@@ -23,7 +22,7 @@ export class DynamicTableComponent
     @Input() public hasTableHeader: boolean;
     @Input() public tableSource?: TableSourceInterface;
     @Input() public idTable = "";
-    @Output() public selectRowEmit: EventEmitter<string> = new EventEmitter();
+    @Output() public selectRowEmit = new EventEmitter<string>();
 
     public dataSource = new MatTableDataSource<TableSourceRowInterface>([]);
     public displayedColumns: string[] = [];
@@ -33,8 +32,8 @@ export class DynamicTableComponent
             this.renderTable(this.tableSource);
         }
     }
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (this.tableSource && changes) {
+    public ngOnChanges(): void {
+        if (this.tableSource) {
             this.renderTable(this.tableSource);
         }
     }

@@ -21,8 +21,7 @@ import { SideNavService } from "../../services/sidenav.service";
 export class SearchAdditionalButtonsComponent implements OnInit {
     @Input()
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[];
-    @Output() public searchAdditionalButtonsMethod: EventEmitter<string> =
-        new EventEmitter();
+    @Output() public searchAdditionalButtonsMethod = new EventEmitter<string>();
     public isMinimizeSearchAdditionalButtons = false;
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     @ViewChild("menuTrigger") trigger: ElementRef;

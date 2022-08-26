@@ -9,7 +9,7 @@ interface AppConfig {
     providedIn: "root",
 })
 export class AppConfigService {
-    private appConfig: AppConfig;
+    private appConfig?: AppConfig;
 
     constructor(private http: HttpClient) {}
 
@@ -19,7 +19,7 @@ export class AppConfigService {
             .toPromise()
             .then((data: AppConfig) => {
                 data.apiServerGqlUrl = this.toRemoteURL(data.apiServerGqlUrl);
-                this.appConfig = data as AppConfig;
+                this.appConfig = data;
             });
     }
 
@@ -41,6 +41,6 @@ export class AppConfigService {
         ) {
             turl.hostname = window.location.hostname;
         }
-        return turl.toString();
+        return turl.href;
     }
 }

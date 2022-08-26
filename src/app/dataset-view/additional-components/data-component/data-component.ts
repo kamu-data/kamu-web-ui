@@ -15,7 +15,7 @@ import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 })
 export class DataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;
-    @Output() public runSQLRequestEmit: EventEmitter<string> = new EventEmitter();
+    @Output() public runSQLRequestEmit = new EventEmitter<string>();
     public sqlEditorOptions = {
         theme: "vs",
         language: "sql",
@@ -33,12 +33,12 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     public onRunSQLRequest(sqlRequestCode?: string): void {
-        this.runSQLRequestEmit.emit(sqlRequestCode || this.sqlRequestCode);
+        this.runSQLRequestEmit.emit(sqlRequestCode ?? this.sqlRequestCode);
     }
 
     public ngOnInit(): void {
         if (this.datasetBasics) {
-            this.sqlRequestCode += `'${this.datasetBasics.name}'`;
+            this.sqlRequestCode += `'${this.datasetBasics.name as string}'`;
         }
         this.trackSubscription(
             this.appDatasetSubsService.onDatasetDataChanges.subscribe(
@@ -61,10 +61,6 @@ export class DataComponent extends BaseComponent implements OnInit {
             label: "Run SQL",
             // An optional array of keybindings for the action.
             keybindings: [monaco.KeyMod.CtrlCmd, monaco.KeyCode.Enter],
-            // A precondition for this action.
-            precondition: null || undefined,
-            // A rule to evaluate on top of the precondition in order to dispatch the keybindings.
-            keybindingContext: null || undefined,
             contextMenuGroupId: "navigation",
             contextMenuOrder: 1.5,
             // Method that will be executed when the action is triggered.

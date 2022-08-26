@@ -14,12 +14,10 @@ export class SideNavService {
     }
 
     public open(): Promise<MatDrawerToggleResult> {
-        this.emptySidenav();
         return this.sidenav ? this.sidenav.open() : this.emptySidenav();
     }
 
     public close(): Promise<MatDrawerToggleResult> {
-        this.emptySidenav();
         return this.sidenav ? this.sidenav.close() : this.emptySidenav();
     }
 

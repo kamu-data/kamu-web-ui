@@ -64,12 +64,12 @@ export class DatasetViewMenuComponent implements OnInit {
             setTimeout(() => {
                 currentElementChildren[0].style.display = "inline-block";
                 currentElementChildren[1].style.display = "none";
-                currentElement["classList"].remove("clipboard-btn--success");
+                currentElement.classList.remove("clipboard-btn--success");
             }, 2000);
 
             currentElementChildren[0].style.display = "none";
             currentElementChildren[1].style.display = "inline-block";
-            currentElement["classList"].add("clipboard-btn--success");
+            currentElement.classList.add("clipboard-btn--success");
         }
     }
 

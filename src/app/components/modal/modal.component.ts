@@ -71,7 +71,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
 
         this._close();
 
-        if (command.type && command.type !== "blank") {
+        if (command.type !== "blank") {
             this._renderModal(command);
         }
     }
@@ -86,16 +86,18 @@ export class ModalComponent extends BaseComponent implements OnInit {
         this.componentRef = this.container.createComponent(factory);
 
         const instance = this.componentRef.instance as DynamicComponent;
-        instance.context = Object.assign(command.context || {}, {
-            _close: this._close.bind(this),
-        });
+        instance.context = Object.assign(
+            command.context, 
+            {
+                _close: this._close.bind(this),
+            }
+        );
 
         this._handleKBD(command.type);
     }
 
     _getComponentType(typeName: ModalComponentType) {
-        const type = this.mappings[typeName];
-        return type || BlankComponent;
+        return this.mappings[typeName];
     }
 
     _handleKBD(type?: string) {
@@ -123,7 +125,8 @@ export class ModalComponent extends BaseComponent implements OnInit {
 
         if (e.key === "Tab") {
             // tab
-            setTimeout(() => this.container.element.nativeElement.focus());
+            const element = this.container.element.nativeElement as HTMLElement;
+            setTimeout(() => element.focus());
         }
     }
 }

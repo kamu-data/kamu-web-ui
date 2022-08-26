@@ -29,6 +29,4 @@ export interface DatasetHistoryUpdate {
     pageInfo: PageBasedInfo;
 }
 
-export interface DataRow {
-    [key: string]: string | number;
-}
+export type DataRow = Record<string, string | number>;

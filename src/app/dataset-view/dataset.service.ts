@@ -1,6 +1,6 @@
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { Injectable } from "@angular/core";
-import { Observable, Subject, Subscription } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { SearchApi } from "../api/search.api";
 import {
     DatasetKindInterface,
@@ -35,7 +35,6 @@ import _ from "lodash";
 
 @Injectable()
 export class AppDatasetService {
-    public onSearchLineageDatasetSubscription: Subscription;
 
     constructor(
         private searchApi: SearchApi,
@@ -89,7 +88,7 @@ export class AppDatasetService {
         data: DatasetOverviewQuery,
     ): DataRow[] {
         return data.datasets.byOwnerAndName
-            ? JSON.parse(data.datasets?.byOwnerAndName?.data.tail.data.content)
+            ? JSON.parse(data.datasets.byOwnerAndName.data.tail.data.content) as DataRow[]
             : [];
     }
     public get defaultPageInfo(): PageBasedInfo {
@@ -133,9 +132,9 @@ export class AppDatasetService {
             return;
         }
         this.datasetKindInfo.push({
-            id: dataset.id,
+            id: dataset.id as string,
             kind: dataset.kind,
-            name: dataset.name,
+            name: dataset.name as string,
         });
         this.kindInfoChanges(this.datasetKindInfo);
     }
@@ -161,7 +160,7 @@ export class AppDatasetService {
                     AppDatasetService.parseContentOfDataset(data);
                 const schema: DataViewSchema = JSON.parse(
                     data.datasets.byOwnerAndName.metadata.currentSchema.content,
-                );
+                ) as DataViewSchema;
                 const dataUpdate: DataUpdate = { content, schema };
                 this.appDatasetSubsService.changeDatasetData(dataUpdate);
             });
@@ -215,22 +214,14 @@ export class AppDatasetService {
                             data.datasets.byOwnerAndName,
                         );
                     this.searchDatasetInfoChanges(dataset);
-                    const pageInfo: PageBasedInfo = data.datasets.byOwnerAndName
-                        ?.metadata.chain.blocks.pageInfo
-                        ? Object.assign(
-                              _.cloneDeep(
-                                  data.datasets.byOwnerAndName?.metadata.chain
-                                      .blocks.pageInfo,
-                              ),
-                              { currentPage: numPage },
-                          )
-                        : Object.assign(this.defaultPageInfo, {
-                              currentPage: numPage,
-                          });
+                    const pageInfo: PageBasedInfo = Object.assign(
+                        _.cloneDeep(
+                            data.datasets.byOwnerAndName.metadata.chain.blocks.pageInfo,
+                        ),
+                        { currentPage: numPage },
+                    );
                     const historyUpdate: DatasetHistoryUpdate = {
-                        history:
-                            (data.datasets.byOwnerAndName?.metadata.chain.blocks
-                                .nodes as MetadataBlockFragment[]) || [],
+                        history: data.datasets.byOwnerAndName.metadata.chain.blocks.nodes as MetadataBlockFragment[],
                         pageInfo,
                     };
                     this.appDatasetSubsService.changeDatasetHistory(
@@ -253,7 +244,7 @@ export class AppDatasetService {
                     );
                 const schema: DataViewSchema = JSON.parse(
                     data.datasets.byOwnerAndName.metadata.currentSchema.content,
-                );
+                ) as DataViewSchema;
                 const metadata: DatasetMetadataDetailsFragment = _.cloneDeep(
                     data.datasets.byOwnerAndName.metadata,
                 );
@@ -277,13 +268,8 @@ export class AppDatasetService {
     public onGetDatasetDataSQLRun(query: string, limit: number): void {
         this.searchApi.onGetDatasetDataSQLRun({ query, limit }).subscribe(
             (data: GetDatasetDataSqlRunQuery) => {
-                const content: DataRow[] = data.data?.query.data
-                    ? JSON.parse(data.data?.query.data.content)
-                    : "";
-                const schema: DataViewSchema = data.data.query.schema
-                    ? JSON.parse(data.data.query.schema.content)
-                    : "";
-
+                const content: DataRow[] = JSON.parse(data.data.query.data.content) as DataRow[];
+                const schema: DataViewSchema = JSON.parse(data.data.query.schema.content) as DataViewSchema;
                 const dataUpdate: DataUpdate = { content, schema };
                 this.appDatasetSubsService.changeDatasetData(dataUpdate);
             },
@@ -333,43 +319,40 @@ export class AppDatasetService {
         // TODO: Why is this needed to be called for every dataset in the graph?
         this.setKindInfo(origin);
 
-        if (origin.metadata.currentDownstreamDependencies) {
-            origin.metadata.currentDownstreamDependencies.forEach(
-                (dep: Dataset) => {
-                    tree.push([
-                        {
-                            id: origin.id,
-                            kind: origin.kind,
-                            name: origin.name,
-                        },
-                        {
-                            id: dep.id,
-                            kind: dep.kind,
-                            name: dep.name,
-                        },
-                    ]);
-                    this.updateDatasetTreeRec(tree, dep);
-                },
-            );
-        }
-        if (origin.metadata.currentUpstreamDependencies) {
-            origin.metadata.currentUpstreamDependencies.forEach(
-                (dep: Dataset) => {
-                    tree.push([
-                        {
-                            id: dep.id,
-                            kind: dep.kind,
-                            name: dep.name,
-                        },
-                        {
-                            id: origin.id,
-                            kind: origin.kind,
-                            name: origin.name,
-                        },
-                    ]);
-                    this.updateDatasetTreeRec(tree, dep);
-                },
-            );
-        }
+        origin.metadata.currentDownstreamDependencies.forEach(
+            (dep: Dataset) => {
+                tree.push([
+                    {
+                        id: origin.id as string,
+                        kind: origin.kind,
+                        name: origin.name as string,
+                    },
+                    {
+                        id: dep.id as string,
+                        kind: dep.kind,
+                        name: dep.name as string,
+                    },
+                ]);
+                this.updateDatasetTreeRec(tree, dep);
+            },
+        );
+
+        origin.metadata.currentUpstreamDependencies.forEach(
+            (dep: Dataset) => {
+                tree.push([
+                    {
+                        id: dep.id as string,
+                        kind: dep.kind,
+                        name: dep.name as string,
+                    },
+                    {
+                        id: origin.id as string,
+                        kind: origin.kind,
+                        name: origin.name as string,
+                    },
+                ]);
+                this.updateDatasetTreeRec(tree, dep);
+            },
+        );
     }
 }

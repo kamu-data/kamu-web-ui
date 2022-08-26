@@ -5,7 +5,7 @@ import {
     MetadataBlockFragment,
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
-import { DataHelpers } from "src/app/common/data.helpers";
+import { descriptionForMetadataBlock, relativeTime, shortHash } from "src/app/common/data.helpers";
 
 @Component({
     selector: "app-timeline",
@@ -32,14 +32,14 @@ export class TimelineComponent {
     }
 
     public descriptionForMetadataBlock(block: MetadataBlockFragment): string {
-        return DataHelpers.descriptionForMetadataBlock(block);
+        return descriptionForMetadataBlock(block);
     }
 
     public relativeTime(time: string): string {
-        return DataHelpers.relativeTime(time);
+        return relativeTime(time);
     }
 
     public shortHash(hash: string): string {
-        return DataHelpers.shortHash(hash);
+        return shortHash(hash);
     }
 }

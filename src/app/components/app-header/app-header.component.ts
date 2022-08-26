@@ -29,26 +29,26 @@ export class AppHeaderComponent extends BaseComponent {
     @Input() public isVisible: boolean;
     @Input() public userInfo: AccountInfo;
 
-    @Output() public selectDatasetEmitter: EventEmitter<DatasetIDsInterface> =
-        new EventEmitter();
-    @Output() public addNewEmitter: EventEmitter<null> = new EventEmitter();
-    @Output() public loginEmitter: EventEmitter<null> = new EventEmitter();
-    @Output() public logOutEmitter: EventEmitter<null> = new EventEmitter();
-    @Output() public userProfileEmitter: EventEmitter<null> =
-        new EventEmitter();
-    @Output() public clickAppLogoEmitter: EventEmitter<null> =
-        new EventEmitter();
-    @Output() public clickSettingsEmitter: EventEmitter<null> =
-        new EventEmitter();
-    @Output() public clickHelpEmitter: EventEmitter<null> = new EventEmitter();
-    @Output() public clickAnalyticsEmitter: EventEmitter<null> =
-        new EventEmitter();
-    @Output() public clickBillingEmitter: EventEmitter<null> =
-        new EventEmitter();
-    @Output() public clickUserDatasetsEmitter: EventEmitter<null> =
-        new EventEmitter();
-    @Output() public clickUserProfileEmitter: EventEmitter<null> =
-        new EventEmitter();
+    @Output() public selectDatasetEmitter =
+        new EventEmitter<DatasetIDsInterface>();
+    @Output() public addNewEmitter = new EventEmitter<null>();
+    @Output() public loginEmitter = new EventEmitter<null>();
+    @Output() public logOutEmitter = new EventEmitter<null>();
+    @Output() public userProfileEmitter =
+        new EventEmitter<null>();
+    @Output() public clickAppLogoEmitter =
+        new EventEmitter<null>();
+    @Output() public clickSettingsEmitter =
+        new EventEmitter<null>();
+    @Output() public clickHelpEmitter = new EventEmitter<null>();
+    @Output() public clickAnalyticsEmitter =
+        new EventEmitter<null>();
+    @Output() public clickBillingEmitter =
+        new EventEmitter<null>();
+    @Output() public clickUserDatasetsEmitter =
+        new EventEmitter<null>();
+    @Output() public clickUserProfileEmitter =
+        new EventEmitter<null>();
 
     @ViewChild("appHeaderMenuButton")
     appHeaderMenuButton: ElementRef<HTMLElement>;
@@ -92,7 +92,7 @@ export class AppHeaderComponent extends BaseComponent {
         this.isSearchActive = false;
 
         if (event.item) {
-            this.selectDatasetEmitter.emit(event.item);
+            this.selectDatasetEmitter.emit(event.item as DatasetIDsInterface);
 
             setTimeout(() => {
                 const typeaheadInput: HTMLElement | null =

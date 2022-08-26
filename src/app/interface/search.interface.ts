@@ -2,13 +2,11 @@ import {
     Dataset,
     DatasetKind,
     PageBasedInfo,
-    Scalars,
 } from "../api/kamu.graphql.interface";
-import Maybe from "graphql/tsutils/Maybe";
 
 export interface SearchOverviewInterface {
     datasets: Dataset[];
-    totalCount: Maybe<Scalars["Int"]>;
+    totalCount: number;
     pageInfo: PageBasedInfo;
     currentPage: number;
 }
@@ -50,7 +48,7 @@ export interface DatasetCurrentUpstreamDependencies {
 export interface DataViewSchema {
     name: string;
     type: string;
-    fields: Array<DataSchemaField>;
+    fields: DataSchemaField[];
 }
 
 export interface DataSchemaField {

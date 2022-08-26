@@ -12,7 +12,7 @@ export class LineageComponent {
     @Input() public lineageGraphLink: Edge[];
     @Input() public lineageGraphNodes: Node[];
     @Input() public lineageGraphClusters: ClusterNode[];
-    @Output() onClickNodeEmit: EventEmitter<Node> = new EventEmitter();
+    @Output() onClickNodeEmit = new EventEmitter<Node>();
 
     public onClickNode(node: Node): void {
         this.onClickNodeEmit.emit(node);

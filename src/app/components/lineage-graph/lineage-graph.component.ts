@@ -21,7 +21,7 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     @Input() public nodes: Node[];
     @Input() public clusters: ClusterNode[];
 
-    @Output() public onClickNodeEvent: EventEmitter<Node> = new EventEmitter();
+    @Output() public onClickNodeEvent = new EventEmitter<Node>();
 
     public draggingEnabled = false;
     public panningEnabled = true;
@@ -38,35 +38,22 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public graphNodes: Node[];
 
     public ngOnInit(): void {
-        this.graphNodes = this.nodes || [];
-        this.graphClusters = this.graphClusters || [];
+        this.graphNodes = this.nodes;
+        this.graphClusters = this.clusters;
     }
     public ngOnChanges(changes: SimpleChanges): void {
         const clusters: SimpleChange = changes.clusters;
         const nodes: SimpleChange = changes.nodes;
-        if (clusters) {
-            if (
-                typeof clusters.currentValue !== "undefined" &&
-                clusters.currentValue !== clusters.previousValue
-            ) {
-                if (typeof clusters.currentValue !== "undefined") {
-                    this.graphClusters = clusters.currentValue.filter(
-                        (cluster: ClusterNode) =>
-                            cluster.childNodeIds &&
-                            cluster.childNodeIds.length !== 0,
-                    );
-                }
-            }
+        if (clusters.currentValue && clusters.currentValue !== clusters.previousValue) {
+            const currentClusters = clusters.currentValue as ClusterNode[];
+            this.graphClusters = currentClusters.filter(
+                (cluster: ClusterNode) =>
+                    cluster.childNodeIds &&
+                    cluster.childNodeIds.length !== 0,
+            );
         }
-        if (nodes) {
-            if (
-                typeof nodes.currentValue !== "undefined" &&
-                nodes.currentValue !== nodes.previousValue
-            ) {
-                if (typeof nodes.currentValue !== "undefined") {
-                    this.graphNodes = nodes.currentValue;
-                }
-            }
+        if (nodes.currentValue && nodes.currentValue !== nodes.previousValue) {
+            this.graphNodes = nodes.currentValue as Node[];
         }
     }
 

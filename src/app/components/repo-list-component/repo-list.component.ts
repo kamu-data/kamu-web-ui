@@ -10,6 +10,7 @@ import {
 } from "@angular/core";
 import { ModalService } from "../modal/modal.service";
 import { Dataset } from "src/app/api/kamu.graphql.interface";
+import { logError } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-repo-list",
@@ -61,6 +62,6 @@ export class RepoListComponent {
             message: "Feature coming soon",
             yesButtonText: "Ok",
             title: topicName,
-        });
+        }).catch(e => logError(e));
     }
 }

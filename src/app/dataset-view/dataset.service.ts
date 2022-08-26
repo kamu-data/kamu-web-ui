@@ -32,6 +32,7 @@ import {
 } from "./datasetSubs.interface";
 import { isNil } from "lodash";
 import _ from "lodash";
+import { logError } from "../common/app.helpers";
 
 @Injectable()
 export class AppDatasetService {
@@ -278,7 +279,8 @@ export class AppDatasetService {
                     title: "Request was malformed.",
                     message: error.message,
                     yesButtonText: "Close",
-                });
+                })
+                    .catch(e => logError(e));
             },
         );
     }

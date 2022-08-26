@@ -12,6 +12,7 @@ import { SearchAdditionalHeaderButtonInterface } from "./search-additional-butto
 import { MatSidenav } from "@angular/material/sidenav";
 import AppValues from "../../common/app.values";
 import { SideNavService } from "../../services/sidenav.service";
+import { logError } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-search-additional-buttons",
@@ -31,9 +32,11 @@ export class SearchAdditionalButtonsComponent implements OnInit {
         this.isMinimizeSearchAdditionalButtons = AppValues.isMobileView();
 
         if (AppValues.isMobileView()) {
-            this.sidenavService.close();
+            this.sidenavService.close()
+                .catch(e => logError(e));
         } else {
-            this.sidenavService.open();
+            this.sidenavService.open()
+                .catch(e => logError(e));
         }
     }
 

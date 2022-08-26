@@ -10,24 +10,24 @@ describe("AppComponent", () => {
         }).compileComponents();
     });
 
-    it("should create the app", () => {
+    it("should create the app", async () => {
         const fixture = TestBed.createComponent(AppComponent);
         const app = fixture.componentInstance;
-        expect(app).toBeTruthy();
+        await expect(app).toBeTruthy();
     });
 
-    it(`should have as logo 'kamu-client'`, () => {
+    it(`should have as logo 'kamu-client'`, async () => {
         const fixture = TestBed.createComponent(AppComponent);
         const app: AppComponent = fixture.componentInstance;
 
-        expect(app.appLogo).toEqual("/assets/icons/kamu_logo_icon.svg");
+        await expect(app.appLogo).toEqual("/assets/icons/kamu_logo_icon.svg");
     });
 
-    it("should render title", () => {
+    it("should render title", async () => {
         const fixture = TestBed.createComponent(AppComponent);
         fixture.detectChanges();
         const compiled = fixture.nativeElement as HTMLElement;
-        expect(compiled.querySelector(".content span")?.textContent).toContain(
+        await expect(compiled.querySelector(".content span")?.textContent).toContain(
             "kamu-client app is running!",
         );
     });

@@ -30,7 +30,7 @@ import {
 import { BaseComponent } from "../common/base.component";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { requireValue } from "../common/app.helpers";
+import { logError, requireValue } from "../common/app.helpers";
 
 @Component({
     selector: "app-dataset",
@@ -157,7 +157,7 @@ export class DatasetComponent
         this.modalService.warning({
             message: "Feature coming soon",
             yesButtonText: "Ok",
-        });
+        }).catch(e => logError(e));
     }
 
     private initOverviewTab(datasetInfo: DatasetInfo): void {
@@ -219,7 +219,7 @@ export class DatasetComponent
             message: "Feature coming soon",
             yesButtonText: "Ok",
             title: topicName,
-        });
+        }).catch(e => logError(e));
     }
 
     public onClickLineageNode(node: Node): void {

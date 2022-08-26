@@ -16,6 +16,7 @@ import { NavigationService } from "../services/navigation.service";
 import { Dataset, PageBasedInfo } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
+import { logError } from "../common/app.helpers";
 
 export interface SearchFilters {
     name?: string;
@@ -122,9 +123,11 @@ export class SearchComponent
         this.isMobileView = AppValues.isMobileView();
 
         if (AppValues.isMobileView()) {
-            this.sidenavService.close();
+            this.sidenavService.close()
+                .catch(e => logError(e));
         } else {
-            this.sidenavService.open();
+            this.sidenavService.open()
+                .catch(e => logError(e));
         }
     }
 

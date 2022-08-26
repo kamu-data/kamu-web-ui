@@ -13,6 +13,7 @@ import { AccountInfo } from "./api/kamu.graphql.interface";
 import { MaybeNull } from "./common/app.types";
 import _ from "lodash";
 import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
+import { logError } from "./common/app.helpers";
 
 @Component({
     selector: "app-root",
@@ -166,36 +167,36 @@ export class AppComponent extends BaseComponent implements OnInit {
         this.modalService.warning({
             message: this.unimplementedMessage,
             yesButtonText: "Ok",
-        });
+        }).catch(e => logError(e));
     }
     public onUserDatasets(): void {
         this.modalService.warning({
             message: this.unimplementedMessage,
             yesButtonText: "Ok",
-        });
+        }).catch(e => logError(e));
     }
     public onBilling(): void {
         this.modalService.warning({
             message: this.unimplementedMessage,
             yesButtonText: "Ok",
-        });
+        }).catch(e => logError(e));
     }
     public onAnalytics(): void {
         this.modalService.warning({
             message: this.unimplementedMessage,
             yesButtonText: "Ok",
-        });
+        }).catch(e => logError(e));
     }
     public onSettings(): void {
         this.modalService.warning({
             message: this.unimplementedMessage,
             yesButtonText: "Ok",
-        });
+        }).catch(e => logError(e));
     }
     public onHelp(): void {
         this.modalService.warning({
             message: this.unimplementedMessage,
             yesButtonText: "Ok",
-        });
+        }).catch(e => logError(e));
     }
 }

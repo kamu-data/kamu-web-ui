@@ -1,4 +1,4 @@
-import { DataHelpers } from "src/app/common/data.helpers";
+import { relativeTime } from "src/app/common/data.helpers";
 import { DatasetInfo } from "./../../interface/navigation.interface";
 import { NavigationService } from "./../../services/navigation.service";
 import {
@@ -10,6 +10,7 @@ import {
 } from "@angular/core";
 import { ModalService } from "../modal/modal.service";
 import { Dataset } from "src/app/api/kamu.graphql.interface";
+import { logError } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-repo-list",
@@ -23,8 +24,7 @@ export class RepoListComponent {
     @Input() public resultUnitText: string;
     @Input() public hasResultQuantity?: boolean = false;
     @Input() public isClickableRow?: boolean = false;
-    @Output() public onSelectDatasetEmit: EventEmitter<DatasetInfo> =
-        new EventEmitter();
+    @Output() public selectDatasetEmit = new EventEmitter<DatasetInfo>();
     @Input() public sortOptions: {
         value: string;
         label: string;
@@ -41,14 +41,14 @@ export class RepoListComponent {
     }
 
     public onSelectDataset(row: Dataset): void {
-        this.onSelectDatasetEmit.emit({
-            datasetName: row.name,
-            accountName: row.owner?.name,
+        this.selectDatasetEmit.emit({
+            datasetName: row.name as string,
+            accountName: row.owner.name,
         });
     }
 
     public getRelativeTime(time: string): string {
-        return DataHelpers.relativeTime(time);
+        return relativeTime(time);
     }
 
     public searchResultQuantity(dataSource: Dataset[] = []): string {
@@ -61,6 +61,7 @@ export class RepoListComponent {
         this.modalService.warning({
             message: "Feature coming soon",
             yesButtonText: "Ok",
-        });
+            title: topicName,
+        }).catch(e => logError(e));
     }
 }

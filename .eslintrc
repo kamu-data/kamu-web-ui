@@ -6,12 +6,23 @@
     },
     "extends": [
         "eslint:recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/strict"
     ],
     "parser": "@typescript-eslint/parser",
     "plugins": [
         "@typescript-eslint"
     ],
-    "rules": {},
-    "ignorePatterns": ["ngx-graph", "node_modules", "src/**/**.spec.ts"]
+    "rules": {
+        "no-bitwise": 0,
+        "@typescript-eslint/no-extraneous-class": [
+            "warn",
+            {
+                "allowWithDecorator": true
+            }
+        ]
+    },
+    "ignorePatterns": ["node_modules", "kamu.graphql.interface.ts"]
 }

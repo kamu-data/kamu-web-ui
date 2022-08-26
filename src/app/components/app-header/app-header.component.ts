@@ -16,50 +16,46 @@ import { SearchApi } from "../../api/search.api";
 import AppValues from "../../common/app.values";
 import { BaseComponent } from "src/app/common/base.component";
 import { AccountInfo } from "src/app/api/kamu.graphql.interface";
+import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: "app-header",
     templateUrl: "./app-header.component.html",
 })
 export class AppHeaderComponent extends BaseComponent {
-    @Input() public searchValue: DatasetIDsInterface = {
-        id: "",
-        name: "",
-        __typename: TypeNames.allDataType,
-    };
+    @Input() public searchValue: string;
     @Input() public appLogo: string;
     @Input() public isMobileView: boolean;
     @Input() public isVisible: boolean;
     @Input() public userInfo: AccountInfo;
 
-    @Output() public selectDatasetEmitter: EventEmitter<DatasetIDsInterface> =
-        new EventEmitter();
-    @Output() public addNewEmitter: EventEmitter<null> = new EventEmitter();
-    @Output() public loginEmitter: EventEmitter<null> = new EventEmitter();
-    @Output() public logOutEmitter: EventEmitter<null> = new EventEmitter();
-    @Output() public userProfileEmitter: EventEmitter<null> =
-        new EventEmitter();
-    @Output() public onClickAppLogoEmitter: EventEmitter<null> =
-        new EventEmitter();
-    @Output() public onClickSettingsEmitter: EventEmitter<null> =
-        new EventEmitter();
-    @Output() public onClickHelpEmitter: EventEmitter<null> =
-        new EventEmitter();
-    @Output() public onClickAnalyticsEmitter: EventEmitter<null> =
-        new EventEmitter();
-    @Output() public onClickBillingEmitter: EventEmitter<null> =
-        new EventEmitter();
-    @Output() public onClickUserDatasetsEmitter: EventEmitter<null> =
-        new EventEmitter();
-    @Output() public onClickUserProfileEmitter: EventEmitter<null> =
-        new EventEmitter();
+    @Output() public selectDatasetEmitter =
+        new EventEmitter<DatasetIDsInterface>();
+    @Output() public addNewEmitter = new EventEmitter<null>();
+    @Output() public loginEmitter = new EventEmitter<null>();
+    @Output() public logOutEmitter = new EventEmitter<null>();
+    @Output() public userProfileEmitter =
+        new EventEmitter<null>();
+    @Output() public clickAppLogoEmitter =
+        new EventEmitter<null>();
+    @Output() public clickSettingsEmitter =
+        new EventEmitter<null>();
+    @Output() public clickHelpEmitter = new EventEmitter<null>();
+    @Output() public clickAnalyticsEmitter =
+        new EventEmitter<null>();
+    @Output() public clickBillingEmitter =
+        new EventEmitter<null>();
+    @Output() public clickUserDatasetsEmitter =
+        new EventEmitter<null>();
+    @Output() public clickUserProfileEmitter =
+        new EventEmitter<null>();
 
     @ViewChild("appHeaderMenuButton")
     appHeaderMenuButton: ElementRef<HTMLElement>;
 
     public defaultUsername: string = AppValues.defaultUsername;
     public isSearchActive = false;
-    public isCollapsedAppHeaderMenu: boolean = false;
+    public isCollapsedAppHeaderMenu = false;
 
     constructor(private appSearchAPI: SearchApi) {
         super();
@@ -68,13 +64,14 @@ export class AppHeaderComponent extends BaseComponent {
     public isDatasetType(type: string): boolean {
         return type === TypeNames.datasetType;
     }
+
     public search: OperatorFunction<string, readonly DatasetIDsInterface[]> = (
         text$: Observable<string>,
     ) => {
         return text$.pipe(
             debounceTime(300),
             distinctUntilChanged(),
-            switchMap((term) =>
+            switchMap((term: string) =>
                 this.appSearchAPI.autocompleteDatasetSearch(term),
             ),
         );
@@ -91,11 +88,11 @@ export class AppHeaderComponent extends BaseComponent {
             typeaheadInput.focus();
         }
     }
-    public onSelectItem(event: any): void {
+    public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
         this.isSearchActive = false;
 
         if (event.item) {
-            this.selectDatasetEmitter.emit(event.item);
+            this.selectDatasetEmitter.emit(event.item as DatasetIDsInterface);
 
             setTimeout(() => {
                 const typeaheadInput: HTMLElement | null =
@@ -121,10 +118,7 @@ export class AppHeaderComponent extends BaseComponent {
         }
     }
 
-    public onSearch(
-        event: any,
-        searchValue: DatasetIDsInterface | string,
-    ): void {
+    public onSearch(event: Event): void {
         this.isSearchActive = false;
 
         setTimeout(() => {
@@ -137,11 +131,7 @@ export class AppHeaderComponent extends BaseComponent {
                 "ngb-typeahead-window",
             );
             if (typeaheadInput) {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                document
-                    .querySelector("ngb-typeahead-window")
-                    .classList.remove("show");
+                typeaheadInput.classList.remove("show");
             }
         }, 200);
     }
@@ -157,6 +147,7 @@ export class AppHeaderComponent extends BaseComponent {
     public onAddNew(): void {
         this.addNewEmitter.emit();
     }
+
     public onOpenUserInfo(): void {
         this.userProfileEmitter.emit();
     }
@@ -168,29 +159,32 @@ export class AppHeaderComponent extends BaseComponent {
         el.blur();
         this.isCollapsedAppHeaderMenu = !this.isCollapsedAppHeaderMenu;
     }
+
     public onClickAppLogo(): void {
-        this.onClickAppLogoEmitter.emit();
+        this.clickAppLogoEmitter.emit();
     }
+
     public onHelp(): void {
-        this.onClickHelpEmitter.emit();
+        this.clickHelpEmitter.emit();
     }
 
     public onSettings(): void {
-        this.onClickSettingsEmitter.emit();
+        this.clickSettingsEmitter.emit();
     }
 
     public onAnalytics(): void {
-        this.onClickAnalyticsEmitter.emit();
+        this.clickAnalyticsEmitter.emit();
     }
+    
     public onBilling(): void {
-        this.onClickBillingEmitter.emit();
+        this.clickBillingEmitter.emit();
     }
 
     public onUserDatasets(): void {
-        this.onClickUserDatasetsEmitter.emit();
+        this.clickUserDatasetsEmitter.emit();
     }
 
     public onUserProfile(): void {
-        this.onClickUserProfileEmitter.emit();
+        this.clickUserProfileEmitter.emit();
     }
 }

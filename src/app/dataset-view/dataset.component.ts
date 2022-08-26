@@ -30,6 +30,7 @@ import {
 import { BaseComponent } from "../common/base.component";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
+import { logError, requireValue } from "../common/app.helpers";
 
 @Component({
     selector: "app-dataset",
@@ -73,7 +74,7 @@ export class DatasetComponent
         this.trackSubscription(
             this.router.events
                 .pipe(filter((event) => event instanceof NavigationEnd))
-                .subscribe((_: any) => {
+                .subscribe(() => {
                     this.initDatasetViewByType(
                         this.getDatasetInfoFromUrl(),
                         this.getCurrentPageFromUrl(),
@@ -113,8 +114,8 @@ export class DatasetComponent
                     );
                     this.lineageGraphView[0] =
                         searchResultContainer.offsetWidth -
-                        parseInt(styleElement.paddingLeft) -
-                        parseInt(styleElement.paddingRight);
+                        parseInt(styleElement.paddingLeft, 10) -
+                        parseInt(styleElement.paddingRight, 10);
                     this.lineageGraphView[1] = 400;
                 }
             });
@@ -133,7 +134,7 @@ export class DatasetComponent
             this.initDatasetViewByType(
                 {
                     accountName: this.datasetBasics.owner.name,
-                    datasetName: this.datasetBasics.name,
+                    datasetName: this.datasetBasics.name as string,
                 },
                 params.currentPage,
             );
@@ -156,7 +157,7 @@ export class DatasetComponent
         this.modalService.warning({
             message: "Feature coming soon",
             yesButtonText: "Ok",
-        });
+        }).catch(e => logError(e));
     }
 
     private initOverviewTab(datasetInfo: DatasetInfo): void {
@@ -217,7 +218,8 @@ export class DatasetComponent
         this.modalService.warning({
             message: "Feature coming soon",
             yesButtonText: "Ok",
-        });
+            title: topicName,
+        }).catch(e => logError(e));
     }
 
     public onClickLineageNode(node: Node): void {
@@ -225,7 +227,7 @@ export class DatasetComponent
     }
 
     public onClickMetadataNode(dataset: DatasetBasicsFragment): void {
-        this.onSelectDataset(dataset.name);
+        this.onSelectDataset(dataset.name as string);
     }
 
     public getDatasetNavigation(): DatasetNavigationInterface {
@@ -234,7 +236,7 @@ export class DatasetComponent
                 if (this.datasetBasics) {
                     this.navigationService.navigateToDatasetView({
                         accountName: this.datasetBasics.owner.name,
-                        datasetName: this.datasetBasics.name,
+                        datasetName: this.datasetBasics.name as string,
                         tab: DatasetViewTypeEnum.Overview,
                     });
                 }
@@ -243,7 +245,7 @@ export class DatasetComponent
                 if (this.datasetBasics) {
                     this.navigationService.navigateToDatasetView({
                         accountName: this.datasetBasics.owner.name,
-                        datasetName: this.datasetBasics.name,
+                        datasetName: this.datasetBasics.name as string,
                         tab: DatasetViewTypeEnum.Data,
                     });
                 }
@@ -252,7 +254,7 @@ export class DatasetComponent
                 if (this.datasetBasics) {
                     this.navigationService.navigateToDatasetView({
                         accountName: this.datasetBasics.owner.name,
-                        datasetName: this.datasetBasics.name,
+                        datasetName: this.datasetBasics.name as string,
                         tab: DatasetViewTypeEnum.Metadata,
                         page: currentPage,
                     });
@@ -262,7 +264,7 @@ export class DatasetComponent
                 if (this.datasetBasics) {
                     this.navigationService.navigateToDatasetView({
                         accountName: this.datasetBasics.owner.name,
-                        datasetName: this.datasetBasics.name,
+                        datasetName: this.datasetBasics.name as string,
                         tab: DatasetViewTypeEnum.History,
                         page: currentPage,
                     });
@@ -272,7 +274,7 @@ export class DatasetComponent
                 if (this.datasetBasics) {
                     this.navigationService.navigateToDatasetView({
                         accountName: this.datasetBasics.owner.name,
-                        datasetName: this.datasetBasics.name,
+                        datasetName: this.datasetBasics.name as string,
                         tab: DatasetViewTypeEnum.Lineage,
                     });
                 }
@@ -343,9 +345,7 @@ export class DatasetComponent
 
                     this.isAvailableLineageGraph = edges.length !== 0;
 
-                    const uniqueDatasets: {
-                        [id: string]: DatasetKindInterface;
-                    } = {};
+                    const uniqueDatasets: Record<string, DatasetKindInterface> = {};
                     edges.forEach((edge: DatasetKindInterface[]) =>
                         edge.forEach((dataset: DatasetKindInterface) => {
                             uniqueDatasets[dataset.id] = dataset;
@@ -383,20 +383,22 @@ export class DatasetComponent
             this.appDatasetService.onKindInfoChanges.subscribe(
                 (datasetList: DatasetKindInterface[]) => {
                     datasetList.forEach((dataset: DatasetKindInterface) => {
-                        this.lineageGraphClusters = this.lineageGraphClusters.map(
-                            (cluster: ClusterNode) => {
-                                if (
-                                    typeof cluster.childNodeIds === "undefined"
-                                ) {
-                                    cluster.childNodeIds = [];
-                                }
+                        this.lineageGraphClusters =
+                            this.lineageGraphClusters.map(
+                                (cluster: ClusterNode) => {
+                                    if (
+                                        typeof cluster.childNodeIds ===
+                                        "undefined"
+                                    ) {
+                                        cluster.childNodeIds = [];
+                                    }
 
-                                if (cluster.label === dataset.kind) {
-                                    cluster.childNodeIds.push(dataset.id);
-                                }
-                                return cluster;
-                            },
-                        );
+                                    if (cluster.label === dataset.kind) {
+                                        cluster.childNodeIds.push(dataset.id);
+                                    }
+                                    return cluster;
+                                },
+                            );
                     });
                 },
             ),
@@ -405,13 +407,7 @@ export class DatasetComponent
 
     // TODO: Use `String.replaceAll()`
     private sanitizeID(id: string): string {
-        while (true) {
-            const nid = id.replace(":", "");
-            if (nid === id) {
-                return id;
-            }
-            id = nid;
-        }
+        return id.replace(/:/g, "");
     }
 
     private onClickDeriveFrom(): void {
@@ -446,9 +442,7 @@ export class DatasetComponent
                 this.initLineageTab(datasetInfo),
             [DatasetViewTypeEnum.Discussions]: () => this.initDiscussionsTab(),
         };
-        if (this.appDatasetService.onSearchLineageDatasetSubscription) {
-            this.appDatasetService.onSearchLineageDatasetSubscription.unsubscribe();
-        }
+
         this.datasetViewType = this.getDatasetViewTypeFromUrl();
 
         this.appDatasetService.resetDatasetTree();
@@ -460,8 +454,8 @@ export class DatasetComponent
         const paramMap: ParamMap = this.activatedRoute.snapshot.paramMap;
         return {
             // Both parameters are mandatory in URL, router would not activate this component otherwise
-            accountName: paramMap.get(ProjectLinks.urlParamAccountName)!,
-            datasetName: paramMap.get(ProjectLinks.urlParamDatasetName)!,
+            accountName: requireValue(paramMap.get(ProjectLinks.urlParamAccountName)),
+            datasetName: requireValue(paramMap.get(ProjectLinks.urlParamDatasetName)),
         };
     }
 
@@ -495,7 +489,7 @@ export class DatasetComponent
                 accountName: this.datasetBasics.owner.name,
                 datasetName: datasetName
                     ? datasetName
-                    : this.datasetBasics.name,
+                    : this.datasetBasics.name as string,
                 tab: DatasetViewTypeEnum.Lineage,
             });
         }
@@ -508,12 +502,5 @@ export class DatasetComponent
                 50, // TODO: Propagate limit from UI and display when it was reached
             );
         }
-    }
-
-    ngOnDestroy() {
-        if (this.appDatasetService.onSearchLineageDatasetSubscription) {
-            this.appDatasetService.onSearchLineageDatasetSubscription.unsubscribe();
-        }
-        super.ngOnDestroy();
     }
 }

@@ -1,5 +1,6 @@
 import {
     Component,
+    ElementRef,
     EventEmitter,
     HostListener,
     Input,
@@ -7,13 +8,11 @@ import {
     Output,
     ViewChild,
 } from "@angular/core";
-import {
-    SearchAdditionalButtonInterface,
-    SearchAdditionalHeaderButtonInterface,
-} from "./search-additional-buttons.interface";
+import { SearchAdditionalHeaderButtonInterface } from "./search-additional-buttons.interface";
 import { MatSidenav } from "@angular/material/sidenav";
 import AppValues from "../../common/app.values";
 import { SideNavService } from "../../services/sidenav.service";
+import { logError } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-search-additional-buttons",
@@ -23,20 +22,21 @@ import { SideNavService } from "../../services/sidenav.service";
 export class SearchAdditionalButtonsComponent implements OnInit {
     @Input()
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[];
-    @Output() public searchAdditionalButtonsMethod: EventEmitter<string> =
-        new EventEmitter();
+    @Output() public searchAdditionalButtonsMethod = new EventEmitter<string>();
     public isMinimizeSearchAdditionalButtons = false;
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
-    @ViewChild("menuTrigger") trigger: any;
+    @ViewChild("menuTrigger") trigger: ElementRef;
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
         this.isMinimizeSearchAdditionalButtons = AppValues.isMobileView();
 
         if (AppValues.isMobileView()) {
-            this.sidenavService.close();
+            this.sidenavService.close()
+                .catch(e => logError(e));
         } else {
-            this.sidenavService.open();
+            this.sidenavService.open()
+                .catch(e => logError(e));
         }
     }
 

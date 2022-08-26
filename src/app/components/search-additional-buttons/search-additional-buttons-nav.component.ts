@@ -1,8 +1,5 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import {
-    SearchAdditionalButtonInterface,
-    SearchAdditionalHeaderButtonInterface,
-} from "./search-additional-buttons.interface";
+import { Component, Input } from "@angular/core";
+import { SearchAdditionalHeaderButtonInterface } from "./search-additional-buttons.interface";
 
 @Component({
     selector: "app-search-additional-buttons-nav",

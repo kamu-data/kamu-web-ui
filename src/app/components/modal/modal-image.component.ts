@@ -14,7 +14,7 @@ import { DynamicComponent } from "./dynamic.component";
                 <button
                     class="modal__btn"
                     data-test-id="yesButton"
-                    (click)="context._close()"
+                    (click)="context._close && context._close()"
                 >
                     Close
                 </button>

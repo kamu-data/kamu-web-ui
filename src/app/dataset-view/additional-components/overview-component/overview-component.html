@@ -170,7 +170,7 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ currentState?.size?.estimatedSize ?
+                                {{ currentState.size.estimatedSize ?
                                 dataSize(currentState.size.estimatedSize) : "-"
                                 }}
                             </p>
@@ -182,7 +182,7 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ currentState?.size?.numRecordsTotal || 0 |
+                                {{ currentState.size.numRecordsTotal || 0 |
                                 number: "1.0-0" }}
                             </p>
                         </div>

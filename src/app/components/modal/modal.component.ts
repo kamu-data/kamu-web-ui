@@ -9,7 +9,10 @@ import {
 
 import { BlankComponent } from "./blank.component";
 import { DynamicComponent } from "./dynamic.component";
-import { ModalCommandInterface } from "../../interface/modal.interface";
+import {
+    ModalCommandInterface,
+    ModalComponentType,
+} from "../../interface/modal.interface";
 import { ModalDialogComponent } from "./modal-dialog.component";
 import { ModalImageComponent } from "./modal-image.component";
 import { ModalService } from "./modal.service";
@@ -34,6 +37,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
     @ViewChild("container", { read: ViewContainerRef })
     container: ViewContainerRef;
     isVisible: boolean;
+    type: string | undefined;
 
     private componentRef: ComponentRef<unknown>;
     private mappings: ModalMappingsComponent = {
@@ -57,22 +61,6 @@ export class ModalComponent extends BaseComponent implements OnInit {
             this.modalService
                 .getCommand()
                 .subscribe((command: ModalCommandInterface) => {
-                    if (command.context) {
-                        // @ts-ignore
-                        command.context.buttonCount = 0;
-                        [
-                            "yesButtonText",
-                            "noButtonText",
-                            "lastButtonText",
-                            "tooLastButtonText",
-                        ].forEach((btnName: string) => {
-                            // @ts-ignore
-                            if (command.context[btnName]) {
-                                // @ts-ignore
-                                command.context.buttonCount += 1;
-                            }
-                        });
-                    }
                     this._execute(command);
                 }),
         );
@@ -83,7 +71,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
 
         this._close();
 
-        if (command.type && command.type !== "blank") {
+        if (command.type !== "blank") {
             this._renderModal(command);
         }
     }
@@ -98,21 +86,23 @@ export class ModalComponent extends BaseComponent implements OnInit {
         this.componentRef = this.container.createComponent(factory);
 
         const instance = this.componentRef.instance as DynamicComponent;
-        instance.context = Object.assign(command.context, {
-            _close: this._close.bind(this),
-        });
+        instance.context = Object.assign(
+            command.context, 
+            {
+                _close: this._close.bind(this),
+            }
+        );
 
         this._handleKBD(command.type);
     }
 
-    _getComponentType(typeName: string) {
-        // @ts-ignore
-        const type = this.mappings[typeName];
-        return type || BlankComponent;
+    _getComponentType(typeName: ModalComponentType) {
+        return this.mappings[typeName];
     }
 
-    _handleKBD(type: string) {
+    _handleKBD(type?: string) {
         this.isVisible = true;
+        this.type = type;
         document.addEventListener("keydown", this._processKDB.bind(this));
     }
 
@@ -127,14 +117,16 @@ export class ModalComponent extends BaseComponent implements OnInit {
         document.removeEventListener("keydown", this._processKDB.bind(this));
     }
 
-    _processKDB(e: any) {
-        // if (e.keyCode === 27) { // escape
-        //     this._close();
-        // }
+    _processKDB(e: KeyboardEvent) {
+        if (e.key === "Escape") {
+            // escape
+            this._close();
+        }
 
-        if (e.keyCode === 9) {
+        if (e.key === "Tab") {
             // tab
-            setTimeout(() => this.container.element.nativeElement.focus());
+            const element = this.container.element.nativeElement as HTMLElement;
+            setTimeout(() => element.focus());
         }
     }
 }

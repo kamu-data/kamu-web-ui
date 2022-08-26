@@ -7,10 +7,8 @@ import {
 } from "../interface/search.interface";
 import {
     Dataset,
-    Scalars,
     SearchDatasetsOverviewQuery,
 } from "../api/kamu.graphql.interface";
-import Maybe from "graphql/tsutils/Maybe";
 
 @Injectable()
 export class AppSearchService {
@@ -47,10 +45,9 @@ export class AppSearchService {
         this.searchApi
             .searchOverview(searchValue, page)
             .subscribe((data: SearchDatasetsOverviewQuery) => {
-                let datasets: Dataset[] = data.search.query.nodes as Dataset[];
-                let pageInfo = data.search.query.pageInfo;
-                let totalCount: Maybe<Scalars["Int"]> =
-                    data.search.query.totalCount;
+                const datasets: Dataset[] = data.search.query.nodes as Dataset[];
+                const pageInfo = data.search.query.pageInfo;
+                const totalCount: number = data.search.query.totalCount ?? 0;
 
                 this.searchData = {
                     datasets,

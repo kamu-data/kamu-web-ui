@@ -5,13 +5,11 @@ import { BlankComponent } from "../components/modal/blank.component";
 import { ModalSpinnerComponent } from "../components/modal/modal-spinner.component";
 
 export interface ModalCommandInterface {
-    type: string;
-    context?: ModalArgumentsInterface | {};
-    buttonCount: number;
+    type: ModalComponentType;
+    context: ModalArgumentsInterface;
 }
 
 export interface ModalArgumentsInterface {
-    buttonCount?: number;
     title?: string;
     message?: string;
     bigTextBlock?: string;
@@ -20,23 +18,15 @@ export interface ModalArgumentsInterface {
     noButtonText?: string;
     lastButtonText?: string;
     tooLastButtonText?: string;
-    handler?: Function;
-    data?: any;
+    handler?: (arg: string | boolean) => void;
+    data?: undefined;
     locationBack?: boolean;
     idFilterButton?: string;
     filter_data?: ModalFilterArgumentInterface[][];
-    position?: ModalPosition;
+    position?: DOMRect;
     style?: ModalStyles;
     type?: string;
-}
-
-export interface ModalPosition {
-    top?: number;
-    bottom?: number;
-    right?: number;
-    left?: number;
-    height?: number;
-    width?: number;
+    _close?: (locationBack?: boolean) => void;
 }
 
 export interface ModalStyles {
@@ -58,3 +48,12 @@ export interface ModalMappingsComponent {
     blank: typeof BlankComponent;
     spinner: typeof ModalSpinnerComponent;
 }
+
+export type ModalComponentType =
+    | "blank"
+    | "dialog"
+    | "image"
+    | "spinner"
+    | "filter";
+
+export type NgStyleValue = Record<string, string> | null;

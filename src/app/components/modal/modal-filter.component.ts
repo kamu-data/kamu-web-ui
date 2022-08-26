@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { DynamicComponent } from "./dynamic.component";
-import { ModalArgumentsInterface } from "../../interface/modal.interface";
+import { ModalArgumentsInterface, NgStyleValue } from "../../interface/modal.interface";
 
 @Component({
     selector: "modal-dialog",
@@ -27,7 +27,7 @@ import { ModalArgumentsInterface } from "../../interface/modal.interface";
                     [ngClass]="'modal__dialog'"
                     [ngStyle]="styleFilterModal()"
                     [style.display]="
-                        context && !context.filter_data.length && 'none'
+                        context && !context.filter_data?.length && 'none'
                     "
                 >
                     <ul
@@ -62,40 +62,29 @@ import { ModalArgumentsInterface } from "../../interface/modal.interface";
     `,
 })
 export class ModalFilterComponent extends DynamicComponent {
-    boundingClientRect = {
-        bottom: 0,
-        height: 0,
-        left: 0,
-        right: 0,
-        top: 0,
-        width: 0,
-        x: 0,
-        y: 0,
-    };
-    getElementPosition() {
-        if (this.context) {
-            if (this.context.idFilterButton) {
-                const element: Element | null = document.querySelector(
-                    '[data-test-id="' + this.context.idFilterButton + '"]',
-                );
-                return element !== null && element.getBoundingClientRect();
+
+    getElementPosition(): DOMRect | null {
+        if (this.context.idFilterButton) {
+            const element: Element | null = document.querySelector(
+                `[data-test-id=${this.context.idFilterButton}]`,
+            );
+            if (element !== null) {
+                return element.getBoundingClientRect();
             }
-            if (this.context.position) {
-                return this.context.position;
-            }
-        } else {
-            return this.boundingClientRect;
         }
+        if (this.context.position) {
+            return this.context.position;
+        }
+        return null;
     }
 
     hideAll() {
-        // tslint:disable-next-line:no-unused-expression
-        this.context && this.context._close();
+        this.context._close?.();
     }
 
     onSortChange(action: boolean | string, locationBack?: boolean) {
-        if (this.context) {
-            this.context._close(locationBack);
+        if (this.context.handler) {
+            this.context._close?.(locationBack);
             this.context.handler(action);
         }
     }
@@ -108,69 +97,67 @@ export class ModalFilterComponent extends DynamicComponent {
         );
     }
 
-    positionStartModal() {
-        return {
-            top:
-                this.getElementPosition().top +
-                this.getElementPosition().height +
-                "px",
-        };
+    positionStartModal(): NgStyleValue {
+        const elementPosition = this.getElementPosition();
+        if (elementPosition) {
+            const top = elementPosition.top + elementPosition.height;
+            return {
+                top: `${top}px`,
+            };
+        }
+        return {};
     }
 
-    styleFilterModal() {
-        const styleModal: any = {};
+    styleFilterModal(): NgStyleValue {
+        const styleModal: NgStyleValue = {};
+        const elementPosition = this.getElementPosition();
+        if (this.context.style?.isMinContent) {
+            styleModal["max-width"] = "min-content";
+        }
+        if (window.innerWidth < 568) {
+            styleModal["max-width"] = "91%";
+        }
+        if (this.context.style?.width) {
+            styleModal.width = this.context.style.width || "";
+        }
 
-        if (this.context) {
-            if (this.context.style && this.context.style.isMinContent) {
-                styleModal["max-width"] = "min-content";
-            }
-            if (window.innerWidth < 568) {
-                styleModal["max-width"] = "91%";
-            }
-            if (this.context.style.width) {
-                styleModal.width = this.context.style.width;
-            }
+        if (this.context.idFilterButton && this.context.style && this.context.style.borderRadius) {
+            const borderRadius = this.context.style.borderRadius;
+            styleModal["border-radius"] =
+                borderRadius + " 0 " + borderRadius + " " + borderRadius;
 
-            if (this.context.idFilterButton) {
-                const borderRadius = this.context.style.borderRadius;
-                styleModal["border-radius"] =
-                    borderRadius + " 0 " + borderRadius + " " + borderRadius;
-
-                const modalDialog: any =
-                    document.getElementsByClassName("modal__dialog")[0];
-
-                if (modalDialog !== null) {
+            if (elementPosition) {
+                const modalDialogs = document.getElementsByClassName("modal__dialog") as HTMLCollectionOf<HTMLElement>;
+                if (modalDialogs.length > 0) {
+                    const modalDialog = modalDialogs[0];
                     if (modalDialog.offsetWidth !== 0) {
                         styleModal.position = "absolute";
-                        styleModal.right =
-                            this.getElementPosition().right -
-                            modalDialog.offsetWidth +
-                            4 +
-                            "px";
+                        styleModal.right = `${elementPosition.right || 0 - modalDialog.offsetWidth + 4}px`;
                     }
                 }
             }
+        }
 
-            if (this.context.style.width) {
-                styleModal.position = "absolute";
-                styleModal.left =
-                    this.getElementPosition().right -
-                    Number(this.context.style.width.split("px")[0]) +
-                    "px";
-            }
+        if (this.context.style?.width && elementPosition) {
+            styleModal.position = "absolute";
+            styleModal.left = `${elementPosition.right || 0 - Number(this.context.style.width.split("px")[0])}px`;
         }
 
         return styleModal;
     }
 
-    closeButtonPosition() {
-        const borderRadius = this.context ? this.context.style.borderRadius : 0;
-        return {
-            top: this.getElementPosition().top + "px",
-            width: this.getElementPosition().width - 2 + "px",
-            left: this.getElementPosition().left + "px",
-            height: this.getElementPosition().height + "px",
-            "border-radius": borderRadius + " " + borderRadius + " 0px 0px",
-        };
+    closeButtonPosition(): NgStyleValue {
+        const buttonPositionStyle: NgStyleValue = {};
+        const elementPosition = this.getElementPosition();
+        if (this.context.style?.borderRadius && elementPosition) {
+            const borderRadius = this.context.style.borderRadius;
+            buttonPositionStyle.top = `${elementPosition.top}px`;
+            buttonPositionStyle.width = `${elementPosition.width || 0 - 2}px`;
+            buttonPositionStyle.left = `${elementPosition.left}px`;
+            buttonPositionStyle.height = `${elementPosition.height}px`;
+            buttonPositionStyle["border-radius"] = `${borderRadius} ${borderRadius} + 0px 0px`;
+            return buttonPositionStyle;
+        }
+        return {};
     }
 }

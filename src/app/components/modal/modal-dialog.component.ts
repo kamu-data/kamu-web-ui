@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { DynamicComponent } from "./dynamic.component";
 
 @Component({
@@ -39,7 +39,7 @@ import { DynamicComponent } from "./dynamic.component";
                 <div
                     class="modal__dialog__footer-block"
                     [style]="{
-                        width: 100 / context.buttonCount + '%',
+                        width: computeWidth(),
                         display: 'flex',
                         alignItems: 'center'
                     }"
@@ -92,12 +92,27 @@ import { DynamicComponent } from "./dynamic.component";
 })
 export class ModalDialogComponent extends DynamicComponent {
     onClick(action: boolean | string, locationBack?: boolean) {
-        this.context._close(locationBack);
-        this.context.handler(action);
+        this.context._close?.(locationBack);
+        this.context.handler?.(action);
     }
 
     hideAll() {
-        // tslint:disable-next-line:no-unused-expression
-        this.context.title === "Search for:" && this.context._close();
+        if (this.context.title === "Search for:") {
+            this.context._close?.();
+        }
+    }
+
+    computeWidth(): number {
+        const buttonsCount = this.getContextButtonsCount();
+        return buttonsCount ? 100 / buttonsCount : 100;
+    }
+
+    private getContextButtonsCount(): number {
+        let buttonsCount = 0;
+        if (this.context.yesButtonText) buttonsCount++;
+        if (this.context.noButtonText) buttonsCount++;
+        if (this.context.lastButtonText) buttonsCount++;
+        if (this.context.tooLastButtonText) buttonsCount++;
+        return buttonsCount;
     }
 }

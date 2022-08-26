@@ -47,59 +47,68 @@ export class ModalService {
     public close(): void {
         this.showModal$.next({
             context: {},
-            buttonCount: 0,
             type: "blank",
         });
     }
 
-    public success(options: ModalArgumentsInterface): Promise<{}> {
+    public success(
+        options: ModalArgumentsInterface,
+    ): Promise<boolean | string> {
         return this._showDialog(Object.assign(options, { status: "ok" }));
     }
 
-    public warning(options: ModalArgumentsInterface): Promise<{}> {
+    public warning(
+        options: ModalArgumentsInterface,
+    ): Promise<boolean | string> {
         return this._showDialog(Object.assign(options, { status: "warning" }));
     }
 
-    public error(options: ModalArgumentsInterface): Promise<{}> {
+    public error(options: ModalArgumentsInterface): Promise<boolean | string> {
         return this._showDialog(Object.assign(options, { status: "error" }));
     }
 
-    public dialog_question(options: ModalArgumentsInterface): Promise<{}> {
+    public dialog_question(
+        options: ModalArgumentsInterface,
+    ): Promise<boolean | string> {
         return this._showDialog(
             Object.assign(options, { status: "dialog_question" }),
         );
     }
 
-    public filter_modal(options: ModalArgumentsInterface): Promise<{}> {
+    public filter_modal(
+        options: ModalArgumentsInterface,
+    ): Promise<boolean | string> {
         return this._showFilter(
             Object.assign(options, { status: "filter_modal" }),
         );
     }
 
-    private _showDialog(context: ModalArgumentsInterface): Promise<{}> {
+    private _showDialog(
+        context: ModalArgumentsInterface,
+    ): Promise<boolean | string> {
         if (context.message === "Check the Internet connection") {
-            return new Promise((resolve) => {});
+            return new Promise(() => null);
         }
         this.showModal$.next({
             type: "dialog",
             context,
-            buttonCount: 0,
         });
 
         return new Promise((resolve) => {
-            context.handler = (arg: any) => resolve(arg);
+            context.handler = (arg: boolean | string) => resolve(arg);
         });
     }
 
-    private _showFilter(context: ModalArgumentsInterface): Promise<{}> {
+    private _showFilter(
+        context: ModalArgumentsInterface,
+    ): Promise<boolean | string> {
         this.showModal$.next({
             type: "filter",
             context,
-            buttonCount: 0,
         });
 
         return new Promise((resolve) => {
-            context.handler = (arg: any) => resolve(arg);
+            context.handler = (arg: boolean | string) => resolve(arg);
         });
     }
 
@@ -109,7 +118,6 @@ export class ModalService {
             context: {
                 message: url,
             },
-            buttonCount: 0,
         });
     }
 
@@ -117,15 +125,6 @@ export class ModalService {
         this.showModal$.next({
             type: "spinner",
             context: {},
-            buttonCount: 0,
-        });
-    }
-
-    public showUpload(): void {
-        this.showModal$.next({
-            type: "upload",
-            context: {},
-            buttonCount: 0,
         });
     }
 

@@ -16,6 +16,7 @@ import { NavigationService } from "../services/navigation.service";
 import { Dataset, PageBasedInfo } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
+import { logError } from "../common/app.helpers";
 
 export interface SearchFilters {
     name?: string;
@@ -47,7 +48,7 @@ export class SearchComponent
         { value: "least", label: "Least recently indexed", active: false },
     ];
 
-    public allComplete: boolean = false;
+    public allComplete = false;
     public tableData: {
         tableSource: Dataset[];
         hasResultQuantity: boolean;
@@ -122,9 +123,11 @@ export class SearchComponent
         this.isMobileView = AppValues.isMobileView();
 
         if (AppValues.isMobileView()) {
-            this.sidenavService.close();
+            this.sidenavService.close()
+                .catch(e => logError(e));
         } else {
-            this.sidenavService.open();
+            this.sidenavService.open()
+                .catch(e => logError(e));
         }
     }
 
@@ -161,7 +164,7 @@ export class SearchComponent
                 (data: SearchOverviewInterface) => {
                     this.tableData.tableSource = data.datasets;
                     this.tableData.pageInfo = data.pageInfo;
-                    this.tableData.totalCount = data.totalCount as number;
+                    this.tableData.totalCount = data.totalCount;
                     this.currentPage = data.currentPage;
                 },
             ),
@@ -222,13 +225,12 @@ export class SearchComponent
         });
     }
 
-    public onSearch(searchValue: string, page: number = 1): void {
+    public onSearch(searchValue: string, page = 1): void {
         this.appSearchService.search(searchValue, page - 1);
     }
 
     public updateAllComplete() {
         this.allComplete =
-            this.filters != null &&
             this.filters.every((t) =>
                 t.subtasks?.every((sub) => sub.completed),
             );

@@ -1,4 +1,4 @@
-import { DataHelpers } from "src/app/common/data.helpers";
+import { shortHash } from "src/app/common/data.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DataViewSchema } from "../../../interface/search.interface";
@@ -18,17 +18,17 @@ import {
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;
-    @Output() public pageChangeEvent: EventEmitter<{
+    @Output() public pageChangeEvent = new EventEmitter<{
         currentPage: number;
         isClick: boolean;
-    }> = new EventEmitter();
-    @Output() onPageChangeEmit: EventEmitter<{
+    }>();
+    @Output() pageChangeEmit = new EventEmitter<{
         currentPage: number;
         isClick: boolean;
-    }> = new EventEmitter();
-    @Output() onSelectTopicEmit: EventEmitter<string> = new EventEmitter();
-    @Output() onClickDatasetEmit: EventEmitter<DatasetBasicsFragment> =
-        new EventEmitter();
+    }>();
+    @Output() selectTopicEmit = new EventEmitter<string>();
+    @Output() clickDatasetEmit =
+        new EventEmitter<DatasetBasicsFragment>();
 
     public sqlEditorOptions = {
         theme: "vs",
@@ -73,18 +73,18 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     }
 
     public selectTopic(topicName: string): void {
-        this.onSelectTopicEmit.emit(topicName);
+        this.selectTopicEmit.emit(topicName);
     }
 
     public onClickDataset(dataset: DatasetBasicsFragment): void {
-        this.onClickDatasetEmit.emit(dataset);
+        this.clickDatasetEmit.emit(dataset);
     }
 
     public onPageChange(params: {
         currentPage: number;
         isClick: boolean;
     }): void {
-        this.onPageChangeEmit.emit(params);
+        this.pageChangeEmit.emit(params);
     }
 
     public get currentPage(): number {
@@ -100,15 +100,15 @@ export class MetadataComponent extends BaseComponent implements OnInit {
 
     public get latestBlockhash(): string {
         return this.currentState
-            ? DataHelpers.shortHash(
-                  this.currentState.metadata.chain.blocks.nodes[0].blockHash,
+            ? shortHash(
+                  this.currentState.metadata.chain.blocks.nodes[0].blockHash as string,
               )
             : "";
     }
 
     public get latestBlockSystemTime(): string {
         const systemTimeAsString: string | undefined =
-            this.currentState?.metadata.chain.blocks.nodes[0].systemTime;
+            this.currentState?.metadata.chain.blocks.nodes[0].systemTime as string;
 
         return systemTimeAsString
             ? AppValues.momentConverDatetoLocalWithFormat({

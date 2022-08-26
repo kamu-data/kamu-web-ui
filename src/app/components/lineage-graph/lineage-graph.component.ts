@@ -8,7 +8,7 @@ import {
     SimpleChange,
     SimpleChanges,
 } from "@angular/core";
-import { Edge } from "@swimlane/ngx-graph";
+import { Edge, MiniMapPosition } from "@swimlane/ngx-graph";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 
 @Component({
@@ -17,11 +17,11 @@ import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 })
 export class LineageGraphComponent implements OnChanges, OnInit {
     @Input() public view: [number, number];
-    @Input() public links: any[];
-    @Input() public nodes: any[];
-    @Input() public clusters: any[];
+    @Input() public links: Edge[];
+    @Input() public nodes: Node[];
+    @Input() public clusters: ClusterNode[];
 
-    @Output() public onClickNodeEvent: EventEmitter<Node> = new EventEmitter();
+    @Output() public onClickNodeEvent = new EventEmitter<Node>();
 
     public draggingEnabled = false;
     public panningEnabled = true;
@@ -33,40 +33,27 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public autoZoom = true;
     public autoCenter = true;
     public showMiniMap = true;
-    public miniMapPosition: any;
-    public graphClusters: any[];
-    public graphNodes: any[];
+    public miniMapPosition: MiniMapPosition;
+    public graphClusters: ClusterNode[];
+    public graphNodes: Node[];
 
     public ngOnInit(): void {
-        this.graphNodes = this.nodes || [];
-        this.graphClusters = this.graphClusters || [];
+        this.graphNodes = this.nodes;
+        this.graphClusters = this.clusters;
     }
     public ngOnChanges(changes: SimpleChanges): void {
         const clusters: SimpleChange = changes.clusters;
         const nodes: SimpleChange = changes.nodes;
-        if (clusters) {
-            if (
-                typeof clusters.currentValue !== "undefined" &&
-                clusters.currentValue !== clusters.previousValue
-            ) {
-                if (typeof clusters.currentValue !== "undefined") {
-                    this.graphClusters = clusters.currentValue.filter(
-                        (cluster: ClusterNode) =>
-                            cluster.childNodeIds &&
-                            cluster.childNodeIds.length !== 0,
-                    );
-                }
-            }
+        if (clusters.currentValue && clusters.currentValue !== clusters.previousValue) {
+            const currentClusters = clusters.currentValue as ClusterNode[];
+            this.graphClusters = currentClusters.filter(
+                (cluster: ClusterNode) =>
+                    cluster.childNodeIds &&
+                    cluster.childNodeIds.length !== 0,
+            );
         }
-        if (nodes) {
-            if (
-                typeof nodes.currentValue !== "undefined" &&
-                nodes.currentValue !== nodes.previousValue
-            ) {
-                if (typeof nodes.currentValue !== "undefined") {
-                    this.graphNodes = nodes.currentValue;
-                }
-            }
+        if (nodes.currentValue && nodes.currentValue !== nodes.previousValue) {
+            this.graphNodes = nodes.currentValue as Node[];
         }
     }
 
@@ -76,14 +63,13 @@ export class LineageGraphComponent implements OnChanges, OnInit {
 
     // See: https://stackoverflow.com/questions/62874476/ngx-graph-linktemplate-links-middle-pointer-alignment-issue
     getXYForCenteredLinkCircle(link: Edge): [number, number] {
-        var myPath = document.createElementNS(
+        const myPath = document.createElementNS(
             "http://www.w3.org/2000/svg",
             "path",
         );
-        // @ts-ignore
-        myPath.setAttributeNS(null, "d", link.line);
-        var length = myPath.getTotalLength();
-        let p = myPath.getPointAtLength(length / 2);
+        myPath.setAttributeNS(null, "d", link.line ?? "");
+        const length = myPath.getTotalLength();
+        const p = myPath.getPointAtLength(length / 2);
         return [p.x, p.y]; // Consider the center coordinates of the circle
     }
 }

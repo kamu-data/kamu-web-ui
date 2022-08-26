@@ -2,17 +2,18 @@ import { NavigationService } from "./services/navigation.service";
 import { Component, HostListener, OnInit } from "@angular/core";
 import AppValues from "./common/app.values";
 import { AppSearchService } from "./search/search.service";
-import { filter } from "rxjs/operators";
-import { Router, NavigationEnd } from "@angular/router";
+import { filter, map } from "rxjs/operators";
+import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { DatasetIDsInterface, TypeNames } from "./interface/search.interface";
 import { AuthApi } from "./api/auth.api";
 import { ModalService } from "./components/modal/modal.service";
 import { BaseComponent } from "./common/base.component";
 import ProjectLinks from "./project-links";
 import { AccountInfo } from "./api/kamu.graphql.interface";
-import { Optional } from "./common/app.types";
+import { MaybeNull } from "./common/app.types";
 import _ from "lodash";
 import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
+import { logError } from "./common/app.helpers";
 
 @Component({
     selector: "app-root",
@@ -27,7 +28,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     private unimplementedMessage = "Feature coming soon";
     public appLogo = `/${AppValues.appLogo}`;
     public isMobileView = false;
-    public searchValue: any = "";
+    public searchValue = "";
     public isVisible = true;
     public user: AccountInfo;
     private appHeaderNotVisiblePages: string[] = [
@@ -56,7 +57,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         this.appHeaderInit();
         this.trackSubscription(
             this.authApi.onUserChanges.subscribe(
-                (user: Optional<AccountInfo>) => {
+                (user: MaybeNull<AccountInfo>) => {
                     this.user = user
                         ? _.cloneDeep(user)
                         : this.AnonymousAccountInfo;
@@ -93,11 +94,12 @@ export class AppComponent extends BaseComponent implements OnInit {
                     this.searchValue = searchValue;
                 },
             ),
-
-            /* eslint-disable  @typescript-eslint/no-explicit-any */
             this.router.events
-                .pipe(filter((event) => event instanceof NavigationEnd))
-                .subscribe((event: any) => {
+                .pipe(
+                    filter((event) => event instanceof NavigationEnd),
+                    map((event) => event as RouterEvent),
+                )
+                .subscribe((event: RouterEvent) => {
                     this.isVisible = this.isAvailableAppHeaderUrl(event.url);
 
                     if (event.url.split("?query=").length > 1) {
@@ -132,13 +134,6 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onSelectDataset(item: DatasetIDsInterface): void {
-        console.log(
-            "item.__typename: " +
-                item.__typename +
-                " ; " +
-                "item.id:" +
-                item.id,
-        );
         if (item.__typename === TypeNames.datasetType) {
             this.navigationService.navigateToDatasetView({
                 accountName: AppValues.defaultUsername,
@@ -155,7 +150,6 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onOpenUserInfo(): void {
-        // tslint:disable-next-line:no-console
         console.info("click onOpenUserInfo");
     }
 
@@ -173,36 +167,36 @@ export class AppComponent extends BaseComponent implements OnInit {
         this.modalService.warning({
             message: this.unimplementedMessage,
             yesButtonText: "Ok",
-        });
+        }).catch(e => logError(e));
     }
     public onUserDatasets(): void {
         this.modalService.warning({
             message: this.unimplementedMessage,
             yesButtonText: "Ok",
-        });
+        }).catch(e => logError(e));
     }
     public onBilling(): void {
         this.modalService.warning({
             message: this.unimplementedMessage,
             yesButtonText: "Ok",
-        });
+        }).catch(e => logError(e));
     }
     public onAnalytics(): void {
         this.modalService.warning({
             message: this.unimplementedMessage,
             yesButtonText: "Ok",
-        });
+        }).catch(e => logError(e));
     }
     public onSettings(): void {
         this.modalService.warning({
             message: this.unimplementedMessage,
             yesButtonText: "Ok",
-        });
+        }).catch(e => logError(e));
     }
     public onHelp(): void {
         this.modalService.warning({
             message: this.unimplementedMessage,
             yesButtonText: "Ok",
-        });
+        }).catch(e => logError(e));
     }
 }

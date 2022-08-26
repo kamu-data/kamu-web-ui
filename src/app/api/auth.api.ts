@@ -9,7 +9,7 @@ import {
 } from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
 import { FetchResult } from "apollo-link";
-import { Optional } from "../common/app.types";
+import { MaybeNull } from "../common/app.types";
 
 @Injectable()
 export class AuthApi {
@@ -18,7 +18,7 @@ export class AuthApi {
         private navigationService: NavigationService,
     ) {}
 
-    public get onUserChanges(): Observable<Optional<AccountInfo>> {
+    public get onUserChanges(): Observable<MaybeNull<AccountInfo>> {
         return this.userChanges$.asObservable();
     }
 
@@ -32,16 +32,14 @@ export class AuthApi {
     public get isAuthUser(): boolean {
         return this.isAuthenticated;
     }
-    private user: Optional<AccountInfo>;
+    private user: MaybeNull<AccountInfo>;
     private isAuthenticated: boolean;
-    private userChanges$: Subject<Optional<AccountInfo>> = new Subject<
-        Optional<AccountInfo>
-    >();
+    private userChanges$: Subject<MaybeNull<AccountInfo>> = new Subject<MaybeNull<AccountInfo>>();
 
     static handleError(error: Response): Observable<never> {
         return throwError(`GitHub ${error.statusText || "Server error"}`);
     }
-    public userChange(user: Optional<AccountInfo>) {
+    public userChange(user: MaybeNull<AccountInfo>) {
         this.user = user;
         this.userChanges$.next(user);
     }
@@ -59,7 +57,7 @@ export class AuthApi {
                     this.isAuthUser = true;
                     // this.authApi.getUser(accessToken);
                 },
-                (err: any) => {
+                (err: Response) => {
                     this.isAuthUser = false;
                     localStorage.removeItem(AppValues.localStorageAccessToken);
                     AuthApi.handleError(err);
@@ -69,9 +67,7 @@ export class AuthApi {
     }
 
     public getAccessToken(code: string): Observable<string> {
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
-        // @ts-ignore
-        return this.githubLoginGQL.mutate({ code: code }).pipe(
+        return this.githubLoginGQL.mutate({ code }).pipe(
             map((result: FetchResult<GithubLoginMutation>) => {
                 if (result.data) {
                     const login: GithubLoginMutation = result.data;

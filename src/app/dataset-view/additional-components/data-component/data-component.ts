@@ -1,8 +1,11 @@
+import {
+    DataUpdate,
+    DataRow,
+} from "src/app/dataset-view/datasetSubs.interface";
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DataViewSchema } from "../../../interface/search.interface";
 import DataTabValues from "./mock.data";
 import { AppDatasetSubsService } from "../../datasetSubs.service";
-import { DataUpdate } from "../../datasetSubs.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 
@@ -12,8 +15,7 @@ import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 })
 export class DataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;
-    // tslint:disable-next-line:no-output-on-prefix
-    @Output() onRunSQLRequestEmit: EventEmitter<string> = new EventEmitter();
+    @Output() public runSQLRequestEmit = new EventEmitter<string>();
     public sqlEditorOptions = {
         theme: "vs",
         language: "sql",
@@ -22,21 +24,21 @@ export class DataComponent extends BaseComponent implements OnInit {
         },
     };
     public savedQueries = DataTabValues.savedQueries;
-    public sqlRequestCode: string = `select\n  *\nfrom `;
+    public sqlRequestCode = `select\n  *\nfrom `;
     public currentSchema?: DataViewSchema;
-    public currentData: Object[] = [];
+    public currentData: DataRow[];
 
     constructor(private appDatasetSubsService: AppDatasetSubsService) {
         super();
     }
 
     public onRunSQLRequest(sqlRequestCode?: string): void {
-        this.onRunSQLRequestEmit.emit(sqlRequestCode || this.sqlRequestCode);
+        this.runSQLRequestEmit.emit(sqlRequestCode ?? this.sqlRequestCode);
     }
 
     public ngOnInit(): void {
         if (this.datasetBasics) {
-            this.sqlRequestCode += `'${this.datasetBasics.name}'`;
+            this.sqlRequestCode += `'${this.datasetBasics.name as string}'`;
         }
         this.trackSubscription(
             this.appDatasetSubsService.onDatasetDataChanges.subscribe(
@@ -48,10 +50,9 @@ export class DataComponent extends BaseComponent implements OnInit {
         );
     }
 
-    onInitEditor(editor: any): void {
-        let self = this;
-        let runQueryFn = function (_editor: any) {
-            self.onRunSQLRequest();
+    onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
+        const runQueryFn = () => {
+            this.onRunSQLRequest();
         };
         editor.addAction({
             // An unique identifier of the contributed action.
@@ -59,11 +60,7 @@ export class DataComponent extends BaseComponent implements OnInit {
             // A label of the action that will be presented to the user.
             label: "Run SQL",
             // An optional array of keybindings for the action.
-            keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
-            // A precondition for this action.
-            precondition: null,
-            // A rule to evaluate on top of the precondition in order to dispatch the keybindings.
-            keybindingContext: null,
+            keybindings: [monaco.KeyMod.CtrlCmd, monaco.KeyCode.Enter],
             contextMenuGroupId: "navigation",
             contextMenuOrder: 1.5,
             // Method that will be executed when the action is triggered.

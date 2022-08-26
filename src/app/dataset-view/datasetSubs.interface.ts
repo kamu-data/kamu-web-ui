@@ -8,14 +8,14 @@ import {
 import { DataViewSchema } from "../interface/search.interface";
 
 export interface OverviewDataUpdate {
-    content: ObjectInterface[];
+    content: DataRow[];
     overview: DatasetOverviewFragment;
     size: DatasetDataSizeFragment;
 }
 
 export interface DataUpdate {
     schema: DataViewSchema;
-    content: ObjectInterface[];
+    content: DataRow[];
 }
 
 export interface MetadataSchemaUpdate {
@@ -29,10 +29,6 @@ export interface DatasetHistoryUpdate {
     pageInfo: PageBasedInfo;
 }
 
-export type DataRow = Record<string, unknown>;
-
-export interface ObjectInterface {
+export interface DataRow {
     [key: string]: string | number;
 }
-
-export type NgStyleValue = { [klass: string]: string } | null;

@@ -30,6 +30,7 @@ import {
 import { BaseComponent } from "../common/base.component";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
+import { AppHelpers } from "../common/app.helpers";
 
 @Component({
     selector: "app-dataset",
@@ -457,8 +458,8 @@ export class DatasetComponent
         const paramMap: ParamMap = this.activatedRoute.snapshot.paramMap;
         return {
             // Both parameters are mandatory in URL, router would not activate this component otherwise
-            accountName: paramMap.get(ProjectLinks.urlParamAccountName) || "",
-            datasetName: paramMap.get(ProjectLinks.urlParamDatasetName) || "",
+            accountName: AppHelpers.requireValue(paramMap.get(ProjectLinks.urlParamAccountName)),
+            datasetName: AppHelpers.requireValue(paramMap.get(ProjectLinks.urlParamDatasetName)),
         };
     }
 

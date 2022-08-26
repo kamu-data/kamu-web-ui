@@ -33,7 +33,7 @@
             <ng-template [ngIf]="isDatasetViewTypeData && datasetBasics">
                 <app-data
                     [datasetBasics]="datasetBasics"
-                    (onRunSQLRequestEmit)="onRunSQLRequest($event)"
+                    (runSQLRequestEmit)="onRunSQLRequest($event)"
                 ></app-data>
             </ng-template>
 

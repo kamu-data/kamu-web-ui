@@ -47,7 +47,6 @@ export class ModalService {
     public close(): void {
         this.showModal$.next({
             context: {},
-            buttonCount: 0,
             type: "blank",
         });
     }
@@ -93,7 +92,6 @@ export class ModalService {
         this.showModal$.next({
             type: "dialog",
             context,
-            buttonCount: 0,
         });
 
         return new Promise((resolve) => {
@@ -107,7 +105,6 @@ export class ModalService {
         this.showModal$.next({
             type: "filter",
             context,
-            buttonCount: 0,
         });
 
         return new Promise((resolve) => {
@@ -121,7 +118,6 @@ export class ModalService {
             context: {
                 message: url,
             },
-            buttonCount: 0,
         });
     }
 
@@ -129,7 +125,6 @@ export class ModalService {
         this.showModal$.next({
             type: "spinner",
             context: {},
-            buttonCount: 0,
         });
     }
 

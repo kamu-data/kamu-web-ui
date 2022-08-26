@@ -27,7 +27,7 @@ import {
     DatasetHistoryUpdate,
     DataUpdate,
     MetadataSchemaUpdate,
-    ObjectInterface,
+    DataRow,
     OverviewDataUpdate,
 } from "./datasetSubs.interface";
 import { isNil } from "lodash";
@@ -87,7 +87,7 @@ export class AppDatasetService {
 
     private static parseContentOfDataset(
         data: DatasetOverviewQuery,
-    ): ObjectInterface[] {
+    ): DataRow[] {
         return data.datasets.byOwnerAndName
             ? JSON.parse(data.datasets?.byOwnerAndName?.data.tail.data.content)
             : [];
@@ -157,7 +157,7 @@ export class AppDatasetService {
                     );
                 this.searchDatasetInfoChanges(dataset);
 
-                const content: ObjectInterface[] =
+                const content: DataRow[] =
                     AppDatasetService.parseContentOfDataset(data);
                 const schema: DataViewSchema = JSON.parse(
                     data.datasets.byOwnerAndName.metadata.currentSchema.content,
@@ -180,7 +180,7 @@ export class AppDatasetService {
                     );
                 this.searchDatasetInfoChanges(dataset);
 
-                const content: ObjectInterface[] =
+                const content: DataRow[] =
                     AppDatasetService.parseContentOfDataset(data);
                 const overview: DatasetOverviewFragment =
                     _.cloneDeep<DatasetOverviewFragment>(
@@ -277,7 +277,7 @@ export class AppDatasetService {
     public onGetDatasetDataSQLRun(query: string, limit: number): void {
         this.searchApi.onGetDatasetDataSQLRun({ query, limit }).subscribe(
             (data: GetDatasetDataSqlRunQuery) => {
-                const content: ObjectInterface[] = data.data?.query.data
+                const content: DataRow[] = data.data?.query.data
                     ? JSON.parse(data.data?.query.data.content)
                     : "";
                 const schema: DataViewSchema = data.data.query.schema

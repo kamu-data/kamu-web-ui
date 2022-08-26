@@ -1,6 +1,6 @@
 import {
     DataUpdate,
-    ObjectInterface,
+    DataRow,
 } from "src/app/dataset-view/datasetSubs.interface";
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DataViewSchema } from "../../../interface/search.interface";
@@ -15,8 +15,7 @@ import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 })
 export class DataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;
-    // tslint:disable-next-line:no-output-on-prefix
-    @Output() onRunSQLRequestEmit: EventEmitter<string> = new EventEmitter();
+    @Output() public runSQLRequestEmit: EventEmitter<string> = new EventEmitter();
     public sqlEditorOptions = {
         theme: "vs",
         language: "sql",
@@ -27,14 +26,14 @@ export class DataComponent extends BaseComponent implements OnInit {
     public savedQueries = DataTabValues.savedQueries;
     public sqlRequestCode = `select\n  *\nfrom `;
     public currentSchema?: DataViewSchema;
-    public currentData: ObjectInterface[];
+    public currentData: DataRow[];
 
     constructor(private appDatasetSubsService: AppDatasetSubsService) {
         super();
     }
 
     public onRunSQLRequest(sqlRequestCode?: string): void {
-        this.onRunSQLRequestEmit.emit(sqlRequestCode || this.sqlRequestCode);
+        this.runSQLRequestEmit.emit(sqlRequestCode || this.sqlRequestCode);
     }
 
     public ngOnInit(): void {

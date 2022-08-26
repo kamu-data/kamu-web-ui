@@ -1,5 +1,5 @@
 import {
-    ObjectInterface,
+    DataRow,
     OverviewDataUpdate,
 } from "src/app/dataset-view/datasetSubs.interface";
 import { DatasetKind } from "./../../../api/kamu.graphql.interface";
@@ -36,7 +36,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     @Output() selectTopicEmit: EventEmitter<string> = new EventEmitter();
 
     public currentState?: {
-        data: ObjectInterface[];
+        data: DataRow[];
         overview: DatasetOverviewFragment;
         size: DatasetDataSizeFragment;
     };

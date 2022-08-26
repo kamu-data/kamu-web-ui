@@ -1,4 +1,5 @@
-import { ObjectInterface } from "src/app/dataset-view/datasetSubs.interface";
+import { DataRow } from "src/app/dataset-view/datasetSubs.interface";
 import { DataSchemaField } from "../../interface/search.interface";
 
-export type TableSourceInterface = DataSchemaField[] | ObjectInterface[];
+export type TableSourceRowInterface = DataSchemaField | DataRow;
+export type TableSourceInterface = TableSourceRowInterface[];

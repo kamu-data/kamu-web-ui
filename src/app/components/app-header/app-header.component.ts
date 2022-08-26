@@ -64,6 +64,7 @@ export class AppHeaderComponent extends BaseComponent {
     public isDatasetType(type: string): boolean {
         return type === TypeNames.datasetType;
     }
+
     public search: OperatorFunction<string, readonly DatasetIDsInterface[]> = (
         text$: Observable<string>,
     ) => {
@@ -146,6 +147,7 @@ export class AppHeaderComponent extends BaseComponent {
     public onAddNew(): void {
         this.addNewEmitter.emit();
     }
+
     public onOpenUserInfo(): void {
         this.userProfileEmitter.emit();
     }
@@ -157,9 +159,11 @@ export class AppHeaderComponent extends BaseComponent {
         el.blur();
         this.isCollapsedAppHeaderMenu = !this.isCollapsedAppHeaderMenu;
     }
+
     public onClickAppLogo(): void {
         this.clickAppLogoEmitter.emit();
     }
+
     public onHelp(): void {
         this.clickHelpEmitter.emit();
     }
@@ -171,6 +175,7 @@ export class AppHeaderComponent extends BaseComponent {
     public onAnalytics(): void {
         this.clickAnalyticsEmitter.emit();
     }
+    
     public onBilling(): void {
         this.clickBillingEmitter.emit();
     }

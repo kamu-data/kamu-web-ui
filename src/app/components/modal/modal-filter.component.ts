@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
 import { DynamicComponent } from "./dynamic.component";
-import { ModalArgumentsInterface } from "../../interface/modal.interface";
-import { NgStyleValue } from "src/app/dataset-view/datasetSubs.interface";
+import { ModalArgumentsInterface, NgStyleValue } from "../../interface/modal.interface";
 
 @Component({
     selector: "modal-dialog",
@@ -63,17 +62,8 @@ import { NgStyleValue } from "src/app/dataset-view/datasetSubs.interface";
     `,
 })
 export class ModalFilterComponent extends DynamicComponent {
-    boundingClientRect = {
-        bottom: 0,
-        height: 0,
-        left: 0,
-        right: 0,
-        top: 0,
-        width: 0,
-        x: 0,
-        y: 0,
-    };
-    getElementPosition() {
+
+    getElementPosition(): DOMRect | null {
         if (this.context) {
             if (this.context.idFilterButton) {
                 const element: Element | null = document.querySelector(
@@ -86,9 +76,8 @@ export class ModalFilterComponent extends DynamicComponent {
             if (this.context.position) {
                 return this.context.position;
             }
-        } else {
-            return this.boundingClientRect;
         }
+        return null;
     }
 
     hideAll() {
@@ -172,7 +161,7 @@ export class ModalFilterComponent extends DynamicComponent {
         return styleModal;
     }
 
-    closeButtonPosition() {
+    closeButtonPosition(): NgStyleValue {
         const buttonPositionStyle: NgStyleValue = {};
         const elementPosition = this.getElementPosition();
         if (this.context.style && elementPosition) {

@@ -7,7 +7,6 @@ import { ModalSpinnerComponent } from "../components/modal/modal-spinner.compone
 export interface ModalCommandInterface {
     type: ModalComponentType;
     context?: ModalArgumentsInterface;
-    buttonCount: number;
 }
 
 export interface ModalArgumentsInterface {
@@ -24,19 +23,10 @@ export interface ModalArgumentsInterface {
     locationBack?: boolean;
     idFilterButton?: string;
     filter_data?: ModalFilterArgumentInterface[][];
-    position?: ModalPosition;
+    position?: DOMRect;
     style?: ModalStyles;
     type?: string;
     _close?: (locationBack?: boolean) => void;
-}
-
-export interface ModalPosition {
-    top?: number;
-    bottom?: number;
-    right?: number;
-    left?: number;
-    height?: number;
-    width?: number;
 }
 
 export interface ModalStyles {
@@ -65,3 +55,5 @@ export type ModalComponentType =
     | "image"
     | "spinner"
     | "filter";
+
+export type NgStyleValue = { [klass: string]: string } | null;

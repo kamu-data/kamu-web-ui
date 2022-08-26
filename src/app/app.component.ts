@@ -10,7 +10,7 @@ import { ModalService } from "./components/modal/modal.service";
 import { BaseComponent } from "./common/base.component";
 import ProjectLinks from "./project-links";
 import { AccountInfo } from "./api/kamu.graphql.interface";
-import { Optional } from "./common/app.types";
+import { MaybeNull } from "./common/app.types";
 import _ from "lodash";
 import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
 
@@ -56,7 +56,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         this.appHeaderInit();
         this.trackSubscription(
             this.authApi.onUserChanges.subscribe(
-                (user: Optional<AccountInfo>) => {
+                (user: MaybeNull<AccountInfo>) => {
                     this.user = user
                         ? _.cloneDeep(user)
                         : this.AnonymousAccountInfo;
@@ -149,7 +149,6 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onOpenUserInfo(): void {
-        // tslint:disable-next-line:no-console
         console.info("click onOpenUserInfo");
     }
 

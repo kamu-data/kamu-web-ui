@@ -30,7 +30,6 @@ import { DatasetViewHeaderComponent } from "./dataset-view-header/dataset-view-h
 import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu-component";
 import { SideNavModule } from "../sidenav/side-nav.module";
 import { RouterModule } from "@angular/router";
-// tslint:disable-next-line: max-line-length
 import { OverviewHistorySummaryHeaderComponent } from "../components/overview-history-summary-header/overview-history-summary-header.component";
 
 @NgModule({

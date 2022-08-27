@@ -249,8 +249,6 @@ export class AppDatasetService {
 
     // TODO: What is the naming convention here exactly?
     public onSearchLineage(info: DatasetInfo): void {
-        this.resetLineageGraph();
-
         this.searchApi
             .getDatasetLineage(info)
             .subscribe((data: GetDatasetLineageQuery) => {
@@ -363,9 +361,10 @@ export class AppDatasetService {
      }
 
     private updatelineageGraph(lineage: DatasetLineageNode) {
+        this.resetLineageGraph();
         this.updateLineageGraphRecords(lineage);
-        this.lineageEdgesChanged(lineage.basics);
         this.lineageNodesChanged();
+        this.lineageEdgesChanged(lineage.basics);
     }
 
     private updateLineageGraphRecords(

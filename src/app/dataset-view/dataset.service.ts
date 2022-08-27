@@ -3,14 +3,12 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { SearchApi } from "../api/search.api";
 import {
-    DatasetKindInterface,
+    DatasetLineageNode,
     DataViewSchema,
 } from "../interface/search.interface";
 import {
-    Dataset,
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
-    DatasetKind,
     DatasetMetadataDetailsFragment,
     DatasetOverviewFragment,
     DatasetOverviewQuery,
@@ -51,39 +49,24 @@ export class AppDatasetService {
         return this.searchChanges$.asObservable();
     }
 
-    public get onKindInfoChanges(): Observable<DatasetKindInterface[]> {
-        return this.kindInfoChanges$.asObservable();
+    public get onLineageNodesChanges(): Observable<DatasetBasicsFragment[]> {
+        return this.lineageNodesChange$.asObservable();
     }
 
-    public get onDatasetTreeChanges(): Observable<
-        [DatasetKindInterface[][], DatasetKindInterface]
-    > {
-        return this.datasetTreeChanges$.asObservable();
+    public get onLineageEdgesChanges(): Observable<[DatasetBasicsFragment[][], DatasetBasicsFragment]> {
+        return this.lineageEdgesChange$.asObservable();
     }
 
-    public get getDatasetTree(): {
-        id: string;
-        kind: DatasetKind;
-    }[][] {
-        return this.datasetTree;
-    }
-
-    public get kindInfo(): DatasetKindInterface[] {
-        return this.datasetKindInfo;
-    }
-
-    private kindInfoChanges$: Subject<DatasetKindInterface[]> = new Subject<
-        DatasetKindInterface[]
-    >();
     private searchChanges$: Subject<string> = new Subject<string>();
     private searchDatasetInfoChanges$: Subject<DatasetBasicsFragment> =
         new Subject<DatasetBasicsFragment>();
-    private datasetTreeChanges$: Subject<
-        [DatasetKindInterface[][], DatasetKindInterface]
-    > = new Subject<[DatasetKindInterface[][], DatasetKindInterface]>();
 
-    private datasetTree: DatasetKindInterface[][] = [];
-    private datasetKindInfo: DatasetKindInterface[] = [];
+    private lineageNodesChange$: Subject<DatasetBasicsFragment[]> = new Subject<DatasetBasicsFragment[]>();
+    private lineageEdgesChange$: Subject<[DatasetBasicsFragment[][], DatasetBasicsFragment]> 
+        = new Subject<[DatasetBasicsFragment[][], DatasetBasicsFragment]>();
+
+    private lineageGraphEdges: DatasetBasicsFragment[][] = [];
+    private lineageGraphNodes: DatasetBasicsFragment[] = [];
 
     private static parseContentOfDataset(
         data: DatasetOverviewQuery,
@@ -107,41 +90,20 @@ export class AppDatasetService {
         this.searchDatasetInfoChanges$.next(searchDatasetInfo);
     }
 
-    public kindInfoChanges(datasetList: DatasetKindInterface[]): void {
-        this.kindInfoChanges$.next(datasetList);
+    public lineageNodesChanged(): void {
+        this.lineageNodesChange$.next(this.lineageGraphNodes);
     }
 
-    public datasetTreeChange(
-        edges: DatasetKindInterface[][],
-        origin: DatasetKindInterface,
+    public lineageEdgesChanged(
+        origin: DatasetBasicsFragment,
     ): void {
-        this.datasetTreeChanges$.next([edges, origin]);
+        this.lineageEdgesChange$.next([this.lineageGraphEdges, origin]);
     }
 
-    public resetKindInfo(): void {
-        this.datasetKindInfo = [];
-        this.kindInfoChanges([]);
-    }
-
-    public setKindInfo(dataset: Dataset): void {
-        if (
-            this.datasetKindInfo.some(
-                (realDataset: DatasetKindInterface) =>
-                    realDataset.id === dataset.id,
-            )
-        ) {
-            return;
-        }
-        this.datasetKindInfo.push({
-            id: dataset.id as string,
-            kind: dataset.kind,
-            name: dataset.name as string,
-        });
-        this.kindInfoChanges(this.datasetKindInfo);
-    }
-
-    public resetDatasetTree(): void {
-        this.datasetTree = [];
+    public resetLineageGraph(): void {
+        this.lineageGraphEdges = [];
+        this.lineageGraphNodes = [];
+        this.lineageNodesChanged();
     }
 
     public getDatasetDataSchema(info: DatasetInfo): void {
@@ -287,9 +249,7 @@ export class AppDatasetService {
 
     // TODO: What is the naming convention here exactly?
     public onSearchLineage(info: DatasetInfo): void {
-        // TODO: Do we have to reset these when switching tabs?
-        this.resetDatasetTree();
-        this.resetKindInfo();
+        this.resetLineageGraph();
 
         this.searchApi
             .getDatasetLineage(info)
@@ -303,66 +263,130 @@ export class AppDatasetService {
                     );
                 this.searchDatasetInfoChanges(dataset);
 
-                this.updateDatasetTree(data);
+                const lineageResponse: DatasetLineageNode = this.lineageResponseFromRawQuery(data);
+                this.updatelineageGraph(lineageResponse);
             });
     }
 
-    private updateDatasetTree(lineage: GetDatasetLineageQuery) {
-        const tree: DatasetKindInterface[][] = [];
-        const origin = lineage.datasets.byOwnerAndName as Dataset;
-        this.updateDatasetTreeRec(tree, origin);
-        this.datasetTreeChange(tree, origin);
+    private lineageResponseFromRawQuery(data: GetDatasetLineageQuery): DatasetLineageNode {
+        if (isNil(data.datasets.byOwnerAndName)) {
+            throw new Error("Dataset not resolved by ID");
+        }
+        const originDatasetBasics = data.datasets.byOwnerAndName as DatasetBasicsFragment;
+        const originMetadata = data.datasets.byOwnerAndName.metadata;
+
+        return {
+            basics: originDatasetBasics,
+            downstreamDependencies: originMetadata.currentDownstreamDependencies.map(
+                (downDependency) => {
+                    return {
+                        basics: downDependency as DatasetBasicsFragment,
+                        downstreamDependencies: downDependency.metadata.currentDownstreamDependencies.map(
+                            (downDependency2) => {
+                                return {
+                                    basics: downDependency2 as DatasetBasicsFragment,
+                                    downstreamDependencies: downDependency2.metadata.currentDownstreamDependencies.map(
+                                        (downDependency3) => {
+                                            return {
+                                                basics: downDependency3 as DatasetBasicsFragment,
+                                                downstreamDependencies: downDependency3.metadata.currentDownstreamDependencies.map(
+                                                    (downDependency4) => {
+                                                        return {
+                                                            basics: downDependency4 as DatasetBasicsFragment,
+                                                            downstreamDependencies: downDependency4.metadata.currentDownstreamDependencies.map(
+                                                                (downDependency5) => {
+                                                                    return {
+                                                                        basics: downDependency5 as DatasetBasicsFragment,
+                                                                        downstreamDependencies: [],
+                                                                        upstreamDependencies: []
+                                                                    };
+                                                                }
+                                                            ),
+                                                            upstreamDependencies: []
+                                                        };
+                                                    }
+                                                ),
+                                                upstreamDependencies: []
+                                            };
+                                        }
+                                    ),
+                                    upstreamDependencies: []
+                                };
+                            }
+                        ),
+                        upstreamDependencies: []
+                    };
+                }
+            ),
+            upstreamDependencies: originMetadata.currentUpstreamDependencies.map(
+                (upDependency) => {
+                    return {
+                        basics: upDependency as DatasetBasicsFragment,
+                        downstreamDependencies: [],
+                        upstreamDependencies: upDependency.metadata.currentUpstreamDependencies.map(
+                            (upDependency2) => {
+                                return {
+                                    basics: upDependency2 as DatasetBasicsFragment,
+                                    downstreamDependencies: [],
+                                    upstreamDependencies: upDependency2.metadata.currentUpstreamDependencies.map(
+                                        (upDependency3) => {
+                                            return {
+                                                basics: upDependency3 as DatasetBasicsFragment,
+                                                downstreamDependencies: [],
+                                                upstreamDependencies: upDependency3.metadata.currentUpstreamDependencies.map(
+                                                    (upDependency4) => {
+                                                        return {
+                                                            basics: upDependency4 as DatasetBasicsFragment,
+                                                            downstreamDependencies: [],
+                                                            upstreamDependencies: upDependency4.metadata.currentUpstreamDependencies.map(
+                                                                (upDependency5) => {
+                                                                    return {
+                                                                        basics: upDependency5 as DatasetBasicsFragment,
+                                                                        downstreamDependencies: [],
+                                                                        upstreamDependencies: []
+                                                                    };
+                                                                }
+                                                            )
+                                                        };
+                                                    }
+                                                )
+                                            };
+                                        }
+                                    )
+                                };
+                            }
+                        )
+                    };
+                }
+            )
+        };
+     }
+
+    private updatelineageGraph(lineage: DatasetLineageNode) {
+        this.updateLineageGraphRecords(lineage);
+        this.lineageEdgesChanged(lineage.basics);
+        this.lineageNodesChanged();
     }
 
-    private updateDatasetTreeRec(
-        tree: DatasetKindInterface[][],
-        origin: Dataset,
+    private updateLineageGraphRecords(
+        node: DatasetLineageNode,
     ) {
-        // TODO: Why is this needed to be called for every dataset in the graph?
-        this.setKindInfo(origin);
-
-        // TODO: we are actually doing a bad cast here, fragment is not a full Dataset
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (origin.metadata.currentDownstreamDependencies) {
-            origin.metadata.currentDownstreamDependencies.forEach(
-                (dep: Dataset) => {
-                    tree.push([
-                        {
-                            id: origin.id as string,
-                            kind: origin.kind,
-                            name: origin.name as string,
-                        },
-                        {
-                            id: dep.id as string,
-                            kind: dep.kind,
-                            name: dep.name as string,
-                        },
-                    ]);
-                    this.updateDatasetTreeRec(tree, dep);
-                },
-            );
+        if (!this.lineageGraphNodes.some((existingNode: DatasetBasicsFragment) => existingNode.id === node.basics.id)) {
+            this.lineageGraphNodes.push(node.basics);
         }
 
-        // TODO: we are actually doing a bad cast here, fragment is not a full Dataset
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (origin.metadata.currentUpstreamDependencies) {
-            origin.metadata.currentUpstreamDependencies.forEach(
-                (dep: Dataset) => {
-                    tree.push([
-                        {
-                            id: dep.id as string,
-                            kind: dep.kind,
-                            name: dep.name as string,
-                        },
-                        {
-                            id: origin.id as string,
-                            kind: origin.kind,
-                            name: origin.name as string,
-                        },
-                    ]);
-                    this.updateDatasetTreeRec(tree, dep);
-                },
-            );
-        }
+        node.downstreamDependencies.forEach(
+            (dependency: DatasetLineageNode) => {
+                this.lineageGraphEdges.push([node.basics, dependency.basics]);
+                this.updateLineageGraphRecords(dependency);
+            },
+        );
+
+        node.upstreamDependencies.forEach(
+            (dependency: DatasetLineageNode) => {
+                this.lineageGraphEdges.push([dependency.basics, node.basics]);
+                this.updateLineageGraphRecords(dependency);
+            },
+        );
     }
 }

@@ -6,7 +6,6 @@ import {
     OnInit,
     ViewEncapsulation,
 } from "@angular/core";
-import { DatasetKindInterface } from "../interface/search.interface";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
 import {
     DatasetNavigationInterface,
@@ -122,10 +121,6 @@ export class DatasetComponent
         }
     }
 
-    public getDatasetTree(): { id: string; kind: DatasetKind }[][] {
-        return this.appDatasetService.getDatasetTree;
-    }
-
     public onPageChange(params: {
         currentPage: number;
         isClick: boolean;
@@ -192,9 +187,7 @@ export class DatasetComponent
 
     private initLineageTab(datasetInfo: DatasetInfo): void {
         this.datasetViewType = DatasetViewTypeEnum.Lineage;
-        this.appDatasetService.resetDatasetTree();
         this.appDatasetService.onSearchLineage(datasetInfo);
-
         this.changeLineageGraphView();
     }
 
@@ -315,8 +308,7 @@ export class DatasetComponent
     }
 
     private prepareLineageGraph(): void {
-        this.appDatasetService.resetDatasetTree();
-        this.appDatasetService.resetKindInfo();
+        this.appDatasetService.resetLineageGraph();
         this.initLineageGraphProperty();
         this.lineageGraphClusters = [
             {
@@ -336,8 +328,8 @@ export class DatasetComponent
         ];
 
         this.trackSubscriptions(
-            this.appDatasetService.onDatasetTreeChanges.subscribe(
-                (args: [DatasetKindInterface[][], DatasetKindInterface]) => {
+            this.appDatasetService.onLineageEdgesChanges.subscribe(
+                (args: [DatasetBasicsFragment[][], DatasetBasicsFragment]) => {
                     const edges = args[0];
                     const currentDataset = args[1];
 
@@ -345,10 +337,10 @@ export class DatasetComponent
 
                     this.isAvailableLineageGraph = edges.length !== 0;
 
-                    const uniqueDatasets: Record<string, DatasetKindInterface> = {};
-                    edges.forEach((edge: DatasetKindInterface[]) =>
-                        edge.forEach((dataset: DatasetKindInterface) => {
-                            uniqueDatasets[dataset.id] = dataset;
+                    const uniqueDatasets: Record<string, DatasetBasicsFragment> = {};
+                    edges.forEach((edge: DatasetBasicsFragment[]) =>
+                        edge.forEach((dataset: DatasetBasicsFragment) => {
+                            uniqueDatasets[dataset.id as string] = dataset;
                         }),
                     );
 
@@ -357,10 +349,10 @@ export class DatasetComponent
                     )) {
                         this.lineageGraphNodes.push({
                             id: this.sanitizeID(id),
-                            label: dataset.name,
+                            label: dataset.name as string,
                             data: {
-                                id: dataset.id,
-                                name: dataset.name,
+                                id: dataset.id as string,
+                                name: dataset.name as string,
                                 kind: dataset.kind,
                                 isRoot: dataset.kind === DatasetKind.Root,
                                 isCurrent: dataset.id === currentDataset.id,
@@ -368,9 +360,9 @@ export class DatasetComponent
                         });
                     }
 
-                    edges.forEach((edge: DatasetKindInterface[]) => {
-                        const source: string = this.sanitizeID(edge[0].id);
-                        const target: string = this.sanitizeID(edge[1].id);
+                    edges.forEach((edge: DatasetBasicsFragment[]) => {
+                        const source: string = this.sanitizeID(edge[0].id as string);
+                        const target: string = this.sanitizeID(edge[1].id as string);
 
                         this.lineageGraphLink.push({
                             id: `${source}__and__${target}`,
@@ -380,9 +372,9 @@ export class DatasetComponent
                     });
                 },
             ),
-            this.appDatasetService.onKindInfoChanges.subscribe(
-                (datasetList: DatasetKindInterface[]) => {
-                    datasetList.forEach((dataset: DatasetKindInterface) => {
+            this.appDatasetService.onLineageNodesChanges.subscribe(
+                (datasetList: DatasetBasicsFragment[]) => {
+                    datasetList.forEach((dataset: DatasetBasicsFragment) => {
                         this.lineageGraphClusters =
                             this.lineageGraphClusters.map(
                                 (cluster: ClusterNode) => {
@@ -394,7 +386,7 @@ export class DatasetComponent
                                     }
 
                                     if (cluster.label === dataset.kind) {
-                                        cluster.childNodeIds.push(dataset.id);
+                                        cluster.childNodeIds.push(dataset.id as string);
                                     }
                                     return cluster;
                                 },
@@ -444,9 +436,6 @@ export class DatasetComponent
         };
 
         this.datasetViewType = this.getDatasetViewTypeFromUrl();
-
-        this.appDatasetService.resetDatasetTree();
-
         mapperTabs[this.datasetViewType]();
     }
 

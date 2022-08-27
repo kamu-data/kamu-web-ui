@@ -46,7 +46,7 @@ import { NotificationIndicatorComponent } from "./components/notification-indica
 import { MonacoEditorModule } from "ngx-monaco-editor";
 import { AppConfigService } from "./app-config.service";
 import { NavigationService } from "./services/navigation.service";
-import { AppDatasetSubsService } from "./dataset-view/datasetSubs.service";
+import { AppDatasetSubscriptionsService } from "./dataset-view/dataset.subscriptions.service";
 
 const Services = [
     {
@@ -66,7 +66,7 @@ const Services = [
     AppSearchService,
     AppDatasetService,
     NavigationService,
-    AppDatasetSubsService,
+    AppDatasetSubscriptionsService,
     SideNavService,
     {
         provide: APOLLO_OPTIONS,

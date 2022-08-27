@@ -4,8 +4,8 @@ import {
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
-import { DatasetHistoryUpdate } from "../../datasetSubs.interface";
-import { AppDatasetSubsService } from "../../datasetSubs.service";
+import { DatasetHistoryUpdate } from "../../dataset.subscriptions.interface";
+import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 
 @Component({
     selector: "app-history",
@@ -22,7 +22,7 @@ export class HistoryComponent extends BaseComponent implements OnInit {
         history: MetadataBlockFragment[];
     };
 
-    constructor(private appDatasetSubsService: AppDatasetSubsService) {
+    constructor(private appDatasetSubsService: AppDatasetSubscriptionsService) {
         super();
     }
 

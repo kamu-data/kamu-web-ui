@@ -1,6 +1,6 @@
 import {
     Dataset,
-    DatasetKind,
+    DatasetBasicsFragment,
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 
@@ -9,12 +9,6 @@ export interface SearchOverviewInterface {
     totalCount: number;
     pageInfo: PageBasedInfo;
     currentPage: number;
-}
-
-export interface DatasetKindInterface {
-    id: string;
-    name: string;
-    kind: DatasetKind;
 }
 
 export interface DatasetIDsInterface {
@@ -28,21 +22,10 @@ export enum TypeNames {
     datasetType = "Dataset",
 }
 
-export interface DatasetLineageResponse {
-    __typename: string;
-    id: string;
-    kind: DatasetKind;
-    name: string;
-    metadata: DatasetCurrentUpstreamDependencies;
-}
-
-export interface DatasetCurrentUpstreamDependencies {
-    __typename: string;
-    id: string;
-    kind: DatasetKind;
-    name: string;
-    currentDownstreamDependencies?: DatasetLineageResponse[];
-    currentUpstreamDependencies?: DatasetLineageResponse[];
+export interface DatasetLineageNode {
+    basics: DatasetBasicsFragment;
+    downstreamDependencies: DatasetLineageNode[];
+    upstreamDependencies: DatasetLineageNode[];
 }
 
 export interface DataViewSchema {

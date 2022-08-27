@@ -3,11 +3,12 @@ import { Injectable } from "@angular/core";
 import {
     DatasetHistoryUpdate,
     DataUpdate,
+    LineageUpdate,
     MetadataSchemaUpdate,
     OverviewDataUpdate,
-} from "./datasetSubs.interface";
+} from "./dataset.subscriptions.interface";
 @Injectable()
-export class AppDatasetSubsService {
+export class AppDatasetSubscriptionsService {
     private datasetOverviewDataChanges$: Subject<OverviewDataUpdate> =
         new ReplaySubject<OverviewDataUpdate>(1 /*bufferSize*/);
     private datasetDataChanges$: Subject<DataUpdate> =
@@ -16,6 +17,8 @@ export class AppDatasetSubsService {
         new ReplaySubject<DatasetHistoryUpdate>(1 /*bufferSize*/);
     private metadataSchemaChanges$: Subject<MetadataSchemaUpdate> =
         new ReplaySubject<MetadataSchemaUpdate>(1 /*bufferSize*/);
+    private lineageChanges$: Subject<LineageUpdate> = 
+        new ReplaySubject<LineageUpdate>(1 /*bufferSize*/);
 
     public changeDatasetOverviewData(data: OverviewDataUpdate): void {
         this.datasetOverviewDataChanges$.next(data);
@@ -47,5 +50,13 @@ export class AppDatasetSubsService {
 
     public metadataSchemaChanges(schema: MetadataSchemaUpdate): void {
         this.metadataSchemaChanges$.next(schema);
+    }
+
+    public changeLineageData(data: LineageUpdate): void {
+        this.lineageChanges$.next(data);
+    }
+
+    public get onLineageDataChanges(): Observable<LineageUpdate> {
+        return this.lineageChanges$.asObservable();
     }
 }

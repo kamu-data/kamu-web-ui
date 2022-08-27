@@ -46,10 +46,6 @@
             <ng-template [ngIf]="isDatasetViewTypeLineage">
                 <app-lineage
                     [lineageGraphView]="lineageGraphView"
-                    [isAvailableLineageGraph]="isAvailableLineageGraph"
-                    [lineageGraphClusters]="lineageGraphClusters"
-                    [lineageGraphLink]="lineageGraphLink"
-                    [lineageGraphNodes]="lineageGraphNodes"
                     (onClickNodeEmit)="onClickLineageNode($event)"
                 ></app-lineage>
             </ng-template>

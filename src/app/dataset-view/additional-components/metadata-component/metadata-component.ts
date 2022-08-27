@@ -3,8 +3,8 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DataViewSchema } from "../../../interface/search.interface";
 import AppValues from "../../../common/app.values";
-import { AppDatasetSubsService } from "../../datasetSubs.service";
-import { MetadataSchemaUpdate } from "../../datasetSubs.interface";
+import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { MetadataSchemaUpdate } from "../../dataset.subscriptions.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import {
     DatasetBasicsFragment,
@@ -48,7 +48,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     };
 
     constructor(
-        private appDatasetSubsService: AppDatasetSubsService,
+        private appDatasetSubsService: AppDatasetSubscriptionsService,
         private navigationService: NavigationService,
     ) {
         super();

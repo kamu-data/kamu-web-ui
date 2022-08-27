@@ -18,14 +18,10 @@ import {
     ParamMap,
     Router,
 } from "@angular/router";
-import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
-import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
+import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
-import {
-    DatasetBasicsFragment,
-    DatasetKind,
-} from "../api/kamu.graphql.interface";
+import { DatasetBasicsFragment } from "../api/kamu.graphql.interface";
 import { BaseComponent } from "../common/base.component";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
@@ -47,10 +43,6 @@ export class DatasetComponent
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
 
     public lineageGraphView: [number, number] = [500, 600];
-    public lineageGraphLink: Edge[] = [];
-    public lineageGraphNodes: Node[] = [];
-    public lineageGraphClusters: ClusterNode[] = [];
-    public isAvailableLineageGraph = false;
     public isMarkdownEditView = false;
 
     @HostListener("window:resize", ["$event"])
@@ -85,8 +77,6 @@ export class DatasetComponent
             this.getDatasetInfoFromUrl(),
             this.getCurrentPageFromUrl(),
         );
-
-        this.prepareLineageGraph();
 
         this.trackSubscriptions(
             this.appDatasetService.onSearchDatasetBasicsChanges.subscribe(
@@ -300,106 +290,6 @@ export class DatasetComponent
 
     public get isDatasetViewTypeDiscussions(): boolean {
         return this.datasetViewType === DatasetViewTypeEnum.Discussions;
-    }
-
-    private initLineageGraphProperty(): void {
-        this.lineageGraphNodes = [];
-        this.lineageGraphLink = [];
-    }
-
-    private prepareLineageGraph(): void {
-        this.appDatasetService.resetLineageGraph();
-        this.initLineageGraphProperty();
-        this.lineageGraphClusters = [
-            {
-                id: DatasetKind.Root + "_cluster",
-                label: DatasetKind.Root,
-                data: { customColor: "#A52A2A59" },
-                position: { x: 10, y: 10 },
-                childNodeIds: [],
-            },
-            {
-                id: DatasetKind.Derivative + "_cluster",
-                label: DatasetKind.Derivative,
-                data: { customColor: "#00800039" },
-                position: { x: 10, y: 10 },
-                childNodeIds: [],
-            },
-        ];
-
-        this.trackSubscriptions(
-            this.appDatasetService.onLineageEdgesChanges.subscribe(
-                (args: [DatasetBasicsFragment[][], DatasetBasicsFragment]) => {
-                    const edges = args[0];
-                    const currentDataset = args[1];
-
-                    this.initLineageGraphProperty();
-
-                    this.isAvailableLineageGraph = edges.length !== 0;
-
-                    const uniqueDatasets: Record<string, DatasetBasicsFragment> = {};
-                    edges.forEach((edge: DatasetBasicsFragment[]) =>
-                        edge.forEach((dataset: DatasetBasicsFragment) => {
-                            uniqueDatasets[dataset.id as string] = dataset;
-                        }),
-                    );
-
-                    for (const [id, dataset] of Object.entries(
-                        uniqueDatasets,
-                    )) {
-                        this.lineageGraphNodes.push({
-                            id: this.sanitizeID(id),
-                            label: dataset.name as string,
-                            data: {
-                                id: dataset.id as string,
-                                name: dataset.name as string,
-                                kind: dataset.kind,
-                                isRoot: dataset.kind === DatasetKind.Root,
-                                isCurrent: dataset.id === currentDataset.id,
-                            },
-                        });
-                    }
-
-                    edges.forEach((edge: DatasetBasicsFragment[]) => {
-                        const source: string = this.sanitizeID(edge[0].id as string);
-                        const target: string = this.sanitizeID(edge[1].id as string);
-
-                        this.lineageGraphLink.push({
-                            id: `${source}__and__${target}`,
-                            source,
-                            target,
-                        });
-                    });
-                },
-            ),
-            this.appDatasetService.onLineageNodesChanges.subscribe(
-                (datasetList: DatasetBasicsFragment[]) => {
-                    datasetList.forEach((dataset: DatasetBasicsFragment) => {
-                        this.lineageGraphClusters =
-                            this.lineageGraphClusters.map(
-                                (cluster: ClusterNode) => {
-                                    if (
-                                        typeof cluster.childNodeIds ===
-                                        "undefined"
-                                    ) {
-                                        cluster.childNodeIds = [];
-                                    }
-
-                                    if (cluster.label === dataset.kind) {
-                                        cluster.childNodeIds.push(dataset.id as string);
-                                    }
-                                    return cluster;
-                                },
-                            );
-                    });
-                },
-            ),
-        );
-    }
-
-    // TODO: Use `String.replaceAll()`
-    private sanitizeID(id: string): string {
-        return id.replace(/:/g, "");
     }
 
     private onClickDeriveFrom(): void {

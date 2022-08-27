@@ -1,11 +1,11 @@
 import {
     DataUpdate,
     DataRow,
-} from "src/app/dataset-view/datasetSubs.interface";
+} from "src/app/dataset-view/dataset.subscriptions.interface";
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DataViewSchema } from "../../../interface/search.interface";
 import DataTabValues from "./mock.data";
-import { AppDatasetSubsService } from "../../datasetSubs.service";
+import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 
@@ -28,7 +28,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     public currentSchema?: DataViewSchema;
     public currentData: DataRow[];
 
-    constructor(private appDatasetSubsService: AppDatasetSubsService) {
+    constructor(private appDatasetSubsService: AppDatasetSubscriptionsService) {
         super();
     }
 

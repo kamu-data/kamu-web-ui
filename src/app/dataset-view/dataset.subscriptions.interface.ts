@@ -1,4 +1,5 @@
 import {
+    DatasetBasicsFragment,
     DatasetDataSizeFragment,
     DatasetMetadataDetailsFragment,
     DatasetOverviewFragment,
@@ -27,6 +28,12 @@ export interface MetadataSchemaUpdate {
 export interface DatasetHistoryUpdate {
     history: MetadataBlockFragment[];
     pageInfo: PageBasedInfo;
+}
+
+export interface LineageUpdate {
+    nodes: DatasetBasicsFragment[];
+    edges: DatasetBasicsFragment[][];
+    origin: DatasetBasicsFragment;
 }
 
 export type DataRow = Record<string, string | number>;

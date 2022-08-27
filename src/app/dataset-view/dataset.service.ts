@@ -20,14 +20,14 @@ import {
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 import { ModalService } from "../components/modal/modal.service";
-import { AppDatasetSubsService } from "./datasetSubs.service";
+import { AppDatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import {
     DatasetHistoryUpdate,
     DataUpdate,
     MetadataSchemaUpdate,
     DataRow,
     OverviewDataUpdate,
-} from "./datasetSubs.interface";
+} from "./dataset.subscriptions.interface";
 import { isNil } from "lodash";
 import _ from "lodash";
 import { logError } from "../common/app.helpers";
@@ -38,7 +38,7 @@ export class AppDatasetService {
     constructor(
         private searchApi: SearchApi,
         private modalService: ModalService,
-        private appDatasetSubsService: AppDatasetSubsService,
+        private appDatasetSubsService: AppDatasetSubscriptionsService,
     ) {}
 
     public get onSearchDatasetBasicsChanges(): Observable<DatasetBasicsFragment> {
@@ -49,24 +49,9 @@ export class AppDatasetService {
         return this.searchChanges$.asObservable();
     }
 
-    public get onLineageNodesChanges(): Observable<DatasetBasicsFragment[]> {
-        return this.lineageNodesChange$.asObservable();
-    }
-
-    public get onLineageEdgesChanges(): Observable<[DatasetBasicsFragment[][], DatasetBasicsFragment]> {
-        return this.lineageEdgesChange$.asObservable();
-    }
-
     private searchChanges$: Subject<string> = new Subject<string>();
     private searchDatasetInfoChanges$: Subject<DatasetBasicsFragment> =
         new Subject<DatasetBasicsFragment>();
-
-    private lineageNodesChange$: Subject<DatasetBasicsFragment[]> = new Subject<DatasetBasicsFragment[]>();
-    private lineageEdgesChange$: Subject<[DatasetBasicsFragment[][], DatasetBasicsFragment]> 
-        = new Subject<[DatasetBasicsFragment[][], DatasetBasicsFragment]>();
-
-    private lineageGraphEdges: DatasetBasicsFragment[][] = [];
-    private lineageGraphNodes: DatasetBasicsFragment[] = [];
 
     private static parseContentOfDataset(
         data: DatasetOverviewQuery,
@@ -88,22 +73,6 @@ export class AppDatasetService {
         searchDatasetInfo: DatasetBasicsFragment,
     ): void {
         this.searchDatasetInfoChanges$.next(searchDatasetInfo);
-    }
-
-    public lineageNodesChanged(): void {
-        this.lineageNodesChange$.next(this.lineageGraphNodes);
-    }
-
-    public lineageEdgesChanged(
-        origin: DatasetBasicsFragment,
-    ): void {
-        this.lineageEdgesChange$.next([this.lineageGraphEdges, origin]);
-    }
-
-    public resetLineageGraph(): void {
-        this.lineageGraphEdges = [];
-        this.lineageGraphNodes = [];
-        this.lineageNodesChanged();
     }
 
     public getDatasetDataSchema(info: DatasetInfo): void {
@@ -360,31 +329,40 @@ export class AppDatasetService {
         };
      }
 
-    private updatelineageGraph(lineage: DatasetLineageNode) {
-        this.resetLineageGraph();
-        this.updateLineageGraphRecords(lineage);
-        this.lineageNodesChanged();
-        this.lineageEdgesChanged(lineage.basics);
+    private updatelineageGraph(origin: DatasetLineageNode) {
+        const lineageGraphEdges: DatasetBasicsFragment[][] = [];
+        const lineageGraphNodes: DatasetBasicsFragment[] = [];
+
+        this.updateLineageGraphRecords(origin, lineageGraphNodes, lineageGraphEdges);
+        this.appDatasetSubsService.changeLineageData(
+            {
+                origin: origin.basics,
+                nodes: lineageGraphNodes,
+                edges: lineageGraphEdges
+            }
+        );
     }
 
     private updateLineageGraphRecords(
-        node: DatasetLineageNode,
+        currentNode: DatasetLineageNode,
+        lineageGraphNodes: DatasetBasicsFragment[],
+        lineageGraphEdges: DatasetBasicsFragment[][]
     ) {
-        if (!this.lineageGraphNodes.some((existingNode: DatasetBasicsFragment) => existingNode.id === node.basics.id)) {
-            this.lineageGraphNodes.push(node.basics);
+        if (!lineageGraphNodes.some((existingNode: DatasetBasicsFragment) => existingNode.id === currentNode.basics.id)) {
+            lineageGraphNodes.push(currentNode.basics);
         }
 
-        node.downstreamDependencies.forEach(
+        currentNode.downstreamDependencies.forEach(
             (dependency: DatasetLineageNode) => {
-                this.lineageGraphEdges.push([node.basics, dependency.basics]);
-                this.updateLineageGraphRecords(dependency);
+                lineageGraphEdges.push([currentNode.basics, dependency.basics]);
+                this.updateLineageGraphRecords(dependency, lineageGraphNodes, lineageGraphEdges);
             },
         );
 
-        node.upstreamDependencies.forEach(
+        currentNode.upstreamDependencies.forEach(
             (dependency: DatasetLineageNode) => {
-                this.lineageGraphEdges.push([dependency.basics, node.basics]);
-                this.updateLineageGraphRecords(dependency);
+                lineageGraphEdges.push([dependency.basics, currentNode.basics]);
+                this.updateLineageGraphRecords(dependency, lineageGraphNodes, lineageGraphEdges);
             },
         );
     }

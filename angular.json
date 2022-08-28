@@ -22,7 +22,9 @@
               "zen-observable",
               "dagre",
               "moment-timezone",
-              "webcola"
+              "webcola",
+              "fast-json-stable-stringify",
+              "marked"
             ],
             "outputPath": "dist/kamu-platform",
             "index": "src/index.html",
@@ -143,7 +145,6 @@
       }
     }
   },
-  "defaultProject": "kamu-platform",
   "cli": {
     "analytics": "dbc9d1ba-d851-4f85-b1fe-a749b743ca20"
   }

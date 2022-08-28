@@ -17,6 +17,13 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies":[
+              "lodash",
+              "zen-observable",
+              "dagre",
+              "moment-timezone",
+              "webcola"
+            ],
             "outputPath": "dist/kamu-platform",
             "index": "src/index.html",
             "main": "src/main.ts",

@@ -28,7 +28,7 @@ import { ModalFilterComponent } from "./modal-filter.component";
     exports: [ModalComponent],
 })
 export class ModalModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<ModalModule> {
         return {
             ngModule: ModalModule,
             providers: [ModalService],

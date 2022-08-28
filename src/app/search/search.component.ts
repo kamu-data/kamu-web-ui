@@ -20,9 +20,9 @@ import { logError } from "../common/app.helpers";
 
 export interface SearchFilters {
     name?: string;
-    isTitle?: boolean;
-    completed?: boolean;
-    disabled?: boolean;
+    isTitle: boolean;
+    completed: boolean;
+    disabled: boolean;
     color?: ThemePalette;
     subtasks?: SearchFilters[];
 }
@@ -62,22 +62,33 @@ export class SearchComponent
         {
             name: "Search for:",
             isTitle: true,
+            completed: true,
+            disabled: true,
             subtasks: [
-                { name: "Datasets", completed: true, color: "primary" },
+                {
+                    name: "Datasets",
+                    isTitle: false,
+                    completed: true,
+                    color: "primary",
+                    disabled: false,
+                },
                 {
                     name: "Collections",
+                    isTitle: false,
                     completed: false,
                     disabled: true,
                     color: "primary",
                 },
                 {
                     name: "Users",
+                    isTitle: false,
                     completed: false,
                     disabled: true,
                     color: "primary",
                 },
                 {
                     name: "Organizations",
+                    isTitle: false,
                     completed: false,
                     disabled: true,
                     color: "primary",
@@ -87,27 +98,49 @@ export class SearchComponent
         {
             name: "Datasets:",
             isTitle: true,
+            completed: true,
+            disabled: true,
             subtasks: [
-                { name: "Root", completed: true, color: "primary" },
-                { name: "Derivative", completed: true, color: "primary" },
+                {
+                    name: "Root",
+                    isTitle: false,
+                    completed: true,
+                    color: "primary",
+                    disabled: false,
+                },
+                {
+                    name: "Derivative",
+                    isTitle: false,
+                    completed: true,
+                    color: "primary",
+                    disabled: false,
+                },
                 {
                     name: "Updated within:",
                     isTitle: true,
+                    completed: true,
+                    disabled: true,
                     subtasks: [
                         {
                             name: "Last day",
+                            isTitle: false,
                             completed: false,
                             color: "primary",
+                            disabled: false,
                         },
                         {
                             name: "Last month",
+                            isTitle: false,
                             completed: false,
                             color: "primary",
+                            disabled: false,
                         },
                         {
                             name: "Last year",
+                            isTitle: false,
                             completed: false,
                             color: "primary",
+                            disabled: false,
                         },
                     ],
                 },
@@ -123,11 +156,9 @@ export class SearchComponent
         this.isMobileView = AppValues.isMobileView();
 
         if (AppValues.isMobileView()) {
-            this.sidenavService.close()
-                .catch(e => logError(e));
+            this.sidenavService.close().catch((e) => logError(e));
         } else {
-            this.sidenavService.open()
-                .catch(e => logError(e));
+            this.sidenavService.open().catch((e) => logError(e));
         }
     }
 
@@ -230,9 +261,8 @@ export class SearchComponent
     }
 
     public updateAllComplete() {
-        this.allComplete =
-            this.filters.every((t) =>
-                t.subtasks?.every((sub) => sub.completed),
-            );
+        this.allComplete = this.filters.every((t) =>
+            t.subtasks?.every((sub) => sub.completed),
+        );
     }
 }

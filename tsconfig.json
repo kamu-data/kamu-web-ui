@@ -19,8 +19,7 @@
     "skipLibCheck": true,
     "lib": [
       "es2018",
-      "dom",
-      "esnext.asynciterable"
+      "dom"
     ],
     "allowSyntheticDefaultImports": true
   },
@@ -28,6 +27,6 @@
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true,
+    "strictTemplates": true
   }
 }

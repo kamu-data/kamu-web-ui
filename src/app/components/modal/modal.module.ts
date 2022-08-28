@@ -18,14 +18,7 @@ import { ModalFilterComponent } from "./modal-filter.component";
         ModalSpinnerComponent,
         ModalFilterComponent,
     ],
-    entryComponents: [
-        BlankComponent,
-        ModalDialogComponent,
-        ModalImageComponent,
-        ModalSpinnerComponent,
-        ModalFilterComponent,
-    ],
-    exports: [ModalComponent],
+    exports: [ModalComponent]
 })
 export class ModalModule {
     static forRoot(): ModuleWithProviders<ModalModule> {

@@ -1,6 +1,8 @@
+import {Apollo} from 'apollo-angular';
+import {ApolloQueryResult} from '@apollo/client/core';
 import { Injectable } from "@angular/core";
-import { Apollo } from "apollo-angular";
-import { ApolloQueryResult } from "apollo-client";
+
+
 import { map } from "rxjs/operators";
 import { Observable, of } from "rxjs";
 import { DatasetIDsInterface, TypeNames } from "../interface/search.interface";

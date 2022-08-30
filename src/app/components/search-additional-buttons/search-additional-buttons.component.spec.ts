@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { SideNavService } from "src/app/services/sidenav.service";
+import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons-nav.component";
 
 import { SearchAdditionalButtonsComponent } from "./search-additional-buttons.component";
 
@@ -8,7 +10,11 @@ describe("SearchAdditionalButtonsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SearchAdditionalButtonsComponent],
+            declarations: [
+                SearchAdditionalButtonsComponent,
+                SearchAdditionalButtonsNavComponent,
+            ],
+            providers: [SideNavService],
         }).compileComponents();
     });
 

@@ -1,6 +1,14 @@
+import { AuthApi } from "./../api/auth.api";
+import { SearchApi } from "./../api/search.api";
+import { SideNavService } from "./../services/sidenav.service";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SearchComponent } from "./search.component";
+import { NavigationService } from "../services/navigation.service";
+import { AppSearchService } from "./search.service";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { ModalService } from "../components/modal/modal.service";
+import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 
 describe("SearchComponent", () => {
     let component: SearchComponent;
@@ -9,6 +17,16 @@ describe("SearchComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [SearchComponent],
+            imports: [ApolloTestingModule],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            providers: [
+                NavigationService,
+                SideNavService,
+                AppSearchService,
+                AuthApi,
+                SearchApi,
+                ModalService,
+            ],
         }).compileComponents();
     });
 

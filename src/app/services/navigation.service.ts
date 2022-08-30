@@ -13,35 +13,36 @@ export class NavigationService {
     }
 
     public navigateToHome(): void {
-        this.router.navigate([ProjectLinks.urlHome])
-            .catch(e => logError(e));
+        this.router.navigate([ProjectLinks.urlHome]).catch((e) => logError(e));
     }
 
     public navigateToSearch(query?: string, page?: number): void {
-        this.router.navigate([ProjectLinks.urlSearch], {
-            queryParams: { query, page },
-        })
-            .catch(e => logError(e));
+        this.router
+            .navigate([ProjectLinks.urlSearch], {
+                queryParams: { query, page },
+            })
+            .catch((e) => logError(e));
     }
 
     public navigateToDatasetCreate(): void {
-        this.router.navigate([ProjectLinks.urlDatasetCreate]).catch(e => logError(e));
+        this.router
+            .navigate([ProjectLinks.urlDatasetCreate])
+            .catch((e) => logError(e));
     }
 
     public navigateToDatasetView(params: DatasetNavigationParams): void {
-        this.router.navigate([params.accountName, params.datasetName], {
-            queryParams: { tab: params.tab, page: params.page },
-        })
-            .catch(e => logError(e));
+        this.router
+            .navigate([params.accountName, params.datasetName], {
+                queryParams: { tab: params.tab, page: params.page },
+            })
+            .catch((e) => logError(e));
     }
 
     public navigateToLogin(): void {
-        this.router.navigate([ProjectLinks.urlLogin])
-            .catch(e => logError(e));
+        this.router.navigate([ProjectLinks.urlLogin]).catch((e) => logError(e));
     }
 
     public navigateToOwnerView(ownerName: string): void {
-        this.router.navigate([ownerName])
-            .catch(e => logError(e));
+        this.router.navigate([ownerName]).catch((e) => logError(e));
     }
 }

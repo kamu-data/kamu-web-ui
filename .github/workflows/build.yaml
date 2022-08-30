@@ -27,7 +27,7 @@ jobs:
       - if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
-      # TODO: tests
       - run: npm run lint
+      - run: npm run test
       - run: npm run build
       - run: npm run build-prod

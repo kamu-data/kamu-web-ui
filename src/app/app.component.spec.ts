@@ -1,12 +1,27 @@
+import { AppHeaderComponent } from "./components/app-header/app-header.component";
+import { SearchApi } from "./api/search.api";
 import { TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import { AppComponent } from "./app.component";
+import { AppSearchService } from "./search/search.service";
+import { NavigationService } from "./services/navigation.service";
+import { AuthApi } from "./api/auth.api";
+import { ModalService } from "./components/modal/modal.service";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { ModalComponent } from "./components/modal/modal.component";
 
 describe("AppComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
-            declarations: [AppComponent],
+            imports: [RouterTestingModule, ApolloTestingModule],
+            declarations: [AppComponent, AppHeaderComponent, ModalComponent],
+            providers: [
+                AppSearchService,
+                SearchApi,
+                AuthApi,
+                NavigationService,
+                ModalService,
+            ],
         }).compileComponents();
     });
 
@@ -21,14 +36,5 @@ describe("AppComponent", () => {
         const app: AppComponent = fixture.componentInstance;
 
         await expect(app.appLogo).toEqual("/assets/icons/kamu_logo_icon.svg");
-    });
-
-    it("should render title", async () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        fixture.detectChanges();
-        const compiled = fixture.nativeElement as HTMLElement;
-        await expect(compiled.querySelector(".content span")?.textContent).toContain(
-            "kamu-client app is running!",
-        );
     });
 });

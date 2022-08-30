@@ -34,7 +34,6 @@ import { logError } from "../common/app.helpers";
 
 @Injectable()
 export class AppDatasetService {
-
     constructor(
         private searchApi: SearchApi,
         private modalService: ModalService,
@@ -57,7 +56,9 @@ export class AppDatasetService {
         data: DatasetOverviewQuery,
     ): DataRow[] {
         return data.datasets.byOwnerAndName
-            ? JSON.parse(data.datasets.byOwnerAndName.data.tail.data.content) as DataRow[]
+            ? (JSON.parse(
+                  data.datasets.byOwnerAndName.data.tail.data.content,
+              ) as DataRow[])
             : [];
     }
     public get defaultPageInfo(): PageBasedInfo {
@@ -99,6 +100,8 @@ export class AppDatasetService {
     }
 
     public getDatasetOverview(info: DatasetInfo): void {
+        console.log("test");
+
         this.searchApi
             .getDatasetOverview(info)
             .subscribe((data: DatasetOverviewQuery) => {
@@ -148,12 +151,14 @@ export class AppDatasetService {
                     this.searchDatasetInfoChanges(dataset);
                     const pageInfo: PageBasedInfo = Object.assign(
                         _.cloneDeep(
-                            data.datasets.byOwnerAndName.metadata.chain.blocks.pageInfo,
+                            data.datasets.byOwnerAndName.metadata.chain.blocks
+                                .pageInfo,
                         ),
                         { currentPage: numPage },
                     );
                     const historyUpdate: DatasetHistoryUpdate = {
-                        history: data.datasets.byOwnerAndName.metadata.chain.blocks.nodes as MetadataBlockFragment[],
+                        history: data.datasets.byOwnerAndName.metadata.chain
+                            .blocks.nodes as MetadataBlockFragment[],
                         pageInfo,
                     };
                     this.appDatasetSubsService.changeDatasetHistory(
@@ -200,18 +205,23 @@ export class AppDatasetService {
     public onGetDatasetDataSQLRun(query: string, limit: number): void {
         this.searchApi.onGetDatasetDataSQLRun({ query, limit }).subscribe(
             (data: GetDatasetDataSqlRunQuery) => {
-                const content: DataRow[] = JSON.parse(data.data.query.data.content) as DataRow[];
-                const schema: DataViewSchema = JSON.parse(data.data.query.schema.content) as DataViewSchema;
+                const content: DataRow[] = JSON.parse(
+                    data.data.query.data.content,
+                ) as DataRow[];
+                const schema: DataViewSchema = JSON.parse(
+                    data.data.query.schema.content,
+                ) as DataViewSchema;
                 const dataUpdate: DataUpdate = { content, schema };
                 this.appDatasetSubsService.changeDatasetData(dataUpdate);
             },
             (error: { message: string }) => {
-                this.modalService.error({
-                    title: "Request was malformed.",
-                    message: error.message,
-                    yesButtonText: "Close",
-                })
-                    .catch(e => logError(e));
+                this.modalService
+                    .error({
+                        title: "Request was malformed.",
+                        message: error.message,
+                        yesButtonText: "Close",
+                    })
+                    .catch((e) => logError(e));
             },
         );
     }
@@ -230,139 +240,184 @@ export class AppDatasetService {
                     );
                 this.searchDatasetInfoChanges(dataset);
 
-                const lineageResponse: DatasetLineageNode = this.lineageResponseFromRawQuery(data);
+                const lineageResponse: DatasetLineageNode =
+                    this.lineageResponseFromRawQuery(data);
                 this.updatelineageGraph(lineageResponse);
             });
     }
 
-    private lineageResponseFromRawQuery(data: GetDatasetLineageQuery): DatasetLineageNode {
+    private lineageResponseFromRawQuery(
+        data: GetDatasetLineageQuery,
+    ): DatasetLineageNode {
         if (isNil(data.datasets.byOwnerAndName)) {
             throw new Error("Dataset not resolved by ID");
         }
-        const originDatasetBasics = data.datasets.byOwnerAndName as DatasetBasicsFragment;
+        const originDatasetBasics = data.datasets
+            .byOwnerAndName as DatasetBasicsFragment;
         const originMetadata = data.datasets.byOwnerAndName.metadata;
 
         return {
             basics: originDatasetBasics,
-            downstreamDependencies: originMetadata.currentDownstreamDependencies.map(
-                (downDependency) => {
-                    return {
-                        basics: downDependency as DatasetBasicsFragment,
-                        downstreamDependencies: downDependency.metadata.currentDownstreamDependencies.map(
-                            (downDependency2) => {
-                                return {
-                                    basics: downDependency2 as DatasetBasicsFragment,
-                                    downstreamDependencies: downDependency2.metadata.currentDownstreamDependencies.map(
-                                        (downDependency3) => {
-                                            return {
-                                                basics: downDependency3 as DatasetBasicsFragment,
-                                                downstreamDependencies: downDependency3.metadata.currentDownstreamDependencies.map(
-                                                    (downDependency4) => {
+            downstreamDependencies:
+                originMetadata.currentDownstreamDependencies.map(
+                    (downDependency) => {
+                        return {
+                            basics: downDependency as DatasetBasicsFragment,
+                            downstreamDependencies:
+                                downDependency.metadata.currentDownstreamDependencies.map(
+                                    (downDependency2) => {
+                                        return {
+                                            basics: downDependency2 as DatasetBasicsFragment,
+                                            downstreamDependencies:
+                                                downDependency2.metadata.currentDownstreamDependencies.map(
+                                                    (downDependency3) => {
                                                         return {
-                                                            basics: downDependency4 as DatasetBasicsFragment,
-                                                            downstreamDependencies: downDependency4.metadata.currentDownstreamDependencies.map(
-                                                                (downDependency5) => {
-                                                                    return {
-                                                                        basics: downDependency5 as DatasetBasicsFragment,
-                                                                        downstreamDependencies: [],
-                                                                        upstreamDependencies: []
-                                                                    };
-                                                                }
-                                                            ),
-                                                            upstreamDependencies: []
+                                                            basics: downDependency3 as DatasetBasicsFragment,
+                                                            downstreamDependencies:
+                                                                downDependency3.metadata.currentDownstreamDependencies.map(
+                                                                    (
+                                                                        downDependency4,
+                                                                    ) => {
+                                                                        return {
+                                                                            basics: downDependency4 as DatasetBasicsFragment,
+                                                                            downstreamDependencies:
+                                                                                downDependency4.metadata.currentDownstreamDependencies.map(
+                                                                                    (
+                                                                                        downDependency5,
+                                                                                    ) => {
+                                                                                        return {
+                                                                                            basics: downDependency5 as DatasetBasicsFragment,
+                                                                                            downstreamDependencies:
+                                                                                                [],
+                                                                                            upstreamDependencies:
+                                                                                                [],
+                                                                                        };
+                                                                                    },
+                                                                                ),
+                                                                            upstreamDependencies:
+                                                                                [],
+                                                                        };
+                                                                    },
+                                                                ),
+                                                            upstreamDependencies:
+                                                                [],
                                                         };
-                                                    }
+                                                    },
                                                 ),
-                                                upstreamDependencies: []
-                                            };
-                                        }
-                                    ),
-                                    upstreamDependencies: []
-                                };
-                            }
-                        ),
-                        upstreamDependencies: []
-                    };
-                }
-            ),
-            upstreamDependencies: originMetadata.currentUpstreamDependencies.map(
-                (upDependency) => {
-                    return {
-                        basics: upDependency as DatasetBasicsFragment,
-                        downstreamDependencies: [],
-                        upstreamDependencies: upDependency.metadata.currentUpstreamDependencies.map(
-                            (upDependency2) => {
-                                return {
-                                    basics: upDependency2 as DatasetBasicsFragment,
-                                    downstreamDependencies: [],
-                                    upstreamDependencies: upDependency2.metadata.currentUpstreamDependencies.map(
-                                        (upDependency3) => {
-                                            return {
-                                                basics: upDependency3 as DatasetBasicsFragment,
-                                                downstreamDependencies: [],
-                                                upstreamDependencies: upDependency3.metadata.currentUpstreamDependencies.map(
-                                                    (upDependency4) => {
+                                            upstreamDependencies: [],
+                                        };
+                                    },
+                                ),
+                            upstreamDependencies: [],
+                        };
+                    },
+                ),
+            upstreamDependencies:
+                originMetadata.currentUpstreamDependencies.map(
+                    (upDependency) => {
+                        return {
+                            basics: upDependency as DatasetBasicsFragment,
+                            downstreamDependencies: [],
+                            upstreamDependencies:
+                                upDependency.metadata.currentUpstreamDependencies.map(
+                                    (upDependency2) => {
+                                        return {
+                                            basics: upDependency2 as DatasetBasicsFragment,
+                                            downstreamDependencies: [],
+                                            upstreamDependencies:
+                                                upDependency2.metadata.currentUpstreamDependencies.map(
+                                                    (upDependency3) => {
                                                         return {
-                                                            basics: upDependency4 as DatasetBasicsFragment,
-                                                            downstreamDependencies: [],
-                                                            upstreamDependencies: upDependency4.metadata.currentUpstreamDependencies.map(
-                                                                (upDependency5) => {
-                                                                    return {
-                                                                        basics: upDependency5 as DatasetBasicsFragment,
-                                                                        downstreamDependencies: [],
-                                                                        upstreamDependencies: []
-                                                                    };
-                                                                }
-                                                            )
+                                                            basics: upDependency3 as DatasetBasicsFragment,
+                                                            downstreamDependencies:
+                                                                [],
+                                                            upstreamDependencies:
+                                                                upDependency3.metadata.currentUpstreamDependencies.map(
+                                                                    (
+                                                                        upDependency4,
+                                                                    ) => {
+                                                                        return {
+                                                                            basics: upDependency4 as DatasetBasicsFragment,
+                                                                            downstreamDependencies:
+                                                                                [],
+                                                                            upstreamDependencies:
+                                                                                upDependency4.metadata.currentUpstreamDependencies.map(
+                                                                                    (
+                                                                                        upDependency5,
+                                                                                    ) => {
+                                                                                        return {
+                                                                                            basics: upDependency5 as DatasetBasicsFragment,
+                                                                                            downstreamDependencies:
+                                                                                                [],
+                                                                                            upstreamDependencies:
+                                                                                                [],
+                                                                                        };
+                                                                                    },
+                                                                                ),
+                                                                        };
+                                                                    },
+                                                                ),
                                                         };
-                                                    }
-                                                )
-                                            };
-                                        }
-                                    )
-                                };
-                            }
-                        )
-                    };
-                }
-            )
+                                                    },
+                                                ),
+                                        };
+                                    },
+                                ),
+                        };
+                    },
+                ),
         };
-     }
+    }
 
     private updatelineageGraph(origin: DatasetLineageNode) {
         const lineageGraphEdges: DatasetBasicsFragment[][] = [];
         const lineageGraphNodes: DatasetBasicsFragment[] = [];
 
-        this.updateLineageGraphRecords(origin, lineageGraphNodes, lineageGraphEdges);
-        this.appDatasetSubsService.changeLineageData(
-            {
-                origin: origin.basics,
-                nodes: lineageGraphNodes,
-                edges: lineageGraphEdges
-            }
+        this.updateLineageGraphRecords(
+            origin,
+            lineageGraphNodes,
+            lineageGraphEdges,
         );
+        this.appDatasetSubsService.changeLineageData({
+            origin: origin.basics,
+            nodes: lineageGraphNodes,
+            edges: lineageGraphEdges,
+        });
     }
 
     private updateLineageGraphRecords(
         currentNode: DatasetLineageNode,
         lineageGraphNodes: DatasetBasicsFragment[],
-        lineageGraphEdges: DatasetBasicsFragment[][]
+        lineageGraphEdges: DatasetBasicsFragment[][],
     ) {
-        if (!lineageGraphNodes.some((existingNode: DatasetBasicsFragment) => existingNode.id === currentNode.basics.id)) {
+        if (
+            !lineageGraphNodes.some(
+                (existingNode: DatasetBasicsFragment) =>
+                    existingNode.id === currentNode.basics.id,
+            )
+        ) {
             lineageGraphNodes.push(currentNode.basics);
         }
 
         currentNode.downstreamDependencies.forEach(
             (dependency: DatasetLineageNode) => {
                 lineageGraphEdges.push([currentNode.basics, dependency.basics]);
-                this.updateLineageGraphRecords(dependency, lineageGraphNodes, lineageGraphEdges);
+                this.updateLineageGraphRecords(
+                    dependency,
+                    lineageGraphNodes,
+                    lineageGraphEdges,
+                );
             },
         );
 
         currentNode.upstreamDependencies.forEach(
             (dependency: DatasetLineageNode) => {
                 lineageGraphEdges.push([dependency.basics, currentNode.basics]);
-                this.updateLineageGraphRecords(dependency, lineageGraphNodes, lineageGraphEdges);
+                this.updateLineageGraphRecords(
+                    dependency,
+                    lineageGraphNodes,
+                    lineageGraphEdges,
+                );
             },
         );
     }

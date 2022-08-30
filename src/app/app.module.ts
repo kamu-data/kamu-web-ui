@@ -1,5 +1,6 @@
-import {Apollo, APOLLO_OPTIONS} from 'apollo-angular';
-import {HttpLink} from 'apollo-angular/http';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
+import { HttpLink } from "apollo-angular/http";
 import { APP_INITIALIZER, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
@@ -17,8 +18,6 @@ import { GraphQLModule } from "./graphql.module";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { MatTableModule } from "@angular/material/table";
 import { CdkTableModule } from "@angular/cdk/table";
-
-
 import { InMemoryCache } from "@apollo/client/core";
 import { SearchApi } from "./api/search.api";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";

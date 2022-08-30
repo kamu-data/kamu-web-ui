@@ -21,30 +21,37 @@ export type Scalars = {
     Int: number;
     Float: number;
     AccountID: any;
+    AccountName: any;
+    DatasetID: any;
+    DatasetName: any;
     /**
      * Implement the DateTime<Utc> scalar
      *
      * The input/output is a string in RFC3339 format.
      */
     DateTime: any;
-    DatasetID: any;
     Multihash: any;
-    DatasetName: any;
-    AccountName: any;
 };
 
-export type Query = {
-    __typename?: "Query";
-    /** Account-related functionality group */
-    accounts: Accounts;
-    /** Returns the version of the GQL API */
-    apiVersion: Scalars["String"];
-    /** Querying and data manipulations */
-    data: DataQueries;
-    /** Dataset-related functionality group */
-    datasets: Datasets;
-    /** Search-related functionality group */
-    search: Search;
+export type AccessToken = {
+    __typename?: "AccessToken";
+    accessToken: Scalars["String"];
+    scope: Scalars["String"];
+    tokenType: Scalars["String"];
+};
+
+export type Account = {
+    id: Scalars["AccountID"];
+    name: Scalars["String"];
+};
+
+export type AccountInfo = {
+    __typename?: "AccountInfo";
+    avatarUrl?: Maybe<Scalars["String"]>;
+    email?: Maybe<Scalars["String"]>;
+    gravatarId?: Maybe<Scalars["String"]>;
+    login: Scalars["String"];
+    name: Scalars["String"];
 };
 
 export type Accounts = {
@@ -63,10 +70,77 @@ export type AccountsByNameArgs = {
     name: Scalars["String"];
 };
 
-export type Account = {
-    id: Scalars["AccountID"];
+export type AddData = {
+    __typename?: "AddData";
+    inputCheckpoint?: Maybe<Scalars["Multihash"]>;
+    outputCheckpoint?: Maybe<Checkpoint>;
+    outputData: DataSlice;
+    outputWatermark?: Maybe<Scalars["DateTime"]>;
+};
+
+export type AttachmentEmbedded = {
+    __typename?: "AttachmentEmbedded";
+    content: Scalars["String"];
+    path: Scalars["String"];
+};
+
+export type Attachments = AttachmentsEmbedded;
+
+export type AttachmentsEmbedded = {
+    __typename?: "AttachmentsEmbedded";
+    items: Array<AttachmentEmbedded>;
+};
+
+export type Auth = {
+    __typename?: "Auth";
+    accountInfo: AccountInfo;
+    githubLogin: LoginResponse;
+};
+
+export type AuthAccountInfoArgs = {
+    accessToken: Scalars["String"];
+};
+
+export type AuthGithubLoginArgs = {
+    code: Scalars["String"];
+};
+
+export type BlockInterval = {
+    __typename?: "BlockInterval";
+    end: Scalars["Multihash"];
+    start: Scalars["Multihash"];
+};
+
+export type BlockRef = {
+    __typename?: "BlockRef";
+    blockHash: Scalars["Multihash"];
     name: Scalars["String"];
 };
+
+export type Checkpoint = {
+    __typename?: "Checkpoint";
+    physicalHash: Scalars["Multihash"];
+    size: Scalars["Int"];
+};
+
+export enum CompressionFormat {
+    Gzip = "GZIP",
+    Zip = "ZIP",
+}
+
+export type DataBatch = {
+    __typename?: "DataBatch";
+    content: Scalars["String"];
+    format: DataBatchFormat;
+    numRecords: Scalars["Int"];
+};
+
+export enum DataBatchFormat {
+    Csv = "CSV",
+    Json = "JSON",
+    JsonLd = "JSON_LD",
+    JsonSoa = "JSON_SOA",
+}
 
 export type DataQueries = {
     __typename?: "DataQueries";
@@ -82,34 +156,11 @@ export type DataQueriesQueryArgs = {
     schemaFormat?: InputMaybe<DataSchemaFormat>;
 };
 
-export enum DataBatchFormat {
-    Csv = "CSV",
-    Json = "JSON",
-    JsonLd = "JSON_LD",
-    JsonSoa = "JSON_SOA",
-}
-
-export enum QueryDialect {
-    DataFusion = "DATA_FUSION",
-}
-
-export enum DataSchemaFormat {
-    Parquet = "PARQUET",
-    ParquetJson = "PARQUET_JSON",
-}
-
 export type DataQueryResult = {
     __typename?: "DataQueryResult";
     data: DataBatch;
     limit: Scalars["Int"];
     schema: DataSchema;
-};
-
-export type DataBatch = {
-    __typename?: "DataBatch";
-    content: Scalars["String"];
-    format: DataBatchFormat;
-    numRecords: Scalars["Int"];
 };
 
 export type DataSchema = {
@@ -118,53 +169,17 @@ export type DataSchema = {
     format: DataSchemaFormat;
 };
 
-export type Datasets = {
-    __typename?: "Datasets";
-    /** Returns datasets belonging to the specified account */
-    byAccountId: DatasetConnection;
-    /** Returns datasets belonging to the specified account */
-    byAccountName: DatasetConnection;
-    /** Returns dataset by its ID */
-    byId?: Maybe<Dataset>;
-    /** Returns dataset by its owner and name */
-    byOwnerAndName?: Maybe<Dataset>;
-};
+export enum DataSchemaFormat {
+    Parquet = "PARQUET",
+    ParquetJson = "PARQUET_JSON",
+}
 
-export type DatasetsByAccountIdArgs = {
-    accountId: Scalars["AccountID"];
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
-};
-
-export type DatasetsByAccountNameArgs = {
-    accountName: Scalars["AccountName"];
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
-};
-
-export type DatasetsByIdArgs = {
-    datasetId: Scalars["DatasetID"];
-};
-
-export type DatasetsByOwnerAndNameArgs = {
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
-};
-
-export type DatasetConnection = {
-    __typename?: "DatasetConnection";
-    edges: Array<DatasetEdge>;
-    /** A shorthand for `edges { node { ... } }` */
-    nodes: Array<Dataset>;
-    /** Page information */
-    pageInfo: PageBasedInfo;
-    /** Approximate number of total nodes */
-    totalCount?: Maybe<Scalars["Int"]>;
-};
-
-export type DatasetEdge = {
-    __typename?: "DatasetEdge";
-    node: Dataset;
+export type DataSlice = {
+    __typename?: "DataSlice";
+    interval: OffsetInterval;
+    logicalHash: Scalars["Multihash"];
+    physicalHash: Scalars["Multihash"];
+    size: Scalars["Int"];
 };
 
 export type Dataset = {
@@ -190,6 +205,17 @@ export type Dataset = {
     owner: Account;
 };
 
+export type DatasetConnection = {
+    __typename?: "DatasetConnection";
+    edges: Array<DatasetEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<Dataset>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount?: Maybe<Scalars["Int"]>;
+};
+
 export type DatasetData = {
     __typename?: "DatasetData";
     /** An estimated size of data on disk not accounting for replication or caching */
@@ -207,6 +233,11 @@ export type DatasetDataTailArgs = {
     dataFormat?: InputMaybe<DataBatchFormat>;
     limit?: InputMaybe<Scalars["Int"]>;
     schemaFormat?: InputMaybe<DataSchemaFormat>;
+};
+
+export type DatasetEdge = {
+    __typename?: "DatasetEdge";
+    node: Dataset;
 };
 
 export enum DatasetKind {
@@ -242,172 +273,43 @@ export type DatasetMetadataCurrentSchemaArgs = {
     format?: InputMaybe<DataSchemaFormat>;
 };
 
-export type MetadataChain = {
-    __typename?: "MetadataChain";
-    /** Returns a metadata block corresponding to the specified hash */
-    blockByHash?: Maybe<MetadataBlockExtended>;
-    /** Iterates all metadata blocks in the reverse chronological order */
-    blocks: MetadataBlockConnection;
-    /** Returns all named metadata block references */
-    refs: Array<BlockRef>;
+export type Datasets = {
+    __typename?: "Datasets";
+    /** Returns datasets belonging to the specified account */
+    byAccountId: DatasetConnection;
+    /** Returns datasets belonging to the specified account */
+    byAccountName: DatasetConnection;
+    /** Returns dataset by its ID */
+    byId?: Maybe<Dataset>;
+    /** Returns dataset by its owner and name */
+    byOwnerAndName?: Maybe<Dataset>;
 };
 
-export type MetadataChainBlockByHashArgs = {
-    hash: Scalars["Multihash"];
-};
-
-export type MetadataChainBlocksArgs = {
+export type DatasetsByAccountIdArgs = {
+    accountId: Scalars["AccountID"];
     page?: InputMaybe<Scalars["Int"]>;
     perPage?: InputMaybe<Scalars["Int"]>;
 };
 
-export type MetadataBlockExtended = {
-    __typename?: "MetadataBlockExtended";
-    author: Account;
-    blockHash: Scalars["Multihash"];
-    event: MetadataEvent;
-    prevBlockHash?: Maybe<Scalars["Multihash"]>;
-    systemTime: Scalars["DateTime"];
+export type DatasetsByAccountNameArgs = {
+    accountName: Scalars["AccountName"];
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
 };
 
-export type MetadataEvent =
-    | AddData
-    | ExecuteQuery
-    | Seed
-    | SetAttachments
-    | SetInfo
-    | SetLicense
-    | SetPollingSource
-    | SetTransform
-    | SetVocab
-    | SetWatermark;
-
-export type AddData = {
-    __typename?: "AddData";
-    inputCheckpoint?: Maybe<Scalars["Multihash"]>;
-    outputCheckpoint?: Maybe<Checkpoint>;
-    outputData: DataSlice;
-    outputWatermark?: Maybe<Scalars["DateTime"]>;
-};
-
-export type Checkpoint = {
-    __typename?: "Checkpoint";
-    physicalHash: Scalars["Multihash"];
-    size: Scalars["Int"];
-};
-
-export type DataSlice = {
-    __typename?: "DataSlice";
-    interval: OffsetInterval;
-    logicalHash: Scalars["Multihash"];
-    physicalHash: Scalars["Multihash"];
-    size: Scalars["Int"];
-};
-
-export type OffsetInterval = {
-    __typename?: "OffsetInterval";
-    end: Scalars["Int"];
-    start: Scalars["Int"];
-};
-
-export type ExecuteQuery = {
-    __typename?: "ExecuteQuery";
-    inputCheckpoint?: Maybe<Scalars["Multihash"]>;
-    inputSlices: Array<InputSlice>;
-    outputCheckpoint?: Maybe<Checkpoint>;
-    outputData?: Maybe<DataSlice>;
-    outputWatermark?: Maybe<Scalars["DateTime"]>;
-};
-
-export type InputSlice = {
-    __typename?: "InputSlice";
-    blockInterval?: Maybe<BlockInterval>;
-    dataInterval?: Maybe<OffsetInterval>;
+export type DatasetsByIdArgs = {
     datasetId: Scalars["DatasetID"];
 };
 
-export type BlockInterval = {
-    __typename?: "BlockInterval";
-    end: Scalars["Multihash"];
-    start: Scalars["Multihash"];
-};
-
-export type Seed = {
-    __typename?: "Seed";
-    datasetId: Scalars["DatasetID"];
-    datasetKind: DatasetKind;
-};
-
-export type SetAttachments = {
-    __typename?: "SetAttachments";
-    attachments: Attachments;
-};
-
-export type Attachments = AttachmentsEmbedded;
-
-export type AttachmentsEmbedded = {
-    __typename?: "AttachmentsEmbedded";
-    items: Array<AttachmentEmbedded>;
-};
-
-export type AttachmentEmbedded = {
-    __typename?: "AttachmentEmbedded";
-    content: Scalars["String"];
-    path: Scalars["String"];
-};
-
-export type SetInfo = {
-    __typename?: "SetInfo";
-    description?: Maybe<Scalars["String"]>;
-    keywords?: Maybe<Array<Scalars["String"]>>;
-};
-
-export type SetLicense = {
-    __typename?: "SetLicense";
-    name: Scalars["String"];
-    shortName: Scalars["String"];
-    spdxId?: Maybe<Scalars["String"]>;
-    websiteUrl: Scalars["String"];
-};
-
-export type SetPollingSource = {
-    __typename?: "SetPollingSource";
-    fetch: FetchStep;
-    merge: MergeStrategy;
-    prepare?: Maybe<Array<PrepStep>>;
-    preprocess?: Maybe<Transform>;
-    read: ReadStep;
-};
-
-export type FetchStep = FetchStepContainer | FetchStepFilesGlob | FetchStepUrl;
-
-export type FetchStepContainer = {
-    __typename?: "FetchStepContainer";
-    args?: Maybe<Array<Scalars["String"]>>;
-    command?: Maybe<Array<Scalars["String"]>>;
-    env?: Maybe<Array<EnvVar>>;
-    image: Scalars["String"];
+export type DatasetsByOwnerAndNameArgs = {
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
 };
 
 export type EnvVar = {
     __typename?: "EnvVar";
     name: Scalars["String"];
     value?: Maybe<Scalars["String"]>;
-};
-
-export type FetchStepFilesGlob = {
-    __typename?: "FetchStepFilesGlob";
-    cache?: Maybe<SourceCaching>;
-    eventTime?: Maybe<EventTimeSource>;
-    order?: Maybe<SourceOrdering>;
-    path: Scalars["String"];
-};
-
-export type SourceCaching = SourceCachingForever;
-
-export type SourceCachingForever = {
-    __typename?: "SourceCachingForever";
-    dummy?: Maybe<Scalars["String"]>;
 };
 
 export type EventTimeSource =
@@ -425,16 +327,51 @@ export type EventTimeSourceFromPath = {
     timestampFormat?: Maybe<Scalars["String"]>;
 };
 
-export enum SourceOrdering {
-    ByEventTime = "BY_EVENT_TIME",
-    ByName = "BY_NAME",
-}
+export type ExecuteQuery = {
+    __typename?: "ExecuteQuery";
+    inputCheckpoint?: Maybe<Scalars["Multihash"]>;
+    inputSlices: Array<InputSlice>;
+    outputCheckpoint?: Maybe<Checkpoint>;
+    outputData?: Maybe<DataSlice>;
+    outputWatermark?: Maybe<Scalars["DateTime"]>;
+};
+
+export type FetchStep = FetchStepContainer | FetchStepFilesGlob | FetchStepUrl;
+
+export type FetchStepContainer = {
+    __typename?: "FetchStepContainer";
+    args?: Maybe<Array<Scalars["String"]>>;
+    command?: Maybe<Array<Scalars["String"]>>;
+    env?: Maybe<Array<EnvVar>>;
+    image: Scalars["String"];
+};
+
+export type FetchStepFilesGlob = {
+    __typename?: "FetchStepFilesGlob";
+    cache?: Maybe<SourceCaching>;
+    eventTime?: Maybe<EventTimeSource>;
+    order?: Maybe<SourceOrdering>;
+    path: Scalars["String"];
+};
 
 export type FetchStepUrl = {
     __typename?: "FetchStepUrl";
     cache?: Maybe<SourceCaching>;
     eventTime?: Maybe<EventTimeSource>;
     url: Scalars["String"];
+};
+
+export type InputSlice = {
+    __typename?: "InputSlice";
+    blockInterval?: Maybe<BlockInterval>;
+    dataInterval?: Maybe<OffsetInterval>;
+    datasetId: Scalars["DatasetID"];
+};
+
+export type LoginResponse = {
+    __typename?: "LoginResponse";
+    accountInfo: AccountInfo;
+    token: AccessToken;
 };
 
 export type MergeStrategy =
@@ -462,6 +399,93 @@ export type MergeStrategySnapshot = {
     primaryKey: Array<Scalars["String"]>;
 };
 
+export type MetadataBlockConnection = {
+    __typename?: "MetadataBlockConnection";
+    edges: Array<MetadataBlockEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<MetadataBlockExtended>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount?: Maybe<Scalars["Int"]>;
+};
+
+export type MetadataBlockEdge = {
+    __typename?: "MetadataBlockEdge";
+    node: MetadataBlockExtended;
+};
+
+export type MetadataBlockExtended = {
+    __typename?: "MetadataBlockExtended";
+    author: Account;
+    blockHash: Scalars["Multihash"];
+    event: MetadataEvent;
+    prevBlockHash?: Maybe<Scalars["Multihash"]>;
+    systemTime: Scalars["DateTime"];
+};
+
+export type MetadataChain = {
+    __typename?: "MetadataChain";
+    /** Returns a metadata block corresponding to the specified hash */
+    blockByHash?: Maybe<MetadataBlockExtended>;
+    /** Iterates all metadata blocks in the reverse chronological order */
+    blocks: MetadataBlockConnection;
+    /** Returns all named metadata block references */
+    refs: Array<BlockRef>;
+};
+
+export type MetadataChainBlockByHashArgs = {
+    hash: Scalars["Multihash"];
+};
+
+export type MetadataChainBlocksArgs = {
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+};
+
+export type MetadataEvent =
+    | AddData
+    | ExecuteQuery
+    | Seed
+    | SetAttachments
+    | SetInfo
+    | SetLicense
+    | SetPollingSource
+    | SetTransform
+    | SetVocab
+    | SetWatermark;
+
+export type Mutation = {
+    __typename?: "Mutation";
+    auth: Auth;
+};
+
+export type OffsetInterval = {
+    __typename?: "OffsetInterval";
+    end: Scalars["Int"];
+    start: Scalars["Int"];
+};
+
+export type Organization = Account & {
+    __typename?: "Organization";
+    /** Unique and stable identitfier of this organization account */
+    id: Scalars["AccountID"];
+    /** Symbolic account name */
+    name: Scalars["String"];
+};
+
+export type PageBasedInfo = {
+    __typename?: "PageBasedInfo";
+    /** Index of the current page */
+    currentPage: Scalars["Int"];
+    /** When paginating forwards, are there more items? */
+    hasNextPage: Scalars["Boolean"];
+    /** When paginating backwards, are there more items? */
+    hasPreviousPage: Scalars["Boolean"];
+    /** Approximate number of total pages assuming number of nodes per page stays the same */
+    totalPages?: Maybe<Scalars["Int"]>;
+};
+
 export type PrepStep = PrepStepDecompress | PrepStepPipe;
 
 export type PrepStepDecompress = {
@@ -470,37 +494,28 @@ export type PrepStepDecompress = {
     subPath?: Maybe<Scalars["String"]>;
 };
 
-export enum CompressionFormat {
-    Gzip = "GZIP",
-    Zip = "ZIP",
-}
-
 export type PrepStepPipe = {
     __typename?: "PrepStepPipe";
     command: Array<Scalars["String"]>;
 };
 
-export type Transform = TransformSql;
-
-export type TransformSql = {
-    __typename?: "TransformSql";
-    engine: Scalars["String"];
-    queries: Array<SqlQueryStep>;
-    temporalTables?: Maybe<Array<TemporalTable>>;
-    version?: Maybe<Scalars["String"]>;
+export type Query = {
+    __typename?: "Query";
+    /** Account-related functionality group */
+    accounts: Accounts;
+    /** Returns the version of the GQL API */
+    apiVersion: Scalars["String"];
+    /** Querying and data manipulations */
+    data: DataQueries;
+    /** Dataset-related functionality group */
+    datasets: Datasets;
+    /** Search-related functionality group */
+    search: Search;
 };
 
-export type SqlQueryStep = {
-    __typename?: "SqlQueryStep";
-    alias?: Maybe<Scalars["String"]>;
-    query: Scalars["String"];
-};
-
-export type TemporalTable = {
-    __typename?: "TemporalTable";
-    name: Scalars["String"];
-    primaryKey: Array<Scalars["String"]>;
-};
+export enum QueryDialect {
+    DataFusion = "DATA_FUSION",
+}
 
 export type ReadStep =
     | ReadStepCsv
@@ -558,65 +573,6 @@ export type ReadStepParquet = {
     schema?: Maybe<Array<Scalars["String"]>>;
 };
 
-export type SetTransform = {
-    __typename?: "SetTransform";
-    inputs: Array<TransformInput>;
-    transform: Transform;
-};
-
-export type TransformInput = {
-    __typename?: "TransformInput";
-    dataset: Dataset;
-    id?: Maybe<Scalars["DatasetID"]>;
-    name: Scalars["DatasetName"];
-};
-
-export type SetVocab = {
-    __typename?: "SetVocab";
-    eventTimeColumn?: Maybe<Scalars["String"]>;
-    offsetColumn?: Maybe<Scalars["String"]>;
-    systemTimeColumn?: Maybe<Scalars["String"]>;
-};
-
-export type SetWatermark = {
-    __typename?: "SetWatermark";
-    outputWatermark: Scalars["DateTime"];
-};
-
-export type MetadataBlockConnection = {
-    __typename?: "MetadataBlockConnection";
-    edges: Array<MetadataBlockEdge>;
-    /** A shorthand for `edges { node { ... } }` */
-    nodes: Array<MetadataBlockExtended>;
-    /** Page information */
-    pageInfo: PageBasedInfo;
-    /** Approximate number of total nodes */
-    totalCount?: Maybe<Scalars["Int"]>;
-};
-
-export type MetadataBlockEdge = {
-    __typename?: "MetadataBlockEdge";
-    node: MetadataBlockExtended;
-};
-
-export type PageBasedInfo = {
-    __typename?: "PageBasedInfo";
-    /** Index of the current page */
-    currentPage: Scalars["Int"];
-    /** When paginating forwards, are there more items? */
-    hasNextPage: Scalars["Boolean"];
-    /** When paginating backwards, are there more items? */
-    hasPreviousPage: Scalars["Boolean"];
-    /** Approximate number of total pages assuming number of nodes per page stays the same */
-    totalPages?: Maybe<Scalars["Int"]>;
-};
-
-export type BlockRef = {
-    __typename?: "BlockRef";
-    blockHash: Scalars["Multihash"];
-    name: Scalars["String"];
-};
-
 export type Search = {
     __typename?: "Search";
     /** Perform search across all resources */
@@ -628,6 +584,8 @@ export type SearchQueryArgs = {
     perPage?: InputMaybe<Scalars["Int"]>;
     query: Scalars["String"];
 };
+
+export type SearchResult = Dataset;
 
 export type SearchResultConnection = {
     __typename?: "SearchResultConnection";
@@ -645,55 +603,97 @@ export type SearchResultEdge = {
     node: SearchResult;
 };
 
-export type SearchResult = Dataset;
-
-export type Mutation = {
-    __typename?: "Mutation";
-    auth: Auth;
+export type Seed = {
+    __typename?: "Seed";
+    datasetId: Scalars["DatasetID"];
+    datasetKind: DatasetKind;
 };
 
-export type Auth = {
-    __typename?: "Auth";
-    accountInfo: AccountInfo;
-    githubLogin: LoginResponse;
+export type SetAttachments = {
+    __typename?: "SetAttachments";
+    attachments: Attachments;
 };
 
-export type AuthAccountInfoArgs = {
-    accessToken: Scalars["String"];
+export type SetInfo = {
+    __typename?: "SetInfo";
+    description?: Maybe<Scalars["String"]>;
+    keywords?: Maybe<Array<Scalars["String"]>>;
 };
 
-export type AuthGithubLoginArgs = {
-    code: Scalars["String"];
-};
-
-export type AccountInfo = {
-    __typename?: "AccountInfo";
-    avatarUrl?: Maybe<Scalars["String"]>;
-    email?: Maybe<Scalars["String"]>;
-    gravatarId?: Maybe<Scalars["String"]>;
-    login: Scalars["String"];
+export type SetLicense = {
+    __typename?: "SetLicense";
     name: Scalars["String"];
+    shortName: Scalars["String"];
+    spdxId?: Maybe<Scalars["String"]>;
+    websiteUrl: Scalars["String"];
 };
 
-export type LoginResponse = {
-    __typename?: "LoginResponse";
-    accountInfo: AccountInfo;
-    token: AccessToken;
+export type SetPollingSource = {
+    __typename?: "SetPollingSource";
+    fetch: FetchStep;
+    merge: MergeStrategy;
+    prepare?: Maybe<Array<PrepStep>>;
+    preprocess?: Maybe<Transform>;
+    read: ReadStep;
 };
 
-export type AccessToken = {
-    __typename?: "AccessToken";
-    accessToken: Scalars["String"];
-    scope: Scalars["String"];
-    tokenType: Scalars["String"];
+export type SetTransform = {
+    __typename?: "SetTransform";
+    inputs: Array<TransformInput>;
+    transform: Transform;
 };
 
-export type Organization = Account & {
-    __typename?: "Organization";
-    /** Unique and stable identitfier of this organization account */
-    id: Scalars["AccountID"];
-    /** Symbolic account name */
+export type SetVocab = {
+    __typename?: "SetVocab";
+    eventTimeColumn?: Maybe<Scalars["String"]>;
+    offsetColumn?: Maybe<Scalars["String"]>;
+    systemTimeColumn?: Maybe<Scalars["String"]>;
+};
+
+export type SetWatermark = {
+    __typename?: "SetWatermark";
+    outputWatermark: Scalars["DateTime"];
+};
+
+export type SourceCaching = SourceCachingForever;
+
+export type SourceCachingForever = {
+    __typename?: "SourceCachingForever";
+    dummy?: Maybe<Scalars["String"]>;
+};
+
+export enum SourceOrdering {
+    ByEventTime = "BY_EVENT_TIME",
+    ByName = "BY_NAME",
+}
+
+export type SqlQueryStep = {
+    __typename?: "SqlQueryStep";
+    alias?: Maybe<Scalars["String"]>;
+    query: Scalars["String"];
+};
+
+export type TemporalTable = {
+    __typename?: "TemporalTable";
     name: Scalars["String"];
+    primaryKey: Array<Scalars["String"]>;
+};
+
+export type Transform = TransformSql;
+
+export type TransformInput = {
+    __typename?: "TransformInput";
+    dataset: Dataset;
+    id?: Maybe<Scalars["DatasetID"]>;
+    name: Scalars["DatasetName"];
+};
+
+export type TransformSql = {
+    __typename?: "TransformSql";
+    engine: Scalars["String"];
+    queries: Array<SqlQueryStep>;
+    temporalTables?: Maybe<Array<TemporalTable>>;
+    version?: Maybe<Scalars["String"]>;
 };
 
 export type User = Account & {
@@ -716,9 +716,9 @@ export type AccountInfoMutation = {
             __typename?: "AccountInfo";
             login: string;
             name: string;
-            email?: string | null | undefined;
-            avatarUrl?: string | null | undefined;
-            gravatarId?: string | null | undefined;
+            email?: string | null;
+            avatarUrl?: string | null;
+            gravatarId?: string | null;
         };
     };
 };
@@ -733,49 +733,46 @@ export type GetDatasetDataSchemaQuery = {
     __typename?: "Query";
     datasets: {
         __typename: "Datasets";
-        byId?:
-            | {
-                  __typename: "Dataset";
-                  id: any;
-                  name: any;
-                  kind: DatasetKind;
-                  createdAt: any;
-                  lastUpdatedAt: any;
-                  owner:
-                      | { __typename?: "Organization"; id: any; name: string }
-                      | { __typename?: "User"; id: any; name: string };
-                  metadata: {
-                      __typename: "DatasetMetadata";
-                      currentWatermark?: any | null | undefined;
-                      currentSchema: {
-                          __typename: "DataSchema";
-                          format: DataSchemaFormat;
-                          content: string;
-                      };
-                  };
-                  data: {
-                      __typename: "DatasetData";
-                      numRecordsTotal: number;
-                      estimatedSize: number;
-                      tail: {
-                          __typename: "DataQueryResult";
-                          limit: number;
-                          schema: {
-                              __typename?: "DataSchema";
-                              format: DataSchemaFormat;
-                              content: string;
-                          };
-                          data: {
-                              __typename?: "DataBatch";
-                              format: DataBatchFormat;
-                              content: string;
-                              numRecords: number;
-                          };
-                      };
-                  };
-              }
-            | null
-            | undefined;
+        byId?: {
+            __typename: "Dataset";
+            id: any;
+            name: any;
+            kind: DatasetKind;
+            createdAt: any;
+            lastUpdatedAt: any;
+            owner:
+                | { __typename?: "Organization"; id: any; name: string }
+                | { __typename?: "User"; id: any; name: string };
+            metadata: {
+                __typename: "DatasetMetadata";
+                currentWatermark?: any | null;
+                currentSchema: {
+                    __typename: "DataSchema";
+                    format: DataSchemaFormat;
+                    content: string;
+                };
+            };
+            data: {
+                __typename: "DatasetData";
+                numRecordsTotal: number;
+                estimatedSize: number;
+                tail: {
+                    __typename: "DataQueryResult";
+                    limit: number;
+                    schema: {
+                        __typename?: "DataSchema";
+                        format: DataSchemaFormat;
+                        content: string;
+                    };
+                    data: {
+                        __typename?: "DataBatch";
+                        format: DataBatchFormat;
+                        content: string;
+                        numRecords: number;
+                    };
+                };
+            };
+        } | null;
     };
 };
 
@@ -826,7 +823,7 @@ export type GetDatasetHistoryQuery = {
                           __typename?: "MetadataChain";
                           blocks: {
                               __typename?: "MetadataBlockConnection";
-                              totalCount?: number | null | undefined;
+                              totalCount?: number | null;
                               nodes: Array<
                                   {
                                       __typename?: "MetadataBlockExtended";
@@ -836,14 +833,13 @@ export type GetDatasetHistoryQuery = {
                                   __typename?: "PageBasedInfo";
                                   hasNextPage: boolean;
                                   hasPreviousPage: boolean;
-                                  totalPages?: number | null | undefined;
+                                  totalPages?: number | null;
                               };
                           };
                       };
                   };
               } & DatasetBasicsFragment)
-            | null
-            | undefined;
+            | null;
     };
 };
 
@@ -937,8 +933,7 @@ export type GetDatasetLineageQuery = {
                       >;
                   };
               } & DatasetBasicsFragment)
-            | null
-            | undefined;
+            | null;
     };
 };
 
@@ -960,8 +955,7 @@ export type GetDatasetMetadataSchemaQuery = {
                       __typename?: "DatasetMetadata";
                   } & DatasetMetadataDetailsFragment;
               } & DatasetBasicsFragment)
-            | null
-            | undefined;
+            | null;
     };
 };
 
@@ -995,8 +989,7 @@ export type DatasetOverviewQuery = {
                       };
                   } & DatasetDataSizeFragment;
               } & DatasetOverviewFragment)
-            | null
-            | undefined;
+            | null;
     };
 };
 
@@ -1022,7 +1015,7 @@ export type DatasetMetadataDetailsFragment = {
         __typename?: "MetadataChain";
         blocks: {
             __typename?: "MetadataBlockConnection";
-            totalCount?: number | null | undefined;
+            totalCount?: number | null;
             nodes: Array<{
                 __typename?: "MetadataBlockExtended";
                 blockHash: any;
@@ -1032,45 +1025,35 @@ export type DatasetMetadataDetailsFragment = {
                 __typename?: "PageBasedInfo";
                 hasNextPage: boolean;
                 hasPreviousPage: boolean;
-                totalPages?: number | null | undefined;
+                totalPages?: number | null;
             };
         };
     };
     currentSchema: { __typename?: "DataSchema"; content: string };
-    currentTransform?:
-        | {
-              __typename?: "SetTransform";
-              inputs: Array<{
-                  __typename?: "TransformInput";
-                  dataset: {
-                      __typename?: "Dataset";
-                      id: any;
-                      name: any;
-                      kind: DatasetKind;
-                      owner:
-                          | {
-                                __typename?: "Organization";
-                                id: any;
-                                name: string;
-                            }
-                          | { __typename?: "User"; id: any; name: string };
-                  };
-              }>;
-              transform: {
-                  __typename?: "TransformSql";
-                  queries: Array<{
-                      __typename?: "SqlQueryStep";
-                      alias?: string | null | undefined;
-                      query: string;
-                  }>;
-              };
-          }
-        | null
-        | undefined;
-    currentLicense?:
-        | ({ __typename?: "SetLicense" } & LicenseFragment)
-        | null
-        | undefined;
+    currentTransform?: {
+        __typename?: "SetTransform";
+        inputs: Array<{
+            __typename?: "TransformInput";
+            dataset: {
+                __typename?: "Dataset";
+                id: any;
+                name: any;
+                kind: DatasetKind;
+                owner:
+                    | { __typename?: "Organization"; id: any; name: string }
+                    | { __typename?: "User"; id: any; name: string };
+            };
+        }>;
+        transform: {
+            __typename?: "TransformSql";
+            queries: Array<{
+                __typename?: "SqlQueryStep";
+                alias?: string | null;
+                query: string;
+            }>;
+        };
+    } | null;
+    currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
 };
 
 export type DatasetOverviewFragment = {
@@ -1079,17 +1062,16 @@ export type DatasetOverviewFragment = {
     lastUpdatedAt: any;
     metadata: {
         __typename: "DatasetMetadata";
-        currentReadme?: string | null | undefined;
-        currentWatermark?: any | null | undefined;
+        currentReadme?: string | null;
+        currentWatermark?: any | null;
         currentInfo: {
             __typename?: "SetInfo";
-            description?: string | null | undefined;
-            keywords?: Array<string> | null | undefined;
+            description?: string | null;
+            keywords?: Array<string> | null;
         };
         currentLicense?:
             | ({ __typename?: "SetLicense" } & LicenseFragment)
-            | null
-            | undefined;
+            | null;
         currentSchema: {
             __typename: "DataSchema";
             format: DataSchemaFormat;
@@ -1099,7 +1081,7 @@ export type DatasetOverviewFragment = {
             __typename?: "MetadataChain";
             blocks: {
                 __typename?: "MetadataBlockConnection";
-                totalCount?: number | null | undefined;
+                totalCount?: number | null;
                 nodes: Array<
                     {
                         __typename?: "MetadataBlockExtended";
@@ -1114,14 +1096,14 @@ export type LicenseFragment = {
     __typename?: "SetLicense";
     shortName: string;
     name: string;
-    spdxId?: string | null | undefined;
+    spdxId?: string | null;
     websiteUrl: string;
 };
 
 export type MetadataBlockFragment = {
     __typename?: "MetadataBlockExtended";
     blockHash: any;
-    prevBlockHash?: any | null | undefined;
+    prevBlockHash?: any | null;
     systemTime: any;
     author:
         | { __typename: "Organization"; id: any; name: string }
@@ -1142,19 +1124,16 @@ export type MetadataBlockFragment = {
           }
         | {
               __typename: "ExecuteQuery";
-              queryOutputData?:
-                  | {
-                        __typename?: "DataSlice";
-                        logicalHash: any;
-                        physicalHash: any;
-                        interval: {
-                            __typename?: "OffsetInterval";
-                            start: number;
-                            end: number;
-                        };
-                    }
-                  | null
-                  | undefined;
+              queryOutputData?: {
+                  __typename?: "DataSlice";
+                  logicalHash: any;
+                  physicalHash: any;
+                  interval: {
+                      __typename?: "OffsetInterval";
+                      start: number;
+                      end: number;
+                  };
+              } | null;
           }
         | { __typename: "Seed"; datasetId: any; datasetKind: DatasetKind }
         | { __typename: "SetAttachments" }
@@ -1185,10 +1164,10 @@ export type GithubLoginMutation = {
             accountInfo: {
                 __typename?: "AccountInfo";
                 login: string;
-                email?: string | null | undefined;
+                email?: string | null;
                 name: string;
-                avatarUrl?: string | null | undefined;
-                gravatarId?: string | null | undefined;
+                avatarUrl?: string | null;
+                gravatarId?: string | null;
             };
         };
     };
@@ -1228,7 +1207,7 @@ export type SearchDatasetsOverviewQuery = {
         __typename?: "Search";
         query: {
             __typename?: "SearchResultConnection";
-            totalCount?: number | null | undefined;
+            totalCount?: number | null;
             nodes: Array<{
                 __typename: "Dataset";
                 id: any;
@@ -1243,13 +1222,12 @@ export type SearchDatasetsOverviewQuery = {
                     __typename?: "DatasetMetadata";
                     currentInfo: {
                         __typename?: "SetInfo";
-                        description?: string | null | undefined;
-                        keywords?: Array<string> | null | undefined;
+                        description?: string | null;
+                        keywords?: Array<string> | null;
                     };
                     currentLicense?:
                         | ({ __typename?: "SetLicense" } & LicenseFragment)
-                        | null
-                        | undefined;
+                        | null;
                     currentDownstreamDependencies: Array<{
                         __typename?: "Dataset";
                         id: any;
@@ -1262,7 +1240,7 @@ export type SearchDatasetsOverviewQuery = {
                 hasNextPage: boolean;
                 hasPreviousPage: boolean;
                 currentPage: number;
-                totalPages?: number | null | undefined;
+                totalPages?: number | null;
             };
         };
     };

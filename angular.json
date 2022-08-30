@@ -17,16 +17,28 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies":[
+              "lodash",
+              "zen-observable",
+              "dagre",
+              "moment-timezone",
+              "webcola",
+              "fast-json-stable-stringify",
+              "marked"
+            ],
             "outputPath": "dist/kamu-platform",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "aot": true,
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              { "glob": "**/*", "input": "node_modules/ngx-monaco-editor/assets/monaco", "output": "./assets/monaco/" }
+              {
+                "glob": "**/*",
+                "input": "node_modules/monaco-editor",
+                "output": "assets/monaco-editor"
+              }
             ],
             "styles": [
               "src/styles.sass",
@@ -37,7 +49,6 @@
               "node_modules/katex/dist/katex.min.css"
             ],
             "scripts": [
-              "node_modules/marked/lib/marked.js",
               "node_modules/prismjs/prism.js",
               "node_modules/prismjs/components/prism-csharp.min.js",
               "node_modules/prismjs/components/prism-css.min.js",
@@ -46,7 +57,13 @@
               "node_modules/prismjs/plugins/command-line/prism-command-line.js",
               "node_modules/emoji-toolkit/lib/js/joypixels.min.js",
               "node_modules/katex/dist/katex.min.js"
-            ]
+            ],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -59,13 +76,13 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -104,7 +121,6 @@
               "node_modules/katex/dist/katex.min.css"
             ],
             "scripts": [
-              "node_modules/marked/lib/marked.js",
               "node_modules/prismjs/prism.js",
               "node_modules/prismjs/components/prism-csharp.min.js",
               "node_modules/prismjs/components/prism-css.min.js",
@@ -113,19 +129,6 @@
               "node_modules/prismjs/plugins/command-line/prism-command-line.js",
               "node_modules/emoji-toolkit/lib/js/joypixels.min.js",
               "node_modules/katex/dist/katex.min.js"
-            ]
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
             ]
           }
         },
@@ -144,7 +147,6 @@
       }
     }
   },
-  "defaultProject": "kamu-platform",
   "cli": {
     "analytics": "dbc9d1ba-d851-4f85-b1fe-a749b743ca20"
   }

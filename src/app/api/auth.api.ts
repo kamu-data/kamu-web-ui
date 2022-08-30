@@ -1,3 +1,4 @@
+import {FetchResult} from '@apollo/client/core';
 import { Injectable } from "@angular/core";
 import { map } from "rxjs/operators";
 import { Observable, Subject, throwError } from "rxjs";
@@ -8,7 +9,7 @@ import {
     GithubLoginMutation,
 } from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
-import { FetchResult } from "apollo-link";
+
 import { MaybeNull } from "../common/app.types";
 
 @Injectable()

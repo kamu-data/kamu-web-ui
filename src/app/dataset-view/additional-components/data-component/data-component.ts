@@ -8,6 +8,7 @@ import DataTabValues from "./mock.data";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import * as monaco from "monaco-editor";
 
 @Component({
     selector: "app-data",
@@ -60,7 +61,8 @@ export class DataComponent extends BaseComponent implements OnInit {
             // A label of the action that will be presented to the user.
             label: "Run SQL",
             // An optional array of keybindings for the action.
-            keybindings: [monaco.KeyMod.CtrlCmd, monaco.KeyCode.Enter],
+            //keybindings: [KeyMod.CtrlCmd | KeyCode.Enter],
+            keybindings: [2048 | 3],
             contextMenuGroupId: "navigation",
             contextMenuOrder: 1.5,
             // Method that will be executed when the action is triggered.

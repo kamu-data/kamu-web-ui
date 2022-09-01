@@ -17,7 +17,7 @@ export class SpinnerInterceptor implements HttpInterceptor {
     ): Observable<HttpEvent<unknown>> {
         this.spinnerService.show();
         return next.handle(req).pipe(
-            delay(environment.delay_http_request),
+            delay(environment.delay_http_request_ms),
             finalize(() => this.spinnerService.hide()),
         );
     }

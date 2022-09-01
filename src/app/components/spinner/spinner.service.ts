@@ -5,12 +5,15 @@ import { Injectable } from "@angular/core";
     providedIn: "root",
 })
 export class SpinnerService {
-    isLoading$ = new Subject<boolean>();
+    private _isLoading$ = new Subject<boolean>();
+    public get isLoading$() {
+        return this._isLoading$.asObservable();
+    }
 
     show(): void {
-        this.isLoading$.next(true);
+        this._isLoading$.next(true);
     }
     hide(): void {
-        this.isLoading$.next(false);
+        this._isLoading$.next(false);
     }
 }

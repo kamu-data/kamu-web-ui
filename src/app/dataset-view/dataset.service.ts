@@ -100,8 +100,6 @@ export class AppDatasetService {
     }
 
     public getDatasetOverview(info: DatasetInfo): void {
-        console.log("test");
-
         this.searchApi
             .getDatasetOverview(info)
             .subscribe((data: DatasetOverviewQuery) => {

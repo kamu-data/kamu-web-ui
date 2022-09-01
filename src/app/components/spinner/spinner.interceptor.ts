@@ -12,9 +12,9 @@ import { environment } from "../../../environments/environment";
 export class SpinnerInterceptor implements HttpInterceptor {
     constructor(private spinnerService: SpinnerService) {}
     intercept(
-        req: HttpRequest<any>,
+        req: HttpRequest<unknown>,
         next: HttpHandler,
-    ): Observable<HttpEvent<any>> {
+    ): Observable<HttpEvent<unknown>> {
         this.spinnerService.show();
         return next.handle(req).pipe(
             delay(environment.delay_http_request),

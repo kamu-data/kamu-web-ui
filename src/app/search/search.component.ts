@@ -172,8 +172,6 @@ export class SearchComponent
 
     public ngAfterContentInit(): void {
         this.tableData.tableSource = this.searchData;
-
-        this.changePageAndSearch();
     }
 
     public ngOnInit(): void {
@@ -181,7 +179,6 @@ export class SearchComponent
             this.sidenavService.setSidenav(this.sidenav);
             this.checkWindowSize();
         }
-
         this.initTableData();
 
         this.changePageAndSearch();

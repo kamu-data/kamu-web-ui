@@ -13,7 +13,11 @@ import {
     ViewEncapsulation,
 } from "@angular/core";
 import { BaseComponent } from "src/app/common/base.component";
-import { datasetKind2String, dataSize, relativeTime } from "src/app/common/data.helpers";
+import {
+    datasetKind2String,
+    dataSize,
+    relativeTime,
+} from "src/app/common/data.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 import {
     DatasetBasicsFragment,

@@ -16,7 +16,6 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
-import { GraphQLModule } from "./graphql.module";
 import {
     HttpClient,
     HttpClientModule,
@@ -140,7 +139,7 @@ const MatModules = [
             registrationStrategy: "registerWhenStable:30000",
         }),
         NgbModule,
-        GraphQLModule,
+        //GraphQLModule,
         HttpClientModule,
         CdkTableModule,
         ...MatModules,

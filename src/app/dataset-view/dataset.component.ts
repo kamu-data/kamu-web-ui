@@ -328,7 +328,6 @@ export class DatasetComponent
                 this.initLineageTab(datasetInfo),
             [DatasetViewTypeEnum.Discussions]: () => this.initDiscussionsTab(),
         };
-        console.log("=====>>>>>>>test");
 
         this.datasetViewType = this.getDatasetViewTypeFromUrl();
         mapperTabs[this.datasetViewType]();

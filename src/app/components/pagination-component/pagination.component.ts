@@ -39,8 +39,6 @@ export class PaginationComponent implements OnChanges {
     }
 
     public onPageChange(currentPage: number, isClick = false) {
-        console.log("page change");
-
         if (currentPage !== this.previousPage) {
             this.previousPage = currentPage;
             this.pageChangeEvent.emit({ currentPage, isClick });

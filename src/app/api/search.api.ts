@@ -1,9 +1,8 @@
-import {Apollo} from 'apollo-angular';
-import {ApolloQueryResult} from '@apollo/client/core';
+import { Apollo } from "apollo-angular";
+import { ApolloQueryResult } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 
-
-import { map } from "rxjs/operators";
+import { map, first } from "rxjs/operators";
 import { Observable, of } from "rxjs";
 import { DatasetIDsInterface, TypeNames } from "../interface/search.interface";
 
@@ -63,6 +62,7 @@ export class SearchApi {
                 page,
             })
             .valueChanges.pipe(
+                first(),
                 map(
                     (
                         result: ApolloQueryResult<SearchDatasetsOverviewQuery>,
@@ -83,17 +83,17 @@ export class SearchApi {
         return this.searchDatasetsAutocompleteGQL
             .watch({ query: id, perPage: 10 })
             .valueChanges.pipe(
+                first(),
                 map(
                     (
                         result: ApolloQueryResult<SearchDatasetsAutocompleteQuery>,
                     ) => {
-                        const nodesList: DatasetIDsInterface[] = result.data.search.query.nodes.map(
-                            (node) => ({
+                        const nodesList: DatasetIDsInterface[] =
+                            result.data.search.query.nodes.map((node) => ({
                                 name: node.name as string,
                                 id: node.id as string,
                                 __typename: node.__typename as TypeNames,
-                            }),
-                        );
+                            }));
                         // Add dummy result that opens search view
                         nodesList.unshift({
                             __typename: TypeNames.allDataType,
@@ -121,6 +121,7 @@ export class SearchApi {
                 limit: params.numRecords ?? 10,
             })
             .valueChanges.pipe(
+                first(),
                 map((result: ApolloQueryResult<DatasetOverviewQuery>) => {
                     return result.data;
                 }),
@@ -133,6 +134,7 @@ export class SearchApi {
         return this.getDatasetDataSQLRun
             .watch({ query: params.query, limit: params.limit })
             .valueChanges.pipe(
+                first(),
                 map((result: ApolloQueryResult<GetDatasetDataSqlRunQuery>) => {
                     return result.data;
                 }),
@@ -152,6 +154,7 @@ export class SearchApi {
                 page: params.numPage || 0,
             })
             .valueChanges.pipe(
+                first(),
                 map((result: ApolloQueryResult<GetDatasetHistoryQuery>) => {
                     return result.data;
                 }),
@@ -169,6 +172,7 @@ export class SearchApi {
                 numPage: params.page ?? 0,
             })
             .valueChanges.pipe(
+                first(),
                 map((result: ApolloQueryResult<GetDatasetDataSchemaQuery>) => {
                     return result.data;
                 }),
@@ -189,6 +193,7 @@ export class SearchApi {
                 numRecords: 1,
             })
             .valueChanges.pipe(
+                first(),
                 map(
                     (
                         result: ApolloQueryResult<GetDatasetMetadataSchemaQuery>,
@@ -209,6 +214,7 @@ export class SearchApi {
                 datasetName: params.datasetName,
             })
             .valueChanges.pipe(
+                first(),
                 map((result: ApolloQueryResult<GetDatasetLineageQuery>) => {
                     return result.data;
                 }),

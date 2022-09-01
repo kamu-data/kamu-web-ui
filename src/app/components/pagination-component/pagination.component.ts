@@ -29,7 +29,6 @@ export class PaginationComponent implements OnChanges {
             this.previousPage = 1;
             this.currentPage = 1;
         }
-
         if (!page.previousValue && page.firstChange) {
             this.previousPage = page.currentValue as number;
         }

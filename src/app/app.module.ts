@@ -1,3 +1,5 @@
+import { SpinnerService } from "./components/spinner/spinner.service";
+import { SpinnerInterceptor } from "./components/spinner/spinner.interceptor";
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
@@ -14,8 +16,11 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
-import { GraphQLModule } from "./graphql.module";
-import { HttpClient, HttpClientModule } from "@angular/common/http";
+import {
+    HttpClient,
+    HttpClientModule,
+    HTTP_INTERCEPTORS,
+} from "@angular/common/http";
 import { MatTableModule } from "@angular/material/table";
 import { CdkTableModule } from "@angular/cdk/table";
 import { InMemoryCache } from "@apollo/client/core";
@@ -48,6 +53,7 @@ import { MonacoEditorModule } from "ngx-monaco-editor";
 import { AppConfigService } from "./app-config.service";
 import { NavigationService } from "./services/navigation.service";
 import { AppDatasetSubscriptionsService } from "./dataset-view/dataset.subscriptions.service";
+import { SpinnerModule } from "./components/spinner/spinner.module";
 
 const Services = [
     {
@@ -59,6 +65,13 @@ const Services = [
                 return appConfigService.loadAppConfig();
             };
         },
+    },
+    // comment or uncomment this object for simulation latency
+    {
+        provide: HTTP_INTERCEPTORS,
+        useClass: SpinnerInterceptor,
+        multi: true,
+        deps: [SpinnerService],
     },
     Apollo,
     AuthApi,
@@ -126,7 +139,7 @@ const MatModules = [
             registrationStrategy: "registerWhenStable:30000",
         }),
         NgbModule,
-        GraphQLModule,
+        //GraphQLModule,
         HttpClientModule,
         CdkTableModule,
         ...MatModules,
@@ -134,6 +147,7 @@ const MatModules = [
         MatOptionModule,
         ReactiveFormsModule,
         NgxGraphModule,
+        SpinnerModule,
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

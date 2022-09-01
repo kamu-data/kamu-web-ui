@@ -139,10 +139,12 @@ export class DatasetComponent
         if (method === searchAdditionalButtonsEnum.Descission) {
             this.onClickDescission();
         }
-        this.modalService.warning({
-            message: "Feature coming soon",
-            yesButtonText: "Ok",
-        }).catch(e => logError(e));
+        this.modalService
+            .warning({
+                message: "Feature coming soon",
+                yesButtonText: "Ok",
+            })
+            .catch((e) => logError(e));
     }
 
     private initOverviewTab(datasetInfo: DatasetInfo): void {
@@ -198,11 +200,13 @@ export class DatasetComponent
     }
 
     public selectTopic(topicName: string): void {
-        this.modalService.warning({
-            message: "Feature coming soon",
-            yesButtonText: "Ok",
-            title: topicName,
-        }).catch(e => logError(e));
+        this.modalService
+            .warning({
+                message: "Feature coming soon",
+                yesButtonText: "Ok",
+                title: topicName,
+            })
+            .catch((e) => logError(e));
     }
 
     public onClickLineageNode(node: Node): void {
@@ -333,8 +337,12 @@ export class DatasetComponent
         const paramMap: ParamMap = this.activatedRoute.snapshot.paramMap;
         return {
             // Both parameters are mandatory in URL, router would not activate this component otherwise
-            accountName: requireValue(paramMap.get(ProjectLinks.urlParamAccountName)),
-            datasetName: requireValue(paramMap.get(ProjectLinks.urlParamDatasetName)),
+            accountName: requireValue(
+                paramMap.get(ProjectLinks.urlParamAccountName),
+            ),
+            datasetName: requireValue(
+                paramMap.get(ProjectLinks.urlParamDatasetName),
+            ),
         };
     }
 
@@ -368,7 +376,7 @@ export class DatasetComponent
                 accountName: this.datasetBasics.owner.name,
                 datasetName: datasetName
                     ? datasetName
-                    : this.datasetBasics.name as string,
+                    : (this.datasetBasics.name as string),
                 tab: DatasetViewTypeEnum.Lineage,
             });
         }

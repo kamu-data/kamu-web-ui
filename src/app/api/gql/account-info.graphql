@@ -1,11 +1,7 @@
 mutation AccountInfo ($accessToken: String!) {
   auth {
     accountInfo(accessToken: $accessToken) {
-      login
-      name
-      email
-      avatarUrl
-      gravatarId
+      ...AccountDetails
     }
   }
 }

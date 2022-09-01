@@ -712,14 +712,7 @@ export type AccountInfoMutation = {
     __typename?: "Mutation";
     auth: {
         __typename?: "Auth";
-        accountInfo: {
-            __typename?: "AccountInfo";
-            login: string;
-            name: string;
-            email?: string | null;
-            avatarUrl?: string | null;
-            gravatarId?: string | null;
-        };
+        accountInfo: { __typename?: "AccountInfo" } & AccountDetailsFragment;
     };
 };
 
@@ -993,6 +986,15 @@ export type DatasetOverviewQuery = {
     };
 };
 
+export type AccountDetailsFragment = {
+    __typename?: "AccountInfo";
+    login: string;
+    name: string;
+    email?: string | null;
+    avatarUrl?: string | null;
+    gravatarId?: string | null;
+};
+
 export type DatasetBasicsFragment = {
     __typename?: "Dataset";
     id: any;
@@ -1163,12 +1165,7 @@ export type GithubLoginMutation = {
             };
             accountInfo: {
                 __typename?: "AccountInfo";
-                login: string;
-                email?: string | null;
-                name: string;
-                avatarUrl?: string | null;
-                gravatarId?: string | null;
-            };
+            } & AccountDetailsFragment;
         };
     };
 };
@@ -1246,6 +1243,15 @@ export type SearchDatasetsOverviewQuery = {
     };
 };
 
+export const AccountDetailsFragmentDoc = gql`
+    fragment AccountDetails on AccountInfo {
+        login
+        name
+        email
+        avatarUrl
+        gravatarId
+    }
+`;
 export const DatasetDataSizeFragmentDoc = gql`
     fragment DatasetDataSize on DatasetData {
         numRecordsTotal
@@ -1410,14 +1416,11 @@ export const AccountInfoDocument = gql`
     mutation AccountInfo($accessToken: String!) {
         auth {
             accountInfo(accessToken: $accessToken) {
-                login
-                name
-                email
-                avatarUrl
-                gravatarId
+                ...AccountDetails
             }
         }
     }
+    ${AccountDetailsFragmentDoc}
 `;
 
 @Injectable({
@@ -1755,15 +1758,12 @@ export const GithubLoginDocument = gql`
                     tokenType
                 }
                 accountInfo {
-                    login
-                    email
-                    name
-                    avatarUrl
-                    gravatarId
+                    ...AccountDetails
                 }
             }
         }
     }
+    ${AccountDetailsFragmentDoc}
 `;
 
 @Injectable({

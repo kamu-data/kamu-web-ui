@@ -1,10 +1,9 @@
-import {Apollo} from 'apollo-angular';
-import {ApolloQueryResult} from '@apollo/client/core';
+import { Apollo } from "apollo-angular";
+import { ApolloQueryResult } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 
-
 import { map, first } from "rxjs/operators";
-import { Observable, of, } from "rxjs";
+import { Observable, of } from "rxjs";
 import { DatasetIDsInterface, TypeNames } from "../interface/search.interface";
 
 import {
@@ -89,13 +88,12 @@ export class SearchApi {
                     (
                         result: ApolloQueryResult<SearchDatasetsAutocompleteQuery>,
                     ) => {
-                        const nodesList: DatasetIDsInterface[] = result.data.search.query.nodes.map(
-                            (node) => ({
+                        const nodesList: DatasetIDsInterface[] =
+                            result.data.search.query.nodes.map((node) => ({
                                 name: node.name as string,
                                 id: node.id as string,
                                 __typename: node.__typename as TypeNames,
-                            }),
-                        );
+                            }));
                         // Add dummy result that opens search view
                         nodesList.unshift({
                             __typename: TypeNames.allDataType,

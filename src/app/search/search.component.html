@@ -87,7 +87,7 @@
                     </nav>
                 </div>
                 <div class="search-result-container__content">
-                    <app-repo-list
+                    <app-dataset-list
                         [dataSource]="tableData.tableSource"
                         [sortOptions]="tableData.sortOptions"
                         [resultUnitText]="tableData.resultUnitText"
@@ -95,7 +95,7 @@
                         [hasResultQuantity]="tableData.hasResultQuantity"
                         [isClickableRow]="tableData.isClickableRow"
                         (selectDatasetEmit)="onSelectDataset($event)"
-                    ></app-repo-list>
+                    ></app-dataset-list>
 
                     <ng-template
                         [ngIf]="

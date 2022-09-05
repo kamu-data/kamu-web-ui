@@ -65,9 +65,7 @@
                                     (focusin)="isSearchActive = true"
                                     (click)="onClickInput()"
                                     (selectItem)="onSelectItem($event)"
-                                    (keyup.enter)="
-                                        onSearch($event)
-                                    "
+                                    (keyup.enter)="onSearch($event)"
                                     (blur)="onSearch($event)"
                                 />
                             </div>
@@ -76,7 +74,7 @@
                                 <div>
                                     <i class="bi bi-journal-album mr-2"></i>
                                     <ngb-highlight
-                                        [result]="r.name"
+                                        [result]="r.dataset.name"
                                         [term]="t.name"
                                     ></ngb-highlight>
                                 </div>

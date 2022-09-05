@@ -1,7 +1,4 @@
-import {
-    DataRow,
-    OverviewDataUpdate,
-} from "src/app/dataset-view/dataset.subscriptions.interface";
+import { OverviewDataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetKind } from "./../../../api/kamu.graphql.interface";
 import {
     ChangeDetectionStrategy,
@@ -26,6 +23,7 @@ import {
     MetadataBlockFragment,
 } from "../../../api/kamu.graphql.interface";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { DataRow } from "src/app/interface/dataset.interface";
 
 @Component({
     selector: "app-overview",

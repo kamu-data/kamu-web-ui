@@ -1,9 +1,6 @@
-import {
-    DataUpdate,
-    DataRow,
-} from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { DataViewSchema } from "../../../interface/search.interface";
+import { DataRow, DatasetSchema } from "../../../interface/dataset.interface";
 import DataTabValues from "./mock.data";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { BaseComponent } from "src/app/common/base.component";
@@ -26,7 +23,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     };
     public savedQueries = DataTabValues.savedQueries;
     public sqlRequestCode = `select\n  *\nfrom `;
-    public currentSchema?: DataViewSchema;
+    public currentSchema?: DatasetSchema;
     public currentData: DataRow[];
 
     constructor(private appDatasetSubsService: AppDatasetSubscriptionsService) {

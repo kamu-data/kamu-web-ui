@@ -38,7 +38,6 @@ export class DatasetComponent
     implements OnInit, OnDestroy
 {
     public datasetBasics?: DatasetBasicsFragment;
-    public searchValue = "";
     public isMinimizeSearchAdditionalButtons = false;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
 
@@ -78,15 +77,10 @@ export class DatasetComponent
             this.getCurrentPageFromUrl(),
         );
 
-        this.trackSubscriptions(
-            this.appDatasetService.onSearchDatasetBasicsChanges.subscribe(
+        this.trackSubscription(
+            this.appDatasetService.onDatasetChanges.subscribe(
                 (basics: DatasetBasicsFragment) => {
                     this.datasetBasics = basics;
-                },
-            ),
-            this.appDatasetService.onSearchChanges.subscribe(
-                (value: string) => {
-                    this.searchValue = value;
                 },
             ),
         );
@@ -149,12 +143,12 @@ export class DatasetComponent
 
     private initOverviewTab(datasetInfo: DatasetInfo): void {
         this.datasetViewType = DatasetViewTypeEnum.Overview;
-        this.appDatasetService.getDatasetOverview(datasetInfo);
+        this.appDatasetService.requestDatasetOverview(datasetInfo);
     }
 
     private initDataTab(datasetInfo: DatasetInfo): void {
         this.datasetViewType = DatasetViewTypeEnum.Data;
-        this.appDatasetService.getDatasetDataSchema(datasetInfo);
+        this.appDatasetService.requestDatasetDataSchema(datasetInfo);
     }
 
     private initMetadataTab(
@@ -162,7 +156,10 @@ export class DatasetComponent
         currentPage: number,
     ): void {
         this.datasetViewType = DatasetViewTypeEnum.Metadata;
-        this.appDatasetService.onSearchMetadata(datasetInfo, currentPage - 1);
+        this.appDatasetService.requestDatasetMetadata(
+            datasetInfo,
+            currentPage - 1,
+        );
     }
 
     private initHistoryTab(
@@ -170,7 +167,7 @@ export class DatasetComponent
         currentPage: number,
     ): void {
         this.datasetViewType = DatasetViewTypeEnum.History;
-        this.appDatasetService.onDatasetHistorySchema(
+        this.appDatasetService.requestDatasetHistory(
             datasetInfo,
             20,
             currentPage - 1,
@@ -179,7 +176,7 @@ export class DatasetComponent
 
     private initLineageTab(datasetInfo: DatasetInfo): void {
         this.datasetViewType = DatasetViewTypeEnum.Lineage;
-        this.appDatasetService.onSearchLineage(datasetInfo);
+        this.appDatasetService.requestDatasetLineage(datasetInfo);
         this.changeLineageGraphView();
     }
 
@@ -384,7 +381,7 @@ export class DatasetComponent
 
     public onRunSQLRequest(query: string): void {
         if (this.datasetBasics) {
-            this.appDatasetService.onGetDatasetDataSQLRun(
+            this.appDatasetService.requestDatasetDataSqlRun(
                 query,
                 50, // TODO: Propagate limit from UI and display when it was reached
             );

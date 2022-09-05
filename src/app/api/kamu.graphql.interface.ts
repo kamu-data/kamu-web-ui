@@ -723,59 +723,6 @@ export type AccountInfoMutation = {
     };
 };
 
-export type GetDatasetDataSchemaQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    numRecords?: InputMaybe<Scalars["Int"]>;
-    numPage?: InputMaybe<Scalars["Int"]>;
-}>;
-
-export type GetDatasetDataSchemaQuery = {
-    __typename?: "Query";
-    datasets: {
-        __typename: "Datasets";
-        byId?: {
-            __typename: "Dataset";
-            id: any;
-            name: any;
-            kind: DatasetKind;
-            createdAt: any;
-            lastUpdatedAt: any;
-            owner:
-                | { __typename?: "Organization"; id: any; name: string }
-                | { __typename?: "User"; id: any; name: string };
-            metadata: {
-                __typename: "DatasetMetadata";
-                currentWatermark?: any | null;
-                currentSchema: {
-                    __typename: "DataSchema";
-                    format: DataSchemaFormat;
-                    content: string;
-                };
-            };
-            data: {
-                __typename: "DatasetData";
-                numRecordsTotal: number;
-                estimatedSize: number;
-                tail: {
-                    __typename: "DataQueryResult";
-                    limit: number;
-                    schema: {
-                        __typename?: "DataSchema";
-                        format: DataSchemaFormat;
-                        content: string;
-                    };
-                    data: {
-                        __typename?: "DataBatch";
-                        format: DataBatchFormat;
-                        content: string;
-                        numRecords: number;
-                    };
-                };
-            };
-        } | null;
-    };
-};
-
 export type GetDatasetDataSqlRunQueryVariables = Exact<{
     query: Scalars["String"];
     limit: Scalars["Int"];
@@ -959,13 +906,13 @@ export type GetDatasetMetadataSchemaQuery = {
     };
 };
 
-export type DatasetOverviewQueryVariables = Exact<{
+export type GetDatasetOverviewQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
     limit?: InputMaybe<Scalars["Int"]>;
 }>;
 
-export type DatasetOverviewQuery = {
+export type GetDatasetOverviewQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
@@ -1092,6 +1039,28 @@ export type DatasetOverviewFragment = {
     };
 } & DatasetBasicsFragment;
 
+export type DatasetSearchOverviewFragment = {
+    __typename?: "Dataset";
+    createdAt: any;
+    lastUpdatedAt: any;
+    metadata: {
+        __typename?: "DatasetMetadata";
+        currentInfo: {
+            __typename?: "SetInfo";
+            description?: string | null;
+            keywords?: Array<string> | null;
+        };
+        currentLicense?:
+            | ({ __typename?: "SetLicense" } & LicenseFragment)
+            | null;
+        currentDownstreamDependencies: Array<{
+            __typename?: "Dataset";
+            id: any;
+            kind: DatasetKind;
+        }>;
+    };
+} & DatasetBasicsFragment;
+
 export type LicenseFragment = {
     __typename?: "SetLicense";
     shortName: string;
@@ -1185,12 +1154,7 @@ export type SearchDatasetsAutocompleteQuery = {
         __typename?: "Search";
         query: {
             __typename?: "SearchResultConnection";
-            nodes: Array<{
-                __typename: "Dataset";
-                id: any;
-                name: any;
-                kind: DatasetKind;
-            }>;
+            nodes: Array<{ __typename: "Dataset" } & DatasetBasicsFragment>;
         };
     };
 };
@@ -1208,33 +1172,9 @@ export type SearchDatasetsOverviewQuery = {
         query: {
             __typename?: "SearchResultConnection";
             totalCount?: number | null;
-            nodes: Array<{
-                __typename: "Dataset";
-                id: any;
-                name: any;
-                kind: DatasetKind;
-                createdAt: any;
-                lastUpdatedAt: any;
-                owner:
-                    | { __typename?: "Organization"; id: any; name: string }
-                    | { __typename?: "User"; id: any; name: string };
-                metadata: {
-                    __typename?: "DatasetMetadata";
-                    currentInfo: {
-                        __typename?: "SetInfo";
-                        description?: string | null;
-                        keywords?: Array<string> | null;
-                    };
-                    currentLicense?:
-                        | ({ __typename?: "SetLicense" } & LicenseFragment)
-                        | null;
-                    currentDownstreamDependencies: Array<{
-                        __typename?: "Dataset";
-                        id: any;
-                        kind: DatasetKind;
-                    }>;
-                };
-            }>;
+            nodes: Array<
+                { __typename: "Dataset" } & DatasetSearchOverviewFragment
+            >;
             pageInfo: {
                 __typename?: "PageBasedInfo";
                 hasNextPage: boolean;
@@ -1406,6 +1346,28 @@ export const DatasetOverviewFragmentDoc = gql`
     ${LicenseFragmentDoc}
     ${MetadataBlockFragmentDoc}
 `;
+export const DatasetSearchOverviewFragmentDoc = gql`
+    fragment DatasetSearchOverview on Dataset {
+        ...DatasetBasics
+        createdAt
+        lastUpdatedAt
+        metadata {
+            currentInfo {
+                description
+                keywords
+            }
+            currentLicense {
+                ...License
+            }
+            currentDownstreamDependencies {
+                id
+                kind
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${LicenseFragmentDoc}
+`;
 export const AccountInfoDocument = gql`
     mutation AccountInfo($accessToken: String!) {
         auth {
@@ -1428,70 +1390,6 @@ export class AccountInfoGQL extends Apollo.Mutation<
     AccountInfoMutationVariables
 > {
     document = AccountInfoDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const GetDatasetDataSchemaDocument = gql`
-    query getDatasetDataSchema(
-        $datasetId: DatasetID!
-        $numRecords: Int
-        $numPage: Int
-    ) {
-        datasets {
-            byId(datasetId: $datasetId) {
-                id
-                owner {
-                    id
-                    name
-                }
-                name
-                kind
-                createdAt
-                lastUpdatedAt
-                metadata {
-                    currentWatermark
-                    currentSchema(format: PARQUET_JSON) {
-                        format
-                        content
-                        __typename
-                    }
-                    __typename
-                }
-                data {
-                    numRecordsTotal
-                    estimatedSize
-                    tail(limit: $numRecords, dataFormat: JSON) {
-                        schema {
-                            format
-                            content
-                        }
-                        data {
-                            format
-                            content
-                            numRecords
-                        }
-                        limit
-                        __typename
-                    }
-                    __typename
-                }
-                __typename
-            }
-            __typename
-        }
-    }
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class GetDatasetDataSchemaGQL extends Apollo.Query<
-    GetDatasetDataSchemaQuery,
-    GetDatasetDataSchemaQueryVariables
-> {
-    document = GetDatasetDataSchemaDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
@@ -1697,8 +1595,8 @@ export class GetDatasetMetadataSchemaGQL extends Apollo.Query<
         super(apollo);
     }
 }
-export const DatasetOverviewDocument = gql`
-    query datasetOverview(
+export const GetDatasetOverviewDocument = gql`
+    query getDatasetOverview(
         $accountName: AccountName!
         $datasetName: DatasetName!
         $limit: Int
@@ -1735,11 +1633,11 @@ export const DatasetOverviewDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class DatasetOverviewGQL extends Apollo.Query<
-    DatasetOverviewQuery,
-    DatasetOverviewQueryVariables
+export class GetDatasetOverviewGQL extends Apollo.Query<
+    GetDatasetOverviewQuery,
+    GetDatasetOverviewQueryVariables
 > {
-    document = DatasetOverviewDocument;
+    document = GetDatasetOverviewDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
@@ -1789,15 +1687,12 @@ export const SearchDatasetsAutocompleteDocument = gql`
             query(query: $query, perPage: $perPage, page: $page) {
                 nodes {
                     __typename
-                    ... on Dataset {
-                        id
-                        name
-                        kind
-                    }
+                    ...DatasetBasics
                 }
             }
         }
     }
+    ${DatasetBasicsFragmentDoc}
 `;
 
 @Injectable({
@@ -1818,32 +1713,8 @@ export const SearchDatasetsOverviewDocument = gql`
         search {
             query(query: $query, perPage: $perPage, page: $page) {
                 nodes {
+                    ...DatasetSearchOverview
                     __typename
-                    ... on Dataset {
-                        id
-                        name
-                        owner {
-                            id
-                            name
-                        }
-                        kind
-                        metadata {
-                            currentInfo {
-                                description
-                                keywords
-                            }
-                            currentLicense {
-                                ...License
-                            }
-                            currentDownstreamDependencies {
-                                id
-                                kind
-                            }
-                        }
-                        createdAt
-                        lastUpdatedAt
-                        __typename
-                    }
                 }
                 totalCount
                 pageInfo {
@@ -1855,7 +1726,7 @@ export const SearchDatasetsOverviewDocument = gql`
             }
         }
     }
-    ${LicenseFragmentDoc}
+    ${DatasetSearchOverviewFragmentDoc}
 `;
 
 @Injectable({

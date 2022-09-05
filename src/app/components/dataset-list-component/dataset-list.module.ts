@@ -6,7 +6,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule } from "@angular/forms";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
-import { RepoListComponent } from "./repo-list.component";
+import { DatasetListComponent } from "./dataset-list.component";
 import { MatSelectModule } from "@angular/material/select";
 
 @NgModule({
@@ -20,11 +20,11 @@ import { MatSelectModule } from "@angular/material/select";
         MatChipsModule,
         MatSelectModule,
     ],
-    exports: [RepoListComponent],
-    declarations: [RepoListComponent],
+    exports: [DatasetListComponent],
+    declarations: [DatasetListComponent],
 })
-export class RepoListModule {
-    public static forRoot(): ModuleWithProviders<RepoListModule> {
-        return { ngModule: RepoListModule };
+export class DatasetListModule {
+    public static forRoot(): ModuleWithProviders<DatasetListModule> {
+        return { ngModule: DatasetListModule };
     }
 }

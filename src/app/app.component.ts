@@ -4,7 +4,10 @@ import AppValues from "./common/app.values";
 import { AppSearchService } from "./search/search.service";
 import { filter, map } from "rxjs/operators";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
-import { DatasetIDsInterface, TypeNames } from "./interface/search.interface";
+import {
+    DatasetAutocompleteItem,
+    TypeNames,
+} from "./interface/search.interface";
 import { AuthApi } from "./api/auth.api";
 import { ModalService } from "./components/modal/modal.service";
 import { BaseComponent } from "./common/base.component";
@@ -89,7 +92,7 @@ export class AppComponent extends BaseComponent implements OnInit {
 
     private appHeaderInit(): void {
         this.trackSubscriptions(
-            this.appSearchService.onSearchChanges.subscribe(
+            this.appSearchService.onSearchQueryChanges.subscribe(
                 (searchValue: string) => {
                     this.searchValue = searchValue;
                 },
@@ -110,14 +113,16 @@ export class AppComponent extends BaseComponent implements OnInit {
                         if (searchValue === "%255Bobject%2520Object%255D") {
                             this.navigationService.navigateToSearch();
                             setTimeout(() =>
-                                this.appSearchService.searchChanges(""),
+                                this.appSearchService.searchQueryChanges(""),
                             );
                         }
                         if (event.url.includes(ProjectLinks.urlSearch)) {
-                            this.appSearchService.searchChanges(searchValue);
+                            this.appSearchService.searchQueryChanges(
+                                searchValue,
+                            );
                         }
                         if (!event.url.includes(ProjectLinks.urlSearch)) {
-                            this.appSearchService.searchChanges("");
+                            this.appSearchService.searchQueryChanges("");
                         }
                     }
                 }),
@@ -133,20 +138,23 @@ export class AppComponent extends BaseComponent implements OnInit {
         );
     }
 
-    public onSelectDataset(item: DatasetIDsInterface): void {
+    public onSelectDataset(item: DatasetAutocompleteItem): void {
         if (item.__typename === TypeNames.datasetType) {
             this.navigationService.navigateToDatasetView({
-                accountName: AppValues.defaultUsername,
-                datasetName: item.name,
+                accountName: item.dataset.owner.name,
+                datasetName: item.dataset.name as string,
                 tab: DatasetViewTypeEnum.Overview,
             });
         } else {
-            this.navigationService.navigateToSearch(item.id, 1);
+            this.navigationService.navigateToSearch(
+                item.dataset.id as string,
+                1,
+            );
         }
     }
     public onClickAppLogo(): void {
         this.navigationService.navigateToSearch();
-        this.appSearchService.searchChanges("");
+        this.appSearchService.searchQueryChanges("");
     }
 
     public onOpenUserInfo(): void {
@@ -164,39 +172,51 @@ export class AppComponent extends BaseComponent implements OnInit {
         this.authApi.logOut();
     }
     public onUserProfile(): void {
-        this.modalService.warning({
-            message: this.unimplementedMessage,
-            yesButtonText: "Ok",
-        }).catch(e => logError(e));
+        this.modalService
+            .warning({
+                message: this.unimplementedMessage,
+                yesButtonText: "Ok",
+            })
+            .catch((e) => logError(e));
     }
     public onUserDatasets(): void {
-        this.modalService.warning({
-            message: this.unimplementedMessage,
-            yesButtonText: "Ok",
-        }).catch(e => logError(e));
+        this.modalService
+            .warning({
+                message: this.unimplementedMessage,
+                yesButtonText: "Ok",
+            })
+            .catch((e) => logError(e));
     }
     public onBilling(): void {
-        this.modalService.warning({
-            message: this.unimplementedMessage,
-            yesButtonText: "Ok",
-        }).catch(e => logError(e));
+        this.modalService
+            .warning({
+                message: this.unimplementedMessage,
+                yesButtonText: "Ok",
+            })
+            .catch((e) => logError(e));
     }
     public onAnalytics(): void {
-        this.modalService.warning({
-            message: this.unimplementedMessage,
-            yesButtonText: "Ok",
-        }).catch(e => logError(e));
+        this.modalService
+            .warning({
+                message: this.unimplementedMessage,
+                yesButtonText: "Ok",
+            })
+            .catch((e) => logError(e));
     }
     public onSettings(): void {
-        this.modalService.warning({
-            message: this.unimplementedMessage,
-            yesButtonText: "Ok",
-        }).catch(e => logError(e));
+        this.modalService
+            .warning({
+                message: this.unimplementedMessage,
+                yesButtonText: "Ok",
+            })
+            .catch((e) => logError(e));
     }
     public onHelp(): void {
-        this.modalService.warning({
-            message: this.unimplementedMessage,
-            yesButtonText: "Ok",
-        }).catch(e => logError(e));
+        this.modalService
+            .warning({
+                message: this.unimplementedMessage,
+                yesButtonText: "Ok",
+            })
+            .catch((e) => logError(e));
     }
 }

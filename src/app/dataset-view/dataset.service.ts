@@ -1,17 +1,17 @@
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
-import { SearchApi } from "../api/search.api";
 import {
+    DataRow,
     DatasetLineageNode,
-    DataViewSchema,
-} from "../interface/search.interface";
+    DatasetSchema,
+} from "../interface/dataset.interface";
 import {
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
     DatasetMetadataDetailsFragment,
     DatasetOverviewFragment,
-    DatasetOverviewQuery,
+    GetDatasetOverviewQuery,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
     GetDatasetLineageQuery,
@@ -25,61 +25,36 @@ import {
     DatasetHistoryUpdate,
     DataUpdate,
     MetadataSchemaUpdate,
-    DataRow,
     OverviewDataUpdate,
 } from "./dataset.subscriptions.interface";
 import { isNil } from "lodash";
 import _ from "lodash";
 import { logError } from "../common/app.helpers";
+import { DatasetApi } from "../api/dataset.api";
 
 @Injectable()
 export class AppDatasetService {
     constructor(
-        private searchApi: SearchApi,
+        private datasetApi: DatasetApi,
         private modalService: ModalService,
         private appDatasetSubsService: AppDatasetSubscriptionsService,
     ) {}
 
-    public get onSearchDatasetBasicsChanges(): Observable<DatasetBasicsFragment> {
-        return this.searchDatasetInfoChanges$.asObservable();
-    }
-
-    public get onSearchChanges(): Observable<string> {
-        return this.searchChanges$.asObservable();
-    }
-
-    private searchChanges$: Subject<string> = new Subject<string>();
-    private searchDatasetInfoChanges$: Subject<DatasetBasicsFragment> =
+    private datasetChanges$: Subject<DatasetBasicsFragment> =
         new Subject<DatasetBasicsFragment>();
 
-    private static parseContentOfDataset(
-        data: DatasetOverviewQuery,
-    ): DataRow[] {
-        return data.datasets.byOwnerAndName
-            ? (JSON.parse(
-                  data.datasets.byOwnerAndName.data.tail.data.content,
-              ) as DataRow[])
-            : [];
-    }
-    public get defaultPageInfo(): PageBasedInfo {
-        return {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            totalPages: 1,
-            currentPage: 1,
-        };
+    public get onDatasetChanges(): Observable<DatasetBasicsFragment> {
+        return this.datasetChanges$.asObservable();
     }
 
-    public searchDatasetInfoChanges(
-        searchDatasetInfo: DatasetBasicsFragment,
-    ): void {
-        this.searchDatasetInfoChanges$.next(searchDatasetInfo);
+    public datasetChanges(searchDatasetInfo: DatasetBasicsFragment): void {
+        this.datasetChanges$.next(searchDatasetInfo);
     }
 
-    public getDatasetDataSchema(info: DatasetInfo): void {
-        this.searchApi
+    public requestDatasetDataSchema(info: DatasetInfo): void {
+        this.datasetApi
             .getDatasetOverview(info)
-            .subscribe((data: DatasetOverviewQuery) => {
+            .subscribe((data: GetDatasetOverviewQuery) => {
                 if (isNil(data.datasets.byOwnerAndName)) {
                     throw new Error("Dataset not resolved by ID");
                 }
@@ -87,22 +62,22 @@ export class AppDatasetService {
                     _.cloneDeep<DatasetBasicsFragment>(
                         data.datasets.byOwnerAndName,
                     );
-                this.searchDatasetInfoChanges(dataset);
+                this.datasetChanges(dataset);
 
                 const content: DataRow[] =
                     AppDatasetService.parseContentOfDataset(data);
-                const schema: DataViewSchema = JSON.parse(
+                const schema: DatasetSchema = JSON.parse(
                     data.datasets.byOwnerAndName.metadata.currentSchema.content,
-                ) as DataViewSchema;
+                ) as DatasetSchema;
                 const dataUpdate: DataUpdate = { content, schema };
                 this.appDatasetSubsService.changeDatasetData(dataUpdate);
             });
     }
 
-    public getDatasetOverview(info: DatasetInfo): void {
-        this.searchApi
+    public requestDatasetOverview(info: DatasetInfo): void {
+        this.datasetApi
             .getDatasetOverview(info)
-            .subscribe((data: DatasetOverviewQuery) => {
+            .subscribe((data: GetDatasetOverviewQuery) => {
                 if (isNil(data.datasets.byOwnerAndName)) {
                     throw new Error("Dataset not resolved by ID");
                 }
@@ -110,7 +85,7 @@ export class AppDatasetService {
                     _.cloneDeep<DatasetBasicsFragment>(
                         data.datasets.byOwnerAndName,
                     );
-                this.searchDatasetInfoChanges(dataset);
+                this.datasetChanges(dataset);
 
                 const content: DataRow[] =
                     AppDatasetService.parseContentOfDataset(data);
@@ -133,20 +108,20 @@ export class AppDatasetService {
             });
     }
 
-    public onDatasetHistorySchema(
+    public requestDatasetHistory(
         info: DatasetInfo,
         numRecords: number,
         numPage: number,
     ): void {
-        this.searchApi
-            .onDatasetHistory({ ...info, numRecords, numPage })
+        this.datasetApi
+            .getDatasetHistory({ ...info, numRecords, numPage })
             .subscribe((data: GetDatasetHistoryQuery) => {
                 if (data.datasets.byOwnerAndName) {
                     const dataset: DatasetBasicsFragment =
                         _.cloneDeep<DatasetBasicsFragment>(
                             data.datasets.byOwnerAndName,
                         );
-                    this.searchDatasetInfoChanges(dataset);
+                    this.datasetChanges(dataset);
                     const pageInfo: PageBasedInfo = Object.assign(
                         _.cloneDeep(
                             data.datasets.byOwnerAndName.metadata.chain.blocks
@@ -166,9 +141,9 @@ export class AppDatasetService {
             });
     }
 
-    public onSearchMetadata(info: DatasetInfo, page: number): void {
-        this.searchApi
-            .onSearchMetadata({ ...info, page })
+    public requestDatasetMetadata(info: DatasetInfo, page: number): void {
+        this.datasetApi
+            .getDatasetMetadata({ ...info, page })
             .subscribe((data: GetDatasetMetadataSchemaQuery) => {
                 if (isNil(data.datasets.byOwnerAndName)) {
                     throw new Error("Dataset not resolved by ID");
@@ -177,18 +152,18 @@ export class AppDatasetService {
                     _.cloneDeep<DatasetBasicsFragment>(
                         data.datasets.byOwnerAndName,
                     );
-                const schema: DataViewSchema = JSON.parse(
+                const schema: DatasetSchema = JSON.parse(
                     data.datasets.byOwnerAndName.metadata.currentSchema.content,
-                ) as DataViewSchema;
+                ) as DatasetSchema;
                 const metadata: DatasetMetadataDetailsFragment = _.cloneDeep(
                     data.datasets.byOwnerAndName.metadata,
                 );
-                const pageInfo: PageBasedInfo = Object.assign(
-                    this.defaultPageInfo,
-                    {
-                        currentPage: page,
-                    },
-                );
+                const pageInfo: PageBasedInfo = {
+                    hasNextPage: false,
+                    hasPreviousPage: false,
+                    totalPages: 1,
+                    currentPage: page,
+                };
                 const metadataSchemaUpdate: MetadataSchemaUpdate = {
                     schema,
                     pageInfo,
@@ -197,18 +172,19 @@ export class AppDatasetService {
                 this.appDatasetSubsService.metadataSchemaChanges(
                     metadataSchemaUpdate,
                 );
-                this.searchDatasetInfoChanges(dataset);
+                this.datasetChanges(dataset);
             });
     }
-    public onGetDatasetDataSQLRun(query: string, limit: number): void {
-        this.searchApi.onGetDatasetDataSQLRun({ query, limit }).subscribe(
+
+    public requestDatasetDataSqlRun(query: string, limit: number): void {
+        this.datasetApi.getDatasetDataSqlRun({ query, limit }).subscribe(
             (data: GetDatasetDataSqlRunQuery) => {
                 const content: DataRow[] = JSON.parse(
                     data.data.query.data.content,
                 ) as DataRow[];
-                const schema: DataViewSchema = JSON.parse(
+                const schema: DatasetSchema = JSON.parse(
                     data.data.query.schema.content,
-                ) as DataViewSchema;
+                ) as DatasetSchema;
                 const dataUpdate: DataUpdate = { content, schema };
                 this.appDatasetSubsService.changeDatasetData(dataUpdate);
             },
@@ -224,9 +200,8 @@ export class AppDatasetService {
         );
     }
 
-    // TODO: What is the naming convention here exactly?
-    public onSearchLineage(info: DatasetInfo): void {
-        this.searchApi
+    public requestDatasetLineage(info: DatasetInfo): void {
+        this.datasetApi
             .getDatasetLineage(info)
             .subscribe((data: GetDatasetLineageQuery) => {
                 if (isNil(data.datasets.byOwnerAndName)) {
@@ -236,7 +211,7 @@ export class AppDatasetService {
                     _.cloneDeep<DatasetBasicsFragment>(
                         data.datasets.byOwnerAndName,
                     );
-                this.searchDatasetInfoChanges(dataset);
+                this.datasetChanges(dataset);
 
                 const lineageResponse: DatasetLineageNode =
                     this.lineageResponseFromRawQuery(data);
@@ -418,5 +393,15 @@ export class AppDatasetService {
                 );
             },
         );
+    }
+
+    private static parseContentOfDataset(
+        data: GetDatasetOverviewQuery,
+    ): DataRow[] {
+        return data.datasets.byOwnerAndName
+            ? (JSON.parse(
+                  data.datasets.byOwnerAndName.data.tail.data.content,
+              ) as DataRow[])
+            : [];
     }
 }

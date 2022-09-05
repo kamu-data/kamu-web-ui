@@ -1,7 +1,6 @@
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
-import { SearchApi } from "../api/search.api";
 import {
     DatasetLineageNode,
     DataViewSchema,
@@ -31,11 +30,12 @@ import {
 import { isNil } from "lodash";
 import _ from "lodash";
 import { logError } from "../common/app.helpers";
+import { DatasetApi } from "../api/dataset.api";
 
 @Injectable()
 export class AppDatasetService {
     constructor(
-        private searchApi: SearchApi,
+        private datasetApi: DatasetApi,
         private modalService: ModalService,
         private appDatasetSubsService: AppDatasetSubscriptionsService,
     ) {}
@@ -77,7 +77,7 @@ export class AppDatasetService {
     }
 
     public getDatasetDataSchema(info: DatasetInfo): void {
-        this.searchApi
+        this.datasetApi
             .getDatasetOverview(info)
             .subscribe((data: DatasetOverviewQuery) => {
                 if (isNil(data.datasets.byOwnerAndName)) {
@@ -100,7 +100,7 @@ export class AppDatasetService {
     }
 
     public getDatasetOverview(info: DatasetInfo): void {
-        this.searchApi
+        this.datasetApi
             .getDatasetOverview(info)
             .subscribe((data: DatasetOverviewQuery) => {
                 if (isNil(data.datasets.byOwnerAndName)) {
@@ -138,7 +138,7 @@ export class AppDatasetService {
         numRecords: number,
         numPage: number,
     ): void {
-        this.searchApi
+        this.datasetApi
             .onDatasetHistory({ ...info, numRecords, numPage })
             .subscribe((data: GetDatasetHistoryQuery) => {
                 if (data.datasets.byOwnerAndName) {
@@ -167,7 +167,7 @@ export class AppDatasetService {
     }
 
     public onSearchMetadata(info: DatasetInfo, page: number): void {
-        this.searchApi
+        this.datasetApi
             .onSearchMetadata({ ...info, page })
             .subscribe((data: GetDatasetMetadataSchemaQuery) => {
                 if (isNil(data.datasets.byOwnerAndName)) {
@@ -201,7 +201,7 @@ export class AppDatasetService {
             });
     }
     public onGetDatasetDataSQLRun(query: string, limit: number): void {
-        this.searchApi.onGetDatasetDataSQLRun({ query, limit }).subscribe(
+        this.datasetApi.onGetDatasetDataSQLRun({ query, limit }).subscribe(
             (data: GetDatasetDataSqlRunQuery) => {
                 const content: DataRow[] = JSON.parse(
                     data.data.query.data.content,
@@ -226,7 +226,7 @@ export class AppDatasetService {
 
     // TODO: What is the naming convention here exactly?
     public onSearchLineage(info: DatasetInfo): void {
-        this.searchApi
+        this.datasetApi
             .getDatasetLineage(info)
             .subscribe((data: GetDatasetLineageQuery) => {
                 if (isNil(data.datasets.byOwnerAndName)) {

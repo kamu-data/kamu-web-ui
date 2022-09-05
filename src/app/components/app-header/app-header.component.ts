@@ -9,7 +9,7 @@ import {
 import { Observable, OperatorFunction } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
 import {
-    DatasetIDsInterface,
+    DatasetAutocompleteItem,
     TypeNames,
 } from "../../interface/search.interface";
 import { SearchApi } from "../../api/search.api";
@@ -29,26 +29,18 @@ export class AppHeaderComponent extends BaseComponent {
     @Input() public isVisible: boolean;
     @Input() public userInfo: AccountInfo;
 
-    @Output() public selectDatasetEmitter =
-        new EventEmitter<DatasetIDsInterface>();
+    @Output() public selectDatasetEmitter = new EventEmitter<DatasetAutocompleteItem>();
     @Output() public addNewEmitter = new EventEmitter<null>();
     @Output() public loginEmitter = new EventEmitter<null>();
     @Output() public logOutEmitter = new EventEmitter<null>();
-    @Output() public userProfileEmitter =
-        new EventEmitter<null>();
-    @Output() public clickAppLogoEmitter =
-        new EventEmitter<null>();
-    @Output() public clickSettingsEmitter =
-        new EventEmitter<null>();
+    @Output() public userProfileEmitter = new EventEmitter<null>();
+    @Output() public clickAppLogoEmitter = new EventEmitter<null>();
+    @Output() public clickSettingsEmitter = new EventEmitter<null>();
     @Output() public clickHelpEmitter = new EventEmitter<null>();
-    @Output() public clickAnalyticsEmitter =
-        new EventEmitter<null>();
-    @Output() public clickBillingEmitter =
-        new EventEmitter<null>();
-    @Output() public clickUserDatasetsEmitter =
-        new EventEmitter<null>();
-    @Output() public clickUserProfileEmitter =
-        new EventEmitter<null>();
+    @Output() public clickAnalyticsEmitter = new EventEmitter<null>();
+    @Output() public clickBillingEmitter = new EventEmitter<null>();
+    @Output() public clickUserDatasetsEmitter = new EventEmitter<null>();
+    @Output() public clickUserProfileEmitter = new EventEmitter<null>();
 
     @ViewChild("appHeaderMenuButton")
     appHeaderMenuButton: ElementRef<HTMLElement>;
@@ -65,9 +57,10 @@ export class AppHeaderComponent extends BaseComponent {
         return type === TypeNames.datasetType;
     }
 
-    public search: OperatorFunction<string, readonly DatasetIDsInterface[]> = (
-        text$: Observable<string>,
-    ) => {
+    public search: OperatorFunction<
+        string,
+        readonly DatasetAutocompleteItem[]
+    > = (text$: Observable<string>) => {
         return text$.pipe(
             debounceTime(300),
             distinctUntilChanged(),
@@ -77,8 +70,8 @@ export class AppHeaderComponent extends BaseComponent {
         );
     };
 
-    public formatter(x: DatasetIDsInterface | string): string {
-        return typeof x !== "string" ? x.name : x;
+    public formatter(x: DatasetAutocompleteItem | string): string {
+        return typeof x !== "string" ? (x.dataset.name as string) : x;
     }
 
     public onClickInput(): void {
@@ -88,11 +81,14 @@ export class AppHeaderComponent extends BaseComponent {
             typeaheadInput.focus();
         }
     }
+    
     public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
         this.isSearchActive = false;
 
         if (event.item) {
-            this.selectDatasetEmitter.emit(event.item as DatasetIDsInterface);
+            this.selectDatasetEmitter.emit(
+                event.item as DatasetAutocompleteItem,
+            );
 
             setTimeout(() => {
                 const typeaheadInput: HTMLElement | null =
@@ -175,7 +171,7 @@ export class AppHeaderComponent extends BaseComponent {
     public onAnalytics(): void {
         this.clickAnalyticsEmitter.emit();
     }
-    
+
     public onBilling(): void {
         this.clickBillingEmitter.emit();
     }

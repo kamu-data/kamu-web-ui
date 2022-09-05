@@ -1092,6 +1092,28 @@ export type DatasetOverviewFragment = {
     };
 } & DatasetBasicsFragment;
 
+export type DatasetSearchOverviewFragment = {
+    __typename?: "Dataset";
+    createdAt: any;
+    lastUpdatedAt: any;
+    metadata: {
+        __typename?: "DatasetMetadata";
+        currentInfo: {
+            __typename?: "SetInfo";
+            description?: string | null;
+            keywords?: Array<string> | null;
+        };
+        currentLicense?:
+            | ({ __typename?: "SetLicense" } & LicenseFragment)
+            | null;
+        currentDownstreamDependencies: Array<{
+            __typename?: "Dataset";
+            id: any;
+            kind: DatasetKind;
+        }>;
+    };
+} & DatasetBasicsFragment;
+
 export type LicenseFragment = {
     __typename?: "SetLicense";
     shortName: string;
@@ -1185,12 +1207,7 @@ export type SearchDatasetsAutocompleteQuery = {
         __typename?: "Search";
         query: {
             __typename?: "SearchResultConnection";
-            nodes: Array<{
-                __typename: "Dataset";
-                id: any;
-                name: any;
-                kind: DatasetKind;
-            }>;
+            nodes: Array<{ __typename: "Dataset" } & DatasetBasicsFragment>;
         };
     };
 };
@@ -1208,33 +1225,9 @@ export type SearchDatasetsOverviewQuery = {
         query: {
             __typename?: "SearchResultConnection";
             totalCount?: number | null;
-            nodes: Array<{
-                __typename: "Dataset";
-                id: any;
-                name: any;
-                kind: DatasetKind;
-                createdAt: any;
-                lastUpdatedAt: any;
-                owner:
-                    | { __typename?: "Organization"; id: any; name: string }
-                    | { __typename?: "User"; id: any; name: string };
-                metadata: {
-                    __typename?: "DatasetMetadata";
-                    currentInfo: {
-                        __typename?: "SetInfo";
-                        description?: string | null;
-                        keywords?: Array<string> | null;
-                    };
-                    currentLicense?:
-                        | ({ __typename?: "SetLicense" } & LicenseFragment)
-                        | null;
-                    currentDownstreamDependencies: Array<{
-                        __typename?: "Dataset";
-                        id: any;
-                        kind: DatasetKind;
-                    }>;
-                };
-            }>;
+            nodes: Array<
+                { __typename: "Dataset" } & DatasetSearchOverviewFragment
+            >;
             pageInfo: {
                 __typename?: "PageBasedInfo";
                 hasNextPage: boolean;
@@ -1405,6 +1398,28 @@ export const DatasetOverviewFragmentDoc = gql`
     ${DatasetBasicsFragmentDoc}
     ${LicenseFragmentDoc}
     ${MetadataBlockFragmentDoc}
+`;
+export const DatasetSearchOverviewFragmentDoc = gql`
+    fragment DatasetSearchOverview on Dataset {
+        ...DatasetBasics
+        createdAt
+        lastUpdatedAt
+        metadata {
+            currentInfo {
+                description
+                keywords
+            }
+            currentLicense {
+                ...License
+            }
+            currentDownstreamDependencies {
+                id
+                kind
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${LicenseFragmentDoc}
 `;
 export const AccountInfoDocument = gql`
     mutation AccountInfo($accessToken: String!) {
@@ -1789,15 +1804,12 @@ export const SearchDatasetsAutocompleteDocument = gql`
             query(query: $query, perPage: $perPage, page: $page) {
                 nodes {
                     __typename
-                    ... on Dataset {
-                        id
-                        name
-                        kind
-                    }
+                    ...DatasetBasics
                 }
             }
         }
     }
+    ${DatasetBasicsFragmentDoc}
 `;
 
 @Injectable({
@@ -1818,32 +1830,8 @@ export const SearchDatasetsOverviewDocument = gql`
         search {
             query(query: $query, perPage: $perPage, page: $page) {
                 nodes {
+                    ...DatasetSearchOverview
                     __typename
-                    ... on Dataset {
-                        id
-                        name
-                        owner {
-                            id
-                            name
-                        }
-                        kind
-                        metadata {
-                            currentInfo {
-                                description
-                                keywords
-                            }
-                            currentLicense {
-                                ...License
-                            }
-                            currentDownstreamDependencies {
-                                id
-                                kind
-                            }
-                        }
-                        createdAt
-                        lastUpdatedAt
-                        __typename
-                    }
                 }
                 totalCount
                 pageInfo {
@@ -1855,7 +1843,7 @@ export const SearchDatasetsOverviewDocument = gql`
             }
         }
     }
-    ${LicenseFragmentDoc}
+    ${DatasetSearchOverviewFragmentDoc}
 `;
 
 @Injectable({

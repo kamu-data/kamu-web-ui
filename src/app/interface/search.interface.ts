@@ -1,19 +1,18 @@
 import {
-    Dataset,
     DatasetBasicsFragment,
+    DatasetSearchOverviewFragment,
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 
-export interface SearchOverviewInterface {
-    datasets: Dataset[];
+export interface DatasetSearchResult {
+    datasets: DatasetSearchOverviewFragment[];
     totalCount: number;
     pageInfo: PageBasedInfo;
     currentPage: number;
 }
 
-export interface DatasetIDsInterface {
-    id: string;
-    name: string;
+export interface DatasetAutocompleteItem {
+    dataset: DatasetBasicsFragment;
     __typename: TypeNames;
 }
 

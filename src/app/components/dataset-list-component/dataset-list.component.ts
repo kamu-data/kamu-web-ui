@@ -1,6 +1,6 @@
 import { relativeTime } from "src/app/common/data.helpers";
-import { DatasetInfo } from "./../../interface/navigation.interface";
-import { NavigationService } from "./../../services/navigation.service";
+import { DatasetInfo } from "../../interface/navigation.interface";
+import { NavigationService } from "../../services/navigation.service";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -9,17 +9,20 @@ import {
     Output,
 } from "@angular/core";
 import { ModalService } from "../modal/modal.service";
-import { Dataset } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    DatasetSearchOverviewFragment,
+} from "src/app/api/kamu.graphql.interface";
 import { logError } from "src/app/common/app.helpers";
 
 @Component({
-    selector: "app-repo-list",
-    templateUrl: "./repo-list.component.html",
-    styleUrls: ["./repo-list.sass"],
+    selector: "app-dataset-list",
+    templateUrl: "./dataset-list.component.html",
+    styleUrls: ["./dataset-list.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RepoListComponent {
-    @Input() public dataSource: Dataset[];
+export class DatasetListComponent {
+    @Input() public dataSource: DatasetSearchOverviewFragment[];
     @Input() public totalCount = 0;
     @Input() public resultUnitText: string;
     @Input() public hasResultQuantity?: boolean = false;
@@ -40,10 +43,12 @@ export class RepoListComponent {
         this.navigationService.navigateToOwnerView(ownerName);
     }
 
-    public onSelectDataset(row: Dataset): void {
+    public onSelectDataset(row: DatasetSearchOverviewFragment): void {
+        const datasetBasics: DatasetBasicsFragment =
+            row as DatasetBasicsFragment;
         this.selectDatasetEmit.emit({
-            datasetName: row.name as string,
-            accountName: row.owner.name,
+            datasetName: datasetBasics.name as string,
+            accountName: datasetBasics.owner.name,
         });
     }
 
@@ -51,17 +56,13 @@ export class RepoListComponent {
         return relativeTime(time);
     }
 
-    public searchResultQuantity(dataSource: Dataset[] = []): string {
-        if (!Array.isArray(dataSource)) {
-            return "0";
-        }
-        return dataSource.length.toString();
-    }
     public selectTopic(topicName: string): void {
-        this.modalService.warning({
-            message: "Feature coming soon",
-            yesButtonText: "Ok",
-            title: topicName,
-        }).catch(e => logError(e));
+        this.modalService
+            .warning({
+                message: "Feature coming soon",
+                yesButtonText: "Ok",
+                title: topicName,
+            })
+            .catch((e) => logError(e));
     }
 }

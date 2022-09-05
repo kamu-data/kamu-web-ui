@@ -2,32 +2,8 @@ query searchDatasetsOverview($query: String!, $perPage: Int, $page: Int) {
   search {
     query(query: $query, perPage: $perPage, page: $page) {
       nodes {
+        ...DatasetSearchOverview
         __typename
-        ... on Dataset {
-          id
-          name
-          owner {
-            id
-            name
-          }
-          kind
-          metadata {
-            currentInfo {
-              description
-              keywords
-            }
-            currentLicense {
-              ...License
-            }
-            currentDownstreamDependencies {
-              id
-              kind
-            }
-          }
-          createdAt
-          lastUpdatedAt
-          __typename
-        }
       }
       totalCount
       pageInfo {

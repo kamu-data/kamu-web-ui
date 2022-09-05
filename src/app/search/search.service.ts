@@ -2,71 +2,77 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { SearchApi } from "../api/search.api";
 import {
-    DatasetIDsInterface,
-    SearchOverviewInterface,
+    DatasetAutocompleteItem,
+    DatasetSearchResult,
 } from "../interface/search.interface";
 import {
-    Dataset,
+    DatasetSearchOverviewFragment,
     SearchDatasetsOverviewQuery,
 } from "../api/kamu.graphql.interface";
 
 @Injectable()
 export class AppSearchService {
-    public searchData: SearchOverviewInterface;
-    private searchChanges$: Subject<string> = new Subject<string>();
-    private searchDataChanges$: Subject<SearchOverviewInterface> =
-        new Subject<SearchOverviewInterface>();
-    private autocompleteDatasetChanges$: Subject<DatasetIDsInterface[]> =
-        new Subject<DatasetIDsInterface[]>();
+    private inputQueryChanges$: Subject<string> = new Subject<string>();
+    private overviewSearchChanges$: Subject<DatasetSearchResult> =
+        new Subject<DatasetSearchResult>();
+    private autocompleteSearchChanges$: Subject<DatasetAutocompleteItem[]> =
+        new Subject<DatasetAutocompleteItem[]>();
 
     constructor(private searchApi: SearchApi) {}
 
-    public searchChanges(searchValue: string): void {
-        this.searchChanges$.next(searchValue);
+    public searchQueryChanges(searchValue: string): void {
+        this.inputQueryChanges$.next(searchValue);
     }
-    public get onSearchChanges(): Observable<string> {
-        return this.searchChanges$.asObservable();
+
+    public get onSearchQueryChanges(): Observable<string> {
+        return this.inputQueryChanges$.asObservable();
     }
-    public searchDataChanges(searchData: SearchOverviewInterface): void {
-        this.searchDataChanges$.next(searchData);
+
+    public overviewSearchChanges(searchData: DatasetSearchResult): void {
+        this.overviewSearchChanges$.next(searchData);
     }
-    public get onSearchDataChanges(): Observable<SearchOverviewInterface> {
-        return this.searchDataChanges$.asObservable();
+
+    public get onOverviewSearchChanges(): Observable<DatasetSearchResult> {
+        return this.overviewSearchChanges$.asObservable();
     }
-    public autocompleteDatasetChanges(searchData: DatasetIDsInterface[]) {
-        this.autocompleteDatasetChanges$.next(searchData);
+
+    public autocompleteSearchChanges(
+        autocompleteData: DatasetAutocompleteItem[],
+    ) {
+        this.autocompleteSearchChanges$.next(autocompleteData);
     }
-    public get onAutocompleteDatasetChanges(): Observable<
-        DatasetIDsInterface[]
+
+    public get onAutocompleteSearchChanges(): Observable<
+        DatasetAutocompleteItem[]
     > {
-        return this.autocompleteDatasetChanges$.asObservable();
+        return this.autocompleteSearchChanges$.asObservable();
     }
-    public search(searchValue: string, page = 0): void {
+
+    public searchDatasets(searchQuery: string, page = 0): void {
         this.searchApi
-            .searchOverview(searchValue, page)
+            .overviewDatasetSearch(searchQuery, page)
             .subscribe((data: SearchDatasetsOverviewQuery) => {
-                const datasets: Dataset[] = data.search.query
-                    .nodes as Dataset[];
+                const datasets: DatasetSearchOverviewFragment[] =
+                    data.search.query.nodes;
                 const pageInfo = data.search.query.pageInfo;
                 const totalCount: number = data.search.query.totalCount ?? 0;
 
-                this.searchData = {
+                this.overviewSearchChanges({
                     datasets,
                     pageInfo,
                     totalCount,
                     currentPage: page + 1 || 1,
-                };
-                this.searchDataChanges(this.searchData);
+                });
             });
     }
 
-    public autocompleteDatasetSearch(search: string): void {
-        this.searchApi.autocompleteDatasetSearch(search).subscribe(
-            (data: DatasetIDsInterface[]) => {
-                this.autocompleteDatasetChanges(data);
+    public autocompleteDatasetSearch(searchQuery: string): void {
+        this.searchApi.autocompleteDatasetSearch(searchQuery).subscribe(
+            (data: DatasetAutocompleteItem[]) => {
+                this.autocompleteSearchChanges(data);
             },
             () => {
-                this.autocompleteDatasetChanges([]);
+                this.autocompleteSearchChanges([]);
             },
         );
     }

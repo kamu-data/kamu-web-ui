@@ -5,7 +5,7 @@ import { SearchAdditionalButtonsModule } from "../components/search-additional-b
 import { FormsModule } from "@angular/forms";
 import { DynamicTableModule } from "../components/dynamic-table/dynamic-table.module";
 import { MatChipsModule } from "@angular/material/chips";
-import { RepoListModule } from "../components/repo-list-component/repo-list.module";
+import { DatasetListModule } from "../components/dataset-list-component/dataset-list.module";
 import { PaginationModule } from "../components/pagination-component/pagination.module";
 import { ModalModule } from "../components/modal/modal.module";
 import { MatCheckboxModule } from "@angular/material/checkbox";
@@ -18,7 +18,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
         DynamicTableModule,
         PaginationModule,
         MatChipsModule,
-        RepoListModule,
+        DatasetListModule,
         ModalModule,
         MatCheckboxModule,
     ],

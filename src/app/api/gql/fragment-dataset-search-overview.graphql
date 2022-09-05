@@ -1,0 +1,18 @@
+fragment DatasetSearchOverview on Dataset {
+  ...DatasetBasics
+  createdAt
+  lastUpdatedAt
+  metadata {
+    currentInfo {
+      description
+      keywords
+    }
+    currentLicense {
+      ...License
+    }
+    currentDownstreamDependencies {
+      id
+      kind
+    }
+  }
+}

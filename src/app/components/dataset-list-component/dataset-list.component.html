@@ -2,7 +2,9 @@
     class="d-flex flex-column flex-md-row flex-justify-between border-bottom pb-3 position-relative justify-content-between align-content-center align-items-baseline"
     *ngIf="hasResultQuantity"
 >
-    <h2 class="repo-list-total-count">{{ totalCount }} {{ resultUnitText }}</h2>
+    <h2 class="dataset-list-total-count">
+        {{ totalCount }} {{ resultUnitText }}
+    </h2>
     <div class="select-block form-group">
         <div
             class="form-control input-group justify-content-left align-items-center"
@@ -21,13 +23,13 @@
     </div>
 </div>
 <div *ngFor="let row of dataSource; let rowIndex = index">
-    <div class="repo-list-container py-2">
-        <div class="repo-list-container__title-row">
-            <div class="repo-list-container__title-row__dataset-name">
+    <div class="dataset-list-container py-2">
+        <div class="dataset-list-container__title-row">
+            <div class="dataset-list-container__title-row__dataset-name">
                 <i *ngIf="row.kind === 'ROOT'" class="bi bi-journal-album"></i>
                 <mat-icon *ngIf="row.kind === 'DERIVATIVE'">merge</mat-icon>
                 <button
-                    class="repo-list-container__title mb-1 pl-0"
+                    class="dataset-list-container__title mb-1 pl-0"
                     (click)="isClickableRow && onSelectDataset(row)"
                 >
                     {{ row.owner.name }}/{{ row.name }}
@@ -107,7 +109,7 @@
             </div>
         </div>
         <div>
-            <p class="repo-list-container__description mb-2">
+            <p class="dataset-list-container__description mb-2">
                 {{ row.metadata.currentInfo.description }}
             </p>
             <div class="app-mat-chip">
@@ -123,7 +125,7 @@
                     </div>
                 </mat-chip-list>
             </div>
-            <div class="repo-list-container__additional-block mt-2">
+            <div class="dataset-list-container__additional-block mt-2">
                 <p class="text-small color-text-secondary mr-3">
                     Updated
                     {{ getRelativeTime(row.lastUpdatedAt) }}

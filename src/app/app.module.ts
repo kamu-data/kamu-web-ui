@@ -54,6 +54,7 @@ import { AppConfigService } from "./app-config.service";
 import { NavigationService } from "./services/navigation.service";
 import { AppDatasetSubscriptionsService } from "./dataset-view/dataset.subscriptions.service";
 import { SpinnerModule } from "./components/spinner/spinner.module";
+import { DatasetApi } from "./api/dataset.api";
 
 const Services = [
     {
@@ -76,6 +77,7 @@ const Services = [
     Apollo,
     AuthApi,
     SearchApi,
+    DatasetApi,
     HttpLink,
     AppSearchService,
     AppDatasetService,

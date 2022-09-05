@@ -1,5 +1,5 @@
 import { AppSearchService } from "./search.service";
-import { SearchOverviewInterface } from "../interface/search.interface";
+import { DatasetSearchResult } from "../interface/search.interface";
 import AppValues from "../common/app.values";
 import { MatSidenav } from "@angular/material/sidenav";
 import { SideNavService } from "../services/sidenav.service";
@@ -13,7 +13,10 @@ import {
 import { ThemePalette } from "@angular/material/core";
 import { BaseComponent } from "../common/base.component";
 import { NavigationService } from "../services/navigation.service";
-import { Dataset, PageBasedInfo } from "../api/kamu.graphql.interface";
+import {
+    DatasetSearchOverviewFragment,
+    PageBasedInfo,
+} from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 import { logError } from "../common/app.helpers";
@@ -50,7 +53,7 @@ export class SearchComponent
 
     public allComplete = false;
     public tableData: {
-        tableSource: Dataset[];
+        tableSource: DatasetSearchOverviewFragment[];
         hasResultQuantity: boolean;
         resultUnitText: string;
         isClickableRow: boolean;
@@ -148,7 +151,7 @@ export class SearchComponent
         },
     ];
 
-    public searchData: Dataset[] = [];
+    public searchData: DatasetSearchOverviewFragment[] = [];
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
@@ -184,12 +187,14 @@ export class SearchComponent
         this.changePageAndSearch();
 
         this.trackSubscriptions(
-            this.appSearchService.onSearchChanges.subscribe((value: string) => {
-                this.searchValue = value;
-                this.onSearch(value, this.currentPage);
-            }),
-            this.appSearchService.onSearchDataChanges.subscribe(
-                (data: SearchOverviewInterface) => {
+            this.appSearchService.onSearchQueryChanges.subscribe(
+                (value: string) => {
+                    this.searchValue = value;
+                    this.onSearchDatasets(value, this.currentPage);
+                },
+            ),
+            this.appSearchService.onOverviewSearchChanges.subscribe(
+                (data: DatasetSearchResult) => {
                     this.tableData.tableSource = data.datasets;
                     this.tableData.pageInfo = data.pageInfo;
                     this.tableData.totalCount = data.totalCount;
@@ -214,7 +219,7 @@ export class SearchComponent
         }
 
         this.currentPage = page;
-        this.onSearch(currentId, page);
+        this.onSearchDatasets(currentId, page);
     }
 
     private initTableData(): void {
@@ -253,8 +258,8 @@ export class SearchComponent
         });
     }
 
-    public onSearch(searchValue: string, page = 1): void {
-        this.appSearchService.search(searchValue, page - 1);
+    public onSearchDatasets(searchValue: string, page = 1): void {
+        this.appSearchService.searchDatasets(searchValue, page - 1);
     }
 
     public updateAllComplete() {

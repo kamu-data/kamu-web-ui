@@ -1,11 +1,11 @@
 @import src/assets/styles/var
-.repo-list-container
+.dataset-list-container
   width: 100%
   display: grid
   grid-template-columns: 1fr
   grid-template-rows: 1fr
 
-.repo-list-container__title-row
+.dataset-list-container__title-row
   display: flex
   justify-content: space-between
   &__dataset-name
@@ -13,7 +13,8 @@
     justify-content: left
   & i
     margin-right: 8px
-.repo-list-container__title
+
+.dataset-list-container__title
   display: flex
   background: none
   border: none
@@ -23,8 +24,10 @@
     cursor: pointer
     text-decoration: underline
     background: none
-.repo-list-total-count
+
+.dataset-list-total-count
   margin: 0
+
 .select-block
   background: transparent
   > *
@@ -40,6 +43,7 @@
   color: #b0c4de
   &.filled
     color: $app-cloudy
+
 #sortOptions
   color: $app-dark
   z-index: 1
@@ -48,8 +52,10 @@
   transition: .2s cubic-bezier(0.3, 0, 0.5, 1)
   &:focus-visible
     outline: none
-.repo-list-container__additional-block
+
+.dataset-list-container__additional-block
   display: flex
   gap: 5px
-.repo-list-container__description
+  
+.dataset-list-container__description
   font-size: 14px

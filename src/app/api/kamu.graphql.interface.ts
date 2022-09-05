@@ -906,13 +906,13 @@ export type GetDatasetMetadataSchemaQuery = {
     };
 };
 
-export type DatasetOverviewQueryVariables = Exact<{
+export type GetDatasetOverviewQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
     limit?: InputMaybe<Scalars["Int"]>;
 }>;
 
-export type DatasetOverviewQuery = {
+export type GetDatasetOverviewQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
@@ -1595,8 +1595,8 @@ export class GetDatasetMetadataSchemaGQL extends Apollo.Query<
         super(apollo);
     }
 }
-export const DatasetOverviewDocument = gql`
-    query datasetOverview(
+export const GetDatasetOverviewDocument = gql`
+    query getDatasetOverview(
         $accountName: AccountName!
         $datasetName: DatasetName!
         $limit: Int
@@ -1633,11 +1633,11 @@ export const DatasetOverviewDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class DatasetOverviewGQL extends Apollo.Query<
-    DatasetOverviewQuery,
-    DatasetOverviewQueryVariables
+export class GetDatasetOverviewGQL extends Apollo.Query<
+    GetDatasetOverviewQuery,
+    GetDatasetOverviewQueryVariables
 > {
-    document = DatasetOverviewDocument;
+    document = GetDatasetOverviewDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

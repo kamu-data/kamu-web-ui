@@ -11,7 +11,7 @@ import {
     DatasetDataSizeFragment,
     DatasetMetadataDetailsFragment,
     DatasetOverviewFragment,
-    DatasetOverviewQuery,
+    GetDatasetOverviewQuery,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
     GetDatasetLineageQuery,
@@ -54,7 +54,7 @@ export class AppDatasetService {
     public requestDatasetDataSchema(info: DatasetInfo): void {
         this.datasetApi
             .getDatasetOverview(info)
-            .subscribe((data: DatasetOverviewQuery) => {
+            .subscribe((data: GetDatasetOverviewQuery) => {
                 if (isNil(data.datasets.byOwnerAndName)) {
                     throw new Error("Dataset not resolved by ID");
                 }
@@ -77,7 +77,7 @@ export class AppDatasetService {
     public requestDatasetOverview(info: DatasetInfo): void {
         this.datasetApi
             .getDatasetOverview(info)
-            .subscribe((data: DatasetOverviewQuery) => {
+            .subscribe((data: GetDatasetOverviewQuery) => {
                 if (isNil(data.datasets.byOwnerAndName)) {
                     throw new Error("Dataset not resolved by ID");
                 }
@@ -396,7 +396,7 @@ export class AppDatasetService {
     }
 
     private static parseContentOfDataset(
-        data: DatasetOverviewQuery,
+        data: GetDatasetOverviewQuery,
     ): DataRow[] {
         return data.datasets.byOwnerAndName
             ? (JSON.parse(

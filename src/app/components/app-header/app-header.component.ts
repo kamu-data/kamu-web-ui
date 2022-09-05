@@ -29,7 +29,8 @@ export class AppHeaderComponent extends BaseComponent {
     @Input() public isVisible: boolean;
     @Input() public userInfo: AccountInfo;
 
-    @Output() public selectDatasetEmitter = new EventEmitter<DatasetAutocompleteItem>();
+    @Output() public selectDatasetEmitter =
+        new EventEmitter<DatasetAutocompleteItem>();
     @Output() public addNewEmitter = new EventEmitter<null>();
     @Output() public loginEmitter = new EventEmitter<null>();
     @Output() public logOutEmitter = new EventEmitter<null>();
@@ -81,7 +82,7 @@ export class AppHeaderComponent extends BaseComponent {
             typeaheadInput.focus();
         }
     }
-    
+
     public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
         this.isSearchActive = false;
 

@@ -6,7 +6,7 @@ import {
     MetadataBlockFragment,
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
-import { DataViewSchema } from "../interface/search.interface";
+import { DataRow, DatasetSchema } from "../interface/dataset.interface";
 
 export interface OverviewDataUpdate {
     content: DataRow[];
@@ -15,12 +15,12 @@ export interface OverviewDataUpdate {
 }
 
 export interface DataUpdate {
-    schema: DataViewSchema;
+    schema: DatasetSchema;
     content: DataRow[];
 }
 
 export interface MetadataSchemaUpdate {
-    schema: DataViewSchema;
+    schema: DatasetSchema;
     metadata: DatasetMetadataDetailsFragment;
     pageInfo: PageBasedInfo;
 }
@@ -35,5 +35,3 @@ export interface LineageUpdate {
     edges: DatasetBasicsFragment[][];
     origin: DatasetBasicsFragment;
 }
-
-export type DataRow = Record<string, string | number>;

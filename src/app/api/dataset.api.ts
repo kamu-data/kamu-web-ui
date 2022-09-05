@@ -7,8 +7,6 @@ import { Observable } from "rxjs";
 import {
     DatasetOverviewGQL,
     DatasetOverviewQuery,
-    GetDatasetDataSchemaGQL,
-    GetDatasetDataSchemaQuery,
     GetDatasetHistoryGQL,
     GetDatasetHistoryQuery,
     GetDatasetMetadataSchemaGQL,
@@ -24,10 +22,9 @@ export class DatasetApi {
     constructor(
         private datasetOverviewGQL: DatasetOverviewGQL,
         private datasetMetadataGQL: GetDatasetMetadataSchemaGQL,
-        private getDatasetDataSchemaGQL: GetDatasetDataSchemaGQL,
-        private getDatasetDataSQLRun: GetDatasetDataSqlRunGQL,
-        private getDatasetHistoryGQL: GetDatasetHistoryGQL,
-        private getDatasetLineageGQL: GetDatasetLineageGQL,
+        private datasetDataSqlRunGQL: GetDatasetDataSqlRunGQL,
+        private datasetHistoryGQL: GetDatasetHistoryGQL,
+        private datasetLineageGQL: GetDatasetLineageGQL,
     ) {}
 
     public getDatasetOverview(params: {
@@ -48,11 +45,12 @@ export class DatasetApi {
                 }),
             );
     }
-    public onGetDatasetDataSQLRun(params: {
+
+    public getDatasetDataSqlRun(params: {
         query: string;
         limit: number;
     }): Observable<GetDatasetDataSqlRunQuery> {
-        return this.getDatasetDataSQLRun
+        return this.datasetDataSqlRunGQL
             .watch({ query: params.query, limit: params.limit })
             .valueChanges.pipe(
                 first(),
@@ -61,13 +59,14 @@ export class DatasetApi {
                 }),
             );
     }
-    public onDatasetHistory(params: {
+
+    public getDatasetHistory(params: {
         accountName: string;
         datasetName: string;
         numRecords: number;
         numPage: number;
     }): Observable<GetDatasetHistoryQuery> {
-        return this.getDatasetHistoryGQL
+        return this.datasetHistoryGQL
             .watch({
                 accountName: params.accountName,
                 datasetName: params.datasetName,
@@ -81,26 +80,8 @@ export class DatasetApi {
                 }),
             );
     }
-    public getDatasetDataSchema(params: {
-        id: string;
-        numRecords?: number;
-        page?: number;
-    }): Observable<GetDatasetDataSchemaQuery> {
-        return this.getDatasetDataSchemaGQL
-            .watch({
-                datasetId: params.id,
-                numRecords: params.numRecords ?? 10,
-                numPage: params.page ?? 0,
-            })
-            .valueChanges.pipe(
-                first(),
-                map((result: ApolloQueryResult<GetDatasetDataSchemaQuery>) => {
-                    return result.data;
-                }),
-            );
-    }
 
-    public onSearchMetadata(params: {
+    public getDatasetMetadata(params: {
         accountName: string;
         datasetName: string;
         numRecords?: number;
@@ -129,7 +110,7 @@ export class DatasetApi {
         accountName: string;
         datasetName: string;
     }): Observable<GetDatasetLineageQuery> {
-        return this.getDatasetLineageGQL
+        return this.datasetLineageGQL
             .watch({
                 accountName: params.accountName,
                 datasetName: params.datasetName,

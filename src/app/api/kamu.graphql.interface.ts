@@ -723,59 +723,6 @@ export type AccountInfoMutation = {
     };
 };
 
-export type GetDatasetDataSchemaQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    numRecords?: InputMaybe<Scalars["Int"]>;
-    numPage?: InputMaybe<Scalars["Int"]>;
-}>;
-
-export type GetDatasetDataSchemaQuery = {
-    __typename?: "Query";
-    datasets: {
-        __typename: "Datasets";
-        byId?: {
-            __typename: "Dataset";
-            id: any;
-            name: any;
-            kind: DatasetKind;
-            createdAt: any;
-            lastUpdatedAt: any;
-            owner:
-                | { __typename?: "Organization"; id: any; name: string }
-                | { __typename?: "User"; id: any; name: string };
-            metadata: {
-                __typename: "DatasetMetadata";
-                currentWatermark?: any | null;
-                currentSchema: {
-                    __typename: "DataSchema";
-                    format: DataSchemaFormat;
-                    content: string;
-                };
-            };
-            data: {
-                __typename: "DatasetData";
-                numRecordsTotal: number;
-                estimatedSize: number;
-                tail: {
-                    __typename: "DataQueryResult";
-                    limit: number;
-                    schema: {
-                        __typename?: "DataSchema";
-                        format: DataSchemaFormat;
-                        content: string;
-                    };
-                    data: {
-                        __typename?: "DataBatch";
-                        format: DataBatchFormat;
-                        content: string;
-                        numRecords: number;
-                    };
-                };
-            };
-        } | null;
-    };
-};
-
 export type GetDatasetDataSqlRunQueryVariables = Exact<{
     query: Scalars["String"];
     limit: Scalars["Int"];
@@ -1443,70 +1390,6 @@ export class AccountInfoGQL extends Apollo.Mutation<
     AccountInfoMutationVariables
 > {
     document = AccountInfoDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const GetDatasetDataSchemaDocument = gql`
-    query getDatasetDataSchema(
-        $datasetId: DatasetID!
-        $numRecords: Int
-        $numPage: Int
-    ) {
-        datasets {
-            byId(datasetId: $datasetId) {
-                id
-                owner {
-                    id
-                    name
-                }
-                name
-                kind
-                createdAt
-                lastUpdatedAt
-                metadata {
-                    currentWatermark
-                    currentSchema(format: PARQUET_JSON) {
-                        format
-                        content
-                        __typename
-                    }
-                    __typename
-                }
-                data {
-                    numRecordsTotal
-                    estimatedSize
-                    tail(limit: $numRecords, dataFormat: JSON) {
-                        schema {
-                            format
-                            content
-                        }
-                        data {
-                            format
-                            content
-                            numRecords
-                        }
-                        limit
-                        __typename
-                    }
-                    __typename
-                }
-                __typename
-            }
-            __typename
-        }
-    }
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class GetDatasetDataSchemaGQL extends Apollo.Query<
-    GetDatasetDataSchemaQuery,
-    GetDatasetDataSchemaQueryVariables
-> {
-    document = GetDatasetDataSchemaDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

@@ -27,7 +27,7 @@ export class DatasetApi {
         private datasetLineageGQL: GetDatasetLineageGQL,
     ) {}
 
-    public getDatasetOverview(params: {
+    public getDatasetMainData(params: {
         accountName: string;
         datasetName: string;
         numRecords?: number;

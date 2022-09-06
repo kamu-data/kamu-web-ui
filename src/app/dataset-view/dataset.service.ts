@@ -15,7 +15,6 @@ import {
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
     GetDatasetLineageQuery,
-    GetDatasetMetadataSchemaQuery,
     MetadataBlockFragment,
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
@@ -51,9 +50,9 @@ export class AppDatasetService {
         this.datasetChanges$.next(searchDatasetInfo);
     }
 
-    public requestDatasetDataSchema(info: DatasetInfo): void {
+    public requestDatasetMainData(info: DatasetInfo): void {
         this.datasetApi
-            .getDatasetOverview(info)
+            .getDatasetMainData(info)
             .subscribe((data: GetDatasetOverviewQuery) => {
                 if (isNil(data.datasets.byOwnerAndName)) {
                     throw new Error("Dataset not resolved by ID");
@@ -63,32 +62,10 @@ export class AppDatasetService {
                         data.datasets.byOwnerAndName,
                     );
                 this.datasetChanges(dataset);
-
                 const content: DataRow[] =
                     AppDatasetService.parseContentOfDataset(data);
-                const schema: DatasetSchema = JSON.parse(
-                    data.datasets.byOwnerAndName.metadata.currentSchema.content,
-                ) as DatasetSchema;
-                const dataUpdate: DataUpdate = { content, schema };
-                this.appDatasetSubsService.changeDatasetData(dataUpdate);
-            });
-    }
 
-    public requestDatasetOverview(info: DatasetInfo): void {
-        this.datasetApi
-            .getDatasetOverview(info)
-            .subscribe((data: GetDatasetOverviewQuery) => {
-                if (isNil(data.datasets.byOwnerAndName)) {
-                    throw new Error("Dataset not resolved by ID");
-                }
-                const dataset: DatasetBasicsFragment =
-                    _.cloneDeep<DatasetBasicsFragment>(
-                        data.datasets.byOwnerAndName,
-                    );
-                this.datasetChanges(dataset);
-
-                const content: DataRow[] =
-                    AppDatasetService.parseContentOfDataset(data);
+                //overview tab
                 const overview: DatasetOverviewFragment =
                     _.cloneDeep<DatasetOverviewFragment>(
                         data.datasets.byOwnerAndName,
@@ -105,6 +82,40 @@ export class AppDatasetService {
                 this.appDatasetSubsService.changeDatasetOverviewData(
                     overviewDataUpdate,
                 );
+
+                //data tab
+                const schemaData: DatasetSchema = JSON.parse(
+                    data.datasets.byOwnerAndName.metadata.currentSchema.content,
+                ) as DatasetSchema;
+                const dataUpdate: DataUpdate = { content, schema: schemaData };
+                this.appDatasetSubsService.changeDatasetData(dataUpdate);
+
+                // metadata tab
+                const schemaMetadata: DatasetSchema = JSON.parse(
+                    data.datasets.byOwnerAndName.metadata.currentSchema.content,
+                ) as DatasetSchema;
+                const metadata: DatasetMetadataDetailsFragment = _.cloneDeep(
+                    data.datasets.byOwnerAndName.metadata,
+                );
+                const pageInfo: PageBasedInfo = {
+                    hasNextPage: false,
+                    hasPreviousPage: false,
+                    totalPages: 1,
+                    currentPage: 1,
+                };
+                const metadataSchemaUpdate: MetadataSchemaUpdate = {
+                    schema: schemaMetadata,
+                    pageInfo,
+                    metadata,
+                };
+                this.appDatasetSubsService.metadataSchemaChanges(
+                    metadataSchemaUpdate,
+                );
+
+                // lineage tab
+                const lineageResponse: DatasetLineageNode =
+                    this.lineageResponseFromRawQuery(data);
+                this.updatelineageGraph(lineageResponse);
             });
     }
 
@@ -138,41 +149,6 @@ export class AppDatasetService {
                         historyUpdate,
                     );
                 }
-            });
-    }
-
-    public requestDatasetMetadata(info: DatasetInfo, page: number): void {
-        this.datasetApi
-            .getDatasetMetadata({ ...info, page })
-            .subscribe((data: GetDatasetMetadataSchemaQuery) => {
-                if (isNil(data.datasets.byOwnerAndName)) {
-                    throw new Error("Dataset not resolved by ID");
-                }
-                const dataset: DatasetBasicsFragment =
-                    _.cloneDeep<DatasetBasicsFragment>(
-                        data.datasets.byOwnerAndName,
-                    );
-                const schema: DatasetSchema = JSON.parse(
-                    data.datasets.byOwnerAndName.metadata.currentSchema.content,
-                ) as DatasetSchema;
-                const metadata: DatasetMetadataDetailsFragment = _.cloneDeep(
-                    data.datasets.byOwnerAndName.metadata,
-                );
-                const pageInfo: PageBasedInfo = {
-                    hasNextPage: false,
-                    hasPreviousPage: false,
-                    totalPages: 1,
-                    currentPage: page,
-                };
-                const metadataSchemaUpdate: MetadataSchemaUpdate = {
-                    schema,
-                    pageInfo,
-                    metadata,
-                };
-                this.appDatasetSubsService.metadataSchemaChanges(
-                    metadataSchemaUpdate,
-                );
-                this.datasetChanges(dataset);
             });
     }
 

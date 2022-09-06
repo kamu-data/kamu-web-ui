@@ -3,6 +3,53 @@ fragment DatasetOverview on Dataset {
   createdAt
   lastUpdatedAt
   metadata {
+     currentUpstreamDependencies {
+          ...DatasetBasics
+          metadata {
+            currentUpstreamDependencies {
+              ...DatasetBasics
+              metadata {
+                currentUpstreamDependencies {
+                  ...DatasetBasics
+                  metadata {
+                    currentUpstreamDependencies {
+                      ...DatasetBasics
+                      metadata {
+                        currentUpstreamDependencies {
+                          ...DatasetBasics
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+            currentDownstreamDependencies {
+          ...DatasetBasics
+          metadata {
+            currentDownstreamDependencies {
+              ...DatasetBasics
+              metadata {
+                currentDownstreamDependencies {
+                  ...DatasetBasics
+                  metadata {
+                    currentDownstreamDependencies {
+                      ...DatasetBasics
+                      metadata {
+                        currentDownstreamDependencies {
+                          ...DatasetBasics
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
     currentInfo {
       description
       keywords
@@ -12,6 +59,27 @@ fragment DatasetOverview on Dataset {
     }
     currentReadme
     currentWatermark
+    currentTransform {
+    inputs {
+      dataset {
+        id
+        name
+        kind
+        owner {
+          id
+          name
+        }
+      }
+    }
+    transform {
+      ... on TransformSql {
+        queries {
+          alias
+          query
+        }
+      }
+    }
+  }
     currentSchema(format: PARQUET_JSON) {
       format
       content
@@ -25,6 +93,11 @@ fragment DatasetOverview on Dataset {
           ...MetadataBlock
         }
         totalCount
+         pageInfo {
+          hasNextPage
+          hasPreviousPage
+          totalPages
+        }
       }
     }
   }

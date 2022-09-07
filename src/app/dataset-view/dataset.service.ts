@@ -14,7 +14,6 @@ import {
     GetDatasetMainDataQuery,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
-    GetDatasetLineageQuery,
     MetadataBlockFragment,
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
@@ -177,7 +176,7 @@ export class AppDatasetService {
     }
 
     private lineageResponseFromRawQuery(
-        data: GetDatasetLineageQuery,
+        data: GetDatasetMainDataQuery,
     ): DatasetLineageNode {
         if (isNil(data.datasets.byOwnerAndName)) {
             throw new Error("Dataset not resolved by ID");

@@ -9,22 +9,16 @@ import {
     GetDatasetMainDataQuery,
     GetDatasetHistoryGQL,
     GetDatasetHistoryQuery,
-    GetDatasetMetadataSchemaGQL,
     GetDatasetDataSqlRunGQL,
     GetDatasetDataSqlRunQuery,
-    GetDatasetLineageGQL,
-    GetDatasetLineageQuery,
-    GetDatasetMetadataSchemaQuery,
 } from "./kamu.graphql.interface";
 
 @Injectable()
 export class DatasetApi {
     constructor(
         private datasetMainDataGQL: GetDatasetMainDataGQL,
-        private datasetMetadataGQL: GetDatasetMetadataSchemaGQL,
         private datasetDataSqlRunGQL: GetDatasetDataSqlRunGQL,
         private datasetHistoryGQL: GetDatasetHistoryGQL,
-        private datasetLineageGQL: GetDatasetLineageGQL,
     ) {}
 
     public getDatasetMainData(params: {
@@ -76,48 +70,6 @@ export class DatasetApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<GetDatasetHistoryQuery>) => {
-                    return result.data;
-                }),
-            );
-    }
-
-    public getDatasetMetadata(params: {
-        accountName: string;
-        datasetName: string;
-        numRecords?: number;
-        page?: number;
-    }): Observable<GetDatasetMetadataSchemaQuery> {
-        return this.datasetMetadataGQL
-            .watch({
-                accountName: params.accountName,
-                datasetName: params.datasetName,
-                numPage: 0,
-                numRecords: 1,
-            })
-            .valueChanges.pipe(
-                first(),
-                map(
-                    (
-                        result: ApolloQueryResult<GetDatasetMetadataSchemaQuery>,
-                    ) => {
-                        return result.data;
-                    },
-                ),
-            );
-    }
-
-    public getDatasetLineage(params: {
-        accountName: string;
-        datasetName: string;
-    }): Observable<GetDatasetLineageQuery> {
-        return this.datasetLineageGQL
-            .watch({
-                accountName: params.accountName,
-                datasetName: params.datasetName,
-            })
-            .valueChanges.pipe(
-                first(),
-                map((result: ApolloQueryResult<GetDatasetLineageQuery>) => {
                     return result.data;
                 }),
             );

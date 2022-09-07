@@ -783,100 +783,6 @@ export type GetDatasetHistoryQuery = {
     };
 };
 
-export type GetDatasetLineageQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
-}>;
-
-export type GetDatasetLineageQuery = {
-    __typename?: "Query";
-    datasets: {
-        __typename?: "Datasets";
-        byOwnerAndName?:
-            | ({
-                  __typename?: "Dataset";
-                  metadata: {
-                      __typename?: "DatasetMetadata";
-                      currentUpstreamDependencies: Array<
-                          {
-                              __typename?: "Dataset";
-                              metadata: {
-                                  __typename?: "DatasetMetadata";
-                                  currentUpstreamDependencies: Array<
-                                      {
-                                          __typename?: "Dataset";
-                                          metadata: {
-                                              __typename?: "DatasetMetadata";
-                                              currentUpstreamDependencies: Array<
-                                                  {
-                                                      __typename?: "Dataset";
-                                                      metadata: {
-                                                          __typename?: "DatasetMetadata";
-                                                          currentUpstreamDependencies: Array<
-                                                              {
-                                                                  __typename?: "Dataset";
-                                                                  metadata: {
-                                                                      __typename?: "DatasetMetadata";
-                                                                      currentUpstreamDependencies: Array<
-                                                                          {
-                                                                              __typename?: "Dataset";
-                                                                          } & DatasetBasicsFragment
-                                                                      >;
-                                                                  };
-                                                              } & DatasetBasicsFragment
-                                                          >;
-                                                      };
-                                                  } & DatasetBasicsFragment
-                                              >;
-                                          };
-                                      } & DatasetBasicsFragment
-                                  >;
-                              };
-                          } & DatasetBasicsFragment
-                      >;
-                      currentDownstreamDependencies: Array<
-                          {
-                              __typename?: "Dataset";
-                              metadata: {
-                                  __typename?: "DatasetMetadata";
-                                  currentDownstreamDependencies: Array<
-                                      {
-                                          __typename?: "Dataset";
-                                          metadata: {
-                                              __typename?: "DatasetMetadata";
-                                              currentDownstreamDependencies: Array<
-                                                  {
-                                                      __typename?: "Dataset";
-                                                      metadata: {
-                                                          __typename?: "DatasetMetadata";
-                                                          currentDownstreamDependencies: Array<
-                                                              {
-                                                                  __typename?: "Dataset";
-                                                                  metadata: {
-                                                                      __typename?: "DatasetMetadata";
-                                                                      currentDownstreamDependencies: Array<
-                                                                          {
-                                                                              __typename?: "Dataset";
-                                                                          } & DatasetBasicsFragment
-                                                                      >;
-                                                                  };
-                                                              } & DatasetBasicsFragment
-                                                          >;
-                                                      };
-                                                  } & DatasetBasicsFragment
-                                              >;
-                                          };
-                                      } & DatasetBasicsFragment
-                                  >;
-                              };
-                          } & DatasetBasicsFragment
-                      >;
-                  };
-              } & DatasetBasicsFragment)
-            | null;
-    };
-};
-
 export type GetDatasetMainDataQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
@@ -907,28 +813,6 @@ export type GetDatasetMainDataQuery = {
                       };
                   } & DatasetDataSizeFragment;
               } & DatasetOverviewFragment)
-            | null;
-    };
-};
-
-export type GetDatasetMetadataSchemaQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
-    numRecords?: InputMaybe<Scalars["Int"]>;
-    numPage?: InputMaybe<Scalars["Int"]>;
-}>;
-
-export type GetDatasetMetadataSchemaQuery = {
-    __typename?: "Query";
-    datasets: {
-        __typename?: "Datasets";
-        byOwnerAndName?:
-            | ({
-                  __typename?: "Dataset";
-                  metadata: {
-                      __typename?: "DatasetMetadata";
-                  } & DatasetMetadataDetailsFragment;
-              } & DatasetBasicsFragment)
             | null;
     };
 };
@@ -1659,84 +1543,6 @@ export class GetDatasetHistoryGQL extends Apollo.Query<
         super(apollo);
     }
 }
-export const GetDatasetLineageDocument = gql`
-    query getDatasetLineage(
-        $accountName: AccountName!
-        $datasetName: DatasetName!
-    ) {
-        datasets {
-            byOwnerAndName(
-                accountName: $accountName
-                datasetName: $datasetName
-            ) {
-                ...DatasetBasics
-                metadata {
-                    currentUpstreamDependencies {
-                        ...DatasetBasics
-                        metadata {
-                            currentUpstreamDependencies {
-                                ...DatasetBasics
-                                metadata {
-                                    currentUpstreamDependencies {
-                                        ...DatasetBasics
-                                        metadata {
-                                            currentUpstreamDependencies {
-                                                ...DatasetBasics
-                                                metadata {
-                                                    currentUpstreamDependencies {
-                                                        ...DatasetBasics
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    currentDownstreamDependencies {
-                        ...DatasetBasics
-                        metadata {
-                            currentDownstreamDependencies {
-                                ...DatasetBasics
-                                metadata {
-                                    currentDownstreamDependencies {
-                                        ...DatasetBasics
-                                        metadata {
-                                            currentDownstreamDependencies {
-                                                ...DatasetBasics
-                                                metadata {
-                                                    currentDownstreamDependencies {
-                                                        ...DatasetBasics
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    ${DatasetBasicsFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class GetDatasetLineageGQL extends Apollo.Query<
-    GetDatasetLineageQuery,
-    GetDatasetLineageQueryVariables
-> {
-    document = GetDatasetLineageDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
 export const GetDatasetMainDataDocument = gql`
     query getDatasetMainData(
         $accountName: AccountName!
@@ -1780,42 +1586,6 @@ export class GetDatasetMainDataGQL extends Apollo.Query<
     GetDatasetMainDataQueryVariables
 > {
     document = GetDatasetMainDataDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const GetDatasetMetadataSchemaDocument = gql`
-    query getDatasetMetadataSchema(
-        $accountName: AccountName!
-        $datasetName: DatasetName!
-        $numRecords: Int
-        $numPage: Int
-    ) {
-        datasets {
-            byOwnerAndName(
-                accountName: $accountName
-                datasetName: $datasetName
-            ) {
-                ...DatasetBasics
-                metadata {
-                    ...DatasetMetadataDetails
-                }
-            }
-        }
-    }
-    ${DatasetBasicsFragmentDoc}
-    ${DatasetMetadataDetailsFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class GetDatasetMetadataSchemaGQL extends Apollo.Query<
-    GetDatasetMetadataSchemaQuery,
-    GetDatasetMetadataSchemaQueryVariables
-> {
-    document = GetDatasetMetadataSchemaDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

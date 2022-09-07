@@ -65,7 +65,7 @@ export class DatasetComponent
             this.router.events
                 .pipe(
                     filter((event) => event instanceof NavigationEnd),
-                    tap(() => this.getDatasetDataByLineageView()),
+                    tap(() => this.getMainDataByLineageNode()),
                 )
                 .subscribe(() => {
                     this.initDatasetViewByType(
@@ -92,13 +92,12 @@ export class DatasetComponent
         );
     }
 
-    public getDatasetDataByLineageView(): void {
+    public getMainDataByLineageNode(): void {
         if (
-            this.datasetViewType === DatasetViewTypeEnum.Lineage &&
             this.datasetBasics?.name !==
-                this.getDatasetInfoFromUrl().datasetName
+            this.getDatasetInfoFromUrl().datasetName
         ) {
-            this.appDatasetService.requestDatasetLineage(
+            this.appDatasetService.requestDatasetMainData(
                 this.getDatasetInfoFromUrl(),
             );
         }
@@ -381,7 +380,6 @@ export class DatasetComponent
                     : (this.datasetBasics.name as string),
                 tab: DatasetViewTypeEnum.Lineage,
             });
-            this.changeLineageGraphView();
         }
     }
 

@@ -877,35 +877,13 @@ export type GetDatasetLineageQuery = {
     };
 };
 
-export type GetDatasetMetadataSchemaQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
-    numRecords?: InputMaybe<Scalars["Int"]>;
-    numPage?: InputMaybe<Scalars["Int"]>;
-}>;
-
-export type GetDatasetMetadataSchemaQuery = {
-    __typename?: "Query";
-    datasets: {
-        __typename?: "Datasets";
-        byOwnerAndName?:
-            | ({
-                  __typename?: "Dataset";
-                  metadata: {
-                      __typename?: "DatasetMetadata";
-                  } & DatasetMetadataDetailsFragment;
-              } & DatasetBasicsFragment)
-            | null;
-    };
-};
-
-export type GetDatasetOverviewQueryVariables = Exact<{
+export type GetDatasetMainDataQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
     limit?: InputMaybe<Scalars["Int"]>;
 }>;
 
-export type GetDatasetOverviewQuery = {
+export type GetDatasetMainDataQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
@@ -929,6 +907,28 @@ export type GetDatasetOverviewQuery = {
                       };
                   } & DatasetDataSizeFragment;
               } & DatasetOverviewFragment)
+            | null;
+    };
+};
+
+export type GetDatasetMetadataSchemaQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
+    numRecords?: InputMaybe<Scalars["Int"]>;
+    numPage?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type GetDatasetMetadataSchemaQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byOwnerAndName?:
+            | ({
+                  __typename?: "Dataset";
+                  metadata: {
+                      __typename?: "DatasetMetadata";
+                  } & DatasetMetadataDetailsFragment;
+              } & DatasetBasicsFragment)
             | null;
     };
 };
@@ -1737,44 +1737,8 @@ export class GetDatasetLineageGQL extends Apollo.Query<
         super(apollo);
     }
 }
-export const GetDatasetMetadataSchemaDocument = gql`
-    query getDatasetMetadataSchema(
-        $accountName: AccountName!
-        $datasetName: DatasetName!
-        $numRecords: Int
-        $numPage: Int
-    ) {
-        datasets {
-            byOwnerAndName(
-                accountName: $accountName
-                datasetName: $datasetName
-            ) {
-                ...DatasetBasics
-                metadata {
-                    ...DatasetMetadataDetails
-                }
-            }
-        }
-    }
-    ${DatasetBasicsFragmentDoc}
-    ${DatasetMetadataDetailsFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class GetDatasetMetadataSchemaGQL extends Apollo.Query<
-    GetDatasetMetadataSchemaQuery,
-    GetDatasetMetadataSchemaQueryVariables
-> {
-    document = GetDatasetMetadataSchemaDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const GetDatasetOverviewDocument = gql`
-    query getDatasetOverview(
+export const GetDatasetMainDataDocument = gql`
+    query getDatasetMainData(
         $accountName: AccountName!
         $datasetName: DatasetName!
         $limit: Int
@@ -1811,11 +1775,47 @@ export const GetDatasetOverviewDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class GetDatasetOverviewGQL extends Apollo.Query<
-    GetDatasetOverviewQuery,
-    GetDatasetOverviewQueryVariables
+export class GetDatasetMainDataGQL extends Apollo.Query<
+    GetDatasetMainDataQuery,
+    GetDatasetMainDataQueryVariables
 > {
-    document = GetDatasetOverviewDocument;
+    document = GetDatasetMainDataDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const GetDatasetMetadataSchemaDocument = gql`
+    query getDatasetMetadataSchema(
+        $accountName: AccountName!
+        $datasetName: DatasetName!
+        $numRecords: Int
+        $numPage: Int
+    ) {
+        datasets {
+            byOwnerAndName(
+                accountName: $accountName
+                datasetName: $datasetName
+            ) {
+                ...DatasetBasics
+                metadata {
+                    ...DatasetMetadataDetails
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${DatasetMetadataDetailsFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetDatasetMetadataSchemaGQL extends Apollo.Query<
+    GetDatasetMetadataSchemaQuery,
+    GetDatasetMetadataSchemaQueryVariables
+> {
+    document = GetDatasetMetadataSchemaDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

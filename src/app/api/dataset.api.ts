@@ -5,8 +5,8 @@ import { map, first } from "rxjs/operators";
 import { Observable } from "rxjs";
 
 import {
-    GetDatasetOverviewGQL,
-    GetDatasetOverviewQuery,
+    GetDatasetMainDataGQL,
+    GetDatasetMainDataQuery,
     GetDatasetHistoryGQL,
     GetDatasetHistoryQuery,
     GetDatasetMetadataSchemaGQL,
@@ -20,7 +20,7 @@ import {
 @Injectable()
 export class DatasetApi {
     constructor(
-        private datasetOverviewGQL: GetDatasetOverviewGQL,
+        private datasetMainDataGQL: GetDatasetMainDataGQL,
         private datasetMetadataGQL: GetDatasetMetadataSchemaGQL,
         private datasetDataSqlRunGQL: GetDatasetDataSqlRunGQL,
         private datasetHistoryGQL: GetDatasetHistoryGQL,
@@ -31,8 +31,8 @@ export class DatasetApi {
         accountName: string;
         datasetName: string;
         numRecords?: number;
-    }): Observable<GetDatasetOverviewQuery> {
-        return this.datasetOverviewGQL
+    }): Observable<GetDatasetMainDataQuery> {
+        return this.datasetMainDataGQL
             .watch({
                 accountName: params.accountName,
                 datasetName: params.datasetName,
@@ -40,7 +40,7 @@ export class DatasetApi {
             })
             .valueChanges.pipe(
                 first(),
-                map((result: ApolloQueryResult<GetDatasetOverviewQuery>) => {
+                map((result: ApolloQueryResult<GetDatasetMainDataQuery>) => {
                     return result.data;
                 }),
             );

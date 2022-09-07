@@ -11,7 +11,7 @@ import {
     DatasetDataSizeFragment,
     DatasetMetadataDetailsFragment,
     DatasetOverviewFragment,
-    GetDatasetOverviewQuery,
+    GetDatasetMainDataQuery,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
     GetDatasetLineageQuery,
@@ -53,7 +53,7 @@ export class AppDatasetService {
     public requestDatasetMainData(info: DatasetInfo): void {
         this.datasetApi
             .getDatasetMainData(info)
-            .subscribe((data: GetDatasetOverviewQuery) => {
+            .subscribe((data: GetDatasetMainDataQuery) => {
                 if (isNil(data.datasets.byOwnerAndName)) {
                     throw new Error("Dataset not resolved by ID");
                 }
@@ -174,25 +174,6 @@ export class AppDatasetService {
                     .catch((e) => logError(e));
             },
         );
-    }
-
-    public requestDatasetLineage(info: DatasetInfo): void {
-        this.datasetApi
-            .getDatasetLineage(info)
-            .subscribe((data: GetDatasetLineageQuery) => {
-                if (isNil(data.datasets.byOwnerAndName)) {
-                    throw new Error("Dataset not resolved by ID");
-                }
-                const dataset: DatasetBasicsFragment =
-                    _.cloneDeep<DatasetBasicsFragment>(
-                        data.datasets.byOwnerAndName,
-                    );
-                this.datasetChanges(dataset);
-
-                const lineageResponse: DatasetLineageNode =
-                    this.lineageResponseFromRawQuery(data);
-                this.updatelineageGraph(lineageResponse);
-            });
     }
 
     private lineageResponseFromRawQuery(
@@ -372,7 +353,7 @@ export class AppDatasetService {
     }
 
     private static parseContentOfDataset(
-        data: GetDatasetOverviewQuery,
+        data: GetDatasetMainDataQuery,
     ): DataRow[] {
         return data.datasets.byOwnerAndName
             ? (JSON.parse(

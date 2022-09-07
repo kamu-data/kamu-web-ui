@@ -1,4 +1,4 @@
-query getDatasetOverview(
+query getDatasetMainData(
   $accountName: AccountName!
   $datasetName: DatasetName!
   $limit: Int

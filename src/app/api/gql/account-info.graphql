@@ -1,4 +1,4 @@
-mutation AccountInfo ($accessToken: String!) {
+mutation AccountInfo($accessToken: String!) {
   auth {
     accountInfo(accessToken: $accessToken) {
       ...AccountDetails

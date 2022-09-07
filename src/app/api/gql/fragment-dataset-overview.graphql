@@ -3,7 +3,10 @@ fragment DatasetOverview on Dataset {
   createdAt
   lastUpdatedAt
   metadata {
-     currentUpstreamDependencies {
+    currentUpstreamDependencies {
+      ...DatasetBasics
+      metadata {
+        currentUpstreamDependencies {
           ...DatasetBasics
           metadata {
             currentUpstreamDependencies {
@@ -14,11 +17,6 @@ fragment DatasetOverview on Dataset {
                   metadata {
                     currentUpstreamDependencies {
                       ...DatasetBasics
-                      metadata {
-                        currentUpstreamDependencies {
-                          ...DatasetBasics
-                        }
-                      }
                     }
                   }
                 }
@@ -26,8 +24,12 @@ fragment DatasetOverview on Dataset {
             }
           }
         }
-
-            currentDownstreamDependencies {
+      }
+    }
+    currentDownstreamDependencies {
+      ...DatasetBasics
+      metadata {
+        currentDownstreamDependencies {
           ...DatasetBasics
           metadata {
             currentDownstreamDependencies {
@@ -38,11 +40,6 @@ fragment DatasetOverview on Dataset {
                   metadata {
                     currentDownstreamDependencies {
                       ...DatasetBasics
-                      metadata {
-                        currentDownstreamDependencies {
-                          ...DatasetBasics
-                        }
-                      }
                     }
                   }
                 }
@@ -50,6 +47,8 @@ fragment DatasetOverview on Dataset {
             }
           }
         }
+      }
+    }
     currentInfo {
       description
       keywords
@@ -60,26 +59,26 @@ fragment DatasetOverview on Dataset {
     currentReadme
     currentWatermark
     currentTransform {
-    inputs {
-      dataset {
-        id
-        name
-        kind
-        owner {
+      inputs {
+        dataset {
           id
           name
+          kind
+          owner {
+            id
+            name
+          }
+        }
+      }
+      transform {
+        ... on TransformSql {
+          queries {
+            alias
+            query
+          }
         }
       }
     }
-    transform {
-      ... on TransformSql {
-        queries {
-          alias
-          query
-        }
-      }
-    }
-  }
     currentSchema(format: PARQUET_JSON) {
       format
       content
@@ -93,7 +92,7 @@ fragment DatasetOverview on Dataset {
           ...MetadataBlock
         }
         totalCount
-         pageInfo {
+        pageInfo {
           hasNextPage
           hasPreviousPage
           totalPages

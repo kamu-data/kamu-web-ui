@@ -221,7 +221,6 @@ export class DatasetComponent
                     this.navigationService.navigateToDatasetView({
                         accountName: this.datasetBasics.owner.name,
                         datasetName: this.datasetBasics.name as string,
-                        tab: DatasetViewTypeEnum.Overview,
                     });
                 }
             },
@@ -234,13 +233,12 @@ export class DatasetComponent
                     });
                 }
             },
-            navigateToMetadata: (currentPage: number) => {
+            navigateToMetadata: () => {
                 if (this.datasetBasics) {
                     this.navigationService.navigateToDatasetView({
                         accountName: this.datasetBasics.owner.name,
                         datasetName: this.datasetBasics.name as string,
                         tab: DatasetViewTypeEnum.Metadata,
-                        page: currentPage,
                     });
                 }
             },

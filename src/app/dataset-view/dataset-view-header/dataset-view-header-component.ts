@@ -12,7 +12,8 @@ import { DatasetViewTypeEnum } from "../dataset-view.interface";
 export class DatasetViewHeaderComponent {
     @Input() datasetBasics?: DatasetBasicsFragment;
     @Output() public showOwnerPageEmit = new EventEmitter<null>();
-    @Output() public onClickSearchAdditionalButtonEmit = new EventEmitter<string>();
+    @Output() public onClickSearchAdditionalButtonEmit =
+        new EventEmitter<string>();
 
     constructor(private navigationService: NavigationService) {}
 
@@ -79,7 +80,6 @@ export class DatasetViewHeaderComponent {
             this.navigationService.navigateToDatasetView({
                 accountName: this.datasetBasics.owner.name,
                 datasetName: this.datasetBasics.name as string,
-                tab: DatasetViewTypeEnum.Overview,
             });
         }
     }

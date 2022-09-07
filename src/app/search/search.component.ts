@@ -254,7 +254,6 @@ export class SearchComponent
         this.navigationService.navigateToDatasetView({
             accountName: data.accountName,
             datasetName: data.datasetName,
-            tab: DatasetViewTypeEnum.Overview,
         });
     }
 

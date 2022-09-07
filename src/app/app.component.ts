@@ -15,7 +15,6 @@ import ProjectLinks from "./project-links";
 import { AccountInfo } from "./api/kamu.graphql.interface";
 import { MaybeNull } from "./common/app.types";
 import _ from "lodash";
-import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
 import { logError } from "./common/app.helpers";
 
 @Component({
@@ -143,13 +142,9 @@ export class AppComponent extends BaseComponent implements OnInit {
             this.navigationService.navigateToDatasetView({
                 accountName: item.dataset.owner.name,
                 datasetName: item.dataset.name as string,
-                tab: DatasetViewTypeEnum.Overview,
             });
         } else {
-            this.navigationService.navigateToSearch(
-                item.dataset.id as string,
-                1,
-            );
+            this.navigationService.navigateToSearch(item.dataset.id as string);
         }
     }
     public onClickAppLogo(): void {

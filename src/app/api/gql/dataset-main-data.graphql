@@ -7,13 +7,7 @@ query getDatasetMainData(
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       ...DatasetBasics
       ...DatasetOverview
-      data {
-        ...DatasetDataSize
-        tail(limit: $limit, dataFormat: JSON) {
-          ...DatasetQuery
-        }
-        __typename
-      }
+      ...DatasetData
       __typename
     }
   }

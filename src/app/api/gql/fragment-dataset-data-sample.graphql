@@ -1,4 +1,4 @@
-fragment DatasetQuery on DataQueryResult {
+fragment DatasetDataSample on DataQueryResult {
   schema {
     format
     content

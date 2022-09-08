@@ -794,16 +794,9 @@ export type GetDatasetMainDataQuery = {
     datasets: {
         __typename?: "Datasets";
         byOwnerAndName?:
-            | ({
-                  __typename: "Dataset";
-                  data: {
-                      __typename: "DatasetData";
-                      tail: {
-                          __typename: "DataQueryResult";
-                      } & DatasetQueryFragment;
-                  } & DatasetDataSizeFragment;
-              } & DatasetBasicsFragment &
-                  DatasetOverviewFragment)
+            | ({ __typename: "Dataset" } & DatasetBasicsFragment &
+                  DatasetOverviewFragment &
+                  DatasetDataFragment)
             | null;
     };
 };
@@ -827,7 +820,7 @@ export type DatasetBasicsFragment = {
         | { __typename?: "User"; id: any; name: string };
 };
 
-export type DatasetQueryFragment = {
+export type DatasetDataSampleFragment = {
     __typename: "DataQueryResult";
     schema: {
         __typename?: "DataSchema";
@@ -845,6 +838,14 @@ export type DatasetDataSizeFragment = {
     __typename?: "DatasetData";
     numRecordsTotal: number;
     estimatedSize: number;
+};
+
+export type DatasetDataFragment = {
+    __typename?: "Dataset";
+    data: {
+        __typename: "DatasetData";
+        tail: { __typename?: "DataQueryResult" } & DatasetDataSampleFragment;
+    } & DatasetDataSizeFragment;
 };
 
 export type DatasetMetadataSummaryFragment = {
@@ -1137,8 +1138,14 @@ export const AccountDetailsFragmentDoc = gql`
         gravatarId
     }
 `;
-export const DatasetQueryFragmentDoc = gql`
-    fragment DatasetQuery on DataQueryResult {
+export const DatasetDataSizeFragmentDoc = gql`
+    fragment DatasetDataSize on DatasetData {
+        numRecordsTotal
+        estimatedSize
+    }
+`;
+export const DatasetDataSampleFragmentDoc = gql`
+    fragment DatasetDataSample on DataQueryResult {
         schema {
             format
             content
@@ -1150,11 +1157,18 @@ export const DatasetQueryFragmentDoc = gql`
         __typename
     }
 `;
-export const DatasetDataSizeFragmentDoc = gql`
-    fragment DatasetDataSize on DatasetData {
-        numRecordsTotal
-        estimatedSize
+export const DatasetDataFragmentDoc = gql`
+    fragment DatasetData on Dataset {
+        data {
+            ...DatasetDataSize
+            tail(limit: $limit, dataFormat: JSON) {
+                ...DatasetDataSample
+            }
+            __typename
+        }
     }
+    ${DatasetDataSizeFragmentDoc}
+    ${DatasetDataSampleFragmentDoc}
 `;
 export const DatasetBasicsFragmentDoc = gql`
     fragment DatasetBasics on Dataset {
@@ -1486,22 +1500,14 @@ export const GetDatasetMainDataDocument = gql`
             ) {
                 ...DatasetBasics
                 ...DatasetOverview
-                data {
-                    ...DatasetDataSize
-                    tail(limit: $limit, dataFormat: JSON) {
-                        ...DatasetQuery
-                        __typename
-                    }
-                    __typename
-                }
+                ...DatasetData
                 __typename
             }
         }
     }
     ${DatasetBasicsFragmentDoc}
     ${DatasetOverviewFragmentDoc}
-    ${DatasetDataSizeFragmentDoc}
-    ${DatasetQueryFragmentDoc}
+    ${DatasetDataFragmentDoc}
 `;
 
 @Injectable({

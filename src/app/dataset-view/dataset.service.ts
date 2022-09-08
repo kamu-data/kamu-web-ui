@@ -9,7 +9,7 @@ import {
 import {
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
-    DatasetMetadataDetailsFragment,
+    DatasetMetadataSummaryFragment,
     DatasetOverviewFragment,
     GetDatasetMainDataQuery,
     GetDatasetDataSqlRunQuery,
@@ -93,7 +93,7 @@ export class AppDatasetService {
                 const schemaMetadata: DatasetSchema = JSON.parse(
                     data.datasets.byOwnerAndName.metadata.currentSchema.content,
                 ) as DatasetSchema;
-                const metadata: DatasetMetadataDetailsFragment = _.cloneDeep(
+                const metadata: DatasetMetadataSummaryFragment = _.cloneDeep(
                     data.datasets.byOwnerAndName.metadata,
                 );
                 const pageInfo: PageBasedInfo = {

@@ -8,7 +8,7 @@ import { MetadataSchemaUpdate } from "../../dataset.subscriptions.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import {
     DatasetBasicsFragment,
-    DatasetMetadataDetailsFragment,
+    DatasetMetadataSummaryFragment,
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
 
@@ -42,7 +42,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
 
     public currentState?: {
         schema: DatasetSchema;
-        metadata: DatasetMetadataDetailsFragment;
+        metadata: DatasetMetadataSummaryFragment;
         pageInfo: PageBasedInfo;
     };
 

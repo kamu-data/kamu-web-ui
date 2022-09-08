@@ -5,20 +5,12 @@ query getDatasetMainData(
 ) {
   datasets {
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      ...DatasetBasics
       ...DatasetOverview
       data {
         ...DatasetDataSize
-        # Data sample
         tail(limit: $limit, dataFormat: JSON) {
-          schema {
-            format
-            content
-          }
-          data {
-            format
-            content
-          }
-          __typename
+          ...DatasetQuery
         }
         __typename
       }

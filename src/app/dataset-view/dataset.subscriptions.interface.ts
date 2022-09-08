@@ -1,7 +1,7 @@
 import {
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
-    DatasetMetadataDetailsFragment,
+    DatasetMetadataSummaryFragment,
     DatasetOverviewFragment,
     MetadataBlockFragment,
     PageBasedInfo,
@@ -21,7 +21,7 @@ export interface DataUpdate {
 
 export interface MetadataSchemaUpdate {
     schema: DatasetSchema;
-    metadata: DatasetMetadataDetailsFragment;
+    metadata: DatasetMetadataSummaryFragment;
     pageInfo: PageBasedInfo;
 }
 

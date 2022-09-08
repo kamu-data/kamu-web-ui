@@ -1,0 +1,11 @@
+fragment DatasetQuery on DataQueryResult {
+  schema {
+    format
+    content
+  }
+  data {
+    format
+    content
+  }
+  __typename
+}

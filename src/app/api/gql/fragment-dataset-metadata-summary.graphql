@@ -1,0 +1,52 @@
+fragment DatasetMetadataSummary on DatasetMetadata {
+  currentInfo {
+    description
+    keywords
+  }
+  currentLicense {
+    ...License
+  }
+  currentReadme
+  currentWatermark
+  currentTransform {
+    inputs {
+      dataset {
+        id
+        name
+        kind
+        owner {
+          id
+          name
+        }
+      }
+    }
+    transform {
+      ... on TransformSql {
+        queries {
+          alias
+          query
+        }
+      }
+    }
+  }
+  currentSchema(format: PARQUET_JSON) {
+    format
+    content
+    __typename
+  }
+  __typename
+  # Last update
+  chain {
+    blocks(page: 0, perPage: 1) {
+      nodes {
+        ...MetadataBlock
+      }
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        totalPages
+      }
+    }
+  }
+}

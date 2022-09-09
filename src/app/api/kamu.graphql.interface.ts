@@ -704,18 +704,6 @@ export type User = Account & {
     name: Scalars["String"];
 };
 
-export type AccountInfoMutationVariables = Exact<{
-    accessToken: Scalars["String"];
-}>;
-
-export type AccountInfoMutation = {
-    __typename?: "Mutation";
-    auth: {
-        __typename?: "Auth";
-        accountInfo: { __typename?: "AccountInfo" } & AccountDetailsFragment;
-    };
-};
-
 export type GetDatasetDataSqlRunQueryVariables = Exact<{
     query: Scalars["String"];
     limit: Scalars["Int"];
@@ -1377,30 +1365,6 @@ export const DatasetSearchOverviewFragmentDoc = gql`
     ${DatasetBasicsFragmentDoc}
     ${LicenseFragmentDoc}
 `;
-export const AccountInfoDocument = gql`
-    mutation AccountInfo($accessToken: String!) {
-        auth {
-            accountInfo(accessToken: $accessToken) {
-                ...AccountDetails
-            }
-        }
-    }
-    ${AccountDetailsFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class AccountInfoGQL extends Apollo.Mutation<
-    AccountInfoMutation,
-    AccountInfoMutationVariables
-> {
-    document = AccountInfoDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
 export const GetDatasetDataSqlRunDocument = gql`
     query getDatasetDataSQLRun($query: String!, $limit: Int!) {
         data {

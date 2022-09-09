@@ -18,7 +18,6 @@ import {
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 import { logError } from "../common/app.helpers";
 
 export interface SearchFilters {
@@ -206,20 +205,19 @@ export class SearchComponent
 
     private changePageAndSearch(): void {
         let page = 1;
-        let currentId = "";
-
-        if (this.searchString.split("?id=").length > 1) {
-            currentId = this.searchString.split("?id=")[1].split("&")[0];
-            this.searchValue = currentId;
-
-            const searchPageParams: string[] = this.searchString.split("&p=");
+        let gueryValue = "";
+        if (this.searchString.split("?query=").length > 1) {
+            gueryValue = this.searchString.split("?query=")[1];
+            this.searchValue = gueryValue;
+            const searchPageParams: string[] =
+                this.searchString.split("&page=");
             if (searchPageParams[1]) {
-                page = Number(searchPageParams[1].split("&")[0]);
+                page = Number(searchPageParams[1]);
             }
         }
 
         this.currentPage = page;
-        this.onSearchDatasets(currentId, page);
+        this.onSearchDatasets(gueryValue, page);
     }
 
     private initTableData(): void {
@@ -244,6 +242,10 @@ export class SearchComponent
         isClick: boolean;
     }): void {
         this.currentPage = params.currentPage;
+        if (this.currentPage === 1) {
+            this.navigationService.navigateToSearch(this.searchValue);
+            return;
+        }
         this.navigationService.navigateToSearch(
             this.searchValue,
             params.currentPage,

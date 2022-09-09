@@ -242,13 +242,12 @@ export class DatasetComponent
                     });
                 }
             },
-            navigateToHistory: (currentPage: number) => {
+            navigateToHistory: () => {
                 if (this.datasetBasics) {
                     this.navigationService.navigateToDatasetView({
                         accountName: this.datasetBasics.owner.name,
                         datasetName: this.datasetBasics.name as string,
                         tab: DatasetViewTypeEnum.History,
-                        page: currentPage,
                     });
                 }
             },

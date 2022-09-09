@@ -3,7 +3,6 @@ import { SearchAdditionalHeaderButtonInterface } from "../../components/search-a
 import { searchAdditionalButtonsEnum } from "../../search/search.interface";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetViewTypeEnum } from "../dataset-view.interface";
 
 @Component({
     selector: "app-dataset-view-header",

@@ -103,12 +103,17 @@ export class AppComponent extends BaseComponent implements OnInit {
                 )
                 .subscribe((event: RouterEvent) => {
                     this.isVisible = this.isAvailableAppHeaderUrl(event.url);
-
                     if (event.url.split("?query=").length > 1) {
-                        const searchValue: string =
-                            AppValues.fixedEncodeURIComponent(
+                        let searchValue = "";
+                        if (event.url.includes("&")) {
+                            searchValue = AppValues.fixedEncodeURIComponent(
                                 event.url.split("?query=")[1].split("&")[0],
                             );
+                        } else {
+                            searchValue = AppValues.fixedEncodeURIComponent(
+                                event.url.split("?query=")[1],
+                            );
+                        }
                         if (searchValue === "%255Bobject%2520Object%255D") {
                             this.navigationService.navigateToSearch();
                             setTimeout(() =>

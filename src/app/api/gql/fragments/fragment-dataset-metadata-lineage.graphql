@@ -1,0 +1,48 @@
+fragment DatasetMetadataLineage on DatasetMetadata {
+  currentUpstreamDependencies {
+    ...DatasetBasics
+    metadata {
+      currentUpstreamDependencies {
+        ...DatasetBasics
+        metadata {
+          currentUpstreamDependencies {
+            ...DatasetBasics
+            metadata {
+              currentUpstreamDependencies {
+                ...DatasetBasics
+                metadata {
+                  currentUpstreamDependencies {
+                    ...DatasetBasics
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  currentDownstreamDependencies {
+    ...DatasetBasics
+    metadata {
+      currentDownstreamDependencies {
+        ...DatasetBasics
+        metadata {
+          currentDownstreamDependencies {
+            ...DatasetBasics
+            metadata {
+              currentDownstreamDependencies {
+                ...DatasetBasics
+                metadata {
+                  currentDownstreamDependencies {
+                    ...DatasetBasics
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

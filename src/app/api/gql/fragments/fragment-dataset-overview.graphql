@@ -2,52 +2,7 @@ fragment DatasetOverview on Dataset {
   createdAt
   lastUpdatedAt
   metadata {
-    currentUpstreamDependencies {
-      ...DatasetBasics
-      metadata {
-        currentUpstreamDependencies {
-          ...DatasetBasics
-          metadata {
-            currentUpstreamDependencies {
-              ...DatasetBasics
-              metadata {
-                currentUpstreamDependencies {
-                  ...DatasetBasics
-                  metadata {
-                    currentUpstreamDependencies {
-                      ...DatasetBasics
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    currentDownstreamDependencies {
-      ...DatasetBasics
-      metadata {
-        currentDownstreamDependencies {
-          ...DatasetBasics
-          metadata {
-            currentDownstreamDependencies {
-              ...DatasetBasics
-              metadata {
-                currentDownstreamDependencies {
-                  ...DatasetBasics
-                  metadata {
-                    currentDownstreamDependencies {
-                      ...DatasetBasics
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+    ...DatasetMetadataLineage
     ...DatasetMetadataSummary
   }
 }

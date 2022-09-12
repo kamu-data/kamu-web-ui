@@ -1,0 +1,12 @@
+fragment DatasetCurrentTransform on DatasetMetadata {
+  currentTransform {
+    inputs {
+      dataset {
+        ...DatasetBasics
+      }
+    }
+    transform {
+      ...DatasetTransformContent
+    }
+  }
+}

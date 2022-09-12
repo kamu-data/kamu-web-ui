@@ -1,34 +1,13 @@
 fragment DatasetMetadataSummary on DatasetMetadata {
   currentInfo {
-    description
-    keywords
+    ...DatasetCurrentInfo
   }
   currentLicense {
     ...License
   }
   currentReadme
   currentWatermark
-  currentTransform {
-    inputs {
-      dataset {
-        id
-        name
-        kind
-        owner {
-          id
-          name
-        }
-      }
-    }
-    transform {
-      ... on TransformSql {
-        queries {
-          alias
-          query
-        }
-      }
-    }
-  }
+  ...DatasetCurrentTransform
   currentSchema(format: PARQUET_JSON) {
     format
     content
@@ -43,9 +22,7 @@ fragment DatasetMetadataSummary on DatasetMetadata {
       }
       totalCount
       pageInfo {
-        hasNextPage
-        hasPreviousPage
-        totalPages
+        ...DatasetPageInfo
       }
     }
   }

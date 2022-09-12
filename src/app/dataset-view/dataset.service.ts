@@ -1,3 +1,4 @@
+import { DatasetPageInfoFragment } from "./../api/kamu.graphql.interface";
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
@@ -15,7 +16,6 @@ import {
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
     MetadataBlockFragment,
-    PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 import { ModalService } from "../components/modal/modal.service";
 import { AppDatasetSubscriptionsService } from "./dataset.subscriptions.service";
@@ -56,65 +56,12 @@ export class AppDatasetService {
                 if (isNil(data.datasets.byOwnerAndName)) {
                     throw new Error("Dataset not resolved by ID");
                 }
-                const dataset: DatasetBasicsFragment =
-                    _.cloneDeep<DatasetBasicsFragment>(
-                        data.datasets.byOwnerAndName,
-                    );
-                this.datasetChanges(dataset);
-                const content: DataRow[] =
-                    AppDatasetService.parseContentOfDataset(data);
+                this.datasetUpdate(data.datasets.byOwnerAndName);
 
-                //overview tab
-                const overview: DatasetOverviewFragment =
-                    _.cloneDeep<DatasetOverviewFragment>(
-                        data.datasets.byOwnerAndName,
-                    );
-                const size: DatasetDataSizeFragment =
-                    _.cloneDeep<DatasetDataSizeFragment>(
-                        data.datasets.byOwnerAndName.data,
-                    );
-                const overviewDataUpdate: OverviewDataUpdate = {
-                    content,
-                    overview,
-                    size,
-                };
-                this.appDatasetSubsService.changeDatasetOverviewData(
-                    overviewDataUpdate,
-                );
-
-                //data tab
-                const schemaData: DatasetSchema = JSON.parse(
-                    data.datasets.byOwnerAndName.metadata.currentSchema.content,
-                ) as DatasetSchema;
-                const dataUpdate: DataUpdate = { content, schema: schemaData };
-                this.appDatasetSubsService.changeDatasetData(dataUpdate);
-
-                // metadata tab
-                const schemaMetadata: DatasetSchema = JSON.parse(
-                    data.datasets.byOwnerAndName.metadata.currentSchema.content,
-                ) as DatasetSchema;
-                const metadata: DatasetMetadataSummaryFragment = _.cloneDeep(
-                    data.datasets.byOwnerAndName.metadata,
-                );
-                const pageInfo: PageBasedInfo = {
-                    hasNextPage: false,
-                    hasPreviousPage: false,
-                    totalPages: 1,
-                    currentPage: 1,
-                };
-                const metadataSchemaUpdate: MetadataSchemaUpdate = {
-                    schema: schemaMetadata,
-                    pageInfo,
-                    metadata,
-                };
-                this.appDatasetSubsService.metadataSchemaChanges(
-                    metadataSchemaUpdate,
-                );
-
-                // lineage tab
-                const lineageResponse: DatasetLineageNode =
-                    this.lineageResponseFromRawQuery(data);
-                this.updatelineageGraph(lineageResponse);
+                this.overviewTabDataUpdate(data);
+                this.dataTabDataUpdate(data);
+                this.metadataTabDataUpdate(data);
+                this.lineageTabDataUpdate(data);
             });
     }
 
@@ -132,7 +79,7 @@ export class AppDatasetService {
                             data.datasets.byOwnerAndName,
                         );
                     this.datasetChanges(dataset);
-                    const pageInfo: PageBasedInfo = Object.assign(
+                    const pageInfo: DatasetPageInfoFragment = Object.assign(
                         _.cloneDeep(
                             data.datasets.byOwnerAndName.metadata.chain.blocks
                                 .pageInfo,
@@ -173,6 +120,78 @@ export class AppDatasetService {
                     .catch((e) => logError(e));
             },
         );
+    }
+
+    private datasetUpdate(data: DatasetBasicsFragment): void {
+        const dataset: DatasetBasicsFragment =
+            _.cloneDeep<DatasetBasicsFragment>(data);
+        this.datasetChanges(dataset);
+    }
+
+    private overviewTabDataUpdate(data: GetDatasetMainDataQuery): void {
+        if (data.datasets.byOwnerAndName) {
+            const content: DataRow[] =
+                AppDatasetService.parseContentOfDataset(data);
+            const overview: DatasetOverviewFragment =
+                _.cloneDeep<DatasetOverviewFragment>(
+                    data.datasets.byOwnerAndName,
+                );
+            const size: DatasetDataSizeFragment =
+                _.cloneDeep<DatasetDataSizeFragment>(
+                    data.datasets.byOwnerAndName.data,
+                );
+            const overviewDataUpdate: OverviewDataUpdate = {
+                content,
+                overview,
+                size,
+            };
+            this.appDatasetSubsService.changeDatasetOverviewData(
+                overviewDataUpdate,
+            );
+        }
+    }
+
+    private dataTabDataUpdate(data: GetDatasetMainDataQuery): void {
+        if (data.datasets.byOwnerAndName) {
+            const content: DataRow[] =
+                AppDatasetService.parseContentOfDataset(data);
+            const schemaData: DatasetSchema = JSON.parse(
+                data.datasets.byOwnerAndName.metadata.currentSchema.content,
+            ) as DatasetSchema;
+            const dataUpdate: DataUpdate = { content, schema: schemaData };
+            this.appDatasetSubsService.changeDatasetData(dataUpdate);
+        }
+    }
+
+    private metadataTabDataUpdate(data: GetDatasetMainDataQuery): void {
+        if (data.datasets.byOwnerAndName) {
+            const schemaMetadata: DatasetSchema = JSON.parse(
+                data.datasets.byOwnerAndName.metadata.currentSchema.content,
+            ) as DatasetSchema;
+            const metadata: DatasetMetadataSummaryFragment = _.cloneDeep(
+                data.datasets.byOwnerAndName.metadata,
+            );
+            const pageInfo: DatasetPageInfoFragment = {
+                hasNextPage: false,
+                hasPreviousPage: false,
+                totalPages: 1,
+                currentPage: 1,
+            };
+            const metadataSchemaUpdate: MetadataSchemaUpdate = {
+                schema: schemaMetadata,
+                pageInfo,
+                metadata,
+            };
+            this.appDatasetSubsService.metadataSchemaChanges(
+                metadataSchemaUpdate,
+            );
+        }
+    }
+
+    private lineageTabDataUpdate(data: GetDatasetMainDataQuery): void {
+        const lineageResponse: DatasetLineageNode =
+            this.lineageResponseFromRawQuery(data);
+        this.updatelineageGraph(lineageResponse);
     }
 
     private lineageResponseFromRawQuery(

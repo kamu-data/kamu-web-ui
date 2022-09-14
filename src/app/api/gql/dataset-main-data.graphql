@@ -8,7 +8,7 @@ query getDatasetMainData(
       ...DatasetBasics
       ...DatasetOverview
       ...DatasetData
-      ...DatasetMetadataSummary
+      ...DatasetMetadataData
       ...DatasetMetadataLineage
       __typename
     }

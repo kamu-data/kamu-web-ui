@@ -10,7 +10,7 @@ import {
 import {
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
-    DatasetMetadataSummaryFragment,
+    DatasetMetadataDataFragment,
     DatasetOverviewFragment,
     GetDatasetMainDataQuery,
     GetDatasetDataSqlRunQuery,
@@ -161,7 +161,7 @@ export class AppDatasetService {
             const schemaMetadata: DatasetSchema = JSON.parse(
                 data.datasets.byOwnerAndName.metadata.currentSchema.content,
             ) as DatasetSchema;
-            const metadata: DatasetMetadataSummaryFragment =
+            const metadata: DatasetMetadataDataFragment =
                 data.datasets.byOwnerAndName;
 
             const pageInfo: DatasetPageInfoFragment = {

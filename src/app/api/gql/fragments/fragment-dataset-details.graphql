@@ -1,0 +1,15 @@
+fragment DatasetDetails on Dataset {
+  kind
+  createdAt
+  lastUpdatedAt
+  data {
+    estimatedSize
+    numRecordsTotal
+  }
+  metadata {
+    currentLicense {
+      ...License
+    }
+    currentWatermark
+  }
+}

@@ -2,7 +2,7 @@ import { DatasetPageInfoFragment } from "./../api/kamu.graphql.interface";
 import {
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
-    DatasetMetadataSummaryFragment,
+    DatasetMetadataDataFragment,
     DatasetOverviewFragment,
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
@@ -21,7 +21,7 @@ export interface DataUpdate {
 
 export interface MetadataSchemaUpdate {
     schema: DatasetSchema;
-    metadata: DatasetMetadataSummaryFragment;
+    metadata: DatasetMetadataDataFragment;
     pageInfo: DatasetPageInfoFragment;
 }
 

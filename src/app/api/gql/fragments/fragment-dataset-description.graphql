@@ -1,0 +1,10 @@
+fragment DatasetDescription on Dataset {
+  metadata {
+    currentInfo {
+      ...DatasetCurrentInfo
+    }
+    currentLicense {
+      ...License
+    }
+  }
+}

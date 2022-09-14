@@ -1,28 +1,30 @@
-fragment DatasetMetadataSummary on DatasetMetadata {
-  currentInfo {
-    ...DatasetCurrentInfo
-  }
-  currentLicense {
-    ...License
-  }
-  currentReadme
-  currentWatermark
-  ...DatasetCurrentTransform
-  currentSchema(format: PARQUET_JSON) {
-    format
-    content
+fragment DatasetMetadataSummary on Dataset {
+  metadata {
+    currentInfo {
+      ...DatasetCurrentInfo
+    }
+    currentLicense {
+      ...License
+    }
+    currentReadme
+    currentWatermark
+    ...DatasetCurrentTransform
+    currentSchema(format: PARQUET_JSON) {
+      format
+      content
+      __typename
+    }
     __typename
-  }
-  __typename
-  # Last update
-  chain {
-    blocks(page: 0, perPage: 1) {
-      nodes {
-        ...MetadataBlock
-      }
-      totalCount
-      pageInfo {
-        ...DatasetPageInfo
+    # Last update
+    chain {
+      blocks(page: 0, perPage: 1) {
+        nodes {
+          ...MetadataBlock
+        }
+        totalCount
+        pageInfo {
+          ...DatasetPageInfo
+        }
       }
     }
   }

@@ -26,7 +26,6 @@ import {
     OverviewDataUpdate,
 } from "./dataset.subscriptions.interface";
 import { isNil } from "lodash";
-import _ from "lodash";
 import { logError } from "../common/app.helpers";
 import { DatasetApi } from "../api/dataset.api";
 
@@ -75,15 +74,12 @@ export class AppDatasetService {
             .subscribe((data: GetDatasetHistoryQuery) => {
                 if (data.datasets.byOwnerAndName) {
                     const dataset: DatasetBasicsFragment =
-                        _.cloneDeep<DatasetBasicsFragment>(
-                            data.datasets.byOwnerAndName,
-                        );
+                        data.datasets.byOwnerAndName;
                     this.datasetChanges(dataset);
                     const pageInfo: DatasetPageInfoFragment = Object.assign(
-                        _.cloneDeep(
-                            data.datasets.byOwnerAndName.metadata.chain.blocks
-                                .pageInfo,
-                        ),
+                        {},
+                        data.datasets.byOwnerAndName.metadata.chain.blocks
+                            .pageInfo,
                         { currentPage: numPage },
                     );
                     const historyUpdate: DatasetHistoryUpdate = {
@@ -123,8 +119,7 @@ export class AppDatasetService {
     }
 
     private datasetUpdate(data: DatasetBasicsFragment): void {
-        const dataset: DatasetBasicsFragment =
-            _.cloneDeep<DatasetBasicsFragment>(data);
+        const dataset: DatasetBasicsFragment = data;
         this.datasetChanges(dataset);
     }
 
@@ -133,13 +128,11 @@ export class AppDatasetService {
             const content: DataRow[] =
                 AppDatasetService.parseContentOfDataset(data);
             const overview: DatasetOverviewFragment =
-                _.cloneDeep<DatasetOverviewFragment>(
-                    data.datasets.byOwnerAndName,
-                );
+                data.datasets.byOwnerAndName;
+
             const size: DatasetDataSizeFragment =
-                _.cloneDeep<DatasetDataSizeFragment>(
-                    data.datasets.byOwnerAndName.data,
-                );
+                data.datasets.byOwnerAndName.data;
+
             const overviewDataUpdate: OverviewDataUpdate = {
                 content,
                 overview,
@@ -168,9 +161,9 @@ export class AppDatasetService {
             const schemaMetadata: DatasetSchema = JSON.parse(
                 data.datasets.byOwnerAndName.metadata.currentSchema.content,
             ) as DatasetSchema;
-            const metadata: DatasetMetadataSummaryFragment = _.cloneDeep(
-                data.datasets.byOwnerAndName.metadata,
-            );
+            const metadata: DatasetMetadataSummaryFragment =
+                data.datasets.byOwnerAndName;
+
             const pageInfo: DatasetPageInfoFragment = {
                 hasNextPage: false,
                 hasPreviousPage: false,

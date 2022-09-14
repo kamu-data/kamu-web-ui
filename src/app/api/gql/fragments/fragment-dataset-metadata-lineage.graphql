@@ -1,18 +1,20 @@
-fragment DatasetMetadataLineage on DatasetMetadata {
-  currentUpstreamDependencies {
-    ...DatasetBasics
-    metadata {
-      currentUpstreamDependencies {
-        ...DatasetBasics
-        metadata {
-          currentUpstreamDependencies {
-            ...DatasetBasics
-            metadata {
-              currentUpstreamDependencies {
-                ...DatasetBasics
-                metadata {
-                  currentUpstreamDependencies {
-                    ...DatasetBasics
+fragment DatasetMetadataLineage on Dataset {
+  metadata {
+    currentUpstreamDependencies {
+      ...DatasetBasics
+      metadata {
+        currentUpstreamDependencies {
+          ...DatasetBasics
+          metadata {
+            currentUpstreamDependencies {
+              ...DatasetBasics
+              metadata {
+                currentUpstreamDependencies {
+                  ...DatasetBasics
+                  metadata {
+                    currentUpstreamDependencies {
+                      ...DatasetBasics
+                    }
                   }
                 }
               }
@@ -21,21 +23,21 @@ fragment DatasetMetadataLineage on DatasetMetadata {
         }
       }
     }
-  }
-  currentDownstreamDependencies {
-    ...DatasetBasics
-    metadata {
-      currentDownstreamDependencies {
-        ...DatasetBasics
-        metadata {
-          currentDownstreamDependencies {
-            ...DatasetBasics
-            metadata {
-              currentDownstreamDependencies {
-                ...DatasetBasics
-                metadata {
-                  currentDownstreamDependencies {
-                    ...DatasetBasics
+    currentDownstreamDependencies {
+      ...DatasetBasics
+      metadata {
+        currentDownstreamDependencies {
+          ...DatasetBasics
+          metadata {
+            currentDownstreamDependencies {
+              ...DatasetBasics
+              metadata {
+                currentDownstreamDependencies {
+                  ...DatasetBasics
+                  metadata {
+                    currentDownstreamDependencies {
+                      ...DatasetBasics
+                    }
                   }
                 }
               }

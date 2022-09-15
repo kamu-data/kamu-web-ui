@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "apollo-angular";
+import { gql } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -779,27 +779,13 @@ export type GetDatasetMainDataQuery = {
     datasets: {
         __typename?: "Datasets";
         byOwnerAndName?:
-            | ({ __typename: "Dataset" } & DatasetBasicsFragment &
+            | ({ __typename?: "Dataset" } & DatasetBasicsFragment &
                   DatasetOverviewFragment &
                   DatasetDataFragment &
-                  DatasetMetadataDataFragment &
-                  DatasetMetadataLineageFragment)
+                  DatasetMetadataSummaryFragment &
+                  DatasetLineageFragment)
             | null;
     };
-};
-
-export type DatasetCurrentTransformFragment = {
-    __typename?: "DatasetMetadata";
-    currentTransform?: {
-        __typename?: "SetTransform";
-        inputs: Array<{
-            __typename?: "TransformInput";
-            dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
-        }>;
-        transform: {
-            __typename?: "TransformSql";
-        } & DatasetTransformContentFragment;
-    } | null;
 };
 
 export type AccountDetailsFragment = {
@@ -827,7 +813,7 @@ export type DatasetCurrentInfoFragment = {
     keywords?: Array<string> | null;
 };
 
-export type DatasetDataSampleFragment = {
+export type DatasetDataFrameFragment = {
     __typename: "DataQueryResult";
     schema: {
         __typename?: "DataSchema";
@@ -851,7 +837,7 @@ export type DatasetDataFragment = {
     __typename?: "Dataset";
     data: {
         __typename: "DatasetData";
-        tail: { __typename?: "DataQueryResult" } & DatasetDataSampleFragment;
+        tail: { __typename?: "DataQueryResult" } & DatasetDataFrameFragment;
     } & DatasetDataSizeFragment;
 };
 
@@ -907,25 +893,7 @@ export type DatasetLastUpdateFragment = {
     };
 };
 
-export type DatasetMetadataDataFragment = {
-    __typename?: "Dataset";
-    metadata: {
-        __typename: "DatasetMetadata";
-        currentWatermark?: any | null;
-        currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
-        currentLicense?:
-            | ({ __typename?: "SetLicense" } & LicenseFragment)
-            | null;
-        currentSchema: {
-            __typename: "DataSchema";
-            format: DataSchemaFormat;
-            content: string;
-        };
-    } & DatasetCurrentTransformFragment;
-} & DatasetReadmeFragment &
-    DatasetLastUpdateFragment;
-
-export type DatasetMetadataLineageFragment = {
+export type DatasetLineageFragment = {
     __typename?: "Dataset";
     metadata: {
         __typename?: "DatasetMetadata";
@@ -1006,11 +974,32 @@ export type DatasetMetadataLineageFragment = {
     };
 };
 
+export type DatasetMetadataSummaryFragment = {
+    __typename?: "Dataset";
+    metadata: {
+        __typename: "DatasetMetadata";
+        currentWatermark?: any | null;
+        currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
+        currentLicense?:
+            | ({ __typename?: "SetLicense" } & LicenseFragment)
+            | null;
+        currentTransform?:
+            | ({ __typename?: "SetTransform" } & DatasetTransformFragment)
+            | null;
+        currentSchema: {
+            __typename: "DataSchema";
+            format: DataSchemaFormat;
+            content: string;
+        };
+    };
+} & DatasetReadmeFragment &
+    DatasetLastUpdateFragment;
+
 export type DatasetOverviewFragment = {
     __typename?: "Dataset";
-} & DatasetDetailsFragment &
+} & DatasetDescriptionFragment &
+    DatasetDetailsFragment &
     DatasetReadmeFragment &
-    DatasetDescriptionFragment &
     DatasetLastUpdateFragment;
 
 export type DatasetPageInfoFragment = {
@@ -1051,6 +1040,17 @@ export type DatasetTransformContentFragment = {
         alias?: string | null;
         query: string;
     }>;
+};
+
+export type DatasetTransformFragment = {
+    __typename?: "SetTransform";
+    inputs: Array<{
+        __typename?: "TransformInput";
+        dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+    }>;
+    transform: {
+        __typename?: "TransformSql";
+    } & DatasetTransformContentFragment;
 };
 
 export type LicenseFragment = {
@@ -1184,8 +1184,8 @@ export const DatasetDataSizeFragmentDoc = gql`
         estimatedSize
     }
 `;
-export const DatasetDataSampleFragmentDoc = gql`
-    fragment DatasetDataSample on DataQueryResult {
+export const DatasetDataFrameFragmentDoc = gql`
+    fragment DatasetDataFrame on DataQueryResult {
         schema {
             format
             content
@@ -1202,13 +1202,77 @@ export const DatasetDataFragmentDoc = gql`
         data {
             ...DatasetDataSize
             tail(limit: $limit, dataFormat: JSON) {
-                ...DatasetDataSample
+                ...DatasetDataFrame
             }
             __typename
         }
     }
     ${DatasetDataSizeFragmentDoc}
-    ${DatasetDataSampleFragmentDoc}
+    ${DatasetDataFrameFragmentDoc}
+`;
+export const DatasetBasicsFragmentDoc = gql`
+    fragment DatasetBasics on Dataset {
+        id
+        kind
+        name
+        owner {
+            id
+            name
+        }
+    }
+`;
+export const DatasetLineageFragmentDoc = gql`
+    fragment DatasetLineage on Dataset {
+        metadata {
+            currentUpstreamDependencies {
+                ...DatasetBasics
+                metadata {
+                    currentUpstreamDependencies {
+                        ...DatasetBasics
+                        metadata {
+                            currentUpstreamDependencies {
+                                ...DatasetBasics
+                                metadata {
+                                    currentUpstreamDependencies {
+                                        ...DatasetBasics
+                                        metadata {
+                                            currentUpstreamDependencies {
+                                                ...DatasetBasics
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            currentDownstreamDependencies {
+                ...DatasetBasics
+                metadata {
+                    currentDownstreamDependencies {
+                        ...DatasetBasics
+                        metadata {
+                            currentDownstreamDependencies {
+                                ...DatasetBasics
+                                metadata {
+                                    currentDownstreamDependencies {
+                                        ...DatasetBasics
+                                        metadata {
+                                            currentDownstreamDependencies {
+                                                ...DatasetBasics
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
 `;
 export const DatasetCurrentInfoFragmentDoc = gql`
     fragment DatasetCurrentInfo on SetInfo {
@@ -1224,17 +1288,6 @@ export const LicenseFragmentDoc = gql`
         websiteUrl
     }
 `;
-export const DatasetBasicsFragmentDoc = gql`
-    fragment DatasetBasics on Dataset {
-        id
-        kind
-        name
-        owner {
-            id
-            name
-        }
-    }
-`;
 export const DatasetTransformContentFragmentDoc = gql`
     fragment DatasetTransformContent on Transform {
         ... on TransformSql {
@@ -1245,17 +1298,15 @@ export const DatasetTransformContentFragmentDoc = gql`
         }
     }
 `;
-export const DatasetCurrentTransformFragmentDoc = gql`
-    fragment DatasetCurrentTransform on DatasetMetadata {
-        currentTransform {
-            inputs {
-                dataset {
-                    ...DatasetBasics
-                }
+export const DatasetTransformFragmentDoc = gql`
+    fragment DatasetTransform on SetTransform {
+        inputs {
+            dataset {
+                ...DatasetBasics
             }
-            transform {
-                ...DatasetTransformContent
-            }
+        }
+        transform {
+            ...DatasetTransformContent
         }
     }
     ${DatasetBasicsFragmentDoc}
@@ -1349,8 +1400,8 @@ export const DatasetLastUpdateFragmentDoc = gql`
     ${MetadataBlockFragmentDoc}
     ${DatasetPageInfoFragmentDoc}
 `;
-export const DatasetMetadataDataFragmentDoc = gql`
-    fragment DatasetMetadataData on Dataset {
+export const DatasetMetadataSummaryFragmentDoc = gql`
+    fragment DatasetMetadataSummary on Dataset {
         metadata {
             currentInfo {
                 ...DatasetCurrentInfo
@@ -1359,7 +1410,9 @@ export const DatasetMetadataDataFragmentDoc = gql`
                 ...License
             }
             currentWatermark
-            ...DatasetCurrentTransform
+            currentTransform {
+                ...DatasetTransform
+            }
             currentSchema(format: PARQUET_JSON) {
                 format
                 content
@@ -1372,62 +1425,23 @@ export const DatasetMetadataDataFragmentDoc = gql`
     }
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
-    ${DatasetCurrentTransformFragmentDoc}
+    ${DatasetTransformFragmentDoc}
     ${DatasetReadmeFragmentDoc}
     ${DatasetLastUpdateFragmentDoc}
 `;
-export const DatasetMetadataLineageFragmentDoc = gql`
-    fragment DatasetMetadataLineage on Dataset {
+export const DatasetDescriptionFragmentDoc = gql`
+    fragment DatasetDescription on Dataset {
         metadata {
-            currentUpstreamDependencies {
-                ...DatasetBasics
-                metadata {
-                    currentUpstreamDependencies {
-                        ...DatasetBasics
-                        metadata {
-                            currentUpstreamDependencies {
-                                ...DatasetBasics
-                                metadata {
-                                    currentUpstreamDependencies {
-                                        ...DatasetBasics
-                                        metadata {
-                                            currentUpstreamDependencies {
-                                                ...DatasetBasics
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+            currentInfo {
+                ...DatasetCurrentInfo
             }
-            currentDownstreamDependencies {
-                ...DatasetBasics
-                metadata {
-                    currentDownstreamDependencies {
-                        ...DatasetBasics
-                        metadata {
-                            currentDownstreamDependencies {
-                                ...DatasetBasics
-                                metadata {
-                                    currentDownstreamDependencies {
-                                        ...DatasetBasics
-                                        metadata {
-                                            currentDownstreamDependencies {
-                                                ...DatasetBasics
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+            currentLicense {
+                ...License
             }
         }
     }
-    ${DatasetBasicsFragmentDoc}
+    ${DatasetCurrentInfoFragmentDoc}
+    ${LicenseFragmentDoc}
 `;
 export const DatasetDetailsFragmentDoc = gql`
     fragment DatasetDetails on Dataset {
@@ -1447,30 +1461,16 @@ export const DatasetDetailsFragmentDoc = gql`
     }
     ${LicenseFragmentDoc}
 `;
-export const DatasetDescriptionFragmentDoc = gql`
-    fragment DatasetDescription on Dataset {
-        metadata {
-            currentInfo {
-                ...DatasetCurrentInfo
-            }
-            currentLicense {
-                ...License
-            }
-        }
-    }
-    ${DatasetCurrentInfoFragmentDoc}
-    ${LicenseFragmentDoc}
-`;
 export const DatasetOverviewFragmentDoc = gql`
     fragment DatasetOverview on Dataset {
+        ...DatasetDescription
         ...DatasetDetails
         ...DatasetReadme
-        ...DatasetDescription
         ...DatasetLastUpdate
     }
+    ${DatasetDescriptionFragmentDoc}
     ${DatasetDetailsFragmentDoc}
     ${DatasetReadmeFragmentDoc}
-    ${DatasetDescriptionFragmentDoc}
     ${DatasetLastUpdateFragmentDoc}
 `;
 export const DatasetSearchOverviewFragmentDoc = gql`
@@ -1594,17 +1594,16 @@ export const GetDatasetMainDataDocument = gql`
                 ...DatasetBasics
                 ...DatasetOverview
                 ...DatasetData
-                ...DatasetMetadataData
-                ...DatasetMetadataLineage
-                __typename
+                ...DatasetMetadataSummary
+                ...DatasetLineage
             }
         }
     }
     ${DatasetBasicsFragmentDoc}
     ${DatasetOverviewFragmentDoc}
     ${DatasetDataFragmentDoc}
-    ${DatasetMetadataDataFragmentDoc}
-    ${DatasetMetadataLineageFragmentDoc}
+    ${DatasetMetadataSummaryFragmentDoc}
+    ${DatasetLineageFragmentDoc}
 `;
 
 @Injectable({

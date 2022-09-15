@@ -8,9 +8,8 @@ query getDatasetMainData(
       ...DatasetBasics
       ...DatasetOverview
       ...DatasetData
-      ...DatasetMetadataData
-      ...DatasetMetadataLineage
-      __typename
+      ...DatasetMetadataSummary
+      ...DatasetLineage
     }
   }
 }

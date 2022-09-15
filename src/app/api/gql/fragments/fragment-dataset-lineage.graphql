@@ -1,4 +1,4 @@
-fragment DatasetMetadataLineage on Dataset {
+fragment DatasetLineage on Dataset {
   metadata {
     currentUpstreamDependencies {
       ...DatasetBasics

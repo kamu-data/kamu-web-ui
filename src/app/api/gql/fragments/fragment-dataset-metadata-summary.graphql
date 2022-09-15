@@ -1,4 +1,4 @@
-fragment DatasetMetadataData on Dataset {
+fragment DatasetMetadataSummary on Dataset {
   metadata {
     currentInfo {
       ...DatasetCurrentInfo
@@ -7,7 +7,9 @@ fragment DatasetMetadataData on Dataset {
       ...License
     }
     currentWatermark
-    ...DatasetCurrentTransform
+    currentTransform {
+      ...DatasetTransform
+    }
     currentSchema(format: PARQUET_JSON) {
       format
       content

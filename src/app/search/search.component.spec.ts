@@ -9,6 +9,7 @@ import { AppSearchService } from "./search.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ModalService } from "../components/modal/modal.service";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { RouterTestingModule } from "@angular/router/testing";
 
 describe("SearchComponent", () => {
     let component: SearchComponent;
@@ -17,7 +18,7 @@ describe("SearchComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [SearchComponent],
-            imports: [ApolloTestingModule],
+            imports: [ApolloTestingModule, RouterTestingModule],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 NavigationService,

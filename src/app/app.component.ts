@@ -71,19 +71,16 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     authentification(): void {
-        const code: string | null = localStorage.getItem(
-            AppValues.localStorageCode,
-        );
-
+        const accessToken: string | null = localStorage.getItem(AppValues.localStorageAccessToken);
         if (
             location.href.includes(ProjectLinks.urlLogin) ||
             location.href.includes(ProjectLinks.urlGithubCallback)
         ) {
             return;
         } else {
-            if (typeof code === "string" && !this.authApi.isAuthUser) {
+            if (typeof accessToken === "string" && !this.authApi.isAuthUser) {
                 this.trackSubscription(
-                    this.authApi.getUserInfoAndToken(code).subscribe(),
+                    this.authApi.fetchUserInfoFromAccessToken(accessToken).subscribe(),
                 );
                 return;
             }

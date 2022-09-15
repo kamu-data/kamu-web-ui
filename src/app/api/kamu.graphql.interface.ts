@@ -1129,6 +1129,18 @@ export type GithubLoginMutation = {
     };
 };
 
+export type FetchAccountInfoMutationVariables = Exact<{
+    accessToken: Scalars["String"];
+}>;
+
+export type FetchAccountInfoMutation = {
+    __typename?: "Mutation";
+    auth: {
+        __typename?: "Auth";
+        accountInfo: { __typename?: "AccountInfo" } & AccountDetailsFragment;
+    };
+};
+
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
     query: Scalars["String"];
     perPage?: InputMaybe<Scalars["Int"]>;
@@ -1645,6 +1657,30 @@ export class GithubLoginGQL extends Apollo.Mutation<
     GithubLoginMutationVariables
 > {
     document = GithubLoginDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const FetchAccountInfoDocument = gql`
+    mutation FetchAccountInfo($accessToken: String!) {
+        auth {
+            accountInfo(accessToken: $accessToken) {
+                ...AccountDetails
+            }
+        }
+    }
+    ${AccountDetailsFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class FetchAccountInfoGQL extends Apollo.Mutation<
+    FetchAccountInfoMutation,
+    FetchAccountInfoMutationVariables
+> {
+    document = FetchAccountInfoDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

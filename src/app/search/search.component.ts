@@ -1,3 +1,4 @@
+import { ActivatedRoute } from "@angular/router";
 import { AppSearchService } from "./search.service";
 import { DatasetSearchResult } from "../interface/search.interface";
 import AppValues from "../common/app.values";
@@ -18,7 +19,7 @@ import {
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { logError } from "../common/app.helpers";
+import { logError, requireValue } from "../common/app.helpers";
 
 export interface SearchFilters {
     name?: string;
@@ -168,6 +169,7 @@ export class SearchComponent
         private navigationService: NavigationService,
         private appSearchService: AppSearchService,
         private sidenavService: SideNavService,
+        private activatedRoute: ActivatedRoute,
     ) {
         super();
     }
@@ -189,6 +191,11 @@ export class SearchComponent
             this.appSearchService.onSearchQueryChanges.subscribe(
                 (value: string) => {
                     this.searchValue = value;
+                    const pageParam =
+                        this.activatedRoute.snapshot.queryParamMap.get("page");
+                    if (pageParam) {
+                        this.currentPage = 1;
+                    }
                     this.onSearchDatasets(value, this.currentPage);
                 },
             ),
@@ -197,7 +204,6 @@ export class SearchComponent
                     this.tableData.tableSource = data.datasets;
                     this.tableData.pageInfo = data.pageInfo;
                     this.tableData.totalCount = data.totalCount;
-                    this.currentPage = data.currentPage;
                 },
             ),
         );
@@ -205,19 +211,20 @@ export class SearchComponent
 
     private changePageAndSearch(): void {
         let page = 1;
-        let gueryValue = "";
-        if (this.searchString.split("?query=").length > 1) {
-            gueryValue = this.searchString.split("?query=")[1];
-            this.searchValue = gueryValue;
-            const searchPageParams: string[] =
-                this.searchString.split("&page=");
-            if (searchPageParams[1]) {
-                page = Number(searchPageParams[1]);
-            }
+        let queryValue = "";
+        const queryParam =
+            this.activatedRoute.snapshot.queryParamMap.get("query");
+        if (queryParam) {
+            queryValue = requireValue(queryParam);
+            this.searchValue = queryValue;
         }
-
+        const pageParam =
+            this.activatedRoute.snapshot.queryParamMap.get("page");
+        if (pageParam) {
+            page = +requireValue(pageParam);
+        }
         this.currentPage = page;
-        this.onSearchDatasets(gueryValue, page);
+        this.onSearchDatasets(queryValue, page);
     }
 
     private initTableData(): void {
@@ -241,7 +248,10 @@ export class SearchComponent
         currentPage: number;
         isClick: boolean;
     }): void {
-        this.currentPage = params.currentPage;
+        params.currentPage
+            ? (this.currentPage = params.currentPage)
+            : (this.currentPage = 1);
+        this.appSearchService.searchQueryChanges(this.searchValue);
         if (this.currentPage === 1) {
             this.navigationService.navigateToSearch(this.searchValue);
             return;

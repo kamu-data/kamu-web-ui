@@ -19,7 +19,7 @@ export class NavigationService {
     public navigateToSearch(query?: string, page?: number): void {
         this.router
             .navigate([ProjectLinks.urlSearch], {
-                queryParams: { query, page },
+                queryParams: query ? { query, page } : { page },
             })
             .catch((e) => logError(e));
     }

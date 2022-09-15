@@ -2,8 +2,14 @@ import { NavigationService } from "./services/navigation.service";
 import { Component, HostListener, OnInit } from "@angular/core";
 import AppValues from "./common/app.values";
 import { AppSearchService } from "./search/search.service";
-import { filter, map } from "rxjs/operators";
-import { NavigationEnd, Router, RouterEvent } from "@angular/router";
+import { filter, first, map } from "rxjs/operators";
+import {
+    ActivatedRoute,
+    NavigationEnd,
+    Params,
+    Router,
+    RouterEvent,
+} from "@angular/router";
 import {
     DatasetAutocompleteItem,
     TypeNames,
@@ -50,6 +56,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         private authApi: AuthApi,
         private modalService: ModalService,
         private navigationService: NavigationService,
+        private activatedRoute: ActivatedRoute,
     ) {
         super();
     }
@@ -103,34 +110,23 @@ export class AppComponent extends BaseComponent implements OnInit {
                 )
                 .subscribe((event: RouterEvent) => {
                     this.isVisible = this.isAvailableAppHeaderUrl(event.url);
-                    if (event.url.split("?query=").length > 1) {
-                        let searchValue = "";
-                        if (event.url.includes("&")) {
-                            searchValue = AppValues.fixedEncodeURIComponent(
-                                event.url.split("?query=")[1].split("&")[0],
-                            );
-                        } else {
-                            searchValue = AppValues.fixedEncodeURIComponent(
-                                event.url.split("?query=")[1],
-                            );
-                        }
-                        if (searchValue === "%255Bobject%2520Object%255D") {
-                            this.navigationService.navigateToSearch();
-                            setTimeout(() =>
-                                this.appSearchService.searchQueryChanges(""),
-                            );
-                        }
-                        if (event.url.includes(ProjectLinks.urlSearch)) {
-                            this.appSearchService.searchQueryChanges(
-                                searchValue,
-                            );
-                        }
-                        if (!event.url.includes(ProjectLinks.urlSearch)) {
-                            this.appSearchService.searchQueryChanges("");
-                        }
-                    }
+                    this.getSearchQueryFromUrl();
                 }),
         );
+    }
+
+    private getSearchQueryFromUrl(): void {
+        this.activatedRoute.queryParams
+            .pipe(first())
+            .subscribe((params: Params) => {
+                if (params.query) {
+                    this.appSearchService.searchQueryChanges(
+                        params.query as string,
+                    );
+                } else {
+                    this.appSearchService.searchQueryChanges("");
+                }
+            });
     }
 
     private checkView(): void {

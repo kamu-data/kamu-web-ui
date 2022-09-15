@@ -1,0 +1,6 @@
+fragment DatasetOverview on Dataset {
+  ...DatasetDescription
+  ...DatasetDetails
+  ...DatasetReadme
+  ...DatasetLastUpdate
+}

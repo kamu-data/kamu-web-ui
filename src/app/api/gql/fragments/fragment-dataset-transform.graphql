@@ -1,0 +1,10 @@
+fragment DatasetTransform on SetTransform {
+  inputs {
+    dataset {
+      ...DatasetBasics
+    }
+  }
+  transform {
+    ...DatasetTransformContent
+  }
+}

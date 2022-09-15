@@ -1,0 +1,4 @@
+fragment DatasetCurrentInfo on SetInfo {
+  description
+  keywords
+}

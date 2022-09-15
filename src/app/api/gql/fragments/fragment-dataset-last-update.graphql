@@ -1,0 +1,15 @@
+fragment DatasetLastUpdate on Dataset {
+  metadata {
+    chain {
+      blocks(page: 0, perPage: 1) {
+        nodes {
+          ...MetadataBlock
+        }
+        totalCount
+        pageInfo {
+          ...DatasetPageInfo
+        }
+      }
+    }
+  }
+}

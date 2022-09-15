@@ -12,3 +12,11 @@ mutation GithubLogin($code: String!) {
     }
   }
 }
+
+mutation FetchAccountInfo($accessToken: String!) {
+  auth {
+    accountInfo(accessToken: $accessToken) {
+      ...AccountDetails
+    }
+  }
+}

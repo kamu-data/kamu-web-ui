@@ -4,8 +4,7 @@ import * as moment from "moment-timezone";
 @Injectable()
 export default class AppValues {
     public static appLogo = "assets/icons/kamu_logo_icon.svg";
-    public static localStorageCode = "code";
-    public static localStorageAccessToken = "code";
+    public static localStorageAccessToken = "access_token";
     public static defaultUsername = "anonymous";
     public static httpPattern = new RegExp(/^(http:\/\/)|(https:\/\/)/i);
     public static displayDateFormat = "DD MMM YYYY";

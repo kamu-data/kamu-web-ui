@@ -4,8 +4,7 @@ fragment DatasetSearchOverview on Dataset {
   lastUpdatedAt
   metadata {
     currentInfo {
-      description
-      keywords
+      ...DatasetCurrentInfo
     }
     currentLicense {
       ...License

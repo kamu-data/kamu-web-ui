@@ -8,7 +8,7 @@ import { MetadataSchemaUpdate } from "../../dataset.subscriptions.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import {
     DatasetBasicsFragment,
-    DatasetMetadataDetailsFragment,
+    DatasetMetadataSummaryFragment,
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
 
@@ -42,7 +42,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
 
     public currentState?: {
         schema: DatasetSchema;
-        metadata: DatasetMetadataDetailsFragment;
+        metadata: DatasetMetadataSummaryFragment;
         pageInfo: PageBasedInfo;
     };
 
@@ -100,15 +100,17 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     public get latestBlockhash(): string {
         return this.currentState
             ? shortHash(
-                  this.currentState.metadata.chain.blocks.nodes[0]
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                  this.currentState.metadata.metadata.chain.blocks.nodes[0]
                       .blockHash as string,
               )
             : "";
     }
 
     public get latestBlockSystemTime(): string {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         const systemTimeAsString: string | undefined = this.currentState
-            ?.metadata.chain.blocks.nodes[0].systemTime as string;
+            ?.metadata.metadata.chain.blocks.nodes[0].systemTime as string;
 
         return systemTimeAsString
             ? AppValues.momentConverDatetoLocalWithFormat({

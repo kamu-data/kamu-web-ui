@@ -704,25 +704,6 @@ export type User = Account & {
     name: Scalars["String"];
 };
 
-export type AccountInfoMutationVariables = Exact<{
-    accessToken: Scalars["String"];
-}>;
-
-export type AccountInfoMutation = {
-    __typename?: "Mutation";
-    auth: {
-        __typename?: "Auth";
-        accountInfo: {
-            __typename?: "AccountInfo";
-            login: string;
-            name: string;
-            email?: string | null;
-            avatarUrl?: string | null;
-            gravatarId?: string | null;
-        };
-    };
-};
-
 export type GetDatasetDataSqlRunQueryVariables = Exact<{
     query: Scalars["String"];
     limit: Scalars["Int"];
@@ -778,10 +759,7 @@ export type GetDatasetHistoryQuery = {
                               >;
                               pageInfo: {
                                   __typename?: "PageBasedInfo";
-                                  hasNextPage: boolean;
-                                  hasPreviousPage: boolean;
-                                  totalPages?: number | null;
-                              };
+                              } & DatasetPageInfoFragment;
                           };
                       };
                   };
@@ -790,154 +768,33 @@ export type GetDatasetHistoryQuery = {
     };
 };
 
-export type GetDatasetLineageQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
-}>;
-
-export type GetDatasetLineageQuery = {
-    __typename?: "Query";
-    datasets: {
-        __typename?: "Datasets";
-        byOwnerAndName?:
-            | ({
-                  __typename?: "Dataset";
-                  metadata: {
-                      __typename?: "DatasetMetadata";
-                      currentUpstreamDependencies: Array<
-                          {
-                              __typename?: "Dataset";
-                              metadata: {
-                                  __typename?: "DatasetMetadata";
-                                  currentUpstreamDependencies: Array<
-                                      {
-                                          __typename?: "Dataset";
-                                          metadata: {
-                                              __typename?: "DatasetMetadata";
-                                              currentUpstreamDependencies: Array<
-                                                  {
-                                                      __typename?: "Dataset";
-                                                      metadata: {
-                                                          __typename?: "DatasetMetadata";
-                                                          currentUpstreamDependencies: Array<
-                                                              {
-                                                                  __typename?: "Dataset";
-                                                                  metadata: {
-                                                                      __typename?: "DatasetMetadata";
-                                                                      currentUpstreamDependencies: Array<
-                                                                          {
-                                                                              __typename?: "Dataset";
-                                                                          } & DatasetBasicsFragment
-                                                                      >;
-                                                                  };
-                                                              } & DatasetBasicsFragment
-                                                          >;
-                                                      };
-                                                  } & DatasetBasicsFragment
-                                              >;
-                                          };
-                                      } & DatasetBasicsFragment
-                                  >;
-                              };
-                          } & DatasetBasicsFragment
-                      >;
-                      currentDownstreamDependencies: Array<
-                          {
-                              __typename?: "Dataset";
-                              metadata: {
-                                  __typename?: "DatasetMetadata";
-                                  currentDownstreamDependencies: Array<
-                                      {
-                                          __typename?: "Dataset";
-                                          metadata: {
-                                              __typename?: "DatasetMetadata";
-                                              currentDownstreamDependencies: Array<
-                                                  {
-                                                      __typename?: "Dataset";
-                                                      metadata: {
-                                                          __typename?: "DatasetMetadata";
-                                                          currentDownstreamDependencies: Array<
-                                                              {
-                                                                  __typename?: "Dataset";
-                                                                  metadata: {
-                                                                      __typename?: "DatasetMetadata";
-                                                                      currentDownstreamDependencies: Array<
-                                                                          {
-                                                                              __typename?: "Dataset";
-                                                                          } & DatasetBasicsFragment
-                                                                      >;
-                                                                  };
-                                                              } & DatasetBasicsFragment
-                                                          >;
-                                                      };
-                                                  } & DatasetBasicsFragment
-                                              >;
-                                          };
-                                      } & DatasetBasicsFragment
-                                  >;
-                              };
-                          } & DatasetBasicsFragment
-                      >;
-                  };
-              } & DatasetBasicsFragment)
-            | null;
-    };
-};
-
-export type GetDatasetMetadataSchemaQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
-    numRecords?: InputMaybe<Scalars["Int"]>;
-    numPage?: InputMaybe<Scalars["Int"]>;
-}>;
-
-export type GetDatasetMetadataSchemaQuery = {
-    __typename?: "Query";
-    datasets: {
-        __typename?: "Datasets";
-        byOwnerAndName?:
-            | ({
-                  __typename?: "Dataset";
-                  metadata: {
-                      __typename?: "DatasetMetadata";
-                  } & DatasetMetadataDetailsFragment;
-              } & DatasetBasicsFragment)
-            | null;
-    };
-};
-
-export type GetDatasetOverviewQueryVariables = Exact<{
+export type GetDatasetMainDataQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
     limit?: InputMaybe<Scalars["Int"]>;
 }>;
 
-export type GetDatasetOverviewQuery = {
+export type GetDatasetMainDataQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
         byOwnerAndName?:
-            | ({
-                  __typename: "Dataset";
-                  data: {
-                      __typename: "DatasetData";
-                      tail: {
-                          __typename: "DataQueryResult";
-                          schema: {
-                              __typename?: "DataSchema";
-                              format: DataSchemaFormat;
-                              content: string;
-                          };
-                          data: {
-                              __typename?: "DataBatch";
-                              format: DataBatchFormat;
-                              content: string;
-                          };
-                      };
-                  } & DatasetDataSizeFragment;
-              } & DatasetOverviewFragment)
+            | ({ __typename?: "Dataset" } & DatasetBasicsFragment &
+                  DatasetOverviewFragment &
+                  DatasetDataFragment &
+                  DatasetMetadataSummaryFragment &
+                  DatasetLineageFragment)
             | null;
     };
+};
+
+export type AccountDetailsFragment = {
+    __typename?: "AccountInfo";
+    login: string;
+    name: string;
+    email?: string | null;
+    avatarUrl?: string | null;
+    gravatarId?: string | null;
 };
 
 export type DatasetBasicsFragment = {
@@ -950,80 +807,74 @@ export type DatasetBasicsFragment = {
         | { __typename?: "User"; id: any; name: string };
 };
 
+export type DatasetCurrentInfoFragment = {
+    __typename?: "SetInfo";
+    description?: string | null;
+    keywords?: Array<string> | null;
+};
+
+export type DatasetDataFrameFragment = {
+    __typename: "DataQueryResult";
+    schema: {
+        __typename?: "DataSchema";
+        format: DataSchemaFormat;
+        content: string;
+    };
+    data: {
+        __typename?: "DataBatch";
+        format: DataBatchFormat;
+        content: string;
+    };
+};
+
 export type DatasetDataSizeFragment = {
     __typename?: "DatasetData";
     numRecordsTotal: number;
     estimatedSize: number;
 };
 
-export type DatasetMetadataDetailsFragment = {
-    __typename?: "DatasetMetadata";
-    chain: {
-        __typename?: "MetadataChain";
-        blocks: {
-            __typename?: "MetadataBlockConnection";
-            totalCount?: number | null;
-            nodes: Array<{
-                __typename?: "MetadataBlockExtended";
-                blockHash: any;
-                systemTime: any;
-            }>;
-            pageInfo: {
-                __typename?: "PageBasedInfo";
-                hasNextPage: boolean;
-                hasPreviousPage: boolean;
-                totalPages?: number | null;
-            };
-        };
-    };
-    currentSchema: { __typename?: "DataSchema"; content: string };
-    currentTransform?: {
-        __typename?: "SetTransform";
-        inputs: Array<{
-            __typename?: "TransformInput";
-            dataset: {
-                __typename?: "Dataset";
-                id: any;
-                name: any;
-                kind: DatasetKind;
-                owner:
-                    | { __typename?: "Organization"; id: any; name: string }
-                    | { __typename?: "User"; id: any; name: string };
-            };
-        }>;
-        transform: {
-            __typename?: "TransformSql";
-            queries: Array<{
-                __typename?: "SqlQueryStep";
-                alias?: string | null;
-                query: string;
-            }>;
-        };
-    } | null;
-    currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
+export type DatasetDataFragment = {
+    __typename?: "Dataset";
+    data: {
+        __typename: "DatasetData";
+        tail: { __typename?: "DataQueryResult" } & DatasetDataFrameFragment;
+    } & DatasetDataSizeFragment;
 };
 
-export type DatasetOverviewFragment = {
+export type DatasetDescriptionFragment = {
     __typename?: "Dataset";
-    createdAt: any;
-    lastUpdatedAt: any;
     metadata: {
-        __typename: "DatasetMetadata";
-        currentReadme?: string | null;
-        currentWatermark?: any | null;
-        currentInfo: {
-            __typename?: "SetInfo";
-            description?: string | null;
-            keywords?: Array<string> | null;
-        };
+        __typename?: "DatasetMetadata";
+        currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
         currentLicense?:
             | ({ __typename?: "SetLicense" } & LicenseFragment)
             | null;
-        currentSchema: {
-            __typename: "DataSchema";
-            format: DataSchemaFormat;
-            content: string;
-        };
+    };
+};
+
+export type DatasetDetailsFragment = {
+    __typename?: "Dataset";
+    kind: DatasetKind;
+    createdAt: any;
+    lastUpdatedAt: any;
+    data: {
+        __typename?: "DatasetData";
+        estimatedSize: number;
+        numRecordsTotal: number;
+    };
+    metadata: {
+        __typename?: "DatasetMetadata";
+        currentWatermark?: any | null;
+        currentLicense?:
+            | ({ __typename?: "SetLicense" } & LicenseFragment)
+            | null;
+    };
+};
+
+export type DatasetLastUpdateFragment = {
+    __typename?: "Dataset";
+    metadata: {
+        __typename?: "DatasetMetadata";
         chain: {
             __typename?: "MetadataChain";
             blocks: {
@@ -1034,10 +885,135 @@ export type DatasetOverviewFragment = {
                         __typename?: "MetadataBlockExtended";
                     } & MetadataBlockFragment
                 >;
+                pageInfo: {
+                    __typename?: "PageBasedInfo";
+                } & DatasetPageInfoFragment;
             };
         };
     };
-} & DatasetBasicsFragment;
+};
+
+export type DatasetLineageFragment = {
+    __typename?: "Dataset";
+    metadata: {
+        __typename?: "DatasetMetadata";
+        currentUpstreamDependencies: Array<
+            {
+                __typename?: "Dataset";
+                metadata: {
+                    __typename?: "DatasetMetadata";
+                    currentUpstreamDependencies: Array<
+                        {
+                            __typename?: "Dataset";
+                            metadata: {
+                                __typename?: "DatasetMetadata";
+                                currentUpstreamDependencies: Array<
+                                    {
+                                        __typename?: "Dataset";
+                                        metadata: {
+                                            __typename?: "DatasetMetadata";
+                                            currentUpstreamDependencies: Array<
+                                                {
+                                                    __typename?: "Dataset";
+                                                    metadata: {
+                                                        __typename?: "DatasetMetadata";
+                                                        currentUpstreamDependencies: Array<
+                                                            {
+                                                                __typename?: "Dataset";
+                                                            } & DatasetBasicsFragment
+                                                        >;
+                                                    };
+                                                } & DatasetBasicsFragment
+                                            >;
+                                        };
+                                    } & DatasetBasicsFragment
+                                >;
+                            };
+                        } & DatasetBasicsFragment
+                    >;
+                };
+            } & DatasetBasicsFragment
+        >;
+        currentDownstreamDependencies: Array<
+            {
+                __typename?: "Dataset";
+                metadata: {
+                    __typename?: "DatasetMetadata";
+                    currentDownstreamDependencies: Array<
+                        {
+                            __typename?: "Dataset";
+                            metadata: {
+                                __typename?: "DatasetMetadata";
+                                currentDownstreamDependencies: Array<
+                                    {
+                                        __typename?: "Dataset";
+                                        metadata: {
+                                            __typename?: "DatasetMetadata";
+                                            currentDownstreamDependencies: Array<
+                                                {
+                                                    __typename?: "Dataset";
+                                                    metadata: {
+                                                        __typename?: "DatasetMetadata";
+                                                        currentDownstreamDependencies: Array<
+                                                            {
+                                                                __typename?: "Dataset";
+                                                            } & DatasetBasicsFragment
+                                                        >;
+                                                    };
+                                                } & DatasetBasicsFragment
+                                            >;
+                                        };
+                                    } & DatasetBasicsFragment
+                                >;
+                            };
+                        } & DatasetBasicsFragment
+                    >;
+                };
+            } & DatasetBasicsFragment
+        >;
+    };
+};
+
+export type DatasetMetadataSummaryFragment = {
+    __typename?: "Dataset";
+    metadata: {
+        __typename: "DatasetMetadata";
+        currentWatermark?: any | null;
+        currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
+        currentLicense?:
+            | ({ __typename?: "SetLicense" } & LicenseFragment)
+            | null;
+        currentTransform?:
+            | ({ __typename?: "SetTransform" } & DatasetTransformFragment)
+            | null;
+        currentSchema: {
+            __typename: "DataSchema";
+            format: DataSchemaFormat;
+            content: string;
+        };
+    };
+} & DatasetReadmeFragment &
+    DatasetLastUpdateFragment;
+
+export type DatasetOverviewFragment = {
+    __typename?: "Dataset";
+} & DatasetDescriptionFragment &
+    DatasetDetailsFragment &
+    DatasetReadmeFragment &
+    DatasetLastUpdateFragment;
+
+export type DatasetPageInfoFragment = {
+    __typename?: "PageBasedInfo";
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    currentPage: number;
+    totalPages?: number | null;
+};
+
+export type DatasetReadmeFragment = {
+    __typename?: "Dataset";
+    metadata: { __typename?: "DatasetMetadata"; currentReadme?: string | null };
+};
 
 export type DatasetSearchOverviewFragment = {
     __typename?: "Dataset";
@@ -1045,11 +1021,7 @@ export type DatasetSearchOverviewFragment = {
     lastUpdatedAt: any;
     metadata: {
         __typename?: "DatasetMetadata";
-        currentInfo: {
-            __typename?: "SetInfo";
-            description?: string | null;
-            keywords?: Array<string> | null;
-        };
+        currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
         currentLicense?:
             | ({ __typename?: "SetLicense" } & LicenseFragment)
             | null;
@@ -1060,6 +1032,26 @@ export type DatasetSearchOverviewFragment = {
         }>;
     };
 } & DatasetBasicsFragment;
+
+export type DatasetTransformContentFragment = {
+    __typename?: "TransformSql";
+    queries: Array<{
+        __typename?: "SqlQueryStep";
+        alias?: string | null;
+        query: string;
+    }>;
+};
+
+export type DatasetTransformFragment = {
+    __typename?: "SetTransform";
+    inputs: Array<{
+        __typename?: "TransformInput";
+        dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+    }>;
+    transform: {
+        __typename?: "TransformSql";
+    } & DatasetTransformContentFragment;
+};
 
 export type LicenseFragment = {
     __typename?: "SetLicense";
@@ -1132,12 +1124,7 @@ export type GithubLoginMutation = {
             };
             accountInfo: {
                 __typename?: "AccountInfo";
-                login: string;
-                email?: string | null;
-                name: string;
-                avatarUrl?: string | null;
-                gravatarId?: string | null;
-            };
+            } & AccountDetailsFragment;
         };
     };
 };
@@ -1177,19 +1164,120 @@ export type SearchDatasetsOverviewQuery = {
             >;
             pageInfo: {
                 __typename?: "PageBasedInfo";
-                hasNextPage: boolean;
-                hasPreviousPage: boolean;
-                currentPage: number;
-                totalPages?: number | null;
-            };
+            } & DatasetPageInfoFragment;
         };
     };
 };
 
+export const AccountDetailsFragmentDoc = gql`
+    fragment AccountDetails on AccountInfo {
+        login
+        name
+        email
+        avatarUrl
+        gravatarId
+    }
+`;
 export const DatasetDataSizeFragmentDoc = gql`
     fragment DatasetDataSize on DatasetData {
         numRecordsTotal
         estimatedSize
+    }
+`;
+export const DatasetDataFrameFragmentDoc = gql`
+    fragment DatasetDataFrame on DataQueryResult {
+        schema {
+            format
+            content
+        }
+        data {
+            format
+            content
+        }
+        __typename
+    }
+`;
+export const DatasetDataFragmentDoc = gql`
+    fragment DatasetData on Dataset {
+        data {
+            ...DatasetDataSize
+            tail(limit: $limit, dataFormat: JSON) {
+                ...DatasetDataFrame
+            }
+            __typename
+        }
+    }
+    ${DatasetDataSizeFragmentDoc}
+    ${DatasetDataFrameFragmentDoc}
+`;
+export const DatasetBasicsFragmentDoc = gql`
+    fragment DatasetBasics on Dataset {
+        id
+        kind
+        name
+        owner {
+            id
+            name
+        }
+    }
+`;
+export const DatasetLineageFragmentDoc = gql`
+    fragment DatasetLineage on Dataset {
+        metadata {
+            currentUpstreamDependencies {
+                ...DatasetBasics
+                metadata {
+                    currentUpstreamDependencies {
+                        ...DatasetBasics
+                        metadata {
+                            currentUpstreamDependencies {
+                                ...DatasetBasics
+                                metadata {
+                                    currentUpstreamDependencies {
+                                        ...DatasetBasics
+                                        metadata {
+                                            currentUpstreamDependencies {
+                                                ...DatasetBasics
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            currentDownstreamDependencies {
+                ...DatasetBasics
+                metadata {
+                    currentDownstreamDependencies {
+                        ...DatasetBasics
+                        metadata {
+                            currentDownstreamDependencies {
+                                ...DatasetBasics
+                                metadata {
+                                    currentDownstreamDependencies {
+                                        ...DatasetBasics
+                                        metadata {
+                                            currentDownstreamDependencies {
+                                                ...DatasetBasics
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+`;
+export const DatasetCurrentInfoFragmentDoc = gql`
+    fragment DatasetCurrentInfo on SetInfo {
+        description
+        keywords
     }
 `;
 export const LicenseFragmentDoc = gql`
@@ -1200,60 +1288,34 @@ export const LicenseFragmentDoc = gql`
         websiteUrl
     }
 `;
-export const DatasetMetadataDetailsFragmentDoc = gql`
-    fragment DatasetMetadataDetails on DatasetMetadata {
-        chain {
-            blocks(perPage: $numRecords, page: $numPage) {
-                totalCount
-                nodes {
-                    blockHash
-                    systemTime
-                }
-                pageInfo {
-                    hasNextPage
-                    hasPreviousPage
-                    totalPages
-                }
+export const DatasetTransformContentFragmentDoc = gql`
+    fragment DatasetTransformContent on Transform {
+        ... on TransformSql {
+            queries {
+                alias
+                query
             }
-        }
-        currentSchema(format: PARQUET_JSON) {
-            content
-        }
-        currentTransform {
-            inputs {
-                dataset {
-                    id
-                    name
-                    kind
-                    owner {
-                        id
-                        name
-                    }
-                }
-            }
-            transform {
-                ... on TransformSql {
-                    queries {
-                        alias
-                        query
-                    }
-                }
-            }
-        }
-        currentLicense {
-            ...License
         }
     }
-    ${LicenseFragmentDoc}
 `;
-export const DatasetBasicsFragmentDoc = gql`
-    fragment DatasetBasics on Dataset {
-        id
-        kind
-        name
-        owner {
-            id
-            name
+export const DatasetTransformFragmentDoc = gql`
+    fragment DatasetTransform on SetTransform {
+        inputs {
+            dataset {
+                ...DatasetBasics
+            }
+        }
+        transform {
+            ...DatasetTransformContent
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${DatasetTransformContentFragmentDoc}
+`;
+export const DatasetReadmeFragmentDoc = gql`
+    fragment DatasetReadme on Dataset {
+        metadata {
+            currentReadme
         }
     }
 `;
@@ -1311,40 +1373,105 @@ export const MetadataBlockFragmentDoc = gql`
         }
     }
 `;
-export const DatasetOverviewFragmentDoc = gql`
-    fragment DatasetOverview on Dataset {
-        ...DatasetBasics
-        createdAt
-        lastUpdatedAt
+export const DatasetPageInfoFragmentDoc = gql`
+    fragment DatasetPageInfo on PageBasedInfo {
+        hasNextPage
+        hasPreviousPage
+        currentPage
+        totalPages
+    }
+`;
+export const DatasetLastUpdateFragmentDoc = gql`
+    fragment DatasetLastUpdate on Dataset {
         metadata {
-            currentInfo {
-                description
-                keywords
-            }
-            currentLicense {
-                ...License
-            }
-            currentReadme
-            currentWatermark
-            currentSchema(format: PARQUET_JSON) {
-                format
-                content
-                __typename
-            }
-            __typename
             chain {
                 blocks(page: 0, perPage: 1) {
                     nodes {
                         ...MetadataBlock
                     }
                     totalCount
+                    pageInfo {
+                        ...DatasetPageInfo
+                    }
                 }
             }
         }
     }
-    ${DatasetBasicsFragmentDoc}
-    ${LicenseFragmentDoc}
     ${MetadataBlockFragmentDoc}
+    ${DatasetPageInfoFragmentDoc}
+`;
+export const DatasetMetadataSummaryFragmentDoc = gql`
+    fragment DatasetMetadataSummary on Dataset {
+        metadata {
+            currentInfo {
+                ...DatasetCurrentInfo
+            }
+            currentLicense {
+                ...License
+            }
+            currentWatermark
+            currentTransform {
+                ...DatasetTransform
+            }
+            currentSchema(format: PARQUET_JSON) {
+                format
+                content
+                __typename
+            }
+            __typename
+        }
+        ...DatasetReadme
+        ...DatasetLastUpdate
+    }
+    ${DatasetCurrentInfoFragmentDoc}
+    ${LicenseFragmentDoc}
+    ${DatasetTransformFragmentDoc}
+    ${DatasetReadmeFragmentDoc}
+    ${DatasetLastUpdateFragmentDoc}
+`;
+export const DatasetDescriptionFragmentDoc = gql`
+    fragment DatasetDescription on Dataset {
+        metadata {
+            currentInfo {
+                ...DatasetCurrentInfo
+            }
+            currentLicense {
+                ...License
+            }
+        }
+    }
+    ${DatasetCurrentInfoFragmentDoc}
+    ${LicenseFragmentDoc}
+`;
+export const DatasetDetailsFragmentDoc = gql`
+    fragment DatasetDetails on Dataset {
+        kind
+        createdAt
+        lastUpdatedAt
+        data {
+            estimatedSize
+            numRecordsTotal
+        }
+        metadata {
+            currentLicense {
+                ...License
+            }
+            currentWatermark
+        }
+    }
+    ${LicenseFragmentDoc}
+`;
+export const DatasetOverviewFragmentDoc = gql`
+    fragment DatasetOverview on Dataset {
+        ...DatasetDescription
+        ...DatasetDetails
+        ...DatasetReadme
+        ...DatasetLastUpdate
+    }
+    ${DatasetDescriptionFragmentDoc}
+    ${DatasetDetailsFragmentDoc}
+    ${DatasetReadmeFragmentDoc}
+    ${DatasetLastUpdateFragmentDoc}
 `;
 export const DatasetSearchOverviewFragmentDoc = gql`
     fragment DatasetSearchOverview on Dataset {
@@ -1353,8 +1480,7 @@ export const DatasetSearchOverviewFragmentDoc = gql`
         lastUpdatedAt
         metadata {
             currentInfo {
-                description
-                keywords
+                ...DatasetCurrentInfo
             }
             currentLicense {
                 ...License
@@ -1366,35 +1492,9 @@ export const DatasetSearchOverviewFragmentDoc = gql`
         }
     }
     ${DatasetBasicsFragmentDoc}
+    ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
 `;
-export const AccountInfoDocument = gql`
-    mutation AccountInfo($accessToken: String!) {
-        auth {
-            accountInfo(accessToken: $accessToken) {
-                login
-                name
-                email
-                avatarUrl
-                gravatarId
-            }
-        }
-    }
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class AccountInfoGQL extends Apollo.Mutation<
-    AccountInfoMutation,
-    AccountInfoMutationVariables
-> {
-    document = AccountInfoDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
 export const GetDatasetDataSqlRunDocument = gql`
     query getDatasetDataSQLRun($query: String!, $limit: Int!) {
         data {
@@ -1454,9 +1554,7 @@ export const GetDatasetHistoryDocument = gql`
                                 ...MetadataBlock
                             }
                             pageInfo {
-                                hasNextPage
-                                hasPreviousPage
-                                totalPages
+                                ...DatasetPageInfo
                             }
                         }
                     }
@@ -1466,6 +1564,7 @@ export const GetDatasetHistoryDocument = gql`
     }
     ${DatasetBasicsFragmentDoc}
     ${MetadataBlockFragmentDoc}
+    ${DatasetPageInfoFragmentDoc}
 `;
 
 @Injectable({
@@ -1481,122 +1580,8 @@ export class GetDatasetHistoryGQL extends Apollo.Query<
         super(apollo);
     }
 }
-export const GetDatasetLineageDocument = gql`
-    query getDatasetLineage(
-        $accountName: AccountName!
-        $datasetName: DatasetName!
-    ) {
-        datasets {
-            byOwnerAndName(
-                accountName: $accountName
-                datasetName: $datasetName
-            ) {
-                ...DatasetBasics
-                metadata {
-                    currentUpstreamDependencies {
-                        ...DatasetBasics
-                        metadata {
-                            currentUpstreamDependencies {
-                                ...DatasetBasics
-                                metadata {
-                                    currentUpstreamDependencies {
-                                        ...DatasetBasics
-                                        metadata {
-                                            currentUpstreamDependencies {
-                                                ...DatasetBasics
-                                                metadata {
-                                                    currentUpstreamDependencies {
-                                                        ...DatasetBasics
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    currentDownstreamDependencies {
-                        ...DatasetBasics
-                        metadata {
-                            currentDownstreamDependencies {
-                                ...DatasetBasics
-                                metadata {
-                                    currentDownstreamDependencies {
-                                        ...DatasetBasics
-                                        metadata {
-                                            currentDownstreamDependencies {
-                                                ...DatasetBasics
-                                                metadata {
-                                                    currentDownstreamDependencies {
-                                                        ...DatasetBasics
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    ${DatasetBasicsFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class GetDatasetLineageGQL extends Apollo.Query<
-    GetDatasetLineageQuery,
-    GetDatasetLineageQueryVariables
-> {
-    document = GetDatasetLineageDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const GetDatasetMetadataSchemaDocument = gql`
-    query getDatasetMetadataSchema(
-        $accountName: AccountName!
-        $datasetName: DatasetName!
-        $numRecords: Int
-        $numPage: Int
-    ) {
-        datasets {
-            byOwnerAndName(
-                accountName: $accountName
-                datasetName: $datasetName
-            ) {
-                ...DatasetBasics
-                metadata {
-                    ...DatasetMetadataDetails
-                }
-            }
-        }
-    }
-    ${DatasetBasicsFragmentDoc}
-    ${DatasetMetadataDetailsFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class GetDatasetMetadataSchemaGQL extends Apollo.Query<
-    GetDatasetMetadataSchemaQuery,
-    GetDatasetMetadataSchemaQueryVariables
-> {
-    document = GetDatasetMetadataSchemaDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const GetDatasetOverviewDocument = gql`
-    query getDatasetOverview(
+export const GetDatasetMainDataDocument = gql`
+    query getDatasetMainData(
         $accountName: AccountName!
         $datasetName: DatasetName!
         $limit: Int
@@ -1606,38 +1591,29 @@ export const GetDatasetOverviewDocument = gql`
                 accountName: $accountName
                 datasetName: $datasetName
             ) {
+                ...DatasetBasics
                 ...DatasetOverview
-                data {
-                    ...DatasetDataSize
-                    tail(limit: $limit, dataFormat: JSON) {
-                        schema {
-                            format
-                            content
-                        }
-                        data {
-                            format
-                            content
-                        }
-                        __typename
-                    }
-                    __typename
-                }
-                __typename
+                ...DatasetData
+                ...DatasetMetadataSummary
+                ...DatasetLineage
             }
         }
     }
+    ${DatasetBasicsFragmentDoc}
     ${DatasetOverviewFragmentDoc}
-    ${DatasetDataSizeFragmentDoc}
+    ${DatasetDataFragmentDoc}
+    ${DatasetMetadataSummaryFragmentDoc}
+    ${DatasetLineageFragmentDoc}
 `;
 
 @Injectable({
     providedIn: "root",
 })
-export class GetDatasetOverviewGQL extends Apollo.Query<
-    GetDatasetOverviewQuery,
-    GetDatasetOverviewQueryVariables
+export class GetDatasetMainDataGQL extends Apollo.Query<
+    GetDatasetMainDataQuery,
+    GetDatasetMainDataQueryVariables
 > {
-    document = GetDatasetOverviewDocument;
+    document = GetDatasetMainDataDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
@@ -1653,15 +1629,12 @@ export const GithubLoginDocument = gql`
                     tokenType
                 }
                 accountInfo {
-                    login
-                    email
-                    name
-                    avatarUrl
-                    gravatarId
+                    ...AccountDetails
                 }
             }
         }
     }
+    ${AccountDetailsFragmentDoc}
 `;
 
 @Injectable({
@@ -1718,15 +1691,13 @@ export const SearchDatasetsOverviewDocument = gql`
                 }
                 totalCount
                 pageInfo {
-                    hasNextPage
-                    hasPreviousPage
-                    currentPage
-                    totalPages
+                    ...DatasetPageInfo
                 }
             }
         }
     }
     ${DatasetSearchOverviewFragmentDoc}
+    ${DatasetPageInfoFragmentDoc}
 `;
 
 @Injectable({

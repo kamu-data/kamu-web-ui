@@ -7,10 +7,7 @@ query searchDatasetsOverview($query: String!, $perPage: Int, $page: Int) {
       }
       totalCount
       pageInfo {
-        hasNextPage
-        hasPreviousPage
-        currentPage
-        totalPages
+        ...DatasetPageInfo
       }
     }
   }

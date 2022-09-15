@@ -1,0 +1,22 @@
+fragment DatasetMetadataSummary on Dataset {
+  metadata {
+    currentInfo {
+      ...DatasetCurrentInfo
+    }
+    currentLicense {
+      ...License
+    }
+    currentWatermark
+    currentTransform {
+      ...DatasetTransform
+    }
+    currentSchema(format: PARQUET_JSON) {
+      format
+      content
+      __typename
+    }
+    __typename
+  }
+  ...DatasetReadme
+  ...DatasetLastUpdate
+}

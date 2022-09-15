@@ -1,10 +1,10 @@
+import { DatasetPageInfoFragment } from "./../api/kamu.graphql.interface";
 import {
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
-    DatasetMetadataDetailsFragment,
+    DatasetMetadataSummaryFragment,
     DatasetOverviewFragment,
     MetadataBlockFragment,
-    PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 import { DataRow, DatasetSchema } from "../interface/dataset.interface";
 
@@ -21,13 +21,13 @@ export interface DataUpdate {
 
 export interface MetadataSchemaUpdate {
     schema: DatasetSchema;
-    metadata: DatasetMetadataDetailsFragment;
-    pageInfo: PageBasedInfo;
+    metadata: DatasetMetadataSummaryFragment;
+    pageInfo: DatasetPageInfoFragment;
 }
 
 export interface DatasetHistoryUpdate {
     history: MetadataBlockFragment[];
-    pageInfo: PageBasedInfo;
+    pageInfo: DatasetPageInfoFragment;
 }
 
 export interface LineageUpdate {

@@ -1,0 +1,8 @@
+fragment DatasetTransformContent on Transform {
+  ... on TransformSql {
+    queries {
+      alias
+      query
+    }
+  }
+}

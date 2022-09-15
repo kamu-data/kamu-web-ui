@@ -7,11 +7,7 @@ mutation GithubLogin($code: String!) {
         tokenType
       }
       accountInfo {
-        login
-        email
-        name
-        avatarUrl
-        gravatarId
+        ...AccountDetails
       }
     }
   }

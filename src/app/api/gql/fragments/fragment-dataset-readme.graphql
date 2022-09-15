@@ -1,0 +1,5 @@
+fragment DatasetReadme on Dataset {
+  metadata {
+    currentReadme
+  }
+}

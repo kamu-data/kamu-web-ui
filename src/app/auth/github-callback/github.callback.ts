@@ -24,7 +24,7 @@ export class GithubCallbackComponent extends BaseComponent implements OnInit {
         this.trackSubscription(
             this.route.queryParams.subscribe((param: Params) => {
                 this.authApi
-                    .getUserInfoAndToken(param.code as string)
+                    .fetchUserInfoAndTokenFromGithubCallackCode(param.code as string)
                     .subscribe(() => this.navigationService.navigateToHome());
             }),
         );

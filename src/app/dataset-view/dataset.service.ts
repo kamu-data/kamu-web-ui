@@ -17,7 +17,6 @@ import {
     GetDatasetHistoryQuery,
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
-import { ModalService } from "../components/modal/modal.service";
 import { AppDatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import {
     DatasetHistoryUpdate,
@@ -26,14 +25,15 @@ import {
     OverviewDataUpdate,
 } from "./dataset.subscriptions.interface";
 import { isNil } from "lodash";
-import { logError } from "../common/app.helpers";
 import { DatasetApi } from "../api/dataset.api";
+import { ApolloError } from "@apollo/client";
+import { ErrorService } from "../services/error.service";
 
 @Injectable()
 export class AppDatasetService {
     constructor(
         private datasetApi: DatasetApi,
-        private modalService: ModalService,
+        private errorService: ErrorService,
         private appDatasetSubsService: AppDatasetSubscriptionsService,
     ) {}
 
@@ -49,9 +49,8 @@ export class AppDatasetService {
     }
 
     public requestDatasetMainData(info: DatasetInfo): void {
-        this.datasetApi
-            .getDatasetMainData(info)
-            .subscribe((data: GetDatasetMainDataQuery) => {
+        this.datasetApi.getDatasetMainData(info).subscribe(
+            (data: GetDatasetMainDataQuery) => {
                 if (isNil(data.datasets.byOwnerAndName)) {
                     throw new Error("Dataset not resolved by ID");
                 }
@@ -61,7 +60,11 @@ export class AppDatasetService {
                 this.dataTabDataUpdate(data);
                 this.metadataTabDataUpdate(data);
                 this.lineageTabDataUpdate(data);
-            });
+            },
+            (error: ApolloError) => {
+                this.errorService.processError(error);
+            },
+        );
     }
 
     public requestDatasetHistory(
@@ -71,27 +74,32 @@ export class AppDatasetService {
     ): void {
         this.datasetApi
             .getDatasetHistory({ ...info, numRecords, numPage })
-            .subscribe((data: GetDatasetHistoryQuery) => {
-                if (data.datasets.byOwnerAndName) {
-                    const dataset: DatasetBasicsFragment =
-                        data.datasets.byOwnerAndName;
-                    this.datasetChanges(dataset);
-                    const pageInfo: DatasetPageInfoFragment = Object.assign(
-                        {},
-                        data.datasets.byOwnerAndName.metadata.chain.blocks
-                            .pageInfo,
-                        { currentPage: numPage },
-                    );
-                    const historyUpdate: DatasetHistoryUpdate = {
-                        history: data.datasets.byOwnerAndName.metadata.chain
-                            .blocks.nodes as MetadataBlockFragment[],
-                        pageInfo,
-                    };
-                    this.appDatasetSubsService.changeDatasetHistory(
-                        historyUpdate,
-                    );
-                }
-            });
+            .subscribe(
+                (data: GetDatasetHistoryQuery) => {
+                    if (data.datasets.byOwnerAndName) {
+                        const dataset: DatasetBasicsFragment =
+                            data.datasets.byOwnerAndName;
+                        this.datasetChanges(dataset);
+                        const pageInfo: DatasetPageInfoFragment = Object.assign(
+                            {},
+                            data.datasets.byOwnerAndName.metadata.chain.blocks
+                                .pageInfo,
+                            { currentPage: numPage },
+                        );
+                        const historyUpdate: DatasetHistoryUpdate = {
+                            history: data.datasets.byOwnerAndName.metadata.chain
+                                .blocks.nodes as MetadataBlockFragment[],
+                            pageInfo,
+                        };
+                        this.appDatasetSubsService.changeDatasetHistory(
+                            historyUpdate,
+                        );
+                    }
+                },
+                (error: ApolloError) => {
+                    this.errorService.processError(error);
+                },
+            );
     }
 
     public requestDatasetDataSqlRun(query: string, limit: number): void {
@@ -106,14 +114,8 @@ export class AppDatasetService {
                 const dataUpdate: DataUpdate = { content, schema };
                 this.appDatasetSubsService.changeDatasetData(dataUpdate);
             },
-            (error: { message: string }) => {
-                this.modalService
-                    .error({
-                        title: "Request was malformed.",
-                        message: error.message,
-                        yesButtonText: "Close",
-                    })
-                    .catch((e) => logError(e));
+            (error: ApolloError) => {
+                this.errorService.processError(error);
             },
         );
     }

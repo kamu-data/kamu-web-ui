@@ -1,3 +1,4 @@
+import { ErrorTexts } from "./../common/app.values";
 import { DatasetPageInfoFragment } from "./../api/kamu.graphql.interface";
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { Injectable } from "@angular/core";
@@ -51,15 +52,18 @@ export class AppDatasetService {
     public requestDatasetMainData(info: DatasetInfo): void {
         this.datasetApi.getDatasetMainData(info).subscribe(
             (data: GetDatasetMainDataQuery) => {
-                if (isNil(data.datasets.byOwnerAndName)) {
-                    throw new Error("Dataset not resolved by ID");
-                }
-                this.datasetUpdate(data.datasets.byOwnerAndName);
+                if (data.datasets.byOwnerAndName) {
+                    this.datasetUpdate(data.datasets.byOwnerAndName);
 
-                this.overviewTabDataUpdate(data);
-                this.dataTabDataUpdate(data);
-                this.metadataTabDataUpdate(data);
-                this.lineageTabDataUpdate(data);
+                    this.overviewTabDataUpdate(data);
+                    this.dataTabDataUpdate(data);
+                    this.metadataTabDataUpdate(data);
+                    this.lineageTabDataUpdate(data);
+                } else {
+                    this.errorService.processError(
+                        new Error(ErrorTexts.ERROR_DATASET_NOT_FOUND),
+                    );
+                }
             },
             (error: ApolloError) => {
                 this.errorService.processError(error);
@@ -93,6 +97,10 @@ export class AppDatasetService {
                         };
                         this.appDatasetSubsService.changeDatasetHistory(
                             historyUpdate,
+                        );
+                    } else {
+                        this.errorService.processError(
+                            new Error(ErrorTexts.ERROR_DATASET_NOT_FOUND),
                         );
                     }
                 },

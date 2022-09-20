@@ -104,3 +104,11 @@ const language = 'typescript';
             });
     }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+export class ErrorTexts {
+    public static readonly ERROR_TITLE_REQUEST_FAILED = "Request was failed.";
+    public static readonly ERROR_NETWORK_DESCRIPTION =
+        "Check the internet connection.";
+    public static readonly ERROR_DATASET_NOT_FOUND = "Dataset not found.";
+}

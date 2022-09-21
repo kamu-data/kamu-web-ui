@@ -33,7 +33,10 @@ export class NavigationService {
     public navigateToDatasetView(params: DatasetNavigationParams): void {
         this.router
             .navigate([params.accountName, params.datasetName], {
-                queryParams: { tab: params.tab, page: params.page },
+                queryParams:
+                    params.page === 1
+                        ? { tab: params.tab }
+                        : { tab: params.tab, page: params.page },
             })
             .catch((e) => logError(e));
     }

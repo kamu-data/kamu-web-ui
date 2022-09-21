@@ -21,6 +21,7 @@ export class HistoryComponent extends BaseComponent implements OnInit {
         pageInfo: PageBasedInfo;
         history: MetadataBlockFragment[];
     };
+    public totalPages: number;
 
     constructor(private appDatasetSubsService: AppDatasetSubscriptionsService) {
         super();
@@ -34,6 +35,8 @@ export class HistoryComponent extends BaseComponent implements OnInit {
                         pageInfo: historyUpdate.pageInfo,
                         history: historyUpdate.history,
                     };
+                    if (historyUpdate.pageInfo.totalPages)
+                        this.totalPages = historyUpdate.pageInfo.totalPages;
                 },
             ),
         );

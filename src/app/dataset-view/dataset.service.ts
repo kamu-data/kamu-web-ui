@@ -30,7 +30,7 @@ import { DatasetApi } from "../api/dataset.api";
 import { ApolloError } from "@apollo/client";
 import { ErrorService } from "../services/error.service";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class AppDatasetService {
     constructor(
         private datasetApi: DatasetApi,
@@ -54,7 +54,6 @@ export class AppDatasetService {
             (data: GetDatasetMainDataQuery) => {
                 if (data.datasets.byOwnerAndName) {
                     this.datasetUpdate(data.datasets.byOwnerAndName);
-
                     this.overviewTabDataUpdate(data);
                     this.dataTabDataUpdate(data);
                     this.metadataTabDataUpdate(data);

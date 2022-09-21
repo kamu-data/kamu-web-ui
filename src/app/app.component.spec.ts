@@ -9,12 +9,14 @@ import { AuthApi } from "./api/auth.api";
 import { ModalService } from "./components/modal/modal.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ModalComponent } from "./components/modal/modal.component";
+import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 
 describe("AppComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [RouterTestingModule, ApolloTestingModule],
             declarations: [AppComponent, AppHeaderComponent, ModalComponent],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 AppSearchService,
                 SearchApi,

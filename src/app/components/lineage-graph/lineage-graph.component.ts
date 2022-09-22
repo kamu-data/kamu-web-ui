@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     EventEmitter,
     Input,
@@ -14,6 +15,7 @@ import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 @Component({
     selector: "app-lineage-graph",
     templateUrl: "./lineage-graph.component.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineageGraphComponent implements OnChanges, OnInit {
     @Input() public view: [number, number];
@@ -44,12 +46,14 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public ngOnChanges(changes: SimpleChanges): void {
         const clusters: SimpleChange = changes.clusters;
         const nodes: SimpleChange = changes.nodes;
-        if (clusters.currentValue && clusters.currentValue !== clusters.previousValue) {
+        if (
+            clusters.currentValue &&
+            clusters.currentValue !== clusters.previousValue
+        ) {
             const currentClusters = clusters.currentValue as ClusterNode[];
             this.graphClusters = currentClusters.filter(
                 (cluster: ClusterNode) =>
-                    cluster.childNodeIds &&
-                    cluster.childNodeIds.length !== 0,
+                    cluster.childNodeIds && cluster.childNodeIds.length !== 0,
             );
         }
         if (nodes.currentValue && nodes.currentValue !== nodes.previousValue) {

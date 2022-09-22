@@ -1,4 +1,11 @@
-import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    OnInit,
+    Output,
+} from "@angular/core";
 import {
     MetadataBlockFragment,
     PageBasedInfo,
@@ -10,6 +17,7 @@ import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.serv
 @Component({
     selector: "app-history",
     templateUrl: "./history.component.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HistoryComponent extends BaseComponent implements OnInit {
     @Output() onPageChangeEmit = new EventEmitter<{
@@ -23,7 +31,10 @@ export class HistoryComponent extends BaseComponent implements OnInit {
     };
     public totalPages: number;
 
-    constructor(private appDatasetSubsService: AppDatasetSubscriptionsService) {
+    constructor(
+        private appDatasetSubsService: AppDatasetSubscriptionsService,
+        private cdr: ChangeDetectorRef,
+    ) {
         super();
     }
 
@@ -37,6 +48,7 @@ export class HistoryComponent extends BaseComponent implements OnInit {
                     };
                     if (historyUpdate.pageInfo.totalPages)
                         this.totalPages = historyUpdate.pageInfo.totalPages;
+                    this.cdr.markForCheck();
                 },
             ),
         );

@@ -1,6 +1,13 @@
 import { shortHash } from "src/app/common/data.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+} from "@angular/core";
 import { DatasetSchema } from "../../../interface/dataset.interface";
 import AppValues from "../../../common/app.values";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
@@ -15,6 +22,7 @@ import {
 @Component({
     selector: "app-metadata",
     templateUrl: "./metadata.component.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;

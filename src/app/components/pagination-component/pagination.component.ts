@@ -1,10 +1,17 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+} from "@angular/core";
 import { PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-pagination",
     templateUrl: "./pagination.component.html",
     styleUrls: ["./pagination-component.sass"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginationComponent {
     @Input() public currentPage: number;

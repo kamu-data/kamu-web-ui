@@ -1,6 +1,7 @@
 import { DataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     Input,
@@ -34,7 +35,10 @@ export class DataComponent extends BaseComponent implements OnInit {
     public currentSchema?: DatasetSchema;
     public currentData: DataRow[];
 
-    constructor(private appDatasetSubsService: AppDatasetSubscriptionsService) {
+    constructor(
+        private appDatasetSubsService: AppDatasetSubscriptionsService,
+        private cdr: ChangeDetectorRef,
+    ) {
         super();
     }
 
@@ -51,6 +55,7 @@ export class DataComponent extends BaseComponent implements OnInit {
                 (dataUpdate: DataUpdate) => {
                     this.currentData = dataUpdate.content;
                     this.currentSchema = dataUpdate.schema;
+                    this.cdr.markForCheck();
                 },
             ),
         );

@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     ElementRef,
     EventEmitter,
@@ -21,6 +22,7 @@ import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 @Component({
     selector: "app-header",
     templateUrl: "./app-header.component.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppHeaderComponent extends BaseComponent {
     @Input() public searchValue: string;

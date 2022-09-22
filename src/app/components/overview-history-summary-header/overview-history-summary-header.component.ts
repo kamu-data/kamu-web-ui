@@ -1,15 +1,20 @@
-import { Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import {
     Account,
     MetadataBlockFragment,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
-import { descriptionForMetadataBlock, relativeTime, shortHash } from "src/app/common/data.helpers";
+import {
+    descriptionForMetadataBlock,
+    relativeTime,
+    shortHash,
+} from "src/app/common/data.helpers";
 
 @Component({
     selector: "app-overview-history-summary-header",
     templateUrl: "./overview-history-summary-header.component.html",
     styleUrls: ["./overview-history-summary-header.component.sass"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewHistorySummaryHeaderComponent {
     @Input() public metadataBlockFragment?: MetadataBlockFragment;
@@ -18,7 +23,7 @@ export class OverviewHistorySummaryHeaderComponent {
 
     get systemTime(): string {
         return this.metadataBlockFragment
-            ? this.metadataBlockFragment.systemTime as string
+            ? (this.metadataBlockFragment.systemTime as string)
             : "";
     }
 
@@ -30,7 +35,7 @@ export class OverviewHistorySummaryHeaderComponent {
 
     get blockHash(): string {
         return this.metadataBlockFragment
-            ? this.metadataBlockFragment.blockHash as string
+            ? (this.metadataBlockFragment.blockHash as string)
             : "";
     }
 

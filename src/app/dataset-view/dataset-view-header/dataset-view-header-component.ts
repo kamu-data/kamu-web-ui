@@ -1,4 +1,10 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+} from "@angular/core";
 import { SearchAdditionalHeaderButtonInterface } from "../../components/search-additional-buttons/search-additional-buttons.interface";
 import { searchAdditionalButtonsEnum } from "../../search/search.interface";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
@@ -7,6 +13,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 @Component({
     selector: "app-dataset-view-header",
     templateUrl: "./dataset-view-header.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetViewHeaderComponent {
     @Input() datasetBasics?: DatasetBasicsFragment;

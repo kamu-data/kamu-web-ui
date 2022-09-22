@@ -1,5 +1,7 @@
 import { NavigationService } from "./../services/navigation.service";
 import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     HostListener,
     OnDestroy,
@@ -32,6 +34,7 @@ import { logError, requireValue } from "../common/app.helpers";
     templateUrl: "./dataset.component.html",
     styleUrls: ["./dataset-view.component.sass"],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetComponent
     extends BaseComponent
@@ -55,6 +58,7 @@ export class DatasetComponent
         private activatedRoute: ActivatedRoute,
         private navigationService: NavigationService,
         private modalService: ModalService,
+        private cdr: ChangeDetectorRef,
     ) {
         super();
     }
@@ -87,6 +91,7 @@ export class DatasetComponent
             this.appDatasetService.onDatasetChanges.subscribe(
                 (basics: DatasetBasicsFragment) => {
                     this.datasetBasics = basics;
+                    this.cdr.markForCheck();
                 },
             ),
         );

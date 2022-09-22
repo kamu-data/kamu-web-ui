@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     ElementRef,
     EventEmitter,
@@ -18,6 +19,7 @@ import { logError } from "src/app/common/app.helpers";
     selector: "app-search-additional-buttons",
     templateUrl: "./search-additional-buttons.component.html",
     styleUrls: ["./search-additional-buttons.component.sass"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchAdditionalButtonsComponent implements OnInit {
     @Input()
@@ -32,11 +34,9 @@ export class SearchAdditionalButtonsComponent implements OnInit {
         this.isMinimizeSearchAdditionalButtons = AppValues.isMobileView();
 
         if (AppValues.isMobileView()) {
-            this.sidenavService.close()
-                .catch(e => logError(e));
+            this.sidenavService.close().catch((e) => logError(e));
         } else {
-            this.sidenavService.open()
-                .catch(e => logError(e));
+            this.sidenavService.open().catch((e) => logError(e));
         }
     }
 

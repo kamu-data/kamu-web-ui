@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+} from "@angular/core";
 import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import {
@@ -12,6 +20,7 @@ import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.serv
 @Component({
     selector: "app-lineage",
     templateUrl: "./lineage-component.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineageComponent extends BaseComponent implements OnInit {
     @Input() public lineageGraphView: [number, number];
@@ -22,7 +31,10 @@ export class LineageComponent extends BaseComponent implements OnInit {
     public lineageGraphClusters: ClusterNode[] = [];
     public isAvailableLineageGraph = false;
 
-    constructor(private appDatasetSubsService: AppDatasetSubscriptionsService) {
+    constructor(
+        private appDatasetSubsService: AppDatasetSubscriptionsService,
+        private cdr: ChangeDetectorRef,
+    ) {
         super();
     }
 
@@ -58,6 +70,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
             this.appDatasetSubsService.onLineageDataChanges.subscribe(
                 (lineageUpdate: LineageUpdate) => {
                     this.updateGraph(lineageUpdate);
+                    this.cdr.markForCheck();
                 },
             ),
         );

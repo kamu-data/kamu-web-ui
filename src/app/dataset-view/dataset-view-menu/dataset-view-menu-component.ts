@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     ElementRef,
     HostListener,
@@ -19,6 +20,7 @@ import { logError } from "src/app/common/app.helpers";
 @Component({
     selector: "app-dataset-view-menu",
     templateUrl: "./dataset-view-menu.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetViewMenuComponent implements OnInit {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
@@ -36,11 +38,9 @@ export class DatasetViewMenuComponent implements OnInit {
         this.isMinimizeSearchAdditionalButtons = AppValues.isMobileView();
 
         if (AppValues.isMobileView()) {
-            this.sidenavService.close()
-                .catch(e => logError(e));
+            this.sidenavService.close().catch((e) => logError(e));
         } else {
-            this.sidenavService.open()
-                .catch(e => logError(e));
+            this.sidenavService.open().catch((e) => logError(e));
         }
     }
 

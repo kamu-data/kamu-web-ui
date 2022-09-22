@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/dot-notation */
-import { ErrorTexts } from "./../common/app.values";
 import { ApolloError } from "@apollo/client/core";
 import { ModalService } from "./../components/modal/modal.service";
 import { TestBed } from "@angular/core/testing";
 import { ErrorService } from "./error.service";
+import { ErrorTexts } from "../common/errors.text";
 
 describe("ErrorService", () => {
     let service: ErrorService;

@@ -4,7 +4,9 @@ import { logError } from "../common/app.helpers";
 import { DatasetNavigationParams } from "../interface/navigation.interface";
 import ProjectLinks from "../project-links";
 
-@Injectable()
+@Injectable({
+    providedIn: "root",
+})
 export class NavigationService {
     constructor(private router: Router) {}
 

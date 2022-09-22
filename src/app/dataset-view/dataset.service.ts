@@ -1,4 +1,3 @@
-import { ErrorTexts } from "./../common/app.values";
 import { DatasetPageInfoFragment } from "./../api/kamu.graphql.interface";
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { Injectable } from "@angular/core";
@@ -29,6 +28,7 @@ import { isNil } from "lodash";
 import { DatasetApi } from "../api/dataset.api";
 import { ApolloError } from "@apollo/client";
 import { ErrorService } from "../services/error.service";
+import { ErrorTexts } from "../common/errors.text";
 
 @Injectable({ providedIn: "root" })
 export class AppDatasetService {
@@ -61,6 +61,7 @@ export class AppDatasetService {
                 } else {
                     this.errorService.processError(
                         new Error(ErrorTexts.ERROR_DATASET_NOT_FOUND),
+                        info.datasetName,
                     );
                 }
             },

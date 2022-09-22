@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 @Component({
     selector: "app-side-nav",
@@ -6,5 +6,6 @@ import { Component } from "@angular/core";
         <h2>Single-slot content projection</h2>
         <ng-content></ng-content>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SideNavComponent {}

@@ -1,5 +1,10 @@
 import { NavigationService } from "./services/navigation.service";
-import { Component, HostListener, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    HostListener,
+    OnInit,
+} from "@angular/core";
 import AppValues from "./common/app.values";
 import { AppSearchService } from "./search/search.service";
 import { filter, first, map } from "rxjs/operators";
@@ -27,6 +32,7 @@ import { logError } from "./common/app.helpers";
     selector: "app-root",
     templateUrl: "./app.component.html",
     styleUrls: ["./app.component.sass"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent extends BaseComponent implements OnInit {
     private readonly AnonymousAccountInfo: AccountInfo = {
@@ -77,7 +83,9 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     authentification(): void {
-        const accessToken: string | null = localStorage.getItem(AppValues.localStorageAccessToken);
+        const accessToken: string | null = localStorage.getItem(
+            AppValues.localStorageAccessToken,
+        );
         if (
             location.href.includes(ProjectLinks.urlLogin) ||
             location.href.includes(ProjectLinks.urlGithubCallback)
@@ -86,7 +94,9 @@ export class AppComponent extends BaseComponent implements OnInit {
         } else {
             if (typeof accessToken === "string" && !this.authApi.isAuthUser) {
                 this.trackSubscription(
-                    this.authApi.fetchUserInfoFromAccessToken(accessToken).subscribe(),
+                    this.authApi
+                        .fetchUserInfoFromAccessToken(accessToken)
+                        .subscribe(),
                 );
                 return;
             }

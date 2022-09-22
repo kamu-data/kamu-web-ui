@@ -6,6 +6,8 @@ import { MatSidenav } from "@angular/material/sidenav";
 import { SideNavService } from "../services/sidenav.service";
 import {
     AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     HostListener,
     OnInit,
@@ -34,6 +36,7 @@ export interface SearchFilters {
     selector: "app-search",
     templateUrl: "./search.component.html",
     styleUrls: ["./search.component.sass"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent
     extends BaseComponent
@@ -170,6 +173,7 @@ export class SearchComponent
         private appSearchService: AppSearchService,
         private sidenavService: SideNavService,
         private activatedRoute: ActivatedRoute,
+        private cdr: ChangeDetectorRef,
     ) {
         super();
     }
@@ -204,6 +208,7 @@ export class SearchComponent
                     this.tableData.tableSource = data.datasets;
                     this.tableData.pageInfo = data.pageInfo;
                     this.tableData.totalCount = data.totalCount;
+                    this.cdr.markForCheck();
                 },
             ),
         );

@@ -1,5 +1,5 @@
 import { NavigationService } from "./../../services/navigation.service";
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Params } from "@angular/router";
 import { AuthApi } from "../../api/auth.api";
 import { BaseComponent } from "src/app/common/base.component";
@@ -7,6 +7,7 @@ import { BaseComponent } from "src/app/common/base.component";
 @Component({
     selector: "app-github-callback",
     templateUrl: "./github-callback.component.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GithubCallbackComponent extends BaseComponent implements OnInit {
     constructor(
@@ -24,7 +25,9 @@ export class GithubCallbackComponent extends BaseComponent implements OnInit {
         this.trackSubscription(
             this.route.queryParams.subscribe((param: Params) => {
                 this.authApi
-                    .fetchUserInfoAndTokenFromGithubCallackCode(param.code as string)
+                    .fetchUserInfoAndTokenFromGithubCallackCode(
+                        param.code as string,
+                    )
                     .subscribe(() => this.navigationService.navigateToHome());
             }),
         );

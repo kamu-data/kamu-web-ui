@@ -1,5 +1,12 @@
 import { DataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+} from "@angular/core";
 import { DataRow, DatasetSchema } from "../../../interface/dataset.interface";
 import DataTabValues from "./mock.data";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
@@ -10,6 +17,7 @@ import * as monaco from "monaco-editor";
 @Component({
     selector: "app-data",
     templateUrl: "./data-component.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;

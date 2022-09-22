@@ -4,12 +4,14 @@ import {
     Output,
     EventEmitter,
     OnChanges,
+    ChangeDetectionStrategy,
 } from "@angular/core";
 
 @Component({
     selector: "app-custom-pagination",
     templateUrl: "custom-pagination.component.html",
     styleUrls: ["custom-pagination.component.sass"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomPaginationComponent implements OnChanges {
     @Input() date = "";

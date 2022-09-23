@@ -50,4 +50,10 @@ export class NavigationService {
     public navigateToOwnerView(ownerName: string): void {
         this.router.navigate([ownerName]).catch((e) => logError(e));
     }
+
+    public navigateToPageNotFound(): void {
+        this.router
+            .navigate([ProjectLinks.urlPageNotFound])
+            .catch((e) => logError(e));
+    }
 }

@@ -1,3 +1,5 @@
+import { CustomApolloError, InvalidSqlError } from "./../common/errors";
+import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetPageInfoFragment } from "./../api/kamu.graphql.interface";
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { Injectable } from "@angular/core";
@@ -28,7 +30,7 @@ import { isNil } from "lodash";
 import { DatasetApi } from "../api/dataset.api";
 import { ApolloError } from "@apollo/client";
 import { ErrorService } from "../services/error.service";
-import { ErrorTexts } from "../common/errors.text";
+import { DatasetNotFoundError } from "../common/errors";
 
 @Injectable({ providedIn: "root" })
 export class AppDatasetService {
@@ -36,6 +38,7 @@ export class AppDatasetService {
         private datasetApi: DatasetApi,
         private errorService: ErrorService,
         private appDatasetSubsService: AppDatasetSubscriptionsService,
+        private navigationSevice: NavigationService,
     ) {}
 
     private datasetChanges$: Subject<DatasetBasicsFragment> =
@@ -59,14 +62,11 @@ export class AppDatasetService {
                     this.metadataTabDataUpdate(data);
                     this.lineageTabDataUpdate(data);
                 } else {
-                    this.errorService.processError(
-                        new Error(ErrorTexts.ERROR_DATASET_NOT_FOUND),
-                        info.datasetName,
-                    );
+                    this.errorService.processError(new DatasetNotFoundError());
                 }
             },
-            (error: ApolloError) => {
-                this.errorService.processError(error);
+            (e: ApolloError) => {
+                this.errorService.processError(new CustomApolloError(e));
             },
         );
     }
@@ -100,12 +100,12 @@ export class AppDatasetService {
                         );
                     } else {
                         this.errorService.processError(
-                            new Error(ErrorTexts.ERROR_DATASET_NOT_FOUND),
+                            new DatasetNotFoundError(),
                         );
                     }
                 },
-                (error: ApolloError) => {
-                    this.errorService.processError(error);
+                (e: ApolloError) => {
+                    this.errorService.processError(new CustomApolloError(e));
                 },
             );
     }
@@ -122,8 +122,8 @@ export class AppDatasetService {
                 const dataUpdate: DataUpdate = { content, schema };
                 this.appDatasetSubsService.changeDatasetData(dataUpdate);
             },
-            (error: ApolloError) => {
-                this.errorService.processError(error);
+            () => {
+                this.errorService.processError(new InvalidSqlError());
             },
         );
     }

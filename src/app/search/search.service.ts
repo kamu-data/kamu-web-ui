@@ -1,5 +1,6 @@
-import { ErrorService } from "./../services/error.service";
 import { ApolloError } from "@apollo/client/core";
+import { CustomApolloError } from "./../common/errors";
+import { ErrorService } from "./../services/error.service";
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { SearchApi } from "../api/search.api";
@@ -68,8 +69,8 @@ export class AppSearchService {
                     currentPage: page + 1 || 1,
                 });
             },
-            (error: ApolloError) => {
-                this.errorService.processError(error);
+            (e: ApolloError) => {
+                this.errorService.processError(new CustomApolloError(e));
             },
         );
     }

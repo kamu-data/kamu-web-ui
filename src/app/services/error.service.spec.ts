@@ -1,9 +1,10 @@
-/* eslint-disable @typescript-eslint/dot-notation */
+import { ErrorTexts } from "./../common/errors.text";
 import { ApolloError } from "@apollo/client/core";
+import { CustomApolloError, InvalidSqlError } from "./../common/errors";
+/* eslint-disable @typescript-eslint/dot-notation */
 import { ModalService } from "./../components/modal/modal.service";
 import { TestBed } from "@angular/core/testing";
 import { ErrorService } from "./error.service";
-import { ErrorTexts } from "../common/errors.text";
 
 describe("ErrorService", () => {
     let service: ErrorService;
@@ -19,34 +20,33 @@ describe("ErrorService", () => {
         await expect(service).toBeTruthy();
     });
 
-    it("should show modal window when error occured", () => {
-        const mockErrorMessage = "Mock error message";
+    it("should show modal window when error sql query incorrect", () => {
         const modalServiceSpy: jasmine.Spy = spyOn(
             service["modalService"],
             "error",
         ).and.callThrough();
-        service.processError(new Error(mockErrorMessage));
+        service.processError(new InvalidSqlError());
         expect(modalServiceSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({ message: mockErrorMessage }),
+            jasmine.objectContaining({
+                message: ErrorTexts.ERROR_BAD_SQL_QUERY,
+            }),
         );
     });
 
-    it("should show modal window when connection was lost", () => {
+    it("should show modal window when connection was lost", async () => {
         const mockErrorMessage = "Mock apollo error message";
         const modalServiceSpy: jasmine.Spy = spyOn(
             service["modalService"],
             "error",
         ).and.callThrough();
         service.processError(
-            new ApolloError({
-                errorMessage: mockErrorMessage,
-                networkError: new Error("Problem with internet"),
-            }),
+            new CustomApolloError(
+                new ApolloError({
+                    errorMessage: mockErrorMessage,
+                    networkError: new Error("Problem with internet"),
+                }),
+            ),
         );
-        expect(modalServiceSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
-                message: ErrorTexts.ERROR_NETWORK_DESCRIPTION,
-            }),
-        );
+        await expect(modalServiceSpy).toHaveBeenCalled();
     });
 });

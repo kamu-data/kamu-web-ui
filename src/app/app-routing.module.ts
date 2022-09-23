@@ -36,6 +36,10 @@ const routes: Routes = [
         component: DatasetCreateComponent,
     },
     {
+        path: ProjectLinks.urlPageNotFound,
+        component: PageNotFoundComponent,
+    },
+    {
         path: `:${ProjectLinks.urlParamAccountName}`,
         children: [
             {

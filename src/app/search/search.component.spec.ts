@@ -1,6 +1,5 @@
 import { AuthApi } from "./../api/auth.api";
 import { SearchApi } from "./../api/search.api";
-import { SideNavService } from "./../services/sidenav.service";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SearchComponent } from "./search.component";
@@ -22,7 +21,6 @@ describe("SearchComponent", () => {
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 NavigationService,
-                SideNavService,
                 AppSearchService,
                 AuthApi,
                 SearchApi,

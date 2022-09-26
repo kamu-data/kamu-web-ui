@@ -3,7 +3,7 @@ import { AppSearchService } from "./search.service";
 import { DatasetSearchResult } from "../interface/search.interface";
 import AppValues from "../common/app.values";
 import { MatSidenav } from "@angular/material/sidenav";
-import { SideNavService } from "../services/sidenav.service";
+import { SideNavHelper } from "../common/sidenav.helper";
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -47,6 +47,7 @@ export class SearchComponent
     public searchValue = "";
     public currentPage = 1; // TODO: Should be zero-based and only offset for display
     public isMinimizeSearchAdditionalButtons = false;
+    private sideNavHelper: SideNavHelper;
 
     private sortOptions: { value: string; label: string; active: boolean }[] = [
         { value: "best", label: "Best match", active: true },
@@ -162,16 +163,15 @@ export class SearchComponent
         this.isMobileView = AppValues.isMobileView();
 
         if (AppValues.isMobileView()) {
-            this.sidenavService.close().catch((e) => logError(e));
+            this.sideNavHelper.close().catch((e) => logError(e));
         } else {
-            this.sidenavService.open().catch((e) => logError(e));
+            this.sideNavHelper.open().catch((e) => logError(e));
         }
     }
 
     constructor(
         private navigationService: NavigationService,
         private appSearchService: AppSearchService,
-        private sidenavService: SideNavService,
         private activatedRoute: ActivatedRoute,
         private cdr: ChangeDetectorRef,
     ) {
@@ -184,7 +184,7 @@ export class SearchComponent
 
     public ngOnInit(): void {
         if (this.sidenav) {
-            this.sidenavService.setSidenav(this.sidenav);
+            this.sideNavHelper = new SideNavHelper(this.sidenav);
             this.checkWindowSize();
         }
         this.initTableData();

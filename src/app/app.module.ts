@@ -30,7 +30,6 @@ import { AppSearchService } from "./search/search.service";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatSidenavModule } from "@angular/material/sidenav";
-import { SideNavService } from "./services/sidenav.service";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatButtonModule } from "@angular/material/button";
 import { SearchModule } from "./search/search.module";
@@ -83,7 +82,6 @@ const Services = [
     AppDatasetService,
     NavigationService,
     AppDatasetSubscriptionsService,
-    SideNavService,
     {
         provide: APOLLO_OPTIONS,
         useFactory: (httpLink: HttpLink, appConfig: AppConfigService) => {

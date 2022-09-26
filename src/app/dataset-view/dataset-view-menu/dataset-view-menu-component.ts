@@ -14,7 +14,7 @@ import {
 } from "../dataset-view.interface";
 import { Clipboard } from "@angular/cdk/clipboard";
 import AppValues from "../../common/app.values";
-import { SideNavService } from "../../services/sidenav.service";
+import { SideNavHelper } from "../../common/sidenav.helper";
 import { logError } from "src/app/common/app.helpers";
 
 @Component({
@@ -32,27 +32,25 @@ export class DatasetViewMenuComponent implements OnInit {
 
     public clipboardKamuCli = AppValues.clipboardKamuCli;
     public clipboardKafka = AppValues.clipboardKafka;
+    private sideNavHelper: SideNavHelper;
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
         this.isMinimizeSearchAdditionalButtons = AppValues.isMobileView();
 
         if (AppValues.isMobileView()) {
-            this.sidenavService.close().catch((e) => logError(e));
+            this.sideNavHelper.close().catch((e) => logError(e));
         } else {
-            this.sidenavService.open().catch((e) => logError(e));
+            this.sideNavHelper.open().catch((e) => logError(e));
         }
     }
 
-    constructor(
-        private clipboard: Clipboard,
-        private sidenavService: SideNavService,
-    ) {}
+    constructor(private clipboard: Clipboard) {}
 
     public ngOnInit(): void {
         this.checkWindowSize();
         if (this.sidenav) {
-            this.sidenavService.setSidenav(this.sidenav);
+            this.sideNavHelper = new SideNavHelper(this.sidenav);
         }
     }
 

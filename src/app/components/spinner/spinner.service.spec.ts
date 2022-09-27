@@ -13,4 +13,14 @@ describe("SpinnerService", () => {
     it("should be created", async () => {
         await expect(service).toBeTruthy();
     });
+
+    [true, false].forEach((expectation: boolean) => {
+        it(`should be call _isLoading subject with ${String(
+            expectation,
+        )}`, () => {
+            const isLoadingSpy = spyOn(service["_isLoading$"], "next");
+            expectation ? service.show() : service.hide();
+            expect(isLoadingSpy).toHaveBeenCalledWith(expectation);
+        });
+    });
 });

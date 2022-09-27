@@ -162,7 +162,7 @@ export class SearchComponent
         this.isMinimizeSearchAdditionalButtons = AppValues.isMobileView();
         this.isMobileView = AppValues.isMobileView();
 
-        if (AppValues.isMobileView()) {
+        if (this.isMobileView) {
             this.sideNavHelper.close().catch((e) => logError(e));
         } else {
             this.sideNavHelper.open().catch((e) => logError(e));

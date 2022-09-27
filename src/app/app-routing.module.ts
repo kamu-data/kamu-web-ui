@@ -12,7 +12,7 @@ import ProjectLinks from "./project-links";
 
 const githubUrl = `https://github.com/login/oauth/authorize?scope=user:email&client_id=${environment.github_client_id}`;
 
-const routes: Routes = [
+export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.urlSearch, pathMatch: "full" },
     {
         path: ProjectLinks.urlGithubCallback,

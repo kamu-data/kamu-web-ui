@@ -18,7 +18,7 @@ import {
 } from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class SearchApi {
     constructor(
         private searchDatasetsAutocompleteGQL: SearchDatasetsAutocompleteGQL,

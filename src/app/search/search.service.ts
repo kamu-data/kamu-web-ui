@@ -10,7 +10,7 @@ import {
     SearchDatasetsOverviewQuery,
 } from "../api/kamu.graphql.interface";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class AppSearchService {
     private inputQueryChanges$: Subject<string> = new Subject<string>();
     private overviewSearchChanges$: Subject<DatasetSearchResult> =

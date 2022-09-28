@@ -14,4 +14,14 @@ export const mockDataDataset: DatasetAutocompleteItem[] = [
         },
         __typename: TypeNames.datasetType,
     },
+
+    {
+        dataset: {
+            id: "id",
+            kind: DatasetKind.Derivative,
+            name: "mockName",
+            owner: { id: "omnerId", name: "ownerName" },
+        },
+        __typename: TypeNames.allDataType,
+    },
 ];

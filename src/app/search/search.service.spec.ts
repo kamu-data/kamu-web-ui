@@ -9,7 +9,7 @@ import {
     DatasetSearchResult,
 } from "../interface/search.interface";
 import { mockDataDataset } from "./search.mock.data";
-import { of } from "rxjs";
+import { of, throwError } from "rxjs";
 
 describe("SerchService", () => {
     let service: AppSearchService;
@@ -86,6 +86,24 @@ describe("SerchService", () => {
             .subscribe((data: DatasetAutocompleteItem[]) => {
                 void expect(data).toEqual(mockDataDataset);
                 expect(autocompleteSearchChangesSpy).toHaveBeenCalledWith(data);
+            });
+    });
+
+    it("should be call autocompleteSearchChanges with empty array", () => {
+        const mockSearchQuery = "Test string";
+        const autocompleteSearchChangesSpy = spyOn(
+            service,
+            "autocompleteSearchChanges",
+        ).and.callThrough();
+        spyOn(
+            service["searchApi"],
+            "autocompleteDatasetSearch",
+        ).and.returnValue(throwError("error"));
+        service.autocompleteDatasetSearch(mockSearchQuery);
+        service["searchApi"]
+            ["autocompleteDatasetSearch"](mockSearchQuery)
+            .subscribe(undefined, () => {
+                expect(autocompleteSearchChangesSpy).toHaveBeenCalledWith([]);
             });
     });
 });

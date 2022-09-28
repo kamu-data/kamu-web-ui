@@ -52,7 +52,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     ];
 
     @HostListener("window:resize", ["$event"])
-    private checkWindowSize(): void {
+    checkWindowSize(): void {
         this.checkView();
     }
 

@@ -13,7 +13,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { environment } from "../environments/environment";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import {
@@ -139,6 +139,7 @@ const MatModules = [
             registrationStrategy: "registerWhenStable:30000",
         }),
         NgbModule,
+        NgbTypeaheadModule,
         //GraphQLModule,
         HttpClientModule,
         CdkTableModule,

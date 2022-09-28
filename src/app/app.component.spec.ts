@@ -1,20 +1,35 @@
-import { AppHeaderComponent } from "./components/app-header/app-header.component";
-import { SearchApi } from "./api/search.api";
-import { TestBed } from "@angular/core/testing";
+import { FormsModule } from "@angular/forms";
+import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { mockDataDataset } from "./search/search.mock.data";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { MatMenuModule } from "@angular/material/menu";
 import { RouterTestingModule } from "@angular/router/testing";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { AuthApi } from "./api/auth.api";
+import { SearchApi } from "./api/search.api";
 import { AppComponent } from "./app.component";
+import AppValues from "./common/app.values";
+import { AppHeaderComponent } from "./components/app-header/app-header.component";
+import { ModalComponent } from "./components/modal/modal.component";
+import { ModalService } from "./components/modal/modal.service";
 import { AppSearchService } from "./search/search.service";
 import { NavigationService } from "./services/navigation.service";
-import { AuthApi } from "./api/auth.api";
-import { ModalService } from "./components/modal/modal.service";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { ModalComponent } from "./components/modal/modal.component";
+import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 
 describe("AppComponent", () => {
+    let component: AppComponent;
+    let fixture: ComponentFixture<AppComponent>;
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [RouterTestingModule, ApolloTestingModule],
+            imports: [
+                RouterTestingModule,
+                ApolloTestingModule,
+                MatMenuModule,
+                NgbTypeaheadModule,
+                FormsModule,
+            ],
             declarations: [AppComponent, AppHeaderComponent, ModalComponent],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 AppSearchService,
                 SearchApi,
@@ -23,18 +38,100 @@ describe("AppComponent", () => {
                 ModalService,
             ],
         }).compileComponents();
+        fixture = TestBed.createComponent(AppComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
     });
 
     it("should create the app", async () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        const app = fixture.componentInstance;
-        await expect(app).toBeTruthy();
+        await expect(component).toBeTruthy();
     });
 
     it(`should have as logo 'kamu-client'`, async () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        const app: AppComponent = fixture.componentInstance;
+        await expect(component.appLogo).toEqual(
+            "/assets/icons/kamu_logo_icon.svg",
+        );
+    });
 
-        await expect(app.appLogo).toEqual("/assets/icons/kamu_logo_icon.svg");
+    it("should check call authentification method in onInit ", async () => {
+        const authentificationSpy = spyOn(component, "authentification");
+        component.ngOnInit();
+        await expect(authentificationSpy).toHaveBeenCalled();
+    });
+
+    it("should check call checkWindowSize method", async () => {
+        const checkWindowSizeSpy = spyOn(component, "checkWindowSize");
+        window.dispatchEvent(new Event("resize"));
+        await expect(checkWindowSizeSpy).toHaveBeenCalled();
+        await expect(component.isMobileView).toEqual(AppValues.isMobileView());
+    });
+
+    it("should check call onClickAppLogo method", async () => {
+        const navigateToSearchSpy = spyOn(
+            component["navigationService"],
+            "navigateToSearch",
+        ).and.returnValue();
+        component.onClickAppLogo();
+        await expect(navigateToSearchSpy).toHaveBeenCalled();
+    });
+
+    it("should check call onAddNew method", async () => {
+        const navigateToDatasetCreateSpy = spyOn(
+            component["navigationService"],
+            "navigateToDatasetCreate",
+        ).and.returnValue();
+        component.onAddNew();
+        await expect(navigateToDatasetCreateSpy).toHaveBeenCalled();
+    });
+
+    it("should check call onLogOut method", async () => {
+        const logOutSpy = spyOn(
+            component["authApi"],
+            "logOut",
+        ).and.returnValue();
+        component.onLogOut();
+        await expect(logOutSpy).toHaveBeenCalled();
+    });
+
+    it("should check call onLogin method", async () => {
+        const loginSpy = spyOn(
+            component["navigationService"],
+            "navigateToLogin",
+        ).and.returnValue();
+        component.onLogin();
+        await expect(loginSpy).toHaveBeenCalled();
+    });
+
+    it("should check call onSelectDataset method and navigate to dataset", async () => {
+        const navigateToDatasetViewSpy = spyOn(
+            component["navigationService"],
+            "navigateToDatasetView",
+        ).and.returnValue();
+        component.onSelectDataset(mockDataDataset[0]);
+        await expect(navigateToDatasetViewSpy).toHaveBeenCalled();
+    });
+
+    it("should check call onSelectDataset method and navigate to search", async () => {
+        const navigateToSearchSpy = spyOn(
+            component["navigationService"],
+            "navigateToSearch",
+        ).and.returnValue();
+        component.onSelectDataset(mockDataDataset[1]);
+        await expect(navigateToSearchSpy).toHaveBeenCalled();
+    });
+
+    it("should check call onOpenUserInfo", async () => {
+        const consoleSpy = spyOn(console, "info").and.callThrough();
+        component.onOpenUserInfo();
+        await expect(consoleSpy).toHaveBeenCalled();
+    });
+
+    it("should check call onUserProfile", async () => {
+        const modalSpy = spyOn(
+            component["modalService"],
+            "warning",
+        ).and.callThrough();
+        component.onUserProfile();
+        await expect(modalSpy).toHaveBeenCalled();
     });
 });

@@ -33,7 +33,9 @@ describe("NavigationService", () => {
     });
 
     it("should be test navigate to login", () => {
-        const routerSpy = spyOn(router, "navigate").and.callThrough();
+        const routerSpy = spyOn(router, "navigate").and.returnValue(
+            Promise.resolve(true),
+        );
         service.navigateToLogin();
         expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.urlLogin]);
     });
@@ -47,7 +49,8 @@ describe("NavigationService", () => {
 
     it("should be test navigate to website", async () => {
         const mockWebsite = "http://google.com";
-        const windowSpy = spyOn(window, "open").and.callThrough();
+        const windowMock = { document: {} } as Window;
+        const windowSpy = spyOn(window, "open").and.returnValue(windowMock);
         service.navigateToWebsite(mockWebsite);
         await expect(windowSpy).toHaveBeenCalled();
     });

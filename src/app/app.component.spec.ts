@@ -1,6 +1,6 @@
 import { FormsModule } from "@angular/forms";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
-import { mockDataDataset } from "./search/search.mock.data";
+import { mockDataDataset } from "./search/mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatMenuModule } from "@angular/material/menu";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -118,12 +118,6 @@ describe("AppComponent", () => {
         ).and.returnValue();
         component.onSelectDataset(mockDataDataset[1]);
         await expect(navigateToSearchSpy).toHaveBeenCalled();
-    });
-
-    it("should check call onOpenUserInfo", async () => {
-        const consoleSpy = spyOn(console, "info").and.callThrough();
-        component.onOpenUserInfo();
-        await expect(consoleSpy).toHaveBeenCalled();
     });
 
     it("should check call onUserProfile", async () => {

@@ -1,5 +1,4 @@
 /* eslint-disable no-unexpected-multiline */
-import { ApolloTestingModule } from "apollo-angular/testing";
 import { Apollo } from "apollo-angular";
 import { SearchApi } from "./../api/search.api";
 import { TestBed } from "@angular/core/testing";
@@ -8,7 +7,7 @@ import {
     DatasetAutocompleteItem,
     DatasetSearchResult,
 } from "../interface/search.interface";
-import { mockDataDataset } from "./search.mock.data";
+import { mockDataDataset } from "./mock.data";
 import { of, throwError } from "rxjs";
 
 describe("SerchService", () => {
@@ -17,7 +16,6 @@ describe("SerchService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [SearchApi, Apollo],
-            imports: [ApolloTestingModule],
         });
         service = TestBed.inject(AppSearchService);
     });

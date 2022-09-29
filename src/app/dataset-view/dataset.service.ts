@@ -29,7 +29,7 @@ import { isNil } from "lodash";
 import { logError } from "../common/app.helpers";
 import { DatasetApi } from "../api/dataset.api";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class AppDatasetService {
     constructor(
         private datasetApi: DatasetApi,

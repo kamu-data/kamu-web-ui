@@ -13,36 +13,42 @@
             [value]="datasetViewType"
         >
             <mat-button-toggle
+                data-test-id="navigateToOverview"
                 value="overview"
                 [checked]="isDatasetViewTypeOverview"
                 (click)="onNavigateToOverview()"
                 >Overview
             </mat-button-toggle>
             <mat-button-toggle
+                data-test-id="navigateToData"
                 value="data"
                 [checked]="isDatasetViewTypeData"
                 (click)="onNavigateToData()"
                 >Data
             </mat-button-toggle>
             <mat-button-toggle
+                data-test-id="navigateToMetadata"
                 value="metadata"
                 [checked]="isDatasetViewTypeMetadata"
                 (click)="onNavigateToMetadata()"
                 >Metadata
             </mat-button-toggle>
             <mat-button-toggle
+                data-test-id="navigateToHistory"
                 value="history"
                 [checked]="isDatasetViewTypeHistory"
                 (click)="onNavigateToHistory()"
                 >History
             </mat-button-toggle>
             <mat-button-toggle
+                data-test-id="navigateToLineage"
                 value="lineage"
                 [checked]="isDatasetViewTypeLineage"
                 (click)="onNavigateToLineage()"
                 >Lineage
             </mat-button-toggle>
             <mat-button-toggle
+                data-test-id="navigateToDiscussions"
                 value="discussions"
                 [checked]="isDatasetViewTypeDiscussions"
                 (click)="onNavigateToDiscussions()"
@@ -72,7 +78,11 @@
                     <mat-icon>arrow_drop_down</mat-icon>
                 </button>
 
-                <mat-menu #menu2="matMenu" [hasBackdrop]="false">
+                <mat-menu
+                    #menu2="matMenu"
+                    [hasBackdrop]="false"
+                    data-test-id="menu"
+                >
                     <div
                         class="SelectMenu-modal notifications-component-menu-modal"
                     >
@@ -161,6 +171,7 @@
                                                                             clipboardKamuCli
                                                                         )
                                                                     "
+                                                        data-test-id="copyToClipboard"
                                                         aria-label="Copy to clipboard"
                                                         class="btn btn-sm btn-gray clipboard-btn"
                                                         data-copy-feedback="Copied!"

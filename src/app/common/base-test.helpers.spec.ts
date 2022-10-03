@@ -1,0 +1,47 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ComponentFixture } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
+import { DebugElement } from "@angular/core";
+
+export function findElement<T>(
+    fixture: ComponentFixture<T>,
+    selector: string,
+): DebugElement {
+    return fixture.debugElement.query(By.css(selector));
+}
+
+export function findNativeElement<T>(
+    fixture: ComponentFixture<T>,
+    selector: string,
+): HTMLElement {
+    return findElement(fixture, selector).nativeElement;
+}
+
+export function emitClickOnElement<T>(
+    fixture: ComponentFixture<T>,
+    selector: string,
+): void {
+    findNativeElement(fixture, selector).click();
+}
+
+export function getSpy(object: any, method: string): jasmine.Spy<any> {
+    return spyOn<any>(object, method).and.callThrough();
+}
+
+export function checkHint(
+    fixture: ComponentFixture<any>,
+    selector: string,
+    expectedHint: string,
+): void {
+    const element: HTMLElement = findNativeElement(fixture, selector);
+    void expect(element.innerText.trim()).toEqual(expectedHint);
+}
+
+export function findElementByDataTestId<T>(
+    fixture: ComponentFixture<T>,
+    id: string,
+): HTMLElement {
+    return fixture.debugElement.query(By.css(`[data-test-id="${id}"]`))
+        .nativeElement;
+}

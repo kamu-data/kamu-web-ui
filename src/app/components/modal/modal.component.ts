@@ -5,6 +5,7 @@ import {
     ViewContainerRef,
     ComponentFactoryResolver,
     ComponentRef,
+    ChangeDetectorRef,
 } from "@angular/core";
 
 import { BlankComponent } from "./blank.component";
@@ -51,6 +52,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
     constructor(
         private componentFactoryResolver: ComponentFactoryResolver,
         private modalService: ModalService,
+        private cdr: ChangeDetectorRef,
         private location: Location,
     ) {
         super();
@@ -62,6 +64,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
                 .getCommand()
                 .subscribe((command: ModalCommandInterface) => {
                     this._execute(command);
+                    this.cdr.markForCheck();
                 }),
         );
     }

@@ -1,27 +1,27 @@
-/* eslint-disable @typescript-eslint/dot-notation */
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { TestBed } from "@angular/core/testing";
 import { DatasetApi } from "../api/dataset.api";
-import { ErrorService } from "../services/error.service";
 import { AppDatasetService } from "./dataset.service";
 import { AppDatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import { ModalService } from "../components/modal/modal.service";
 
 describe("AppDatasetService", () => {
     let service: AppDatasetService;
+    let datasetApi: DatasetApi;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [ApolloTestingModule],
             providers: [
-                ErrorService,
+
                 DatasetApi,
                 AppDatasetSubscriptionsService,
                 ModalService,
             ],
         });
         service = TestBed.inject(AppDatasetService);
+        datasetApi = TestBed.inject(DatasetApi);
     });
 
     it("should be created", async () => {
@@ -34,7 +34,7 @@ describe("AppDatasetService", () => {
             datasetName: "Test datasetName",
         };
         const getDatasetMainDataSpy: jasmine.Spy = spyOn(
-            service["datasetApi"],
+            datasetApi,
             "getDatasetMainData",
         ).and.callThrough();
         service.requestDatasetMainData(mockDatasetInfo);

@@ -38,32 +38,23 @@ interface KamuErrorVisitor {
 }
 
 export class KamuErrorHandler implements KamuErrorVisitor {
-    errorMessage: string;
-    navigationService: NavigationService;
-    modalService: ModalService;
     constructor(
-        errorMessage: string,
-        navigationService: NavigationService,
-        modalService: ModalService,
-    ) {
-        this.errorMessage = errorMessage;
-        this.navigationService = navigationService;
-        this.modalService = modalService;
-    }
+        private navigationService: NavigationService,
+        private modalService: ModalService,
+    ) {}
 
     public visitApolloError(
         e: CustomApolloError,
         apolloError: ApolloError,
     ): void {
-        this.modalService
-            .error({
-                title: ErrorTexts.ERROR_TITLE_REQUEST_FAILED,
-                message: apolloError.networkError
-                    ? ErrorTexts.ERROR_NETWORK_DESCRIPTION
-                    : ErrorTexts.ERROR_TECHNICAL_SUPPORT,
-                yesButtonText: "Close",
-            })
-            .catch((e) => logError(e));
+        this.modalService.error({
+            title: ErrorTexts.ERROR_TITLE_REQUEST_FAILED,
+            message: apolloError.networkError
+                ? ErrorTexts.ERROR_NETWORK_DESCRIPTION
+                : ErrorTexts.ERROR_TECHNICAL_SUPPORT,
+            yesButtonText: "Close",
+        })
+        .catch((e) => logError(e));
     }
 
     public visitDatasetNotFoundError(): void {

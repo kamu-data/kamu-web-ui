@@ -1,5 +1,4 @@
-import { CustomApolloError, InvalidSqlError } from "./../common/errors";
-import { NavigationService } from "src/app/services/navigation.service";
+import { InvalidSqlError } from "./../common/errors";
 import { DatasetPageInfoFragment } from "./../api/kamu.graphql.interface";
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { Injectable } from "@angular/core";
@@ -28,17 +27,13 @@ import {
 } from "./dataset.subscriptions.interface";
 import { isNil } from "lodash";
 import { DatasetApi } from "../api/dataset.api";
-import { ApolloError } from "@apollo/client";
-import { ErrorService } from "../services/error.service";
 import { DatasetNotFoundError } from "../common/errors";
 
 @Injectable({ providedIn: "root" })
 export class AppDatasetService {
     constructor(
         private datasetApi: DatasetApi,
-        private errorService: ErrorService,
-        private appDatasetSubsService: AppDatasetSubscriptionsService,
-        private navigationSevice: NavigationService,
+        private appDatasetSubsService: AppDatasetSubscriptionsService
     ) {}
 
     private datasetChanges$: Subject<DatasetBasicsFragment> =
@@ -62,12 +57,9 @@ export class AppDatasetService {
                     this.metadataTabDataUpdate(data);
                     this.lineageTabDataUpdate(data);
                 } else {
-                    this.errorService.processError(new DatasetNotFoundError());
+                    throw new DatasetNotFoundError();
                 }
-            },
-            (e: ApolloError) => {
-                this.errorService.processError(new CustomApolloError(e));
-            },
+            }
         );
     }
 
@@ -99,14 +91,9 @@ export class AppDatasetService {
                             historyUpdate,
                         );
                     } else {
-                        this.errorService.processError(
-                            new DatasetNotFoundError(),
-                        );
+                        throw new DatasetNotFoundError();
                     }
-                },
-                (e: ApolloError) => {
-                    this.errorService.processError(new CustomApolloError(e));
-                },
+                }
             );
     }
 
@@ -123,7 +110,7 @@ export class AppDatasetService {
                 this.appDatasetSubsService.changeDatasetData(dataUpdate);
             },
             () => {
-                this.errorService.processError(new InvalidSqlError());
+                throw new InvalidSqlError();
             },
         );
     }

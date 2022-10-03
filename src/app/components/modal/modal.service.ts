@@ -5,7 +5,9 @@ import {
 } from "../../interface/modal.interface";
 import { Subject } from "rxjs";
 
-@Injectable()
+@Injectable({
+    providedIn: "root",
+})
 export class ModalService {
     /**
      * @example
@@ -95,7 +97,7 @@ export class ModalService {
         });
 
         return new Promise((resolve) => {
-            context.handler = (arg: boolean | string) => resolve(arg);
+            resolve(context.status ?? "");
         });
     }
 
@@ -108,7 +110,7 @@ export class ModalService {
         });
 
         return new Promise((resolve) => {
-            context.handler = (arg: boolean | string) => resolve(arg);
+            resolve(context.status ?? "");
         });
     }
 

@@ -12,7 +12,6 @@ import { MatMenuModule } from "@angular/material/menu";
 import { DatasetViewMenuComponent } from "./dataset-view-menu-component";
 import {
     emitClickOnElement,
-    findElement,
     findElementByDataTestId,
 } from "src/app/common/base-test.helpers.spec";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";

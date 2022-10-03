@@ -15,7 +15,7 @@ export class CustomApolloError extends KamuError {
         this.apolloError = apolloError;
     }
     public accept(visitor: KamuErrorVisitor): void {
-        visitor.visitApolloError(this, this.apolloError);
+        visitor.visitApolloError(this.apolloError);
     }
 }
 
@@ -34,7 +34,7 @@ export class DatasetNotFoundError extends KamuError {
 interface KamuErrorVisitor {
     visitInvalidSqlError(e?: InvalidSqlError): void;
     visitDatasetNotFoundError(e?: DatasetNotFoundError): void;
-    visitApolloError(e: CustomApolloError, apolloError: ApolloError): void;
+    visitApolloError(apolloError: ApolloError): void;
 }
 
 export class KamuErrorHandler implements KamuErrorVisitor {
@@ -44,7 +44,6 @@ export class KamuErrorHandler implements KamuErrorVisitor {
     ) {}
 
     public visitApolloError(
-        e: CustomApolloError,
         apolloError: ApolloError,
     ): void {
         this.modalService.error({

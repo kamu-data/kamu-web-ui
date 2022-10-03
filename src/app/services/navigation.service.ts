@@ -53,7 +53,9 @@ export class NavigationService {
 
     public navigateToPageNotFound(): void {
         this.router
-            .navigate([ProjectLinks.urlPageNotFound], { skipLocationChange: true })
+            .navigate([ProjectLinks.urlPageNotFound], {
+                skipLocationChange: true,
+            })
             .catch((e) => logError(e));
     }
 }

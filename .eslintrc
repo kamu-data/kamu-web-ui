@@ -16,10 +16,7 @@
   "rules": {
     "no-bitwise": 0,
     "@typescript-eslint/no-extraneous-class": [
-      "off",
-      {
-        "allowWithDecorator": true
-      }
+      "off"
     ]
   },
   "ignorePatterns": ["node_modules", "dist", "kamu.graphql.interface.ts"]

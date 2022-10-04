@@ -45,11 +45,11 @@ const language = 'typescript';
      * @return {string}
      */
     public static momentConverDatetoLocalWithFormat(dateParams: {
-        date: Date;
+        date: Date | number;
         format?: string;
         isTextDate?: boolean;
     }): string {
-        const stringDate: string = new Date(dateParams.date).toString();
+        const stringDate: Date = new Date(dateParams.date);
 
         // solution for all browsers
         const UTCStringDate: string = moment(stringDate).format(
@@ -74,33 +74,5 @@ const language = 'typescript';
         }
 
         return moment(ISOStringDate).format(dateParams.format);
-    }
-
-    /**
-     * @desc gets current datetime and convert the given date
-     * object’s contents into a string in ISO format (ISO 8601)
-     * "2014-09-08T08:02:17-05:00"
-     * @returns {string}
-     */
-    public static getDateNowISO8601(): string {
-        return moment().format();
-    }
-
-    /**
-     * Checks if ulr has a protocol (http:// or https://).
-     * In case false - adds 'https://' at the beginning of url.
-     * @param {string} url
-     * @returns {string}
-     */
-    public static normalizeUrl(url: string): string {
-        return AppValues.httpPattern.test(url) ? url : `https://${url}`;
-    }
-
-    public static fixedEncodeURIComponent(text: string): string {
-        return encodeURIComponent(text)
-            .replace("%2C", ",")
-            .replace(/[!'"/*]/g, (c: string) => {
-                return "%" + c.charCodeAt(0).toString(16);
-            });
     }
 }

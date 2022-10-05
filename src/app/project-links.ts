@@ -8,6 +8,7 @@ export default class ProjectLinks {
     public static urlGithubCallback = "github_callback";
     public static urlSearch = "v/search";
     public static urlDatasetCreate = "v/new-dataset";
+    public static urlPageNotFound = "v/page-not-found";
 
     public static urlParamAccountName = "accountName";
     public static urlParamDatasetName = "datasetName";

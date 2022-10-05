@@ -132,6 +132,12 @@ export class DatasetComponent
         isClick: boolean;
     }): void {
         if (this.datasetBasics) {
+            this.navigationService.navigateToDatasetView({
+                accountName: this.datasetBasics.owner.name,
+                datasetName: this.datasetBasics.name as string,
+                tab: this.datasetViewType,
+                page: params.currentPage,
+            });
             this.initDatasetViewByType(
                 {
                     accountName: this.datasetBasics.owner.name,

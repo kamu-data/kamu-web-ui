@@ -13,7 +13,7 @@ export class PageNotFoundComponent {
 
     constructor(private navigationService: NavigationService) {}
 
-    public navigateToNome(): void {
+    public navigateToHome(): void {
         this.navigationService.navigateToHome();
     }
 }

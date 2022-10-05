@@ -86,9 +86,6 @@ export class ModalService {
     private _showDialog(
         context: ModalArgumentsInterface,
     ): Promise<boolean | string> {
-        if (context.message === "Check the Internet connection") {
-            return new Promise(() => null);
-        }
         this.showModal$.next({
             type: "dialog",
             context,

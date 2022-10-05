@@ -108,7 +108,6 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     public get latestBlockhash(): string {
         return this.currentState
             ? shortHash(
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                   this.currentState.metadata.metadata.chain.blocks.nodes[0]
                       .blockHash as string,
               )
@@ -116,7 +115,6 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     }
 
     public get latestBlockSystemTime(): string {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         const systemTimeAsString: string | undefined = this.currentState
             ?.metadata.metadata.chain.blocks.nodes[0].systemTime as string;
 

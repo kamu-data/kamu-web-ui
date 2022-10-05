@@ -33,7 +33,10 @@ export class NavigationService {
     public navigateToDatasetView(params: DatasetNavigationParams): void {
         this.router
             .navigate([params.accountName, params.datasetName], {
-                queryParams: { tab: params.tab, page: params.page },
+                queryParams:
+                    params.page === 1
+                        ? { tab: params.tab }
+                        : { tab: params.tab, page: params.page },
             })
             .catch((e) => logError(e));
     }
@@ -44,5 +47,13 @@ export class NavigationService {
 
     public navigateToOwnerView(ownerName: string): void {
         this.router.navigate([ownerName]).catch((e) => logError(e));
+    }
+
+    public navigateToPageNotFound(): void {
+        this.router
+            .navigate([ProjectLinks.urlPageNotFound], {
+                skipLocationChange: true,
+            })
+            .catch((e) => logError(e));
     }
 }

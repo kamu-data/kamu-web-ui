@@ -1,3 +1,4 @@
+import { InvalidSqlError } from "./../common/errors";
 import { DatasetPageInfoFragment } from "./../api/kamu.graphql.interface";
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { Injectable } from "@angular/core";
@@ -17,7 +18,6 @@ import {
     GetDatasetHistoryQuery,
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
-import { ModalService } from "../components/modal/modal.service";
 import { AppDatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import {
     DatasetHistoryUpdate,
@@ -26,14 +26,13 @@ import {
     OverviewDataUpdate,
 } from "./dataset.subscriptions.interface";
 import { isNil } from "lodash";
-import { logError } from "../common/app.helpers";
 import { DatasetApi } from "../api/dataset.api";
+import { DatasetNotFoundError } from "../common/errors";
 
 @Injectable({ providedIn: "root" })
 export class AppDatasetService {
     constructor(
         private datasetApi: DatasetApi,
-        private modalService: ModalService,
         private appDatasetSubsService: AppDatasetSubscriptionsService,
     ) {}
 
@@ -52,15 +51,15 @@ export class AppDatasetService {
         this.datasetApi
             .getDatasetMainData(info)
             .subscribe((data: GetDatasetMainDataQuery) => {
-                if (isNil(data.datasets.byOwnerAndName)) {
-                    throw new Error("Dataset not resolved by ID");
+                if (data.datasets.byOwnerAndName) {
+                    this.datasetUpdate(data.datasets.byOwnerAndName);
+                    this.overviewTabDataUpdate(data);
+                    this.dataTabDataUpdate(data);
+                    this.metadataTabDataUpdate(data);
+                    this.lineageTabDataUpdate(data);
+                } else {
+                    throw new DatasetNotFoundError();
                 }
-                this.datasetUpdate(data.datasets.byOwnerAndName);
-
-                this.overviewTabDataUpdate(data);
-                this.dataTabDataUpdate(data);
-                this.metadataTabDataUpdate(data);
-                this.lineageTabDataUpdate(data);
             });
     }
 
@@ -90,6 +89,8 @@ export class AppDatasetService {
                     this.appDatasetSubsService.changeDatasetHistory(
                         historyUpdate,
                     );
+                } else {
+                    throw new DatasetNotFoundError();
                 }
             });
     }
@@ -106,14 +107,8 @@ export class AppDatasetService {
                 const dataUpdate: DataUpdate = { content, schema };
                 this.appDatasetSubsService.changeDatasetData(dataUpdate);
             },
-            (error: { message: string }) => {
-                this.modalService
-                    .error({
-                        title: "Request was malformed.",
-                        message: error.message,
-                        yesButtonText: "Close",
-                    })
-                    .catch((e) => logError(e));
+            () => {
+                throw new InvalidSqlError();
             },
         );
     }

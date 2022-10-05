@@ -55,7 +55,6 @@ export class SearchApi {
         if (id === "") {
             return of([]);
         }
-
         return this.searchDatasetsAutocompleteGQL
             .watch({ query: id, perPage: 10 })
             .valueChanges.pipe(

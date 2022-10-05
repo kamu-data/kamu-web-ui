@@ -1,9 +1,8 @@
 import { SpinnerService } from "./components/spinner/spinner.service";
 import { SpinnerInterceptor } from "./components/spinner/spinner.interceptor";
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
-import { APP_INITIALIZER, NgModule } from "@angular/core";
+import { APP_INITIALIZER, ErrorHandler, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { AppRoutingModule } from "./app-routing.module";
@@ -54,6 +53,7 @@ import { NavigationService } from "./services/navigation.service";
 import { AppDatasetSubscriptionsService } from "./dataset-view/dataset.subscriptions.service";
 import { SpinnerModule } from "./components/spinner/spinner.module";
 import { DatasetApi } from "./api/dataset.api";
+import { ErrorHandlerService } from "./services/error-handler.service";
 
 const Services = [
     {
@@ -66,12 +66,15 @@ const Services = [
             };
         },
     },
-    // comment or uncomment this object for simulation latency
     {
         provide: HTTP_INTERCEPTORS,
         useClass: SpinnerInterceptor,
         multi: true,
         deps: [SpinnerService],
+    },
+    {
+        provide: ErrorHandler,
+        useClass: ErrorHandlerService,
     },
     Apollo,
     AuthApi,

@@ -23,6 +23,7 @@ import { of } from "rxjs";
 
 describe("AppDatasetService", () => {
     let service: AppDatasetService;
+    let datasetApi: DatasetApi;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -40,29 +41,21 @@ describe("AppDatasetService", () => {
             ],
         });
         service = TestBed.inject(AppDatasetService);
+        datasetApi = TestBed.inject(DatasetApi);
     });
 
     it("should be created", async () => {
         await expect(service).toBeTruthy();
     });
 
-    it("should be call datasetChanges$.next", async () => {
-        const datasetChanges$Spy = spyOn(service["datasetChanges$"], "next");
-        service.datasetChanges(mockDatasetBasicsFragment);
-        await expect(datasetChanges$Spy).toHaveBeenCalled();
-        service.onDatasetChanges.subscribe((data) => {
-            void expect(data).toEqual(mockDatasetBasicsFragment);
-        });
-    });
-
     it("should be check get main data from api", async () => {
         const getDatasetMainDataSpy = spyOn(
-            service["datasetApi"],
+            datasetApi,
             "getDatasetMainData",
         ).and.returnValue(of(mockDatasetMainDataResponse));
         service.requestDatasetMainData(mockInfo);
         await expect(getDatasetMainDataSpy).toHaveBeenCalled();
-        service["datasetApi"]
+        datasetApi
             .getDatasetMainData(mockInfo)
             .subscribe((data: GetDatasetMainDataQuery) => {
                 void expect(data).toEqual(mockDatasetMainDataResponse);
@@ -73,12 +66,12 @@ describe("AppDatasetService", () => {
         const numRecords = 7;
         const numPage = 1;
         const getDatasetHistorySpy = spyOn(
-            service["datasetApi"],
+            datasetApi,
             "getDatasetHistory",
         ).and.returnValue(of(mockDatasetHistoryResponse));
         service.requestDatasetHistory(mockInfo, numRecords, numPage);
         await expect(getDatasetHistorySpy).toHaveBeenCalled();
-        service["datasetApi"]
+        datasetApi
             .getDatasetHistory({ ...mockInfo, numRecords, numPage })
             .subscribe((data: GetDatasetHistoryQuery) => {
                 void expect(data).toEqual(mockDatasetHistoryResponse);
@@ -89,12 +82,12 @@ describe("AppDatasetService", () => {
         const query = "select\n  *\nfrom testTable";
         const limit = 20;
         const getDatasetDataSqlRunSpy = spyOn(
-            service["datasetApi"],
+            datasetApi,
             "getDatasetDataSqlRun",
         ).and.returnValue(of(mockDatasetDataSqlRunResponse));
         service.requestDatasetDataSqlRun(query, limit);
         await expect(getDatasetDataSqlRunSpy).toHaveBeenCalled();
-        service["datasetApi"]
+        datasetApi
             .getDatasetDataSqlRun({ query, limit })
             .subscribe((data: GetDatasetDataSqlRunQuery) => {
                 void expect(data).toEqual(mockDatasetDataSqlRunResponse);

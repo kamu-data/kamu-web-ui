@@ -1,20 +1,20 @@
 import { FormsModule } from "@angular/forms";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { mockDataDataset } from "./search/mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatMenuModule } from "@angular/material/menu";
 import { RouterTestingModule } from "@angular/router/testing";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { AuthApi } from "./api/auth.api";
 import { SearchApi } from "./api/search.api";
 import { AppComponent } from "./app.component";
 import AppValues from "./common/app.values";
 import { AppHeaderComponent } from "./components/app-header/app-header.component";
-import { ModalComponent } from "./components/modal/modal.component";
-import { ModalService } from "./components/modal/modal.service";
 import { AppSearchService } from "./search/search.service";
 import { NavigationService } from "./services/navigation.service";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
+import { AuthApi } from "./api/auth.api";
+import { ModalService } from "./components/modal/modal.service";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { ModalComponent } from "./components/modal/modal.component";
+import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 
 describe("AppComponent", () => {
     let component: AppComponent;

@@ -24,7 +24,7 @@ describe("PageNotFoundComponent", () => {
             component["navigationService"],
             "navigateToHome",
         ).and.returnValue();
-        component.navigateToNome();
+        component.navigateToHome();
         await expect(navigateToHomeSpy).toHaveBeenCalled();
     });
 });

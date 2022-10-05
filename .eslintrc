@@ -15,13 +15,7 @@
   "plugins": ["@typescript-eslint"],
   "rules": {
     "no-bitwise": 0,
-    "@typescript-eslint/dot-notation": 0,
-    "@typescript-eslint/no-extraneous-class": [
-      "warn",
-      {
-        "allowWithDecorator": true
-      }
-    ]
+    "@typescript-eslint/no-extraneous-class": ["off"]
   },
   "ignorePatterns": ["node_modules", "dist", "kamu.graphql.interface.ts"]
 }

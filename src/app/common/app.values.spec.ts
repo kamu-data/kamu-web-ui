@@ -8,14 +8,12 @@ describe("AppValues class helper", () => {
     });
 
     it("should convert data to local ", async () => {
-        const baseDate = new Date(
-            String("2022-08-05T21:19:28.817281255+00:00"),
-        );
+        const baseDate = new Date(String("2022-08-05T21:19:28.817281255"));
         const result = AppValues.momentConverDatetoLocalWithFormat({
             date: baseDate,
             format: AppValues.displayDateFormat,
         });
-        await expect(result).toEqual("06 Aug 2022");
+        await expect(result).toEqual("05 Aug 2022");
     });
 
     it("should convert data to today ", async () => {

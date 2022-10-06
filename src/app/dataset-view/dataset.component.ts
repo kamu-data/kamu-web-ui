@@ -113,7 +113,7 @@ export class DatasetComponent
             setTimeout(() => {
                 const searchResultContainer: HTMLElement | null =
                     document.getElementById("searchResultContainerContent");
-                if (searchResultContainer !== null) {
+                if (searchResultContainer) {
                     const styleElement: CSSStyleDeclaration = getComputedStyle(
                         searchResultContainer,
                     );

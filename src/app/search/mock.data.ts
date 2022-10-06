@@ -7,6 +7,7 @@ import {
     GetDatasetHistoryQuery,
     GetDatasetMainDataQuery,
 } from "../api/kamu.graphql.interface";
+import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { DatasetInfo } from "../interface/navigation.interface";
 import {
     DatasetAutocompleteItem,
@@ -16,6 +17,11 @@ import {
 export const mockInfo: DatasetInfo = {
     accountName: "kamu",
     datasetName: "test name",
+};
+
+export const mockNode: Node = {
+    id: "testId",
+    label: "british-columbia.case-details.hm",
 };
 
 export const mockDataDataset: DatasetAutocompleteItem[] = [

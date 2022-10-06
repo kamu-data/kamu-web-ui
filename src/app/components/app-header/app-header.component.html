@@ -126,6 +126,7 @@
                 <a
                     class="Header-link d-block d-md-none py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                     (click)="onAddNew()"
+                    data-test-id="addNewDataset"
                 >
                     Add New Dataset
                 </a>
@@ -253,6 +254,7 @@
                                     : 'https://avatars.githubusercontent.com/u/11951648?v=4'
                             "
                             (click)="onOpenUserInfo()"
+                            data-test-id="openUserInfo"
                             alt="User icon"
                         />
                     </div>
@@ -271,7 +273,7 @@
                     <ng-template [ngIf]="!(userInfo && userInfo.name)">
                         <button
                             mat-menu-item
-                            data-test-id="openUserProfile"
+                            data-test-id="openLogin"
                             (click)="onLogin()"
                         >
                             Login

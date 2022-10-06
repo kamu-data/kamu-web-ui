@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import { TestBed } from "@angular/core/testing";
-
 import { SpinnerService } from "./spinner.service";
 
 describe("SpinnerService", () => {

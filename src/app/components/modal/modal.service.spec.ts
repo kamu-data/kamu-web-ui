@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import { ModalCommandInterface } from "./../../interface/modal.interface";
 import { TestBed } from "@angular/core/testing";
 import { ModalService } from "./modal.service";

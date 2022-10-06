@@ -14,6 +14,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 describe("SearchComponent", () => {
     let component: SearchComponent;
     let fixture: ComponentFixture<SearchComponent>;
+    let navigationService: NavigationService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -32,6 +33,7 @@ describe("SearchComponent", () => {
 
     beforeEach(() => {
         fixture = TestBed.createComponent(SearchComponent);
+        navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
@@ -42,7 +44,7 @@ describe("SearchComponent", () => {
 
     it("should call updateAllComplete method", async () => {
         component.updateAllComplete();
-        await expect(component["allComplete"]).toEqual(false);
+        await expect(component.allComplete).toEqual(false);
     });
 
     it("should check call navigateToDatasetView in navigation service", async () => {
@@ -50,10 +52,7 @@ describe("SearchComponent", () => {
             accountName: "test",
             datasetName: "test datasetName",
         };
-        const routerSpy = spyOn(
-            component["navigationService"],
-            "navigateToDatasetView",
-        );
+        const routerSpy = spyOn(navigationService, "navigateToDatasetView");
         component.onSelectDataset(data);
         await expect(routerSpy).toHaveBeenCalled();
     });
@@ -64,7 +63,7 @@ describe("SearchComponent", () => {
         component.searchValue = testSearchValue;
         fixture.detectChanges();
         const navigationServiceSpy = spyOn(
-            component["navigationService"],
+            navigationService,
             "navigateToSearch",
         );
         component.onPageChange({
@@ -83,7 +82,7 @@ describe("SearchComponent", () => {
         component.searchValue = testSearchValue;
         fixture.detectChanges();
         const navigationServiceSpy = spyOn(
-            component["navigationService"],
+            navigationService,
             "navigateToSearch",
         );
         component.onPageChange({ currentPage: 0, isClick: false });

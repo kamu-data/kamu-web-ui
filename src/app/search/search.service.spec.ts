@@ -1,4 +1,4 @@
-/* eslint-disable no-unexpected-multiline */
+/* eslint-disable @typescript-eslint/dot-notation */
 import { Apollo } from "apollo-angular";
 import { SearchApi } from "./../api/search.api";
 import { TestBed } from "@angular/core/testing";
@@ -12,12 +12,14 @@ import { of, throwError } from "rxjs";
 
 describe("SerchService", () => {
     let service: AppSearchService;
+    let searchApi: SearchApi;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [SearchApi, Apollo],
         });
         service = TestBed.inject(AppSearchService);
+        searchApi = TestBed.inject(SearchApi);
     });
 
     it("should be created", async () => {
@@ -74,13 +76,12 @@ describe("SerchService", () => {
             service,
             "autocompleteSearchChanges",
         ).and.callThrough();
-        spyOn(
-            service["searchApi"],
-            "autocompleteDatasetSearch",
-        ).and.returnValue(of(mockDataDataset));
+        spyOn(searchApi, "autocompleteDatasetSearch").and.returnValue(
+            of(mockDataDataset),
+        );
         service.autocompleteDatasetSearch(mockSearchQuery);
-        service["searchApi"]
-            ["autocompleteDatasetSearch"](mockSearchQuery)
+        searchApi
+            .autocompleteDatasetSearch(mockSearchQuery)
             .subscribe((data: DatasetAutocompleteItem[]) => {
                 void expect(data).toEqual(mockDataDataset);
                 expect(autocompleteSearchChangesSpy).toHaveBeenCalledWith(data);
@@ -93,13 +94,12 @@ describe("SerchService", () => {
             service,
             "autocompleteSearchChanges",
         ).and.callThrough();
-        spyOn(
-            service["searchApi"],
-            "autocompleteDatasetSearch",
-        ).and.returnValue(throwError("error"));
+        spyOn(searchApi, "autocompleteDatasetSearch").and.returnValue(
+            throwError("error"),
+        );
         service.autocompleteDatasetSearch(mockSearchQuery);
-        service["searchApi"]
-            ["autocompleteDatasetSearch"](mockSearchQuery)
+        searchApi
+            .autocompleteDatasetSearch(mockSearchQuery)
             .subscribe(undefined, () => {
                 expect(autocompleteSearchChangesSpy).toHaveBeenCalledWith([]);
             });

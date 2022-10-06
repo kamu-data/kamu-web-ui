@@ -19,6 +19,10 @@ import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 describe("AppComponent", () => {
     let component: AppComponent;
     let fixture: ComponentFixture<AppComponent>;
+    let navigationService: NavigationService;
+    let modalService: ModalService;
+    let authApi: AuthApi;
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
@@ -39,6 +43,9 @@ describe("AppComponent", () => {
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(AppComponent);
+        navigationService = TestBed.inject(NavigationService);
+        modalService = TestBed.inject(ModalService);
+        authApi = TestBed.inject(AuthApi);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
@@ -68,7 +75,7 @@ describe("AppComponent", () => {
 
     it("should check call onClickAppLogo method", async () => {
         const navigateToSearchSpy = spyOn(
-            component["navigationService"],
+            navigationService,
             "navigateToSearch",
         ).and.returnValue();
         component.onClickAppLogo();
@@ -77,7 +84,7 @@ describe("AppComponent", () => {
 
     it("should check call onAddNew method", async () => {
         const navigateToDatasetCreateSpy = spyOn(
-            component["navigationService"],
+            navigationService,
             "navigateToDatasetCreate",
         ).and.returnValue();
         component.onAddNew();
@@ -85,17 +92,14 @@ describe("AppComponent", () => {
     });
 
     it("should check call onLogOut method", async () => {
-        const logOutSpy = spyOn(
-            component["authApi"],
-            "logOut",
-        ).and.returnValue();
+        const logOutSpy = spyOn(authApi, "logOut").and.returnValue();
         component.onLogOut();
         await expect(logOutSpy).toHaveBeenCalled();
     });
 
     it("should check call onLogin method", async () => {
         const loginSpy = spyOn(
-            component["navigationService"],
+            navigationService,
             "navigateToLogin",
         ).and.returnValue();
         component.onLogin();
@@ -104,7 +108,7 @@ describe("AppComponent", () => {
 
     it("should check call onSelectDataset method and navigate to dataset", async () => {
         const navigateToDatasetViewSpy = spyOn(
-            component["navigationService"],
+            navigationService,
             "navigateToDatasetView",
         ).and.returnValue();
         component.onSelectDataset(mockDataDataset[0]);
@@ -113,7 +117,7 @@ describe("AppComponent", () => {
 
     it("should check call onSelectDataset method and navigate to search", async () => {
         const navigateToSearchSpy = spyOn(
-            component["navigationService"],
+            navigationService,
             "navigateToSearch",
         ).and.returnValue();
         component.onSelectDataset(mockDataDataset[1]);
@@ -121,10 +125,7 @@ describe("AppComponent", () => {
     });
 
     it("should check call onUserProfile", async () => {
-        const modalSpy = spyOn(
-            component["modalService"],
-            "warning",
-        ).and.callThrough();
+        const modalSpy = spyOn(modalService, "warning").and.callThrough();
         component.onUserProfile();
         await expect(modalSpy).toHaveBeenCalled();
     });

@@ -49,7 +49,7 @@ describe("DatasetViewMenuComponent", () => {
     Object.keys(mockNavigationObject).forEach((item) => {
         it(`should check ${item} on click button`, async () => {
             const navigateSpy = spyOn(
-                component["datasetNavigation"],
+                component.datasetNavigation,
                 item as keyof DatasetNavigationInterface,
             ).and.callThrough();
             emitClickOnElement(fixture, `[data-test-id=${item}]`);

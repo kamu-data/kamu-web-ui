@@ -1,4 +1,3 @@
-import { ModalService } from "./../components/modal/modal.service";
 import { mockDatasetBasicsFragment, mockNode } from "./../search/mock.data";
 import { AppDatasetService } from "./dataset.service";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";

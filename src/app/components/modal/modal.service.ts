@@ -30,7 +30,7 @@ export class ModalService {
 
     private showModal$: Subject<ModalCommandInterface> =
         new Subject<ModalCommandInterface>();
-    private currentModalType = "blank";
+    private currentModalType = "dialog";
 
     /**
      * Setter for type of currently displayed modal.
@@ -44,13 +44,6 @@ export class ModalService {
      */
     get modalType(): string {
         return this.currentModalType;
-    }
-
-    public close(): void {
-        this.showModal$.next({
-            context: {},
-            type: "blank",
-        });
     }
 
     public success(
@@ -77,32 +70,11 @@ export class ModalService {
         );
     }
 
-    public filter_modal(
-        options: ModalArgumentsInterface,
-    ): Promise<boolean | string> {
-        return this._showFilter(
-            Object.assign(options, { status: "filter_modal" }),
-        );
-    }
-
     private _showDialog(
         context: ModalArgumentsInterface,
     ): Promise<boolean | string> {
         this.showModal$.next({
             type: "dialog",
-            context,
-        });
-
-        return new Promise((resolve) => {
-            resolve(context.status ?? "");
-        });
-    }
-
-    private _showFilter(
-        context: ModalArgumentsInterface,
-    ): Promise<boolean | string> {
-        this.showModal$.next({
-            type: "filter",
             context,
         });
 

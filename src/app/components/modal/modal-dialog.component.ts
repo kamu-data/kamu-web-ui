@@ -7,7 +7,7 @@ import { DynamicComponent } from "./dynamic.component";
         <div class="modal__content" (click)="hideAll()">
             <div
                 [ngClass]="
-                    context.bigTextBlock
+                    context && context.bigTextBlock
                         ? 'modal__bigtest-dialog'
                         : 'modal__dialog'
                 "
@@ -17,19 +17,21 @@ import { DynamicComponent } from "./dynamic.component";
                         class="modal__header"
                         data-test-id="modalHeader"
                         [ngClass]="{
-                            'modal__header-ok': context.status === 'ok',
+                            'modal__header-ok':
+                                context && context.status === 'ok',
                             'modal__header-warning':
-                                context.status === 'warning',
-                            'modal__header-error': context.status === 'error',
+                                context && context.status === 'warning',
+                            'modal__header-error':
+                                context && context.status === 'error',
                             'modal__header-black':
-                                context.status === 'dialog_question'
+                                context && context.status === 'dialog_question'
                         }"
                     >
-                        {{ context.title }}
+                        {{ context && context.title }}
                     </h2>
 
                     <p
-                        *ngIf="context.message"
+                        *ngIf="context && context.message"
                         class="modal__msg"
                         data-test-id="modalMessage"
                     >
@@ -51,7 +53,7 @@ import { DynamicComponent } from "./dynamic.component";
                                 : 'modal__btn'
                         "
                         data-test-id="yesButton"
-                        *ngIf="context.yesButtonText"
+                        *ngIf="context && context.yesButtonText"
                         (click)="onClick(true, context.locationBack)"
                     >
                         {{ context.yesButtonText }}
@@ -64,7 +66,7 @@ import { DynamicComponent } from "./dynamic.component";
                                 : 'modal__btn'
                         "
                         data-test-id="noButton"
-                        *ngIf="context.noButtonText"
+                        *ngIf="context && context.noButtonText"
                         (click)="onClick(false)"
                     >
                         {{ context.noButtonText }}
@@ -72,7 +74,7 @@ import { DynamicComponent } from "./dynamic.component";
                     <button
                         class="modal__btn modal__btn-last"
                         data-test-id="lastButton"
-                        *ngIf="context.lastButtonText"
+                        *ngIf="context && context.lastButtonText"
                         (click)="onClick('last')"
                     >
                         {{ context.lastButtonText }}
@@ -80,7 +82,7 @@ import { DynamicComponent } from "./dynamic.component";
                     <button
                         class="modal__btn modal__btn-last"
                         data-test-id="tooLastButtonText"
-                        *ngIf="context.tooLastButtonText"
+                        *ngIf="context && context.tooLastButtonText"
                         (click)="onClick('tooLast')"
                     >
                         {{ context.tooLastButtonText }}

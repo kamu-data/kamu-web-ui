@@ -15,9 +15,7 @@ describe("SearchAdditionalButtonsComponent", () => {
             ],
             providers: [],
         }).compileComponents();
-    });
 
-    beforeEach(() => {
         fixture = TestBed.createComponent(SearchAdditionalButtonsComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

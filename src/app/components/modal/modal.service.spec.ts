@@ -20,15 +20,6 @@ describe("ModalService", () => {
         await expect(service.modalType).toEqual("test");
     });
 
-    it("should be close modal", () => {
-        const showModalSpy = spyOn(service["showModal$"], "next");
-        service.close();
-        expect(showModalSpy).toHaveBeenCalledWith({
-            context: {},
-            type: "blank",
-        });
-    });
-
     it("should be show modal image", () => {
         const testImageUrl = "http://image.com";
         const showModalSpy = spyOn(service["showModal$"], "next");
@@ -84,14 +75,5 @@ describe("ModalService", () => {
         };
         const result = await service.dialog_question(testObj);
         await expect(result).toEqual("dialog_question");
-    });
-
-    it("should check filter_modal show modal", async () => {
-        const testObj: ModalCommandInterface = {
-            context: {},
-            type: "dialog",
-        };
-        const result = await service.filter_modal(testObj);
-        await expect(result).toEqual("filter_modal");
     });
 });

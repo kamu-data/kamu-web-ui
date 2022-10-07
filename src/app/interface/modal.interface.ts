@@ -1,7 +1,5 @@
-import { ModalFilterComponent } from "../components/modal/modal-filter.component";
 import { ModalDialogComponent } from "../components/modal/modal-dialog.component";
 import { ModalImageComponent } from "../components/modal/modal-image.component";
-import { BlankComponent } from "../components/modal/blank.component";
 import { ModalSpinnerComponent } from "../components/modal/modal-spinner.component";
 
 export interface ModalCommandInterface {
@@ -42,18 +40,11 @@ export interface ModalFilterArgumentInterface {
 }
 
 export interface ModalMappingsComponent {
-    filter: typeof ModalFilterComponent;
     dialog: typeof ModalDialogComponent;
     image: typeof ModalImageComponent;
-    blank: typeof BlankComponent;
     spinner: typeof ModalSpinnerComponent;
 }
 
-export type ModalComponentType =
-    | "blank"
-    | "dialog"
-    | "image"
-    | "spinner"
-    | "filter";
+export type ModalComponentType = "dialog" | "image" | "spinner";
 
 export type NgStyleValue = Record<string, string> | null;

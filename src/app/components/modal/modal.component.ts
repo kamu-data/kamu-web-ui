@@ -8,7 +8,6 @@ import {
     ChangeDetectorRef,
 } from "@angular/core";
 
-import { BlankComponent } from "./blank.component";
 import { DynamicComponent } from "./dynamic.component";
 import {
     ModalCommandInterface,
@@ -19,7 +18,6 @@ import { ModalImageComponent } from "./modal-image.component";
 import { ModalService } from "./modal.service";
 import { ModalSpinnerComponent } from "./modal-spinner.component";
 import { Location } from "@angular/common";
-import { ModalFilterComponent } from "./modal-filter.component";
 import { ModalMappingsComponent } from "../../interface/modal.interface";
 import { BaseComponent } from "src/app/common/base.component";
 
@@ -42,11 +40,9 @@ export class ModalComponent extends BaseComponent implements OnInit {
 
     private componentRef: ComponentRef<unknown>;
     private mappings: ModalMappingsComponent = {
-        blank: BlankComponent,
         dialog: ModalDialogComponent,
         image: ModalImageComponent,
         spinner: ModalSpinnerComponent,
-        filter: ModalFilterComponent,
     };
 
     constructor(
@@ -74,9 +70,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
 
         this._close();
 
-        if (command.type !== "blank") {
-            this._renderModal(command);
-        }
+        this._renderModal(command);
     }
 
     _renderModal(command: ModalCommandInterface) {

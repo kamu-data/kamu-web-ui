@@ -37,11 +37,12 @@ export class DatasetViewMenuComponent implements OnInit {
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
         this.isMinimizeSearchAdditionalButtons = AppValues.isMobileView();
-
-        if (AppValues.isMobileView()) {
-            this.sideNavHelper.close().catch((e) => logError(e));
-        } else {
-            this.sideNavHelper.open().catch((e) => logError(e));
+        if (this.sidenav) {
+            if (AppValues.isMobileView()) {
+                this.sideNavHelper.close().catch((e) => logError(e));
+            } else {
+                this.sideNavHelper.open().catch((e) => logError(e));
+            }
         }
     }
 

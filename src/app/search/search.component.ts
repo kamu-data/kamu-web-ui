@@ -2,8 +2,6 @@ import { ActivatedRoute } from "@angular/router";
 import { AppSearchService } from "./search.service";
 import { DatasetSearchResult } from "../interface/search.interface";
 import AppValues from "../common/app.values";
-import { MatSidenav } from "@angular/material/sidenav";
-import { SideNavHelper } from "../common/sidenav.helper";
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -11,7 +9,6 @@ import {
     Component,
     HostListener,
     OnInit,
-    ViewChild,
 } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
 import { BaseComponent } from "../common/base.component";
@@ -21,7 +18,7 @@ import {
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { logError, requireValue } from "../common/app.helpers";
+import { requireValue } from "../common/app.helpers";
 
 export interface SearchFilters {
     name?: string;
@@ -42,12 +39,10 @@ export class SearchComponent
     extends BaseComponent
     implements OnInit, AfterContentInit
 {
-    @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     public isMobileView = false;
     public searchValue = "";
     public currentPage = 1; // TODO: Should be zero-based and only offset for display
     public isMinimizeSearchAdditionalButtons = false;
-    private sideNavHelper: SideNavHelper;
 
     private sortOptions: { value: string; label: string; active: boolean }[] = [
         { value: "best", label: "Best match", active: true },
@@ -161,12 +156,6 @@ export class SearchComponent
     private checkWindowSize(): void {
         this.isMinimizeSearchAdditionalButtons = AppValues.isMobileView();
         this.isMobileView = AppValues.isMobileView();
-
-        if (this.isMobileView) {
-            this.sideNavHelper.close().catch((e) => logError(e));
-        } else {
-            this.sideNavHelper.open().catch((e) => logError(e));
-        }
     }
 
     constructor(
@@ -183,10 +172,7 @@ export class SearchComponent
     }
 
     public ngOnInit(): void {
-        if (this.sidenav) {
-            this.sideNavHelper = new SideNavHelper(this.sidenav);
-            this.checkWindowSize();
-        }
+        this.checkWindowSize();
         this.initTableData();
 
         this.changePageAndSearch();

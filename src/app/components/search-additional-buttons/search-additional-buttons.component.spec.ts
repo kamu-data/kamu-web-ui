@@ -1,3 +1,4 @@
+import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons-nav.component";
 
@@ -14,7 +15,11 @@ describe("SearchAdditionalButtonsComponent", () => {
                 SearchAdditionalButtonsNavComponent,
             ],
             providers: [],
-        }).compileComponents();
+        })
+            .overrideComponent(SearchAdditionalButtonsComponent, {
+                set: { changeDetection: ChangeDetectionStrategy.Default },
+            })
+            .compileComponents();
 
         fixture = TestBed.createComponent(SearchAdditionalButtonsComponent);
         component = fixture.componentInstance;
@@ -23,5 +28,12 @@ describe("SearchAdditionalButtonsComponent", () => {
 
     it("should create", async () => {
         await expect(component).toBeTruthy();
+    });
+
+    it("should trigger onResize method when window is resized", async () => {
+        const spyOnResize = spyOn(component, "checkWindowSize");
+        window.dispatchEvent(new Event("resize"));
+        fixture.detectChanges();
+        await expect(spyOnResize).toHaveBeenCalled();
     });
 });

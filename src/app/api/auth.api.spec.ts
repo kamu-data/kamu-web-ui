@@ -22,7 +22,6 @@ describe("AuthApi", () => {
 
     it("should be logout user", async () => {
         const navigationServiceSpy = spyOn(navigationService, "navigateToHome");
-        const localStorageSpy = spyOn(localStorage, "removeItem");
         const user: AccountDetailsFragment = {
             login: "hhhhhh",
             name: "testName",
@@ -31,7 +30,6 @@ describe("AuthApi", () => {
         await expect(service.userModal).toBeDefined();
         service.logOut();
         await expect(service.userModal).toBeNull();
-        await expect(localStorageSpy).toHaveBeenCalled();
         await expect(navigationServiceSpy).toHaveBeenCalled();
     });
 });

@@ -22,6 +22,7 @@ describe("DatasetComponent", () => {
     let fixture: ComponentFixture<DatasetComponent>;
     let appDatasetService: AppDatasetService;
     let navigationService: NavigationService;
+    let route: ActivatedRoute;
 
     const eventSubject = new ReplaySubject<RouterEvent>(1);
     const routerMock = {
@@ -75,6 +76,7 @@ describe("DatasetComponent", () => {
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsFragment;
         appDatasetService = TestBed.inject(AppDatasetService);
+        route = TestBed.inject(ActivatedRoute);
         navigationService = TestBed.inject(NavigationService);
         fixture.detectChanges();
     });
@@ -83,10 +85,32 @@ describe("DatasetComponent", () => {
         await expect(component).toBeTruthy();
     });
 
-    it("should check call ngOnInit", async () => {
-        appDatasetService.datasetChanges(mockDatasetBasicsFragment);
-        component.ngOnInit();
-        await expect(component.datasetBasics).toBe(mockDatasetBasicsFragment);
+    [
+        DatasetViewTypeEnum.Overview,
+        DatasetViewTypeEnum.Data,
+        DatasetViewTypeEnum.Metadata,
+        DatasetViewTypeEnum.History,
+        DatasetViewTypeEnum.Lineage,
+        DatasetViewTypeEnum.Discussions,
+    ].forEach((tab: string) => {
+        it(`should check init ${tab} tab`, async () => {
+            const spyRoute = spyOn(route.snapshot.queryParamMap, "get");
+            spyRoute.and.callFake((queryParam: "tab" | "page") => {
+                switch (queryParam) {
+                    case "tab": {
+                        return tab;
+                    }
+                    case "page": {
+                        return null;
+                    }
+                }
+            });
+            appDatasetService.datasetChanges(mockDatasetBasicsFragment);
+            component.ngOnInit();
+            await expect(component.datasetBasics).toBe(
+                mockDatasetBasicsFragment,
+            );
+        });
     });
 
     it("should check call getMainDataByLineageNode", async () => {

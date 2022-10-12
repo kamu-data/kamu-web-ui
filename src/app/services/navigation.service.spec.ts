@@ -84,4 +84,12 @@ describe("NavigationService", () => {
         service.navigateToDatasetView(mockParams);
         await expect(routerSpy).toHaveBeenCalled();
     });
+
+    it("should be test navigate to page not found view", () => {
+        const routerSpy = spyOn(router, "navigate").and.callThrough();
+        service.navigateToPageNotFound();
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.urlPageNotFound], {
+            skipLocationChange: true,
+        });
+    });
 });

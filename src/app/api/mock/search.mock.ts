@@ -1,9 +1,14 @@
 import {
+    DatasetAutocompleteItem,
+    TypeNames,
+} from "../../interface/search.interface";
+import {
     DatasetKind,
     SearchDatasetsAutocompleteQuery,
-} from "./kamu.graphql.interface";
+    SearchDatasetsOverviewQuery,
+} from "../kamu.graphql.interface";
 
-export const mockSearchOverviewResponse = {
+export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
     search: {
         __typename: "Search",
         query: {
@@ -42,12 +47,12 @@ export const mockSearchOverviewResponse = {
                             {
                                 __typename: "Dataset",
                                 id: "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7",
-                                kind: "DERIVATIVE",
+                                kind: DatasetKind.Derivative,
                             },
                         ],
                     },
                     id: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
-                    kind: "ROOT",
+                    kind: DatasetKind.Root,
                     name: "alberta.case-details",
                     owner: {
                         __typename: "User",
@@ -89,12 +94,12 @@ export const mockSearchOverviewResponse = {
                             {
                                 __typename: "Dataset",
                                 id: "did:odf:z4k88e8epAntnrFDUiDYxSGkCRcTc6wNzcwbpubzLCPQLVLUMcF",
-                                kind: "DERIVATIVE",
+                                kind: DatasetKind.Derivative,
                             },
                         ],
                     },
                     id: "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7",
-                    kind: "DERIVATIVE",
+                    kind: DatasetKind.Derivative,
                     name: "alberta.case-details.hm",
                     owner: {
                         __typename: "User",
@@ -135,12 +140,12 @@ export const mockSearchOverviewResponse = {
                             {
                                 __typename: "Dataset",
                                 id: "did:odf:z4k88e8rAFwtkT53U5hCMU2k5E1EqNLif5uYfC3AwN6FD62onvP",
-                                kind: "DERIVATIVE",
+                                kind: DatasetKind.Derivative,
                             },
                         ],
                     },
                     id: "did:odf:z4k88e8i1YPqnKHsAqwPkaUhT1t4vtHQzS2fVCqtggE7SJWDVza",
-                    kind: "ROOT",
+                    kind: DatasetKind.Root,
                     name: "british-columbia.case-details",
                     owner: {
                         __typename: "User",
@@ -182,12 +187,12 @@ export const mockSearchOverviewResponse = {
                             {
                                 __typename: "Dataset",
                                 id: "did:odf:z4k88e8epAntnrFDUiDYxSGkCRcTc6wNzcwbpubzLCPQLVLUMcF",
-                                kind: "DERIVATIVE",
+                                kind: DatasetKind.Derivative,
                             },
                         ],
                     },
                     id: "did:odf:z4k88e8rAFwtkT53U5hCMU2k5E1EqNLif5uYfC3AwN6FD62onvP",
-                    kind: "DERIVATIVE",
+                    kind: DatasetKind.Derivative,
                     name: "british-columbia.case-details.hm",
                     owner: {
                         __typename: "User",
@@ -228,12 +233,12 @@ export const mockSearchOverviewResponse = {
                             {
                                 __typename: "Dataset",
                                 id: "did:odf:z4k88e8thqpQ7kupbJCiFbeXr5WZVCor7hmybhfmyUTLnWifwz6",
-                                kind: "DERIVATIVE",
+                                kind: DatasetKind.Derivative,
                             },
                         ],
                     },
                     id: "did:odf:z4k88e8epAntnrFDUiDYxSGkCRcTc6wNzcwbpubzLCPQLVLUMcF",
-                    kind: "DERIVATIVE",
+                    kind: DatasetKind.Derivative,
                     name: "canada.case-details",
                     owner: {
                         __typename: "User",
@@ -271,7 +276,7 @@ export const mockSearchOverviewResponse = {
                         currentDownstreamDependencies: [],
                     },
                     id: "did:odf:z4k88e8thqpQ7kupbJCiFbeXr5WZVCor7hmybhfmyUTLnWifwz6",
-                    kind: "DERIVATIVE",
+                    kind: DatasetKind.Derivative,
                     name: "canada.daily-cases",
                     owner: {
                         __typename: "User",
@@ -294,7 +299,7 @@ export const mockSearchOverviewResponse = {
                         currentDownstreamDependencies: [],
                     },
                     id: "did:odf:z4k88e8kYjmgyhEpMcQfN3U1hAKSJ1Lvj63vbeu8xQocriPMP1Q",
-                    kind: "ROOT",
+                    kind: DatasetKind.Root,
                     name: "co.alphavantage.tickers.daily.spy",
                     owner: {
                         __typename: "User",
@@ -324,7 +329,7 @@ export const mockSearchOverviewResponse = {
                         currentDownstreamDependencies: [],
                     },
                     id: "did:odf:z4k88e8e5sAUjHVvsBaqLs42wX2bhgohzbhaLnKZ7K1ywCjygig",
-                    kind: "ROOT",
+                    kind: DatasetKind.Root,
                     name: "com.cryptocompare.ohlcv.eth-usd",
                     owner: {
                         __typename: "User",
@@ -347,7 +352,7 @@ export const mockSearchOverviewResponse = {
                         currentDownstreamDependencies: [],
                     },
                     id: "did:odf:z4k88e8u3rDWqP6sq96Z7gfYdHXiuG9ZDGkdPxbtqFw8VCVJvEu",
-                    kind: "ROOT",
+                    kind: DatasetKind.Root,
                     name: "net.rocketpool.reth.mint-burn",
                     owner: {
                         __typename: "User",
@@ -388,12 +393,12 @@ export const mockSearchOverviewResponse = {
                             {
                                 __typename: "Dataset",
                                 id: "did:odf:z4k88e8gCvWKoSD2eaVa7ocoLDzuUcGu8VW89Pks775fM5MgDom",
-                                kind: "DERIVATIVE",
+                                kind: DatasetKind.Derivative,
                             },
                         ],
                     },
                     id: "did:odf:z4k88e8uUcKWpJVMbvAyww4R6iarRhSy93yhd3ohg3QdDQP86D4",
-                    kind: "ROOT",
+                    kind: DatasetKind.Root,
                     name: "ontario.case-details",
                     owner: {
                         __typename: "User",
@@ -535,13 +540,13 @@ export const mockSearchResponse: SearchDatasetsAutocompleteQuery = {
     },
 };
 
-export const searchResult = [
+export const searchResult: DatasetAutocompleteItem[] = [
     {
-        __typename: "all",
+        __typename: TypeNames.allDataType,
         dataset: {
             id: "a",
             name: "a",
-            kind: "ROOT",
+            kind: DatasetKind.Root,
             owner: {
                 id: "anonymous",
                 name: "anonymous",
@@ -552,7 +557,7 @@ export const searchResult = [
         dataset: {
             __typename: "Dataset",
             id: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
-            kind: "ROOT",
+            kind: DatasetKind.Root,
             name: "alberta.case-details",
             owner: {
                 __typename: "User",
@@ -560,13 +565,13 @@ export const searchResult = [
                 name: "kamu",
             },
         },
-        __typename: "Dataset",
+        __typename: TypeNames.datasetType,
     },
     {
         dataset: {
             __typename: "Dataset",
             id: "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7",
-            kind: "DERIVATIVE",
+            kind: DatasetKind.Derivative,
             name: "alberta.case-details.hm",
             owner: {
                 __typename: "User",
@@ -574,13 +579,13 @@ export const searchResult = [
                 name: "kamu",
             },
         },
-        __typename: "Dataset",
+        __typename: TypeNames.datasetType,
     },
     {
         dataset: {
             __typename: "Dataset",
             id: "did:odf:z4k88e8i1YPqnKHsAqwPkaUhT1t4vtHQzS2fVCqtggE7SJWDVza",
-            kind: "ROOT",
+            kind: DatasetKind.Root,
             name: "british-columbia.case-details",
             owner: {
                 __typename: "User",
@@ -588,13 +593,13 @@ export const searchResult = [
                 name: "kamu",
             },
         },
-        __typename: "Dataset",
+        __typename: TypeNames.datasetType,
     },
     {
         dataset: {
             __typename: "Dataset",
             id: "did:odf:z4k88e8rAFwtkT53U5hCMU2k5E1EqNLif5uYfC3AwN6FD62onvP",
-            kind: "DERIVATIVE",
+            kind: DatasetKind.Derivative,
             name: "british-columbia.case-details.hm",
             owner: {
                 __typename: "User",
@@ -602,13 +607,13 @@ export const searchResult = [
                 name: "kamu",
             },
         },
-        __typename: "Dataset",
+        __typename: TypeNames.datasetType,
     },
     {
         dataset: {
             __typename: "Dataset",
             id: "did:odf:z4k88e8epAntnrFDUiDYxSGkCRcTc6wNzcwbpubzLCPQLVLUMcF",
-            kind: "DERIVATIVE",
+            kind: DatasetKind.Derivative,
             name: "canada.case-details",
             owner: {
                 __typename: "User",
@@ -616,13 +621,13 @@ export const searchResult = [
                 name: "kamu",
             },
         },
-        __typename: "Dataset",
+        __typename: TypeNames.datasetType,
     },
     {
         dataset: {
             __typename: "Dataset",
             id: "did:odf:z4k88e8thqpQ7kupbJCiFbeXr5WZVCor7hmybhfmyUTLnWifwz6",
-            kind: "DERIVATIVE",
+            kind: DatasetKind.Derivative,
             name: "canada.daily-cases",
             owner: {
                 __typename: "User",
@@ -630,13 +635,13 @@ export const searchResult = [
                 name: "kamu",
             },
         },
-        __typename: "Dataset",
+        __typename: TypeNames.datasetType,
     },
     {
         dataset: {
             __typename: "Dataset",
             id: "did:odf:z4k88e8kYjmgyhEpMcQfN3U1hAKSJ1Lvj63vbeu8xQocriPMP1Q",
-            kind: "ROOT",
+            kind: DatasetKind.Root,
             name: "co.alphavantage.tickers.daily.spy",
             owner: {
                 __typename: "User",
@@ -644,13 +649,13 @@ export const searchResult = [
                 name: "kamu",
             },
         },
-        __typename: "Dataset",
+        __typename: TypeNames.datasetType,
     },
     {
         dataset: {
             __typename: "Dataset",
             id: "did:odf:z4k88e8e5sAUjHVvsBaqLs42wX2bhgohzbhaLnKZ7K1ywCjygig",
-            kind: "ROOT",
+            kind: DatasetKind.Root,
             name: "com.cryptocompare.ohlcv.eth-usd",
             owner: {
                 __typename: "User",
@@ -658,13 +663,13 @@ export const searchResult = [
                 name: "kamu",
             },
         },
-        __typename: "Dataset",
+        __typename: TypeNames.datasetType,
     },
     {
         dataset: {
             __typename: "Dataset",
             id: "did:odf:z4k88e8uUcKWpJVMbvAyww4R6iarRhSy93yhd3ohg3QdDQP86D4",
-            kind: "ROOT",
+            kind: DatasetKind.Root,
             name: "ontario.case-details",
             owner: {
                 __typename: "User",
@@ -672,13 +677,13 @@ export const searchResult = [
                 name: "kamu",
             },
         },
-        __typename: "Dataset",
+        __typename: TypeNames.datasetType,
     },
     {
         dataset: {
             __typename: "Dataset",
             id: "did:odf:z4k88e8gCvWKoSD2eaVa7ocoLDzuUcGu8VW89Pks775fM5MgDom",
-            kind: "DERIVATIVE",
+            kind: DatasetKind.Derivative,
             name: "ontario.case-details.hm",
             owner: {
                 __typename: "User",
@@ -686,6 +691,6 @@ export const searchResult = [
                 name: "kamu",
             },
         },
-        __typename: "Dataset",
+        __typename: TypeNames.datasetType,
     },
 ];

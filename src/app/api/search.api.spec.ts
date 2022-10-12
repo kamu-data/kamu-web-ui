@@ -7,12 +7,14 @@ import {
 import {
     SearchDatasetsAutocompleteDocument,
     SearchDatasetsOverviewDocument,
+    SearchDatasetsOverviewQuery,
 } from "./kamu.graphql.interface";
 import {
     mockSearchOverviewResponse,
     mockSearchResponse,
     searchResult,
-} from "./search.mock";
+} from "./mock/search.mock";
+import { DatasetAutocompleteItem } from "../interface/search.interface";
 
 describe("SearchApi", () => {
     let service: SearchApi;
@@ -36,10 +38,14 @@ describe("SearchApi", () => {
     });
 
     it("should be call autocomplete with search query", async () => {
-        service.autocompleteDatasetSearch("a").subscribe((res) => {
-            void expect(res[0].__typename).toEqual(searchResult[0].__typename);
-            void expect(res.length).toEqual(11);
-        });
+        service
+            .autocompleteDatasetSearch("a")
+            .subscribe((res: DatasetAutocompleteItem[]) => {
+                void expect(res[0].__typename).toEqual(
+                    searchResult[0].__typename,
+                );
+                void expect(res.length).toEqual(11);
+            });
 
         const op = controller.expectOne(SearchDatasetsAutocompleteDocument);
         await expect(op.operation.variables.query).toEqual("a");
@@ -51,15 +57,19 @@ describe("SearchApi", () => {
     });
 
     it("should check autocomplete without search query", () => {
-        service.autocompleteDatasetSearch("").subscribe((res) => {
-            void expect(res).toEqual([]);
-        });
+        service
+            .autocompleteDatasetSearch("")
+            .subscribe((res: DatasetAutocompleteItem[]) => {
+                void expect(res).toEqual([]);
+            });
     });
 
     it("should be call autocomplete with search query", async () => {
-        service.overviewDatasetSearch("").subscribe((res) => {
-            void expect(res.search.query.totalCount).toEqual(13);
-        });
+        service
+            .overviewDatasetSearch("")
+            .subscribe((res: SearchDatasetsOverviewQuery) => {
+                void expect(res.search.query.totalCount).toEqual(13);
+            });
 
         const op = controller.expectOne(SearchDatasetsOverviewDocument);
         await expect(op.operation.variables.query).toEqual("");

@@ -26,7 +26,7 @@ import ProjectLinks from "./project-links";
 import { AccountInfo } from "./api/kamu.graphql.interface";
 import { MaybeNull } from "./common/app.types";
 import _ from "lodash";
-import { logError } from "./common/app.helpers";
+import { promiseWithCatch } from "./common/app.helpers";
 
 @Component({
     selector: "app-root",
@@ -175,51 +175,51 @@ export class AppComponent extends BaseComponent implements OnInit {
         this.authApi.logOut();
     }
     public onUserProfile(): void {
-        this.modalService
-            .warning({
+        promiseWithCatch(
+            this.modalService.warning({
                 message: this.unimplementedMessage,
                 yesButtonText: "Ok",
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
     public onUserDatasets(): void {
-        this.modalService
-            .warning({
+        promiseWithCatch(
+            this.modalService.warning({
                 message: this.unimplementedMessage,
                 yesButtonText: "Ok",
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
     public onBilling(): void {
-        this.modalService
-            .warning({
+        promiseWithCatch(
+            this.modalService.warning({
                 message: this.unimplementedMessage,
                 yesButtonText: "Ok",
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
     public onAnalytics(): void {
-        this.modalService
-            .warning({
+        promiseWithCatch(
+            this.modalService.warning({
                 message: this.unimplementedMessage,
                 yesButtonText: "Ok",
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
     public onSettings(): void {
-        this.modalService
-            .warning({
+        promiseWithCatch(
+            this.modalService.warning({
                 message: this.unimplementedMessage,
                 yesButtonText: "Ok",
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
     public onHelp(): void {
-        this.modalService
-            .warning({
+        promiseWithCatch(
+            this.modalService.warning({
                 message: this.unimplementedMessage,
                 yesButtonText: "Ok",
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
 }

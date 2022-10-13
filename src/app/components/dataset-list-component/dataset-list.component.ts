@@ -13,7 +13,7 @@ import {
     DatasetBasicsFragment,
     DatasetSearchOverviewFragment,
 } from "src/app/api/kamu.graphql.interface";
-import { logError } from "src/app/common/app.helpers";
+import { promiseWithCatch } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-dataset-list",
@@ -57,12 +57,12 @@ export class DatasetListComponent {
     }
 
     public selectTopic(topicName: string): void {
-        this.modalService
-            .warning({
+        promiseWithCatch(
+            this.modalService.warning({
                 message: "Feature coming soon",
                 yesButtonText: "Ok",
                 title: topicName,
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
 }

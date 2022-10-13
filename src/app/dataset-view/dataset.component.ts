@@ -27,7 +27,7 @@ import { DatasetBasicsFragment } from "../api/kamu.graphql.interface";
 import { BaseComponent } from "../common/base.component";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { logError, requireValue } from "../common/app.helpers";
+import { promiseWithCatch, requireValue } from "../common/app.helpers";
 
 @Component({
     selector: "app-dataset",
@@ -149,24 +149,27 @@ export class DatasetComponent
     }
 
     public onClickSearchAdditionalButton(method: string) {
-        if (method === searchAdditionalButtonsEnum.DeriveFrom) {
-            this.onClickDeriveFrom();
-        }
-        if (method === searchAdditionalButtonsEnum.Reputation) {
-            this.onClickReputation();
-        }
-        if (method === searchAdditionalButtonsEnum.Explore) {
-            this.onClickExplore();
-        }
-        if (method === searchAdditionalButtonsEnum.Descission) {
-            this.onClickDescission();
-        }
-        this.modalService
-            .warning({
+        const mapperMethod: {
+            [key in searchAdditionalButtonsEnum]: () => void;
+        } = {
+            [searchAdditionalButtonsEnum.DeriveFrom]: () =>
+                this.onClickDeriveFrom(),
+            [searchAdditionalButtonsEnum.Reputation]: () =>
+                this.onClickReputation(),
+            [searchAdditionalButtonsEnum.Explore]: () => this.onClickExplore(),
+            [searchAdditionalButtonsEnum.Descission]: () =>
+                this.onClickDescission(),
+            [searchAdditionalButtonsEnum.Starred]: () => null,
+            [searchAdditionalButtonsEnum.UnWatch]: () => null,
+        };
+        mapperMethod[method as searchAdditionalButtonsEnum]();
+
+        promiseWithCatch(
+            this.modalService.warning({
                 message: "Feature coming soon",
                 yesButtonText: "Ok",
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
 
     private initOverviewTab(): void {
@@ -215,13 +218,13 @@ export class DatasetComponent
     }
 
     public selectTopic(topicName: string): void {
-        this.modalService
-            .warning({
+        promiseWithCatch(
+            this.modalService.warning({
                 message: "Feature coming soon",
                 yesButtonText: "Ok",
                 title: topicName,
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
 
     public onClickLineageNode(node: Node): void {

@@ -1,6 +1,6 @@
+import { promiseWithCatch } from "src/app/common/app.helpers";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { logError } from "../common/app.helpers";
 import { DatasetNavigationParams } from "../interface/navigation.interface";
 import ProjectLinks from "../project-links";
 
@@ -13,47 +13,45 @@ export class NavigationService {
     }
 
     public navigateToHome(): void {
-        this.router.navigate([ProjectLinks.urlHome]).catch((e) => logError(e));
+        promiseWithCatch(this.router.navigate([ProjectLinks.urlHome]));
     }
 
     public navigateToSearch(query?: string, page?: number): void {
-        this.router
-            .navigate([ProjectLinks.urlSearch], {
+        promiseWithCatch(
+            this.router.navigate([ProjectLinks.urlSearch], {
                 queryParams: query ? { query, page } : { page },
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
 
     public navigateToDatasetCreate(): void {
-        this.router
-            .navigate([ProjectLinks.urlDatasetCreate])
-            .catch((e) => logError(e));
+        promiseWithCatch(this.router.navigate([ProjectLinks.urlDatasetCreate]));
     }
 
     public navigateToDatasetView(params: DatasetNavigationParams): void {
-        this.router
-            .navigate([params.accountName, params.datasetName], {
+        promiseWithCatch(
+            this.router.navigate([params.accountName, params.datasetName], {
                 queryParams:
                     params.page === 1
                         ? { tab: params.tab }
                         : { tab: params.tab, page: params.page },
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
 
     public navigateToLogin(): void {
-        this.router.navigate([ProjectLinks.urlLogin]).catch((e) => logError(e));
+        promiseWithCatch(this.router.navigate([ProjectLinks.urlLogin]));
     }
 
     public navigateToOwnerView(ownerName: string): void {
-        this.router.navigate([ownerName]).catch((e) => logError(e));
+        promiseWithCatch(this.router.navigate([ownerName]));
     }
 
     public navigateToPageNotFound(): void {
-        this.router
-            .navigate([ProjectLinks.urlPageNotFound], {
+        promiseWithCatch(
+            this.router.navigate([ProjectLinks.urlPageNotFound], {
                 skipLocationChange: true,
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
 }

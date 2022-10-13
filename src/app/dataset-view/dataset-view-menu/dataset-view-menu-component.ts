@@ -15,7 +15,7 @@ import {
 import { Clipboard } from "@angular/cdk/clipboard";
 import AppValues from "../../common/app.values";
 import { SideNavHelper } from "../../common/sidenav.helper";
-import { logError } from "src/app/common/app.helpers";
+import { promiseWithCatch } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-dataset-view-menu",
@@ -39,9 +39,9 @@ export class DatasetViewMenuComponent implements OnInit {
         this.isMinimizeSearchAdditionalButtons = AppValues.isMobileView();
         if (this.sidenav) {
             if (AppValues.isMobileView()) {
-                this.sideNavHelper.close().catch((e) => logError(e));
+                promiseWithCatch(this.sideNavHelper.close());
             } else {
-                this.sideNavHelper.open().catch((e) => logError(e));
+                promiseWithCatch(this.sideNavHelper.open());
             }
         }
     }

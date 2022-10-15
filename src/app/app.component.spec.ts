@@ -15,6 +15,7 @@ import { ModalService } from "./components/modal/modal.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ModalComponent } from "./components/modal/modal.component";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { AccountDetailsFragment } from "./api/kamu.graphql.interface";
 
 describe("AppComponent", () => {
     let component: AppComponent;
@@ -22,7 +23,6 @@ describe("AppComponent", () => {
     let navigationService: NavigationService;
     let modalService: ModalService;
     let authApi: AuthApi;
-
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
@@ -61,8 +61,14 @@ describe("AppComponent", () => {
     });
 
     it("should check call authentification method in onInit ", async () => {
+        const mockAccountDetailsFragment: AccountDetailsFragment = {
+            login: "testLogin",
+            name: "testName",
+        };
+        authApi.userChange(mockAccountDetailsFragment);
         const authentificationSpy = spyOn(component, "authentification");
         component.ngOnInit();
+        await expect(component.user).toEqual(mockAccountDetailsFragment);
         await expect(authentificationSpy).toHaveBeenCalled();
     });
 

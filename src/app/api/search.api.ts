@@ -18,8 +18,11 @@ import {
 } from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
 
+export const SEARCH_RESULTS_PER_PAGE = 10;
+
 @Injectable({ providedIn: "root" })
 export class SearchApi {
+
     constructor(
         private searchDatasetsAutocompleteGQL: SearchDatasetsAutocompleteGQL,
         private searchDatasetsOverviewGQL: SearchDatasetsOverviewGQL,
@@ -29,7 +32,7 @@ export class SearchApi {
     public overviewDatasetSearch(
         searchQuery: string,
         page = 0,
-        perPage = 10,
+        perPage = SEARCH_RESULTS_PER_PAGE,
     ): Observable<SearchDatasetsOverviewQuery> {
         return this.searchDatasetsOverviewGQL
             .watch({
@@ -51,12 +54,13 @@ export class SearchApi {
 
     public autocompleteDatasetSearch(
         id: string,
+        perPage = SEARCH_RESULTS_PER_PAGE,
     ): Observable<DatasetAutocompleteItem[]> {
         if (id === "") {
             return of([]);
         }
         return this.searchDatasetsAutocompleteGQL
-            .watch({ query: id, perPage: 10 })
+            .watch({ query: id, perPage })
             .valueChanges.pipe(
                 first(),
                 map(

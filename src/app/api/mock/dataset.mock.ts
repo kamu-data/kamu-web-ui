@@ -4,6 +4,9 @@ import {
 } from "./../kamu.graphql.interface";
 import { DataSchemaFormat } from "../kamu.graphql.interface";
 
+export const TEST_USER_NAME = "test-user";
+export const TEST_DATASET_NAME = "test-dataset";
+
 export const mockDatasetDataSqlRunResponse: GetDatasetDataSqlRunQuery = {
     data: {
         __typename: "DataQueries",

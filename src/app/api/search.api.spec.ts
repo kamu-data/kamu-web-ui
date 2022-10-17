@@ -1,5 +1,5 @@
 import { TestBed } from "@angular/core/testing";
-import { SearchApi } from "./search.api";
+import { SearchApi, SEARCH_RESULTS_PER_PAGE } from "./search.api";
 import {
     ApolloTestingController,
     ApolloTestingModule,
@@ -12,7 +12,6 @@ import {
 import {
     mockSearchOverviewResponse,
     mockSearchResponse,
-    searchResult,
 } from "./mock/search.mock";
 import { DatasetAutocompleteItem } from "../interface/search.interface";
 
@@ -37,26 +36,24 @@ describe("SearchApi", () => {
         await expect(service).toBeTruthy();
     });
 
-    it("should be call autocomplete with search query", async () => {
+    it("should check dataset autocomplete", async () => {
+        const TEST_QUERY = "a";
         service
-            .autocompleteDatasetSearch("a")
+            .autocompleteDatasetSearch(TEST_QUERY)
             .subscribe((res: DatasetAutocompleteItem[]) => {
-                void expect(res[0].__typename).toEqual(
-                    searchResult[0].__typename,
-                );
-                void expect(res.length).toEqual(11);
+                void expect(res.length).toEqual(mockSearchResponse.search.query.nodes.length + 1 /* dummy result */);
             });
 
         const op = controller.expectOne(SearchDatasetsAutocompleteDocument);
-        await expect(op.operation.variables.query).toEqual("a");
-        await expect(op.operation.variables.perPage).toEqual(10);
+        await expect(op.operation.variables.query).toEqual(TEST_QUERY);
+        await expect(op.operation.variables.perPage).toEqual(SEARCH_RESULTS_PER_PAGE);
 
         op.flush({
             data: mockSearchResponse,
         });
     });
 
-    it("should check autocomplete without search query", () => {
+    it("should check dataset autocomplete with empty query", () => {
         service
             .autocompleteDatasetSearch("")
             .subscribe((res: DatasetAutocompleteItem[]) => {
@@ -64,16 +61,17 @@ describe("SearchApi", () => {
             });
     });
 
-    it("should be call autocomplete with search query", async () => {
+    it("should check dataset search with empty query", async () => {
+        const EMPTY_QUERY = "";
         service
-            .overviewDatasetSearch("")
+            .overviewDatasetSearch(EMPTY_QUERY)
             .subscribe((res: SearchDatasetsOverviewQuery) => {
                 void expect(res.search.query.totalCount).toEqual(13);
             });
 
         const op = controller.expectOne(SearchDatasetsOverviewDocument);
-        await expect(op.operation.variables.query).toEqual("");
-        await expect(op.operation.variables.perPage).toEqual(10);
+        await expect(op.operation.variables.query).toEqual(EMPTY_QUERY);
+        await expect(op.operation.variables.perPage).toEqual(SEARCH_RESULTS_PER_PAGE);
 
         op.flush({
             data: mockSearchOverviewResponse,

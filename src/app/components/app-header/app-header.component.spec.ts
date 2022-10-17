@@ -1,4 +1,4 @@
-import { AccountInfo } from "src/app/api/kamu.graphql.interface";
+import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import { FormsModule } from "@angular/forms";
 import { MatMenuModule } from "@angular/material/menu";
 import { ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
@@ -103,7 +103,7 @@ describe("AppHeaderComponent", () => {
     });
 
     it("should emit on click Settings link", async () => {
-        component.userInfo = { login: "ssss", name: "testName" } as AccountInfo;
+        component.userInfo = { login: "ssss", name: "testName" } as AccountDetailsFragment;
         const clickSettingsEmitterSpy = spyOn(
             component.clickSettingsEmitter,
             "emit",
@@ -116,7 +116,7 @@ describe("AppHeaderComponent", () => {
     });
 
     it("should emit on click Your profile link", async () => {
-        component.userInfo = { login: "ssss", name: "testName" } as AccountInfo;
+        component.userInfo = { login: "ssss", name: "testName" } as AccountDetailsFragment;
         const clickUserProfileEmitterSpy = spyOn(
             component.clickUserProfileEmitter,
             "emit",
@@ -129,7 +129,7 @@ describe("AppHeaderComponent", () => {
     });
 
     it("should emit on click Analytics link", async () => {
-        component.userInfo = { login: "ssss", name: "testName" } as AccountInfo;
+        component.userInfo = { login: "ssss", name: "testName" } as AccountDetailsFragment;
         const clickAnalyticsEmitterSpy = spyOn(
             component.clickAnalyticsEmitter,
             "emit",
@@ -142,7 +142,7 @@ describe("AppHeaderComponent", () => {
     });
 
     it("should emit on click LogOut link", async () => {
-        component.userInfo = { login: "ssss", name: "testName" } as AccountInfo;
+        component.userInfo = { login: "ssss", name: "testName" } as AccountDetailsFragment;
         const logOutEmitterSpy = spyOn(component.logOutEmitter, "emit");
         emitClickOnElement(fixture, "#appHeaderMenuButton");
         fixture.detectChanges();

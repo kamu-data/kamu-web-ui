@@ -15,7 +15,7 @@ import { ModalService } from "./components/modal/modal.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ModalComponent } from "./components/modal/modal.component";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
-import { AccountDetailsFragment } from "./api/kamu.graphql.interface";
+import { of } from "rxjs";
 
 describe("AppComponent", () => {
     let component: AppComponent;
@@ -61,15 +61,17 @@ describe("AppComponent", () => {
     });
 
     it("should check call authentification method in onInit ", async () => {
-        const mockAccountDetailsFragment: AccountDetailsFragment = {
-            login: "testLogin",
-            name: "testName",
-        };
-        authApi.userChange(mockAccountDetailsFragment);
-        const authentificationSpy = spyOn(component, "authentification");
+        const localStorageGetItemSpy = spyOn(localStorage, 'getItem').and.returnValue('someToken');
+        const fetchUserInfoFromAccessTokenSpy = spyOn(authApi, 'fetchUserInfoFromAccessToken').and.callFake(() => of());
+        const authentificationSpy = spyOn(component, "authentification").and.callThrough();
+        const isAuthenticatedSpy = spyOnProperty(authApi, 'isAuthenticated', 'get').and.returnValue(false);
+
         component.ngOnInit();
-        await expect(component.user).toEqual(mockAccountDetailsFragment);
+
         await expect(authentificationSpy).toHaveBeenCalled();
+        expect(localStorageGetItemSpy).toHaveBeenCalledWith(AppValues.localStorageAccessToken);
+        await expect(fetchUserInfoFromAccessTokenSpy).toHaveBeenCalled();
+        await expect(isAuthenticatedSpy).toHaveBeenCalled();
     });
 
     it("should check call checkWindowSize method", async () => {

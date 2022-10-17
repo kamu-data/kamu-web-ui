@@ -23,7 +23,7 @@ import { AuthApi } from "./api/auth.api";
 import { ModalService } from "./components/modal/modal.service";
 import { BaseComponent } from "./common/base.component";
 import ProjectLinks from "./project-links";
-import { AccountInfo } from "./api/kamu.graphql.interface";
+import { AccountDetailsFragment } from "./api/kamu.graphql.interface";
 import { MaybeNull } from "./common/app.types";
 import _ from "lodash";
 import { promiseWithCatch } from "./common/app.helpers";
@@ -35,7 +35,7 @@ import { promiseWithCatch } from "./common/app.helpers";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent extends BaseComponent implements OnInit {
-    private readonly AnonymousAccountInfo: AccountInfo = {
+    private readonly AnonymousAccountInfo: AccountDetailsFragment = {
         login: "",
         name: AppValues.defaultUsername,
     };
@@ -44,7 +44,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     public isMobileView = false;
     public searchValue = "";
     public isVisible = true;
-    public user: AccountInfo;
+    public user: AccountDetailsFragment = this.AnonymousAccountInfo;
     private appHeaderNotVisiblePages: string[] = [
         ProjectLinks.urlDatasetCreate,
         ProjectLinks.urlLogin,
@@ -72,7 +72,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         this.appHeaderInit();
         this.trackSubscription(
             this.authApi.onUserChanges.subscribe(
-                (user: MaybeNull<AccountInfo>) => {
+                (user: MaybeNull<AccountDetailsFragment>) => {
                     this.user = user
                         ? _.cloneDeep(user)
                         : this.AnonymousAccountInfo;
@@ -92,7 +92,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         ) {
             return;
         } else {
-            if (typeof accessToken === "string" && !this.authApi.isAuthUser) {
+            if (typeof accessToken === "string" && !this.authApi.isAuthenticated) {
                 this.trackSubscription(
                     this.authApi
                         .fetchUserInfoFromAccessToken(accessToken)

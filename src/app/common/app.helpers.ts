@@ -9,6 +9,6 @@ export function logError<T>(input: T) {
     console.error(input);
 }
 
-export function promiseWithCatch(promise: Promise<boolean | string>): void {
+export function promiseWithCatch<T>(promise: Promise<T>): void {
     promise.catch((e) => logError(e));
 }

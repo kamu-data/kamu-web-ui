@@ -16,7 +16,7 @@ import {
 import { SearchApi } from "../../api/search.api";
 import AppValues from "../../common/app.values";
 import { BaseComponent } from "src/app/common/base.component";
-import { AccountInfo } from "src/app/api/kamu.graphql.interface";
+import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
@@ -29,7 +29,7 @@ export class AppHeaderComponent extends BaseComponent {
     @Input() public appLogo: string;
     @Input() public isMobileView: boolean;
     @Input() public isVisible: boolean;
-    @Input() public userInfo: AccountInfo;
+    @Input() public userInfo: AccountDetailsFragment;
 
     @Output() public selectDatasetEmitter =
         new EventEmitter<DatasetAutocompleteItem>();

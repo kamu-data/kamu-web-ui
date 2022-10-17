@@ -1,8 +1,15 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+} from "@angular/core";
 
 @Component({
     selector: "app-search-sidenav",
     templateUrl: "./search-sidenav.component.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchSidenavComponent {
     @Input() public searchValue: string;

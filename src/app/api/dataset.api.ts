@@ -5,34 +5,28 @@ import { map, first } from "rxjs/operators";
 import { Observable } from "rxjs";
 
 import {
-    GetDatasetOverviewGQL,
-    GetDatasetOverviewQuery,
+    GetDatasetMainDataGQL,
+    GetDatasetMainDataQuery,
     GetDatasetHistoryGQL,
     GetDatasetHistoryQuery,
-    GetDatasetMetadataSchemaGQL,
     GetDatasetDataSqlRunGQL,
     GetDatasetDataSqlRunQuery,
-    GetDatasetLineageGQL,
-    GetDatasetLineageQuery,
-    GetDatasetMetadataSchemaQuery,
 } from "./kamu.graphql.interface";
 
 @Injectable()
 export class DatasetApi {
     constructor(
-        private datasetOverviewGQL: GetDatasetOverviewGQL,
-        private datasetMetadataGQL: GetDatasetMetadataSchemaGQL,
+        private datasetMainDataGQL: GetDatasetMainDataGQL,
         private datasetDataSqlRunGQL: GetDatasetDataSqlRunGQL,
         private datasetHistoryGQL: GetDatasetHistoryGQL,
-        private datasetLineageGQL: GetDatasetLineageGQL,
     ) {}
 
-    public getDatasetOverview(params: {
+    public getDatasetMainData(params: {
         accountName: string;
         datasetName: string;
         numRecords?: number;
-    }): Observable<GetDatasetOverviewQuery> {
-        return this.datasetOverviewGQL
+    }): Observable<GetDatasetMainDataQuery> {
+        return this.datasetMainDataGQL
             .watch({
                 accountName: params.accountName,
                 datasetName: params.datasetName,
@@ -40,7 +34,7 @@ export class DatasetApi {
             })
             .valueChanges.pipe(
                 first(),
-                map((result: ApolloQueryResult<GetDatasetOverviewQuery>) => {
+                map((result: ApolloQueryResult<GetDatasetMainDataQuery>) => {
                     return result.data;
                 }),
             );
@@ -76,48 +70,6 @@ export class DatasetApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<GetDatasetHistoryQuery>) => {
-                    return result.data;
-                }),
-            );
-    }
-
-    public getDatasetMetadata(params: {
-        accountName: string;
-        datasetName: string;
-        numRecords?: number;
-        page?: number;
-    }): Observable<GetDatasetMetadataSchemaQuery> {
-        return this.datasetMetadataGQL
-            .watch({
-                accountName: params.accountName,
-                datasetName: params.datasetName,
-                numPage: 0,
-                numRecords: 1,
-            })
-            .valueChanges.pipe(
-                first(),
-                map(
-                    (
-                        result: ApolloQueryResult<GetDatasetMetadataSchemaQuery>,
-                    ) => {
-                        return result.data;
-                    },
-                ),
-            );
-    }
-
-    public getDatasetLineage(params: {
-        accountName: string;
-        datasetName: string;
-    }): Observable<GetDatasetLineageQuery> {
-        return this.datasetLineageGQL
-            .watch({
-                accountName: params.accountName,
-                datasetName: params.datasetName,
-            })
-            .valueChanges.pipe(
-                first(),
-                map((result: ApolloQueryResult<GetDatasetLineageQuery>) => {
                     return result.data;
                 }),
             );

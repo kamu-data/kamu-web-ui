@@ -1,0 +1,6 @@
+fragment DatasetPageInfo on PageBasedInfo {
+  hasNextPage
+  hasPreviousPage
+  currentPage
+  totalPages
+}

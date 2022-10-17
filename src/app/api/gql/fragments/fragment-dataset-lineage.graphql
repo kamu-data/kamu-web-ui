@@ -1,9 +1,6 @@
-query getDatasetLineage(
-  $accountName: AccountName!
-  $datasetName: DatasetName!
-) {
-  datasets {
-    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+fragment DatasetLineage on Dataset {
+  metadata {
+    currentUpstreamDependencies {
       ...DatasetBasics
       metadata {
         currentUpstreamDependencies {
@@ -17,11 +14,6 @@ query getDatasetLineage(
                   metadata {
                     currentUpstreamDependencies {
                       ...DatasetBasics
-                      metadata {
-                        currentUpstreamDependencies {
-                          ...DatasetBasics
-                        }
-                      }
                     }
                   }
                 }
@@ -29,6 +21,11 @@ query getDatasetLineage(
             }
           }
         }
+      }
+    }
+    currentDownstreamDependencies {
+      ...DatasetBasics
+      metadata {
         currentDownstreamDependencies {
           ...DatasetBasics
           metadata {
@@ -40,11 +37,6 @@ query getDatasetLineage(
                   metadata {
                     currentDownstreamDependencies {
                       ...DatasetBasics
-                      metadata {
-                        currentDownstreamDependencies {
-                          ...DatasetBasics
-                        }
-                      }
                     }
                   }
                 }

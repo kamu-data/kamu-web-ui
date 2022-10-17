@@ -1,6 +1,13 @@
 import { shortHash } from "src/app/common/data.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+} from "@angular/core";
 import { DatasetSchema } from "../../../interface/dataset.interface";
 import AppValues from "../../../common/app.values";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
@@ -8,13 +15,14 @@ import { MetadataSchemaUpdate } from "../../dataset.subscriptions.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import {
     DatasetBasicsFragment,
-    DatasetMetadataDetailsFragment,
+    DatasetMetadataSummaryFragment,
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-metadata",
     templateUrl: "./metadata.component.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;
@@ -42,7 +50,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
 
     public currentState?: {
         schema: DatasetSchema;
-        metadata: DatasetMetadataDetailsFragment;
+        metadata: DatasetMetadataSummaryFragment;
         pageInfo: PageBasedInfo;
     };
 
@@ -100,7 +108,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     public get latestBlockhash(): string {
         return this.currentState
             ? shortHash(
-                  this.currentState.metadata.chain.blocks.nodes[0]
+                  this.currentState.metadata.metadata.chain.blocks.nodes[0]
                       .blockHash as string,
               )
             : "";
@@ -108,7 +116,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
 
     public get latestBlockSystemTime(): string {
         const systemTimeAsString: string | undefined = this.currentState
-            ?.metadata.chain.blocks.nodes[0].systemTime as string;
+            ?.metadata.metadata.chain.blocks.nodes[0].systemTime as string;
 
         return systemTimeAsString
             ? AppValues.momentConverDatetoLocalWithFormat({

@@ -1,5 +1,7 @@
 import { NavigationService } from "./../services/navigation.service";
 import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     HostListener,
     OnDestroy,
@@ -19,7 +21,7 @@ import {
     Router,
 } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { filter } from "rxjs/operators";
+import { filter, tap } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
 import { DatasetBasicsFragment } from "../api/kamu.graphql.interface";
 import { BaseComponent } from "../common/base.component";
@@ -32,6 +34,7 @@ import { logError, requireValue } from "../common/app.helpers";
     templateUrl: "./dataset.component.html",
     styleUrls: ["./dataset-view.component.sass"],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetComponent
     extends BaseComponent
@@ -55,6 +58,7 @@ export class DatasetComponent
         private activatedRoute: ActivatedRoute,
         private navigationService: NavigationService,
         private modalService: ModalService,
+        private cdr: ChangeDetectorRef,
     ) {
         super();
     }
@@ -63,13 +67,19 @@ export class DatasetComponent
         this.checkWindowSize();
         this.trackSubscription(
             this.router.events
-                .pipe(filter((event) => event instanceof NavigationEnd))
+                .pipe(
+                    filter((event) => event instanceof NavigationEnd),
+                    tap(() => this.getMainDataByLineageNode()),
+                )
                 .subscribe(() => {
                     this.initDatasetViewByType(
                         this.getDatasetInfoFromUrl(),
                         this.getCurrentPageFromUrl(),
                     );
                 }),
+        );
+        this.appDatasetService.requestDatasetMainData(
+            this.getDatasetInfoFromUrl(),
         );
 
         this.initDatasetViewByType(
@@ -81,9 +91,21 @@ export class DatasetComponent
             this.appDatasetService.onDatasetChanges.subscribe(
                 (basics: DatasetBasicsFragment) => {
                     this.datasetBasics = basics;
+                    this.cdr.markForCheck();
                 },
             ),
         );
+    }
+
+    public getMainDataByLineageNode(): void {
+        if (
+            this.datasetBasics?.name !==
+            this.getDatasetInfoFromUrl().datasetName
+        ) {
+            this.appDatasetService.requestDatasetMainData(
+                this.getDatasetInfoFromUrl(),
+            );
+        }
     }
 
     public changeLineageGraphView(): void {
@@ -110,6 +132,12 @@ export class DatasetComponent
         isClick: boolean;
     }): void {
         if (this.datasetBasics) {
+            this.navigationService.navigateToDatasetView({
+                accountName: this.datasetBasics.owner.name,
+                datasetName: this.datasetBasics.name as string,
+                tab: this.datasetViewType,
+                page: params.currentPage,
+            });
             this.initDatasetViewByType(
                 {
                     accountName: this.datasetBasics.owner.name,
@@ -141,25 +169,16 @@ export class DatasetComponent
             .catch((e) => logError(e));
     }
 
-    private initOverviewTab(datasetInfo: DatasetInfo): void {
+    private initOverviewTab(): void {
         this.datasetViewType = DatasetViewTypeEnum.Overview;
-        this.appDatasetService.requestDatasetOverview(datasetInfo);
     }
 
-    private initDataTab(datasetInfo: DatasetInfo): void {
+    private initDataTab(): void {
         this.datasetViewType = DatasetViewTypeEnum.Data;
-        this.appDatasetService.requestDatasetDataSchema(datasetInfo);
     }
 
-    private initMetadataTab(
-        datasetInfo: DatasetInfo,
-        currentPage: number,
-    ): void {
+    private initMetadataTab(): void {
         this.datasetViewType = DatasetViewTypeEnum.Metadata;
-        this.appDatasetService.requestDatasetMetadata(
-            datasetInfo,
-            currentPage - 1,
-        );
     }
 
     private initHistoryTab(
@@ -174,9 +193,8 @@ export class DatasetComponent
         );
     }
 
-    private initLineageTab(datasetInfo: DatasetInfo): void {
+    private initLineageTab(): void {
         this.datasetViewType = DatasetViewTypeEnum.Lineage;
-        this.appDatasetService.requestDatasetLineage(datasetInfo);
         this.changeLineageGraphView();
     }
 
@@ -221,7 +239,6 @@ export class DatasetComponent
                     this.navigationService.navigateToDatasetView({
                         accountName: this.datasetBasics.owner.name,
                         datasetName: this.datasetBasics.name as string,
-                        tab: DatasetViewTypeEnum.Overview,
                     });
                 }
             },
@@ -234,23 +251,21 @@ export class DatasetComponent
                     });
                 }
             },
-            navigateToMetadata: (currentPage: number) => {
+            navigateToMetadata: () => {
                 if (this.datasetBasics) {
                     this.navigationService.navigateToDatasetView({
                         accountName: this.datasetBasics.owner.name,
                         datasetName: this.datasetBasics.name as string,
                         tab: DatasetViewTypeEnum.Metadata,
-                        page: currentPage,
                     });
                 }
             },
-            navigateToHistory: (currentPage: number) => {
+            navigateToHistory: () => {
                 if (this.datasetBasics) {
                     this.navigationService.navigateToDatasetView({
                         accountName: this.datasetBasics.owner.name,
                         datasetName: this.datasetBasics.name as string,
                         tab: DatasetViewTypeEnum.History,
-                        page: currentPage,
                     });
                 }
             },
@@ -314,15 +329,12 @@ export class DatasetComponent
         currentPage: number,
     ): void {
         const mapperTabs: { [key in DatasetViewTypeEnum]: () => void } = {
-            [DatasetViewTypeEnum.Overview]: () =>
-                this.initOverviewTab(datasetInfo),
-            [DatasetViewTypeEnum.Data]: () => this.initDataTab(datasetInfo),
-            [DatasetViewTypeEnum.Metadata]: () =>
-                this.initMetadataTab(datasetInfo, currentPage),
+            [DatasetViewTypeEnum.Overview]: () => this.initOverviewTab(),
+            [DatasetViewTypeEnum.Data]: () => this.initDataTab(),
+            [DatasetViewTypeEnum.Metadata]: () => this.initMetadataTab(),
             [DatasetViewTypeEnum.History]: () =>
                 this.initHistoryTab(datasetInfo, currentPage),
-            [DatasetViewTypeEnum.Lineage]: () =>
-                this.initLineageTab(datasetInfo),
+            [DatasetViewTypeEnum.Lineage]: () => this.initLineageTab(),
             [DatasetViewTypeEnum.Discussions]: () => this.initDiscussionsTab(),
         };
 

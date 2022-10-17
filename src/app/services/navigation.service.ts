@@ -4,7 +4,9 @@ import { logError } from "../common/app.helpers";
 import { DatasetNavigationParams } from "../interface/navigation.interface";
 import ProjectLinks from "../project-links";
 
-@Injectable()
+@Injectable({
+    providedIn: "root",
+})
 export class NavigationService {
     constructor(private router: Router) {}
 
@@ -19,7 +21,7 @@ export class NavigationService {
     public navigateToSearch(query?: string, page?: number): void {
         this.router
             .navigate([ProjectLinks.urlSearch], {
-                queryParams: { query, page },
+                queryParams: query ? { query, page } : { page },
             })
             .catch((e) => logError(e));
     }
@@ -33,7 +35,10 @@ export class NavigationService {
     public navigateToDatasetView(params: DatasetNavigationParams): void {
         this.router
             .navigate([params.accountName, params.datasetName], {
-                queryParams: { tab: params.tab, page: params.page },
+                queryParams:
+                    params.page === 1
+                        ? { tab: params.tab }
+                        : { tab: params.tab, page: params.page },
             })
             .catch((e) => logError(e));
     }
@@ -44,5 +49,13 @@ export class NavigationService {
 
     public navigateToOwnerView(ownerName: string): void {
         this.router.navigate([ownerName]).catch((e) => logError(e));
+    }
+
+    public navigateToPageNotFound(): void {
+        this.router
+            .navigate([ProjectLinks.urlPageNotFound], {
+                skipLocationChange: true,
+            })
+            .catch((e) => logError(e));
     }
 }

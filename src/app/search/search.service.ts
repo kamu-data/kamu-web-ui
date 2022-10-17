@@ -18,7 +18,9 @@ export class AppSearchService {
     private autocompleteSearchChanges$: Subject<DatasetAutocompleteItem[]> =
         new Subject<DatasetAutocompleteItem[]>();
 
-    constructor(private searchApi: SearchApi) {}
+    constructor(
+        private searchApi: SearchApi,
+    ) {}
 
     public searchQueryChanges(searchValue: string): void {
         this.inputQueryChanges$.next(searchValue);
@@ -49,9 +51,8 @@ export class AppSearchService {
     }
 
     public searchDatasets(searchQuery: string, page = 0): void {
-        this.searchApi
-            .overviewDatasetSearch(searchQuery, page)
-            .subscribe((data: SearchDatasetsOverviewQuery) => {
+        this.searchApi.overviewDatasetSearch(searchQuery, page).subscribe(
+            (data: SearchDatasetsOverviewQuery) => {
                 const datasets: DatasetSearchOverviewFragment[] =
                     data.search.query.nodes;
                 const pageInfo = data.search.query.pageInfo;
@@ -63,7 +64,8 @@ export class AppSearchService {
                     totalCount,
                     currentPage: page + 1 || 1,
                 });
-            });
+            }
+        );
     }
 
     public autocompleteDatasetSearch(searchQuery: string): void {

@@ -7,12 +7,16 @@ mutation GithubLogin($code: String!) {
         tokenType
       }
       accountInfo {
-        login
-        email
-        name
-        avatarUrl
-        gravatarId
+        ...AccountDetails
       }
+    }
+  }
+}
+
+mutation FetchAccountInfo($accessToken: String!) {
+  auth {
+    accountInfo(accessToken: $accessToken) {
+      ...AccountDetails
     }
   }
 }

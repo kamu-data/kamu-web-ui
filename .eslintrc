@@ -1,28 +1,23 @@
 {
-    "parserOptions": {
-      "ecmaVersion": 2021,
-      "sourceType": "module",
-      "project": ["./tsconfig.json"]
-    },
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/strict"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-        "@typescript-eslint"
-    ],
-    "rules": {
-        "no-bitwise": 0,
-        "@typescript-eslint/no-extraneous-class": [
-            "warn",
-            {
-                "allowWithDecorator": true
-            }
-        ]
-    },
-    "ignorePatterns": ["node_modules", "dist", "kamu.graphql.interface.ts"]
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "module",
+    "project": ["./tsconfig.json"]
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/strict"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "no-bitwise": 0,
+    "@typescript-eslint/no-extraneous-class": [
+      "off"
+    ]
+  },
+  "ignorePatterns": ["node_modules", "dist", "kamu.graphql.interface.ts"]
 }

@@ -1,3 +1,5 @@
+import { InvalidSqlError } from "./../common/errors";
+import { DatasetPageInfoFragment } from "./../api/kamu.graphql.interface";
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
@@ -9,17 +11,13 @@ import {
 import {
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
-    DatasetMetadataDetailsFragment,
+    DatasetMetadataSummaryFragment,
     DatasetOverviewFragment,
-    GetDatasetOverviewQuery,
+    GetDatasetMainDataQuery,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
-    GetDatasetLineageQuery,
-    GetDatasetMetadataSchemaQuery,
     MetadataBlockFragment,
-    PageBasedInfo,
 } from "../api/kamu.graphql.interface";
-import { ModalService } from "../components/modal/modal.service";
 import { AppDatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import {
     DatasetHistoryUpdate,
@@ -28,16 +26,14 @@ import {
     OverviewDataUpdate,
 } from "./dataset.subscriptions.interface";
 import { isNil } from "lodash";
-import _ from "lodash";
-import { logError } from "../common/app.helpers";
 import { DatasetApi } from "../api/dataset.api";
+import { DatasetNotFoundError } from "../common/errors";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class AppDatasetService {
     constructor(
         private datasetApi: DatasetApi,
-        private modalService: ModalService,
-        private appDatasetSubsService: AppDatasetSubscriptionsService,
+        private appDatasetSubsService: AppDatasetSubscriptionsService
     ) {}
 
     private datasetChanges$: Subject<DatasetBasicsFragment> =
@@ -51,61 +47,20 @@ export class AppDatasetService {
         this.datasetChanges$.next(searchDatasetInfo);
     }
 
-    public requestDatasetDataSchema(info: DatasetInfo): void {
-        this.datasetApi
-            .getDatasetOverview(info)
-            .subscribe((data: GetDatasetOverviewQuery) => {
-                if (isNil(data.datasets.byOwnerAndName)) {
-                    throw new Error("Dataset not resolved by ID");
+    public requestDatasetMainData(info: DatasetInfo): void {
+        this.datasetApi.getDatasetMainData(info).subscribe(
+            (data: GetDatasetMainDataQuery) => {
+                if (data.datasets.byOwnerAndName) {
+                    this.datasetUpdate(data.datasets.byOwnerAndName);
+                    this.overviewTabDataUpdate(data);
+                    this.dataTabDataUpdate(data);
+                    this.metadataTabDataUpdate(data);
+                    this.lineageTabDataUpdate(data);
+                } else {
+                    throw new DatasetNotFoundError();
                 }
-                const dataset: DatasetBasicsFragment =
-                    _.cloneDeep<DatasetBasicsFragment>(
-                        data.datasets.byOwnerAndName,
-                    );
-                this.datasetChanges(dataset);
-
-                const content: DataRow[] =
-                    AppDatasetService.parseContentOfDataset(data);
-                const schema: DatasetSchema = JSON.parse(
-                    data.datasets.byOwnerAndName.metadata.currentSchema.content,
-                ) as DatasetSchema;
-                const dataUpdate: DataUpdate = { content, schema };
-                this.appDatasetSubsService.changeDatasetData(dataUpdate);
-            });
-    }
-
-    public requestDatasetOverview(info: DatasetInfo): void {
-        this.datasetApi
-            .getDatasetOverview(info)
-            .subscribe((data: GetDatasetOverviewQuery) => {
-                if (isNil(data.datasets.byOwnerAndName)) {
-                    throw new Error("Dataset not resolved by ID");
-                }
-                const dataset: DatasetBasicsFragment =
-                    _.cloneDeep<DatasetBasicsFragment>(
-                        data.datasets.byOwnerAndName,
-                    );
-                this.datasetChanges(dataset);
-
-                const content: DataRow[] =
-                    AppDatasetService.parseContentOfDataset(data);
-                const overview: DatasetOverviewFragment =
-                    _.cloneDeep<DatasetOverviewFragment>(
-                        data.datasets.byOwnerAndName,
-                    );
-                const size: DatasetDataSizeFragment =
-                    _.cloneDeep<DatasetDataSizeFragment>(
-                        data.datasets.byOwnerAndName.data,
-                    );
-                const overviewDataUpdate: OverviewDataUpdate = {
-                    content,
-                    overview,
-                    size,
-                };
-                this.appDatasetSubsService.changeDatasetOverviewData(
-                    overviewDataUpdate,
-                );
-            });
+            }
+        );
     }
 
     public requestDatasetHistory(
@@ -115,65 +70,31 @@ export class AppDatasetService {
     ): void {
         this.datasetApi
             .getDatasetHistory({ ...info, numRecords, numPage })
-            .subscribe((data: GetDatasetHistoryQuery) => {
-                if (data.datasets.byOwnerAndName) {
-                    const dataset: DatasetBasicsFragment =
-                        _.cloneDeep<DatasetBasicsFragment>(
-                            data.datasets.byOwnerAndName,
-                        );
-                    this.datasetChanges(dataset);
-                    const pageInfo: PageBasedInfo = Object.assign(
-                        _.cloneDeep(
+            .subscribe(
+                (data: GetDatasetHistoryQuery) => {
+                    if (data.datasets.byOwnerAndName) {
+                        const dataset: DatasetBasicsFragment =
+                            data.datasets.byOwnerAndName;
+                        this.datasetChanges(dataset);
+                        const pageInfo: DatasetPageInfoFragment = Object.assign(
+                            {},
                             data.datasets.byOwnerAndName.metadata.chain.blocks
                                 .pageInfo,
-                        ),
-                        { currentPage: numPage },
-                    );
-                    const historyUpdate: DatasetHistoryUpdate = {
-                        history: data.datasets.byOwnerAndName.metadata.chain
-                            .blocks.nodes as MetadataBlockFragment[],
-                        pageInfo,
-                    };
-                    this.appDatasetSubsService.changeDatasetHistory(
-                        historyUpdate,
-                    );
+                            { currentPage: numPage },
+                        );
+                        const historyUpdate: DatasetHistoryUpdate = {
+                            history: data.datasets.byOwnerAndName.metadata.chain
+                                .blocks.nodes as MetadataBlockFragment[],
+                            pageInfo,
+                        };
+                        this.appDatasetSubsService.changeDatasetHistory(
+                            historyUpdate,
+                        );
+                    } else {
+                        throw new DatasetNotFoundError();
+                    }
                 }
-            });
-    }
-
-    public requestDatasetMetadata(info: DatasetInfo, page: number): void {
-        this.datasetApi
-            .getDatasetMetadata({ ...info, page })
-            .subscribe((data: GetDatasetMetadataSchemaQuery) => {
-                if (isNil(data.datasets.byOwnerAndName)) {
-                    throw new Error("Dataset not resolved by ID");
-                }
-                const dataset: DatasetBasicsFragment =
-                    _.cloneDeep<DatasetBasicsFragment>(
-                        data.datasets.byOwnerAndName,
-                    );
-                const schema: DatasetSchema = JSON.parse(
-                    data.datasets.byOwnerAndName.metadata.currentSchema.content,
-                ) as DatasetSchema;
-                const metadata: DatasetMetadataDetailsFragment = _.cloneDeep(
-                    data.datasets.byOwnerAndName.metadata,
-                );
-                const pageInfo: PageBasedInfo = {
-                    hasNextPage: false,
-                    hasPreviousPage: false,
-                    totalPages: 1,
-                    currentPage: page,
-                };
-                const metadataSchemaUpdate: MetadataSchemaUpdate = {
-                    schema,
-                    pageInfo,
-                    metadata,
-                };
-                this.appDatasetSubsService.metadataSchemaChanges(
-                    metadataSchemaUpdate,
-                );
-                this.datasetChanges(dataset);
-            });
+            );
     }
 
     public requestDatasetDataSqlRun(query: string, limit: number): void {
@@ -188,39 +109,83 @@ export class AppDatasetService {
                 const dataUpdate: DataUpdate = { content, schema };
                 this.appDatasetSubsService.changeDatasetData(dataUpdate);
             },
-            (error: { message: string }) => {
-                this.modalService
-                    .error({
-                        title: "Request was malformed.",
-                        message: error.message,
-                        yesButtonText: "Close",
-                    })
-                    .catch((e) => logError(e));
+            () => {
+                throw new InvalidSqlError();
             },
         );
     }
 
-    public requestDatasetLineage(info: DatasetInfo): void {
-        this.datasetApi
-            .getDatasetLineage(info)
-            .subscribe((data: GetDatasetLineageQuery) => {
-                if (isNil(data.datasets.byOwnerAndName)) {
-                    throw new Error("Dataset not resolved by ID");
-                }
-                const dataset: DatasetBasicsFragment =
-                    _.cloneDeep<DatasetBasicsFragment>(
-                        data.datasets.byOwnerAndName,
-                    );
-                this.datasetChanges(dataset);
+    private datasetUpdate(data: DatasetBasicsFragment): void {
+        const dataset: DatasetBasicsFragment = data;
+        this.datasetChanges(dataset);
+    }
 
-                const lineageResponse: DatasetLineageNode =
-                    this.lineageResponseFromRawQuery(data);
-                this.updatelineageGraph(lineageResponse);
-            });
+    private overviewTabDataUpdate(data: GetDatasetMainDataQuery): void {
+        if (data.datasets.byOwnerAndName) {
+            const content: DataRow[] =
+                AppDatasetService.parseContentOfDataset(data);
+            const overview: DatasetOverviewFragment =
+                data.datasets.byOwnerAndName;
+
+            const size: DatasetDataSizeFragment =
+                data.datasets.byOwnerAndName.data;
+
+            const overviewDataUpdate: OverviewDataUpdate = {
+                content,
+                overview,
+                size,
+            };
+            this.appDatasetSubsService.changeDatasetOverviewData(
+                overviewDataUpdate,
+            );
+        }
+    }
+
+    private dataTabDataUpdate(data: GetDatasetMainDataQuery): void {
+        if (data.datasets.byOwnerAndName) {
+            const content: DataRow[] =
+                AppDatasetService.parseContentOfDataset(data);
+            const schemaData: DatasetSchema = JSON.parse(
+                data.datasets.byOwnerAndName.metadata.currentSchema.content,
+            ) as DatasetSchema;
+            const dataUpdate: DataUpdate = { content, schema: schemaData };
+            this.appDatasetSubsService.changeDatasetData(dataUpdate);
+        }
+    }
+
+    private metadataTabDataUpdate(data: GetDatasetMainDataQuery): void {
+        if (data.datasets.byOwnerAndName) {
+            const schemaMetadata: DatasetSchema = JSON.parse(
+                data.datasets.byOwnerAndName.metadata.currentSchema.content,
+            ) as DatasetSchema;
+            const metadata: DatasetMetadataSummaryFragment =
+                data.datasets.byOwnerAndName;
+
+            const pageInfo: DatasetPageInfoFragment = {
+                hasNextPage: false,
+                hasPreviousPage: false,
+                totalPages: 1,
+                currentPage: 1,
+            };
+            const metadataSchemaUpdate: MetadataSchemaUpdate = {
+                schema: schemaMetadata,
+                pageInfo,
+                metadata,
+            };
+            this.appDatasetSubsService.metadataSchemaChanges(
+                metadataSchemaUpdate,
+            );
+        }
+    }
+
+    private lineageTabDataUpdate(data: GetDatasetMainDataQuery): void {
+        const lineageResponse: DatasetLineageNode =
+            this.lineageResponseFromRawQuery(data);
+        this.updatelineageGraph(lineageResponse);
     }
 
     private lineageResponseFromRawQuery(
-        data: GetDatasetLineageQuery,
+        data: GetDatasetMainDataQuery,
     ): DatasetLineageNode {
         if (isNil(data.datasets.byOwnerAndName)) {
             throw new Error("Dataset not resolved by ID");
@@ -396,7 +361,7 @@ export class AppDatasetService {
     }
 
     private static parseContentOfDataset(
-        data: GetDatasetOverviewQuery,
+        data: GetDatasetMainDataQuery,
     ): DataRow[] {
         return data.datasets.byOwnerAndName
             ? (JSON.parse(

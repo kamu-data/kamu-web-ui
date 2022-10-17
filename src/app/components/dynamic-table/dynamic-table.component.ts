@@ -1,20 +1,25 @@
 import {
     AfterContentInit,
+    ChangeDetectionStrategy,
     Component,
     EventEmitter,
     Input,
     OnChanges,
     OnInit,
-    Output
+    Output,
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import AppValues from "../../common/app.values";
-import { TableSourceInterface, TableSourceRowInterface } from "./dynamic-table.interface";
+import {
+    TableSourceInterface,
+    TableSourceRowInterface,
+} from "./dynamic-table.interface";
 
 @Component({
     selector: "app-dynamic-table",
     templateUrl: "./dynamic-table.component.html",
     styleUrls: ["./dynamic-table.sass"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DynamicTableComponent
     implements OnInit, OnChanges, AfterContentInit

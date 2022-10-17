@@ -1,3 +1,4 @@
+import { ActivatedRoute } from "@angular/router";
 import { AppSearchService } from "./search.service";
 import { DatasetSearchResult } from "../interface/search.interface";
 import AppValues from "../common/app.values";
@@ -5,6 +6,8 @@ import { MatSidenav } from "@angular/material/sidenav";
 import { SideNavService } from "../services/sidenav.service";
 import {
     AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     HostListener,
     OnInit,
@@ -18,8 +21,7 @@ import {
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
-import { logError } from "../common/app.helpers";
+import { logError, requireValue } from "../common/app.helpers";
 
 export interface SearchFilters {
     name?: string;
@@ -34,6 +36,7 @@ export interface SearchFilters {
     selector: "app-search",
     templateUrl: "./search.component.html",
     styleUrls: ["./search.component.sass"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent
     extends BaseComponent
@@ -169,6 +172,8 @@ export class SearchComponent
         private navigationService: NavigationService,
         private appSearchService: AppSearchService,
         private sidenavService: SideNavService,
+        private activatedRoute: ActivatedRoute,
+        private cdr: ChangeDetectorRef,
     ) {
         super();
     }
@@ -190,6 +195,11 @@ export class SearchComponent
             this.appSearchService.onSearchQueryChanges.subscribe(
                 (value: string) => {
                     this.searchValue = value;
+                    const pageParam =
+                        this.activatedRoute.snapshot.queryParamMap.get("page");
+                    if (pageParam) {
+                        this.currentPage = 1;
+                    }
                     this.onSearchDatasets(value, this.currentPage);
                 },
             ),
@@ -198,7 +208,7 @@ export class SearchComponent
                     this.tableData.tableSource = data.datasets;
                     this.tableData.pageInfo = data.pageInfo;
                     this.tableData.totalCount = data.totalCount;
-                    this.currentPage = data.currentPage;
+                    this.cdr.markForCheck();
                 },
             ),
         );
@@ -206,20 +216,20 @@ export class SearchComponent
 
     private changePageAndSearch(): void {
         let page = 1;
-        let currentId = "";
-
-        if (this.searchString.split("?id=").length > 1) {
-            currentId = this.searchString.split("?id=")[1].split("&")[0];
-            this.searchValue = currentId;
-
-            const searchPageParams: string[] = this.searchString.split("&p=");
-            if (searchPageParams[1]) {
-                page = Number(searchPageParams[1].split("&")[0]);
-            }
+        let queryValue = "";
+        const queryParam =
+            this.activatedRoute.snapshot.queryParamMap.get("query");
+        if (queryParam) {
+            queryValue = requireValue(queryParam);
+            this.searchValue = queryValue;
         }
-
+        const pageParam =
+            this.activatedRoute.snapshot.queryParamMap.get("page");
+        if (pageParam) {
+            page = +requireValue(pageParam);
+        }
         this.currentPage = page;
-        this.onSearchDatasets(currentId, page);
+        this.onSearchDatasets(queryValue, page);
     }
 
     private initTableData(): void {
@@ -243,7 +253,14 @@ export class SearchComponent
         currentPage: number;
         isClick: boolean;
     }): void {
-        this.currentPage = params.currentPage;
+        params.currentPage
+            ? (this.currentPage = params.currentPage)
+            : (this.currentPage = 1);
+        this.appSearchService.searchQueryChanges(this.searchValue);
+        if (this.currentPage === 1) {
+            this.navigationService.navigateToSearch(this.searchValue);
+            return;
+        }
         this.navigationService.navigateToSearch(
             this.searchValue,
             params.currentPage,
@@ -254,7 +271,6 @@ export class SearchComponent
         this.navigationService.navigateToDatasetView({
             accountName: data.accountName,
             datasetName: data.datasetName,
-            tab: DatasetViewTypeEnum.Overview,
         });
     }
 

@@ -78,7 +78,7 @@ describe("OverviewComponent", () => {
 
     it("should check show dataSize", async () => {
         const result = component.dataSize(1024);
-        await expect(result).toBe("1.0 KiB");
+        await expect(result).toBe("1.0 KB");
     });
 
     it("should select topic name", () => {

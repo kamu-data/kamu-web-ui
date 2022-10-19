@@ -124,14 +124,7 @@ export class AppHeaderComponent extends BaseComponent {
             if (this.isMobileView) {
                 this.triggerMenuClick();
             }
-
             (event.target as HTMLElement).blur();
-            const typeaheadInput: Element | null = document.querySelector(
-                "ngb-typeahead-window",
-            );
-            if (typeaheadInput) {
-                typeaheadInput.classList.remove("show");
-            }
         }, 200);
     }
 

@@ -17,10 +17,16 @@ import {
 import { AppHeaderComponent } from "./app-header.component";
 import { BrowserModule } from "@angular/platform-browser";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
+import { SearchApi } from "src/app/api/search.api";
+import { of } from "rxjs";
+import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
+import { mockDatasetBasicsFragment } from "src/app/search/mock.data";
+import { first } from "rxjs/operators";
 
 describe("AppHeaderComponent", () => {
     let component: AppHeaderComponent;
     let fixture: ComponentFixture<AppHeaderComponent>;
+    let searchApi: SearchApi;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -42,7 +48,9 @@ describe("AppHeaderComponent", () => {
         fixture = TestBed.createComponent(AppHeaderComponent);
         component = fixture.componentInstance;
         component.isVisible = true;
+        component.isMobileView = false;
         fixture.detectChanges();
+        searchApi = TestBed.inject(SearchApi);
     });
 
     it("should create", async () => {
@@ -51,7 +59,7 @@ describe("AppHeaderComponent", () => {
 
     it("should check focus on input", async () => {
         const searchInput = findElementByDataTestId(fixture, "searchInput");
-        const focusElementSpy = spyOn(searchInput, "focus");
+        const focusElementSpy = spyOn(searchInput, "focus").and.callThrough();
         component.onClickInput();
         await expect(focusElementSpy).toHaveBeenCalledTimes(1);
     });
@@ -186,18 +194,70 @@ describe("AppHeaderComponent", () => {
         await expect(userProfileEmitterSpy).toHaveBeenCalled();
     });
 
-    it("should check search method", fakeAsync(async () => {
+    it("should check selection of search suggestion", fakeAsync(async () => {
+        // Let's assume auto-complete returns 1 hardcoded item
+        const MOCK_AUTOCOMPLETE_ITEM: DatasetAutocompleteItem = {
+            __typename: TypeNames.allDataType,
+            dataset: mockDatasetBasicsFragment,
+        };
+        const searchApiAutocompleteDatasetSearchSpy = spyOn(
+            searchApi, "autocompleteDatasetSearch"
+        ).and.callFake(() => of([MOCK_AUTOCOMPLETE_ITEM]));
+
+        // Run search query
+        const SEARCH_QUERY = "query";
+        const elSearchInput = findElementByDataTestId(fixture, "searchInput") as HTMLInputElement;
+        elSearchInput.value = SEARCH_QUERY;
+        elSearchInput.dispatchEvent(new Event('input'));
+        tick(301); // debouncer
+
+        // This should activate search API and update view
+        expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(SEARCH_QUERY);
+        fixture.detectChanges();
+        
+        // Expect emitter event with hardcoded auto-complete item
+        const emitterSubscription$ = component.selectDatasetEmitter
+            .pipe(first())
+            .subscribe(
+                (item: DatasetAutocompleteItem) => {
+                    void expect(item).toBe(MOCK_AUTOCOMPLETE_ITEM)
+                },
+            );
+
+        // After click on selection option, search typeahead should hide
+        const typeAheadInputEl = findNativeElement(fixture, "#typeahead-http");
+        const typeAheadInputElBlurSpy = spyOn(typeAheadInputEl, 'blur').and.callThrough();
+
+        // Do actual click
+        const typeAheadSelectionEl = findNativeElement(fixture, 'button.dropdown-item');
+        typeAheadSelectionEl.click();
+        fixture.detectChanges();
+
+        // Ensure emitter callback was hit
+        await expect(emitterSubscription$.closed).toBeTruthy();
+
+        // Ensure focus lost on autocomplete after delay
+        tick(100);
+        await expect(typeAheadInputElBlurSpy).toHaveBeenCalled();
+    }));
+ 
+    it("should check search method triggers menu click on mobile view", fakeAsync(async () => {
         component.isMobileView = true;
         const triggerMenuClickSpy = spyOn(
             component,
             "triggerMenuClick",
         ).and.callThrough();
+        
         const event = new KeyboardEvent("keyup", {
             key: "Enter",
         });
         const el = findElementByDataTestId(fixture, "searchInput");
+        const elBlurSpy = spyOn(el, 'blur').and.callThrough();
+
         el.dispatchEvent(event);
         tick(201);
         await expect(triggerMenuClickSpy).toHaveBeenCalled();
+        await expect(elBlurSpy).toHaveBeenCalled();
     }));
+
 });

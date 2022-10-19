@@ -80,7 +80,7 @@ export class DatasetComponent
         );
         this.appDatasetService.requestDatasetMainData(
             this.getDatasetInfoFromUrl(),
-        );
+        ).subscribe();
 
         this.initDatasetViewByType(
             this.getDatasetInfoFromUrl(),
@@ -104,7 +104,7 @@ export class DatasetComponent
         ) {
             this.appDatasetService.requestDatasetMainData(
                 this.getDatasetInfoFromUrl(),
-            );
+            ).subscribe();
         }
     }
 
@@ -193,7 +193,7 @@ export class DatasetComponent
             datasetInfo,
             20,
             currentPage - 1,
-        );
+        ).subscribe();
     }
 
     private initLineageTab(): void {
@@ -399,7 +399,7 @@ export class DatasetComponent
             this.appDatasetService.requestDatasetDataSqlRun(
                 query,
                 50, // TODO: Propagate limit from UI and display when it was reached
-            );
+            ).subscribe();
         }
     }
 }

@@ -53,6 +53,14 @@ export const mockDatasetBasicsFragment: DatasetBasicsFragment = {
     owner: { __typename: "User", id: "userId", name: "ownerName" },
 };
 
+
+export const mockDatasetResponseNotFound: GetDatasetMainDataQuery = {
+    datasets: {
+        __typename: "Datasets"
+    }
+};
+
+
 export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
     datasets: {
         __typename: "Datasets",
@@ -119,7 +127,87 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                     content:
                         '{"name": "spark_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT96"}, {"name": "date_reported", "repetition": "OPTIONAL", "type": "INT96"}, {"name": "id", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "zone", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "gender", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "age_group", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "case_status", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "case_type", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}]}',
                 },
-                currentUpstreamDependencies: [],
+                currentUpstreamDependencies: [
+                    {
+                        __typename: "Dataset",
+                        metadata: {
+                            __typename: "DatasetMetadata",
+                            currentUpstreamDependencies: [
+                                {
+                                    __typename: "Dataset",
+                                    metadata: {
+                                        __typename: "DatasetMetadata",
+                                        currentUpstreamDependencies: [
+                                            {
+                                                __typename: "Dataset",
+                                                metadata: {
+                                                    __typename: "DatasetMetadata",
+                                                    currentUpstreamDependencies: [
+                                                        {
+                                                            __typename: "Dataset",
+                                                            metadata: {
+                                                                __typename: "DatasetMetadata",
+                                                                currentUpstreamDependencies: [
+                                                                    {
+                                                                        __typename: "Dataset",
+                                                                        metadata: {
+                                                                            __typename: "DatasetMetadata",
+                                                                            currentUpstreamDependencies: []
+                                                                        },
+                                                                        id: "did:odf:z4k66d7thqpab83a24iYbeXr5yDYBAxaB7hnzbhfmyUTLnWifwz6",
+                                                                        kind: DatasetKind.Derivative,
+                                                                        name: "fake.upstream-level-5",
+                                                                        owner: {
+                                                                            __typename: "User",
+                                                                            id: "1",
+                                                                            name: "kamu",
+                                                                        },
+                                                                    }
+                                                                ]
+                                                            },
+                                                            id: "did:odf:z4k55d7thqpab83a24iZbeXr5yDYBAxaB7hnzbhfmyUTLnWifwz6",
+                                                            kind: DatasetKind.Derivative,
+                                                            name: "fake.upstream-level-4",
+                                                            owner: {
+                                                                __typename: "User",
+                                                                id: "1",
+                                                                name: "kamu",
+                                                            },
+                                                        }
+                                                    ]
+                                                },
+                                                id: "did:odf:z4k55e8thqpab83a24iZbeXr5yDYBAxaB7hmybhfmyUTLnWifwz6",
+                                                kind: DatasetKind.Derivative,
+                                                name: "fake.upstream-level-3",
+                                                owner: {
+                                                    __typename: "User",
+                                                    id: "1",
+                                                    name: "kamu",
+                                                },
+                                            }
+                                        ]
+                                    },
+                                    id: "did:odf:z4k55e8thqpab83a24iZbeXr5yCVCDxaB7hmybhfmyUTLnWifwz6",
+                                    kind: DatasetKind.Derivative,
+                                    name: "fake.upstream-level-2",
+                                    owner: {
+                                        __typename: "User",
+                                        id: "1",
+                                        name: "kamu",
+                                    },
+                                }
+                            ],
+                        },
+                        id: "did:odf:z4k55e8thqpab83a24iZbeXr5WZVCxaB7hmybhfmyUTLnWifwz6",
+                        kind: DatasetKind.Derivative,
+                        name: "fake.upstream-level-1",
+                        owner: {
+                            __typename: "User",
+                            id: "1",
+                            name: "kamu",
+                        },
+                    }
+                ],
                 currentDownstreamDependencies: [
                     {
                         __typename: "Dataset",
@@ -134,10 +222,40 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                             {
                                                 __typename: "Dataset",
                                                 metadata: {
-                                                    __typename:
-                                                        "DatasetMetadata",
-                                                    currentDownstreamDependencies:
-                                                        [],
+                                                    __typename: "DatasetMetadata",
+                                                    currentDownstreamDependencies: [
+                                                        {
+                                                            __typename: "Dataset",
+                                                            metadata: {
+                                                                __typename: "DatasetMetadata",
+                                                                currentDownstreamDependencies: [
+                                                                    {
+                                                                        __typename: "Dataset",
+                                                                        metadata: {
+                                                                            __typename: "DatasetMetadata",
+                                                                            currentDownstreamDependencies: []
+                                                                        },
+                                                                        id: "did:odf:z4k88e8thqpab83a24iFbeXr5WZVCxaB7hmybhfmyUTLnWifwz6",
+                                                                        kind: DatasetKind.Derivative,
+                                                                        name: "world.daily-cases",
+                                                                        owner: {
+                                                                            __typename: "User",
+                                                                            id: "1",
+                                                                            name: "kamu",
+                                                                        },
+                                                                    }
+                                                                ]
+                                                            },
+                                                            id: "did:odf:z4k88e8thqpab83aJCiFbeXr5WZVCor7hmybhfmyUTLnWifwz6",
+                                                            kind: DatasetKind.Derivative,
+                                                            name: "america.daily-cases",
+                                                            owner: {
+                                                                __typename: "User",
+                                                                id: "1",
+                                                                name: "kamu",
+                                                            },
+                                                        }
+                                                    ],
                                                 },
                                                 id: "did:odf:z4k88e8thqpQ7kupbJCiFbeXr5WZVCor7hmybhfmyUTLnWifwz6",
                                                 kind: DatasetKind.Derivative,

@@ -16,6 +16,7 @@ import { DatasetComponent } from "./dataset.component";
 import { ReplaySubject } from "rxjs/internal/ReplaySubject";
 import { NavigationService } from "../services/navigation.service";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
+import { of } from "rxjs";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -135,7 +136,7 @@ describe("DatasetComponent", () => {
         const requestDatasetDataSqlRunSpy = spyOn(
             appDatasetService,
             "requestDatasetDataSqlRun",
-        );
+        ).and.returnValue(of());
         component.onRunSQLRequest(sqlQuery);
         await expect(requestDatasetDataSqlRunSpy).toHaveBeenCalled();
     });

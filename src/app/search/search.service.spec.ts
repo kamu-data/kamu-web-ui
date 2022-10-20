@@ -25,21 +25,8 @@ describe("SearchService", () => {
         await expect(service).toBeTruthy();
     });
 
-    it("should fire inputSearchQueryChanges$ propagation", async () => {
-        const testSearchValue = "test";
-        let notificationReceived = false;
-        service.onInputSearchQueryChanges.subscribe(
-            (searchValue: string) => {
-                notificationReceived = true;
-                void expect(searchValue).toEqual(testSearchValue);
-            }
-        );
-        service.inputSearchQueryChanges(testSearchValue);
-        await expect(notificationReceived).toBeTruthy();
-    });
-
     it("should fire overviewSearchChanges$ on search request", async () => {
-        const searchApiOverviewDatasearchSpy = spyOn(
+        const searchApiOverviewDataSearchSpy = spyOn(
             searchApi, 'overviewDatasetSearch'
         ).and.returnValue(of(mockSearchDatasetOverviewQuery));
 
@@ -63,7 +50,7 @@ describe("SearchService", () => {
         const testSearchValue = "test";
         service.searchDatasets(testSearchValue);
 
-        expect(searchApiOverviewDatasearchSpy).toHaveBeenCalledWith(testSearchValue, 0);
+        expect(searchApiOverviewDataSearchSpy).toHaveBeenCalledWith(testSearchValue, 0);
         await expect(notificationReceived).toBeTruthy();
     });
 

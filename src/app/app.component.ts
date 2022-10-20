@@ -6,12 +6,9 @@ import {
     OnInit,
 } from "@angular/core";
 import AppValues from "./common/app.values";
-import { SearchService } from "./search/search.service";
-import { filter, first, map } from "rxjs/operators";
+import { filter, map } from "rxjs/operators";
 import {
-    ActivatedRoute,
     NavigationEnd,
-    Params,
     Router,
     RouterEvent,
 } from "@angular/router";
@@ -57,11 +54,9 @@ export class AppComponent extends BaseComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private appSearchService: SearchService,
         private authApi: AuthApi,
         private modalService: ModalService,
         private navigationService: NavigationService,
-        private activatedRoute: ActivatedRoute,
     ) {
         super();
     }
@@ -76,7 +71,6 @@ export class AppComponent extends BaseComponent implements OnInit {
                 )
                 .subscribe((event: RouterEvent) => {
                     this.isVisible = this.isAvailableAppHeaderUrl(event.url);
-                    this.fetchSearchQueryFromUrl();
                 }),
             this.authApi.onUserChanges.subscribe(
                 (user: MaybeNull<AccountDetailsFragment>) => {
@@ -110,22 +104,6 @@ export class AppComponent extends BaseComponent implements OnInit {
         }
     }
 
-    private fetchSearchQueryFromUrl(): void {
-        this.activatedRoute.queryParams
-            .pipe(first())
-            .subscribe((params: Params) => {
-                if (params.query) {
-                    this.changeSearchValue(params.query as string);
-                } else {
-                    this.changeSearchValue("");
-                }
-            });
-    }
-
-    private changeSearchValue(searchValue: string): void {
-        this.appSearchService.inputSearchQueryChanges(searchValue);
-    }
-
     private checkView(): void {
         this.isMobileView = AppValues.isMobileView();
     }
@@ -147,7 +125,6 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
     public onClickAppLogo(): void {
         this.navigationService.navigateToSearch();
-        this.changeSearchValue("");
     }
 
     public onOpenUserInfo(): void {

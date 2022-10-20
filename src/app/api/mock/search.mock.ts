@@ -419,7 +419,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
     },
 };
 
-export const mockSearchResponse: SearchDatasetsAutocompleteQuery = {
+export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
     search: {
         __typename: "Search",
         query: {

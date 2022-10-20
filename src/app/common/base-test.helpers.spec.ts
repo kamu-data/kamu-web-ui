@@ -3,6 +3,8 @@
 import { ComponentFixture } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { DebugElement } from "@angular/core";
+import { ReplaySubject } from "rxjs";
+import { RouterEvent } from "@angular/router";
 
 export function findElement<T>(
     fixture: ComponentFixture<T>,
@@ -45,3 +47,20 @@ export function findElementByDataTestId<T>(
     return fixture.debugElement.query(By.css(`[data-test-id="${id}"]`))
         .nativeElement;
 }
+
+export const routerMockEventSubject = new ReplaySubject<RouterEvent>(1);
+
+export const routerMock = {
+    navigate: () => null,
+    events: routerMockEventSubject.asObservable(),
+};
+
+export const activeRouteMockQueryParamMap = new Map<string, string>();
+
+export const activeRouteMock = {
+    snapshot: {
+        queryParamMap: {
+            get: (key: string) => activeRouteMockQueryParamMap.get(key),
+        },
+    },
+};

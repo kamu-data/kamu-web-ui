@@ -6,17 +6,16 @@ import {
     ActivatedRoute,
     NavigationEnd,
     Router,
-    RouterEvent,
 } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { DatasetApi } from "../api/dataset.api";
 import { DatasetComponent } from "./dataset.component";
-import { ReplaySubject } from "rxjs/internal/ReplaySubject";
 import { NavigationService } from "../services/navigation.service";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { of } from "rxjs";
+import { routerMock, routerMockEventSubject } from "../common/base-test.helpers.spec";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -24,12 +23,6 @@ describe("DatasetComponent", () => {
     let appDatasetService: AppDatasetService;
     let navigationService: NavigationService;
     let route: ActivatedRoute;
-
-    const eventSubject = new ReplaySubject<RouterEvent>(1);
-    const routerMock = {
-        navigate: () => null,
-        events: eventSubject.asObservable(),
-    };
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -119,7 +112,7 @@ describe("DatasetComponent", () => {
             component,
             "getMainDataByLineageNode",
         );
-        eventSubject.next(new NavigationEnd(1, "", "redirectUrl"));
+        routerMockEventSubject.next(new NavigationEnd(1, "", "redirectUrl"));
         await expect(getMainDataByLineageNodeSpy).toHaveBeenCalledTimes(1);
     });
 

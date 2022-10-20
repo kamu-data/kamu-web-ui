@@ -15,6 +15,7 @@ export default class ProjectLinks {
 
     public static urlQueryParamTab = "tab";
     public static urlQueryParamPage = "page";
+    public static urlQueryParamQuery = "query";
 
     // TODO
     // public static urlDatasetCreateSelectType = "select-type";

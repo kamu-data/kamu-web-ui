@@ -12,21 +12,12 @@ import {
 
 @Injectable({ providedIn: "root" })
 export class SearchService {
-    private inputQueryChanges$: Subject<string> = new Subject<string>();
     private overviewSearchChanges$: Subject<DatasetSearchResult> =
         new Subject<DatasetSearchResult>();
     private autocompleteSearchChanges$: Subject<DatasetAutocompleteItem[]> =
         new Subject<DatasetAutocompleteItem[]>();
 
     constructor(private searchApi: SearchApi) {}
-
-    public inputSearchQueryChanges(searchValue: string): void {
-        this.inputQueryChanges$.next(searchValue);
-    }
-
-    public get onInputSearchQueryChanges(): Observable<string> {
-        return this.inputQueryChanges$.asObservable();
-    }
 
     private overviewSearchChanges(searchData: DatasetSearchResult): void {
         this.overviewSearchChanges$.next(searchData);

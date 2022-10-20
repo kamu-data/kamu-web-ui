@@ -1,16 +1,12 @@
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { SearchService } from "./search.service";
-import { DatasetSearchResult } from "../interface/search.interface";
-import AppValues from "../common/app.values";
+import { DatasetSearchResult, SearchFilters } from "../interface/search.interface";
 import {
-    AfterContentInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    HostListener,
     OnInit,
 } from "@angular/core";
-import { ThemePalette } from "@angular/material/core";
 import { BaseComponent } from "../common/base.component";
 import { NavigationService } from "../services/navigation.service";
 import {
@@ -19,15 +15,8 @@ import {
 } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { requireValue } from "../common/app.helpers";
-
-export interface SearchFilters {
-    name?: string;
-    isTitle: boolean;
-    completed: boolean;
-    disabled: boolean;
-    color?: ThemePalette;
-    subtasks?: SearchFilters[];
-}
+import ProjectLinks from "../project-links";
+import { filter, map } from "rxjs/operators";
 
 @Component({
     selector: "app-search",
@@ -35,14 +24,10 @@ export interface SearchFilters {
     styleUrls: ["./search.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchComponent
-    extends BaseComponent
-    implements OnInit, AfterContentInit
+export class SearchComponent extends BaseComponent implements OnInit
 {
-    public isMobileView = false;
     public searchValue = "";
     public currentPage = 1; // TODO: Should be zero-based and only offset for display
-    public isMinimizeSearchAdditionalButtons = false;
 
     private sortOptions: { value: string; label: string; active: boolean }[] = [
         { value: "best", label: "Best match", active: true },
@@ -51,6 +36,7 @@ export class SearchComponent
     ];
 
     public allComplete = false;
+
     public tableData: {
         tableSource: DatasetSearchOverviewFragment[];
         hasResultQuantity: boolean;
@@ -60,6 +46,7 @@ export class SearchComponent
         totalCount: number;
         sortOptions: { value: string; label: string; active: boolean }[];
     };
+
     public filters: SearchFilters[] = [
         {
             name: "Search for:",
@@ -150,46 +137,30 @@ export class SearchComponent
         },
     ];
 
-    public searchData: DatasetSearchOverviewFragment[] = [];
-
-    @HostListener("window:resize", ["$event"])
-    private checkWindowSize(): void {
-        this.isMinimizeSearchAdditionalButtons = AppValues.isMobileView();
-        this.isMobileView = AppValues.isMobileView();
-    }
-
     constructor(
         private navigationService: NavigationService,
-        private appSearchService: SearchService,
+        private searchService: SearchService,
+        private router: Router,
         private activatedRoute: ActivatedRoute,
         private cdr: ChangeDetectorRef,
     ) {
         super();
     }
 
-    public ngAfterContentInit(): void {
-        this.tableData.tableSource = this.searchData;
-    }
-
     public ngOnInit(): void {
-        this.checkWindowSize();
         this.initTableData();
 
         this.changePageAndSearch();
 
         this.trackSubscriptions(
-            this.appSearchService.onInputSearchQueryChanges.subscribe(
-                (value: string) => {
-                    this.searchValue = value;
-                    const pageParam =
-                        this.activatedRoute.snapshot.queryParamMap.get("page");
-                    if (pageParam) {
-                        this.currentPage = 1;
-                    }
-                    this.onSearchDatasets(value, this.currentPage);
-                },
-            ),
-            this.appSearchService.onOverviewSearchChanges.subscribe(
+            this.router.events
+                .pipe(
+                    filter((event) => event instanceof NavigationEnd),
+                    map((event) => event as RouterEvent),
+                )
+                .subscribe(() => this.changePageAndSearch()),
+
+            this.searchService.onOverviewSearchChanges.subscribe(
                 (data: DatasetSearchResult) => {
                     this.tableData.tableSource = data.datasets;
                     this.tableData.pageInfo = data.pageInfo;
@@ -201,26 +172,26 @@ export class SearchComponent
     }
 
     private changePageAndSearch(): void {
-        let page = 1;
         let queryValue = "";
-        const queryParam =
-            this.activatedRoute.snapshot.queryParamMap.get("query");
+        const queryParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.urlQueryParamQuery);
         if (queryParam) {
             queryValue = requireValue(queryParam);
-            this.searchValue = queryValue;
         }
-        const pageParam =
-            this.activatedRoute.snapshot.queryParamMap.get("page");
+        this.searchValue = queryValue;
+        
+        let page = 1;
+        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.urlQueryParamPage);
         if (pageParam) {
             page = +requireValue(pageParam);
         }
         this.currentPage = page;
-        this.onSearchDatasets(queryValue, page);
+        
+        this.onSearchDatasets();
     }
 
     private initTableData(): void {
         this.tableData = {
-            tableSource: this.searchData,
+            tableSource: [],
             resultUnitText: "dataset(s) found",
             hasResultQuantity: true,
             isClickableRow: true,
@@ -242,7 +213,6 @@ export class SearchComponent
         params.currentPage
             ? (this.currentPage = params.currentPage)
             : (this.currentPage = 1);
-        this.appSearchService.inputSearchQueryChanges(this.searchValue);
         if (this.currentPage === 1) {
             this.navigationService.navigateToSearch(this.searchValue);
             return;
@@ -260,8 +230,8 @@ export class SearchComponent
         });
     }
 
-    public onSearchDatasets(searchValue: string, page = 1): void {
-        this.appSearchService.searchDatasets(searchValue, page - 1);
+    private onSearchDatasets(): void {
+        this.searchService.searchDatasets(this.searchValue, this.currentPage - 1);
     }
 
     public updateAllComplete() {

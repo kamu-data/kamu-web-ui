@@ -11,7 +11,7 @@ import {
 } from "./kamu.graphql.interface";
 import {
     mockSearchOverviewResponse,
-    mockSearchResponse,
+    mockAutoCompleteResponse,
 } from "./mock/search.mock";
 import { DatasetAutocompleteItem } from "../interface/search.interface";
 
@@ -41,7 +41,7 @@ describe("SearchApi", () => {
         service
             .autocompleteDatasetSearch(TEST_QUERY)
             .subscribe((res: DatasetAutocompleteItem[]) => {
-                void expect(res.length).toEqual(mockSearchResponse.search.query.nodes.length + 1 /* dummy result */);
+                void expect(res.length).toEqual(mockAutoCompleteResponse.search.query.nodes.length + 1 /* dummy result */);
             });
 
         const op = controller.expectOne(SearchDatasetsAutocompleteDocument);
@@ -49,7 +49,7 @@ describe("SearchApi", () => {
         await expect(op.operation.variables.perPage).toEqual(SEARCH_RESULTS_PER_PAGE);
 
         op.flush({
-            data: mockSearchResponse,
+            data: mockAutoCompleteResponse,
         });
     });
 

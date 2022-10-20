@@ -12,14 +12,17 @@ import {
 import AppValues from "../common/app.values";
 
 import { MaybeNull, MaybeUndefined } from "../common/app.types";
-import { MutationResult } from 'apollo-angular';
+import { MutationResult } from "apollo-angular";
 
-@Injectable()
+@Injectable({
+    providedIn: "root",
+})
 export class AuthApi {
     private user: MaybeNull<AccountDetailsFragment>;
     private isAuthenticated: boolean;
 
-    private userChanges$: Subject<MaybeNull<AccountDetailsFragment>> = new Subject<MaybeNull<AccountDetailsFragment>>();
+    private userChanges$: Subject<MaybeNull<AccountDetailsFragment>> =
+        new Subject<MaybeNull<AccountDetailsFragment>>();
 
     constructor(
         private githubLoginGQL: GithubLoginGQL,
@@ -48,44 +51,53 @@ export class AuthApi {
         this.userChanges$.next(user);
     }
 
-    public fetchUserInfoAndTokenFromGithubCallackCode(code: string): Observable<void> {
+    public fetchUserInfoAndTokenFromGithubCallackCode(
+        code: string,
+    ): Observable<void> {
         return this.githubLoginGQL.mutate({ code }).pipe(
-            map((result: MutationResult<GithubLoginMutation>) => {
-                if (result.data) {
-                    this.isAuthUser = true;
-                    const data: GithubLoginMutation = result.data;
-                    localStorage.setItem(AppValues.localStorageAccessToken, data.auth.githubLogin.token.accessToken);
-                    this.userChange(data.auth.githubLogin.accountInfo);
-                } else {
-                    this.handleAuthenticationError(result.errors);
-                }
-            },
-            catchError(
-                (e: Error) => this.handleAuthenticationError([e])
-            )),
+            map(
+                (result: MutationResult<GithubLoginMutation>) => {
+                    if (result.data) {
+                        this.isAuthUser = true;
+                        const data: GithubLoginMutation = result.data;
+                        localStorage.setItem(
+                            AppValues.localStorageAccessToken,
+                            data.auth.githubLogin.token.accessToken,
+                        );
+                        this.userChange(data.auth.githubLogin.accountInfo);
+                    } else {
+                        this.handleAuthenticationError(result.errors);
+                    }
+                },
+                catchError((e: Error) => this.handleAuthenticationError([e])),
+            ),
         );
     }
 
     public fetchUserInfoFromAccessToken(accessToken: string): Observable<void> {
         return this.fetchAccountInfoGQL.mutate({ accessToken }).pipe(
-            map((result: MutationResult<FetchAccountInfoMutation>) => {
-                if (result.data) {
-                    this.isAuthUser = true;
-                    const data: FetchAccountInfoMutation = result.data;
-                    this.userChange(data.auth.accountInfo);
-                } else {
-                    this.handleAuthenticationError(result.errors);
-                }
-            },
-            catchError(
-                (e: Error) => this.handleAuthenticationError([e])
-            )),
+            map(
+                (result: MutationResult<FetchAccountInfoMutation>) => {
+                    if (result.data) {
+                        this.isAuthUser = true;
+                        const data: FetchAccountInfoMutation = result.data;
+                        this.userChange(data.auth.accountInfo);
+                    } else {
+                        this.handleAuthenticationError(result.errors);
+                    }
+                },
+                catchError((e: Error) => this.handleAuthenticationError([e])),
+            ),
         );
     }
 
-    private handleAuthenticationError(err: MaybeUndefined<readonly Error[]>): Observable<void> {
+    private handleAuthenticationError(
+        err: MaybeUndefined<readonly Error[]>,
+    ): Observable<void> {
         if (err) {
-            err.forEach((e: Error) => console.warn(`Authentication query error: ${e.message}`));
+            err.forEach((e: Error) =>
+                console.warn(`Authentication query error: ${e.message}`),
+            );
         } else {
             console.warn("Authentication query error");
         }

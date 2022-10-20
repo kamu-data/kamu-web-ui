@@ -25,6 +25,19 @@ import { MaybeNull } from "./common/app.types";
 import _ from "lodash";
 import { promiseWithCatch } from "./common/app.helpers";
 
+
+export const ALL_URLS_WITHOUT_HEADER: string[] = [
+    ProjectLinks.URL_DATASET_CREATE,
+    ProjectLinks.URL_LOGIN,
+    ProjectLinks.URL_GITHUB_CALLBACK,
+];
+
+export const ALL_URLS_WITHOUT_ACCESS_TOKEN: string[] = [
+    ProjectLinks.URL_LOGIN,
+    ProjectLinks.URL_GITHUB_CALLBACK,
+];
+
+
 @Component({
     selector: "app-root",
     templateUrl: "./app.component.html",
@@ -32,20 +45,15 @@ import { promiseWithCatch } from "./common/app.helpers";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent extends BaseComponent implements OnInit {
-    private readonly AnonymousAccountInfo: AccountDetailsFragment = {
+    public static readonly AnonymousAccountInfo: AccountDetailsFragment = {
         login: "",
         name: AppValues.defaultUsername,
     };
     private unimplementedMessage = "Feature coming soon";
     public appLogo = `/${AppValues.appLogo}`;
     public isMobileView = false;
-    public isVisible = true;
-    public user: AccountDetailsFragment = this.AnonymousAccountInfo;
-    private appHeaderNotVisiblePages: string[] = [
-        ProjectLinks.urlDatasetCreate,
-        ProjectLinks.urlLogin,
-        ProjectLinks.urlGithubCallback,
-    ];
+    public isHeaderVisible = true;
+    public user: AccountDetailsFragment = AppComponent.AnonymousAccountInfo;
 
     @HostListener("window:resize", ["$event"])
     checkWindowSize(): void {
@@ -70,13 +78,14 @@ export class AppComponent extends BaseComponent implements OnInit {
                     map((event) => event as RouterEvent),
                 )
                 .subscribe((event: RouterEvent) => {
-                    this.isVisible = this.isAvailableAppHeaderUrl(event.url);
+                    this.isHeaderVisible = this.shouldHeaderBeVisible(event.url);
                 }),
+
             this.authApi.onUserChanges.subscribe(
                 (user: MaybeNull<AccountDetailsFragment>) => {
                     this.user = user
                         ? _.cloneDeep(user)
-                        : this.AnonymousAccountInfo;
+                        : AppComponent.AnonymousAccountInfo;
                 },
             ),
         );
@@ -84,15 +93,12 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     authentification(): void {
-        const accessToken: string | null = localStorage.getItem(
-            AppValues.localStorageAccessToken,
-        );
-        if (
-            location.href.includes(ProjectLinks.urlLogin) ||
-            location.href.includes(ProjectLinks.urlGithubCallback)
-        ) {
+        if (ALL_URLS_WITHOUT_ACCESS_TOKEN.includes(this.router.url)) {
             return;
         } else {
+            const accessToken: string | null = localStorage.getItem(
+                AppValues.localStorageAccessToken,
+            );
             if (typeof accessToken === "string" && !this.authApi.isAuthenticated) {
                 this.trackSubscription(
                     this.authApi
@@ -107,10 +113,9 @@ export class AppComponent extends BaseComponent implements OnInit {
     private checkView(): void {
         this.isMobileView = AppValues.isMobileView();
     }
-    private isAvailableAppHeaderUrl(url: string): boolean {
-        return !this.appHeaderNotVisiblePages.some((item) =>
-            url.toLowerCase().includes(item),
-        );
+
+    private shouldHeaderBeVisible(url: string): boolean {
+        return !ALL_URLS_WITHOUT_HEADER.some((item) => url.toLowerCase().includes(item));
     }
 
     public onSelectDataset(item: DatasetAutocompleteItem): void {
@@ -138,9 +143,11 @@ export class AppComponent extends BaseComponent implements OnInit {
     public onLogin(): void {
         this.navigationService.navigateToLogin();
     }
+
     public onLogOut(): void {
         this.authApi.logOut();
     }
+
     public onUserProfile(): void {
         promiseWithCatch(
             this.modalService.warning({
@@ -149,6 +156,7 @@ export class AppComponent extends BaseComponent implements OnInit {
             }),
         );
     }
+
     public onUserDatasets(): void {
         promiseWithCatch(
             this.modalService.warning({
@@ -157,6 +165,7 @@ export class AppComponent extends BaseComponent implements OnInit {
             }),
         );
     }
+
     public onBilling(): void {
         promiseWithCatch(
             this.modalService.warning({
@@ -165,6 +174,7 @@ export class AppComponent extends BaseComponent implements OnInit {
             }),
         );
     }
+
     public onAnalytics(): void {
         promiseWithCatch(
             this.modalService.warning({
@@ -173,6 +183,7 @@ export class AppComponent extends BaseComponent implements OnInit {
             }),
         );
     }
+    
     public onSettings(): void {
         promiseWithCatch(
             this.modalService.warning({
@@ -181,6 +192,7 @@ export class AppComponent extends BaseComponent implements OnInit {
             }),
         );
     }
+
     public onHelp(): void {
         promiseWithCatch(
             this.modalService.warning({

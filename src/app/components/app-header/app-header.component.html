@@ -130,7 +130,7 @@
                     Add New Dataset
                 </a>
 
-                <ng-template [ngIf]="!(userInfo && userInfo.name)">
+                <ng-template [ngIf]="!isUserLoggedIn()">
                     <a
                         class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="openBillingPlanHeader"
@@ -151,7 +151,7 @@
                     >
                 </ng-template>
 
-                <ng-template [ngIf]="userInfo && userInfo.name">
+                <ng-template [ngIf]="isUserLoggedIn()">
                     <a
                         class="Header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="openUserProfileHeader"
@@ -194,13 +194,8 @@
                             src="https://avatars.githubusercontent.com/u/87068546?s=40&amp;v=4"
                             width="20"
                             height="20"
-                            alt="@kulykivska"
                         />
-                        {{
-                            userInfo && userInfo.name
-                                ? userInfo.name
-                                : defaultUsername
-                        }}
+                        {{ isUserLoggedIn() ? userInfo.name : defaultUsername }}
                     </a>
                     <button
                         class="Header-link Header-signout-btn d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-md-top-0 border-white-fade"
@@ -248,7 +243,7 @@
                     <div class="img-container-round">
                         <img
                             [src]="
-                                userInfo && userInfo.avatarUrl
+                                isUserLoggedIn() && userInfo.avatarUrl
                                     ? userInfo.avatarUrl
                                     : 'https://avatars.githubusercontent.com/u/11951648?v=4'
                             "
@@ -262,14 +257,12 @@
                     <p id="matmenu-signed-in-name">
                         Signed in as
                         <strong data-test-id="userName">{{
-                            userInfo && userInfo.name
-                                ? userInfo.name
-                                : defaultUsername
+                            isUserLoggedIn() ? userInfo.name : defaultUsername
                         }}</strong>
                     </p>
                     <div role="none" class="dropdown-divider"></div>
 
-                    <ng-template [ngIf]="!(userInfo && userInfo.name)">
+                    <ng-template [ngIf]="!isUserLoggedIn()">
                         <button
                             mat-menu-item
                             data-test-id="openLogin"
@@ -294,7 +287,7 @@
                         </button>
                     </ng-template>
 
-                    <ng-template [ngIf]="userInfo && userInfo.name">
+                    <ng-template [ngIf]="isUserLoggedIn()">
                         <button
                             mat-menu-item
                             data-test-id="openUserProfile"

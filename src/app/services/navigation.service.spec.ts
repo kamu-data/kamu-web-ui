@@ -29,7 +29,7 @@ describe("NavigationService", () => {
     it("should be test navigate to home", () => {
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         service.navigateToHome();
-        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.urlHome]);
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_HOME]);
     });
 
     it("should be test navigate to login", () => {
@@ -37,7 +37,7 @@ describe("NavigationService", () => {
             Promise.resolve(true),
         );
         service.navigateToLogin();
-        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.urlLogin]);
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_LOGIN]);
     });
 
     it("should be test navigate to owner page", () => {
@@ -70,7 +70,7 @@ describe("NavigationService", () => {
     it("should be test navigate to dataset create", () => {
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         service.navigateToDatasetCreate();
-        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.urlDatasetCreate]);
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_DATASET_CREATE]);
     });
 
     it("should be test navigate to dataset view", async () => {
@@ -88,7 +88,7 @@ describe("NavigationService", () => {
     it("should be test navigate to page not found view", () => {
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         service.navigateToPageNotFound();
-        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.urlPageNotFound], {
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_PAGE_NOT_FOUND], {
             skipLocationChange: true,
         });
     });

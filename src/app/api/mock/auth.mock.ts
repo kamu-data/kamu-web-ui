@@ -4,7 +4,7 @@ import { AccountDetailsFragment, FetchAccountInfoMutation, GithubLoginMutation }
 export const TEST_GITHUB_CODE = "12345";
 export const TEST_ACCESS_TOKEN = "someToken";
 
-const testAccountInfo: AccountDetailsFragment = {
+export const mockAccountDetails: AccountDetailsFragment = {
     login: "test-user",
     name: "Test User",
     email: "test@example.com",
@@ -15,7 +15,7 @@ const testAccountInfo: AccountDetailsFragment = {
 export const mockUserInfoFromAccessToken: FetchAccountInfoMutation = {
     auth: {
         __typename: "Auth",
-        accountInfo: testAccountInfo,
+        accountInfo: mockAccountDetails,
     }
 };
 
@@ -30,7 +30,7 @@ export const mockGithubLoginResponse: GithubLoginMutation = {
                 scope: "someScope",
                 tokenType: "someType"
             },
-            accountInfo: testAccountInfo,
+            accountInfo: mockAccountDetails,
         }
     }
 };

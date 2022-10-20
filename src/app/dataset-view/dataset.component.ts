@@ -350,10 +350,10 @@ export class DatasetComponent
         return {
             // Both parameters are mandatory in URL, router would not activate this component otherwise
             accountName: requireValue(
-                paramMap.get(ProjectLinks.urlParamAccountName),
+                paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
             ),
             datasetName: requireValue(
-                paramMap.get(ProjectLinks.urlParamDatasetName),
+                paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
             ),
         };
     }
@@ -361,7 +361,7 @@ export class DatasetComponent
     private getCurrentPageFromUrl(): number {
         const page: string | null =
             this.activatedRoute.snapshot.queryParamMap.get(
-                ProjectLinks.urlQueryParamPage,
+                ProjectLinks.URL_QUERY_PARAM_PAGE,
             );
         return page ? Number(page) : 1;
     }
@@ -369,7 +369,7 @@ export class DatasetComponent
     private getDatasetViewTypeFromUrl(): DatasetViewTypeEnum {
         const tabValue: string | null =
             this.activatedRoute.snapshot.queryParamMap.get(
-                ProjectLinks.urlQueryParamTab,
+                ProjectLinks.URL_QUERY_PARAM_TAB,
             );
         if (tabValue) {
             const tab = tabValue as DatasetViewTypeEnum;

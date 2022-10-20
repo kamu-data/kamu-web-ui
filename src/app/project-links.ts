@@ -2,22 +2,33 @@ import { Injectable } from "@angular/core";
 
 @Injectable()
 export default class ProjectLinks {
-    public static urlHome = "/";
-    public static urlProfile = "v/profile";
-    public static urlLogin = "v/login";
-    public static urlGithubCallback = "github_callback";
-    public static urlSearch = "v/search";
-    public static urlDatasetCreate = "v/new-dataset";
-    public static urlPageNotFound = "v/page-not-found";
+    public static readonly URL_HOME: string = "/";
+    public static readonly URL_PROFILE: string = "v/profile";
+    public static readonly URL_LOGIN: string = "v/login";
+    public static readonly URL_GITHUB_CALLBACK: string = "github_callback";
+    public static readonly URL_SEARCH: string = "v/search";
+    public static readonly URL_DATASET_CREATE: string = "v/new-dataset";
+    public static readonly URL_PAGE_NOT_FOUND: string = "v/page-not-found";
 
-    public static urlParamAccountName = "accountName";
-    public static urlParamDatasetName = "datasetName";
+    public static readonly ALL_URLS: string[] = [
+        ProjectLinks.URL_HOME,
+        ProjectLinks.URL_PROFILE,
+        ProjectLinks.URL_LOGIN,
+        ProjectLinks.URL_GITHUB_CALLBACK,
+        ProjectLinks.URL_SEARCH,
+        ProjectLinks.URL_DATASET_CREATE,
+        ProjectLinks.URL_PAGE_NOT_FOUND
+    ];
 
-    public static urlQueryParamTab = "tab";
-    public static urlQueryParamPage = "page";
-    public static urlQueryParamQuery = "query";
+    public static readonly URL_PARAM_ACCOUNT_NAME: string = "accountName";
+    public static readonly URL_PARAM_DATASET_NAME: string = "datasetName";
+
+    public static readonly URL_QUERY_PARAM_TAB: string = "tab";
+    public static readonly URL_QUERY_PARAM_PAGE: string = "page";
+    public static readonly URL_QUERY_PARAM_QUERY: string = "query";
+    
 
     // TODO
-    // public static urlDatasetCreateSelectType = "select-type";
-    // public static urlDatasetCreateRoot = "root";
+    // public static readonly URL_DATASET_CREATE_SELECT_TYPE = "select-type";
+    // public static readonly URL_DATASET_CREATE_ROOT = "root";
 }

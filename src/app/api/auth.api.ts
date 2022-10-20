@@ -46,7 +46,6 @@ export class AuthApi {
     }
 
     public fetchUserInfoAndTokenFromGithubCallackCode(code: string): Observable<void> {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return this.githubLoginGQL.mutate({ code }).pipe(
             map((result: MutationResult<GithubLoginMutation>) => {
                 if (result.data) {

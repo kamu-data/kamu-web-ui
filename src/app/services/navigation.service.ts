@@ -13,19 +13,19 @@ export class NavigationService {
     }
 
     public navigateToHome(): void {
-        promiseWithCatch(this.router.navigate([ProjectLinks.urlHome]));
+        promiseWithCatch(this.router.navigate([ProjectLinks.URL_HOME]));
     }
 
     public navigateToSearch(query?: string, page?: number): void {
         promiseWithCatch(
-            this.router.navigate([ProjectLinks.urlSearch], {
+            this.router.navigate([ProjectLinks.URL_SEARCH], {
                 queryParams: query ? { query, page } : { page },
             }),
         );
     }
 
     public navigateToDatasetCreate(): void {
-        promiseWithCatch(this.router.navigate([ProjectLinks.urlDatasetCreate]));
+        promiseWithCatch(this.router.navigate([ProjectLinks.URL_DATASET_CREATE]));
     }
 
     public navigateToDatasetView(params: DatasetNavigationParams): void {
@@ -40,7 +40,7 @@ export class NavigationService {
     }
 
     public navigateToLogin(): void {
-        promiseWithCatch(this.router.navigate([ProjectLinks.urlLogin]));
+        promiseWithCatch(this.router.navigate([ProjectLinks.URL_LOGIN]));
     }
 
     public navigateToOwnerView(ownerName: string): void {
@@ -49,7 +49,7 @@ export class NavigationService {
 
     public navigateToPageNotFound(): void {
         promiseWithCatch(
-            this.router.navigate([ProjectLinks.urlPageNotFound], {
+            this.router.navigate([ProjectLinks.URL_PAGE_NOT_FOUND], {
                 skipLocationChange: true,
             }),
         );

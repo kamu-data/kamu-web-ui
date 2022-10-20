@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatMenuModule } from "@angular/material/menu";
 import { RouterTestingModule } from "@angular/router/testing";
 import { SearchApi } from "./api/search.api";
-import { AppComponent } from "./app.component";
+import { ALL_URLS_WITHOUT_ACCESS_TOKEN, ALL_URLS_WITHOUT_HEADER, AppComponent } from "./app.component";
 import AppValues from "./common/app.values";
 import { AppHeaderComponent } from "./components/app-header/app-header.component";
 import { SearchService } from "./search/search.service";
@@ -16,6 +16,11 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { ModalComponent } from "./components/modal/modal.component";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { of } from "rxjs";
+import ProjectLinks from "./project-links";
+import { routerMock, routerMockEventSubject } from "./common/base-test.helpers.spec";
+import { NavigationEnd, Router } from "@angular/router";
+import { mockAccountDetails } from "./api/mock/auth.mock";
+
 
 describe("AppComponent", () => {
     let component: AppComponent;
@@ -40,8 +45,10 @@ describe("AppComponent", () => {
                 AuthApi,
                 NavigationService,
                 ModalService,
+                { provide: Router, useValue: routerMock },    
             ],
         }).compileComponents();
+        routerMock.url = ProjectLinks.URL_HOME;
         fixture = TestBed.createComponent(AppComponent);
         navigationService = TestBed.inject(NavigationService);
         modalService = TestBed.inject(ModalService);
@@ -54,28 +61,46 @@ describe("AppComponent", () => {
         await expect(component).toBeTruthy();
     });
 
-    it(`should have as logo 'kamu-client'`, async () => {
-        await expect(component.appLogo).toEqual(
-            "/assets/icons/kamu_logo_icon.svg",
-        );
-    });
+    ProjectLinks.ALL_URLS.filter(url => !ALL_URLS_WITHOUT_ACCESS_TOKEN.includes(url)).forEach(    
+        (url: string) => {
+            it(`should call authentification method in onInit for ${url} and trigger token restore`, async () => {
+                const authentificationSpy = spyOn(component, "authentification").and.callThrough();        
+                const localStorageGetItemSpy = spyOn(localStorage, 'getItem').and.returnValue('someToken');
+                const fetchUserInfoFromAccessTokenSpy = spyOn(authApi, 'fetchUserInfoFromAccessToken').and.callFake(() => of());
+                const isAuthenticatedSpy = spyOnProperty(authApi, 'isAuthenticated', 'get').and.returnValue(false);
+        
+                routerMock.url = url;                
+                component.ngOnInit();
+        
+                await expect(authentificationSpy).toHaveBeenCalled();
+                expect(localStorageGetItemSpy).toHaveBeenCalledWith(AppValues.localStorageAccessToken);
+                await expect(fetchUserInfoFromAccessTokenSpy).toHaveBeenCalled();
+                await expect(isAuthenticatedSpy).toHaveBeenCalled();
+            });
+        }
+    );
 
-    it("should check call authentification method in onInit ", async () => {
-        const localStorageGetItemSpy = spyOn(localStorage, 'getItem').and.returnValue('someToken');
-        const fetchUserInfoFromAccessTokenSpy = spyOn(authApi, 'fetchUserInfoFromAccessToken').and.callFake(() => of());
-        const authentificationSpy = spyOn(component, "authentification").and.callThrough();
-        const isAuthenticatedSpy = spyOnProperty(authApi, 'isAuthenticated', 'get').and.returnValue(false);
-
-        component.ngOnInit();
-
-        await expect(authentificationSpy).toHaveBeenCalled();
-        expect(localStorageGetItemSpy).toHaveBeenCalledWith(AppValues.localStorageAccessToken);
-        await expect(fetchUserInfoFromAccessTokenSpy).toHaveBeenCalled();
-        await expect(isAuthenticatedSpy).toHaveBeenCalled();
-    });
+    ALL_URLS_WITHOUT_ACCESS_TOKEN.forEach(
+        (url: string) => {
+            it(`should call authentification method in onInit on ${url} without token restore`, async () => {
+                const authentificationSpy = spyOn(component, "authentification").and.callThrough();
+                const localStorageGetItemSpy = spyOn(localStorage, 'getItem').and.stub();
+                const fetchUserInfoFromAccessTokenSpy = spyOn(authApi, 'fetchUserInfoFromAccessToken').and.stub();
+                const isAuthenticatedSpy = spyOnProperty(authApi, 'isAuthenticated', 'get').and.stub();
+        
+                routerMock.url = url;
+                component.ngOnInit();
+        
+                await expect(authentificationSpy).toHaveBeenCalled();
+                await expect(localStorageGetItemSpy).not.toHaveBeenCalled();
+                await expect(fetchUserInfoFromAccessTokenSpy).not.toHaveBeenCalled();
+                await expect(isAuthenticatedSpy).not.toHaveBeenCalled();
+            });            
+        }
+    );
 
     it("should check call checkWindowSize method", async () => {
-        const checkWindowSizeSpy = spyOn(component, "checkWindowSize");
+        const checkWindowSizeSpy = spyOn(component, "checkWindowSize").and.callThrough();
         window.dispatchEvent(new Event("resize"));
         await expect(checkWindowSizeSpy).toHaveBeenCalled();
         await expect(component.isMobileView).toEqual(AppValues.isMobileView());
@@ -137,4 +162,36 @@ describe("AppComponent", () => {
         component.onUserProfile();
         await expect(modalSpy).toHaveBeenCalled();
     });
+
+    ALL_URLS_WITHOUT_HEADER.forEach(
+        (url: string) => {
+            it(`should hide header when going to ${url} page`, async () => {
+                routerMockEventSubject.next(new NavigationEnd(1, url, ""));
+                fixture.detectChanges();
+                await expect(component.isHeaderVisible).toBeFalsy();
+            });
+        }
+    );
+
+    ProjectLinks.ALL_URLS.filter(url => !ALL_URLS_WITHOUT_HEADER.includes(url)).forEach(
+        (url: string) => {
+            it(`should show header when going to ${url} page`, async () => {
+                routerMockEventSubject.next(new NavigationEnd(1, url, ""));
+                fixture.detectChanges();
+                await expect(component.isHeaderVisible).toBeTruthy();
+            });
+        }
+    )
+
+    it("should accept new logged user", async () => {
+        // eslint-disable-next-line @typescript-eslint/dot-notation
+        authApi['userChanges$'].next(mockAccountDetails);
+        await expect(component.user).toEqual(mockAccountDetails);
+    });
+
+    it("should accept user logout", async () => {
+        // eslint-disable-next-line @typescript-eslint/dot-notation
+        authApi['userChanges$'].next(null);
+        await expect(component.user).toEqual(AppComponent.AnonymousAccountInfo);
+    });    
 });

@@ -59,6 +59,10 @@ export class AppHeaderComponent extends BaseComponent {
         return type === TypeNames.datasetType;
     }
 
+    public isUserLoggedIn(): boolean {
+        return this.userInfo.login.length > 0;
+    }
+
     public search: OperatorFunction<
         string,
         readonly DatasetAutocompleteItem[]

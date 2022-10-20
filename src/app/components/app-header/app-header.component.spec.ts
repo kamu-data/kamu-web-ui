@@ -22,6 +22,7 @@ import { of } from "rxjs";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { mockDatasetBasicsFragment } from "src/app/search/mock.data";
 import { first } from "rxjs/operators";
+import AppValues from "src/app/common/app.values";
 
 describe("AppHeaderComponent", () => {
     let component: AppHeaderComponent;
@@ -47,6 +48,10 @@ describe("AppHeaderComponent", () => {
 
         fixture = TestBed.createComponent(AppHeaderComponent);
         component = fixture.componentInstance;
+        component.userInfo = {
+            login: '',
+            name: AppValues.defaultUsername,
+        }
         component.isVisible = true;
         component.isMobileView = false;
         fixture.detectChanges();

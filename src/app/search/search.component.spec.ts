@@ -38,31 +38,28 @@ describe("SearchComponent", () => {
                 SearchApi,
                 ModalService,
                 { provide: Router, useValue: routerMock },
-                {
-                    provide: ActivatedRoute,
-                    useValue: activeRouteMock,
-                },
+                { provide: ActivatedRoute, useValue: activeRouteMock },
             ],
         }).compileComponents();
     });
 
     function setSearchUrl(searchQuery?: string, page?: number): void {
         if (searchQuery) {
-            activeRouteMockQueryParamMap.set(ProjectLinks.urlQueryParamQuery, searchQuery);
-        } else if (activeRouteMockQueryParamMap.has(ProjectLinks.urlQueryParamQuery)) {
-            activeRouteMockQueryParamMap.delete(ProjectLinks.urlQueryParamQuery);
+            activeRouteMockQueryParamMap.set(ProjectLinks.URL_QUERY_PARAM_QUERY, searchQuery);
+        } else if (activeRouteMockQueryParamMap.has(ProjectLinks.URL_QUERY_PARAM_QUERY)) {
+            activeRouteMockQueryParamMap.delete(ProjectLinks.URL_QUERY_PARAM_QUERY);
         }
         
         if (page) {
-            activeRouteMockQueryParamMap.set(ProjectLinks.urlQueryParamPage, page.toString());
-        } else if (activeRouteMockQueryParamMap.has(ProjectLinks.urlQueryParamPage)) {
-            activeRouteMockQueryParamMap.delete(ProjectLinks.urlQueryParamPage);
+            activeRouteMockQueryParamMap.set(ProjectLinks.URL_QUERY_PARAM_PAGE, page.toString());
+        } else if (activeRouteMockQueryParamMap.has(ProjectLinks.URL_QUERY_PARAM_PAGE)) {
+            activeRouteMockQueryParamMap.delete(ProjectLinks.URL_QUERY_PARAM_PAGE);
         }
     }
 
     function pushNavigationEnd(): void {
         routerMockEventSubject.next(
-            new NavigationEnd(1, ProjectLinks.urlSearch, "")
+            new NavigationEnd(1, ProjectLinks.URL_SEARCH, "")
         );
     }
 

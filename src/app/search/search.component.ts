@@ -173,14 +173,14 @@ export class SearchComponent extends BaseComponent implements OnInit
 
     private changePageAndSearch(): void {
         let queryValue = "";
-        const queryParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.urlQueryParamQuery);
+        const queryParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_QUERY);
         if (queryParam) {
             queryValue = requireValue(queryParam);
         }
         this.searchValue = queryValue;
         
         let page = 1;
-        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.urlQueryParamPage);
+        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
         if (pageParam) {
             page = +requireValue(pageParam);
         }

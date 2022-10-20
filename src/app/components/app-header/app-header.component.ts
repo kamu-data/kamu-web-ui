@@ -25,7 +25,6 @@ import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppHeaderComponent extends BaseComponent {
-    @Input() public searchValue: string;
     @Input() public appLogo: string;
     @Input() public isMobileView: boolean;
     @Input() public isVisible: boolean;

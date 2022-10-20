@@ -1,5 +1,5 @@
 import { FormsModule } from "@angular/forms";
-import { mockDataDataset } from "./search/mock.data";
+import { mockAutocompleteItems } from "./search/mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatMenuModule } from "@angular/material/menu";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -7,7 +7,7 @@ import { SearchApi } from "./api/search.api";
 import { AppComponent } from "./app.component";
 import AppValues from "./common/app.values";
 import { AppHeaderComponent } from "./components/app-header/app-header.component";
-import { AppSearchService } from "./search/search.service";
+import { SearchService } from "./search/search.service";
 import { NavigationService } from "./services/navigation.service";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { AuthApi } from "./api/auth.api";
@@ -35,7 +35,7 @@ describe("AppComponent", () => {
             declarations: [AppComponent, AppHeaderComponent, ModalComponent],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                AppSearchService,
+                SearchService,
                 SearchApi,
                 AuthApi,
                 NavigationService,
@@ -119,7 +119,7 @@ describe("AppComponent", () => {
             navigationService,
             "navigateToDatasetView",
         ).and.returnValue();
-        component.onSelectDataset(mockDataDataset[0]);
+        component.onSelectDataset(mockAutocompleteItems[0]);
         await expect(navigateToDatasetViewSpy).toHaveBeenCalled();
     });
 
@@ -128,7 +128,7 @@ describe("AppComponent", () => {
             navigationService,
             "navigateToSearch",
         ).and.returnValue();
-        component.onSelectDataset(mockDataDataset[1]);
+        component.onSelectDataset(mockAutocompleteItems[1]);
         await expect(navigateToSearchSpy).toHaveBeenCalled();
     });
 

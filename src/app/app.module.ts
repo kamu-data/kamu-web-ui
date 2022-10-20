@@ -25,7 +25,7 @@ import { CdkTableModule } from "@angular/cdk/table";
 import { InMemoryCache } from "@apollo/client/core";
 import { SearchApi } from "./api/search.api";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { AppSearchService } from "./search/search.service";
+import { SearchService } from "./search/search.service";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatSidenavModule } from "@angular/material/sidenav";
@@ -81,7 +81,7 @@ const Services = [
     SearchApi,
     DatasetApi,
     HttpLink,
-    AppSearchService,
+    SearchService,
     AppDatasetService,
     NavigationService,
     AppDatasetSubscriptionsService,

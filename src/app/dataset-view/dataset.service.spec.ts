@@ -3,7 +3,7 @@ import {
     mockDatasetHistoryResponse,
     mockDatasetMainDataResponse,
     mockDatasetResponseNotFound,
-    mockInfo,
+    mockDatasetInfo,
 } from "./../search/mock.data";
 import { TestBed } from "@angular/core/testing";
 import { Apollo, ApolloModule } from "apollo-angular";
@@ -91,7 +91,7 @@ describe("AppDatasetService", () => {
             lineageUpdated = true;
         });
         
-        service.requestDatasetMainData(mockInfo).subscribe();
+        service.requestDatasetMainData(mockDatasetInfo).subscribe();
 
         await expect(datasetUpdated).toBeTruthy();
         await expect(overviewTabDataUpdated).toBeTruthy();
@@ -113,7 +113,7 @@ describe("AppDatasetService", () => {
         appDatasetSubsService.onLineageDataChanges.subscribe(() => fail("Unexpected lineage update"));
 
         let errorHandled = false;
-        service.requestDatasetMainData(mockInfo).subscribe(
+        service.requestDatasetMainData(mockDatasetInfo).subscribe(
             () => { fail("Unexpected success")},
             (e: Error) => {
                 errorHandled = true;
@@ -145,7 +145,7 @@ describe("AppDatasetService", () => {
             });
         });
         
-        service.requestDatasetHistory(mockInfo, numRecords, numPage).subscribe();
+        service.requestDatasetHistory(mockDatasetInfo, numRecords, numPage).subscribe();
 
         await expect(historyUpdated).toBeTruthy();        
     });
@@ -161,7 +161,7 @@ describe("AppDatasetService", () => {
         appDatasetSubsService.onDatasetHistoryChanges.subscribe(() => fail("Unexpected history update"));
         
         let errorHandled = false;
-        service.requestDatasetHistory(mockInfo, numRecords, numPage).subscribe(
+        service.requestDatasetHistory(mockDatasetInfo, numRecords, numPage).subscribe(
             () => { fail("Unexpected success")},
             (e: Error) => {
                 errorHandled = true;

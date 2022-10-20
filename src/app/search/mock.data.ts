@@ -2,19 +2,23 @@ import {
     DataBatchFormat,
     DataSchemaFormat,
     DatasetBasicsFragment,
+    DatasetCurrentInfoFragment,
     DatasetKind,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
     GetDatasetMainDataQuery,
+    LicenseFragment,
+    SearchDatasetsOverviewQuery,
 } from "../api/kamu.graphql.interface";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { DatasetInfo } from "../interface/navigation.interface";
 import {
     DatasetAutocompleteItem,
+    DatasetSearchResult,
     TypeNames,
 } from "../interface/search.interface";
 
-export const mockInfo: DatasetInfo = {
+export const mockDatasetInfo: DatasetInfo = {
     accountName: "kamu",
     datasetName: "test name",
 };
@@ -24,33 +28,114 @@ export const mockNode: Node = {
     label: "british-columbia.case-details.hm",
 };
 
-export const mockDataDataset: DatasetAutocompleteItem[] = [
+const mockOwnerFields = {
+    id: "1",
+    name: "kamu",
+};
+
+export const mockAutocompleteItems: DatasetAutocompleteItem[] = [
     {
         dataset: {
-            id: "id",
+            id: "id1",
             kind: DatasetKind.Root,
-            name: "mockName",
-            owner: { id: "omnerId", name: "ownerName" },
+            name: "mockName1",
+            owner: mockOwnerFields,
         },
         __typename: TypeNames.datasetType,
     },
 
     {
         dataset: {
-            id: "id",
+            id: "id2",
             kind: DatasetKind.Derivative,
-            name: "mockName",
-            owner: { id: "omnerId", name: "ownerName" },
+            name: "mockName2",
+            owner: mockOwnerFields,
         },
         __typename: TypeNames.allDataType,
     },
 ];
 
+const mockMetadataCurrentInfo: DatasetCurrentInfoFragment = {
+    __typename: "SetInfo",
+    description:
+        "Confirmed positive cases of COVID-19 in Alberta.",
+    keywords: [
+        "Healthcare",
+        "Epidemiology",
+        "COVID-19",
+        "SARS-CoV-2",
+        "Disaggregated",
+        "Anonymized",
+        "Alberta",
+        "Canada",
+    ],
+};
+
+const mockMetadataCurrentLicense: LicenseFragment = {
+    __typename: "SetLicense",
+    shortName: "OGL-Canada-2.0",
+    name: "Open Government Licence - Canada",
+    spdxId: "OGL-Canada-2.0",
+    websiteUrl:
+        "https://open.canada.ca/en/open-government-licence-canada",
+};
+
+export const mockDatasetSearchResult: DatasetSearchResult = {
+    datasets: [
+        {
+            __typename: "Dataset",
+            id: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+            kind: DatasetKind.Root,
+            name: "alberta.case-details",
+            owner: {
+                __typename: "User",
+                ...mockOwnerFields,
+            },
+            createdAt: "2022-08-05T21:17:30.613911358+00:00",
+            lastUpdatedAt: "2022-08-05T21:19:28.817281255+00:00",
+            metadata: {
+                currentInfo: mockMetadataCurrentInfo,
+                currentLicense: mockMetadataCurrentLicense,
+                currentDownstreamDependencies: []
+            }
+        }
+    ],
+    totalCount: 1,
+    pageInfo: {
+        currentPage: 1,
+        hasNextPage: false,
+        hasPreviousPage: false,
+    },
+    currentPage: 1,
+};
+
+export const mockSearchDatasetOverviewQuery: SearchDatasetsOverviewQuery = {
+    __typename: "Query",
+    search: {
+        __typename: "Search",
+        query: {
+            __typename: "SearchResultConnection",
+            totalCount: 1,
+            nodes: [
+                {
+                    __typename: "Dataset",
+                    ...mockDatasetSearchResult.datasets[0],
+                }
+            ],
+            pageInfo: {
+                currentPage: 1,
+                hasNextPage: true,
+                hasPreviousPage: false,
+            },
+        },
+    },
+}
+
 export const mockDatasetBasicsFragment: DatasetBasicsFragment = {
     id: "id",
     kind: DatasetKind.Derivative,
     name: "mockName",
-    owner: { __typename: "User", id: "userId", name: "ownerName" },
+    owner: { __typename: "User", ...mockOwnerFields },
 };
 
 
@@ -71,8 +156,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
             name: "alberta.case-details",
             owner: {
                 __typename: "User",
-                id: "1",
-                name: "kamu",
+                ...mockOwnerFields,
             },
             data: {
                 __typename: "DatasetData",
@@ -96,29 +180,8 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
             },
             metadata: {
                 __typename: "DatasetMetadata",
-                currentInfo: {
-                    __typename: "SetInfo",
-                    description:
-                        "Confirmed positive cases of COVID-19 in Alberta.",
-                    keywords: [
-                        "Healthcare",
-                        "Epidemiology",
-                        "COVID-19",
-                        "SARS-CoV-2",
-                        "Disaggregated",
-                        "Anonymized",
-                        "Alberta",
-                        "Canada",
-                    ],
-                },
-                currentLicense: {
-                    __typename: "SetLicense",
-                    shortName: "OGL-Canada-2.0",
-                    name: "Open Government Licence - Canada",
-                    spdxId: "OGL-Canada-2.0",
-                    websiteUrl:
-                        "https://open.canada.ca/en/open-government-licence-canada",
-                },
+                currentInfo: mockMetadataCurrentInfo,
+                currentLicense: mockMetadataCurrentLicense,
                 currentWatermark: "2022-08-01T00:00:00+00:00",
                 currentTransform: null,
                 currentSchema: {
@@ -159,8 +222,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                                                         name: "fake.upstream-level-5",
                                                                         owner: {
                                                                             __typename: "User",
-                                                                            id: "1",
-                                                                            name: "kamu",
+                                                                            ...mockOwnerFields,
                                                                         },
                                                                     }
                                                                 ]
@@ -170,8 +232,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                                             name: "fake.upstream-level-4",
                                                             owner: {
                                                                 __typename: "User",
-                                                                id: "1",
-                                                                name: "kamu",
+                                                                ...mockOwnerFields,
                                                             },
                                                         }
                                                     ]
@@ -181,8 +242,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                                 name: "fake.upstream-level-3",
                                                 owner: {
                                                     __typename: "User",
-                                                    id: "1",
-                                                    name: "kamu",
+                                                    ...mockOwnerFields,
                                                 },
                                             }
                                         ]
@@ -192,8 +252,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                     name: "fake.upstream-level-2",
                                     owner: {
                                         __typename: "User",
-                                        id: "1",
-                                        name: "kamu",
+                                        ...mockOwnerFields,
                                     },
                                 }
                             ],
@@ -203,8 +262,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                         name: "fake.upstream-level-1",
                         owner: {
                             __typename: "User",
-                            id: "1",
-                            name: "kamu",
+                            ...mockOwnerFields,
                         },
                     }
                 ],
@@ -240,8 +298,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                                                         name: "world.daily-cases",
                                                                         owner: {
                                                                             __typename: "User",
-                                                                            id: "1",
-                                                                            name: "kamu",
+                                                                            ...mockOwnerFields,
                                                                         },
                                                                     }
                                                                 ]
@@ -251,8 +308,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                                             name: "america.daily-cases",
                                                             owner: {
                                                                 __typename: "User",
-                                                                id: "1",
-                                                                name: "kamu",
+                                                                ...mockOwnerFields,
                                                             },
                                                         }
                                                     ],
@@ -262,8 +318,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                                 name: "canada.daily-cases",
                                                 owner: {
                                                     __typename: "User",
-                                                    id: "1",
-                                                    name: "kamu",
+                                                    ...mockOwnerFields,
                                                 },
                                             },
                                         ],
@@ -273,8 +328,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                     name: "canada.case-details",
                                     owner: {
                                         __typename: "User",
-                                        id: "1",
-                                        name: "kamu",
+                                        ...mockOwnerFields,
                                     },
                                 },
                             ],
@@ -284,8 +338,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                         name: "alberta.case-details.hm",
                         owner: {
                             __typename: "User",
-                            id: "1",
-                            name: "kamu",
+                            ...mockOwnerFields,
                         },
                     },
                 ],
@@ -306,8 +359,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                     "2022-08-05T21:19:28.817281255+00:00",
                                 author: {
                                     __typename: "User",
-                                    id: "1",
-                                    name: "kamu",
+                                    ...mockOwnerFields,
                                 },
                                 event: {
                                     __typename: "AddData",
@@ -366,8 +418,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     "2022-08-05T21:19:28.817281255+00:00",
                                 author: {
                                     __typename: "User",
-                                    id: "1",
-                                    name: "kamu",
+                                    ...mockOwnerFields,
                                 },
                                 event: {
                                     __typename: "AddData",
@@ -395,8 +446,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
                                     __typename: "User",
-                                    id: "1",
-                                    name: "kamu",
+                                    ...mockOwnerFields,
                                 },
                                 event: {
                                     __typename: "SetLicense",
@@ -413,8 +463,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
                                     __typename: "User",
-                                    id: "1",
-                                    name: "kamu",
+                                    ...mockOwnerFields,
                                 },
                                 event: {
                                     __typename: "SetAttachments",
@@ -430,8 +479,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
                                     __typename: "User",
-                                    id: "1",
-                                    name: "kamu",
+                                    ...mockOwnerFields,
                                 },
                                 event: {
                                     __typename: "SetInfo",
@@ -447,8 +495,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
                                     __typename: "User",
-                                    id: "1",
-                                    name: "kamu",
+                                    ...mockOwnerFields,
                                 },
                                 event: {
                                     __typename: "SetVocab",
@@ -464,8 +511,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
                                     __typename: "User",
-                                    id: "1",
-                                    name: "kamu",
+                                    ...mockOwnerFields,
                                 },
                                 event: {
                                     __typename: "SetPollingSource",
@@ -480,8 +526,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
                                     __typename: "User",
-                                    id: "1",
-                                    name: "kamu",
+                                    ...mockOwnerFields,
                                 },
                                 event: {
                                     __typename: "Seed",
@@ -506,8 +551,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
             name: "alberta.case-details",
             owner: {
                 __typename: "User",
-                id: "1",
-                name: "kamu",
+                ...mockOwnerFields,
             },
         },
     },

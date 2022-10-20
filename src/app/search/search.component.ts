@@ -1,5 +1,5 @@
 import { ActivatedRoute } from "@angular/router";
-import { AppSearchService } from "./search.service";
+import { SearchService } from "./search.service";
 import { DatasetSearchResult } from "../interface/search.interface";
 import AppValues from "../common/app.values";
 import {
@@ -160,7 +160,7 @@ export class SearchComponent
 
     constructor(
         private navigationService: NavigationService,
-        private appSearchService: AppSearchService,
+        private appSearchService: SearchService,
         private activatedRoute: ActivatedRoute,
         private cdr: ChangeDetectorRef,
     ) {
@@ -178,7 +178,7 @@ export class SearchComponent
         this.changePageAndSearch();
 
         this.trackSubscriptions(
-            this.appSearchService.onSearchQueryChanges.subscribe(
+            this.appSearchService.onInputSearchQueryChanges.subscribe(
                 (value: string) => {
                     this.searchValue = value;
                     const pageParam =
@@ -242,7 +242,7 @@ export class SearchComponent
         params.currentPage
             ? (this.currentPage = params.currentPage)
             : (this.currentPage = 1);
-        this.appSearchService.searchQueryChanges(this.searchValue);
+        this.appSearchService.inputSearchQueryChanges(this.searchValue);
         if (this.currentPage === 1) {
             this.navigationService.navigateToSearch(this.searchValue);
             return;

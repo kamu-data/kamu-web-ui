@@ -5,7 +5,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SearchComponent } from "./search.component";
 import { NavigationService } from "../services/navigation.service";
-import { AppSearchService } from "./search.service";
+import { SearchService } from "./search.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ModalService } from "../components/modal/modal.service";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
@@ -23,7 +23,7 @@ describe("SearchComponent", () => {
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 NavigationService,
-                AppSearchService,
+                SearchService,
                 AuthApi,
                 SearchApi,
                 ModalService,

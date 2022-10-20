@@ -1,24 +1,23 @@
-/* eslint-disable @typescript-eslint/dot-notation */
 import { Apollo } from "apollo-angular";
 import { SearchApi } from "./../api/search.api";
 import { TestBed } from "@angular/core/testing";
-import { AppSearchService } from "./search.service";
+import { SearchService } from "./search.service";
 import {
     DatasetAutocompleteItem,
     DatasetSearchResult,
 } from "../interface/search.interface";
-import { mockDataDataset } from "./mock.data";
+import { mockAutocompleteItems, mockSearchDatasetOverviewQuery } from "./mock.data";
 import { of, throwError } from "rxjs";
 
-describe("SerchService", () => {
-    let service: AppSearchService;
+describe("SearchService", () => {
+    let service: SearchService;
     let searchApi: SearchApi;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [SearchApi, Apollo],
         });
-        service = TestBed.inject(AppSearchService);
+        service = TestBed.inject(SearchService);
         searchApi = TestBed.inject(SearchApi);
     });
 
@@ -26,82 +25,87 @@ describe("SerchService", () => {
         await expect(service).toBeTruthy();
     });
 
-    it("should be check get onAutocompleteSearchChanges", async () => {
-        const result = service.onAutocompleteSearchChanges;
-        await expect(result).toBeDefined();
+    it("should fire inputSearchQueryChanges$ propagation", async () => {
+        const testSearchValue = "test";
+        let notificationReceived = false;
+        service.onInputSearchQueryChanges.subscribe(
+            (searchValue: string) => {
+                notificationReceived = true;
+                void expect(searchValue).toEqual(testSearchValue);
+            }
+        );
+        service.inputSearchQueryChanges(testSearchValue);
+        await expect(notificationReceived).toBeTruthy();
     });
 
-    it("should be call inputQueryChanges$ ", async () => {
-        const searchValue = "test";
-        const inputQueryChangesSpy = spyOn(
-            service["inputQueryChanges$"],
-            "next",
-        );
-        service.searchQueryChanges(searchValue);
-        await expect(inputQueryChangesSpy).toHaveBeenCalled();
+    it("should fire overviewSearchChanges$ on search request", async () => {
+        const searchApiOverviewDatasearchSpy = spyOn(
+            searchApi, 'overviewDatasetSearch'
+        ).and.returnValue(of(mockSearchDatasetOverviewQuery));
+
+        let notificationReceived = false;
+        service.onOverviewSearchChanges.subscribe(
+            (searchResult: DatasetSearchResult) => {
+                notificationReceived = true;
+
+                const expectedSearchData: DatasetSearchResult = {
+                    datasets: [
+                        mockSearchDatasetOverviewQuery.search.query.nodes[0]
+                    ],
+                    totalCount: 1,
+                    pageInfo: mockSearchDatasetOverviewQuery.search.query.pageInfo,
+                    currentPage: 1,
+                };
+                void expect(searchResult).toEqual(expectedSearchData);
+            }
+        )
+
+        const testSearchValue = "test";
+        service.searchDatasets(testSearchValue);
+
+        expect(searchApiOverviewDatasearchSpy).toHaveBeenCalledWith(testSearchValue, 0);
+        await expect(notificationReceived).toBeTruthy();
     });
 
-    it("should be call overviewSearchChanges$ ", async () => {
-        const mockSearchData: DatasetSearchResult = {
-            datasets: [],
-            totalCount: 10,
-            pageInfo: {
-                currentPage: 1,
-                hasNextPage: true,
-                hasPreviousPage: false,
-            },
-            currentPage: 1,
-        };
-        const overviewSearchChangesSpy = spyOn(
-            service["overviewSearchChanges$"],
-            "next",
-        );
-        service.overviewSearchChanges(mockSearchData);
-        await expect(overviewSearchChangesSpy).toHaveBeenCalled();
+    it("should fire autocompleteSearchChanges$ on autocomplete request", async () => {
+        const searchApiAutocompleteDatasetSearchSpy = spyOn(
+            searchApi, 'autocompleteDatasetSearch'
+        ).and.returnValue(of(mockAutocompleteItems));
+
+        let notificationReceived = false;
+
+        service.onAutocompleteSearchChanges.subscribe(
+            (autocompleteItems: DatasetAutocompleteItem[]) => {
+                notificationReceived = true;
+                void expect(autocompleteItems).toEqual(mockAutocompleteItems);
+            }
+        )
+
+        const testAutoCompleteValue = "test";
+        service.autocompleteDatasetSearch(testAutoCompleteValue);
+
+        expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(testAutoCompleteValue);
+        await expect(notificationReceived).toBeTruthy();
     });
 
-    it("should be call autocompleteSearchChanges$ ", async () => {
-        const mockSearchData: DatasetAutocompleteItem[] = [];
-        const autocompleteSearchChangesSpy = spyOn(
-            service["autocompleteSearchChanges$"],
-            "next",
-        );
-        service.autocompleteSearchChanges(mockSearchData);
-        await expect(autocompleteSearchChangesSpy).toHaveBeenCalled();
-    });
+    it("should fire autocompleteSearchChanges$ with empty collection on autocomplete request failure", async () => {
+        const searchApiAutocompleteDatasetSearchSpy = spyOn(
+            searchApi, 'autocompleteDatasetSearch'
+        ).and.returnValue(throwError("some error"));
 
-    it("should be call autocompleteSearchChanges with data", () => {
-        const mockSearchQuery = "Test string";
-        const autocompleteSearchChangesSpy = spyOn(
-            service,
-            "autocompleteSearchChanges",
-        ).and.callThrough();
-        spyOn(searchApi, "autocompleteDatasetSearch").and.returnValue(
-            of(mockDataDataset),
-        );
-        service.autocompleteDatasetSearch(mockSearchQuery);
-        searchApi
-            .autocompleteDatasetSearch(mockSearchQuery)
-            .subscribe((data: DatasetAutocompleteItem[]) => {
-                void expect(data).toEqual(mockDataDataset);
-                expect(autocompleteSearchChangesSpy).toHaveBeenCalledWith(data);
-            });
-    });
+        let notificationReceived = false;
 
-    it("should be call autocompleteSearchChanges with empty array", () => {
-        const mockSearchQuery = "Test string";
-        const autocompleteSearchChangesSpy = spyOn(
-            service,
-            "autocompleteSearchChanges",
-        ).and.callThrough();
-        spyOn(searchApi, "autocompleteDatasetSearch").and.returnValue(
-            throwError("error"),
-        );
-        service.autocompleteDatasetSearch(mockSearchQuery);
-        searchApi
-            .autocompleteDatasetSearch(mockSearchQuery)
-            .subscribe(undefined, () => {
-                expect(autocompleteSearchChangesSpy).toHaveBeenCalledWith([]);
-            });
+        service.onAutocompleteSearchChanges.subscribe(
+            (autocompleteItems: DatasetAutocompleteItem[]) => {
+                notificationReceived = true;
+                void expect(autocompleteItems).toEqual([]);
+            }
+        )        
+
+        const testAutoCompleteValue = "test";
+        service.autocompleteDatasetSearch(testAutoCompleteValue);
+
+        expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(testAutoCompleteValue);
+        await expect(notificationReceived).toBeTruthy();            
     });
 });

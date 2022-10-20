@@ -213,7 +213,7 @@ export type DatasetConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount?: Maybe<Scalars["Int"]>;
+    totalCount: Scalars["Int"];
 };
 
 export type DatasetData = {
@@ -407,7 +407,7 @@ export type MetadataBlockConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount?: Maybe<Scalars["Int"]>;
+    totalCount: Scalars["Int"];
 };
 
 export type MetadataBlockEdge = {
@@ -595,7 +595,7 @@ export type SearchResultConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount?: Maybe<Scalars["Int"]>;
+    totalCount: Scalars["Int"];
 };
 
 export type SearchResultEdge = {
@@ -751,7 +751,7 @@ export type GetDatasetHistoryQuery = {
                           __typename?: "MetadataChain";
                           blocks: {
                               __typename?: "MetadataBlockConnection";
-                              totalCount?: number | null;
+                              totalCount: number;
                               nodes: Array<
                                   {
                                       __typename?: "MetadataBlockExtended";
@@ -879,7 +879,7 @@ export type DatasetLastUpdateFragment = {
             __typename?: "MetadataChain";
             blocks: {
                 __typename?: "MetadataBlockConnection";
-                totalCount?: number | null;
+                totalCount: number;
                 nodes: Array<
                     {
                         __typename?: "MetadataBlockExtended";
@@ -1170,7 +1170,7 @@ export type SearchDatasetsOverviewQuery = {
         __typename?: "Search";
         query: {
             __typename?: "SearchResultConnection";
-            totalCount?: number | null;
+            totalCount: number;
             nodes: Array<
                 { __typename: "Dataset" } & DatasetSearchOverviewFragment
             >;

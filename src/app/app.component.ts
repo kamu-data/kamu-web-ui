@@ -6,7 +6,7 @@ import {
     OnInit,
 } from "@angular/core";
 import AppValues from "./common/app.values";
-import { AppSearchService } from "./search/search.service";
+import { SearchService } from "./search/search.service";
 import { filter, first, map } from "rxjs/operators";
 import {
     ActivatedRoute,
@@ -42,7 +42,6 @@ export class AppComponent extends BaseComponent implements OnInit {
     private unimplementedMessage = "Feature coming soon";
     public appLogo = `/${AppValues.appLogo}`;
     public isMobileView = false;
-    public searchValue = "";
     public isVisible = true;
     public user: AccountDetailsFragment = this.AnonymousAccountInfo;
     private appHeaderNotVisiblePages: string[] = [
@@ -58,7 +57,7 @@ export class AppComponent extends BaseComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private appSearchService: AppSearchService,
+        private appSearchService: SearchService,
         private authApi: AuthApi,
         private modalService: ModalService,
         private navigationService: NavigationService,
@@ -69,8 +68,16 @@ export class AppComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         this.checkView();
-        this.appHeaderInit();
-        this.trackSubscription(
+        this.trackSubscriptions(
+            this.router.events
+                .pipe(
+                    filter((event) => event instanceof NavigationEnd),
+                    map((event) => event as RouterEvent),
+                )
+                .subscribe((event: RouterEvent) => {
+                    this.isVisible = this.isAvailableAppHeaderUrl(event.url);
+                    this.fetchSearchQueryFromUrl();
+                }),
             this.authApi.onUserChanges.subscribe(
                 (user: MaybeNull<AccountDetailsFragment>) => {
                     this.user = user
@@ -103,37 +110,20 @@ export class AppComponent extends BaseComponent implements OnInit {
         }
     }
 
-    private appHeaderInit(): void {
-        this.trackSubscriptions(
-            this.appSearchService.onSearchQueryChanges.subscribe(
-                (searchValue: string) => {
-                    this.searchValue = searchValue;
-                },
-            ),
-            this.router.events
-                .pipe(
-                    filter((event) => event instanceof NavigationEnd),
-                    map((event) => event as RouterEvent),
-                )
-                .subscribe((event: RouterEvent) => {
-                    this.isVisible = this.isAvailableAppHeaderUrl(event.url);
-                    this.getSearchQueryFromUrl();
-                }),
-        );
-    }
-
-    private getSearchQueryFromUrl(): void {
+    private fetchSearchQueryFromUrl(): void {
         this.activatedRoute.queryParams
             .pipe(first())
             .subscribe((params: Params) => {
                 if (params.query) {
-                    this.appSearchService.searchQueryChanges(
-                        params.query as string,
-                    );
+                    this.changeSearchValue(params.query as string);
                 } else {
-                    this.appSearchService.searchQueryChanges("");
+                    this.changeSearchValue("");
                 }
             });
+    }
+
+    private changeSearchValue(searchValue: string): void {
+        this.appSearchService.inputSearchQueryChanges(searchValue);
     }
 
     private checkView(): void {
@@ -157,7 +147,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
     public onClickAppLogo(): void {
         this.navigationService.navigateToSearch();
-        this.appSearchService.searchQueryChanges("");
+        this.changeSearchValue("");
     }
 
     public onOpenUserInfo(): void {

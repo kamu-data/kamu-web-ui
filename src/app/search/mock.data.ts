@@ -28,7 +28,7 @@ export const mockNode: Node = {
     label: "british-columbia.case-details.hm",
 };
 
-const mockOwnerFields = {
+export const mockOwnerFields = {
     id: "1",
     name: "kamu",
 };

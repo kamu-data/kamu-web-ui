@@ -238,6 +238,15 @@ describe("DatasetComponent", () => {
         );
     });
 
+    it("should check navigate to discussions tab", async () => {
+        const selectDatasetSpy = spyOn(
+            navigationService,
+            "navigateToDatasetView",
+        );
+        component.getDatasetNavigation().navigateToDiscussions();
+        await expect(selectDatasetSpy).not.toHaveBeenCalled();  // TODO: implement discussions
+    });
+
     it("should check navigate to owner view", () => {
         const navigateToOwnerViewSpy = spyOn(
             navigationService,

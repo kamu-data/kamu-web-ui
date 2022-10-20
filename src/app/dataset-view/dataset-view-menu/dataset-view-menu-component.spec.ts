@@ -39,6 +39,7 @@ describe("DatasetViewMenuComponent", () => {
         fixture = TestBed.createComponent(DatasetViewMenuComponent);
         component = fixture.componentInstance;
         component.datasetNavigation = mockNavigationObject;
+        component.ngOnInit();
         fixture.detectChanges();
     });
 

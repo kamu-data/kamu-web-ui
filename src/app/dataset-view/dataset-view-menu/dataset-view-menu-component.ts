@@ -51,8 +51,8 @@ export class DatasetViewMenuComponent implements OnInit {
     public ngOnInit(): void {
         if (this.sidenav) {
             this.sideNavHelper = new SideNavHelper(this.sidenav);
-            this.checkWindowSize();
         }
+        this.checkWindowSize();
     }
 
     public copyToClipboard(event: MouseEvent, text: string): void {

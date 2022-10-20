@@ -1,5 +1,7 @@
 import timekeeper from 'timekeeper';
-import { dataSize, relativeTime } from "./data.helpers";
+import { DatasetKind, MetadataBlockFragment } from '../api/kamu.graphql.interface';
+import { mockOwnerFields } from '../search/mock.data';
+import { BLOCK_DESCRIBE_SEED, BLOCK_DESCRIBE_SET_ATTACHMENTS, BLOCK_DESCRIBE_SET_INFO, BLOCK_DESCRIBE_SET_POLLING_SOURCE, BLOCK_DESCRIBE_SET_TRANSFORM, BLOCK_DESCRIBE_SET_VOCAB, dataSize, descriptionForMetadataBlock, relativeTime } from "./data.helpers";
 
 describe("Relative time helper", () => {
 
@@ -205,4 +207,152 @@ describe("Size helper", () => {
             await expect(dataSize(size, decimalPlaces)).toBe(expectedResult);
         });
     });
+
+    const metadataBlockSetVocab: MetadataBlockFragment = {
+        __typename: "MetadataBlockExtended",
+        blockHash:
+            "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
+        prevBlockHash:
+            "zW1ioX6fdsM4so8MPw7wqF1uKsDC7n6FEkhahZKXNcgF5E1",
+        systemTime:
+            "2022-08-05T21:19:28.817281255+00:00",
+        author: {
+            __typename: "User",
+            ...mockOwnerFields,
+        },
+        event : {
+            __typename: "SetVocab"
+        }
+    };
+
+    it("should check description for SetVocab block", async () => {
+        await expect(descriptionForMetadataBlock(metadataBlockSetVocab)).toEqual(BLOCK_DESCRIBE_SET_VOCAB);
+    });
+
+    it("should check description for SetPollingSource block", async () => {
+        const setPollingSourceBlock: MetadataBlockFragment = {
+            ...metadataBlockSetVocab,
+            event: {
+                __typename: "SetPollingSource",
+            },
+        };        
+        await expect(descriptionForMetadataBlock(setPollingSourceBlock)).toEqual(BLOCK_DESCRIBE_SET_POLLING_SOURCE);
+    });    
+
+    it("should check description for SetAttachments block", async () => {
+        const setAttachmentsBlock: MetadataBlockFragment = {
+            ...metadataBlockSetVocab,
+            event: {
+                __typename: "SetAttachments",
+            },
+        };        
+        await expect(descriptionForMetadataBlock(setAttachmentsBlock)).toEqual(BLOCK_DESCRIBE_SET_ATTACHMENTS);
+    });    
+
+    it("should check description for SetInfo block", async () => {
+        const setInfoBlock: MetadataBlockFragment = {
+            ...metadataBlockSetVocab,
+            event: {
+                __typename: "SetInfo",
+            },
+        };        
+        await expect(descriptionForMetadataBlock(setInfoBlock)).toEqual(BLOCK_DESCRIBE_SET_INFO);
+    });    
+
+    it("should check description for SetTransform block", async () => {
+        const setTransformBlock: MetadataBlockFragment = {
+            ...metadataBlockSetVocab,
+            event: {
+                __typename: "SetTransform",
+            },
+        };        
+        await expect(descriptionForMetadataBlock(setTransformBlock)).toEqual(BLOCK_DESCRIBE_SET_TRANSFORM);
+    });    
+
+    it("should check description for Seed block", async () => {
+        const seedBlock: MetadataBlockFragment = {
+            ...metadataBlockSetVocab,
+            event: {
+                __typename: "Seed",
+                datasetId:
+                    "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+                datasetKind: DatasetKind.Root,
+            },
+        };
+        await expect(descriptionForMetadataBlock(seedBlock)).toEqual(BLOCK_DESCRIBE_SEED);
+    });
+
+    it("should check description for SetLicense block", async () => {
+        const setLicenseBlock: MetadataBlockFragment = {
+            ...metadataBlockSetVocab,
+            event: {
+                __typename: "SetLicense",
+                name: 'GPL',
+            },
+        };        
+        await expect(descriptionForMetadataBlock(setLicenseBlock)).toEqual("License updated: GPL");
+    });    
+
+    it("should check description for SetWatermark block", async () => {
+        const watermarkTime = 1666303480;
+        const setWatermarkBlock: MetadataBlockFragment = {
+            ...metadataBlockSetVocab,
+            event: {
+                __typename: "SetWatermark",
+                outputWatermark: +watermarkTime,
+            },
+        };        
+        await expect(descriptionForMetadataBlock(setWatermarkBlock)).toEqual(`Watermark updated to ${watermarkTime}`);
+    });
+
+    it("should check description for AddData block", async () => {
+        const addDataBlock: MetadataBlockFragment = {
+            ...metadataBlockSetVocab,
+            event: {
+                __typename: "AddData",
+                addedOutputData: {
+                    __typename: "DataSlice",
+                    interval: {
+                        __typename: "OffsetInterval",
+                        start: 117,
+                        end: 517,
+                    },
+                    logicalHash:
+                        "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
+                    physicalHash:
+                        "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
+                },
+            },
+        };        
+        await expect(descriptionForMetadataBlock(addDataBlock)).toEqual("Added 400 new records");
+    });
+
+    it("should check description for ExecuteQuery block", async () => {
+        const addDataBlockEmpty: MetadataBlockFragment = {
+            ...metadataBlockSetVocab,
+            event: {
+                __typename: "ExecuteQuery",
+            },
+        };
+        const addDataBlockNonEmpty: MetadataBlockFragment = {
+            ...metadataBlockSetVocab,
+            event: {
+                __typename: "ExecuteQuery",
+                queryOutputData: {
+                    __typename: "DataSlice",
+                    logicalHash:
+                        "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
+                    physicalHash:
+                        "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
+                    interval: {
+                        __typename: "OffsetInterval",
+                        start: 15,
+                        end: 36,
+                    },
+                },
+            },
+        };
+        await expect(descriptionForMetadataBlock(addDataBlockEmpty)).toEqual("Transformation produced 0 new records");        
+        await expect(descriptionForMetadataBlock(addDataBlockNonEmpty)).toEqual("Transformation produced 21 new records");
+    });     
 });

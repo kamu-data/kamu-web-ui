@@ -70,6 +70,13 @@ export function relativeTime(
     return bytes.toFixed(decimalPlaces) + " " + units[u];
 }
 
+export const BLOCK_DESCRIBE_SEED = "Dataset initialized";
+export const BLOCK_DESCRIBE_SET_TRANSFORM = "Query changed";
+export const BLOCK_DESCRIBE_SET_VOCAB = "Vocabulary changed"
+export const BLOCK_DESCRIBE_SET_POLLING_SOURCE = "Polling source changed";
+export const BLOCK_DESCRIBE_SET_INFO = "Basic information updated";
+export const BLOCK_DESCRIBE_SET_ATTACHMENTS = "Attachments updated";
+
 export function descriptionForMetadataBlock(
     block: MetadataBlockFragment,
 ): string {
@@ -87,24 +94,21 @@ export function descriptionForMetadataBlock(
                     : "0"
             } new records`;
         case "Seed":
-            return `Dataset initialized`;
+            return BLOCK_DESCRIBE_SEED;
         case "SetTransform":
-            return `Query changed`;
+            return BLOCK_DESCRIBE_SET_TRANSFORM;
         case "SetVocab":
-            return `Vocabulary changed`;
+            return BLOCK_DESCRIBE_SET_VOCAB;
         case "SetWatermark":
             return `Watermark updated to ${event.outputWatermark as string}`;
         case "SetPollingSource":
-            return `Polling source changed`;
+            return BLOCK_DESCRIBE_SET_POLLING_SOURCE;
         case "SetInfo":
-            return `Basic information updated`;
+            return BLOCK_DESCRIBE_SET_INFO;
         case "SetLicense":
             return `License updated: ${event.name}`;
         case "SetAttachments":
-            return `Attachments updated`;
-
-        default:
-            return "";
+            return BLOCK_DESCRIBE_SET_ATTACHMENTS;
     }
 }
 

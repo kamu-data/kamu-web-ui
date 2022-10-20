@@ -81,6 +81,11 @@ describe("OverviewComponent", () => {
         await expect(result).toBe("1.0 KB");
     });
 
+    it("should check relative time", async () => {
+        const result = component.relativeTime(new Date().toISOString());
+        await expect(result).toEqual("a few seconds ago");
+    });
+
     it("should select topic name", () => {
         const topicName = "test topic name";
         const selectTopicEmitSpy = spyOn(component.selectTopicEmit, "emit");

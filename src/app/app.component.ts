@@ -7,11 +7,7 @@ import {
 } from "@angular/core";
 import AppValues from "./common/app.values";
 import { filter, map } from "rxjs/operators";
-import {
-    NavigationEnd,
-    Router,
-    RouterEvent,
-} from "@angular/router";
+import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import {
     DatasetAutocompleteItem,
     TypeNames,
@@ -25,7 +21,6 @@ import { MaybeNull } from "./common/app.types";
 import _ from "lodash";
 import { isMobileView, promiseWithCatch } from "./common/app.helpers";
 
-
 export const ALL_URLS_WITHOUT_HEADER: string[] = [
     ProjectLinks.URL_DATASET_CREATE,
     ProjectLinks.URL_LOGIN,
@@ -36,7 +31,6 @@ export const ALL_URLS_WITHOUT_ACCESS_TOKEN: string[] = [
     ProjectLinks.URL_LOGIN,
     ProjectLinks.URL_GITHUB_CALLBACK,
 ];
-
 
 @Component({
     selector: "app-root",
@@ -78,7 +72,9 @@ export class AppComponent extends BaseComponent implements OnInit {
                     map((event) => event as RouterEvent),
                 )
                 .subscribe((event: RouterEvent) => {
-                    this.isHeaderVisible = this.shouldHeaderBeVisible(event.url);
+                    this.isHeaderVisible = this.shouldHeaderBeVisible(
+                        event.url,
+                    );
                 }),
 
             this.authApi.onUserChanges.subscribe(
@@ -99,7 +95,10 @@ export class AppComponent extends BaseComponent implements OnInit {
             const accessToken: string | null = localStorage.getItem(
                 AppValues.localStorageAccessToken,
             );
-            if (typeof accessToken === "string" && !this.authApi.isAuthenticated) {
+            if (
+                typeof accessToken === "string" &&
+                !this.authApi.isAuthenticated
+            ) {
                 this.trackSubscription(
                     this.authApi
                         .fetchUserInfoFromAccessToken(accessToken)
@@ -115,7 +114,9 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     private shouldHeaderBeVisible(url: string): boolean {
-        return !ALL_URLS_WITHOUT_HEADER.some((item) => url.toLowerCase().includes(item));
+        return !ALL_URLS_WITHOUT_HEADER.some((item) =>
+            url.toLowerCase().includes(item),
+        );
     }
 
     public onSelectDataset(item: DatasetAutocompleteItem): void {
@@ -183,7 +184,7 @@ export class AppComponent extends BaseComponent implements OnInit {
             }),
         );
     }
-    
+
     public onSettings(): void {
         promiseWithCatch(
             this.modalService.warning({

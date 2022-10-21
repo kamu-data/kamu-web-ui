@@ -1,4 +1,8 @@
-import { mockDatasetDataSqlRunResponse, TEST_DATASET_NAME, TEST_USER_NAME } from "./mock/dataset.mock";
+import {
+    mockDatasetDataSqlRunResponse,
+    TEST_DATASET_NAME,
+    TEST_USER_NAME,
+} from "./mock/dataset.mock";
 import {
     mockDatasetHistoryResponse,
     mockDatasetMainDataResponse,
@@ -54,8 +58,12 @@ describe("DatasetApi", () => {
                 );
             });
         const op = controller.expectOne(GetDatasetMainDataDocument);
-        await expect(op.operation.variables.accountName).toEqual(TEST_USER_NAME);
-        await expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
+        await expect(op.operation.variables.accountName).toEqual(
+            TEST_USER_NAME,
+        );
+        await expect(op.operation.variables.datasetName).toEqual(
+            TEST_DATASET_NAME,
+        );
         op.flush({
             data: mockDatasetMainDataResponse,
         });
@@ -99,8 +107,12 @@ describe("DatasetApi", () => {
                 );
             });
         const op = controller.expectOne(GetDatasetHistoryDocument);
-        await expect(op.operation.variables.accountName).toEqual(TEST_USER_NAME);
-        await expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
+        await expect(op.operation.variables.accountName).toEqual(
+            TEST_USER_NAME,
+        );
+        await expect(op.operation.variables.datasetName).toEqual(
+            TEST_DATASET_NAME,
+        );
         op.flush({
             data: mockDatasetHistoryResponse,
         });

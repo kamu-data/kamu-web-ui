@@ -6,7 +6,10 @@ import {
     DatasetAutocompleteItem,
     DatasetSearchResult,
 } from "../interface/search.interface";
-import { mockAutocompleteItems, mockSearchDatasetOverviewQuery } from "./mock.data";
+import {
+    mockAutocompleteItems,
+    mockSearchDatasetOverviewQuery,
+} from "./mock.data";
 import { of, throwError } from "rxjs";
 
 describe("SearchService", () => {
@@ -27,7 +30,8 @@ describe("SearchService", () => {
 
     it("should fire overviewSearchChanges$ on search request", async () => {
         const searchApiOverviewDataSearchSpy = spyOn(
-            searchApi, 'overviewDatasetSearch'
+            searchApi,
+            "overviewDatasetSearch",
         ).and.returnValue(of(mockSearchDatasetOverviewQuery));
 
         let notificationReceived = false;
@@ -37,26 +41,31 @@ describe("SearchService", () => {
 
                 const expectedSearchData: DatasetSearchResult = {
                     datasets: [
-                        mockSearchDatasetOverviewQuery.search.query.nodes[0]
+                        mockSearchDatasetOverviewQuery.search.query.nodes[0],
                     ],
                     totalCount: 1,
-                    pageInfo: mockSearchDatasetOverviewQuery.search.query.pageInfo,
+                    pageInfo:
+                        mockSearchDatasetOverviewQuery.search.query.pageInfo,
                     currentPage: 1,
                 };
                 void expect(searchResult).toEqual(expectedSearchData);
-            }
-        )
+            },
+        );
 
         const testSearchValue = "test";
         service.searchDatasets(testSearchValue);
 
-        expect(searchApiOverviewDataSearchSpy).toHaveBeenCalledWith(testSearchValue, 0);
+        expect(searchApiOverviewDataSearchSpy).toHaveBeenCalledWith(
+            testSearchValue,
+            0,
+        );
         await expect(notificationReceived).toBeTruthy();
     });
 
     it("should fire autocompleteSearchChanges$ on autocomplete request", async () => {
         const searchApiAutocompleteDatasetSearchSpy = spyOn(
-            searchApi, 'autocompleteDatasetSearch'
+            searchApi,
+            "autocompleteDatasetSearch",
         ).and.returnValue(of(mockAutocompleteItems));
 
         let notificationReceived = false;
@@ -65,19 +74,22 @@ describe("SearchService", () => {
             (autocompleteItems: DatasetAutocompleteItem[]) => {
                 notificationReceived = true;
                 void expect(autocompleteItems).toEqual(mockAutocompleteItems);
-            }
-        )
+            },
+        );
 
         const testAutoCompleteValue = "test";
         service.autocompleteDatasetSearch(testAutoCompleteValue);
 
-        expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(testAutoCompleteValue);
+        expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(
+            testAutoCompleteValue,
+        );
         await expect(notificationReceived).toBeTruthy();
     });
 
     it("should fire autocompleteSearchChanges$ with empty collection on autocomplete request failure", async () => {
         const searchApiAutocompleteDatasetSearchSpy = spyOn(
-            searchApi, 'autocompleteDatasetSearch'
+            searchApi,
+            "autocompleteDatasetSearch",
         ).and.returnValue(throwError("some error"));
 
         let notificationReceived = false;
@@ -86,13 +98,15 @@ describe("SearchService", () => {
             (autocompleteItems: DatasetAutocompleteItem[]) => {
                 notificationReceived = true;
                 void expect(autocompleteItems).toEqual([]);
-            }
-        )        
+            },
+        );
 
         const testAutoCompleteValue = "test";
         service.autocompleteDatasetSearch(testAutoCompleteValue);
 
-        expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(testAutoCompleteValue);
-        await expect(notificationReceived).toBeTruthy();            
+        expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(
+            testAutoCompleteValue,
+        );
+        await expect(notificationReceived).toBeTruthy();
     });
 });

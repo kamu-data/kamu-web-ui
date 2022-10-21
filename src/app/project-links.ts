@@ -17,7 +17,7 @@ export default class ProjectLinks {
         ProjectLinks.URL_GITHUB_CALLBACK,
         ProjectLinks.URL_SEARCH,
         ProjectLinks.URL_DATASET_CREATE,
-        ProjectLinks.URL_PAGE_NOT_FOUND
+        ProjectLinks.URL_PAGE_NOT_FOUND,
     ];
 
     public static readonly URL_PARAM_ACCOUNT_NAME: string = "accountName";
@@ -26,7 +26,6 @@ export default class ProjectLinks {
     public static readonly URL_QUERY_PARAM_TAB: string = "tab";
     public static readonly URL_QUERY_PARAM_PAGE: string = "page";
     public static readonly URL_QUERY_PARAM_QUERY: string = "query";
-    
 
     // TODO
     // public static readonly URL_DATASET_CREATE_SELECT_TYPE = "select-type";

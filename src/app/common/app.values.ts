@@ -26,5 +26,4 @@ const language = 'typescript';
 
 ### Blockquote
 > Blockquote to the max`;
-
 }

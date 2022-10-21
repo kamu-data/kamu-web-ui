@@ -1,6 +1,11 @@
 import { fakeAsync, tick } from "@angular/core/testing";
 import moment from "moment";
-import { capitalizeFirstLetter, momentConvertDatetoLocalWithFormat, promiseWithCatch, requireValue } from "./app.helpers";
+import {
+    capitalizeFirstLetter,
+    momentConvertDatetoLocalWithFormat,
+    promiseWithCatch,
+    requireValue,
+} from "./app.helpers";
 import AppValues from "./app.values";
 
 describe("AppHelpers", () => {
@@ -11,24 +16,26 @@ describe("AppHelpers", () => {
     it("should check null requireValue", async () => {
         await expect(() => requireValue(null)).toThrowError();
     });
-    
+
     it("should check promiseWithCatch with success", async () => {
-        const consoleErrorSpy = spyOn(console, 'error').and.stub();
-        const emptyPromise = async () => { /* Intentionally empty */ };
+        const consoleErrorSpy = spyOn(console, "error").and.stub();
+        const emptyPromise = async () => {
+            /* Intentionally empty */
+        };
         promiseWithCatch(emptyPromise());
         await expect(consoleErrorSpy).not.toHaveBeenCalled();
     });
-    
+
     it("should check promiseWithCatch with failure", fakeAsync(async () => {
-        const consoleErrorSpy = spyOn(console, 'error').and.stub();
-        const failingPromise = async () => { 
+        const consoleErrorSpy = spyOn(console, "error").and.stub();
+        const failingPromise = async () => {
             await expect(consoleErrorSpy).not.toHaveBeenCalled();
-            throw Error("test") 
+            throw Error("test");
         };
         promiseWithCatch(failingPromise());
         tick();
         await expect(consoleErrorSpy).toHaveBeenCalled();
-    }));    
+    }));
 
     it("should the first letter be capitalized", async () => {
         const result = capitalizeFirstLetter("test");
@@ -60,5 +67,5 @@ describe("AppHelpers", () => {
             isTextDate: true,
         });
         await expect(result).toEqual("Yesterday");
-    });    
+    });
 });

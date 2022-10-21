@@ -41,12 +41,17 @@ describe("SearchApi", () => {
         service
             .autocompleteDatasetSearch(TEST_QUERY)
             .subscribe((res: DatasetAutocompleteItem[]) => {
-                void expect(res.length).toEqual(mockAutoCompleteResponse.search.query.nodes.length + 1 /* dummy result */);
+                void expect(res.length).toEqual(
+                    mockAutoCompleteResponse.search.query.nodes.length +
+                        1 /* dummy result */,
+                );
             });
 
         const op = controller.expectOne(SearchDatasetsAutocompleteDocument);
         await expect(op.operation.variables.query).toEqual(TEST_QUERY);
-        await expect(op.operation.variables.perPage).toEqual(SEARCH_RESULTS_PER_PAGE);
+        await expect(op.operation.variables.perPage).toEqual(
+            SEARCH_RESULTS_PER_PAGE,
+        );
 
         op.flush({
             data: mockAutoCompleteResponse,
@@ -71,7 +76,9 @@ describe("SearchApi", () => {
 
         const op = controller.expectOne(SearchDatasetsOverviewDocument);
         await expect(op.operation.variables.query).toEqual(EMPTY_QUERY);
-        await expect(op.operation.variables.perPage).toEqual(SEARCH_RESULTS_PER_PAGE);
+        await expect(op.operation.variables.perPage).toEqual(
+            SEARCH_RESULTS_PER_PAGE,
+        );
 
         op.flush({
             data: mockSearchOverviewResponse,

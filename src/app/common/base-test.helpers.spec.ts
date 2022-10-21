@@ -53,7 +53,7 @@ export const routerMockEventSubject = new ReplaySubject<RouterEvent>(1);
 export const routerMock = {
     navigate: () => null,
     events: routerMockEventSubject.asObservable(),
-    url: '/',
+    url: "/",
 };
 
 export const activeRouteMockQueryParamMap = new Map<string, string>();

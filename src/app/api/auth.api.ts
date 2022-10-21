@@ -12,7 +12,7 @@ import {
 import AppValues from "../common/app.values";
 
 import { MaybeNull, MaybeUndefined } from "../common/app.types";
-import { MutationResult } from 'apollo-angular';
+import { MutationResult } from "apollo-angular";
 import { isNull } from "lodash";
 import { logError } from "../common/app.helpers";
 
@@ -20,7 +20,8 @@ import { logError } from "../common/app.helpers";
 export class AuthApi {
     private user: MaybeNull<AccountDetailsFragment> = null;
 
-    private userChanges$: Subject<MaybeNull<AccountDetailsFragment>> = new Subject<MaybeNull<AccountDetailsFragment>>();
+    private userChanges$: Subject<MaybeNull<AccountDetailsFragment>> =
+        new Subject<MaybeNull<AccountDetailsFragment>>();
 
     constructor(
         private githubLoginGQL: GithubLoginGQL,
@@ -45,22 +46,25 @@ export class AuthApi {
         this.userChanges$.next(user);
     }
 
-    public fetchUserInfoAndTokenFromGithubCallackCode(code: string): Observable<void> {
+    public fetchUserInfoAndTokenFromGithubCallackCode(
+        code: string,
+    ): Observable<void> {
         return this.githubLoginGQL.mutate({ code }).pipe(
             map((result: MutationResult<GithubLoginMutation>) => {
                 if (result.data) {
                     const data: GithubLoginMutation = result.data;
-                    localStorage.setItem(AppValues.localStorageAccessToken, data.auth.githubLogin.token.accessToken);
+                    localStorage.setItem(
+                        AppValues.localStorageAccessToken,
+                        data.auth.githubLogin.token.accessToken,
+                    );
                     this.changeUser(data.auth.githubLogin.accountInfo);
                 } else {
                     this.handleAuthenticationError(result.errors);
                 }
             }),
-            catchError(
-                (e: Error) => {
-                    return this.handleAuthenticationError([e]);
-                }
-            ),            
+            catchError((e: Error) => {
+                return this.handleAuthenticationError([e]);
+            }),
         );
     }
 
@@ -74,15 +78,17 @@ export class AuthApi {
                     this.handleAuthenticationError(result.errors);
                 }
             }),
-            catchError(
-                (e: Error) => this.handleAuthenticationError([e])
-            ),
+            catchError((e: Error) => this.handleAuthenticationError([e])),
         );
     }
 
-    private handleAuthenticationError(err: MaybeUndefined<readonly Error[]>): Observable<void> {     
+    private handleAuthenticationError(
+        err: MaybeUndefined<readonly Error[]>,
+    ): Observable<void> {
         if (err) {
-            err.forEach((e: Error) => logError(`Authentication query error: ${e.message}`));
+            err.forEach((e: Error) =>
+                logError(`Authentication query error: ${e.message}`),
+            );
         } else {
             logError("Uknown authentication query error");
         }

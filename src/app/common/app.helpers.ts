@@ -42,16 +42,11 @@ export function momentConvertDatetoLocalWithFormat(dateParams: {
     const UTCStringDate: string = moment(stringDate).format(
         "YYYY-MM-DDTHH:mm:ss.sss",
     );
-    const ISOStringDate: string = new Date(
-        String(UTCStringDate),
-    ).toISOString();
+    const ISOStringDate: string = new Date(String(UTCStringDate)).toISOString();
 
     if (dateParams.isTextDate) {
         if (
-            moment(dateParams.date).isSame(
-                moment().subtract(1, "day"),
-                "day",
-            )
+            moment(dateParams.date).isSame(moment().subtract(1, "day"), "day")
         ) {
             return "Yesterday";
         }

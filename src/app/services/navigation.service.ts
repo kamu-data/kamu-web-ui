@@ -25,7 +25,9 @@ export class NavigationService {
     }
 
     public navigateToDatasetCreate(): void {
-        promiseWithCatch(this.router.navigate([ProjectLinks.URL_DATASET_CREATE]));
+        promiseWithCatch(
+            this.router.navigate([ProjectLinks.URL_DATASET_CREATE]),
+        );
     }
 
     public navigateToDatasetView(params: DatasetNavigationParams): void {

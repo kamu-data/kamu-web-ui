@@ -19,7 +19,10 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { SearchApi } from "src/app/api/search.api";
 import { of } from "rxjs";
-import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
+import {
+    DatasetAutocompleteItem,
+    TypeNames,
+} from "src/app/interface/search.interface";
 import { mockDatasetBasicsFragment } from "src/app/search/mock.data";
 import { first } from "rxjs/operators";
 import AppValues from "src/app/common/app.values";
@@ -49,9 +52,9 @@ describe("AppHeaderComponent", () => {
         fixture = TestBed.createComponent(AppHeaderComponent);
         component = fixture.componentInstance;
         component.userInfo = {
-            login: '',
+            login: "",
             name: AppValues.defaultUsername,
-        }
+        };
         component.isVisible = true;
         component.isMobileView = false;
         fixture.detectChanges();
@@ -116,7 +119,10 @@ describe("AppHeaderComponent", () => {
     });
 
     it("should emit on click Settings link", async () => {
-        component.userInfo = { login: "ssss", name: "testName" } as AccountDetailsFragment;
+        component.userInfo = {
+            login: "ssss",
+            name: "testName",
+        } as AccountDetailsFragment;
         const clickSettingsEmitterSpy = spyOn(
             component.clickSettingsEmitter,
             "emit",
@@ -129,7 +135,10 @@ describe("AppHeaderComponent", () => {
     });
 
     it("should emit on click Your profile link", async () => {
-        component.userInfo = { login: "ssss", name: "testName" } as AccountDetailsFragment;
+        component.userInfo = {
+            login: "ssss",
+            name: "testName",
+        } as AccountDetailsFragment;
         const clickUserProfileEmitterSpy = spyOn(
             component.clickUserProfileEmitter,
             "emit",
@@ -142,7 +151,10 @@ describe("AppHeaderComponent", () => {
     });
 
     it("should emit on click Analytics link", async () => {
-        component.userInfo = { login: "ssss", name: "testName" } as AccountDetailsFragment;
+        component.userInfo = {
+            login: "ssss",
+            name: "testName",
+        } as AccountDetailsFragment;
         const clickAnalyticsEmitterSpy = spyOn(
             component.clickAnalyticsEmitter,
             "emit",
@@ -155,7 +167,10 @@ describe("AppHeaderComponent", () => {
     });
 
     it("should emit on click LogOut link", async () => {
-        component.userInfo = { login: "ssss", name: "testName" } as AccountDetailsFragment;
+        component.userInfo = {
+            login: "ssss",
+            name: "testName",
+        } as AccountDetailsFragment;
         const logOutEmitterSpy = spyOn(component.logOutEmitter, "emit");
         emitClickOnElement(fixture, "#appHeaderMenuButton");
         fixture.detectChanges();
@@ -206,35 +221,45 @@ describe("AppHeaderComponent", () => {
             dataset: mockDatasetBasicsFragment,
         };
         const searchApiAutocompleteDatasetSearchSpy = spyOn(
-            searchApi, "autocompleteDatasetSearch"
+            searchApi,
+            "autocompleteDatasetSearch",
         ).and.callFake(() => of([MOCK_AUTOCOMPLETE_ITEM]));
 
         // Run search query
         const SEARCH_QUERY = "query";
-        const elSearchInput = findElementByDataTestId(fixture, "searchInput") as HTMLInputElement;
+        const elSearchInput = findElementByDataTestId(
+            fixture,
+            "searchInput",
+        ) as HTMLInputElement;
         elSearchInput.value = SEARCH_QUERY;
-        elSearchInput.dispatchEvent(new Event('input'));
+        elSearchInput.dispatchEvent(new Event("input"));
         tick(301); // debouncer
 
         // This should activate search API and update view
-        expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(SEARCH_QUERY);
+        expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(
+            SEARCH_QUERY,
+        );
         fixture.detectChanges();
-        
+
         // Expect emitter event with hardcoded auto-complete item
         const emitterSubscription$ = component.selectDatasetEmitter
             .pipe(first())
-            .subscribe(
-                (item: DatasetAutocompleteItem) => {
-                    void expect(item).toBe(MOCK_AUTOCOMPLETE_ITEM)
-                },
-            );
+            .subscribe((item: DatasetAutocompleteItem) => {
+                void expect(item).toBe(MOCK_AUTOCOMPLETE_ITEM);
+            });
 
         // After click on selection option, search typeahead should hide
         const typeAheadInputEl = findNativeElement(fixture, "#typeahead-http");
-        const typeAheadInputElBlurSpy = spyOn(typeAheadInputEl, 'blur').and.callThrough();
+        const typeAheadInputElBlurSpy = spyOn(
+            typeAheadInputEl,
+            "blur",
+        ).and.callThrough();
 
         // Do actual click
-        const typeAheadSelectionEl = findNativeElement(fixture, 'button.dropdown-item');
+        const typeAheadSelectionEl = findNativeElement(
+            fixture,
+            "button.dropdown-item",
+        );
         typeAheadSelectionEl.click();
         fixture.detectChanges();
 
@@ -245,24 +270,23 @@ describe("AppHeaderComponent", () => {
         tick(100);
         await expect(typeAheadInputElBlurSpy).toHaveBeenCalled();
     }));
- 
+
     it("should check search method triggers menu click on mobile view", fakeAsync(async () => {
         component.isMobileView = true;
         const triggerMenuClickSpy = spyOn(
             component,
             "triggerMenuClick",
         ).and.callThrough();
-        
+
         const event = new KeyboardEvent("keyup", {
             key: "Enter",
         });
         const el = findElementByDataTestId(fixture, "searchInput");
-        const elBlurSpy = spyOn(el, 'blur').and.callThrough();
+        const elBlurSpy = spyOn(el, "blur").and.callThrough();
 
         el.dispatchEvent(event);
         tick(201);
         await expect(triggerMenuClickSpy).toHaveBeenCalled();
         await expect(elBlurSpy).toHaveBeenCalled();
     }));
-
 });

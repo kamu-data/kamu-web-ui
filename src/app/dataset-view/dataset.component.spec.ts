@@ -2,11 +2,7 @@ import { mockDatasetBasicsFragment, mockNode } from "./../search/mock.data";
 import { AppDatasetService } from "./dataset.service";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import {
-    ActivatedRoute,
-    NavigationEnd,
-    Router,
-} from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
@@ -15,7 +11,10 @@ import { DatasetComponent } from "./dataset.component";
 import { NavigationService } from "../services/navigation.service";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { of } from "rxjs";
-import { routerMock, routerMockEventSubject } from "../common/base-test.helpers.spec";
+import {
+    routerMock,
+    routerMockEventSubject,
+} from "../common/base-test.helpers.spec";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -244,7 +243,7 @@ describe("DatasetComponent", () => {
             "navigateToDatasetView",
         );
         component.getDatasetNavigation().navigateToDiscussions();
-        await expect(selectDatasetSpy).not.toHaveBeenCalled();  // TODO: implement discussions
+        await expect(selectDatasetSpy).not.toHaveBeenCalled(); // TODO: implement discussions
     });
 
     it("should check navigate to owner view", () => {

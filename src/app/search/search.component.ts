@@ -1,6 +1,14 @@
-import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from "@angular/router";
+import {
+    ActivatedRoute,
+    NavigationEnd,
+    Router,
+    RouterEvent,
+} from "@angular/router";
 import { SearchService } from "./search.service";
-import { DatasetSearchResult, SearchFilters } from "../interface/search.interface";
+import {
+    DatasetSearchResult,
+    SearchFilters,
+} from "../interface/search.interface";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -24,8 +32,7 @@ import { filter, map } from "rxjs/operators";
     styleUrls: ["./search.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchComponent extends BaseComponent implements OnInit
-{
+export class SearchComponent extends BaseComponent implements OnInit {
     public searchValue = "";
     public currentPage = 1; // TODO: Should be zero-based and only offset for display
 
@@ -173,19 +180,23 @@ export class SearchComponent extends BaseComponent implements OnInit
 
     private changePageAndSearch(): void {
         let queryValue = "";
-        const queryParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_QUERY);
+        const queryParam = this.activatedRoute.snapshot.queryParamMap.get(
+            ProjectLinks.URL_QUERY_PARAM_QUERY,
+        );
         if (queryParam) {
             queryValue = requireValue(queryParam);
         }
         this.searchValue = queryValue;
-        
+
         let page = 1;
-        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
+        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(
+            ProjectLinks.URL_QUERY_PARAM_PAGE,
+        );
         if (pageParam) {
             page = +requireValue(pageParam);
         }
         this.currentPage = page;
-        
+
         this.onSearchDatasets();
     }
 
@@ -231,7 +242,10 @@ export class SearchComponent extends BaseComponent implements OnInit
     }
 
     private onSearchDatasets(): void {
-        this.searchService.searchDatasets(this.searchValue, this.currentPage - 1);
+        this.searchService.searchDatasets(
+            this.searchValue,
+            this.currentPage - 1,
+        );
     }
 
     public updateAllComplete() {

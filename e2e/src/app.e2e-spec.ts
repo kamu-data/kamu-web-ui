@@ -10,7 +10,9 @@ describe("workspace-project App", () => {
 
     it("should display welcome message", async () => {
         await page.navigateTo();
-        await expect(page.getTitleText()).toEqual("kamu-platform app is running!");
+        await expect(page.getTitleText()).toEqual(
+            "kamu-platform app is running!",
+        );
     });
 
     afterEach(async () => {

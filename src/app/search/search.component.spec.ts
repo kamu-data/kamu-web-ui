@@ -14,7 +14,12 @@ import { mockSearchOverviewResponse } from "../api/mock/search.mock";
 import { of } from "rxjs";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import ProjectLinks from "../project-links";
-import { activeRouteMock, activeRouteMockQueryParamMap, routerMock, routerMockEventSubject } from "../common/base-test.helpers.spec";
+import {
+    activeRouteMock,
+    activeRouteMockQueryParamMap,
+    routerMock,
+    routerMockEventSubject,
+} from "../common/base-test.helpers.spec";
 
 describe("SearchComponent", () => {
     let component: SearchComponent;
@@ -45,21 +50,35 @@ describe("SearchComponent", () => {
 
     function setSearchUrl(searchQuery?: string, page?: number): void {
         if (searchQuery) {
-            activeRouteMockQueryParamMap.set(ProjectLinks.URL_QUERY_PARAM_QUERY, searchQuery);
-        } else if (activeRouteMockQueryParamMap.has(ProjectLinks.URL_QUERY_PARAM_QUERY)) {
-            activeRouteMockQueryParamMap.delete(ProjectLinks.URL_QUERY_PARAM_QUERY);
+            activeRouteMockQueryParamMap.set(
+                ProjectLinks.URL_QUERY_PARAM_QUERY,
+                searchQuery,
+            );
+        } else if (
+            activeRouteMockQueryParamMap.has(ProjectLinks.URL_QUERY_PARAM_QUERY)
+        ) {
+            activeRouteMockQueryParamMap.delete(
+                ProjectLinks.URL_QUERY_PARAM_QUERY,
+            );
         }
-        
+
         if (page) {
-            activeRouteMockQueryParamMap.set(ProjectLinks.URL_QUERY_PARAM_PAGE, page.toString());
-        } else if (activeRouteMockQueryParamMap.has(ProjectLinks.URL_QUERY_PARAM_PAGE)) {
-            activeRouteMockQueryParamMap.delete(ProjectLinks.URL_QUERY_PARAM_PAGE);
+            activeRouteMockQueryParamMap.set(
+                ProjectLinks.URL_QUERY_PARAM_PAGE,
+                page.toString(),
+            );
+        } else if (
+            activeRouteMockQueryParamMap.has(ProjectLinks.URL_QUERY_PARAM_PAGE)
+        ) {
+            activeRouteMockQueryParamMap.delete(
+                ProjectLinks.URL_QUERY_PARAM_PAGE,
+            );
         }
     }
 
     function pushNavigationEnd(): void {
         routerMockEventSubject.next(
-            new NavigationEnd(1, ProjectLinks.URL_SEARCH, "")
+            new NavigationEnd(1, ProjectLinks.URL_SEARCH, ""),
         );
     }
 
@@ -89,7 +108,7 @@ describe("SearchComponent", () => {
         setSearchUrl();
         pushNavigationEnd();
         fixture.detectChanges();
-        await expect(component.searchValue).toEqual('');
+        await expect(component.searchValue).toEqual("");
         await expect(component.currentPage).toEqual(1);
 
         const testQuery = "test";
@@ -102,7 +121,7 @@ describe("SearchComponent", () => {
         setSearchUrl(undefined, 4);
         pushNavigationEnd();
         fixture.detectChanges();
-        await expect(component.searchValue).toEqual('');
+        await expect(component.searchValue).toEqual("");
         await expect(component.currentPage).toEqual(4);
     });
 
@@ -166,19 +185,21 @@ describe("SearchComponent", () => {
     });
 
     it("should check search results update the dataset table", async () => {
-        spyOn(searchApi, 'overviewDatasetSearch').and.returnValue(of(mockSearchOverviewResponse));
+        spyOn(searchApi, "overviewDatasetSearch").and.returnValue(
+            of(mockSearchOverviewResponse),
+        );
 
         const testSearchQuery = "test";
         searchService.searchDatasets(testSearchQuery);
 
         await expect(component.tableData.pageInfo).toEqual(
-            mockSearchOverviewResponse.search.query.pageInfo
+            mockSearchOverviewResponse.search.query.pageInfo,
         );
         await expect(component.tableData.totalCount).toEqual(
-            mockSearchOverviewResponse.search.query.totalCount
-        )
+            mockSearchOverviewResponse.search.query.totalCount,
+        );
         await expect(component.tableData.tableSource).toEqual(
-            mockSearchOverviewResponse.search.query.nodes
+            mockSearchOverviewResponse.search.query.nodes,
         );
 
         fixture.detectChanges();

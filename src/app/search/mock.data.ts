@@ -57,8 +57,7 @@ export const mockAutocompleteItems: DatasetAutocompleteItem[] = [
 
 const mockMetadataCurrentInfo: DatasetCurrentInfoFragment = {
     __typename: "SetInfo",
-    description:
-        "Confirmed positive cases of COVID-19 in Alberta.",
+    description: "Confirmed positive cases of COVID-19 in Alberta.",
     keywords: [
         "Healthcare",
         "Epidemiology",
@@ -76,8 +75,7 @@ const mockMetadataCurrentLicense: LicenseFragment = {
     shortName: "OGL-Canada-2.0",
     name: "Open Government Licence - Canada",
     spdxId: "OGL-Canada-2.0",
-    websiteUrl:
-        "https://open.canada.ca/en/open-government-licence-canada",
+    websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
 };
 
 export const mockDatasetSearchResult: DatasetSearchResult = {
@@ -96,9 +94,9 @@ export const mockDatasetSearchResult: DatasetSearchResult = {
             metadata: {
                 currentInfo: mockMetadataCurrentInfo,
                 currentLicense: mockMetadataCurrentLicense,
-                currentDownstreamDependencies: []
-            }
-        }
+                currentDownstreamDependencies: [],
+            },
+        },
     ],
     totalCount: 1,
     pageInfo: {
@@ -120,7 +118,7 @@ export const mockSearchDatasetOverviewQuery: SearchDatasetsOverviewQuery = {
                 {
                     __typename: "Dataset",
                     ...mockDatasetSearchResult.datasets[0],
-                }
+                },
             ],
             pageInfo: {
                 currentPage: 1,
@@ -129,7 +127,7 @@ export const mockSearchDatasetOverviewQuery: SearchDatasetsOverviewQuery = {
             },
         },
     },
-}
+};
 
 export const mockDatasetBasicsFragment: DatasetBasicsFragment = {
     id: "id",
@@ -138,13 +136,11 @@ export const mockDatasetBasicsFragment: DatasetBasicsFragment = {
     owner: { __typename: "User", ...mockOwnerFields },
 };
 
-
 export const mockDatasetResponseNotFound: GetDatasetMainDataQuery = {
     datasets: {
-        __typename: "Datasets"
-    }
+        __typename: "Datasets",
+    },
 };
-
 
 export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
     datasets: {
@@ -204,38 +200,49 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                             {
                                                 __typename: "Dataset",
                                                 metadata: {
-                                                    __typename: "DatasetMetadata",
-                                                    currentUpstreamDependencies: [
-                                                        {
-                                                            __typename: "Dataset",
-                                                            metadata: {
-                                                                __typename: "DatasetMetadata",
-                                                                currentUpstreamDependencies: [
-                                                                    {
-                                                                        __typename: "Dataset",
-                                                                        metadata: {
-                                                                            __typename: "DatasetMetadata",
-                                                                            currentUpstreamDependencies: []
-                                                                        },
-                                                                        id: "did:odf:z4k66d7thqpab83a24iYbeXr5yDYBAxaB7hnzbhfmyUTLnWifwz6",
-                                                                        kind: DatasetKind.Derivative,
-                                                                        name: "fake.upstream-level-5",
-                                                                        owner: {
-                                                                            __typename: "User",
-                                                                            ...mockOwnerFields,
-                                                                        },
-                                                                    }
-                                                                ]
+                                                    __typename:
+                                                        "DatasetMetadata",
+                                                    currentUpstreamDependencies:
+                                                        [
+                                                            {
+                                                                __typename:
+                                                                    "Dataset",
+                                                                metadata: {
+                                                                    __typename:
+                                                                        "DatasetMetadata",
+                                                                    currentUpstreamDependencies:
+                                                                        [
+                                                                            {
+                                                                                __typename:
+                                                                                    "Dataset",
+                                                                                metadata:
+                                                                                    {
+                                                                                        __typename:
+                                                                                            "DatasetMetadata",
+                                                                                        currentUpstreamDependencies:
+                                                                                            [],
+                                                                                    },
+                                                                                id: "did:odf:z4k66d7thqpab83a24iYbeXr5yDYBAxaB7hnzbhfmyUTLnWifwz6",
+                                                                                kind: DatasetKind.Derivative,
+                                                                                name: "fake.upstream-level-5",
+                                                                                owner: {
+                                                                                    __typename:
+                                                                                        "User",
+                                                                                    ...mockOwnerFields,
+                                                                                },
+                                                                            },
+                                                                        ],
+                                                                },
+                                                                id: "did:odf:z4k55d7thqpab83a24iZbeXr5yDYBAxaB7hnzbhfmyUTLnWifwz6",
+                                                                kind: DatasetKind.Derivative,
+                                                                name: "fake.upstream-level-4",
+                                                                owner: {
+                                                                    __typename:
+                                                                        "User",
+                                                                    ...mockOwnerFields,
+                                                                },
                                                             },
-                                                            id: "did:odf:z4k55d7thqpab83a24iZbeXr5yDYBAxaB7hnzbhfmyUTLnWifwz6",
-                                                            kind: DatasetKind.Derivative,
-                                                            name: "fake.upstream-level-4",
-                                                            owner: {
-                                                                __typename: "User",
-                                                                ...mockOwnerFields,
-                                                            },
-                                                        }
-                                                    ]
+                                                        ],
                                                 },
                                                 id: "did:odf:z4k55e8thqpab83a24iZbeXr5yDYBAxaB7hmybhfmyUTLnWifwz6",
                                                 kind: DatasetKind.Derivative,
@@ -244,8 +251,8 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                                     __typename: "User",
                                                     ...mockOwnerFields,
                                                 },
-                                            }
-                                        ]
+                                            },
+                                        ],
                                     },
                                     id: "did:odf:z4k55e8thqpab83a24iZbeXr5yCVCDxaB7hmybhfmyUTLnWifwz6",
                                     kind: DatasetKind.Derivative,
@@ -254,7 +261,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                         __typename: "User",
                                         ...mockOwnerFields,
                                     },
-                                }
+                                },
                             ],
                         },
                         id: "did:odf:z4k55e8thqpab83a24iZbeXr5WZVCxaB7hmybhfmyUTLnWifwz6",
@@ -264,7 +271,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                             __typename: "User",
                             ...mockOwnerFields,
                         },
-                    }
+                    },
                 ],
                 currentDownstreamDependencies: [
                     {
@@ -280,38 +287,49 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                             {
                                                 __typename: "Dataset",
                                                 metadata: {
-                                                    __typename: "DatasetMetadata",
-                                                    currentDownstreamDependencies: [
-                                                        {
-                                                            __typename: "Dataset",
-                                                            metadata: {
-                                                                __typename: "DatasetMetadata",
-                                                                currentDownstreamDependencies: [
-                                                                    {
-                                                                        __typename: "Dataset",
-                                                                        metadata: {
-                                                                            __typename: "DatasetMetadata",
-                                                                            currentDownstreamDependencies: []
-                                                                        },
-                                                                        id: "did:odf:z4k88e8thqpab83a24iFbeXr5WZVCxaB7hmybhfmyUTLnWifwz6",
-                                                                        kind: DatasetKind.Derivative,
-                                                                        name: "world.daily-cases",
-                                                                        owner: {
-                                                                            __typename: "User",
-                                                                            ...mockOwnerFields,
-                                                                        },
-                                                                    }
-                                                                ]
+                                                    __typename:
+                                                        "DatasetMetadata",
+                                                    currentDownstreamDependencies:
+                                                        [
+                                                            {
+                                                                __typename:
+                                                                    "Dataset",
+                                                                metadata: {
+                                                                    __typename:
+                                                                        "DatasetMetadata",
+                                                                    currentDownstreamDependencies:
+                                                                        [
+                                                                            {
+                                                                                __typename:
+                                                                                    "Dataset",
+                                                                                metadata:
+                                                                                    {
+                                                                                        __typename:
+                                                                                            "DatasetMetadata",
+                                                                                        currentDownstreamDependencies:
+                                                                                            [],
+                                                                                    },
+                                                                                id: "did:odf:z4k88e8thqpab83a24iFbeXr5WZVCxaB7hmybhfmyUTLnWifwz6",
+                                                                                kind: DatasetKind.Derivative,
+                                                                                name: "world.daily-cases",
+                                                                                owner: {
+                                                                                    __typename:
+                                                                                        "User",
+                                                                                    ...mockOwnerFields,
+                                                                                },
+                                                                            },
+                                                                        ],
+                                                                },
+                                                                id: "did:odf:z4k88e8thqpab83aJCiFbeXr5WZVCor7hmybhfmyUTLnWifwz6",
+                                                                kind: DatasetKind.Derivative,
+                                                                name: "america.daily-cases",
+                                                                owner: {
+                                                                    __typename:
+                                                                        "User",
+                                                                    ...mockOwnerFields,
+                                                                },
                                                             },
-                                                            id: "did:odf:z4k88e8thqpab83aJCiFbeXr5WZVCor7hmybhfmyUTLnWifwz6",
-                                                            kind: DatasetKind.Derivative,
-                                                            name: "america.daily-cases",
-                                                            owner: {
-                                                                __typename: "User",
-                                                                ...mockOwnerFields,
-                                                            },
-                                                        }
-                                                    ],
+                                                        ],
                                                 },
                                                 id: "did:odf:z4k88e8thqpQ7kupbJCiFbeXr5WZVCor7hmybhfmyUTLnWifwz6",
                                                 kind: DatasetKind.Derivative,

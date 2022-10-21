@@ -22,7 +22,6 @@ export const SEARCH_RESULTS_PER_PAGE = 10;
 
 @Injectable({ providedIn: "root" })
 export class SearchApi {
-
     constructor(
         private searchDatasetsAutocompleteGQL: SearchDatasetsAutocompleteGQL,
         private searchDatasetsOverviewGQL: SearchDatasetsOverviewGQL,

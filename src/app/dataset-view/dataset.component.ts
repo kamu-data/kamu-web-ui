@@ -78,9 +78,9 @@ export class DatasetComponent
                     );
                 }),
         );
-        this.appDatasetService.requestDatasetMainData(
-            this.getDatasetInfoFromUrl(),
-        ).subscribe();
+        this.appDatasetService
+            .requestDatasetMainData(this.getDatasetInfoFromUrl())
+            .subscribe();
 
         this.initDatasetViewByType(
             this.getDatasetInfoFromUrl(),
@@ -102,9 +102,9 @@ export class DatasetComponent
             this.datasetBasics?.name !==
             this.getDatasetInfoFromUrl().datasetName
         ) {
-            this.appDatasetService.requestDatasetMainData(
-                this.getDatasetInfoFromUrl(),
-            ).subscribe();
+            this.appDatasetService
+                .requestDatasetMainData(this.getDatasetInfoFromUrl())
+                .subscribe();
         }
     }
 
@@ -189,11 +189,9 @@ export class DatasetComponent
         currentPage: number,
     ): void {
         this.datasetViewType = DatasetViewTypeEnum.History;
-        this.appDatasetService.requestDatasetHistory(
-            datasetInfo,
-            20,
-            currentPage - 1,
-        ).subscribe();
+        this.appDatasetService
+            .requestDatasetHistory(datasetInfo, 20, currentPage - 1)
+            .subscribe();
     }
 
     private initLineageTab(): void {
@@ -396,10 +394,12 @@ export class DatasetComponent
 
     public onRunSQLRequest(query: string): void {
         if (this.datasetBasics) {
-            this.appDatasetService.requestDatasetDataSqlRun(
-                query,
-                50, // TODO: Propagate limit from UI and display when it was reached
-            ).subscribe();
+            this.appDatasetService
+                .requestDatasetDataSqlRun(
+                    query,
+                    50, // TODO: Propagate limit from UI and display when it was reached
+                )
+                .subscribe();
         }
     }
 }

@@ -70,7 +70,9 @@ describe("NavigationService", () => {
     it("should be test navigate to dataset create", () => {
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         service.navigateToDatasetCreate();
-        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_DATASET_CREATE]);
+        expect(routerSpy).toHaveBeenCalledWith([
+            ProjectLinks.URL_DATASET_CREATE,
+        ]);
     });
 
     it("should be test navigate to dataset view", async () => {
@@ -88,8 +90,11 @@ describe("NavigationService", () => {
     it("should be test navigate to page not found view", () => {
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         service.navigateToPageNotFound();
-        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_PAGE_NOT_FOUND], {
-            skipLocationChange: true,
-        });
+        expect(routerSpy).toHaveBeenCalledWith(
+            [ProjectLinks.URL_PAGE_NOT_FOUND],
+            {
+                skipLocationChange: true,
+            },
+        );
     });
 });

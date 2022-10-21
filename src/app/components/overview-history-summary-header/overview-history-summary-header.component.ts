@@ -45,7 +45,9 @@ export class OverviewHistorySummaryHeaderComponent {
 
     get descriptionForMetadataBlock(): string {
         return this.metadataBlockFragment
-            ? DataHelpers.descriptionForMetadataBlock(this.metadataBlockFragment)
+            ? DataHelpers.descriptionForMetadataBlock(
+                  this.metadataBlockFragment,
+              )
             : "";
     }
 }

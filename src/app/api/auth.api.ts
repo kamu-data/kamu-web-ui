@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { catchError, map } from "rxjs/operators";
-import { Observable, of, Subject } from "rxjs";
+import { Observable, Subject, throwError } from "rxjs";
 import { NavigationService } from "../services/navigation.service";
 import {
     AccountDetailsFragment,
@@ -11,10 +11,10 @@ import {
 } from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
 
-import { MaybeNull, MaybeUndefined } from "../common/app.types";
+import { MaybeNull } from "../common/app.types";
 import { MutationResult } from "apollo-angular";
 import { isNull } from "lodash";
-import { logError } from "../common/app.helpers";
+import { AuthenticationError } from "../common/errors";
 
 @Injectable()
 export class AuthApi {
@@ -59,12 +59,10 @@ export class AuthApi {
                     );
                     this.changeUser(data.auth.githubLogin.accountInfo);
                 } else {
-                    this.handleAuthenticationError(result.errors);
+                    throw new AuthenticationError(result.errors ?? []);
                 }
             }),
-            catchError((e: Error) => {
-                return this.handleAuthenticationError([e]);
-            }),
+            catchError((e: Error) => throwError(new AuthenticationError([e]))),
         );
     }
 
@@ -75,31 +73,20 @@ export class AuthApi {
                     const data: FetchAccountInfoMutation = result.data;
                     this.changeUser(data.auth.accountInfo);
                 } else {
-                    this.handleAuthenticationError(result.errors);
+                    throw new AuthenticationError(result.errors ?? []);
                 }
             }),
-            catchError((e: Error) => this.handleAuthenticationError([e])),
+            catchError((e: Error) => throwError(new AuthenticationError([e]))),
         );
     }
 
-    private handleAuthenticationError(
-        err: MaybeUndefined<readonly Error[]>,
-    ): Observable<void> {
-        if (err) {
-            err.forEach((e: Error) =>
-                logError(`Authentication query error: ${e.message}`),
-            );
-        } else {
-            logError("Uknown authentication query error");
-        }
-        localStorage.removeItem(AppValues.localStorageAccessToken);
+    public terminateSession() {
         this.changeUser(null);
-        return of();
+        localStorage.removeItem(AppValues.localStorageAccessToken);
     }
 
     public logOut(): void {
-        this.changeUser(null);
-        localStorage.removeItem(AppValues.localStorageAccessToken);
+        this.terminateSession();
         this.navigationService.navigateToHome();
     }
 }

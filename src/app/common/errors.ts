@@ -2,7 +2,8 @@ import { ModalService } from "./../components/modal/modal.service";
 import { NavigationService } from "./../services/navigation.service";
 import { ApolloError } from "@apollo/client/core";
 import { ErrorTexts } from "./errors.text";
-import { promiseWithCatch } from "./app.helpers";
+import { logError, promiseWithCatch } from "./app.helpers";
+import { AuthApi } from "../api/auth.api";
 
 export abstract class KamuError extends Error {
     abstract accept(visitor: KamuErrorVisitor): void;
@@ -10,10 +11,12 @@ export abstract class KamuError extends Error {
 
 export class CustomApolloError extends KamuError {
     private apolloError: ApolloError;
+
     constructor(apolloError: ApolloError) {
         super();
         this.apolloError = apolloError;
     }
+
     public accept(visitor: KamuErrorVisitor): void {
         visitor.visitApolloError(this.apolloError);
     }
@@ -31,23 +34,38 @@ export class DatasetNotFoundError extends KamuError {
     }
 }
 
+export class AuthenticationError extends KamuError {
+    public readonly errors: readonly Error[];
+
+    constructor(errors: readonly Error[]) {
+        super();
+        this.errors = errors;
+    }
+
+    public accept(visitor: KamuErrorVisitor): void {
+        visitor.visitAuthenticationError(this);
+    }
+}
+
 interface KamuErrorVisitor {
-    visitInvalidSqlError(e?: InvalidSqlError): void;
-    visitDatasetNotFoundError(e?: DatasetNotFoundError): void;
-    visitApolloError(apolloError: ApolloError): void;
+    visitInvalidSqlError(e: InvalidSqlError): void;
+    visitDatasetNotFoundError(e: DatasetNotFoundError): void;
+    visitApolloError(e: ApolloError): void;
+    visitAuthenticationError(e: AuthenticationError): void;
 }
 
 export class KamuErrorHandler implements KamuErrorVisitor {
     constructor(
         private navigationService: NavigationService,
         private modalService: ModalService,
+        private authApi: AuthApi,
     ) {}
 
-    public visitApolloError(apolloError: ApolloError): void {
+    public visitApolloError(e: ApolloError): void {
         promiseWithCatch(
             this.modalService.error({
                 title: ErrorTexts.ERROR_TITLE_REQUEST_FAILED,
-                message: apolloError.networkError
+                message: e.networkError
                     ? ErrorTexts.ERROR_NETWORK_DESCRIPTION
                     : ErrorTexts.ERROR_TECHNICAL_SUPPORT,
                 yesButtonText: "Close",
@@ -67,5 +85,14 @@ export class KamuErrorHandler implements KamuErrorVisitor {
                 yesButtonText: "Close",
             }),
         );
+    }
+
+    public visitAuthenticationError(authenticationError: AuthenticationError): void {
+        if (authenticationError.errors.length > 0) {
+            authenticationError.errors.forEach((e) => logError(e));
+        } else {
+            logError("Uknown authentication error");
+        }
+        this.authApi.terminateSession();
     }
 }

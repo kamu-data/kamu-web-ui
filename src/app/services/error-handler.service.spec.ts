@@ -1,19 +1,28 @@
 import { ErrorTexts } from "../common/errors.text";
 import { ApolloError } from "@apollo/client/core";
-import { DatasetNotFoundError, InvalidSqlError } from "../common/errors";
+import { AuthenticationError, DatasetNotFoundError, InvalidSqlError } from "../common/errors";
 import { ModalService } from "../components/modal/modal.service";
 import { TestBed } from "@angular/core/testing";
 import { ErrorHandlerService } from "./error-handler.service";
 import { NavigationService } from "./navigation.service";
+import { AuthApi } from "../api/auth.api";
 
 describe("ErrorHandlerService", () => {
     let service: ErrorHandlerService;
     let modalService: ModalService;
     let navigationService: NavigationService;
 
+    const authApiMock = {
+        terminateSession: () => { /* Intentionally empty */ },
+    };
+
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [ModalService, NavigationService],
+            providers: [
+                ModalService, 
+                NavigationService,
+                { provide: AuthApi, useValue: authApiMock}
+            ],
         });
         service = TestBed.inject(ErrorHandlerService);
         modalService = TestBed.inject(ModalService);
@@ -71,6 +80,14 @@ describe("ErrorHandlerService", () => {
         );
         await expect(modalServiceSpy).toHaveBeenCalledTimes(2);
     });
+
+    it("should log authentication errors and terminate session", async () => {
+        const consoleErrorSpy: jasmine.Spy = spyOn(console, "error").and.stub();
+        const authApiTerminateSessionSpy: jasmine.Spy = spyOn(authApiMock, "terminateSession").and.stub();
+        service.handleError(new AuthenticationError([]));
+        await expect(consoleErrorSpy).toHaveBeenCalled();
+        await expect(authApiTerminateSessionSpy).toHaveBeenCalled();
+    });    
 
     it("should log unknown errors", async () => {
         const modalServiceSpy: jasmine.Spy = spyOn(

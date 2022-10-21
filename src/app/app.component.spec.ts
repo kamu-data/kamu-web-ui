@@ -27,7 +27,8 @@ import {
     routerMockEventSubject,
 } from "./common/base-test.helpers.spec";
 import { NavigationEnd, Router } from "@angular/router";
-import { mockAccountDetails } from "./api/mock/auth.mock";
+import { mockUserInfoFromAccessToken } from "./api/mock/auth.mock";
+import { FetchAccountInfoGQL } from "./api/kamu.graphql.interface";
 
 describe("AppComponent", () => {
     let component: AppComponent;
@@ -35,6 +36,7 @@ describe("AppComponent", () => {
     let navigationService: NavigationService;
     let modalService: ModalService;
     let authApi: AuthApi;
+    let fetchAccountInfoGQL: FetchAccountInfoGQL;
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
@@ -60,6 +62,7 @@ describe("AppComponent", () => {
         navigationService = TestBed.inject(NavigationService);
         modalService = TestBed.inject(ModalService);
         authApi = TestBed.inject(AuthApi);
+        fetchAccountInfoGQL = TestBed.inject(FetchAccountInfoGQL);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
@@ -219,15 +222,17 @@ describe("AppComponent", () => {
         });
     });
 
-    it("should accept new logged user", async () => {
-        // eslint-disable-next-line @typescript-eslint/dot-notation
-        authApi["userChanges$"].next(mockAccountDetails);
-        await expect(component.user).toEqual(mockAccountDetails);
-    });
+    it("should react on login/logout changes", async () => {
+        spyOn(fetchAccountInfoGQL, 'mutate')
+            .and.returnValue(of({
+                loading: false,
+                data: mockUserInfoFromAccessToken
+            }));
+        authApi.fetchUserInfoFromAccessToken('someToken').subscribe();
 
-    it("should accept user logout", async () => {
-        // eslint-disable-next-line @typescript-eslint/dot-notation
-        authApi["userChanges$"].next(null);
+        await expect(component.user).toEqual(mockUserInfoFromAccessToken.auth.accountInfo);
+
+        authApi.terminateSession();
         await expect(component.user).toEqual(AppComponent.AnonymousAccountInfo);
     });
 });

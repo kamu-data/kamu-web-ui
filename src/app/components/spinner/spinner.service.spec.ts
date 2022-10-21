@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/dot-notation */
 import { TestBed } from "@angular/core/testing";
+import { first } from "rxjs/operators";
 import { SpinnerService } from "./spinner.service";
 
 describe("SpinnerService", () => {
@@ -17,10 +17,12 @@ describe("SpinnerService", () => {
     [true, false].forEach((expectation: boolean) => {
         it(`should be call _isLoading subject with ${String(
             expectation,
-        )}`, () => {
-            const isLoadingSpy = spyOn(service["_isLoading$"], "next");
+        )}`, async () => {
+            const subscription$ = service.isLoading.pipe(first()).subscribe(
+                (loading: boolean) => void expect(loading).toEqual(expectation)
+            )
             expectation ? service.show() : service.hide();
-            expect(isLoadingSpy).toHaveBeenCalledWith(expectation);
+            await expect(subscription$.closed).toBeTruthy();
         });
     });
 });

@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/dot-notation */
 import { ModalCommandInterface } from "./../../interface/modal.interface";
 import { TestBed } from "@angular/core/testing";
 import { ModalService } from "./modal.service";
+import { first } from "rxjs/operators";
 
 describe("ModalService", () => {
     let service: ModalService;
@@ -20,25 +20,33 @@ describe("ModalService", () => {
         await expect(service.modalType).toEqual("test");
     });
 
-    it("should be show modal image", () => {
+    it("should be show modal image", async () => {
         const testImageUrl = "http://image.com";
-        const showModalSpy = spyOn(service["showModal$"], "next");
+        const subscription$ = service.getCommand().pipe(first()).subscribe(
+            (command: ModalCommandInterface) => {
+                void expect(command).toEqual({
+                    context: {
+                        message: testImageUrl,
+                    },
+                    type: "image",
+                });
+            }
+        );
         service.showImage(testImageUrl);
-        expect(showModalSpy).toHaveBeenCalledWith({
-            context: {
-                message: testImageUrl,
-            },
-            type: "image",
-        });
+        await expect(subscription$.closed).toBeTruthy();
     });
 
-    it("should be show modal spinner", () => {
-        const showModalSpy = spyOn(service["showModal$"], "next");
+    it("should be show modal spinner", async () => {
+        const subscription$ = service.getCommand().pipe(first()).subscribe(
+            (command: ModalCommandInterface) => {
+                void expect(command).toEqual({
+                    context: {},
+                    type: "spinner",
+                });
+            }
+        );
         service.showSpinner();
-        expect(showModalSpy).toHaveBeenCalledWith({
-            context: {},
-            type: "spinner",
-        });
+        await expect(subscription$.closed).toBeTruthy();
     });
 
     it("should check success show modal", async () => {

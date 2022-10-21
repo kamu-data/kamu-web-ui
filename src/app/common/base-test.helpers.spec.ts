@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComponentFixture } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { DebugElement } from "@angular/core";
@@ -17,7 +15,7 @@ export function findNativeElement<T>(
     fixture: ComponentFixture<T>,
     selector: string,
 ): HTMLElement {
-    return findElement(fixture, selector).nativeElement;
+    return findElement(fixture, selector).nativeElement as HTMLElement;
 }
 
 export function emitClickOnElement<T>(
@@ -27,12 +25,8 @@ export function emitClickOnElement<T>(
     findNativeElement(fixture, selector).click();
 }
 
-export function getSpy(object: any, method: string): jasmine.Spy<any> {
-    return spyOn<any>(object, method).and.callThrough();
-}
-
-export function checkHint(
-    fixture: ComponentFixture<any>,
+export function checkHint<T>(
+    fixture: ComponentFixture<T>,
     selector: string,
     expectedHint: string,
 ): void {
@@ -44,8 +38,7 @@ export function findElementByDataTestId<T>(
     fixture: ComponentFixture<T>,
     id: string,
 ): HTMLElement {
-    return fixture.debugElement.query(By.css(`[data-test-id="${id}"]`))
-        .nativeElement;
+    return fixture.debugElement.query(By.css(`[data-test-id="${id}"]`)).nativeElement as HTMLElement;
 }
 
 export const routerMockEventSubject = new ReplaySubject<RouterEvent>(1);

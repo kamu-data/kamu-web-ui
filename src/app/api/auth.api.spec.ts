@@ -19,8 +19,9 @@ import {
     TEST_GITHUB_CODE,
 } from "./mock/auth.mock";
 import AppValues from "../common/app.values";
-import { getSpy } from "../common/base-test.helpers.spec";
 import { MaybeNull } from "../common/app.types";
+import { AuthenticationError } from "../common/errors";
+import { first } from "rxjs/operators";
 
 describe("AuthApi", () => {
     let service: AuthApi;
@@ -134,15 +135,15 @@ describe("AuthApi", () => {
     }));
 
     it("should check full login GraphQL failure", fakeAsync(async () => {
-        const handleAuthenticationErrorSpy = getSpy(
-            service,
-            "handleAuthenticationError",
-        ).and.callThrough();
-        service
+        const subscription$ = service
             .fetchUserInfoAndTokenFromGithubCallackCode(TEST_GITHUB_CODE)
-            .subscribe(() => {
-                /* just need subscribe */
-            });
+            .pipe(first())
+            .subscribe(
+                () => fail("Unexpected success"),
+                (e: Error) => {
+                    void expect(e).toEqual(new AuthenticationError([mockLogin401Error]));
+                }
+            );
 
         const op = controller.expectOne(GithubLoginDocument);
         await expect(op.operation.variables.code).toEqual(TEST_GITHUB_CODE);
@@ -150,21 +151,19 @@ describe("AuthApi", () => {
 
         tick();
 
-        expect(handleAuthenticationErrorSpy).toHaveBeenCalledWith([
-            mockLogin401Error,
-        ]);
+        await expect(subscription$.closed).toBeTruthy();
     }));
 
     it("should check login via access token GraphQL failure", fakeAsync(async () => {
-        const handleAuthenticationErrorSpy = getSpy(
-            service,
-            "handleAuthenticationError",
-        ).and.callThrough();
-        service
+        const subscription$ = service
             .fetchUserInfoFromAccessToken(TEST_ACCESS_TOKEN)
-            .subscribe(() => {
-                /* just need subscribe */
-            });
+            .pipe(first())
+            .subscribe(
+                () => fail("Unexpected success"),
+                (e: Error) => {
+                    void expect(e).toEqual(new AuthenticationError([mockLogin401Error]));
+                }
+            );
 
         const op = controller.expectOne(FetchAccountInfoDocument);
         await expect(op.operation.variables.accessToken).toEqual(
@@ -174,9 +173,7 @@ describe("AuthApi", () => {
 
         tick();
 
-        expect(handleAuthenticationErrorSpy).toHaveBeenCalledWith([
-            mockLogin401Error,
-        ]);
+        await expect(subscription$.closed).toBeTruthy();        
     }));
 
     it("should check user logout navigates to home page", async () => {

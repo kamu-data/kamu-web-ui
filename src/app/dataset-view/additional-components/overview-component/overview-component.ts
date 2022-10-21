@@ -10,11 +10,7 @@ import {
     ViewEncapsulation,
 } from "@angular/core";
 import { BaseComponent } from "src/app/common/base.component";
-import {
-    datasetKind2String,
-    dataSize,
-    relativeTime,
-} from "src/app/common/data.helpers";
+import { DataHelpers } from "src/app/common/data.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 import {
     DatasetBasicsFragment,
@@ -77,7 +73,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public datasetKind(kind: DatasetKind): string {
-        return datasetKind2String(kind);
+        return DataHelpers.datasetKind2String(kind);
     }
 
     get metadataFragmentBlock(): MetadataBlockFragment | undefined {
@@ -87,10 +83,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public dataSize(estimatedSize: number): string {
-        return dataSize(estimatedSize);
+        return DataHelpers.dataSize(estimatedSize);
     }
 
     public relativeTime(time: string): string {
-        return relativeTime(time, { w: 1 });
+        return DataHelpers.relativeTime(time, { w: 1 });
     }
 }

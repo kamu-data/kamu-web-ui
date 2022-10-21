@@ -10,7 +10,7 @@ import {
     ViewChild,
 } from "@angular/core";
 import { SearchAdditionalHeaderButtonInterface } from "./search-additional-buttons.interface";
-import AppValues from "../../common/app.values";
+import { isMobileView } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-search-additional-buttons",
@@ -22,12 +22,12 @@ export class SearchAdditionalButtonsComponent implements OnInit {
     @Input()
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[];
     @Output() public searchAdditionalButtonsMethod = new EventEmitter<string>();
-    public isMinimizeSearchAdditionalButtons = false;
+    public shouldMinimizeSearchAdditionalButtons = false;
     @ViewChild("menuTrigger") trigger: ElementRef;
 
     @HostListener("window:resize", ["$event"])
     public checkWindowSize(): void {
-        this.isMinimizeSearchAdditionalButtons = AppValues.isMobileView();
+        this.shouldMinimizeSearchAdditionalButtons = isMobileView();
     }
 
     public ngOnInit(): void {

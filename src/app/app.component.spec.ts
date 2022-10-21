@@ -6,6 +6,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { SearchApi } from "./api/search.api";
 import { ALL_URLS_WITHOUT_ACCESS_TOKEN, ALL_URLS_WITHOUT_HEADER, AppComponent } from "./app.component";
 import AppValues from "./common/app.values";
+import { isMobileView } from "./common/app.helpers";
 import { AppHeaderComponent } from "./components/app-header/app-header.component";
 import { SearchService } from "./search/search.service";
 import { NavigationService } from "./services/navigation.service";
@@ -103,7 +104,7 @@ describe("AppComponent", () => {
         const checkWindowSizeSpy = spyOn(component, "checkWindowSize").and.callThrough();
         window.dispatchEvent(new Event("resize"));
         await expect(checkWindowSizeSpy).toHaveBeenCalled();
-        await expect(component.isMobileView).toEqual(AppValues.isMobileView());
+        await expect(component.isMobileView).toEqual(isMobileView());
     });
 
     it("should check call onClickAppLogo method", async () => {
@@ -195,3 +196,4 @@ describe("AppComponent", () => {
         await expect(component.user).toEqual(AppComponent.AnonymousAccountInfo);
     });    
 });
+

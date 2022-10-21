@@ -4,11 +4,7 @@ import {
     MetadataBlockFragment,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
-import {
-    descriptionForMetadataBlock,
-    relativeTime,
-    shortHash,
-} from "src/app/common/data.helpers";
+import { DataHelpers } from "src/app/common/data.helpers";
 
 @Component({
     selector: "app-overview-history-summary-header",
@@ -40,16 +36,16 @@ export class OverviewHistorySummaryHeaderComponent {
     }
 
     get relativeTime(): string {
-        return relativeTime(this.systemTime);
+        return DataHelpers.relativeTime(this.systemTime);
     }
 
     get shortHash(): string {
-        return shortHash(this.blockHash);
+        return DataHelpers.shortHash(this.blockHash);
     }
 
     get descriptionForMetadataBlock(): string {
         return this.metadataBlockFragment
-            ? descriptionForMetadataBlock(this.metadataBlockFragment)
+            ? DataHelpers.descriptionForMetadataBlock(this.metadataBlockFragment)
             : "";
     }
 }

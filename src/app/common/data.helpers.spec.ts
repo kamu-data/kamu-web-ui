@@ -1,7 +1,7 @@
 import timekeeper from 'timekeeper';
 import { DatasetKind, MetadataBlockFragment } from '../api/kamu.graphql.interface';
 import { mockOwnerFields } from '../search/mock.data';
-import { BLOCK_DESCRIBE_SEED, BLOCK_DESCRIBE_SET_ATTACHMENTS, BLOCK_DESCRIBE_SET_INFO, BLOCK_DESCRIBE_SET_POLLING_SOURCE, BLOCK_DESCRIBE_SET_TRANSFORM, BLOCK_DESCRIBE_SET_VOCAB, dataSize, descriptionForMetadataBlock, relativeTime } from "./data.helpers";
+import { DataHelpers } from "./data.helpers";
 
 describe("Relative time helper", () => {
 
@@ -29,7 +29,9 @@ describe("Relative time helper", () => {
         date: Date, 
         threshold? : moment.argThresholdOpts, 
     ): Promise<void> {
-        await expect(relativeTime(date.toISOString(), threshold)).toBe(expectedResult);
+        await expect(
+            DataHelpers.relativeTime(date.toISOString(), threshold)
+        ).toBe(expectedResult);
     }
 
     [
@@ -111,7 +113,6 @@ describe("Relative time helper", () => {
     });
 
     [
-    
         {
             date: THREE_DAYS_AGO,
             expectedResult: "3 days ago"
@@ -204,7 +205,9 @@ describe("Size helper", () => {
         },                       
     ].forEach(({size, decimalPlaces, expectedResult}) => {
         it("#dataSize", async () => {
-            await expect(dataSize(size, decimalPlaces)).toBe(expectedResult);
+            await expect(
+                DataHelpers.dataSize(size, decimalPlaces)
+            ).toBe(expectedResult);
         });
     });
 
@@ -226,7 +229,9 @@ describe("Size helper", () => {
     };
 
     it("should check description for SetVocab block", async () => {
-        await expect(descriptionForMetadataBlock(metadataBlockSetVocab)).toEqual(BLOCK_DESCRIBE_SET_VOCAB);
+        await expect(
+            DataHelpers.descriptionForMetadataBlock(metadataBlockSetVocab)
+        ).toEqual(DataHelpers.BLOCK_DESCRIBE_SET_VOCAB);
     });
 
     it("should check description for SetPollingSource block", async () => {
@@ -236,7 +241,9 @@ describe("Size helper", () => {
                 __typename: "SetPollingSource",
             },
         };        
-        await expect(descriptionForMetadataBlock(setPollingSourceBlock)).toEqual(BLOCK_DESCRIBE_SET_POLLING_SOURCE);
+        await expect(
+            DataHelpers.descriptionForMetadataBlock(setPollingSourceBlock)
+        ).toEqual(DataHelpers.BLOCK_DESCRIBE_SET_POLLING_SOURCE);
     });    
 
     it("should check description for SetAttachments block", async () => {
@@ -246,7 +253,9 @@ describe("Size helper", () => {
                 __typename: "SetAttachments",
             },
         };        
-        await expect(descriptionForMetadataBlock(setAttachmentsBlock)).toEqual(BLOCK_DESCRIBE_SET_ATTACHMENTS);
+        await expect(
+            DataHelpers.descriptionForMetadataBlock(setAttachmentsBlock)
+        ).toEqual(DataHelpers.BLOCK_DESCRIBE_SET_ATTACHMENTS);
     });    
 
     it("should check description for SetInfo block", async () => {
@@ -256,7 +265,9 @@ describe("Size helper", () => {
                 __typename: "SetInfo",
             },
         };        
-        await expect(descriptionForMetadataBlock(setInfoBlock)).toEqual(BLOCK_DESCRIBE_SET_INFO);
+        await expect(
+            DataHelpers.descriptionForMetadataBlock(setInfoBlock)
+        ).toEqual(DataHelpers.BLOCK_DESCRIBE_SET_INFO);
     });    
 
     it("should check description for SetTransform block", async () => {
@@ -266,7 +277,9 @@ describe("Size helper", () => {
                 __typename: "SetTransform",
             },
         };        
-        await expect(descriptionForMetadataBlock(setTransformBlock)).toEqual(BLOCK_DESCRIBE_SET_TRANSFORM);
+        await expect(
+            DataHelpers.descriptionForMetadataBlock(setTransformBlock)
+        ).toEqual(DataHelpers.BLOCK_DESCRIBE_SET_TRANSFORM);
     });    
 
     it("should check description for Seed block", async () => {
@@ -279,7 +292,9 @@ describe("Size helper", () => {
                 datasetKind: DatasetKind.Root,
             },
         };
-        await expect(descriptionForMetadataBlock(seedBlock)).toEqual(BLOCK_DESCRIBE_SEED);
+        await expect(
+            DataHelpers.descriptionForMetadataBlock(seedBlock)
+        ).toEqual(DataHelpers.BLOCK_DESCRIBE_SEED);
     });
 
     it("should check description for SetLicense block", async () => {
@@ -290,7 +305,9 @@ describe("Size helper", () => {
                 name: 'GPL',
             },
         };        
-        await expect(descriptionForMetadataBlock(setLicenseBlock)).toEqual("License updated: GPL");
+        await expect(
+            DataHelpers.descriptionForMetadataBlock(setLicenseBlock)
+        ).toEqual("License updated: GPL");
     });    
 
     it("should check description for SetWatermark block", async () => {
@@ -302,7 +319,9 @@ describe("Size helper", () => {
                 outputWatermark: +watermarkTime,
             },
         };        
-        await expect(descriptionForMetadataBlock(setWatermarkBlock)).toEqual(`Watermark updated to ${watermarkTime}`);
+        await expect(
+            DataHelpers.descriptionForMetadataBlock(setWatermarkBlock)
+        ).toEqual(`Watermark updated to ${watermarkTime}`);
     });
 
     it("should check description for AddData block", async () => {
@@ -324,7 +343,9 @@ describe("Size helper", () => {
                 },
             },
         };        
-        await expect(descriptionForMetadataBlock(addDataBlock)).toEqual("Added 400 new records");
+        await expect(
+            DataHelpers.descriptionForMetadataBlock(addDataBlock)
+        ).toEqual("Added 400 new records");
     });
 
     it("should check description for ExecuteQuery block", async () => {
@@ -352,7 +373,13 @@ describe("Size helper", () => {
                 },
             },
         };
-        await expect(descriptionForMetadataBlock(addDataBlockEmpty)).toEqual("Transformation produced 0 new records");        
-        await expect(descriptionForMetadataBlock(addDataBlockNonEmpty)).toEqual("Transformation produced 21 new records");
+        
+        await expect(
+            DataHelpers.descriptionForMetadataBlock(addDataBlockEmpty)
+        ).toEqual("Transformation produced 0 new records");        
+
+        await expect(
+            DataHelpers.descriptionForMetadataBlock(addDataBlockNonEmpty)
+        ).toEqual("Transformation produced 21 new records");
     });     
 });

@@ -23,7 +23,7 @@ import ProjectLinks from "./project-links";
 import { AccountDetailsFragment } from "./api/kamu.graphql.interface";
 import { MaybeNull } from "./common/app.types";
 import _ from "lodash";
-import { promiseWithCatch } from "./common/app.helpers";
+import { isMobileView, promiseWithCatch } from "./common/app.helpers";
 
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [
@@ -111,7 +111,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     private checkView(): void {
-        this.isMobileView = AppValues.isMobileView();
+        this.isMobileView = isMobileView();
     }
 
     private shouldHeaderBeVisible(url: string): boolean {

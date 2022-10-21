@@ -1,4 +1,4 @@
-import { relativeTime } from "src/app/common/data.helpers";
+import { DataHelpers } from "src/app/common/data.helpers";
 import { DatasetInfo } from "../../interface/navigation.interface";
 import { NavigationService } from "../../services/navigation.service";
 import {
@@ -53,7 +53,7 @@ export class DatasetListComponent {
     }
 
     public getRelativeTime(time: string): string {
-        return relativeTime(time);
+        return DataHelpers.relativeTime(time);
     }
 
     public selectTopic(topicName: string): void {

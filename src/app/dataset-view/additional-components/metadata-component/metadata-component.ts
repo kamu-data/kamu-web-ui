@@ -1,4 +1,4 @@
-import { shortHash } from "src/app/common/data.helpers";
+import { DataHelpers } from "src/app/common/data.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 import {
     ChangeDetectionStrategy,
@@ -18,6 +18,7 @@ import {
     DatasetMetadataSummaryFragment,
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
+import { momentConvertDatetoLocalWithFormat } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-metadata",
@@ -107,7 +108,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
 
     public get latestBlockhash(): string {
         return this.currentState
-            ? shortHash(
+            ? DataHelpers.shortHash(
                   this.currentState.metadata.metadata.chain.blocks.nodes[0]
                       .blockHash as string,
               )
@@ -118,7 +119,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         const systemTimeAsString: string | undefined = this.currentState
             ?.metadata.metadata.chain.blocks.nodes[0].systemTime as string;
         return systemTimeAsString
-            ? AppValues.momentConverDatetoLocalWithFormat({
+            ? momentConvertDatetoLocalWithFormat({
                   date: new Date(String(systemTimeAsString)),
                   format: AppValues.displayDateFormat,
                   isTextDate: true,

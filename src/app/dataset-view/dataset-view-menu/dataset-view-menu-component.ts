@@ -15,7 +15,7 @@ import {
 import { Clipboard } from "@angular/cdk/clipboard";
 import AppValues from "../../common/app.values";
 import { SideNavHelper } from "../../common/sidenav.helper";
-import { promiseWithCatch } from "src/app/common/app.helpers";
+import { isMobileView, promiseWithCatch } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-dataset-view-menu",
@@ -36,9 +36,9 @@ export class DatasetViewMenuComponent implements OnInit {
 
     @HostListener("window:resize", ["$event"])
     private checkWindowSize(): void {
-        this.isMinimizeSearchAdditionalButtons = AppValues.isMobileView();
+        this.isMinimizeSearchAdditionalButtons = isMobileView();
         if (this.sidenav) {
-            if (AppValues.isMobileView()) {
+            if (isMobileView()) {
                 promiseWithCatch(this.sideNavHelper.close());
             } else {
                 promiseWithCatch(this.sideNavHelper.open());

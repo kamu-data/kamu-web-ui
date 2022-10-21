@@ -358,6 +358,7 @@ export type FetchStepUrl = {
     __typename?: "FetchStepUrl";
     cache?: Maybe<SourceCaching>;
     eventTime?: Maybe<EventTimeSource>;
+    headers?: Maybe<Array<RequestHeader>>;
     url: Scalars["String"];
 };
 
@@ -421,6 +422,7 @@ export type MetadataBlockExtended = {
     blockHash: Scalars["Multihash"];
     event: MetadataEvent;
     prevBlockHash?: Maybe<Scalars["Multihash"]>;
+    sequenceNumber: Scalars["Int"];
     systemTime: Scalars["DateTime"];
 };
 
@@ -571,6 +573,12 @@ export type ReadStepJsonLines = {
 export type ReadStepParquet = {
     __typename?: "ReadStepParquet";
     schema?: Maybe<Array<Scalars["String"]>>;
+};
+
+export type RequestHeader = {
+    __typename?: "RequestHeader";
+    name: Scalars["String"];
+    value: Scalars["String"];
 };
 
 export type Search = {

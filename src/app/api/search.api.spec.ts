@@ -32,26 +32,24 @@ describe("SearchApi", () => {
         controller.verify();
     });
 
-    it("should be created", async () => {
-        await expect(service).toBeTruthy();
+    it("should be created", () => {
+        expect(service).toBeTruthy();
     });
 
-    it("should check dataset autocomplete", async () => {
+    it("should check dataset autocomplete", () => {
         const TEST_QUERY = "a";
         service
             .autocompleteDatasetSearch(TEST_QUERY)
             .subscribe((res: DatasetAutocompleteItem[]) => {
-                void expect(res.length).toEqual(
+                expect(res.length).toEqual(
                     mockAutoCompleteResponse.search.query.nodes.length +
                         1 /* dummy result */,
                 );
             });
 
         const op = controller.expectOne(SearchDatasetsAutocompleteDocument);
-        await expect(op.operation.variables.query).toEqual(TEST_QUERY);
-        await expect(op.operation.variables.perPage).toEqual(
-            SEARCH_RESULTS_PER_PAGE,
-        );
+        expect(op.operation.variables.query).toEqual(TEST_QUERY);
+        expect(op.operation.variables.perPage).toEqual(SEARCH_RESULTS_PER_PAGE);
 
         op.flush({
             data: mockAutoCompleteResponse,
@@ -62,23 +60,21 @@ describe("SearchApi", () => {
         service
             .autocompleteDatasetSearch("")
             .subscribe((res: DatasetAutocompleteItem[]) => {
-                void expect(res).toEqual([]);
+                expect(res).toEqual([]);
             });
     });
 
-    it("should check dataset search with empty query", async () => {
+    it("should check dataset search with empty query", () => {
         const EMPTY_QUERY = "";
         service
             .overviewDatasetSearch(EMPTY_QUERY)
             .subscribe((res: SearchDatasetsOverviewQuery) => {
-                void expect(res.search.query.totalCount).toEqual(13);
+                expect(res.search.query.totalCount).toEqual(13);
             });
 
         const op = controller.expectOne(SearchDatasetsOverviewDocument);
-        await expect(op.operation.variables.query).toEqual(EMPTY_QUERY);
-        await expect(op.operation.variables.perPage).toEqual(
-            SEARCH_RESULTS_PER_PAGE,
-        );
+        expect(op.operation.variables.query).toEqual(EMPTY_QUERY);
+        expect(op.operation.variables.perPage).toEqual(SEARCH_RESULTS_PER_PAGE);
 
         op.flush({
             data: mockSearchOverviewResponse,

@@ -39,37 +39,33 @@ describe("DatasetApi", () => {
         controller.verify();
     });
 
-    it("should be created", async () => {
-        await expect(service).toBeTruthy();
+    it("should be created", () => {
+        expect(service).toBeTruthy();
     });
 
-    it("should query dataset main data", async () => {
+    it("should query dataset main data", () => {
         service
             .getDatasetMainData({
                 accountName: TEST_USER_NAME,
                 datasetName: TEST_DATASET_NAME,
             })
             .subscribe((res: GetDatasetMainDataQuery) => {
-                void expect(res.datasets.byOwnerAndName?.name).toEqual(
-                    "alberta.case-details",
-                );
-                void expect(res.datasets.byOwnerAndName?.id).toEqual(
+                expect(res.datasets.byOwnerAndName?.name).toEqual("alberta.case-details");
+                expect(res.datasets.byOwnerAndName?.id).toEqual(
                     "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
                 );
             });
+
         const op = controller.expectOne(GetDatasetMainDataDocument);
-        await expect(op.operation.variables.accountName).toEqual(
-            TEST_USER_NAME,
-        );
-        await expect(op.operation.variables.datasetName).toEqual(
-            TEST_DATASET_NAME,
-        );
+        expect(op.operation.variables.accountName).toEqual(TEST_USER_NAME);
+        expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
+
         op.flush({
             data: mockDatasetMainDataResponse,
         });
     });
 
-    it("should run SQL query", async () => {
+    it("should run SQL query", () => {
         const TEST_QUERY = "test query";
         service
             .getDatasetDataSqlRun({
@@ -77,19 +73,21 @@ describe("DatasetApi", () => {
                 limit: 50,
             })
             .subscribe((res: GetDatasetDataSqlRunQuery) => {
-                void expect(res.data.query.data.content).toEqual(
+                expect(res.data.query.data.content).toEqual(
                     mockDatasetDataSqlRunResponse.data.query.data.content,
                 );
             });
+
         const op = controller.expectOne(GetDatasetDataSqlRunDocument);
-        await expect(op.operation.variables.query).toEqual(TEST_QUERY);
-        await expect(op.operation.variables.limit).toEqual(50);
+        expect(op.operation.variables.query).toEqual(TEST_QUERY);
+        expect(op.operation.variables.limit).toEqual(50);
+
         op.flush({
             data: mockDatasetDataSqlRunResponse,
         });
     });
 
-    it("should extract dataset history", async () => {
+    it("should extract dataset history", () => {
         service
             .getDatasetHistory({
                 accountName: TEST_USER_NAME,
@@ -98,21 +96,18 @@ describe("DatasetApi", () => {
                 numPage: 1,
             })
             .subscribe((res: GetDatasetHistoryQuery) => {
-                void expect(
-                    res.datasets.byOwnerAndName?.metadata.chain.blocks
-                        .totalCount,
+                expect(
+                    res.datasets.byOwnerAndName?.metadata.chain.blocks.totalCount,
                 ).toEqual(
                     mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata
                         .chain.blocks.totalCount,
                 );
             });
+
         const op = controller.expectOne(GetDatasetHistoryDocument);
-        await expect(op.operation.variables.accountName).toEqual(
-            TEST_USER_NAME,
-        );
-        await expect(op.operation.variables.datasetName).toEqual(
-            TEST_DATASET_NAME,
-        );
+        expect(op.operation.variables.accountName).toEqual(TEST_USER_NAME);
+        expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
+        
         op.flush({
             data: mockDatasetHistoryResponse,
         });

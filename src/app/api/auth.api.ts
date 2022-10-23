@@ -54,7 +54,7 @@ export class AuthApi {
                 if (result.data) {
                     const data: GithubLoginMutation = result.data;
                     localStorage.setItem(
-                        AppValues.localStorageAccessToken,
+                        AppValues.LOCAL_STORAGE_ACCESS_TOKEN,
                         data.auth.githubLogin.token.accessToken,
                     );
                     this.changeUser(data.auth.githubLogin.accountInfo);
@@ -82,7 +82,7 @@ export class AuthApi {
 
     public terminateSession() {
         this.changeUser(null);
-        localStorage.removeItem(AppValues.localStorageAccessToken);
+        localStorage.removeItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
     }
 
     public logOut(): void {

@@ -28,62 +28,65 @@ describe("OverviewComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should create", async () => {
-        await expect(component).toBeTruthy();
+    it("should create", () => {
+        expect(component).toBeTruthy();
     });
 
-    it("should check #ngOninit", async () => {
-        await expect(component.currentState).not.toBeDefined();
+    it("should check #ngOninit", () => {
+        expect(component.currentState).not.toBeDefined();
+
         appDatasetSubsService.changeDatasetOverviewData(
             mockOverviewDataUpdate as OverviewDataUpdate,
         );
         component.ngOnInit();
-        await expect(component.metadataFragmentBlock).toBeDefined();
-        await expect(component.currentState).toBeDefined();
+
+        expect(component.metadataFragmentBlock).toBeDefined();
+        expect(component.currentState).toBeDefined();
     });
 
-    it("should check metadataFragmentBlock equal undefined", async () => {
-        await expect(component.currentState).not.toBeDefined();
+    it("should check metadataFragmentBlock equal undefined", () => {
+        expect(component.currentState).not.toBeDefined();
         component.ngOnInit();
-        await expect(component.metadataFragmentBlock).toEqual(undefined);
+        expect(component.metadataFragmentBlock).toEqual(undefined);
     });
 
-    it("should check toggle readme view", async () => {
+    it("should check toggle readme view", () => {
         const toggleReadmeViewEmitSpy = spyOn(
             component.toggleReadmeViewEmit,
             "emit",
         );
         component.toggleReadmeView();
-        await expect(toggleReadmeViewEmitSpy).toHaveBeenCalled();
+        expect(toggleReadmeViewEmitSpy).toHaveBeenCalledWith();
     });
 
     [
         { kind: DatasetKind.Derivative, result: "Derivative" },
         { kind: DatasetKind.Root, result: "Root" },
     ].forEach((item: { kind: DatasetKind; result: string }) => {
-        it(`should return dataset kind ${item.kind} to string ${item.result}`, async () => {
+        it(`should return dataset kind ${item.kind} to string ${item.result}`, () => {
             const result = component.datasetKind(item.kind);
-            await expect(result).toBe(item.result);
+            expect(result).toBe(item.result);
         });
     });
 
-    it("should check open website", async () => {
+    it("should check open website", () => {
         const navigationServiceSpy = spyOn(
             navigationService,
             "navigateToWebsite",
         );
-        component.showWebsite("http://google.com");
-        await expect(navigationServiceSpy).toHaveBeenCalled();
+        const testWebsite = "http://google.com";
+        component.showWebsite(testWebsite);
+        expect(navigationServiceSpy).toHaveBeenCalledWith(testWebsite);
     });
 
-    it("should check show dataSize", async () => {
+    it("should check show dataSize", () => {
         const result = component.dataSize(1024);
-        await expect(result).toBe("1.0 KB");
+        expect(result).toBe("1.0 KB");
     });
 
-    it("should check relative time", async () => {
+    it("should check relative time", () => {
         const result = component.relativeTime(new Date().toISOString());
-        await expect(result).toEqual("a few seconds ago");
+        expect(result).toEqual("a few seconds ago");
     });
 
     it("should select topic name", () => {

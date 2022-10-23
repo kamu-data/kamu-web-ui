@@ -67,46 +67,36 @@ describe("AppComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should create the app", async () => {
-        await expect(component).toBeTruthy();
+    it("should create the app", () => {
+        expect(component).toBeTruthy();
     });
 
     ProjectLinks.ALL_URLS.filter(
         (url) => !ALL_URLS_WITHOUT_ACCESS_TOKEN.includes(url),
     ).forEach((url: string) => {
-        it(`should call authentification method in onInit for ${url} and trigger token restore`, async () => {
-            const authentificationSpy = spyOn(
-                component,
-                "authentification",
-            ).and.callThrough();
-            const localStorageGetItemSpy = spyOn(
-                localStorage,
-                "getItem",
-            ).and.returnValue("someToken");
-            const fetchUserInfoFromAccessTokenSpy = spyOn(
-                authApi,
-                "fetchUserInfoFromAccessToken",
-            ).and.callFake(() => of());
-            const isAuthenticatedSpy = spyOnProperty(
-                authApi,
-                "isAuthenticated",
-                "get",
-            ).and.returnValue(false);
+        it(`should call authentification method in onInit for ${url} and trigger token restore`, () => {
+            const someToken = "someToken";
+            const authentificationSpy = spyOn(component, "authentification")
+                .and.callThrough();
+            const localStorageGetItemSpy = spyOn(localStorage, "getItem")
+                .and.returnValue(someToken);
+            const fetchUserInfoFromAccessTokenSpy = spyOn(authApi, "fetchUserInfoFromAccessToken")
+                .and.callFake(() => of());
+            const isAuthenticatedSpy = spyOnProperty(authApi, "isAuthenticated", "get")
+                .and.returnValue(false);
 
             routerMock.url = url;
             component.ngOnInit();
 
-            await expect(authentificationSpy).toHaveBeenCalled();
-            expect(localStorageGetItemSpy).toHaveBeenCalledWith(
-                AppValues.localStorageAccessToken,
-            );
-            await expect(fetchUserInfoFromAccessTokenSpy).toHaveBeenCalled();
-            await expect(isAuthenticatedSpy).toHaveBeenCalled();
+            expect(authentificationSpy).toHaveBeenCalledWith();
+            expect(localStorageGetItemSpy).toHaveBeenCalledWith(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
+            expect(fetchUserInfoFromAccessTokenSpy).toHaveBeenCalledWith(someToken);
+            expect(isAuthenticatedSpy).toHaveBeenCalledWith();
         });
     });
 
     ALL_URLS_WITHOUT_ACCESS_TOKEN.forEach((url: string) => {
-        it(`should call authentification method in onInit on ${url} without token restore`, async () => {
+        it(`should call authentification method in onInit on ${url} without token restore`, () => {
             const authentificationSpy = spyOn(
                 component,
                 "authentification",
@@ -128,101 +118,107 @@ describe("AppComponent", () => {
             routerMock.url = url;
             component.ngOnInit();
 
-            await expect(authentificationSpy).toHaveBeenCalled();
-            await expect(localStorageGetItemSpy).not.toHaveBeenCalled();
-            await expect(
+            expect(authentificationSpy).toHaveBeenCalledWith();
+            expect(localStorageGetItemSpy).not.toHaveBeenCalled();
+            expect(
                 fetchUserInfoFromAccessTokenSpy,
             ).not.toHaveBeenCalled();
-            await expect(isAuthenticatedSpy).not.toHaveBeenCalled();
+            expect(isAuthenticatedSpy).not.toHaveBeenCalled();
         });
     });
 
-    it("should check call checkWindowSize method", async () => {
+    it("should check call checkWindowSize method", () => {
         const checkWindowSizeSpy = spyOn(
             component,
             "checkWindowSize",
         ).and.callThrough();
         window.dispatchEvent(new Event("resize"));
-        await expect(checkWindowSizeSpy).toHaveBeenCalled();
-        await expect(component.isMobileView).toEqual(isMobileView());
+        expect(checkWindowSizeSpy).toHaveBeenCalledWith();
+        expect(component.isMobileView).toEqual(isMobileView());
     });
 
-    it("should check call onClickAppLogo method", async () => {
+    it("should check call onClickAppLogo method", () => {
         const navigateToSearchSpy = spyOn(
             navigationService,
             "navigateToSearch",
         ).and.returnValue();
         component.onClickAppLogo();
-        await expect(navigateToSearchSpy).toHaveBeenCalled();
+        expect(navigateToSearchSpy).toHaveBeenCalledWith();
     });
 
-    it("should check call onAddNew method", async () => {
+    it("should check call onAddNew method", () => {
         const navigateToDatasetCreateSpy = spyOn(
             navigationService,
             "navigateToDatasetCreate",
         ).and.returnValue();
         component.onAddNew();
-        await expect(navigateToDatasetCreateSpy).toHaveBeenCalled();
+        expect(navigateToDatasetCreateSpy).toHaveBeenCalledWith();
     });
 
-    it("should check call onLogOut method", async () => {
+    it("should check call onLogOut method", () => {
         const logOutSpy = spyOn(authApi, "logOut").and.returnValue();
         component.onLogOut();
-        await expect(logOutSpy).toHaveBeenCalled();
+        expect(logOutSpy).toHaveBeenCalledWith();
     });
 
-    it("should check call onLogin method", async () => {
+    it("should check call onLogin method", () => {
         const loginSpy = spyOn(
             navigationService,
             "navigateToLogin",
         ).and.returnValue();
         component.onLogin();
-        await expect(loginSpy).toHaveBeenCalled();
+        expect(loginSpy).toHaveBeenCalledWith();
     });
 
-    it("should check call onSelectDataset method and navigate to dataset", async () => {
+    it("should check call onSelectDataset method and navigate to dataset", () => {
         const navigateToDatasetViewSpy = spyOn(
             navigationService,
             "navigateToDatasetView",
         ).and.returnValue();
         component.onSelectDataset(mockAutocompleteItems[0]);
-        await expect(navigateToDatasetViewSpy).toHaveBeenCalled();
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
+            accountName: mockAutocompleteItems[0].dataset.owner.name,
+            datasetName: mockAutocompleteItems[0].dataset.name as string,
+        });
     });
 
-    it("should check call onSelectDataset method and navigate to search", async () => {
+    it("should check call onSelectDataset method and navigate to search", () => {
         const navigateToSearchSpy = spyOn(
             navigationService,
             "navigateToSearch",
         ).and.returnValue();
         component.onSelectDataset(mockAutocompleteItems[1]);
-        await expect(navigateToSearchSpy).toHaveBeenCalled();
+        expect(navigateToSearchSpy).toHaveBeenCalledWith(mockAutocompleteItems[1].dataset.id as string);
     });
 
-    it("should check call onUserProfile", async () => {
-        const modalSpy = spyOn(modalService, "warning").and.callThrough();
+    it("should check call onUserProfile", () => {
+        const modalSpy = spyOn(modalService, "warning").and.resolveTo();
         component.onUserProfile();
-        await expect(modalSpy).toHaveBeenCalled();
+        expect(modalSpy).toHaveBeenCalledWith({
+            message: AppValues.UNIMPLEMENTED_MESSAGE,
+            yesButtonText: "Ok",
+        });
     });
 
     ALL_URLS_WITHOUT_HEADER.forEach((url: string) => {
-        it(`should hide header when going to ${url} page`, async () => {
+        it(`should hide header when going to ${url} page`, () => {
             routerMockEventSubject.next(new NavigationEnd(1, url, ""));
             fixture.detectChanges();
-            await expect(component.isHeaderVisible).toBeFalsy();
+            expect(component.isHeaderVisible).toBeFalsy();
         });
     });
 
     ProjectLinks.ALL_URLS.filter(
         (url) => !ALL_URLS_WITHOUT_HEADER.includes(url),
     ).forEach((url: string) => {
-        it(`should show header when going to ${url} page`, async () => {
+        it(`should show header when going to ${url} page`, () => {
             routerMockEventSubject.next(new NavigationEnd(1, url, ""));
             fixture.detectChanges();
-            await expect(component.isHeaderVisible).toBeTruthy();
+            expect(component.isHeaderVisible).toBeTruthy();
         });
     });
 
-    it("should react on login/logout changes", async () => {
+    it("should react on login/logout changes", () => {
         spyOn(fetchAccountInfoGQL, 'mutate')
             .and.returnValue(of({
                 loading: false,
@@ -230,9 +226,9 @@ describe("AppComponent", () => {
             }));
         authApi.fetchUserInfoFromAccessToken('someToken').subscribe();
 
-        await expect(component.user).toEqual(mockUserInfoFromAccessToken.auth.accountInfo);
+        expect(component.user).toEqual(mockUserInfoFromAccessToken.auth.accountInfo);
 
         authApi.terminateSession();
-        await expect(component.user).toEqual(AppComponent.AnonymousAccountInfo);
+        expect(component.user).toEqual(AppComponent.AnonymousAccountInfo);
     });
 });

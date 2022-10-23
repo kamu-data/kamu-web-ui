@@ -27,8 +27,8 @@ describe("DataComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should create", async () => {
-        await expect(component).toBeTruthy();
+    it("should create", () => {
+        expect(component).toBeTruthy();
     });
 
     it("should check run sql button", () => {
@@ -40,14 +40,16 @@ describe("DataComponent", () => {
         );
     });
 
-    it("should check #ngOninit", async () => {
+    it("should check #ngOninit", () => {
         component.datasetBasics = mockDatasetBasicsFragment;
-        await expect(component.currentData).not.toBeDefined();
+        expect(component.currentData).not.toBeDefined();
+
         appDatasetSubsService.changeDatasetData(mockDataUpdate);
         component.ngOnInit();
-        await expect(component.currentData).toBeDefined();
-        await expect(component.currentSchema).toBeDefined();
-        await expect(component.sqlRequestCode).toEqual(
+
+        expect(component.currentData).toBeDefined();
+        expect(component.currentSchema).toBeDefined();
+        expect(component.sqlRequestCode).toEqual(
             `select\n  *\nfrom 'mockName'`,
         );
     });

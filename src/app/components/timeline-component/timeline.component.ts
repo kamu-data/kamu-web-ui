@@ -27,7 +27,7 @@ export class TimelineComponent {
     public momentConverDatetoLocalWithFormat(date: string): string {
         return momentConvertDatetoLocalWithFormat({
             date: new Date(String(date)),
-            format: AppValues.displayDateFormat,
+            format: AppValues.DISPLAY_DATE_FORMAT,
             isTextDate: true,
         });
     }

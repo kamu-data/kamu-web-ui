@@ -30,11 +30,11 @@ export class DatasetViewMenuComponent implements OnInit {
     @Input() datasetViewType: DatasetViewTypeEnum;
     @Input() isMinimizeSearchAdditionalButtons: boolean;
 
-    public clipboardKamuCli = AppValues.clipboardKamuCli;
-    public clipboardKafka = AppValues.clipboardKafka;
+    public clipboardKamuCli = AppValues.CLIBPOARD_KAMU_CLI;
+    public clipboardKafka = AppValues.CLIPBOARD_KAFKA;
     private sideNavHelper: SideNavHelper;
 
-    @HostListener("window:resize", ["$event"])
+    @HostListener("window:resize")
     private checkWindowSize(): void {
         this.isMinimizeSearchAdditionalButtons = isMobileView();
         if (this.sidenav) {

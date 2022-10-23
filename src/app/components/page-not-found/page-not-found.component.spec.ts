@@ -18,16 +18,16 @@ describe("PageNotFoundComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should create", async () => {
-        await expect(component).toBeTruthy();
+    it("should create", () => {
+        expect(component).toBeTruthy();
     });
 
-    it("should redirect to home page", async () => {
+    it("should redirect to home page", () => {
         const navigateToHomeSpy = spyOn(
             navigationService,
             "navigateToHome",
         ).and.returnValue();
         component.navigateToHome();
-        await expect(navigateToHomeSpy).toHaveBeenCalled();
+        expect(navigateToHomeSpy).toHaveBeenCalledWith();
     });
 });

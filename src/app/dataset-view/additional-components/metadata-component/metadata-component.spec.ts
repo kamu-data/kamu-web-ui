@@ -33,39 +33,45 @@ describe("MetadataComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should create", async () => {
-        await expect(component).toBeTruthy();
+    it("should create", () => {
+        expect(component).toBeTruthy();
     });
 
-    it("should check #ngOninit", async () => {
-        await expect(component.currentState).not.toBeDefined();
+    it("should check #ngOninit", () => {
+        expect(component.currentState).not.toBeDefined();
+
         appDatasetSubsService.metadataSchemaChanges(
             mockMetadataSchemaUpdate as MetadataSchemaUpdate,
         );
         component.ngOnInit();
         fixture.detectChanges();
-        await expect(component.currentState).toBeDefined();
+
+        expect(component.currentState).toBeDefined();
     });
 
-    it("should check navigate to website", async () => {
+    it("should check navigate to website", () => {
         component.currentState = {
             schema: mockMetadataSchemaUpdate.schema,
             metadata:
                 mockMetadataSchemaUpdate.metadata as DatasetMetadataSummaryFragment,
             pageInfo: mockMetadataSchemaUpdate.pageInfo,
         };
+
         fixture.detectChanges();
         const navigateToWebsiteSpy = spyOn(
             navigationService,
             "navigateToWebsite",
         );
         emitClickOnElement(fixture, '[data-test-id="navigateToWebsite"]');
-        await expect(navigateToWebsiteSpy).toHaveBeenCalled();
+
+        expect(navigateToWebsiteSpy).toHaveBeenCalledWith(
+            mockMetadataSchemaUpdate.metadata.metadata.currentLicense.websiteUrl
+        );
     });
 
-    it("should check onClickDataset method", async () => {
+    it("should check onClickDataset method", () => {
         const clickDatasetEmitSpy = spyOn(component.clickDatasetEmit, "emit");
         component.onClickDataset(mockDatasetBasicsFragment);
-        await expect(clickDatasetEmitSpy).toHaveBeenCalled();
+        expect(clickDatasetEmitSpy).toHaveBeenCalledWith(mockDatasetBasicsFragment);
     });
 });

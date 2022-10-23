@@ -9,63 +9,69 @@ import {
 import AppValues from "./app.values";
 
 describe("AppHelpers", () => {
-    it("should check non-null requireValue", async () => {
-        await expect(requireValue({})).toEqual({});
+
+    it("should check non-null requireValue", () => {
+        expect(requireValue({})).toEqual({});
     });
 
-    it("should check null requireValue", async () => {
-        await expect(() => requireValue(null)).toThrowError();
+    it("should check null requireValue", () => {
+        expect(() => requireValue(null)).toThrowError();
     });
 
-    it("should check promiseWithCatch with success", async () => {
+    it("should check promiseWithCatch with success", () => {
         const consoleErrorSpy = spyOn(console, "error").and.stub();
         const emptyPromise = async () => {
             /* Intentionally empty */
         };
         promiseWithCatch(emptyPromise());
-        await expect(consoleErrorSpy).not.toHaveBeenCalled();
+        expect(consoleErrorSpy).not.toHaveBeenCalled();
     });
 
-    it("should check promiseWithCatch with failure", fakeAsync(async () => {
+    it("should check promiseWithCatch with failure", fakeAsync(() => {
+        const testError = new Error("test");
         const consoleErrorSpy = spyOn(console, "error").and.stub();
         const failingPromise = async () => {
-            await expect(consoleErrorSpy).not.toHaveBeenCalled();
-            throw Error("test");
+            await new Promise((resolve) => {
+                setTimeout(() => { resolve("foo"); }, 1);
+              });
+            expect(consoleErrorSpy).not.toHaveBeenCalled();
+            throw testError;
         };
         promiseWithCatch(failingPromise());
-        tick();
-        await expect(consoleErrorSpy).toHaveBeenCalled();
+        tick(1);
+        
+        expect(consoleErrorSpy).toHaveBeenCalledWith(testError);
     }));
 
-    it("should the first letter be capitalized", async () => {
+    it("should the first letter be capitalized", () => {
         const result = capitalizeFirstLetter("test");
-        await expect(result).toEqual("Test");
+        expect(result).toEqual("Test");
     });
 
-    it("should convert data to local ", async () => {
+    it("should convert data to local ", () => {
         const baseDate = new Date(String("2022-08-05T21:19:28.817281255"));
         const result = momentConvertDatetoLocalWithFormat({
             date: baseDate,
-            format: AppValues.displayDateFormat,
+            format: AppValues.DISPLAY_DATE_FORMAT,
         });
-        await expect(result).toEqual("05 Aug 2022");
+        expect(result).toEqual("05 Aug 2022");
     });
 
-    it("should convert data to today ", async () => {
+    it("should convert data to today ", () => {
         const result = momentConvertDatetoLocalWithFormat({
             date: Date.now(),
-            format: AppValues.displayDateFormat,
+            format: AppValues.DISPLAY_DATE_FORMAT,
             isTextDate: true,
         });
-        await expect(result).toEqual("Today");
+        expect(result).toEqual("Today");
     });
 
-    it("should convert data to yesterday ", async () => {
+    it("should convert data to yesterday ", () => {
         const result = momentConvertDatetoLocalWithFormat({
             date: moment().subtract(1, "day").toDate(),
-            format: AppValues.displayDateFormat,
+            format: AppValues.DISPLAY_DATE_FORMAT,
             isTextDate: true,
         });
-        await expect(result).toEqual("Yesterday");
+        expect(result).toEqual("Yesterday");
     });
 });

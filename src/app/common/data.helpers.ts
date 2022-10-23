@@ -16,7 +16,7 @@ export class DataHelpers {
 
     public static dateTime(rfc3339: string): string {
         const dt = moment(rfc3339);
-        return dt.format(AppValues.displayDateFormat);
+        return dt.format(AppValues.DISPLAY_DATE_FORMAT);
     }
 
     public static relativeTime(

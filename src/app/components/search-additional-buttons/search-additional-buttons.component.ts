@@ -25,7 +25,7 @@ export class SearchAdditionalButtonsComponent implements OnInit {
     public shouldMinimizeSearchAdditionalButtons = false;
     @ViewChild("menuTrigger") trigger: ElementRef;
 
-    @HostListener("window:resize", ["$event"])
+    @HostListener("window:resize")
     public checkWindowSize(): void {
         this.shouldMinimizeSearchAdditionalButtons = isMobileView();
     }

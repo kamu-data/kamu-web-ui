@@ -24,11 +24,11 @@ describe("SearchService", () => {
         searchApi = TestBed.inject(SearchApi);
     });
 
-    it("should be created", async () => {
-        await expect(service).toBeTruthy();
+    it("should be created", () => {
+        expect(service).toBeTruthy();
     });
 
-    it("should fire overviewSearchChanges$ on search request", async () => {
+    it("should fire overviewSearchChanges$ on search request", () => {
         const searchApiOverviewDataSearchSpy = spyOn(
             searchApi,
             "overviewDatasetSearch",
@@ -48,7 +48,7 @@ describe("SearchService", () => {
                         mockSearchDatasetOverviewQuery.search.query.pageInfo,
                     currentPage: 1,
                 };
-                void expect(searchResult).toEqual(expectedSearchData);
+                expect(searchResult).toEqual(expectedSearchData);
             },
         );
 
@@ -59,10 +59,10 @@ describe("SearchService", () => {
             testSearchValue,
             0,
         );
-        await expect(notificationReceived).toBeTruthy();
+        expect(notificationReceived).toBeTruthy();
     });
 
-    it("should fire autocompleteSearchChanges$ on autocomplete request", async () => {
+    it("should fire autocompleteSearchChanges$ on autocomplete request", () => {
         const searchApiAutocompleteDatasetSearchSpy = spyOn(
             searchApi,
             "autocompleteDatasetSearch",
@@ -73,7 +73,7 @@ describe("SearchService", () => {
         service.onAutocompleteSearchChanges.subscribe(
             (autocompleteItems: DatasetAutocompleteItem[]) => {
                 notificationReceived = true;
-                void expect(autocompleteItems).toEqual(mockAutocompleteItems);
+                expect(autocompleteItems).toEqual(mockAutocompleteItems);
             },
         );
 
@@ -83,10 +83,10 @@ describe("SearchService", () => {
         expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(
             testAutoCompleteValue,
         );
-        await expect(notificationReceived).toBeTruthy();
+        expect(notificationReceived).toBeTruthy();
     });
 
-    it("should fire autocompleteSearchChanges$ with empty collection on autocomplete request failure", async () => {
+    it("should fire autocompleteSearchChanges$ with empty collection on autocomplete request failure", () => {
         const searchApiAutocompleteDatasetSearchSpy = spyOn(
             searchApi,
             "autocompleteDatasetSearch",
@@ -97,7 +97,7 @@ describe("SearchService", () => {
         service.onAutocompleteSearchChanges.subscribe(
             (autocompleteItems: DatasetAutocompleteItem[]) => {
                 notificationReceived = true;
-                void expect(autocompleteItems).toEqual([]);
+                expect(autocompleteItems).toEqual([]);
             },
         );
 
@@ -107,6 +107,6 @@ describe("SearchService", () => {
         expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(
             testAutoCompleteValue,
         );
-        await expect(notificationReceived).toBeTruthy();
+        expect(notificationReceived).toBeTruthy();
     });
 });

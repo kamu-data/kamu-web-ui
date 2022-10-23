@@ -17,7 +17,7 @@ describe("ModalDialogComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should create", async () => {
-        await expect(component).toBeTruthy();
+    it("should create", () => {
+        expect(component).toBeTruthy();
     });
 });

@@ -51,11 +51,11 @@ describe("AppDatasetService", () => {
         appDatasetSubsService = TestBed.inject(AppDatasetSubscriptionsService);
     });
 
-    it("should be created", async () => {
-        await expect(service).toBeTruthy();
+    it("should be created", () => {
+        expect(service).toBeTruthy();
     });
 
-    it("should check get main data from api", async () => {
+    it("should check get main data from api", () => {
         spyOn(datasetApi, "getDatasetMainData").and.returnValue(
             of(mockDatasetMainDataResponse),
         );
@@ -65,7 +65,7 @@ describe("AppDatasetService", () => {
             datasetUpdated = true;
             const expectedDatasetBasics = mockDatasetMainDataResponse.datasets
                 .byOwnerAndName as DatasetBasicsFragment;
-            void expect(dataset).toBe(expectedDatasetBasics);
+            expect(dataset).toBe(expectedDatasetBasics);
         });
 
         let overviewTabDataUpdated = false;
@@ -74,13 +74,13 @@ describe("AppDatasetService", () => {
                 overviewTabDataUpdated = true;
                 const expectedOverview = mockDatasetMainDataResponse.datasets
                     .byOwnerAndName as DatasetOverviewFragment;
-                void expect(overviewDataUpdate.overview).toEqual(
+                expect(overviewDataUpdate.overview).toEqual(
                     expectedOverview,
                 );
 
                 const expectedSize = mockDatasetMainDataResponse.datasets
                     .byOwnerAndName?.data as DatasetDataSizeFragment;
-                void expect(overviewDataUpdate.size).toEqual(expectedSize);
+                expect(overviewDataUpdate.size).toEqual(expectedSize);
             },
         );
 
@@ -101,14 +101,14 @@ describe("AppDatasetService", () => {
 
         service.requestDatasetMainData(mockDatasetInfo).subscribe();
 
-        await expect(datasetUpdated).toBeTruthy();
-        await expect(overviewTabDataUpdated).toBeTruthy();
-        await expect(dataUpdated).toBeTruthy();
-        await expect(metadataUpdated).toBeTruthy();
-        await expect(lineageUpdated).toBeTruthy();
+        expect(datasetUpdated).toBeTruthy();
+        expect(overviewTabDataUpdated).toBeTruthy();
+        expect(dataUpdated).toBeTruthy();
+        expect(metadataUpdated).toBeTruthy();
+        expect(lineageUpdated).toBeTruthy();
     });
 
-    it("should check get main data from api when dataset not found", async () => {
+    it("should check get main data from api when dataset not found", () => {
         spyOn(datasetApi, "getDatasetMainData").and.returnValue(
             of(mockDatasetResponseNotFound),
         );
@@ -136,13 +136,13 @@ describe("AppDatasetService", () => {
             },
             (e: Error) => {
                 errorHandled = true;
-                void expect(e).toEqual(new DatasetNotFoundError());
+                expect(e).toEqual(new DatasetNotFoundError());
             },
         );
-        await expect(errorHandled).toBeTruthy();
+        expect(errorHandled).toBeTruthy();
     });
 
-    it("should check get history data from api", async () => {
+    it("should check get history data from api", () => {
         const numRecords = 7;
         const numPage = 1;
         spyOn(datasetApi, "getDatasetHistory").and.returnValue(
@@ -156,8 +156,8 @@ describe("AppDatasetService", () => {
                 const expectedNodes = mockDatasetHistoryResponse.datasets
                     .byOwnerAndName?.metadata.chain.blocks
                     .nodes as MetadataBlockFragment[];
-                void expect(historyUpdate.history).toBe(expectedNodes);
-                void expect(historyUpdate.pageInfo).toEqual({
+                expect(historyUpdate.history).toBe(expectedNodes);
+                expect(historyUpdate.pageInfo).toEqual({
                     __typename: "PageBasedInfo",
                     hasNextPage: false,
                     hasPreviousPage: false,
@@ -171,10 +171,10 @@ describe("AppDatasetService", () => {
             .requestDatasetHistory(mockDatasetInfo, numRecords, numPage)
             .subscribe();
 
-        await expect(historyUpdated).toBeTruthy();
+        expect(historyUpdated).toBeTruthy();
     });
 
-    it("should check get history data from api when dataset not found", async () => {
+    it("should check get history data from api when dataset not found", () => {
         const numRecords = 7;
         const numPage = 1;
         spyOn(datasetApi, "getDatasetHistory").and.returnValue(
@@ -194,13 +194,13 @@ describe("AppDatasetService", () => {
                 },
                 (e: Error) => {
                     errorHandled = true;
-                    void expect(e).toEqual(new DatasetNotFoundError());
+                    expect(e).toEqual(new DatasetNotFoundError());
                 },
             );
-        await expect(errorHandled).toBeTruthy();
+        expect(errorHandled).toBeTruthy();
     });
 
-    it("should check get SQL query data from api", async () => {
+    it("should check get SQL query data from api", () => {
         const query = "select\n  *\nfrom testTable";
         const limit = 20;
         spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(
@@ -214,10 +214,10 @@ describe("AppDatasetService", () => {
 
         service.requestDatasetDataSqlRun(query, limit).subscribe();
 
-        await expect(dataUpdated).toBeTruthy();
+        expect(dataUpdated).toBeTruthy();
     });
 
-    it("should check get SQL query data from api when invalid SQL", async () => {
+    it("should check get SQL query data from api when invalid SQL", () => {
         const query = "select\n  *\nfrom testTable";
         const limit = 20;
         spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(
@@ -235,9 +235,9 @@ describe("AppDatasetService", () => {
             },
             (e: Error) => {
                 errorHandled = true;
-                void expect(e).toEqual(new InvalidSqlError());
+                expect(e).toEqual(new InvalidSqlError());
             },
         );
-        await expect(errorHandled).toBeTruthy();
+        expect(errorHandled).toBeTruthy();
     });
 });

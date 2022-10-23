@@ -79,8 +79,8 @@ export class SearchApi {
                                 name: id,
                                 kind: DatasetKind.Root,
                                 owner: {
-                                    id: AppValues.defaultUsername,
-                                    name: AppValues.defaultUsername,
+                                    id: AppValues.DEFAULT_USERNAME,
+                                    name: AppValues.DEFAULT_USERNAME,
                                 },
                             },
                         });

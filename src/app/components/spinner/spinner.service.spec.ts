@@ -10,19 +10,19 @@ describe("SpinnerService", () => {
         service = TestBed.inject(SpinnerService);
     });
 
-    it("should be created", async () => {
-        await expect(service).toBeTruthy();
+    it("should be created", () => {
+        expect(service).toBeTruthy();
     });
 
     [true, false].forEach((expectation: boolean) => {
-        it(`should be call _isLoading subject with ${String(
+        it(`should call _isLoading subject with ${String(
             expectation,
-        )}`, async () => {
+        )}`, () => {
             const subscription$ = service.isLoading.pipe(first()).subscribe(
-                (loading: boolean) => void expect(loading).toEqual(expectation)
+                (loading: boolean) => expect(loading).toEqual(expectation)
             )
             expectation ? service.show() : service.hide();
-            await expect(subscription$.closed).toBeTruthy();
+            expect(subscription$.closed).toBeTruthy();
         });
     });
 });

@@ -20,8 +20,8 @@ describe("LineageComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should create", async () => {
-        await expect(component).toBeTruthy();
+    it("should create", () => {
+        expect(component).toBeTruthy();
     });
 
     it("should check click on Node", () => {
@@ -30,9 +30,9 @@ describe("LineageComponent", () => {
         expect(emitSpy).toHaveBeenCalledWith(mockNode);
     });
 
-    it("should check #ngOninit", async () => {
+    it("should check #ngOninit", () => {
         appDatasetSubsService.changeLineageData(mockLineageUpdate);
         component.ngOnInit();
-        await expect(component.isAvailableLineageGraph).toBeTruthy();
+        expect(component.isAvailableLineageGraph).toBeTruthy();
     });
 });

@@ -26,12 +26,12 @@ describe("Relative time helper", () => {
         timekeeper.freeze(FROZEN_TIME);
     });
 
-    async function testRelativeTime(
+    function testRelativeTime(
         expectedResult: string,
         date: Date,
         threshold?: moment.argThresholdOpts,
-    ): Promise<void> {
-        await expect(
+    ): void {
+        expect(
             DataHelpers.relativeTime(date.toISOString(), threshold),
         ).toBe(expectedResult);
     }
@@ -86,8 +86,8 @@ describe("Relative time helper", () => {
             expectedResult: "a year ago",
         },
     ].forEach(({ date, expectedResult: expectedResult }) => {
-        it("#relativeTime no threshold", async () => {
-            await testRelativeTime(expectedResult, date);
+        it("#relativeTime no threshold", () => {
+            testRelativeTime(expectedResult, date);
         });
     });
 
@@ -109,8 +109,8 @@ describe("Relative time helper", () => {
             expectedResult: "24 Sep 2022",
         },
     ].forEach(({ date, expectedResult }) => {
-        it("#relativeTime days threshold", async () => {
-            await testRelativeTime(expectedResult, date, { d: 3 });
+        it("#relativeTime days threshold", () => {
+            testRelativeTime(expectedResult, date, { d: 3 });
         });
     });
 
@@ -128,8 +128,8 @@ describe("Relative time helper", () => {
             expectedResult: "23 Sep 2022",
         },
     ].forEach(({ date, expectedResult }) => {
-        it("#relativeTime weeks threshold", async () => {
-            await testRelativeTime(expectedResult, date, { w: 1 });
+        it("#relativeTime weeks threshold", () => {
+            testRelativeTime(expectedResult, date, { w: 1 });
         });
     });
 
@@ -206,8 +206,8 @@ describe("Size helper", () => {
             expectedResult: "13 TB",
         },
     ].forEach(({ size, decimalPlaces, expectedResult }) => {
-        it("#dataSize", async () => {
-            await expect(DataHelpers.dataSize(size, decimalPlaces)).toBe(
+        it("#dataSize", () => {
+            expect(DataHelpers.dataSize(size, decimalPlaces)).toBe(
                 expectedResult,
             );
         });
@@ -227,61 +227,61 @@ describe("Size helper", () => {
         },
     };
 
-    it("should check description for SetVocab block", async () => {
-        await expect(
+    it("should check description for SetVocab block", () => {
+        expect(
             DataHelpers.descriptionForMetadataBlock(metadataBlockSetVocab),
         ).toEqual(DataHelpers.BLOCK_DESCRIBE_SET_VOCAB);
     });
 
-    it("should check description for SetPollingSource block", async () => {
+    it("should check description for SetPollingSource block", () => {
         const setPollingSourceBlock: MetadataBlockFragment = {
             ...metadataBlockSetVocab,
             event: {
                 __typename: "SetPollingSource",
             },
         };
-        await expect(
+        expect(
             DataHelpers.descriptionForMetadataBlock(setPollingSourceBlock),
         ).toEqual(DataHelpers.BLOCK_DESCRIBE_SET_POLLING_SOURCE);
     });
 
-    it("should check description for SetAttachments block", async () => {
+    it("should check description for SetAttachments block", () => {
         const setAttachmentsBlock: MetadataBlockFragment = {
             ...metadataBlockSetVocab,
             event: {
                 __typename: "SetAttachments",
             },
         };
-        await expect(
+        expect(
             DataHelpers.descriptionForMetadataBlock(setAttachmentsBlock),
         ).toEqual(DataHelpers.BLOCK_DESCRIBE_SET_ATTACHMENTS);
     });
 
-    it("should check description for SetInfo block", async () => {
+    it("should check description for SetInfo block", () => {
         const setInfoBlock: MetadataBlockFragment = {
             ...metadataBlockSetVocab,
             event: {
                 __typename: "SetInfo",
             },
         };
-        await expect(
+        expect(
             DataHelpers.descriptionForMetadataBlock(setInfoBlock),
         ).toEqual(DataHelpers.BLOCK_DESCRIBE_SET_INFO);
     });
 
-    it("should check description for SetTransform block", async () => {
+    it("should check description for SetTransform block", () => {
         const setTransformBlock: MetadataBlockFragment = {
             ...metadataBlockSetVocab,
             event: {
                 __typename: "SetTransform",
             },
         };
-        await expect(
+        expect(
             DataHelpers.descriptionForMetadataBlock(setTransformBlock),
         ).toEqual(DataHelpers.BLOCK_DESCRIBE_SET_TRANSFORM);
     });
 
-    it("should check description for Seed block", async () => {
+    it("should check description for Seed block", () => {
         const seedBlock: MetadataBlockFragment = {
             ...metadataBlockSetVocab,
             event: {
@@ -291,12 +291,12 @@ describe("Size helper", () => {
                 datasetKind: DatasetKind.Root,
             },
         };
-        await expect(
+        expect(
             DataHelpers.descriptionForMetadataBlock(seedBlock),
         ).toEqual(DataHelpers.BLOCK_DESCRIBE_SEED);
     });
 
-    it("should check description for SetLicense block", async () => {
+    it("should check description for SetLicense block", () => {
         const setLicenseBlock: MetadataBlockFragment = {
             ...metadataBlockSetVocab,
             event: {
@@ -304,12 +304,12 @@ describe("Size helper", () => {
                 name: "GPL",
             },
         };
-        await expect(
+        expect(
             DataHelpers.descriptionForMetadataBlock(setLicenseBlock),
         ).toEqual("License updated: GPL");
     });
 
-    it("should check description for SetWatermark block", async () => {
+    it("should check description for SetWatermark block", () => {
         const watermarkTime = 1666303480;
         const setWatermarkBlock: MetadataBlockFragment = {
             ...metadataBlockSetVocab,
@@ -318,12 +318,12 @@ describe("Size helper", () => {
                 outputWatermark: +watermarkTime,
             },
         };
-        await expect(
+        expect(
             DataHelpers.descriptionForMetadataBlock(setWatermarkBlock),
         ).toEqual(`Watermark updated to ${watermarkTime}`);
     });
 
-    it("should check description for AddData block", async () => {
+    it("should check description for AddData block", () => {
         const addDataBlock: MetadataBlockFragment = {
             ...metadataBlockSetVocab,
             event: {
@@ -342,12 +342,12 @@ describe("Size helper", () => {
                 },
             },
         };
-        await expect(
+        expect(
             DataHelpers.descriptionForMetadataBlock(addDataBlock),
         ).toEqual("Added 400 new records");
     });
 
-    it("should check description for ExecuteQuery block", async () => {
+    it("should check description for ExecuteQuery block", () => {
         const addDataBlockEmpty: MetadataBlockFragment = {
             ...metadataBlockSetVocab,
             event: {
@@ -373,11 +373,11 @@ describe("Size helper", () => {
             },
         };
 
-        await expect(
+        expect(
             DataHelpers.descriptionForMetadataBlock(addDataBlockEmpty),
         ).toEqual("Transformation produced 0 new records");
 
-        await expect(
+        expect(
             DataHelpers.descriptionForMetadataBlock(addDataBlockNonEmpty),
         ).toEqual("Transformation produced 21 new records");
     });

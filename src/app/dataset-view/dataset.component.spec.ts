@@ -15,6 +15,7 @@ import {
     routerMock,
     routerMockEventSubject,
 } from "../common/base-test.helpers.spec";
+import AppValues from "../common/app.values";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -74,8 +75,8 @@ describe("DatasetComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should create", async () => {
-        await expect(component).toBeTruthy();
+    it("should create", () => {
+        expect(component).toBeTruthy();
     });
 
     [
@@ -86,7 +87,7 @@ describe("DatasetComponent", () => {
         DatasetViewTypeEnum.Lineage,
         DatasetViewTypeEnum.Discussions,
     ].forEach((tab: string) => {
-        it(`should check init ${tab} tab`, async () => {
+        it(`should check init ${tab} tab`, () => {
             const spyRoute = spyOn(route.snapshot.queryParamMap, "get");
             spyRoute.and.callFake((queryParam: "tab" | "page") => {
                 switch (queryParam) {
@@ -100,37 +101,36 @@ describe("DatasetComponent", () => {
             });
             appDatasetService.datasetChanges(mockDatasetBasicsFragment);
             component.ngOnInit();
-            await expect(component.datasetBasics).toBe(
-                mockDatasetBasicsFragment,
-            );
+
+            expect(component.datasetBasics).toBe(mockDatasetBasicsFragment);
         });
     });
 
-    it("should check call getMainDataByLineageNode", async () => {
+    it("should check call getMainDataByLineageNode", () => {
         const getMainDataByLineageNodeSpy = spyOn(
             component,
             "getMainDataByLineageNode",
         );
         routerMockEventSubject.next(new NavigationEnd(1, "", "redirectUrl"));
-        await expect(getMainDataByLineageNodeSpy).toHaveBeenCalledTimes(1);
+        expect(getMainDataByLineageNodeSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check toggle readme view", async () => {
+    it("should check toggle readme view", () => {
         component.isMarkdownEditView = false;
         component.toggleReadmeView();
-        await expect(component.isMarkdownEditView).toBe(true);
+        expect(component.isMarkdownEditView).toBe(true);
         component.toggleReadmeView();
-        await expect(component.isMarkdownEditView).toBe(false);
+        expect(component.isMarkdownEditView).toBe(false);
     });
 
-    it("should check run SQL request", async () => {
+    it("should check run SQL request", () => {
         const sqlQuery = "select * from test.table";
         const requestDatasetDataSqlRunSpy = spyOn(
             appDatasetService,
             "requestDatasetDataSqlRun",
         ).and.returnValue(of());
         component.onRunSQLRequest(sqlQuery);
-        await expect(requestDatasetDataSqlRunSpy).toHaveBeenCalled();
+        expect(requestDatasetDataSqlRunSpy).toHaveBeenCalledWith(sqlQuery, AppValues.SQL_QUERY_LIMIT);
     });
 
     it("should check page changed", () => {
@@ -180,17 +180,20 @@ describe("DatasetComponent", () => {
         const selectDatasetSpy = spyOn(component, "onSelectDataset");
         component.onClickMetadataNode(mockDatasetBasicsFragment);
         expect(selectDatasetSpy).toHaveBeenCalledWith(
-            mockDatasetBasicsFragment.name,
+            mockDatasetBasicsFragment.name as string,
         );
     });
 
-    it("should check navigate to overview tab", async () => {
+    it("should check navigate to overview tab", () => {
         const selectDatasetSpy = spyOn(
             navigationService,
             "navigateToDatasetView",
         );
         component.getDatasetNavigation().navigateToOverview();
-        await expect(selectDatasetSpy).toHaveBeenCalled();
+        expect(selectDatasetSpy).toHaveBeenCalledWith({
+            datasetName: mockDatasetBasicsFragment.name as string,
+            accountName: mockDatasetBasicsFragment.owner.name
+        });
     });
 
     it("should check navigate to data tab", () => {
@@ -237,13 +240,13 @@ describe("DatasetComponent", () => {
         );
     });
 
-    it("should check navigate to discussions tab", async () => {
+    it("should check navigate to discussions tab", () => {
         const selectDatasetSpy = spyOn(
             navigationService,
             "navigateToDatasetView",
         );
         component.getDatasetNavigation().navigateToDiscussions();
-        await expect(selectDatasetSpy).not.toHaveBeenCalled(); // TODO: implement discussions
+        expect(selectDatasetSpy).not.toHaveBeenCalled(); // TODO: implement discussions
     });
 
     it("should check navigate to owner view", () => {

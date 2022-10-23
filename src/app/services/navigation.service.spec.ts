@@ -22,52 +22,74 @@ describe("NavigationService", () => {
         router = TestBed.inject(Router);
     });
 
-    it("should be created", async () => {
-        await expect(service).toBeTruthy();
+    it("should be created", () => {
+        expect(service).toBeTruthy();
     });
 
-    it("should be test navigate to home", () => {
+    it("should test navigate to home", () => {
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         service.navigateToHome();
         expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_HOME]);
     });
 
-    it("should be test navigate to login", () => {
-        const routerSpy = spyOn(router, "navigate").and.returnValue(
-            Promise.resolve(true),
-        );
+    it("should test navigate to login", () => {
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToLogin();
         expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_LOGIN]);
     });
 
-    it("should be test navigate to owner page", () => {
+    it("should test navigate to owner page", () => {
         const mockOwnerName = "Mock name";
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         service.navigateToOwnerView(mockOwnerName);
         expect(routerSpy).toHaveBeenCalledWith([mockOwnerName]);
     });
 
-    it("should be test navigate to website", async () => {
+    it("should test navigate to website", () => {
         const mockWebsite = "http://google.com";
         const windowMock = { document: {} } as Window;
         const windowSpy = spyOn(window, "open").and.returnValue(windowMock);
         service.navigateToWebsite(mockWebsite);
-        await expect(windowSpy).toHaveBeenCalled();
+        expect(windowSpy).toHaveBeenCalledWith(mockWebsite, '_blank');
     });
 
-    it("should be test navigate to search", async () => {
+    it("should test navigate to search", () => {
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         service.navigateToSearch();
-        await expect(routerSpy).toHaveBeenCalled();
+        expect(routerSpy).toHaveBeenCalledWith(
+            [ProjectLinks.URL_SEARCH], { queryParams: {} },
+        );
     });
 
-    it("should be test navigate to search with query", async () => {
+    it("should test navigate to search with query", () => {
         const routerSpy = spyOn(router, "navigate").and.callThrough();
-        service.navigateToSearch("test query");
-        await expect(routerSpy).toHaveBeenCalled();
+        const testQuery = "test query";
+        service.navigateToSearch(testQuery);
+        expect(routerSpy).toHaveBeenCalledWith(
+            [ProjectLinks.URL_SEARCH], { queryParams: { query: testQuery } },
+        );
     });
 
-    it("should be test navigate to dataset create", () => {
+    it("should test navigate to search with page", () => {
+        const routerSpy = spyOn(router, "navigate").and.callThrough();
+        const testPage = 3;
+        service.navigateToSearch(undefined /*query*/, testPage);
+        expect(routerSpy).toHaveBeenCalledWith(
+            [ProjectLinks.URL_SEARCH], { queryParams: { page: testPage } },
+        );
+    });
+
+    it("should test navigate to search with query and page", () => {
+        const routerSpy = spyOn(router, "navigate").and.callThrough();
+        const testQuery = "test query";
+        const testPage = 3;
+        service.navigateToSearch(testQuery, testPage);
+        expect(routerSpy).toHaveBeenCalledWith(
+            [ProjectLinks.URL_SEARCH], { queryParams: { query: testQuery, page: testPage } },
+        );
+    });
+
+    it("should test navigate to dataset create", () => {
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         service.navigateToDatasetCreate();
         expect(routerSpy).toHaveBeenCalledWith([
@@ -75,7 +97,7 @@ describe("NavigationService", () => {
         ]);
     });
 
-    it("should be test navigate to dataset view", async () => {
+    it("should test navigate to dataset view to first page", () => {
         const mockParams: DatasetNavigationParams = {
             accountName: "mockAccountName",
             datasetName: "mockDatasetName",
@@ -84,10 +106,28 @@ describe("NavigationService", () => {
         };
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         service.navigateToDatasetView(mockParams);
-        await expect(routerSpy).toHaveBeenCalled();
+        expect(routerSpy).toHaveBeenCalledWith(
+            [mockParams.accountName, mockParams.datasetName],
+            { queryParams: { tab: mockParams.tab } }
+        );
     });
 
-    it("should be test navigate to page not found view", () => {
+    it("should test navigate to dataset view to second page", () => {
+        const mockParams: DatasetNavigationParams = {
+            accountName: "mockAccountName",
+            datasetName: "mockDatasetName",
+            tab: "history",
+            page: 2,
+        };
+        const routerSpy = spyOn(router, "navigate").and.callThrough();
+        service.navigateToDatasetView(mockParams);
+        expect(routerSpy).toHaveBeenCalledWith(
+            [mockParams.accountName, mockParams.datasetName],
+            { queryParams: { tab: mockParams.tab, page: mockParams.page } }
+        );
+    });
+
+    it("should test navigate to page not found view", () => {
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         service.navigateToPageNotFound();
         expect(routerSpy).toHaveBeenCalledWith(

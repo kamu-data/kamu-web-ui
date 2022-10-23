@@ -26,14 +26,14 @@ describe("SearchAdditionalButtonsComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should create", async () => {
-        await expect(component).toBeTruthy();
+    it("should create", () => {
+        expect(component).toBeTruthy();
     });
 
-    it("should trigger onResize method when window is resized", async () => {
+    it("should trigger onResize method when window is resized", () => {
         const spyOnResize = spyOn(component, "checkWindowSize");
         window.dispatchEvent(new Event("resize"));
         fixture.detectChanges();
-        await expect(spyOnResize).toHaveBeenCalled();
+        expect(spyOnResize).toHaveBeenCalledWith();
     });
 });

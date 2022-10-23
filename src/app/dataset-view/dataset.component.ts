@@ -28,6 +28,7 @@ import { BaseComponent } from "../common/base.component";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { promiseWithCatch, requireValue } from "../common/app.helpers";
+import AppValues from "../common/app.values";
 
 @Component({
     selector: "app-dataset",
@@ -47,7 +48,7 @@ export class DatasetComponent
     public lineageGraphView: [number, number] = [500, 600];
     public isMarkdownEditView = false;
 
-    @HostListener("window:resize", ["$event"])
+    @HostListener("window:resize")
     private checkWindowSize(): void {
         this.changeLineageGraphView();
     }
@@ -397,7 +398,7 @@ export class DatasetComponent
             this.appDatasetService
                 .requestDatasetDataSqlRun(
                     query,
-                    50, // TODO: Propagate limit from UI and display when it was reached
+                    AppValues.SQL_QUERY_LIMIT, // TODO: Propagate limit from UI and display when it was reached
                 )
                 .subscribe();
         }

@@ -47,7 +47,7 @@ export class AppHeaderComponent extends BaseComponent {
     @ViewChild("appHeaderMenuButton")
     appHeaderMenuButton: ElementRef<HTMLElement>;
 
-    public defaultUsername: string = AppValues.defaultUsername;
+    public defaultUsername: string = AppValues.DEFAULT_USERNAME;
     public isSearchActive = false;
     public isCollapsedAppHeaderMenu = false;
 

@@ -17,10 +17,10 @@ export class NavigationService {
     }
 
     public navigateToSearch(query?: string, page?: number): void {
+        const queryParams = query ? (page ? { query, page } : { query})
+                                  : (page ? { page } : {} );
         promiseWithCatch(
-            this.router.navigate([ProjectLinks.URL_SEARCH], {
-                queryParams: query ? { query, page } : { page },
-            }),
+            this.router.navigate([ProjectLinks.URL_SEARCH], {queryParams}),
         );
     }
 

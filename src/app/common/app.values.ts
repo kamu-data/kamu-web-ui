@@ -2,15 +2,17 @@ import { Injectable } from "@angular/core";
 
 @Injectable()
 export default class AppValues {
-    public static appLogo = "assets/icons/kamu_logo_icon.svg";
-    public static localStorageAccessToken = "access_token";
-    public static defaultUsername = "anonymous";
-    public static httpPattern = new RegExp(/^(http:\/\/)|(https:\/\/)/i);
-    public static displayDateFormat = "DD MMM YYYY";
-    public static clipboardKamuCli = "kamu pull kamu.dev/anonymous/dataset";
-    public static clipboardKafka =
+    public static readonly APP_LOGO = "assets/icons/kamu_logo_icon.svg";
+    public static readonly LOCAL_STORAGE_ACCESS_TOKEN = "access_token";
+    public static readonly DEFAULT_USERNAME = "anonymous";
+    public static readonly HTTP_PATTERN = new RegExp(/^(http:\/\/)|(https:\/\/)/i);
+    public static readonly DISPLAY_DATE_FORMAT = "DD MMM YYYY";
+    public static readonly UNIMPLEMENTED_MESSAGE = "Feature coming soon";
+    public static readonly SQL_QUERY_LIMIT = 50;
+    public static readonly CLIBPOARD_KAMU_CLI = "kamu pull kamu.dev/anonymous/dataset";
+    public static readonly CLIPBOARD_KAFKA =
         "https://api.kamu.dev/kafka/anonymous/dataset";
-    public static markdownContain = `## Markdown __rulez__!
+    public static readonly MARKDOWN_CONTAIN = `## Markdown __rulez__!
 ---
 
 ### Syntax highlight

@@ -91,7 +91,7 @@ export class KamuErrorHandler implements KamuErrorVisitor {
         if (authenticationError.errors.length > 0) {
             authenticationError.errors.forEach((e) => logError(e));
         } else {
-            logError("Uknown authentication error");
+            logError(ErrorTexts.ERROR_UNKNOWN_AUTHENTICATION);
         }
         this.authApi.terminateSession();
     }

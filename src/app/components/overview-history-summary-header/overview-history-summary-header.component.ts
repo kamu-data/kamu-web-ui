@@ -15,7 +15,7 @@ import { DataHelpers } from "src/app/common/data.helpers";
 export class OverviewHistorySummaryHeaderComponent {
     @Input() public metadataBlockFragment?: MetadataBlockFragment;
     @Input() public numBlocksTotal: number;
-    public appLogo = `/${AppValues.appLogo}`;
+    public appLogo = `/${AppValues.APP_LOGO}`;
 
     get systemTime(): string {
         return this.metadataBlockFragment
@@ -26,7 +26,7 @@ export class OverviewHistorySummaryHeaderComponent {
     get authorInfo(): Account {
         return this.metadataBlockFragment
             ? this.metadataBlockFragment.author
-            : { id: "", name: AppValues.defaultUsername };
+            : { id: "", name: AppValues.DEFAULT_USERNAME };
     }
 
     get blockHash(): string {

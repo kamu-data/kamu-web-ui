@@ -31,7 +31,7 @@ export function checkHint<T>(
     expectedHint: string,
 ): void {
     const element: HTMLElement = findNativeElement(fixture, selector);
-    void expect(element.innerText.trim()).toEqual(expectedHint);
+    expect(element.innerText.trim()).toEqual(expectedHint);
 }
 
 export function findElementByDataTestId<T>(

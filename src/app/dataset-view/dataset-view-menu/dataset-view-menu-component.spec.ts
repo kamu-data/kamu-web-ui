@@ -43,38 +43,47 @@ describe("DatasetViewMenuComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should create", async () => {
-        await expect(component).toBeTruthy();
+    it("should create", () => {
+        expect(component).toBeTruthy();
     });
 
     Object.keys(mockNavigationObject).forEach((item) => {
-        it(`should check ${item} on click button`, async () => {
+        it(`should check ${item} on click button`, () => {
             const navigateSpy = spyOn(
                 component.datasetNavigation,
                 item as keyof DatasetNavigationInterface,
             ).and.callThrough();
             emitClickOnElement(fixture, `[data-test-id=${item}]`);
             fixture.detectChanges();
-            await expect(navigateSpy).toHaveBeenCalled();
+            if (item === "navigateToHistory" || item === "navigateToMetadata") {
+                expect(navigateSpy).toHaveBeenCalledWith(1);
+            } else {
+                expect(navigateSpy).toHaveBeenCalledWith();
+            }
         });
     });
 
-    it("should copy to clipboard", fakeAsync(async () => {
+    it("should copy to clipboard", fakeAsync(() => {
         emitClickOnElement(fixture, '[data-test-id="searchAdditionalButtons"]');
+
         const menu = findElementByDataTestId(fixture, "menu");
-        await expect(menu).toBeDefined();
+        expect(menu).toBeDefined();
+
         const copyToClipboardButton = findElementByDataTestId(
             fixture,
             "copyToClipboard",
         );
         emitClickOnElement(fixture, '[data-test-id="copyToClipboard"]');
-        await expect(
+        expect(
             copyToClipboardButton.classList.contains("clipboard-btn--success"),
         ).toEqual(true);
+
         tick(2001);
-        await expect(
+
+        expect(
             copyToClipboardButton.classList.contains("clipboard-btn--success"),
         ).toEqual(false);
+        
         flush();
     }));
 });

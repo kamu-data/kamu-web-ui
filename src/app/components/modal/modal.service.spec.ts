@@ -11,20 +11,20 @@ describe("ModalService", () => {
         service = TestBed.inject(ModalService);
     });
 
-    it("should be created", async () => {
-        await expect(service).toBeTruthy();
+    it("should be created", () => {
+        expect(service).toBeTruthy();
     });
 
-    it("should be check setter modalType", async () => {
+    it("should check setter modalType", () => {
         service.modalType = "test";
-        await expect(service.modalType).toEqual("test");
+        expect(service.modalType).toEqual("test");
     });
 
-    it("should be show modal image", async () => {
+    it("should show modal image", () => {
         const testImageUrl = "http://image.com";
         const subscription$ = service.getCommand().pipe(first()).subscribe(
             (command: ModalCommandInterface) => {
-                void expect(command).toEqual({
+                expect(command).toEqual({
                     context: {
                         message: testImageUrl,
                     },
@@ -33,20 +33,20 @@ describe("ModalService", () => {
             }
         );
         service.showImage(testImageUrl);
-        await expect(subscription$.closed).toBeTruthy();
+        expect(subscription$.closed).toBeTruthy();
     });
 
-    it("should be show modal spinner", async () => {
+    it("should show modal spinner", () => {
         const subscription$ = service.getCommand().pipe(first()).subscribe(
             (command: ModalCommandInterface) => {
-                void expect(command).toEqual({
+                expect(command).toEqual({
                     context: {},
                     type: "spinner",
                 });
             }
         );
         service.showSpinner();
-        await expect(subscription$.closed).toBeTruthy();
+        expect(subscription$.closed).toBeTruthy();
     });
 
     it("should check success show modal", async () => {
@@ -55,7 +55,7 @@ describe("ModalService", () => {
             type: "dialog",
         };
         const result = await service.success(testObj);
-        await expect(result).toEqual("ok");
+        expect(result).toEqual("ok");
     });
 
     it("should check warning show modal", async () => {
@@ -64,7 +64,7 @@ describe("ModalService", () => {
             type: "dialog",
         };
         const result = await service.warning(testObj);
-        await expect(result).toEqual("warning");
+        expect(result).toEqual("warning");
     });
 
     it("should check error show modal", async () => {
@@ -73,7 +73,7 @@ describe("ModalService", () => {
             type: "dialog",
         };
         const result = await service.error(testObj);
-        await expect(result).toEqual("error");
+        expect(result).toEqual("error");
     });
 
     it("should check dialog_question show modal", async () => {
@@ -82,6 +82,6 @@ describe("ModalService", () => {
             type: "dialog",
         };
         const result = await service.dialog_question(testObj);
-        await expect(result).toEqual("dialog_question");
+        expect(result).toEqual("dialog_question");
     });
 });

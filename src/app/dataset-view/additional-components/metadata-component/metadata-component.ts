@@ -121,7 +121,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         return systemTimeAsString
             ? momentConvertDatetoLocalWithFormat({
                   date: new Date(String(systemTimeAsString)),
-                  format: AppValues.displayDateFormat,
+                  format: AppValues.DISPLAY_DATE_FORMAT,
                   isTextDate: true,
               })
             : "";

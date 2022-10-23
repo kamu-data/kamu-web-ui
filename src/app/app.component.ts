@@ -41,15 +41,15 @@ export const ALL_URLS_WITHOUT_ACCESS_TOKEN: string[] = [
 export class AppComponent extends BaseComponent implements OnInit {
     public static readonly AnonymousAccountInfo: AccountDetailsFragment = {
         login: "",
-        name: AppValues.defaultUsername,
+        name: AppValues.DEFAULT_USERNAME,
     };
-    private unimplementedMessage = "Feature coming soon";
-    public appLogo = `/${AppValues.appLogo}`;
+
+    public appLogo = `/${AppValues.APP_LOGO}`;
     public isMobileView = false;
     public isHeaderVisible = true;
     public user: AccountDetailsFragment = AppComponent.AnonymousAccountInfo;
 
-    @HostListener("window:resize", ["$event"])
+    @HostListener("window:resize")
     checkWindowSize(): void {
         this.checkView();
     }
@@ -93,7 +93,7 @@ export class AppComponent extends BaseComponent implements OnInit {
             return;
         } else {
             const accessToken: string | null = localStorage.getItem(
-                AppValues.localStorageAccessToken,
+                AppValues.LOCAL_STORAGE_ACCESS_TOKEN,
             );
             if (
                 typeof accessToken === "string" &&
@@ -152,7 +152,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     public onUserProfile(): void {
         promiseWithCatch(
             this.modalService.warning({
-                message: this.unimplementedMessage,
+                message: AppValues.UNIMPLEMENTED_MESSAGE,
                 yesButtonText: "Ok",
             }),
         );
@@ -161,7 +161,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     public onUserDatasets(): void {
         promiseWithCatch(
             this.modalService.warning({
-                message: this.unimplementedMessage,
+                message: AppValues.UNIMPLEMENTED_MESSAGE,
                 yesButtonText: "Ok",
             }),
         );
@@ -170,7 +170,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     public onBilling(): void {
         promiseWithCatch(
             this.modalService.warning({
-                message: this.unimplementedMessage,
+                message: AppValues.UNIMPLEMENTED_MESSAGE,
                 yesButtonText: "Ok",
             }),
         );
@@ -179,7 +179,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     public onAnalytics(): void {
         promiseWithCatch(
             this.modalService.warning({
-                message: this.unimplementedMessage,
+                message: AppValues.UNIMPLEMENTED_MESSAGE,
                 yesButtonText: "Ok",
             }),
         );
@@ -188,7 +188,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     public onSettings(): void {
         promiseWithCatch(
             this.modalService.warning({
-                message: this.unimplementedMessage,
+                message: AppValues.UNIMPLEMENTED_MESSAGE,
                 yesButtonText: "Ok",
             }),
         );
@@ -197,7 +197,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     public onHelp(): void {
         promiseWithCatch(
             this.modalService.warning({
-                message: this.unimplementedMessage,
+                message: AppValues.UNIMPLEMENTED_MESSAGE,
                 yesButtonText: "Ok",
             }),
         );

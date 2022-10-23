@@ -13,6 +13,8 @@ describe("GithubCallbackComponent", () => {
     let authApiService: AuthApi;
     let navigationService: NavigationService;
 
+    const GITHUB_TEST_CODE = "11111111";
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [GithubCallbackComponent],
@@ -21,7 +23,7 @@ describe("GithubCallbackComponent", () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        queryParams: of({ code: "11111111" }),
+                        queryParams: of({ code: GITHUB_TEST_CODE }),
                     },
                 },
                 AuthApi,
@@ -36,18 +38,19 @@ describe("GithubCallbackComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should create", async () => {
-        await expect(component).toBeTruthy();
+    it("should create", () => {
+        expect(component).toBeTruthy();
     });
 
-    it("should call fetchUserInfoAndTokenFromGithubCallackCode method", async () => {
+    it("should call fetchUserInfoAndTokenFromGithubCallackCode method", () => {
         const navigateToHomeSpy = spyOn(navigationService, "navigateToHome");
         const fetchUserInfoAndTokenSpy = spyOn(
             authApiService,
             "fetchUserInfoAndTokenFromGithubCallackCode",
         ).and.returnValue(of(undefined));
         component.ngOnInit();
-        await expect(fetchUserInfoAndTokenSpy).toHaveBeenCalled();
-        await expect(navigateToHomeSpy).toHaveBeenCalled();
+
+        expect(fetchUserInfoAndTokenSpy).toHaveBeenCalledWith(GITHUB_TEST_CODE);
+        expect(navigateToHomeSpy).toHaveBeenCalledWith();
     });
 });

@@ -6,4 +6,6 @@ export class ErrorTexts {
     public static readonly ERROR_SERVER_BAD_SQL_QUERY = "DataFusion error";
     public static readonly ERROR_TECHNICAL_SUPPORT =
         "Operation failed. If this happens again, please contact Kamu technical support.";
+    public static readonly ERROR_UNKNOWN_AUTHENTICATION = 
+        "Uknown authentication error";
 }

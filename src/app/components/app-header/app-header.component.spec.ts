@@ -53,7 +53,7 @@ describe("AppHeaderComponent", () => {
         component = fixture.componentInstance;
         component.userInfo = {
             login: "",
-            name: AppValues.defaultUsername,
+            name: AppValues.DEFAULT_USERNAME,
         };
         component.isVisible = true;
         component.isMobileView = false;
@@ -61,64 +61,64 @@ describe("AppHeaderComponent", () => {
         searchApi = TestBed.inject(SearchApi);
     });
 
-    it("should create", async () => {
-        await expect(component).toBeTruthy();
+    it("should create", () => {
+        expect(component).toBeTruthy();
     });
 
-    it("should check focus on input", async () => {
+    it("should check focus on input", () => {
         const searchInput = findElementByDataTestId(fixture, "searchInput");
         const focusElementSpy = spyOn(searchInput, "focus").and.callThrough();
         component.onClickInput();
-        await expect(focusElementSpy).toHaveBeenCalledTimes(1);
+        expect(focusElementSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check dataset type", async () => {
-        await expect(component.isDatasetType("Dataset")).toBeTruthy();
-        await expect(component.isDatasetType("all")).toBeFalsy();
+    it("should check dataset type", () => {
+        expect(component.isDatasetType("Dataset")).toBeTruthy();
+        expect(component.isDatasetType("all")).toBeFalsy();
     });
 
     [false, true].forEach((isExpectation: boolean) => {
         it(`should ${
             isExpectation ? "close" : "open"
-        } header menu`, async () => {
+        } header menu`, () => {
             component.isCollapsedAppHeaderMenu = isExpectation;
             const headerMenu = findNativeElement(fixture, "#app-header");
             emitClickOnElement(fixture, "#appHeaderMenuButton");
             isExpectation
-                ? await expect(
+                ? expect(
                       headerMenu.classList.contains("Details--on"),
                   ).toBeFalsy()
-                : await expect(
+                : expect(
                       headerMenu.classList.contains("Details--on"),
                   ).toBeTruthy();
         });
     });
 
-    it("should emit on click app logo", async () => {
+    it("should emit on click app logo", () => {
         const clickAppLogoEmitterSpy = spyOn(
             component.clickAppLogoEmitter,
             "emit",
         );
         const link = findElementByDataTestId(fixture, "appLogo");
         link.click();
-        await expect(clickAppLogoEmitterSpy).toHaveBeenCalled();
+        expect(clickAppLogoEmitterSpy).toHaveBeenCalledWith();
     });
 
-    it("should emit on click Help link", async () => {
+    it("should emit on click Help link", () => {
         const clickHelpEmitterSpy = spyOn(component.clickHelpEmitter, "emit");
         const link = findElementByDataTestId(fixture, "openHelpHeader");
         link.click();
-        await expect(clickHelpEmitterSpy).toHaveBeenCalled();
+        expect(clickHelpEmitterSpy).toHaveBeenCalledWith();
     });
 
-    it("should emit on click AddNew link", async () => {
+    it("should emit on click AddNew link", () => {
         const addNewEmitterSpy = spyOn(component.addNewEmitter, "emit");
         const link = findElementByDataTestId(fixture, "addNewDataset");
         link.click();
-        await expect(addNewEmitterSpy).toHaveBeenCalled();
+        expect(addNewEmitterSpy).toHaveBeenCalledWith();
     });
 
-    it("should emit on click Settings link", async () => {
+    it("should emit on click Settings link", () => {
         component.userInfo = {
             login: "ssss",
             name: "testName",
@@ -131,10 +131,10 @@ describe("AppHeaderComponent", () => {
         fixture.detectChanges();
         const link = findElementByDataTestId(fixture, "openSettingsHeader");
         link.click();
-        await expect(clickSettingsEmitterSpy).toHaveBeenCalled();
+        expect(clickSettingsEmitterSpy).toHaveBeenCalledWith();
     });
 
-    it("should emit on click Your profile link", async () => {
+    it("should emit on click Your profile link", () => {
         component.userInfo = {
             login: "ssss",
             name: "testName",
@@ -147,10 +147,10 @@ describe("AppHeaderComponent", () => {
         fixture.detectChanges();
         const link = findElementByDataTestId(fixture, "openUserProfileHeader");
         link.click();
-        await expect(clickUserProfileEmitterSpy).toHaveBeenCalled();
+        expect(clickUserProfileEmitterSpy).toHaveBeenCalledWith();
     });
 
-    it("should emit on click Analytics link", async () => {
+    it("should emit on click Analytics link", () => {
         component.userInfo = {
             login: "ssss",
             name: "testName",
@@ -163,10 +163,10 @@ describe("AppHeaderComponent", () => {
         fixture.detectChanges();
         const link = findElementByDataTestId(fixture, "openAnalyticsHeader");
         link.click();
-        await expect(clickAnalyticsEmitterSpy).toHaveBeenCalled();
+        expect(clickAnalyticsEmitterSpy).toHaveBeenCalledWith();
     });
 
-    it("should emit on click LogOut link", async () => {
+    it("should emit on click LogOut link", () => {
         component.userInfo = {
             login: "ssss",
             name: "testName",
@@ -176,45 +176,45 @@ describe("AppHeaderComponent", () => {
         fixture.detectChanges();
         const link = findElementByDataTestId(fixture, "openSignOutHeader");
         link.click();
-        await expect(logOutEmitterSpy).toHaveBeenCalled();
+        expect(logOutEmitterSpy).toHaveBeenCalledWith();
     });
 
-    it("should emit on click Login link", async () => {
+    it("should emit on click Login link", () => {
         const loginEmitterSpy = spyOn(component.loginEmitter, "emit");
         const link = findElementByDataTestId(fixture, "openUserProfileHeader");
         link.click();
-        await expect(loginEmitterSpy).toHaveBeenCalled();
+        expect(loginEmitterSpy).toHaveBeenCalledWith();
     });
 
-    it("should emit on click Billing link", async () => {
+    it("should emit on click Billing link", () => {
         const clickBillingEmitterSpy = spyOn(
             component.clickBillingEmitter,
             "emit",
         );
         const link = findElementByDataTestId(fixture, "openBillingPlanHeader");
         link.click();
-        await expect(clickBillingEmitterSpy).toHaveBeenCalled();
+        expect(clickBillingEmitterSpy).toHaveBeenCalledWith();
     });
 
-    it("should emit on click Your datasets link", async () => {
+    it("should emit on click Your datasets link", () => {
         const clickUserDatasetsEmitterSpy = spyOn(
             component.clickUserDatasetsEmitter,
             "emit",
         );
         component.onUserDatasets();
-        await expect(clickUserDatasetsEmitterSpy).toHaveBeenCalled();
+        expect(clickUserDatasetsEmitterSpy).toHaveBeenCalledWith();
     });
 
-    it("should emit on click User Info link", async () => {
+    it("should emit on click User Info link", () => {
         const userProfileEmitterSpy = spyOn(
             component.userProfileEmitter,
             "emit",
         );
         component.onOpenUserInfo();
-        await expect(userProfileEmitterSpy).toHaveBeenCalled();
+        expect(userProfileEmitterSpy).toHaveBeenCalledWith();
     });
 
-    it("should check selection of search suggestion", fakeAsync(async () => {
+    it("should check selection of search suggestion", fakeAsync(() => {
         // Let's assume auto-complete returns 1 hardcoded item
         const MOCK_AUTOCOMPLETE_ITEM: DatasetAutocompleteItem = {
             __typename: TypeNames.allDataType,
@@ -245,7 +245,7 @@ describe("AppHeaderComponent", () => {
         const emitterSubscription$ = component.selectDatasetEmitter
             .pipe(first())
             .subscribe((item: DatasetAutocompleteItem) => {
-                void expect(item).toBe(MOCK_AUTOCOMPLETE_ITEM);
+                expect(item).toBe(MOCK_AUTOCOMPLETE_ITEM);
             });
 
         // After click on selection option, search typeahead should hide
@@ -264,14 +264,14 @@ describe("AppHeaderComponent", () => {
         fixture.detectChanges();
 
         // Ensure emitter callback was hit
-        await expect(emitterSubscription$.closed).toBeTruthy();
+        expect(emitterSubscription$.closed).toBeTruthy();
 
         // Ensure focus lost on autocomplete after delay
         tick(100);
-        await expect(typeAheadInputElBlurSpy).toHaveBeenCalled();
+        expect(typeAheadInputElBlurSpy).toHaveBeenCalledWith();
     }));
 
-    it("should check search method triggers menu click on mobile view", fakeAsync(async () => {
+    it("should check search method triggers menu click on mobile view", fakeAsync(() => {
         component.isMobileView = true;
         const triggerMenuClickSpy = spyOn(
             component,
@@ -286,7 +286,7 @@ describe("AppHeaderComponent", () => {
 
         el.dispatchEvent(event);
         tick(201);
-        await expect(triggerMenuClickSpy).toHaveBeenCalled();
-        await expect(elBlurSpy).toHaveBeenCalled();
+        expect(triggerMenuClickSpy).toHaveBeenCalledWith();
+        expect(elBlurSpy).toHaveBeenCalledWith();
     }));
 });

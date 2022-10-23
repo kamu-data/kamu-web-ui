@@ -95,63 +95,66 @@ describe("SearchComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should create", async () => {
-        await expect(component).toBeTruthy();
+    it("should create", () => {
+        expect(component).toBeTruthy();
     });
 
-    it("should initially search query/page from active route", async () => {
-        await expect(component.searchValue).toEqual(DEFAULT_SEARCH_QUERY);
-        await expect(component.currentPage).toEqual(DEFAULT_SEARCH_PAGE);
+    it("should initially search query/page from active route", () => {
+        expect(component.searchValue).toEqual(DEFAULT_SEARCH_QUERY);
+        expect(component.currentPage).toEqual(DEFAULT_SEARCH_PAGE);
     });
 
-    it("should pick default search query/page when arguments are not specified", async () => {
+    it("should pick default search query/page when arguments are not specified", () => {
         setSearchUrl();
         pushNavigationEnd();
         fixture.detectChanges();
-        await expect(component.searchValue).toEqual("");
-        await expect(component.currentPage).toEqual(1);
+        expect(component.searchValue).toEqual("");
+        expect(component.currentPage).toEqual(1);
 
         const testQuery = "test";
         setSearchUrl(testQuery);
         pushNavigationEnd();
         fixture.detectChanges();
-        await expect(component.searchValue).toEqual(testQuery);
-        await expect(component.currentPage).toEqual(1);
+        expect(component.searchValue).toEqual(testQuery);
+        expect(component.currentPage).toEqual(1);
 
         setSearchUrl(undefined, 4);
         pushNavigationEnd();
         fixture.detectChanges();
-        await expect(component.searchValue).toEqual("");
-        await expect(component.currentPage).toEqual(4);
+        expect(component.searchValue).toEqual("");
+        expect(component.currentPage).toEqual(4);
     });
 
-    it("should pick search query/page from url updates", async () => {
+    it("should pick search query/page from url updates", () => {
         const testQuery = "test";
         const testPage = 2;
         setSearchUrl(testQuery, testPage);
         pushNavigationEnd();
 
         fixture.detectChanges();
-        await expect(component.searchValue).toEqual(testQuery);
-        await expect(component.currentPage).toEqual(testPage);
+        expect(component.searchValue).toEqual(testQuery);
+        expect(component.currentPage).toEqual(testPage);
     });
 
-    it("should call updateAllComplete method upon request", async () => {
+    it("should call updateAllComplete method upon request", () => {
         component.updateAllComplete();
-        await expect(component.allComplete).toEqual(false);
+        expect(component.allComplete).toEqual(false);
     });
 
-    it("should call navigateToDatasetView in navigation service on dataset selection", async () => {
+    it("should call navigateToDatasetView in navigation service on dataset selection", () => {
         const data: DatasetInfo = {
             accountName: "test",
             datasetName: "test datasetName",
         };
         const routerSpy = spyOn(navigationService, "navigateToDatasetView");
         component.onSelectDataset(data);
-        await expect(routerSpy).toHaveBeenCalled();
+        expect(routerSpy).toHaveBeenCalledWith({
+            accountName: data.accountName,
+            datasetName: data.datasetName,
+        });
     });
 
-    it("should check onPageChange method with page", async () => {
+    it("should check onPageChange method with page", () => {
         const testSearchValue = "test";
         const testCurrentPage = 2;
         component.searchValue = testSearchValue;
@@ -164,14 +167,14 @@ describe("SearchComponent", () => {
             currentPage: testCurrentPage,
             isClick: false,
         });
-        await expect(component.currentPage).toBe(testCurrentPage);
+        expect(component.currentPage).toBe(testCurrentPage);
         expect(navigationServiceSpy).toHaveBeenCalledWith(
             testSearchValue,
             testCurrentPage,
         );
     });
 
-    it("should check onPageChange method when page equal 0", async () => {
+    it("should check onPageChange method when page equal 0", () => {
         const testSearchValue = "test";
         component.searchValue = testSearchValue;
         fixture.detectChanges();
@@ -180,11 +183,11 @@ describe("SearchComponent", () => {
             "navigateToSearch",
         );
         component.onPageChange({ currentPage: 0, isClick: false });
-        await expect(component.currentPage).toBe(1);
+        expect(component.currentPage).toBe(1);
         expect(navigationServiceSpy).toHaveBeenCalledWith(testSearchValue);
     });
 
-    it("should check search results update the dataset table", async () => {
+    it("should check search results update the dataset table", () => {
         spyOn(searchApi, "overviewDatasetSearch").and.returnValue(
             of(mockSearchOverviewResponse),
         );
@@ -192,13 +195,13 @@ describe("SearchComponent", () => {
         const testSearchQuery = "test";
         searchService.searchDatasets(testSearchQuery);
 
-        await expect(component.tableData.pageInfo).toEqual(
+        expect(component.tableData.pageInfo).toEqual(
             mockSearchOverviewResponse.search.query.pageInfo,
         );
-        await expect(component.tableData.totalCount).toEqual(
+        expect(component.tableData.totalCount).toEqual(
             mockSearchOverviewResponse.search.query.totalCount,
         );
-        await expect(component.tableData.tableSource).toEqual(
+        expect(component.tableData.tableSource).toEqual(
             mockSearchOverviewResponse.search.query.nodes,
         );
 

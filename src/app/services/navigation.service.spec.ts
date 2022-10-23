@@ -50,33 +50,33 @@ describe("NavigationService", () => {
         const windowMock = { document: {} } as Window;
         const windowSpy = spyOn(window, "open").and.returnValue(windowMock);
         service.navigateToWebsite(mockWebsite);
-        expect(windowSpy).toHaveBeenCalledWith(mockWebsite, '_blank');
+        expect(windowSpy).toHaveBeenCalledWith(mockWebsite, "_blank");
     });
 
     it("should test navigate to search", () => {
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         service.navigateToSearch();
-        expect(routerSpy).toHaveBeenCalledWith(
-            [ProjectLinks.URL_SEARCH], { queryParams: {} },
-        );
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_SEARCH], {
+            queryParams: {},
+        });
     });
 
     it("should test navigate to search with query", () => {
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         const testQuery = "test query";
         service.navigateToSearch(testQuery);
-        expect(routerSpy).toHaveBeenCalledWith(
-            [ProjectLinks.URL_SEARCH], { queryParams: { query: testQuery } },
-        );
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_SEARCH], {
+            queryParams: { query: testQuery },
+        });
     });
 
     it("should test navigate to search with page", () => {
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         const testPage = 3;
         service.navigateToSearch(undefined /*query*/, testPage);
-        expect(routerSpy).toHaveBeenCalledWith(
-            [ProjectLinks.URL_SEARCH], { queryParams: { page: testPage } },
-        );
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_SEARCH], {
+            queryParams: { page: testPage },
+        });
     });
 
     it("should test navigate to search with query and page", () => {
@@ -84,9 +84,9 @@ describe("NavigationService", () => {
         const testQuery = "test query";
         const testPage = 3;
         service.navigateToSearch(testQuery, testPage);
-        expect(routerSpy).toHaveBeenCalledWith(
-            [ProjectLinks.URL_SEARCH], { queryParams: { query: testQuery, page: testPage } },
-        );
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_SEARCH], {
+            queryParams: { query: testQuery, page: testPage },
+        });
     });
 
     it("should test navigate to dataset create", () => {
@@ -108,7 +108,7 @@ describe("NavigationService", () => {
         service.navigateToDatasetView(mockParams);
         expect(routerSpy).toHaveBeenCalledWith(
             [mockParams.accountName, mockParams.datasetName],
-            { queryParams: { tab: mockParams.tab } }
+            { queryParams: { tab: mockParams.tab } },
         );
     });
 
@@ -123,7 +123,7 @@ describe("NavigationService", () => {
         service.navigateToDatasetView(mockParams);
         expect(routerSpy).toHaveBeenCalledWith(
             [mockParams.accountName, mockParams.datasetName],
-            { queryParams: { tab: mockParams.tab, page: mockParams.page } }
+            { queryParams: { tab: mockParams.tab, page: mockParams.page } },
         );
     });
 

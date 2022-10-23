@@ -76,21 +76,34 @@ describe("AppComponent", () => {
     ).forEach((url: string) => {
         it(`should call authentification method in onInit for ${url} and trigger token restore`, () => {
             const someToken = "someToken";
-            const authentificationSpy = spyOn(component, "authentification")
-                .and.callThrough();
-            const localStorageGetItemSpy = spyOn(localStorage, "getItem")
-                .and.returnValue(someToken);
-            const fetchUserInfoFromAccessTokenSpy = spyOn(authApi, "fetchUserInfoFromAccessToken")
-                .and.callFake(() => of());
-            const isAuthenticatedSpy = spyOnProperty(authApi, "isAuthenticated", "get")
-                .and.returnValue(false);
+            const authentificationSpy = spyOn(
+                component,
+                "authentification",
+            ).and.callThrough();
+            const localStorageGetItemSpy = spyOn(
+                localStorage,
+                "getItem",
+            ).and.returnValue(someToken);
+            const fetchUserInfoFromAccessTokenSpy = spyOn(
+                authApi,
+                "fetchUserInfoFromAccessToken",
+            ).and.callFake(() => of());
+            const isAuthenticatedSpy = spyOnProperty(
+                authApi,
+                "isAuthenticated",
+                "get",
+            ).and.returnValue(false);
 
             routerMock.url = url;
             component.ngOnInit();
 
             expect(authentificationSpy).toHaveBeenCalledWith();
-            expect(localStorageGetItemSpy).toHaveBeenCalledWith(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
-            expect(fetchUserInfoFromAccessTokenSpy).toHaveBeenCalledWith(someToken);
+            expect(localStorageGetItemSpy).toHaveBeenCalledWith(
+                AppValues.LOCAL_STORAGE_ACCESS_TOKEN,
+            );
+            expect(fetchUserInfoFromAccessTokenSpy).toHaveBeenCalledWith(
+                someToken,
+            );
             expect(isAuthenticatedSpy).toHaveBeenCalledWith();
         });
     });
@@ -120,9 +133,7 @@ describe("AppComponent", () => {
 
             expect(authentificationSpy).toHaveBeenCalledWith();
             expect(localStorageGetItemSpy).not.toHaveBeenCalled();
-            expect(
-                fetchUserInfoFromAccessTokenSpy,
-            ).not.toHaveBeenCalled();
+            expect(fetchUserInfoFromAccessTokenSpy).not.toHaveBeenCalled();
             expect(isAuthenticatedSpy).not.toHaveBeenCalled();
         });
     });
@@ -188,7 +199,9 @@ describe("AppComponent", () => {
             "navigateToSearch",
         ).and.returnValue();
         component.onSelectDataset(mockAutocompleteItems[1]);
-        expect(navigateToSearchSpy).toHaveBeenCalledWith(mockAutocompleteItems[1].dataset.id as string);
+        expect(navigateToSearchSpy).toHaveBeenCalledWith(
+            mockAutocompleteItems[1].dataset.id as string,
+        );
     });
 
     it("should check call onUserProfile", () => {
@@ -219,14 +232,17 @@ describe("AppComponent", () => {
     });
 
     it("should react on login/logout changes", () => {
-        spyOn(fetchAccountInfoGQL, 'mutate')
-            .and.returnValue(of({
+        spyOn(fetchAccountInfoGQL, "mutate").and.returnValue(
+            of({
                 loading: false,
-                data: mockUserInfoFromAccessToken
-            }));
-        authApi.fetchUserInfoFromAccessToken('someToken').subscribe();
+                data: mockUserInfoFromAccessToken,
+            }),
+        );
+        authApi.fetchUserInfoFromAccessToken("someToken").subscribe();
 
-        expect(component.user).toEqual(mockUserInfoFromAccessToken.auth.accountInfo);
+        expect(component.user).toEqual(
+            mockUserInfoFromAccessToken.auth.accountInfo,
+        );
 
         authApi.terminateSession();
         expect(component.user).toEqual(AppComponent.AnonymousAccountInfo);

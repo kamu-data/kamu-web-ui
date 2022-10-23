@@ -31,9 +31,9 @@ describe("Relative time helper", () => {
         date: Date,
         threshold?: moment.argThresholdOpts,
     ): void {
-        expect(
-            DataHelpers.relativeTime(date.toISOString(), threshold),
-        ).toBe(expectedResult);
+        expect(DataHelpers.relativeTime(date.toISOString(), threshold)).toBe(
+            expectedResult,
+        );
     }
 
     [
@@ -264,9 +264,9 @@ describe("Size helper", () => {
                 __typename: "SetInfo",
             },
         };
-        expect(
-            DataHelpers.descriptionForMetadataBlock(setInfoBlock),
-        ).toEqual(DataHelpers.BLOCK_DESCRIBE_SET_INFO);
+        expect(DataHelpers.descriptionForMetadataBlock(setInfoBlock)).toEqual(
+            DataHelpers.BLOCK_DESCRIBE_SET_INFO,
+        );
     });
 
     it("should check description for SetTransform block", () => {
@@ -291,9 +291,9 @@ describe("Size helper", () => {
                 datasetKind: DatasetKind.Root,
             },
         };
-        expect(
-            DataHelpers.descriptionForMetadataBlock(seedBlock),
-        ).toEqual(DataHelpers.BLOCK_DESCRIBE_SEED);
+        expect(DataHelpers.descriptionForMetadataBlock(seedBlock)).toEqual(
+            DataHelpers.BLOCK_DESCRIBE_SEED,
+        );
     });
 
     it("should check description for SetLicense block", () => {
@@ -342,9 +342,9 @@ describe("Size helper", () => {
                 },
             },
         };
-        expect(
-            DataHelpers.descriptionForMetadataBlock(addDataBlock),
-        ).toEqual("Added 400 new records");
+        expect(DataHelpers.descriptionForMetadataBlock(addDataBlock)).toEqual(
+            "Added 400 new records",
+        );
     });
 
     it("should check description for ExecuteQuery block", () => {

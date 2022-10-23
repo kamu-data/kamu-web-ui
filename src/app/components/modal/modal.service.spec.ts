@@ -22,29 +22,31 @@ describe("ModalService", () => {
 
     it("should show modal image", () => {
         const testImageUrl = "http://image.com";
-        const subscription$ = service.getCommand().pipe(first()).subscribe(
-            (command: ModalCommandInterface) => {
+        const subscription$ = service
+            .getCommand()
+            .pipe(first())
+            .subscribe((command: ModalCommandInterface) => {
                 expect(command).toEqual({
                     context: {
                         message: testImageUrl,
                     },
                     type: "image",
                 });
-            }
-        );
+            });
         service.showImage(testImageUrl);
         expect(subscription$.closed).toBeTruthy();
     });
 
     it("should show modal spinner", () => {
-        const subscription$ = service.getCommand().pipe(first()).subscribe(
-            (command: ModalCommandInterface) => {
+        const subscription$ = service
+            .getCommand()
+            .pipe(first())
+            .subscribe((command: ModalCommandInterface) => {
                 expect(command).toEqual({
                     context: {},
                     type: "spinner",
                 });
-            }
-        );
+            });
         service.showSpinner();
         expect(subscription$.closed).toBeTruthy();
     });

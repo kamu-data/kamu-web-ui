@@ -1,6 +1,10 @@
 import { ErrorTexts } from "../common/errors.text";
 import { ApolloError } from "@apollo/client/core";
-import { AuthenticationError, DatasetNotFoundError, InvalidSqlError } from "../common/errors";
+import {
+    AuthenticationError,
+    DatasetNotFoundError,
+    InvalidSqlError,
+} from "../common/errors";
 import { ModalService } from "../components/modal/modal.service";
 import { TestBed } from "@angular/core/testing";
 import { ErrorHandlerService } from "./error-handler.service";
@@ -13,15 +17,17 @@ describe("ErrorHandlerService", () => {
     let navigationService: NavigationService;
 
     const authApiMock = {
-        terminateSession: () => { /* Intentionally empty */ },
+        terminateSession: () => {
+            /* Intentionally empty */
+        },
     };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
-                ModalService, 
+                ModalService,
                 NavigationService,
-                { provide: AuthApi, useValue: authApiMock}
+                { provide: AuthApi, useValue: authApiMock },
             ],
         });
         service = TestBed.inject(ErrorHandlerService);
@@ -83,14 +89,22 @@ describe("ErrorHandlerService", () => {
 
     it("should log authentication errors and terminate session", () => {
         const consoleErrorSpy: jasmine.Spy = spyOn(console, "error").and.stub();
-        const authApiTerminateSessionSpy: jasmine.Spy = spyOn(authApiMock, "terminateSession").and.stub();
+        const authApiTerminateSessionSpy: jasmine.Spy = spyOn(
+            authApiMock,
+            "terminateSession",
+        ).and.stub();
         service.handleError(new AuthenticationError([]));
-        expect(consoleErrorSpy).toHaveBeenCalledWith(ErrorTexts.ERROR_UNKNOWN_AUTHENTICATION);
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+            ErrorTexts.ERROR_UNKNOWN_AUTHENTICATION,
+        );
         expect(authApiTerminateSessionSpy).toHaveBeenCalledWith();
-    });    
+    });
 
     it("should log unknown errors", () => {
-        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.callThrough();
+        const modalServiceSpy: jasmine.Spy = spyOn(
+            modalService,
+            "error",
+        ).and.callThrough();
         const consoleErrorSpy: jasmine.Spy = spyOn(console, "error").and.stub();
         const unknownError = new Error("Some Unknown Error");
         service.handleError(unknownError);

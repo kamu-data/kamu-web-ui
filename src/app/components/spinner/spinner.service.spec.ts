@@ -15,12 +15,12 @@ describe("SpinnerService", () => {
     });
 
     [true, false].forEach((expectation: boolean) => {
-        it(`should call _isLoading subject with ${String(
-            expectation,
-        )}`, () => {
-            const subscription$ = service.isLoading.pipe(first()).subscribe(
-                (loading: boolean) => expect(loading).toEqual(expectation)
-            )
+        it(`should call _isLoading subject with ${String(expectation)}`, () => {
+            const subscription$ = service.isLoading
+                .pipe(first())
+                .subscribe((loading: boolean) =>
+                    expect(loading).toEqual(expectation),
+                );
             expectation ? service.show() : service.hide();
             expect(subscription$.closed).toBeTruthy();
         });

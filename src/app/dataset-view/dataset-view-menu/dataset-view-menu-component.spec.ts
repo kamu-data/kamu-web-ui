@@ -83,7 +83,7 @@ describe("DatasetViewMenuComponent", () => {
         expect(
             copyToClipboardButton.classList.contains("clipboard-btn--success"),
         ).toEqual(false);
-        
+
         flush();
     }));
 });

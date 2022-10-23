@@ -87,7 +87,9 @@ export class KamuErrorHandler implements KamuErrorVisitor {
         );
     }
 
-    public visitAuthenticationError(authenticationError: AuthenticationError): void {
+    public visitAuthenticationError(
+        authenticationError: AuthenticationError,
+    ): void {
         if (authenticationError.errors.length > 0) {
             authenticationError.errors.forEach((e) => logError(e));
         } else {

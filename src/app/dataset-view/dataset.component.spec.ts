@@ -130,7 +130,10 @@ describe("DatasetComponent", () => {
             "requestDatasetDataSqlRun",
         ).and.returnValue(of());
         component.onRunSQLRequest(sqlQuery);
-        expect(requestDatasetDataSqlRunSpy).toHaveBeenCalledWith(sqlQuery, AppValues.SQL_QUERY_LIMIT);
+        expect(requestDatasetDataSqlRunSpy).toHaveBeenCalledWith(
+            sqlQuery,
+            AppValues.SQL_QUERY_LIMIT,
+        );
     });
 
     it("should check page changed", () => {
@@ -192,7 +195,7 @@ describe("DatasetComponent", () => {
         component.getDatasetNavigation().navigateToOverview();
         expect(selectDatasetSpy).toHaveBeenCalledWith({
             datasetName: mockDatasetBasicsFragment.name as string,
-            accountName: mockDatasetBasicsFragment.owner.name
+            accountName: mockDatasetBasicsFragment.owner.name,
         });
     });
 

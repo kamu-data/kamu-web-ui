@@ -65,13 +65,16 @@ describe("MetadataComponent", () => {
         emitClickOnElement(fixture, '[data-test-id="navigateToWebsite"]');
 
         expect(navigateToWebsiteSpy).toHaveBeenCalledWith(
-            mockMetadataSchemaUpdate.metadata.metadata.currentLicense.websiteUrl
+            mockMetadataSchemaUpdate.metadata.metadata.currentLicense
+                .websiteUrl,
         );
     });
 
     it("should check onClickDataset method", () => {
         const clickDatasetEmitSpy = spyOn(component.clickDatasetEmit, "emit");
         component.onClickDataset(mockDatasetBasicsFragment);
-        expect(clickDatasetEmitSpy).toHaveBeenCalledWith(mockDatasetBasicsFragment);
+        expect(clickDatasetEmitSpy).toHaveBeenCalledWith(
+            mockDatasetBasicsFragment,
+        );
     });
 });

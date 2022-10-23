@@ -38,7 +38,8 @@ export function findElementByDataTestId<T>(
     fixture: ComponentFixture<T>,
     id: string,
 ): HTMLElement {
-    return fixture.debugElement.query(By.css(`[data-test-id="${id}"]`)).nativeElement as HTMLElement;
+    return fixture.debugElement.query(By.css(`[data-test-id="${id}"]`))
+        .nativeElement as HTMLElement;
 }
 
 export const routerMockEventSubject = new ReplaySubject<RouterEvent>(1);

@@ -74,9 +74,7 @@ describe("AppDatasetService", () => {
                 overviewTabDataUpdated = true;
                 const expectedOverview = mockDatasetMainDataResponse.datasets
                     .byOwnerAndName as DatasetOverviewFragment;
-                expect(overviewDataUpdate.overview).toEqual(
-                    expectedOverview,
-                );
+                expect(overviewDataUpdate.overview).toEqual(expectedOverview);
 
                 const expectedSize = mockDatasetMainDataResponse.datasets
                     .byOwnerAndName?.data as DatasetDataSizeFragment;

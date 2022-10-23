@@ -50,7 +50,9 @@ describe("DatasetApi", () => {
                 datasetName: TEST_DATASET_NAME,
             })
             .subscribe((res: GetDatasetMainDataQuery) => {
-                expect(res.datasets.byOwnerAndName?.name).toEqual("alberta.case-details");
+                expect(res.datasets.byOwnerAndName?.name).toEqual(
+                    "alberta.case-details",
+                );
                 expect(res.datasets.byOwnerAndName?.id).toEqual(
                     "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
                 );
@@ -97,7 +99,8 @@ describe("DatasetApi", () => {
             })
             .subscribe((res: GetDatasetHistoryQuery) => {
                 expect(
-                    res.datasets.byOwnerAndName?.metadata.chain.blocks.totalCount,
+                    res.datasets.byOwnerAndName?.metadata.chain.blocks
+                        .totalCount,
                 ).toEqual(
                     mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata
                         .chain.blocks.totalCount,
@@ -107,7 +110,7 @@ describe("DatasetApi", () => {
         const op = controller.expectOne(GetDatasetHistoryDocument);
         expect(op.operation.variables.accountName).toEqual(TEST_USER_NAME);
         expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
-        
+
         op.flush({
             data: mockDatasetHistoryResponse,
         });

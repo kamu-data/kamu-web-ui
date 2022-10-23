@@ -9,7 +9,6 @@ import {
 import AppValues from "./app.values";
 
 describe("AppHelpers", () => {
-
     it("should check non-null requireValue", () => {
         expect(requireValue({})).toEqual({});
     });
@@ -32,14 +31,16 @@ describe("AppHelpers", () => {
         const consoleErrorSpy = spyOn(console, "error").and.stub();
         const failingPromise = async () => {
             await new Promise((resolve) => {
-                setTimeout(() => { resolve("foo"); }, 1);
-              });
+                setTimeout(() => {
+                    resolve("foo");
+                }, 1);
+            });
             expect(consoleErrorSpy).not.toHaveBeenCalled();
             throw testError;
         };
         promiseWithCatch(failingPromise());
         tick(1);
-        
+
         expect(consoleErrorSpy).toHaveBeenCalledWith(testError);
     }));
 

@@ -67,7 +67,9 @@ describe("AuthApi", () => {
             .fetchUserInfoAndTokenFromGithubCallackCode(TEST_GITHUB_CODE)
             .subscribe(() => {
                 expect(service.isAuthenticated).toBeTrue();
-                expect(service.currentUser).toBe(mockGithubLoginResponse.auth.githubLogin.accountInfo);
+                expect(service.currentUser).toBe(
+                    mockGithubLoginResponse.auth.githubLogin.accountInfo,
+                );
                 expect(localStorageSetItemSpy).toHaveBeenCalledWith(
                     AppValues.LOCAL_STORAGE_ACCESS_TOKEN,
                     mockGithubLoginResponse.auth.githubLogin.token.accessToken,
@@ -101,9 +103,7 @@ describe("AuthApi", () => {
         service.onUserChanges.subscribe(
             (user: MaybeNull<AccountDetailsFragment>) => {
                 callbackInvoked = true;
-                user
-                    ? checkUserIsLogged(user)
-                    : fail("User must not be null");
+                user ? checkUserIsLogged(user) : fail("User must not be null");
             },
         );
 
@@ -118,9 +118,7 @@ describe("AuthApi", () => {
         service.onUserChanges.subscribe(
             (user: MaybeNull<AccountDetailsFragment>) => {
                 callbackInvoked = true;
-                user
-                    ? checkUserIsLogged(user)
-                    : fail("User must not be null");
+                user ? checkUserIsLogged(user) : fail("User must not be null");
             },
         );
 
@@ -137,8 +135,10 @@ describe("AuthApi", () => {
             .subscribe(
                 () => fail("Unexpected success"),
                 (e: Error) => {
-                    expect(e).toEqual(new AuthenticationError([mockLogin401Error]));
-                }
+                    expect(e).toEqual(
+                        new AuthenticationError([mockLogin401Error]),
+                    );
+                },
             );
 
         const op = controller.expectOne(GithubLoginDocument);
@@ -157,8 +157,10 @@ describe("AuthApi", () => {
             .subscribe(
                 () => fail("Unexpected success"),
                 (e: Error) => {
-                    expect(e).toEqual(new AuthenticationError([mockLogin401Error]));
-                }
+                    expect(e).toEqual(
+                        new AuthenticationError([mockLogin401Error]),
+                    );
+                },
             );
 
         const op = controller.expectOne(FetchAccountInfoDocument);
@@ -167,7 +169,7 @@ describe("AuthApi", () => {
         op.graphqlErrors([mockLogin401Error]);
         tick();
 
-        expect(subscription$.closed).toBeTrue();        
+        expect(subscription$.closed).toBeTrue();
     }));
 
     it("should check user logout navigates to home page", () => {

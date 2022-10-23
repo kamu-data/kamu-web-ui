@@ -78,9 +78,7 @@ describe("AppHeaderComponent", () => {
     });
 
     [false, true].forEach((isExpectation: boolean) => {
-        it(`should ${
-            isExpectation ? "close" : "open"
-        } header menu`, () => {
+        it(`should ${isExpectation ? "close" : "open"} header menu`, () => {
             component.isCollapsedAppHeaderMenu = isExpectation;
             const headerMenu = findNativeElement(fixture, "#app-header");
             emitClickOnElement(fixture, "#appHeaderMenuButton");

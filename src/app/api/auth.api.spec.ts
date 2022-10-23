@@ -114,10 +114,8 @@ describe("AuthApi", () => {
     }));
 
     it("should check user changes via full login with github", fakeAsync(() => {
-        let callbackInvoked = false;
-        service.onUserChanges.subscribe(
+        const subscription$ = service.onUserChanges.pipe(first()).subscribe(
             (user: MaybeNull<AccountDetailsFragment>) => {
-                callbackInvoked = true;
                 user ? checkUserIsLogged(user) : fail("User must not be null");
             },
         );
@@ -125,7 +123,7 @@ describe("AuthApi", () => {
         loginFullyViaGithub();
         tick();
 
-        expect(callbackInvoked).toBeTruthy();
+        expect(subscription$.closed).toBeTrue();
     }));
 
     it("should check full login GraphQL failure", fakeAsync(() => {

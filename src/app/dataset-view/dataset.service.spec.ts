@@ -25,6 +25,7 @@ import {
     DatasetHistoryUpdate,
     OverviewDataUpdate,
 } from "./dataset.subscriptions.interface";
+import { first } from "rxjs/operators";
 
 describe("AppDatasetService", () => {
     let service: AppDatasetService;
@@ -60,50 +61,51 @@ describe("AppDatasetService", () => {
             of(mockDatasetMainDataResponse),
         );
 
-        let datasetUpdated = false;
-        service.onDatasetChanges.subscribe((dataset: DatasetBasicsFragment) => {
-            datasetUpdated = true;
-            const expectedDatasetBasics = mockDatasetMainDataResponse.datasets
-                .byOwnerAndName as DatasetBasicsFragment;
-            expect(dataset).toBe(expectedDatasetBasics);
-        });
+        const datasetChangesSubscription$ = 
+            service.onDatasetChanges
+                .pipe(first())
+                .subscribe((dataset: DatasetBasicsFragment) => {
+                    const expectedDatasetBasics = mockDatasetMainDataResponse.datasets
+                                    .byOwnerAndName as DatasetBasicsFragment;
+                    expect(dataset).toBe(expectedDatasetBasics);
+                });
 
-        let overviewTabDataUpdated = false;
-        appDatasetSubsService.onDatasetOverviewDataChanges.subscribe(
-            (overviewDataUpdate: OverviewDataUpdate) => {
-                overviewTabDataUpdated = true;
-                const expectedOverview = mockDatasetMainDataResponse.datasets
-                    .byOwnerAndName as DatasetOverviewFragment;
-                expect(overviewDataUpdate.overview).toEqual(expectedOverview);
+        const datasetOverviewSubscription$ =
+            appDatasetSubsService.onDatasetOverviewDataChanges
+                .pipe(first())
+                .subscribe((overviewDataUpdate: OverviewDataUpdate) => {
+                    const expectedOverview = mockDatasetMainDataResponse.datasets
+                        .byOwnerAndName as DatasetOverviewFragment;
+                    expect(overviewDataUpdate.overview).toEqual(expectedOverview);
 
-                const expectedSize = mockDatasetMainDataResponse.datasets
-                    .byOwnerAndName?.data as DatasetDataSizeFragment;
-                expect(overviewDataUpdate.size).toEqual(expectedSize);
-            },
+                    const expectedSize = mockDatasetMainDataResponse.datasets
+                        .byOwnerAndName?.data as DatasetDataSizeFragment;
+                    expect(overviewDataUpdate.size).toEqual(expectedSize);
+                },
         );
 
-        let dataUpdated = false;
-        appDatasetSubsService.onDatasetDataChanges.subscribe(() => {
-            dataUpdated = true;
-        });
+        const datasetDataSubscription$ = 
+            appDatasetSubsService.onDatasetDataChanges
+                .pipe(first())
+                .subscribe(() => { /* Intentionally blank */ });
 
-        let metadataUpdated = false;
-        appDatasetSubsService.onMetadataSchemaChanges.subscribe(() => {
-            metadataUpdated = true;
-        });
+        const metadataSchemaSubscription$ =
+            appDatasetSubsService.onMetadataSchemaChanges
+                .pipe(first())
+                .subscribe(() => { /* Intentionally blank */ });
 
-        let lineageUpdated = false;
-        appDatasetSubsService.onLineageDataChanges.subscribe(() => {
-            lineageUpdated = true;
-        });
+        const lineageDataSubscription$ = 
+            appDatasetSubsService.onLineageDataChanges      
+                .pipe(first())
+                .subscribe(() => { /* Intentionally blank */ });
 
         service.requestDatasetMainData(mockDatasetInfo).subscribe();
 
-        expect(datasetUpdated).toBeTruthy();
-        expect(overviewTabDataUpdated).toBeTruthy();
-        expect(dataUpdated).toBeTruthy();
-        expect(metadataUpdated).toBeTruthy();
-        expect(lineageUpdated).toBeTruthy();
+        expect(datasetChangesSubscription$.closed).toBeTrue();
+        expect(datasetOverviewSubscription$.closed).toBeTrue();
+        expect(datasetDataSubscription$.closed).toBeTrue();
+        expect(metadataSchemaSubscription$.closed).toBeTrue();
+        expect(lineageDataSubscription$.closed).toBeTrue();
     });
 
     it("should check get main data from api when dataset not found", () => {
@@ -127,17 +129,17 @@ describe("AppDatasetService", () => {
             fail("Unexpected lineage update"),
         );
 
-        let errorHandled = false;
-        service.requestDatasetMainData(mockDatasetInfo).subscribe(
-            () => {
-                fail("Unexpected success");
-            },
-            (e: Error) => {
-                errorHandled = true;
-                expect(e).toEqual(new DatasetNotFoundError());
-            },
-        );
-        expect(errorHandled).toBeTruthy();
+        const subscription$ = service.requestDatasetMainData(mockDatasetInfo)
+            .pipe(first())
+            .subscribe(
+                () => {
+                    fail("Unexpected success");
+                },
+                (e: Error) => {
+                    expect(e).toEqual(new DatasetNotFoundError());
+                },
+            );
+        expect(subscription$.closed).toBeTrue();
     });
 
     it("should check get history data from api", () => {
@@ -147,10 +149,8 @@ describe("AppDatasetService", () => {
             of(mockDatasetHistoryResponse),
         );
 
-        let historyUpdated = false;
-        appDatasetSubsService.onDatasetHistoryChanges.subscribe(
+        const subscription$ = appDatasetSubsService.onDatasetHistoryChanges.pipe(first()).subscribe(
             (historyUpdate: DatasetHistoryUpdate) => {
-                historyUpdated = true;
                 const expectedNodes = mockDatasetHistoryResponse.datasets
                     .byOwnerAndName?.metadata.chain.blocks
                     .nodes as MetadataBlockFragment[];
@@ -169,7 +169,7 @@ describe("AppDatasetService", () => {
             .requestDatasetHistory(mockDatasetInfo, numRecords, numPage)
             .subscribe();
 
-        expect(historyUpdated).toBeTruthy();
+        expect(subscription$.closed).toBeTrue();
     });
 
     it("should check get history data from api when dataset not found", () => {
@@ -183,19 +183,18 @@ describe("AppDatasetService", () => {
             fail("Unexpected history update"),
         );
 
-        let errorHandled = false;
-        service
+        const subscription$ = service
             .requestDatasetHistory(mockDatasetInfo, numRecords, numPage)
+            .pipe(first())
             .subscribe(
                 () => {
                     fail("Unexpected success");
                 },
                 (e: Error) => {
-                    errorHandled = true;
                     expect(e).toEqual(new DatasetNotFoundError());
                 },
             );
-        expect(errorHandled).toBeTruthy();
+        expect(subscription$.closed).toBeTrue();
     });
 
     it("should check get SQL query data from api", () => {
@@ -205,14 +204,13 @@ describe("AppDatasetService", () => {
             of(mockDatasetDataSqlRunResponse),
         );
 
-        let dataUpdated = false;
-        appDatasetSubsService.onDatasetDataChanges.subscribe(() => {
-            dataUpdated = true;
-        });
+        const subscription$ = appDatasetSubsService.onDatasetDataChanges.pipe(first()).subscribe(
+            () => { /* Intentionally blank */ }
+        );
 
         service.requestDatasetDataSqlRun(query, limit).subscribe();
 
-        expect(dataUpdated).toBeTruthy();
+        expect(subscription$.closed).toBeTrue();
     });
 
     it("should check get SQL query data from api when invalid SQL", () => {
@@ -226,16 +224,14 @@ describe("AppDatasetService", () => {
             fail("Unexpected data update"),
         );
 
-        let errorHandled = false;
-        service.requestDatasetDataSqlRun(query, limit).subscribe(
+        const subscription$ = service.requestDatasetDataSqlRun(query, limit).pipe(first()).subscribe(
             () => {
                 fail("Unexpected success");
             },
             (e: Error) => {
-                errorHandled = true;
                 expect(e).toEqual(new InvalidSqlError());
             },
         );
-        expect(errorHandled).toBeTruthy();
+        expect(subscription$.closed).toBeTrue();
     });
 });

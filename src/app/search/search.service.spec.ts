@@ -11,6 +11,7 @@ import {
     mockSearchDatasetOverviewQuery,
 } from "./mock.data";
 import { of, throwError } from "rxjs";
+import { first } from "rxjs/operators";
 
 describe("SearchService", () => {
     let service: SearchService;
@@ -34,11 +35,8 @@ describe("SearchService", () => {
             "overviewDatasetSearch",
         ).and.returnValue(of(mockSearchDatasetOverviewQuery));
 
-        let notificationReceived = false;
-        service.onOverviewSearchChanges.subscribe(
+        const subscription$ = service.onOverviewSearchChanges.pipe(first()).subscribe(
             (searchResult: DatasetSearchResult) => {
-                notificationReceived = true;
-
                 const expectedSearchData: DatasetSearchResult = {
                     datasets: [
                         mockSearchDatasetOverviewQuery.search.query.nodes[0],
@@ -59,7 +57,7 @@ describe("SearchService", () => {
             testSearchValue,
             0,
         );
-        expect(notificationReceived).toBeTruthy();
+        expect(subscription$.closed).toBeTrue();
     });
 
     it("should fire autocompleteSearchChanges$ on autocomplete request", () => {
@@ -68,11 +66,8 @@ describe("SearchService", () => {
             "autocompleteDatasetSearch",
         ).and.returnValue(of(mockAutocompleteItems));
 
-        let notificationReceived = false;
-
-        service.onAutocompleteSearchChanges.subscribe(
+        const subscription$ = service.onAutocompleteSearchChanges.pipe(first()).subscribe(
             (autocompleteItems: DatasetAutocompleteItem[]) => {
-                notificationReceived = true;
                 expect(autocompleteItems).toEqual(mockAutocompleteItems);
             },
         );
@@ -83,7 +78,7 @@ describe("SearchService", () => {
         expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(
             testAutoCompleteValue,
         );
-        expect(notificationReceived).toBeTruthy();
+        expect(subscription$.closed).toBeTrue();
     });
 
     it("should fire autocompleteSearchChanges$ with empty collection on autocomplete request failure", () => {
@@ -92,11 +87,8 @@ describe("SearchService", () => {
             "autocompleteDatasetSearch",
         ).and.returnValue(throwError("some error"));
 
-        let notificationReceived = false;
-
-        service.onAutocompleteSearchChanges.subscribe(
+        const subscription$ = service.onAutocompleteSearchChanges.pipe(first()).subscribe(
             (autocompleteItems: DatasetAutocompleteItem[]) => {
-                notificationReceived = true;
                 expect(autocompleteItems).toEqual([]);
             },
         );
@@ -107,6 +99,6 @@ describe("SearchService", () => {
         expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(
             testAutoCompleteValue,
         );
-        expect(notificationReceived).toBeTruthy();
+        expect(subscription$.closed).toBeTrue();
     });
 });

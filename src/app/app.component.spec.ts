@@ -217,7 +217,7 @@ describe("AppComponent", () => {
         it(`should hide header when going to ${url} page`, () => {
             routerMockEventSubject.next(new NavigationEnd(1, url, ""));
             fixture.detectChanges();
-            expect(component.isHeaderVisible).toBeFalsy();
+            expect(component.isHeaderVisible).toBeFalse();
         });
     });
 
@@ -227,7 +227,7 @@ describe("AppComponent", () => {
         it(`should show header when going to ${url} page`, () => {
             routerMockEventSubject.next(new NavigationEnd(1, url, ""));
             fixture.detectChanges();
-            expect(component.isHeaderVisible).toBeTruthy();
+            expect(component.isHeaderVisible).toBeTrue();
         });
     });
 

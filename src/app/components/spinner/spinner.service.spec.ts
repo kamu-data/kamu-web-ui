@@ -22,7 +22,7 @@ describe("SpinnerService", () => {
                     expect(loading).toEqual(expectation),
                 );
             expectation ? service.show() : service.hide();
-            expect(subscription$.closed).toBeTruthy();
+            expect(subscription$.closed).toBeTrue();
         });
     });
 });

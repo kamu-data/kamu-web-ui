@@ -73,8 +73,8 @@ describe("AppHeaderComponent", () => {
     });
 
     it("should check dataset type", () => {
-        expect(component.isDatasetType("Dataset")).toBeTruthy();
-        expect(component.isDatasetType("all")).toBeFalsy();
+        expect(component.isDatasetType("Dataset")).toBeTrue();
+        expect(component.isDatasetType("all")).toBeFalse();
     });
 
     [false, true].forEach((isExpectation: boolean) => {
@@ -85,10 +85,10 @@ describe("AppHeaderComponent", () => {
             isExpectation
                 ? expect(
                       headerMenu.classList.contains("Details--on"),
-                  ).toBeFalsy()
+                  ).toBeFalse()
                 : expect(
                       headerMenu.classList.contains("Details--on"),
-                  ).toBeTruthy();
+                  ).toBeTrue();
         });
     });
 
@@ -262,7 +262,7 @@ describe("AppHeaderComponent", () => {
         fixture.detectChanges();
 
         // Ensure emitter callback was hit
-        expect(emitterSubscription$.closed).toBeTruthy();
+        expect(emitterSubscription$.closed).toBeTrue();
 
         // Ensure focus lost on autocomplete after delay
         tick(100);

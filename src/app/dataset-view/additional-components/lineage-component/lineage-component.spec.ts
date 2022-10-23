@@ -33,6 +33,6 @@ describe("LineageComponent", () => {
     it("should check #ngOninit", () => {
         appDatasetSubsService.changeLineageData(mockLineageUpdate);
         component.ngOnInit();
-        expect(component.isAvailableLineageGraph).toBeTruthy();
+        expect(component.isAvailableLineageGraph).toBeTrue();
     });
 });

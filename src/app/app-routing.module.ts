@@ -12,14 +12,14 @@ import ProjectLinks from "./project-links";
 
 const githubUrl = `https://github.com/login/oauth/authorize?scope=user:email&client_id=${environment.github_client_id}`;
 
-const routes: Routes = [
-    { path: "", redirectTo: ProjectLinks.urlSearch, pathMatch: "full" },
+export const routes: Routes = [
+    { path: "", redirectTo: ProjectLinks.URL_SEARCH, pathMatch: "full" },
     {
-        path: ProjectLinks.urlGithubCallback,
+        path: ProjectLinks.URL_GITHUB_CALLBACK,
         component: GithubCallbackComponent,
     },
     {
-        path: ProjectLinks.urlLogin,
+        path: ProjectLinks.URL_LOGIN,
         component: LoginComponent,
         loadChildren: () =>
             new Promise(() => {
@@ -27,27 +27,27 @@ const routes: Routes = [
             }),
     },
     {
-        path: ProjectLinks.urlSearch,
+        path: ProjectLinks.URL_SEARCH,
         component: SearchComponent,
         children: [{ path: ":id", component: SearchComponent }],
     },
     {
-        path: ProjectLinks.urlDatasetCreate,
+        path: ProjectLinks.URL_DATASET_CREATE,
         component: DatasetCreateComponent,
     },
     {
-        path: ProjectLinks.urlPageNotFound,
+        path: ProjectLinks.URL_PAGE_NOT_FOUND,
         component: PageNotFoundComponent,
     },
     {
-        path: `:${ProjectLinks.urlParamAccountName}`,
+        path: `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}`,
         children: [
             {
                 path: "",
                 component: AccountComponent,
             },
             {
-                path: `:${ProjectLinks.urlParamDatasetName}`,
+                path: `:${ProjectLinks.URL_PARAM_DATASET_NAME}`,
                 component: DatasetComponent,
             },
         ],

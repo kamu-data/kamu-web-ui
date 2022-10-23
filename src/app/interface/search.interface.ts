@@ -1,3 +1,4 @@
+import { ThemePalette } from "@angular/material/core";
 import {
     DatasetBasicsFragment,
     DatasetSearchOverviewFragment,
@@ -19,4 +20,13 @@ export interface DatasetAutocompleteItem {
 export enum TypeNames {
     allDataType = "all",
     datasetType = "Dataset",
+}
+
+export interface SearchFilters {
+    name?: string;
+    isTitle: boolean;
+    completed: boolean;
+    disabled: boolean;
+    color?: ThemePalette;
+    subtasks?: SearchFilters[];
 }

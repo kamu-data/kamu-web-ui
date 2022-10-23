@@ -1,4 +1,4 @@
-<ng-template [ngIf]="isMinimizeSearchAdditionalButtons">
+<ng-template [ngIf]="shouldMinimizeSearchAdditionalButtons">
     <div class="searchAdditionalButtonsBlock">
         <button
             mat-icon-button
@@ -16,7 +16,7 @@
     </mat-menu>
 </ng-template>
 <ng-template
-    [ngIf]="!isMinimizeSearchAdditionalButtons"
+    [ngIf]="!shouldMinimizeSearchAdditionalButtons"
     id="bigSearchAdditionalButtons"
 >
     <app-search-additional-buttons-nav

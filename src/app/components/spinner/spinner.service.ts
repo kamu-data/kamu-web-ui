@@ -7,7 +7,7 @@ import { Injectable } from "@angular/core";
 export class SpinnerService {
     private _isLoading$ = new Subject<boolean>();
 
-    public get isLoading$(): Observable<boolean> {
+    public get isLoading(): Observable<boolean> {
         return this._isLoading$.asObservable();
     }
 

@@ -5,11 +5,8 @@ import {
     MetadataBlockFragment,
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
-import {
-    descriptionForMetadataBlock,
-    relativeTime,
-    shortHash,
-} from "src/app/common/data.helpers";
+import { DataHelpers } from "src/app/common/data.helpers";
+import { momentConvertDatetoLocalWithFormat } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-timeline",
@@ -28,22 +25,22 @@ export class TimelineComponent {
     }
 
     public momentConverDatetoLocalWithFormat(date: string): string {
-        return AppValues.momentConverDatetoLocalWithFormat({
+        return momentConvertDatetoLocalWithFormat({
             date: new Date(String(date)),
-            format: AppValues.displayDateFormat,
+            format: AppValues.DISPLAY_DATE_FORMAT,
             isTextDate: true,
         });
     }
 
     public descriptionForMetadataBlock(block: MetadataBlockFragment): string {
-        return descriptionForMetadataBlock(block);
+        return DataHelpers.descriptionForMetadataBlock(block);
     }
 
     public relativeTime(time: string): string {
-        return relativeTime(time);
+        return DataHelpers.relativeTime(time);
     }
 
     public shortHash(hash: string): string {
-        return shortHash(hash);
+        return DataHelpers.shortHash(hash);
     }
 }

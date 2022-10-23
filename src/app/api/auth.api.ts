@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { catchError, map } from "rxjs/operators";
-import { Observable, of, Subject } from "rxjs";
+import { Observable, Subject, throwError } from "rxjs";
 import { NavigationService } from "../services/navigation.service";
 import {
     AccountDetailsFragment,
@@ -11,15 +11,17 @@ import {
 } from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
 
-import { MaybeNull, MaybeUndefined } from "../common/app.types";
-import { MutationResult } from 'apollo-angular';
+import { MaybeNull } from "../common/app.types";
+import { MutationResult } from "apollo-angular";
+import { isNull } from "lodash";
+import { AuthenticationError } from "../common/errors";
 
 @Injectable()
 export class AuthApi {
-    private user: MaybeNull<AccountDetailsFragment>;
-    private isAuthenticated: boolean;
+    private user: MaybeNull<AccountDetailsFragment> = null;
 
-    private userChanges$: Subject<MaybeNull<AccountDetailsFragment>> = new Subject<MaybeNull<AccountDetailsFragment>>();
+    private userChanges$: Subject<MaybeNull<AccountDetailsFragment>> =
+        new Subject<MaybeNull<AccountDetailsFragment>>();
 
     constructor(
         private githubLoginGQL: GithubLoginGQL,
@@ -31,38 +33,36 @@ export class AuthApi {
         return this.userChanges$.asObservable();
     }
 
-    public get userModal() {
+    public get currentUser(): MaybeNull<AccountDetailsFragment> {
         return this.user;
     }
 
-    public set isAuthUser(isAuthenticated: boolean) {
-        this.isAuthenticated = isAuthenticated;
+    public get isAuthenticated(): boolean {
+        return !isNull(this.user);
     }
 
-    public get isAuthUser(): boolean {
-        return this.isAuthenticated;
-    }
-
-    public userChange(user: MaybeNull<AccountDetailsFragment>) {
+    private changeUser(user: MaybeNull<AccountDetailsFragment>) {
         this.user = user;
         this.userChanges$.next(user);
     }
 
-    public fetchUserInfoAndTokenFromGithubCallackCode(code: string): Observable<void> {
+    public fetchUserInfoAndTokenFromGithubCallackCode(
+        code: string,
+    ): Observable<void> {
         return this.githubLoginGQL.mutate({ code }).pipe(
             map((result: MutationResult<GithubLoginMutation>) => {
                 if (result.data) {
-                    this.isAuthUser = true;
                     const data: GithubLoginMutation = result.data;
-                    localStorage.setItem(AppValues.localStorageAccessToken, data.auth.githubLogin.token.accessToken);
-                    this.userChange(data.auth.githubLogin.accountInfo);
+                    localStorage.setItem(
+                        AppValues.LOCAL_STORAGE_ACCESS_TOKEN,
+                        data.auth.githubLogin.token.accessToken,
+                    );
+                    this.changeUser(data.auth.githubLogin.accountInfo);
                 } else {
-                    this.handleAuthenticationError(result.errors);
+                    throw new AuthenticationError(result.errors ?? []);
                 }
-            },
-            catchError(
-                (e: Error) => this.handleAuthenticationError([e])
-            )),
+            }),
+            catchError((e: Error) => throwError(new AuthenticationError([e]))),
         );
     }
 
@@ -70,34 +70,23 @@ export class AuthApi {
         return this.fetchAccountInfoGQL.mutate({ accessToken }).pipe(
             map((result: MutationResult<FetchAccountInfoMutation>) => {
                 if (result.data) {
-                    this.isAuthUser = true;
                     const data: FetchAccountInfoMutation = result.data;
-                    this.userChange(data.auth.accountInfo);
+                    this.changeUser(data.auth.accountInfo);
                 } else {
-                    this.handleAuthenticationError(result.errors);
+                    throw new AuthenticationError(result.errors ?? []);
                 }
-            },
-            catchError(
-                (e: Error) => this.handleAuthenticationError([e])
-            )),
+            }),
+            catchError((e: Error) => throwError(new AuthenticationError([e]))),
         );
     }
 
-    private handleAuthenticationError(err: MaybeUndefined<readonly Error[]>): Observable<void> {
-        if (err) {
-            err.forEach((e: Error) => console.warn(`Authentication query error: ${e.message}`));
-        } else {
-            console.warn("Authentication query error");
-        }
-        this.isAuthUser = false;
-        localStorage.removeItem(AppValues.localStorageAccessToken);
-        this.userChange(null);
-        return of(void 0);
+    public terminateSession() {
+        this.changeUser(null);
+        localStorage.removeItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
     }
 
     public logOut(): void {
-        this.userChange(null);
-        localStorage.removeItem(AppValues.localStorageAccessToken);
+        this.terminateSession();
         this.navigationService.navigateToHome();
     }
 }

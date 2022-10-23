@@ -7,7 +7,7 @@ import {
     MetadataSchemaUpdate,
     OverviewDataUpdate,
 } from "./dataset.subscriptions.interface";
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class AppDatasetSubscriptionsService {
     private datasetOverviewDataChanges$: Subject<OverviewDataUpdate> =
         new ReplaySubject<OverviewDataUpdate>(1 /*bufferSize*/);
@@ -17,7 +17,7 @@ export class AppDatasetSubscriptionsService {
         new ReplaySubject<DatasetHistoryUpdate>(1 /*bufferSize*/);
     private metadataSchemaChanges$: Subject<MetadataSchemaUpdate> =
         new ReplaySubject<MetadataSchemaUpdate>(1 /*bufferSize*/);
-    private lineageChanges$: Subject<LineageUpdate> = 
+    private lineageChanges$: Subject<LineageUpdate> =
         new ReplaySubject<LineageUpdate>(1 /*bufferSize*/);
 
     public changeDatasetOverviewData(data: OverviewDataUpdate): void {

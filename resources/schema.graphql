@@ -163,7 +163,7 @@ type DatasetConnection {
 	"""
 	Approximate number of total nodes
 	"""
-	totalCount: Int
+	totalCount: Int!
 	"""
 	Page information
 	"""
@@ -313,6 +313,7 @@ type FetchStepUrl {
 	url: String!
 	eventTime: EventTimeSource
 	cache: SourceCaching
+	headers: [RequestHeader!]
 }
 
 
@@ -356,7 +357,7 @@ type MetadataBlockConnection {
 	"""
 	Approximate number of total nodes
 	"""
-	totalCount: Int
+	totalCount: Int!
 	"""
 	Page information
 	"""
@@ -374,6 +375,7 @@ type MetadataBlockExtended {
 	systemTime: DateTime!
 	author: Account!
 	event: MetadataEvent!
+	sequenceNumber: Int!
 }
 
 type MetadataChain {
@@ -518,6 +520,11 @@ type ReadStepParquet {
 	schema: [String!]
 }
 
+type RequestHeader {
+	name: String!
+	value: String!
+}
+
 type Search {
 	"""
 	Perform search across all resources
@@ -535,7 +542,7 @@ type SearchResultConnection {
 	"""
 	Approximate number of total nodes
 	"""
-	totalCount: Int
+	totalCount: Int!
 	"""
 	Page information
 	"""

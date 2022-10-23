@@ -6,15 +6,8 @@ import {
     OnInit,
 } from "@angular/core";
 import AppValues from "./common/app.values";
-import { AppSearchService } from "./search/search.service";
-import { filter, first, map } from "rxjs/operators";
-import {
-    ActivatedRoute,
-    NavigationEnd,
-    Params,
-    Router,
-    RouterEvent,
-} from "@angular/router";
+import { filter, map } from "rxjs/operators";
+import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import {
     DatasetAutocompleteItem,
     TypeNames,
@@ -23,10 +16,21 @@ import { AuthApi } from "./api/auth.api";
 import { ModalService } from "./components/modal/modal.service";
 import { BaseComponent } from "./common/base.component";
 import ProjectLinks from "./project-links";
-import { AccountInfo } from "./api/kamu.graphql.interface";
+import { AccountDetailsFragment } from "./api/kamu.graphql.interface";
 import { MaybeNull } from "./common/app.types";
 import _ from "lodash";
-import { logError } from "./common/app.helpers";
+import { isMobileView, promiseWithCatch } from "./common/app.helpers";
+
+export const ALL_URLS_WITHOUT_HEADER: string[] = [
+    ProjectLinks.URL_DATASET_CREATE,
+    ProjectLinks.URL_LOGIN,
+    ProjectLinks.URL_GITHUB_CALLBACK,
+];
+
+export const ALL_URLS_WITHOUT_ACCESS_TOKEN: string[] = [
+    ProjectLinks.URL_LOGIN,
+    ProjectLinks.URL_GITHUB_CALLBACK,
+];
 
 @Component({
     selector: "app-root",
@@ -35,47 +39,49 @@ import { logError } from "./common/app.helpers";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent extends BaseComponent implements OnInit {
-    private readonly AnonymousAccountInfo: AccountInfo = {
+    public static readonly AnonymousAccountInfo: AccountDetailsFragment = {
         login: "",
-        name: AppValues.defaultUsername,
+        name: AppValues.DEFAULT_USERNAME,
     };
-    private unimplementedMessage = "Feature coming soon";
-    public appLogo = `/${AppValues.appLogo}`;
-    public isMobileView = false;
-    public searchValue = "";
-    public isVisible = true;
-    public user: AccountInfo;
-    private appHeaderNotVisiblePages: string[] = [
-        ProjectLinks.urlDatasetCreate,
-        ProjectLinks.urlLogin,
-        ProjectLinks.urlGithubCallback,
-    ];
 
-    @HostListener("window:resize", ["$event"])
-    private checkWindowSize(): void {
+    public appLogo = `/${AppValues.APP_LOGO}`;
+    public isMobileView = false;
+    public isHeaderVisible = true;
+    public user: AccountDetailsFragment = AppComponent.AnonymousAccountInfo;
+
+    @HostListener("window:resize")
+    checkWindowSize(): void {
         this.checkView();
     }
 
     constructor(
         private router: Router,
-        private appSearchService: AppSearchService,
         private authApi: AuthApi,
         private modalService: ModalService,
         private navigationService: NavigationService,
-        private activatedRoute: ActivatedRoute,
     ) {
         super();
     }
 
     public ngOnInit(): void {
         this.checkView();
-        this.appHeaderInit();
-        this.trackSubscription(
+        this.trackSubscriptions(
+            this.router.events
+                .pipe(
+                    filter((event) => event instanceof NavigationEnd),
+                    map((event) => event as RouterEvent),
+                )
+                .subscribe((event: RouterEvent) => {
+                    this.isHeaderVisible = this.shouldHeaderBeVisible(
+                        event.url,
+                    );
+                }),
+
             this.authApi.onUserChanges.subscribe(
-                (user: MaybeNull<AccountInfo>) => {
+                (user: MaybeNull<AccountDetailsFragment>) => {
                     this.user = user
                         ? _.cloneDeep(user)
-                        : this.AnonymousAccountInfo;
+                        : AppComponent.AnonymousAccountInfo;
                 },
             ),
         );
@@ -83,16 +89,16 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     authentification(): void {
-        const accessToken: string | null = localStorage.getItem(
-            AppValues.localStorageAccessToken,
-        );
-        if (
-            location.href.includes(ProjectLinks.urlLogin) ||
-            location.href.includes(ProjectLinks.urlGithubCallback)
-        ) {
+        if (ALL_URLS_WITHOUT_ACCESS_TOKEN.includes(this.router.url)) {
             return;
         } else {
-            if (typeof accessToken === "string" && !this.authApi.isAuthUser) {
+            const accessToken: string | null = localStorage.getItem(
+                AppValues.LOCAL_STORAGE_ACCESS_TOKEN,
+            );
+            if (
+                typeof accessToken === "string" &&
+                !this.authApi.isAuthenticated
+            ) {
                 this.trackSubscription(
                     this.authApi
                         .fetchUserInfoFromAccessToken(accessToken)
@@ -103,44 +109,12 @@ export class AppComponent extends BaseComponent implements OnInit {
         }
     }
 
-    private appHeaderInit(): void {
-        this.trackSubscriptions(
-            this.appSearchService.onSearchQueryChanges.subscribe(
-                (searchValue: string) => {
-                    this.searchValue = searchValue;
-                },
-            ),
-            this.router.events
-                .pipe(
-                    filter((event) => event instanceof NavigationEnd),
-                    map((event) => event as RouterEvent),
-                )
-                .subscribe((event: RouterEvent) => {
-                    this.isVisible = this.isAvailableAppHeaderUrl(event.url);
-                    this.getSearchQueryFromUrl();
-                }),
-        );
-    }
-
-    private getSearchQueryFromUrl(): void {
-        this.activatedRoute.queryParams
-            .pipe(first())
-            .subscribe((params: Params) => {
-                if (params.query) {
-                    this.appSearchService.searchQueryChanges(
-                        params.query as string,
-                    );
-                } else {
-                    this.appSearchService.searchQueryChanges("");
-                }
-            });
-    }
-
     private checkView(): void {
-        this.isMobileView = AppValues.isMobileView();
+        this.isMobileView = isMobileView();
     }
-    private isAvailableAppHeaderUrl(url: string): boolean {
-        return !this.appHeaderNotVisiblePages.some((item) =>
+
+    private shouldHeaderBeVisible(url: string): boolean {
+        return !ALL_URLS_WITHOUT_HEADER.some((item) =>
             url.toLowerCase().includes(item),
         );
     }
@@ -157,7 +131,6 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
     public onClickAppLogo(): void {
         this.navigationService.navigateToSearch();
-        this.appSearchService.searchQueryChanges("");
     }
 
     public onOpenUserInfo(): void {
@@ -171,55 +144,62 @@ export class AppComponent extends BaseComponent implements OnInit {
     public onLogin(): void {
         this.navigationService.navigateToLogin();
     }
+
     public onLogOut(): void {
         this.authApi.logOut();
     }
+
     public onUserProfile(): void {
-        this.modalService
-            .warning({
-                message: this.unimplementedMessage,
+        promiseWithCatch(
+            this.modalService.warning({
+                message: AppValues.UNIMPLEMENTED_MESSAGE,
                 yesButtonText: "Ok",
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
+
     public onUserDatasets(): void {
-        this.modalService
-            .warning({
-                message: this.unimplementedMessage,
+        promiseWithCatch(
+            this.modalService.warning({
+                message: AppValues.UNIMPLEMENTED_MESSAGE,
                 yesButtonText: "Ok",
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
+
     public onBilling(): void {
-        this.modalService
-            .warning({
-                message: this.unimplementedMessage,
+        promiseWithCatch(
+            this.modalService.warning({
+                message: AppValues.UNIMPLEMENTED_MESSAGE,
                 yesButtonText: "Ok",
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
+
     public onAnalytics(): void {
-        this.modalService
-            .warning({
-                message: this.unimplementedMessage,
+        promiseWithCatch(
+            this.modalService.warning({
+                message: AppValues.UNIMPLEMENTED_MESSAGE,
                 yesButtonText: "Ok",
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
+
     public onSettings(): void {
-        this.modalService
-            .warning({
-                message: this.unimplementedMessage,
+        promiseWithCatch(
+            this.modalService.warning({
+                message: AppValues.UNIMPLEMENTED_MESSAGE,
                 yesButtonText: "Ok",
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
+
     public onHelp(): void {
-        this.modalService
-            .warning({
-                message: this.unimplementedMessage,
+        promiseWithCatch(
+            this.modalService.warning({
+                message: AppValues.UNIMPLEMENTED_MESSAGE,
                 yesButtonText: "Ok",
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
 }

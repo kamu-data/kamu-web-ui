@@ -16,7 +16,7 @@ import {
 import { SearchApi } from "../../api/search.api";
 import AppValues from "../../common/app.values";
 import { BaseComponent } from "src/app/common/base.component";
-import { AccountInfo } from "src/app/api/kamu.graphql.interface";
+import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
@@ -25,11 +25,10 @@ import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppHeaderComponent extends BaseComponent {
-    @Input() public searchValue: string;
     @Input() public appLogo: string;
     @Input() public isMobileView: boolean;
     @Input() public isVisible: boolean;
-    @Input() public userInfo: AccountInfo;
+    @Input() public userInfo: AccountDetailsFragment;
 
     @Output() public selectDatasetEmitter =
         new EventEmitter<DatasetAutocompleteItem>();
@@ -48,7 +47,7 @@ export class AppHeaderComponent extends BaseComponent {
     @ViewChild("appHeaderMenuButton")
     appHeaderMenuButton: ElementRef<HTMLElement>;
 
-    public defaultUsername: string = AppValues.defaultUsername;
+    public defaultUsername: string = AppValues.DEFAULT_USERNAME;
     public isSearchActive = false;
     public isCollapsedAppHeaderMenu = false;
 
@@ -58,6 +57,10 @@ export class AppHeaderComponent extends BaseComponent {
 
     public isDatasetType(type: string): boolean {
         return type === TypeNames.datasetType;
+    }
+
+    public isUserLoggedIn(): boolean {
+        return this.userInfo.login.length > 0;
     }
 
     public search: OperatorFunction<
@@ -124,14 +127,7 @@ export class AppHeaderComponent extends BaseComponent {
             if (this.isMobileView) {
                 this.triggerMenuClick();
             }
-
             (event.target as HTMLElement).blur();
-            const typeaheadInput: Element | null = document.querySelector(
-                "ngb-typeahead-window",
-            );
-            if (typeaheadInput) {
-                typeaheadInput.classList.remove("show");
-            }
         }, 200);
     }
 

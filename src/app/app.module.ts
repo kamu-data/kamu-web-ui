@@ -2,7 +2,7 @@ import { SpinnerService } from "./components/spinner/spinner.service";
 import { SpinnerInterceptor } from "./components/spinner/spinner.interceptor";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
-import { APP_INITIALIZER, ErrorHandler, NgModule } from "@angular/core";
+import { ErrorHandler, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { AppRoutingModule } from "./app-routing.module";
@@ -56,16 +56,6 @@ import { DatasetApi } from "./api/dataset.api";
 import { ErrorHandlerService } from "./services/error-handler.service";
 
 const Services = [
-    {
-        provide: APP_INITIALIZER,
-        multi: true,
-        deps: [AppConfigService],
-        useFactory: (appConfigService: AppConfigService) => {
-            return () => {
-                return appConfigService.loadAppConfig();
-            };
-        },
-    },
     {
         provide: HTTP_INTERCEPTORS,
         useClass: SpinnerInterceptor,

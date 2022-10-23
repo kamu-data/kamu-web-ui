@@ -61,43 +61,49 @@ describe("AppDatasetService", () => {
             of(mockDatasetMainDataResponse),
         );
 
-        const datasetChangesSubscription$ = 
-            service.onDatasetChanges
-                .pipe(first())
-                .subscribe((dataset: DatasetBasicsFragment) => {
-                    const expectedDatasetBasics = mockDatasetMainDataResponse.datasets
-                                    .byOwnerAndName as DatasetBasicsFragment;
-                    expect(dataset).toBe(expectedDatasetBasics);
-                });
+        const datasetChangesSubscription$ = service.onDatasetChanges
+            .pipe(first())
+            .subscribe((dataset: DatasetBasicsFragment) => {
+                const expectedDatasetBasics = mockDatasetMainDataResponse
+                    .datasets.byOwnerAndName as DatasetBasicsFragment;
+                expect(dataset).toBe(expectedDatasetBasics);
+            });
 
         const datasetOverviewSubscription$ =
             appDatasetSubsService.onDatasetOverviewDataChanges
                 .pipe(first())
                 .subscribe((overviewDataUpdate: OverviewDataUpdate) => {
-                    const expectedOverview = mockDatasetMainDataResponse.datasets
-                        .byOwnerAndName as DatasetOverviewFragment;
-                    expect(overviewDataUpdate.overview).toEqual(expectedOverview);
+                    const expectedOverview = mockDatasetMainDataResponse
+                        .datasets.byOwnerAndName as DatasetOverviewFragment;
+                    expect(overviewDataUpdate.overview).toEqual(
+                        expectedOverview,
+                    );
 
                     const expectedSize = mockDatasetMainDataResponse.datasets
                         .byOwnerAndName?.data as DatasetDataSizeFragment;
                     expect(overviewDataUpdate.size).toEqual(expectedSize);
-                },
-        );
+                });
 
-        const datasetDataSubscription$ = 
+        const datasetDataSubscription$ =
             appDatasetSubsService.onDatasetDataChanges
                 .pipe(first())
-                .subscribe(() => { /* Intentionally blank */ });
+                .subscribe(() => {
+                    /* Intentionally blank */
+                });
 
         const metadataSchemaSubscription$ =
             appDatasetSubsService.onMetadataSchemaChanges
                 .pipe(first())
-                .subscribe(() => { /* Intentionally blank */ });
+                .subscribe(() => {
+                    /* Intentionally blank */
+                });
 
-        const lineageDataSubscription$ = 
-            appDatasetSubsService.onLineageDataChanges      
+        const lineageDataSubscription$ =
+            appDatasetSubsService.onLineageDataChanges
                 .pipe(first())
-                .subscribe(() => { /* Intentionally blank */ });
+                .subscribe(() => {
+                    /* Intentionally blank */
+                });
 
         service.requestDatasetMainData(mockDatasetInfo).subscribe();
 
@@ -129,7 +135,8 @@ describe("AppDatasetService", () => {
             fail("Unexpected lineage update"),
         );
 
-        const subscription$ = service.requestDatasetMainData(mockDatasetInfo)
+        const subscription$ = service
+            .requestDatasetMainData(mockDatasetInfo)
             .pipe(first())
             .subscribe(
                 () => {
@@ -149,8 +156,9 @@ describe("AppDatasetService", () => {
             of(mockDatasetHistoryResponse),
         );
 
-        const subscription$ = appDatasetSubsService.onDatasetHistoryChanges.pipe(first()).subscribe(
-            (historyUpdate: DatasetHistoryUpdate) => {
+        const subscription$ = appDatasetSubsService.onDatasetHistoryChanges
+            .pipe(first())
+            .subscribe((historyUpdate: DatasetHistoryUpdate) => {
                 const expectedNodes = mockDatasetHistoryResponse.datasets
                     .byOwnerAndName?.metadata.chain.blocks
                     .nodes as MetadataBlockFragment[];
@@ -162,8 +170,7 @@ describe("AppDatasetService", () => {
                     currentPage: 1,
                     totalPages: 1,
                 });
-            },
-        );
+            });
 
         service
             .requestDatasetHistory(mockDatasetInfo, numRecords, numPage)
@@ -204,9 +211,11 @@ describe("AppDatasetService", () => {
             of(mockDatasetDataSqlRunResponse),
         );
 
-        const subscription$ = appDatasetSubsService.onDatasetDataChanges.pipe(first()).subscribe(
-            () => { /* Intentionally blank */ }
-        );
+        const subscription$ = appDatasetSubsService.onDatasetDataChanges
+            .pipe(first())
+            .subscribe(() => {
+                /* Intentionally blank */
+            });
 
         service.requestDatasetDataSqlRun(query, limit).subscribe();
 
@@ -224,14 +233,17 @@ describe("AppDatasetService", () => {
             fail("Unexpected data update"),
         );
 
-        const subscription$ = service.requestDatasetDataSqlRun(query, limit).pipe(first()).subscribe(
-            () => {
-                fail("Unexpected success");
-            },
-            (e: Error) => {
-                expect(e).toEqual(new InvalidSqlError());
-            },
-        );
+        const subscription$ = service
+            .requestDatasetDataSqlRun(query, limit)
+            .pipe(first())
+            .subscribe(
+                () => {
+                    fail("Unexpected success");
+                },
+                (e: Error) => {
+                    expect(e).toEqual(new InvalidSqlError());
+                },
+            );
         expect(subscription$.closed).toBeTrue();
     });
 });

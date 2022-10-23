@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { first } from "rxjs/operators";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { mockHistoryUpdate } from "../data-tabs.mock";
 import { HistoryComponent } from "./history-component";
@@ -35,9 +36,15 @@ describe("HistoryComponent", () => {
     });
 
     it("should check change page", () => {
-        const emitSpy = spyOn(component.onPageChangeEmit, "emit");
         const testChangeNotification = { currentPage: 1, isClick: false };
+
+        const emitterSubscription$ = component.onPageChangeEmit
+            .pipe(first())
+            .subscribe((notification) =>
+                expect(notification).toEqual(testChangeNotification),
+            );
+
         component.onPageChange(testChangeNotification);
-        expect(emitSpy).toHaveBeenCalledWith(testChangeNotification);
+        expect(emitterSubscription$.closed).toBeTrue();
     });
 });

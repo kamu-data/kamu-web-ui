@@ -7,7 +7,11 @@ import { mockMetadataSchemaUpdate } from "../data-tabs.mock";
 import { MetadataComponent } from "./metadata-component";
 import { ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetMetadataSummaryFragment } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    DatasetMetadataSummaryFragment,
+} from "src/app/api/kamu.graphql.interface";
+import { first } from "rxjs/operators";
 
 describe("MetadataComponent", () => {
     let component: MetadataComponent;
@@ -71,10 +75,13 @@ describe("MetadataComponent", () => {
     });
 
     it("should check onClickDataset method", () => {
-        const clickDatasetEmitSpy = spyOn(component.clickDatasetEmit, "emit");
+        const emitterSubscription$ = component.clickDatasetEmit
+            .pipe(first())
+            .subscribe((dataset: DatasetBasicsFragment) =>
+                expect(dataset).toEqual(mockDatasetBasicsFragment),
+            );
+
         component.onClickDataset(mockDatasetBasicsFragment);
-        expect(clickDatasetEmitSpy).toHaveBeenCalledWith(
-            mockDatasetBasicsFragment,
-        );
+        expect(emitterSubscription$.closed).toBeTrue();
     });
 });

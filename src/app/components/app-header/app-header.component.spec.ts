@@ -93,27 +93,30 @@ describe("AppHeaderComponent", () => {
     });
 
     it("should emit on click app logo", () => {
-        const clickAppLogoEmitterSpy = spyOn(
-            component.clickAppLogoEmitter,
-            "emit",
-        );
+        const emitterSubscription$ = component.clickAppLogoEmitter
+            .pipe(first())
+            .subscribe();
         const link = findElementByDataTestId(fixture, "appLogo");
         link.click();
-        expect(clickAppLogoEmitterSpy).toHaveBeenCalledWith();
+        expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should emit on click Help link", () => {
-        const clickHelpEmitterSpy = spyOn(component.clickHelpEmitter, "emit");
+        const emitterSubscription$ = component.clickHelpEmitter
+            .pipe(first())
+            .subscribe();
         const link = findElementByDataTestId(fixture, "openHelpHeader");
         link.click();
-        expect(clickHelpEmitterSpy).toHaveBeenCalledWith();
+        expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should emit on click AddNew link", () => {
-        const addNewEmitterSpy = spyOn(component.addNewEmitter, "emit");
+        const emitterSubscription$ = component.addNewEmitter
+            .pipe(first())
+            .subscribe();
         const link = findElementByDataTestId(fixture, "addNewDataset");
         link.click();
-        expect(addNewEmitterSpy).toHaveBeenCalledWith();
+        expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should emit on click Settings link", () => {
@@ -121,15 +124,17 @@ describe("AppHeaderComponent", () => {
             login: "ssss",
             name: "testName",
         } as AccountDetailsFragment;
-        const clickSettingsEmitterSpy = spyOn(
-            component.clickSettingsEmitter,
-            "emit",
-        );
+
+        const emitterSubscription$ = component.clickSettingsEmitter
+            .pipe(first())
+            .subscribe();
+
         emitClickOnElement(fixture, "#appHeaderMenuButton");
         fixture.detectChanges();
         const link = findElementByDataTestId(fixture, "openSettingsHeader");
         link.click();
-        expect(clickSettingsEmitterSpy).toHaveBeenCalledWith();
+
+        expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should emit on click Your profile link", () => {
@@ -137,15 +142,17 @@ describe("AppHeaderComponent", () => {
             login: "ssss",
             name: "testName",
         } as AccountDetailsFragment;
-        const clickUserProfileEmitterSpy = spyOn(
-            component.clickUserProfileEmitter,
-            "emit",
-        );
+
+        const emitterSubscription$ = component.clickUserProfileEmitter
+            .pipe(first())
+            .subscribe();
+
         emitClickOnElement(fixture, "#appHeaderMenuButton");
         fixture.detectChanges();
         const link = findElementByDataTestId(fixture, "openUserProfileHeader");
         link.click();
-        expect(clickUserProfileEmitterSpy).toHaveBeenCalledWith();
+
+        expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should emit on click Analytics link", () => {
@@ -153,15 +160,17 @@ describe("AppHeaderComponent", () => {
             login: "ssss",
             name: "testName",
         } as AccountDetailsFragment;
-        const clickAnalyticsEmitterSpy = spyOn(
-            component.clickAnalyticsEmitter,
-            "emit",
-        );
+
+        const emitterSubscription$ = component.clickAnalyticsEmitter
+            .pipe(first())
+            .subscribe();
+
         emitClickOnElement(fixture, "#appHeaderMenuButton");
         fixture.detectChanges();
         const link = findElementByDataTestId(fixture, "openAnalyticsHeader");
         link.click();
-        expect(clickAnalyticsEmitterSpy).toHaveBeenCalledWith();
+
+        expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should emit on click LogOut link", () => {
@@ -169,47 +178,51 @@ describe("AppHeaderComponent", () => {
             login: "ssss",
             name: "testName",
         } as AccountDetailsFragment;
-        const logOutEmitterSpy = spyOn(component.logOutEmitter, "emit");
+
+        const emitterSubscription$ = component.logOutEmitter
+            .pipe(first())
+            .subscribe();
+
         emitClickOnElement(fixture, "#appHeaderMenuButton");
         fixture.detectChanges();
         const link = findElementByDataTestId(fixture, "openSignOutHeader");
         link.click();
-        expect(logOutEmitterSpy).toHaveBeenCalledWith();
+
+        expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should emit on click Login link", () => {
-        const loginEmitterSpy = spyOn(component.loginEmitter, "emit");
+        const emitterSubscription$ = component.loginEmitter
+            .pipe(first())
+            .subscribe();
         const link = findElementByDataTestId(fixture, "openUserProfileHeader");
         link.click();
-        expect(loginEmitterSpy).toHaveBeenCalledWith();
+        expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should emit on click Billing link", () => {
-        const clickBillingEmitterSpy = spyOn(
-            component.clickBillingEmitter,
-            "emit",
-        );
+        const emitterSubscription$ = component.clickBillingEmitter
+            .pipe(first())
+            .subscribe();
         const link = findElementByDataTestId(fixture, "openBillingPlanHeader");
         link.click();
-        expect(clickBillingEmitterSpy).toHaveBeenCalledWith();
+        expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should emit on click Your datasets link", () => {
-        const clickUserDatasetsEmitterSpy = spyOn(
-            component.clickUserDatasetsEmitter,
-            "emit",
-        );
+        const emitterSubscription$ = component.clickUserDatasetsEmitter
+            .pipe(first())
+            .subscribe();
         component.onUserDatasets();
-        expect(clickUserDatasetsEmitterSpy).toHaveBeenCalledWith();
+        expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should emit on click User Info link", () => {
-        const userProfileEmitterSpy = spyOn(
-            component.userProfileEmitter,
-            "emit",
-        );
+        const emitterSubscription$ = component.userProfileEmitter
+            .pipe(first())
+            .subscribe();
         component.onOpenUserInfo();
-        expect(userProfileEmitterSpy).toHaveBeenCalledWith();
+        expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should check selection of search suggestion", fakeAsync(() => {

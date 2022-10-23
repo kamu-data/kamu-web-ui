@@ -35,8 +35,9 @@ describe("SearchService", () => {
             "overviewDatasetSearch",
         ).and.returnValue(of(mockSearchDatasetOverviewQuery));
 
-        const subscription$ = service.onOverviewSearchChanges.pipe(first()).subscribe(
-            (searchResult: DatasetSearchResult) => {
+        const subscription$ = service.onOverviewSearchChanges
+            .pipe(first())
+            .subscribe((searchResult: DatasetSearchResult) => {
                 const expectedSearchData: DatasetSearchResult = {
                     datasets: [
                         mockSearchDatasetOverviewQuery.search.query.nodes[0],
@@ -47,8 +48,7 @@ describe("SearchService", () => {
                     currentPage: 1,
                 };
                 expect(searchResult).toEqual(expectedSearchData);
-            },
-        );
+            });
 
         const testSearchValue = "test";
         service.searchDatasets(testSearchValue);
@@ -66,11 +66,11 @@ describe("SearchService", () => {
             "autocompleteDatasetSearch",
         ).and.returnValue(of(mockAutocompleteItems));
 
-        const subscription$ = service.onAutocompleteSearchChanges.pipe(first()).subscribe(
-            (autocompleteItems: DatasetAutocompleteItem[]) => {
+        const subscription$ = service.onAutocompleteSearchChanges
+            .pipe(first())
+            .subscribe((autocompleteItems: DatasetAutocompleteItem[]) => {
                 expect(autocompleteItems).toEqual(mockAutocompleteItems);
-            },
-        );
+            });
 
         const testAutoCompleteValue = "test";
         service.autocompleteDatasetSearch(testAutoCompleteValue);
@@ -87,11 +87,11 @@ describe("SearchService", () => {
             "autocompleteDatasetSearch",
         ).and.returnValue(throwError("some error"));
 
-        const subscription$ = service.onAutocompleteSearchChanges.pipe(first()).subscribe(
-            (autocompleteItems: DatasetAutocompleteItem[]) => {
+        const subscription$ = service.onAutocompleteSearchChanges
+            .pipe(first())
+            .subscribe((autocompleteItems: DatasetAutocompleteItem[]) => {
                 expect(autocompleteItems).toEqual([]);
-            },
-        );
+            });
 
         const testAutoCompleteValue = "test";
         service.autocompleteDatasetSearch(testAutoCompleteValue);

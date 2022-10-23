@@ -114,11 +114,11 @@ describe("AuthApi", () => {
     }));
 
     it("should check user changes via full login with github", fakeAsync(() => {
-        const subscription$ = service.onUserChanges.pipe(first()).subscribe(
-            (user: MaybeNull<AccountDetailsFragment>) => {
+        const subscription$ = service.onUserChanges
+            .pipe(first())
+            .subscribe((user: MaybeNull<AccountDetailsFragment>) => {
                 user ? checkUserIsLogged(user) : fail("User must not be null");
-            },
-        );
+            });
 
         loginFullyViaGithub();
         tick();

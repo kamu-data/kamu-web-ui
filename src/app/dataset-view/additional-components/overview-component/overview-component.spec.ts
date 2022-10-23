@@ -7,6 +7,7 @@ import { OverviewDataUpdate } from "../../dataset.subscriptions.interface";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { first } from "rxjs/operators";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;
@@ -51,12 +52,11 @@ describe("OverviewComponent", () => {
     });
 
     it("should check toggle readme view", () => {
-        const toggleReadmeViewEmitSpy = spyOn(
-            component.toggleReadmeViewEmit,
-            "emit",
-        );
+        const emitterSubscription$ = component.toggleReadmeViewEmit
+            .pipe(first())
+            .subscribe();
         component.toggleReadmeView();
-        expect(toggleReadmeViewEmitSpy).toHaveBeenCalledWith();
+        expect(emitterSubscription$.closed).toBeTrue();
     });
 
     [
@@ -91,8 +91,11 @@ describe("OverviewComponent", () => {
 
     it("should select topic name", () => {
         const topicName = "test topic name";
-        const selectTopicEmitSpy = spyOn(component.selectTopicEmit, "emit");
+        const emitterSubscription$ = component.selectTopicEmit
+            .pipe(first())
+            .subscribe((name: string) => expect(name).toEqual(topicName));
+
         component.selectTopic(topicName);
-        expect(selectTopicEmitSpy).toHaveBeenCalledWith(topicName);
+        expect(emitterSubscription$.closed).toBeTrue();
     });
 });

@@ -8,6 +8,7 @@ import { DataComponent } from "./data-component";
 import { emitClickOnElement } from "src/app/common/base-test.helpers.spec";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { mockDataUpdate } from "../data-tabs.mock";
+import { first } from "rxjs/operators";
 
 describe("DataComponent", () => {
     let component: DataComponent;
@@ -32,12 +33,15 @@ describe("DataComponent", () => {
     });
 
     it("should check run sql button", () => {
-        const runSQLRequestEmitSpy = spyOn(component.runSQLRequestEmit, "emit");
+        const emitterSubscription$ = component.runSQLRequestEmit
+            .pipe(first())
+            .subscribe((query: string) =>
+                expect(query).toEqual(component.sqlRequestCode),
+            );
+
         emitClickOnElement(fixture, '[data-test-id="runSqlQueryButton"]');
         fixture.detectChanges();
-        expect(runSQLRequestEmitSpy).toHaveBeenCalledWith(
-            component.sqlRequestCode,
-        );
+        expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should check #ngOninit", () => {

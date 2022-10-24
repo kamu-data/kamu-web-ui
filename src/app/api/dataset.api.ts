@@ -64,8 +64,8 @@ export class DatasetApi {
             .watch({
                 accountName: params.accountName,
                 datasetName: params.datasetName,
-                perPage: params.numRecords || 10,
-                page: params.numPage || 0,
+                perPage: params.numRecords,
+                page: params.numPage,
             })
             .valueChanges.pipe(
                 first(),

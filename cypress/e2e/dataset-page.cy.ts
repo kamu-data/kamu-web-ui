@@ -37,7 +37,7 @@ describe("Dataset page", () => {
                 .find("button")
                 .should("have.text", "Take me home ");
             cy.get(".error-template").find("button").click();
-            cy.url().should("include", ProjectLinks.urlSearch);
+            cy.url().should("include", ProjectLinks.URL_SEARCH);
         });
     });
 

@@ -2,7 +2,7 @@ import { SpinnerService } from "./components/spinner/spinner.service";
 import { SpinnerInterceptor } from "./components/spinner/spinner.interceptor";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
-import { APP_INITIALIZER, ErrorHandler, NgModule } from "@angular/core";
+import { ErrorHandler, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { AppRoutingModule } from "./app-routing.module";
@@ -12,7 +12,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { environment } from "../environments/environment";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import {
@@ -25,11 +25,10 @@ import { CdkTableModule } from "@angular/cdk/table";
 import { InMemoryCache } from "@apollo/client/core";
 import { SearchApi } from "./api/search.api";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { AppSearchService } from "./search/search.service";
+import { SearchService } from "./search/search.service";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatSidenavModule } from "@angular/material/sidenav";
-import { SideNavService } from "./services/sidenav.service";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatButtonModule } from "@angular/material/button";
 import { SearchModule } from "./search/search.module";
@@ -58,16 +57,6 @@ import { ErrorHandlerService } from "./services/error-handler.service";
 
 const Services = [
     {
-        provide: APP_INITIALIZER,
-        multi: true,
-        deps: [AppConfigService],
-        useFactory: (appConfigService: AppConfigService) => {
-            return () => {
-                return appConfigService.loadAppConfig();
-            };
-        },
-    },
-    {
         provide: HTTP_INTERCEPTORS,
         useClass: SpinnerInterceptor,
         multi: true,
@@ -75,18 +64,17 @@ const Services = [
     },
     {
         provide: ErrorHandler,
-        useClass: ErrorHandlerService
+        useClass: ErrorHandlerService,
     },
     Apollo,
     AuthApi,
     SearchApi,
     DatasetApi,
     HttpLink,
-    AppSearchService,
+    SearchService,
     AppDatasetService,
     NavigationService,
     AppDatasetSubscriptionsService,
-    SideNavService,
     {
         provide: APOLLO_OPTIONS,
         useFactory: (httpLink: HttpLink, appConfig: AppConfigService) => {
@@ -144,6 +132,7 @@ const MatModules = [
             registrationStrategy: "registerWhenStable:30000",
         }),
         NgbModule,
+        NgbTypeaheadModule,
         //GraphQLModule,
         HttpClientModule,
         CdkTableModule,

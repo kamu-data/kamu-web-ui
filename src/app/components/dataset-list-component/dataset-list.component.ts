@@ -1,4 +1,4 @@
-import { relativeTime } from "src/app/common/data.helpers";
+import { DataHelpers } from "src/app/common/data.helpers";
 import { DatasetInfo } from "../../interface/navigation.interface";
 import { NavigationService } from "../../services/navigation.service";
 import {
@@ -13,7 +13,7 @@ import {
     DatasetBasicsFragment,
     DatasetSearchOverviewFragment,
 } from "src/app/api/kamu.graphql.interface";
-import { logError } from "src/app/common/app.helpers";
+import { promiseWithCatch } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-dataset-list",
@@ -53,16 +53,16 @@ export class DatasetListComponent {
     }
 
     public getRelativeTime(time: string): string {
-        return relativeTime(time);
+        return DataHelpers.relativeTime(time);
     }
 
     public selectTopic(topicName: string): void {
-        this.modalService
-            .warning({
+        promiseWithCatch(
+            this.modalService.warning({
                 message: "Feature coming soon",
                 yesButtonText: "Ok",
                 title: topicName,
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
 }

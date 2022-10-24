@@ -9,7 +9,7 @@ import AppValues from "src/app/common/app.values";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageNotFoundComponent {
-    public appLogo = `/${AppValues.appLogo}`;
+    public appLogo = `/${AppValues.APP_LOGO}`;
 
     constructor(private navigationService: NavigationService) {}
 

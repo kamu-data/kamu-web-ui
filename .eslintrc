@@ -9,14 +9,19 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/strict"
+    "plugin:@typescript-eslint/strict",
+    "plugin:jasmine/recommended"
   ],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "jasmine"],
+  "env": {
+    "jasmine": true
+  },
   "rules": {
     "@typescript-eslint/no-namespace": "off",
     "no-bitwise": 0,
-    "@typescript-eslint/no-extraneous-class": ["off"]
+    "@typescript-eslint/no-extraneous-class": ["off"],
+    "jasmine/new-line-before-expect": 0
   },
   "ignorePatterns": ["node_modules", "dist", "kamu.graphql.interface.ts"]
 }

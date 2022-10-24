@@ -1,34 +1,19 @@
-import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-
-interface AppConfig {
-    apiServerGqlUrl: string;
-}
+import { environment } from "src/environments/environment";
 
 @Injectable({
     providedIn: "root",
 })
 export class AppConfigService {
-    private appConfig?: AppConfig;
 
-    constructor(private http: HttpClient) {}
+    private readonly _apiServerGqlUrl: string;
 
-    loadAppConfig() {
-        return this.http
-            .get<AppConfig>("/assets/runtime-config.json")
-            .toPromise()
-            .then((data: AppConfig) => {
-                data.apiServerGqlUrl = this.toRemoteURL(data.apiServerGqlUrl);
-                this.appConfig = data;
-            });
+    constructor() {
+        this._apiServerGqlUrl = this.toRemoteURL(environment.api_server_gql_url);
     }
 
     get apiServerGqlUrl() {
-        if (!this.appConfig) {
-            throw Error("Config is not loaded!");
-        }
-
-        return this.appConfig.apiServerGqlUrl;
+        return this._apiServerGqlUrl;
     }
 
     // If loopback or any address is used - replace hostname with hostname from the browser

@@ -5,7 +5,9 @@ import {
 } from "../../interface/modal.interface";
 import { Subject } from "rxjs";
 
-@Injectable()
+@Injectable({
+    providedIn: "root",
+})
 export class ModalService {
     /**
      * @example
@@ -28,7 +30,7 @@ export class ModalService {
 
     private showModal$: Subject<ModalCommandInterface> =
         new Subject<ModalCommandInterface>();
-    private currentModalType = "blank";
+    private currentModalType = "dialog";
 
     /**
      * Setter for type of currently displayed modal.
@@ -42,13 +44,6 @@ export class ModalService {
      */
     get modalType(): string {
         return this.currentModalType;
-    }
-
-    public close(): void {
-        this.showModal$.next({
-            context: {},
-            type: "blank",
-        });
     }
 
     public success(
@@ -75,14 +70,6 @@ export class ModalService {
         );
     }
 
-    public filter_modal(
-        options: ModalArgumentsInterface,
-    ): Promise<boolean | string> {
-        return this._showFilter(
-            Object.assign(options, { status: "filter_modal" }),
-        );
-    }
-
     private _showDialog(
         context: ModalArgumentsInterface,
     ): Promise<boolean | string> {
@@ -92,20 +79,7 @@ export class ModalService {
         });
 
         return new Promise((resolve) => {
-            context.handler = (arg: boolean | string) => resolve(arg);
-        });
-    }
-
-    private _showFilter(
-        context: ModalArgumentsInterface,
-    ): Promise<boolean | string> {
-        this.showModal$.next({
-            type: "filter",
-            context,
-        });
-
-        return new Promise((resolve) => {
-            context.handler = (arg: boolean | string) => resolve(arg);
+            resolve(context.status ?? "");
         });
     }
 

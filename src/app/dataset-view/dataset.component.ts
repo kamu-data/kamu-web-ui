@@ -27,7 +27,8 @@ import { DatasetBasicsFragment } from "../api/kamu.graphql.interface";
 import { BaseComponent } from "../common/base.component";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { logError, requireValue } from "../common/app.helpers";
+import { promiseWithCatch, requireValue } from "../common/app.helpers";
+import AppValues from "../common/app.values";
 
 @Component({
     selector: "app-dataset",
@@ -47,7 +48,7 @@ export class DatasetComponent
     public lineageGraphView: [number, number] = [500, 600];
     public isMarkdownEditView = false;
 
-    @HostListener("window:resize", ["$event"])
+    @HostListener("window:resize")
     private checkWindowSize(): void {
         this.changeLineageGraphView();
     }
@@ -78,9 +79,9 @@ export class DatasetComponent
                     );
                 }),
         );
-        this.appDatasetService.requestDatasetMainData(
-            this.getDatasetInfoFromUrl(),
-        );
+        this.appDatasetService
+            .requestDatasetMainData(this.getDatasetInfoFromUrl())
+            .subscribe();
 
         this.initDatasetViewByType(
             this.getDatasetInfoFromUrl(),
@@ -102,9 +103,9 @@ export class DatasetComponent
             this.datasetBasics?.name !==
             this.getDatasetInfoFromUrl().datasetName
         ) {
-            this.appDatasetService.requestDatasetMainData(
-                this.getDatasetInfoFromUrl(),
-            );
+            this.appDatasetService
+                .requestDatasetMainData(this.getDatasetInfoFromUrl())
+                .subscribe();
         }
     }
 
@@ -113,7 +114,7 @@ export class DatasetComponent
             setTimeout(() => {
                 const searchResultContainer: HTMLElement | null =
                     document.getElementById("searchResultContainerContent");
-                if (searchResultContainer !== null) {
+                if (searchResultContainer) {
                     const styleElement: CSSStyleDeclaration = getComputedStyle(
                         searchResultContainer,
                     );
@@ -149,24 +150,27 @@ export class DatasetComponent
     }
 
     public onClickSearchAdditionalButton(method: string) {
-        if (method === searchAdditionalButtonsEnum.DeriveFrom) {
-            this.onClickDeriveFrom();
-        }
-        if (method === searchAdditionalButtonsEnum.Reputation) {
-            this.onClickReputation();
-        }
-        if (method === searchAdditionalButtonsEnum.Explore) {
-            this.onClickExplore();
-        }
-        if (method === searchAdditionalButtonsEnum.Descission) {
-            this.onClickDescission();
-        }
-        this.modalService
-            .warning({
+        const mapperMethod: {
+            [key in searchAdditionalButtonsEnum]: () => void;
+        } = {
+            [searchAdditionalButtonsEnum.DeriveFrom]: () =>
+                this.onClickDeriveFrom(),
+            [searchAdditionalButtonsEnum.Reputation]: () =>
+                this.onClickReputation(),
+            [searchAdditionalButtonsEnum.Explore]: () => this.onClickExplore(),
+            [searchAdditionalButtonsEnum.Descission]: () =>
+                this.onClickDescission(),
+            [searchAdditionalButtonsEnum.Starred]: () => null,
+            [searchAdditionalButtonsEnum.UnWatch]: () => null,
+        };
+        mapperMethod[method as searchAdditionalButtonsEnum]();
+
+        promiseWithCatch(
+            this.modalService.warning({
                 message: "Feature coming soon",
                 yesButtonText: "Ok",
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
 
     private initOverviewTab(): void {
@@ -186,11 +190,9 @@ export class DatasetComponent
         currentPage: number,
     ): void {
         this.datasetViewType = DatasetViewTypeEnum.History;
-        this.appDatasetService.requestDatasetHistory(
-            datasetInfo,
-            20,
-            currentPage - 1,
-        );
+        this.appDatasetService
+            .requestDatasetHistory(datasetInfo, 20, currentPage - 1)
+            .subscribe();
     }
 
     private initLineageTab(): void {
@@ -215,13 +217,13 @@ export class DatasetComponent
     }
 
     public selectTopic(topicName: string): void {
-        this.modalService
-            .warning({
+        promiseWithCatch(
+            this.modalService.warning({
                 message: "Feature coming soon",
                 yesButtonText: "Ok",
                 title: topicName,
-            })
-            .catch((e) => logError(e));
+            }),
+        );
     }
 
     public onClickLineageNode(node: Node): void {
@@ -347,10 +349,10 @@ export class DatasetComponent
         return {
             // Both parameters are mandatory in URL, router would not activate this component otherwise
             accountName: requireValue(
-                paramMap.get(ProjectLinks.urlParamAccountName),
+                paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
             ),
             datasetName: requireValue(
-                paramMap.get(ProjectLinks.urlParamDatasetName),
+                paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
             ),
         };
     }
@@ -358,7 +360,7 @@ export class DatasetComponent
     private getCurrentPageFromUrl(): number {
         const page: string | null =
             this.activatedRoute.snapshot.queryParamMap.get(
-                ProjectLinks.urlQueryParamPage,
+                ProjectLinks.URL_QUERY_PARAM_PAGE,
             );
         return page ? Number(page) : 1;
     }
@@ -366,7 +368,7 @@ export class DatasetComponent
     private getDatasetViewTypeFromUrl(): DatasetViewTypeEnum {
         const tabValue: string | null =
             this.activatedRoute.snapshot.queryParamMap.get(
-                ProjectLinks.urlQueryParamTab,
+                ProjectLinks.URL_QUERY_PARAM_TAB,
             );
         if (tabValue) {
             const tab = tabValue as DatasetViewTypeEnum;
@@ -393,10 +395,12 @@ export class DatasetComponent
 
     public onRunSQLRequest(query: string): void {
         if (this.datasetBasics) {
-            this.appDatasetService.requestDatasetDataSqlRun(
-                query,
-                50, // TODO: Propagate limit from UI and display when it was reached
-            );
+            this.appDatasetService
+                .requestDatasetDataSqlRun(
+                    query,
+                    AppValues.SQL_QUERY_LIMIT, // TODO: Propagate limit from UI and display when it was reached
+                )
+                .subscribe();
         }
     }
 }

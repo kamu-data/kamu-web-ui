@@ -10,27 +10,16 @@ import {
     SearchDatasetsOverviewQuery,
 } from "../api/kamu.graphql.interface";
 
-@Injectable()
-export class AppSearchService {
-    private inputQueryChanges$: Subject<string> = new Subject<string>();
+@Injectable({ providedIn: "root" })
+export class SearchService {
     private overviewSearchChanges$: Subject<DatasetSearchResult> =
         new Subject<DatasetSearchResult>();
     private autocompleteSearchChanges$: Subject<DatasetAutocompleteItem[]> =
         new Subject<DatasetAutocompleteItem[]>();
 
-    constructor(
-        private searchApi: SearchApi,
-    ) {}
+    constructor(private searchApi: SearchApi) {}
 
-    public searchQueryChanges(searchValue: string): void {
-        this.inputQueryChanges$.next(searchValue);
-    }
-
-    public get onSearchQueryChanges(): Observable<string> {
-        return this.inputQueryChanges$.asObservable();
-    }
-
-    public overviewSearchChanges(searchData: DatasetSearchResult): void {
+    private overviewSearchChanges(searchData: DatasetSearchResult): void {
         this.overviewSearchChanges$.next(searchData);
     }
 
@@ -38,7 +27,7 @@ export class AppSearchService {
         return this.overviewSearchChanges$.asObservable();
     }
 
-    public autocompleteSearchChanges(
+    private autocompleteSearchChanges(
         autocompleteData: DatasetAutocompleteItem[],
     ) {
         this.autocompleteSearchChanges$.next(autocompleteData);
@@ -51,21 +40,21 @@ export class AppSearchService {
     }
 
     public searchDatasets(searchQuery: string, page = 0): void {
-        this.searchApi.overviewDatasetSearch(searchQuery, page).subscribe(
-            (data: SearchDatasetsOverviewQuery) => {
+        this.searchApi
+            .overviewDatasetSearch(searchQuery, page)
+            .subscribe((data: SearchDatasetsOverviewQuery) => {
                 const datasets: DatasetSearchOverviewFragment[] =
                     data.search.query.nodes;
                 const pageInfo = data.search.query.pageInfo;
-                const totalCount: number = data.search.query.totalCount ?? 0;
+                const totalCount: number = data.search.query.totalCount;
 
                 this.overviewSearchChanges({
                     datasets,
                     pageInfo,
                     totalCount,
-                    currentPage: page + 1 || 1,
+                    currentPage: page + 1,
                 });
-            }
-        );
+            });
     }
 
     public autocompleteDatasetSearch(searchQuery: string): void {

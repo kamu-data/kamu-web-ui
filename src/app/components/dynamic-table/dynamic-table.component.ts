@@ -9,7 +9,7 @@ import {
     Output,
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import AppValues from "../../common/app.values";
+import { capitalizeFirstLetter } from "src/app/common/app.helpers";
 import {
     TableSourceInterface,
     TableSourceRowInterface,
@@ -62,7 +62,7 @@ export class DynamicTableComponent
         }
         newColumnName = newColumnName.toLocaleLowerCase();
 
-        return AppValues.capitalizeFirstLetter(newColumnName);
+        return capitalizeFirstLetter(newColumnName);
     }
 
     public onSelectRow(row: string): void {

@@ -213,7 +213,7 @@ export type DatasetConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount?: Maybe<Scalars["Int"]>;
+    totalCount: Scalars["Int"];
 };
 
 export type DatasetData = {
@@ -358,6 +358,7 @@ export type FetchStepUrl = {
     __typename?: "FetchStepUrl";
     cache?: Maybe<SourceCaching>;
     eventTime?: Maybe<EventTimeSource>;
+    headers?: Maybe<Array<RequestHeader>>;
     url: Scalars["String"];
 };
 
@@ -407,7 +408,7 @@ export type MetadataBlockConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount?: Maybe<Scalars["Int"]>;
+    totalCount: Scalars["Int"];
 };
 
 export type MetadataBlockEdge = {
@@ -421,6 +422,7 @@ export type MetadataBlockExtended = {
     blockHash: Scalars["Multihash"];
     event: MetadataEvent;
     prevBlockHash?: Maybe<Scalars["Multihash"]>;
+    sequenceNumber: Scalars["Int"];
     systemTime: Scalars["DateTime"];
 };
 
@@ -573,6 +575,12 @@ export type ReadStepParquet = {
     schema?: Maybe<Array<Scalars["String"]>>;
 };
 
+export type RequestHeader = {
+    __typename?: "RequestHeader";
+    name: Scalars["String"];
+    value: Scalars["String"];
+};
+
 export type Search = {
     __typename?: "Search";
     /** Perform search across all resources */
@@ -595,7 +603,7 @@ export type SearchResultConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount?: Maybe<Scalars["Int"]>;
+    totalCount: Scalars["Int"];
 };
 
 export type SearchResultEdge = {
@@ -751,7 +759,7 @@ export type GetDatasetHistoryQuery = {
                           __typename?: "MetadataChain";
                           blocks: {
                               __typename?: "MetadataBlockConnection";
-                              totalCount?: number | null;
+                              totalCount: number;
                               nodes: Array<
                                   {
                                       __typename?: "MetadataBlockExtended";
@@ -879,7 +887,7 @@ export type DatasetLastUpdateFragment = {
             __typename?: "MetadataChain";
             blocks: {
                 __typename?: "MetadataBlockConnection";
-                totalCount?: number | null;
+                totalCount: number;
                 nodes: Array<
                     {
                         __typename?: "MetadataBlockExtended";
@@ -1170,7 +1178,7 @@ export type SearchDatasetsOverviewQuery = {
         __typename?: "Search";
         query: {
             __typename?: "SearchResultConnection";
-            totalCount?: number | null;
+            totalCount: number;
             nodes: Array<
                 { __typename: "Dataset" } & DatasetSearchOverviewFragment
             >;

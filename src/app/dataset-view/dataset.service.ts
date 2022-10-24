@@ -1,8 +1,12 @@
 import { InvalidSqlError } from "./../common/errors";
-import { DatasetPageInfoFragment } from "./../api/kamu.graphql.interface";
+import {
+    DatasetDataFragment,
+    DatasetLineageFragment,
+    DatasetPageInfoFragment,
+} from "./../api/kamu.graphql.interface";
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, throwError } from "rxjs";
 import {
     DataRow,
     DatasetLineageNode,
@@ -25,15 +29,15 @@ import {
     MetadataSchemaUpdate,
     OverviewDataUpdate,
 } from "./dataset.subscriptions.interface";
-import { isNil } from "lodash";
 import { DatasetApi } from "../api/dataset.api";
 import { DatasetNotFoundError } from "../common/errors";
+import { catchError, map } from "rxjs/operators";
 
 @Injectable({ providedIn: "root" })
 export class AppDatasetService {
     constructor(
         private datasetApi: DatasetApi,
-        private appDatasetSubsService: AppDatasetSubscriptionsService
+        private appDatasetSubsService: AppDatasetSubscriptionsService,
     ) {}
 
     private datasetChanges$: Subject<DatasetBasicsFragment> =
@@ -47,19 +51,22 @@ export class AppDatasetService {
         this.datasetChanges$.next(searchDatasetInfo);
     }
 
-    public requestDatasetMainData(info: DatasetInfo): void {
-        this.datasetApi.getDatasetMainData(info).subscribe(
-            (data: GetDatasetMainDataQuery) => {
+    public requestDatasetMainData(info: DatasetInfo): Observable<void> {
+        return this.datasetApi.getDatasetMainData(info).pipe(
+            map((data: GetDatasetMainDataQuery) => {
                 if (data.datasets.byOwnerAndName) {
                     this.datasetUpdate(data.datasets.byOwnerAndName);
                     this.overviewTabDataUpdate(data);
                     this.dataTabDataUpdate(data);
                     this.metadataTabDataUpdate(data);
-                    this.lineageTabDataUpdate(data);
+                    this.lineageTabDataUpdate(
+                        data.datasets.byOwnerAndName,
+                        data.datasets.byOwnerAndName,
+                    );
                 } else {
                     throw new DatasetNotFoundError();
                 }
-            }
+            }),
         );
     }
 
@@ -67,11 +74,11 @@ export class AppDatasetService {
         info: DatasetInfo,
         numRecords: number,
         numPage: number,
-    ): void {
-        this.datasetApi
+    ): Observable<void> {
+        return this.datasetApi
             .getDatasetHistory({ ...info, numRecords, numPage })
-            .subscribe(
-                (data: GetDatasetHistoryQuery) => {
+            .pipe(
+                map((data: GetDatasetHistoryQuery) => {
                     if (data.datasets.byOwnerAndName) {
                         const dataset: DatasetBasicsFragment =
                             data.datasets.byOwnerAndName;
@@ -93,13 +100,16 @@ export class AppDatasetService {
                     } else {
                         throw new DatasetNotFoundError();
                     }
-                }
+                }),
             );
     }
 
-    public requestDatasetDataSqlRun(query: string, limit: number): void {
-        this.datasetApi.getDatasetDataSqlRun({ query, limit }).subscribe(
-            (data: GetDatasetDataSqlRunQuery) => {
+    public requestDatasetDataSqlRun(
+        query: string,
+        limit: number,
+    ): Observable<void> {
+        return this.datasetApi.getDatasetDataSqlRun({ query, limit }).pipe(
+            map((data: GetDatasetDataSqlRunQuery) => {
                 const content: DataRow[] = JSON.parse(
                     data.data.query.data.content,
                 ) as DataRow[];
@@ -108,10 +118,8 @@ export class AppDatasetService {
                 ) as DatasetSchema;
                 const dataUpdate: DataUpdate = { content, schema };
                 this.appDatasetSubsService.changeDatasetData(dataUpdate);
-            },
-            () => {
-                throw new InvalidSqlError();
-            },
+            }),
+            catchError(() => throwError(new InvalidSqlError())),
         );
     }
 
@@ -122,8 +130,9 @@ export class AppDatasetService {
 
     private overviewTabDataUpdate(data: GetDatasetMainDataQuery): void {
         if (data.datasets.byOwnerAndName) {
-            const content: DataRow[] =
-                AppDatasetService.parseContentOfDataset(data);
+            const content: DataRow[] = AppDatasetService.parseContentOfDataset(
+                data.datasets.byOwnerAndName,
+            );
             const overview: DatasetOverviewFragment =
                 data.datasets.byOwnerAndName;
 
@@ -143,8 +152,9 @@ export class AppDatasetService {
 
     private dataTabDataUpdate(data: GetDatasetMainDataQuery): void {
         if (data.datasets.byOwnerAndName) {
-            const content: DataRow[] =
-                AppDatasetService.parseContentOfDataset(data);
+            const content: DataRow[] = AppDatasetService.parseContentOfDataset(
+                data.datasets.byOwnerAndName,
+            );
             const schemaData: DatasetSchema = JSON.parse(
                 data.datasets.byOwnerAndName.metadata.currentSchema.content,
             ) as DatasetSchema;
@@ -178,22 +188,20 @@ export class AppDatasetService {
         }
     }
 
-    private lineageTabDataUpdate(data: GetDatasetMainDataQuery): void {
+    private lineageTabDataUpdate(
+        originDatasetBasics: DatasetBasicsFragment,
+        lineage: DatasetLineageFragment,
+    ): void {
         const lineageResponse: DatasetLineageNode =
-            this.lineageResponseFromRawQuery(data);
+            this.lineageResponseFromRawQuery(originDatasetBasics, lineage);
         this.updatelineageGraph(lineageResponse);
     }
 
     private lineageResponseFromRawQuery(
-        data: GetDatasetMainDataQuery,
+        originDatasetBasics: DatasetBasicsFragment,
+        lineage: DatasetLineageFragment,
     ): DatasetLineageNode {
-        if (isNil(data.datasets.byOwnerAndName)) {
-            throw new Error("Dataset not resolved by ID");
-        }
-        const originDatasetBasics = data.datasets
-            .byOwnerAndName as DatasetBasicsFragment;
-        const originMetadata = data.datasets.byOwnerAndName.metadata;
-
+        const originMetadata = lineage.metadata;
         return {
             basics: originDatasetBasics,
             downstreamDependencies:
@@ -361,12 +369,8 @@ export class AppDatasetService {
     }
 
     private static parseContentOfDataset(
-        data: GetDatasetMainDataQuery,
+        dataFragment: DatasetDataFragment,
     ): DataRow[] {
-        return data.datasets.byOwnerAndName
-            ? (JSON.parse(
-                  data.datasets.byOwnerAndName.data.tail.data.content,
-              ) as DataRow[])
-            : [];
+        return JSON.parse(dataFragment.data.tail.data.content) as DataRow[];
     }
 }

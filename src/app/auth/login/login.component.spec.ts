@@ -10,15 +10,12 @@ describe("LoginComponent", () => {
         await TestBed.configureTestingModule({
             declarations: [LoginComponent],
         }).compileComponents();
-    });
-
-    beforeEach(() => {
         fixture = TestBed.createComponent(LoginComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
 
-    it("should create", async () => {
-        await expect(component).toBeTruthy();
+    it("should create", () => {
+        expect(component).toBeTruthy();
     });
 });

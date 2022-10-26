@@ -29,6 +29,7 @@
                 <i *ngIf="row.kind === 'ROOT'" class="bi bi-journal-album"></i>
                 <mat-icon *ngIf="row.kind === 'DERIVATIVE'">merge</mat-icon>
                 <button
+                    attr.data-test-id="dataset-name-button-{{ rowIndex }}"
                     class="dataset-list-container__title mb-1 pl-0"
                     (click)="isClickableRow && onSelectDataset(row)"
                 >

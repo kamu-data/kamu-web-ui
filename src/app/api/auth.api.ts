@@ -16,7 +16,9 @@ import { MutationResult } from "apollo-angular";
 import { isNull } from "lodash";
 import { AuthenticationError } from "../common/errors";
 
-@Injectable()
+@Injectable({
+    providedIn: "root",
+})
 export class AuthApi {
     private user: MaybeNull<AccountDetailsFragment> = null;
 

@@ -58,14 +58,14 @@
                                     [resultTemplate]="rt"
                                     placeholder="Search or jump to..."
                                     [inputFormatter]="formatter"
-                                    [focusFirst]="false"
+                                    [(ngModel)]="searchQuery"
                                     aria-label="Search"
                                     aria-describedby="addon-wrapping"
-                                    (focusin)="isSearchActive = true"
                                     (click)="onClickInput()"
                                     (selectItem)="onSelectItem($event)"
                                     (keyup.enter)="onSearch($event)"
                                     (blur)="onSearch($event)"
+                                    (focus)="onFocus($event)"
                                 />
                             </div>
 
@@ -74,7 +74,7 @@
                                     <i class="bi bi-journal-album mr-2"></i>
                                     <ngb-highlight
                                         [result]="r.dataset.name"
-                                        [term]="t.name"
+                                        [term]="t"
                                     ></ngb-highlight>
                                 </div>
                                 <div

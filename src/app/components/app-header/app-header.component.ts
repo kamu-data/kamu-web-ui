@@ -1,14 +1,29 @@
 import {
+    ActivatedRoute,
+    NavigationEnd,
+    Params,
+    Router,
+    RouterEvent,
+} from "@angular/router";
+import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
     Input,
+    OnInit,
     Output,
     ViewChild,
 } from "@angular/core";
 import { Observable, OperatorFunction } from "rxjs";
-import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
+import {
+    debounceTime,
+    distinctUntilChanged,
+    filter,
+    map,
+    switchMap,
+} from "rxjs/operators";
 import {
     DatasetAutocompleteItem,
     TypeNames,
@@ -24,7 +39,7 @@ import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
     templateUrl: "./app-header.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppHeaderComponent extends BaseComponent {
+export class AppHeaderComponent extends BaseComponent implements OnInit {
     @Input() public appLogo: string;
     @Input() public isMobileView: boolean;
     @Input() public isVisible: boolean;
@@ -50,9 +65,35 @@ export class AppHeaderComponent extends BaseComponent {
     public defaultUsername: string = AppValues.DEFAULT_USERNAME;
     public isSearchActive = false;
     public isCollapsedAppHeaderMenu = false;
+    public searchQuery: string | null = "";
 
-    constructor(private appSearchAPI: SearchApi) {
+    constructor(
+        private appSearchAPI: SearchApi,
+        private route: ActivatedRoute,
+        private router: Router,
+        private cdr: ChangeDetectorRef,
+    ) {
         super();
+    }
+    ngOnInit(): void {
+        this.trackSubscriptions(
+            this.router.events
+                .pipe(
+                    filter((event) => event instanceof NavigationEnd),
+                    map((event) => event as RouterEvent),
+                )
+                .subscribe((event: RouterEvent) => {
+                    if (!event.url.includes("?query=")) {
+                        this.searchQuery = "";
+                        this.cdr.detectChanges();
+                    }
+                }),
+            this.route.queryParams.subscribe((param: Params) => {
+                if (param.query) {
+                    this.searchQuery = param.query as string;
+                }
+            }),
+        );
     }
 
     public isDatasetType(type: string): boolean {
@@ -90,12 +131,10 @@ export class AppHeaderComponent extends BaseComponent {
 
     public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
         this.isSearchActive = false;
-
         if (event.item) {
             this.selectDatasetEmitter.emit(
                 event.item as DatasetAutocompleteItem,
             );
-
             setTimeout(() => {
                 const typeaheadInput: HTMLElement | null =
                     document.getElementById("typeahead-http");
@@ -118,6 +157,15 @@ export class AppHeaderComponent extends BaseComponent {
                 appHeaderButton.classList.remove("Details--on");
             }
         }
+    }
+
+    public onFocus(event: Event): void {
+        this.isSearchActive = true;
+        event.stopPropagation();
+        setTimeout(() => {
+            const inputEvent: Event = new Event("input");
+            (event.target as HTMLElement).dispatchEvent(inputEvent);
+        }, 0);
     }
 
     public onSearch(event: Event): void {

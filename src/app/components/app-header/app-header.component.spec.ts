@@ -1,3 +1,4 @@
+import { RouterTestingModule } from "@angular/router/testing";
 import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import { FormsModule } from "@angular/forms";
 import { MatMenuModule } from "@angular/material/menu";
@@ -13,6 +14,8 @@ import {
     emitClickOnElement,
     findElementByDataTestId,
     findNativeElement,
+    routerMock,
+    routerMockEventSubject,
 } from "src/app/common/base-test.helpers.spec";
 import { AppHeaderComponent } from "./app-header.component";
 import { BrowserModule } from "@angular/platform-browser";
@@ -26,11 +29,19 @@ import {
 import { mockDatasetBasicsFragment } from "src/app/search/mock.data";
 import { first } from "rxjs/operators";
 import AppValues from "src/app/common/app.values";
+import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
+import ProjectLinks from "src/app/project-links";
 
 describe("AppHeaderComponent", () => {
     let component: AppHeaderComponent;
     let fixture: ComponentFixture<AppHeaderComponent>;
     let searchApi: SearchApi;
+
+    function pushNavigationEnd(): void {
+        routerMockEventSubject.next(
+            new NavigationEnd(1, ProjectLinks.URL_SEARCH, ""),
+        );
+    }
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -39,10 +50,20 @@ describe("AppHeaderComponent", () => {
                 FormsModule,
                 BrowserModule,
                 NgbTypeaheadModule,
+                RouterTestingModule,
             ],
             declarations: [AppHeaderComponent],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
-            providers: [Apollo],
+            providers: [
+                Apollo,
+                { provide: Router, useValue: routerMock },
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        queryParams: of({ query: "test" }),
+                    },
+                },
+            ],
         })
             .overrideComponent(AppHeaderComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
@@ -63,6 +84,13 @@ describe("AppHeaderComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should check initial value search input", () => {
+        pushNavigationEnd();
+        component.ngOnInit();
+        fixture.detectChanges();
+        expect(component.searchQuery).toEqual("test");
     });
 
     it("should check focus on input", () => {

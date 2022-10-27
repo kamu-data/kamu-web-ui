@@ -78,9 +78,13 @@ describe("DatasetApi", () => {
                 limit: 50,
             })
             .subscribe((res: GetDatasetDataSqlRunQuery) => {
-                expect(res.data.query.data.content).toEqual(
-                    mockDatasetDataSqlRunResponse.data.query.data.content,
-                );
+                const actualQuery = res.data.query;
+                const expectedQuery = mockDatasetDataSqlRunResponse.data.query;
+                if (actualQuery.__typename === "DataQuerySuccessResult" && expectedQuery.__typename === "DataQuerySuccessResult") {
+                    expect(actualQuery.data.content).toEqual(expectedQuery.data.content);
+                } else {
+                    fail("expecting successful query");
+                }
             });
 
         const op = controller.expectOne(GetDatasetDataSqlRunDocument);

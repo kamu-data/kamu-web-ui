@@ -7,16 +7,22 @@ query getDatasetDataSQLRun($query: String!, $limit: Int!) {
       dataFormat: JSON
       limit: $limit
     ) {
-      schema {
-        format
-        content
+      __typename
+      ... on DataQuerySuccessResult {
+        schema {
+          format
+          content
+        }
+        data {
+          format
+          content
+          numRecords
+        }
+        limit
       }
-      data {
-        format
-        content
-        numRecords
+      ... on DataQueryFailureResult {
+        error
       }
-      limit
     }
   }
 }

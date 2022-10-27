@@ -157,7 +157,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
             data: {
                 __typename: "DatasetData",
                 tail: {
-                    __typename: "DataQueryResult",
+                    __typename: "DataQuerySuccessResult",
                     schema: {
                         __typename: "DataSchema",
                         format: DataSchemaFormat.Parquet,
@@ -579,7 +579,7 @@ export const mockDatasetDataSqlRunResponse: GetDatasetDataSqlRunQuery = {
     data: {
         __typename: "DataQueries",
         query: {
-            __typename: "DataQueryResult",
+            __typename: "DataQuerySuccessResult",
             schema: {
                 __typename: "DataSchema",
                 format: DataSchemaFormat.ParquetJson,

@@ -156,8 +156,15 @@ export type DataQueriesQueryArgs = {
     schemaFormat?: InputMaybe<DataSchemaFormat>;
 };
 
-export type DataQueryResult = {
-    __typename?: "DataQueryResult";
+export type DataQueryFailureResult = {
+    __typename?: "DataQueryFailureResult";
+    error: Scalars["String"];
+};
+
+export type DataQueryResult = DataQueryFailureResult | DataQuerySuccessResult;
+
+export type DataQuerySuccessResult = {
+    __typename?: "DataQuerySuccessResult";
     data: DataBatch;
     limit: Scalars["Int"];
     schema: DataSchema;
@@ -721,21 +728,23 @@ export type GetDatasetDataSqlRunQuery = {
     __typename?: "Query";
     data: {
         __typename?: "DataQueries";
-        query: {
-            __typename?: "DataQueryResult";
-            limit: number;
-            schema: {
-                __typename?: "DataSchema";
-                format: DataSchemaFormat;
-                content: string;
-            };
-            data: {
-                __typename?: "DataBatch";
-                format: DataBatchFormat;
-                content: string;
-                numRecords: number;
-            };
-        };
+        query:
+            | { __typename: "DataQueryFailureResult"; error: string }
+            | {
+                  __typename: "DataQuerySuccessResult";
+                  limit: number;
+                  schema: {
+                      __typename?: "DataSchema";
+                      format: DataSchemaFormat;
+                      content: string;
+                  };
+                  data: {
+                      __typename?: "DataBatch";
+                      format: DataBatchFormat;
+                      content: string;
+                      numRecords: number;
+                  };
+              };
     };
 };
 
@@ -844,8 +853,13 @@ export type DatasetCurrentInfoFragment = {
     keywords?: Array<string> | null;
 };
 
-export type DatasetDataFrameFragment = {
-    __typename: "DataQueryResult";
+type DatasetDataFrame_DataQueryFailureResult_Fragment = {
+    __typename: "DataQueryFailureResult";
+    error: string;
+};
+
+type DatasetDataFrame_DataQuerySuccessResult_Fragment = {
+    __typename: "DataQuerySuccessResult";
     schema: {
         __typename?: "DataSchema";
         format: DataSchemaFormat;
@@ -858,6 +872,10 @@ export type DatasetDataFrameFragment = {
     };
 };
 
+export type DatasetDataFrameFragment =
+    | DatasetDataFrame_DataQueryFailureResult_Fragment
+    | DatasetDataFrame_DataQuerySuccessResult_Fragment;
+
 export type DatasetDataSizeFragment = {
     __typename?: "DatasetData";
     numRecordsTotal: number;
@@ -868,7 +886,13 @@ export type DatasetDataFragment = {
     __typename?: "Dataset";
     data: {
         __typename: "DatasetData";
-        tail: { __typename?: "DataQueryResult" } & DatasetDataFrameFragment;
+        tail:
+            | ({
+                  __typename?: "DataQueryFailureResult";
+              } & DatasetDataFrame_DataQueryFailureResult_Fragment)
+            | ({
+                  __typename?: "DataQuerySuccessResult";
+              } & DatasetDataFrame_DataQuerySuccessResult_Fragment);
     } & DatasetDataSizeFragment;
 };
 
@@ -1229,13 +1253,18 @@ export const DatasetDataSizeFragmentDoc = gql`
 `;
 export const DatasetDataFrameFragmentDoc = gql`
     fragment DatasetDataFrame on DataQueryResult {
-        schema {
-            format
-            content
+        ... on DataQuerySuccessResult {
+            schema {
+                format
+                content
+            }
+            data {
+                format
+                content
+            }
         }
-        data {
-            format
-            content
+        ... on DataQueryFailureResult {
+            error
         }
         __typename
     }
@@ -1548,16 +1577,22 @@ export const GetDatasetDataSqlRunDocument = gql`
                 dataFormat: JSON
                 limit: $limit
             ) {
-                schema {
-                    format
-                    content
+                __typename
+                ... on DataQuerySuccessResult {
+                    schema {
+                        format
+                        content
+                    }
+                    data {
+                        format
+                        content
+                        numRecords
+                    }
+                    limit
                 }
-                data {
-                    format
-                    content
-                    numRecords
+                ... on DataQueryFailureResult {
+                    error
                 }
-                limit
             }
         }
     }

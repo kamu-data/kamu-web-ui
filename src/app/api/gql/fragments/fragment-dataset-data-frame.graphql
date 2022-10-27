@@ -1,11 +1,16 @@
 fragment DatasetDataFrame on DataQueryResult {
-  schema {
-    format
-    content
+  ... on DataQuerySuccessResult {
+    schema {
+      format
+      content
+    }
+    data {
+      format
+      content
+    }
   }
-  data {
-    format
-    content
+  ... on DataQueryFailureResult {
+    error
   }
   __typename
 }

@@ -31,12 +31,15 @@ import { first } from "rxjs/operators";
 import AppValues from "src/app/common/app.values";
 import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("AppHeaderComponent", () => {
     let component: AppHeaderComponent;
     let fixture: ComponentFixture<AppHeaderComponent>;
     let searchApi: SearchApi;
-
+    let navigationService: NavigationService;
+    const DEFAULT_SEARCH_QUERY = "defaultSearchQuery";
     function pushNavigationEnd(): void {
         routerMockEventSubject.next(
             new NavigationEnd(1, ProjectLinks.URL_SEARCH, ""),
@@ -51,6 +54,7 @@ describe("AppHeaderComponent", () => {
                 BrowserModule,
                 NgbTypeaheadModule,
                 RouterTestingModule,
+                ApolloTestingModule,
             ],
             declarations: [AppHeaderComponent],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -60,7 +64,7 @@ describe("AppHeaderComponent", () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        queryParams: of({ query: "test" }),
+                        queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
                     },
                 },
             ],
@@ -80,6 +84,7 @@ describe("AppHeaderComponent", () => {
         component.isMobileView = false;
         fixture.detectChanges();
         searchApi = TestBed.inject(SearchApi);
+        navigationService = TestBed.inject(NavigationService);
     });
 
     it("should create", () => {
@@ -90,7 +95,7 @@ describe("AppHeaderComponent", () => {
         pushNavigationEnd();
         component.ngOnInit();
         fixture.detectChanges();
-        expect(component.searchQuery).toEqual("test");
+        expect(component.searchQuery).toEqual(DEFAULT_SEARCH_QUERY);
     });
 
     it("should check focus on input", () => {
@@ -317,15 +322,30 @@ describe("AppHeaderComponent", () => {
             "triggerMenuClick",
         ).and.callThrough();
 
+        const navigateToSearchSpy = spyOn(
+            navigationService,
+            "navigateToSearch",
+        );
+
         const event = new KeyboardEvent("keyup", {
             key: "Enter",
         });
         const el = findElementByDataTestId(fixture, "searchInput");
-        const elBlurSpy = spyOn(el, "blur").and.callThrough();
-
         el.dispatchEvent(event);
         tick(201);
         expect(triggerMenuClickSpy).toHaveBeenCalledWith();
-        expect(elBlurSpy).toHaveBeenCalledWith();
+        expect(navigateToSearchSpy).toHaveBeenCalledWith(DEFAULT_SEARCH_QUERY);
     }));
+
+    it("should check redirect to initial search page", () => {
+        component.searchQuery = "";
+        const navigateToHomeSpy = spyOn(navigationService, "navigateToHome");
+
+        const event = new KeyboardEvent("keyup", {
+            key: "Enter",
+        });
+        const el = findElementByDataTestId(fixture, "searchInput");
+        el.dispatchEvent(event);
+        expect(navigateToHomeSpy).toHaveBeenCalledWith();
+    });
 });

@@ -33,6 +33,8 @@ import AppValues from "../../common/app.values";
 import { BaseComponent } from "src/app/common/base.component";
 import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
+import ProjectLinks from "src/app/project-links";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-header",
@@ -65,13 +67,14 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     public defaultUsername: string = AppValues.DEFAULT_USERNAME;
     public isSearchActive = false;
     public isCollapsedAppHeaderMenu = false;
-    public searchQuery: string | null = "";
+    public searchQuery = "";
 
     constructor(
         private appSearchAPI: SearchApi,
         private route: ActivatedRoute,
         private router: Router,
         private cdr: ChangeDetectorRef,
+        private navigationService: NavigationService,
     ) {
         super();
     }
@@ -83,7 +86,11 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
                     map((event) => event as RouterEvent),
                 )
                 .subscribe((event: RouterEvent) => {
-                    if (!event.url.includes("?query=")) {
+                    if (
+                        !event.url.includes(
+                            `?${ProjectLinks.URL_QUERY_PARAM_QUERY}=`,
+                        )
+                    ) {
                         this.searchQuery = "";
                         this.cdr.detectChanges();
                     }
@@ -170,13 +177,17 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
 
     public onSearch(event: Event): void {
         this.isSearchActive = false;
-
         setTimeout(() => {
             if (this.isMobileView) {
                 this.triggerMenuClick();
             }
             (event.target as HTMLElement).blur();
         }, 200);
+        if (!this.searchQuery) {
+            this.navigationService.navigateToHome();
+            return;
+        }
+        this.navigationService.navigateToSearch(this.searchQuery);
     }
 
     public onLogin(): void {

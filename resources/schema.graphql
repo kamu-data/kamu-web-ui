@@ -97,7 +97,7 @@ type DataQueries {
 }
 
 type DataQueryFailureResult {
-	error: String!
+	errors: [String!]!
 }
 
 union DataQueryResult = DataQuerySuccessResult | DataQueryFailureResult

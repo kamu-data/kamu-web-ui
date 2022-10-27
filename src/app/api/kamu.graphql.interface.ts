@@ -158,7 +158,7 @@ export type DataQueriesQueryArgs = {
 
 export type DataQueryFailureResult = {
     __typename?: "DataQueryFailureResult";
-    error: Scalars["String"];
+    errors: Array<Scalars["String"]>;
 };
 
 export type DataQueryResult = DataQueryFailureResult | DataQuerySuccessResult;
@@ -729,7 +729,7 @@ export type GetDatasetDataSqlRunQuery = {
     data: {
         __typename?: "DataQueries";
         query:
-            | { __typename: "DataQueryFailureResult"; error: string }
+            | { __typename: "DataQueryFailureResult"; errors: Array<string> }
             | {
                   __typename: "DataQuerySuccessResult";
                   limit: number;
@@ -853,29 +853,6 @@ export type DatasetCurrentInfoFragment = {
     keywords?: Array<string> | null;
 };
 
-type DatasetDataFrame_DataQueryFailureResult_Fragment = {
-    __typename: "DataQueryFailureResult";
-    error: string;
-};
-
-type DatasetDataFrame_DataQuerySuccessResult_Fragment = {
-    __typename: "DataQuerySuccessResult";
-    schema: {
-        __typename?: "DataSchema";
-        format: DataSchemaFormat;
-        content: string;
-    };
-    data: {
-        __typename?: "DataBatch";
-        format: DataBatchFormat;
-        content: string;
-    };
-};
-
-export type DatasetDataFrameFragment =
-    | DatasetDataFrame_DataQueryFailureResult_Fragment
-    | DatasetDataFrame_DataQuerySuccessResult_Fragment;
-
 export type DatasetDataSizeFragment = {
     __typename?: "DatasetData";
     numRecordsTotal: number;
@@ -887,12 +864,20 @@ export type DatasetDataFragment = {
     data: {
         __typename: "DatasetData";
         tail:
-            | ({
-                  __typename?: "DataQueryFailureResult";
-              } & DatasetDataFrame_DataQueryFailureResult_Fragment)
-            | ({
-                  __typename?: "DataQuerySuccessResult";
-              } & DatasetDataFrame_DataQuerySuccessResult_Fragment);
+            | { __typename: "DataQueryFailureResult"; errors: Array<string> }
+            | {
+                  __typename: "DataQuerySuccessResult";
+                  schema: {
+                      __typename?: "DataSchema";
+                      format: DataSchemaFormat;
+                      content: string;
+                  };
+                  data: {
+                      __typename?: "DataBatch";
+                      format: DataBatchFormat;
+                      content: string;
+                  };
+              };
     } & DatasetDataSizeFragment;
 };
 
@@ -1251,36 +1236,30 @@ export const DatasetDataSizeFragmentDoc = gql`
         estimatedSize
     }
 `;
-export const DatasetDataFrameFragmentDoc = gql`
-    fragment DatasetDataFrame on DataQueryResult {
-        ... on DataQuerySuccessResult {
-            schema {
-                format
-                content
-            }
-            data {
-                format
-                content
-            }
-        }
-        ... on DataQueryFailureResult {
-            error
-        }
-        __typename
-    }
-`;
 export const DatasetDataFragmentDoc = gql`
     fragment DatasetData on Dataset {
         data {
             ...DatasetDataSize
             tail(limit: $limit, dataFormat: JSON) {
-                ...DatasetDataFrame
+                __typename
+                ... on DataQuerySuccessResult {
+                    schema {
+                        format
+                        content
+                    }
+                    data {
+                        format
+                        content
+                    }
+                }
+                ... on DataQueryFailureResult {
+                    errors
+                }
             }
             __typename
         }
     }
     ${DatasetDataSizeFragmentDoc}
-    ${DatasetDataFrameFragmentDoc}
 `;
 export const DatasetBasicsFragmentDoc = gql`
     fragment DatasetBasics on Dataset {
@@ -1591,7 +1570,7 @@ export const GetDatasetDataSqlRunDocument = gql`
                     limit
                 }
                 ... on DataQueryFailureResult {
-                    error
+                    errors
                 }
             }
         }

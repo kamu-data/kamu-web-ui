@@ -21,7 +21,7 @@ query getDatasetDataSQLRun($query: String!, $limit: Int!) {
         limit
       }
       ... on DataQueryFailureResult {
-        error
+        errors
       }
     }
   }

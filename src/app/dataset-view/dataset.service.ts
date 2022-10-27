@@ -110,13 +110,14 @@ export class AppDatasetService {
     ): Observable<void> {
         return this.datasetApi.getDatasetDataSqlRun({ query, limit }).pipe(
             map((result: GetDatasetDataSqlRunQuery) => {
-                if (result.data.query.__typename === "DataQuerySuccessResult") {
-                    const content: DataRow[] = JSON.parse(result.data.query.data.content) as DataRow[];
-                    const schema: DatasetSchema = JSON.parse(result.data.query.schema.content) as DatasetSchema;
+                const queryResult = result.data.query;
+                if (queryResult.__typename === "DataQuerySuccessResult") {
+                    const content: DataRow[] = JSON.parse(queryResult.data.content) as DataRow[];
+                    const schema: DatasetSchema = JSON.parse(queryResult.schema.content) as DatasetSchema;
                     const dataUpdate: DataUpdate = { content, schema };
                     this.appDatasetSubsService.changeDatasetData(dataUpdate);
                 } else {
-                    throw new InvalidSqlError(result.data.query.error);
+                    throw new InvalidSqlError(queryResult.errors);
                 }
             }),
             catchError(() => throwError(new InvalidSqlError())),
@@ -371,10 +372,11 @@ export class AppDatasetService {
     private static parseContentOfDataset(
         dataFragment: DatasetDataFragment,
     ): DataRow[] {
-        if (dataFragment.data.tail.__typename === "DataQuerySuccessResult") {
-            return JSON.parse(dataFragment.data.tail.data.content) as DataRow[];
+        const tail = dataFragment.data.tail;
+        if (tail.__typename === "DataQuerySuccessResult") {
+            return JSON.parse(tail.data.content) as DataRow[];
         } else {
-            throw new InvalidSqlError(dataFragment.data.tail.error);
+            throw new InvalidSqlError(tail.errors);
         }
         
     }

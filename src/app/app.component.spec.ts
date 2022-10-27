@@ -1,3 +1,4 @@
+import { ModalComponent } from "./components/modal/modal.component";
 import { FormsModule } from "@angular/forms";
 import { mockAutocompleteItems } from "./search/mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -44,7 +45,7 @@ describe("AppComponent", () => {
                 NgbTypeaheadModule,
                 FormsModule,
             ],
-            declarations: [AppComponent],
+            declarations: [AppComponent, ModalComponent],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 SearchService,

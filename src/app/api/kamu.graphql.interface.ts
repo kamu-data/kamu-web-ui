@@ -156,12 +156,24 @@ export type DataQueriesQueryArgs = {
     schemaFormat?: InputMaybe<DataSchemaFormat>;
 };
 
-export type DataQueryFailureResult = {
-    __typename?: "DataQueryFailureResult";
-    errors: Array<Scalars["String"]>;
+export type DataQueryErrorResult = {
+    error: Scalars["String"];
 };
 
-export type DataQueryResult = DataQueryFailureResult | DataQuerySuccessResult;
+export type DataQueryInternalErrorResult = DataQueryErrorResult & {
+    __typename?: "DataQueryInternalErrorResult";
+    error: Scalars["String"];
+};
+
+export type DataQueryInvalidSqlResult = DataQueryErrorResult & {
+    __typename?: "DataQueryInvalidSqlResult";
+    error: Scalars["String"];
+};
+
+export type DataQueryResult =
+    | DataQueryInternalErrorResult
+    | DataQueryInvalidSqlResult
+    | DataQuerySuccessResult;
 
 export type DataQuerySuccessResult = {
     __typename?: "DataQuerySuccessResult";
@@ -729,7 +741,8 @@ export type GetDatasetDataSqlRunQuery = {
     data: {
         __typename?: "DataQueries";
         query:
-            | { __typename: "DataQueryFailureResult"; errors: Array<string> }
+            | { __typename: "DataQueryInternalErrorResult"; error: string }
+            | { __typename: "DataQueryInvalidSqlResult"; error: string }
             | {
                   __typename: "DataQuerySuccessResult";
                   limit: number;
@@ -864,7 +877,8 @@ export type DatasetDataFragment = {
     data: {
         __typename: "DatasetData";
         tail:
-            | { __typename: "DataQueryFailureResult"; errors: Array<string> }
+            | { __typename: "DataQueryInternalErrorResult"; error: string }
+            | { __typename: "DataQueryInvalidSqlResult"; error: string }
             | {
                   __typename: "DataQuerySuccessResult";
                   schema: {
@@ -1252,8 +1266,8 @@ export const DatasetDataFragmentDoc = gql`
                         content
                     }
                 }
-                ... on DataQueryFailureResult {
-                    errors
+                ... on DataQueryErrorResult {
+                    error
                 }
             }
             __typename
@@ -1569,8 +1583,8 @@ export const GetDatasetDataSqlRunDocument = gql`
                     }
                     limit
                 }
-                ... on DataQueryFailureResult {
-                    errors
+                ... on DataQueryErrorResult {
+                    error
                 }
             }
         }

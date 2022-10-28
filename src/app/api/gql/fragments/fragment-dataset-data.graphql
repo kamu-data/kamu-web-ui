@@ -13,8 +13,8 @@ fragment DatasetData on Dataset {
           content
         }
       }
-      ... on DataQueryFailureResult {
-        errors
+      ... on DataQueryErrorResult {
+        error
       }
     }
     __typename

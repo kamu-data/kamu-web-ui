@@ -117,7 +117,7 @@ export class AppDatasetService {
                     const dataUpdate: DataUpdate = { content, schema };
                     this.appDatasetSubsService.changeDatasetData(dataUpdate);
                 } else {
-                    throw new InvalidSqlError(queryResult.errors);
+                    throw new InvalidSqlError(queryResult.error);
                 }
             }),
             catchError(() => throwError(new InvalidSqlError())),
@@ -376,7 +376,7 @@ export class AppDatasetService {
         if (tail.__typename === "DataQuerySuccessResult") {
             return JSON.parse(tail.data.content) as DataRow[];
         } else {
-            throw new InvalidSqlError(tail.errors);
+            throw new InvalidSqlError(tail.error);
         }
         
     }

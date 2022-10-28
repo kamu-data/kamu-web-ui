@@ -23,12 +23,6 @@ export class CustomApolloError extends KamuError {
 }
 
 export class InvalidSqlError extends KamuError {
-    private errors: string[];
-
-    constructor(errors?: string[]) {
-        super();
-        this.errors = errors ? errors : [];
-    }    
     public accept(visitor: KamuErrorVisitor): void {
         visitor.visitInvalidSqlError(this);
     }

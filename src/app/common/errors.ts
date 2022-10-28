@@ -88,7 +88,7 @@ export class KamuErrorHandler implements KamuErrorVisitor {
         promiseWithCatch(
             this.modalService.error({
                 title: ErrorTexts.ERROR_TITLE_REQUEST_FAILED,
-                message: `${ErrorTexts.ERROR_INVALID_SQL_QUERY}: ${e.message}.`,
+                message: `${ErrorTexts.ERROR_INVALID_SQL_QUERY}: ${e.message}`,
                 yesButtonText: "Close",
             }),
         );
@@ -99,7 +99,7 @@ export class KamuErrorHandler implements KamuErrorVisitor {
             this.modalService.error({
                 title: ErrorTexts.ERROR_TITLE_REQUEST_FAILED,
                 message: e.message 
-                    ? `${ErrorTexts.ERROR_EXECUTING_SQL_QUERY}: ${e.message}` 
+                    ? `${ErrorTexts.ERROR_EXECUTING_SQL_QUERY}: ${e.message}`
                     : ErrorTexts.ERROR_EXECUTING_SQL_QUERY,
                 yesButtonText: "Close",
             }),

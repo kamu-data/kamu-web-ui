@@ -7,7 +7,7 @@ import { MatMenuModule } from "@angular/material/menu";
 import { DataComponent } from "./data-component";
 import { emitClickOnElement } from "src/app/common/base-test.helpers.spec";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { mockDataUpdate } from "../data-tabs.mock";
+import { mockDataUpdate, mockSqlErrorUpdate } from "../data-tabs.mock";
 import { first } from "rxjs/operators";
 
 describe("DataComponent", () => {
@@ -50,13 +50,29 @@ describe("DataComponent", () => {
         expect(component.currentSchema).toEqual(DataComponent.DefaultDatasetSchema);
         expect(component.sqlErrorMarker).toBe(null);
 
-        appDatasetSubsService.changeDatasetData(mockDataUpdate);
         component.ngOnInit();
-
-        expect(component.currentData).toBeDefined();
-        expect(component.currentSchema).toBeDefined();
+        expect(component.currentData).toEqual([]);
+        expect(component.currentSchema).toEqual(DataComponent.DefaultDatasetSchema);
         expect(component.sqlRequestCode).toEqual(
             `select\n  *\nfrom 'mockName'`,
         );
+        expect(component.sqlErrorMarker).toBe(null);        
+    });
+
+    it("should check successful query result update", () => {
+        appDatasetSubsService.changeDatasetData(mockDataUpdate);
+
+        expect(component.currentData).toEqual(mockDataUpdate.content);
+        expect(component.currentSchema).toEqual(mockDataUpdate.schema);
+        expect(component.sqlErrorMarker).toBe(null);
+   
+    });
+
+    it("should check invalid SQL result update", () => {
+        appDatasetSubsService.observeSqlErrorOccurred(mockSqlErrorUpdate);
+
+        expect(component.currentData).toEqual([]);
+        expect(component.currentSchema).toEqual(DataComponent.DefaultDatasetSchema);
+        expect(component.sqlErrorMarker).toBe(mockSqlErrorUpdate.error);        
     });
 });

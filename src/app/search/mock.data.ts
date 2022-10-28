@@ -596,3 +596,23 @@ export const mockDatasetDataSqlRunResponse: GetDatasetDataSqlRunQuery = {
         },
     },
 };
+
+export const mockDatasetDataSqlRunInvalidSqlResponse: GetDatasetDataSqlRunQuery = {
+    data: {
+        __typename: "DataQueries",
+        query: {
+            __typename: "DataQueryInvalidSqlResult",
+            error: "invalid SQL query"
+        },
+    },
+};
+
+export const mockDatasetDataSqlRunInternalErrorResponse: GetDatasetDataSqlRunQuery = {
+    data: {
+        __typename: "DataQueries",
+        query: {
+            __typename: "DataQueryInternalErrorResult",
+            error: "internal server error"
+        },
+    },
+};

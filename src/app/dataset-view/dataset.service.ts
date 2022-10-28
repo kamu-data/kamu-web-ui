@@ -55,14 +55,20 @@ export class DatasetService {
         return this.datasetApi.getDatasetMainData(info).pipe(
             map((data: GetDatasetMainDataQuery) => {
                 if (data.datasets.byOwnerAndName) {
-                    this.datasetUpdate(data.datasets.byOwnerAndName);
-                    this.overviewTabDataUpdate(data);
-                    this.dataTabDataUpdate(data);
-                    this.metadataTabDataUpdate(data);
-                    this.lineageTabDataUpdate(
-                        data.datasets.byOwnerAndName,
-                        data.datasets.byOwnerAndName,
-                    );
+                    const dataTail = data.datasets.byOwnerAndName.data.tail;
+                    if (dataTail.__typename === "DataQuerySuccessResult") {
+                        this.datasetUpdate(data.datasets.byOwnerAndName);
+                        this.overviewTabDataUpdate(data.datasets.byOwnerAndName, data.datasets.byOwnerAndName.data, dataTail);
+                        this.dataTabDataUpdate(data.datasets.byOwnerAndName, dataTail);
+                        this.metadataTabDataUpdate(data);
+                        this.lineageTabDataUpdate(
+                            data.datasets.byOwnerAndName,
+                            data.datasets.byOwnerAndName,
+                        );
+                    } else {
+                        throw new SqlExecutionError(dataTail.error)
+                    }
+
                 } else {
                     throw new DatasetNotFoundError();
                 }
@@ -133,41 +139,31 @@ export class DatasetService {
         this.datasetChanges(dataset);
     }
 
-    private overviewTabDataUpdate(data: GetDatasetMainDataQuery): void {
-        if (data.datasets.byOwnerAndName) {
-            const tail = data.datasets.byOwnerAndName.data.tail;
-            if (tail.__typename === "DataQuerySuccessResult") {
-                const content: DataRow[] = DatasetService.parseDataRows(tail);
-                const overview: DatasetOverviewFragment = data.datasets.byOwnerAndName;
-                const size: DatasetDataSizeFragment = data.datasets.byOwnerAndName.data;
+    private overviewTabDataUpdate(
+        overview: DatasetOverviewFragment,
+        size: DatasetDataSizeFragment,
+        tail: DataQuerySuccessResultViewFragment
+    ): void {
+        const content: DataRow[] = DatasetService.parseDataRows(tail);
 
-                const overviewDataUpdate: OverviewDataUpdate = {
-                    content,
-                    overview,
-                    size,
-                };
-                this.appDatasetSubsService.changeDatasetOverviewData(
-                    overviewDataUpdate,
-                );                
-            } else {
-                throw new SqlExecutionError(tail.error);
-            }
-        }
+        const overviewDataUpdate: OverviewDataUpdate = {
+            content,
+            overview,
+            size,
+        };
+        this.appDatasetSubsService.changeDatasetOverviewData(
+            overviewDataUpdate,
+        );                
     }
 
-    private dataTabDataUpdate(data: GetDatasetMainDataQuery): void {
-        if (data.datasets.byOwnerAndName) {
-            const dataset = data.datasets.byOwnerAndName;
-            const tail = dataset.data.tail;
-            if (tail.__typename === "DataQuerySuccessResult") {
-                const content: DataRow[] =  DatasetService.parseDataRows(tail);
-                const schema: DatasetSchema = DatasetService.parseSchema(dataset.metadata.currentSchema.content);
-                const dataUpdate: DataUpdate = { content, schema };
-                this.appDatasetSubsService.changeDatasetData(dataUpdate);
-            } else {
-                throw new SqlExecutionError(tail.error);
-            }
-        }
+    private dataTabDataUpdate(
+        metadata: DatasetMetadataSummaryFragment, 
+        tail: DataQuerySuccessResultViewFragment
+    ): void {
+        const content: DataRow[] =  DatasetService.parseDataRows(tail);
+        const schema: DatasetSchema = DatasetService.parseSchema(metadata.metadata.currentSchema.content);
+        const dataUpdate: DataUpdate = { content, schema };
+        this.appDatasetSubsService.changeDatasetData(dataUpdate);
     }
 
     private metadataTabDataUpdate(data: GetDatasetMainDataQuery): void {

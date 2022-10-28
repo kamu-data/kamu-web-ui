@@ -1,6 +1,7 @@
 import { mockDatasetBasicsFragment } from "./../../search/mock.data";
 import {
     DatasetHistoryUpdate,
+    DataSqlErrorUpdate,
     DataUpdate,
 } from "../dataset.subscriptions.interface";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
@@ -17,7 +18,15 @@ export const mockDataUpdate: DataUpdate = {
             },
         ],
     },
-    content: [],
+    content: [
+        {
+            "mockName": "someValueOfMockType"
+        }
+    ],
+};
+
+export const mockSqlErrorUpdate: DataSqlErrorUpdate = {
+    error: "sql parser error",
 };
 
 export const mockHistoryUpdate: DatasetHistoryUpdate = {

@@ -1,0 +1,10 @@
+fragment DataQuerySuccessResultView on DataQuerySuccessResult {
+  schema {
+    format
+    content
+  }
+  data {
+    format
+    content
+  }
+}

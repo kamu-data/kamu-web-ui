@@ -9,18 +9,13 @@ query getDatasetDataSQLRun($query: String!, $limit: Int!) {
     ) {
       __typename
       ... on DataQuerySuccessResult {
-        schema {
-          format
-          content
-        }
-        data {
-          format
-          content
-          numRecords
-        }
+        ...DataQuerySuccessResultView
         limit
       }
-      ... on DataQueryErrorResult {
+      ... on DataQueryInvalidSqlResult {
+        error
+      }
+      ... on DataQueryInternalErrorResult {
         error
       }
     }

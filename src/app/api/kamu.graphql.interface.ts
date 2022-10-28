@@ -743,21 +743,10 @@ export type GetDatasetDataSqlRunQuery = {
         query:
             | { __typename: "DataQueryInternalErrorResult"; error: string }
             | { __typename: "DataQueryInvalidSqlResult"; error: string }
-            | {
+            | ({
                   __typename: "DataQuerySuccessResult";
                   limit: number;
-                  schema: {
-                      __typename?: "DataSchema";
-                      format: DataSchemaFormat;
-                      content: string;
-                  };
-                  data: {
-                      __typename?: "DataBatch";
-                      format: DataBatchFormat;
-                      content: string;
-                      numRecords: number;
-                  };
-              };
+              } & DataQuerySuccessResultViewFragment);
     };
 };
 
@@ -850,6 +839,20 @@ export type AccountDetailsFragment = {
     gravatarId?: string | null;
 };
 
+export type DataQuerySuccessResultViewFragment = {
+    __typename?: "DataQuerySuccessResult";
+    schema: {
+        __typename?: "DataSchema";
+        format: DataSchemaFormat;
+        content: string;
+    };
+    data: {
+        __typename?: "DataBatch";
+        format: DataBatchFormat;
+        content: string;
+    };
+};
+
 export type DatasetBasicsFragment = {
     __typename?: "Dataset";
     id: any;
@@ -879,19 +882,9 @@ export type DatasetDataFragment = {
         tail:
             | { __typename: "DataQueryInternalErrorResult"; error: string }
             | { __typename: "DataQueryInvalidSqlResult"; error: string }
-            | {
+            | ({
                   __typename: "DataQuerySuccessResult";
-                  schema: {
-                      __typename?: "DataSchema";
-                      format: DataSchemaFormat;
-                      content: string;
-                  };
-                  data: {
-                      __typename?: "DataBatch";
-                      format: DataBatchFormat;
-                      content: string;
-                  };
-              };
+              } & DataQuerySuccessResultViewFragment);
     } & DatasetDataSizeFragment;
 };
 
@@ -1250,6 +1243,18 @@ export const DatasetDataSizeFragmentDoc = gql`
         estimatedSize
     }
 `;
+export const DataQuerySuccessResultViewFragmentDoc = gql`
+    fragment DataQuerySuccessResultView on DataQuerySuccessResult {
+        schema {
+            format
+            content
+        }
+        data {
+            format
+            content
+        }
+    }
+`;
 export const DatasetDataFragmentDoc = gql`
     fragment DatasetData on Dataset {
         data {
@@ -1257,16 +1262,12 @@ export const DatasetDataFragmentDoc = gql`
             tail(limit: $limit, dataFormat: JSON) {
                 __typename
                 ... on DataQuerySuccessResult {
-                    schema {
-                        format
-                        content
-                    }
-                    data {
-                        format
-                        content
-                    }
+                    ...DataQuerySuccessResultView
                 }
-                ... on DataQueryErrorResult {
+                ... on DataQueryInvalidSqlResult {
+                    error
+                }
+                ... on DataQueryInternalErrorResult {
                     error
                 }
             }
@@ -1274,6 +1275,7 @@ export const DatasetDataFragmentDoc = gql`
         }
     }
     ${DatasetDataSizeFragmentDoc}
+    ${DataQuerySuccessResultViewFragmentDoc}
 `;
 export const DatasetBasicsFragmentDoc = gql`
     fragment DatasetBasics on Dataset {
@@ -1572,23 +1574,19 @@ export const GetDatasetDataSqlRunDocument = gql`
             ) {
                 __typename
                 ... on DataQuerySuccessResult {
-                    schema {
-                        format
-                        content
-                    }
-                    data {
-                        format
-                        content
-                        numRecords
-                    }
+                    ...DataQuerySuccessResultView
                     limit
                 }
-                ... on DataQueryErrorResult {
+                ... on DataQueryInvalidSqlResult {
+                    error
+                }
+                ... on DataQueryInternalErrorResult {
                     error
                 }
             }
         }
     }
+    ${DataQuerySuccessResultViewFragmentDoc}
 `;
 
 @Injectable({

@@ -1,5 +1,5 @@
 import { mockDatasetBasicsFragment, mockNode } from "./../search/mock.data";
-import { AppDatasetService } from "./dataset.service";
+import { DatasetService } from "./dataset.service";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
@@ -20,7 +20,7 @@ import AppValues from "../common/app.values";
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
     let fixture: ComponentFixture<DatasetComponent>;
-    let appDatasetService: AppDatasetService;
+    let appDatasetService: DatasetService;
     let navigationService: NavigationService;
     let route: ActivatedRoute;
 
@@ -69,7 +69,7 @@ describe("DatasetComponent", () => {
         fixture = TestBed.createComponent(DatasetComponent);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsFragment;
-        appDatasetService = TestBed.inject(AppDatasetService);
+        appDatasetService = TestBed.inject(DatasetService);
         route = TestBed.inject(ActivatedRoute);
         navigationService = TestBed.inject(NavigationService);
         fixture.detectChanges();

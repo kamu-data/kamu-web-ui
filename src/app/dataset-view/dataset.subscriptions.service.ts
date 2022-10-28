@@ -1,6 +1,7 @@
 import { Observable, ReplaySubject, Subject } from "rxjs";
 import { Injectable } from "@angular/core";
 import {
+    DataSqlErrorUpdate,
     DatasetHistoryUpdate,
     DataUpdate,
     LineageUpdate,
@@ -13,6 +14,8 @@ export class AppDatasetSubscriptionsService {
         new ReplaySubject<OverviewDataUpdate>(1 /*bufferSize*/);
     private datasetDataChanges$: Subject<DataUpdate> =
         new ReplaySubject<DataUpdate>(1 /*bufferSize*/);
+    private datasetDataSqlErrorOccurred$: Subject<DataSqlErrorUpdate> = 
+        new ReplaySubject<DataSqlErrorUpdate>(1 /*bufferSize*/);
     private datasetHistoryChanges$: Subject<DatasetHistoryUpdate> =
         new ReplaySubject<DatasetHistoryUpdate>(1 /*bufferSize*/);
     private metadataSchemaChanges$: Subject<MetadataSchemaUpdate> =
@@ -34,6 +37,14 @@ export class AppDatasetSubscriptionsService {
 
     public get onDatasetDataChanges(): Observable<DataUpdate> {
         return this.datasetDataChanges$.asObservable();
+    }
+
+    public observeSqlErrorOccurred(dataSqlErrorUpdate: DataSqlErrorUpdate) {
+        this.datasetDataSqlErrorOccurred$.next(dataSqlErrorUpdate);
+    }
+
+    public get onDatasetDataSqlErrorOccured(): Observable<DataSqlErrorUpdate> {
+        return this.datasetDataSqlErrorOccurred$.asObservable();
     }
 
     public changeDatasetHistory(historyUpdate: DatasetHistoryUpdate): void {

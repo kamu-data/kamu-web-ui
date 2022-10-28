@@ -3,7 +3,7 @@ import { ApolloError } from "@apollo/client/core";
 import {
     AuthenticationError,
     DatasetNotFoundError,
-    InvalidSqlError,
+    SqlExecutionError,
 } from "../common/errors";
 import { ModalService } from "../components/modal/modal.service";
 import { TestBed } from "@angular/core/testing";
@@ -44,10 +44,10 @@ describe("ErrorHandlerService", () => {
             modalService,
             "error",
         ).and.callThrough();
-        service.handleError(new InvalidSqlError());
+        service.handleError(new SqlExecutionError());
         expect(modalServiceSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
-                message: ErrorTexts.ERROR_BAD_SQL_QUERY,
+                message: ErrorTexts.ERROR_EXECUTING_SQL_QUERY,
             }),
         );
     });

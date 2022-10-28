@@ -9,7 +9,7 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { DatasetApi } from "../api/dataset.api";
 import { ModalService } from "../components/modal/modal.service";
-import { AppDatasetService } from "./dataset.service";
+import { DatasetService } from "./dataset.service";
 import { AppDatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
@@ -20,7 +20,7 @@ import {
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
 import { of, throwError } from "rxjs";
-import { DatasetNotFoundError, InvalidSqlError } from "../common/errors";
+import { DatasetNotFoundError, SqlExecutionError } from "../common/errors";
 import {
     DatasetHistoryUpdate,
     OverviewDataUpdate,
@@ -28,7 +28,7 @@ import {
 import { first } from "rxjs/operators";
 
 describe("AppDatasetService", () => {
-    let service: AppDatasetService;
+    let service: DatasetService;
     let datasetApi: DatasetApi;
     let appDatasetSubsService: AppDatasetSubscriptionsService;
 
@@ -42,12 +42,12 @@ describe("AppDatasetService", () => {
             providers: [
                 DatasetApi,
                 ModalService,
-                AppDatasetService,
+                DatasetService,
                 AppDatasetSubscriptionsService,
                 Apollo,
             ],
         });
-        service = TestBed.inject(AppDatasetService);
+        service = TestBed.inject(DatasetService);
         datasetApi = TestBed.inject(DatasetApi);
         appDatasetSubsService = TestBed.inject(AppDatasetSubscriptionsService);
     });
@@ -226,7 +226,7 @@ describe("AppDatasetService", () => {
         const query = "select\n  *\nfrom testTable";
         const limit = 20;
         spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(
-            throwError(new InvalidSqlError()),
+            throwError(new SqlExecutionError()),
         );
 
         appDatasetSubsService.onDatasetDataChanges.subscribe(() =>
@@ -241,7 +241,7 @@ describe("AppDatasetService", () => {
                     fail("Unexpected success");
                 },
                 (e: Error) => {
-                    expect(e).toEqual(new InvalidSqlError());
+                    expect(e).toEqual(new SqlExecutionError());
                 },
             );
         expect(subscription$.closed).toBeTrue();

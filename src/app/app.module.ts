@@ -34,7 +34,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { SearchModule } from "./search/search.module";
 import { AccountComponent } from "./auth/account/account.component";
 import { DatasetModule } from "./dataset-view/dataset.module";
-import { AppDatasetService } from "./dataset-view/dataset.service";
+import { DatasetService } from "./dataset-view/dataset.service";
 import { DatasetCreateModule } from "./dataset-create/dataset-create.module";
 import { AppHeaderComponent } from "./components/app-header/app-header.component";
 import { MatOptionModule } from "@angular/material/core";
@@ -81,7 +81,7 @@ const Services = [
     AppSettingsService,
     HttpLink,
     SearchService,
-    AppDatasetService,
+    DatasetService,
     NavigationService,
     AppDatasetSubscriptionsService,
     {

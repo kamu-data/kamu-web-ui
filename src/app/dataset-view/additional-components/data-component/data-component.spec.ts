@@ -46,7 +46,9 @@ describe("DataComponent", () => {
 
     it("should check #ngOninit", () => {
         component.datasetBasics = mockDatasetBasicsFragment;
-        expect(component.currentData).not.toBeDefined();
+        expect(component.currentData).toEqual([]);
+        expect(component.currentSchema).toEqual(DataComponent.DefaultDatasetSchema);
+        expect(component.sqlErrorMarker).toBe(null);
 
         appDatasetSubsService.changeDatasetData(mockDataUpdate);
         component.ngOnInit();

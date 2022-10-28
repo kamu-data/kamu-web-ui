@@ -4,16 +4,12 @@ fragment DatasetData on Dataset {
     tail(limit: $limit, dataFormat: JSON) {
       __typename
       ... on DataQuerySuccessResult {
-        schema {
-          format
-          content
-        }
-        data {
-          format
-          content
-        }
+        ...DataQuerySuccessResultView
       }
-      ... on DataQueryErrorResult {
+      ... on DataQueryInvalidSqlResult {
+        error
+      }
+      ... on DataQueryInternalErrorResult {
         error
       }
     }

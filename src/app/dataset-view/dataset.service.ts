@@ -1,6 +1,6 @@
-import { InvalidSqlError } from "./../common/errors";
+import { SqlExecutionError } from "./../common/errors";
 import {
-    DatasetDataFragment,
+    DataQuerySuccessResultViewFragment,
     DatasetLineageFragment,
     DatasetPageInfoFragment,
 } from "./../api/kamu.graphql.interface";
@@ -34,7 +34,7 @@ import { DatasetNotFoundError } from "../common/errors";
 import { catchError, map } from "rxjs/operators";
 
 @Injectable({ providedIn: "root" })
-export class AppDatasetService {
+export class DatasetService {
     constructor(
         private datasetApi: DatasetApi,
         private appDatasetSubsService: AppDatasetSubscriptionsService,
@@ -109,18 +109,22 @@ export class AppDatasetService {
         limit: number,
     ): Observable<void> {
         return this.datasetApi.getDatasetDataSqlRun({ query, limit }).pipe(
+            catchError(() => throwError(new SqlExecutionError())),
             map((result: GetDatasetDataSqlRunQuery) => {
                 const queryResult = result.data.query;
                 if (queryResult.__typename === "DataQuerySuccessResult") {
-                    const content: DataRow[] = JSON.parse(queryResult.data.content) as DataRow[];
-                    const schema: DatasetSchema = JSON.parse(queryResult.schema.content) as DatasetSchema;
+                    const content: DataRow[] = DatasetService.parseDataRows(queryResult);
+                    const schema: DatasetSchema = DatasetService.parseSchema(queryResult.schema.content);
                     const dataUpdate: DataUpdate = { content, schema };
                     this.appDatasetSubsService.changeDatasetData(dataUpdate);
+                } else if (queryResult.__typename === "DataQueryInvalidSqlResult") {
+                    this.appDatasetSubsService.observeSqlErrorOccurred({
+                        error: queryResult.error
+                    });
                 } else {
-                    throw new InvalidSqlError(queryResult.error);
+                    throw new SqlExecutionError(queryResult.error);
                 }
-            }),
-            catchError(() => throwError(new InvalidSqlError())),
+            })
         );
     }
 
@@ -131,36 +135,38 @@ export class AppDatasetService {
 
     private overviewTabDataUpdate(data: GetDatasetMainDataQuery): void {
         if (data.datasets.byOwnerAndName) {
-            const content: DataRow[] = AppDatasetService.parseContentOfDataset(
-                data.datasets.byOwnerAndName,
-            );
-            const overview: DatasetOverviewFragment =
-                data.datasets.byOwnerAndName;
+            const tail = data.datasets.byOwnerAndName.data.tail;
+            if (tail.__typename === "DataQuerySuccessResult") {
+                const content: DataRow[] = DatasetService.parseDataRows(tail);
+                const overview: DatasetOverviewFragment = data.datasets.byOwnerAndName;
+                const size: DatasetDataSizeFragment = data.datasets.byOwnerAndName.data;
 
-            const size: DatasetDataSizeFragment =
-                data.datasets.byOwnerAndName.data;
-
-            const overviewDataUpdate: OverviewDataUpdate = {
-                content,
-                overview,
-                size,
-            };
-            this.appDatasetSubsService.changeDatasetOverviewData(
-                overviewDataUpdate,
-            );
+                const overviewDataUpdate: OverviewDataUpdate = {
+                    content,
+                    overview,
+                    size,
+                };
+                this.appDatasetSubsService.changeDatasetOverviewData(
+                    overviewDataUpdate,
+                );                
+            } else {
+                throw new SqlExecutionError(tail.error);
+            }
         }
     }
 
     private dataTabDataUpdate(data: GetDatasetMainDataQuery): void {
         if (data.datasets.byOwnerAndName) {
-            const content: DataRow[] = AppDatasetService.parseContentOfDataset(
-                data.datasets.byOwnerAndName,
-            );
-            const schemaData: DatasetSchema = JSON.parse(
-                data.datasets.byOwnerAndName.metadata.currentSchema.content,
-            ) as DatasetSchema;
-            const dataUpdate: DataUpdate = { content, schema: schemaData };
-            this.appDatasetSubsService.changeDatasetData(dataUpdate);
+            const dataset = data.datasets.byOwnerAndName;
+            const tail = dataset.data.tail;
+            if (tail.__typename === "DataQuerySuccessResult") {
+                const content: DataRow[] =  DatasetService.parseDataRows(tail);
+                const schema: DatasetSchema = DatasetService.parseSchema(dataset.metadata.currentSchema.content);
+                const dataUpdate: DataUpdate = { content, schema };
+                this.appDatasetSubsService.changeDatasetData(dataUpdate);
+            } else {
+                throw new SqlExecutionError(tail.error);
+            }
         }
     }
 
@@ -369,15 +375,12 @@ export class AppDatasetService {
         );
     }
 
-    private static parseContentOfDataset(
-        dataFragment: DatasetDataFragment,
-    ): DataRow[] {
-        const tail = dataFragment.data.tail;
-        if (tail.__typename === "DataQuerySuccessResult") {
-            return JSON.parse(tail.data.content) as DataRow[];
-        } else {
-            throw new InvalidSqlError(tail.error);
-        }
-        
+    private static parseDataRows(successResult: DataQuerySuccessResultViewFragment): DataRow[] {
+        const content: string = successResult.data.content;
+        return JSON.parse(content) as DataRow[];
+    }
+
+    private static parseSchema(schemaContent: string): DatasetSchema {
+        return JSON.parse(schemaContent) as DatasetSchema;
     }
 }

@@ -8,14 +8,14 @@ query getDatasetDataSQLRun($query: String!, $limit: Int!) {
       limit: $limit
     ) {
       __typename
-      ... on DataQuerySuccessResult {
-        ...DataQuerySuccessResultView
+      ... on DataQueryResultSuccess {
+        ...DataQueryResultSuccessView
         limit
       }
-      ... on DataQueryInvalidSqlResult {
+      ... on DataQueryResultInvalidSql {
         error
       }
-      ... on DataQueryInternalErrorResult {
+      ... on DataQueryResultInternalError {
         error
       }
     }

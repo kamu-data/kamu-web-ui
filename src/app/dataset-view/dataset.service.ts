@@ -1,6 +1,6 @@
 import { SqlExecutionError } from "./../common/errors";
 import {
-    DataQuerySuccessResultViewFragment,
+    DataQueryResultSuccessViewFragment,
     DatasetLineageFragment,
     DatasetPageInfoFragment,
 } from "./../api/kamu.graphql.interface";
@@ -56,7 +56,7 @@ export class DatasetService {
             map((data: GetDatasetMainDataQuery) => {
                 if (data.datasets.byOwnerAndName) {
                     const dataTail = data.datasets.byOwnerAndName.data.tail;
-                    if (dataTail.__typename === "DataQuerySuccessResult") {
+                    if (dataTail.__typename === "DataQueryResultSuccess") {
                         this.datasetUpdate(data.datasets.byOwnerAndName);
                         this.overviewTabDataUpdate(data.datasets.byOwnerAndName, data.datasets.byOwnerAndName.data, dataTail);
                         this.dataTabDataUpdate(data.datasets.byOwnerAndName, dataTail);
@@ -118,12 +118,12 @@ export class DatasetService {
             catchError(() => throwError(new SqlExecutionError())),
             map((result: GetDatasetDataSqlRunQuery) => {
                 const queryResult = result.data.query;
-                if (queryResult.__typename === "DataQuerySuccessResult") {
+                if (queryResult.__typename === "DataQueryResultSuccess") {
                     const content: DataRow[] = DatasetService.parseDataRows(queryResult);
                     const schema: DatasetSchema = DatasetService.parseSchema(queryResult.schema.content);
                     const dataUpdate: DataUpdate = { content, schema };
                     this.appDatasetSubsService.changeDatasetData(dataUpdate);
-                } else if (queryResult.__typename === "DataQueryInvalidSqlResult") {
+                } else if (queryResult.__typename === "DataQueryResultInvalidSql") {
                     this.appDatasetSubsService.observeSqlErrorOccurred({
                         error: queryResult.error
                     });
@@ -142,7 +142,7 @@ export class DatasetService {
     private overviewTabDataUpdate(
         overview: DatasetOverviewFragment,
         size: DatasetDataSizeFragment,
-        tail: DataQuerySuccessResultViewFragment
+        tail: DataQueryResultSuccessViewFragment
     ): void {
         const content: DataRow[] = DatasetService.parseDataRows(tail);
 
@@ -158,7 +158,7 @@ export class DatasetService {
 
     private dataTabDataUpdate(
         metadata: DatasetMetadataSummaryFragment, 
-        tail: DataQuerySuccessResultViewFragment
+        tail: DataQueryResultSuccessViewFragment
     ): void {
         const content: DataRow[] =  DatasetService.parseDataRows(tail);
         const schema: DatasetSchema = DatasetService.parseSchema(metadata.metadata.currentSchema.content);
@@ -371,7 +371,7 @@ export class DatasetService {
         );
     }
 
-    private static parseDataRows(successResult: DataQuerySuccessResultViewFragment): DataRow[] {
+    private static parseDataRows(successResult: DataQueryResultSuccessViewFragment): DataRow[] {
         const content: string = successResult.data.content;
         return JSON.parse(content) as DataRow[];
     }

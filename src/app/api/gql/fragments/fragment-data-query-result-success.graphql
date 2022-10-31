@@ -1,4 +1,4 @@
-fragment DataQuerySuccessResultView on DataQuerySuccessResult {
+fragment DataQueryResultSuccessView on DataQueryResultSuccess {
   schema {
     format
     content

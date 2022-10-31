@@ -3,13 +3,13 @@ fragment DatasetData on Dataset {
     ...DatasetDataSize
     tail(limit: $limit, dataFormat: JSON) {
       __typename
-      ... on DataQuerySuccessResult {
-        ...DataQuerySuccessResultView
+      ... on DataQueryResultSuccess {
+        ...DataQueryResultSuccessView
       }
-      ... on DataQueryInvalidSqlResult {
+      ... on DataQueryResultInvalidSql {
         error
       }
-      ... on DataQueryInternalErrorResult {
+      ... on DataQueryResultInternalError {
         error
       }
     }

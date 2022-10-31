@@ -156,27 +156,27 @@ export type DataQueriesQueryArgs = {
     schemaFormat?: InputMaybe<DataSchemaFormat>;
 };
 
-export type DataQueryErrorResult = {
-    error: Scalars["String"];
-};
-
-export type DataQueryInternalErrorResult = DataQueryErrorResult & {
-    __typename?: "DataQueryInternalErrorResult";
-    error: Scalars["String"];
-};
-
-export type DataQueryInvalidSqlResult = DataQueryErrorResult & {
-    __typename?: "DataQueryInvalidSqlResult";
-    error: Scalars["String"];
-};
-
 export type DataQueryResult =
-    | DataQueryInternalErrorResult
-    | DataQueryInvalidSqlResult
-    | DataQuerySuccessResult;
+    | DataQueryResultInternalError
+    | DataQueryResultInvalidSql
+    | DataQueryResultSuccess;
 
-export type DataQuerySuccessResult = {
-    __typename?: "DataQuerySuccessResult";
+export type DataQueryResultError = {
+    error: Scalars["String"];
+};
+
+export type DataQueryResultInternalError = DataQueryResultError & {
+    __typename?: "DataQueryResultInternalError";
+    error: Scalars["String"];
+};
+
+export type DataQueryResultInvalidSql = DataQueryResultError & {
+    __typename?: "DataQueryResultInvalidSql";
+    error: Scalars["String"];
+};
+
+export type DataQueryResultSuccess = {
+    __typename?: "DataQueryResultSuccess";
     data: DataBatch;
     limit: Scalars["Int"];
     schema: DataSchema;
@@ -741,12 +741,12 @@ export type GetDatasetDataSqlRunQuery = {
     data: {
         __typename?: "DataQueries";
         query:
-            | { __typename: "DataQueryInternalErrorResult"; error: string }
-            | { __typename: "DataQueryInvalidSqlResult"; error: string }
+            | { __typename: "DataQueryResultInternalError"; error: string }
+            | { __typename: "DataQueryResultInvalidSql"; error: string }
             | ({
-                  __typename: "DataQuerySuccessResult";
+                  __typename: "DataQueryResultSuccess";
                   limit: number;
-              } & DataQuerySuccessResultViewFragment);
+              } & DataQueryResultSuccessViewFragment);
     };
 };
 
@@ -839,8 +839,8 @@ export type AccountDetailsFragment = {
     gravatarId?: string | null;
 };
 
-export type DataQuerySuccessResultViewFragment = {
-    __typename?: "DataQuerySuccessResult";
+export type DataQueryResultSuccessViewFragment = {
+    __typename?: "DataQueryResultSuccess";
     schema: {
         __typename?: "DataSchema";
         format: DataSchemaFormat;
@@ -880,11 +880,11 @@ export type DatasetDataFragment = {
     data: {
         __typename: "DatasetData";
         tail:
-            | { __typename: "DataQueryInternalErrorResult"; error: string }
-            | { __typename: "DataQueryInvalidSqlResult"; error: string }
+            | { __typename: "DataQueryResultInternalError"; error: string }
+            | { __typename: "DataQueryResultInvalidSql"; error: string }
             | ({
-                  __typename: "DataQuerySuccessResult";
-              } & DataQuerySuccessResultViewFragment);
+                  __typename: "DataQueryResultSuccess";
+              } & DataQueryResultSuccessViewFragment);
     } & DatasetDataSizeFragment;
 };
 
@@ -1243,8 +1243,8 @@ export const DatasetDataSizeFragmentDoc = gql`
         estimatedSize
     }
 `;
-export const DataQuerySuccessResultViewFragmentDoc = gql`
-    fragment DataQuerySuccessResultView on DataQuerySuccessResult {
+export const DataQueryResultSuccessViewFragmentDoc = gql`
+    fragment DataQueryResultSuccessView on DataQueryResultSuccess {
         schema {
             format
             content
@@ -1261,13 +1261,13 @@ export const DatasetDataFragmentDoc = gql`
             ...DatasetDataSize
             tail(limit: $limit, dataFormat: JSON) {
                 __typename
-                ... on DataQuerySuccessResult {
-                    ...DataQuerySuccessResultView
+                ... on DataQueryResultSuccess {
+                    ...DataQueryResultSuccessView
                 }
-                ... on DataQueryInvalidSqlResult {
+                ... on DataQueryResultInvalidSql {
                     error
                 }
-                ... on DataQueryInternalErrorResult {
+                ... on DataQueryResultInternalError {
                     error
                 }
             }
@@ -1275,7 +1275,7 @@ export const DatasetDataFragmentDoc = gql`
         }
     }
     ${DatasetDataSizeFragmentDoc}
-    ${DataQuerySuccessResultViewFragmentDoc}
+    ${DataQueryResultSuccessViewFragmentDoc}
 `;
 export const DatasetBasicsFragmentDoc = gql`
     fragment DatasetBasics on Dataset {
@@ -1573,20 +1573,20 @@ export const GetDatasetDataSqlRunDocument = gql`
                 limit: $limit
             ) {
                 __typename
-                ... on DataQuerySuccessResult {
-                    ...DataQuerySuccessResultView
+                ... on DataQueryResultSuccess {
+                    ...DataQueryResultSuccessView
                     limit
                 }
-                ... on DataQueryInvalidSqlResult {
+                ... on DataQueryResultInvalidSql {
                     error
                 }
-                ... on DataQueryInternalErrorResult {
+                ... on DataQueryResultInternalError {
                     error
                 }
             }
         }
     }
-    ${DataQuerySuccessResultViewFragmentDoc}
+    ${DataQueryResultSuccessViewFragmentDoc}
 `;
 
 @Injectable({

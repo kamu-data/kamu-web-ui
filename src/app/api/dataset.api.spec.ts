@@ -80,7 +80,7 @@ describe("DatasetApi", () => {
             .subscribe((res: GetDatasetDataSqlRunQuery) => {
                 const actualQuery = res.data.query;
                 const expectedQuery = mockDatasetDataSqlRunResponse.data.query;
-                if (actualQuery.__typename === "DataQuerySuccessResult" && expectedQuery.__typename === "DataQuerySuccessResult") {
+                if (actualQuery.__typename === "DataQueryResultSuccess" && expectedQuery.__typename === "DataQueryResultSuccess") {
                     expect(actualQuery.data.content).toEqual(expectedQuery.data.content);
                 } else {
                     fail("expecting successful query");

@@ -15,7 +15,7 @@ export const mockDatasetDataSqlRunResponse: GetDatasetDataSqlRunQuery = {
     data: {
         __typename: "DataQueries",
         query: {
-            __typename: "DataQuerySuccessResult",
+            __typename: "DataQueryResultSuccess",
             schema: {
                 __typename: "DataSchema",
                 format: DataSchemaFormat.ParquetJson,

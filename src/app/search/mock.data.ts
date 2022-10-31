@@ -157,7 +157,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
             data: {
                 __typename: "DatasetData",
                 tail: {
-                    __typename: "DataQuerySuccessResult",
+                    __typename: "DataQueryResultSuccess",
                     schema: {
                         __typename: "DataSchema",
                         format: DataSchemaFormat.Parquet,
@@ -579,7 +579,7 @@ export const mockDatasetDataSqlRunResponse: GetDatasetDataSqlRunQuery = {
     data: {
         __typename: "DataQueries",
         query: {
-            __typename: "DataQuerySuccessResult",
+            __typename: "DataQueryResultSuccess",
             schema: {
                 __typename: "DataSchema",
                 format: DataSchemaFormat.ParquetJson,
@@ -601,7 +601,7 @@ export const mockDatasetDataSqlRunInvalidSqlResponse: GetDatasetDataSqlRunQuery 
     data: {
         __typename: "DataQueries",
         query: {
-            __typename: "DataQueryInvalidSqlResult",
+            __typename: "DataQueryResultInvalidSql",
             error: "invalid SQL query"
         },
     },
@@ -611,7 +611,7 @@ export const mockDatasetDataSqlRunInternalErrorResponse: GetDatasetDataSqlRunQue
     data: {
         __typename: "DataQueries",
         query: {
-            __typename: "DataQueryInternalErrorResult",
+            __typename: "DataQueryResultInternalError",
             error: "internal server error"
         },
     },

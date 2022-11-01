@@ -6,11 +6,9 @@ fragment DatasetData on Dataset {
       ... on DataQueryResultSuccess {
         ...DataQueryResultSuccessView
       }
-      ... on DataQueryResultInvalidSql {
-        error
-      }
-      ... on DataQueryResultInternalError {
-        error
+      ... on DataQueryResultError {
+        errorMessage
+        errorKind
       }
     }
     __typename

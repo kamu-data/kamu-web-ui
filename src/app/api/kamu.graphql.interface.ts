@@ -156,24 +156,18 @@ export type DataQueriesQueryArgs = {
     schemaFormat?: InputMaybe<DataSchemaFormat>;
 };
 
-export type DataQueryResult =
-    | DataQueryResultInternalError
-    | DataQueryResultInvalidSql
-    | DataQueryResultSuccess;
+export type DataQueryResult = DataQueryResultError | DataQueryResultSuccess;
 
 export type DataQueryResultError = {
-    error: Scalars["String"];
+    __typename?: "DataQueryResultError";
+    errorKind: DataQueryResultErrorKind;
+    errorMessage: Scalars["String"];
 };
 
-export type DataQueryResultInternalError = DataQueryResultError & {
-    __typename?: "DataQueryResultInternalError";
-    error: Scalars["String"];
-};
-
-export type DataQueryResultInvalidSql = DataQueryResultError & {
-    __typename?: "DataQueryResultInvalidSql";
-    error: Scalars["String"];
-};
+export enum DataQueryResultErrorKind {
+    InternalError = "INTERNAL_ERROR",
+    InvalidSql = "INVALID_SQL",
+}
 
 export type DataQueryResultSuccess = {
     __typename?: "DataQueryResultSuccess";
@@ -741,8 +735,11 @@ export type GetDatasetDataSqlRunQuery = {
     data: {
         __typename?: "DataQueries";
         query:
-            | { __typename: "DataQueryResultInternalError"; error: string }
-            | { __typename: "DataQueryResultInvalidSql"; error: string }
+            | {
+                  __typename: "DataQueryResultError";
+                  errorMessage: string;
+                  errorKind: DataQueryResultErrorKind;
+              }
             | ({
                   __typename: "DataQueryResultSuccess";
                   limit: number;
@@ -880,8 +877,11 @@ export type DatasetDataFragment = {
     data: {
         __typename: "DatasetData";
         tail:
-            | { __typename: "DataQueryResultInternalError"; error: string }
-            | { __typename: "DataQueryResultInvalidSql"; error: string }
+            | {
+                  __typename: "DataQueryResultError";
+                  errorMessage: string;
+                  errorKind: DataQueryResultErrorKind;
+              }
             | ({
                   __typename: "DataQueryResultSuccess";
               } & DataQueryResultSuccessViewFragment);
@@ -1264,11 +1264,9 @@ export const DatasetDataFragmentDoc = gql`
                 ... on DataQueryResultSuccess {
                     ...DataQueryResultSuccessView
                 }
-                ... on DataQueryResultInvalidSql {
-                    error
-                }
-                ... on DataQueryResultInternalError {
-                    error
+                ... on DataQueryResultError {
+                    errorMessage
+                    errorKind
                 }
             }
             __typename
@@ -1577,11 +1575,9 @@ export const GetDatasetDataSqlRunDocument = gql`
                     ...DataQueryResultSuccessView
                     limit
                 }
-                ... on DataQueryResultInvalidSql {
-                    error
-                }
-                ... on DataQueryResultInternalError {
-                    error
+                ... on DataQueryResultError {
+                    errorMessage
+                    errorKind
                 }
             }
         }

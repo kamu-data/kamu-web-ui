@@ -1,5 +1,6 @@
 import { SqlExecutionError } from "./../common/errors";
 import {
+    DataQueryResultErrorKind,
     DataQueryResultSuccessViewFragment,
     DatasetLineageFragment,
     DatasetPageInfoFragment,
@@ -66,7 +67,7 @@ export class DatasetService {
                             data.datasets.byOwnerAndName,
                         );
                     } else {
-                        throw new SqlExecutionError(dataTail.error)
+                        throw new SqlExecutionError(dataTail.errorMessage)
                     }
 
                 } else {
@@ -123,12 +124,12 @@ export class DatasetService {
                     const schema: DatasetSchema = DatasetService.parseSchema(queryResult.schema.content);
                     const dataUpdate: DataUpdate = { content, schema };
                     this.appDatasetSubsService.changeDatasetData(dataUpdate);
-                } else if (queryResult.__typename === "DataQueryResultInvalidSql") {
+                } else if (queryResult.errorKind === DataQueryResultErrorKind.InvalidSql) {
                     this.appDatasetSubsService.observeSqlErrorOccurred({
-                        error: queryResult.error
+                        error: queryResult.errorMessage
                     });
                 } else {
-                    throw new SqlExecutionError(queryResult.error);
+                    throw new SqlExecutionError(queryResult.errorMessage);
                 }
             })
         );

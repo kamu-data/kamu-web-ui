@@ -12,11 +12,9 @@ query getDatasetDataSQLRun($query: String!, $limit: Int!) {
         ...DataQueryResultSuccessView
         limit
       }
-      ... on DataQueryResultInvalidSql {
-        error
-      }
-      ... on DataQueryResultInternalError {
-        error
+      ... on DataQueryResultError {
+        errorMessage
+        errorKind
       }
     }
   }

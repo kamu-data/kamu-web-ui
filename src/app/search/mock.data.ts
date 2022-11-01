@@ -1,5 +1,6 @@
 import {
     DataBatchFormat,
+    DataQueryResultErrorKind,
     DataSchemaFormat,
     DatasetBasicsFragment,
     DatasetCurrentInfoFragment,
@@ -601,8 +602,9 @@ export const mockDatasetDataSqlRunInvalidSqlResponse: GetDatasetDataSqlRunQuery 
     data: {
         __typename: "DataQueries",
         query: {
-            __typename: "DataQueryResultInvalidSql",
-            error: "invalid SQL query"
+            __typename: "DataQueryResultError",
+            errorMessage: "invalid SQL query",
+            errorKind: DataQueryResultErrorKind.InvalidSql,
         },
     },
 };
@@ -611,8 +613,9 @@ export const mockDatasetDataSqlRunInternalErrorResponse: GetDatasetDataSqlRunQue
     data: {
         __typename: "DataQueries",
         query: {
-            __typename: "DataQueryResultInternalError",
-            error: "internal server error"
+            __typename: "DataQueryResultError",
+            errorMessage: "internal server error",
+            errorKind: DataQueryResultErrorKind.InternalError,
         },
     },
 };

@@ -17,6 +17,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import {
     DataQueryResultError,
+    DataQueryResultErrorKind,
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
     DatasetOverviewFragment,
@@ -160,8 +161,9 @@ describe("AppDatasetService", () => {
         const sqlFailureResponse = _.cloneDeep(mockDatasetMainDataResponse);
         if (sqlFailureResponse.datasets.byOwnerAndName) {
             sqlFailureResponse.datasets.byOwnerAndName.data.tail = {
-                __typename: "DataQueryResultInternalError",
-                error: executionFailureMessage
+                __typename: "DataQueryResultError",
+                errorMessage: executionFailureMessage,
+                errorKind: DataQueryResultErrorKind.InternalError,
             };
         }
         spyOn(datasetApi, "getDatasetMainData").and.returnValue(
@@ -290,7 +292,7 @@ describe("AppDatasetService", () => {
             .subscribe(
                 (update: DataSqlErrorUpdate) => {
                     const errorResult = mockDatasetDataSqlRunInvalidSqlResponse.data.query as DataQueryResultError;
-                    expect(update.error).toEqual(errorResult.error);
+                    expect(update.error).toEqual(errorResult.errorMessage);
                 }
             );
 
@@ -323,7 +325,7 @@ describe("AppDatasetService", () => {
                 },
                 (e: Error) => {
                     const errorResult = mockDatasetDataSqlRunInternalErrorResponse.data.query as DataQueryResultError;
-                    expect(e).toEqual(new SqlExecutionError(errorResult.error));
+                    expect(e).toEqual(new SqlExecutionError(errorResult.errorMessage));
                 },
             );
         expect(subscription$.closed).toBeTrue();

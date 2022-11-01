@@ -42,13 +42,23 @@ $app-color-btn-border: #ced4da
 $app-color-timeline-badge-bg: #eaeef2
 $app--color-overview-history-summary-bg: #ddf4ff
 $app--color-table-header-bg: #f6f8fa
+$app-color-primer-border-active: #fd8c73
+$app-color-action-list-item-default-selected-bg: #d0d7de3d
+$app-color-accent-fg: #0969da
+$app-color-action-list-item-inline-divider: #d0d7de7a
 
 .input-group-button
   vertical-align: middle
+.color-border-muted
+  border-color: $app-color-border-muted !important
+.color-bg-default
+  background-color: $app-color-canvas-overlay !important
 .color-bg-subtle
   background-color: $app-color-canvas-subtle !important
 .color-fg-success
   color: $app-harmonies
+.color-fg-default
+  color: $app-color-fg-default
 .color-fg-muted
   color: $app-color-fg-muted
 .link--primary
@@ -535,3 +545,6 @@ markdown
 
 .mat-standard-chip
   border-radius: 16px
+
+.overflow-visible
+  overflow: visible !important

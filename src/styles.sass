@@ -7,6 +7,10 @@ body
   font-size: 14px
 *
   font-size: 14px
+.h3-custom
+  font-size: 20px !important
+.lh-condensed
+  line-height: 1.25 !important
 a
   text-decoration: none
   &:hover
@@ -840,6 +844,62 @@ router-outlet
       color: inherit
     &:active
       background: linear-gradient(to bottom, rgba(204,204,204,0.8) 100%, #eee 0%)
+
+.account-container
+  grid-template-columns: 0.5fr 0.5fr
+  display: grid !important
+app-account .dropdown-menu
+  right: 0
+.account-additional-main-info__list
+  & .mail-outline .mat-icon
+    font-size: 20px
+    height: 20px
+    width: 20px
+.Layout.Layout--sidebarPosition-start .Layout-main
+  grid-column: 2/span 2
+.UnderlineNav
+  display: flex
+  overflow-x: auto
+  overflow-y: hidden
+  justify-content: space-between
+  & .mat-icon
+    height: 20px
+    width: 20px
+    font-size: 20px
+[role="menu"] .UnderlineNav-item
+  display: flex
+  justify-content: flex-start
+  align-items: center
+details summary::-webkit-details-marker,
+details summary::marker
+  display: none
+  content: ""
+.UnderlineNav-item
+  padding: 8px 16px
+  font-size: 14px
+  line-height: 30px
+  color: $app-color-fg-default
+  text-align: center
+  white-space: nowrap
+  background-color: transparent
+  border: 0
+  border-bottom: 2px solid transparent
+  justify-content: center
+  align-items: center
+  display: flex
+  &.selected
+    font-weight: 600
+    color: $app-color-fg-default
+    border-bottom-color: $app-color-primer-border-active
+    outline: 1px dotted transparent
+    outline-offset: -1px
+  &:not(.selected):hover, &:not(.selected):focus
+    color: $app-color-fg-default
+    text-decoration: none
+    border-bottom-color: $app-color-neutral-muted
+    outline: 1px dotted transparent
+    outline-offset: -1px
+    transition: border-bottom-color .12s ease-out
 /******** MIXINZ ********/
 %border-none
   border: 0px

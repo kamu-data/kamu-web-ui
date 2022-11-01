@@ -1,3 +1,4 @@
+import { SettingsComponent } from "./auth/settings/settings.component";
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
@@ -38,6 +39,47 @@ export const routes: Routes = [
     {
         path: ProjectLinks.URL_PAGE_NOT_FOUND,
         component: PageNotFoundComponent,
+    },
+    {
+        path: ProjectLinks.URL_SETTINGS,
+        children: [
+            {
+                path: "profile",
+                component: SettingsComponent,
+            },
+            {
+                path: "admin",
+                component: SettingsComponent,
+            },
+            {
+                path: "appearance",
+                component: SettingsComponent,
+            },
+            {
+                path: "accessibility",
+                component: SettingsComponent,
+            },
+            {
+                path: "notifications",
+                component: SettingsComponent,
+            },
+            {
+                path: "billing",
+                component: SettingsComponent,
+            },
+            {
+                path: "emails",
+                component: SettingsComponent,
+            },
+            {
+                path: "security",
+                component: SettingsComponent,
+            },
+            {
+                path: "organizations",
+                component: SettingsComponent,
+            },
+        ],
     },
     {
         path: `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}`,

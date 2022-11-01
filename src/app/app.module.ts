@@ -54,6 +54,8 @@ import { AppDatasetSubscriptionsService } from "./dataset-view/dataset.subscript
 import { SpinnerModule } from "./components/spinner/spinner.module";
 import { DatasetApi } from "./api/dataset.api";
 import { ErrorHandlerService } from "./services/error-handler.service";
+import { AppSettingsService } from "./services/settings.service";
+import { SettingsComponent } from "./auth/settings/settings.component";
 
 const Services = [
     {
@@ -70,6 +72,7 @@ const Services = [
     AuthApi,
     SearchApi,
     DatasetApi,
+    AppSettingsService,
     HttpLink,
     SearchService,
     AppDatasetService,
@@ -110,6 +113,7 @@ const MatModules = [
         GithubCallbackComponent,
         AccountComponent,
         NotificationIndicatorComponent,
+        SettingsComponent,
     ],
     imports: [
         AppRoutingModule,

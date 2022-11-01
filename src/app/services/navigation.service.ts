@@ -35,6 +35,12 @@ export class NavigationService {
         );
     }
 
+    public navigateToSettings(): void {
+        promiseWithCatch(
+            this.router.navigate([ProjectLinks.URL_SETTINGS, "profile"]),
+        );
+    }
+
     public navigateToDatasetView(params: DatasetNavigationParams): void {
         promiseWithCatch(
             this.router.navigate([params.accountName, params.datasetName], {

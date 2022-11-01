@@ -9,6 +9,7 @@ export default class ProjectLinks {
     public static readonly URL_SEARCH: string = "v/search";
     public static readonly URL_DATASET_CREATE: string = "v/new-dataset";
     public static readonly URL_PAGE_NOT_FOUND: string = "v/page-not-found";
+    public static readonly URL_SETTINGS: string = "v/settings";
 
     public static readonly ALL_URLS: string[] = [
         ProjectLinks.URL_HOME,
@@ -18,6 +19,7 @@ export default class ProjectLinks {
         ProjectLinks.URL_SEARCH,
         ProjectLinks.URL_DATASET_CREATE,
         ProjectLinks.URL_PAGE_NOT_FOUND,
+        ProjectLinks.URL_SETTINGS,
     ];
 
     public static readonly URL_PARAM_ACCOUNT_NAME: string = "accountName";

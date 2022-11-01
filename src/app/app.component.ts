@@ -186,12 +186,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onSettings(): void {
-        promiseWithCatch(
-            this.modalService.warning({
-                message: AppValues.UNIMPLEMENTED_MESSAGE,
-                yesButtonText: "Ok",
-            }),
-        );
+        this.navigationService.navigateToSettings();
     }
 
     public onHelp(): void {

@@ -28,8 +28,8 @@
                 </button>
             </div>
             <div class="border-top mt-5">
-                <h2 class="text-start pt-3 px-3 h3 organization">
-                    Organization
+                <h2 class="text-start pt-3 px-3 h6 organization">
+                    Organizations
                 </h2>
                 <div class="d-flex flex-row gap-2 text-start px-3">
                     <img
@@ -53,7 +53,7 @@
                 </div>
             </div>
         </div>
-        <div class="container-content px-3">
+        <div class="container-content px-4">
             <div class="datasetViewTypeToggleGroup border-bottom">
                 <mat-button-toggle-group
                     name="accountViewType"
@@ -66,7 +66,9 @@
                         [checked]="isAccountViewTypeOverview"
                         (click)="onSelectOverviewTab()"
                     >
-                        <mat-icon class="text-muted">my_library_books</mat-icon>
+                        <mat-icon class="text-muted fs-4"
+                            >my_library_books</mat-icon
+                        >
                         <span class="mx-2"> Overview</span>
                     </mat-button-toggle>
                     <mat-button-toggle
@@ -75,7 +77,7 @@
                         [checked]="isAccountViewTypeDatasets"
                         (click)="onSelectDatasetsTab()"
                     >
-                        <mat-icon class="text-muted">book</mat-icon>
+                        <mat-icon class="text-muted fs-4">book</mat-icon>
                         <span class="mx-2">Datasets</span>
                         <span
                             title="1"
@@ -90,7 +92,7 @@
                         [checked]="isAccountViewTypeOrganizations"
                         (click)="onSelectOrganizationsTab()"
                     >
-                        <mat-icon class="text-muted">people</mat-icon>
+                        <mat-icon class="text-muted fs-4">people</mat-icon>
                         <span class="mx-2">Organizations </span>
                         <span
                             title="1"
@@ -106,7 +108,7 @@
                         [checked]="isAccountViewTypeInbox"
                         (click)="onSelectInboxTab()"
                     >
-                        <mat-icon class="text-muted">inbox</mat-icon>
+                        <mat-icon class="text-muted fs-4">inbox</mat-icon>
                         <span class="mx-2">Inbox</span>
                         <span
                             title="1"
@@ -121,7 +123,7 @@
                         [checked]="isAccountViewTypeStars"
                         (click)="onSelectStarsTab()"
                     >
-                        <mat-icon class="text-muted">star_border</mat-icon>
+                        <mat-icon class="text-muted fs-4">star_border</mat-icon>
                         <span class="mx-2">Stars</span>
                         <span
                             title="1"
@@ -132,6 +134,21 @@
                     </mat-button-toggle>
                 </mat-button-toggle-group>
             </div>
+            <ng-container *ngIf="isAccountViewTypeOverview">
+                <div>Overview</div>
+            </ng-container>
+            <ng-container *ngIf="isAccountViewTypeDatasets">
+                <div></div>
+            </ng-container>
+            <ng-container *ngIf="isAccountViewTypeOrganizations">
+                <div>Organizations</div>
+            </ng-container>
+            <ng-container *ngIf="isAccountViewTypeInbox">
+                <div>Inbox</div>
+            </ng-container>
+            <ng-container *ngIf="isAccountViewTypeStars">
+                <div>Stars</div>
+            </ng-container>
         </div>
     </div>
 </div>

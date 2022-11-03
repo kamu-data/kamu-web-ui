@@ -1,5 +1,6 @@
 @import src/assets/styles/var
 @import 'node_modules/prismjs/themes/prism-okaidia'
+@import 'node_modules/bootstrap/dist/css/bootstrap.min'
 @import 'node_modules/prismjs/plugins/line-numbers/prism-line-numbers'
 @import 'node_modules/prismjs/plugins/line-highlight/prism-line-highlight'
 
@@ -61,6 +62,9 @@ mat-button-toggle ::ng-deep .mat-button-toggle-focus-overlay
     background-color:#f6f8fa
     border-color:#dee2e6 !important
     color: $app-dark
-    font-weight: 500   
-        
+    font-weight: 500 
+    &:hover,&:active,&:focus
+         background-color:#ebedf0
+         color: $app-dark
+
 

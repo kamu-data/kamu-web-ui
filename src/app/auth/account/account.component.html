@@ -2,16 +2,18 @@
     <div class="custom-container">
         <div class="container-sidebar">
             <div class="d-flex mb-3 justify-content-center align-items-center">
-                <img
-                    alt="avatar"
-                    width="260"
-                    height="260"
-                    class="avatar avatar-user border color-bg-default"
-                    [src]="
-                        user?.avatarUrl ||
-                        'https://avatars.githubusercontent.com/u/11951648?v=4'
-                    "
-                />
+                <a routerLink="/v/settings/profile">
+                    <img
+                        alt="avatar"
+                        width="260"
+                        height="260"
+                        class="avatar avatar-user border color-bg-default"
+                        [src]="
+                            user?.avatarUrl ||
+                            'https://avatars.githubusercontent.com/u/11951648?v=4'
+                        "
+                    />
+                </a>
             </div>
             <span class="vcard-username d-block p-2" itemprop="additionalName">
                 {{ user?.login }}
@@ -62,14 +64,16 @@
                         data-test-id="account-overview-tab"
                         value="overview"
                         [checked]="isAccountViewTypeOverview"
+                        (click)="onSelectOverviewTab()"
                     >
                         <mat-icon class="text-muted">my_library_books</mat-icon>
                         <span class="mx-2"> Overview</span>
                     </mat-button-toggle>
                     <mat-button-toggle
                         data-test-id="account-datasets-tab"
-                        value="data"
+                        value="datasets"
                         [checked]="isAccountViewTypeDatasets"
+                        (click)="onSelectDatasetsTab()"
                     >
                         <mat-icon class="text-muted">book</mat-icon>
                         <span class="mx-2">Datasets</span>
@@ -82,8 +86,9 @@
                     </mat-button-toggle>
                     <mat-button-toggle
                         data-test-id="account-organizations-tab"
-                        value="data"
-                        [checked]="isAccountViewTypeDatasets"
+                        value="organizations"
+                        [checked]="isAccountViewTypeOrganizations"
+                        (click)="onSelectOrganizationsTab()"
                     >
                         <mat-icon class="text-muted">people</mat-icon>
                         <span class="mx-2">Organizations </span>
@@ -96,9 +101,10 @@
                     </mat-button-toggle>
 
                     <mat-button-toggle
-                        data-test-id="account-datasets-tab"
-                        value="data"
-                        [checked]="isAccountViewTypeDatasets"
+                        data-test-id="account-inbox-tab"
+                        value="inbox"
+                        [checked]="isAccountViewTypeInbox"
+                        (click)="onSelectInboxTab()"
                     >
                         <mat-icon class="text-muted">inbox</mat-icon>
                         <span class="mx-2">Inbox</span>
@@ -109,7 +115,12 @@
                             >2</span
                         >
                     </mat-button-toggle>
-                    <mat-button-toggle>
+                    <mat-button-toggle
+                        data-test-id="account-stars-tab"
+                        value="Stars"
+                        [checked]="isAccountViewTypeStars"
+                        (click)="onSelectStarsTab()"
+                    >
                         <mat-icon class="text-muted">star_border</mat-icon>
                         <span class="mx-2">Stars</span>
                         <span

@@ -1,3 +1,5 @@
+import { BaseComponent } from "src/app/common/base.component";
+import { NavigationService } from "src/app/services/navigation.service";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -6,7 +8,7 @@ import {
     OnInit,
     ViewChild,
 } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute, Params } from "@angular/router";
 import { AuthApi } from "src/app/api/auth.api";
 import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import { SearchApi } from "src/app/api/search.api";
@@ -20,7 +22,7 @@ import { AccountTabs } from "./account.constants";
     styleUrls: ["./account.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountComponent implements OnInit {
+export class AccountComponent extends BaseComponent implements OnInit {
     public accountViewType = AccountTabs.overview;
     private userName: string;
     private _window: Window;
@@ -40,7 +42,9 @@ export class AccountComponent implements OnInit {
         private authApi: AuthApi,
         private router: Router,
         private route: ActivatedRoute,
+        private navigationService: NavigationService,
     ) {
+        super();
         this._window = window;
         this.user = this.authApi.currentUser;
 
@@ -53,48 +57,15 @@ export class AccountComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.userName = this._window.location.pathname.split("/")[1];
-        console.log("name", this.userName);
-
-        //  this.setupUrl();
-        //this.onUserDatasets();
-    }
-    private setupUrl(): void {
-        if (this._window.location.search.includes("type=currentUser")) {
-            this.isCurrentUser = true;
-        }
-        if (
-            this._window.location.search.includes("type=currentUser") &&
-            !this._window.location.search.includes("tab=")
-        ) {
-            this.router
-                .navigate([this.userName], {
-                    queryParams: {
-                        tab: AccountTabs.overview,
-                        type: "currentUser",
-                    },
-                })
-                .catch((e) => console.log(e));
-        }
-        switch (true) {
-            case this.isMatchTab(AccountTabs.overview):
-                this.onUserProfile();
-                break;
-            case this.isMatchTab(AccountTabs.datasets):
-                this.onUserDatasets();
-                break;
-            case this.isMatchTab(AccountTabs.organizations):
-                this.onUserOrganizations();
-                break;
-            case this.isMatchTab(AccountTabs.stars):
-                this.onUserStars();
-                break;
-            case this.isMatchTab(AccountTabs.inbox):
-                this.onUserInbox();
-                break;
-            default:
-                this.onUserDatasets();
-                break;
+        this.trackSubscription(
+            this.route.queryParams.subscribe((param: Params) => {
+                if (param.tab) {
+                    this.accountViewType = param.tab as AccountTabs;
+                }
+            }),
+        );
+        if (this.user?.name) {
+            this.userName = this.user.name;
         }
     }
 
@@ -106,8 +77,16 @@ export class AccountComponent implements OnInit {
         return this.accountViewType === AccountTabs.datasets;
     }
 
-    private isMatchTab(tabName: string): boolean {
-        return this._window.location.search.includes(`tab=${tabName}`);
+    public get isAccountViewTypeOrganizations(): boolean {
+        return this.accountViewType === AccountTabs.organizations;
+    }
+
+    public get isAccountViewTypeInbox(): boolean {
+        return this.accountViewType === AccountTabs.inbox;
+    }
+
+    public get isAccountViewTypeStars(): boolean {
+        return this.accountViewType === AccountTabs.stars;
     }
 
     public selectedTabs(accountTabKey: AccountTabs): boolean {
@@ -117,118 +96,29 @@ export class AccountComponent implements OnInit {
         return false;
     }
 
-    public onUserProfile(): void {
-        // this.router.navigate(["."], {
-        //     relativeTo: this.route,
-        //     queryParams: { tab: AccountTabs.overview },
-        // });
-        this.router
-            .navigate([this.userName], {
-                queryParams: {
-                    tab: AccountTabs.overview,
-                    type: "currentUser",
-                },
-            })
-            .catch((e) => console.log(e));
+    public onSelectOverviewTab(): void {
+        this.navigateTo(AccountTabs.overview);
     }
-    public onSelectDataset(data: { ownerName: string; id: string }): void {
-        // const id: string = data.id;
-        // this.router.navigateByUrl(
-        //     `/dataset/${data.ownerName}/${id}?id=${id}&type=${AppValues.urlDatasetViewOverviewType}`,
-        // );
-        this.router
-            .navigate([this.userName], {
-                queryParams: {
-                    tab: AccountTabs.overview,
-                    type: "currentUser",
-                },
-            })
-            .catch((e) => console.log(e));
+    public onSelectDatasetsTab(): void {
+        this.navigateTo(AccountTabs.datasets);
     }
 
-    public onUserDatasets(): void {
-        // this.router.navigate(["."], {
-        //     relativeTo: this.route,
-        //     queryParams: { tab: AccountTabs.datasets },
-        // });
-
-        // this.searchApi
-        //     .datasetsByAccountName({
-        //         accountName: this.userName,
-        //         page: 0,
-        //         perPage: 10,
-        //         limit: 10,
-        //     })
-        //     .subscribe((res: DatasetsByAccountNameQuery | undefined) => {
-        //         if (res) {
-        //             this.datasets = res.datasets.byAccountName.nodes;
-        //         }
-        //     });
-        this.router
-            .navigate([this.userName], {
-                queryParams: {
-                    tab: AccountTabs.overview,
-                    type: "currentUser",
-                },
-            })
-            .catch((e) => console.log(e));
+    public onSelectOrganizationsTab(): void {
+        this.navigateTo(AccountTabs.organizations);
     }
 
-    public onUserOrganizations(): void {
-        // this.router.navigate(["."], {
-        //     relativeTo: this.route,
-        //     queryParams: { tab: AccountTabs.organizations },
-        // });
-        this.router
-            .navigate([this.userName], {
-                queryParams: {
-                    tab: AccountTabs.overview,
-                    type: "currentUser",
-                },
-            })
-            .catch((e) => console.log(e));
+    public onSelectInboxTab(): void {
+        this.navigateTo(AccountTabs.inbox);
     }
 
-    public onUserInbox(): void {
-        // this.router.navigate(["."], {
-        //     relativeTo: this.route,
-        //     queryParams: { tab: AccountTabs.inbox },
-        // });
-        this.router
-            .navigate([this.userName], {
-                queryParams: {
-                    tab: AccountTabs.overview,
-                    type: "currentUser",
-                },
-            })
-            .catch((e) => console.log(e));
+    public onSelectStarsTab(): void {
+        this.navigateTo(AccountTabs.stars);
     }
 
-    public onUserStars(): void {
-        // this.router.navigate(["."], {
-        //     relativeTo: this.route,
-        //     queryParams: { tab: AccountTabs.stars },
-        // });
-
-        // this.searchApi
-        //     .datasetsByAccountName({
-        //         accountName: this.userName,
-        //         page: 0,
-        //         perPage: 10,
-        //         limit: 10,
-        //     })
-        //     .subscribe((res: DatasetsByAccountNameQuery | undefined) => {
-        //         if (res) {
-        //             this.datasets = res.datasets.byAccountName.nodes;
-        //         }
-        //     });
-        this.router
-            .navigate([this.userName], {
-                queryParams: {
-                    tab: AccountTabs.overview,
-                    type: "currentUser",
-                },
-            })
-            .catch((e) => console.log(e));
+    private navigateTo(type: string): void {
+        if (this.user?.login) {
+            this.navigationService.navigateToOwnerView(this.user.login, type);
+            this.accountViewType = type as AccountTabs;
+        }
     }
 }

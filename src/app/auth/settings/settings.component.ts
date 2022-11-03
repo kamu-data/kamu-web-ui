@@ -1,3 +1,6 @@
+import { MaybeNull } from "./../../common/app.types";
+import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
+import { AuthApi } from "src/app/api/auth.api";
 import { SettingsTabs } from "./settings.constants";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
@@ -13,8 +16,13 @@ import { BaseComponent } from "src/app/common/base.component";
 export class SettingsComponent extends BaseComponent implements OnInit {
     public activeTab: string | undefined = SettingsTabs.PROFILE;
     public settingsTabs: typeof SettingsTabs = SettingsTabs;
+    public user: MaybeNull<AccountDetailsFragment>;
 
-    constructor(private router: Router, private route: ActivatedRoute) {
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+        private authApi: AuthApi,
+    ) {
         super();
     }
 
@@ -27,5 +35,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
                 }),
         );
         this.activeTab = this.route.snapshot.routeConfig?.path;
+        this.user = this.authApi.currentUser;
     }
 }

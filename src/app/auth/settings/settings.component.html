@@ -2,7 +2,7 @@
     <div class="d-md-flex align-items-center justify-content-between mt-1 mb-4">
         <div class="d-flex align-items-center mb-2 mb-md-0">
             <img
-                src="https://avatars.githubusercontent.com/u/87068546?s=96&amp;v=4"
+                [src]="user?.avatarUrl"
                 alt="@kulykivska"
                 size="48"
                 height="48"
@@ -13,10 +13,10 @@
             <div class="flex-auto mx-4 mt-3">
                 <div class="h3-custom lh-condensed">
                     <a
-                        href="/kulykivska"
+                        [routerLink]="['/', user?.login]"
                         class="color-fg-default fw-bold-custom fs-5"
                     >
-                        Kulykivska Julia
+                        {{ user?.login }}
                     </a>
                     <span class="sr-only">settings</span>
                 </div>

@@ -1,3 +1,4 @@
+import { AccountTabs } from "./../auth/account/account.constants";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
@@ -56,8 +57,12 @@ export class NavigationService {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_LOGIN]));
     }
 
-    public navigateToOwnerView(ownerName: string): void {
-        promiseWithCatch(this.router.navigate([ownerName]));
+    public navigateToOwnerView(ownerName: string, tab?: string): void {
+        promiseWithCatch(
+            this.router.navigate([ownerName], {
+                queryParams: tab !== AccountTabs.overview ? { tab } : {},
+            }),
+        );
     }
 
     public navigateToPageNotFound(): void {

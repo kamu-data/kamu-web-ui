@@ -1,3 +1,4 @@
+import { AccountTabs } from "./auth/account/account.constants";
 import { mockAccountDetails } from "./api/mock/auth.mock";
 import { NavigationService } from "./services/navigation.service";
 import {
@@ -155,7 +156,12 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onUserProfile(): void {
-        this.navigationService.navigateToOwnerView("Test_owner_name");
+        if (this.authApi.currentUser?.login) {
+            this.navigationService.navigateToOwnerView(
+                this.authApi.currentUser.login,
+                AccountTabs.overview,
+            );
+        }
     }
 
     public onUserDatasets(): void {

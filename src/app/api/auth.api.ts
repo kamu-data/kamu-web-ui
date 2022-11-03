@@ -1,3 +1,4 @@
+import { mockAccountDetails } from "./mock/auth.mock";
 import { Injectable } from "@angular/core";
 import { catchError, map } from "rxjs/operators";
 import { Observable, Subject, throwError } from "rxjs";
@@ -29,7 +30,10 @@ export class AuthApi {
         private githubLoginGQL: GithubLoginGQL,
         private fetchAccountInfoGQL: FetchAccountInfoGQL,
         private navigationService: NavigationService,
-    ) {}
+    ) {
+        // Mock user
+        this.changeUser(mockAccountDetails);
+    }
 
     public get onUserChanges(): Observable<MaybeNull<AccountDetailsFragment>> {
         return this.userChanges$.asObservable();

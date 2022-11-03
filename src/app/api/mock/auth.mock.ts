@@ -12,7 +12,8 @@ export const mockAccountDetails: AccountDetailsFragment = {
     login: "test-user",
     name: "Test User",
     email: "test@example.com",
-    avatarUrl: null,
+    // avatarUrl: null,
+    avatarUrl: "https://avatars.githubusercontent.com/u/11951648?v=4",
     gravatarId: null,
 };
 

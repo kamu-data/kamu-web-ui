@@ -1,3 +1,4 @@
+import { mockAccountDetails } from "./api/mock/auth.mock";
 import { NavigationService } from "./services/navigation.service";
 import {
     ChangeDetectionStrategy,
@@ -86,6 +87,10 @@ export class AppComponent extends BaseComponent implements OnInit {
             ),
         );
         this.authentification();
+        // Remove mock user
+        this.user = this.authApi.currentUser
+            ? this.authApi.currentUser
+            : AppComponent.AnonymousAccountInfo;
     }
 
     authentification(): void {
@@ -150,12 +155,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onUserProfile(): void {
-        promiseWithCatch(
-            this.modalService.warning({
-                message: AppValues.UNIMPLEMENTED_MESSAGE,
-                yesButtonText: "Ok",
-            }),
-        );
+        this.navigationService.navigateToOwnerView("Test_owner_name");
     }
 
     public onUserDatasets(): void {

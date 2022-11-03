@@ -56,6 +56,7 @@ import { DatasetApi } from "./api/dataset.api";
 import { ErrorHandlerService } from "./services/error-handler.service";
 import { AppSettingsService } from "./services/settings.service";
 import { SettingsComponent } from "./auth/settings/settings.component";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
 
 const Services = [
     {
@@ -103,6 +104,7 @@ const MatModules = [
     MatButtonModule,
     MatAutocompleteModule,
     MatProgressSpinnerModule,
+    MatButtonToggleModule,
 ];
 
 @NgModule({

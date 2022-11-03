@@ -60,8 +60,7 @@ export class AppHeaderComponent extends BaseComponent {
     }
 
     public isUserLoggedIn(): boolean {
-        return true;
-        // return this.userInfo.login.length > 0;
+        return this.userInfo.login.length > 0;
     }
 
     public search: OperatorFunction<

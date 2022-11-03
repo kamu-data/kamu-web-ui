@@ -1,1 +1,126 @@
-<p>Account works!</p>
+<div class="p-4 p-responsive clearfix">
+    <div class="custom-container">
+        <div class="container-sidebar">
+            <div class="d-flex mb-3 justify-content-center align-items-center">
+                <img
+                    alt="avatar"
+                    width="260"
+                    height="260"
+                    class="avatar avatar-user border color-bg-default"
+                    [src]="
+                        user?.avatarUrl ||
+                        'https://avatars.githubusercontent.com/u/11951648?v=4'
+                    "
+                />
+            </div>
+            <span class="vcard-username d-block p-2" itemprop="additionalName">
+                {{ user?.login }}
+            </span>
+            <div class="my-3 text-center">
+                <button
+                    name="button"
+                    type="button"
+                    class="btn btn-outline-secondary w-100 btn-custom"
+                >
+                    Edit profile
+                </button>
+            </div>
+            <div class="border-top mt-5">
+                <h2 class="text-start pt-3 px-3 h3 organization">
+                    Organization
+                </h2>
+                <div class="d-flex flex-row gap-2 text-start px-3">
+                    <img
+                        src="https://avatars.githubusercontent.com/u/50896974?s=64&amp;v=4"
+                        alt="@kamu-data"
+                        size="32"
+                        height="32"
+                        width="32"
+                        data-view-component="true"
+                        class="avatar"
+                    />
+                    <img
+                        src="https://avatars.githubusercontent.com/u/50896974?s=64&amp;v=4"
+                        alt="@kamu-data"
+                        size="32"
+                        height="32"
+                        width="32"
+                        data-view-component="true"
+                        class="avatar"
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="container-content px-3">
+            <div class="datasetViewTypeToggleGroup border-bottom">
+                <mat-button-toggle-group
+                    name="accountViewType"
+                    aria-label="Account View Type"
+                    [value]="accountViewType"
+                >
+                    <mat-button-toggle
+                        data-test-id="account-overview-tab"
+                        value="overview"
+                        [checked]="isAccountViewTypeOverview"
+                    >
+                        <mat-icon class="text-muted">my_library_books</mat-icon>
+                        <span class="mx-2"> Overview</span>
+                    </mat-button-toggle>
+                    <mat-button-toggle
+                        data-test-id="account-datasets-tab"
+                        value="data"
+                        [checked]="isAccountViewTypeDatasets"
+                    >
+                        <mat-icon class="text-muted">book</mat-icon>
+                        <span class="mx-2">Datasets</span>
+                        <span
+                            title="1"
+                            data-view-component="true"
+                            class="counter"
+                            >6</span
+                        >
+                    </mat-button-toggle>
+                    <mat-button-toggle
+                        data-test-id="account-organizations-tab"
+                        value="data"
+                        [checked]="isAccountViewTypeDatasets"
+                    >
+                        <mat-icon class="text-muted">people</mat-icon>
+                        <span class="mx-2">Organizations </span>
+                        <span
+                            title="1"
+                            data-view-component="true"
+                            class="counter"
+                            >2</span
+                        >
+                    </mat-button-toggle>
+
+                    <mat-button-toggle
+                        data-test-id="account-datasets-tab"
+                        value="data"
+                        [checked]="isAccountViewTypeDatasets"
+                    >
+                        <mat-icon class="text-muted">inbox</mat-icon>
+                        <span class="mx-2">Inbox</span>
+                        <span
+                            title="1"
+                            data-view-component="true"
+                            class="counter"
+                            >2</span
+                        >
+                    </mat-button-toggle>
+                    <mat-button-toggle>
+                        <mat-icon class="text-muted">star_border</mat-icon>
+                        <span class="mx-2">Stars</span>
+                        <span
+                            title="1"
+                            data-view-component="true"
+                            class="counter"
+                            >2</span
+                        >
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
+        </div>
+    </div>
+</div>

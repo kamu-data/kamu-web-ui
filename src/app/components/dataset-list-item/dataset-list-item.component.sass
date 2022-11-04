@@ -1,0 +1,34 @@
+@import src/assets/styles/var
+
+.dataset-list-container
+  width: 100%
+  display: grid
+  grid-template-columns: 1fr
+  grid-template-rows: 1fr
+
+.dataset-list-container__title-row
+  display: flex
+  justify-content: space-between
+  &__dataset-name
+    display: flex
+    justify-content: left
+  & i
+    margin-right: 8px
+
+.dataset-list-container__title
+  display: flex
+  background: none
+  border: none
+  color: $app-navyBlue
+  font-size: 16px
+  &:hover, &:active
+    cursor: pointer
+    text-decoration: underline
+    background: none
+
+.dataset-list-container__additional-block
+  display: flex
+  gap: 5px
+  
+.dataset-list-container__description
+  font-size: 14px

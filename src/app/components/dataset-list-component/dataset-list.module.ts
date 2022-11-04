@@ -1,3 +1,4 @@
+import { DatasetListItemComponent } from "./../dataset-list-item/dataset-list-item.component";
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
@@ -20,8 +21,8 @@ import { MatSelectModule } from "@angular/material/select";
         MatChipsModule,
         MatSelectModule,
     ],
-    exports: [DatasetListComponent],
-    declarations: [DatasetListComponent],
+    exports: [DatasetListComponent, DatasetListItemComponent],
+    declarations: [DatasetListComponent, DatasetListItemComponent],
 })
 export class DatasetListModule {
     public static forRoot(): ModuleWithProviders<DatasetListModule> {

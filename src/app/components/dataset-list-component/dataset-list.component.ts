@@ -1,4 +1,3 @@
-import { DataHelpers } from "src/app/common/data.helpers";
 import { DatasetInfo } from "../../interface/navigation.interface";
 import { NavigationService } from "../../services/navigation.service";
 import {
@@ -13,7 +12,6 @@ import {
     DatasetBasicsFragment,
     DatasetSearchOverviewFragment,
 } from "src/app/api/kamu.graphql.interface";
-import { promiseWithCatch } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-dataset-list",
@@ -36,12 +34,8 @@ export class DatasetListComponent {
 
     constructor(
         private modalService: ModalService,
-        public navigationService: NavigationService,
+        private navigationService: NavigationService,
     ) {}
-
-    public navigateToOwnerView(ownerName: string): void {
-        this.navigationService.navigateToOwnerView(ownerName);
-    }
 
     public onSelectDataset(row: DatasetSearchOverviewFragment): void {
         const datasetBasics: DatasetBasicsFragment =
@@ -50,19 +44,5 @@ export class DatasetListComponent {
             datasetName: datasetBasics.name as string,
             accountName: datasetBasics.owner.name,
         });
-    }
-
-    public getRelativeTime(time: string): string {
-        return DataHelpers.relativeTime(time);
-    }
-
-    public selectTopic(topicName: string): void {
-        promiseWithCatch(
-            this.modalService.warning({
-                message: "Feature coming soon",
-                yesButtonText: "Ok",
-                title: topicName,
-            }),
-        );
     }
 }

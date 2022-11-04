@@ -138,7 +138,19 @@
                 <div>Overview</div>
             </ng-container>
             <ng-container *ngIf="isAccountViewTypeDatasets">
-                <div></div>
+                <div class="account-datasets-tab-container">
+                    <div *ngIf="datasets.length === 0" class="text-center">
+                        <h5>Datasets list is empty</h5>
+                    </div>
+                    <div *ngFor="let row of datasets; let rowIndex = index">
+                        <app-dataset-list-item
+                            [row]="row"
+                            [rowIndex]="rowIndex"
+                            [isClickableRow]="isClickableRow"
+                            (selectDatasetEmit)="onSelectDataset($event)"
+                        ></app-dataset-list-item>
+                    </div>
+                </div>
             </ng-container>
             <ng-container *ngIf="isAccountViewTypeOrganizations">
                 <div>Organizations</div>

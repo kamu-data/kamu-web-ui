@@ -1,19 +1,23 @@
-import { DatasetsByAccountNameQuery } from "./../../api/kamu.graphql.interface";
+import {
+    DatasetsByAccountNameQuery,
+    DatasetSearchOverviewFragment,
+    User,
+} from "./../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ElementRef,
     OnInit,
     ViewChild,
 } from "@angular/core";
-import { Router, ActivatedRoute, Params } from "@angular/router";
 import { AuthApi } from "src/app/api/auth.api";
 import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
-import { SearchApi } from "src/app/api/search.api";
 import { MaybeNull } from "src/app/common/app.types";
 import { AccountTabs } from "./account.constants";
+import { ActivatedRoute, Params } from "@angular/router";
 
 @Component({
     selector: "app-account",
@@ -23,12 +27,13 @@ import { AccountTabs } from "./account.constants";
 })
 export class AccountComponent extends BaseComponent implements OnInit {
     public accountViewType = AccountTabs.overview;
-    private userName: string;
     private _window: Window;
     private resizeId: NodeJS.Timer;
     private menuRowWidth: number;
     public user: MaybeNull<AccountDetailsFragment>;
+    public datasets: DatasetSearchOverviewFragment[] = [];
     public accountTabs = AccountTabs;
+    public isClickableRow = true;
     public isDropdownMenu = false;
     public isCurrentUser = false;
 
@@ -36,22 +41,14 @@ export class AccountComponent extends BaseComponent implements OnInit {
     @ViewChild("dropdownMenu") dropdownMenu: ElementRef;
 
     constructor(
-        private searchApi: SearchApi,
         private authApi: AuthApi,
-        private router: Router,
         private route: ActivatedRoute,
         private navigationService: NavigationService,
+        private cdr: ChangeDetectorRef,
     ) {
         super();
         this._window = window;
         this.user = this.authApi.currentUser;
-
-        // if (this.authApi.userModal) {
-        //     this.user = AppValues.deepCopy(this.authApi.userModal);
-        // }
-        // this.authApi.onUserChanges.subscribe((user: UserInterface | {}) => {
-        //     this.user = AppValues.deepCopy(user);
-        // });
     }
 
     public ngOnInit(): void {
@@ -63,11 +60,11 @@ export class AccountComponent extends BaseComponent implements OnInit {
             }),
         );
         if (this.user) {
-            this.userName = this.user.name;
             this.authApi
                 .fetchDatasetsByAccountName(this.user.login)
                 .subscribe((data: DatasetsByAccountNameQuery) => {
-                    console.log("===>", data);
+                    this.datasets = data.datasets.byAccountName.nodes;
+                    this.cdr.detectChanges();
                 });
         }
     }
@@ -116,6 +113,13 @@ export class AccountComponent extends BaseComponent implements OnInit {
 
     public onSelectStarsTab(): void {
         this.navigateTo(AccountTabs.stars);
+    }
+
+    public onSelectDataset(row: DatasetSearchOverviewFragment): void {
+        this.navigationService.navigateToDatasetView({
+            accountName: (row.owner as User).name,
+            datasetName: row.name as string,
+        });
     }
 
     private navigateTo(type: string): void {

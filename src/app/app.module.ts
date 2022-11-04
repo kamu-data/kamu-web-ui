@@ -57,6 +57,7 @@ import { ErrorHandlerService } from "./services/error-handler.service";
 import { AppSettingsService } from "./services/settings.service";
 import { SettingsComponent } from "./auth/settings/settings.component";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { DatasetListModule } from "./components/dataset-list-component/dataset-list.module";
 
 const Services = [
     {
@@ -148,6 +149,7 @@ const MatModules = [
         ReactiveFormsModule,
         NgxGraphModule,
         SpinnerModule,
+        DatasetListModule,
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

@@ -1,3 +1,4 @@
+import { ModalComponent } from "./components/modal/modal.component";
 import { FormsModule } from "@angular/forms";
 import { mockAutocompleteItems } from "./search/mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -11,14 +12,12 @@ import {
 } from "./app.component";
 import AppValues from "./common/app.values";
 import { isMobileView } from "./common/app.helpers";
-import { AppHeaderComponent } from "./components/app-header/app-header.component";
 import { SearchService } from "./search/search.service";
 import { NavigationService } from "./services/navigation.service";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { AuthApi } from "./api/auth.api";
 import { ModalService } from "./components/modal/modal.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { ModalComponent } from "./components/modal/modal.component";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { of } from "rxjs";
 import ProjectLinks from "./project-links";
@@ -46,7 +45,7 @@ describe("AppComponent", () => {
                 NgbTypeaheadModule,
                 FormsModule,
             ],
-            declarations: [AppComponent, AppHeaderComponent, ModalComponent],
+            declarations: [AppComponent, ModalComponent],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 SearchService,

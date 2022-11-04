@@ -23,6 +23,7 @@
                     name="button"
                     type="button"
                     class="btn btn-outline-secondary w-100 btn-custom"
+                    (click)="onEditProfile()"
                 >
                     Edit profile
                 </button>
@@ -150,6 +151,13 @@
                             (selectDatasetEmit)="onSelectDataset($event)"
                         ></app-dataset-list-item>
                     </div>
+                    <ng-template [ngIf]="datasets.length > 0 && pageInfo">
+                        <app-pagination
+                            [currentPage]="currentPage"
+                            [pageInfo]="pageInfo"
+                            (pageChangeEvent)="onPageChange($event)"
+                        ></app-pagination>
+                    </ng-template>
                 </div>
             </ng-container>
             <ng-container *ngIf="isAccountViewTypeOrganizations">

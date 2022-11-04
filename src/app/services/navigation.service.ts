@@ -57,10 +57,14 @@ export class NavigationService {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_LOGIN]));
     }
 
-    public navigateToOwnerView(ownerName: string, tab?: string): void {
+    public navigateToOwnerView(
+        ownerName: string,
+        tab?: string,
+        page?: number,
+    ): void {
         promiseWithCatch(
             this.router.navigate([ownerName], {
-                queryParams: tab !== AccountTabs.overview ? { tab } : {},
+                queryParams: tab !== AccountTabs.overview ? { tab, page } : {},
             }),
         );
     }

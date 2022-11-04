@@ -58,8 +58,8 @@ export class AuthApi {
 
     public fetchDatasetsByAccountName(
         accountName: string,
-        perPage = 10,
         page = 0,
+        perPage = 10,
     ): Observable<DatasetsByAccountNameQuery> {
         return this.datasetsByAccountNameGQL
             .watch({ accountName, perPage, page })

@@ -58,6 +58,7 @@ import { AppSettingsService } from "./services/settings.service";
 import { SettingsComponent } from "./auth/settings/settings.component";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { DatasetListModule } from "./components/dataset-list-component/dataset-list.module";
+import { PaginationModule } from "./components/pagination-component/pagination.module";
 
 const Services = [
     {
@@ -150,6 +151,7 @@ const MatModules = [
         NgxGraphModule,
         SpinnerModule,
         DatasetListModule,
+        PaginationModule,
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

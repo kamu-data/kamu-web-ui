@@ -1,6 +1,8 @@
+import { ModalService } from "./../../components/modal/modal.service";
 import {
     DatasetsByAccountNameQuery,
     DatasetSearchOverviewFragment,
+    PageBasedInfo,
     User,
 } from "./../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
@@ -17,7 +19,16 @@ import { AuthApi } from "src/app/api/auth.api";
 import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { AccountTabs } from "./account.constants";
-import { ActivatedRoute, Params } from "@angular/router";
+import {
+    ActivatedRoute,
+    NavigationEnd,
+    Params,
+    Router,
+    RouterEvent,
+} from "@angular/router";
+import { filter, map } from "rxjs/operators";
+import AppValues from "src/app/common/app.values";
+import { promiseWithCatch } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-account",
@@ -32,10 +43,13 @@ export class AccountComponent extends BaseComponent implements OnInit {
     private menuRowWidth: number;
     public user: MaybeNull<AccountDetailsFragment>;
     public datasets: DatasetSearchOverviewFragment[] = [];
+    public pageInfo: PageBasedInfo;
     public accountTabs = AccountTabs;
+    public accountName: string;
     public isClickableRow = true;
     public isDropdownMenu = false;
     public isCurrentUser = false;
+    public currentPage = 1;
 
     @ViewChild("containerMenu") containerMenu: ElementRef;
     @ViewChild("dropdownMenu") dropdownMenu: ElementRef;
@@ -43,8 +57,10 @@ export class AccountComponent extends BaseComponent implements OnInit {
     constructor(
         private authApi: AuthApi,
         private route: ActivatedRoute,
+        private router: Router,
         private navigationService: NavigationService,
         private cdr: ChangeDetectorRef,
+        private modalService: ModalService,
     ) {
         super();
         this._window = window;
@@ -52,20 +68,25 @@ export class AccountComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.trackSubscription(
+        this.trackSubscriptions(
             this.route.queryParams.subscribe((param: Params) => {
                 if (param.tab) {
                     this.accountViewType = param.tab as AccountTabs;
                 }
+                if (param.page) {
+                    this.currentPage = param.page as number;
+                }
             }),
+            this.router.events
+                .pipe(
+                    filter((event) => event instanceof NavigationEnd),
+                    map((event) => event as RouterEvent),
+                )
+                .subscribe(() => this.getDatasets()),
         );
         if (this.user) {
-            this.authApi
-                .fetchDatasetsByAccountName(this.user.login)
-                .subscribe((data: DatasetsByAccountNameQuery) => {
-                    this.datasets = data.datasets.byAccountName.nodes;
-                    this.cdr.detectChanges();
-                });
+            this.accountName = this.user.login;
+            this.getDatasets();
         }
     }
 
@@ -87,6 +108,15 @@ export class AccountComponent extends BaseComponent implements OnInit {
 
     public get isAccountViewTypeStars(): boolean {
         return this.accountViewType === AccountTabs.stars;
+    }
+
+    public onEditProfile(): void {
+        promiseWithCatch(
+            this.modalService.warning({
+                message: AppValues.UNIMPLEMENTED_MESSAGE,
+                yesButtonText: "Ok",
+            }),
+        );
     }
 
     public selectedTabs(accountTabKey: AccountTabs): boolean {
@@ -122,10 +152,39 @@ export class AccountComponent extends BaseComponent implements OnInit {
         });
     }
 
-    private navigateTo(type: string): void {
-        if (this.user?.login) {
-            this.navigationService.navigateToOwnerView(this.user.login, type);
-            this.accountViewType = type as AccountTabs;
+    public onPageChange(params: {
+        currentPage: number;
+        isClick: boolean;
+    }): void {
+        params.currentPage
+            ? (this.currentPage = params.currentPage)
+            : (this.currentPage = 1);
+        if (this.currentPage === 1) {
+            this.navigationService.navigateToOwnerView(
+                this.accountName,
+                this.accountViewType,
+            );
+            return;
         }
+        this.navigationService.navigateToOwnerView(
+            this.accountName,
+            this.accountViewType,
+            params.currentPage,
+        );
+    }
+
+    private navigateTo(type: AccountTabs): void {
+        this.navigationService.navigateToOwnerView(this.accountName, type);
+        this.accountViewType = type;
+    }
+
+    private getDatasets(): void {
+        this.authApi
+            .fetchDatasetsByAccountName(this.accountName, this.currentPage - 1)
+            .subscribe((data: DatasetsByAccountNameQuery) => {
+                this.datasets = data.datasets.byAccountName.nodes;
+                this.pageInfo = data.datasets.byAccountName.pageInfo;
+                this.cdr.detectChanges();
+            });
     }
 }

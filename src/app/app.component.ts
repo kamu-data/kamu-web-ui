@@ -87,10 +87,6 @@ export class AppComponent extends BaseComponent implements OnInit {
             ),
         );
         this.authentification();
-        // Remove mock user
-        this.user = this.authApi.currentUser
-            ? this.authApi.currentUser
-            : AppComponent.AnonymousAccountInfo;
     }
 
     authentification(): void {

@@ -1,10 +1,10 @@
+import { DatasetsByAccountNameQuery } from "./../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    HostListener,
     OnInit,
     ViewChild,
 } from "@angular/core";
@@ -13,7 +13,6 @@ import { AuthApi } from "src/app/api/auth.api";
 import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import { SearchApi } from "src/app/api/search.api";
 import { MaybeNull } from "src/app/common/app.types";
-import AppValues from "src/app/common/app.values";
 import { AccountTabs } from "./account.constants";
 
 @Component({
@@ -29,7 +28,6 @@ export class AccountComponent extends BaseComponent implements OnInit {
     private resizeId: NodeJS.Timer;
     private menuRowWidth: number;
     public user: MaybeNull<AccountDetailsFragment>;
-    public datasets: any;
     public accountTabs = AccountTabs;
     public isDropdownMenu = false;
     public isCurrentUser = false;
@@ -64,8 +62,13 @@ export class AccountComponent extends BaseComponent implements OnInit {
                 }
             }),
         );
-        if (this.user?.name) {
+        if (this.user) {
             this.userName = this.user.name;
+            this.authApi
+                .fetchDatasetsByAccountName(this.user.login)
+                .subscribe((data: DatasetsByAccountNameQuery) => {
+                    console.log("===>", data);
+                });
         }
     }
 

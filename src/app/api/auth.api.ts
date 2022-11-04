@@ -1,12 +1,14 @@
 import { mockAccountDetails } from "./mock/auth.mock";
 import { Injectable } from "@angular/core";
-import { catchError, map } from "rxjs/operators";
+import { catchError, first, map } from "rxjs/operators";
 import { Observable, Subject, throwError } from "rxjs";
 import { NavigationService } from "../services/navigation.service";
 import {
     AccountDetailsFragment,
     FetchAccountInfoGQL,
     FetchAccountInfoMutation,
+    DatasetsByAccountNameQuery,
+    DatasetsByAccountNameGQL,
     GithubLoginGQL,
     GithubLoginMutation,
 } from "./kamu.graphql.interface";
@@ -16,6 +18,7 @@ import { MaybeNull } from "../common/app.types";
 import { MutationResult } from "apollo-angular";
 import { isNull } from "lodash";
 import { AuthenticationError } from "../common/errors";
+import { ApolloQueryResult } from "@apollo/client";
 
 @Injectable({
     providedIn: "root",
@@ -29,6 +32,7 @@ export class AuthApi {
     constructor(
         private githubLoginGQL: GithubLoginGQL,
         private fetchAccountInfoGQL: FetchAccountInfoGQL,
+        private datasetsByAccountNameGQL: DatasetsByAccountNameGQL,
         private navigationService: NavigationService,
     ) {
         // Mock user
@@ -50,6 +54,21 @@ export class AuthApi {
     private changeUser(user: MaybeNull<AccountDetailsFragment>) {
         this.user = user;
         this.userChanges$.next(user);
+    }
+
+    public fetchDatasetsByAccountName(
+        accountName: string,
+        perPage = 10,
+        page = 0,
+    ): Observable<DatasetsByAccountNameQuery> {
+        return this.datasetsByAccountNameGQL
+            .watch({ accountName, perPage, page })
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<DatasetsByAccountNameQuery>) => {
+                    return result.data;
+                }),
+            );
     }
 
     public fetchUserInfoAndTokenFromGithubCallackCode(

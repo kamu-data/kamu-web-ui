@@ -1,5 +1,4 @@
 import { AccountTabs } from "./auth/account/account.constants";
-import { mockAccountDetails } from "./api/mock/auth.mock";
 import { NavigationService } from "./services/navigation.service";
 import {
     ChangeDetectionStrategy,

@@ -796,6 +796,29 @@ export type GetDatasetMainDataQuery = {
     };
 };
 
+export type DatasetsByAccountNameQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    perPage?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type DatasetsByAccountNameQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byAccountName: {
+            __typename?: "DatasetConnection";
+            totalCount: number;
+            nodes: Array<
+                { __typename: "Dataset" } & DatasetSearchOverviewFragment
+            >;
+            pageInfo: {
+                __typename?: "PageBasedInfo";
+            } & DatasetPageInfoFragment;
+        };
+    };
+};
+
 export type AccountDetailsFragment = {
     __typename?: "AccountInfo";
     login: string;
@@ -1634,6 +1657,46 @@ export class GetDatasetMainDataGQL extends Apollo.Query<
     GetDatasetMainDataQueryVariables
 > {
     document = GetDatasetMainDataDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetsByAccountNameDocument = gql`
+    query datasetsByAccountName(
+        $accountName: AccountName!
+        $perPage: Int
+        $page: Int
+    ) {
+        datasets {
+            byAccountName(
+                accountName: $accountName
+                perPage: $perPage
+                page: $page
+            ) {
+                nodes {
+                    ...DatasetSearchOverview
+                    __typename
+                }
+                totalCount
+                pageInfo {
+                    ...DatasetPageInfo
+                }
+            }
+        }
+    }
+    ${DatasetSearchOverviewFragmentDoc}
+    ${DatasetPageInfoFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetsByAccountNameGQL extends Apollo.Query<
+    DatasetsByAccountNameQuery,
+    DatasetsByAccountNameQueryVariables
+> {
+    document = DatasetsByAccountNameDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

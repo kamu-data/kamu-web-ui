@@ -51,6 +51,7 @@
                     </a>
                     <span class="signed-commit-signer-name flex-1">
                         <a
+                            data-test-id="dataset-owner-name"
                             class="signer"
                             (click)="navigateToOwnerView(row.owner.name)"
                             >{{ row.owner.name }}</a
@@ -73,6 +74,7 @@
                 </div>
             </ng-template>
             <button
+                data-test-id="button-popover-verified"
                 type="button"
                 class="signed-commit-badge verified signed-commit-badge-small"
                 placement="left"

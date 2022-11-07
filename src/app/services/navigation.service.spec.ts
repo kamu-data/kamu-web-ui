@@ -1,3 +1,4 @@
+import { AccountTabs } from "./../auth/account/account.constants";
 import { routes } from "./../app-routing.module";
 import { RouterTestingModule } from "@angular/router/testing";
 import { TestBed } from "@angular/core/testing";
@@ -38,11 +39,27 @@ describe("NavigationService", () => {
         expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_LOGIN]);
     });
 
-    it("should test navigate to owner page", () => {
+    it("should test navigate to owner page and tab equal overview", () => {
         const mockOwnerName = "Mock name";
         const routerSpy = spyOn(router, "navigate").and.callThrough();
-        service.navigateToOwnerView(mockOwnerName);
-        expect(routerSpy).toHaveBeenCalledWith([mockOwnerName]);
+        service.navigateToOwnerView(mockOwnerName, AccountTabs.overview);
+        expect(routerSpy).toHaveBeenCalledWith([mockOwnerName], {
+            queryParams: {},
+        });
+    });
+
+    it("should test navigate to owner page and tab not equal overview", () => {
+        const mockOwnerName = "Mock name";
+        const testPage = 2;
+        const routerSpy = spyOn(router, "navigate").and.callThrough();
+        service.navigateToOwnerView(
+            mockOwnerName,
+            AccountTabs.datasets,
+            testPage,
+        );
+        expect(routerSpy).toHaveBeenCalledWith([mockOwnerName], {
+            queryParams: { tab: AccountTabs.datasets, page: testPage },
+        });
     });
 
     it("should test navigate to website", () => {

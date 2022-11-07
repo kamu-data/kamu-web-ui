@@ -1,5 +1,7 @@
 import {
     DataBatchFormat,
+    DatasetKind,
+    DatasetSearchOverviewFragment,
     GetDatasetDataSqlRunQuery,
 } from "./../kamu.graphql.interface";
 import { DataSchemaFormat } from "../kamu.graphql.interface";
@@ -27,5 +29,51 @@ export const mockDatasetDataSqlRunResponse: GetDatasetDataSqlRunQuery = {
             },
             limit: 50,
         },
+    },
+};
+
+export const mockDatasetListItem: DatasetSearchOverviewFragment = {
+    __typename: "Dataset",
+    createdAt: "2022-08-05T21:17:30.613911358+00:00",
+    lastUpdatedAt: "2022-08-05T21:19:28.817281255+00:00",
+    metadata: {
+        __typename: "DatasetMetadata",
+        currentInfo: {
+            __typename: "SetInfo",
+            description: "Confirmed positive cases of COVID-19 in Alberta.",
+            keywords: [
+                "Healthcare",
+                "Epidemiology",
+                "COVID-19",
+                "SARS-CoV-2",
+                "Disaggregated",
+                "Anonymized",
+                "Alberta",
+                "Canada",
+            ],
+        },
+        currentLicense: {
+            __typename: "SetLicense",
+            shortName: "OGL-Canada-2.0",
+            name: "Open Government Licence - Canada",
+            spdxId: "OGL-Canada-2.0",
+            websiteUrl:
+                "https://open.canada.ca/en/open-government-licence-canada",
+        },
+        currentDownstreamDependencies: [
+            {
+                __typename: "Dataset",
+                id: "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7",
+                kind: DatasetKind.Derivative,
+            },
+        ],
+    },
+    id: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+    kind: DatasetKind.Root,
+    name: "alberta.case-details",
+    owner: {
+        __typename: "User",
+        id: "1",
+        name: "kamu",
     },
 };

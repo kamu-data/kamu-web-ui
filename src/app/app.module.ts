@@ -59,6 +59,8 @@ import { SettingsComponent } from "./auth/settings/settings.component";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { DatasetListModule } from "./components/dataset-list-component/dataset-list.module";
 import { PaginationModule } from "./components/pagination-component/pagination.module";
+import { AngularSvgIconModule } from "angular-svg-icon";
+import { AngularSvgIconPreloaderModule } from "angular-svg-icon-preloader";
 
 const Services = [
     {
@@ -152,6 +154,10 @@ const MatModules = [
         SpinnerModule,
         DatasetListModule,
         PaginationModule,
+        AngularSvgIconModule.forRoot(),
+        AngularSvgIconPreloaderModule.forRoot({
+            configUrl: "./assets/svg/icons.json",
+        }),
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

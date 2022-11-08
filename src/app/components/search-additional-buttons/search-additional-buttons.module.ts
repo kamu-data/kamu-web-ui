@@ -6,6 +6,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { CommonModule } from "@angular/common";
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons-nav.component";
+import { AngularSvgIconModule } from "angular-svg-icon";
 
 @NgModule({
     imports: [
@@ -14,6 +15,7 @@ import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons
         MatButtonModule,
         CommonModule,
         NgbPopoverModule,
+        AngularSvgIconModule,
     ],
     exports: [
         SearchAdditionalButtonsComponent,

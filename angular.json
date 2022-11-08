@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "allowedCommonJsDependencies":[
+            "allowedCommonJsDependencies": [
               "lodash",
               "zen-observable",
               "dagre",
@@ -32,6 +32,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
+              "src/assets/svg",
               "src/favicon.ico",
               "src/assets",
               {
@@ -108,10 +109,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "src/styles.sass",
               "node_modules/prismjs/themes/prism-okaidia.css",

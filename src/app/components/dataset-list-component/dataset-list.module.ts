@@ -9,6 +9,7 @@ import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { DatasetListComponent } from "./dataset-list.component";
 import { MatSelectModule } from "@angular/material/select";
+import { AngularSvgIconModule } from "angular-svg-icon";
 
 @NgModule({
     imports: [
@@ -20,6 +21,7 @@ import { MatSelectModule } from "@angular/material/select";
         FormsModule,
         MatChipsModule,
         MatSelectModule,
+        AngularSvgIconModule,
     ],
     exports: [DatasetListComponent, DatasetListItemComponent],
     declarations: [DatasetListComponent, DatasetListItemComponent],

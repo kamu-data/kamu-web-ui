@@ -1,3 +1,5 @@
+import { AuthenticationError } from "./common/errors";
+import { throwError } from "rxjs";
 import { AccountTabs } from "./auth/account/account.constants";
 import { NavigationService } from "./services/navigation.service";
 import {
@@ -160,6 +162,10 @@ export class AppComponent extends BaseComponent implements OnInit {
                 this.authApi.currentUser.login,
                 AccountTabs.overview,
             );
+        } else {
+            throwError(
+                new AuthenticationError([new Error("Login is undefined")]),
+            );
         }
     }
 
@@ -191,7 +197,13 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onSettings(): void {
-        this.navigationService.navigateToSettings();
+        if (this.authApi.currentUser?.login) {
+            this.navigationService.navigateToSettings();
+        } else {
+            throwError(
+                new AuthenticationError([new Error("Login is undefined")]),
+            );
+        }
     }
 
     public onHelp(): void {

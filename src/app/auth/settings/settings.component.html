@@ -2,7 +2,7 @@
     <div class="d-md-flex align-items-center justify-content-between mt-1 mb-4">
         <div class="d-flex align-items-center mb-2 mb-md-0">
             <img
-                [src]="user?.avatarUrl"
+                [src]="user.avatarUrl"
                 alt="@kulykivska"
                 size="48"
                 height="48"
@@ -13,10 +13,10 @@
             <div class="flex-auto mx-4 mt-3">
                 <div class="h3-custom lh-condensed">
                     <a
-                        [routerLink]="['/', user?.login]"
+                        [routerLink]="['/', user.login]"
                         class="color-fg-default fw-bold-custom fs-5"
                     >
-                        {{ user?.login }}
+                        {{ user.login }}
                     </a>
                     <span class="sr-only">settings</span>
                 </div>
@@ -55,7 +55,9 @@
                             >
                                 <a
                                     routerLinkActive="active"
-                                    routerLink="/v/settings/profile"
+                                    [routerLink]="
+                                        getRouteLink(settingsTabs.PROFILE)
+                                    "
                                     aria-current="page"
                                     data-view-component="true"
                                     class="ActionList-content ActionList-content--visual16"
@@ -94,7 +96,9 @@
                             >
                                 <a
                                     routerLinkActive="active"
-                                    routerLink="/v/settings/admin"
+                                    [routerLink]="
+                                        getRouteLink(settingsTabs.ACCOUNT)
+                                    "
                                     data-view-component="true"
                                     class="ActionList-content ActionList-content--visual16"
                                 >
@@ -132,7 +136,9 @@
                             >
                                 <a
                                     routerLinkActive="active"
-                                    routerLink="/v/settings/appearance"
+                                    [routerLink]="
+                                        getRouteLink(settingsTabs.APPEARANCE)
+                                    "
                                     data-view-component="true"
                                     class="ActionList-content ActionList-content--visual16"
                                 >
@@ -170,7 +176,9 @@
                             >
                                 <a
                                     routerLinkActive="active"
-                                    routerLink="/v/settings/accessibility"
+                                    [routerLink]="
+                                        getRouteLink(settingsTabs.ACCESSIBILITY)
+                                    "
                                     data-view-component="true"
                                     class="ActionList-content ActionList-content--visual16"
                                 >
@@ -208,7 +216,9 @@
                             >
                                 <a
                                     routerLinkActive="active"
-                                    routerLink="/v/settings/notifications"
+                                    [routerLink]="
+                                        getRouteLink(settingsTabs.NOTIFICATIONS)
+                                    "
                                     data-view-component="true"
                                     class="ActionList-content ActionList-content--visual16"
                                 >
@@ -277,7 +287,11 @@
                                     >
                                         <a
                                             routerLinkActive="active"
-                                            routerLink="/v/settings/billing"
+                                            [routerLink]="
+                                                getRouteLink(
+                                                    settingsTabs.BILLING
+                                                )
+                                            "
                                             data-view-component="true"
                                             class="ActionList-content ActionList-content--visual16"
                                         >
@@ -319,7 +333,11 @@
                                     >
                                         <a
                                             routerLinkActive="active"
-                                            routerLink="/v/settings/emails"
+                                            [routerLink]="
+                                                getRouteLink(
+                                                    settingsTabs.EMAILS
+                                                )
+                                            "
                                             data-view-component="true"
                                             class="ActionList-content ActionList-content--visual16"
                                         >
@@ -358,7 +376,11 @@
                                     >
                                         <a
                                             routerLinkActive="active"
-                                            routerLink="/v/settings/security"
+                                            [routerLink]="
+                                                getRouteLink(
+                                                    settingsTabs.SECURITY
+                                                )
+                                            "
                                             data-view-component="true"
                                             class="ActionList-content ActionList-content--visual16"
                                         >
@@ -397,7 +419,11 @@
                                     >
                                         <a
                                             routerLinkActive="active"
-                                            routerLink="/v/settings/organizations"
+                                            [routerLink]="
+                                                getRouteLink(
+                                                    settingsTabs.ORGANIZATIONS
+                                                )
+                                            "
                                             data-view-component="true"
                                             class="ActionList-content ActionList-content--visual16"
                                         >

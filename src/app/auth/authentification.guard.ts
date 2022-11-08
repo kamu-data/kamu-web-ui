@@ -1,12 +1,6 @@
 import { NavigationService } from "src/app/services/navigation.service";
 import { Injectable } from "@angular/core";
-import {
-    ActivatedRouteSnapshot,
-    CanActivate,
-    RouterStateSnapshot,
-    UrlTree,
-} from "@angular/router";
-import { Observable } from "rxjs";
+import { CanActivate } from "@angular/router";
 import { AuthApi } from "../api/auth.api";
 
 @Injectable({
@@ -17,11 +11,7 @@ export class AuthentificationGuard implements CanActivate {
         private navigationService: NavigationService,
         private authApi: AuthApi,
     ) {}
-    canActivate():
-        | Observable<boolean | UrlTree>
-        | Promise<boolean | UrlTree>
-        | boolean
-        | UrlTree {
+    canActivate(): boolean {
         if (!this.authApi.isAuthenticated) {
             this.navigationService.navigateToHome();
             return false;

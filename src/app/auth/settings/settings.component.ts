@@ -41,4 +41,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         ] as string;
         if (this.authApi.currentUser) this.user = this.authApi.currentUser;
     }
+
+    public getRouteLink(tab: SettingsTabs): string {
+        return `/${ProjectLinks.URL_SETTINGS}/${tab}`;
+    }
 }

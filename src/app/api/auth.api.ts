@@ -6,8 +6,6 @@ import {
     AccountDetailsFragment,
     FetchAccountInfoGQL,
     FetchAccountInfoMutation,
-    DatasetsByAccountNameQuery,
-    DatasetsByAccountNameGQL,
     GithubLoginGQL,
     GithubLoginMutation,
 } from "./kamu.graphql.interface";
@@ -17,7 +15,7 @@ import { MaybeNull } from "../common/app.types";
 import { MutationResult } from "apollo-angular";
 import { isNull } from "lodash";
 import { AuthenticationError } from "../common/errors";
-import { ApolloQueryResult } from "@apollo/client";
+import { mockAccountDetails } from "./mock/auth.mock";
 
 @Injectable({
     providedIn: "root",
@@ -31,9 +29,11 @@ export class AuthApi {
     constructor(
         private githubLoginGQL: GithubLoginGQL,
         private fetchAccountInfoGQL: FetchAccountInfoGQL,
-        private datasetsByAccountNameGQL: DatasetsByAccountNameGQL,
         private navigationService: NavigationService,
-    ) {}
+    ) {
+        // Mock user
+        this.changeUser(mockAccountDetails);
+    }
 
     public get onUserChanges(): Observable<MaybeNull<AccountDetailsFragment>> {
         return this.userChanges$.asObservable();
@@ -50,21 +50,6 @@ export class AuthApi {
     private changeUser(user: MaybeNull<AccountDetailsFragment>) {
         this.user = user;
         this.userChanges$.next(user);
-    }
-
-    public fetchDatasetsByAccountName(
-        accountName: string,
-        page = 0,
-        perPage = 10,
-    ): Observable<DatasetsByAccountNameQuery> {
-        return this.datasetsByAccountNameGQL
-            .watch({ accountName, perPage, page })
-            .valueChanges.pipe(
-                first(),
-                map((result: ApolloQueryResult<DatasetsByAccountNameQuery>) => {
-                    return result.data;
-                }),
-            );
     }
 
     public fetchUserInfoAndTokenFromGithubCallackCode(

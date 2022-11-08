@@ -1,4 +1,4 @@
-import { MaybeNull } from "./../../common/app.types";
+import ProjectLinks from "src/app/project-links";
 import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import { AuthApi } from "src/app/api/auth.api";
 import { SettingsTabs } from "./settings.constants";
@@ -14,9 +14,9 @@ import { BaseComponent } from "src/app/common/base.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent extends BaseComponent implements OnInit {
-    public activeTab: string | undefined = SettingsTabs.PROFILE;
+    public activeTab: string = SettingsTabs.PROFILE;
     public settingsTabs: typeof SettingsTabs = SettingsTabs;
-    public user: MaybeNull<AccountDetailsFragment>;
+    public user: AccountDetailsFragment;
 
     constructor(
         private router: Router,
@@ -31,10 +31,14 @@ export class SettingsComponent extends BaseComponent implements OnInit {
             this.router.events
                 .pipe(filter((event) => event instanceof NavigationEnd))
                 .subscribe(() => {
-                    this.activeTab = this.route.snapshot.routeConfig?.path;
+                    this.activeTab = this.route.snapshot.params[
+                        ProjectLinks.URL_PARAM_CATEGORY
+                    ] as string;
                 }),
         );
-        this.activeTab = this.route.snapshot.routeConfig?.path;
-        this.user = this.authApi.currentUser;
+        this.activeTab = this.route.snapshot.params[
+            ProjectLinks.URL_PARAM_CATEGORY
+        ] as string;
+        if (this.authApi.currentUser) this.user = this.authApi.currentUser;
     }
 }

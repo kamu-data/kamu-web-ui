@@ -1,3 +1,4 @@
+import { AuthentificationGuard } from "./auth/authentification.guard";
 import { SettingsComponent } from "./auth/settings/settings.component";
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
 import { NgModule } from "@angular/core";
@@ -42,41 +43,10 @@ export const routes: Routes = [
     },
     {
         path: ProjectLinks.URL_SETTINGS,
+        canActivate: [AuthentificationGuard],
         children: [
             {
-                path: "profile",
-                component: SettingsComponent,
-            },
-            {
-                path: "admin",
-                component: SettingsComponent,
-            },
-            {
-                path: "appearance",
-                component: SettingsComponent,
-            },
-            {
-                path: "accessibility",
-                component: SettingsComponent,
-            },
-            {
-                path: "notifications",
-                component: SettingsComponent,
-            },
-            {
-                path: "billing",
-                component: SettingsComponent,
-            },
-            {
-                path: "emails",
-                component: SettingsComponent,
-            },
-            {
-                path: "security",
-                component: SettingsComponent,
-            },
-            {
-                path: "organizations",
+                path: `:${ProjectLinks.URL_PARAM_CATEGORY}`,
                 component: SettingsComponent,
             },
         ],

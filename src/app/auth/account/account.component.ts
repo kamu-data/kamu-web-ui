@@ -29,6 +29,7 @@ import {
 import { filter, map } from "rxjs/operators";
 import AppValues from "src/app/common/app.values";
 import { promiseWithCatch } from "src/app/common/app.helpers";
+import { DatasetApi } from "src/app/api/dataset.api";
 
 @Component({
     selector: "app-account",
@@ -46,6 +47,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
     public pageInfo: PageBasedInfo;
     public accountTabs = AccountTabs;
     public accountName: string;
+    public datasetTotalCount: number;
     public isClickableRow = true;
     public isDropdownMenu = false;
     public isCurrentUser = false;
@@ -61,6 +63,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
         private navigationService: NavigationService,
         private cdr: ChangeDetectorRef,
         private modalService: ModalService,
+        private datasetApi: DatasetApi,
     ) {
         super();
         this._window = window;
@@ -179,11 +182,12 @@ export class AccountComponent extends BaseComponent implements OnInit {
     }
 
     private getDatasets(): void {
-        this.authApi
+        this.datasetApi
             .fetchDatasetsByAccountName(this.accountName, this.currentPage - 1)
             .subscribe((data: DatasetsByAccountNameQuery) => {
                 this.datasets = data.datasets.byAccountName.nodes;
                 this.pageInfo = data.datasets.byAccountName.pageInfo;
+                this.datasetTotalCount = data.datasets.byAccountName.totalCount;
                 this.cdr.detectChanges();
             });
     }

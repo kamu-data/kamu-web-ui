@@ -6,7 +6,7 @@ import { AuthApi } from "../api/auth.api";
 @Injectable({
     providedIn: "root",
 })
-export class AuthentificationGuard implements CanActivate {
+export class AuthenticationGuard implements CanActivate {
     constructor(
         private navigationService: NavigationService,
         private authApi: AuthApi,

@@ -1,3 +1,4 @@
+import { SettingsTabs } from "./../auth/settings/settings.constants";
 import { AccountTabs } from "./../auth/account/account.constants";
 import { routes } from "./../app-routing.module";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -37,6 +38,15 @@ describe("NavigationService", () => {
         const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToLogin();
         expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_LOGIN]);
+    });
+
+    it("should test navigate to settings", () => {
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        service.navigateToSettings();
+        expect(routerSpy).toHaveBeenCalledWith([
+            ProjectLinks.URL_SETTINGS,
+            SettingsTabs.PROFILE,
+        ]);
     });
 
     it("should test navigate to owner page and tab equal overview", () => {

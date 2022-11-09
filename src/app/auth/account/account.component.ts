@@ -123,30 +123,38 @@ export class AccountComponent extends BaseComponent implements OnInit {
         );
     }
 
-    public selectedTabs(accountTabKey: AccountTabs): boolean {
-        if (this._window.location.search.includes(accountTabKey)) {
-            return true;
-        }
-        return false;
-    }
-
     public onSelectOverviewTab(): void {
-        this.navigateTo(AccountTabs.overview);
+        this.navigationService.navigateToOwnerView(
+            this.accountName,
+            AccountTabs.overview,
+        );
     }
     public onSelectDatasetsTab(): void {
-        this.navigateTo(AccountTabs.datasets);
+        this.navigationService.navigateToOwnerView(
+            this.accountName,
+            AccountTabs.datasets,
+        );
     }
 
     public onSelectOrganizationsTab(): void {
-        this.navigateTo(AccountTabs.organizations);
+        this.navigationService.navigateToOwnerView(
+            this.accountName,
+            AccountTabs.organizations,
+        );
     }
 
     public onSelectInboxTab(): void {
-        this.navigateTo(AccountTabs.inbox);
+        this.navigationService.navigateToOwnerView(
+            this.accountName,
+            AccountTabs.inbox,
+        );
     }
 
     public onSelectStarsTab(): void {
-        this.navigateTo(AccountTabs.stars);
+        this.navigationService.navigateToOwnerView(
+            this.accountName,
+            AccountTabs.stars,
+        );
     }
 
     public onSelectDataset(row: DatasetSearchOverviewFragment): void {
@@ -157,8 +165,8 @@ export class AccountComponent extends BaseComponent implements OnInit {
     }
 
     public onPageChange(params: {
-        currentPage: number;
-        isClick: boolean;
+        currentPage?: number;
+        isClick?: boolean;
     }): void {
         params.currentPage
             ? (this.currentPage = params.currentPage)
@@ -175,11 +183,6 @@ export class AccountComponent extends BaseComponent implements OnInit {
             this.accountViewType,
             params.currentPage,
         );
-    }
-
-    private navigateTo(type: AccountTabs): void {
-        this.navigationService.navigateToOwnerView(this.accountName, type);
-        this.accountViewType = type;
     }
 
     private getDatasets(): void {

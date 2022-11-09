@@ -4,5 +4,4 @@ export enum AccountTabs {
     organizations = "organizations",
     inbox = "inbox",
     stars = "stars",
-    currentUser = "currentUser",
 }

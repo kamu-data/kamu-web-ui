@@ -1,4 +1,4 @@
-import { AuthentificationGuard } from "./auth/authentification.guard";
+import { AuthenticationGuard } from "./auth/authentication.guard";
 import { SettingsComponent } from "./auth/settings/settings.component";
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
 import { NgModule } from "@angular/core";
@@ -43,7 +43,7 @@ export const routes: Routes = [
     },
     {
         path: ProjectLinks.URL_SETTINGS,
-        canActivate: [AuthentificationGuard],
+        canActivate: [AuthenticationGuard],
         children: [
             {
                 path: `:${ProjectLinks.URL_PARAM_CATEGORY}`,

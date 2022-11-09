@@ -110,7 +110,7 @@ describe("AccountComponent", () => {
         component.onPageChange({});
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
             mockAccountDetails.login,
-            AccountTabs.datasets,
+            AccountTabs.overview,
         );
     });
 });

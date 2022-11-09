@@ -8,6 +8,7 @@ import { routerMock } from "src/app/common/base-test.helpers.spec";
 
 import { AccountComponent } from "./account.component";
 import { of } from "rxjs";
+import { DatasetApi } from "src/app/api/dataset.api";
 
 describe("AccountComponent", () => {
     let component: AccountComponent;
@@ -22,6 +23,7 @@ describe("AccountComponent", () => {
                 MatButtonToggleModule,
             ],
             providers: [
+                DatasetApi,
                 { provide: Router, useValue: routerMock },
                 {
                     provide: ActivatedRoute,

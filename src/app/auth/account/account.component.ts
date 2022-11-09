@@ -73,9 +73,10 @@ export class AccountComponent extends BaseComponent implements OnInit {
     public ngOnInit(): void {
         this.trackSubscriptions(
             this.route.queryParams.subscribe((param: Params) => {
-                if (param.tab) {
-                    this.accountViewType = param.tab as AccountTabs;
-                }
+                param.tab
+                    ? (this.accountViewType = param.tab as AccountTabs)
+                    : (this.accountViewType = AccountTabs.overview);
+
                 if (param.page) {
                     this.currentPage = param.page as number;
                 }

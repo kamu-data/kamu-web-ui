@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { catchError, first, map } from "rxjs/operators";
+import { catchError, map } from "rxjs/operators";
 import { Observable, Subject, throwError } from "rxjs";
 import { NavigationService } from "../services/navigation.service";
 import {
@@ -15,7 +15,6 @@ import { MaybeNull } from "../common/app.types";
 import { MutationResult } from "apollo-angular";
 import { isNull } from "lodash";
 import { AuthenticationError } from "../common/errors";
-import { mockAccountDetails } from "./mock/auth.mock";
 
 @Injectable({
     providedIn: "root",
@@ -30,10 +29,7 @@ export class AuthApi {
         private githubLoginGQL: GithubLoginGQL,
         private fetchAccountInfoGQL: FetchAccountInfoGQL,
         private navigationService: NavigationService,
-    ) {
-        // Mock user
-        this.changeUser(mockAccountDetails);
-    }
+    ) {}
 
     public get onUserChanges(): Observable<MaybeNull<AccountDetailsFragment>> {
         return this.userChanges$.asObservable();

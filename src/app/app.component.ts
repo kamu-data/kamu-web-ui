@@ -89,10 +89,6 @@ export class AppComponent extends BaseComponent implements OnInit {
             ),
         );
         this.authentification();
-        // Remove mock user
-        this.user = this.authApi.currentUser
-            ? this.authApi.currentUser
-            : AppComponent.AnonymousAccountInfo;
     }
 
     authentification(): void {
@@ -170,12 +166,16 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onUserDatasets(): void {
-        promiseWithCatch(
-            this.modalService.warning({
-                message: AppValues.UNIMPLEMENTED_MESSAGE,
-                yesButtonText: "Ok",
-            }),
-        );
+        if (this.authApi.currentUser?.login) {
+            this.navigationService.navigateToOwnerView(
+                this.authApi.currentUser.login,
+                AccountTabs.datasets,
+            );
+        } else {
+            throwError(
+                new AuthenticationError([new Error("Login is undefined")]),
+            );
+        }
     }
 
     public onBilling(): void {

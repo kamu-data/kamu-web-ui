@@ -17,7 +17,6 @@
                             data-hovercard-url="/users/sergiimk/hovercard"
                             data-octo-click="hovercard-link-click"
                             data-octo-dimensions="link_type:self"
-                            href="/sergiimk"
                         >
                             <img
                                 data-test-selector="commits-avatar-stack-avatar-image"
@@ -35,7 +34,7 @@
                         class="commit-author user-mention"
                         *ngIf="authorInfo?.name"
                         [title]="'View all commits by ' + authorInfo.name"
-                        href="#todo-navigate-to-user"
+                        [routerLink]="['/', authorInfo.name]"
                         >{{ authorInfo.name }}</a
                     >
                     <span class="d-none d-sm-inline mb-0 ml-3">

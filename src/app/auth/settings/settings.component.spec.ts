@@ -1,3 +1,5 @@
+import { mockAccountDetails } from "./../../api/mock/auth.mock";
+import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { RouterTestingModule } from "@angular/router/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
@@ -13,12 +15,13 @@ describe("SettingsComponent", () => {
         await TestBed.configureTestingModule({
             declarations: [SettingsComponent],
             imports: [ApolloTestingModule, RouterTestingModule],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 {
                     provide: ActivatedRoute,
                     useValue: {
                         snapshot: {
-                            routeConfig: { path: "" },
+                            params: { category: "" },
                         },
                     },
                 },
@@ -27,6 +30,7 @@ describe("SettingsComponent", () => {
 
         fixture = TestBed.createComponent(SettingsComponent);
         component = fixture.componentInstance;
+        component.user = mockAccountDetails;
         fixture.detectChanges();
     });
 

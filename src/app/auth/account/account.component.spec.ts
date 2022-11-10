@@ -103,6 +103,7 @@ describe("AccountComponent", () => {
     });
 
     it("should check page changed without cuurrent page", () => {
+        mockQueryParams.next({ tab: AccountTabs.overview, page: 1 });
         const navigateToOwnerViewSpy = spyOn(
             navigationService,
             "navigateToOwnerView",

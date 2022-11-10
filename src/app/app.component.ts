@@ -89,6 +89,9 @@ export class AppComponent extends BaseComponent implements OnInit {
             ),
         );
         this.authentification();
+        this.user = this.authApi.currentUser
+            ? this.authApi.currentUser
+            : AppComponent.AnonymousAccountInfo;
     }
 
     authentification(): void {

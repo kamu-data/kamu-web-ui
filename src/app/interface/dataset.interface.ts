@@ -1,4 +1,8 @@
-import { DatasetBasicsFragment } from "../api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    DatasetSearchOverviewFragment,
+    PageBasedInfo,
+} from "../api/kamu.graphql.interface";
 
 export type DataRow = Record<string, string | number>;
 
@@ -18,4 +22,10 @@ export interface DataSchemaField {
     name: string;
     repetition: string;
     type: string;
+}
+
+export interface DatasetsAccountResponse {
+    datasets: DatasetSearchOverviewFragment[];
+    pageInfo: PageBasedInfo;
+    datasetTotalCount: number;
 }

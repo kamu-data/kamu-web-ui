@@ -1,6 +1,6 @@
+import ProjectLinks from "src/app/project-links";
 import { ModalService } from "./../../components/modal/modal.service";
 import {
-    DatasetsByAccountNameQuery,
     DatasetSearchOverviewFragment,
     PageBasedInfo,
     User,
@@ -17,19 +17,12 @@ import {
 } from "@angular/core";
 import { AuthApi } from "src/app/api/auth.api";
 import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/common/app.types";
 import { AccountTabs } from "./account.constants";
-import {
-    ActivatedRoute,
-    NavigationEnd,
-    Params,
-    Router,
-    RouterEvent,
-} from "@angular/router";
-import { filter, map } from "rxjs/operators";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 import AppValues from "src/app/common/app.values";
 import { promiseWithCatch } from "src/app/common/app.helpers";
-import { DatasetApi } from "src/app/api/dataset.api";
+import { AccountService } from "src/app/services/account.service";
+import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 
 @Component({
     selector: "app-account",
@@ -39,10 +32,7 @@ import { DatasetApi } from "src/app/api/dataset.api";
 })
 export class AccountComponent extends BaseComponent implements OnInit {
     public accountViewType = AccountTabs.overview;
-    private _window: Window;
-    private resizeId: NodeJS.Timer;
-    private menuRowWidth: number;
-    public user: MaybeNull<AccountDetailsFragment>;
+    public user: AccountDetailsFragment;
     public datasets: DatasetSearchOverviewFragment[] = [];
     public pageInfo: PageBasedInfo;
     public accountTabs = AccountTabs;
@@ -63,35 +53,39 @@ export class AccountComponent extends BaseComponent implements OnInit {
         private navigationService: NavigationService,
         private cdr: ChangeDetectorRef,
         private modalService: ModalService,
-        private datasetApi: DatasetApi,
+        private accountService: AccountService,
     ) {
         super();
-        this._window = window;
-        this.user = this.authApi.currentUser;
+        //  this.user = this.authApi.currentUser;
     }
 
     public ngOnInit(): void {
         this.trackSubscriptions(
-            this.route.queryParams.subscribe((param: Params) => {
-                param.tab
-                    ? (this.accountViewType = param.tab as AccountTabs)
+            this.route.queryParams.subscribe((params: Params) => {
+                params.tab
+                    ? (this.accountViewType = params.tab as AccountTabs)
                     : (this.accountViewType = AccountTabs.overview);
 
-                if (param.page) {
-                    this.currentPage = param.page as number;
+                if (params.page) {
+                    this.currentPage = params.page as number;
                 }
             }),
-            this.router.events
-                .pipe(
-                    filter((event) => event instanceof NavigationEnd),
-                    map((event) => event as RouterEvent),
-                )
-                .subscribe(() => this.getDatasets()),
+            this.route.params.subscribe((params: Params) => {
+                this.accountName = params[
+                    ProjectLinks.URL_PARAM_ACCOUNT_NAME
+                ] as string;
+                this.getDatasets();
+            }),
+            this.accountService.onDatasetsChanges.subscribe(
+                (data: DatasetsAccountResponse) => {
+                    console.log(data);
+                    this.datasets = data.datasets;
+                    this.pageInfo = data.pageInfo;
+                    this.datasetTotalCount = data.datasetTotalCount;
+                    this.cdr.detectChanges();
+                },
+            ),
         );
-        if (this.user) {
-            this.accountName = this.user.login;
-            this.getDatasets();
-        }
     }
 
     public get isAccountViewTypeOverview(): boolean {
@@ -112,6 +106,10 @@ export class AccountComponent extends BaseComponent implements OnInit {
 
     public get isAccountViewTypeStars(): boolean {
         return this.accountViewType === AccountTabs.stars;
+    }
+
+    public get isOwner(): boolean {
+        return this.authApi.currentUser?.login === this.accountName;
     }
 
     public onEditProfile(): void {
@@ -186,13 +184,8 @@ export class AccountComponent extends BaseComponent implements OnInit {
     }
 
     private getDatasets(): void {
-        this.datasetApi
-            .fetchDatasetsByAccountName(this.accountName, this.currentPage - 1)
-            .subscribe((data: DatasetsByAccountNameQuery) => {
-                this.datasets = data.datasets.byAccountName.nodes;
-                this.pageInfo = data.datasets.byAccountName.pageInfo;
-                this.datasetTotalCount = data.datasets.byAccountName.totalCount;
-                this.cdr.detectChanges();
-            });
+        this.accountService
+            .getDatasetsByAccountName(this.accountName, this.currentPage - 1)
+            .subscribe();
     }
 }

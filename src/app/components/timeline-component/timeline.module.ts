@@ -6,6 +6,7 @@ import { CommonModule } from "@angular/common";
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { TimelineComponent } from "./timeline.component";
 import { AngularSvgIconModule } from "angular-svg-icon";
+import { RouterModule } from "@angular/router";
 
 @NgModule({
     imports: [
@@ -15,6 +16,7 @@ import { AngularSvgIconModule } from "angular-svg-icon";
         CommonModule,
         NgbPopoverModule,
         AngularSvgIconModule,
+        RouterModule,
     ],
     exports: [TimelineComponent],
     declarations: [TimelineComponent],

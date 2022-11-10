@@ -90,7 +90,7 @@
                                             'View all commits by ' +
                                             block.author.name
                                         "
-                                        href="#todo-navigate-to-user"
+                                        [routerLink]="['/', block.author.name]"
                                         >{{ block.author.name }}</a
                                     >
 

@@ -65,6 +65,10 @@
       "iconPath": "/assets/svg/copy.svg"
     },
     {
+      "iconName": "code",
+      "iconPath": "/assets/svg/code.svg"
+    },
+    {
       "iconName": "code-square",
       "iconPath": "/assets/svg/code-square.svg"
     },
@@ -84,5 +88,6 @@
       "iconName": "checked",
       "iconPath": "/assets/svg/checked.svg"
     }
-  ]
+  ],
+  "customIcons": []
 }

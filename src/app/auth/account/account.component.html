@@ -9,14 +9,13 @@
                         height="260"
                         class="avatar avatar-user border color-bg-default"
                         [src]="
-                            user?.avatarUrl ||
                             'https://avatars.githubusercontent.com/u/11951648?v=4'
                         "
                     />
                 </a>
             </div>
             <span class="vcard-username d-block p-2" itemprop="additionalName">
-                {{ user?.login }}
+                {{ accountName }}
             </span>
             <div class="my-3 text-center">
                 <button
@@ -25,7 +24,7 @@
                     class="btn btn-outline-secondary w-100 btn-custom"
                     (click)="onEditProfile()"
                 >
-                    Edit profile
+                    {{ isOwner ? "Edit profile" : "Follow" }}
                 </button>
             </div>
             <div class="border-top mt-5">

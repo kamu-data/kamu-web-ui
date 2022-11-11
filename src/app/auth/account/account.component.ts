@@ -3,7 +3,6 @@ import { ModalService } from "./../../components/modal/modal.service";
 import {
     DatasetSearchOverviewFragment,
     PageBasedInfo,
-    User,
 } from "./../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -74,11 +73,11 @@ export class AccountComponent extends BaseComponent implements OnInit {
                     this.cdr.detectChanges();
                 },
             ),
-            this.accountService.onAccountInfoChanges.subscribe(
-                (user: AccountDetailsFragment) => {
-                    this.user = user;
-                },
-            ),
+            // this.accountService.onAccountInfoChanges.subscribe(
+            //     (user: AccountDetailsFragment) => {
+            //         this.user = user;
+            //     },
+            // ),
         );
     }
 

@@ -1,5 +1,6 @@
 import {
     mockDatasetDataSqlRunResponse,
+    mockDatasetsByAccountNameQuery,
     TEST_DATASET_NAME,
     TEST_USER_NAME,
 } from "./mock/dataset.mock";
@@ -14,6 +15,8 @@ import {
 } from "apollo-angular/testing";
 import { DatasetApi } from "./dataset.api";
 import {
+    DatasetsByAccountNameDocument,
+    DatasetsByAccountNameQuery,
     GetDatasetDataSqlRunDocument,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryDocument,
@@ -113,6 +116,28 @@ describe("DatasetApi", () => {
 
         op.flush({
             data: mockDatasetHistoryResponse,
+        });
+    });
+
+    it("should extract datasets by account name", () => {
+        service
+            .fetchDatasetsByAccountName(TEST_USER_NAME)
+            .subscribe((res: DatasetsByAccountNameQuery) => {
+                expect(res.datasets.byAccountName.totalCount).toEqual(
+                    mockDatasetsByAccountNameQuery.datasets.byAccountName
+                        .totalCount,
+                );
+                expect(res.datasets.byAccountName.nodes[0].name).toEqual(
+                    mockDatasetsByAccountNameQuery.datasets.byAccountName
+                        .nodes[0].name,
+                );
+            });
+
+        const op = controller.expectOne(DatasetsByAccountNameDocument);
+        expect(op.operation.variables.accountName).toEqual(TEST_USER_NAME);
+
+        op.flush({
+            data: mockDatasetsByAccountNameQuery,
         });
     });
 });

@@ -1,12 +1,17 @@
+import { DatasetApi } from "src/app/api/dataset.api";
 import { TestBed } from "@angular/core/testing";
 
 import { AccountService } from "./account.service";
+import { ApolloTestingModule } from "apollo-angular/testing";
 
 describe("AccountService", () => {
     let service: AccountService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            imports: [ApolloTestingModule],
+            providers: [DatasetApi],
+        });
         service = TestBed.inject(AccountService);
     });
 

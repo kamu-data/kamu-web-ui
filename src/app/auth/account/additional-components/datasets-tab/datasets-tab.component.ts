@@ -8,12 +8,7 @@ import {
     RouterEvent,
 } from "@angular/router";
 import { NavigationService } from "./../../../../services/navigation.service";
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Input,
-    OnInit,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Input, OnInit } from "@angular/core";
 import { Component } from "@angular/core";
 import {
     DatasetSearchOverviewFragment,

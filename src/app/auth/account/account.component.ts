@@ -18,7 +18,7 @@ import {
 import { AuthApi } from "src/app/api/auth.api";
 import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "./account.constants";
-import { ActivatedRoute, Params, Router } from "@angular/router";
+import { ActivatedRoute, Params } from "@angular/router";
 import AppValues from "src/app/common/app.values";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { AccountService } from "src/app/services/account.service";
@@ -38,10 +38,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
     public accountTabs = AccountTabs;
     public accountName: string;
     public datasetTotalCount: number;
-    public isClickableRow = true;
     public isDropdownMenu = false;
-    public isCurrentUser = false;
-    public currentPage = 1;
 
     @ViewChild("containerMenu") containerMenu: ElementRef;
     @ViewChild("dropdownMenu") dropdownMenu: ElementRef;
@@ -63,17 +60,11 @@ export class AccountComponent extends BaseComponent implements OnInit {
                 params.tab
                     ? (this.accountViewType = params.tab as AccountTabs)
                     : (this.accountViewType = AccountTabs.overview);
-
-                if (params.page) {
-                    this.currentPage = params.page as number;
-                }
             }),
             this.route.params.subscribe((params: Params) => {
                 this.accountName = params[
                     ProjectLinks.URL_PARAM_ACCOUNT_NAME
                 ] as string;
-                this.getDatasets();
-                this.getAccountInfo();
             }),
             this.accountService.onDatasetsChanges.subscribe(
                 (data: DatasetsAccountResponse) => {
@@ -85,7 +76,6 @@ export class AccountComponent extends BaseComponent implements OnInit {
             ),
             this.accountService.onAccountInfoChanges.subscribe(
                 (user: AccountDetailsFragment) => {
-                    console.log("2", user);
                     this.user = user;
                 },
             ),
@@ -159,43 +149,9 @@ export class AccountComponent extends BaseComponent implements OnInit {
         );
     }
 
-    public onSelectDataset(row: DatasetSearchOverviewFragment): void {
-        this.navigationService.navigateToDatasetView({
-            accountName: (row.owner as User).name,
-            datasetName: row.name as string,
-        });
-    }
-
-    public onPageChange(params: {
-        currentPage?: number;
-        isClick?: boolean;
-    }): void {
-        params.currentPage
-            ? (this.currentPage = params.currentPage)
-            : (this.currentPage = 1);
-        if (this.currentPage === 1) {
-            this.navigationService.navigateToOwnerView(
-                this.accountName,
-                this.accountViewType,
-            );
-            return;
-        }
-        this.navigationService.navigateToOwnerView(
-            this.accountName,
-            this.accountViewType,
-            params.currentPage,
-        );
-    }
-
-    private getDatasets(): void {
-        this.accountService
-            .getDatasetsByAccountName(this.accountName, this.currentPage - 1)
-            .subscribe();
-    }
-
-    private getAccountInfo(): void {
-        this.accountService
-            .getAccountInfoByAccountName("mock-account-unknown")
-            .subscribe();
-    }
+    // private getAccountInfo(): void {
+    //     this.accountService
+    //         .getAccountInfoByAccountName("mock-account-unknown")
+    //         .subscribe();
+    // }
 }

@@ -138,26 +138,12 @@
                 <div>Overview</div>
             </ng-container>
             <ng-container *ngIf="isAccountViewTypeDatasets">
-                <div class="account-datasets-tab-container">
-                    <div *ngIf="datasets.length === 0" class="text-center">
-                        <h5>Datasets list is empty</h5>
-                    </div>
-                    <div *ngFor="let row of datasets; let rowIndex = index">
-                        <app-dataset-list-item
-                            [row]="row"
-                            [rowIndex]="rowIndex"
-                            [isClickableRow]="isClickableRow"
-                            (selectDatasetEmit)="onSelectDataset($event)"
-                        ></app-dataset-list-item>
-                    </div>
-                    <ng-template [ngIf]="datasets.length > 0 && pageInfo">
-                        <app-pagination
-                            [currentPage]="currentPage"
-                            [pageInfo]="pageInfo"
-                            (pageChangeEvent)="onPageChange($event)"
-                        ></app-pagination>
-                    </ng-template>
-                </div>
+                <app-datasets-tab
+                    [datasets]="datasets"
+                    [accountName]="accountName"
+                    [accountViewType]="accountViewType"
+                    [pageInfo]="pageInfo"
+                ></app-datasets-tab>
             </ng-container>
             <ng-container *ngIf="isAccountViewTypeOrganizations">
                 <div>Organizations</div>

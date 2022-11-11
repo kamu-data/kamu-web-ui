@@ -61,6 +61,7 @@ import { DatasetListModule } from "./components/dataset-list-component/dataset-l
 import { PaginationModule } from "./components/pagination-component/pagination.module";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { AngularSvgIconPreloaderModule } from "angular-svg-icon-preloader";
+import { DatasetsTabComponent } from "./auth/account/additional-components/datasets-tab/datasets-tab.component";
 
 const Services = [
     {
@@ -120,6 +121,7 @@ const MatModules = [
         AccountComponent,
         NotificationIndicatorComponent,
         SettingsComponent,
+        DatasetsTabComponent,
     ],
     imports: [
         AppRoutingModule,

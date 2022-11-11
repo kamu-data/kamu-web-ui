@@ -49,14 +49,12 @@ export class AccountComponent extends BaseComponent implements OnInit {
     constructor(
         private authApi: AuthApi,
         private route: ActivatedRoute,
-        private router: Router,
         private navigationService: NavigationService,
         private cdr: ChangeDetectorRef,
         private modalService: ModalService,
         private accountService: AccountService,
     ) {
         super();
-        //  this.user = this.authApi.currentUser;
     }
 
     public ngOnInit(): void {
@@ -75,14 +73,20 @@ export class AccountComponent extends BaseComponent implements OnInit {
                     ProjectLinks.URL_PARAM_ACCOUNT_NAME
                 ] as string;
                 this.getDatasets();
+                this.getAccountInfo();
             }),
             this.accountService.onDatasetsChanges.subscribe(
                 (data: DatasetsAccountResponse) => {
-                    console.log(data);
                     this.datasets = data.datasets;
                     this.pageInfo = data.pageInfo;
                     this.datasetTotalCount = data.datasetTotalCount;
                     this.cdr.detectChanges();
+                },
+            ),
+            this.accountService.onAccountInfoChanges.subscribe(
+                (user: AccountDetailsFragment) => {
+                    console.log("2", user);
+                    this.user = user;
                 },
             ),
         );
@@ -186,6 +190,12 @@ export class AccountComponent extends BaseComponent implements OnInit {
     private getDatasets(): void {
         this.accountService
             .getDatasetsByAccountName(this.accountName, this.currentPage - 1)
+            .subscribe();
+    }
+
+    private getAccountInfo(): void {
+        this.accountService
+            .getAccountInfoByAccountName("mock-account-unknown")
             .subscribe();
     }
 }

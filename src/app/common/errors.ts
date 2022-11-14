@@ -22,6 +22,12 @@ export class CustomApolloError extends KamuError {
     }
 }
 
+export class SqlExecutionError extends KamuError {
+    public accept(visitor: KamuErrorVisitor): void {
+        visitor.visitSqlExecutionError(this);
+    }
+}
+
 export class InvalidSqlError extends KamuError {
     public accept(visitor: KamuErrorVisitor): void {
         visitor.visitInvalidSqlError(this);
@@ -48,6 +54,7 @@ export class AuthenticationError extends KamuError {
 }
 
 interface KamuErrorVisitor {
+    visitSqlExecutionError(e: SqlExecutionError): void;
     visitInvalidSqlError(e: InvalidSqlError): void;
     visitDatasetNotFoundError(e: DatasetNotFoundError): void;
     visitApolloError(e: ApolloError): void;
@@ -77,11 +84,23 @@ export class KamuErrorHandler implements KamuErrorVisitor {
         this.navigationService.navigateToPageNotFound();
     }
 
-    public visitInvalidSqlError(): void {
+    public visitInvalidSqlError(e: InvalidSqlError): void {
         promiseWithCatch(
             this.modalService.error({
                 title: ErrorTexts.ERROR_TITLE_REQUEST_FAILED,
-                message: ErrorTexts.ERROR_BAD_SQL_QUERY,
+                message: `${ErrorTexts.ERROR_INVALID_SQL_QUERY}: ${e.message}`,
+                yesButtonText: "Close",
+            }),
+        );
+    }
+
+    public visitSqlExecutionError(e: SqlExecutionError): void {
+        promiseWithCatch(
+            this.modalService.error({
+                title: ErrorTexts.ERROR_TITLE_REQUEST_FAILED,
+                message: e.message 
+                    ? `${ErrorTexts.ERROR_EXECUTING_SQL_QUERY}: ${e.message}`
+                    : ErrorTexts.ERROR_EXECUTING_SQL_QUERY,
                 yesButtonText: "Close",
             }),
         );

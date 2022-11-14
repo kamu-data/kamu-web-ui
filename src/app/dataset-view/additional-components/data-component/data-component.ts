@@ -1,4 +1,4 @@
-import { DataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DataSqlErrorUpdate, DataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -14,6 +14,7 @@ import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.serv
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import * as monaco from "monaco-editor";
+import { MaybeNull } from "src/app/common/app.types";
 
 @Component({
     selector: "app-data",
@@ -21,6 +22,13 @@ import * as monaco from "monaco-editor";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent extends BaseComponent implements OnInit {
+
+    public static readonly DefaultDatasetSchema: DatasetSchema = {
+        name: "arrow_schema", 
+        type: "struct", 
+        "fields": []
+    };
+
     @Input() public datasetBasics?: DatasetBasicsFragment;
     @Output() public runSQLRequestEmit = new EventEmitter<string>();
     public sqlEditorOptions = {
@@ -32,8 +40,10 @@ export class DataComponent extends BaseComponent implements OnInit {
     };
     public savedQueries = DataTabValues.savedQueries;
     public sqlRequestCode = `select\n  *\nfrom `;
-    public currentSchema?: DatasetSchema;
-    public currentData: DataRow[];
+
+    public sqlErrorMarker: MaybeNull<string> = null;
+    public currentSchema: DatasetSchema = DataComponent.DefaultDatasetSchema;
+    public currentData: DataRow[] = [];
 
     constructor(
         private appDatasetSubsService: AppDatasetSubscriptionsService,
@@ -50,11 +60,20 @@ export class DataComponent extends BaseComponent implements OnInit {
         if (this.datasetBasics) {
             this.sqlRequestCode += `'${this.datasetBasics.name as string}'`;
         }
-        this.trackSubscription(
+        this.trackSubscriptions(
             this.appDatasetSubsService.onDatasetDataChanges.subscribe(
                 (dataUpdate: DataUpdate) => {
                     this.currentData = dataUpdate.content;
                     this.currentSchema = dataUpdate.schema;
+                    this.sqlErrorMarker = null;
+                    this.cdr.markForCheck();
+                },
+            ),
+            this.appDatasetSubsService.onDatasetDataSqlErrorOccured.subscribe(
+                (dataSqlErrorUpdate: DataSqlErrorUpdate) => {                         
+                    this.currentData = [];
+                    this.currentSchema = DataComponent.DefaultDatasetSchema;
+                    this.sqlErrorMarker = dataSqlErrorUpdate.error;
                     this.cdr.markForCheck();
                 },
             ),
@@ -79,5 +98,6 @@ export class DataComponent extends BaseComponent implements OnInit {
             // @param editor The editor instance is passed in as a convenience
             run: runQueryFn,
         });
+
     }
 }

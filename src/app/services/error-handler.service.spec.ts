@@ -4,6 +4,7 @@ import {
     AuthenticationError,
     DatasetNotFoundError,
     InvalidSqlError,
+    SqlExecutionError,
 } from "../common/errors";
 import { ModalService } from "../components/modal/modal.service";
 import { TestBed } from "@angular/core/testing";
@@ -39,15 +40,43 @@ describe("ErrorHandlerService", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should show modal window when error sql query incorrect", () => {
+    it("should show modal window when SQL query execution fails", () => {
         const modalServiceSpy: jasmine.Spy = spyOn(
             modalService,
             "error",
         ).and.callThrough();
-        service.handleError(new InvalidSqlError());
+        service.handleError(new SqlExecutionError());
         expect(modalServiceSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
-                message: ErrorTexts.ERROR_BAD_SQL_QUERY,
+                message: ErrorTexts.ERROR_EXECUTING_SQL_QUERY,
+            }),
+        );
+    });
+
+    it("should show modal window when SQL query execution fails with extra error message", () => {
+        const modalServiceSpy: jasmine.Spy = spyOn(
+            modalService,
+            "error",
+        ).and.callThrough();
+        const errorText = "executing SQL failed";
+        service.handleError(new SqlExecutionError(errorText));
+        expect(modalServiceSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                message: `${ErrorTexts.ERROR_EXECUTING_SQL_QUERY}: ${errorText}`,
+            }),
+        );
+    });
+
+    it("should show modal window when SQL query is invalid", () => {
+        const modalServiceSpy: jasmine.Spy = spyOn(
+            modalService,
+            "error",
+        ).and.callThrough();
+        const errorText = "bad SQL";
+        service.handleError(new InvalidSqlError(errorText));
+        expect(modalServiceSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                message: `${ErrorTexts.ERROR_INVALID_SQL_QUERY}: ${errorText}`
             }),
         );
     });

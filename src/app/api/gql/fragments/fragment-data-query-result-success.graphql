@@ -1,4 +1,4 @@
-fragment DatasetDataFrame on DataQueryResult {
+fragment DataQueryResultSuccessView on DataQueryResultSuccess {
   schema {
     format
     content
@@ -7,5 +7,4 @@ fragment DatasetDataFrame on DataQueryResult {
     format
     content
   }
-  __typename
 }

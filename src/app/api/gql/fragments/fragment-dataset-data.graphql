@@ -2,7 +2,14 @@ fragment DatasetData on Dataset {
   data {
     ...DatasetDataSize
     tail(limit: $limit, dataFormat: JSON) {
-      ...DatasetDataFrame
+      __typename
+      ... on DataQueryResultSuccess {
+        ...DataQueryResultSuccessView
+      }
+      ... on DataQueryResultError {
+        errorMessage
+        errorKind
+      }
     }
     __typename
   }

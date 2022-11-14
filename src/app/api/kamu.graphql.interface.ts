@@ -156,8 +156,21 @@ export type DataQueriesQueryArgs = {
     schemaFormat?: InputMaybe<DataSchemaFormat>;
 };
 
-export type DataQueryResult = {
-    __typename?: "DataQueryResult";
+export type DataQueryResult = DataQueryResultError | DataQueryResultSuccess;
+
+export type DataQueryResultError = {
+    __typename?: "DataQueryResultError";
+    errorKind: DataQueryResultErrorKind;
+    errorMessage: Scalars["String"];
+};
+
+export enum DataQueryResultErrorKind {
+    InternalError = "INTERNAL_ERROR",
+    InvalidSql = "INVALID_SQL",
+}
+
+export type DataQueryResultSuccess = {
+    __typename?: "DataQueryResultSuccess";
     data: DataBatch;
     limit: Scalars["Int"];
     schema: DataSchema;
@@ -721,21 +734,16 @@ export type GetDatasetDataSqlRunQuery = {
     __typename?: "Query";
     data: {
         __typename?: "DataQueries";
-        query: {
-            __typename?: "DataQueryResult";
-            limit: number;
-            schema: {
-                __typename?: "DataSchema";
-                format: DataSchemaFormat;
-                content: string;
-            };
-            data: {
-                __typename?: "DataBatch";
-                format: DataBatchFormat;
-                content: string;
-                numRecords: number;
-            };
-        };
+        query:
+            | {
+                  __typename: "DataQueryResultError";
+                  errorMessage: string;
+                  errorKind: DataQueryResultErrorKind;
+              }
+            | ({
+                  __typename: "DataQueryResultSuccess";
+                  limit: number;
+              } & DataQueryResultSuccessViewFragment);
     };
 };
 
@@ -828,6 +836,20 @@ export type AccountDetailsFragment = {
     gravatarId?: string | null;
 };
 
+export type DataQueryResultSuccessViewFragment = {
+    __typename?: "DataQueryResultSuccess";
+    schema: {
+        __typename?: "DataSchema";
+        format: DataSchemaFormat;
+        content: string;
+    };
+    data: {
+        __typename?: "DataBatch";
+        format: DataBatchFormat;
+        content: string;
+    };
+};
+
 export type DatasetBasicsFragment = {
     __typename?: "Dataset";
     id: any;
@@ -844,20 +866,6 @@ export type DatasetCurrentInfoFragment = {
     keywords?: Array<string> | null;
 };
 
-export type DatasetDataFrameFragment = {
-    __typename: "DataQueryResult";
-    schema: {
-        __typename?: "DataSchema";
-        format: DataSchemaFormat;
-        content: string;
-    };
-    data: {
-        __typename?: "DataBatch";
-        format: DataBatchFormat;
-        content: string;
-    };
-};
-
 export type DatasetDataSizeFragment = {
     __typename?: "DatasetData";
     numRecordsTotal: number;
@@ -868,7 +876,15 @@ export type DatasetDataFragment = {
     __typename?: "Dataset";
     data: {
         __typename: "DatasetData";
-        tail: { __typename?: "DataQueryResult" } & DatasetDataFrameFragment;
+        tail:
+            | {
+                  __typename: "DataQueryResultError";
+                  errorMessage: string;
+                  errorKind: DataQueryResultErrorKind;
+              }
+            | ({
+                  __typename: "DataQueryResultSuccess";
+              } & DataQueryResultSuccessViewFragment);
     } & DatasetDataSizeFragment;
 };
 
@@ -1227,8 +1243,8 @@ export const DatasetDataSizeFragmentDoc = gql`
         estimatedSize
     }
 `;
-export const DatasetDataFrameFragmentDoc = gql`
-    fragment DatasetDataFrame on DataQueryResult {
+export const DataQueryResultSuccessViewFragmentDoc = gql`
+    fragment DataQueryResultSuccessView on DataQueryResultSuccess {
         schema {
             format
             content
@@ -1237,7 +1253,6 @@ export const DatasetDataFrameFragmentDoc = gql`
             format
             content
         }
-        __typename
     }
 `;
 export const DatasetDataFragmentDoc = gql`
@@ -1245,13 +1260,20 @@ export const DatasetDataFragmentDoc = gql`
         data {
             ...DatasetDataSize
             tail(limit: $limit, dataFormat: JSON) {
-                ...DatasetDataFrame
+                __typename
+                ... on DataQueryResultSuccess {
+                    ...DataQueryResultSuccessView
+                }
+                ... on DataQueryResultError {
+                    errorMessage
+                    errorKind
+                }
             }
             __typename
         }
     }
     ${DatasetDataSizeFragmentDoc}
-    ${DatasetDataFrameFragmentDoc}
+    ${DataQueryResultSuccessViewFragmentDoc}
 `;
 export const DatasetBasicsFragmentDoc = gql`
     fragment DatasetBasics on Dataset {
@@ -1548,19 +1570,19 @@ export const GetDatasetDataSqlRunDocument = gql`
                 dataFormat: JSON
                 limit: $limit
             ) {
-                schema {
-                    format
-                    content
+                __typename
+                ... on DataQueryResultSuccess {
+                    ...DataQueryResultSuccessView
+                    limit
                 }
-                data {
-                    format
-                    content
-                    numRecords
+                ... on DataQueryResultError {
+                    errorMessage
+                    errorKind
                 }
-                limit
             }
         }
     }
+    ${DataQueryResultSuccessViewFragmentDoc}
 `;
 
 @Injectable({

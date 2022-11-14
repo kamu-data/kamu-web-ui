@@ -72,6 +72,7 @@ export class DynamicTableComponent
     private renderTable(data: TableSourceInterface): void {
         if (data.length === 0) {
             this.dataSource.data = [];
+            this.displayedColumns = [];
             return;
         }
         this.dataSource.data = [];

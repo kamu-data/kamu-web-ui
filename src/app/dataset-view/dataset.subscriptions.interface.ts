@@ -19,6 +19,10 @@ export interface DataUpdate {
     content: DataRow[];
 }
 
+export interface DataSqlErrorUpdate {
+    error: string;
+}
+
 export interface MetadataSchemaUpdate {
     schema: DatasetSchema;
     metadata: DatasetMetadataSummaryFragment;

@@ -13,7 +13,7 @@ import {
     DatasetNavigationInterface,
     DatasetViewTypeEnum,
 } from "./dataset-view.interface";
-import { AppDatasetService } from "./dataset.service";
+import { DatasetService } from "./dataset.service";
 import {
     ActivatedRoute,
     NavigationEnd,
@@ -54,7 +54,7 @@ export class DatasetComponent
     }
 
     constructor(
-        private appDatasetService: AppDatasetService,
+        private appDatasetService: DatasetService,
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private navigationService: NavigationService,

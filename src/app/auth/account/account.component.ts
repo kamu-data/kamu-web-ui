@@ -46,6 +46,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
     public datasetTotalCount: number;
     public isDropdownMenu = false;
     public currentPage = 1;
+    public avatarLink: string;
 
     @ViewChild("containerMenu") containerMenu: ElementRef;
     @ViewChild("dropdownMenu") dropdownMenu: ElementRef;
@@ -95,11 +96,6 @@ export class AccountComponent extends BaseComponent implements OnInit {
                     this.cdr.detectChanges();
                 },
             ),
-            // this.accountService
-            //     .getAccountInfoByName(this.accountName)
-            //     .subscribe((user: AccountDetailsFragment) => {
-            //         console.log("user", user);
-            //     }),
         );
     }
 
@@ -128,6 +124,15 @@ export class AccountComponent extends BaseComponent implements OnInit {
     }
 
     public onEditProfile(): void {
+        promiseWithCatch(
+            this.modalService.warning({
+                message: AppValues.UNIMPLEMENTED_MESSAGE,
+                yesButtonText: "Ok",
+            }),
+        );
+    }
+
+    public onFollow(): void {
         promiseWithCatch(
             this.modalService.warning({
                 message: AppValues.UNIMPLEMENTED_MESSAGE,
@@ -175,6 +180,8 @@ export class AccountComponent extends BaseComponent implements OnInit {
             .getAccountInfoByName(this.accountName)
             .subscribe((user: AccountDetailsFragment) => {
                 this.user = user;
+                this.avatarLink =
+                    this.user.avatarUrl ?? AppValues.DEFAULT_AVATAR_URL;
             });
     }
 

@@ -2,18 +2,29 @@
     <div class="custom-container">
         <div class="container-sidebar">
             <div class="d-flex mb-3 justify-content-center align-items-center">
-                <a routerLink="/v/settings/profile">
+                <a
+                    *ngIf="isOwner; else notOwnerLink"
+                    routerLink="/v/settings/profile"
+                >
                     <img
                         alt="avatar"
                         width="260"
                         height="260"
                         class="avatar avatar-user border color-bg-default"
-                        [src]="
-                            user.avatarUrl ||
-                            'https://avatars.githubusercontent.com/u/11951648?v=4'
-                        "
+                        [src]="avatarLink"
                     />
                 </a>
+                <ng-template #notOwnerLink>
+                    <a [href]="avatarLink">
+                        <img
+                            alt="avatar"
+                            width="260"
+                            height="260"
+                            class="avatar avatar-user border color-bg-default"
+                            [src]="avatarLink"
+                        />
+                    </a>
+                </ng-template>
             </div>
             <span class="vcard-username d-block p-2" itemprop="additionalName">
                 {{ accountName }}
@@ -23,7 +34,7 @@
                     name="button"
                     type="button"
                     class="btn btn-outline-secondary w-100 btn-custom"
-                    (click)="onEditProfile()"
+                    (click)="isOwner ? onEditProfile() : onFollow()"
                 >
                     {{ isOwner ? "Edit profile" : "Follow" }}
                 </button>

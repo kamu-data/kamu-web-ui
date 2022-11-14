@@ -1,12 +1,9 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ActivatedRoute, Router } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { BehaviorSubject } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { mockDatasetListItem } from "src/app/api/mock/dataset.mock";
-import { routerMock } from "src/app/common/base-test.helpers.spec";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AccountTabs } from "../../account.constants";
 
@@ -16,24 +13,11 @@ describe("DatasetsTabComponent", () => {
     let component: DatasetsTabComponent;
     let fixture: ComponentFixture<DatasetsTabComponent>;
     let navigationService: NavigationService;
-    const mockQueryParams = new BehaviorSubject({
-        tab: AccountTabs.overview,
-        page: 2,
-    });
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [ApolloTestingModule],
-            providers: [
-                DatasetApi,
-                { provide: Router, useValue: routerMock },
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        queryParams: mockQueryParams.asObservable(),
-                    },
-                },
-            ],
+            providers: [DatasetApi],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             declarations: [DatasetsTabComponent],
         }).compileComponents();

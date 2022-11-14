@@ -17,11 +17,18 @@ import {
 import { AuthApi } from "src/app/api/auth.api";
 import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "./account.constants";
-import { ActivatedRoute, Params } from "@angular/router";
+import {
+    ActivatedRoute,
+    NavigationEnd,
+    Params,
+    Router,
+    RouterEvent,
+} from "@angular/router";
 import AppValues from "src/app/common/app.values";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { AccountService } from "src/app/services/account.service";
 import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
+import { filter, map } from "rxjs/operators";
 
 @Component({
     selector: "app-account",
@@ -38,6 +45,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
     public accountName: string;
     public datasetTotalCount: number;
     public isDropdownMenu = false;
+    public currentPage = 1;
 
     @ViewChild("containerMenu") containerMenu: ElementRef;
     @ViewChild("dropdownMenu") dropdownMenu: ElementRef;
@@ -47,6 +55,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
         private route: ActivatedRoute,
         private navigationService: NavigationService,
         private cdr: ChangeDetectorRef,
+        private router: Router,
         private modalService: ModalService,
         private accountService: AccountService,
     ) {
@@ -59,12 +68,25 @@ export class AccountComponent extends BaseComponent implements OnInit {
                 params.tab
                     ? (this.accountViewType = params.tab as AccountTabs)
                     : (this.accountViewType = AccountTabs.overview);
+                params.page
+                    ? (this.currentPage = params.page as number)
+                    : (this.currentPage = 1);
             }),
             this.route.params.subscribe((params: Params) => {
                 this.accountName = params[
                     ProjectLinks.URL_PARAM_ACCOUNT_NAME
                 ] as string;
+                this.getAccountInfo();
+                this.getDatasets();
             }),
+            this.router.events
+                .pipe(
+                    filter((event) => event instanceof NavigationEnd),
+                    map((event) => event as RouterEvent),
+                )
+                .subscribe(() => {
+                    this.getDatasets();
+                }),
             this.accountService.onDatasetsChanges.subscribe(
                 (data: DatasetsAccountResponse) => {
                     this.datasets = data.datasets;
@@ -73,11 +95,11 @@ export class AccountComponent extends BaseComponent implements OnInit {
                     this.cdr.detectChanges();
                 },
             ),
-            // this.accountService.onAccountInfoChanges.subscribe(
-            //     (user: AccountDetailsFragment) => {
-            //         this.user = user;
-            //     },
-            // ),
+            // this.accountService
+            //     .getAccountInfoByName(this.accountName)
+            //     .subscribe((user: AccountDetailsFragment) => {
+            //         console.log("user", user);
+            //     }),
         );
     }
 
@@ -148,9 +170,17 @@ export class AccountComponent extends BaseComponent implements OnInit {
         );
     }
 
-    // private getAccountInfo(): void {
-    //     this.accountService
-    //         .getAccountInfoByAccountName("mock-account-unknown")
-    //         .subscribe();
-    // }
+    private getAccountInfo(): void {
+        this.accountService
+            .getAccountInfoByName(this.accountName)
+            .subscribe((user: AccountDetailsFragment) => {
+                this.user = user;
+            });
+    }
+
+    private getDatasets(): void {
+        this.accountService
+            .getDatasetsByAccountName(this.accountName, this.currentPage - 1)
+            .subscribe();
+    }
 }

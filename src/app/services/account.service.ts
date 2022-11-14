@@ -16,17 +16,6 @@ export class AccountService {
         private accountApi: AccountApi,
     ) {}
 
-    private accountInfoChanges$: Subject<AccountDetailsFragment> =
-        new Subject<AccountDetailsFragment>();
-
-    public get onAccountInfoChanges(): Observable<AccountDetailsFragment> {
-        return this.accountInfoChanges$.asObservable();
-    }
-
-    public accountInfoChanges(info: AccountDetailsFragment): void {
-        this.accountInfoChanges$.next(info);
-    }
-
     private datasetsChanges$: Subject<DatasetsAccountResponse> =
         new Subject<DatasetsAccountResponse>();
 
@@ -53,11 +42,9 @@ export class AccountService {
         );
     }
 
-    public getAccountInfoByAccountName(name: string): Observable<void> {
-        return this.accountApi.getAccountInfoByName(name).pipe(
-            map((info: AccountDetailsFragment) => {
-                this.accountInfoChanges(info);
-            }),
-        );
+    public getAccountInfoByName(
+        name: string,
+    ): Observable<AccountDetailsFragment> {
+        return this.accountApi.getAccountInfoByName(name);
     }
 }

@@ -11,6 +11,8 @@ import {
     GetDatasetHistoryQuery,
     GetDatasetDataSqlRunGQL,
     GetDatasetDataSqlRunQuery,
+    DatasetsByAccountNameGQL,
+    DatasetsByAccountNameQuery,
 } from "./kamu.graphql.interface";
 
 @Injectable()
@@ -19,6 +21,7 @@ export class DatasetApi {
         private datasetMainDataGQL: GetDatasetMainDataGQL,
         private datasetDataSqlRunGQL: GetDatasetDataSqlRunGQL,
         private datasetHistoryGQL: GetDatasetHistoryGQL,
+        private datasetsByAccountNameGQL: DatasetsByAccountNameGQL,
     ) {}
 
     public getDatasetMainData(params: {
@@ -70,6 +73,21 @@ export class DatasetApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<GetDatasetHistoryQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public fetchDatasetsByAccountName(
+        accountName: string,
+        page = 0,
+        perPage = 10,
+    ): Observable<DatasetsByAccountNameQuery> {
+        return this.datasetsByAccountNameGQL
+            .watch({ accountName, perPage, page })
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<DatasetsByAccountNameQuery>) => {
                     return result.data;
                 }),
             );

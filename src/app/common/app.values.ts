@@ -5,6 +5,8 @@ export default class AppValues {
     public static readonly APP_LOGO = "assets/icons/kamu_logo_icon.svg";
     public static readonly LOCAL_STORAGE_ACCESS_TOKEN = "access_token";
     public static readonly DEFAULT_USERNAME = "anonymous";
+    public static readonly DEFAULT_AVATAR_URL =
+        "https://avatars.githubusercontent.com/u/11951648?v=4";
     public static readonly HTTP_PATTERN = new RegExp(
         /^(http:\/\/)|(https:\/\/)/i,
     );

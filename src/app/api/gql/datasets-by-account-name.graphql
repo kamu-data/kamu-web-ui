@@ -1,0 +1,18 @@
+query datasetsByAccountName(
+  $accountName: AccountName!
+  $perPage: Int
+  $page: Int
+) {
+  datasets {
+    byAccountName(accountName: $accountName, perPage: $perPage, page: $page) {
+      nodes {
+        ...DatasetSearchOverview
+        __typename
+      }
+      totalCount
+      pageInfo {
+        ...DatasetPageInfo
+      }
+    }
+  }
+}

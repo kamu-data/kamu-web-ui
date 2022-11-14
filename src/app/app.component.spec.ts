@@ -1,3 +1,4 @@
+import { AccountTabs } from "./auth/account/account.constants";
 import { ModalComponent } from "./components/modal/modal.component";
 import { FormsModule } from "@angular/forms";
 import { mockAutocompleteItems } from "./search/mock.data";
@@ -26,14 +27,16 @@ import {
     routerMockEventSubject,
 } from "./common/base-test.helpers.spec";
 import { NavigationEnd, Router } from "@angular/router";
-import { mockUserInfoFromAccessToken } from "./api/mock/auth.mock";
+import {
+    mockAccountDetails,
+    mockUserInfoFromAccessToken,
+} from "./api/mock/auth.mock";
 import { FetchAccountInfoGQL } from "./api/kamu.graphql.interface";
 
 describe("AppComponent", () => {
     let component: AppComponent;
     let fixture: ComponentFixture<AppComponent>;
     let navigationService: NavigationService;
-    let modalService: ModalService;
     let authApi: AuthApi;
     let fetchAccountInfoGQL: FetchAccountInfoGQL;
     beforeEach(async () => {
@@ -59,7 +62,6 @@ describe("AppComponent", () => {
         routerMock.url = ProjectLinks.URL_HOME;
         fixture = TestBed.createComponent(AppComponent);
         navigationService = TestBed.inject(NavigationService);
-        modalService = TestBed.inject(ModalService);
         authApi = TestBed.inject(AuthApi);
         fetchAccountInfoGQL = TestBed.inject(FetchAccountInfoGQL);
         component = fixture.componentInstance;
@@ -204,12 +206,21 @@ describe("AppComponent", () => {
     });
 
     it("should check call onUserProfile", () => {
-        const modalSpy = spyOn(modalService, "warning").and.resolveTo();
+        const navigationServicelSpy = spyOn(
+            navigationService,
+            "navigateToOwnerView",
+        ).and.returnValue();
+        const currentUserSpy = spyOnProperty(
+            authApi,
+            "currentUser",
+            "get",
+        ).and.returnValue(mockAccountDetails);
         component.onUserProfile();
-        expect(modalSpy).toHaveBeenCalledWith({
-            message: AppValues.UNIMPLEMENTED_MESSAGE,
-            yesButtonText: "Ok",
-        });
+        expect(currentUserSpy).toHaveBeenCalledWith();
+        expect(navigationServicelSpy).toHaveBeenCalledWith(
+            mockAccountDetails.login,
+            AccountTabs.overview,
+        );
     });
 
     ALL_URLS_WITHOUT_HEADER.forEach((url: string) => {

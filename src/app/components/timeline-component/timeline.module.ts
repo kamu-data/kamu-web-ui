@@ -5,6 +5,8 @@ import { MatButtonModule } from "@angular/material/button";
 import { CommonModule } from "@angular/common";
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { TimelineComponent } from "./timeline.component";
+import { AngularSvgIconModule } from "angular-svg-icon";
+import { RouterModule } from "@angular/router";
 
 @NgModule({
     imports: [
@@ -13,6 +15,8 @@ import { TimelineComponent } from "./timeline.component";
         MatButtonModule,
         CommonModule,
         NgbPopoverModule,
+        AngularSvgIconModule,
+        RouterModule,
     ],
     exports: [TimelineComponent],
     declarations: [TimelineComponent],

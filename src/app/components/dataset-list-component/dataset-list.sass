@@ -1,30 +1,4 @@
 @import src/assets/styles/var
-.dataset-list-container
-  width: 100%
-  display: grid
-  grid-template-columns: 1fr
-  grid-template-rows: 1fr
-
-.dataset-list-container__title-row
-  display: flex
-  justify-content: space-between
-  &__dataset-name
-    display: flex
-    justify-content: left
-  & i
-    margin-right: 8px
-
-.dataset-list-container__title
-  display: flex
-  background: none
-  border: none
-  color: $app-navyBlue
-  font-size: 16px
-  &:hover, &:active
-    cursor: pointer
-    text-decoration: underline
-    background: none
-
 .dataset-list-total-count
   margin: 0
 
@@ -38,11 +12,6 @@
     background: $app-background-btn
   &.form-group *
     font-size: 16px
-.rating-star
-  font-size: 1rem
-  color: #b0c4de
-  &.filled
-    color: $app-cloudy
 
 #sortOptions
   color: $app-dark
@@ -52,10 +21,3 @@
   transition: .2s cubic-bezier(0.3, 0, 0.5, 1)
   &:focus-visible
     outline: none
-
-.dataset-list-container__additional-block
-  display: flex
-  gap: 5px
-  
-.dataset-list-container__description
-  font-size: 14px

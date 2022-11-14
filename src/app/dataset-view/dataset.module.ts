@@ -31,6 +31,7 @@ import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu-
 import { SideNavModule } from "../sidenav/side-nav.module";
 import { RouterModule } from "@angular/router";
 import { OverviewHistorySummaryHeaderComponent } from "../components/overview-history-summary-header/overview-history-summary-header.component";
+import { AngularSvgIconModule } from "angular-svg-icon";
 
 @NgModule({
     imports: [
@@ -59,6 +60,7 @@ import { OverviewHistorySummaryHeaderComponent } from "../components/overview-hi
         CdkAccordionModule,
         CustomPaginationModule,
         SideNavModule,
+        AngularSvgIconModule,
     ],
     exports: [
         DatasetViewHeaderComponent,

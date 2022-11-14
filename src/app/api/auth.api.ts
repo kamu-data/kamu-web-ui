@@ -10,7 +10,6 @@ import {
     GithubLoginMutation,
 } from "./kamu.graphql.interface";
 import AppValues from "../common/app.values";
-
 import { MaybeNull } from "../common/app.types";
 import { MutationResult } from "apollo-angular";
 import { isNull } from "lodash";

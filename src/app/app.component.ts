@@ -1,3 +1,6 @@
+import { AuthenticationError } from "./common/errors";
+import { throwError } from "rxjs";
+import { AccountTabs } from "./auth/account/account.constants";
 import { NavigationService } from "./services/navigation.service";
 import {
     ChangeDetectionStrategy,
@@ -150,21 +153,29 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onUserProfile(): void {
-        promiseWithCatch(
-            this.modalService.warning({
-                message: AppValues.UNIMPLEMENTED_MESSAGE,
-                yesButtonText: "Ok",
-            }),
-        );
+        if (this.authApi.currentUser?.login) {
+            this.navigationService.navigateToOwnerView(
+                this.authApi.currentUser.login,
+                AccountTabs.overview,
+            );
+        } else {
+            throwError(
+                new AuthenticationError([new Error("Login is undefined")]),
+            );
+        }
     }
 
     public onUserDatasets(): void {
-        promiseWithCatch(
-            this.modalService.warning({
-                message: AppValues.UNIMPLEMENTED_MESSAGE,
-                yesButtonText: "Ok",
-            }),
-        );
+        if (this.authApi.currentUser?.login) {
+            this.navigationService.navigateToOwnerView(
+                this.authApi.currentUser.login,
+                AccountTabs.datasets,
+            );
+        } else {
+            throwError(
+                new AuthenticationError([new Error("Login is undefined")]),
+            );
+        }
     }
 
     public onBilling(): void {
@@ -186,12 +197,13 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onSettings(): void {
-        promiseWithCatch(
-            this.modalService.warning({
-                message: AppValues.UNIMPLEMENTED_MESSAGE,
-                yesButtonText: "Ok",
-            }),
-        );
+        if (this.authApi.currentUser?.login) {
+            this.navigationService.navigateToSettings();
+        } else {
+            throwError(
+                new AuthenticationError([new Error("Login is undefined")]),
+            );
+        }
     }
 
     public onHelp(): void {

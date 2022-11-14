@@ -54,6 +54,14 @@ import { AppDatasetSubscriptionsService } from "./dataset-view/dataset.subscript
 import { SpinnerModule } from "./components/spinner/spinner.module";
 import { DatasetApi } from "./api/dataset.api";
 import { ErrorHandlerService } from "./services/error-handler.service";
+import { AppSettingsService } from "./services/settings.service";
+import { SettingsComponent } from "./auth/settings/settings.component";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { DatasetListModule } from "./components/dataset-list-component/dataset-list.module";
+import { PaginationModule } from "./components/pagination-component/pagination.module";
+import { AngularSvgIconModule } from "angular-svg-icon";
+import { AngularSvgIconPreloaderModule } from "angular-svg-icon-preloader";
+import { DatasetsTabComponent } from "./auth/account/additional-components/datasets-tab/datasets-tab.component";
 
 const Services = [
     {
@@ -70,6 +78,7 @@ const Services = [
     AuthApi,
     SearchApi,
     DatasetApi,
+    AppSettingsService,
     HttpLink,
     SearchService,
     AppDatasetService,
@@ -100,6 +109,7 @@ const MatModules = [
     MatButtonModule,
     MatAutocompleteModule,
     MatProgressSpinnerModule,
+    MatButtonToggleModule,
 ];
 
 @NgModule({
@@ -110,6 +120,8 @@ const MatModules = [
         GithubCallbackComponent,
         AccountComponent,
         NotificationIndicatorComponent,
+        SettingsComponent,
+        DatasetsTabComponent,
     ],
     imports: [
         AppRoutingModule,
@@ -142,6 +154,12 @@ const MatModules = [
         ReactiveFormsModule,
         NgxGraphModule,
         SpinnerModule,
+        DatasetListModule,
+        PaginationModule,
+        AngularSvgIconModule.forRoot(),
+        AngularSvgIconPreloaderModule.forRoot({
+            configUrl: "./assets/svg/icons.json",
+        }),
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

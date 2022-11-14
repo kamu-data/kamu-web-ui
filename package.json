@@ -37,6 +37,8 @@
     "@popperjs/core": "^2.10.2",
     "@schematics/angular": "^14.2.1",
     "@swimlane/ngx-graph": "8.0.2",
+    "angular-svg-icon": "^14.0.0",
+    "angular-svg-icon-preloader": "^4.0.1",
     "apollo-angular": "^4.0.1",
     "autoprefixer": "^10.4.5",
     "bootstrap": "^5.2.0-beta1",

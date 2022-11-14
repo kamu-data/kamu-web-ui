@@ -1,1 +1,171 @@
-<p>Account works!</p>
+<div class="p-4 p-responsive clearfix">
+    <div class="custom-container">
+        <div class="container-sidebar">
+            <div class="d-flex mb-3 justify-content-center align-items-center">
+                <a
+                    *ngIf="isOwner; else notOwnerLink"
+                    routerLink="/v/settings/profile"
+                >
+                    <img
+                        alt="avatar"
+                        width="260"
+                        height="260"
+                        class="avatar avatar-user border color-bg-default"
+                        [src]="avatarLink"
+                    />
+                </a>
+                <ng-template #notOwnerLink>
+                    <a [href]="avatarLink">
+                        <img
+                            alt="avatar"
+                            width="260"
+                            height="260"
+                            class="avatar avatar-user border color-bg-default"
+                            [src]="avatarLink"
+                        />
+                    </a>
+                </ng-template>
+            </div>
+            <span class="vcard-username d-block p-2" itemprop="additionalName">
+                {{ accountName }}
+            </span>
+            <div class="my-3 text-center">
+                <button
+                    name="button"
+                    type="button"
+                    class="btn btn-outline-secondary w-100 btn-custom"
+                    (click)="isOwner ? onEditProfile() : onFollow()"
+                >
+                    {{ isOwner ? "Edit profile" : "Follow" }}
+                </button>
+            </div>
+            <div class="border-top mt-5">
+                <h2 class="text-start pt-3 px-3 h6 organization">
+                    Organizations
+                </h2>
+                <div class="d-flex flex-row gap-2 text-start px-3">
+                    <img
+                        src="https://avatars.githubusercontent.com/u/50896974?s=64&amp;v=4"
+                        alt="@kamu-data"
+                        size="32"
+                        height="32"
+                        width="32"
+                        data-view-component="true"
+                        class="avatar"
+                    />
+                    <img
+                        src="https://avatars.githubusercontent.com/u/50896974?s=64&amp;v=4"
+                        alt="@kamu-data"
+                        size="32"
+                        height="32"
+                        width="32"
+                        data-view-component="true"
+                        class="avatar"
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="container-content px-4">
+            <div class="datasetViewTypeToggleGroup border-bottom">
+                <mat-button-toggle-group
+                    name="accountViewType"
+                    aria-label="Account View Type"
+                    [value]="accountViewType"
+                >
+                    <mat-button-toggle
+                        data-test-id="account-overview-tab"
+                        value="overview"
+                        [checked]="isAccountViewTypeOverview"
+                        (click)="onSelectOverviewTab()"
+                    >
+                        <mat-icon class="text-muted fs-4"
+                            >my_library_books</mat-icon
+                        >
+                        <span class="mx-2"> Overview</span>
+                    </mat-button-toggle>
+                    <mat-button-toggle
+                        data-test-id="account-datasets-tab"
+                        value="datasets"
+                        [checked]="isAccountViewTypeDatasets"
+                        (click)="onSelectDatasetsTab()"
+                    >
+                        <mat-icon class="text-muted fs-4">book</mat-icon>
+                        <span class="mx-2">Datasets</span>
+                        <span
+                            title="1"
+                            data-view-component="true"
+                            class="counter"
+                            >{{ datasetTotalCount }}</span
+                        >
+                    </mat-button-toggle>
+                    <mat-button-toggle
+                        data-test-id="account-organizations-tab"
+                        value="organizations"
+                        [checked]="isAccountViewTypeOrganizations"
+                        (click)="onSelectOrganizationsTab()"
+                    >
+                        <mat-icon class="text-muted fs-4">people</mat-icon>
+                        <span class="mx-2">Organizations </span>
+                        <span
+                            title="1"
+                            data-view-component="true"
+                            class="counter"
+                            >2</span
+                        >
+                    </mat-button-toggle>
+
+                    <mat-button-toggle
+                        data-test-id="account-inbox-tab"
+                        value="inbox"
+                        [checked]="isAccountViewTypeInbox"
+                        (click)="onSelectInboxTab()"
+                    >
+                        <mat-icon class="text-muted fs-4">inbox</mat-icon>
+                        <span class="mx-2">Inbox</span>
+                        <span
+                            title="1"
+                            data-view-component="true"
+                            class="counter"
+                            >2</span
+                        >
+                    </mat-button-toggle>
+                    <mat-button-toggle
+                        data-test-id="account-stars-tab"
+                        value="Stars"
+                        [checked]="isAccountViewTypeStars"
+                        (click)="onSelectStarsTab()"
+                    >
+                        <mat-icon class="text-muted fs-4">star_border</mat-icon>
+                        <span class="mx-2">Stars</span>
+                        <span
+                            title="1"
+                            data-view-component="true"
+                            class="counter"
+                            >2</span
+                        >
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
+            <ng-container *ngIf="isAccountViewTypeOverview">
+                <div>Overview</div>
+            </ng-container>
+            <ng-container *ngIf="isAccountViewTypeDatasets">
+                <app-datasets-tab
+                    [datasets]="datasets"
+                    [accountName]="accountName"
+                    [accountViewType]="accountViewType"
+                    [pageInfo]="pageInfo"
+                ></app-datasets-tab>
+            </ng-container>
+            <ng-container *ngIf="isAccountViewTypeOrganizations">
+                <div>Organizations</div>
+            </ng-container>
+            <ng-container *ngIf="isAccountViewTypeInbox">
+                <div>Inbox</div>
+            </ng-container>
+            <ng-container *ngIf="isAccountViewTypeStars">
+                <div>Stars</div>
+            </ng-container>
+        </div>
+    </div>
+</div>

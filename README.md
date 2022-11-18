@@ -105,3 +105,12 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Release procedure
+
+1. While on the feature branch, create a `CHANGELOG` entry for the new version
+4. Create PR, wait for tests, then merge
+5. Checkout and pull master
+6. Tag the latest commit with a new version: `git tag vX.Y.Z`
+7. Push the tag to repo: git push origin tag `vX.Y.Z`
+8. Github Actions will pick up the new tag and create a new GitHub release from it

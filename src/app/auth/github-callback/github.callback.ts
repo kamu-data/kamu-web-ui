@@ -6,7 +6,7 @@ import { BaseComponent } from "src/app/common/base.component";
 
 @Component({
     selector: "app-github-callback",
-    templateUrl: "./github-callback.component.html",
+    template: "",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GithubCallbackComponent extends BaseComponent implements OnInit {

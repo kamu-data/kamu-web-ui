@@ -6,19 +6,29 @@ import {
     HttpRequest,
 } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { finalize, delay } from "rxjs/operators";
+import { finalize } from "rxjs/operators";
 import { environment } from "../../../environments/environment";
 
 export class SpinnerInterceptor implements HttpInterceptor {
     constructor(private spinnerService: SpinnerService) {}
+    timer: NodeJS.Timer;
     intercept(
         req: HttpRequest<unknown>,
         next: HttpHandler,
     ): Observable<HttpEvent<unknown>> {
-        this.spinnerService.show();
+        if (req.url.includes("/assets")) {
+            return next.handle(req);
+        }
+        clearTimeout(this.timer);
+        this.timer = setTimeout(
+            () => this.spinnerService.show(),
+            environment.delay_http_request_ms,
+        );
         return next.handle(req).pipe(
-            delay(environment.delay_http_request_ms),
-            finalize(() => this.spinnerService.hide()),
+            finalize(() => {
+                this.spinnerService.hide();
+                clearTimeout(this.timer);
+            }),
         );
     }
 }

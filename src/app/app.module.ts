@@ -1,3 +1,4 @@
+import { MetadataBlockModule } from "./dataset-block/metadata-block/metadata-block.module";
 import { SpinnerService } from "./components/spinner/spinner.service";
 import { SpinnerInterceptor } from "./components/spinner/spinner.interceptor";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
@@ -127,6 +128,7 @@ const MatModules = [
         AppRoutingModule,
         DatasetModule,
         DatasetCreateModule,
+        MetadataBlockModule,
         ModalModule.forRoot(),
         SearchModule.forRoot(),
         MarkdownModule.forRoot({

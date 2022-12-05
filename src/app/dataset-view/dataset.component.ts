@@ -344,7 +344,7 @@ export class DatasetComponent
         mapperTabs[this.datasetViewType]();
     }
 
-    private getDatasetInfoFromUrl(): DatasetInfo {
+    public getDatasetInfoFromUrl(): DatasetInfo {
         const paramMap: ParamMap = this.activatedRoute.snapshot.paramMap;
         return {
             // Both parameters are mandatory in URL, router would not activate this component otherwise

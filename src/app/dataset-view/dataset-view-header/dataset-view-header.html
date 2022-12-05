@@ -6,21 +6,21 @@
             <svg-icon name="repository"></svg-icon>
             <span class="author flex-self-stretch" itemprop="author">
                 <a
-                    *ngIf="datasetBasics && datasetBasics.owner && datasetBasics.owner.name"
+                    *ngIf="datasetInfo && datasetInfo.accountName"
                     class="url fn"
                     rel="author"
                     data-hovercard-type="organization"
                     (click)="showOwnerPage()"
-                    >{{ datasetBasics.owner.name }}</a
+                    >{{ datasetInfo.accountName}}</a
                 >
             </span>
             <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
             <strong itemprop="name" class="mr-2 flex-self-stretch author">
                 <a
-                    *ngIf="datasetBasics && datasetBasics.name"
+                    *ngIf="datasetInfo && datasetInfo.datasetName"
                     data-pjax="#repo-content-pjax-container"
                     (click)="showDatasetView()"
-                    >{{ datasetBasics.name }}</a
+                    >{{ datasetInfo.datasetName }}</a
                 >
             </strong>
 

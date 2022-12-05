@@ -7,8 +7,8 @@ import {
 } from "@angular/core";
 import { SearchAdditionalHeaderButtonInterface } from "../../components/search-additional-buttons/search-additional-buttons.interface";
 import { searchAdditionalButtonsEnum } from "../../search/search.interface";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { NavigationService } from "src/app/services/navigation.service";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 @Component({
     selector: "app-dataset-view-header",
@@ -16,7 +16,7 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetViewHeaderComponent {
-    @Input() datasetBasics?: DatasetBasicsFragment;
+    @Input() datasetInfo?: DatasetInfo;
     @Output() public showOwnerPageEmit = new EventEmitter<null>();
     @Output() public onClickSearchAdditionalButtonEmit =
         new EventEmitter<string>();
@@ -82,10 +82,10 @@ export class DatasetViewHeaderComponent {
     }
 
     public showDatasetView(): void {
-        if (this.datasetBasics) {
+        if (this.datasetInfo) {
             this.navigationService.navigateToDatasetView({
-                accountName: this.datasetBasics.owner.name,
-                datasetName: this.datasetBasics.name as string,
+                accountName: this.datasetInfo.accountName,
+                datasetName: this.datasetInfo.datasetName,
             });
         }
     }

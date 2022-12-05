@@ -6,7 +6,7 @@
 >
     <div class="app-content">
         <app-dataset-view-header
-            [datasetBasics]="datasetBasics"
+            [datasetInfo]="getDatasetInfoFromUrl()"
             (showOwnerPageEmit)="showOwnerPage()"
             (onClickSearchAdditionalButtonEmit)="
                 onClickSearchAdditionalButton($event)

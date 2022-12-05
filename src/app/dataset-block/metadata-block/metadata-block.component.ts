@@ -6,15 +6,12 @@ import { ActivatedRoute, ParamMap } from "@angular/router";
 import { ModalService } from "./../../components/modal/modal.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     OnInit,
     ViewEncapsulation,
 } from "@angular/core";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { promiseWithCatch, requireValue } from "src/app/common/app.helpers";
 import { searchAdditionalButtonsEnum } from "src/app/search/search.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
@@ -28,39 +25,24 @@ import ProjectLinks from "src/app/project-links";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataBlockComponent extends BaseComponent implements OnInit {
-    public datasetBasics?: DatasetBasicsFragment;
+    public datasetInfo: DatasetInfo;
     public datasetViewType = DatasetViewTypeEnum.History;
 
     constructor(
         private navigationService: NavigationService,
-        private appDatasetService: DatasetService,
         private modalService: ModalService,
         private activatedRoute: ActivatedRoute,
-        private cdr: ChangeDetectorRef,
     ) {
         super();
     }
     ngOnInit(): void {
-        this.datasetViewType = DatasetViewTypeEnum.History;
-        this.trackSubscriptions(
-            this.appDatasetService
-                .requestDatasetMainData(this.getDatasetInfoFromUrl())
-                .subscribe(),
-            this.appDatasetService.onDatasetChanges.subscribe(
-                (basics: DatasetBasicsFragment) => {
-                    this.datasetBasics = basics;
-                    this.cdr.markForCheck();
-                },
-            ),
-        );
-        this.cdr.markForCheck();
+        this.datasetInfo = this.getDatasetInfoFromUrl();
     }
 
     public showOwnerPage(): void {
-        if (this.datasetBasics)
-            this.navigationService.navigateToOwnerView(
-                this.datasetBasics.owner.name,
-            );
+        this.navigationService.navigateToOwnerView(
+            this.datasetInfo.accountName,
+        );
     }
 
     public onClickSearchAdditionalButton(method: string) {
@@ -119,40 +101,29 @@ export class MetadataBlockComponent extends BaseComponent implements OnInit {
     public getDatasetNavigation(): DatasetNavigationInterface {
         return {
             navigateToOverview: () => {
-                if (this.datasetBasics) {
-                    this.navigationService.navigateToDatasetView({
-                        accountName: this.datasetBasics.owner.name,
-                        datasetName: this.datasetBasics.name as string,
-                    });
-                }
+                this.navigationService.navigateToDatasetView(this.datasetInfo);
             },
             navigateToData: () => {
-                if (this.datasetBasics) {
-                    this.navigationService.navigateToDatasetView({
-                        accountName: this.datasetBasics.owner.name,
-                        datasetName: this.datasetBasics.name as string,
-                        tab: DatasetViewTypeEnum.Data,
-                    });
-                }
+                this.navigationService.navigateToDatasetView({
+                    accountName: this.datasetInfo.accountName,
+                    datasetName: this.datasetInfo.datasetName,
+                    tab: DatasetViewTypeEnum.Data,
+                });
             },
             navigateToMetadata: () => {
-                if (this.datasetBasics) {
-                    this.navigationService.navigateToDatasetView({
-                        accountName: this.datasetBasics.owner.name,
-                        datasetName: this.datasetBasics.name as string,
-                        tab: DatasetViewTypeEnum.Metadata,
-                    });
-                }
+                this.navigationService.navigateToDatasetView({
+                    accountName: this.datasetInfo.accountName,
+                    datasetName: this.datasetInfo.datasetName,
+                    tab: DatasetViewTypeEnum.Metadata,
+                });
             },
             navigateToHistory: () => null,
             navigateToLineage: () => {
-                if (this.datasetBasics) {
-                    this.navigationService.navigateToDatasetView({
-                        accountName: this.datasetBasics.owner.name,
-                        datasetName: this.datasetBasics.name as string,
-                        tab: DatasetViewTypeEnum.Lineage,
-                    });
-                }
+                this.navigationService.navigateToDatasetView({
+                    accountName: this.datasetInfo.accountName,
+                    datasetName: this.datasetInfo.datasetName,
+                    tab: DatasetViewTypeEnum.Lineage,
+                });
             },
             navigateToDiscussions: () => {
                 console.log("Navigate to discussions");

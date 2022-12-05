@@ -1,1 +1,25 @@
-<p>metadata-block works!</p>
+<div
+    class="app-main-container"
+    role="main"
+    data-test-id="metada-block-view"
+    id="metada-block-view"
+>
+    <div class="app-content">
+        <app-dataset-view-header
+            [datasetBasics]="datasetBasics"
+            (showOwnerPageEmit)="showOwnerPage()"
+            (onClickSearchAdditionalButtonEmit)="
+                onClickSearchAdditionalButton($event)
+            "
+        ></app-dataset-view-header>
+    </div>
+
+    <div class="app-content">
+        <div id="dataset-viewer">
+            <app-dataset-view-menu
+                [datasetViewType]="datasetViewType"
+                [datasetNavigation]="getDatasetNavigation()"
+            ></app-dataset-view-menu>
+        </div>
+    </div>
+</div>

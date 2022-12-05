@@ -59,17 +59,23 @@ export class DatasetService {
                     const dataTail = data.datasets.byOwnerAndName.data.tail;
                     if (dataTail.__typename === "DataQueryResultSuccess") {
                         this.datasetUpdate(data.datasets.byOwnerAndName);
-                        this.overviewTabDataUpdate(data.datasets.byOwnerAndName, data.datasets.byOwnerAndName.data, dataTail);
-                        this.dataTabDataUpdate(data.datasets.byOwnerAndName, dataTail);
+                        this.overviewTabDataUpdate(
+                            data.datasets.byOwnerAndName,
+                            data.datasets.byOwnerAndName.data,
+                            dataTail,
+                        );
+                        this.dataTabDataUpdate(
+                            data.datasets.byOwnerAndName,
+                            dataTail,
+                        );
                         this.metadataTabDataUpdate(data);
                         this.lineageTabDataUpdate(
                             data.datasets.byOwnerAndName,
                             data.datasets.byOwnerAndName,
                         );
                     } else {
-                        throw new SqlExecutionError(dataTail.errorMessage)
+                        throw new SqlExecutionError(dataTail.errorMessage);
                     }
-
                 } else {
                     throw new DatasetNotFoundError();
                 }
@@ -120,18 +126,24 @@ export class DatasetService {
             map((result: GetDatasetDataSqlRunQuery) => {
                 const queryResult = result.data.query;
                 if (queryResult.__typename === "DataQueryResultSuccess") {
-                    const content: DataRow[] = DatasetService.parseDataRows(queryResult);
-                    const schema: DatasetSchema = DatasetService.parseSchema(queryResult.schema.content);
+                    const content: DataRow[] =
+                        DatasetService.parseDataRows(queryResult);
+                    const schema: DatasetSchema = DatasetService.parseSchema(
+                        queryResult.schema.content,
+                    );
                     const dataUpdate: DataUpdate = { content, schema };
                     this.appDatasetSubsService.changeDatasetData(dataUpdate);
-                } else if (queryResult.errorKind === DataQueryResultErrorKind.InvalidSql) {
+                } else if (
+                    queryResult.errorKind ===
+                    DataQueryResultErrorKind.InvalidSql
+                ) {
                     this.appDatasetSubsService.observeSqlErrorOccurred({
-                        error: queryResult.errorMessage
+                        error: queryResult.errorMessage,
                     });
                 } else {
                     throw new SqlExecutionError(queryResult.errorMessage);
                 }
-            })
+            }),
         );
     }
 
@@ -143,7 +155,7 @@ export class DatasetService {
     private overviewTabDataUpdate(
         overview: DatasetOverviewFragment,
         size: DatasetDataSizeFragment,
-        tail: DataQueryResultSuccessViewFragment
+        tail: DataQueryResultSuccessViewFragment,
     ): void {
         const content: DataRow[] = DatasetService.parseDataRows(tail);
 
@@ -154,15 +166,17 @@ export class DatasetService {
         };
         this.appDatasetSubsService.changeDatasetOverviewData(
             overviewDataUpdate,
-        );                
+        );
     }
 
     private dataTabDataUpdate(
-        metadata: DatasetMetadataSummaryFragment, 
-        tail: DataQueryResultSuccessViewFragment
+        metadata: DatasetMetadataSummaryFragment,
+        tail: DataQueryResultSuccessViewFragment,
     ): void {
-        const content: DataRow[] =  DatasetService.parseDataRows(tail);
-        const schema: DatasetSchema = DatasetService.parseSchema(metadata.metadata.currentSchema.content);
+        const content: DataRow[] = DatasetService.parseDataRows(tail);
+        const schema: DatasetSchema = DatasetService.parseSchema(
+            metadata.metadata.currentSchema.content,
+        );
         const dataUpdate: DataUpdate = { content, schema };
         this.appDatasetSubsService.changeDatasetData(dataUpdate);
     }
@@ -372,7 +386,9 @@ export class DatasetService {
         );
     }
 
-    private static parseDataRows(successResult: DataQueryResultSuccessViewFragment): DataRow[] {
+    private static parseDataRows(
+        successResult: DataQueryResultSuccessViewFragment,
+    ): DataRow[] {
         const content: string = successResult.data.content;
         return JSON.parse(content) as DataRow[];
     }

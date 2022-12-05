@@ -1,3 +1,4 @@
+import { NavigationService } from "./../../services/navigation.service";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import {
     Account,
@@ -15,7 +16,10 @@ import { DataHelpers } from "src/app/common/data.helpers";
 export class OverviewHistorySummaryHeaderComponent {
     @Input() public metadataBlockFragment?: MetadataBlockFragment;
     @Input() public numBlocksTotal: number;
+    @Input() public datasetName: string;
     public appLogo = `/${AppValues.APP_LOGO}`;
+
+    constructor(private navigationService: NavigationService) {}
 
     get systemTime(): string {
         return this.metadataBlockFragment
@@ -49,5 +53,17 @@ export class OverviewHistorySummaryHeaderComponent {
                   this.metadataBlockFragment,
               )
             : "";
+    }
+
+    public navigateToMetadataBlock(
+        accountName: string,
+        datasetName: string,
+        blockHash: string,
+    ): void {
+        this.navigationService.navigateToMetadataBlock({
+            accountName,
+            datasetName,
+            blockHash,
+        });
     }
 }

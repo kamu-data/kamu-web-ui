@@ -35,6 +35,7 @@
             <app-overview-history-summary-header
                 [metadataBlockFragment]="metadataFragmentBlock"
                 [numBlocksTotal]="currentState.overview.metadata.chain.blocks.totalCount || 0"
+                [datasetName]="datasetBasics.name"
             ></app-overview-history-summary-header>
             <app-dynamic-table
                 [hasTableHeader]="true"

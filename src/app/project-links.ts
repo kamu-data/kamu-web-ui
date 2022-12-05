@@ -24,7 +24,7 @@ export default class ProjectLinks {
     public static readonly URL_PARAM_ACCOUNT_NAME: string = "accountName";
     public static readonly URL_PARAM_DATASET_NAME: string = "datasetName";
     public static readonly URL_PARAM_CATEGORY: string = "category";
-    public static readonly URL_PARAM_BLOCK_ID: string = "blockId";
+    public static readonly URL_PARAM_BLOCK_HASH: string = "blockHash";
 
     public static readonly URL_QUERY_PARAM_TAB: string = "tab";
     public static readonly URL_QUERY_PARAM_PAGE: string = "page";

@@ -49,7 +49,13 @@
                                 >
                                 <a
                                     class="link--primary font-weight-bold"
-                                    href="#todo-navigate-to-block"
+                                    (click)="
+                                        navigateToMetadataBlock(
+                                            block.author.name,
+                                            datasetName,
+                                            block.blockHash
+                                        )
+                                    "
                                     >{{ descriptionForMetadataBlock(block) }}</a
                                 >
                             </div>
@@ -84,6 +90,7 @@
                                 </div>
 
                                 <div class="f6 color-fg-muted min-width-0">
+                                    <p>{{ block | json }}</p>
                                     <a
                                         class="commit-author user-mention"
                                         [title]="

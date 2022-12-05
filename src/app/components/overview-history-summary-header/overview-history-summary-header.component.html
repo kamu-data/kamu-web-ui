@@ -44,7 +44,13 @@
                             data-test-selector="commit-tease-commit-message"
                             title="Styles was changed"
                             class="link--primary"
-                            href="#todo-navigate-to-block"
+                            (click)="
+                                navigateToMetadataBlock(
+                                    metadataBlockFragment.author.name,
+                                    datasetName,
+                                    metadataBlockFragment.blockHash
+                                )
+                            "
                             >{{ descriptionForMetadataBlock }}</a
                         >
                     </span>

@@ -7,7 +7,7 @@
     <div class="app-content">
         <app-dataset-view-header
             [datasetInfo]="datasetInfo"
-            (showOwnerPageEmit)="showOwnerPage()"
+            (showOwnerPageEmit)="showOwnerPage(datasetInfo.accountName)"
             (onClickSearchAdditionalButtonEmit)="
                 onClickSearchAdditionalButton($event)
             "
@@ -18,7 +18,12 @@
         <div id="dataset-viewer">
             <app-dataset-view-menu
                 [datasetViewType]="datasetViewType"
-                [datasetNavigation]="getDatasetNavigation()"
+                [datasetNavigation]="
+                    getDatasetNavigation({
+                        accountName: datasetInfo.accountName,
+                        datasetName: datasetInfo.datasetName
+                    })
+                "
             ></app-dataset-view-menu>
         </div>
     </div>

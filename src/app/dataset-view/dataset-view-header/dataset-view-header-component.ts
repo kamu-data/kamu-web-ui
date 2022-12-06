@@ -16,7 +16,7 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetViewHeaderComponent {
-    @Input() datasetInfo?: DatasetInfo;
+    @Input() datasetInfo: DatasetInfo;
     @Output() public showOwnerPageEmit = new EventEmitter<null>();
     @Output() public onClickSearchAdditionalButtonEmit =
         new EventEmitter<string>();
@@ -82,11 +82,9 @@ export class DatasetViewHeaderComponent {
     }
 
     public showDatasetView(): void {
-        if (this.datasetInfo) {
-            this.navigationService.navigateToDatasetView({
-                accountName: this.datasetInfo.accountName,
-                datasetName: this.datasetInfo.datasetName,
-            });
-        }
+        this.navigationService.navigateToDatasetView({
+            accountName: this.datasetInfo.accountName,
+            datasetName: this.datasetInfo.datasetName,
+        });
     }
 }

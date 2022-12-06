@@ -8,27 +8,19 @@ import {
     OnInit,
     ViewEncapsulation,
 } from "@angular/core";
-import { searchAdditionalButtonsEnum } from "../search/search.interface";
-import {
-    DatasetNavigationInterface,
-    DatasetViewTypeEnum,
-} from "./dataset-view.interface";
+import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { DatasetService } from "./dataset.service";
-import {
-    ActivatedRoute,
-    NavigationEnd,
-    ParamMap,
-    Router,
-} from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter, tap } from "rxjs/operators";
 import { ModalService } from "../components/modal/modal.service";
 import { DatasetBasicsFragment } from "../api/kamu.graphql.interface";
-import { BaseComponent } from "../common/base.component";
+
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { promiseWithCatch, requireValue } from "../common/app.helpers";
+import { promiseWithCatch } from "../common/app.helpers";
 import AppValues from "../common/app.values";
+import { BaseProcessingComponent } from "../common/base.processing.component";
 
 @Component({
     selector: "app-dataset",
@@ -38,7 +30,7 @@ import AppValues from "../common/app.values";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetComponent
-    extends BaseComponent
+    extends BaseProcessingComponent
     implements OnInit, OnDestroy
 {
     public datasetBasics?: DatasetBasicsFragment;
@@ -56,12 +48,12 @@ export class DatasetComponent
     constructor(
         private appDatasetService: DatasetService,
         private router: Router,
-        private activatedRoute: ActivatedRoute,
-        private navigationService: NavigationService,
-        private modalService: ModalService,
+        protected activatedRoute: ActivatedRoute,
+        protected navigationService: NavigationService,
+        protected modalService: ModalService,
         private cdr: ChangeDetectorRef,
     ) {
-        super();
+        super(navigationService, modalService, activatedRoute);
     }
 
     public ngOnInit(): void {
@@ -149,30 +141,6 @@ export class DatasetComponent
         }
     }
 
-    public onClickSearchAdditionalButton(method: string) {
-        const mapperMethod: {
-            [key in searchAdditionalButtonsEnum]: () => void;
-        } = {
-            [searchAdditionalButtonsEnum.DeriveFrom]: () =>
-                this.onClickDeriveFrom(),
-            [searchAdditionalButtonsEnum.Reputation]: () =>
-                this.onClickReputation(),
-            [searchAdditionalButtonsEnum.Explore]: () => this.onClickExplore(),
-            [searchAdditionalButtonsEnum.Descission]: () =>
-                this.onClickDescission(),
-            [searchAdditionalButtonsEnum.Starred]: () => null,
-            [searchAdditionalButtonsEnum.UnWatch]: () => null,
-        };
-        mapperMethod[method as searchAdditionalButtonsEnum]();
-
-        promiseWithCatch(
-            this.modalService.warning({
-                message: "Feature coming soon",
-                yesButtonText: "Ok",
-            }),
-        );
-    }
-
     private initOverviewTab(): void {
         this.datasetViewType = DatasetViewTypeEnum.Overview;
     }
@@ -204,14 +172,6 @@ export class DatasetComponent
         console.log("initDiscussionsTab");
     }
 
-    public showOwnerPage(): void {
-        if (this.datasetBasics) {
-            this.navigationService.navigateToOwnerView(
-                this.datasetBasics.owner.name,
-            );
-        }
-    }
-
     public toggleReadmeView(): void {
         this.isMarkdownEditView = !this.isMarkdownEditView;
     }
@@ -232,58 +192,6 @@ export class DatasetComponent
 
     public onClickMetadataNode(dataset: DatasetBasicsFragment): void {
         this.onSelectDataset(dataset.name as string);
-    }
-
-    public getDatasetNavigation(): DatasetNavigationInterface {
-        return {
-            navigateToOverview: () => {
-                if (this.datasetBasics) {
-                    this.navigationService.navigateToDatasetView({
-                        accountName: this.datasetBasics.owner.name,
-                        datasetName: this.datasetBasics.name as string,
-                    });
-                }
-            },
-            navigateToData: () => {
-                if (this.datasetBasics) {
-                    this.navigationService.navigateToDatasetView({
-                        accountName: this.datasetBasics.owner.name,
-                        datasetName: this.datasetBasics.name as string,
-                        tab: DatasetViewTypeEnum.Data,
-                    });
-                }
-            },
-            navigateToMetadata: () => {
-                if (this.datasetBasics) {
-                    this.navigationService.navigateToDatasetView({
-                        accountName: this.datasetBasics.owner.name,
-                        datasetName: this.datasetBasics.name as string,
-                        tab: DatasetViewTypeEnum.Metadata,
-                    });
-                }
-            },
-            navigateToHistory: () => {
-                if (this.datasetBasics) {
-                    this.navigationService.navigateToDatasetView({
-                        accountName: this.datasetBasics.owner.name,
-                        datasetName: this.datasetBasics.name as string,
-                        tab: DatasetViewTypeEnum.History,
-                    });
-                }
-            },
-            navigateToLineage: () => {
-                if (this.datasetBasics) {
-                    this.navigationService.navigateToDatasetView({
-                        accountName: this.datasetBasics.owner.name,
-                        datasetName: this.datasetBasics.name as string,
-                        tab: DatasetViewTypeEnum.Lineage,
-                    });
-                }
-            },
-            navigateToDiscussions: () => {
-                console.log("Navigate to discussions");
-            },
-        };
     }
 
     public get isDatasetViewTypeOverview(): boolean {
@@ -310,22 +218,6 @@ export class DatasetComponent
         return this.datasetViewType === DatasetViewTypeEnum.Discussions;
     }
 
-    private onClickDeriveFrom(): void {
-        console.log("onClickDeriveFrom");
-    }
-
-    private onClickExplore(): void {
-        console.log("onClickExplore");
-    }
-
-    private onClickReputation(): void {
-        console.log("onClickReputation");
-    }
-
-    private onClickDescission(): void {
-        console.log("onClickDescission");
-    }
-
     private initDatasetViewByType(
         datasetInfo: DatasetInfo,
         currentPage: number,
@@ -342,19 +234,6 @@ export class DatasetComponent
 
         this.datasetViewType = this.getDatasetViewTypeFromUrl();
         mapperTabs[this.datasetViewType]();
-    }
-
-    public getDatasetInfoFromUrl(): DatasetInfo {
-        const paramMap: ParamMap = this.activatedRoute.snapshot.paramMap;
-        return {
-            // Both parameters are mandatory in URL, router would not activate this component otherwise
-            accountName: requireValue(
-                paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
-            ),
-            datasetName: requireValue(
-                paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
-            ),
-        };
     }
 
     private getCurrentPageFromUrl(): number {
@@ -394,13 +273,11 @@ export class DatasetComponent
     }
 
     public onRunSQLRequest(query: string): void {
-        if (this.datasetBasics) {
-            this.appDatasetService
-                .requestDatasetDataSqlRun(
-                    query,
-                    AppValues.SQL_QUERY_LIMIT, // TODO: Propagate limit from UI and display when it was reached
-                )
-                .subscribe();
-        }
+        this.appDatasetService
+            .requestDatasetDataSqlRun(
+                query,
+                AppValues.SQL_QUERY_LIMIT, // TODO: Propagate limit from UI and display when it was reached
+            )
+            .subscribe();
     }
 }

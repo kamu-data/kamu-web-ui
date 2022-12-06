@@ -1,4 +1,8 @@
-import { mockDatasetBasicsFragment, mockNode } from "./../search/mock.data";
+import {
+    mockDatasetBasicsFragment,
+    mockDatasetInfo,
+    mockNode,
+} from "./../search/mock.data";
 import { DatasetService } from "./dataset.service";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -192,10 +196,10 @@ describe("DatasetComponent", () => {
             navigationService,
             "navigateToDatasetView",
         );
-        component.getDatasetNavigation().navigateToOverview();
+        component.getDatasetNavigation(mockDatasetInfo).navigateToOverview();
         expect(selectDatasetSpy).toHaveBeenCalledWith({
-            datasetName: mockDatasetBasicsFragment.name as string,
-            accountName: mockDatasetBasicsFragment.owner.name,
+            datasetName: mockDatasetInfo.datasetName,
+            accountName: mockDatasetInfo.accountName,
         });
     });
 
@@ -204,7 +208,7 @@ describe("DatasetComponent", () => {
             navigationService,
             "navigateToDatasetView",
         );
-        component.getDatasetNavigation().navigateToData();
+        component.getDatasetNavigation(mockDatasetInfo).navigateToData();
         expect(selectDatasetSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({ tab: DatasetViewTypeEnum.Data }),
         );
@@ -215,7 +219,7 @@ describe("DatasetComponent", () => {
             navigationService,
             "navigateToDatasetView",
         );
-        component.getDatasetNavigation().navigateToMetadata(1);
+        component.getDatasetNavigation(mockDatasetInfo).navigateToMetadata(1);
         expect(selectDatasetSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({ tab: DatasetViewTypeEnum.Metadata }),
         );
@@ -226,7 +230,7 @@ describe("DatasetComponent", () => {
             navigationService,
             "navigateToDatasetView",
         );
-        component.getDatasetNavigation().navigateToHistory(1);
+        component.getDatasetNavigation(mockDatasetInfo).navigateToHistory(1);
         expect(selectDatasetSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({ tab: DatasetViewTypeEnum.History }),
         );
@@ -237,7 +241,7 @@ describe("DatasetComponent", () => {
             navigationService,
             "navigateToDatasetView",
         );
-        component.getDatasetNavigation().navigateToLineage();
+        component.getDatasetNavigation(mockDatasetInfo).navigateToLineage();
         expect(selectDatasetSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({ tab: DatasetViewTypeEnum.Lineage }),
         );
@@ -248,7 +252,7 @@ describe("DatasetComponent", () => {
             navigationService,
             "navigateToDatasetView",
         );
-        component.getDatasetNavigation().navigateToDiscussions();
+        component.getDatasetNavigation(mockDatasetInfo).navigateToDiscussions();
         expect(selectDatasetSpy).not.toHaveBeenCalled(); // TODO: implement discussions
     });
 
@@ -257,7 +261,7 @@ describe("DatasetComponent", () => {
             navigationService,
             "navigateToOwnerView",
         );
-        component.showOwnerPage();
+        component.showOwnerPage(mockDatasetBasicsFragment.owner.name);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
             mockDatasetBasicsFragment.owner.name,
         );

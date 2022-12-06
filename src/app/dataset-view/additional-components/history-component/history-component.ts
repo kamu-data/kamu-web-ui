@@ -3,6 +3,7 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
+    Input,
     OnInit,
     Output,
 } from "@angular/core";
@@ -20,6 +21,7 @@ import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.serv
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HistoryComponent extends BaseComponent implements OnInit {
+    @Input() public datasetName: string;
     @Output() onPageChangeEmit = new EventEmitter<{
         currentPage: number;
         isClick: boolean;

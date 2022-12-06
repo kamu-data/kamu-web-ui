@@ -1,12 +1,6 @@
-import ProjectLinks from "src/app/project-links";
 import { ActivatedRoute } from "@angular/router";
 import { NavigationService } from "src/app/services/navigation.service";
-import {
-    ChangeDetectionStrategy,
-    Component,
-    Input,
-    OnInit,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import AppValues from "../../common/app.values";
 import {
     MetadataBlockFragment,
@@ -14,7 +8,6 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { DataHelpers } from "src/app/common/data.helpers";
 import { momentConvertDatetoLocalWithFormat } from "src/app/common/app.helpers";
-import { pluck } from "rxjs/operators";
 
 @Component({
     selector: "app-timeline",
@@ -22,23 +15,15 @@ import { pluck } from "rxjs/operators";
     styleUrls: ["timeline.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TimelineComponent implements OnInit {
+export class TimelineComponent {
     @Input() public history: MetadataBlockFragment[];
     @Input() public pageInfo: PageBasedInfo;
-    public datasetName: string;
+    @Input() public datasetName: string;
 
     constructor(
         private navigationService: NavigationService,
         private route: ActivatedRoute,
     ) {}
-
-    ngOnInit(): void {
-        this.route.params
-            .pipe(pluck(ProjectLinks.URL_PARAM_DATASET_NAME))
-            .subscribe(
-                (datasetName: string) => (this.datasetName = datasetName),
-            );
-    }
 
     public navigateToOwnerView(ownerName: string): void {
         this.navigationService.navigateToOwnerView(ownerName);

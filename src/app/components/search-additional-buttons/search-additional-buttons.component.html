@@ -19,7 +19,6 @@
     [ngIf]="!shouldMinimizeSearchAdditionalButtons"
     id="bigSearchAdditionalButtons"
 >
-    <p>{{ searchAdditionalButtonsData | json }}</p>
     <app-search-additional-buttons-nav
         (searchAdditionalButtonsMethod)="onClick($event)"
         [searchAdditionalButtonsData]="searchAdditionalButtonsData"

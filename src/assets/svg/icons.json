@@ -87,6 +87,10 @@
     {
       "iconName": "checked",
       "iconPath": "/assets/svg/checked.svg"
+    },
+    {
+      "iconName": "notifications-checked",
+      "iconPath": "/assets/svg/notifications-checked.svg"
     }
   ],
   "customIcons": []

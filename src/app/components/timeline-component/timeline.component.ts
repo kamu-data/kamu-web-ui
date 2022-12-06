@@ -1,3 +1,4 @@
+import { ActivatedRoute } from "@angular/router";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import AppValues from "../../common/app.values";
@@ -17,11 +18,27 @@ import { momentConvertDatetoLocalWithFormat } from "src/app/common/app.helpers";
 export class TimelineComponent {
     @Input() public history: MetadataBlockFragment[];
     @Input() public pageInfo: PageBasedInfo;
+    @Input() public datasetName: string;
 
-    constructor(private navigationService: NavigationService) {}
+    constructor(
+        private navigationService: NavigationService,
+        private route: ActivatedRoute,
+    ) {}
 
     public navigateToOwnerView(ownerName: string): void {
         this.navigationService.navigateToOwnerView(ownerName);
+    }
+
+    public navigateToMetadataBlock(
+        accountName: string,
+        datasetName: string,
+        blockHash: string,
+    ): void {
+        this.navigationService.navigateToMetadataBlock({
+            accountName,
+            datasetName,
+            blockHash,
+        });
     }
 
     public momentConverDatetoLocalWithFormat(date: string): string {

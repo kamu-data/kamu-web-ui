@@ -6,8 +6,10 @@
 >
     <div class="app-content">
         <app-dataset-view-header
-            [datasetBasics]="datasetBasics"
-            (showOwnerPageEmit)="showOwnerPage()"
+            [datasetInfo]="getDatasetInfoFromUrl()"
+            (showOwnerPageEmit)="
+                showOwnerPage(getDatasetInfoFromUrl().accountName)
+            "
             (onClickSearchAdditionalButtonEmit)="
                 onClickSearchAdditionalButton($event)
             "
@@ -18,7 +20,12 @@
         <div id="dataset-viewer">
             <app-dataset-view-menu
                 [datasetViewType]="datasetViewType"
-                [datasetNavigation]="getDatasetNavigation()"
+                [datasetNavigation]="
+                    getDatasetNavigation({
+                        accountName: getDatasetInfoFromUrl().accountName,
+                        datasetName: getDatasetInfoFromUrl().datasetName
+                    })
+                "
             ></app-dataset-view-menu>
 
             <ng-template [ngIf]="isDatasetViewTypeOverview">
@@ -39,6 +46,7 @@
 
             <ng-template [ngIf]="isDatasetViewTypeHistory">
                 <app-history
+                    [datasetName]="datasetBasics?.name"
                     (onPageChangeEmit)="onPageChange($event)"
                 ></app-history>
             </ng-template>

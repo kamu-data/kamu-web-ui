@@ -5,6 +5,7 @@ export default class ProjectLinks {
     public static readonly URL_HOME: string = "/";
     public static readonly URL_LOGIN: string = "v/login";
     public static readonly URL_GITHUB_CALLBACK: string = "github_callback";
+    public static readonly URL_BLOCK: string = "block";
     public static readonly URL_SEARCH: string = "v/search";
     public static readonly URL_DATASET_CREATE: string = "v/new-dataset";
     public static readonly URL_PAGE_NOT_FOUND: string = "v/page-not-found";
@@ -23,6 +24,7 @@ export default class ProjectLinks {
     public static readonly URL_PARAM_ACCOUNT_NAME: string = "accountName";
     public static readonly URL_PARAM_DATASET_NAME: string = "datasetName";
     public static readonly URL_PARAM_CATEGORY: string = "category";
+    public static readonly URL_PARAM_BLOCK_HASH: string = "blockHash";
 
     public static readonly URL_QUERY_PARAM_TAB: string = "tab";
     public static readonly URL_QUERY_PARAM_PAGE: string = "page";

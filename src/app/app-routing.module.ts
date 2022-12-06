@@ -1,3 +1,4 @@
+import { MetadataBlockComponent } from "./dataset-block/metadata-block/metadata-block.component";
 import { AuthenticationGuard } from "./auth/authentication.guard";
 import { SettingsComponent } from "./auth/settings/settings.component";
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
@@ -36,6 +37,12 @@ export const routes: Routes = [
     {
         path: ProjectLinks.URL_DATASET_CREATE,
         component: DatasetCreateComponent,
+    },
+    {
+        path:
+            `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
+            `/${ProjectLinks.URL_BLOCK}/:${ProjectLinks.URL_PARAM_BLOCK_HASH}`,
+        component: MetadataBlockComponent,
     },
     {
         path: ProjectLinks.URL_PAGE_NOT_FOUND,

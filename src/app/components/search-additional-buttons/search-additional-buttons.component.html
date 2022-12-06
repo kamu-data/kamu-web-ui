@@ -20,6 +20,7 @@
     id="bigSearchAdditionalButtons"
 >
     <app-search-additional-buttons-nav
+        (searchAdditionalButtonsMethod)="onClick($event)"
         [searchAdditionalButtonsData]="searchAdditionalButtonsData"
     ></app-search-additional-buttons-nav>
 </ng-template>

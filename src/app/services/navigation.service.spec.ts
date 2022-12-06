@@ -5,7 +5,10 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { TestBed } from "@angular/core/testing";
 import { NavigationService } from "./navigation.service";
 import ProjectLinks from "../project-links";
-import { DatasetNavigationParams } from "../interface/navigation.interface";
+import {
+    DatasetNavigationParams,
+    MetadataBlockNavigationParams,
+} from "../interface/navigation.interface";
 import { Router } from "@angular/router";
 
 describe("NavigationService", () => {
@@ -46,6 +49,26 @@ describe("NavigationService", () => {
         expect(routerSpy).toHaveBeenCalledWith([
             ProjectLinks.URL_SETTINGS,
             SettingsTabs.PROFILE,
+        ]);
+    });
+
+    it("should test navigate to metadata block", () => {
+        const mockParams: MetadataBlockNavigationParams = {
+            accountName: "kamu",
+            datasetName: "test.hm",
+            blockHash: "kkdcswd6782819e12",
+        };
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        service.navigateToMetadataBlock({
+            accountName: mockParams.accountName,
+            datasetName: mockParams.datasetName,
+            blockHash: mockParams.blockHash,
+        });
+        expect(routerSpy).toHaveBeenCalledWith([
+            mockParams.accountName,
+            mockParams.datasetName,
+            ProjectLinks.URL_BLOCK,
+            mockParams.blockHash,
         ]);
     });
 

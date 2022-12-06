@@ -25,15 +25,6 @@ export function emitClickOnElement<T>(
     findNativeElement(fixture, selector).click();
 }
 
-export function checkHint<T>(
-    fixture: ComponentFixture<T>,
-    selector: string,
-    expectedHint: string,
-): void {
-    const element: HTMLElement = findNativeElement(fixture, selector);
-    expect(element.innerText.trim()).toEqual(expectedHint);
-}
-
 export function findElementByDataTestId<T>(
     fixture: ComponentFixture<T>,
     id: string,

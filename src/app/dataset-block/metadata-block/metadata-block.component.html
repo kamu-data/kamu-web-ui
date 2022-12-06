@@ -1,0 +1,40 @@
+<div
+    class="app-main-container"
+    role="main"
+    data-test-id="metada-block-view"
+    id="metada-block-view"
+>
+    <div class="app-content">
+        <app-dataset-view-header
+            [datasetInfo]="datasetInfo"
+            (showOwnerPageEmit)="showOwnerPage(datasetInfo.accountName)"
+            (onClickSearchAdditionalButtonEmit)="
+                onClickSearchAdditionalButton($event)
+            "
+        ></app-dataset-view-header>
+    </div>
+
+    <div class="app-content">
+        <div id="dataset-viewer">
+            <app-dataset-view-menu
+                [datasetViewType]="datasetViewType"
+                [datasetNavigation]="
+                    getDatasetNavigation({
+                        accountName: datasetInfo.accountName,
+                        datasetName: datasetInfo.datasetName
+                    })
+                "
+            ></app-dataset-view-menu>
+        </div>
+    </div>
+
+    <div class="row px-4">
+        <div class="col-md-7">
+            <div class="container-content">Block Header</div>
+            <div class="container-content mt-4">Block Event Details</div>
+        </div>
+        <div class="col-md-5">
+            <div class="container-content">Block List & Navigation</div>
+        </div>
+    </div>
+</div>

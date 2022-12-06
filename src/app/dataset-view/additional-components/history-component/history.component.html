@@ -6,6 +6,7 @@
         </div>
         <ng-template [ngIf]="currentState && currentState.history.length > 0">
             <app-timeline
+                [datasetName]="datasetName"
                 [history]="currentState.history"
                 [pageInfo]="currentState.pageInfo"
             ></app-timeline>

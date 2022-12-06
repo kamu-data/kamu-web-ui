@@ -48,10 +48,10 @@ export class DatasetComponent
     constructor(
         private appDatasetService: DatasetService,
         private router: Router,
-        protected activatedRoute: ActivatedRoute,
-        protected navigationService: NavigationService,
-        protected modalService: ModalService,
         private cdr: ChangeDetectorRef,
+        activatedRoute: ActivatedRoute,
+        navigationService: NavigationService,
+        modalService: ModalService,
     ) {
         super(navigationService, modalService, activatedRoute);
     }

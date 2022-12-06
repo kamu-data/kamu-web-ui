@@ -10,12 +10,16 @@ import { promiseWithCatch, requireValue } from "./app.helpers";
 import { BaseComponent } from "./base.component";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import ProjectLinks from "../project-links";
+import { Component } from "@angular/core";
 
+@Component({
+    template: "",
+})
 export class BaseProcessingComponent extends BaseComponent {
     constructor(
         protected navigationService: NavigationService,
         protected modalService: ModalService,
-        protected activedRoute: ActivatedRoute,
+        protected activatedRoute: ActivatedRoute,
     ) {
         super();
     }
@@ -92,7 +96,7 @@ export class BaseProcessingComponent extends BaseComponent {
     }
 
     public getDatasetInfoFromUrl(): DatasetInfo {
-        const paramMap: ParamMap = this.activedRoute.snapshot.paramMap;
+        const paramMap: ParamMap = this.activatedRoute.snapshot.paramMap;
         return {
             // Both parameters are mandatory in URL, router would not activate this component otherwise
             accountName: requireValue(

@@ -6,7 +6,6 @@
             <svg-icon name="repository"></svg-icon>
             <span class="author flex-self-stretch" itemprop="author">
                 <a
-                    *ngIf="datasetInfo && datasetInfo.accountName"
                     class="url fn"
                     rel="author"
                     data-hovercard-type="organization"
@@ -17,7 +16,6 @@
             <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
             <strong itemprop="name" class="mr-2 flex-self-stretch author">
                 <a
-                    *ngIf="datasetInfo && datasetInfo.datasetName"
                     data-pjax="#repo-content-pjax-container"
                     (click)="showDatasetView()"
                     >{{ datasetInfo.datasetName }}</a

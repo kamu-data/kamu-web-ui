@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+} from "@angular/core";
 import { SearchAdditionalHeaderButtonInterface } from "./search-additional-buttons.interface";
 
 @Component({
@@ -10,4 +16,9 @@ import { SearchAdditionalHeaderButtonInterface } from "./search-additional-butto
 export class SearchAdditionalButtonsNavComponent {
     @Input()
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[];
+    @Output() public searchAdditionalButtonsMethod = new EventEmitter<string>();
+
+    public onClickButton(method: string): void {
+        this.searchAdditionalButtonsMethod.emit(method);
+    }
 }

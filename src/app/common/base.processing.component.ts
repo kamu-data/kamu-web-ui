@@ -73,11 +73,7 @@ export class BaseProcessingComponent extends BaseComponent {
         } = {
             [searchAdditionalButtonsEnum.DeriveFrom]: () =>
                 this.onClickDeriveFrom(),
-            [searchAdditionalButtonsEnum.Reputation]: () =>
-                this.onClickReputation(),
-            [searchAdditionalButtonsEnum.Explore]: () => this.onClickExplore(),
-            [searchAdditionalButtonsEnum.Descission]: () =>
-                this.onClickDescission(),
+
             [searchAdditionalButtonsEnum.Starred]: () => null,
             [searchAdditionalButtonsEnum.UnWatch]: () => null,
         };
@@ -93,18 +89,6 @@ export class BaseProcessingComponent extends BaseComponent {
 
     private onClickDeriveFrom(): void {
         console.log("onClickDeriveFrom");
-    }
-
-    private onClickExplore(): void {
-        console.log("onClickExplore");
-    }
-
-    private onClickReputation(): void {
-        console.log("onClickReputation");
-    }
-
-    private onClickDescission(): void {
-        console.log("onClickDescission");
     }
 
     public getDatasetInfoFromUrl(): DatasetInfo {

@@ -1,0 +1,17 @@
+query getMetadataBlock(
+  $accountName: AccountName!
+  $datasetName: DatasetName!
+  $blockHash: Multihash!
+) {
+  datasets {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      metadata {
+        chain {
+          blockByHash(hash: $blockHash) {
+            ...MetadataBlock
+          }
+        }
+      }
+    }
+  }
+}

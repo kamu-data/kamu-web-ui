@@ -217,6 +217,7 @@ describe("Size helper", () => {
         __typename: "MetadataBlockExtended",
         blockHash: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
         prevBlockHash: "zW1ioX6fdsM4so8MPw7wqF1uKsDC7n6FEkhahZKXNcgF5E1",
+        sequenceNumber: 14,
         systemTime: "2022-08-05T21:19:28.817281255+00:00",
         author: {
             __typename: "User",

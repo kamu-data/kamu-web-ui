@@ -72,9 +72,15 @@
                     class="d-flex flex-auto justify-content-end ml-3 align-items-baseline"
                 >
                     <a
-                        href="#todo-navigate-to-block"
                         class="f6 link--secondary text-mono ml-2 d-none d-lg-inline"
                         data-pjax="#repo-content-pjax-container"
+                        (click)="
+                            navigateToMetadataBlock(
+                                metadataBlockFragment.author.name,
+                                datasetName,
+                                metadataBlockFragment.blockHash
+                            )
+                        "
                     >
                         {{ shortHash }}
                     </a>

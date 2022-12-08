@@ -10,11 +10,7 @@ import { promiseWithCatch, requireValue } from "./app.helpers";
 import { BaseComponent } from "./base.component";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import ProjectLinks from "../project-links";
-import { Component } from "@angular/core";
 
-@Component({
-    template: "",
-})
 export class BaseProcessingComponent extends BaseComponent {
     constructor(
         protected navigationService: NavigationService,

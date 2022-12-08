@@ -20,8 +20,8 @@ export const mockDataUpdate: DataUpdate = {
     },
     content: [
         {
-            "mockName": "someValueOfMockType"
-        }
+            mockName: "someValueOfMockType",
+        },
     ],
 };
 
@@ -34,6 +34,7 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
         {
             __typename: "MetadataBlockExtended",
             blockHash: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
+            sequenceNumber: 14,
             prevBlockHash: "zW1ioX6fdsM4so8MPw7wqF1uKsDC7n6FEkhahZKXNcgF5E1",
             systemTime: "2022-08-05T21:19:28.817281255+00:00",
             author: {
@@ -138,6 +139,7 @@ export const mockOverviewDataUpdate = {
                             prevBlockHash:
                                 "zW1prmMP3XKbMfdWn9MQWpy4WaT8u8LADxXb8us7CTVb1Vu",
                             systemTime: "2022-08-05T21:15:03.947245004+00:00",
+                            sequenceNumber: 14,
                             author: {
                                 __typename: "User",
                                 id: "1",
@@ -366,6 +368,7 @@ export const mockMetadataSchemaUpdate = {
                             prevBlockHash:
                                 "zW1fzZHGUrvDzMPuYeYifBB56BBKzdxmsbhGdcv1fBXPqBA",
                             systemTime: "2022-08-05T21:19:43.875457619+00:00",
+                            sequenceNumber: 14,
                             author: {
                                 __typename: "User",
                                 id: "1",

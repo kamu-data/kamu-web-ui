@@ -1,0 +1,76 @@
+<div class="block-header-container" *ngIf="block$ | async as block">
+    <div class="d-flex justify-content-end custom-button">
+        <button class="starred rounded-left-2 border rounded-start">
+            <span class="d-inline mr-2">Block Actions</span>
+        </button>
+        <button
+            class="starred rounded-right-2 border rounded-end btnGroup-item d-flex justify-content-center align-items-center"
+            mat-icon-button
+            mat-button
+            #menuTrigger="matMenuTrigger"
+            [matMenuTriggerFor]="menu"
+            aria-label="Example icon-button with a menu"
+            data-test-id="searchAdditionalButtons"
+        >
+            <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu" xPosition="before">
+            <button mat-menu-item>Action 1</button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item>Action 2</button>
+        </mat-menu>
+    </div>
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-4 d-flex align-items-center">
+            <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
+            <span>Event:</span>
+        </div>
+        <div class="col-md-8">{{ block.event.__typename }}</div>
+    </div>
+    <div class="row align-items-center mb-4 mt-1">
+        <div class="col-md-4 d-flex align-items-center">
+            <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
+            Sequence Number:
+        </div>
+        <div class="col-md-8">
+            <span>{{ block.sequenceNumber }}</span>
+        </div>
+    </div>
+    <div class="row align-items-center mb-4">
+        <div class="col-md-4 d-flex align-items-center">
+            <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
+            System Time:
+        </div>
+        <div class="col-md-8">
+            <span>{{ relativeTime(block.systemTime) }}</span>
+        </div>
+    </div>
+    <div class="row align-items-center mb-4">
+        <div class="col-md-4 d-flex align-items-center">
+            <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
+            Block Hash:
+        </div>
+        <div class="col-md-8 blockHash">
+            <span class="block-hash">{{ block.blockHash }}</span>
+        </div>
+    </div>
+    <div class="row align-items-center mb-4">
+        <div class="col-md-4 d-flex align-items-center">
+            <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
+            Previous Block Hash:
+        </div>
+        <div class="col-md-8 blockHash">
+            <a
+                (click)="
+                    navigateToMetadataBlock(
+                        datasetInfo.accountName,
+                        datasetInfo.datasetName,
+                        block.prevBlockHash
+                    )
+                "
+                class="block-hash"
+                >{{ block.prevBlockHash }}</a
+            >
+        </div>
+    </div>
+</div>

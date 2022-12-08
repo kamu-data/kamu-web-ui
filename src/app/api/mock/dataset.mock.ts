@@ -4,12 +4,15 @@ import {
     DatasetsByAccountNameQuery,
     DatasetSearchOverviewFragment,
     GetDatasetDataSqlRunQuery,
+    GetMetadataBlockQuery,
 } from "./../kamu.graphql.interface";
 import { DataSchemaFormat } from "../kamu.graphql.interface";
 import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 
 export const TEST_USER_NAME = "test-user";
 export const TEST_DATASET_NAME = "test-dataset";
+export const TEST_BLOCK_HASH =
+    "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev";
 
 export const mockDatasetDataSqlRunResponse: GetDatasetDataSqlRunQuery = {
     data: {
@@ -151,6 +154,50 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                 hasPreviousPage: false,
                 currentPage: 0,
                 totalPages: 2,
+            },
+        },
+    },
+};
+
+export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byOwnerAndName: {
+            __typename: "Dataset",
+            metadata: {
+                __typename: "DatasetMetadata",
+                chain: {
+                    __typename: "MetadataChain",
+                    blockByHash: {
+                        __typename: "MetadataBlockExtended",
+                        blockHash:
+                            "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev",
+                        prevBlockHash:
+                            "zW1abnmxotsSC7H6SyfbL7bpWtQrMSQktUfiJds3KWX1xfm",
+                        systemTime: "2022-08-05T21:20:08.053635579+00:00",
+                        sequenceNumber: 6,
+                        author: {
+                            __typename: "User",
+                            id: "1",
+                            name: "kamu",
+                        },
+                        event: {
+                            __typename: "ExecuteQuery",
+                            queryOutputData: {
+                                __typename: "DataSlice",
+                                interval: {
+                                    __typename: "OffsetInterval",
+                                    start: 0,
+                                    end: 596125,
+                                },
+                                logicalHash:
+                                    "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
+                                physicalHash:
+                                    "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
+                            },
+                        },
+                    },
+                },
             },
         },
     },

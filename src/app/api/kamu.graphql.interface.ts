@@ -1113,6 +1113,7 @@ export type MetadataBlockFragment = {
     blockHash: any;
     prevBlockHash?: any | null;
     systemTime: any;
+    sequenceNumber: number;
     author:
         | { __typename: "Organization"; id: any; name: string }
         | { __typename: "User"; id: any; name: string };
@@ -1185,6 +1186,33 @@ export type FetchAccountInfoMutation = {
     auth: {
         __typename?: "Auth";
         accountInfo: { __typename?: "AccountInfo" } & AccountDetailsFragment;
+    };
+};
+
+export type GetMetadataBlockQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
+    blockHash: Scalars["Multihash"];
+}>;
+
+export type GetMetadataBlockQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byOwnerAndName?: {
+            __typename?: "Dataset";
+            metadata: {
+                __typename?: "DatasetMetadata";
+                chain: {
+                    __typename?: "MetadataChain";
+                    blockByHash?:
+                        | ({
+                              __typename?: "MetadataBlockExtended";
+                          } & MetadataBlockFragment)
+                        | null;
+                };
+            };
+        } | null;
     };
 };
 
@@ -1389,6 +1417,7 @@ export const MetadataBlockFragmentDoc = gql`
         blockHash
         prevBlockHash
         systemTime
+        sequenceNumber
         author {
             __typename
             id
@@ -1774,6 +1803,43 @@ export class FetchAccountInfoGQL extends Apollo.Mutation<
     FetchAccountInfoMutationVariables
 > {
     document = FetchAccountInfoDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const GetMetadataBlockDocument = gql`
+    query getMetadataBlock(
+        $accountName: AccountName!
+        $datasetName: DatasetName!
+        $blockHash: Multihash!
+    ) {
+        datasets {
+            byOwnerAndName(
+                accountName: $accountName
+                datasetName: $datasetName
+            ) {
+                metadata {
+                    chain {
+                        blockByHash(hash: $blockHash) {
+                            ...MetadataBlock
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${MetadataBlockFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetMetadataBlockGQL extends Apollo.Query<
+    GetMetadataBlockQuery,
+    GetMetadataBlockQueryVariables
+> {
+    document = GetMetadataBlockDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

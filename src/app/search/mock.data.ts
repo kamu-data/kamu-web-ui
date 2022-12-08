@@ -372,6 +372,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                 __typename: "MetadataBlockExtended",
                                 blockHash:
                                     "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
+                                sequenceNumber: 12,
                                 prevBlockHash:
                                     "zW1ioX6fdsM4so8MPw7wqF1uKsDC7n6FEkhahZKXNcgF5E1",
                                 systemTime:
@@ -433,6 +434,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
                                 prevBlockHash:
                                     "zW1ioX6fdsM4so8MPw7wqF1uKsDC7n6FEkhahZKXNcgF5E1",
+                                sequenceNumber: 12,
                                 systemTime:
                                     "2022-08-05T21:19:28.817281255+00:00",
                                 author: {
@@ -461,6 +463,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     "zW1ioX6fdsM4so8MPw7wqF1uKsDC7n6FEkhahZKXNcgF5E1",
                                 prevBlockHash:
                                     "zW1mdEmQaQFQZj6cz9yopVisYEPtbEGyv5ofGjmW8VmAiBA",
+                                sequenceNumber: 12,
                                 systemTime:
                                     "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
@@ -478,6 +481,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     "zW1mdEmQaQFQZj6cz9yopVisYEPtbEGyv5ofGjmW8VmAiBA",
                                 prevBlockHash:
                                     "zW1k7Mc19BhaEDPmuPrQcSLWJkRaCd9MB7X4SeGvqKzFi3d",
+                                sequenceNumber: 12,
                                 systemTime:
                                     "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
@@ -496,6 +500,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     "zW1jzqJxDwLStfBA8jj5oxAd51otwte3xNtZSBkMVtBAbyc",
                                 systemTime:
                                     "2022-08-05T21:17:30.613911358+00:00",
+                                sequenceNumber: 12,
                                 author: {
                                     __typename: "User",
                                     ...mockOwnerFields,
@@ -510,6 +515,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     "zW1jzqJxDwLStfBA8jj5oxAd51otwte3xNtZSBkMVtBAbyc",
                                 prevBlockHash:
                                     "zW1eG5uSWyHACt6TuK8dSJUkQ39SCWfKzNARBSMpFbvZKvL",
+                                sequenceNumber: 12,
                                 systemTime:
                                     "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
@@ -526,6 +532,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     "zW1eG5uSWyHACt6TuK8dSJUkQ39SCWfKzNARBSMpFbvZKvL",
                                 prevBlockHash:
                                     "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
+                                sequenceNumber: 12,
                                 systemTime:
                                     "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
@@ -543,6 +550,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 prevBlockHash: null,
                                 systemTime:
                                     "2022-08-05T21:17:30.613911358+00:00",
+                                sequenceNumber: 12,
                                 author: {
                                     __typename: "User",
                                     ...mockOwnerFields,
@@ -598,24 +606,26 @@ export const mockDatasetDataSqlRunResponse: GetDatasetDataSqlRunQuery = {
     },
 };
 
-export const mockDatasetDataSqlRunInvalidSqlResponse: GetDatasetDataSqlRunQuery = {
-    data: {
-        __typename: "DataQueries",
-        query: {
-            __typename: "DataQueryResultError",
-            errorMessage: "invalid SQL query",
-            errorKind: DataQueryResultErrorKind.InvalidSql,
+export const mockDatasetDataSqlRunInvalidSqlResponse: GetDatasetDataSqlRunQuery =
+    {
+        data: {
+            __typename: "DataQueries",
+            query: {
+                __typename: "DataQueryResultError",
+                errorMessage: "invalid SQL query",
+                errorKind: DataQueryResultErrorKind.InvalidSql,
+            },
         },
-    },
-};
+    };
 
-export const mockDatasetDataSqlRunInternalErrorResponse: GetDatasetDataSqlRunQuery = {
-    data: {
-        __typename: "DataQueries",
-        query: {
-            __typename: "DataQueryResultError",
-            errorMessage: "internal server error",
-            errorKind: DataQueryResultErrorKind.InternalError,
+export const mockDatasetDataSqlRunInternalErrorResponse: GetDatasetDataSqlRunQuery =
+    {
+        data: {
+            __typename: "DataQueries",
+            query: {
+                __typename: "DataQueryResultError",
+                errorMessage: "internal server error",
+                errorKind: DataQueryResultErrorKind.InternalError,
+            },
         },
-    },
-};
+    };

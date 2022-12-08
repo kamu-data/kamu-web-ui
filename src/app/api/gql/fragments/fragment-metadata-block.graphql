@@ -2,6 +2,7 @@ fragment MetadataBlock on MetadataBlockExtended {
   blockHash
   prevBlockHash
   systemTime
+  sequenceNumber
   author {
     __typename
     id

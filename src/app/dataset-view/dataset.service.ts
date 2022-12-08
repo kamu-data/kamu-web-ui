@@ -4,7 +4,6 @@ import {
     DataQueryResultSuccessViewFragment,
     DatasetLineageFragment,
     DatasetPageInfoFragment,
-    GetMetadataBlockQuery,
 } from "./../api/kamu.graphql.interface";
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { Injectable } from "@angular/core";
@@ -51,17 +50,6 @@ export class DatasetService {
 
     public datasetChanges(searchDatasetInfo: DatasetBasicsFragment): void {
         this.datasetChanges$.next(searchDatasetInfo);
-    }
-
-    private metadataBlockChanges$: Subject<MetadataBlockFragment> =
-        new Subject<MetadataBlockFragment>();
-
-    public get onMetadataBlockChanges(): Observable<MetadataBlockFragment> {
-        return this.metadataBlockChanges$.asObservable();
-    }
-
-    public metadataBlockChanges(block: MetadataBlockFragment): void {
-        this.metadataBlockChanges$.next(block);
     }
 
     public requestDatasetMainData(info: DatasetInfo): Observable<void> {
@@ -154,21 +142,6 @@ export class DatasetService {
                     });
                 } else {
                     throw new SqlExecutionError(queryResult.errorMessage);
-                }
-            }),
-        );
-    }
-
-    public requestMetadataBlock(
-        info: DatasetInfo,
-        blockHash: string,
-    ): Observable<void> {
-        return this.datasetApi.getBlockByHash({ ...info, blockHash }).pipe(
-            map((data: GetMetadataBlockQuery) => {
-                if (data.datasets.byOwnerAndName) {
-                    const block = data.datasets.byOwnerAndName.metadata.chain
-                        .blockByHash as MetadataBlockFragment;
-                    this.metadataBlockChanges(block);
                 }
             }),
         );

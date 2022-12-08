@@ -1,5 +1,4 @@
 import { DataHelpers } from "./../../../../common/data.helpers";
-import { DatasetService } from "./../../../../dataset-view/dataset.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { MetadataBlockFragment } from "./../../../../api/kamu.graphql.interface";
 import {
@@ -11,6 +10,7 @@ import {
 import { Observable } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { BlockService } from "../../block.service";
 
 @Component({
     selector: "app-block-header",
@@ -22,14 +22,16 @@ export class BlockHeaderComponent extends BaseComponent implements OnInit {
     public block$: Observable<MetadataBlockFragment>;
     @Input() public blockHash: string;
     @Input() public datasetInfo: DatasetInfo;
+
     constructor(
-        private datasetService: DatasetService,
+        private blockService: BlockService,
         private navigationService: NavigationService,
     ) {
         super();
     }
+
     ngOnInit(): void {
-        this.block$ = this.datasetService.onMetadataBlockChanges;
+        this.block$ = this.blockService.onMetadataBlockChanges;
     }
 
     public relativeTime(time: string): string {

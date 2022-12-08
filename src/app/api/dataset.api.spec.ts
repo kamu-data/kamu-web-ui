@@ -1,6 +1,8 @@
 import {
     mockDatasetDataSqlRunResponse,
     mockDatasetsByAccountNameQuery,
+    mockGetMetadataBlockQuery,
+    TEST_BLOCK_HASH,
     TEST_DATASET_NAME,
     TEST_USER_NAME,
 } from "./mock/dataset.mock";
@@ -23,6 +25,8 @@ import {
     GetDatasetHistoryQuery,
     GetDatasetMainDataDocument,
     GetDatasetMainDataQuery,
+    GetMetadataBlockDocument,
+    GetMetadataBlockQuery,
 } from "./kamu.graphql.interface";
 
 describe("DatasetApi", () => {
@@ -80,8 +84,13 @@ describe("DatasetApi", () => {
             .subscribe((res: GetDatasetDataSqlRunQuery) => {
                 const actualQuery = res.data.query;
                 const expectedQuery = mockDatasetDataSqlRunResponse.data.query;
-                if (actualQuery.__typename === "DataQueryResultSuccess" && expectedQuery.__typename === "DataQueryResultSuccess") {
-                    expect(actualQuery.data.content).toEqual(expectedQuery.data.content);
+                if (
+                    actualQuery.__typename === "DataQueryResultSuccess" &&
+                    expectedQuery.__typename === "DataQueryResultSuccess"
+                ) {
+                    expect(actualQuery.data.content).toEqual(
+                        expectedQuery.data.content,
+                    );
                 } else {
                     fail("expecting successful query");
                 }
@@ -142,6 +151,36 @@ describe("DatasetApi", () => {
 
         op.flush({
             data: mockDatasetsByAccountNameQuery,
+        });
+    });
+
+    it("should load block by hash", () => {
+        const blockByHash =
+            mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+                .blockByHash;
+        service
+            .getBlockByHash({
+                accountName: TEST_USER_NAME,
+                datasetName: TEST_DATASET_NAME,
+                blockHash: TEST_BLOCK_HASH,
+            })
+            .subscribe((res: GetMetadataBlockQuery) => {
+                expect(
+                    res.datasets.byOwnerAndName?.metadata.chain.blockByHash
+                        ?.blockHash,
+                ).toEqual(blockByHash?.blockHash);
+                expect(
+                    res.datasets.byOwnerAndName?.metadata.chain.blockByHash
+                        ?.author.name,
+                ).toEqual(blockByHash?.author.name);
+            });
+
+        const op = controller.expectOne(GetMetadataBlockDocument);
+        expect(op.operation.variables.accountName).toEqual(TEST_USER_NAME);
+        expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
+        expect(op.operation.variables.blockHash).toEqual(TEST_BLOCK_HASH);
+        op.flush({
+            data: mockGetMetadataBlockQuery,
         });
     });
 });

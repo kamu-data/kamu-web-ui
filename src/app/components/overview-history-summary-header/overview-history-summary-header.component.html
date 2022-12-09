@@ -89,9 +89,11 @@
                         class="link--secondary ml-3"
                         data-pjax="#repo-content-pjax-container"
                     >
-                        <time class="no-wrap" [title]="systemTime">
-                            {{ relativeTime }}
-                        </time>
+                        <app-display-time
+                            [value]="systemTime"
+                            class="no-wrap"
+                            [dataTestId]="'time-overview-history-summary'"
+                        ></app-display-time>
                     </a>
                 </div>
             </div>

@@ -1,3 +1,4 @@
+import { DisplayTimeModule } from "./../components/display-time/display-time.module";
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { SearchComponent } from "./search.component";
@@ -21,6 +22,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
         DatasetListModule,
         ModalModule,
         MatCheckboxModule,
+        DisplayTimeModule,
     ],
     exports: [SearchComponent],
     declarations: [SearchComponent],

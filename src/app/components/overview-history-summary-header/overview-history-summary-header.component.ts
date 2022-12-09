@@ -39,10 +39,6 @@ export class OverviewHistorySummaryHeaderComponent {
             : "";
     }
 
-    get relativeTime(): string {
-        return DataHelpers.relativeTime(this.systemTime);
-    }
-
     get shortHash(): string {
         return DataHelpers.shortHash(this.blockHash);
     }

@@ -1,3 +1,4 @@
+import { DisplayTimeModule } from "./../../components/display-time/display-time.module";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { EventDetailsComponent } from "./components/event-details/event-details.component";
@@ -22,6 +23,7 @@ import { MatMenuModule } from "@angular/material/menu";
         MatMenuModule,
         MatIconModule,
         MatDividerModule,
+        DisplayTimeModule,
     ],
     exports: [MetadataBlockComponent],
 })

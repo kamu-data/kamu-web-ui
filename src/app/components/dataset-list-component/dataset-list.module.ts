@@ -1,3 +1,4 @@
+import { DisplayTimeModule } from "./../display-time/display-time.module";
 import { DatasetListItemComponent } from "./../dataset-list-item/dataset-list-item.component";
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
@@ -22,6 +23,7 @@ import { AngularSvgIconModule } from "angular-svg-icon";
         MatChipsModule,
         MatSelectModule,
         AngularSvgIconModule,
+        DisplayTimeModule,
     ],
     exports: [DatasetListComponent, DatasetListItemComponent],
     declarations: [DatasetListComponent, DatasetListItemComponent],

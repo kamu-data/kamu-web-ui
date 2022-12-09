@@ -42,7 +42,12 @@
             System Time:
         </div>
         <div class="col-md-8">
-            <span>{{ relativeTime(block.systemTime) }}</span>
+            <app-display-time
+                class="no-wrap"
+                [value]="block.systemTime"
+                [dataTestId]="'time-block-header'"
+            >
+            </app-display-time>
         </div>
     </div>
     <div class="row align-items-center mb-4">

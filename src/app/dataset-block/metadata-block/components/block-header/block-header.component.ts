@@ -1,4 +1,3 @@
-import { DataHelpers } from "./../../../../common/data.helpers";
 import { BaseComponent } from "src/app/common/base.component";
 import { MetadataBlockFragment } from "./../../../../api/kamu.graphql.interface";
 import {
@@ -32,10 +31,6 @@ export class BlockHeaderComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.block$ = this.blockService.onMetadataBlockChanges;
-    }
-
-    public relativeTime(time: string): string {
-        return DataHelpers.relativeTime(time);
     }
 
     public navigateToMetadataBlock(

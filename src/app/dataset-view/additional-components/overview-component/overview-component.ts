@@ -85,8 +85,4 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     public dataSize(estimatedSize: number): string {
         return DataHelpers.dataSize(estimatedSize);
     }
-
-    public relativeTime(time: string): string {
-        return DataHelpers.relativeTime(time, { w: 1 });
-    }
 }

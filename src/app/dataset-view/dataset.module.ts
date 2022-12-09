@@ -1,3 +1,4 @@
+import { DisplayTimeModule } from "./../components/display-time/display-time.module";
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { DatasetComponent } from "./dataset.component";
@@ -61,6 +62,7 @@ import { AngularSvgIconModule } from "angular-svg-icon";
         CustomPaginationModule,
         SideNavModule,
         AngularSvgIconModule,
+        DisplayTimeModule,
     ],
     exports: [
         DatasetViewHeaderComponent,

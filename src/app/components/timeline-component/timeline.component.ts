@@ -53,10 +53,6 @@ export class TimelineComponent {
         return DataHelpers.descriptionForMetadataBlock(block);
     }
 
-    public relativeTime(time: string): string {
-        return DataHelpers.relativeTime(time);
-    }
-
     public shortHash(hash: string): string {
         return DataHelpers.shortHash(hash);
     }

@@ -2,7 +2,6 @@ import { ModalService } from "./../modal/modal.service";
 import { DatasetSearchOverviewFragment } from "./../../api/kamu.graphql.interface";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { promiseWithCatch } from "src/app/common/app.helpers";
-import { DataHelpers } from "src/app/common/data.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
@@ -34,10 +33,6 @@ export class DatasetListItemComponent {
 
     public onSelectDataset(row: DatasetSearchOverviewFragment): void {
         this.selectDatasetEmit.emit(row);
-    }
-
-    public getRelativeTime(time: string): string {
-        return DataHelpers.relativeTime(time);
     }
 
     public navigateToOwnerView(ownerName: string): void {

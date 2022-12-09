@@ -89,7 +89,11 @@
         <div class="dataset-list-container__additional-block mt-2">
             <p class="text-small color-text-secondary mr-3">
                 Updated
-                {{ getRelativeTime(row.lastUpdatedAt) }}
+                <app-display-time
+                    [value]="row.lastUpdatedAt"
+                    class="text-small color-text-secondary no-wrap"
+                    [dataTestId]="'time-dataset-list-item'"
+                ></app-display-time>
             </p>
             <ngb-rating [rate]="4.5" [max]="5" [readonly]="true">
                 <ng-template let-fill="fill">

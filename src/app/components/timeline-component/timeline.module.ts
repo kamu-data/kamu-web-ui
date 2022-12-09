@@ -1,3 +1,4 @@
+import { DisplayTimeModule } from "./../display-time/display-time.module";
 import { NgModule } from "@angular/core";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatIconModule } from "@angular/material/icon";
@@ -17,6 +18,7 @@ import { RouterModule } from "@angular/router";
         NgbPopoverModule,
         AngularSvgIconModule,
         RouterModule,
+        DisplayTimeModule,
     ],
     exports: [TimelineComponent],
     declarations: [TimelineComponent],

@@ -11,10 +11,15 @@ import AppValues from "src/app/common/app.values";
 export class DisplayTimeComponent {
     @Input() public value: string;
     @Input() public class?: string;
+    @Input() public threshold?: moment.argThresholdOpts;
     @Input() public dataTestId: string;
 
     get relativeTime(): string {
-        return this.convertToRelativeTime(this.value);
+        return this.convertToRelativeTime(this.value, this.threshold);
+    }
+
+    get formatTitle(): string {
+        return moment(this.value).format(AppValues.DISPLAY_TOOLTIP_DATE_FORMAT);
     }
 
     private dateTime(rfc3339: string): string {
@@ -22,7 +27,7 @@ export class DisplayTimeComponent {
         return dt.format(AppValues.DISPLAY_DATE_FORMAT);
     }
 
-    public convertToRelativeTime(
+    private convertToRelativeTime(
         rfc3339: string,
         threshold?: moment.argThresholdOpts,
     ): string {

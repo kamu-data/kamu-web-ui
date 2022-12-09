@@ -11,6 +11,7 @@ export default class AppValues {
         /^(http:\/\/)|(https:\/\/)/i,
     );
     public static readonly DISPLAY_DATE_FORMAT = "DD MMM YYYY";
+    public static readonly DISPLAY_TOOLTIP_DATE_FORMAT = "MMM D, YYYY, HH:mm A";
     public static readonly UNIMPLEMENTED_MESSAGE = "Feature coming soon";
     public static readonly SQL_QUERY_LIMIT = 50;
     public static readonly CLIBPOARD_KAMU_CLI =

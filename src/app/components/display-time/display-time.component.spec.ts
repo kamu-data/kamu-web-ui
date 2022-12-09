@@ -44,9 +44,9 @@ describe("DisplayTimeComponent", () => {
         date: Date,
         threshold?: moment.argThresholdOpts,
     ): void {
-        expect(
-            component.convertToRelativeTime(date.toISOString(), threshold),
-        ).toBe(expectedResult);
+        component.value = date.toISOString();
+        component.threshold = threshold;
+        expect(component.relativeTime).toBe(expectedResult);
     }
 
     [

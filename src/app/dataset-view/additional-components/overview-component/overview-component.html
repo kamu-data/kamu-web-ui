@@ -168,12 +168,11 @@
                             <h2 class="dataset-info--subtitle">Created At:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
-                            <time
+                            <app-display-time
                                 class="dataset-info--text"
                                 [title]="currentState.overview.createdAt"
-                                >{{
-                                relativeTime(currentState.overview.createdAt) }}
-                            </time>
+                                [value]="currentState.overview.createdAt"
+                            ></app-display-time>
                         </div>
                     </div>
                     <div class="dataset-info--block" *ngIf="currentState">
@@ -183,13 +182,11 @@
                             </h2>
                         </div>
                         <div class="dataset-info--sub-block">
-                            <time
+                            <app-display-time
                                 class="dataset-info--text"
                                 [title]="currentState.overview.lastUpdatedAt"
-                                >{{
-                                relativeTime(currentState.overview.lastUpdatedAt)
-                                }}
-                            </time>
+                                [value]="currentState.overview.lastUpdatedAt"
+                            ></app-display-time>
                         </div>
                     </div>
                     <div
@@ -200,13 +197,11 @@
                             <h2 class="dataset-info--subtitle">Watermark:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
-                            <time
+                            <app-display-time
                                 class="dataset-info--text"
                                 [title]="currentState.overview.metadata.currentWatermark"
-                                >{{
-                                relativeTime(currentState.overview.metadata.currentWatermark)
-                                }}
-                            </time>
+                                [value]="currentState.overview.metadata.currentWatermark"
+                            ></app-display-time>
                         </div>
                     </div>
                 </ng-template>

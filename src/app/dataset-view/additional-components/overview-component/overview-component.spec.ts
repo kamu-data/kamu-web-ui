@@ -84,11 +84,6 @@ describe("OverviewComponent", () => {
         expect(result).toBe("1.0 KB");
     });
 
-    it("should check relative time", () => {
-        const result = component.relativeTime(new Date().toISOString());
-        expect(result).toEqual("a few seconds ago");
-    });
-
     it("should select topic name", () => {
         const topicName = "test topic name";
         const emitterSubscription$ = component.selectTopicEmit

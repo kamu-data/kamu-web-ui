@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { DataHelpers } from "src/app/common/data.helpers";
+import moment from "moment";
+import AppValues from "src/app/common/app.values";
 
 @Component({
     selector: "app-display-time",
@@ -13,6 +14,30 @@ export class DisplayTimeComponent {
     @Input() public dataTestId: string;
 
     get relativeTime(): string {
-        return DataHelpers.relativeTime(this.value);
+        return this.convertToRelativeTime(this.value);
+    }
+
+    private dateTime(rfc3339: string): string {
+        const dt = moment(rfc3339);
+        return dt.format(AppValues.DISPLAY_DATE_FORMAT);
+    }
+
+    public convertToRelativeTime(
+        rfc3339: string,
+        threshold?: moment.argThresholdOpts,
+    ): string {
+        const dt = moment(rfc3339);
+        const delta = moment.duration(dt.diff(moment()));
+        if (threshold?.d) {
+            if (Math.abs(delta.asDays()) >= threshold.d) {
+                return this.dateTime(rfc3339);
+            }
+        }
+        if (threshold?.w) {
+            if (Math.abs(delta.asWeeks()) >= threshold.w) {
+                return this.dateTime(rfc3339);
+            }
+        }
+        return delta.humanize(true);
     }
 }

@@ -1,5 +1,3 @@
-import AppValues from "src/app/common/app.values";
-import * as moment from "moment-timezone";
 import {
     DatasetKind,
     MetadataBlockFragment,
@@ -12,30 +10,6 @@ export class DataHelpers {
 
     public static shortHash(hash: string): string {
         return hash.slice(-8);
-    }
-
-    public static dateTime(rfc3339: string): string {
-        const dt = moment(rfc3339);
-        return dt.format(AppValues.DISPLAY_DATE_FORMAT);
-    }
-
-    public static relativeTime(
-        rfc3339: string,
-        threshold?: moment.argThresholdOpts,
-    ): string {
-        const dt = moment(rfc3339);
-        const delta = moment.duration(dt.diff(moment()));
-        if (threshold?.d) {
-            if (Math.abs(delta.asDays()) >= threshold.d) {
-                return DataHelpers.dateTime(rfc3339);
-            }
-        }
-        if (threshold?.w) {
-            if (Math.abs(delta.asWeeks()) >= threshold.w) {
-                return DataHelpers.dateTime(rfc3339);
-            }
-        }
-        return delta.humanize(true);
     }
 
     /**

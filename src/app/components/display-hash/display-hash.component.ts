@@ -32,7 +32,7 @@ export class DisplayHashComponent {
         });
     }
 
-    public copyToClipboard(event: MouseEvent, text: string): void {
+    public copyToClipboard(event: Event, text: string): void {
         this.clipboard.copy(text);
         if (event.currentTarget !== null) {
             const currentElement: HTMLButtonElement =

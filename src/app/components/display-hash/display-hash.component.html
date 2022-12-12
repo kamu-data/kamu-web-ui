@@ -3,6 +3,7 @@
         *ngIf="isNavigable"
         [title]="value"
         [class]="'mr-4 hashBlock ' + class"
+        data-test-id="navigableValue"
         (click)="
             navigateToMetadataBlock(
                 datasetInfo.accountName,
@@ -14,9 +15,13 @@
         {{ value | slice: -8 }}
     </a>
 
-    <span *ngIf="!isNavigable" class="mr-4" [title]="value">{{
-        value | slice: -8
-    }}</span>
+    <span
+        *ngIf="!isNavigable"
+        class="mr-4"
+        [title]="value"
+        data-test-id="notNavigableValue"
+        >{{ value | slice: -8 }}</span
+    >
 
     <button
         *ngIf="showCopyButton"

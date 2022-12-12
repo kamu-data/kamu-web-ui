@@ -32,16 +32,4 @@ export class BlockHeaderComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
         this.block$ = this.blockService.onMetadataBlockChanges;
     }
-
-    public navigateToMetadataBlock(
-        accountName: string,
-        datasetName: string,
-        blockHash: string,
-    ): void {
-        this.navigationService.navigateToMetadataBlock({
-            accountName,
-            datasetName,
-            blockHash,
-        });
-    }
 }

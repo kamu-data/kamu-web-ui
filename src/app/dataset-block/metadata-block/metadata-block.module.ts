@@ -9,6 +9,7 @@ import { DatasetModule } from "src/app/dataset-view/dataset.module";
 import { BlockHeaderComponent } from "./components/block-header/block-header.component";
 import { BlockNavigationComponent } from "./components/block-navigation/block-navigation.component";
 import { MatMenuModule } from "@angular/material/menu";
+import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
 
 @NgModule({
     declarations: [
@@ -24,6 +25,7 @@ import { MatMenuModule } from "@angular/material/menu";
         MatIconModule,
         MatDividerModule,
         DisplayTimeModule,
+        DisplayHashModule,
     ],
     exports: [MetadataBlockComponent],
 })

@@ -1,0 +1,22 @@
+<div [class]="class" *ngIf="value">
+    <a
+        class="blockHash"
+        (click)="
+            navigateToMetadataBlock(
+                datasetInfo.accountName,
+                datasetInfo.datasetName,
+                value
+            )
+        "
+    >
+        <span class="hash-block mr-2" [title]="value">{{
+            value | slice: -8
+        }}</span>
+    </a>
+    <svg-icon
+        *ngIf="showCopyIcon"
+        [cdkCopyToClipboard]="value"
+        name="copy"
+        title="Copy hash"
+    ></svg-icon>
+</div>

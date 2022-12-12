@@ -56,7 +56,11 @@
             Block Hash:
         </div>
         <div class="col-md-8 blockHash">
-            <span class="block-hash">{{ block.blockHash }}</span>
+            <app-display-hash
+                [datasetInfo]="datasetInfo"
+                [value]="block.blockHash"
+                [showCopyIcon]="true"
+            ></app-display-hash>
         </div>
     </div>
     <div class="row align-items-center mb-4">
@@ -65,17 +69,11 @@
             Previous Block Hash:
         </div>
         <div class="col-md-8 blockHash">
-            <a
-                (click)="
-                    navigateToMetadataBlock(
-                        datasetInfo.accountName,
-                        datasetInfo.datasetName,
-                        block.prevBlockHash
-                    )
-                "
-                class="block-hash"
-                >{{ block.prevBlockHash }}</a
-            >
+            <app-display-hash
+                [value]="block.prevBlockHash"
+                [datasetInfo]="datasetInfo"
+                [showCopyIcon]="true"
+            ></app-display-hash>
         </div>
     </div>
 </div>

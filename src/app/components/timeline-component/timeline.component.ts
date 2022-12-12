@@ -52,8 +52,4 @@ export class TimelineComponent {
     public descriptionForMetadataBlock(block: MetadataBlockFragment): string {
         return DataHelpers.descriptionForMetadataBlock(block);
     }
-
-    public shortHash(hash: string): string {
-        return DataHelpers.shortHash(hash);
-    }
 }

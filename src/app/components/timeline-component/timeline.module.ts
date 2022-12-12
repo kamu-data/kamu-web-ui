@@ -1,3 +1,4 @@
+import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
 import { DisplayTimeModule } from "./../display-time/display-time.module";
 import { NgModule } from "@angular/core";
 import { MatMenuModule } from "@angular/material/menu";
@@ -19,6 +20,7 @@ import { RouterModule } from "@angular/router";
         AngularSvgIconModule,
         RouterModule,
         DisplayTimeModule,
+        DisplayHashModule,
     ],
     exports: [TimelineComponent],
     declarations: [TimelineComponent],

@@ -71,24 +71,17 @@
                     *ngIf="metadataBlockFragment"
                     class="d-flex flex-auto justify-content-end ml-3 align-items-baseline"
                 >
-                    <a
-                        class="f6 link--secondary text-mono ml-2 d-none d-lg-inline"
-                        data-pjax="#repo-content-pjax-container"
-                        (click)="
-                            navigateToMetadataBlock(
-                                metadataBlockFragment.author.name,
-                                datasetName,
-                                metadataBlockFragment.blockHash
-                            )
+                    <app-display-hash
+                        [value]="metadataBlockFragment.blockHash"
+                        [datasetInfo]="{
+                            accountName: metadataBlockFragment.author.name,
+                            datasetName: this.datasetName
+                        }"
+                        [class]="
+                            'f6 link--secondary text-mono ml-2 d-none d-lg-inline'
                         "
-                    >
-                        {{ shortHash }}
-                    </a>
-                    <a
-                        href="#todo-navigate-to-block"
-                        class="link--secondary ml-3"
-                        data-pjax="#repo-content-pjax-container"
-                    >
+                    ></app-display-hash>
+                    <a class="link--secondary ml-3">
                         <app-display-time
                             [value]="systemTime"
                             class="no-wrap"

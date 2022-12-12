@@ -59,7 +59,8 @@
             <app-display-hash
                 [datasetInfo]="datasetInfo"
                 [value]="block.blockHash"
-                [showCopyIcon]="true"
+                [showCopyButton]="true"
+                [isNavigable]="false"
             ></app-display-hash>
         </div>
     </div>
@@ -72,7 +73,7 @@
             <app-display-hash
                 [value]="block.prevBlockHash"
                 [datasetInfo]="datasetInfo"
-                [showCopyIcon]="true"
+                [showCopyButton]="true"
             ></app-display-hash>
         </div>
     </div>

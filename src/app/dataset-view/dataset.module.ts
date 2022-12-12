@@ -1,3 +1,4 @@
+import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
 import { DisplayTimeModule } from "./../components/display-time/display-time.module";
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -63,6 +64,7 @@ import { AngularSvgIconModule } from "angular-svg-icon";
         SideNavModule,
         AngularSvgIconModule,
         DisplayTimeModule,
+        DisplayHashModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -75,6 +77,7 @@ import { AngularSvgIconModule } from "angular-svg-icon";
         LineageComponent,
         HistoryComponent,
         MonacoEditorModule,
+        DisplayHashModule,
     ],
     declarations: [
         DatasetViewHeaderComponent,

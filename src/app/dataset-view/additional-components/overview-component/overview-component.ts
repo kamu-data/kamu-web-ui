@@ -81,8 +81,4 @@ export class OverviewComponent extends BaseComponent implements OnInit {
             ? this.currentState.overview.metadata.chain.blocks.nodes[0]
             : undefined;
     }
-
-    public dataSize(estimatedSize: number): string {
-        return DataHelpers.dataSize(estimatedSize);
-    }
 }

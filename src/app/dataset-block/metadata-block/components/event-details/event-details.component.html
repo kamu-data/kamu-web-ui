@@ -1,1 +1,8 @@
-<p>event-details works!</p>
+<div *ngIf="block">
+    <ng-container *ngIf="!isSupportedEvent">
+        <p class="text-center">
+            <mat-icon class="text-danger align-middle">block</mat-icon>
+            Unsupported event type
+        </p>
+    </ng-container>
+</div>

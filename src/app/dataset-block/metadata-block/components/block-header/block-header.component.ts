@@ -7,7 +7,6 @@ import {
     OnInit,
 } from "@angular/core";
 import { Observable } from "rxjs";
-import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { BlockService } from "../../block.service";
 
@@ -22,10 +21,7 @@ export class BlockHeaderComponent extends BaseComponent implements OnInit {
     @Input() public blockHash: string;
     @Input() public datasetInfo: DatasetInfo;
 
-    constructor(
-        private blockService: BlockService,
-        private navigationService: NavigationService,
-    ) {
+    constructor(private blockService: BlockService) {
         super();
     }
 

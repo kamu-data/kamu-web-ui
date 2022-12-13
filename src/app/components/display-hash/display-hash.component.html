@@ -2,7 +2,7 @@
     <a
         *ngIf="isNavigable"
         [title]="value"
-        [class]="'mr-4 hashBlock ' + class"
+        [class]="class"
         data-test-id="navigableValue"
         (click)="
             navigateToMetadataBlock(

@@ -34,6 +34,7 @@ import { SideNavModule } from "../sidenav/side-nav.module";
 import { RouterModule } from "@angular/router";
 import { OverviewHistorySummaryHeaderComponent } from "../components/overview-history-summary-header/overview-history-summary-header.component";
 import { AngularSvgIconModule } from "angular-svg-icon";
+import { DisplaySizeModule } from "../common/pipes/display-size.module";
 
 @NgModule({
     imports: [
@@ -65,6 +66,7 @@ import { AngularSvgIconModule } from "angular-svg-icon";
         AngularSvgIconModule,
         DisplayTimeModule,
         DisplayHashModule,
+        DisplaySizeModule,
     ],
     exports: [
         DatasetViewHeaderComponent,

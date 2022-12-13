@@ -79,11 +79,6 @@ describe("OverviewComponent", () => {
         expect(navigationServiceSpy).toHaveBeenCalledWith(testWebsite);
     });
 
-    it("should check show dataSize", () => {
-        const result = component.dataSize(1024);
-        expect(result).toBe("1.0 KB");
-    });
-
     it("should select topic name", () => {
         const topicName = "test topic name";
         const emitterSubscription$ = component.selectTopicEmit

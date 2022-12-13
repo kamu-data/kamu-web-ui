@@ -146,9 +146,9 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ currentState.size.estimatedSize ?
-                                dataSize(currentState.size.estimatedSize) : "-"
-                                }}
+                                {{ (currentState.size.estimatedSize ?
+                                (currentState.size.estimatedSize | displaySize)
+                                : "-") }}
                             </p>
                         </div>
                     </div>

@@ -8,10 +8,6 @@ export class DataHelpers {
         return kind.charAt(0).toUpperCase() + kind.slice(1).toLowerCase();
     }
 
-    public static shortHash(hash: string): string {
-        return hash.slice(-8);
-    }
-
     /**
      * Format bytes as human-readable text.
      *
@@ -20,27 +16,6 @@ export class DataHelpers {
      *
      * @return Formatted string.
      */
-    public static dataSize(bytes: number, decimalPlaces = 1): string {
-        const thresh = 1024;
-
-        if (Math.abs(bytes) < thresh) {
-            return `${bytes} B`;
-        }
-
-        const units = ["KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-        let u = -1;
-        const r = 10 ** decimalPlaces;
-
-        do {
-            bytes /= thresh;
-            ++u;
-        } while (
-            Math.round(Math.abs(bytes) * r) / r >= thresh &&
-            u < units.length - 1
-        );
-
-        return bytes.toFixed(decimalPlaces) + " " + units[u];
-    }
 
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
     public static readonly BLOCK_DESCRIBE_SET_TRANSFORM = "Query changed";

@@ -11,8 +11,8 @@
         <li class="page-item">
             <span
                 class="page-link"
-                title="You are on page as of {{ date }} {{ hash }}"
-                >As of {{ date }} {{ hash }}</span
+                title="You are on page as of {{ date }} {{ hash | slice: -8 }}"
+                >As of {{ date }} {{ hash | slice: -8 }}</span
             >
         </li>
         <li class="page-item" [class.disabled]="pageIndex === totalSizeOfPages">

@@ -63,6 +63,7 @@ import { PaginationModule } from "./components/pagination-component/pagination.m
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { AngularSvgIconPreloaderModule } from "angular-svg-icon-preloader";
 import { DatasetsTabComponent } from "./auth/account/additional-components/datasets-tab/datasets-tab.component";
+import { ClipboardModule } from "@angular/cdk/clipboard";
 
 const Services = [
     {
@@ -158,6 +159,7 @@ const MatModules = [
         SpinnerModule,
         DatasetListModule,
         PaginationModule,
+        ClipboardModule,
         AngularSvgIconModule.forRoot(),
         AngularSvgIconPreloaderModule.forRoot({
             configUrl: "./assets/svg/icons.json",

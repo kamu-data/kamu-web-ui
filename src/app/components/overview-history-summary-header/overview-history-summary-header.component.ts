@@ -33,16 +33,6 @@ export class OverviewHistorySummaryHeaderComponent {
             : { id: "", name: AppValues.DEFAULT_USERNAME };
     }
 
-    get blockHash(): string {
-        return this.metadataBlockFragment
-            ? (this.metadataBlockFragment.blockHash as string)
-            : "";
-    }
-
-    get shortHash(): string {
-        return DataHelpers.shortHash(this.blockHash);
-    }
-
     get descriptionForMetadataBlock(): string {
         return this.metadataBlockFragment
             ? DataHelpers.descriptionForMetadataBlock(

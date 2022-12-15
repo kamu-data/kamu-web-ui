@@ -45,9 +45,11 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.blockService.onMetadataBlockChanges.subscribe((block) => {
-            this.block = block;
-            this.cdr.detectChanges();
-        });
+        this.blockService.onMetadataBlockChanges.subscribe(
+            (block: MetadataBlockFragment) => {
+                this.block = block;
+                this.cdr.detectChanges();
+            },
+        );
     }
 }

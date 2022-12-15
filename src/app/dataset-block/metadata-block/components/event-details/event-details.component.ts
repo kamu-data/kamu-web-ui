@@ -1,4 +1,4 @@
-import { AddData } from "./../../../../api/kamu.graphql.interface";
+import { AddDataEventFragment } from "./../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "./supported.events";
 import {
     ChangeDetectionStrategy,
@@ -40,8 +40,8 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
         return this.block.event.__typename === SupportedEvents.AddData;
     }
 
-    public get addDataEvent(): AddData {
-        return this.block.event as AddData;
+    public get addDataEvent(): AddDataEventFragment {
+        return this.block.event as AddDataEventFragment;
     }
 
     ngOnInit(): void {

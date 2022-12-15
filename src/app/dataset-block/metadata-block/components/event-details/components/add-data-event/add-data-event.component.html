@@ -1,6 +1,7 @@
 <div class="d-flex flex-column gap-4">
+    <pre>{{ event | json }}</pre>
     <div
-        *ngIf="event?.inputCheckpoint"
+        *ngIf="event.inputCheckpoint"
         class="position-relative border border-1 p-2 rounded-3"
     >
         <span
@@ -23,7 +24,7 @@
         </div>
     </div>
     <div
-        *ngIf="event?.outputCheckpoint"
+        *ngIf="event.outputCheckpoint"
         class="position-relative border border-1 p-2 rounded-3"
     >
         <span
@@ -38,7 +39,7 @@
             <div class="col-md-8 blockHash">
                 <app-display-hash
                     [datasetInfo]="datasetInfo"
-                    [value]="event.outputCheckpoint?.physicalHash"
+                    [value]="event.outputCheckpoint.physicalHash"
                     [showCopyButton]="true"
                     [isNavigable]="false"
                 ></app-display-hash>
@@ -51,14 +52,14 @@
             </div>
             <div class="col-md-8">
                 <span class="size">{{
-                    event.outputCheckpoint!.size | displaySize
+                    event.outputCheckpoint.size | displaySize
                 }}</span>
             </div>
         </div>
     </div>
 
     <div
-        *ngIf="event?.addDataWatermark"
+        *ngIf="event.addDataWatermark"
         class="position-relative border border-1 p-2 rounded-3"
     >
         <span
@@ -82,7 +83,7 @@
     </div>
 
     <div
-        *ngIf="event?.outputData"
+        *ngIf="event.outputData"
         class="position-relative border border-1 p-2 rounded-3"
     >
         <span

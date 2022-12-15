@@ -216,13 +216,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                                                             {
                                                                                 __typename:
                                                                                     "Dataset",
-                                                                                metadata:
-                                                                                    {
-                                                                                        __typename:
-                                                                                            "DatasetMetadata",
-                                                                                        currentUpstreamDependencies:
-                                                                                            [],
-                                                                                    },
+
                                                                                 id: "did:odf:z4k66d7thqpab83a24iYbeXr5yDYBAxaB7hnzbhfmyUTLnWifwz6",
                                                                                 kind: DatasetKind.Derivative,
                                                                                 name: "fake.upstream-level-5",
@@ -303,13 +297,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                                                             {
                                                                                 __typename:
                                                                                     "Dataset",
-                                                                                metadata:
-                                                                                    {
-                                                                                        __typename:
-                                                                                            "DatasetMetadata",
-                                                                                        currentDownstreamDependencies:
-                                                                                            [],
-                                                                                    },
+
                                                                                 id: "did:odf:z4k88e8thqpab83a24iFbeXr5WZVCxaB7hmybhfmyUTLnWifwz6",
                                                                                 kind: DatasetKind.Derivative,
                                                                                 name: "world.daily-cases",
@@ -383,8 +371,13 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                 },
                                 event: {
                                     __typename: "AddData",
-                                    addedOutputData: {
+                                    inputCheckpoint:
+                                        "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
+                                    addDataWatermark:
+                                        "2022-08-05T21:17:30.613911358+00:00",
+                                    outputData: {
                                         __typename: "DataSlice",
+
                                         interval: {
                                             __typename: "OffsetInterval",
                                             start: 0,
@@ -394,6 +387,12 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                             "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
                                         physicalHash:
                                             "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
+                                        size: 900,
+                                    },
+                                    outputCheckpoint: {
+                                        physicalHash:
+                                            "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
+                                        size: 11213,
                                     },
                                 },
                             },
@@ -443,8 +442,13 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 },
                                 event: {
                                     __typename: "AddData",
-                                    addedOutputData: {
+                                    inputCheckpoint:
+                                        "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
+                                    addDataWatermark:
+                                        "2022-08-05T21:17:30.613911358+00:00",
+                                    outputData: {
                                         __typename: "DataSlice",
+
                                         interval: {
                                             __typename: "OffsetInterval",
                                             start: 0,
@@ -454,6 +458,12 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                             "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
                                         physicalHash:
                                             "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
+                                        size: 300,
+                                    },
+                                    outputCheckpoint: {
+                                        physicalHash:
+                                            "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
+                                        size: 11213,
                                     },
                                 },
                             },

@@ -1,0 +1,17 @@
+fragment AddDataEvent on AddData {
+  addDataWatermark: outputWatermark
+  inputCheckpoint
+  outputData {
+    interval {
+      start
+      end
+    }
+    logicalHash
+    physicalHash
+    size
+  }
+  outputCheckpoint {
+    physicalHash
+    size
+  }
+}

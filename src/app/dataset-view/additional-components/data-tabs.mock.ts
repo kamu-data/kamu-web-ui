@@ -44,7 +44,7 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
             },
             event: {
                 __typename: "AddData",
-                addedOutputData: {
+                outputData: {
                     __typename: "DataSlice",
                     interval: {
                         __typename: "OffsetInterval",
@@ -55,6 +55,7 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
                         "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
                     physicalHash:
                         "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
+                    size: 300,
                 },
             },
         },

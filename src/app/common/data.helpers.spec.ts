@@ -121,7 +121,7 @@ it("should check description for AddData block", () => {
         ...metadataBlockSetVocab,
         event: {
             __typename: "AddData",
-            addedOutputData: {
+            outputData: {
                 __typename: "DataSlice",
                 interval: {
                     __typename: "OffsetInterval",
@@ -131,6 +131,7 @@ it("should check description for AddData block", () => {
                 logicalHash:
                     "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
                 physicalHash: "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
+                size: 100,
             },
         },
     };

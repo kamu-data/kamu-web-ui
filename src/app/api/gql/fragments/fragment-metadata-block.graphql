@@ -30,16 +30,7 @@ fragment MetadataBlock on MetadataBlockExtended {
         physicalHash
       }
     }
-    ... on AddData {
-      addedOutputData: outputData {
-        interval {
-          start
-          end
-        }
-        logicalHash
-        physicalHash
-      }
-    }
+    ...AddDataEvent
     ... on SetAttachments {
       __typename
     }

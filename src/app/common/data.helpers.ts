@@ -34,8 +34,8 @@ export class DataHelpers {
         switch (event.__typename) {
             case "AddData":
                 return `Added ${
-                    event.addedOutputData.interval.end -
-                    event.addedOutputData.interval.start
+                    event.outputData.interval.end -
+                    event.outputData.interval.start
                 } new records`;
             case "ExecuteQuery":
                 return `Transformation produced ${

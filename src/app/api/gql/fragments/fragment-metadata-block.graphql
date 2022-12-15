@@ -30,16 +30,7 @@ fragment MetadataBlock on MetadataBlockExtended {
         physicalHash
       }
     }
-    ... on AddData {
-      addedOutputData: outputData {
-        interval {
-          start
-          end
-        }
-        logicalHash
-        physicalHash
-      }
-    }
+    ...AddDataEvent
     ... on SetAttachments {
       __typename
     }
@@ -49,5 +40,26 @@ fragment MetadataBlock on MetadataBlockExtended {
     ... on SetLicense {
       name
     }
+  }
+}
+
+fragment CustomSetWatermark on SetWatermark {
+  outputWatermark
+}
+
+fragment CustomAddData on AddData {
+  outputWatermark
+  inputCheckpoint
+  outputData {
+    interval {
+      start
+      end
+    }
+    logicalHash
+    physicalHash
+  }
+  outputCheckpoint {
+    physicalHash
+    size
   }
 }

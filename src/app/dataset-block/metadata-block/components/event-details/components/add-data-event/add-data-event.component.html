@@ -1,0 +1,144 @@
+<div class="d-flex flex-column gap-4">
+    <div
+        *ngIf="event?.inputCheckpoint"
+        class="position-relative border border-1 p-2 rounded-3"
+    >
+        <span
+            class="position-absolute text-muted group-box-label text-uppercase"
+            >Input checkpoint</span
+        >
+        <div class="row align-items-center mt-1 p-2">
+            <div class="col-md-4 d-flex align-items-center">
+                <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
+                Hash of the checkpoint:
+            </div>
+            <div class="col-md-8 blockHash">
+                <app-display-hash
+                    [datasetInfo]="datasetInfo"
+                    [value]="event.inputCheckpoint"
+                    [showCopyButton]="true"
+                    [isNavigable]="false"
+                ></app-display-hash>
+            </div>
+        </div>
+    </div>
+    <div
+        *ngIf="event?.outputCheckpoint"
+        class="position-relative border border-1 p-2 rounded-3"
+    >
+        <span
+            class="position-absolute text-muted group-box-label text-uppercase"
+            >Output checkpoint</span
+        >
+        <div class="row align-items-center mt-1 p-2">
+            <div class="col-md-4 d-flex align-items-center">
+                <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
+                Physical hash:
+            </div>
+            <div class="col-md-8 blockHash">
+                <app-display-hash
+                    [datasetInfo]="datasetInfo"
+                    [value]="event.outputCheckpoint?.physicalHash"
+                    [showCopyButton]="true"
+                    [isNavigable]="false"
+                ></app-display-hash>
+            </div>
+        </div>
+        <div class="row align-items-center mt-1 p-2">
+            <div class="col-md-4 d-flex align-items-center">
+                <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
+                Size:
+            </div>
+            <div class="col-md-8">
+                <span class="size">{{
+                    event.outputCheckpoint!.size | displaySize
+                }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div
+        *ngIf="event?.addDataWatermark"
+        class="position-relative border border-1 p-2 rounded-3"
+    >
+        <span
+            class="position-absolute text-muted group-box-label text-uppercase"
+            >Output watermark</span
+        >
+        <div class="row align-items-center mt-1 p-2">
+            <div class="col-md-4 d-flex align-items-center">
+                <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
+                Watermark:
+            </div>
+            <div class="col-md-8">
+                <app-display-time
+                    class="no-wrap"
+                    [value]="event.addDataWatermark"
+                    [dataTestId]="'add-data-watermark'"
+                >
+                </app-display-time>
+            </div>
+        </div>
+    </div>
+
+    <div
+        *ngIf="event?.outputData"
+        class="position-relative border border-1 p-2 rounded-3"
+    >
+        <span
+            class="position-absolute text-muted group-box-label text-uppercase"
+            >Output data</span
+        >
+        <div class="row align-items-center mt-1 p-2">
+            <div class="col-md-4 d-flex align-items-center">
+                <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
+                Physical hash:
+            </div>
+            <div class="col-md-8 blockHash">
+                <app-display-hash
+                    [datasetInfo]="datasetInfo"
+                    [value]="event.outputData.physicalHash"
+                    [showCopyButton]="true"
+                    [isNavigable]="false"
+                ></app-display-hash>
+            </div>
+        </div>
+        <div class="row align-items-center mt-1 p-2">
+            <div class="col-md-4 d-flex align-items-center">
+                <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
+                Logical hash:
+            </div>
+            <div class="col-md-8 blockHash">
+                <app-display-hash
+                    [datasetInfo]="datasetInfo"
+                    [value]="event.outputData.logicalHash"
+                    [showCopyButton]="true"
+                    [isNavigable]="false"
+                ></app-display-hash>
+            </div>
+        </div>
+        <div class="row align-items-center mt-1 p-2">
+            <div class="col-md-4 d-flex align-items-center">
+                <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
+                Interval:
+            </div>
+            <div class="col-md-8 blockHash d-flex gap-4">
+                <span class="d-block interval"
+                    >start: {{ event.outputData.interval.start }}</span
+                >
+                <span class="d-block interval"
+                    >end: {{ event.outputData.interval.end }}</span
+                >
+            </div>
+        </div>
+        <div class="row align-items-center mt-1 p-2">
+            <div class="col-md-4 d-flex align-items-center">
+                <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
+                Size:
+            </div>
+            <div class="col-md-8 blockHash">
+                <span>{{ event.outputData.size | displaySize }}</span>
+            </div>
+        </div>
+    </div>
+</div>

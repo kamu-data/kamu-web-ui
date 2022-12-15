@@ -1,4 +1,11 @@
 <div *ngIf="block">
+    <ng-container *ngIf="isAddDataEvent">
+        <app-add-data-event
+            [event]="addDataEvent"
+            [datasetInfo]="datasetInfo"
+        ></app-add-data-event>
+    </ng-container>
+
     <ng-container *ngIf="!isSupportedEvent">
         <p class="text-center">
             <mat-icon class="text-danger align-middle">block</mat-icon>

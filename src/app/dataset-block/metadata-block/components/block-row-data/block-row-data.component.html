@@ -1,0 +1,17 @@
+<div class="row align-items-center mb-4">
+    <div class="col-md-4 d-flex align-items-center">
+        <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
+        {{ label }}
+        <!-- Block Hash: -->
+    </div>
+    <div class="col-md-8 blockHash">
+        <ng-content></ng-content>
+        <!-- <app-display-hash
+                     tooltip="Hash sum of the current block."
+            [datasetInfo]="datasetInfo"
+            [value]="block.blockHash"
+            [showCopyButton]="true"
+            [isNavigable]="false"
+        ></app-display-hash> -->
+    </div>
+</div>

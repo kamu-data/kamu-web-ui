@@ -13,6 +13,8 @@ import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.
 import { AddDataEventComponent } from "./components/event-details/components/add-data-event/add-data-event.component";
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { TooltipIconComponent } from "./components/tooltip-icon/tooltip-icon.component";
+import { BlockRowDataComponent } from "./components/block-row-data/block-row-data.component";
 
 @NgModule({
     declarations: [
@@ -21,6 +23,8 @@ import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
         EventDetailsComponent,
         BlockNavigationComponent,
         AddDataEventComponent,
+        TooltipIconComponent,
+        BlockRowDataComponent,
     ],
     imports: [
         CommonModule,

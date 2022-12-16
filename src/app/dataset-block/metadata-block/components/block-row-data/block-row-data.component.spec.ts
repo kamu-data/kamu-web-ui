@@ -1,23 +1,23 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TooltipIconComponent } from "./../tooltip-icon/tooltip-icon.component";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { BlockRowDataComponent } from './block-row-data.component';
+import { BlockRowDataComponent } from "./block-row-data.component";
 
-describe('BlockRowDataComponent', () => {
-  let component: BlockRowDataComponent;
-  let fixture: ComponentFixture<BlockRowDataComponent>;
+describe("BlockRowDataComponent", () => {
+    let component: BlockRowDataComponent;
+    let fixture: ComponentFixture<BlockRowDataComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ BlockRowDataComponent ]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [BlockRowDataComponent, TooltipIconComponent],
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(BlockRowDataComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(BlockRowDataComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });

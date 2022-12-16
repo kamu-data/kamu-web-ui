@@ -1,5 +1,4 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
-import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatIconModule } from "@angular/material/icon";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 

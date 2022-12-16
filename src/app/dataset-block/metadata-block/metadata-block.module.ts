@@ -12,6 +12,9 @@ import { MatMenuModule } from "@angular/material/menu";
 import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
 import { AddDataEventComponent } from "./components/event-details/components/add-data-event/add-data-event.component";
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
+import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { TooltipIconComponent } from "./components/tooltip-icon/tooltip-icon.component";
+import { BlockRowDataComponent } from "./components/block-row-data/block-row-data.component";
 
 @NgModule({
     declarations: [
@@ -20,6 +23,8 @@ import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
         EventDetailsComponent,
         BlockNavigationComponent,
         AddDataEventComponent,
+        TooltipIconComponent,
+        BlockRowDataComponent,
     ],
     imports: [
         CommonModule,
@@ -30,6 +35,7 @@ import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
         DisplayTimeModule,
         DisplayHashModule,
         DisplaySizeModule,
+        NgbTooltipModule,
     ],
     exports: [MetadataBlockComponent],
 })

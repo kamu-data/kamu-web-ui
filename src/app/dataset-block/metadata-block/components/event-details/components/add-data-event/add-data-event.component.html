@@ -7,19 +7,18 @@
             class="position-absolute text-muted group-box-label text-uppercase"
             >Input checkpoint</span
         >
-        <div class="row align-items-center mt-1 p-2">
-            <div class="col-md-4 d-flex align-items-center">
-                <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
-                Hash of the checkpoint:
-            </div>
-            <div class="col-md-8 blockHash">
+        <div class="ms-4">
+            <app-block-row-data
+                tooltip="Hash of the checkpoint file used to restore ingestion state."
+                label="Hash of the checkpoint:"
+            >
                 <app-display-hash
                     [datasetInfo]="datasetInfo"
                     [value]="event.inputCheckpoint"
                     [showCopyButton]="true"
                     [isNavigable]="false"
                 ></app-display-hash>
-            </div>
+            </app-block-row-data>
         </div>
     </div>
     <div
@@ -30,30 +29,26 @@
             class="position-absolute text-muted group-box-label text-uppercase"
             >Output checkpoint</span
         >
-        <div class="row align-items-center mt-1 p-2">
-            <div class="col-md-4 d-flex align-items-center">
-                <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
-                Physical hash:
-            </div>
-            <div class="col-md-8 blockHash">
+        <div class="ms-4">
+            <app-block-row-data
+                tooltip="Hash sum of the checkpoint file."
+                label="Physical hash:"
+            >
                 <app-display-hash
                     [datasetInfo]="datasetInfo"
                     [value]="event.outputCheckpoint.physicalHash"
                     [showCopyButton]="true"
                     [isNavigable]="false"
                 ></app-display-hash>
-            </div>
-        </div>
-        <div class="row align-items-center mt-1 p-2">
-            <div class="col-md-4 d-flex align-items-center">
-                <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
-                Size:
-            </div>
-            <div class="col-md-8">
+            </app-block-row-data>
+            <app-block-row-data
+                tooltip="Size of checkpoint file in bytes."
+                label="Size:"
+            >
                 <span class="size">{{
                     event.outputCheckpoint.size | displaySize
                 }}</span>
-            </div>
+            </app-block-row-data>
         </div>
     </div>
 
@@ -65,19 +60,18 @@
             class="position-absolute text-muted group-box-label text-uppercase"
             >Output watermark</span
         >
-        <div class="row align-items-center mt-1 p-2">
-            <div class="col-md-4 d-flex align-items-center">
-                <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
-                Watermark:
-            </div>
-            <div class="col-md-8">
+        <div class="ms-4">
+            <app-block-row-data
+                tooltip="Last watermark of the output data stream."
+                label="Watermark:"
+            >
                 <app-display-time
                     class="no-wrap"
                     [value]="event.addDataWatermark"
                     [dataTestId]="'add-data-watermark'"
                 >
                 </app-display-time>
-            </div>
+            </app-block-row-data>
         </div>
     </div>
 
@@ -89,56 +83,49 @@
             class="position-absolute text-muted group-box-label text-uppercase"
             >Output data</span
         >
-        <div class="row align-items-center mt-1 p-2">
-            <div class="col-md-4 d-flex align-items-center">
-                <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
-                Physical hash:
-            </div>
-            <div class="col-md-8 blockHash">
+        <div class="ms-4">
+            <app-block-row-data
+                tooltip="Hash sum of the data part file."
+                label="Physical hash:"
+            >
                 <app-display-hash
                     [datasetInfo]="datasetInfo"
                     [value]="event.outputData.physicalHash"
                     [showCopyButton]="true"
                     [isNavigable]="false"
                 ></app-display-hash>
-            </div>
-        </div>
-        <div class="row align-items-center mt-1 p-2">
-            <div class="col-md-4 d-flex align-items-center">
-                <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
-                Logical hash:
-            </div>
-            <div class="col-md-8 blockHash">
+            </app-block-row-data>
+
+            <app-block-row-data
+                tooltip="Logical hash sum of the data in this slice."
+                label="Logical hash:"
+            >
                 <app-display-hash
                     [datasetInfo]="datasetInfo"
                     [value]="event.outputData.logicalHash"
                     [showCopyButton]="true"
                     [isNavigable]="false"
                 ></app-display-hash>
-            </div>
-        </div>
-        <div class="row align-items-center mt-1 p-2">
-            <div class="col-md-4 d-flex align-items-center">
-                <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
-                Interval:
-            </div>
-            <div class="col-md-8 blockHash d-flex gap-4">
-                <span class="d-block interval"
+            </app-block-row-data>
+
+            <app-block-row-data
+                tooltip="Data slice produced by the transaction."
+                label="Interval:"
+            >
+                <span class="interval"
                     >start: {{ event.outputData.interval.start }}</span
                 >
-                <span class="d-block interval"
+                &nbsp;&nbsp;&nbsp;
+                <span class="interval"
                     >end: {{ event.outputData.interval.end }}</span
                 >
-            </div>
-        </div>
-        <div class="row align-items-center mt-1 p-2">
-            <div class="col-md-4 d-flex align-items-center">
-                <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
-                Size:
-            </div>
-            <div class="col-md-8 blockHash">
+            </app-block-row-data>
+            <app-block-row-data
+                tooltip="Size of data file in bytes."
+                label="Size:"
+            >
                 <span>{{ event.outputData.size | displaySize }}</span>
-            </div>
+            </app-block-row-data>
         </div>
     </div>
 </div>

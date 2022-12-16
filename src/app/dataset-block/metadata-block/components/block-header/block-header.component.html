@@ -1,4 +1,4 @@
-<div class="block-header-container" *ngIf="block$ | async as block">
+<div *ngIf="block$ | async as block">
     <div class="d-flex justify-content-end custom-button">
         <button class="starred rounded-left-2 border rounded-start">
             <span class="d-inline mr-2">Block Actions</span>
@@ -20,61 +20,49 @@
             <button mat-menu-item>Action 2</button>
         </mat-menu>
     </div>
-    <div class="row mb-4 align-items-center">
-        <div class="col-md-4 d-flex align-items-center">
-            <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
-            <span>Event:</span>
-        </div>
-        <div class="col-md-8">{{ block.event.__typename }}</div>
-    </div>
-    <div class="row align-items-center mb-4 mt-1">
-        <div class="col-md-4 d-flex align-items-center">
-            <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
-            Sequence Number:
-        </div>
-        <div class="col-md-8">
-            <span>{{ block.sequenceNumber }}</span>
-        </div>
-    </div>
-    <div class="row align-items-center mb-4">
-        <div class="col-md-4 d-flex align-items-center">
-            <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
-            System Time:
-        </div>
-        <div class="col-md-8">
-            <app-display-time
-                class="no-wrap"
-                [value]="block.systemTime"
-                [dataTestId]="'time-block-header'"
-            >
-            </app-display-time>
-        </div>
-    </div>
-    <div class="row align-items-center mb-4">
-        <div class="col-md-4 d-flex align-items-center">
-            <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
-            Block Hash:
-        </div>
-        <div class="col-md-8 blockHash">
-            <app-display-hash
-                [datasetInfo]="datasetInfo"
-                [value]="block.blockHash"
-                [showCopyButton]="true"
-                [isNavigable]="false"
-            ></app-display-hash>
-        </div>
-    </div>
-    <div class="row align-items-center mb-4">
-        <div class="col-md-4 d-flex align-items-center">
-            <mat-icon class="icon-help-outline mr-1">help_outline</mat-icon>
-            Previous Block Hash:
-        </div>
-        <div class="col-md-8 blockHash">
-            <app-display-hash
-                [value]="block.prevBlockHash"
-                [datasetInfo]="datasetInfo"
-                [showCopyButton]="true"
-            ></app-display-hash>
-        </div>
-    </div>
+    <app-block-row-data
+        tooltip="Represents a transaction that occured on a dataset."
+        label="Event:"
+    >
+        <span>{{ block.event.__typename }}</span>
+    </app-block-row-data>
+    <app-block-row-data
+        tooltip="Block sequence number starting from tail to head."
+        label="Sequence Number:"
+    >
+        <span>{{ block.sequenceNumber }}</span>
+    </app-block-row-data>
+    <app-block-row-data
+        tooltip="System time when this block was written."
+        label="System Time:"
+    >
+        <app-display-time
+            class="no-wrap"
+            [value]="block.systemTime"
+            [dataTestId]="'time-block-header'"
+        >
+        </app-display-time>
+    </app-block-row-data>
+    <app-block-row-data
+        tooltip="Hash sum of the current block."
+        label="Block Hash:"
+    >
+        <app-display-hash
+            [datasetInfo]="datasetInfo"
+            [value]="block.blockHash"
+            [showCopyButton]="true"
+            [isNavigable]="false"
+        ></app-display-hash>
+    </app-block-row-data>
+
+    <app-block-row-data
+        tooltip="Hash sum of the preceding block."
+        label="Previous Block Hash:"
+    >
+        <app-display-hash
+            [value]="block.prevBlockHash"
+            [datasetInfo]="datasetInfo"
+            [showCopyButton]="true"
+        ></app-display-hash>
+    </app-block-row-data>
 </div>

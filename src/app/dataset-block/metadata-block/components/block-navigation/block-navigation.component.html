@@ -1,1 +1,34 @@
-<p>block-navigation works!</p>
+<div class="text-center mb-4 position-relative align-items-center">
+    <input
+        class="form-control placeholder-padding-left"
+        type="text"
+        name="search-hash"
+        [(ngModel)]="searchHash"
+        autocomplete="off"
+        placeholder="Search by hash"
+    />
+    <svg-icon name="search"></svg-icon>
+</div>
+<div class="mb-4">
+    <div class="select-block w-100">
+        <div
+            class="form-control input-group justify-content-left align-items-center"
+        >
+            <p class="m-auto position-absolute">Sort:</p>
+            <select
+                [(ngModel)]="eventType"
+                class="border-0 w-100 py-1 outline-none"
+                data-test-id="event-type-sort-option"
+                id="sortOptionsEventType"
+            >
+                <option
+                    class="py-1"
+                    *ngFor="let option of sortOptions"
+                    value="{{ option }}"
+                >
+                    {{ option }}
+                </option>
+            </select>
+        </div>
+    </div>
+</div>

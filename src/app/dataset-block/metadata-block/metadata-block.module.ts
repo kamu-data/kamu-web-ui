@@ -1,3 +1,4 @@
+import { FormsModule } from "@angular/forms";
 import { DisplayTimeModule } from "./../../components/display-time/display-time.module";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -15,6 +16,7 @@ import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { TooltipIconComponent } from "./components/tooltip-icon/tooltip-icon.component";
 import { BlockRowDataComponent } from "./components/block-row-data/block-row-data.component";
+import { AngularSvgIconModule } from "angular-svg-icon";
 
 @NgModule({
     declarations: [
@@ -36,6 +38,8 @@ import { BlockRowDataComponent } from "./components/block-row-data/block-row-dat
         DisplayHashModule,
         DisplaySizeModule,
         NgbTooltipModule,
+        AngularSvgIconModule,
+        FormsModule,
     ],
     exports: [MetadataBlockComponent],
 })

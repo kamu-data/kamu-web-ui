@@ -1,3 +1,4 @@
+import { SupportedEvents } from "./../event-details/supported.events";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 @Component({
@@ -6,4 +7,11 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
     styleUrls: ["./block-navigation.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BlockNavigationComponent {}
+export class BlockNavigationComponent {
+    public searchHash = "";
+    public eventType = this.sortOptions[0];
+
+    public get sortOptions() {
+        return ["None", ...Object.keys(SupportedEvents)];
+    }
+}

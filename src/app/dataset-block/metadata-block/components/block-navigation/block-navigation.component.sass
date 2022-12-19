@@ -1,0 +1,27 @@
+@import src/assets/styles/var
+
+.placeholder-padding-left
+    padding: 8px 8px 8px 35px!important
+
+.outline-none
+    outline: none
+
+.select-block
+  background: transparent
+  > *
+    background: transparent
+  & p
+    z-index: 0
+  &:hover
+    background: $app-background-btn
+  &.form-group *
+    font-size: 16px
+
+#sortOptionsEventType
+  color: $app-dark
+  z-index: 1
+  background: transparent
+  padding-left: 35px
+  transition: .2s cubic-bezier(0.3, 0, 0.5, 1)
+  &:focus-visible
+    outline: none

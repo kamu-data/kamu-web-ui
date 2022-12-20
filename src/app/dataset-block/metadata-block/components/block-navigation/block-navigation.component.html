@@ -33,24 +33,35 @@
     </div>
 </div>
 
-<ng-container *ngFor="let block of datasetHistory?.history">
-    <div class="d-flex">
-        <div class="flex-grow-1 no-wrap">
+<div class="d-flex flex-column gap-4" *ngIf="datasetHistory?.history">
+    <div
+        *ngFor="
+            let block of datasetHistory.history
+                | eventTypeFilter: eventType
+                | blockHashFilter: searchHash
+        "
+        class="d-flex lh-lg align-items-center justify-content-between"
+    >
+        <div class="flex-grow-1 no-wrap lh-1">
             <mat-icon class="d-inline align-middle fs-4">tag</mat-icon>
             <app-display-hash
                 [value]="block.blockHash"
                 [datasetInfo]="datasetInfo"
                 [showCopyButton]="false"
             ></app-display-hash>
+            <div
+                [innerHTML]="highligthHash(block.blockHash)"
+                class="ms-4 fs-10 text-muted"
+            ></div>
         </div>
         <div
-            class="flex-grow-1 px-2"
+            class="me-4 align-self-baseline"
             *ngIf="currentBlockHash === block.blockHash"
         >
             <span class="badge bg-success">current</span>
         </div>
-        <div class="float-right flex-grow-1">
-            <p class="text-end">{{ block.event.__typename }}</p>
+        <div class="">
+            <p>{{ block.event.__typename }}</p>
         </div>
     </div>
-</ng-container>
+</div>

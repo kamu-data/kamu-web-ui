@@ -17,6 +17,8 @@ import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { TooltipIconComponent } from "./components/tooltip-icon/tooltip-icon.component";
 import { BlockRowDataComponent } from "./components/block-row-data/block-row-data.component";
 import { AngularSvgIconModule } from "angular-svg-icon";
+import { EventTypeFilterModule } from "src/app/common/pipes/event-type-filter.module";
+import { BlockHashFilterModule } from "src/app/common/pipes/block-hash-filter.module";
 
 @NgModule({
     declarations: [
@@ -40,6 +42,8 @@ import { AngularSvgIconModule } from "angular-svg-icon";
         NgbTooltipModule,
         AngularSvgIconModule,
         FormsModule,
+        EventTypeFilterModule,
+        BlockHashFilterModule,
     ],
     exports: [MetadataBlockComponent],
 })

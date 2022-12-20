@@ -6,6 +6,7 @@ import { BaseProcessingComponent } from "./../../common/base.processing.componen
 import { DatasetViewTypeEnum } from "./../../dataset-view/dataset-view.interface";
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     OnInit,
     ViewEncapsulation,
@@ -34,6 +35,7 @@ export class MetadataBlockComponent
         private blockService: BlockService,
         private datasetService: DatasetService,
         private appDatasetSubsService: AppDatasetSubscriptionsService,
+        private cdr: ChangeDetectorRef,
         private router: Router,
         navigationService: NavigationService,
         modalService: ModalService,
@@ -57,10 +59,10 @@ export class MetadataBlockComponent
                     () => this.appDatasetSubsService.onDatasetHistoryChanges,
                 ),
             )
-            .subscribe(
-                (result: DatasetHistoryUpdate) =>
-                    (this.datasetHistoryUpdate = result),
-            );
+            .subscribe((result: DatasetHistoryUpdate) => {
+                this.datasetHistoryUpdate = result;
+                this.cdr.detectChanges();
+            });
 
         this.trackSubscriptions(
             this.activatedRoute.params

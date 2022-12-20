@@ -19,4 +19,11 @@ export class BlockNavigationComponent {
     public get sortOptions() {
         return ["None", ...Object.keys(SupportedEvents)];
     }
+
+    public highligthHash(hash: string): string {
+        return (
+            hash.slice(0, -8) +
+            `<span class="highligth fs-10">${hash.slice(-8)}</span>`
+        );
+    }
 }

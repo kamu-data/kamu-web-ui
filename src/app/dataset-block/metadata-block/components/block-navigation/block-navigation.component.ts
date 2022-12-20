@@ -1,5 +1,7 @@
+import { DatasetHistoryUpdate } from "./../../../../dataset-view/dataset.subscriptions.interface";
 import { SupportedEvents } from "./../event-details/supported.events";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 @Component({
     selector: "app-block-navigation",
@@ -8,6 +10,9 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlockNavigationComponent {
+    @Input() public datasetHistory: DatasetHistoryUpdate;
+    @Input() public currentBlockHash: string;
+    @Input() public datasetInfo: DatasetInfo;
     public searchHash = "";
     public eventType = this.sortOptions[0];
 

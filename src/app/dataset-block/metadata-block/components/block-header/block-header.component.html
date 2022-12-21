@@ -20,49 +20,58 @@
             <button mat-menu-item>Action 2</button>
         </mat-menu>
     </div>
-    <app-block-row-data
-        tooltip="Represents a transaction that occured on a dataset."
-        label="Event:"
-    >
-        <span>{{ block.event.__typename }}</span>
-    </app-block-row-data>
-    <app-block-row-data
-        tooltip="Block sequence number starting from tail to head."
-        label="Sequence Number:"
-    >
-        <span>{{ block.sequenceNumber }}</span>
-    </app-block-row-data>
-    <app-block-row-data
-        tooltip="System time when this block was written."
-        label="System Time:"
-    >
-        <app-display-time
-            class="no-wrap"
-            [value]="block.systemTime"
-            [dataTestId]="'time-block-header'"
-        >
-        </app-display-time>
-    </app-block-row-data>
-    <app-block-row-data
-        tooltip="Hash sum of the current block."
-        label="Block Hash:"
-    >
-        <app-display-hash
-            [datasetInfo]="datasetInfo"
-            [value]="block.blockHash"
-            [showCopyButton]="true"
-            [isNavigable]="false"
-        ></app-display-hash>
-    </app-block-row-data>
 
-    <app-block-row-data
-        tooltip="Hash sum of the preceding block."
-        label="Previous Block Hash:"
-    >
-        <app-display-hash
-            [value]="block.prevBlockHash"
-            [datasetInfo]="datasetInfo"
-            [showCopyButton]="true"
-        ></app-display-hash>
-    </app-block-row-data>
+    <div class="position-relative border border-1 p-2 rounded-3 mt-4">
+        <span
+            class="position-absolute text-muted group-box-label text-uppercase"
+            >Block header</span
+        >
+        <div class="ms-4">
+            <app-block-row-data
+                tooltip="Represents a transaction that occured on a dataset."
+                label="Event:"
+            >
+                <span>{{ block.event.__typename }}</span>
+            </app-block-row-data>
+            <app-block-row-data
+                tooltip="Block sequence number starting from tail to head."
+                label="Sequence Number:"
+            >
+                <span>{{ block.sequenceNumber }}</span>
+            </app-block-row-data>
+            <app-block-row-data
+                tooltip="System time when this block was written."
+                label="System Time:"
+            >
+                <app-display-time
+                    class="no-wrap"
+                    [value]="block.systemTime"
+                    [dataTestId]="'time-block-header'"
+                >
+                </app-display-time>
+            </app-block-row-data>
+            <app-block-row-data
+                tooltip="Hash sum of the current block."
+                label="Block Hash:"
+            >
+                <app-display-hash
+                    [datasetInfo]="datasetInfo"
+                    [value]="block.blockHash"
+                    [showCopyButton]="true"
+                    [isNavigable]="false"
+                ></app-display-hash>
+            </app-block-row-data>
+
+            <app-block-row-data
+                tooltip="Hash sum of the preceding block."
+                label="Previous Block Hash:"
+            >
+                <app-display-hash
+                    [value]="block.prevBlockHash"
+                    [datasetInfo]="datasetInfo"
+                    [showCopyButton]="true"
+                ></app-display-hash>
+            </app-block-row-data>
+        </div>
+    </div>
 </div>

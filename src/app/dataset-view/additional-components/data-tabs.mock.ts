@@ -297,7 +297,35 @@ export const mockMetadataSchemaUpdate = {
                     "https://open.canada.ca/en/open-government-licence-canada",
             },
             currentWatermark: "2022-07-30T00:00:00+00:00",
-            currentTransform: null,
+            currentTransform: {
+                __typename: "SetTransform",
+                inputs: [
+                    {
+                        __typename: "TransformInput",
+                        dataset: {
+                            __typename: "Dataset",
+                            id: "did:odf:z4k88e8uUcKWpJVMbvAyww4R6iarRhSy93yhd3ohg3QdDQP86D4",
+                            kind: "ROOT",
+                            name: "ontario.case-details",
+                            owner: {
+                                __typename: "User",
+                                id: "1",
+                                name: "kamu",
+                            },
+                        },
+                    },
+                ],
+                transform: {
+                    __typename: "TransformSql",
+                    queries: [
+                        {
+                            __typename: "SqlQueryStep",
+                            alias: null,
+                            query: "SELECT\n  id,\n  case_reported_date as reported_date,\n  case when lower(gender) = 'male' then 'M' \n       when lower(gender) = 'female' then 'F' \n       else 'U' end as gender,\n  age_group,\n  city as location\n  FROM `ontario.case-details`\n",
+                        },
+                    ],
+                },
+            },
             currentSchema: {
                 __typename: "DataSchema",
                 format: "PARQUET_JSON",

@@ -1,6 +1,6 @@
 <div class="text-center mb-4 position-relative align-items-center">
     <input
-        class="form-control placeholder-padding-left"
+        class="form-control placeholder-padding-left d-inline"
         type="text"
         name="search-hash"
         [(ngModel)]="searchHash"
@@ -8,6 +8,12 @@
         placeholder="Search by hash"
     />
     <svg-icon name="search"></svg-icon>
+    <mat-icon
+        *ngIf="searchHash"
+        (click)="refreshSearch()"
+        class="fs-5 d-inline position-absolute close-position"
+        >close</mat-icon
+    >
 </div>
 <div class="mb-4">
     <div class="select-block w-100">
@@ -32,7 +38,7 @@
         </div>
     </div>
 </div>
-<!-- <pre>{{ datasetHistory | json }}</pre> -->
+
 <div class="d-flex flex-column gap-4" *ngIf="datasetHistory?.history">
     <div
         *ngFor="
@@ -50,7 +56,7 @@
                 [showCopyButton]="false"
             ></app-display-hash>
             <div
-                [innerHTML]="highligthHash(block.blockHash)"
+                [innerHTML]="highligthHash(block.blockHash, searchHash)"
                 class="ms-4 fs-10 text-muted"
             ></div>
         </div>

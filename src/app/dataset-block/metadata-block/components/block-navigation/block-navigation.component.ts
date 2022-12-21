@@ -31,10 +31,10 @@ export class BlockNavigationComponent {
         return ["None", ...Object.keys(SupportedEvents)];
     }
 
-    public highligthHash(hash: string): string {
-        return (
-            hash.slice(0, -8) +
-            `<span class="highligth fs-10">${hash.slice(-8)}</span>`
+    public highligthHash(hash: string, searchHash: string): string {
+        return hash.replace(
+            searchHash,
+            `<span class="bg-warning fs-10">${searchHash}</span>`,
         );
     }
 
@@ -43,5 +43,9 @@ export class BlockNavigationComponent {
         isClick: boolean;
     }): void {
         this.onPageChangeEmit.emit(params);
+    }
+
+    public refreshSearch(): void {
+        this.searchHash = "";
     }
 }

@@ -1160,28 +1160,6 @@ export type MetadataBlockFragment = {
         | { __typename: "SetWatermark"; outputWatermark: any };
 };
 
-export type CustomSetWatermarkFragment = {
-    __typename?: "SetWatermark";
-    outputWatermark: any;
-};
-
-export type CustomAddDataFragment = {
-    __typename?: "AddData";
-    outputWatermark?: any | null;
-    inputCheckpoint?: any | null;
-    outputData: {
-        __typename?: "DataSlice";
-        logicalHash: any;
-        physicalHash: any;
-        interval: { __typename?: "OffsetInterval"; start: number; end: number };
-    };
-    outputCheckpoint?: {
-        __typename?: "Checkpoint";
-        physicalHash: any;
-        size: number;
-    } | null;
-};
-
 export type GithubLoginMutationVariables = Exact<{
     code: Scalars["String"];
 }>;
@@ -1410,12 +1388,10 @@ export const LicenseFragmentDoc = gql`
     }
 `;
 export const DatasetTransformContentFragmentDoc = gql`
-    fragment DatasetTransformContent on Transform {
-        ... on TransformSql {
-            queries {
-                alias
-                query
-            }
+    fragment DatasetTransformContent on TransformSql {
+        queries {
+            alias
+            query
         }
     }
 `;
@@ -1627,29 +1603,6 @@ export const DatasetSearchOverviewFragmentDoc = gql`
     ${DatasetBasicsFragmentDoc}
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
-`;
-export const CustomSetWatermarkFragmentDoc = gql`
-    fragment CustomSetWatermark on SetWatermark {
-        outputWatermark
-    }
-`;
-export const CustomAddDataFragmentDoc = gql`
-    fragment CustomAddData on AddData {
-        outputWatermark
-        inputCheckpoint
-        outputData {
-            interval {
-                start
-                end
-            }
-            logicalHash
-            physicalHash
-        }
-        outputCheckpoint {
-            physicalHash
-            size
-        }
-    }
 `;
 export const GetDatasetDataSqlRunDocument = gql`
     query getDatasetDataSQLRun($query: String!, $limit: Int!) {

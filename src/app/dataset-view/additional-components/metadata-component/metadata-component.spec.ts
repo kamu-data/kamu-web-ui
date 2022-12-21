@@ -1,5 +1,8 @@
 import { mockDatasetBasicsFragment } from "./../../../search/mock.data";
-import { emitClickOnElement } from "src/app/common/base-test.helpers.spec";
+import {
+    emitClickOnElement,
+    findElementByDataTestId,
+} from "src/app/common/base-test.helpers.spec";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MetadataSchemaUpdate } from "../../dataset.subscriptions.interface";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
@@ -39,6 +42,24 @@ describe("MetadataComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should check display queries for Derivative datasets", () => {
+        component.currentState = {
+            schema: mockMetadataSchemaUpdate.schema,
+            metadata:
+                mockMetadataSchemaUpdate.metadata as DatasetMetadataSummaryFragment,
+            pageInfo: mockMetadataSchemaUpdate.pageInfo,
+        };
+        component.datasetBasics = mockDatasetBasicsFragment;
+        fixture.detectChanges();
+
+        const monacoEditor = findElementByDataTestId(
+            fixture,
+            "monaco-editor-metadata-tab-0",
+        );
+
+        expect(monacoEditor).toBeDefined();
     });
 
     it("should check #ngOninit", () => {

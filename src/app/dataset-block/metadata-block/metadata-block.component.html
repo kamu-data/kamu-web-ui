@@ -47,6 +47,7 @@
                     [datasetHistory]="datasetHistoryUpdate"
                     [currentBlockHash]="blockHash"
                     [datasetInfo]="datasetInfo"
+                    (onPageChangeEmit)="onPageChange($event)"
                 ></app-block-navigation>
             </div>
         </div>

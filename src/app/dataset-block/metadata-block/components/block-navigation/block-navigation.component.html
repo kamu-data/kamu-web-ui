@@ -32,7 +32,7 @@
         </div>
     </div>
 </div>
-
+<!-- <pre>{{ datasetHistory | json }}</pre> -->
 <div class="d-flex flex-column gap-4" *ngIf="datasetHistory?.history">
     <div
         *ngFor="
@@ -64,4 +64,9 @@
             <p>{{ block.event.__typename }}</p>
         </div>
     </div>
+    <app-pagination
+        [currentPage]="currentPage - 1"
+        [pageInfo]="datasetHistory.pageInfo"
+        (pageChangeEvent)="onPageChange($event)"
+    ></app-pagination>
 </div>

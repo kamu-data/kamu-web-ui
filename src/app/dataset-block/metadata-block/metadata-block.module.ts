@@ -19,6 +19,7 @@ import { BlockRowDataComponent } from "./components/block-row-data/block-row-dat
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { EventTypeFilterModule } from "src/app/common/pipes/event-type-filter.module";
 import { BlockHashFilterModule } from "src/app/common/pipes/block-hash-filter.module";
+import { PaginationModule } from "src/app/components/pagination-component/pagination.module";
 
 @NgModule({
     declarations: [
@@ -44,6 +45,7 @@ import { BlockHashFilterModule } from "src/app/common/pipes/block-hash-filter.mo
         FormsModule,
         EventTypeFilterModule,
         BlockHashFilterModule,
+        PaginationModule,
     ],
     exports: [MetadataBlockComponent],
 })

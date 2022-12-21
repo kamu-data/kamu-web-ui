@@ -48,23 +48,13 @@ export class MetadataBlockComponent
     public datasetViewType = DatasetViewTypeEnum.History;
     public blockHash: string;
     public datasetHistoryUpdate: DatasetHistoryUpdate;
-    private blocksPerPage = 3;
+    private blocksPerPage = 4;
 
     ngOnInit(): void {
         this.datasetInfo = this.getDatasetInfoFromUrl();
-        this.datasetService
-            .requestDatasetHistory(this.datasetInfo, this.blocksPerPage, 0)
-            .pipe(
-                switchMap(
-                    () => this.appDatasetSubsService.onDatasetHistoryChanges,
-                ),
-            )
-            .subscribe((result: DatasetHistoryUpdate) => {
-                this.datasetHistoryUpdate = result;
-                this.cdr.detectChanges();
-            });
 
         this.trackSubscriptions(
+            this.loadHistory(),
             this.activatedRoute.params
                 .pipe(pluck(ProjectLinks.URL_PARAM_BLOCK_HASH))
                 .subscribe((hash: string) => {
@@ -79,9 +69,30 @@ export class MetadataBlockComponent
         );
     }
 
+    public onPageChange(params: {
+        currentPage: number;
+        isClick: boolean;
+    }): void {
+        this.loadHistory(params.currentPage - 1);
+    }
+
     private loadMetadataBlock(): Subscription {
         return this.blockService
             .requestMetadataBlock(this.datasetInfo, this.blockHash)
             .subscribe();
+    }
+
+    private loadHistory(page = 0) {
+        return this.datasetService
+            .requestDatasetHistory(this.datasetInfo, this.blocksPerPage, page)
+            .pipe(
+                switchMap(
+                    () => this.appDatasetSubsService.onDatasetHistoryChanges,
+                ),
+            )
+            .subscribe((result: DatasetHistoryUpdate) => {
+                this.datasetHistoryUpdate = result;
+                this.cdr.detectChanges();
+            });
     }
 }

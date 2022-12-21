@@ -1,6 +1,12 @@
 import { DatasetHistoryUpdate } from "./../../../../dataset-view/dataset.subscriptions.interface";
 import { SupportedEvents } from "./../event-details/supported.events";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+} from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 @Component({
@@ -13,8 +19,13 @@ export class BlockNavigationComponent {
     @Input() public datasetHistory: DatasetHistoryUpdate;
     @Input() public currentBlockHash: string;
     @Input() public datasetInfo: DatasetInfo;
+    @Output() onPageChangeEmit = new EventEmitter<{
+        currentPage: number;
+        isClick: boolean;
+    }>();
     public searchHash = "";
     public eventType = this.sortOptions[0];
+    public currentPage = 1;
 
     public get sortOptions() {
         return ["None", ...Object.keys(SupportedEvents)];
@@ -25,5 +36,12 @@ export class BlockNavigationComponent {
             hash.slice(0, -8) +
             `<span class="highligth fs-10">${hash.slice(-8)}</span>`
         );
+    }
+
+    public onPageChange(params: {
+        currentPage: number;
+        isClick: boolean;
+    }): void {
+        this.onPageChangeEmit.emit(params);
     }
 }

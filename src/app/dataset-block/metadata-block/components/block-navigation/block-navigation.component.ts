@@ -31,7 +31,7 @@ export class BlockNavigationComponent {
         return ["None", ...Object.keys(SupportedEvents)];
     }
 
-    public highligthHash(hash: string, searchHash: string): string {
+    public highlightHash(hash: string, searchHash: string): string {
         return hash.replace(
             searchHash,
             `<span class="bg-warning fs-10">${searchHash}</span>`,

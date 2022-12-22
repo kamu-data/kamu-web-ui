@@ -8,6 +8,7 @@ import {
     Output,
 } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { MaybeNull } from "src/app/common/app.types";
 
 @Component({
     selector: "app-block-navigation",
@@ -16,13 +17,10 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlockNavigationComponent {
-    @Input() public datasetHistory: DatasetHistoryUpdate;
+    @Input() public datasetHistory: MaybeNull<DatasetHistoryUpdate>;
     @Input() public currentBlockHash: string;
     @Input() public datasetInfo: DatasetInfo;
-    @Output() onPageChangeEmit = new EventEmitter<{
-        currentPage: number;
-        isClick: boolean;
-    }>();
+    @Output() public onPageChangeEmit = new EventEmitter<number>();
     public searchHash = "";
     public eventType = this.sortOptions[0];
     public currentPage = 1;
@@ -38,11 +36,8 @@ export class BlockNavigationComponent {
         );
     }
 
-    public onPageChange(params: {
-        currentPage: number;
-        isClick: boolean;
-    }): void {
-        this.onPageChangeEmit.emit(params);
+    public onPageChange(currentPage: number): void {
+        this.onPageChangeEmit.emit(currentPage);
     }
 
     public refreshSearch(): void {

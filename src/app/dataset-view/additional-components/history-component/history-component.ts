@@ -22,10 +22,7 @@ import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.serv
 })
 export class HistoryComponent extends BaseComponent implements OnInit {
     @Input() public datasetName: string;
-    @Output() onPageChangeEmit = new EventEmitter<{
-        currentPage: number;
-        isClick: boolean;
-    }>();
+    @Output() onPageChangeEmit = new EventEmitter<number>();
 
     public currentState?: {
         pageInfo: PageBasedInfo;
@@ -55,11 +52,8 @@ export class HistoryComponent extends BaseComponent implements OnInit {
             ),
         );
     }
-    public onPageChange(params: {
-        currentPage: number;
-        isClick: boolean;
-    }): void {
-        this.onPageChangeEmit.emit(params);
+    public onPageChange(currentPage: number): void {
+        this.onPageChangeEmit.emit(currentPage);
     }
 
     public get currentPage(): number {

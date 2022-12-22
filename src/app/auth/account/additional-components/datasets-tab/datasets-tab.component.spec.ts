@@ -54,7 +54,7 @@ describe("DatasetsTabComponent", () => {
             navigationService,
             "navigateToOwnerView",
         );
-        component.onPageChange({ currentPage: testPageNumber, isClick: false });
+        component.onPageChange(testPageNumber);
 
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
             mockAccountDetails.login,
@@ -69,7 +69,7 @@ describe("DatasetsTabComponent", () => {
             navigationService,
             "navigateToOwnerView",
         );
-        component.onPageChange({});
+        component.onPageChange();
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
             mockAccountDetails.login,
             AccountTabs.datasets,

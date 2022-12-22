@@ -26,14 +26,7 @@ import { momentConvertDatetoLocalWithFormat } from "src/app/common/app.helpers";
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;
-    @Output() public pageChangeEvent = new EventEmitter<{
-        currentPage: number;
-        isClick: boolean;
-    }>();
-    @Output() pageChangeEmit = new EventEmitter<{
-        currentPage: number;
-        isClick: boolean;
-    }>();
+    @Output() pageChangeEmit = new EventEmitter<number>();
     @Output() selectTopicEmit = new EventEmitter<string>();
     @Output() clickDatasetEmit = new EventEmitter<DatasetBasicsFragment>();
 
@@ -87,11 +80,8 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         this.clickDatasetEmit.emit(dataset);
     }
 
-    public onPageChange(params: {
-        currentPage: number;
-        isClick: boolean;
-    }): void {
-        this.pageChangeEmit.emit(params);
+    public onPageChange(currentPage: number): void {
+        this.pageChangeEmit.emit(currentPage);
     }
 
     public get currentPage(): number {

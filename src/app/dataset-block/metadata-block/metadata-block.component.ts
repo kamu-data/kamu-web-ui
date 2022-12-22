@@ -1,3 +1,4 @@
+import { MaybeNull } from "./../../common/app.types";
 import { DatasetHistoryUpdate } from "./../../dataset-view/dataset.subscriptions.interface";
 import { DatasetService } from "./../../dataset-view/dataset.service";
 import { Subscription } from "rxjs";
@@ -47,14 +48,13 @@ export class MetadataBlockComponent
     public datasetInfo: DatasetInfo;
     public datasetViewType = DatasetViewTypeEnum.History;
     public blockHash: string;
-    public datasetHistoryUpdate: DatasetHistoryUpdate;
+    public datasetHistoryUpdate: MaybeNull<DatasetHistoryUpdate> = null;
     private blocksPerPage = 4;
 
     ngOnInit(): void {
         this.datasetInfo = this.getDatasetInfoFromUrl();
 
         this.trackSubscriptions(
-            this.loadHistory(),
             this.activatedRoute.params
                 .pipe(pluck(ProjectLinks.URL_PARAM_BLOCK_HASH))
                 .subscribe((hash: string) => {
@@ -66,14 +66,18 @@ export class MetadataBlockComponent
                     this.trackSubscription(this.loadMetadataBlock()),
                 ),
             this.loadMetadataBlock(),
+            this.loadHistory(),
+            this.appDatasetSubsService.onDatasetHistoryChanges.subscribe(
+                (result: DatasetHistoryUpdate) => {
+                    this.datasetHistoryUpdate = result;
+                    this.cdr.detectChanges();
+                },
+            ),
         );
     }
 
-    public onPageChange(params: {
-        currentPage: number;
-        isClick: boolean;
-    }): void {
-        this.loadHistory(params.currentPage - 1);
+    public onPageChange(currentPage: number): void {
+        this.trackSubscription(this.loadHistory(currentPage - 1));
     }
 
     private loadMetadataBlock(): Subscription {
@@ -82,17 +86,9 @@ export class MetadataBlockComponent
             .subscribe();
     }
 
-    private loadHistory(page = 0) {
+    private loadHistory(page = 0): Subscription {
         return this.datasetService
             .requestDatasetHistory(this.datasetInfo, this.blocksPerPage, page)
-            .pipe(
-                switchMap(
-                    () => this.appDatasetSubsService.onDatasetHistoryChanges,
-                ),
-            )
-            .subscribe((result: DatasetHistoryUpdate) => {
-                this.datasetHistoryUpdate = result;
-                this.cdr.detectChanges();
-            });
+            .subscribe();
     }
 }

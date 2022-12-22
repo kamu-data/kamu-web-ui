@@ -217,21 +217,13 @@ export class SearchComponent extends BaseComponent implements OnInit {
         };
     }
 
-    public onPageChange(params: {
-        currentPage: number;
-        isClick: boolean;
-    }): void {
-        params.currentPage
-            ? (this.currentPage = params.currentPage)
-            : (this.currentPage = 1);
+    public onPageChange(currentPage: number): void {
+        currentPage ? (this.currentPage = currentPage) : (this.currentPage = 1);
         if (this.currentPage === 1) {
             this.navigationService.navigateToSearch(this.searchValue);
             return;
         }
-        this.navigationService.navigateToSearch(
-            this.searchValue,
-            params.currentPage,
-        );
+        this.navigationService.navigateToSearch(this.searchValue, currentPage);
     }
 
     public onSelectDataset(data: DatasetInfo): void {

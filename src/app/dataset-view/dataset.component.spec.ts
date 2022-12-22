@@ -146,7 +146,7 @@ describe("DatasetComponent", () => {
             navigationService,
             "navigateToDatasetView",
         );
-        component.onPageChange({ currentPage: testPageNumber, isClick: false });
+        component.onPageChange(testPageNumber);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({ page: testPageNumber }),
         );

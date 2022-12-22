@@ -14,7 +14,7 @@ import {
 } from "@angular/core";
 
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { filter, pluck, switchMap } from "rxjs/operators";
+import { filter, pluck } from "rxjs/operators";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { NavigationService } from "src/app/services/navigation.service";

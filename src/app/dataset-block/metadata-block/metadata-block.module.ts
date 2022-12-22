@@ -17,9 +17,9 @@ import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { TooltipIconComponent } from "./components/tooltip-icon/tooltip-icon.component";
 import { BlockRowDataComponent } from "./components/block-row-data/block-row-data.component";
 import { AngularSvgIconModule } from "angular-svg-icon";
-import { EventTypeFilterModule } from "src/app/common/pipes/event-type-filter.module";
-import { BlockHashFilterModule } from "src/app/common/pipes/block-hash-filter.module";
 import { PaginationModule } from "src/app/components/pagination-component/pagination.module";
+import { BlockHashFilterPipe } from "./components/block-navigation/pipes/block-hash-filter.pipe";
+import { EventTypeFilterPipe } from "./components/block-navigation/pipes/event-type-filter.pipe";
 
 @NgModule({
     declarations: [
@@ -30,6 +30,8 @@ import { PaginationModule } from "src/app/components/pagination-component/pagina
         AddDataEventComponent,
         TooltipIconComponent,
         BlockRowDataComponent,
+        EventTypeFilterPipe,
+        BlockHashFilterPipe,
     ],
     imports: [
         CommonModule,
@@ -43,8 +45,6 @@ import { PaginationModule } from "src/app/components/pagination-component/pagina
         NgbTooltipModule,
         AngularSvgIconModule,
         FormsModule,
-        EventTypeFilterModule,
-        BlockHashFilterModule,
         PaginationModule,
     ],
     exports: [MetadataBlockComponent],

@@ -51,11 +51,13 @@
             <div
                 *ngFor="
                     let queryStep of currentState.metadata.metadata
-                        .currentTransform.transform.queries
+                        .currentTransform.transform.queries;
+                    let i = index
                 "
                 style="height: 400px"
             >
                 <ngx-monaco-editor
+                    attr.data-test-id="monaco-editor-metadata-tab-{{ i }}"
                     style="height: 100%"
                     [options]="sqlEditorOptions"
                     [(ngModel)]="queryStep.query"

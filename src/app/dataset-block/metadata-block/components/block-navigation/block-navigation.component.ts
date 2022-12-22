@@ -9,6 +9,7 @@ import {
 } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { MaybeNull } from "src/app/common/app.types";
+import { IDropdownSettings } from "ng-multiselect-dropdown";
 
 @Component({
     selector: "app-block-navigation",
@@ -22,12 +23,17 @@ export class BlockNavigationComponent {
     @Input() public datasetInfo: DatasetInfo;
     @Output() public onPageChangeEmit = new EventEmitter<number>();
     public searchHash = "";
-    public eventType = this.sortOptions[0];
     public currentPage = 1;
 
-    public get sortOptions() {
-        return ["None", ...Object.keys(SupportedEvents)];
-    }
+    public dropdownList = Object.keys(SupportedEvents);
+    public eventTypeFilters: string[] = [];
+    public dropdownSettings: IDropdownSettings = {
+        singleSelection: false,
+        defaultOpen: false,
+        textField: "value",
+        enableCheckAll: false,
+        // itemsShowLimit: 3,
+    };
 
     public highlightHash(hash: string, searchHash: string): string {
         return hash.replace(

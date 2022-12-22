@@ -3,6 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { BlockNavigationComponent } from "./block-navigation.component";
+import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
 
 describe("BlockNavigationComponent", () => {
     let component: BlockNavigationComponent;
@@ -11,7 +12,7 @@ describe("BlockNavigationComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [BlockNavigationComponent],
-            imports: [FormsModule],
+            imports: [FormsModule, NgMultiSelectDropDownModule],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
 

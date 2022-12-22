@@ -20,6 +20,7 @@ import { AngularSvgIconModule } from "angular-svg-icon";
 import { PaginationModule } from "src/app/components/pagination-component/pagination.module";
 import { BlockHashFilterPipe } from "./components/block-navigation/pipes/block-hash-filter.pipe";
 import { EventTypeFilterPipe } from "./components/block-navigation/pipes/event-type-filter.pipe";
+import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
 
 @NgModule({
     declarations: [
@@ -46,6 +47,7 @@ import { EventTypeFilterPipe } from "./components/block-navigation/pipes/event-t
         AngularSvgIconModule,
         FormsModule,
         PaginationModule,
+        NgMultiSelectDropDownModule.forRoot(),
     ],
     exports: [MetadataBlockComponent],
 })

@@ -7,11 +7,20 @@ import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 export class EventTypeFilterPipe implements PipeTransform {
     transform(
         blocks: MetadataBlockFragment[],
-        filter: string,
+        filters: string[],
     ): MetadataBlockFragment[] {
-        if (filter === "None") {
+        if (!filters.length) {
             return blocks;
+        } else {
+            const result = [] as MetadataBlockFragment[];
+            filters.forEach((filter: string) =>
+                result.push(
+                    ...blocks.filter(
+                        (block) => block.event.__typename === filter,
+                    ),
+                ),
+            );
+            return result;
         }
-        return blocks.filter((block) => block.event.__typename === filter);
     }
 }

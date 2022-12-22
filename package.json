@@ -48,6 +48,7 @@
     "lodash": "^4.17.21",
     "moment-timezone": "^0.5.31",
     "monaco-editor": "^0.34.0",
+    "ng-multiselect-dropdown": "^0.3.9",
     "ngx-markdown": "^14.0.1",
     "ngx-monaco-editor": "^12.0.0",
     "npx": "^10.2.2",

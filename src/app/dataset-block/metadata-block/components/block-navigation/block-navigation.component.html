@@ -18,7 +18,7 @@
             >close</mat-icon
         >
     </div>
-    <div class="mb-4">
+    <div class="mb-4 position-relative">
         <ng-multiselect-dropdown
             [placeholder]="'Select event type'"
             [settings]="dropdownSettings"
@@ -26,6 +26,11 @@
             [(ngModel)]="eventTypeFilters"
         >
         </ng-multiselect-dropdown>
+        <mat-icon
+            *ngIf="!eventTypeFilters.length"
+            class="fs-5 text-muted position-list-icon"
+            >list_alt</mat-icon
+        >
     </div>
 
     <div class="d-flex flex-column gap-4" *ngIf="datasetHistory">

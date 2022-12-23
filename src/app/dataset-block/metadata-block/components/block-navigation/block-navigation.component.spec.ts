@@ -1,9 +1,12 @@
+import { EventTypeFilterPipe } from "./pipes/event-type-filter.pipe";
+import { BlockHashFilterPipe } from "./pipes/block-hash-filter.pipe";
+import { mockHistoryUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { BlockNavigationComponent } from "./block-navigation.component";
 import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
+import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 
 describe("BlockNavigationComponent", () => {
     let component: BlockNavigationComponent;
@@ -11,7 +14,11 @@ describe("BlockNavigationComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [BlockNavigationComponent],
+            declarations: [
+                BlockNavigationComponent,
+                BlockHashFilterPipe,
+                EventTypeFilterPipe,
+            ],
             imports: [FormsModule, NgMultiSelectDropDownModule],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
@@ -23,5 +30,48 @@ describe("BlockNavigationComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should ckeck clear search filter", () => {
+        const testSearchHash = "Qwedfdfdfv";
+        const searchInput = findElementByDataTestId(
+            fixture,
+            "searchHash",
+        ) as HTMLInputElement;
+        searchInput.value = testSearchHash;
+        searchInput.dispatchEvent(new Event("input"));
+        fixture.detectChanges();
+        expect(component.searchHash).toEqual(testSearchHash);
+
+        const clearIcon = findElementByDataTestId(fixture, "clearSearchHash");
+        clearIcon.click();
+
+        expect(component.searchHash).toBe("");
+    });
+
+    it("should ckeck calls highlightHash method", () => {
+        const testSearchHash = "zW1";
+        component.datasetHistory = mockHistoryUpdate;
+        const searchInput = findElementByDataTestId(
+            fixture,
+            "searchHash",
+        ) as HTMLInputElement;
+        searchInput.value = testSearchHash;
+        searchInput.dispatchEvent(new Event("input"));
+        const highlightHashSpy = spyOn(
+            component,
+            "highlightHash",
+        ).and.callThrough();
+        fixture.detectChanges();
+
+        expect(highlightHashSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it("should check change page number ", () => {
+        const testPage = 2;
+        const onPageChangeEmitSpy = spyOn(component.onPageChangeEmit, "emit");
+        component.onPageChange(testPage);
+
+        expect(onPageChangeEmitSpy).toHaveBeenCalledWith(testPage);
     });
 });

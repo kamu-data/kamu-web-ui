@@ -59,6 +59,21 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
                 },
             },
         },
+        {
+            __typename: "MetadataBlockExtended",
+            blockHash: "zW1k7Mc19BhaEDPmuPrQcSLWJkRaCd9MB7X4SeGvqKzFi3d",
+            prevBlockHash: "zW1jzqJxDwLStfBA8jj5oxAd51otwte3xNtZSBkMVtBAbyc",
+            systemTime: "2022-08-05T21:17:30.613911358+00:00",
+            sequenceNumber: 3,
+            author: {
+                __typename: "User",
+                id: "1",
+                name: "kamu",
+            },
+            event: {
+                __typename: "SetInfo",
+            },
+        },
     ],
     pageInfo: {
         __typename: "PageBasedInfo",

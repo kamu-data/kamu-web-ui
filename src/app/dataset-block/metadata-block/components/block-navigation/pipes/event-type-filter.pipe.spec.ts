@@ -1,5 +1,6 @@
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
+import { mockHistoryUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { EventTypeFilterPipe } from "./event-type-filter.pipe";
 
 describe("EventTypeFilterPipe", () => {
@@ -41,5 +42,17 @@ describe("EventTypeFilterPipe", () => {
 
             expect(result).toEqual(match ? mockBlocks : []);
         });
+    });
+
+    it("should check pipe when event filter is multiple", () => {
+        const mockBlocks: MetadataBlockFragment[] = mockHistoryUpdate.history;
+        const defaultEventFilter = ["AddData", "SetInfo"];
+
+        const result: MetadataBlockFragment[] = pipe.transform(
+            mockBlocks,
+            defaultEventFilter,
+        );
+
+        expect(result).toEqual(mockBlocks);
     });
 });

@@ -7,12 +7,14 @@
             [(ngModel)]="searchHash"
             autocomplete="off"
             placeholder="Search by hash"
+            data-test-id="searchHash"
         />
         <svg-icon name="search"></svg-icon>
         <mat-icon
             *ngIf="searchHash"
             (click)="refreshSearch()"
             class="fs-5 d-inline position-absolute close-position"
+            data-test-id="clearSearchHash"
             >close</mat-icon
         >
     </div>

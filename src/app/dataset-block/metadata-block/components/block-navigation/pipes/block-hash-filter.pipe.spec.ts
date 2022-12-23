@@ -1,8 +1,46 @@
-import { BlockHashFilterPipe } from './block-hash-filter.pipe';
+import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
+import { BlockHashFilterPipe } from "./block-hash-filter.pipe";
 
-describe('BlockHashFilterPipe', () => {
-  it('create an instance', () => {
+describe("BlockHashFilterPipe", () => {
     const pipe = new BlockHashFilterPipe();
-    expect(pipe).toBeTruthy();
-  });
+
+    it("create an instance", () => {
+        expect(pipe).toBeTruthy();
+    });
+
+    it("should check pipe when search filter is empty", () => {
+        const block = mockGetMetadataBlockQuery.datasets.byOwnerAndName
+            ?.metadata.chain.blockByHash as MetadataBlockFragment;
+        const mockBlocks: MetadataBlockFragment[] = [block];
+        const defaultSearchFilter = "";
+
+        const result: MetadataBlockFragment[] = pipe.transform(
+            mockBlocks,
+            defaultSearchFilter,
+        );
+
+        expect(result).toEqual(mockBlocks);
+    });
+
+    [
+        { searchFilter: "zW1", match: true },
+        { searchFilter: "zW1qqqqqqqq", match: false },
+    ].forEach(({ searchFilter, match }) => {
+        it(`should check pipe when search filter is ${
+            match ? "" : "not"
+        }matches part of the hash`, () => {
+            const block = mockGetMetadataBlockQuery.datasets.byOwnerAndName
+                ?.metadata.chain.blockByHash as MetadataBlockFragment;
+            const mockBlocks: MetadataBlockFragment[] = [block];
+            const defaultSearchFilter = searchFilter;
+
+            const result: MetadataBlockFragment[] = pipe.transform(
+                mockBlocks,
+                defaultSearchFilter,
+            );
+
+            expect(result).toEqual(match ? mockBlocks : []);
+        });
+    });
 });

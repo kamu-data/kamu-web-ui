@@ -32,7 +32,6 @@ export class BlockNavigationComponent {
         defaultOpen: false,
         textField: "value",
         enableCheckAll: false,
-        // itemsShowLimit: 3,
     };
 
     public highlightHash(hash: string, searchHash: string): string {

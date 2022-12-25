@@ -91,6 +91,10 @@
     {
       "iconName": "notifications-checked",
       "iconPath": "/assets/svg/notifications-checked.svg"
+    },
+    {
+      "iconName": "search",
+      "iconPath": "/assets/svg/search.svg"
     }
   ],
   "customIcons": []

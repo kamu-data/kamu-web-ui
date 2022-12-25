@@ -163,10 +163,7 @@ describe("SearchComponent", () => {
             navigationService,
             "navigateToSearch",
         );
-        component.onPageChange({
-            currentPage: testCurrentPage,
-            isClick: false,
-        });
+        component.onPageChange(testCurrentPage);
         expect(component.currentPage).toBe(testCurrentPage);
         expect(navigationServiceSpy).toHaveBeenCalledWith(
             testSearchValue,
@@ -182,7 +179,7 @@ describe("SearchComponent", () => {
             navigationService,
             "navigateToSearch",
         );
-        component.onPageChange({ currentPage: 0, isClick: false });
+        component.onPageChange(0);
         expect(component.currentPage).toBe(1);
         expect(navigationServiceSpy).toHaveBeenCalledWith(testSearchValue);
     });

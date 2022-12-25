@@ -24,7 +24,8 @@
               "moment-timezone",
               "webcola",
               "fast-json-stable-stringify",
-              "marked"
+              "marked",
+              "moment"
             ],
             "outputPath": "dist/kamu-platform",
             "index": "src/index.html",

@@ -1,3 +1,4 @@
+import { FormsModule } from "@angular/forms";
 import { DisplayTimeModule } from "./../../components/display-time/display-time.module";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -15,6 +16,11 @@ import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { TooltipIconComponent } from "./components/tooltip-icon/tooltip-icon.component";
 import { BlockRowDataComponent } from "./components/block-row-data/block-row-data.component";
+import { AngularSvgIconModule } from "angular-svg-icon";
+import { PaginationModule } from "src/app/components/pagination-component/pagination.module";
+import { BlockHashFilterPipe } from "./components/block-navigation/pipes/block-hash-filter.pipe";
+import { EventTypeFilterPipe } from "./components/block-navigation/pipes/event-type-filter.pipe";
+import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
 
 @NgModule({
     declarations: [
@@ -25,6 +31,8 @@ import { BlockRowDataComponent } from "./components/block-row-data/block-row-dat
         AddDataEventComponent,
         TooltipIconComponent,
         BlockRowDataComponent,
+        EventTypeFilterPipe,
+        BlockHashFilterPipe,
     ],
     imports: [
         CommonModule,
@@ -36,6 +44,10 @@ import { BlockRowDataComponent } from "./components/block-row-data/block-row-dat
         DisplayHashModule,
         DisplaySizeModule,
         NgbTooltipModule,
+        AngularSvgIconModule,
+        FormsModule,
+        PaginationModule,
+        NgMultiSelectDropDownModule.forRoot(),
     ],
     exports: [MetadataBlockComponent],
 })

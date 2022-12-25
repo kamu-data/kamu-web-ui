@@ -36,7 +36,7 @@ describe("HistoryComponent", () => {
     });
 
     it("should check change page", () => {
-        const testChangeNotification = { currentPage: 1, isClick: false };
+        const testChangeNotification = 1;
 
         const emitterSubscription$ = component.onPageChangeEmit
             .pipe(first())

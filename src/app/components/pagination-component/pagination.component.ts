@@ -16,17 +16,14 @@ import { PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 export class PaginationComponent {
     @Input() public currentPage: number;
     @Input() public pageInfo: PageBasedInfo;
-    @Output() public pageChangeEvent = new EventEmitter<{
-        currentPage: number;
-        isClick: boolean;
-    }>();
+    @Output() public pageChangeEvent = new EventEmitter<number>();
 
     private previousPage: number;
 
-    public onPageChange(currentPage: number, isClick = false) {
+    public onPageChange(currentPage: number) {
         if (currentPage !== this.previousPage) {
             this.previousPage = currentPage;
-            this.pageChangeEvent.emit({ currentPage, isClick });
+            this.pageChangeEvent.emit(currentPage);
         }
     }
 }

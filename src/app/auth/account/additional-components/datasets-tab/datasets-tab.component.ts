@@ -31,13 +31,8 @@ export class DatasetsTabComponent {
         });
     }
 
-    public onPageChange(params: {
-        currentPage?: number;
-        isClick?: boolean;
-    }): void {
-        params.currentPage
-            ? (this.currentPage = params.currentPage)
-            : (this.currentPage = 1);
+    public onPageChange(currentPage?: number): void {
+        currentPage ? (this.currentPage = currentPage) : (this.currentPage = 1);
         if (this.currentPage === 1) {
             this.navigationService.navigateToOwnerView(
                 this.accountName,
@@ -48,7 +43,7 @@ export class DatasetsTabComponent {
         this.navigationService.navigateToOwnerView(
             this.accountName,
             this.accountViewType,
-            params.currentPage,
+            currentPage,
         );
     }
 }

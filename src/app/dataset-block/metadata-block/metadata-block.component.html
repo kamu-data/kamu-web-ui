@@ -41,7 +41,12 @@
         </div>
         <div class="col-md-5">
             <div class="container-content">
-                <app-block-navigation></app-block-navigation>
+                <app-block-navigation
+                    [datasetHistory]="datasetHistoryUpdate"
+                    [currentBlockHash]="blockHash"
+                    [datasetInfo]="datasetInfo"
+                    (onPageChangeEmit)="onPageChange($event)"
+                ></app-block-navigation>
             </div>
         </div>
     </div>

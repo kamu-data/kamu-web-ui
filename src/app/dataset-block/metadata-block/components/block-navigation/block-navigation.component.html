@@ -1,1 +1,81 @@
-<p>block-navigation works!</p>
+<div class="container-section">
+    <div class="text-center mb-4 position-relative align-items-center">
+        <input
+            class="form-control placeholder-padding-left d-inline custom-border"
+            type="text"
+            name="search-hash"
+            [(ngModel)]="searchHash"
+            autocomplete="off"
+            placeholder="Search by hash"
+            data-test-id="searchHash"
+        />
+        <svg-icon name="search"></svg-icon>
+        <mat-icon
+            *ngIf="searchHash"
+            (click)="refreshSearch()"
+            class="fs-5 d-inline position-absolute close-position"
+            data-test-id="clearSearchHash"
+            >close</mat-icon
+        >
+    </div>
+    <div class="mb-4 position-relative">
+        <ng-multiselect-dropdown
+            [placeholder]="'Select event type'"
+            [settings]="dropdownSettings"
+            [data]="dropdownList"
+            [(ngModel)]="eventTypeFilters"
+        >
+        </ng-multiselect-dropdown>
+        <mat-icon
+            *ngIf="!eventTypeFilters.length"
+            class="fs-5 text-muted position-list-icon"
+            >list_alt</mat-icon
+        >
+    </div>
+
+    <div class="d-flex flex-column gap-4" *ngIf="datasetHistory">
+        <ng-container
+            *ngIf="
+                datasetHistory.history
+                    | eventTypeFilter: eventTypeFilters
+                    | blockHashFilter: searchHash as result
+            "
+        >
+            <div
+                *ngFor="let block of result"
+                class="d-flex lh-lg align-items-center justify-content-between"
+            >
+                <div class="flex-grow-1 no-wrap lh-1">
+                    <mat-icon class="d-inline align-middle fs-4">tag</mat-icon>
+                    <app-display-hash
+                        [value]="block.blockHash"
+                        [datasetInfo]="datasetInfo"
+                        [showCopyButton]="false"
+                    ></app-display-hash>
+                    <div
+                        [innerHTML]="highlightHash(block.blockHash, searchHash)"
+                        class="ms-4 fs-10 text-muted"
+                    ></div>
+                </div>
+                <div
+                    class="me-4 align-self-baseline"
+                    *ngIf="currentBlockHash === block.blockHash"
+                >
+                    <span class="badge bg-success">current</span>
+                </div>
+                <div class="">
+                    <p>{{ block.event.__typename }}</p>
+                </div>
+            </div>
+            <ng-container *ngIf="result.length === 0">
+                <p class="mt-4 text-center">No block matches</p>
+            </ng-container>
+            <app-pagination
+                *ngIf="result.length"
+                [currentPage]="currentPage - 1"
+                [pageInfo]="datasetHistory.pageInfo"
+                (pageChangeEvent)="onPageChange($event)"
+            ></app-pagination>
+        </ng-container>
+    </div>
+</div>

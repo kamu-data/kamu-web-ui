@@ -120,23 +120,20 @@ export class DatasetComponent
         }
     }
 
-    public onPageChange(params: {
-        currentPage: number;
-        isClick: boolean;
-    }): void {
+    public onPageChange(currentPage: number): void {
         if (this.datasetBasics) {
             this.navigationService.navigateToDatasetView({
                 accountName: this.datasetBasics.owner.name,
                 datasetName: this.datasetBasics.name as string,
                 tab: this.datasetViewType,
-                page: params.currentPage,
+                page: currentPage,
             });
             this.initDatasetViewByType(
                 {
                     accountName: this.datasetBasics.owner.name,
                     datasetName: this.datasetBasics.name as string,
                 },
-                params.currentPage,
+                currentPage,
             );
         }
     }

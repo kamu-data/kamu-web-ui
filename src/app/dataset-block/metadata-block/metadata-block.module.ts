@@ -21,6 +21,7 @@ import { PaginationModule } from "src/app/components/pagination-component/pagina
 import { BlockHashFilterPipe } from "./components/block-navigation/pipes/block-hash-filter.pipe";
 import { EventTypeFilterPipe } from "./components/block-navigation/pipes/event-type-filter.pipe";
 import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
+import { SetPollingSourceEventComponent } from "./components/event-details/components/set-polling-source-event/set-polling-source-event.component";
 
 @NgModule({
     declarations: [
@@ -29,6 +30,7 @@ import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
         EventDetailsComponent,
         BlockNavigationComponent,
         AddDataEventComponent,
+        SetPollingSourceEventComponent,
         TooltipIconComponent,
         BlockRowDataComponent,
         EventTypeFilterPipe,

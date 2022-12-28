@@ -1,4 +1,7 @@
-import { AddDataEventFragment } from "./../../../../api/kamu.graphql.interface";
+import {
+    AddDataEventFragment,
+    SetPollingSource,
+} from "./../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "./supported.events";
 import {
     ChangeDetectionStrategy,
@@ -38,6 +41,14 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     public get isAddDataEvent(): boolean {
         return this.block.event.__typename === SupportedEvents.AddData;
+    }
+
+    public get isSetPollingSourceEvent(): boolean {
+        return this.block.event.__typename === SupportedEvents.SetPollingSource;
+    }
+
+    public get setPollingSourceEvent(): SetPollingSource {
+        return this.block.event as SetPollingSource;
     }
 
     public get addDataEvent(): AddDataEventFragment {

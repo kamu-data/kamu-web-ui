@@ -845,6 +845,122 @@ export type AddDataEventFragment = {
     } | null;
 };
 
+export type SetPollingSourceEventFragment = {
+    __typename?: "SetPollingSource";
+    fetch:
+        | {
+              __typename?: "FetchStepContainer";
+              image: string;
+              command?: Array<string> | null;
+              args?: Array<string> | null;
+              env?: Array<{
+                  __typename?: "EnvVar";
+                  name: string;
+                  value?: string | null;
+              }> | null;
+          }
+        | {
+              __typename?: "FetchStepFilesGlob";
+              path: string;
+              order?: SourceOrdering | null;
+              eventTime?:
+                  | { __typename: "EventTimeSourceFromMetadata" }
+                  | {
+                        __typename?: "EventTimeSourceFromPath";
+                        pattern: string;
+                        timestampFormat?: string | null;
+                    }
+                  | null;
+              cache?: { __typename: "SourceCachingForever" } | null;
+          }
+        | {
+              __typename?: "FetchStepUrl";
+              url: string;
+              eventTime?:
+                  | { __typename: "EventTimeSourceFromMetadata" }
+                  | {
+                        __typename?: "EventTimeSourceFromPath";
+                        pattern: string;
+                        timestampFormat?: string | null;
+                    }
+                  | null;
+          };
+    read:
+        | {
+              __typename?: "ReadStepCsv";
+              schema?: Array<string> | null;
+              separator?: string | null;
+              encoding?: string | null;
+              quote?: string | null;
+              escape?: string | null;
+              comment?: string | null;
+              header?: boolean | null;
+              enforceSchema?: boolean | null;
+              inferSchema?: boolean | null;
+              ignoreLeadingWhiteSpace?: boolean | null;
+              ignoreTrailingWhiteSpace?: boolean | null;
+              nullValue?: string | null;
+              emptyValue?: string | null;
+              nanValue?: string | null;
+              positiveInf?: string | null;
+              negativeInf?: string | null;
+              dateFormat?: string | null;
+              timestampFormat?: string | null;
+              multiLine?: boolean | null;
+          }
+        | {
+              __typename?: "ReadStepEsriShapefile";
+              schema?: Array<string> | null;
+              subPath?: string | null;
+          }
+        | { __typename?: "ReadStepGeoJson"; schema?: Array<string> | null }
+        | {
+              __typename?: "ReadStepJsonLines";
+              schema?: Array<string> | null;
+              dateFormat?: string | null;
+              encoding?: string | null;
+              multiLine?: boolean | null;
+              primitivesAsString?: boolean | null;
+              timestampFormat?: string | null;
+          }
+        | { __typename?: "ReadStepParquet"; schema?: Array<string> | null };
+    merge:
+        | { __typename: "MergeStrategyAppend" }
+        | { __typename?: "MergeStrategyLedger"; primaryKey: Array<string> }
+        | {
+              __typename?: "MergeStrategySnapshot";
+              primaryKey: Array<string>;
+              compareColumns?: Array<string> | null;
+              observationColumn?: string | null;
+              obsvAdded?: string | null;
+              obsvChanged?: string | null;
+              obsvRemoved?: string | null;
+          };
+    prepare?: Array<
+        | {
+              __typename?: "PrepStepDecompress";
+              format: CompressionFormat;
+              subPath?: string | null;
+          }
+        | { __typename?: "PrepStepPipe"; command: Array<string> }
+    > | null;
+    preprocess?: {
+        __typename?: "TransformSql";
+        engine: string;
+        version?: string | null;
+        queries: Array<{
+            __typename?: "SqlQueryStep";
+            query: string;
+            alias?: string | null;
+        }>;
+        temporalTables?: Array<{
+            __typename?: "TemporalTable";
+            name: string;
+            primaryKey: Array<string>;
+        }> | null;
+    } | null;
+};
+
 export type AccountDetailsFragment = {
     __typename?: "AccountInfo";
     login: string;
@@ -1154,7 +1270,7 @@ export type MetadataBlockFragment = {
         | { __typename: "SetAttachments" }
         | { __typename: "SetInfo" }
         | { __typename: "SetLicense"; name: string }
-        | { __typename: "SetPollingSource" }
+        | ({ __typename: "SetPollingSource" } & SetPollingSourceEventFragment)
         | { __typename: "SetTransform" }
         | { __typename: "SetVocab" }
         | { __typename: "SetWatermark"; outputWatermark: any };
@@ -1435,6 +1551,129 @@ export const AddDataEventFragmentDoc = gql`
         }
     }
 `;
+export const SetPollingSourceEventFragmentDoc = gql`
+    fragment SetPollingSourceEvent on SetPollingSource {
+        fetch {
+            ... on FetchStepUrl {
+                url
+                eventTime {
+                    ... on EventTimeSourceFromPath {
+                        pattern
+                        timestampFormat
+                    }
+                    ... on EventTimeSourceFromMetadata {
+                        __typename
+                    }
+                }
+            }
+            ... on FetchStepFilesGlob {
+                path
+                eventTime {
+                    ... on EventTimeSourceFromPath {
+                        pattern
+                        timestampFormat
+                    }
+                    ... on EventTimeSourceFromMetadata {
+                        __typename
+                    }
+                }
+                cache {
+                    __typename
+                }
+                order
+            }
+            ... on FetchStepContainer {
+                image
+                command
+                args
+                env {
+                    name
+                    value
+                }
+            }
+        }
+        read {
+            ... on ReadStepCsv {
+                schema
+                separator
+                encoding
+                quote
+                escape
+                comment
+                header
+                enforceSchema
+                inferSchema
+                ignoreLeadingWhiteSpace
+                ignoreTrailingWhiteSpace
+                nullValue
+                emptyValue
+                nanValue
+                positiveInf
+                negativeInf
+                dateFormat
+                timestampFormat
+                multiLine
+            }
+            ... on ReadStepGeoJson {
+                schema
+            }
+            ... on ReadStepParquet {
+                schema
+            }
+            ... on ReadStepJsonLines {
+                schema
+                dateFormat
+                encoding
+                multiLine
+                primitivesAsString
+                timestampFormat
+            }
+            ... on ReadStepEsriShapefile {
+                schema
+                subPath
+            }
+        }
+        merge {
+            ... on MergeStrategySnapshot {
+                primaryKey
+                compareColumns
+                observationColumn
+                obsvAdded
+                obsvChanged
+                obsvRemoved
+            }
+            ... on MergeStrategyLedger {
+                primaryKey
+            }
+            ... on MergeStrategyAppend {
+                __typename
+            }
+        }
+        prepare {
+            ... on PrepStepDecompress {
+                format
+                subPath
+            }
+            ... on PrepStepPipe {
+                command
+            }
+        }
+        preprocess {
+            ... on TransformSql {
+                engine
+                version
+                queries {
+                    query
+                    alias
+                }
+                temporalTables {
+                    name
+                    primaryKey
+                }
+            }
+        }
+    }
+`;
 export const MetadataBlockFragmentDoc = gql`
     fragment MetadataBlock on MetadataBlockExtended {
         blockHash
@@ -1478,9 +1717,11 @@ export const MetadataBlockFragmentDoc = gql`
             ... on SetLicense {
                 name
             }
+            ...SetPollingSourceEvent
         }
     }
     ${AddDataEventFragmentDoc}
+    ${SetPollingSourceEventFragmentDoc}
 `;
 export const DatasetPageInfoFragmentDoc = gql`
     fragment DatasetPageInfo on PageBasedInfo {

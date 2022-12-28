@@ -40,5 +40,6 @@ fragment MetadataBlock on MetadataBlockExtended {
     ... on SetLicense {
       name
     }
+    ...SetPollingSourceEvent
   }
 }

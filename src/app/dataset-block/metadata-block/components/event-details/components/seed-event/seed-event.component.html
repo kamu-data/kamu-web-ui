@@ -1,0 +1,16 @@
+<div class="position-relative border border-1 p-2 rounded-3">
+    <span class="position-absolute text-muted group-box-label text-uppercase"
+        >Dataset info</span
+    >
+    <div class="ms-4">
+        <app-block-row-data
+            tooltip="Unique identity of the dataset."
+            label="Id:"
+        >
+            <span>{{ event.datasetId }}</span>
+        </app-block-row-data>
+        <app-block-row-data tooltip="Type of the dataset." label="Kind:">
+            <span>{{ datasetKind(event.datasetKind) }}</span>
+        </app-block-row-data>
+    </div>
+</div>

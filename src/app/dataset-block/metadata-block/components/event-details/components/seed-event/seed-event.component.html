@@ -7,7 +7,22 @@
             tooltip="Unique identity of the dataset."
             label="Id:"
         >
-            <span>{{ event.datasetId }}</span>
+            <span class="fs-12 font-monospace text-break">{{
+                event.datasetId
+            }}</span>
+            <button
+                (click)="copyToClipboard($event, event.datasetId)"
+                class="btn btn-sm btn-gray clipboard-btn ms-2"
+                role="button"
+                data-test-id="copyToClipboardId"
+            >
+                <div style="position: relative; display: inline-block">
+                    <svg-icon name="copy"></svg-icon>
+                </div>
+                <div style="position: relative; display: none">
+                    <svg-icon name="checked"></svg-icon>
+                </div>
+            </button>
         </app-block-row-data>
         <app-block-row-data tooltip="Type of the dataset." label="Kind:">
             <span>{{ datasetKind(event.datasetKind) }}</span>

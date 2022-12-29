@@ -1,1 +1,94 @@
-<pre>{{ event | json }}</pre>
+<div class="layout lh-1 font-monospace">
+    <p class="color-key">fetch:</p>
+    <p>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kind:
+        <span class="value-color">
+            {{ event.fetch.__typename }}
+        </span>
+    </p>
+    <ng-container *ngIf="fetchStepUrl">
+        <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url:
+            <a [href]="fetchStepUrl.url" [title]="fetchStepUrl.url"
+                ><span class="value-color lh-sm">{{
+                    fetchStepUrl.url
+                }}</span></a
+            >
+        </p>
+        <p *ngIf="fetchStepUrl.eventTime">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eventTime:
+        </p>
+    </ng-container>
+    <ng-container *ngIf="isFetchStepFilesGlob">
+        <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path:
+            <span class="value-color">{{ fetchStepFilesGlob.path }}</span>
+        </p>
+    </ng-container>
+    <p class="color-key">read:</p>
+    <p>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kind:
+        <span class="value-color">{{ event.read.__typename }}</span>
+    </p>
+    <ng-container *ngIf="isReadStepCsv">
+        <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;separator:
+            <span class="value-color"> {{ readStepCsv.separator }}</span>
+        </p>
+        <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;header:
+            <span class="value-color"> {{ readStepCsv.header }}</span>
+        </p>
+    </ng-container>
+    <p class="color-key">merge:</p>
+    <ng-container *ngIf="isMergeStrategyLedger">
+        <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kind:
+            <span class="value-color"> {{ event.merge.__typename }}</span>
+        </p>
+        <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;primaryKey:
+            <span class="value-color">
+                {{ mergeStrategyLedger.primaryKey.join(", ") }}</span
+            >
+        </p>
+    </ng-container>
+
+    <p class="color-key">preprocess:</p>
+    <ng-container *ngIf="event.preprocess">
+        <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kind:
+            <span class="value-color"> {{ event.preprocess.__typename }}</span>
+        </p>
+
+        <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;engine:
+            <span class="value-color"> {{ event.preprocess.engine }}</span>
+        </p>
+
+        <p *ngIf="event.preprocess.version">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;version:
+            <span class="value-color"> {{ event.preprocess.version }}</span>
+        </p>
+
+        <ng-container *ngIf="event.preprocess.queries">
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queries:</p>
+            <ng-container *ngFor="let query of event.preprocess.queries">
+                <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- alias:<span
+                        class="value-color"
+                    >
+                        {{ query.alias ? query.alias : "none" }}</span
+                    >
+                </p>
+                <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; query:<span
+                        class="value-color lh-sm"
+                    >
+                        {{ query.query }}</span
+                    >
+                </p>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+</div>

@@ -68,6 +68,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     public isSearchActive = false;
     public isCollapsedAppHeaderMenu = false;
     public searchQuery = "";
+    private delayTime: number = AppValues.SHORT_DELAY_MS;
 
     constructor(
         private appSearchAPI: SearchApi,
@@ -116,7 +117,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
         readonly DatasetAutocompleteItem[]
     > = (text$: Observable<string>) => {
         return text$.pipe(
-            debounceTime(300),
+            debounceTime(this.delayTime),
             distinctUntilChanged(),
             switchMap((term: string) =>
                 this.appSearchAPI.autocompleteDatasetSearch(term),

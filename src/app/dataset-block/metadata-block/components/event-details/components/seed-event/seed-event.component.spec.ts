@@ -1,3 +1,4 @@
+import AppValues from "src/app/common/app.values";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import {
     ComponentFixture,
@@ -47,7 +48,7 @@ describe("SeedEventComponent", () => {
             copyToClipboardButton.classList.contains("clipboard-btn--success"),
         ).toEqual(true);
 
-        tick(2001);
+        tick(AppValues.LONG_DELAY_MS);
 
         expect(
             copyToClipboardButton.classList.contains("clipboard-btn--success"),

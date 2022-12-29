@@ -1,3 +1,4 @@
+import AppValues from "src/app/common/app.values";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { DatasetKind, Seed } from "src/app/api/kamu.graphql.interface";
 import { DataHelpers } from "src/app/common/data.helpers";
@@ -31,7 +32,7 @@ export class SeedEventComponent {
                 currentElementChildren[0].style.display = displayInlineBlock;
                 currentElementChildren[1].style.display = displayNone;
                 currentElement.classList.remove("clipboard-btn--success");
-            }, 2000);
+            }, AppValues.LONG_DELAY_MS);
 
             currentElementChildren[0].style.display = displayNone;
             currentElementChildren[1].style.display = displayInlineBlock;

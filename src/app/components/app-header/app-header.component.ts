@@ -182,7 +182,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
                 this.triggerMenuClick();
             }
             (event.target as HTMLElement).blur();
-        }, 200);
+        }, AppValues.SHORT_DELAY_MS);
         if (!this.searchQuery) {
             this.navigationService.navigateToHome();
             return;

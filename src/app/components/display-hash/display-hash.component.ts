@@ -1,3 +1,4 @@
+import AppValues from "src/app/common/app.values";
 import { DatasetInfo } from "./../../interface/navigation.interface";
 import { NavigationService } from "./../../services/navigation.service";
 import { Component, Input } from "@angular/core";
@@ -45,7 +46,7 @@ export class DisplayHashComponent {
                 currentElementChildren[0].style.display = displayInlineBlock;
                 currentElementChildren[1].style.display = displayNone;
                 currentElement.classList.remove("clipboard-btn--success");
-            }, 2000);
+            }, AppValues.LONG_DELAY_MS);
 
             currentElementChildren[0].style.display = displayNone;
             currentElementChildren[1].style.display = displayInlineBlock;

@@ -67,7 +67,7 @@ export class DatasetViewMenuComponent implements OnInit {
                 currentElementChildren[0].style.display = "inline-block";
                 currentElementChildren[1].style.display = "none";
                 currentElement.classList.remove("clipboard-btn--success");
-            }, 2000);
+            }, AppValues.LONG_DELAY_MS);
 
             currentElementChildren[0].style.display = "none";
             currentElementChildren[1].style.display = "inline-block";

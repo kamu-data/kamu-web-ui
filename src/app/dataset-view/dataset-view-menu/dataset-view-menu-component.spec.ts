@@ -1,3 +1,4 @@
+import AppValues from "src/app/common/app.values";
 import { DatasetNavigationInterface } from "./../dataset-view.interface";
 import { FormsModule } from "@angular/forms";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
@@ -78,7 +79,7 @@ describe("DatasetViewMenuComponent", () => {
             copyToClipboardButton.classList.contains("clipboard-btn--success"),
         ).toEqual(true);
 
-        tick(2001);
+        tick(AppValues.LONG_DELAY_MS);
 
         expect(
             copyToClipboardButton.classList.contains("clipboard-btn--success"),

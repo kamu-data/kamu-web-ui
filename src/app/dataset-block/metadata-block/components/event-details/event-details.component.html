@@ -6,6 +6,10 @@
         ></app-add-data-event>
     </ng-container>
 
+    <ng-container *ngIf="isSeedEvent">
+        <app-seed-event [event]="seedEvent"> </app-seed-event>
+    </ng-container>
+
     <ng-container *ngIf="!isSupportedEvent">
         <p class="text-center mt-2">
             <mat-icon class="text-danger align-middle">block</mat-icon>

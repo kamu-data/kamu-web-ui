@@ -14,6 +14,8 @@ export default class AppValues {
     public static readonly DISPLAY_TOOLTIP_DATE_FORMAT = "MMM D, YYYY, HH:mm A";
     public static readonly UNIMPLEMENTED_MESSAGE = "Feature coming soon";
     public static readonly SQL_QUERY_LIMIT = 50;
+    public static readonly SHORT_DELAY_MS = 200;
+    public static readonly LONG_DELAY_MS = 2000;
     public static readonly CLIBPOARD_KAMU_CLI =
         "kamu pull kamu.dev/anonymous/dataset";
     public static readonly CLIPBOARD_KAFKA =

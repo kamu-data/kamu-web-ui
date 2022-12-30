@@ -2,7 +2,7 @@
     <input class="toggle-input" type="checkbox" />
     <button
         class="toggle-btn {{ className }}"
-        [ngClass]="{ 'toggle-btn-on': on, 'toggle-btn-off': !on }"
-        [attr.aria-expanded]="on"
+        [ngClass]="{ 'toggle-btn-on': isToggled, 'toggle-btn-off': !isToggled }"
+        [attr.aria-expanded]="isToggled"
     ></button>
 </div>

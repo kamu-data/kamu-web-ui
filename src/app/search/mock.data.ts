@@ -550,7 +550,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     ...mockOwnerFields,
                                 },
                                 event: {
-                                    __typename: "SetPollingSource",
+                                    __typename: "SetInfo",
                                 },
                             },
                             {

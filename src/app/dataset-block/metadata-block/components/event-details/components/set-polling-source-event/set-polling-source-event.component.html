@@ -1,6 +1,9 @@
 <div class="d-flex justify-content-end">
     <span class="me-2">Show as yaml</span>
-    <app-toggle [on]="isYamlView" (toggled)="onToggleView($event)"></app-toggle>
+    <app-toggle
+        [isToggled]="isYamlView"
+        (toggled)="onToggleView($event)"
+    ></app-toggle>
 </div>
 
 <div *ngIf="isYamlView" class="layout lh-1 font-monospace mt-4">

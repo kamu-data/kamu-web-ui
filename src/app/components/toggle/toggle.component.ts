@@ -13,12 +13,12 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToggleComponent {
-    @Input() on: boolean;
-    @Input() className: string;
-    @Output() toggled = new EventEmitter<boolean>();
+    @Input() public isToggled: boolean;
+    @Input() public className: string;
+    @Output() public toggled = new EventEmitter<boolean>();
 
     public onClick(): void {
-        this.on = !this.on;
-        this.toggled.emit(this.on);
+        this.isToggled = !this.isToggled;
+        this.toggled.emit(this.isToggled);
     }
 }

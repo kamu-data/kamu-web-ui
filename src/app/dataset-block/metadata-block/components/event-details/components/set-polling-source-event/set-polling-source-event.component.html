@@ -1,4 +1,9 @@
-<div *ngIf="isYamlView" class="layout lh-1 font-monospace">
+<div class="d-flex justify-content-end">
+    <span class="me-2">Show as yaml</span>
+    <app-toggle [on]="isYamlView" (toggled)="onToggleView($event)"></app-toggle>
+</div>
+
+<div *ngIf="isYamlView" class="layout lh-1 font-monospace mt-4">
     <p class="color-key">fetch:</p>
     <p>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kind:
@@ -54,8 +59,8 @@
         </p>
     </ng-container>
 
-    <p class="color-key">preprocess:</p>
     <ng-container *ngIf="event.preprocess">
+        <p class="color-key">preprocess:</p>
         <p>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kind:
             <span class="value-color"> {{ event.preprocess.__typename }}</span>
@@ -105,9 +110,12 @@
                     tooltip="URL of the data source."
                     label="Url:"
                 >
-                    <a [href]="fetchStepUrl.url" [title]="fetchStepUrl.url">{{
-                        fetchStepUrl.url
-                    }}</a>
+                    <a
+                        class="text-break"
+                        [href]="fetchStepUrl.url"
+                        [title]="fetchStepUrl.url"
+                        >{{ fetchStepUrl.url }}</a
+                    >
                 </app-block-row-data>
             </div>
         </div>
@@ -180,7 +188,7 @@
                             let i = index
                         "
                     >
-                        <p>Alias: {{ query.alias ? query.alias : "none" }}</p>
+                        <p>alias: {{ query.alias ? query.alias : "none" }}</p>
                         <p class="font-monospace">{{ query.query }}</p>
                         <mat-divider *ngIf="i > 0"></mat-divider>
                     </ng-container>

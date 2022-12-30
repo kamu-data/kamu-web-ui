@@ -51,4 +51,8 @@ export class SetPollingSourceEventComponent {
     public get isMergeStrategyLedger(): boolean {
         return this.event.merge.__typename === "MergeStrategyLedger";
     }
+
+    public onToggleView(value: boolean): void {
+        this.isYamlView = value;
+    }
 }

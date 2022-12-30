@@ -22,6 +22,7 @@ import { BlockHashFilterPipe } from "./components/block-navigation/pipes/block-h
 import { EventTypeFilterPipe } from "./components/block-navigation/pipes/event-type-filter.pipe";
 import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
 import { SetPollingSourceEventComponent } from "./components/event-details/components/set-polling-source-event/set-polling-source-event.component";
+import { ToggleComponent } from "src/app/components/toggle/toggle.component";
 
 @NgModule({
     declarations: [
@@ -35,6 +36,7 @@ import { SetPollingSourceEventComponent } from "./components/event-details/compo
         BlockRowDataComponent,
         EventTypeFilterPipe,
         BlockHashFilterPipe,
+        ToggleComponent,
     ],
     imports: [
         CommonModule,

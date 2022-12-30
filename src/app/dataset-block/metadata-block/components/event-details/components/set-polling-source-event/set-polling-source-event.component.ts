@@ -18,6 +18,8 @@ export class SetPollingSourceEventComponent {
     @Input() public event: SetPollingSource;
     @Input() public datasetInfo: DatasetInfo;
 
+    public isYamlView = false;
+
     public get fetchStepUrl(): FetchStepUrl {
         return this.event.fetch as FetchStepUrl;
     }

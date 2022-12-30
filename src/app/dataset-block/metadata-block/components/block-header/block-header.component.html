@@ -14,8 +14,8 @@
         >
             <mat-icon>arrow_drop_down</mat-icon>
         </button>
-        <mat-menu #menu="matMenu" xPosition="before">
-            <button mat-menu-item>Show as Yaml</button>
+        <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="false">
+            <div class="p-3 bg-white">Show as Yaml</div>
             <mat-divider></mat-divider>
             <button mat-menu-item>Action 2</button>
         </mat-menu>

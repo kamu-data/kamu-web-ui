@@ -1,4 +1,4 @@
-<div class="layout lh-1 font-monospace">
+<div *ngIf="isYamlView" class="layout lh-1 font-monospace">
     <p class="color-key">fetch:</p>
     <p>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kind:
@@ -92,3 +92,100 @@
         </ng-container>
     </ng-container>
 </div>
+
+<ng-container *ngIf="!isYamlView">
+    <div class="d-flex flex-column gap-4 mt-4">
+        <div class="position-relative border border-1 p-2 rounded-3">
+            <span
+                class="position-absolute text-muted group-box-label text-uppercase"
+                >Fetch</span
+            >
+            <div class="ms-4">
+                <app-block-row-data
+                    tooltip="URL of the data source."
+                    label="Url:"
+                >
+                    <a [href]="fetchStepUrl.url" [title]="fetchStepUrl.url">{{
+                        fetchStepUrl.url
+                    }}</a>
+                </app-block-row-data>
+            </div>
+        </div>
+
+        <div class="position-relative border border-1 p-2 rounded-3">
+            <span
+                class="position-absolute text-muted group-box-label text-uppercase"
+                >Read</span
+            >
+            <div class="ms-4">
+                <ng-container *ngIf="isReadStepCsv">
+                    <app-block-row-data
+                        tooltip="Sets a single character as a separator for each field and value."
+                        label="Separator:"
+                    >
+                        <span>{{ readStepCsv.separator }}</span>
+                    </app-block-row-data>
+                    <app-block-row-data
+                        tooltip="Use the first line as names of columns."
+                        label="Header:"
+                    >
+                        <span>{{ readStepCsv.header }}</span>
+                    </app-block-row-data>
+                </ng-container>
+            </div>
+        </div>
+
+        <div class="position-relative border border-1 p-2 rounded-3">
+            <span
+                class="position-absolute text-muted group-box-label text-uppercase"
+                >Merge</span
+            >
+            <div class="ms-4">
+                <ng-container *ngIf="isMergeStrategyLedger">
+                    <app-block-row-data
+                        tooltip="Names of the columns that uniquely identify the record throughout its lifetime."
+                        label="Primary key:"
+                    >
+                        <span>{{
+                            mergeStrategyLedger.primaryKey.join(", ")
+                        }}</span>
+                    </app-block-row-data>
+                </ng-container>
+            </div>
+        </div>
+
+        <div
+            class="position-relative border border-1 p-2 rounded-3"
+            *ngIf="event.preprocess"
+        >
+            <span
+                class="position-absolute text-muted group-box-label text-uppercase"
+                >Preprocess</span
+            >
+            <div class="ms-4">
+                <app-block-row-data
+                    tooltip="Identifier of the engine used for this transformation."
+                    label="Engine:"
+                >
+                    <span>{{ event.preprocess.engine }}</span>
+                </app-block-row-data>
+                <app-block-row-data
+                    tooltip="Queries use for specifying multi-step SQL transformations."
+                    label="Queries:"
+                    *ngIf="event.preprocess.queries"
+                >
+                    <ng-container
+                        *ngFor="
+                            let query of event.preprocess.queries;
+                            let i = index
+                        "
+                    >
+                        <p>Alias: {{ query.alias ? query.alias : "none" }}</p>
+                        <p class="font-monospace">{{ query.query }}</p>
+                        <mat-divider *ngIf="i > 0"></mat-divider>
+                    </ng-container>
+                </app-block-row-data>
+            </div>
+        </div>
+    </div>
+</ng-container>

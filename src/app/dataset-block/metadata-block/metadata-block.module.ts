@@ -23,6 +23,7 @@ import { EventTypeFilterPipe } from "./components/block-navigation/pipes/event-t
 import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
 import { SetPollingSourceEventComponent } from "./components/event-details/components/set-polling-source-event/set-polling-source-event.component";
 import { ToggleComponent } from "src/app/components/toggle/toggle.component";
+import { SeedEventComponent } from "./components/event-details/components/seed-event/seed-event.component";
 
 @NgModule({
     declarations: [
@@ -32,6 +33,7 @@ import { ToggleComponent } from "src/app/components/toggle/toggle.component";
         BlockNavigationComponent,
         AddDataEventComponent,
         SetPollingSourceEventComponent,
+        SeedEventComponent,
         TooltipIconComponent,
         BlockRowDataComponent,
         EventTypeFilterPipe,

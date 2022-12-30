@@ -1,6 +1,7 @@
 import {
     AddDataEventFragment,
     SetPollingSource,
+    Seed,
 } from "./../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "./supported.events";
 import {
@@ -53,6 +54,14 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     public get addDataEvent(): AddDataEventFragment {
         return this.block.event as AddDataEventFragment;
+    }
+
+    public get isSeedEvent(): boolean {
+        return this.block.event.__typename === SupportedEvents.Seed;
+    }
+
+    public get seedEvent(): Seed {
+        return this.block.event as Seed;
     }
 
     ngOnInit(): void {

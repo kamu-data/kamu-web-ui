@@ -1,3 +1,4 @@
+import AppValues from "src/app/common/app.values";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -14,4 +15,5 @@ import {
 })
 export class TooltipIconComponent {
     @Input() public tooltip: string;
+    public openDelay: number = AppValues.SHORT_DELAY_MS;
 }

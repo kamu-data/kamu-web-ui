@@ -33,13 +33,13 @@ describe("AppHelpers", () => {
             await new Promise((resolve) => {
                 setTimeout(() => {
                     resolve("foo");
-                }, 1);
+                });
             });
             expect(consoleErrorSpy).not.toHaveBeenCalled();
             throw testError;
         };
         promiseWithCatch(failingPromise());
-        tick(1);
+        tick();
 
         expect(consoleErrorSpy).toHaveBeenCalledWith(testError);
     }));

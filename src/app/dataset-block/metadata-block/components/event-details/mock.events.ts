@@ -1,5 +1,9 @@
 import { SetPollingSource } from "./../../../../api/kamu.graphql.interface";
-import { AddDataEventFragment } from "src/app/api/kamu.graphql.interface";
+import {
+    AddDataEventFragment,
+    DatasetKind,
+    Seed,
+} from "src/app/api/kamu.graphql.interface";
 export const mockAddData: AddDataEventFragment = {
     __typename: "AddData",
     addDataWatermark: "2022-08-01T00:00:00+00:00",
@@ -65,4 +69,9 @@ export const mockSetPollinfSourceEvent: SetPollingSource = {
     },
     prepare: null,
     preprocess: null,
+};
+export const mockSeed: Seed = {
+    __typename: "Seed",
+    datasetId: "sadasdfdsdefdfdf",
+    datasetKind: DatasetKind.Root,
 };

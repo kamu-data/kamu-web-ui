@@ -6,6 +6,7 @@ import { ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import {
     ComponentFixture,
     fakeAsync,
+    flush,
     TestBed,
     tick,
 } from "@angular/core/testing";
@@ -277,7 +278,7 @@ describe("AppHeaderComponent", () => {
         ) as HTMLInputElement;
         elSearchInput.value = SEARCH_QUERY;
         elSearchInput.dispatchEvent(new Event("input"));
-        tick(301); // debouncer
+        tick(AppValues.SHORT_DELAY_MS); // debouncer
 
         // This should activate search API and update view
         expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(
@@ -311,8 +312,9 @@ describe("AppHeaderComponent", () => {
         expect(emitterSubscription$.closed).toBeTrue();
 
         // Ensure focus lost on autocomplete after delay
-        tick(100);
+        tick();
         expect(typeAheadInputElBlurSpy).toHaveBeenCalledWith();
+        flush();
     }));
 
     it("should check search method triggers menu click on mobile view", fakeAsync(() => {
@@ -332,7 +334,7 @@ describe("AppHeaderComponent", () => {
         });
         const el = findElementByDataTestId(fixture, "searchInput");
         el.dispatchEvent(event);
-        tick(201);
+        tick(AppValues.SHORT_DELAY_MS);
         expect(triggerMenuClickSpy).toHaveBeenCalledWith();
         expect(navigateToSearchSpy).toHaveBeenCalledWith(DEFAULT_SEARCH_QUERY);
     }));

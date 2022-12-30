@@ -1,3 +1,4 @@
+import AppValues from "src/app/common/app.values";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { TEST_BLOCK_HASH } from "./../../api/mock/dataset.mock";
 import {
@@ -68,7 +69,7 @@ describe("DisplayHashComponent", () => {
             copyToClipboardButton.classList.contains("clipboard-btn--success"),
         ).toEqual(true);
 
-        tick(2001);
+        tick(AppValues.LONG_DELAY_MS);
 
         expect(
             copyToClipboardButton.classList.contains("clipboard-btn--success"),

@@ -1,0 +1,31 @@
+<div class="position-relative border border-1 p-2 rounded-3">
+    <span class="position-absolute text-muted group-box-label text-uppercase"
+        >Dataset info</span
+    >
+    <div class="ms-4">
+        <app-block-row-data
+            tooltip="Unique identity of the dataset."
+            label="Id:"
+        >
+            <span class="fs-12 font-monospace text-break">{{
+                event.datasetId
+            }}</span>
+            <button
+                (click)="copyToClipboard($event, event.datasetId)"
+                class="btn btn-sm btn-gray clipboard-btn ms-2"
+                role="button"
+                data-test-id="copyToClipboardId"
+            >
+                <div style="position: relative; display: inline-block">
+                    <svg-icon name="copy"></svg-icon>
+                </div>
+                <div style="position: relative; display: none">
+                    <svg-icon name="checked"></svg-icon>
+                </div>
+            </button>
+        </app-block-row-data>
+        <app-block-row-data tooltip="Type of the dataset." label="Kind:">
+            <span>{{ datasetKind(event.datasetKind) }}</span>
+        </app-block-row-data>
+    </div>
+</div>

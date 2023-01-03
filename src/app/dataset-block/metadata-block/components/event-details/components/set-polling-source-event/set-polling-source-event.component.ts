@@ -1,3 +1,4 @@
+import { DataHelpers } from "src/app/common/data.helpers";
 import {
     FetchStepFilesGlob,
     FetchStepUrl,
@@ -50,6 +51,13 @@ export class SetPollingSourceEventComponent {
 
     public get isMergeStrategyLedger(): boolean {
         return this.event.merge.__typename === "MergeStrategyLedger";
+    }
+
+    public descriptionEngine(name: string): {
+        name: string;
+        url_logo: string;
+    } {
+        return DataHelpers.descriptionForEngine(name);
     }
 
     public onToggleView(value: boolean): void {

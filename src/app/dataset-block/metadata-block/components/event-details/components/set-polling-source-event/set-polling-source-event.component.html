@@ -181,8 +181,21 @@
                 <app-block-row-data
                     tooltip="Identifier of the engine used for this transformation."
                     label="Engine:"
-                >
-                    <span>{{ event.preprocess.engine }}</span>
+                    ><div class="d-flex align-items-end">
+                        <img
+                            class="engine-logo me-3"
+                            [src]="
+                                descriptionEngine(event.preprocess.engine)
+                                    .url_logo
+                            "
+                            [alt]="event.preprocess.engine"
+                        />
+                        <span
+                            >({{
+                                descriptionEngine(event.preprocess.engine).name
+                            }})</span
+                        >
+                    </div>
                 </app-block-row-data>
                 <app-block-row-data
                     tooltip="Queries use for specifying multi-step SQL transformations."

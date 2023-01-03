@@ -27,6 +27,24 @@ export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SET_ATTACHMENTS =
         "Attachments updated";
 
+    public static descriptionForEngine(name: string): {
+        name: string;
+        url_logo: string;
+    } {
+        switch (name) {
+            case "flink":
+                return {
+                    name: "Apache Flink",
+                    url_logo: "assets/images/apache-flink.png",
+                };
+            default:
+                return {
+                    name: "Apache Spark",
+                    url_logo: "assets/images/apache-spark.png",
+                };
+        }
+    }
+
     public static descriptionForMetadataBlock(
         block: MetadataBlockFragment,
     ): string {

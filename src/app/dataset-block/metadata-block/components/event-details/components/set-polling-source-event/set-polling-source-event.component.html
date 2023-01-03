@@ -41,7 +41,7 @@
     <ng-container *ngIf="isReadStepCsv">
         <p>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;separator:
-            <span class="value-color"> {{ readStepCsv.separator }}</span>
+            <span class="value-color"> "{{ readStepCsv.separator }}"</span>
         </p>
         <p>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;header:
@@ -134,7 +134,11 @@
                         tooltip="Sets a single character as a separator for each field and value."
                         label="Separator:"
                     >
-                        <span>{{ readStepCsv.separator }}</span>
+                        <q class="fs-5">
+                            <span class="fs-4">{{
+                                readStepCsv.separator
+                            }}</span>
+                        </q>
                     </app-block-row-data>
                     <app-block-row-data
                         tooltip="Use the first line as names of columns."

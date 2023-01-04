@@ -18,8 +18,19 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 export class SetPollingSourceEventComponent {
     @Input() public event: SetPollingSource;
     @Input() public datasetInfo: DatasetInfo;
-
     public isYamlView = false;
+    public sqlEditorOptions = {
+        theme: "vs",
+        language: "sql",
+        contextmenu: false,
+        wordWrap: "on",
+        readOnly: true,
+        renderLineHighlight: "none",
+        lineNumbers: "off",
+        minimap: {
+            enabled: false,
+        },
+    };
 
     public get fetchStepUrl(): FetchStepUrl {
         return this.event.fetch as FetchStepUrl;
@@ -51,6 +62,19 @@ export class SetPollingSourceEventComponent {
 
     public get isMergeStrategyLedger(): boolean {
         return this.event.merge.__typename === "MergeStrategyLedger";
+    }
+
+    public descriptionMergeStrategy(type: string | undefined): string {
+        switch (type) {
+            case "MergeStrategyLedger":
+                return "Ledger strategy";
+            case "MergeStrategyAppend":
+                return "Append strategy";
+            case "MergeStrategySnapshot":
+                return "Snapshot strategy";
+            default:
+                return "Unknown strategy";
+        }
     }
 
     public descriptionEngine(name: string): {

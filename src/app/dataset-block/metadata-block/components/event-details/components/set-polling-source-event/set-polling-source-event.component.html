@@ -158,10 +158,18 @@
             <div class="ms-4">
                 <ng-container *ngIf="isMergeStrategyLedger">
                     <app-block-row-data
+                        tooltip="Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset."
+                        label="Strategy:"
+                    >
+                        <span>{{
+                            descriptionMergeStrategy(event.merge.__typename)
+                        }}</span>
+                    </app-block-row-data>
+                    <app-block-row-data
                         tooltip="Names of the columns that uniquely identify the record throughout its lifetime."
                         label="Primary key:"
                     >
-                        <span>{{
+                        <span class="font-monospace">{{
                             mergeStrategyLedger.primaryKey.join(", ")
                         }}</span>
                     </app-block-row-data>
@@ -202,17 +210,20 @@
                     label="Queries:"
                     *ngIf="event.preprocess.queries"
                 >
-                    <ng-container
-                        *ngFor="
-                            let query of event.preprocess.queries;
-                            let i = index
-                        "
-                    >
-                        <p>alias: {{ query.alias ? query.alias : "none" }}</p>
-                        <p class="font-monospace">{{ query.query }}</p>
-                        <mat-divider *ngIf="i > 0"></mat-divider>
-                    </ng-container>
                 </app-block-row-data>
+                <ng-container
+                    *ngFor="
+                        let query of event.preprocess.queries;
+                        let i = index
+                    "
+                >
+                    <p *ngIf="query.alias">Alias: {{ query.alias }}</p>
+                    <ngx-monaco-editor
+                        [options]="sqlEditorOptions"
+                        [(ngModel)]="query.query"
+                    ></ngx-monaco-editor>
+                    <mat-divider class="mb-2" *ngIf="i > 0"></mat-divider>
+                </ng-container>
             </div>
         </div>
     </div>

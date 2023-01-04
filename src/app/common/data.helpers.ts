@@ -2,6 +2,7 @@ import {
     DatasetKind,
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
+import { LogoInfo } from "../dataset-block/metadata-block/components/event-details/supported.events";
 
 export class DataHelpers {
     public static datasetKind2String(kind: DatasetKind): string {
@@ -27,21 +28,45 @@ export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SET_ATTACHMENTS =
         "Attachments updated";
 
-    public static descriptionForEngine(name: string): {
-        name: string;
-        url_logo: string;
-    } {
+    public static descriptionForEngine(name: string): LogoInfo {
         switch (name) {
             case "flink":
                 return {
                     name: "Apache Flink",
                     url_logo: "assets/images/apache-flink.png",
                 };
-            default:
+            case "spark":
                 return {
                     name: "Apache Spark",
                     url_logo: "assets/images/apache-spark.png",
                 };
+            default:
+                console.log("Engine is not defined");
+                return {
+                    name: "Engine is not defined",
+                };
+        }
+    }
+
+    public static descriptionMergeStrategy(type: string | undefined): LogoInfo {
+        switch (type) {
+            case "MergeStrategyLedger":
+                return {
+                    name: "Ledger strategy",
+                    url_logo: "assets/images/ledger.jpg",
+                };
+            case "MergeStrategyAppend":
+                return {
+                    name: "Append strategy",
+                    url_logo: "assets/images/append.jpg",
+                };
+            case "MergeStrategySnapshot":
+                return {
+                    name: "Snapshot strategy",
+                    url_logo: "assets/images/snapshot.jpg",
+                };
+            default:
+                return { name: "Unknown strategy" };
         }
     }
 

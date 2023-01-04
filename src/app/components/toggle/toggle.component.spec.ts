@@ -26,7 +26,7 @@ describe("ToggleComponent", () => {
         const expectedValue = true;
         const toggledSpy = spyOn(component.toggled, "emit");
 
-        emitClickOnElement(fixture, '[data-test-id="yaml-view-button"]');
+        emitClickOnElement(fixture, '[data-test-id="toggle-button"]');
 
         expect(component.isToggled).toBeTrue();
         expect(toggledSpy).toHaveBeenCalledWith(expectedValue);

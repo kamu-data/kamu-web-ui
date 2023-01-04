@@ -8,6 +8,8 @@ import {
 } from "./../../../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { sqlEditorOptionsForEvents } from "../../config-editor.events";
+import { LogoInfo } from "../../supported.events";
 
 @Component({
     selector: "app-set-polling-source-event",
@@ -19,18 +21,8 @@ export class SetPollingSourceEventComponent {
     @Input() public event: SetPollingSource;
     @Input() public datasetInfo: DatasetInfo;
     public isYamlView = false;
-    public sqlEditorOptions = {
-        theme: "vs",
-        language: "sql",
-        contextmenu: false,
-        wordWrap: "on",
-        readOnly: true,
-        renderLineHighlight: "none",
-        lineNumbers: "off",
-        minimap: {
-            enabled: false,
-        },
-    };
+    public sqlEditorOptions = sqlEditorOptionsForEvents;
+    public defaultSeparator = ",";
 
     public get fetchStepUrl(): FetchStepUrl {
         return this.event.fetch as FetchStepUrl;
@@ -64,23 +56,11 @@ export class SetPollingSourceEventComponent {
         return this.event.merge.__typename === "MergeStrategyLedger";
     }
 
-    public descriptionMergeStrategy(type: string | undefined): string {
-        switch (type) {
-            case "MergeStrategyLedger":
-                return "Ledger strategy";
-            case "MergeStrategyAppend":
-                return "Append strategy";
-            case "MergeStrategySnapshot":
-                return "Snapshot strategy";
-            default:
-                return "Unknown strategy";
-        }
+    public descriptionMergeStrategy(type: string | undefined): LogoInfo {
+        return DataHelpers.descriptionMergeStrategy(type);
     }
 
-    public descriptionEngine(name: string): {
-        name: string;
-        url_logo: string;
-    } {
+    public descriptionEngine(name: string): LogoInfo {
         return DataHelpers.descriptionForEngine(name);
     }
 

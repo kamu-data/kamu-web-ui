@@ -137,6 +137,8 @@
                         <q class="fs-5">
                             <span class="fs-4">{{
                                 readStepCsv.separator
+                                    ? readStepCsv.separator
+                                    : defaultSeparator
                             }}</span>
                         </q>
                     </app-block-row-data>
@@ -156,14 +158,38 @@
                 >Merge</span
             >
             <div class="ms-4">
-                <ng-container *ngIf="isMergeStrategyLedger">
+                <ng-container *ngIf="isMergeStrategyLedger && event.preprocess">
                     <app-block-row-data
                         tooltip="Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset."
                         label="Strategy:"
                     >
-                        <span>{{
-                            descriptionMergeStrategy(event.merge.__typename)
-                        }}</span>
+                        <div class="d-flex align-items-center">
+                            <img
+                                *ngIf="
+                                    descriptionMergeStrategy(
+                                        event.merge.__typename
+                                    ).url_logo
+                                "
+                                class="strategy-logo me-3"
+                                [src]="
+                                    descriptionMergeStrategy(
+                                        event.merge.__typename
+                                    ).url_logo
+                                "
+                                [alt]="
+                                    descriptionMergeStrategy(
+                                        event.merge.__typename
+                                    )
+                                "
+                            />
+                            <span
+                                >({{
+                                    descriptionMergeStrategy(
+                                        event.merge.__typename
+                                    ).name
+                                }})</span
+                            >
+                        </div>
                     </app-block-row-data>
                     <app-block-row-data
                         tooltip="Names of the columns that uniquely identify the record throughout its lifetime."
@@ -191,6 +217,10 @@
                     label="Engine:"
                     ><div class="d-flex align-items-end">
                         <img
+                            *ngIf="
+                                descriptionEngine(event.preprocess.engine)
+                                    .url_logo
+                            "
                             class="engine-logo me-3"
                             [src]="
                                 descriptionEngine(event.preprocess.engine)

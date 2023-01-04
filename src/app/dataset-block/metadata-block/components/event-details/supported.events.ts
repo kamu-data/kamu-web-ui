@@ -10,3 +10,8 @@ export enum SupportedEvents {
     SetVocab = "SetVocab",
     SetWatermark = "SetWatermark",
 }
+
+export interface LogoInfo {
+    name: string;
+    url_logo?: string;
+}

@@ -130,24 +130,15 @@
             >
             <div class="ms-4">
                 <ng-container *ngIf="isReadStepCsv">
-                    <app-block-row-data
-                        tooltip="Sets a single character as a separator for each field and value."
-                        label="Separator:"
-                    >
-                        <q class="fs-5">
-                            <span class="fs-4">{{
-                                readStepCsv.separator
-                                    ? readStepCsv.separator
-                                    : defaultSeparator
-                            }}</span>
-                        </q>
-                    </app-block-row-data>
-                    <app-block-row-data
-                        tooltip="Use the first line as names of columns."
-                        label="Header:"
-                    >
-                        <span>{{ readStepCsv.header }}</span>
-                    </app-block-row-data>
+                    <!-- Test template   -->
+                    <ng-container *ngFor="let row of readStepCsvData">
+                        <app-block-row-data
+                            [tooltip]="row.tooltip"
+                            [label]="row.label"
+                        >
+                            <ng-template #readStepContainer></ng-template>
+                        </app-block-row-data>
+                    </ng-container>
                 </ng-container>
             </div>
         </div>
@@ -158,7 +149,7 @@
                 >Merge</span
             >
             <div class="ms-4">
-                <ng-container *ngIf="isMergeStrategyLedger && event.preprocess">
+                <ng-container *ngIf="isMergeStrategyLedger">
                     <app-block-row-data
                         tooltip="Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset."
                         label="Strategy:"

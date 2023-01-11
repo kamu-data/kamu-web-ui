@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { DataHelpers } from "src/app/common/data.helpers";
-import { LogoInfo } from "../../../supported.events";
+import { EventPropertyLogo } from "../../../supported.events";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 
 @Component({
@@ -10,7 +10,7 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MergeStrategyPropertyComponent extends BasePropertyComponent {
-    public get descriptionMergeStrategy(): LogoInfo {
+    public get descriptionMergeStrategy(): EventPropertyLogo {
         return DataHelpers.descriptionMergeStrategy(this.data as string);
     }
 }

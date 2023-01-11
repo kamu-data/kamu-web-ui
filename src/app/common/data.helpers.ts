@@ -2,7 +2,7 @@ import {
     DatasetKind,
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
-import { LogoInfo } from "../dataset-block/metadata-block/components/event-details/supported.events";
+import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
 
 export class DataHelpers {
     public static datasetKind2String(kind: DatasetKind): string {
@@ -28,7 +28,7 @@ export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SET_ATTACHMENTS =
         "Attachments updated";
 
-    public static descriptionForEngine(name: string): LogoInfo {
+    public static descriptionForEngine(name: string): EventPropertyLogo {
         switch (name) {
             case "flink":
                 return {
@@ -48,7 +48,9 @@ export class DataHelpers {
         }
     }
 
-    public static descriptionMergeStrategy(type: string | undefined): LogoInfo {
+    public static descriptionMergeStrategy(
+        type: string | undefined,
+    ): EventPropertyLogo {
         switch (type) {
             case "MergeStrategyLedger":
                 return {

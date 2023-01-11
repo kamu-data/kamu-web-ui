@@ -11,7 +11,7 @@ export enum SupportedEvents {
     SetWatermark = "SetWatermark",
 }
 
-export interface LogoInfo {
+export interface EventPropertyLogo {
     name: string;
     url_logo?: string;
 }

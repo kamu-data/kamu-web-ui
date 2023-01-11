@@ -1,4 +1,4 @@
-import { EventRow, EventSection } from "./../../factory.events";
+import { EventRow, EventSection } from "../../builder.events";
 import {
     FetchStepFilesGlob,
     FetchStepUrl,
@@ -19,7 +19,7 @@ import {
     ViewContainerRef,
 } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { FACTORIES_BY_EVENT_TYPE } from "../../factory.events";
+import { FACTORIES_BY_EVENT_TYPE } from "../../builder.events";
 import { BasePropertyComponent } from "../common/base-property/base-property.component";
 
 @Component({

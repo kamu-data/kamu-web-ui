@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { mockSetPollinfSourceEvent } from "../../mock.events";
+import { mockSetPollingSourceEvent } from "../../mock.events";
 
 import { SetPollingSourceEventComponent } from "./set-polling-source-event.component";
 
@@ -16,7 +16,7 @@ describe("SetPollingSourceEventComponent", () => {
 
         fixture = TestBed.createComponent(SetPollingSourceEventComponent);
         component = fixture.componentInstance;
-        component.event = mockSetPollinfSourceEvent;
+        component.event = mockSetPollingSourceEvent;
         fixture.detectChanges();
     });
 

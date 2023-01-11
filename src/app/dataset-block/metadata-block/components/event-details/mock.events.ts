@@ -26,7 +26,7 @@ export const mockAddData: AddDataEventFragment = {
     },
 };
 
-export const mockSetPollinfSourceEvent: SetPollingSource = {
+export const mockSetPollingSourceEvent: SetPollingSource = {
     __typename: "SetPollingSource",
     fetch: {
         __typename: "FetchStepUrl",

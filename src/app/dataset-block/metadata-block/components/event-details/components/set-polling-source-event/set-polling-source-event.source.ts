@@ -1,5 +1,5 @@
 import { LinkPropertyComponent } from "./../common/link-property/link-property.component";
-import { EventRow } from "../../factory.events";
+import { EventRow } from "../../builder.events";
 import { SeparatorPropertyComponent } from "../common/separator-property/separator-property.component";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";

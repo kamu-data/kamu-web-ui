@@ -1,0 +1,9 @@
+<div class="d-flex align-items-center">
+    <img
+        *ngIf="descriptionMergeStrategy.url_logo"
+        class="strategy-logo me-3"
+        [src]="descriptionMergeStrategy.url_logo"
+        [alt]="descriptionMergeStrategy.name"
+    />
+    <span>({{ descriptionMergeStrategy.name }})</span>
+</div>

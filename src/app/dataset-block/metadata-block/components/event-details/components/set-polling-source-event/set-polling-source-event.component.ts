@@ -1,4 +1,4 @@
-import { EventRow } from "./../../factory.events";
+import { EventRow, EventSection } from "./../../factory.events";
 import { DataHelpers } from "src/app/common/data.helpers";
 import {
     FetchStepFilesGlob,
@@ -8,7 +8,7 @@ import {
     SetPollingSource,
 } from "./../../../../../../api/kamu.graphql.interface";
 import {
-    AfterViewInit,
+    AfterViewChecked,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -20,7 +20,7 @@ import {
     ViewContainerRef,
 } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { sqlEditorOptionsForEvents } from "../../config-editor.events";
+
 import { LogoInfo } from "../../supported.events";
 import { FACTORIES_BY_EVENT_TYPE } from "../../factory.events";
 import { BasePropertyComponent } from "../common/base-property/base-property.component";
@@ -31,32 +31,42 @@ import { BasePropertyComponent } from "../common/base-property/base-property.com
     styleUrls: ["./set-polling-source-event.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SetPollingSourceEventComponent implements OnInit, AfterViewInit {
+export class SetPollingSourceEventComponent
+    implements OnInit, AfterViewChecked
+{
     @Input() public event: SetPollingSource;
     @Input() public datasetInfo: DatasetInfo;
-    @ViewChildren("readStepContainer", { read: ViewContainerRef })
-    readStepContainer: QueryList<ViewContainerRef>;
+    @ViewChildren("container", { read: ViewContainerRef })
+    container: QueryList<ViewContainerRef>;
     public isYamlView = false;
-    public sqlEditorOptions = sqlEditorOptionsForEvents;
-    public readStepCsvData: EventRow[];
-    private componentRef: ComponentRef<BasePropertyComponent>;
+    public eventSections: EventSection[];
+    public queriesLabel = "Queries:";
 
     public constructor(private cdr: ChangeDetectorRef) {}
 
-    ngOnInit(): void {
-        this.readStepCsvData =
-            FACTORIES_BY_EVENT_TYPE.SetPollingSource.buildEventRows(this.event);
+    ngAfterViewChecked(): void {
+        if (!this.isYamlView) {
+            let componentRef: ComponentRef<BasePropertyComponent>;
+            const rows: EventRow[] = [];
+            this.eventSections
+                .map((item) => item.rows)
+                .forEach((item: EventRow[]) => {
+                    rows.push(...item);
+                });
+            this.container.map((vcr: ViewContainerRef, index: number) => {
+                vcr.clear();
+                componentRef = vcr.createComponent(
+                    rows[index].presentationComponent,
+                );
+                componentRef.instance.data = rows[index].value;
+            });
+            this.cdr.detectChanges();
+        }
     }
 
-    ngAfterViewInit(): void {
-        this.readStepContainer.map((vcr: ViewContainerRef, index: number) => {
-            vcr.clear();
-            this.componentRef = vcr.createComponent(
-                this.readStepCsvData[index].presentationComponent,
-            );
-            this.componentRef.instance.data = this.readStepCsvData[index].value;
-        });
-        this.cdr.detectChanges();
+    ngOnInit(): void {
+        this.eventSections =
+            FACTORIES_BY_EVENT_TYPE.SetPollingSource.buildEventRows(this.event);
     }
 
     public get fetchStepUrl(): FetchStepUrl {
@@ -89,10 +99,6 @@ export class SetPollingSourceEventComponent implements OnInit, AfterViewInit {
 
     public get isMergeStrategyLedger(): boolean {
         return this.event.merge.__typename === "MergeStrategyLedger";
-    }
-
-    public descriptionMergeStrategy(type: string | undefined): LogoInfo {
-        return DataHelpers.descriptionMergeStrategy(type);
     }
 
     public descriptionEngine(name: string): LogoInfo {

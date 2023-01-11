@@ -1,8 +1,44 @@
+import { LinkPropertyComponent } from "./../common/link-property/link-property.component";
 import { EventRow } from "../../factory.events";
 import { SeparatorPropertyComponent } from "../common/separator-property/separator-property.component";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
+import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
+import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
+import { EditorPropertyComponent } from "../common/editor-property/editor-property.component";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
+    "SetPollingSource.FetchStepUrl.url": {
+        label: "Url:",
+        tooltip: "URL of the data source.",
+        presentationComponent: LinkPropertyComponent,
+    },
+
+    "SetPollingSource.MergeStrategyLedger.__typename": {
+        label: "Strategy:",
+        tooltip:
+            "Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset.",
+        presentationComponent: MergeStrategyPropertyComponent,
+    },
+
+    "SetPollingSource.MergeStrategyLedger.primaryKey": {
+        label: "Primary key:",
+        tooltip:
+            "Names of the columns that uniquely identify the record throughout its lifetime.",
+        presentationComponent: SimplePropertyComponent,
+    },
+
+    "SetPollingSource.TransformSql.engine": {
+        label: "Engine:",
+        tooltip: "Identifier of the engine used for this transformation.",
+        presentationComponent: EnginePropertyComponent,
+    },
+
+    "SetPollingSource.TransformSql.queries": {
+        label: "Queries:",
+        tooltip: "Queries use for specifying multi-step SQL transformations.",
+        presentationComponent: EditorPropertyComponent,
+    },
+
     "SetPollingSource.ReadStepCsv.separator": {
         label: "Separator:",
         tooltip:

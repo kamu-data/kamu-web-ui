@@ -1,5 +1,5 @@
 import { BasePropertyComponent } from "./../base-property/base-property.component";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 @Component({
     selector: "app-simple-property",
@@ -7,4 +7,6 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
     styleUrls: ["./simple-property.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SimplePropertyComponent extends BasePropertyComponent {}
+export class SimplePropertyComponent extends BasePropertyComponent {
+    @Input() public class?: string;
+}

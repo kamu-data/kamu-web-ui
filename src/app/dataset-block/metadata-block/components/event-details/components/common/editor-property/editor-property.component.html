@@ -1,0 +1,8 @@
+<div *ngFor="let query of queries">
+    <p *ngIf="query.alias">Alias: {{ query.alias }}</p>
+    <p class="font-monospace">{{ query.query }}</p>
+    <!-- <ngx-monaco-editor
+        [options]="sqlEditorOptions"
+        [(ngModel)]="test"
+    ></ngx-monaco-editor> -->
+</div>

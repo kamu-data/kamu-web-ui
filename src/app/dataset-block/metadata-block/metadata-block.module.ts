@@ -1,3 +1,6 @@
+import { LinkPropertyComponent } from "./components/event-details/components/common/link-property/link-property.component";
+import { SeparatorPropertyComponent } from "./components/event-details/components/common/separator-property/separator-property.component";
+import { SimplePropertyComponent } from "./components/event-details/components/common/simple-property/simple-property.component";
 import { FormsModule } from "@angular/forms";
 import { DisplayTimeModule } from "./../../components/display-time/display-time.module";
 import { MatDividerModule } from "@angular/material/divider";
@@ -24,6 +27,9 @@ import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
 import { SetPollingSourceEventComponent } from "./components/event-details/components/set-polling-source-event/set-polling-source-event.component";
 import { ToggleComponent } from "src/app/components/toggle/toggle.component";
 import { SeedEventComponent } from "./components/event-details/components/seed-event/seed-event.component";
+import { MergeStrategyPropertyComponent } from "./components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
+import { EnginePropertyComponent } from "./components/event-details/components/common/engine-property/engine-property.component";
+import { EditorPropertyComponent } from "./components/event-details/components/common/editor-property/editor-property.component";
 
 @NgModule({
     declarations: [
@@ -39,6 +45,12 @@ import { SeedEventComponent } from "./components/event-details/components/seed-e
         EventTypeFilterPipe,
         BlockHashFilterPipe,
         ToggleComponent,
+        MergeStrategyPropertyComponent,
+        SimplePropertyComponent,
+        SeparatorPropertyComponent,
+        LinkPropertyComponent,
+        EnginePropertyComponent,
+        EditorPropertyComponent,
     ],
     imports: [
         CommonModule,

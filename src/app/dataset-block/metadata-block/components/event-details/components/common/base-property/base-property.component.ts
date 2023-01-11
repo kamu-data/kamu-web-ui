@@ -1,9 +1,6 @@
-import { Component, Input } from "@angular/core";
+import { Injectable, Input } from "@angular/core";
 
-@Component({
-    template: "",
-})
+@Injectable()
 export abstract class BasePropertyComponent {
     @Input() public data: unknown;
-    @Input() public class?: string;
 }

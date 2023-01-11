@@ -103,147 +103,31 @@
 
 <ng-container *ngIf="!isYamlView">
     <div class="d-flex flex-column gap-4 mt-4">
-        <div class="position-relative border border-1 p-2 rounded-3">
+        <div
+            class="position-relative border border-1 p-2 rounded-3"
+            *ngFor="let section of eventSections"
+        >
             <span
                 class="position-absolute text-muted group-box-label text-uppercase"
-                >Fetch</span
+                >{{ section.title }}</span
             >
             <div class="ms-4">
-                <app-block-row-data
-                    tooltip="URL of the data source."
-                    label="Url:"
-                >
-                    <a
-                        class="text-break"
-                        [href]="fetchStepUrl.url"
-                        [title]="fetchStepUrl.url"
-                        >{{ fetchStepUrl.url }}</a
+                <ng-container *ngFor="let row of section.rows">
+                    <app-block-row-data
+                        *ngIf="row.label !== queriesLabel"
+                        [tooltip]="row.tooltip"
+                        [label]="row.label"
                     >
-                </app-block-row-data>
-            </div>
-        </div>
-
-        <div class="position-relative border border-1 p-2 rounded-3">
-            <span
-                class="position-absolute text-muted group-box-label text-uppercase"
-                >Read</span
-            >
-            <div class="ms-4">
-                <ng-container *ngIf="isReadStepCsv">
-                    <!-- Test template   -->
-                    <ng-container *ngFor="let row of readStepCsvData">
+                        <ng-template #container></ng-template>
+                    </app-block-row-data>
+                    <ng-container *ngIf="row.label === queriesLabel">
                         <app-block-row-data
                             [tooltip]="row.tooltip"
                             [label]="row.label"
                         >
-                            <ng-template #readStepContainer></ng-template>
                         </app-block-row-data>
+                        <ng-template #container></ng-template>
                     </ng-container>
-                </ng-container>
-            </div>
-        </div>
-
-        <div class="position-relative border border-1 p-2 rounded-3">
-            <span
-                class="position-absolute text-muted group-box-label text-uppercase"
-                >Merge</span
-            >
-            <div class="ms-4">
-                <ng-container *ngIf="isMergeStrategyLedger">
-                    <app-block-row-data
-                        tooltip="Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset."
-                        label="Strategy:"
-                    >
-                        <div class="d-flex align-items-center">
-                            <img
-                                *ngIf="
-                                    descriptionMergeStrategy(
-                                        event.merge.__typename
-                                    ).url_logo
-                                "
-                                class="strategy-logo me-3"
-                                [src]="
-                                    descriptionMergeStrategy(
-                                        event.merge.__typename
-                                    ).url_logo
-                                "
-                                [alt]="
-                                    descriptionMergeStrategy(
-                                        event.merge.__typename
-                                    )
-                                "
-                            />
-                            <span
-                                >({{
-                                    descriptionMergeStrategy(
-                                        event.merge.__typename
-                                    ).name
-                                }})</span
-                            >
-                        </div>
-                    </app-block-row-data>
-                    <app-block-row-data
-                        tooltip="Names of the columns that uniquely identify the record throughout its lifetime."
-                        label="Primary key:"
-                    >
-                        <span class="font-monospace">{{
-                            mergeStrategyLedger.primaryKey.join(", ")
-                        }}</span>
-                    </app-block-row-data>
-                </ng-container>
-            </div>
-        </div>
-
-        <div
-            class="position-relative border border-1 p-2 rounded-3"
-            *ngIf="event.preprocess"
-        >
-            <span
-                class="position-absolute text-muted group-box-label text-uppercase"
-                >Preprocess</span
-            >
-            <div class="ms-4">
-                <app-block-row-data
-                    tooltip="Identifier of the engine used for this transformation."
-                    label="Engine:"
-                    ><div class="d-flex align-items-end">
-                        <img
-                            *ngIf="
-                                descriptionEngine(event.preprocess.engine)
-                                    .url_logo
-                            "
-                            class="engine-logo me-3"
-                            [src]="
-                                descriptionEngine(event.preprocess.engine)
-                                    .url_logo
-                            "
-                            [alt]="event.preprocess.engine"
-                        />
-                        <span
-                            >({{
-                                descriptionEngine(event.preprocess.engine).name
-                            }})</span
-                        >
-                    </div>
-                </app-block-row-data>
-                <app-block-row-data
-                    tooltip="Queries use for specifying multi-step SQL transformations."
-                    label="Queries:"
-                    *ngIf="event.preprocess.queries"
-                >
-                </app-block-row-data>
-                <ng-container
-                    *ngFor="
-                        let query of event.preprocess.queries;
-                        let i = index
-                    "
-                >
-                    <p *ngIf="query.alias">Alias: {{ query.alias }}</p>
-                    <ngx-monaco-editor
-                        [options]="sqlEditorOptions"
-                        [(ngModel)]="query.query"
-                    ></ngx-monaco-editor>
-                    <mat-divider class="mb-2" *ngIf="i > 0"></mat-divider>
                 </ng-container>
             </div>
         </div>

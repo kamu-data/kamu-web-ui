@@ -1,7 +1,7 @@
-@import '~@angular/material/theming'
-@import "~bootstrap-icons/font/bootstrap-icons.css"
+@import '@angular/material/theming'
+@import "bootstrap-icons/font/bootstrap-icons.css"
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap'
+@import 'bootstrap/scss/bootstrap'
 @import "assets/styles/var"
 body
   font-size: 14px
@@ -949,3 +949,18 @@ details summary::marker
 .multiselect-dropdown .dropdown-btn
   color: #6c757d !important
   padding-left: 36px !important
+
+pre
+  display: flex
+  margin-top: 0
+  margin-bottom: 0
+  word-wrap: break-word
+  code
+    flex: 1
+    line: height 1.5em
+      min-height: 100%
+      padding: 1em 1.2em
+  & .hljs
+    font-size: 15px !important
+    font-weight: 500 !important
+    background-color: honeydew !important

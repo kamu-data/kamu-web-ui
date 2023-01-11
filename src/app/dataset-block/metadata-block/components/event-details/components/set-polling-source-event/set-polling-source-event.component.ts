@@ -1,5 +1,4 @@
 import { EventRow, EventSection } from "./../../factory.events";
-import { DataHelpers } from "src/app/common/data.helpers";
 import {
     FetchStepFilesGlob,
     FetchStepUrl,
@@ -20,8 +19,6 @@ import {
     ViewContainerRef,
 } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-
-import { LogoInfo } from "../../supported.events";
 import { FACTORIES_BY_EVENT_TYPE } from "../../factory.events";
 import { BasePropertyComponent } from "../common/base-property/base-property.component";
 
@@ -99,10 +96,6 @@ export class SetPollingSourceEventComponent
 
     public get isMergeStrategyLedger(): boolean {
         return this.event.merge.__typename === "MergeStrategyLedger";
-    }
-
-    public descriptionEngine(name: string): LogoInfo {
-        return DataHelpers.descriptionForEngine(name);
     }
 
     public onToggleView(value: boolean): void {

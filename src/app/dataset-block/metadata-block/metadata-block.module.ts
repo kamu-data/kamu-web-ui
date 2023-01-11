@@ -30,6 +30,7 @@ import { SeedEventComponent } from "./components/event-details/components/seed-e
 import { MergeStrategyPropertyComponent } from "./components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
 import { EnginePropertyComponent } from "./components/event-details/components/common/engine-property/engine-property.component";
 import { EditorPropertyComponent } from "./components/event-details/components/common/editor-property/editor-property.component";
+import { HighlightModule } from "ngx-highlightjs";
 
 @NgModule({
     declarations: [
@@ -66,6 +67,7 @@ import { EditorPropertyComponent } from "./components/event-details/components/c
         FormsModule,
         PaginationModule,
         NgMultiSelectDropDownModule.forRoot(),
+        HighlightModule,
     ],
     exports: [MetadataBlockComponent],
 })

@@ -64,6 +64,7 @@ import { AngularSvgIconModule } from "angular-svg-icon";
 import { AngularSvgIconPreloaderModule } from "angular-svg-icon-preloader";
 import { DatasetsTabComponent } from "./auth/account/additional-components/datasets-tab/datasets-tab.component";
 import { ClipboardModule } from "@angular/cdk/clipboard";
+import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 
 const Services = [
     {
@@ -97,6 +98,15 @@ const Services = [
             };
         },
         deps: [HttpLink, AppConfigService],
+    },
+    {
+        provide: HIGHLIGHT_OPTIONS,
+        useValue: {
+            coreLibraryLoader: () => import("highlight.js/lib/core"),
+            languages: {
+                sql: () => import("highlight.js/lib/languages/sql"),
+            },
+        },
     },
 ];
 const MatModules = [
@@ -164,6 +174,7 @@ const MatModules = [
         AngularSvgIconPreloaderModule.forRoot({
             configUrl: "./assets/svg/icons.json",
         }),
+        HighlightModule,
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

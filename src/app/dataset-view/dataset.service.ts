@@ -58,17 +58,19 @@ export class DatasetService {
                 if (data.datasets.byOwnerAndName) {
                     const dataTail = data.datasets.byOwnerAndName.data.tail;
                     if (dataTail.__typename === "DataQueryResultSuccess") {
+                        const schema: DatasetSchema = JSON.parse(
+                            data.datasets.byOwnerAndName.metadata.currentSchema.content,
+                        ) as DatasetSchema;
+
                         this.datasetUpdate(data.datasets.byOwnerAndName);
                         this.overviewTabDataUpdate(
                             data.datasets.byOwnerAndName,
                             data.datasets.byOwnerAndName.data,
+                            schema,
                             dataTail,
                         );
-                        this.dataTabDataUpdate(
-                            data.datasets.byOwnerAndName,
-                            dataTail,
-                        );
-                        this.metadataTabDataUpdate(data);
+                        this.dataTabDataUpdate(schema, dataTail);
+                        this.metadataTabDataUpdate(data, schema);
                         this.lineageTabDataUpdate(
                             data.datasets.byOwnerAndName,
                             data.datasets.byOwnerAndName,
@@ -155,11 +157,13 @@ export class DatasetService {
     private overviewTabDataUpdate(
         overview: DatasetOverviewFragment,
         size: DatasetDataSizeFragment,
+        schema: DatasetSchema,
         tail: DataQueryResultSuccessViewFragment,
     ): void {
         const content: DataRow[] = DatasetService.parseDataRows(tail);
 
         const overviewDataUpdate: OverviewDataUpdate = {
+            schema,
             content,
             overview,
             size,
@@ -170,22 +174,16 @@ export class DatasetService {
     }
 
     private dataTabDataUpdate(
-        metadata: DatasetMetadataSummaryFragment,
+        schema: DatasetSchema,
         tail: DataQueryResultSuccessViewFragment,
     ): void {
         const content: DataRow[] = DatasetService.parseDataRows(tail);
-        const schema: DatasetSchema = DatasetService.parseSchema(
-            metadata.metadata.currentSchema.content,
-        );
         const dataUpdate: DataUpdate = { content, schema };
         this.appDatasetSubsService.changeDatasetData(dataUpdate);
     }
 
-    private metadataTabDataUpdate(data: GetDatasetMainDataQuery): void {
+    private metadataTabDataUpdate(data: GetDatasetMainDataQuery, schema: DatasetSchema): void {
         if (data.datasets.byOwnerAndName) {
-            const schemaMetadata: DatasetSchema = JSON.parse(
-                data.datasets.byOwnerAndName.metadata.currentSchema.content,
-            ) as DatasetSchema;
             const metadata: DatasetMetadataSummaryFragment =
                 data.datasets.byOwnerAndName;
 
@@ -196,7 +194,7 @@ export class DatasetService {
                 currentPage: 1,
             };
             const metadataSchemaUpdate: MetadataSchemaUpdate = {
-                schema: schemaMetadata,
+                schema,
                 pageInfo,
                 metadata,
             };

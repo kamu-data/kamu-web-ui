@@ -1,5 +1,5 @@
 import { mockDatasetBasicsFragment } from "./../../../search/mock.data";
-import { mockOverviewDataUpdate } from "./../data-tabs.mock";
+import { mockMetadataSchemaUpdate, mockOverviewDataUpdate } from "./../data-tabs.mock";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewComponent } from "./overview-component";
@@ -36,9 +36,12 @@ describe("OverviewComponent", () => {
     it("should check #ngOninit", () => {
         expect(component.currentState).not.toBeDefined();
 
-        appDatasetSubsService.changeDatasetOverviewData(
-            mockOverviewDataUpdate as OverviewDataUpdate,
-        );
+        appDatasetSubsService.changeDatasetOverviewData({
+            schema: mockMetadataSchemaUpdate.schema,
+            content: mockOverviewDataUpdate.content,
+            overview: mockOverviewDataUpdate.overview,
+            size: mockOverviewDataUpdate.size,
+        } as OverviewDataUpdate);
         component.ngOnInit();
 
         expect(component.metadataFragmentBlock).toBeDefined();

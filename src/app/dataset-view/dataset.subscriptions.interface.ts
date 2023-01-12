@@ -9,6 +9,7 @@ import {
 import { DataRow, DatasetSchema } from "../interface/dataset.interface";
 
 export interface OverviewDataUpdate {
+    schema: DatasetSchema;
     content: DataRow[];
     overview: DatasetOverviewFragment;
     size: DatasetDataSizeFragment;

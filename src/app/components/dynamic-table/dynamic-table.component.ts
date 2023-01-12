@@ -10,8 +10,8 @@ import {
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { capitalizeFirstLetter } from "src/app/common/app.helpers";
+import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
 import {
-    TableSourceInterface,
     TableSourceRowInterface,
 } from "./dynamic-table.interface";
 
@@ -25,7 +25,8 @@ export class DynamicTableComponent
     implements OnInit, OnChanges, AfterContentInit
 {
     @Input() public hasTableHeader: boolean;
-    @Input() public tableSource?: TableSourceInterface;
+    @Input() public schemaFields: DataSchemaField[];
+    @Input() public dataRows?: DataRow[];
     @Input() public idTable = "";
     @Output() public selectRowEmit = new EventEmitter<string>();
 
@@ -33,20 +34,15 @@ export class DynamicTableComponent
     public displayedColumns: string[] = [];
 
     public ngOnInit(): void {
-        if (this.tableSource) {
-            this.renderTable(this.tableSource);
-        }
+        this.displayTable();
     }
+
     public ngOnChanges(): void {
-        if (this.tableSource) {
-            this.renderTable(this.tableSource);
-        }
+        this.displayTable();
     }
 
     public ngAfterContentInit(): void {
-        if (this.tableSource) {
-            this.renderTable(this.tableSource);
-        }
+        this.displayTable();
     }
 
     public changeColumnName(columnName: string): string {
@@ -69,20 +65,21 @@ export class DynamicTableComponent
         this.selectRowEmit.emit(row);
     }
 
-    private renderTable(data: TableSourceInterface): void {
-        if (data.length === 0) {
+    private displayTable(): void {
+        // Cornercase - schema is empty, nothing to display
+        if (this.schemaFields.length === 0) {
             this.dataSource.data = [];
             this.displayedColumns = [];
-            return;
-        }
-        this.dataSource.data = [];
-        this.displayedColumns = Object.keys(data[0]);
 
-        const dataSource = this.dataSource.data;
-        data.forEach((field: TableSourceRowInterface) => {
-            dataSource.push(field);
-        });
-        this.dataSource.data = dataSource;
-        this.dataSource = new MatTableDataSource(dataSource);
+        // Special case: displaying schema itself
+        } else if (!this.dataRows) {
+            this.dataSource.data = this.schemaFields;
+            this.displayedColumns = Object.keys(this.schemaFields[0]);
+
+        // Casual case, displaying data
+        } else {
+            this.displayedColumns = this.schemaFields.map((f: DataSchemaField) => f.name);
+            this.dataSource.data = this.dataRows;
+        }
     }
 }

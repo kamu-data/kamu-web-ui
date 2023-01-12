@@ -3,7 +3,7 @@
         <h2 class="box-title align-items-center pb-3 m-0">Schema:</h2>
         <app-dynamic-table
             [hasTableHeader]="true"
-            [tableSource]="currentSchema.fields"
+            [schemaFields]="currentSchema ? currentSchema.fields : []"
             [idTable]="'schema-block-table'"
         ></app-dynamic-table>
         <div>
@@ -170,7 +170,8 @@
             <h2 class="box-title align-items-center pb-3 pt-3 m-0">Result:</h2>
             <app-dynamic-table
                 [hasTableHeader]="true"
-                [tableSource]="currentData"
+                [schemaFields]="currentSchema ? currentSchema.fields : []"
+                [dataRows]="currentData || []"
             ></app-dynamic-table>
         </ng-container>
     </div>

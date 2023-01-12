@@ -39,7 +39,8 @@
             ></app-overview-history-summary-header>
             <app-dynamic-table
                 [hasTableHeader]="true"
-                [tableSource]="currentState.data"
+                [schemaFields]="currentState ? currentState.schema.fields : []"
+                [dataRows]="currentState ? currentState.data : []"
             ></app-dynamic-table>
             <div id="file-readme-dataset-template-md" class="file my-4">
                 <div class="file-header d-flex align-items-center">

@@ -19,7 +19,7 @@ import {
     MetadataBlockFragment,
 } from "../../../api/kamu.graphql.interface";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { DataRow } from "src/app/interface/dataset.interface";
+import { DataRow, DatasetSchema } from "src/app/interface/dataset.interface";
 
 @Component({
     selector: "app-overview",
@@ -34,6 +34,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     @Output() selectTopicEmit = new EventEmitter<string>();
 
     public currentState?: {
+        schema: DatasetSchema;
         data: DataRow[];
         overview: DatasetOverviewFragment;
         size: DatasetDataSizeFragment;
@@ -51,6 +52,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
             this.appDatasetSubsService.onDatasetOverviewDataChanges.subscribe(
                 (overviewUpdate: OverviewDataUpdate) => {
                     this.currentState = {
+                        schema: overviewUpdate.schema,
                         data: overviewUpdate.content,
                         size: overviewUpdate.size,
                         overview: overviewUpdate.overview,

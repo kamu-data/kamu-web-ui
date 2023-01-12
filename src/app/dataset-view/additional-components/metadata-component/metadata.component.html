@@ -14,7 +14,7 @@
         <ng-template [ngIf]="currentState">
             <app-dynamic-table
                 [hasTableHeader]="true"
-                [tableSource]="currentState.schema.fields || []"
+                [schemaFields]="currentState ? currentState.schema.fields : []"
                 [idTable]="'schema-block-table'"
             ></app-dynamic-table>
         </ng-template>

@@ -13,6 +13,7 @@ describe("CardsPropertyComponent", () => {
 
         fixture = TestBed.createComponent(CardsPropertyComponent);
         component = fixture.componentInstance;
+        component.data = ["id", "name", "type"];
         fixture.detectChanges();
     });
 

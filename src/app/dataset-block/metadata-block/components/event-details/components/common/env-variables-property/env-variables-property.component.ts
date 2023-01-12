@@ -1,6 +1,7 @@
+import { createSchemaFields } from "./../../../../../../../common/table.helper";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { EnvVar } from "src/app/api/kamu.graphql.interface";
-import { DataRow } from "src/app/interface/dataset.interface";
+import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 
 @Component({
@@ -16,5 +17,9 @@ export class EnvVariablesPropertyComponent extends BasePropertyComponent {
             result.push({ name, value: value ? value : "null" }),
         );
         return result;
+    }
+
+    public get schemaFields(): DataSchemaField[] {
+        return createSchemaFields(this.tableSource[0]);
     }
 }

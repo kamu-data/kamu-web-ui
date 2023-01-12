@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { DataRow } from "src/app/interface/dataset.interface";
+import { createSchemaFields } from "src/app/common/table.helper";
+import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 
 @Component({
@@ -10,10 +11,13 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
 })
 export class SchemaPropertyComponent extends BasePropertyComponent {
     public get tableSource(): DataRow[] {
-        const result: DataRow[] = [];
-        (this.data as string[]).forEach((item: string) =>
-            result.push({ name: item.split(" ")[0], type: item.split(" ")[1] }),
-        );
-        return result;
+        return (this.data as string[]).map((item: string) => ({
+            name: item.split(" ")[0],
+            type: item.split(" ")[1],
+        }));
+    }
+
+    public get schemaFields(): DataSchemaField[] {
+        return createSchemaFields(this.tableSource[0]);
     }
 }

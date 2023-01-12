@@ -1,0 +1,20 @@
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { EnvVar } from "src/app/api/kamu.graphql.interface";
+import { DataRow } from "src/app/interface/dataset.interface";
+import { BasePropertyComponent } from "../base-property/base-property.component";
+
+@Component({
+    selector: "app-env-variables-property",
+    templateUrl: "./env-variables-property.component.html",
+    styleUrls: ["./env-variables-property.component.sass"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class EnvVariablesPropertyComponent extends BasePropertyComponent {
+    public get tableSource(): DataRow[] {
+        const result: DataRow[] = [];
+        (this.data as EnvVar[]).forEach(({ name, value }: EnvVar) =>
+            result.push({ name, value: value ? value : "null" }),
+        );
+        return result;
+    }
+}

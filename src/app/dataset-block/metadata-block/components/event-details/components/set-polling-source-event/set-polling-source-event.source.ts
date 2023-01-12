@@ -5,13 +5,28 @@ import { SimplePropertyComponent } from "../common/simple-property/simple-proper
 import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { EditorPropertyComponent } from "../common/editor-property/editor-property.component";
-import { TablePropertyComponent } from "../common/table-property/table-property.component";
+import { SchemaPropertyComponent } from "../common/schema-property/schema-property.component";
+import { EnvVariablesPropertyComponent } from "../common/env-variables-property/env-variables-property.component";
+import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
     "SetPollingSource.FetchStepUrl.url": {
         label: "Url:",
         tooltip: "URL of the data source.",
         presentationComponent: LinkPropertyComponent,
+    },
+
+    "SetPollingSource.FetchStepContainer.image": {
+        label: "Image:",
+        tooltip: "Image name and and an optional tag.",
+        presentationComponent: SimplePropertyComponent,
+    },
+
+    "SetPollingSource.FetchStepContainer.env": {
+        label: "Environment variables:",
+        tooltip:
+            "Environment variables to propagate into or set in the container.",
+        presentationComponent: EnvVariablesPropertyComponent,
     },
 
     "SetPollingSource.MergeStrategyLedger.__typename": {
@@ -25,7 +40,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         label: "Primary key:",
         tooltip:
             "Names of the columns that uniquely identify the record throughout its lifetime.",
-        presentationComponent: SimplePropertyComponent,
+        presentationComponent: CardsPropertyComponent,
     },
 
     "SetPollingSource.TransformSql.engine": {
@@ -40,6 +55,13 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         presentationComponent: EditorPropertyComponent,
     },
 
+    "SetPollingSource.ReadStepJsonLines.schema": {
+        label: "Schema:",
+        tooltip:
+            "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
+        presentationComponent: SchemaPropertyComponent,
+    },
+
     "SetPollingSource.ReadStepCsv.separator": {
         label: "Separator:",
         tooltip:
@@ -51,7 +73,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         label: "Schema:",
         tooltip:
             "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
-        presentationComponent: TablePropertyComponent,
+        presentationComponent: SchemaPropertyComponent,
     },
 
     "SetPollingSource.ReadStepCsv.header": {
@@ -63,6 +85,12 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         label: "Enforce schema:",
         tooltip:
             "If it is set to true, the specified or inferred schema will be forcibly applied to datasource files, and headers in CSV files will be ignored. If the option is set to false, the schema will be validated against all headers in CSV files in the case when the header option is set to true.",
+        presentationComponent: SimplePropertyComponent,
+    },
+
+    "SetPollingSource.ReadStepCsv.timestampFormat": {
+        label: "Timestamp format:",
+        tooltip: "Sets the string that indicates a timestamp format.",
         presentationComponent: SimplePropertyComponent,
     },
 };

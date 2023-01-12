@@ -32,7 +32,9 @@ import { EnginePropertyComponent } from "./components/event-details/components/c
 import { EditorPropertyComponent } from "./components/event-details/components/common/editor-property/editor-property.component";
 import { HighlightModule } from "ngx-highlightjs";
 import { DynamicTableModule } from "src/app/components/dynamic-table/dynamic-table.module";
-import { TablePropertyComponent } from "./components/event-details/components/common/table-property/table-property.component";
+import { SchemaPropertyComponent } from "./components/event-details/components/common/schema-property/schema-property.component";
+import { EnvVariablesPropertyComponent } from "./components/event-details/components/common/env-variables-property/env-variables-property.component";
+import { CardsPropertyComponent } from "./components/event-details/components/common/cards-property/cards-property.component";
 
 @NgModule({
     declarations: [
@@ -54,7 +56,9 @@ import { TablePropertyComponent } from "./components/event-details/components/co
         LinkPropertyComponent,
         EnginePropertyComponent,
         EditorPropertyComponent,
-        TablePropertyComponent,
+        SchemaPropertyComponent,
+        EnvVariablesPropertyComponent,
+        CardsPropertyComponent,
     ],
     imports: [
         CommonModule,

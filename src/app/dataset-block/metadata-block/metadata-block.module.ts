@@ -31,6 +31,8 @@ import { MergeStrategyPropertyComponent } from "./components/event-details/compo
 import { EnginePropertyComponent } from "./components/event-details/components/common/engine-property/engine-property.component";
 import { EditorPropertyComponent } from "./components/event-details/components/common/editor-property/editor-property.component";
 import { HighlightModule } from "ngx-highlightjs";
+import { DynamicTableModule } from "src/app/components/dynamic-table/dynamic-table.module";
+import { TablePropertyComponent } from "./components/event-details/components/common/table-property/table-property.component";
 
 @NgModule({
     declarations: [
@@ -52,6 +54,7 @@ import { HighlightModule } from "ngx-highlightjs";
         LinkPropertyComponent,
         EnginePropertyComponent,
         EditorPropertyComponent,
+        TablePropertyComponent,
     ],
     imports: [
         CommonModule,
@@ -68,6 +71,7 @@ import { HighlightModule } from "ngx-highlightjs";
         PaginationModule,
         NgMultiSelectDropDownModule.forRoot(),
         HighlightModule,
+        DynamicTableModule,
     ],
     exports: [MetadataBlockComponent],
 })

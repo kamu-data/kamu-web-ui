@@ -5,6 +5,7 @@ import { SimplePropertyComponent } from "../common/simple-property/simple-proper
 import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { EditorPropertyComponent } from "../common/editor-property/editor-property.component";
+import { TablePropertyComponent } from "../common/table-property/table-property.component";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
     "SetPollingSource.FetchStepUrl.url": {
@@ -50,7 +51,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         label: "Schema:",
         tooltip:
             "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
-        presentationComponent: SimplePropertyComponent,
+        presentationComponent: TablePropertyComponent,
     },
 
     "SetPollingSource.ReadStepCsv.header": {

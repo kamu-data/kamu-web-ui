@@ -132,6 +132,14 @@
                         <ng-template #container></ng-template>
                     </ng-template>
                 </ng-container>
+                <ng-container *ngIf="!section.rows.length">
+                    <p class="text-center mt-2">
+                        <mat-icon class="text-danger align-middle"
+                            >block</mat-icon
+                        >
+                        Unsupported section
+                    </p>
+                </ng-container>
             </div>
         </div>
     </div>

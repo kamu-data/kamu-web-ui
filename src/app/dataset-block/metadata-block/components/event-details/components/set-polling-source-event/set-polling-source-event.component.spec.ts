@@ -41,4 +41,11 @@ describe("SetPollingSourceEventComponent", () => {
     it("should create", () => {
         expect(component).toBeTruthy();
     });
+
+    it("should check toggle yaml view", () => {
+        const testValue = true;
+        component.isYamlView = false;
+        component.onToggleView(testValue);
+        expect(component.isYamlView).toBe(testValue);
+    });
 });

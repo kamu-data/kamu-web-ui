@@ -14,12 +14,14 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         label: "Url:",
         tooltip: "URL of the data source.",
         presentationComponent: LinkPropertyComponent,
+        separateRowForValue: false,
     },
 
     "SetPollingSource.FetchStepContainer.image": {
         label: "Image:",
         tooltip: "Image name and and an optional tag.",
         presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
     },
 
     "SetPollingSource.FetchStepContainer.env": {
@@ -27,6 +29,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         tooltip:
             "Environment variables to propagate into or set in the container.",
         presentationComponent: EnvVariablesPropertyComponent,
+        separateRowForValue: false,
     },
 
     "SetPollingSource.MergeStrategyLedger.__typename": {
@@ -34,6 +37,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         tooltip:
             "Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset.",
         presentationComponent: MergeStrategyPropertyComponent,
+        separateRowForValue: false,
     },
 
     "SetPollingSource.MergeStrategyLedger.primaryKey": {
@@ -41,18 +45,21 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         tooltip:
             "Names of the columns that uniquely identify the record throughout its lifetime.",
         presentationComponent: CardsPropertyComponent,
+        separateRowForValue: false,
     },
 
     "SetPollingSource.TransformSql.engine": {
         label: "Engine:",
         tooltip: "Identifier of the engine used for this transformation.",
         presentationComponent: EnginePropertyComponent,
+        separateRowForValue: false,
     },
 
     "SetPollingSource.TransformSql.queries": {
         label: "Queries:",
         tooltip: "Queries use for specifying multi-step SQL transformations.",
         presentationComponent: EditorPropertyComponent,
+        separateRowForValue: true,
     },
 
     "SetPollingSource.ReadStepJsonLines.schema": {
@@ -60,6 +67,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         tooltip:
             "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
         presentationComponent: SchemaPropertyComponent,
+        separateRowForValue: false,
     },
 
     "SetPollingSource.ReadStepCsv.separator": {
@@ -67,6 +75,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         tooltip:
             "Sets a single character as a separator for each field and value.",
         presentationComponent: SeparatorPropertyComponent,
+        separateRowForValue: false,
     },
 
     "SetPollingSource.ReadStepCsv.schema": {
@@ -74,23 +83,27 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         tooltip:
             "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
         presentationComponent: SchemaPropertyComponent,
+        separateRowForValue: false,
     },
 
     "SetPollingSource.ReadStepCsv.header": {
         label: "Header:",
         tooltip: "Use the first line as names of columns.",
         presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
     },
     "SetPollingSource.ReadStepCsv.enforceSchema": {
         label: "Enforce schema:",
         tooltip:
             "If it is set to true, the specified or inferred schema will be forcibly applied to datasource files, and headers in CSV files will be ignored. If the option is set to false, the schema will be validated against all headers in CSV files in the case when the header option is set to true.",
         presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
     },
 
     "SetPollingSource.ReadStepCsv.timestampFormat": {
         label: "Timestamp format:",
         tooltip: "Sets the string that indicates a timestamp format.",
         presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
     },
 };

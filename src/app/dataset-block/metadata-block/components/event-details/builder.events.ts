@@ -30,8 +30,6 @@ enum SetPollingSourceProperty {
     PREPARE = "prepare",
 }
 
-const keysForSeparateRow: string[] = ["queries"];
-
 abstract class EventSectionBuilder<TEvent> {
     public abstract buildEventRows(event: TEvent): EventSection[];
 }
@@ -64,7 +62,7 @@ class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSourc
                         const rows: EventRow[] = [];
                         Object.entries(event[property]).forEach(
                             ([key, value]) => {
-                                if (value && key !== "__typename") {
+                                if (value) {
                                     rows.push({
                                         ...SET_POLLING_SOURCE_DESCRIPTORS[
                                             `SetPollingSource.${event[property].__typename}.${key}`
@@ -88,10 +86,6 @@ class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSourc
                                                 `SetPollingSource.${event.preprocess?.__typename}.${key}`
                                             ],
                                             value: value,
-                                            separateRowForValue:
-                                                keysForSeparateRow.includes(key)
-                                                    ? true
-                                                    : false,
                                         });
                                     }
                                 },
@@ -99,6 +93,9 @@ class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSourc
                         }
                         result.push({ title: property, rows });
                         break;
+                    }
+                    default: {
+                        result.push({ title: property, rows: [] });
                     }
                 }
             }

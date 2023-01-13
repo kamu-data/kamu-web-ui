@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { createSchemaFields } from "src/app/common/table.helper";
+import { extractSchemaFieldsFromData } from "src/app/common/table.helper";
 import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 
@@ -18,6 +18,6 @@ export class SchemaPropertyComponent extends BasePropertyComponent {
     }
 
     public get schemaFields(): DataSchemaField[] {
-        return createSchemaFields(this.tableSource[0]);
+        return extractSchemaFieldsFromData(this.tableSource[0]);
     }
 }

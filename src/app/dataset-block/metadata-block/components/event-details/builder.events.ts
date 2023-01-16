@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { BasePropertyComponent } from "./components/common/base-property/base-property.component";
 import { MetadataEvent } from "../../../../api/kamu.graphql.interface";
 import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
@@ -65,10 +63,11 @@ class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSourc
 
                     case SetPollingSourceSection.PREPARE: {
                         if (event.prepare) {
+                            const numPrepareParts = event.prepare.length;
                             event.prepare.forEach((item, index) => {
                                 const rows: EventRow[] = [];
                                 Object.entries(item).forEach(([key, value]) => {
-                                    if (key !== "__typename") {
+                                    if (key !== "__typename" && item.__typename) {
                                         rows.push(this.buildSupportedRow(
                                             `${item.__typename}`, key, value,
                                         ));
@@ -77,7 +76,7 @@ class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSourc
                                 result.push({
                                     title:
                                         section +
-                                        (event.prepare!.length > 1
+                                        (numPrepareParts > 1
                                             ? `#${index + 1}`
                                             : ""),
                                     rows,
@@ -99,12 +98,13 @@ class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSourc
         event: SetPollingSource, 
         section: SetPollingSourceScalarSections,
     ): EventRow[] {
+        const allowTypenameKey = section === SetPollingSourceSection.MERGE;
         const rows: EventRow[] = [];
         const sectionObject = event[section as keyof SetPollingSource];
         if (sectionObject) {
             Object.entries(sectionObject).forEach(
                 ([key, value]) => {
-                    if (value && key !== "__typename") {
+                    if (value && (key !== "__typename" || allowTypenameKey)) {
                         rows.push(this.buildEventRow(event, section, key, value));
                     }
                 },
@@ -120,16 +120,22 @@ class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSourc
         key: string, 
         value: unknown
     ): EventRow {
-        const sectionType = `${event[section]?.__typename}`;
-        const keyExists = Object.keys(SET_POLLING_SOURCE_DESCRIPTORS).includes(
-            `SetPollingSource.${sectionType}.${key}`,
-        );
-
-        if (keyExists) {
-            return this.buildSupportedRow(sectionType, key, value);
+        const sectionObject = event[section];
+        if (sectionObject?.__typename) {
+            const sectionType = `${sectionObject.__typename}`;
+            const keyExists = Object.keys(SET_POLLING_SOURCE_DESCRIPTORS).includes(
+                `SetPollingSource.${sectionType}.${key}`,
+            );
+    ``
+            if (keyExists) {
+                return this.buildSupportedRow(sectionType, key, value);
+            } else {
+                return this.buildUnsupportedRow(key, value);
+            }
         } else {
-            return this.buildUnsupportedRow(key, value);
+            throw new Error('Expecting typename in section object');
         }
+
     }
 
     private buildUnsupportedRow(key: string, value: unknown): EventRow {

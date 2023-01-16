@@ -3,6 +3,7 @@ import { By } from "@angular/platform-browser";
 import { DebugElement } from "@angular/core";
 import { ReplaySubject } from "rxjs";
 import { RouterEvent } from "@angular/router";
+import { MaybeNull } from "./app.types";
 
 export function findElement<T>(
     fixture: ComponentFixture<T>,
@@ -29,8 +30,13 @@ export function findElementByDataTestId<T>(
     fixture: ComponentFixture<T>,
     id: string,
 ): HTMLElement {
-    return fixture.debugElement.query(By.css(`[data-test-id="${id}"]`))
-        .nativeElement as HTMLElement;
+    const debugElement: MaybeNull<DebugElement> = fixture.debugElement.query(By.css(`[data-test-id="${id}"]`));
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (debugElement) {
+        return debugElement.nativeElement as HTMLElement;
+    } else {
+        throw new Error("Element " + id + " not found");
+    }
 }
 
 export const routerMockEventSubject = new ReplaySubject<RouterEvent>(1);

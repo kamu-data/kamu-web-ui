@@ -6,7 +6,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { mockSetPollingSourceEvent } from "../../mock.events";
 
 import { SetPollingSourceEventComponent } from "./set-polling-source-event.component";
-import { EditorPropertyComponent } from "../common/editor-property/editor-property.component";
+import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { EnvVariablesPropertyComponent } from "../common/env-variables-property/env-variables-property.component";
 import { LinkPropertyComponent } from "../common/link-property/link-property.component";
@@ -28,7 +28,7 @@ describe("SetPollingSourceEventComponent", () => {
                 SeparatorPropertyComponent,
                 LinkPropertyComponent,
                 EnginePropertyComponent,
-                EditorPropertyComponent,
+                SqlQueryViewerComponent,
                 SchemaPropertyComponent,
                 EnvVariablesPropertyComponent,
                 MergeStrategyPropertyComponent,

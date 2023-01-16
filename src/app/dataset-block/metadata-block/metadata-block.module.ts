@@ -29,7 +29,7 @@ import { ToggleComponent } from "src/app/components/toggle/toggle.component";
 import { SeedEventComponent } from "./components/event-details/components/seed-event/seed-event.component";
 import { MergeStrategyPropertyComponent } from "./components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
 import { EnginePropertyComponent } from "./components/event-details/components/common/engine-property/engine-property.component";
-import { EditorPropertyComponent } from "./components/event-details/components/common/editor-property/editor-property.component";
+import { SqlQueryViewerComponent } from "./components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
 import { HighlightModule } from "ngx-highlightjs";
 import { DynamicTableModule } from "src/app/components/dynamic-table/dynamic-table.module";
 import { SchemaPropertyComponent } from "./components/event-details/components/common/schema-property/schema-property.component";
@@ -56,7 +56,7 @@ import { UnsupportedPropertyComponent } from "./components/event-details/compone
         SeparatorPropertyComponent,
         LinkPropertyComponent,
         EnginePropertyComponent,
-        EditorPropertyComponent,
+        SqlQueryViewerComponent,
         SchemaPropertyComponent,
         EnvVariablesPropertyComponent,
         CardsPropertyComponent,

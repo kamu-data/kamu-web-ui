@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { EditorPropertyComponent } from "./editor-property.component";
+import { SqlQueryViewerComponent } from "./sql-query-viewer.component";
 
-describe("EditorPropertyComponent", () => {
-    let component: EditorPropertyComponent;
-    let fixture: ComponentFixture<EditorPropertyComponent>;
+describe("SqlQueryViewerComponent", () => {
+    let component: SqlQueryViewerComponent;
+    let fixture: ComponentFixture<SqlQueryViewerComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EditorPropertyComponent],
+            declarations: [SqlQueryViewerComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(EditorPropertyComponent);
+        fixture = TestBed.createComponent(SqlQueryViewerComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

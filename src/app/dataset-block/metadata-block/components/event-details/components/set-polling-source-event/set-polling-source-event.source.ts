@@ -3,7 +3,7 @@ import { EventRow } from "../../builder.events";
 import { SeparatorPropertyComponent } from "../common/separator-property/separator-property.component";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
-import { EditorPropertyComponent } from "../common/editor-property/editor-property.component";
+import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
 import { SchemaPropertyComponent } from "../common/schema-property/schema-property.component";
 import { EnvVariablesPropertyComponent } from "../common/env-variables-property/env-variables-property.component";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
@@ -65,7 +65,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
     "SetPollingSource.TransformSql.queries": {
         label: "Queries:",
         tooltip: "Queries use for specifying multi-step SQL transformations.",
-        presentationComponent: EditorPropertyComponent,
+        presentationComponent: SqlQueryViewerComponent,
         separateRowForValue: true,
         dataTestId: "setPollingSource-transformSql-queries",
     },

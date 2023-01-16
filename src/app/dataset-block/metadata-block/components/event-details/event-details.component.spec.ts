@@ -1,3 +1,4 @@
+import { SetPollingSourceEventComponent } from "./components/set-polling-source-event/set-polling-source-event.component";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { BlockService } from "./../../block.service";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -15,7 +16,10 @@ describe("EventDetailsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EventDetailsComponent],
+            declarations: [
+                EventDetailsComponent,
+                SetPollingSourceEventComponent,
+            ],
             providers: [Apollo, DatasetApi],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();

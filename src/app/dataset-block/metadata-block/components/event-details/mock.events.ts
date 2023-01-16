@@ -44,7 +44,7 @@ export const mockSetPollingSourceEvent: SetPollingSource = {
             "case_status STRING",
             "case_type STRING",
         ],
-        separator: null,
+        separator: ",",
         encoding: null,
         quote: null,
         escape: null,
@@ -68,7 +68,19 @@ export const mockSetPollingSourceEvent: SetPollingSource = {
         primaryKey: ["id"],
     },
     prepare: null,
-    preprocess: null,
+    preprocess: {
+        __typename: "TransformSql",
+        engine: "spark",
+        version: null,
+        queries: [
+            {
+                __typename: "SqlQueryStep",
+                query: 'SELECT\n  CAST(UNIX_TIMESTAMP(Reported_Date, "yyyy-MM-dd") as TIMESTAMP) as reported_date,\n  Classification_Reported as classification,\n  ROW_NUMBER() OVER (ORDER BY (Reported_Date, HA)) as id,\n  ha,\n  sex,\n  age_group\nFROM input\n',
+                alias: null,
+            },
+        ],
+        temporalTables: null,
+    },
 };
 export const mockSeed: Seed = {
     __typename: "Seed",

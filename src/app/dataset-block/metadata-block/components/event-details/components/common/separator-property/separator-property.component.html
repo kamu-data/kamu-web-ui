@@ -1,3 +1,5 @@
 <q class="fs-5">
-    <span class="fs-4">{{ data ? data : defaultSeparator }}</span>
+    <span class="fs-4" [attr.data-test-id]="dataTestId">{{
+        data ? data : defaultSeparator
+    }}</span>
 </q>

@@ -5,5 +5,7 @@
         [src]="descriptionMergeStrategy.url_logo"
         [alt]="descriptionMergeStrategy.name"
     />
-    <span>({{ descriptionMergeStrategy.name }})</span>
+    <span [attr.data-test-id]="dataTestId"
+        >({{ descriptionMergeStrategy.name }})</span
+    >
 </div>

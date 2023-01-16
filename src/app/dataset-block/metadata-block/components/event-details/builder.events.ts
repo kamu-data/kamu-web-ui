@@ -10,6 +10,7 @@ export interface EventRow {
     tooltip: string;
     value?: unknown;
     separateRowForValue?: boolean;
+    dataTestId?: string;
     presentationComponent: Type<BasePropertyComponent>;
 }
 

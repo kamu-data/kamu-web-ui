@@ -1,5 +1,5 @@
 <ul>
-    <li *ngFor="let key of keys">
-        <span>{{ key }} </span>
+    <li *ngFor="let key of keys; let i = index">
+        <span [attr.data-test-id]="dataTestId + '-' + i">{{ key }} </span>
     </li>
 </ul>

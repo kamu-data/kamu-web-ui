@@ -15,6 +15,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         tooltip: "URL of the data source.",
         presentationComponent: LinkPropertyComponent,
         separateRowForValue: false,
+        dataTestId: "setPollingSource-fetchStepUrl-url",
     },
 
     "SetPollingSource.FetchStepContainer.image": {
@@ -22,6 +23,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         tooltip: "Image name and and an optional tag.",
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
+        dataTestId: "setPollingSource-fetchStepContainer-image",
     },
 
     "SetPollingSource.FetchStepContainer.env": {
@@ -30,6 +32,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
             "Environment variables to propagate into or set in the container.",
         presentationComponent: EnvVariablesPropertyComponent,
         separateRowForValue: false,
+        dataTestId: "setPollingSource-fetchStepContainer-env",
     },
 
     "SetPollingSource.MergeStrategyLedger.__typename": {
@@ -38,6 +41,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
             "Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset.",
         presentationComponent: MergeStrategyPropertyComponent,
         separateRowForValue: false,
+        dataTestId: "setPollingSource-mergeStrategyLedger-__typename",
     },
 
     "SetPollingSource.MergeStrategyLedger.primaryKey": {
@@ -46,6 +50,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
             "Names of the columns that uniquely identify the record throughout its lifetime.",
         presentationComponent: CardsPropertyComponent,
         separateRowForValue: false,
+        dataTestId: "setPollingSource-mergeStrategyLedger-primaryKey",
     },
 
     "SetPollingSource.TransformSql.engine": {
@@ -53,6 +58,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         tooltip: "Identifier of the engine used for this transformation.",
         presentationComponent: EnginePropertyComponent,
         separateRowForValue: false,
+        dataTestId: "setPollingSource-transformSql-engine",
     },
 
     "SetPollingSource.TransformSql.queries": {
@@ -60,6 +66,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         tooltip: "Queries use for specifying multi-step SQL transformations.",
         presentationComponent: EditorPropertyComponent,
         separateRowForValue: true,
+        dataTestId: "setPollingSource-transformSql-queries",
     },
 
     "SetPollingSource.ReadStepJsonLines.schema": {
@@ -68,6 +75,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
             "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
         presentationComponent: SchemaPropertyComponent,
         separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepJsonLines-schema",
     },
 
     "SetPollingSource.ReadStepCsv.separator": {
@@ -76,6 +84,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
             "Sets a single character as a separator for each field and value.",
         presentationComponent: SeparatorPropertyComponent,
         separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-separator",
     },
 
     "SetPollingSource.ReadStepCsv.schema": {
@@ -84,6 +93,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
             "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
         presentationComponent: SchemaPropertyComponent,
         separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-schema",
     },
 
     "SetPollingSource.ReadStepCsv.header": {
@@ -91,6 +101,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         tooltip: "Use the first line as names of columns.",
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-header",
     },
     "SetPollingSource.ReadStepCsv.enforceSchema": {
         label: "Enforce schema:",
@@ -98,6 +109,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
             "If it is set to true, the specified or inferred schema will be forcibly applied to datasource files, and headers in CSV files will be ignored. If the option is set to false, the schema will be validated against all headers in CSV files in the case when the header option is set to true.",
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-enforceSchema",
     },
 
     "SetPollingSource.ReadStepCsv.timestampFormat": {
@@ -105,5 +117,6 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         tooltip: "Sets the string that indicates a timestamp format.",
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-timestampFormat",
     },
 };

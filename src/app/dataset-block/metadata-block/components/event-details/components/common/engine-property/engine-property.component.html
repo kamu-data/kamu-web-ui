@@ -5,5 +5,5 @@
         [src]="descriptionEngine.url_logo"
         [alt]="descriptionEngine.name"
     />
-    <span>({{ descriptionEngine.name }})</span>
+    <span [attr.data-test-id]="dataTestId">({{ descriptionEngine.name }})</span>
 </div>

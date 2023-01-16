@@ -56,6 +56,7 @@ export class SetPollingSourceEventComponent
                     rows[index].presentationComponent,
                 );
                 componentRef.instance.data = rows[index].value;
+                componentRef.instance.dataTestId = rows[index].dataTestId;
             });
             this.cdr.detectChanges();
         }

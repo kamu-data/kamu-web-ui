@@ -115,18 +115,18 @@
                 <ng-container *ngFor="let row of section.rows">
                     <app-block-row-data
                         *ngIf="
-                            !row.separateRowForValue;
+                            !row.descriptor.separateRowForValue;
                             else templateSeparateRow
                         "
-                        [tooltip]="row.tooltip"
-                        [label]="row.label"
+                        [tooltip]="row.descriptor.tooltip"
+                        [label]="row.descriptor.label"
                     >
                         <ng-template #container></ng-template>
                     </app-block-row-data>
                     <ng-template #templateSeparateRow>
                         <app-block-row-data
-                            [tooltip]="row.tooltip"
-                            [label]="row.label"
+                            [tooltip]="row.descriptor.tooltip"
+                            [label]="row.descriptor.label"
                         >
                         </app-block-row-data>
                         <ng-template #container></ng-template>

@@ -6,13 +6,17 @@ import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
 import { Type } from "@angular/core";
 import { SET_POLLING_SOURCE_DESCRIPTORS } from "./components/set-polling-source-event/set-polling-source-event.source";
 
-export interface EventRow {
+export interface EventRowDescriptor {
     label: string;
     tooltip: string;
-    value?: unknown;
     separateRowForValue?: boolean;
     dataTestId?: string;
-    presentationComponent: Type<BasePropertyComponent>;
+    presentationComponent: Type<BasePropertyComponent>;    
+}
+
+export interface EventRow {
+    descriptor: EventRowDescriptor;
+    value: unknown;
 }
 
 export interface EventSection {
@@ -32,98 +36,32 @@ enum SetPollingSourceSection {
     PREPARE = "prepare",
 }
 
+type SetPollingSourceScalarSections =            
+    | SetPollingSourceSection.FETCH
+    | SetPollingSourceSection.MERGE 
+    | SetPollingSourceSection.PREPROCESS  
+    | SetPollingSourceSection.READ;
+
 abstract class EventSectionBuilder<TEvent> {
-    public abstract buildEventRows(event: TEvent): EventSection[];
+    public abstract buildEventSections(event: TEvent): EventSection[];
 }
 
 class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSource> {
-    private unsupportedRow: EventRow = {
+    private readonly UNSUPPORTED_ROW_DESCRIPTOR: EventRowDescriptor = {
         ...SET_POLLING_SOURCE_DESCRIPTORS[`SetPollingSource.UnsupportedKey`],
     };
 
-    public buildEventRows(event: SetPollingSource): EventSection[] {
+    public buildEventSections(event: SetPollingSource): EventSection[] {
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {
                 switch (section) {
                     case SetPollingSourceSection.READ:
-                    case SetPollingSourceSection.FETCH: {
-                        const rows: EventRow[] = [];
-                        Object.entries(event[section]).forEach(
-                            ([key, value]) => {
-                                if (value && key !== "__typename") {
-                                    rows.push(
-                                        this.isKeyExist(key, section, event)
-                                            ? {
-                                                  ...SET_POLLING_SOURCE_DESCRIPTORS[
-                                                      `SetPollingSource.${event[section].__typename}.${key}`
-                                                  ],
-                                                  value: value,
-                                              }
-                                            : {
-                                                  ...this.unsupportedRow,
-                                                  label: `Unsupported(${key})`,
-                                                  value: value,
-                                              },
-                                    );
-                                }
-                            },
-                        );
-                        result.push({ title: section, rows });
+                    case SetPollingSourceSection.FETCH: 
+                    case SetPollingSourceSection.MERGE:
+                    case SetPollingSourceSection.PREPROCESS: 
+                        result.push({ title: section, rows: this.buildEventRows(event, section) });
                         break;
-                    }
-                    case SetPollingSourceSection.MERGE: {
-                        const rows: EventRow[] = [];
-                        Object.entries(event[section]).forEach(
-                            ([key, value]) => {
-                                if (value) {
-                                    rows.push(
-                                        this.isKeyExist(key, section, event)
-                                            ? {
-                                                  ...SET_POLLING_SOURCE_DESCRIPTORS[
-                                                      `SetPollingSource.${event[section].__typename}.${key}`
-                                                  ],
-                                                  value,
-                                              }
-                                            : {
-                                                  ...this.unsupportedRow,
-                                                  label: `Unsupported(${key})`,
-                                                  value,
-                                              },
-                                    );
-                                }
-                            },
-                        );
-                        result.push({ title: section, rows });
-                        break;
-                    }
-                    case SetPollingSourceSection.PREPROCESS: {
-                        const rows: EventRow[] = [];
-                        if (event.preprocess) {
-                            Object.entries(event[section]!).forEach(
-                                ([key, value]) => {
-                                    if (value && key !== "__typename") {
-                                        rows.push(
-                                            this.isKeyExist(key, section, event)
-                                                ? {
-                                                      ...SET_POLLING_SOURCE_DESCRIPTORS[
-                                                          `SetPollingSource.${event[section]?.__typename}.${key}`
-                                                      ],
-                                                      value,
-                                                  }
-                                                : {
-                                                      ...this.unsupportedRow,
-                                                      label: `Unsupported(${key})`,
-                                                      value,
-                                                  },
-                                        );
-                                    }
-                                },
-                            );
-                        }
-                        result.push({ title: section, rows });
-                        break;
-                    }
 
                     case SetPollingSourceSection.PREPARE: {
                         if (event.prepare) {
@@ -131,12 +69,9 @@ class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSourc
                                 const rows: EventRow[] = [];
                                 Object.entries(item).forEach(([key, value]) => {
                                     if (key !== "__typename") {
-                                        rows.push({
-                                            ...SET_POLLING_SOURCE_DESCRIPTORS[
-                                                `SetPollingSource.${item.__typename}.${key}`
-                                            ],
-                                            value: value,
-                                        });
+                                        rows.push(this.buildSupportedRow(
+                                            `${item.__typename}`, key, value,
+                                        ));
                                     }
                                 });
                                 result.push({
@@ -160,19 +95,60 @@ class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSourc
         return result;
     }
 
-    private isKeyExist(
-        key: string,
-        section:
-            | SetPollingSourceSection.FETCH
-            | SetPollingSourceSection.READ
-            | SetPollingSourceSection.MERGE
-            | SetPollingSourceSection.PREPROCESS,
-        event: SetPollingSource,
-    ): boolean {
-        return Object.keys(SET_POLLING_SOURCE_DESCRIPTORS).includes(
-            `SetPollingSource.${event[section]?.__typename}.${key}`,
-        );
+    private buildEventRows(
+        event: SetPollingSource, 
+        section: SetPollingSourceScalarSections,
+    ): EventRow[] {
+        const rows: EventRow[] = [];
+        const sectionObject = event[section as keyof SetPollingSource];
+        if (sectionObject) {
+            Object.entries(sectionObject).forEach(
+                ([key, value]) => {
+                    if (value && key !== "__typename") {
+                        rows.push(this.buildEventRow(event, section, key, value));
+                    }
+                },
+            );
+        }
+
+        return rows;
     }
+
+    private buildEventRow(
+        event: SetPollingSource, 
+        section: SetPollingSourceScalarSections, 
+        key: string, 
+        value: unknown
+    ): EventRow {
+        const sectionType = `${event[section]?.__typename}`;
+        const keyExists = Object.keys(SET_POLLING_SOURCE_DESCRIPTORS).includes(
+            `SetPollingSource.${sectionType}.${key}`,
+        );
+
+        if (keyExists) {
+            return this.buildSupportedRow(sectionType, key, value);
+        } else {
+            return this.buildUnsupportedRow(key, value);
+        }
+    }
+
+    private buildUnsupportedRow(key: string, value: unknown): EventRow {
+        return {
+            descriptor: {
+                ... this.UNSUPPORTED_ROW_DESCRIPTOR,
+                label: `Unsupported(${key})`,
+            } as EventRowDescriptor,
+            value,
+        } as EventRow;
+    }
+
+    private buildSupportedRow(sectionType: string, key: string, value: unknown): EventRow {
+        return {
+            descriptor: SET_POLLING_SOURCE_DESCRIPTORS[`SetPollingSource.${sectionType}.${key}`],
+            value,
+        } as EventRow;
+    }
+
 }
 
 export const FACTORIES_BY_EVENT_TYPE: Record<

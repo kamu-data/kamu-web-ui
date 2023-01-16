@@ -53,10 +53,10 @@ export class SetPollingSourceEventComponent
             this.container.map((vcr: ViewContainerRef, index: number) => {
                 vcr.clear();
                 componentRef = vcr.createComponent(
-                    rows[index].presentationComponent,
+                    rows[index].descriptor.presentationComponent,
                 );
                 componentRef.instance.data = rows[index].value;
-                componentRef.instance.dataTestId = rows[index].dataTestId;
+                componentRef.instance.dataTestId = rows[index].descriptor.dataTestId;
             });
             this.cdr.detectChanges();
         }
@@ -64,7 +64,7 @@ export class SetPollingSourceEventComponent
 
     ngOnInit(): void {
         this.eventSections =
-            FACTORIES_BY_EVENT_TYPE.SetPollingSource.buildEventRows(this.event);
+            FACTORIES_BY_EVENT_TYPE.SetPollingSource.buildEventSections(this.event);
     }
 
     public get fetchStepUrl(): FetchStepUrl {

@@ -1,5 +1,5 @@
 import { LinkPropertyComponent } from "./../common/link-property/link-property.component";
-import { EventRow } from "../../builder.events";
+import { EventRowDescriptor } from "../../builder.events";
 import { SeparatorPropertyComponent } from "../common/separator-property/separator-property.component";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
@@ -10,7 +10,7 @@ import { CardsPropertyComponent } from "../common/cards-property/cards-property.
 import { UnsupportedPropertyComponent } from "../common/unsupported-property/unsupported-property.component";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 
-export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
+export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRowDescriptor> = {
     "SetPollingSource.FetchStepUrl.url": {
         label: "Url:",
         tooltip: "URL of the data source.",

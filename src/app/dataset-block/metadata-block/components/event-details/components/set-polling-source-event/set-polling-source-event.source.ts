@@ -3,11 +3,12 @@ import { EventRow } from "../../builder.events";
 import { SeparatorPropertyComponent } from "../common/separator-property/separator-property.component";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
-import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { EditorPropertyComponent } from "../common/editor-property/editor-property.component";
 import { SchemaPropertyComponent } from "../common/schema-property/schema-property.component";
 import { EnvVariablesPropertyComponent } from "../common/env-variables-property/env-variables-property.component";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
+import { UnsupportedPropertyComponent } from "../common/unsupported-property/unsupported-property.component";
+import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
     "SetPollingSource.FetchStepUrl.url": {
@@ -118,5 +119,38 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRow> = {
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-readStepCsv-timestampFormat",
+    },
+
+    "SetPollingSource.PrepStepDecompress.format": {
+        label: "Format:",
+        tooltip: "Name of a compression algorithm used on data.",
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-prepStepDecompress-format",
+    },
+
+    "SetPollingSource.PrepStepDecompress.subPath": {
+        label: "SubPath:",
+        tooltip:
+            "Path to a data file within a multi-file archive. Can contain glob patterns.",
+        presentationComponent: LinkPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-prepStepDecompress-subPath",
+    },
+
+    "SetPollingSource.PrepStepPipe.command": {
+        label: "Command:",
+        tooltip: "Command to execute and its arguments.",
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-prepStepPipe-command",
+    },
+
+    "SetPollingSource.UnsupportedKey": {
+        label: "",
+        tooltip: "Unsupported value",
+        presentationComponent: UnsupportedPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-unsupportedKey",
     },
 };

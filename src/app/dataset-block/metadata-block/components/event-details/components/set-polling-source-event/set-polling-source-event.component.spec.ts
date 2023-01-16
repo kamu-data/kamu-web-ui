@@ -14,6 +14,7 @@ import { SchemaPropertyComponent } from "../common/schema-property/schema-proper
 import { SeparatorPropertyComponent } from "../common/separator-property/separator-property.component";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
+import { UnsupportedPropertyComponent } from "../common/unsupported-property/unsupported-property.component";
 
 describe("SetPollingSourceEventComponent", () => {
     let component: SetPollingSourceEventComponent;
@@ -32,6 +33,7 @@ describe("SetPollingSourceEventComponent", () => {
                 EnvVariablesPropertyComponent,
                 MergeStrategyPropertyComponent,
                 CardsPropertyComponent,
+                UnsupportedPropertyComponent,
             ],
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();

@@ -35,6 +35,7 @@ import { DynamicTableModule } from "src/app/components/dynamic-table/dynamic-tab
 import { SchemaPropertyComponent } from "./components/event-details/components/common/schema-property/schema-property.component";
 import { EnvVariablesPropertyComponent } from "./components/event-details/components/common/env-variables-property/env-variables-property.component";
 import { CardsPropertyComponent } from "./components/event-details/components/common/cards-property/cards-property.component";
+import { UnsupportedPropertyComponent } from "./components/event-details/components/common/unsupported-property/unsupported-property.component";
 
 @NgModule({
     declarations: [
@@ -59,6 +60,7 @@ import { CardsPropertyComponent } from "./components/event-details/components/co
         SchemaPropertyComponent,
         EnvVariablesPropertyComponent,
         CardsPropertyComponent,
+        UnsupportedPropertyComponent,
     ],
     imports: [
         CommonModule,

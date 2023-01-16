@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { BasePropertyComponent } from "./components/common/base-property/base-property.component";
 import { MetadataEvent } from "../../../../api/kamu.graphql.interface";
@@ -23,7 +24,7 @@ enum EventTypes {
     SetPollingSource = "SetPollingSource",
 }
 
-enum SetPollingSourceProperty {
+enum SetPollingSourceSection {
     READ = "read",
     FETCH = "fetch",
     MERGE = "merge",
@@ -36,72 +37,141 @@ abstract class EventSectionBuilder<TEvent> {
 }
 
 class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSource> {
+    private unsupportedRow: EventRow = {
+        ...SET_POLLING_SOURCE_DESCRIPTORS[`SetPollingSource.UnsupportedKey`],
+    };
+
     public buildEventRows(event: SetPollingSource): EventSection[] {
         const result: EventSection[] = [];
-        Object.entries(event).forEach(([property, data]) => {
-            if (data && property !== "__typename") {
-                switch (property) {
-                    case SetPollingSourceProperty.READ:
-                    case SetPollingSourceProperty.FETCH: {
+        Object.entries(event).forEach(([section, data]) => {
+            if (data && section !== "__typename") {
+                switch (section) {
+                    case SetPollingSourceSection.READ:
+                    case SetPollingSourceSection.FETCH: {
                         const rows: EventRow[] = [];
-                        Object.entries(event[property]).forEach(
+                        Object.entries(event[section]).forEach(
                             ([key, value]) => {
                                 if (value && key !== "__typename") {
-                                    rows.push({
-                                        ...SET_POLLING_SOURCE_DESCRIPTORS[
-                                            `SetPollingSource.${event[property].__typename}.${key}`
-                                        ],
-                                        value: value,
-                                    });
+                                    rows.push(
+                                        this.isKeyExist(key, section, event)
+                                            ? {
+                                                  ...SET_POLLING_SOURCE_DESCRIPTORS[
+                                                      `SetPollingSource.${event[section].__typename}.${key}`
+                                                  ],
+                                                  value: value,
+                                              }
+                                            : {
+                                                  ...this.unsupportedRow,
+                                                  label: `Unsupported(${key})`,
+                                                  value: value,
+                                              },
+                                    );
                                 }
                             },
                         );
-                        result.push({ title: property, rows });
+                        result.push({ title: section, rows });
                         break;
                     }
-                    case SetPollingSourceProperty.MERGE: {
+                    case SetPollingSourceSection.MERGE: {
                         const rows: EventRow[] = [];
-                        Object.entries(event[property]).forEach(
+                        Object.entries(event[section]).forEach(
                             ([key, value]) => {
                                 if (value) {
-                                    rows.push({
-                                        ...SET_POLLING_SOURCE_DESCRIPTORS[
-                                            `SetPollingSource.${event[property].__typename}.${key}`
-                                        ],
-                                        value: value,
-                                    });
+                                    rows.push(
+                                        this.isKeyExist(key, section, event)
+                                            ? {
+                                                  ...SET_POLLING_SOURCE_DESCRIPTORS[
+                                                      `SetPollingSource.${event[section].__typename}.${key}`
+                                                  ],
+                                                  value,
+                                              }
+                                            : {
+                                                  ...this.unsupportedRow,
+                                                  label: `Unsupported(${key})`,
+                                                  value,
+                                              },
+                                    );
                                 }
                             },
                         );
-                        result.push({ title: property, rows });
+                        result.push({ title: section, rows });
                         break;
                     }
-                    case SetPollingSourceProperty.PREPROCESS: {
+                    case SetPollingSourceSection.PREPROCESS: {
                         const rows: EventRow[] = [];
                         if (event.preprocess) {
-                            Object.entries(event.preprocess).forEach(
+                            Object.entries(event[section]!).forEach(
                                 ([key, value]) => {
                                     if (value && key !== "__typename") {
-                                        rows.push({
-                                            ...SET_POLLING_SOURCE_DESCRIPTORS[
-                                                `SetPollingSource.${event.preprocess?.__typename}.${key}`
-                                            ],
-                                            value: value,
-                                        });
+                                        rows.push(
+                                            this.isKeyExist(key, section, event)
+                                                ? {
+                                                      ...SET_POLLING_SOURCE_DESCRIPTORS[
+                                                          `SetPollingSource.${event[section]?.__typename}.${key}`
+                                                      ],
+                                                      value,
+                                                  }
+                                                : {
+                                                      ...this.unsupportedRow,
+                                                      label: `Unsupported(${key})`,
+                                                      value,
+                                                  },
+                                        );
                                     }
                                 },
                             );
                         }
-                        result.push({ title: property, rows });
+                        result.push({ title: section, rows });
+                        break;
+                    }
+
+                    case SetPollingSourceSection.PREPARE: {
+                        if (event.prepare) {
+                            event.prepare.forEach((item, index) => {
+                                const rows: EventRow[] = [];
+                                Object.entries(item).forEach(([key, value]) => {
+                                    if (key !== "__typename") {
+                                        rows.push({
+                                            ...SET_POLLING_SOURCE_DESCRIPTORS[
+                                                `SetPollingSource.${item.__typename}.${key}`
+                                            ],
+                                            value: value,
+                                        });
+                                    }
+                                });
+                                result.push({
+                                    title:
+                                        section +
+                                        (event.prepare!.length > 1
+                                            ? `#${index + 1}`
+                                            : ""),
+                                    rows,
+                                });
+                            });
+                        }
                         break;
                     }
                     default: {
-                        result.push({ title: property, rows: [] });
+                        result.push({ title: section, rows: [] });
                     }
                 }
             }
         });
         return result;
+    }
+
+    private isKeyExist(
+        key: string,
+        section:
+            | SetPollingSourceSection.FETCH
+            | SetPollingSourceSection.READ
+            | SetPollingSourceSection.MERGE
+            | SetPollingSourceSection.PREPROCESS,
+        event: SetPollingSource,
+    ): boolean {
+        return Object.keys(SET_POLLING_SOURCE_DESCRIPTORS).includes(
+            `SetPollingSource.${event[section]?.__typename}.${key}`,
+        );
     }
 }
 

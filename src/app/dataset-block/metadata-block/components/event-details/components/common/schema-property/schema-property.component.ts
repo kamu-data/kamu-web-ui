@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { extractSchemaFieldsFromData } from "src/app/common/table.helper";
 import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
 import { BasePropertyComponent } from "../base-property/base-property.component";
@@ -10,8 +10,10 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SchemaPropertyComponent extends BasePropertyComponent {
+    @Input() public data: string[];
+
     public get tableSource(): DataRow[] {
-        return (this.data as string[]).map((item: string) => ({
+        return this.data.map((item: string) => ({
             name: item.split(" ")[0],
             type: item.split(" ")[1],
         }));

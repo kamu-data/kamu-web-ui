@@ -1,11 +1,5 @@
 import { EventRow, EventSection } from "../../builder.events";
-import {
-    FetchStepFilesGlob,
-    FetchStepUrl,
-    MergeStrategyLedger,
-    ReadStepCsv,
-    SetPollingSource,
-} from "./../../../../../../api/kamu.graphql.interface";
+import { SetPollingSource } from "./../../../../../../api/kamu.graphql.interface";
 import {
     AfterViewChecked,
     ChangeDetectionStrategy,
@@ -37,7 +31,6 @@ export class SetPollingSourceEventComponent
     container: QueryList<ViewContainerRef>;
     public isYamlView = false;
     public eventSections: EventSection[];
-    public queriesLabel = "Queries:";
 
     public constructor(private cdr: ChangeDetectorRef) {}
 
@@ -55,8 +48,9 @@ export class SetPollingSourceEventComponent
                 componentRef = vcr.createComponent(
                     rows[index].descriptor.presentationComponent,
                 );
-                componentRef.instance.data = rows[index].value;
-                componentRef.instance.dataTestId = rows[index].descriptor.dataTestId;
+                componentRef.setInput("data", rows[index].value);
+                componentRef.instance.dataTestId =
+                    rows[index].descriptor.dataTestId;
             });
             this.cdr.detectChanges();
         }
@@ -64,39 +58,9 @@ export class SetPollingSourceEventComponent
 
     ngOnInit(): void {
         this.eventSections =
-            FACTORIES_BY_EVENT_TYPE.SetPollingSource.buildEventSections(this.event);
-    }
-
-    public get fetchStepUrl(): FetchStepUrl {
-        return this.event.fetch as FetchStepUrl;
-    }
-
-    public get isFetchStepUrl(): boolean {
-        return this.event.fetch.__typename === "FetchStepUrl";
-    }
-
-    public get fetchStepFilesGlob(): FetchStepFilesGlob {
-        return this.event.fetch as FetchStepFilesGlob;
-    }
-
-    public get isFetchStepFilesGlob(): boolean {
-        return this.event.fetch.__typename === "FetchStepFilesGlob";
-    }
-
-    public get readStepCsv(): ReadStepCsv {
-        return this.event.read as ReadStepCsv;
-    }
-
-    public get isReadStepCsv(): boolean {
-        return this.event.read.__typename === "ReadStepCsv";
-    }
-
-    public get mergeStrategyLedger(): MergeStrategyLedger {
-        return this.event.merge as MergeStrategyLedger;
-    }
-
-    public get isMergeStrategyLedger(): boolean {
-        return this.event.merge.__typename === "MergeStrategyLedger";
+            FACTORIES_BY_EVENT_TYPE.SetPollingSource.buildEventSections(
+                this.event,
+            );
     }
 
     public onToggleView(value: boolean): void {

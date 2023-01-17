@@ -1,4 +1,7 @@
-import { SetPollingSource } from "./../../../../api/kamu.graphql.interface";
+import {
+    CompressionFormat,
+    SetPollingSource,
+} from "./../../../../api/kamu.graphql.interface";
 import {
     AddDataEventFragment,
     DatasetKind,
@@ -67,7 +70,13 @@ export const mockSetPollingSourceEvent: SetPollingSource = {
         __typename: "MergeStrategyLedger",
         primaryKey: ["id"],
     },
-    prepare: null,
+    prepare: [
+        {
+            __typename: "PrepStepDecompress",
+            format: CompressionFormat.Gzip,
+            subPath: "http://test.com",
+        },
+    ],
     preprocess: {
         __typename: "TransformSql",
         engine: "spark",
@@ -82,6 +91,7 @@ export const mockSetPollingSourceEvent: SetPollingSource = {
         temporalTables: null,
     },
 };
+
 export const mockSeed: Seed = {
     __typename: "Seed",
     datasetId: "sadasdfdsdefdfdf",

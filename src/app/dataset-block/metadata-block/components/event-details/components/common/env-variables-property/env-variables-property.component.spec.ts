@@ -15,7 +15,10 @@ describe("EnvVariablesPropertyComponent", () => {
 
         fixture = TestBed.createComponent(EnvVariablesPropertyComponent);
         component = fixture.componentInstance;
-        component.data = [{ name: "testName", value: null }];
+        component.data = [
+            { name: "testName1", value: null },
+            { name: "testName2", value: "testValue" },
+        ];
         fixture.detectChanges();
     });
 

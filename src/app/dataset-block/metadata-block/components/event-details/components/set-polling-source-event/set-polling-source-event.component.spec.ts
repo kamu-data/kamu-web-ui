@@ -1,4 +1,7 @@
-import { FetchStepUrl } from "./../../../../../../api/kamu.graphql.interface";
+import {
+    FetchStepUrl,
+    PrepStepDecompress,
+} from "./../../../../../../api/kamu.graphql.interface";
 import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { CardsPropertyComponent } from "./../common/cards-property/cards-property.component";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
@@ -42,7 +45,9 @@ describe("SetPollingSourceEventComponent", () => {
 
         fixture = TestBed.createComponent(SetPollingSourceEventComponent);
         component = fixture.componentInstance;
-        component.event = mockSetPollingSourceEvent;
+        component.event = Object.assign({}, mockSetPollingSourceEvent, {
+            unsupportedKey: { name: "" },
+        });
         fixture.detectChanges();
     });
 
@@ -101,5 +106,31 @@ describe("SetPollingSourceEventComponent", () => {
             "setPollingSource-transformSql-queries",
         );
         expect(queries).toBeDefined();
+
+        const prepareFormat = findElementByDataTestId(
+            fixture,
+            "setPollingSource-prepStepDecompress-format",
+        );
+        expect(prepareFormat.textContent).toEqual(
+            (mockSetPollingSourceEvent.prepare as PrepStepDecompress[])[0]
+                .format,
+        );
+
+        const prepareSubPath = findElementByDataTestId(
+            fixture,
+            "setPollingSource-prepStepDecompress-subPath",
+        );
+        expect(prepareSubPath.textContent).toEqual(
+            (mockSetPollingSourceEvent.prepare as PrepStepDecompress[])[0]
+                .subPath ?? "",
+        );
+    });
+
+    it("should check render unsupported section", () => {
+        const unsupportedSection = findElementByDataTestId(
+            fixture,
+            "unsupported-section",
+        );
+        expect(unsupportedSection).toBeDefined();
     });
 });

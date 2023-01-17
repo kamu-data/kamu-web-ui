@@ -23,6 +23,7 @@ export class YamlEventViewerComponent {
         ReadStepJsonLines: "jsonLines",
     };
 
+    // Temporary solution, later data will come from server
     public get yamlEventText(): string {
         let result = "";
         Object.entries(this.event).forEach(([key, value]) => {

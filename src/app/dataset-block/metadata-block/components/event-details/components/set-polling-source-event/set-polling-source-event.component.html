@@ -42,11 +42,14 @@
                     </ng-template>
                 </ng-container>
                 <ng-container *ngIf="!section.rows.length">
-                    <p class="text-center mt-2">
+                    <p
+                        class="text-center mt-2"
+                        data-test-id="unsupported-section"
+                    >
                         <mat-icon class="text-danger align-middle"
                             >block</mat-icon
                         >
-                        Unsupported section
+                        <span>Unsupported section</span>
                     </p>
                 </ng-container>
             </div>

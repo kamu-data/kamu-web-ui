@@ -36,6 +36,7 @@ import { SchemaPropertyComponent } from "./components/event-details/components/c
 import { EnvVariablesPropertyComponent } from "./components/event-details/components/common/env-variables-property/env-variables-property.component";
 import { CardsPropertyComponent } from "./components/event-details/components/common/cards-property/cards-property.component";
 import { UnsupportedPropertyComponent } from "./components/event-details/components/common/unsupported-property/unsupported-property.component";
+import { YamlEventViewerComponent } from "./components/event-details/components/common/yaml-event-viewer/yaml-event-viewer.component";
 
 @NgModule({
     declarations: [
@@ -61,6 +62,7 @@ import { UnsupportedPropertyComponent } from "./components/event-details/compone
         EnvVariablesPropertyComponent,
         CardsPropertyComponent,
         UnsupportedPropertyComponent,
+        YamlEventViewerComponent,
     ],
     imports: [
         CommonModule,

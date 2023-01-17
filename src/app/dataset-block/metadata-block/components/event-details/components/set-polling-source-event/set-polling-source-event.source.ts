@@ -10,7 +10,10 @@ import { CardsPropertyComponent } from "../common/cards-property/cards-property.
 import { UnsupportedPropertyComponent } from "../common/unsupported-property/unsupported-property.component";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 
-export const SET_POLLING_SOURCE_DESCRIPTORS: Record<string, EventRowDescriptor> = {
+export const SET_POLLING_SOURCE_DESCRIPTORS: Record<
+    string,
+    EventRowDescriptor
+> = {
     "SetPollingSource.FetchStepUrl.url": {
         label: "Url:",
         tooltip: "URL of the data source.",

@@ -9,7 +9,7 @@ export interface EventRowDescriptor {
     tooltip: string;
     separateRowForValue?: boolean;
     dataTestId?: string;
-    presentationComponent: Type<BasePropertyComponent>;    
+    presentationComponent: Type<BasePropertyComponent>;
 }
 
 export interface EventRow {
@@ -34,10 +34,10 @@ enum SetPollingSourceSection {
     PREPARE = "prepare",
 }
 
-type SetPollingSourceScalarSections =            
+type SetPollingSourceScalarSections =
     | SetPollingSourceSection.FETCH
-    | SetPollingSourceSection.MERGE 
-    | SetPollingSourceSection.PREPROCESS  
+    | SetPollingSourceSection.MERGE
+    | SetPollingSourceSection.PREPROCESS
     | SetPollingSourceSection.READ;
 
 abstract class EventSectionBuilder<TEvent> {
@@ -55,10 +55,13 @@ class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSourc
             if (data && section !== "__typename") {
                 switch (section) {
                     case SetPollingSourceSection.READ:
-                    case SetPollingSourceSection.FETCH: 
+                    case SetPollingSourceSection.FETCH:
                     case SetPollingSourceSection.MERGE:
-                    case SetPollingSourceSection.PREPROCESS: 
-                        result.push({ title: section, rows: this.buildEventRows(event, section) });
+                    case SetPollingSourceSection.PREPROCESS:
+                        result.push({
+                            title: section,
+                            rows: this.buildEventRows(event, section),
+                        });
                         break;
 
                     case SetPollingSourceSection.PREPARE: {
@@ -67,10 +70,17 @@ class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSourc
                             event.prepare.forEach((item, index) => {
                                 const rows: EventRow[] = [];
                                 Object.entries(item).forEach(([key, value]) => {
-                                    if (key !== "__typename" && item.__typename) {
-                                        rows.push(this.buildSupportedRow(
-                                            `${item.__typename}`, key, value,
-                                        ));
+                                    if (
+                                        key !== "__typename" &&
+                                        item.__typename
+                                    ) {
+                                        rows.push(
+                                            this.buildSupportedRow(
+                                                `${item.__typename}`,
+                                                key,
+                                                value,
+                                            ),
+                                        );
                                     }
                                 });
                                 result.push({
@@ -95,66 +105,69 @@ class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSourc
     }
 
     private buildEventRows(
-        event: SetPollingSource, 
+        event: SetPollingSource,
         section: SetPollingSourceScalarSections,
     ): EventRow[] {
         const allowTypenameKey = section === SetPollingSourceSection.MERGE;
         const rows: EventRow[] = [];
         const sectionObject = event[section as keyof SetPollingSource];
         if (sectionObject) {
-            Object.entries(sectionObject).forEach(
-                ([key, value]) => {
-                    if (value && (key !== "__typename" || allowTypenameKey)) {
-                        rows.push(this.buildEventRow(event, section, key, value));
-                    }
-                },
-            );
+            Object.entries(sectionObject).forEach(([key, value]) => {
+                if (value && (key !== "__typename" || allowTypenameKey)) {
+                    rows.push(this.buildEventRow(event, section, key, value));
+                }
+            });
         }
 
         return rows;
     }
 
     private buildEventRow(
-        event: SetPollingSource, 
-        section: SetPollingSourceScalarSections, 
-        key: string, 
-        value: unknown
+        event: SetPollingSource,
+        section: SetPollingSourceScalarSections,
+        key: string,
+        value: unknown,
     ): EventRow {
         const sectionObject = event[section];
         if (sectionObject?.__typename) {
             const sectionType = `${sectionObject.__typename}`;
-            const keyExists = Object.keys(SET_POLLING_SOURCE_DESCRIPTORS).includes(
-                `SetPollingSource.${sectionType}.${key}`,
-            );
-    ``
+            const keyExists = Object.keys(
+                SET_POLLING_SOURCE_DESCRIPTORS,
+            ).includes(`SetPollingSource.${sectionType}.${key}`);
+            ``;
             if (keyExists) {
                 return this.buildSupportedRow(sectionType, key, value);
             } else {
                 return this.buildUnsupportedRow(key, value);
             }
         } else {
-            throw new Error('Expecting typename in section object');
+            throw new Error("Expecting typename in section object");
         }
-
     }
 
     private buildUnsupportedRow(key: string, value: unknown): EventRow {
         return {
             descriptor: {
-                ... this.UNSUPPORTED_ROW_DESCRIPTOR,
+                ...this.UNSUPPORTED_ROW_DESCRIPTOR,
                 label: `Unsupported(${key})`,
             } as EventRowDescriptor,
             value,
         } as EventRow;
     }
 
-    private buildSupportedRow(sectionType: string, key: string, value: unknown): EventRow {
+    private buildSupportedRow(
+        sectionType: string,
+        key: string,
+        value: unknown,
+    ): EventRow {
         return {
-            descriptor: SET_POLLING_SOURCE_DESCRIPTORS[`SetPollingSource.${sectionType}.${key}`],
+            descriptor:
+                SET_POLLING_SOURCE_DESCRIPTORS[
+                    `SetPollingSource.${sectionType}.${key}`
+                ],
             value,
         } as EventRow;
     }
-
 }
 
 export const FACTORIES_BY_EVENT_TYPE: Record<

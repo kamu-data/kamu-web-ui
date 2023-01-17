@@ -105,6 +105,7 @@ const Services = [
             coreLibraryLoader: () => import("highlight.js/lib/core"),
             languages: {
                 sql: () => import("highlight.js/lib/languages/sql"),
+                yaml: () => import("highlight.js/lib/languages/yaml"),
             },
         },
     },

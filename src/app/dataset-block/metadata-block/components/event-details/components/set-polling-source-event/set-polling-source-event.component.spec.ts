@@ -15,6 +15,7 @@ import { SeparatorPropertyComponent } from "../common/separator-property/separat
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
 import { UnsupportedPropertyComponent } from "../common/unsupported-property/unsupported-property.component";
+import { YamlEventViewerComponent } from "../common/yaml-event-viewer/yaml-event-viewer.component";
 
 describe("SetPollingSourceEventComponent", () => {
     let component: SetPollingSourceEventComponent;
@@ -34,6 +35,7 @@ describe("SetPollingSourceEventComponent", () => {
                 MergeStrategyPropertyComponent,
                 CardsPropertyComponent,
                 UnsupportedPropertyComponent,
+                YamlEventViewerComponent,
             ],
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();

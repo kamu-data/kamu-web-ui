@@ -1,0 +1,8 @@
+<div class="toggle" (click)="onClick()" data-test-id="toggle-button">
+    <input class="toggle-input" type="checkbox" />
+    <button
+        class="toggle-btn {{ className }}"
+        [ngClass]="{ 'toggle-btn-on': isToggled, 'toggle-btn-off': !isToggled }"
+        [attr.aria-expanded]="isToggled"
+    ></button>
+</div>

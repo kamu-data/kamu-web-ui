@@ -1,4 +1,7 @@
-import { DataSqlErrorUpdate, DataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import {
+    DataSqlErrorUpdate,
+    DataUpdate,
+} from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -22,11 +25,10 @@ import { MaybeNull } from "src/app/common/app.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent extends BaseComponent implements OnInit {
-
     public static readonly DefaultDatasetSchema: DatasetSchema = {
-        name: "arrow_schema", 
-        type: "struct", 
-        "fields": []
+        name: "arrow_schema",
+        type: "struct",
+        fields: [],
     };
 
     @Input() public datasetBasics?: DatasetBasicsFragment;
@@ -34,6 +36,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     public sqlEditorOptions = {
         theme: "vs",
         language: "sql",
+        renderLineHighlight: "none",
         minimap: {
             enabled: false,
         },
@@ -70,7 +73,7 @@ export class DataComponent extends BaseComponent implements OnInit {
                 },
             ),
             this.appDatasetSubsService.onDatasetDataSqlErrorOccured.subscribe(
-                (dataSqlErrorUpdate: DataSqlErrorUpdate) => {                         
+                (dataSqlErrorUpdate: DataSqlErrorUpdate) => {
                     this.currentData = [];
                     this.currentSchema = DataComponent.DefaultDatasetSchema;
                     this.sqlErrorMarker = dataSqlErrorUpdate.error;
@@ -98,6 +101,5 @@ export class DataComponent extends BaseComponent implements OnInit {
             // @param editor The editor instance is passed in as a convenience
             run: runQueryFn,
         });
-
     }
 }

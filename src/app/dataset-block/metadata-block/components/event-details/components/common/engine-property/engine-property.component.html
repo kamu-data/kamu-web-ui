@@ -1,0 +1,9 @@
+<div class="d-flex align-items-end">
+    <img
+        *ngIf="descriptionEngine.url_logo"
+        class="engine-logo me-3"
+        [src]="descriptionEngine.url_logo"
+        [alt]="descriptionEngine.name"
+    />
+    <span [attr.data-test-id]="dataTestId">({{ descriptionEngine.name }})</span>
+</div>

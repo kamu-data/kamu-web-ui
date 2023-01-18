@@ -1,0 +1,58 @@
+<div class="d-flex justify-content-end">
+    <span class="me-2">Show as yaml</span>
+    <app-toggle
+        [isToggled]="isYamlView"
+        (toggled)="onToggleView($event)"
+    ></app-toggle>
+</div>
+
+<div *ngIf="isYamlView" class="layout mt-4">
+    <app-yaml-event-viewer [event]="event"></app-yaml-event-viewer>
+</div>
+
+<ng-container *ngIf="!isYamlView">
+    <div class="d-flex flex-column gap-4 mt-4">
+        <div
+            class="position-relative border border-1 p-2 rounded-3"
+            *ngFor="let section of eventSections"
+        >
+            <span
+                class="position-absolute text-muted group-box-label text-uppercase"
+                >{{ section.title }}</span
+            >
+            <div class="mx-4">
+                <ng-container *ngFor="let row of section.rows">
+                    <app-block-row-data
+                        *ngIf="
+                            !row.descriptor.separateRowForValue;
+                            else templateSeparateRow
+                        "
+                        [tooltip]="row.descriptor.tooltip"
+                        [label]="row.descriptor.label"
+                    >
+                        <ng-template #container></ng-template>
+                    </app-block-row-data>
+                    <ng-template #templateSeparateRow>
+                        <app-block-row-data
+                            [tooltip]="row.descriptor.tooltip"
+                            [label]="row.descriptor.label"
+                        >
+                        </app-block-row-data>
+                        <ng-template #container></ng-template>
+                    </ng-template>
+                </ng-container>
+                <ng-container *ngIf="!section.rows.length">
+                    <p
+                        class="text-center mt-2"
+                        data-test-id="unsupported-section"
+                    >
+                        <mat-icon class="text-danger align-middle"
+                            >block</mat-icon
+                        >
+                        <span>Unsupported section</span>
+                    </p>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-container>

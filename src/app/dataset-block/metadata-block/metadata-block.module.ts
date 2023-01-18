@@ -1,3 +1,6 @@
+import { LinkPropertyComponent } from "./components/event-details/components/common/link-property/link-property.component";
+import { SeparatorPropertyComponent } from "./components/event-details/components/common/separator-property/separator-property.component";
+import { SimplePropertyComponent } from "./components/event-details/components/common/simple-property/simple-property.component";
 import { FormsModule } from "@angular/forms";
 import { DisplayTimeModule } from "./../../components/display-time/display-time.module";
 import { MatDividerModule } from "@angular/material/divider";
@@ -21,7 +24,19 @@ import { PaginationModule } from "src/app/components/pagination-component/pagina
 import { BlockHashFilterPipe } from "./components/block-navigation/pipes/block-hash-filter.pipe";
 import { EventTypeFilterPipe } from "./components/block-navigation/pipes/event-type-filter.pipe";
 import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
+import { SetPollingSourceEventComponent } from "./components/event-details/components/set-polling-source-event/set-polling-source-event.component";
+import { ToggleComponent } from "src/app/components/toggle/toggle.component";
 import { SeedEventComponent } from "./components/event-details/components/seed-event/seed-event.component";
+import { MergeStrategyPropertyComponent } from "./components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
+import { EnginePropertyComponent } from "./components/event-details/components/common/engine-property/engine-property.component";
+import { SqlQueryViewerComponent } from "./components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
+import { HighlightModule } from "ngx-highlightjs";
+import { DynamicTableModule } from "src/app/components/dynamic-table/dynamic-table.module";
+import { SchemaPropertyComponent } from "./components/event-details/components/common/schema-property/schema-property.component";
+import { EnvVariablesPropertyComponent } from "./components/event-details/components/common/env-variables-property/env-variables-property.component";
+import { CardsPropertyComponent } from "./components/event-details/components/common/cards-property/cards-property.component";
+import { UnsupportedPropertyComponent } from "./components/event-details/components/common/unsupported-property/unsupported-property.component";
+import { YamlEventViewerComponent } from "./components/event-details/components/common/yaml-event-viewer/yaml-event-viewer.component";
 
 @NgModule({
     declarations: [
@@ -30,11 +45,24 @@ import { SeedEventComponent } from "./components/event-details/components/seed-e
         EventDetailsComponent,
         BlockNavigationComponent,
         AddDataEventComponent,
+        SetPollingSourceEventComponent,
         SeedEventComponent,
         TooltipIconComponent,
         BlockRowDataComponent,
         EventTypeFilterPipe,
         BlockHashFilterPipe,
+        ToggleComponent,
+        MergeStrategyPropertyComponent,
+        SimplePropertyComponent,
+        SeparatorPropertyComponent,
+        LinkPropertyComponent,
+        EnginePropertyComponent,
+        SqlQueryViewerComponent,
+        SchemaPropertyComponent,
+        EnvVariablesPropertyComponent,
+        CardsPropertyComponent,
+        UnsupportedPropertyComponent,
+        YamlEventViewerComponent,
     ],
     imports: [
         CommonModule,
@@ -50,6 +78,8 @@ import { SeedEventComponent } from "./components/event-details/components/seed-e
         FormsModule,
         PaginationModule,
         NgMultiSelectDropDownModule.forRoot(),
+        HighlightModule,
+        DynamicTableModule,
     ],
     exports: [MetadataBlockComponent],
 })

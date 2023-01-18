@@ -10,3 +10,8 @@ export enum SupportedEvents {
     SetVocab = "SetVocab",
     SetWatermark = "SetWatermark",
 }
+
+export interface EventPropertyLogo {
+    name: string;
+    url_logo?: string;
+}

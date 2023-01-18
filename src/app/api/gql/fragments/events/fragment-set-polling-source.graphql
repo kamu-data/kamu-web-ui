@@ -1,0 +1,123 @@
+fragment SetPollingSourceEvent on SetPollingSource {
+  fetch {
+    ... on FetchStepUrl {
+      url
+      eventTime {
+        ... on EventTimeSourceFromPath {
+          pattern
+          timestampFormat
+        }
+        ... on EventTimeSourceFromMetadata {
+          __typename
+        }
+      }
+    }
+    ... on FetchStepFilesGlob {
+      path
+      eventTime {
+        ... on EventTimeSourceFromPath {
+          pattern
+          timestampFormat
+        }
+        ... on EventTimeSourceFromMetadata {
+          __typename
+        }
+      }
+      cache {
+        __typename
+      }
+      order
+    }
+    ... on FetchStepContainer {
+      image
+      command
+      args
+      env {
+        name
+        value
+      }
+    }
+  }
+  read {
+    ... on ReadStepCsv {
+      schema
+      separator
+      encoding
+      quote
+      escape
+      comment
+      header
+      enforceSchema
+      inferSchema
+      ignoreLeadingWhiteSpace
+      ignoreTrailingWhiteSpace
+      nullValue
+      emptyValue
+      nanValue
+      positiveInf
+      negativeInf
+      dateFormat
+      timestampFormat
+      multiLine
+    }
+
+    ... on ReadStepGeoJson {
+      schema
+    }
+
+    ... on ReadStepParquet {
+      schema
+    }
+    ... on ReadStepJsonLines {
+      schema
+      dateFormat
+      encoding
+      multiLine
+      primitivesAsString
+      timestampFormat
+    }
+    ... on ReadStepEsriShapefile {
+      schema
+      subPath
+    }
+  }
+  merge {
+    ... on MergeStrategySnapshot {
+      primaryKey
+      compareColumns
+      observationColumn
+      obsvAdded
+      obsvChanged
+      obsvRemoved
+    }
+    ... on MergeStrategyLedger {
+      primaryKey
+    }
+    ... on MergeStrategyAppend {
+      __typename
+    }
+  }
+  prepare {
+    ... on PrepStepDecompress {
+      format
+      subPath
+    }
+    ... on PrepStepPipe {
+      command
+    }
+  }
+  preprocess {
+    ... on TransformSql {
+      engine
+      version
+      queries {
+        query
+        alias
+      }
+      temporalTables {
+        name
+        primaryKey
+      }
+    }
+  }
+}

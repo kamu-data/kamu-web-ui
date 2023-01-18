@@ -37,6 +37,7 @@ import { EnvVariablesPropertyComponent } from "./components/event-details/compon
 import { CardsPropertyComponent } from "./components/event-details/components/common/cards-property/cards-property.component";
 import { UnsupportedPropertyComponent } from "./components/event-details/components/common/unsupported-property/unsupported-property.component";
 import { YamlEventViewerComponent } from "./components/event-details/components/common/yaml-event-viewer/yaml-event-viewer.component";
+import { SetTransformEventComponent } from "./components/event-details/components/set-transform-event/set-transform-event.component";
 
 @NgModule({
     declarations: [
@@ -46,6 +47,7 @@ import { YamlEventViewerComponent } from "./components/event-details/components/
         BlockNavigationComponent,
         AddDataEventComponent,
         SetPollingSourceEventComponent,
+        SetTransformEventComponent,
         SeedEventComponent,
         TooltipIconComponent,
         BlockRowDataComponent,

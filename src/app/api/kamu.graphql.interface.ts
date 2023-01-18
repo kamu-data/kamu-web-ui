@@ -1271,7 +1271,7 @@ export type MetadataBlockFragment = {
         | { __typename: "SetInfo" }
         | { __typename: "SetLicense"; name: string }
         | ({ __typename: "SetPollingSource" } & SetPollingSourceEventFragment)
-        | { __typename: "SetTransform" }
+        | ({ __typename: "SetTransform" } & DatasetTransformFragment)
         | { __typename: "SetVocab" }
         | { __typename: "SetWatermark"; outputWatermark: any };
 };
@@ -1694,9 +1694,7 @@ export const MetadataBlockFragmentDoc = gql`
             ... on SetWatermark {
                 outputWatermark
             }
-            ... on SetTransform {
-                __typename
-            }
+            ...DatasetTransform
             ... on ExecuteQuery {
                 queryOutputData: outputData {
                     interval {
@@ -1720,6 +1718,7 @@ export const MetadataBlockFragmentDoc = gql`
             ...SetPollingSourceEvent
         }
     }
+    ${DatasetTransformFragmentDoc}
     ${AddDataEventFragmentDoc}
     ${SetPollingSourceEventFragmentDoc}
 `;

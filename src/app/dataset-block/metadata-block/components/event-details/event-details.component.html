@@ -5,7 +5,7 @@
             [datasetInfo]="datasetInfo"
         ></app-add-data-event>
     </ng-container>
-    
+
     <ng-container *ngIf="isSetPollingSourceEvent">
         <app-set-polling-source-event
             [event]="setPollingSourceEvent"
@@ -15,6 +15,12 @@
 
     <ng-container *ngIf="isSeedEvent">
         <app-seed-event [event]="seedEvent"> </app-seed-event>
+    </ng-container>
+
+    <ng-container *ngIf="isSetTransformEvent">
+        <app-set-transform-event
+            [event]="setTransformEvent"
+        ></app-set-transform-event>
     </ng-container>
 
     <ng-container *ngIf="!isSupportedEvent">

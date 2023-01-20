@@ -317,6 +317,7 @@ export const mockMetadataSchemaUpdate = {
                 inputs: [
                     {
                         __typename: "TransformInput",
+                        name: "ontario.case-details",
                         dataset: {
                             __typename: "Dataset",
                             id: "did:odf:z4k88e8uUcKWpJVMbvAyww4R6iarRhSy93yhd3ohg3QdDQP86D4",

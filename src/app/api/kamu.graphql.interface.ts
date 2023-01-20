@@ -1216,11 +1216,18 @@ export type DatasetSearchOverviewFragment = {
 
 export type DatasetTransformContentFragment = {
     __typename?: "TransformSql";
+    engine: string;
+    version?: string | null;
     queries: Array<{
         __typename?: "SqlQueryStep";
         alias?: string | null;
         query: string;
     }>;
+    temporalTables?: Array<{
+        __typename?: "TemporalTable";
+        name: string;
+        primaryKey: Array<string>;
+    }> | null;
 };
 
 export type DatasetTransformFragment = {
@@ -1505,9 +1512,15 @@ export const LicenseFragmentDoc = gql`
 `;
 export const DatasetTransformContentFragmentDoc = gql`
     fragment DatasetTransformContent on TransformSql {
+        engine
+        version
         queries {
             alias
             query
+        }
+        temporalTables {
+            name
+            primaryKey
         }
     }
 `;

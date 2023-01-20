@@ -1,5 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { mockSetTransform } from "../../mock.events";
 import { DatasetKindPropertyComponent } from "../common/dataset-kind-property/dataset-kind-property.component";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 
@@ -21,6 +22,7 @@ describe("SetTransformEventComponent", () => {
 
         fixture = TestBed.createComponent(SetTransformEventComponent);
         component = fixture.componentInstance;
+        component.event = mockSetTransform;
         fixture.detectChanges();
     });
 

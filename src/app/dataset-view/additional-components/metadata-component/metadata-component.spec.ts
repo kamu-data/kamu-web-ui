@@ -48,7 +48,7 @@ describe("MetadataComponent", () => {
         component.currentState = {
             schema: mockMetadataSchemaUpdate.schema,
             metadata:
-                mockMetadataSchemaUpdate.metadata as DatasetMetadataSummaryFragment,
+                mockMetadataSchemaUpdate.metadata as unknown as DatasetMetadataSummaryFragment,
             pageInfo: mockMetadataSchemaUpdate.pageInfo,
         };
         component.datasetBasics = mockDatasetBasicsFragment;
@@ -66,7 +66,7 @@ describe("MetadataComponent", () => {
         expect(component.currentState).not.toBeDefined();
 
         appDatasetSubsService.metadataSchemaChanges(
-            mockMetadataSchemaUpdate as MetadataSchemaUpdate,
+            mockMetadataSchemaUpdate as unknown as MetadataSchemaUpdate,
         );
         component.ngOnInit();
         fixture.detectChanges();
@@ -78,7 +78,7 @@ describe("MetadataComponent", () => {
         component.currentState = {
             schema: mockMetadataSchemaUpdate.schema,
             metadata:
-                mockMetadataSchemaUpdate.metadata as DatasetMetadataSummaryFragment,
+                mockMetadataSchemaUpdate.metadata as unknown as DatasetMetadataSummaryFragment,
             pageInfo: mockMetadataSchemaUpdate.pageInfo,
         };
 

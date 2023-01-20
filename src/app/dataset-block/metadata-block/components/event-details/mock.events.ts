@@ -1,6 +1,7 @@
 import {
     CompressionFormat,
     SetPollingSource,
+    SetTransform,
 } from "./../../../../api/kamu.graphql.interface";
 import {
     AddDataEventFragment,
@@ -96,4 +97,22 @@ export const mockSeed: Seed = {
     __typename: "Seed",
     datasetId: "sadasdfdsdefdfdf",
     datasetKind: DatasetKind.Root,
+};
+
+export const mockSetTransform: SetTransform = {
+    __typename: "SetTransform",
+    inputs: [],
+    transform: {
+        __typename: "TransformSql",
+        engine: "spark",
+        version: null,
+        queries: [
+            {
+                __typename: "SqlQueryStep",
+                alias: null,
+                query: "SELECT\n  row_id as id,\n  date_reported as reported_date,\n  case when lower(gender) = 'male' then 'M' \n       when lower(gender) = 'female' then 'F' \n       else 'U' end as gender,\n  case when age_group = '<20' then '<20'\n       when age_group = '20-29' then '20s'\n       when age_group = '30-39' then '30s'\n       when age_group = '40-49' then '40s'\n       when age_group = '50-59' then '50s'\n       when age_group = '60-69' then '60s'\n       when age_group = '70-79' then '70s'\n       when age_group = '80+' then '80s'\n       else 'UNKNOWN' end as age_group,\n  health_region as location\n  FROM `quebec.case-details`\n",
+            },
+        ],
+        temporalTables: null,
+    },
 };

@@ -13,6 +13,7 @@ describe("DatasetKindPropertyComponent", () => {
 
         fixture = TestBed.createComponent(DatasetKindPropertyComponent);
         component = fixture.componentInstance;
+        component.data = "ROOT";
         fixture.detectChanges();
     });
 

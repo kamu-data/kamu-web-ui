@@ -13,6 +13,7 @@ describe("OwnerPropertyComponent", () => {
 
         fixture = TestBed.createComponent(OwnerPropertyComponent);
         component = fixture.componentInstance;
+        component.data = { id: "1", name: "kamu" };
         fixture.detectChanges();
     });
 

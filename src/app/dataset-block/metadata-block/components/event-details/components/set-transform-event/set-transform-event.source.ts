@@ -3,7 +3,6 @@ import { EventRowDescriptor } from "../../builder.events";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
 import { OwnerPropertyComponent } from "../common/owner-property/owner-property.component";
-import { DatasetKindPropertyComponent } from "../common/dataset-kind-property/dataset-kind-property.component";
 import { UnsupportedPropertyComponent } from "../common/unsupported-property/unsupported-property.component";
 
 export const SET_TRANSFORM_SOURCE_DESCRIPTORS: Record<
@@ -37,7 +36,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: Record<
     "SetTransform.Dataset.kind": {
         label: "Dataset type:",
         tooltip: "Type of the dataset.",
-        presentationComponent: DatasetKindPropertyComponent,
+        presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "set-transform-dataset-kind",
     },
@@ -56,13 +55,5 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: Record<
         presentationComponent: OwnerPropertyComponent,
         separateRowForValue: false,
         dataTestId: "set-transform-dataset-owner",
-    },
-
-    "SetTransform.UnsupportedKey": {
-        label: "",
-        tooltip: "Unsupported value",
-        presentationComponent: UnsupportedPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "set-transform-unsupportedKey",
     },
 };

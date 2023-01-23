@@ -148,12 +148,4 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<
         separateRowForValue: false,
         dataTestId: "setPollingSource-prepStepPipe-command",
     },
-
-    "SetPollingSource.UnsupportedKey": {
-        label: "",
-        tooltip: "Unsupported value",
-        presentationComponent: UnsupportedPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-unsupportedKey",
-    },
 };

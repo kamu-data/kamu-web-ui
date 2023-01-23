@@ -39,7 +39,6 @@ import { UnsupportedPropertyComponent } from "./components/event-details/compone
 import { YamlEventViewerComponent } from "./components/event-details/components/common/yaml-event-viewer/yaml-event-viewer.component";
 import { SetTransformEventComponent } from "./components/event-details/components/set-transform-event/set-transform-event.component";
 import { OwnerPropertyComponent } from "./components/event-details/components/common/owner-property/owner-property.component";
-import { DatasetKindPropertyComponent } from "./components/event-details/components/common/dataset-kind-property/dataset-kind-property.component";
 
 @NgModule({
     declarations: [
@@ -68,7 +67,6 @@ import { DatasetKindPropertyComponent } from "./components/event-details/compone
         UnsupportedPropertyComponent,
         YamlEventViewerComponent,
         OwnerPropertyComponent,
-        DatasetKindPropertyComponent,
     ],
     imports: [
         CommonModule,

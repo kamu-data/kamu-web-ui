@@ -2,13 +2,13 @@ import { SET_TRANSFORM_SOURCE_DESCRIPTORS } from "./components/set-transform-eve
 import {
     SetTransform,
     TransformInput,
-    TransformSql,
 } from "./../../../../api/kamu.graphql.interface";
 import { BasePropertyComponent } from "./components/common/base-property/base-property.component";
 import { MetadataEvent } from "../../../../api/kamu.graphql.interface";
 import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
 import { Type } from "@angular/core";
 import { SET_POLLING_SOURCE_DESCRIPTORS } from "./components/set-polling-source-event/set-polling-source-event.source";
+import { UnsupportedPropertyComponent } from "./components/common/unsupported-property/unsupported-property.component";
 
 export interface EventRowDescriptor {
     label: string;
@@ -33,6 +33,8 @@ enum EventTypes {
     SetTransform = "SetTransform",
 }
 
+type EventTypesScalar = `${EventTypes}`;
+
 enum SetPollingSourceSection {
     READ = "read",
     FETCH = "fetch",
@@ -47,20 +49,120 @@ type SetPollingSourceScalarSections =
     | SetPollingSourceSection.PREPROCESS
     | SetPollingSourceSection.READ;
 
-enum SetTransformSourceSection {
+enum SetTransformSection {
     INPUTS = "inputs",
     TRANSFORM = "transform",
 }
 
+type SetTransformScalarSections =
+    | SetTransformSection.INPUTS
+    | SetTransformSection.TRANSFORM;
+
+export const descriptorMapper = {
+    [EventTypes.SetPollingSource]: SET_POLLING_SOURCE_DESCRIPTORS,
+    [EventTypes.SetTransform]: SET_TRANSFORM_SOURCE_DESCRIPTORS,
+};
+
 abstract class EventSectionBuilder<TEvent> {
+    private readonly UNSUPPORTED_ROW_DESCRIPTOR: EventRowDescriptor = {
+        label: "",
+        tooltip: "Unsupported value",
+        presentationComponent: UnsupportedPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "unsupportedKey",
+    };
     public abstract buildEventSections(event: TEvent): EventSection[];
+    public buildEventRows(
+        event: SetPollingSource | SetTransform,
+        section: SetPollingSourceScalarSections | SetTransformScalarSections,
+    ): EventRow[] {
+        const rows: EventRow[] = [];
+        let sectionObject;
+        const allowTypenameKey = section === SetPollingSourceSection.MERGE;
+        if (event.__typename === EventTypes.SetPollingSource) {
+            sectionObject = event[section as keyof SetPollingSource];
+        } else if (event.__typename === EventTypes.SetTransform) {
+            sectionObject = event[section as keyof SetTransform];
+        }
+        if (sectionObject) {
+            Object.entries(sectionObject).forEach(([key, value]) => {
+                if (value && (key !== "__typename" || allowTypenameKey)) {
+                    rows.push(this.buildEventRow(event, section, key, value));
+                }
+            });
+        }
+
+        return rows;
+    }
+    public buildEventRow(
+        event: SetPollingSource | SetTransform,
+        section: SetPollingSourceScalarSections | SetTransformScalarSections,
+        key: string,
+        value: unknown,
+    ): EventRow {
+        let sectionObject;
+        const eventType = event.__typename;
+        if (event.__typename === EventTypes.SetPollingSource) {
+            sectionObject =
+                event[section as keyof Omit<SetPollingSource, "__typename">];
+        }
+        if (event.__typename === EventTypes.SetTransform) {
+            sectionObject =
+                event[section as keyof Omit<SetTransform, "__typename">];
+        }
+        if (
+            sectionObject &&
+            event.__typename &&
+            eventType &&
+            "__typename" in sectionObject
+        ) {
+            const sectionType = sectionObject.__typename as string;
+            const keyExists = Object.keys(
+                descriptorMapper[event.__typename],
+            ).includes(`${eventType}.${sectionType}.${key}`);
+            if (keyExists) {
+                return this.buildSupportedRow(
+                    event.__typename,
+                    sectionType,
+                    key,
+                    value,
+                );
+            } else {
+                return this.buildUnsupportedRow(key, value);
+            }
+        } else {
+            throw new Error("Expecting typename in section object");
+        }
+    }
+
+    private buildUnsupportedRow(key: string, value: unknown): EventRow {
+        return {
+            descriptor: {
+                ...this.UNSUPPORTED_ROW_DESCRIPTOR,
+                label: `Unsupported(${key})`,
+            } as EventRowDescriptor,
+            value,
+        } as EventRow;
+    }
+
+    public buildSupportedRow(
+        eventType: EventTypesScalar,
+        sectionType: string,
+        key: string,
+        value: unknown,
+    ): EventRow {
+        return {
+            descriptor:
+                descriptorMapper[eventType][
+                    `${eventType}.${sectionType}.${key}`
+                ],
+
+            value,
+        } as EventRow;
+    }
 }
 
 class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSource> {
-    private readonly UNSUPPORTED_ROW_DESCRIPTOR: EventRowDescriptor = {
-        ...SET_POLLING_SOURCE_DESCRIPTORS[`SetPollingSource.UnsupportedKey`],
-    };
-
     public buildEventSections(event: SetPollingSource): EventSection[] {
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
@@ -84,10 +186,12 @@ class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSourc
                                 Object.entries(item).forEach(([key, value]) => {
                                     if (
                                         key !== "__typename" &&
-                                        item.__typename
+                                        item.__typename &&
+                                        event.__typename
                                     ) {
                                         rows.push(
                                             this.buildSupportedRow(
+                                                event.__typename,
                                                 `${item.__typename}`,
                                                 key,
                                                 value,
@@ -115,101 +219,53 @@ class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSourc
         });
         return result;
     }
-
-    private buildEventRows(
-        event: SetPollingSource,
-        section: SetPollingSourceScalarSections,
-    ): EventRow[] {
-        const allowTypenameKey = section === SetPollingSourceSection.MERGE;
-        const rows: EventRow[] = [];
-        const sectionObject = event[section as keyof SetPollingSource];
-        if (sectionObject) {
-            Object.entries(sectionObject).forEach(([key, value]) => {
-                if (value && (key !== "__typename" || allowTypenameKey)) {
-                    rows.push(this.buildEventRow(event, section, key, value));
-                }
-            });
-        }
-
-        return rows;
-    }
-
-    private buildEventRow(
-        event: SetPollingSource,
-        section: SetPollingSourceScalarSections,
-        key: string,
-        value: unknown,
-    ): EventRow {
-        const sectionObject = event[section];
-        if (sectionObject?.__typename) {
-            const sectionType = `${sectionObject.__typename}`;
-            const keyExists = Object.keys(
-                SET_POLLING_SOURCE_DESCRIPTORS,
-            ).includes(`SetPollingSource.${sectionType}.${key}`);
-            ``;
-            if (keyExists) {
-                return this.buildSupportedRow(sectionType, key, value);
-            } else {
-                return this.buildUnsupportedRow(key, value);
-            }
-        } else {
-            throw new Error("Expecting typename in section object");
-        }
-    }
-
-    private buildUnsupportedRow(key: string, value: unknown): EventRow {
-        return {
-            descriptor: {
-                ...this.UNSUPPORTED_ROW_DESCRIPTOR,
-                label: `Unsupported(${key})`,
-            } as EventRowDescriptor,
-            value,
-        } as EventRow;
-    }
-
-    private buildSupportedRow(
-        sectionType: string,
-        key: string,
-        value: unknown,
-    ): EventRow {
-        return {
-            descriptor:
-                SET_POLLING_SOURCE_DESCRIPTORS[
-                    `SetPollingSource.${sectionType}.${key}`
-                ],
-            value,
-        } as EventRow;
-    }
 }
 
 class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform> {
-    private readonly UNSUPPORTED_ROW_DESCRIPTOR: EventRowDescriptor = {
-        ...SET_TRANSFORM_SOURCE_DESCRIPTORS[`SetTransform.UnsupportedKey`],
-    };
-
     public buildEventSections(event: SetTransform): EventSection[] {
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (section !== "__typename") {
                 switch (section) {
-                    case SetTransformSourceSection.TRANSFORM: {
+                    case SetTransformSection.TRANSFORM: {
                         result.push({
                             title: section,
-                            rows: this.buildEventRows(data as TransformSql),
+                            rows: this.buildEventRows(event, section),
                         });
 
                         break;
                     }
-                    case SetTransformSourceSection.INPUTS: {
+                    case SetTransformSection.INPUTS: {
                         const numInputsParts = event.inputs.length;
+                        const rows: EventRow[] = [];
                         (data as TransformInput[]).forEach((item, index) => {
+                            Object.entries(item.dataset).forEach(
+                                ([key, value]) => {
+                                    if (
+                                        event.__typename &&
+                                        item.dataset.__typename &&
+                                        key !== "__typename"
+                                    ) {
+                                        rows.push(
+                                            this.buildSupportedRow(
+                                                event.__typename,
+                                                item.dataset.__typename,
+                                                key,
+                                                key === "kind"
+                                                    ? this.kindDatasetCapitalize(
+                                                          value as string,
+                                                      )
+                                                    : value,
+                                            ),
+                                        );
+                                    }
+                                },
+                            );
                             result.push({
                                 title:
                                     section +
                                     (numInputsParts > 1 ? `#${index + 1}` : ""),
-                                rows: this.buildEventRows(
-                                    item.dataset as unknown as TransformInput,
-                                ),
+                                rows,
                             });
                         });
                         break;
@@ -224,56 +280,8 @@ class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform> {
         return result;
     }
 
-    private buildEventRows(
-        property: TransformSql | TransformInput,
-    ): EventRow[] {
-        const rows: EventRow[] = [];
-        const sectionType = property.__typename;
-        Object.entries(property).forEach(([key, value]) => {
-            if (value && key !== "__typename" && sectionType) {
-                rows.push(this.buildEventRow(sectionType, key, value));
-            }
-        });
-        return rows;
-    }
-
-    private buildEventRow(
-        sectionType: string,
-        key: string,
-        value: unknown,
-    ): EventRow {
-        const keyExists = Object.keys(
-            SET_TRANSFORM_SOURCE_DESCRIPTORS,
-        ).includes(`SetTransform.${sectionType}.${key}`);
-        if (keyExists) {
-            return this.buildSupportedRow(sectionType, key, value);
-        } else {
-            return this.buildUnsupportedRow(key, value);
-        }
-    }
-
-    private buildUnsupportedRow(key: string, value: unknown): EventRow {
-        return {
-            descriptor: {
-                ...this.UNSUPPORTED_ROW_DESCRIPTOR,
-                label: `Unsupported(${key})`,
-            } as EventRowDescriptor,
-            value,
-        } as EventRow;
-    }
-
-    private buildSupportedRow(
-        sectionType: string,
-        key: string,
-        value: unknown,
-    ): EventRow {
-        return {
-            descriptor:
-                SET_TRANSFORM_SOURCE_DESCRIPTORS[
-                    `SetTransform.${sectionType}.${key}`
-                ],
-            value,
-        } as EventRow;
+    private kindDatasetCapitalize(kind: string): string {
+        return kind.slice(0, 1) + kind.slice(1).toLowerCase();
     }
 }
 

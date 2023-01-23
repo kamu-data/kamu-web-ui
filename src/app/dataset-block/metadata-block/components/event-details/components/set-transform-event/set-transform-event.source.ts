@@ -39,7 +39,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: Record<
         tooltip: "Type of the dataset.",
         presentationComponent: DatasetKindPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "set-transform-dataset-id",
+        dataTestId: "set-transform-dataset-kind",
     },
 
     "SetTransform.Dataset.name": {
@@ -47,7 +47,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: Record<
         tooltip: "Alias of the dataset.",
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
-        dataTestId: "set-transform-dataset-id",
+        dataTestId: "set-transform-dataset-name",
     },
 
     "SetTransform.Dataset.owner": {
@@ -55,7 +55,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: Record<
         tooltip: "Owner of the dataset.",
         presentationComponent: OwnerPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "set-transform-dataset-id",
+        dataTestId: "set-transform-dataset-owner",
     },
 
     "SetTransform.UnsupportedKey": {

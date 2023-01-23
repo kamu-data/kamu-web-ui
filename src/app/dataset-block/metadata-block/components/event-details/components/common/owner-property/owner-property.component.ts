@@ -1,3 +1,4 @@
+import { NavigationService } from "./../../../../../../../services/navigation.service";
 import { Account } from "./../../../../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { BasePropertyComponent } from "../base-property/base-property.component";
@@ -10,4 +11,12 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
 })
 export class OwnerPropertyComponent extends BasePropertyComponent {
     @Input() public data: Account;
+
+    constructor(private navigationService: NavigationService) {
+        super();
+    }
+
+    public showOwner(): void {
+        this.navigationService.navigateToOwnerView(this.data.name);
+    }
 }

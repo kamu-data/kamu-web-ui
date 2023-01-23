@@ -1,5 +1,3 @@
-import { map } from "rxjs/operators";
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import {
     MetadataEvent,
@@ -29,36 +27,40 @@ export class YamlEventViewerComponent {
     // Temporary solution, later data will come from server
     public get yamlEventText(): string {
         let result = "";
+        let propertyName;
+        const firstLevelShift = "\u00A0\u00A0";
+        const secondLevelShift = "\u00A0\u00A0\u00A0\u00A0";
         Object.entries(this.event).forEach(([key, value]) => {
             key !== "__typename" && value ? (result += `${key}:\n`) : "";
             if (value && key !== "__typename") {
                 if (key === "inputs") {
                     (value as TransformInput[]).map((item: TransformInput) => {
-                        result += `\u00A0\u00A0- kind: ${
+                        result += `${firstLevelShift}- kind: ${
                             this.kindMapper[item.dataset.__typename as string]
                         }\n`;
-                        result += `\u00A0\u00A0\u00A0\u00A0id: ${item.dataset.id}\n`;
-                        result += `\u00A0\u00A0\u00A0\u00A0type: ${item.dataset.kind}\n`;
-                        result += `\u00A0\u00A0\u00A0\u00A0name: ${item.dataset.name}\n`;
-                        result += `\u00A0\u00A0\u00A0\u00A0owner: ${item.dataset.owner.name}\n`;
+                        result += `${secondLevelShift}id: ${
+                            item.dataset.id as string
+                        }\n`;
+                        result += `${secondLevelShift}type: ${
+                            item.dataset.kind as string
+                        }\n`;
+                        result += `${secondLevelShift}name: ${
+                            item.dataset.name as string
+                        }\n`;
+                        result += `${secondLevelShift}owner: ${item.dataset.owner.name}\n`;
                     });
                 } else {
                     Object.entries(value as object).forEach(
                         ([property, data]) => {
                             if (data) {
-                                result += `\u00A0\u00A0${
-                                    property === "__typename"
-                                        ? "kind"
-                                        : property
-                                }: ${
-                                    property === "__typename"
-                                        ? this.kindMapper[data as string]
-                                        : property === "queries"
-                                        ? (data as SqlQueryStep[]).map(
-                                              (item) => `>\n${item.query}`,
-                                          )
-                                        : (data as string)
-                                }\n`;
+                                property === "__typename"
+                                    ? (propertyName = "kind")
+                                    : (propertyName = property);
+
+                                result += `${firstLevelShift}${propertyName}: ${this.getPropertyValue(
+                                    data as string,
+                                    property,
+                                )}\n`;
                             }
                         },
                     );
@@ -66,5 +68,20 @@ export class YamlEventViewerComponent {
             }
         });
         return result;
+    }
+
+    private getPropertyValue(
+        data: string | SqlQueryStep[],
+        property: string,
+    ): string {
+        if (property === "__typename") {
+            return this.kindMapper[data as string];
+        } else if (property === "queries") {
+            return (data as SqlQueryStep[])
+                .map((item: SqlQueryStep) => `>\n${item.query}`)
+                .join();
+        } else {
+            return data as string;
+        }
     }
 }

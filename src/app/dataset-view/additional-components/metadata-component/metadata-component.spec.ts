@@ -78,7 +78,7 @@ describe("MetadataComponent", () => {
         component.currentState = {
             schema: mockMetadataSchemaUpdate.schema,
             metadata:
-                mockMetadataSchemaUpdate.metadata as unknown as DatasetMetadataSummaryFragment,
+                mockMetadataSchemaUpdate.metadata as DatasetMetadataSummaryFragment,
             pageInfo: mockMetadataSchemaUpdate.pageInfo,
         };
 

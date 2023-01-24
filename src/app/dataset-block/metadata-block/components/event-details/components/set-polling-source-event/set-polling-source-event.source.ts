@@ -7,7 +7,6 @@ import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-vi
 import { SchemaPropertyComponent } from "../common/schema-property/schema-property.component";
 import { EnvVariablesPropertyComponent } from "../common/env-variables-property/env-variables-property.component";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
-import { UnsupportedPropertyComponent } from "../common/unsupported-property/unsupported-property.component";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: Record<

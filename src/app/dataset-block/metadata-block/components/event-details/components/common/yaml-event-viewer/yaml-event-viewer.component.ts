@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import {
-    MetadataEvent,
     SqlQueryStep,
     TransformInput,
 } from "src/app/api/kamu.graphql.interface";
@@ -11,9 +10,8 @@ import {
     styleUrls: ["./yaml-event-viewer.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class YamlEventViewerComponent {
-    @Input() public event: MetadataEvent;
-
+export class YamlEventViewerComponent<TEvent extends object> {
+    @Input() public event: TEvent;
     private kindMapper: Record<string, string> = {
         FetchStepUrl: "url",
         FetchStepContainer: "container",

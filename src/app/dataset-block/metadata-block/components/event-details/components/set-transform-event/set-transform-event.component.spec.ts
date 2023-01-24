@@ -1,5 +1,6 @@
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { SetTransform } from "src/app/api/kamu.graphql.interface";
 import { mockSetTransform } from "../../mock.events";
 
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
@@ -26,7 +27,7 @@ describe("SetTransformEventComponent", () => {
 
         fixture = TestBed.createComponent(SetTransformEventComponent);
         component = fixture.componentInstance;
-        component.event = mockSetTransform;
+        component.event = mockSetTransform as SetTransform;
         fixture.detectChanges();
     });
 

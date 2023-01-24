@@ -19,7 +19,9 @@ import { BasePropertyComponent } from "../common/base-property/base-property.com
     styleUrls: ["./base-dynamic-event.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BaseDynamicEventComponent<TEvent> implements AfterViewChecked {
+export class BaseDynamicEventComponent<TEvent extends object>
+    implements AfterViewChecked
+{
     @Input() public event: TEvent;
     @ViewChildren("container", { read: ViewContainerRef })
     container: QueryList<ViewContainerRef>;

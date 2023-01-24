@@ -2,7 +2,7 @@ import { SetTransform } from "./../../../../../../api/kamu.graphql.interface";
 import { BaseDynamicEventComponent } from "../base-dynamic-event/base-dynamic-event.component";
 
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { FACTORIES_BY_EVENT_TYPE } from "../../builder.events";
+import { FACTORIES_BY_EVENT_TYPE } from "../../factories.builders";
 
 @Component({
     selector: "app-set-transform-event",

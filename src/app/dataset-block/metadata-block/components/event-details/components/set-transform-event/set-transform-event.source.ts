@@ -1,8 +1,9 @@
 import { SimplePropertyComponent } from "./../common/simple-property/simple-property.component";
-import { EventRowDescriptor } from "../../builder.events";
+
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
 import { OwnerPropertyComponent } from "../common/owner-property/owner-property.component";
+import { EventRowDescriptor } from "../../builder.events";
 
 export const SET_TRANSFORM_SOURCE_DESCRIPTORS: Record<
     string,

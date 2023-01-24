@@ -1,5 +1,5 @@
 import { LinkPropertyComponent } from "./../common/link-property/link-property.component";
-import { EventRowDescriptor } from "../../builder.events";
+
 import { SeparatorPropertyComponent } from "../common/separator-property/separator-property.component";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
@@ -8,6 +8,7 @@ import { SchemaPropertyComponent } from "../common/schema-property/schema-proper
 import { EnvVariablesPropertyComponent } from "../common/env-variables-property/env-variables-property.component";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
+import { EventRowDescriptor } from "../../builder.events";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: Record<
     string,

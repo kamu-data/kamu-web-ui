@@ -1,15 +1,16 @@
 import {
-    AfterViewChecked,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    ComponentRef,
+    ChangeDetectionStrategy,
+    AfterViewChecked,
     Input,
-    QueryList,
     ViewChildren,
     ViewContainerRef,
+    QueryList,
+    ChangeDetectorRef,
+    ComponentRef,
 } from "@angular/core";
-import { EventRow, EventSection } from "../../builder.events";
+import { EventSection, EventRow } from "../../builder.events";
+
 import { BasePropertyComponent } from "../common/base-property/base-property.component";
 
 @Component({

@@ -1,16 +1,17 @@
-import { BaseEventComponent } from "./../base-event/base-event.component";
+import { SetTransform } from "./../../../../../../api/kamu.graphql.interface";
+import { BaseDynamicEventComponent } from "../base-dynamic-event/base-dynamic-event.component";
 
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FACTORIES_BY_EVENT_TYPE } from "../../builder.events";
 
 @Component({
     selector: "app-set-transform-event",
-    templateUrl: "../base-event/base-event.component.html",
-    styleUrls: ["../base-event/base-event.component.sass"],
+    templateUrl: "../base-dynamic-event/base-dynamic-event.component.html",
+    styleUrls: ["../base-dynamic-event/base-dynamic-event.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetTransformEventComponent
-    extends BaseEventComponent
+    extends BaseDynamicEventComponent<SetTransform>
     implements OnInit
 {
     ngOnInit(): void {

@@ -1,4 +1,3 @@
-import { MetadataEvent } from "./../../../../../../api/kamu.graphql.interface";
 import {
     AfterViewChecked,
     ChangeDetectionStrategy,
@@ -14,13 +13,13 @@ import { EventRow, EventSection } from "../../builder.events";
 import { BasePropertyComponent } from "../common/base-property/base-property.component";
 
 @Component({
-    selector: "app-base-event",
-    templateUrl: "./base-event.component.html",
-    styleUrls: ["./base-event.component.sass"],
+    selector: "app-dynamic-base-event",
+    templateUrl: "./base-dynamic-event.component.html",
+    styleUrls: ["./base-dynamic-event.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BaseEventComponent implements AfterViewChecked {
-    @Input() public event: MetadataEvent;
+export class BaseDynamicEventComponent<TEvent> implements AfterViewChecked {
+    @Input() public event: TEvent;
     @ViewChildren("container", { read: ViewContainerRef })
     container: QueryList<ViewContainerRef>;
     public isYamlView = false;

@@ -1,16 +1,17 @@
-import { BaseEventComponent } from "./../base-event/base-event.component";
+import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
+import { BaseDynamicEventComponent } from "../base-dynamic-event/base-dynamic-event.component";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 
 import { FACTORIES_BY_EVENT_TYPE } from "../../builder.events";
 
 @Component({
     selector: "app-set-polling-source-event",
-    templateUrl: "../base-event/base-event.component.html",
-    styleUrls: ["../base-event/base-event.component.sass"],
+    templateUrl: "../base-dynamic-event/base-dynamic-event.component.html",
+    styleUrls: ["../base-dynamic-event/base-dynamic-event.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetPollingSourceEventComponent
-    extends BaseEventComponent
+    extends BaseDynamicEventComponent<SetPollingSource>
     implements OnInit
 {
     ngOnInit(): void {

@@ -4,7 +4,6 @@ import {
     TransformInput,
 } from "./../../../../api/kamu.graphql.interface";
 import { BasePropertyComponent } from "./components/common/base-property/base-property.component";
-import { MetadataEvent } from "../../../../api/kamu.graphql.interface";
 import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
 import { Type } from "@angular/core";
 import { SET_POLLING_SOURCE_DESCRIPTORS } from "./components/set-polling-source-event/set-polling-source-event.source";
@@ -43,27 +42,26 @@ enum SetPollingSourceSection {
     PREPARE = "prepare",
 }
 
-type SetPollingSourceScalarSections =
-    | SetPollingSourceSection.FETCH
-    | SetPollingSourceSection.MERGE
-    | SetPollingSourceSection.PREPROCESS
-    | SetPollingSourceSection.READ;
-
 enum SetTransformSection {
     INPUTS = "inputs",
     TRANSFORM = "transform",
 }
 
-type SetTransformScalarSections =
-    | SetTransformSection.INPUTS
-    | SetTransformSection.TRANSFORM;
-
-export const descriptorMapper = {
+export const descriptorMapper: Record<
+    EventTypesScalar,
+    Record<string, EventRowDescriptor>
+> = {
     [EventTypes.SetPollingSource]: SET_POLLING_SOURCE_DESCRIPTORS,
     [EventTypes.SetTransform]: SET_TRANSFORM_SOURCE_DESCRIPTORS,
 };
 
-abstract class EventSectionBuilder<TEvent> {
+interface GenericDynamicEventType extends Record<string, unknown> {
+    __typename?: EventTypesScalar;
+}
+
+type GenericEventSectionType = Record<string, unknown>;
+
+abstract class EventSectionBuilder<TEvent extends GenericDynamicEventType> {
     private readonly UNSUPPORTED_ROW_DESCRIPTOR: EventRowDescriptor = {
         label: "",
         tooltip: "Unsupported value",
@@ -72,50 +70,28 @@ abstract class EventSectionBuilder<TEvent> {
         dataTestId: "unsupportedKey",
     };
     public abstract buildEventSections(event: TEvent): EventSection[];
-    public buildEventRows(
-        event: SetPollingSource | SetTransform,
-        section: SetPollingSourceScalarSections | SetTransformScalarSections,
-    ): EventRow[] {
+    public buildEventRows(event: TEvent, section: keyof TEvent): EventRow[] {
         const rows: EventRow[] = [];
-        let sectionObject;
+        const sectionObject: GenericEventSectionType = event[
+            section
+        ] as GenericEventSectionType;
         const allowTypenameKey = section === SetPollingSourceSection.MERGE;
-        if (event.__typename === EventTypes.SetPollingSource) {
-            sectionObject = event[section as keyof SetPollingSource];
-        } else if (event.__typename === EventTypes.SetTransform) {
-            sectionObject = event[section as keyof SetTransform];
-        }
-        if (sectionObject) {
-            Object.entries(sectionObject).forEach(([key, value]) => {
-                if (value && (key !== "__typename" || allowTypenameKey)) {
-                    rows.push(this.buildEventRow(event, section, key, value));
-                }
-            });
-        }
+        Object.entries(sectionObject).forEach(([key, value]) => {
+            if (value && (key !== "__typename" || allowTypenameKey)) {
+                rows.push(this.buildEventRow(event, sectionObject, key, value));
+            }
+        });
 
         return rows;
     }
     public buildEventRow(
-        event: SetPollingSource | SetTransform,
-        section: SetPollingSourceScalarSections | SetTransformScalarSections,
+        event: TEvent,
+        sectionObject: GenericEventSectionType,
         key: string,
         value: unknown,
     ): EventRow {
-        let sectionObject;
         const eventType = event.__typename;
-        if (event.__typename === EventTypes.SetPollingSource) {
-            sectionObject =
-                event[section as keyof Omit<SetPollingSource, "__typename">];
-        }
-        if (event.__typename === EventTypes.SetTransform) {
-            sectionObject =
-                event[section as keyof Omit<SetTransform, "__typename">];
-        }
-        if (
-            sectionObject &&
-            event.__typename &&
-            eventType &&
-            "__typename" in sectionObject
-        ) {
+        if (event.__typename && eventType && "__typename" in sectionObject) {
             const sectionType = sectionObject.__typename as string;
             const keyExists = Object.keys(
                 descriptorMapper[event.__typename],
@@ -287,7 +263,7 @@ class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform> {
 
 export const FACTORIES_BY_EVENT_TYPE: Record<
     EventTypes,
-    EventSectionBuilder<MetadataEvent>
+    EventSectionBuilder<GenericDynamicEventType>
 > = {
     [EventTypes.SetPollingSource]: new SetPollingSourceSectionBuilder(),
     [EventTypes.SetTransform]: new SetTransformSectionBuilder(),

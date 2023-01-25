@@ -9,7 +9,7 @@ import {
     ChangeDetectorRef,
     ComponentRef,
 } from "@angular/core";
-import { EventSection, EventRow } from "../../builder.events";
+import { EventRow, EventSection } from "../../dynamic-events/dynamic-events.model";
 
 import { BasePropertyComponent } from "../common/base-property/base-property.component";
 

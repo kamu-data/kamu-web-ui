@@ -1,57 +1,8 @@
-import { SET_TRANSFORM_SOURCE_DESCRIPTORS } from "./components/set-transform-event/set-transform-event.source";
-import { BasePropertyComponent } from "./components/common/base-property/base-property.component";
-import { Type } from "@angular/core";
-import { SET_POLLING_SOURCE_DESCRIPTORS } from "./components/set-polling-source-event/set-polling-source-event.source";
-import { UnsupportedPropertyComponent } from "./components/common/unsupported-property/unsupported-property.component";
-
-export interface EventRowDescriptor {
-    label: string;
-    tooltip: string;
-    separateRowForValue?: boolean;
-    dataTestId?: string;
-    presentationComponent: Type<BasePropertyComponent>;
-}
-
-export interface EventRow {
-    descriptor: EventRowDescriptor;
-    value: unknown;
-}
-
-export interface EventSection {
-    title: string;
-    rows: EventRow[];
-}
-
-export enum EventTypes {
-    SetPollingSource = "SetPollingSource",
-    SetTransform = "SetTransform",
-}
-
-type EventTypesScalar = `${EventTypes}`;
-
-export enum SetPollingSourceSection {
-    READ = "read",
-    FETCH = "fetch",
-    MERGE = "merge",
-    PREPROCESS = "preprocess",
-    PREPARE = "prepare",
-}
-
-export enum SetTransformSection {
-    INPUTS = "inputs",
-    TRANSFORM = "transform",
-}
-
-export const descriptorMapper: Record<
-    EventTypesScalar,
-    Record<string, EventRowDescriptor>
-> = {
-    [EventTypes.SetPollingSource]: SET_POLLING_SOURCE_DESCRIPTORS,
-    [EventTypes.SetTransform]: SET_TRANSFORM_SOURCE_DESCRIPTORS,
-};
+import { UnsupportedPropertyComponent } from "../../components/common/unsupported-property/unsupported-property.component";
+import { DynamicEventTypesScalar, EventRow, EventRowDescriptor, EventRowDescriptorsByField, EventSection } from "../dynamic-events.model";
 
 export interface GenericDynamicEventType extends Record<string, unknown> {
-    __typename?: EventTypesScalar;
+    __typename?: DynamicEventTypesScalar;
 }
 
 type GenericEventSectionType = Record<string, unknown>;
@@ -71,6 +22,7 @@ export abstract class EventSectionBuilder<
 
     public buildEventRows(
         event: TEvent,
+        rowDescriptors: EventRowDescriptorsByField,
         section: keyof TEvent,
         allowTypenameKey: boolean,
     ): EventRow[] {
@@ -80,7 +32,7 @@ export abstract class EventSectionBuilder<
         ] as GenericEventSectionType;
         Object.entries(sectionObject).forEach(([key, value]) => {
             if (value && (key !== "__typename" || allowTypenameKey)) {
-                rows.push(this.buildEventRow(event, sectionObject, key, value));
+                rows.push(this.buildEventRow(event, rowDescriptors, sectionObject, key, value));
             }
         });
 
@@ -89,6 +41,7 @@ export abstract class EventSectionBuilder<
 
     public buildEventRow(
         event: TEvent,
+        rowDescriptors: EventRowDescriptorsByField,
         sectionObject: GenericEventSectionType,
         key: string,
         value: unknown,
@@ -96,12 +49,11 @@ export abstract class EventSectionBuilder<
         const eventType = event.__typename;
         if (event.__typename && eventType && "__typename" in sectionObject) {
             const sectionType = sectionObject.__typename as string;
-            const keyExists = Object.keys(
-                descriptorMapper[event.__typename],
-            ).includes(`${eventType}.${sectionType}.${key}`);
+            const keyExists = Object.keys(rowDescriptors).includes(`${eventType}.${sectionType}.${key}`);
             if (keyExists) {
                 return this.buildSupportedRow(
                     event.__typename,
+                    rowDescriptors,
                     sectionType,
                     key,
                     value,
@@ -125,17 +77,14 @@ export abstract class EventSectionBuilder<
     }
 
     public buildSupportedRow(
-        eventType: EventTypesScalar,
+        eventType: DynamicEventTypesScalar,
+        rowDescriptors: EventRowDescriptorsByField,
         sectionType: string,
         key: string,
         value: unknown,
     ): EventRow {
         return {
-            descriptor:
-                descriptorMapper[eventType][
-                    `${eventType}.${sectionType}.${key}`
-                ],
-
+            descriptor: rowDescriptors[`${eventType}.${sectionType}.${key}`],
             value,
         } as EventRow;
     }

@@ -1,7 +1,7 @@
 import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
 import { BaseDynamicEventComponent } from "../base-dynamic-event/base-dynamic-event.component";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { FACTORIES_BY_EVENT_TYPE } from "../../factories.builders";
+import { SECTION_BUILDERS_BY_EVENT_TYPE } from "../../dynamic-events/builders/event-section.builders";
 
 @Component({
     selector: "app-set-polling-source-event",
@@ -15,8 +15,6 @@ export class SetPollingSourceEventComponent
 {
     ngOnInit(): void {
         this.eventSections =
-            FACTORIES_BY_EVENT_TYPE.SetPollingSource.buildEventSections(
-                this.event,
-            );
+            SECTION_BUILDERS_BY_EVENT_TYPE.SetPollingSource.buildEventSections(this.event);
     }
 }

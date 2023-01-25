@@ -8,12 +8,10 @@ import { SchemaPropertyComponent } from "../common/schema-property/schema-proper
 import { EnvVariablesPropertyComponent } from "../common/env-variables-property/env-variables-property.component";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
-import { EventRowDescriptor } from "../../builder.events";
+import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 
-export const SET_POLLING_SOURCE_DESCRIPTORS: Record<
-    string,
-    EventRowDescriptor
-> = {
+
+export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepUrl.url": {
         label: "Url:",
         tooltip: "URL of the data source.",

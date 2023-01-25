@@ -3,12 +3,10 @@ import { SimplePropertyComponent } from "./../common/simple-property/simple-prop
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
 import { OwnerPropertyComponent } from "../common/owner-property/owner-property.component";
-import { EventRowDescriptor } from "../../builder.events";
+import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 
-export const SET_TRANSFORM_SOURCE_DESCRIPTORS: Record<
-    string,
-    EventRowDescriptor
-> = {
+
+export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetTransform.TransformSql.engine": {
         label: "Engine:",
         tooltip: "Identifier of the engine used for this transformation.",

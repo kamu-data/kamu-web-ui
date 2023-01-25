@@ -1,12 +1,18 @@
 import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
-import {
-    EventSectionBuilder,
-    EventSection,
-    SetPollingSourceSection,
-    EventRow,
-} from "../builder.events";
+import { EventSectionBuilder } from "./event-section.builder";
+import { SET_POLLING_SOURCE_DESCRIPTORS } from "../../components/set-polling-source-event/set-polling-source-event.source";
+import { EventRow, EventSection } from "../dynamic-events.model";
+
+enum SetPollingSourceSection {
+    READ = "read",
+    FETCH = "fetch",
+    MERGE = "merge",
+    PREPROCESS = "preprocess",
+    PREPARE = "prepare",
+}
 
 export class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSource> {
+
     public buildEventSections(event: SetPollingSource): EventSection[] {
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
@@ -22,12 +28,14 @@ export class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPolli
                             title: section,
                             rows: this.buildEventRows(
                                 event,
+                                SET_POLLING_SOURCE_DESCRIPTORS,
                                 section,
                                 allowTypenameKey,
                             ),
                         });
                         break;
                     }
+
                     case SetPollingSourceSection.PREPARE: {
                         if (event.prepare) {
                             const numPrepareParts = event.prepare.length;
@@ -42,6 +50,7 @@ export class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPolli
                                         rows.push(
                                             this.buildSupportedRow(
                                                 event.__typename,
+                                                SET_POLLING_SOURCE_DESCRIPTORS,
                                                 `${item.__typename}`,
                                                 key,
                                                 value,
@@ -61,6 +70,7 @@ export class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPolli
                         }
                         break;
                     }
+
                     default: {
                         result.push({ title: section, rows: [] });
                     }

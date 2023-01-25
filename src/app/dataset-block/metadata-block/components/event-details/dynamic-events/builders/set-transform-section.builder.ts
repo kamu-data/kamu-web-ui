@@ -1,15 +1,15 @@
-import {
-    SetTransform,
-    TransformInput,
-} from "src/app/api/kamu.graphql.interface";
-import {
-    EventSectionBuilder,
-    EventSection,
-    EventRow,
-    SetTransformSection,
-} from "../builder.events";
+import { SetTransform, TransformInput } from "src/app/api/kamu.graphql.interface";
+import { EventSectionBuilder } from "./event-section.builder";
+import { SET_TRANSFORM_SOURCE_DESCRIPTORS } from "../../components/set-transform-event/set-transform-event.source";
+import { EventRow, EventSection } from "../dynamic-events.model";
+
+enum SetTransformSection {
+    INPUTS = "inputs",
+    TRANSFORM = "transform",
+}
 
 export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform> {
+
     public buildEventSections(event: SetTransform): EventSection[] {
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
@@ -18,11 +18,16 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                     case SetTransformSection.TRANSFORM: {
                         result.push({
                             title: section,
-                            rows: this.buildEventRows(event, section, false),
+                            rows: this.buildEventRows(
+                                event, 
+                                SET_TRANSFORM_SOURCE_DESCRIPTORS, 
+                                section,
+                                false
+                            ),
                         });
-
                         break;
                     }
+
                     case SetTransformSection.INPUTS: {
                         const numInputsParts = event.inputs.length;
                         const rows: EventRow[] = [];
@@ -37,6 +42,7 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                                         rows.push(
                                             this.buildSupportedRow(
                                                 event.__typename,
+                                                SET_TRANSFORM_SOURCE_DESCRIPTORS,
                                                 item.dataset.__typename,
                                                 key,
                                                 key === "kind"
@@ -58,6 +64,7 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                         });
                         break;
                     }
+
                     default: {
                         result.push({ title: section, rows: [] });
                     }

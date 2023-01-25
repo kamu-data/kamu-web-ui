@@ -66,7 +66,9 @@ export abstract class EventSectionBuilder<
         separateRowForValue: false,
         dataTestId: "unsupportedKey",
     };
+
     public abstract buildEventSections(event: TEvent): EventSection[];
+
     public buildEventRows(
         event: TEvent,
         section: keyof TEvent,
@@ -84,6 +86,7 @@ export abstract class EventSectionBuilder<
 
         return rows;
     }
+
     public buildEventRow(
         event: TEvent,
         sectionObject: GenericEventSectionType,

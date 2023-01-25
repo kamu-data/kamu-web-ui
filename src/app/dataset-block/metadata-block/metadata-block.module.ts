@@ -37,6 +37,10 @@ import { EnvVariablesPropertyComponent } from "./components/event-details/compon
 import { CardsPropertyComponent } from "./components/event-details/components/common/cards-property/cards-property.component";
 import { UnsupportedPropertyComponent } from "./components/event-details/components/common/unsupported-property/unsupported-property.component";
 import { YamlEventViewerComponent } from "./components/event-details/components/common/yaml-event-viewer/yaml-event-viewer.component";
+import { SetTransformEventComponent } from "./components/event-details/components/set-transform-event/set-transform-event.component";
+import { OwnerPropertyComponent } from "./components/event-details/components/common/owner-property/owner-property.component";
+import { BaseDynamicEventComponent } from "./components/event-details/components/base-dynamic-event/base-dynamic-event.component";
+import { DatasetNamePropertyComponent } from "./components/event-details/components/common/dataset-name-property/dataset-name-property.component";
 
 @NgModule({
     declarations: [
@@ -46,6 +50,7 @@ import { YamlEventViewerComponent } from "./components/event-details/components/
         BlockNavigationComponent,
         AddDataEventComponent,
         SetPollingSourceEventComponent,
+        SetTransformEventComponent,
         SeedEventComponent,
         TooltipIconComponent,
         BlockRowDataComponent,
@@ -63,6 +68,9 @@ import { YamlEventViewerComponent } from "./components/event-details/components/
         CardsPropertyComponent,
         UnsupportedPropertyComponent,
         YamlEventViewerComponent,
+        OwnerPropertyComponent,
+        BaseDynamicEventComponent,
+        DatasetNamePropertyComponent,
     ],
     imports: [
         CommonModule,

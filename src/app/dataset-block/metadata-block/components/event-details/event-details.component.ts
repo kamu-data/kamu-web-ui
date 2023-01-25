@@ -2,6 +2,7 @@ import {
     AddDataEventFragment,
     SetPollingSource,
     Seed,
+    SetTransform,
 } from "./../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "./supported.events";
 import {
@@ -46,6 +47,14 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     public get isSetPollingSourceEvent(): boolean {
         return this.block.event.__typename === SupportedEvents.SetPollingSource;
+    }
+
+    public get isSetTransformEvent(): boolean {
+        return this.block.event.__typename === SupportedEvents.SetTransform;
+    }
+
+    public get setTransformEvent(): SetTransform {
+        return this.block.event as SetTransform;
     }
 
     public get setPollingSourceEvent(): SetPollingSource {

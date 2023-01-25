@@ -1216,11 +1216,18 @@ export type DatasetSearchOverviewFragment = {
 
 export type DatasetTransformContentFragment = {
     __typename?: "TransformSql";
+    engine: string;
+    version?: string | null;
     queries: Array<{
         __typename?: "SqlQueryStep";
         alias?: string | null;
         query: string;
     }>;
+    temporalTables?: Array<{
+        __typename?: "TemporalTable";
+        name: string;
+        primaryKey: Array<string>;
+    }> | null;
 };
 
 export type DatasetTransformFragment = {
@@ -1271,7 +1278,7 @@ export type MetadataBlockFragment = {
         | { __typename: "SetInfo" }
         | { __typename: "SetLicense"; name: string }
         | ({ __typename: "SetPollingSource" } & SetPollingSourceEventFragment)
-        | { __typename: "SetTransform" }
+        | ({ __typename: "SetTransform" } & DatasetTransformFragment)
         | { __typename: "SetVocab" }
         | { __typename: "SetWatermark"; outputWatermark: any };
 };
@@ -1505,9 +1512,15 @@ export const LicenseFragmentDoc = gql`
 `;
 export const DatasetTransformContentFragmentDoc = gql`
     fragment DatasetTransformContent on TransformSql {
+        engine
+        version
         queries {
             alias
             query
+        }
+        temporalTables {
+            name
+            primaryKey
         }
     }
 `;
@@ -1694,9 +1707,7 @@ export const MetadataBlockFragmentDoc = gql`
             ... on SetWatermark {
                 outputWatermark
             }
-            ... on SetTransform {
-                __typename
-            }
+            ...DatasetTransform
             ... on ExecuteQuery {
                 queryOutputData: outputData {
                     interval {
@@ -1720,6 +1731,7 @@ export const MetadataBlockFragmentDoc = gql`
             ...SetPollingSourceEvent
         }
     }
+    ${DatasetTransformFragmentDoc}
     ${AddDataEventFragmentDoc}
     ${SetPollingSourceEventFragmentDoc}
 `;

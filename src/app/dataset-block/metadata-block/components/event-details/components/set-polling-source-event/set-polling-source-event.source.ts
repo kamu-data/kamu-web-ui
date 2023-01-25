@@ -1,5 +1,5 @@
 import { LinkPropertyComponent } from "./../common/link-property/link-property.component";
-import { EventRowDescriptor } from "../../builder.events";
+
 import { SeparatorPropertyComponent } from "../common/separator-property/separator-property.component";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
@@ -7,13 +7,11 @@ import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-vi
 import { SchemaPropertyComponent } from "../common/schema-property/schema-property.component";
 import { EnvVariablesPropertyComponent } from "../common/env-variables-property/env-variables-property.component";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
-import { UnsupportedPropertyComponent } from "../common/unsupported-property/unsupported-property.component";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
+import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 
-export const SET_POLLING_SOURCE_DESCRIPTORS: Record<
-    string,
-    EventRowDescriptor
-> = {
+
+export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepUrl.url": {
         label: "Url:",
         tooltip: "URL of the data source.",
@@ -147,13 +145,5 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: Record<
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-prepStepPipe-command",
-    },
-
-    "SetPollingSource.UnsupportedKey": {
-        label: "",
-        tooltip: "Unsupported value",
-        presentationComponent: UnsupportedPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-unsupportedKey",
     },
 };

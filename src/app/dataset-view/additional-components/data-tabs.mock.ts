@@ -215,52 +215,40 @@ export const mockMetadataSchemaUpdate = {
                 type: "INT96",
             },
             {
+                name: "id",
+                repetition: "OPTIONAL",
+                type: "INT64",
+            },
+            {
                 name: "reported_date",
                 repetition: "OPTIONAL",
                 type: "INT96",
             },
             {
-                name: "classification",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
-            },
-            {
-                name: "id",
-                repetition: "OPTIONAL",
-                type: "INT32",
-            },
-            {
-                name: "ha",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
-            },
-            {
-                name: "sex",
-                repetition: "OPTIONAL",
+                name: "gender",
+                repetition: "REQUIRED",
                 type: "BYTE_ARRAY",
                 logicalType: "UTF8",
             },
             {
                 name: "age_group",
+                repetition: "REQUIRED",
+                type: "BYTE_ARRAY",
+                logicalType: "UTF8",
+            },
+            {
+                name: "location",
                 repetition: "OPTIONAL",
                 type: "BYTE_ARRAY",
                 logicalType: "UTF8",
             },
         ],
     },
-    pageInfo: {
-        hasNextPage: false,
-        hasPreviousPage: false,
-        totalPages: 1,
-        currentPage: 1,
-    },
     metadata: {
         __typename: "Dataset",
-        id: "did:odf:z4k88e8i1YPqnKHsAqwPkaUhT1t4vtHQzS2fVCqtggE7SJWDVza",
-        kind: "ROOT",
-        name: "british-columbia.case-details",
+        id: "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7",
+        kind: "DERIVATIVE",
+        name: "alberta.case-details.hm",
         owner: {
             __typename: "User",
             id: "1",
@@ -269,29 +257,29 @@ export const mockMetadataSchemaUpdate = {
         data: {
             __typename: "DatasetData",
             tail: {
-                __typename: "DataQueryResult",
+                __typename: "DataQueryResultSuccess",
                 schema: {
                     __typename: "DataSchema",
                     format: "PARQUET",
                     content:
-                        "message arrow_schema {\n  OPTIONAL INT64 offset;\n  REQUIRED INT64 system_time (TIMESTAMP(NANOS,false));\n  OPTIONAL INT64 reported_date (TIMESTAMP(NANOS,false));\n  OPTIONAL BYTE_ARRAY classification (STRING);\n  OPTIONAL INT32 id;\n  OPTIONAL BYTE_ARRAY ha (STRING);\n  OPTIONAL BYTE_ARRAY sex (STRING);\n  OPTIONAL BYTE_ARRAY age_group (STRING);\n}\n",
+                        "message arrow_schema {\n  OPTIONAL INT64 offset;\n  REQUIRED INT64 system_time (TIMESTAMP(NANOS,false));\n  OPTIONAL INT64 id;\n  OPTIONAL INT64 reported_date (TIMESTAMP(NANOS,false));\n  REQUIRED BYTE_ARRAY gender (STRING);\n  REQUIRED BYTE_ARRAY age_group (STRING);\n  OPTIONAL BYTE_ARRAY location (STRING);\n}\n",
                 },
                 data: {
                     __typename: "DataBatch",
                     format: "JSON",
                     content:
-                        '[{"offset":379273,"system_time":"2022-08-05 21:19:43.875","reported_date":"2022-07-30 00:00:00","classification":"Lab-diagnosed","id":379227,"ha":"Interior","sex":"M","age_group":"40-49"},{"offset":379272,"system_time":"2022-08-05 21:19:43.875","reported_date":"2022-07-30 00:00:00","classification":"Lab-diagnosed","id":379222,"ha":"Interior","sex":"F","age_group":"90+"},{"offset":379271,"system_time":"2022-08-05 21:19:43.875","reported_date":"2022-07-30 00:00:00","classification":"Lab-diagnosed","id":379210,"ha":"Fraser","sex":"F","age_group":"80-89"},{"offset":379270,"system_time":"2022-08-05 21:19:43.875","reported_date":"2022-07-30 00:00:00","classification":"Lab-diagnosed","id":379214,"ha":"Interior","sex":"F","age_group":"80-89"},{"offset":379269,"system_time":"2022-08-05 21:19:43.875","reported_date":"2022-07-30 00:00:00","classification":"Lab-diagnosed","id":379197,"ha":"Fraser","sex":"M","age_group":"80-89"},{"offset":379268,"system_time":"2022-08-05 21:19:43.875","reported_date":"2022-07-30 00:00:00","classification":"Lab-diagnosed","id":379237,"ha":"Northern","sex":"M","age_group":"40-49"},{"offset":379267,"system_time":"2022-08-05 21:19:43.875","reported_date":"2022-07-30 00:00:00","classification":"Lab-diagnosed","id":379270,"ha":"Vancouver Island","sex":"M","age_group":"80-89"},{"offset":379266,"system_time":"2022-08-05 21:19:43.875","reported_date":"2022-07-30 00:00:00","classification":"Lab-diagnosed","id":379220,"ha":"Interior","sex":"M","age_group":"70-79"},{"offset":379265,"system_time":"2022-08-05 21:19:43.875","reported_date":"2022-07-30 00:00:00","classification":"Lab-diagnosed","id":379224,"ha":"Interior","sex":"F","age_group":"90+"},{"offset":379264,"system_time":"2022-08-05 21:19:43.875","reported_date":"2022-07-30 00:00:00","classification":"Lab-diagnosed","id":379200,"ha":"Fraser","sex":"M","age_group":"<10"}]',
+                        '[{"age_group":"50s","gender":"F","id":595254,"location":"Calgary Zone","offset":596125,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"30s","gender":"M","id":377821,"location":"North Zone","offset":596124,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"60s","gender":"F","id":595723,"location":"South Zone","offset":596123,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"30s","gender":"M","id":457371,"location":"Calgary Zone","offset":596122,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"20s","gender":"F","id":457368,"location":"Edmonton Zone","offset":596121,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"60s","gender":"F","id":351389,"location":"Edmonton Zone","offset":596120,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"80s","gender":"F","id":298274,"location":"Calgary Zone","offset":596119,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"30s","gender":"F","id":324898,"location":"Calgary Zone","offset":596118,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"70s","gender":"F","id":484338,"location":"Calgary Zone","offset":596117,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"30s","gender":"F","id":351387,"location":"Edmonton Zone","offset":596116,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"}]',
                 },
             },
-            numRecordsTotal: 379274,
-            estimatedSize: 3476854,
+            numRecordsTotal: 596126,
+            estimatedSize: 5967476,
         },
         metadata: {
             __typename: "DatasetMetadata",
             currentInfo: {
                 __typename: "SetInfo",
                 description:
-                    "British Columbia COVID-19 case data updated regularly from the B.C. Centre for Disease Control, Provincial Health Services Authority and the B.C. Ministry of Health.",
+                    "Confirmed positive cases of COVID-19 in Alberta (harmonized).",
                 keywords: [
                     "Healthcare",
                     "Epidemiology",
@@ -299,8 +287,9 @@ export const mockMetadataSchemaUpdate = {
                     "SARS-CoV-2",
                     "Disaggregated",
                     "Anonymized",
-                    "British Columbia",
+                    "Alberta",
                     "Canada",
+                    "Harmonized",
                 ],
             },
             currentLicense: {
@@ -311,7 +300,7 @@ export const mockMetadataSchemaUpdate = {
                 websiteUrl:
                     "https://open.canada.ca/en/open-government-licence-canada",
             },
-            currentWatermark: "2022-07-30T00:00:00+00:00",
+            currentWatermark: "2022-08-01T00:00:00+00:00",
             currentTransform: {
                 __typename: "SetTransform",
                 inputs: [
@@ -319,9 +308,9 @@ export const mockMetadataSchemaUpdate = {
                         __typename: "TransformInput",
                         dataset: {
                             __typename: "Dataset",
-                            id: "did:odf:z4k88e8uUcKWpJVMbvAyww4R6iarRhSy93yhd3ohg3QdDQP86D4",
+                            id: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
                             kind: "ROOT",
-                            name: "ontario.case-details",
+                            name: "alberta.case-details",
                             owner: {
                                 __typename: "User",
                                 id: "1",
@@ -332,22 +321,41 @@ export const mockMetadataSchemaUpdate = {
                 ],
                 transform: {
                     __typename: "TransformSql",
+                    engine: "spark",
+                    version: null,
                     queries: [
                         {
                             __typename: "SqlQueryStep",
                             alias: null,
-                            query: "SELECT\n  id,\n  case_reported_date as reported_date,\n  case when lower(gender) = 'male' then 'M' \n       when lower(gender) = 'female' then 'F' \n       else 'U' end as gender,\n  age_group,\n  city as location\n  FROM `ontario.case-details`\n",
+                            query: "SELECT\n  id,\n  date_reported as reported_date,\n  case when lower(gender) = 'male' then 'M' \n       when lower(gender) = 'female' then 'F' \n       else 'U' end as gender,\n  case when age_group = 'Under 1 year' then '<20'\n       when age_group = '1-4 years' then '<20'\n       when age_group = '5-9 years' then '<20'\n       when age_group = '10-19 years' then '<20'\n       when age_group = '20-29 years' then '20s'\n       when age_group = '30-39 years' then '30s'\n       when age_group = '40-49 years' then '40s'\n       when age_group = '50-59 years' then '50s'\n       when age_group = '60-69 years' then '60s'\n       when age_group = '70-79 years' then '70s'\n       when age_group = '80+ years' then '80s'\n       else 'UNKNOWN' end as age_group,\n  zone as location\n  FROM `alberta.case-details`\n",
                         },
                     ],
+                    temporalTables: null,
                 },
             },
             currentSchema: {
                 __typename: "DataSchema",
                 format: "PARQUET_JSON",
                 content:
-                    '{"name": "spark_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT96"}, {"name": "reported_date", "repetition": "OPTIONAL", "type": "INT96"}, {"name": "classification", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "id", "repetition": "OPTIONAL", "type": "INT32"}, {"name": "ha", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "sex", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "age_group", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}]}',
+                    '{"name": "spark_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT96"}, {"name": "id", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "reported_date", "repetition": "OPTIONAL", "type": "INT96"}, {"name": "gender", "repetition": "REQUIRED", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "age_group", "repetition": "REQUIRED", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "location", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}]}',
             },
-            currentUpstreamDependencies: [],
+            currentUpstreamDependencies: [
+                {
+                    __typename: "Dataset",
+                    metadata: {
+                        __typename: "DatasetMetadata",
+                        currentUpstreamDependencies: [],
+                    },
+                    id: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+                    kind: "ROOT",
+                    name: "alberta.case-details",
+                    owner: {
+                        __typename: "User",
+                        id: "1",
+                        name: "kamu",
+                    },
+                },
+            ],
             currentDownstreamDependencies: [
                 {
                     __typename: "Dataset",
@@ -358,28 +366,11 @@ export const mockMetadataSchemaUpdate = {
                                 __typename: "Dataset",
                                 metadata: {
                                     __typename: "DatasetMetadata",
-                                    currentDownstreamDependencies: [
-                                        {
-                                            __typename: "Dataset",
-                                            metadata: {
-                                                __typename: "DatasetMetadata",
-                                                currentDownstreamDependencies:
-                                                    [],
-                                            },
-                                            id: "did:odf:z4k88e8thqpQ7kupbJCiFbeXr5WZVCor7hmybhfmyUTLnWifwz6",
-                                            kind: "DERIVATIVE",
-                                            name: "canada.daily-cases",
-                                            owner: {
-                                                __typename: "User",
-                                                id: "1",
-                                                name: "kamu",
-                                            },
-                                        },
-                                    ],
+                                    currentDownstreamDependencies: [],
                                 },
-                                id: "did:odf:z4k88e8epAntnrFDUiDYxSGkCRcTc6wNzcwbpubzLCPQLVLUMcF",
+                                id: "did:odf:z4k88e8thqpQ7kupbJCiFbeXr5WZVCor7hmybhfmyUTLnWifwz6",
                                 kind: "DERIVATIVE",
-                                name: "canada.case-details",
+                                name: "canada.daily-cases",
                                 owner: {
                                     __typename: "User",
                                     id: "1",
@@ -388,9 +379,9 @@ export const mockMetadataSchemaUpdate = {
                             },
                         ],
                     },
-                    id: "did:odf:z4k88e8rAFwtkT53U5hCMU2k5E1EqNLif5uYfC3AwN6FD62onvP",
+                    id: "did:odf:z4k88e8epAntnrFDUiDYxSGkCRcTc6wNzcwbpubzLCPQLVLUMcF",
                     kind: "DERIVATIVE",
-                    name: "british-columbia.case-details.hm",
+                    name: "canada.case-details",
                     owner: {
                         __typename: "User",
                         id: "1",
@@ -399,7 +390,7 @@ export const mockMetadataSchemaUpdate = {
                 },
             ],
             currentReadme:
-                "# Confirmed positive cases of COVID-19 in British Columbia\n\n**Purpose**: These data can be used for visual or reference purposes.\n\nBritish Columbia COVID-19 B.C. & Canadian Testing Rates are obtained from the Public Health Agency of Canada's Daily Epidemiologic Update site: https://www.canada.ca/en/public-health/services/diseases/2019-novel-coronavirus-infection.html.\n\nThese data were made specifically for the British Columbia COVID-19 Dashboard.\n\n## Terms of use, disclaimer and limitation of liability\n\nAlthough every effort has been made to provide accurate information, the Province of British Columbia, including the British Columbia Centre for Disease Control, the Provincial Health Services Authority and the British Columbia Ministry of Health makes no representation or warranties regarding the accuracy of the information in the dashboard and the associated data, nor will it accept responsibility for errors or omissions. Data may not reflect the current situation, and therefore should only be used for reference purposes. Access to and/or content of these data and associated data may be suspended, discontinued, or altered, in part or in whole, at any time, for any reason, with or without prior notice, at the discretion of the Province of British Columbia.\n\nAnyone using this information does so at his or her own risk, and by using such information agrees to indemnify the Province of British Columbia, including the British Columbia Centre for Disease Control, the Provincial Health Services Authority and the British Columbia Ministry of Health and its content providers from any and all liability, loss, injury, damages, costs and expenses (including legal fees and expenses) arising from such person's use of the information on this website.\n\n## Data Notes - General\n\nThe following data notes define the indicators presented on the public dashboard and describe the data sources involved. Data changes daily as new cases are identified, characteristics of reported cases change or are updated, and data corrections are made. For the latest caveats about the data, please refer to the most recent BCCDC Surveillance Report located at: www.bccdc.ca/health-info/diseases-conditions/covid-19/data\n\n## Data Sources\n\n- Case details and laboratory information are updated daily Monday through Friday at 4:30 pm.\n- Data on cases (including hospitalizations and deaths) is collected by Health Authorities during public health follow-up and provided to BCCDC.\n- Total COVID-19 cases include laboratory diagnosed cases (confirmed and probable) as well as epi-linked cases. Definitions can be found at: www.bccdc.ca/health-professionals/clinical-resources/case-definitions/covid-19-(novel-coronavirus). Prior to June 4, 2020, the total number of cases included only laboratory diagnosed cases. Starting June 4, probable epi-linked cases became reportable as a separate category. Epi-linked cases identified during case investigations since May 19, 2020 - the date BC entered Phase 2 of its Restart Plan - are now included in the case total, but are not considered New Cases unless they were reported in the last 24 hours.\n- Laboratory data is supplied by the B.C. Centre for Disease Control Public Health Laboratory and the Provincial Lab Information Solution (PLIS); tests performed for other provinces have been excluded.\n- Critical care hospitalizations are provided by the health authorities to PHSA on a daily basis. \n\nBCCDC/PHSA/B.C. Ministry of Health data sources are available at the links below:\n\n- [Cases Totals (spatial)](#)\n- [Case Details](#)\n- [Laboratory Testing Information](#)\n- [Regional Summary Data](#)\n\n## Data Over Time\n\n- The number of laboratory tests performed and positivity rate over time are reported by the date of test result. On March 16, testing recommendations changed to focus on hospitalized patients, healthcare workers, long term care facility staff and residents, and those part of a cluster or outbreak who are experiencing respiratory symptoms. The current day is excluded from all laboratory indicators.\n- As of January 7, 2021, the numbers of cases over time are reported by the result date of the client's first positive lab result where available; otherwise by the date they are reported to public health.\n\n## Epidemiologic Indicators\n\n- Cases have 'Recovered' when the criteria outlined in BC guidelines for public health management of COVID-19 (www.bccdc.ca/resource-gallery/Documents/Guidelines%20and%20Forms/Guidelines%20and%20Manuals/Epid/CD%20Manual/Chapter%201%20-%20CDC/2019-nCoV-Interim_Guidelines.pdf) are met. These are the same criteria that are met for cases to “Discontinue Isolation” and the terms are sometimes used interchangeably.\n- Today's New Cases are those reported daily in the Provincial Health Officer's press briefing and reflect the difference in counts between one day and the next (net new). This may not be equal to the number of cases identified by calendar day, as: (1) new cases for the current day will be based on lab results up to midnight of the day before; and (2) there may be some delays between cases being reported to public health and then reported provincially; and (3) cases may be attributed to different health authorities or may be excluded from case counts as new information is obtained. \n- Critical care values include the number of COVID-19 patients in all critical care beds (e.g., intensive care units; high acuity units; and other surge critical care spaces as they become available and/or required). \n- Active cases exclude those cases who have died, recovered/discontinued isolation or been lost to follow up. \n- The 7-day moving average is an average daily value over the 7 days up to and including the selected date. The 7-day window moves - or changes - with each new day of data. It is used to smooth new daily case and death counts or rates to mitigate the impact of short-term fluctuations and to more clearly identify the most recent trend over time.\n- The following epidemiological indicators are included in the provincial case data file:\n    - Date: date of the client's first positive lab result where available; otherwise by the date they were reported to public health\n    - HA: health authority assigned to the case\n    - Sex: the sex of the client\n    - Age_Group: the age group of the client\n    - Classification_Reported: whether the case has been lab-diagnosed or is epidemiologically linked to another case\n- The following epidemiological indicators are included in the regional summary data file:\n    - Cases_Reported: the number of cases for the health authority (HA) and health service delivery area (HSDA)\n    - Cases_Reported_Smoothed: Seven day moving average for reported cases\n\n## Laboratory Indicators\n\n- Total tests represent the cumulative number of COVID-19 tests since testing began mid-January. Only tests for residents of B.C. are included.\n- New tests represent the number of COVID-19 tests performed in the 24 hour period prior to date of the dashboard update.\n- COVID-19 positivity rate is calculated for each day as the ratio of 7-day rolling average of number of positive specimens to 7-day rolling average of the total number specimens tested (positive, negative, indeterminate and invalid). A 7-day rolling average applied to all testing data corrects for uneven data release patterns while accurately representing the provincial positivity trends. It avoids misleading daily peaks and valleys due to varying capacities and reporting cadences.\n- Turn-around time is calculated as the daily average time (in hours) between specimen collection and report of a test result. Turn-around time includes the time to ship specimens to the lab; patients who live farther away are expected to have slightly longer average turn around times.\n- The rate of COVID-19 testing per million population is defined as the cumulative number of people tested for COVID-19/BC population x 1,000,000. B.C. and Canadian rates are obtained from the map (Figure 1) available in the Public Health Agency of Canada's Daily Epidemiologic Update: https://health-infobase.canada.ca/covid-19/epidemiological-summary-covid-19-cases.html by selecting Rate and Individuals Tested.  Please note: the same person may be tested multiple times, thus it is not possible to derive this rate directly from the # of cumulative tests reported on the BC COVID dashboard.\n- Testing context:  COVID-19 diagnostic testing and laboratory test guidelines have changed in British Columbia over time.  BC's testing strategy has been characterized by four phases: 1) Exposure-based testing, 2) Targeted testing, 3) Expanded testing, and 4) Symptom-based testing.  While COVID-19 testing was originally centralized at the BCCDC Public Health Laboratory (BCPHL), testing capacity expanded to other BC laboratories over time.  Additional details on the timing and definition of test phases and decentralization of testing can be found at: www.bccdc.ca/health-info/diseases-conditions/covid-19/testing/phases-of-covid-19-testing-in-bc\n- The following laboratory indicators are included in the provincial laboratory data file:\n    - New_Tests: the number of new COVID-19 tests\n    - Total_Tests: the total number of COVID-19 tests\n    - Positivity: the positivity rate for COVID-19 tests\n    - Turn_Around: the turnaround time for COVID-19 tests\n\n## Hospitalization Indicators\n\n- Hospitalizations are defined according to the COVID-19 Case Report Form\n- Hospitalizations are reported by the date of admission. Date of admission is replaced with surveillance date (date of the client's first positive lab result where available; otherwise by the date they were reported to public health) in the rare instance where admission date is missing for a known hospitalization.  \n- Information will change as data becomes available; data from the most recent week, in particular, are incomplete. \n\n## Death Indicators\n\n- Deaths are defined according to the COVID-19 Case Report Form.\n- Deaths are reported by the date of death. Date of death is replaced with surveillance date (date of the client's first positive lab result where available; otherwise by the date they were reported to public health) in the rare instance where date of death is missing for a known mortality event.\n- Information will change as data becomes available; data from the most recent week, in particular, are incomplete. \n\n## Health Authority Assignment\n\n- As of July 9, cases are reported by health authority of residence. When health authority of residence is not available, cases are assigned to the health authority reporting the case or the health authority of the provider ordering the lab test. Cases whose primary residence is outside of Canada are reported as “Out of Canada”. Previously, cases were assigned to the health authority that reported the case. Please note that the health authority of residence and the health authority reporting the case do not necessarily indicate the location of exposure or transmission. As more data is collected about the case, the health authority assignment may change to reflect the latest information. \n- For lab data, health authority is assigned by place of residence; when not available, by location of the provider ordering the lab test. Delays in assignment may occur such that the total number of BC tests performed may be greater than the sum of tests done in specific Health Authorities. \n\n© Province of British Columbia\n",
+                "# Harmonized COVID-19 case data from Alberta\n\nSee [original dataset](#todo).\n\nSee [harmonization schema and semantics](#todo).\n",
             chain: {
                 __typename: "MetadataChain",
                 blocks: {
@@ -408,29 +399,29 @@ export const mockMetadataSchemaUpdate = {
                         {
                             __typename: "MetadataBlockExtended",
                             blockHash:
-                                "zW1fcRSmqFXG6Jpe312qWjE7LuA7ANgJLu5MeEEp4L6Hiej",
+                                "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev",
                             prevBlockHash:
-                                "zW1fzZHGUrvDzMPuYeYifBB56BBKzdxmsbhGdcv1fBXPqBA",
-                            systemTime: "2022-08-05T21:19:43.875457619+00:00",
-                            sequenceNumber: 14,
+                                "zW1abnmxotsSC7H6SyfbL7bpWtQrMSQktUfiJds3KWX1xfm",
+                            systemTime: "2022-08-05T21:20:08.053635579+00:00",
+                            sequenceNumber: 6,
                             author: {
                                 __typename: "User",
                                 id: "1",
                                 name: "kamu",
                             },
                             event: {
-                                __typename: "AddData",
-                                addedOutputData: {
+                                __typename: "ExecuteQuery",
+                                queryOutputData: {
                                     __typename: "DataSlice",
                                     interval: {
                                         __typename: "OffsetInterval",
                                         start: 0,
-                                        end: 379273,
+                                        end: 596125,
                                     },
                                     logicalHash:
-                                        "z63ZND5BFgACqjmdLXGhuF2Wmmrp3wGpHJbXAFotSPPdb5gM8ezd",
+                                        "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
                                     physicalHash:
-                                        "zW1hQyTP2Hht96n4vKpw7NHn5jByCBh3m1urWbfJYB7DGSa",
+                                        "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
                                 },
                             },
                         },
@@ -446,7 +437,13 @@ export const mockMetadataSchemaUpdate = {
                 },
             },
         },
-        createdAt: "2022-08-05T21:17:30.621941313+00:00",
-        lastUpdatedAt: "2022-08-05T21:19:43.875457619+00:00",
+        createdAt: "2022-08-05T21:17:30.646318293+00:00",
+        lastUpdatedAt: "2022-08-05T21:20:08.053635579+00:00",
+    },
+    pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+        totalPages: 1,
+        currentPage: 1,
     },
 };

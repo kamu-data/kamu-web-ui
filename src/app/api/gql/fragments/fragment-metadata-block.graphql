@@ -17,9 +17,7 @@ fragment MetadataBlock on MetadataBlockExtended {
     ... on SetWatermark {
       outputWatermark
     }
-    ... on SetTransform {
-      __typename
-    }
+    ...DatasetTransform
     ... on ExecuteQuery {
       queryOutputData: outputData {
         interval {

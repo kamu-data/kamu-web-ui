@@ -1,12 +1,13 @@
+import { SetTransform } from "./../../../../../../../api/kamu.graphql.interface";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
-import { mockSetPollingSourceEvent } from "./../../../mock.events";
+import { mockSetTransform } from "./../../../mock.events";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { YamlEventViewerComponent } from "./yaml-event-viewer.component";
 
 describe("YamlEventViewerComponent", () => {
-    let component: YamlEventViewerComponent;
-    let fixture: ComponentFixture<YamlEventViewerComponent>;
+    let component: YamlEventViewerComponent<SetTransform>;
+    let fixture: ComponentFixture<YamlEventViewerComponent<SetTransform>>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -14,9 +15,11 @@ describe("YamlEventViewerComponent", () => {
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(YamlEventViewerComponent);
+        fixture = TestBed.createComponent<
+            YamlEventViewerComponent<SetTransform>
+        >(YamlEventViewerComponent);
         component = fixture.componentInstance;
-        component.event = mockSetPollingSourceEvent;
+        component.event = mockSetTransform as SetTransform;
         fixture.detectChanges();
     });
 

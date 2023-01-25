@@ -40,6 +40,7 @@ import { YamlEventViewerComponent } from "./components/event-details/components/
 import { SetTransformEventComponent } from "./components/event-details/components/set-transform-event/set-transform-event.component";
 import { OwnerPropertyComponent } from "./components/event-details/components/common/owner-property/owner-property.component";
 import { BaseDynamicEventComponent } from "./components/event-details/components/base-dynamic-event/base-dynamic-event.component";
+import { DatasetNamePropertyComponent } from "./components/event-details/components/common/dataset-name-property/dataset-name-property.component";
 
 @NgModule({
     declarations: [
@@ -69,6 +70,7 @@ import { BaseDynamicEventComponent } from "./components/event-details/components
         YamlEventViewerComponent,
         OwnerPropertyComponent,
         BaseDynamicEventComponent,
+        DatasetNamePropertyComponent,
     ],
     imports: [
         CommonModule,

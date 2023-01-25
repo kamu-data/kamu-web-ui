@@ -4,7 +4,7 @@ import { EnginePropertyComponent } from "../common/engine-property/engine-proper
 import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
 import { OwnerPropertyComponent } from "../common/owner-property/owner-property.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
-
+import { DatasetNamePropertyComponent } from "../common/dataset-name-property/dataset-name-property.component";
 
 export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetTransform.TransformSql.engine": {
@@ -42,7 +42,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetTransform.Dataset.name": {
         label: "Name:",
         tooltip: "Alias of the dataset.",
-        presentationComponent: SimplePropertyComponent,
+        presentationComponent: DatasetNamePropertyComponent,
         separateRowForValue: false,
         dataTestId: "set-transform-dataset-name",
     },

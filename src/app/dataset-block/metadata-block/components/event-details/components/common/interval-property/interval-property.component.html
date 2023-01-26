@@ -1,7 +1,8 @@
 <p class="bg-value">
-    start: <span>{{ data.start }}</span>
+    start:
+    <span [attr.data-test-id]="dataTestId + '-start'">{{ data.start }}</span>
 </p>
 <br />
 <p class="bg-value">
-    end: <span>{{ data.end }}</span>
+    end: <span [attr.data-test-id]="dataTestId + '-end'">{{ data.end }}</span>
 </p>

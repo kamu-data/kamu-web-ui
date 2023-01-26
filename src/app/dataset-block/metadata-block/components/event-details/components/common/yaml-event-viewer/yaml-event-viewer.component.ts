@@ -20,6 +20,7 @@ export class YamlEventViewerComponent<TEvent extends object> {
         TransformSql: "sql",
         ReadStepJsonLines: "jsonLines",
         Dataset: "dataset",
+        DataSlice: "dataSlice",
     };
 
     // Temporary solution, later data will come from server

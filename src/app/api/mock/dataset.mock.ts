@@ -195,6 +195,31 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                                 physicalHash:
                                     "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
                             },
+                            inputCheckpoint: null,
+                            watermark: "2022-08-01T00:00:00+00:00",
+                            inputSlices: [
+                                {
+                                    __typename: "InputSlice",
+                                    datasetId:
+                                        "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+                                    blockInterval: {
+                                        __typename: "BlockInterval",
+                                        start: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
+                                        end: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
+                                    },
+                                    dataInterval: {
+                                        __typename: "OffsetInterval",
+                                        start: 0,
+                                        end: 596125,
+                                    },
+                                },
+                            ],
+                            outputCheckpoint: {
+                                __typename: "Checkpoint",
+                                physicalHash:
+                                    "zW1otipGpjScUH8C2RfaF4s8RshReBbQVPDf2fPrp2R8Ft2",
+                                size: 2560,
+                            },
                         },
                     },
                 },

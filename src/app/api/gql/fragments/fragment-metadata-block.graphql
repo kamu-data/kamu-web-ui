@@ -18,16 +18,7 @@ fragment MetadataBlock on MetadataBlockExtended {
       outputWatermark
     }
     ...DatasetTransform
-    ... on ExecuteQuery {
-      queryOutputData: outputData {
-        interval {
-          start
-          end
-        }
-        logicalHash
-        physicalHash
-      }
-    }
+    ...ExecuteQueryEvent
     ...AddDataEvent
     ... on SetAttachments {
       __typename

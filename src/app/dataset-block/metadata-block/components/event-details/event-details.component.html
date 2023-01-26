@@ -22,6 +22,12 @@
         ></app-set-transform-event>
     </ng-container>
 
+    <ng-container *ngIf="isExecuteQueryEvent">
+        <app-execute-query-event
+            [event]="executeQueryEvent"
+        ></app-execute-query-event>
+    </ng-container>
+
     <ng-container *ngIf="!isSupportedEvent">
         <p class="text-center mt-2">
             <mat-icon class="text-danger align-middle">block</mat-icon>

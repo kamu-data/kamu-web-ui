@@ -41,6 +41,7 @@ import { SetTransformEventComponent } from "./components/event-details/component
 import { OwnerPropertyComponent } from "./components/event-details/components/common/owner-property/owner-property.component";
 import { BaseDynamicEventComponent } from "./components/event-details/components/base-dynamic-event/base-dynamic-event.component";
 import { DatasetNamePropertyComponent } from "./components/event-details/components/common/dataset-name-property/dataset-name-property.component";
+import { ExecuteQueryEventComponent } from "./components/event-details/components/execute-query-event/execute-query-event.component";
 
 @NgModule({
     declarations: [
@@ -71,6 +72,7 @@ import { DatasetNamePropertyComponent } from "./components/event-details/compone
         OwnerPropertyComponent,
         BaseDynamicEventComponent,
         DatasetNamePropertyComponent,
+        ExecuteQueryEventComponent,
     ],
     imports: [
         CommonModule,

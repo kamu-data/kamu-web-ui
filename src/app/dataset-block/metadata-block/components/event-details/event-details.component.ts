@@ -3,6 +3,7 @@ import {
     SetPollingSource,
     Seed,
     SetTransform,
+    ExecuteQuery,
 } from "./../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "./supported.events";
 import {
@@ -71,6 +72,14 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     public get seedEvent(): Seed {
         return this.block.event as Seed;
+    }
+
+    public get isExecuteQueryEvent(): boolean {
+        return this.block.event.__typename === SupportedEvents.ExecuteQuery;
+    }
+
+    public get executeQueryEvent(): ExecuteQuery {
+        return this.block.event as ExecuteQuery;
     }
 
     ngOnInit(): void {

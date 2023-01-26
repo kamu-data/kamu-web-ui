@@ -42,6 +42,8 @@ import { OwnerPropertyComponent } from "./components/event-details/components/co
 import { BaseDynamicEventComponent } from "./components/event-details/components/base-dynamic-event/base-dynamic-event.component";
 import { DatasetNamePropertyComponent } from "./components/event-details/components/common/dataset-name-property/dataset-name-property.component";
 import { ExecuteQueryEventComponent } from "./components/event-details/components/execute-query-event/execute-query-event.component";
+import { TimePropertyComponent } from "./components/event-details/components/common/time-property/time-property.component";
+import { IntervalPropertyComponent } from "./components/event-details/components/common/interval-property/interval-property.component";
 
 @NgModule({
     declarations: [
@@ -72,6 +74,8 @@ import { ExecuteQueryEventComponent } from "./components/event-details/component
         OwnerPropertyComponent,
         BaseDynamicEventComponent,
         DatasetNamePropertyComponent,
+        TimePropertyComponent,
+        IntervalPropertyComponent,
         ExecuteQueryEventComponent,
     ],
     imports: [

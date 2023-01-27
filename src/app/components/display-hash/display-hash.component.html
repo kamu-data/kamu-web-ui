@@ -5,11 +5,12 @@
         [class]="class"
         data-test-id="navigableValue"
         (click)="
-            navigateToMetadataBlock(
-                datasetInfo.accountName,
-                datasetInfo.datasetName,
-                value
-            )
+            datasetInfo &&
+                navigateToMetadataBlock(
+                    datasetInfo.accountName,
+                    datasetInfo.datasetName,
+                    value
+                )
         "
     >
         {{ value | slice: -8 }}

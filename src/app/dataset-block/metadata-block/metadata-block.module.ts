@@ -45,6 +45,7 @@ import { ExecuteQueryEventComponent } from "./components/event-details/component
 import { TimePropertyComponent } from "./components/event-details/components/common/time-property/time-property.component";
 import { IntervalPropertyComponent } from "./components/event-details/components/common/interval-property/interval-property.component";
 import { SizePropertyComponent } from "./components/event-details/components/common/size-property/size-property.component";
+import { HashPropertyComponent } from "./components/event-details/components/common/hash-property/hash-property.component";
 
 @NgModule({
     declarations: [
@@ -78,6 +79,7 @@ import { SizePropertyComponent } from "./components/event-details/components/com
         TimePropertyComponent,
         IntervalPropertyComponent,
         SizePropertyComponent,
+        HashPropertyComponent,
         ExecuteQueryEventComponent,
     ],
     imports: [

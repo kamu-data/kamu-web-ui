@@ -1,6 +1,5 @@
 import { AddData } from "src/app/api/kamu.graphql.interface";
 import { ADD_DATA_SOURCE_DESCRIPTORS } from "../../components/add-data-event/add-data-event.source";
-import { EXECUTE_QUERY_SOURCE_DESCRIPTORS } from "../../components/execute-query-event/execute-query-event.source";
 import { EventSection } from "../dynamic-events.model";
 import { EventSectionBuilder } from "./event-section.builder";
 

@@ -12,6 +12,8 @@ import {
 })
 export class YamlEventViewerComponent<TEvent extends object> {
     @Input() public event: TEvent;
+    private readonly FIRST_LEVEL_SHIFT = "\u00A0\u00A0";
+    private readonly SECOND_LEVEL_SHIFT = "\u00A0\u00A0\u00A0\u00A0";
     private kindMapper: Record<string, string> = {
         FetchStepUrl: "url",
         FetchStepContainer: "container",
@@ -26,26 +28,24 @@ export class YamlEventViewerComponent<TEvent extends object> {
     public get yamlEventText(): string {
         let result = "";
         let propertyName;
-        const firstLevelShift = "\u00A0\u00A0";
-        const secondLevelShift = "\u00A0\u00A0\u00A0\u00A0";
         Object.entries(this.event).forEach(([key, value]) => {
             key !== "__typename" && value ? (result += `${key}:\n`) : "";
             if (value && key !== "__typename") {
                 if (key === "inputs") {
                     (value as TransformInput[]).map((item: TransformInput) => {
-                        result += `${firstLevelShift}- kind: ${
+                        result += `${this.FIRST_LEVEL_SHIFT}- kind: ${
                             this.kindMapper[item.dataset.__typename as string]
                         }\n`;
-                        result += `${secondLevelShift}id: ${
+                        result += `${this.SECOND_LEVEL_SHIFT}id: ${
                             item.dataset.id as string
                         }\n`;
-                        result += `${secondLevelShift}type: ${
+                        result += `${this.SECOND_LEVEL_SHIFT}type: ${
                             item.dataset.kind as string
                         }\n`;
-                        result += `${secondLevelShift}name: ${
+                        result += `${this.SECOND_LEVEL_SHIFT}name: ${
                             item.dataset.name as string
                         }\n`;
-                        result += `${secondLevelShift}owner: ${item.dataset.owner.name}\n`;
+                        result += `${this.SECOND_LEVEL_SHIFT}owner: ${item.dataset.owner.name}\n`;
                     });
                 } else {
                     Object.entries(value as object).forEach(
@@ -55,7 +55,9 @@ export class YamlEventViewerComponent<TEvent extends object> {
                                     ? (propertyName = "kind")
                                     : (propertyName = property);
 
-                                result += `${firstLevelShift}${propertyName}: ${this.getPropertyValue(
+                                result += `${
+                                    this.FIRST_LEVEL_SHIFT
+                                }${propertyName}: ${this.getPropertyValue(
                                     data as string,
                                     property,
                                 )}\n`;

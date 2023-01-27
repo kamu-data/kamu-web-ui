@@ -9,7 +9,10 @@ import {
     ChangeDetectorRef,
     ComponentRef,
 } from "@angular/core";
-import { EventRow, EventSection } from "../../dynamic-events/dynamic-events.model";
+import {
+    EventRow,
+    EventSection,
+} from "../../dynamic-events/dynamic-events.model";
 
 import { BasePropertyComponent } from "../common/base-property/base-property.component";
 
@@ -26,6 +29,7 @@ export class BaseDynamicEventComponent<TEvent extends object>
     @ViewChildren("container", { read: ViewContainerRef })
     container: QueryList<ViewContainerRef>;
     public isYamlView = false;
+    public isShowYamlToggle = true;
     public eventSections: EventSection[];
 
     public constructor(private cdr: ChangeDetectorRef) {}

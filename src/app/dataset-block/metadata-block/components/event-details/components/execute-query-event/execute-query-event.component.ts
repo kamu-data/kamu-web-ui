@@ -18,5 +18,6 @@ export class ExecuteQueryEventComponent
             SECTION_BUILDERS_BY_EVENT_TYPE.ExecuteQuery.buildEventSections(
                 this.event,
             );
+        this.isShowYamlToggle = false;
     }
 }

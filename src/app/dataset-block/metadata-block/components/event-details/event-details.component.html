@@ -1,9 +1,6 @@
 <div class="py-4" *ngIf="block">
     <ng-container *ngIf="isAddDataEvent">
-        <app-add-data-event
-            [event]="addDataEvent"
-            [datasetInfo]="datasetInfo"
-        ></app-add-data-event>
+        <app-add-data-event [event]="addDataEvent"></app-add-data-event>
     </ng-container>
 
     <ng-container *ngIf="isSetPollingSourceEvent">

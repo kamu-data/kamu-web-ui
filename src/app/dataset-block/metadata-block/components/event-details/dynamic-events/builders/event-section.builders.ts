@@ -7,6 +7,7 @@ import { SetPollingSourceSectionBuilder } from "./set-polling-source-section.bui
 import { SetTransformSectionBuilder } from "./set-transform-section.builder";
 import { DynamicEventTypes } from "../dynamic-events.model";
 import { ExecuteQuerySectionBuilder } from "./execute-query.section.builder";
+import { AddDataSectionBuilder } from "./add-data-section.builder";
 
 export const SECTION_BUILDERS_BY_EVENT_TYPE: Record<
     DynamicEventTypes,
@@ -15,4 +16,5 @@ export const SECTION_BUILDERS_BY_EVENT_TYPE: Record<
     [DynamicEventTypes.SetPollingSource]: new SetPollingSourceSectionBuilder(),
     [DynamicEventTypes.SetTransform]: new SetTransformSectionBuilder(),
     [DynamicEventTypes.ExecuteQuery]: new ExecuteQuerySectionBuilder(),
+    [DynamicEventTypes.AddData]: new AddDataSectionBuilder(),
 };

@@ -44,6 +44,7 @@ import { DatasetNamePropertyComponent } from "./components/event-details/compone
 import { ExecuteQueryEventComponent } from "./components/event-details/components/execute-query-event/execute-query-event.component";
 import { TimePropertyComponent } from "./components/event-details/components/common/time-property/time-property.component";
 import { IntervalPropertyComponent } from "./components/event-details/components/common/interval-property/interval-property.component";
+import { SizePropertyComponent } from "./components/event-details/components/common/size-property/size-property.component";
 
 @NgModule({
     declarations: [
@@ -76,6 +77,7 @@ import { IntervalPropertyComponent } from "./components/event-details/components
         DatasetNamePropertyComponent,
         TimePropertyComponent,
         IntervalPropertyComponent,
+        SizePropertyComponent,
         ExecuteQueryEventComponent,
     ],
     imports: [

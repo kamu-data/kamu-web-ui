@@ -1,3 +1,4 @@
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import moment from "moment";
 import AppValues from "src/app/common/app.values";
@@ -8,18 +9,18 @@ import AppValues from "src/app/common/app.values";
     styleUrls: ["./display-time.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DisplayTimeComponent {
-    @Input() public value: string;
+export class DisplayTimeComponent extends BasePropertyComponent {
+    @Input() public data: string;
     @Input() public class?: string;
     @Input() public threshold?: moment.argThresholdOpts;
     @Input() public dataTestId: string;
 
     get relativeTime(): string {
-        return this.convertToRelativeTime(this.value, this.threshold);
+        return this.convertToRelativeTime(this.data, this.threshold);
     }
 
     get formatTitle(): string {
-        return moment(this.value).format(AppValues.DISPLAY_TOOLTIP_DATE_FORMAT);
+        return moment(this.data).format(AppValues.DISPLAY_TOOLTIP_DATE_FORMAT);
     }
 
     private dateTime(rfc3339: string): string {

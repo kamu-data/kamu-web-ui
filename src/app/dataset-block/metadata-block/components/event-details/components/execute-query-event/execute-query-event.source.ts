@@ -1,7 +1,8 @@
+import { DisplayTimeComponent } from "./../../../../../../components/display-time/display-time.component";
 import { SimplePropertyComponent } from "./../common/simple-property/simple-property.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
-import { TimePropertyComponent } from "../common/time-property/time-property.component";
 import { IntervalPropertyComponent } from "../common/interval-property/interval-property.component";
+import { SizePropertyComponent } from "../common/size-property/size-property.component";
 
 export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "ExecuteQuery.DataSlice.logicalHash": {
@@ -39,7 +40,7 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "ExecuteQuery.string.watermark": {
         label: "Watermark:",
         tooltip: "Last watermark of the output data stream.",
-        presentationComponent: TimePropertyComponent,
+        presentationComponent: DisplayTimeComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-watermark",
     },
@@ -55,7 +56,7 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "ExecuteQuery.Checkpoint.size": {
         label: "Size:",
         tooltip: "Size of checkpoint file in bytes.",
-        presentationComponent: SimplePropertyComponent,
+        presentationComponent: SizePropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-checkpoint-size",
     },

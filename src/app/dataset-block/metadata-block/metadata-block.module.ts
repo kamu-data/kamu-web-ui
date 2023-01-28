@@ -46,6 +46,7 @@ import { TimePropertyComponent } from "./components/event-details/components/com
 import { IntervalPropertyComponent } from "./components/event-details/components/common/interval-property/interval-property.component";
 import { SizePropertyComponent } from "./components/event-details/components/common/size-property/size-property.component";
 import { HashPropertyComponent } from "./components/event-details/components/common/hash-property/hash-property.component";
+import { BlockIntervalPropertyComponent } from "./components/event-details/components/common/block-interval-property/block-interval-property.component";
 
 @NgModule({
     declarations: [
@@ -80,6 +81,7 @@ import { HashPropertyComponent } from "./components/event-details/components/com
         IntervalPropertyComponent,
         SizePropertyComponent,
         HashPropertyComponent,
+        BlockIntervalPropertyComponent,
         ExecuteQueryEventComponent,
     ],
     imports: [

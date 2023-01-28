@@ -118,7 +118,7 @@ export class DatasetApi {
             );
     }
 
-    public getDatasetById(datasetId: string): Observable<DatasetByIdQuery> {
+    public getDatasetInfoById(datasetId: string): Observable<DatasetByIdQuery> {
         return this.datasetByIdGQL
             .watch({
                 datasetId,

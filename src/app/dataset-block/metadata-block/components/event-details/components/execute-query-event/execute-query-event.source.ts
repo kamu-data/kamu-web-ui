@@ -3,19 +3,21 @@ import { SimplePropertyComponent } from "./../common/simple-property/simple-prop
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { IntervalPropertyComponent } from "../common/interval-property/interval-property.component";
 import { SizePropertyComponent } from "../common/size-property/size-property.component";
+import { HashPropertyComponent } from "../common/hash-property/hash-property.component";
+import { BlockIntervalPropertyComponent } from "../common/block-interval-property/block-interval-property.component";
 
 export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "ExecuteQuery.DataSlice.logicalHash": {
         label: "Logical hash:",
         tooltip: "Logical hash sum of the data in this slice.",
-        presentationComponent: SimplePropertyComponent,
+        presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-data-slice-engine",
     },
     "ExecuteQuery.DataSlice.physicalHash": {
         label: "Physical hash:",
         tooltip: "Hash sum of the data part file.",
-        presentationComponent: SimplePropertyComponent,
+        presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-data-slice-physical-hash",
     },
@@ -48,7 +50,7 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "ExecuteQuery.Checkpoint.physicalHash": {
         label: "Physical hash:",
         tooltip: "Hash sum of the checkpoint file.",
-        presentationComponent: SimplePropertyComponent,
+        presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-checkpoint-physical-hash",
     },
@@ -72,7 +74,7 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "ExecuteQuery.InputSlice.blockInterval": {
         label: "Block interval:",
         tooltip: "Blocks that went into this transaction.",
-        presentationComponent: IntervalPropertyComponent,
+        presentationComponent: BlockIntervalPropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-input-slice-block-interval",
     },

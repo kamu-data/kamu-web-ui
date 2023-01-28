@@ -53,7 +53,6 @@ export class MetadataBlockComponent
 
     ngOnInit(): void {
         this.datasetInfo = this.getDatasetInfoFromUrl();
-
         this.trackSubscriptions(
             this.activatedRoute.params
                 .pipe(pluck(ProjectLinks.URL_PARAM_BLOCK_HASH))
@@ -62,9 +61,10 @@ export class MetadataBlockComponent
                 }),
             this.router.events
                 .pipe(filter((event) => event instanceof NavigationEnd))
-                .subscribe(() =>
-                    this.trackSubscription(this.loadMetadataBlock()),
-                ),
+                .subscribe(() => {
+                    this.datasetInfo = this.getDatasetInfoFromUrl();
+                    this.trackSubscription(this.loadMetadataBlock());
+                }),
             this.loadMetadataBlock(),
             this.loadHistory(),
             this.appDatasetSubsService.onDatasetHistoryChanges.subscribe(

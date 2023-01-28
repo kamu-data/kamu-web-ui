@@ -72,7 +72,11 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
                                             EXECUTE_QUERY_SOURCE_DESCRIPTORS,
                                             item.__typename,
                                             key,
-                                            value,
+                                            this.valueTransformMapper(
+                                                key as keyof InputSlice,
+                                                value,
+                                                item,
+                                            ),
                                         ),
                                     );
                                 }
@@ -99,5 +103,22 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
             }
         });
         return result;
+    }
+
+    private valueTransformMapper(
+        key: keyof InputSlice,
+        value: unknown,
+        inputItem: InputSlice,
+    ): unknown {
+        switch (key) {
+            case "blockInterval":
+                return {
+                    block: value,
+                    datasetId: inputItem.datasetId as string,
+                };
+
+            default:
+                return value;
+        }
     }
 }

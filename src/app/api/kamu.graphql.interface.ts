@@ -725,6 +725,18 @@ export type User = Account & {
     name: Scalars["String"];
 };
 
+export type DatasetByIdQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type DatasetByIdQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: ({ __typename?: "Dataset" } & DatasetBasicsFragment) | null;
+    };
+};
+
 export type GetDatasetDataSqlRunQueryVariables = Exact<{
     query: Scalars["String"];
     limit: Scalars["Int"];
@@ -1897,6 +1909,30 @@ export const DatasetSearchOverviewFragmentDoc = gql`
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
 `;
+export const DatasetByIdDocument = gql`
+    query datasetById($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                ...DatasetBasics
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetByIdGQL extends Apollo.Query<
+    DatasetByIdQuery,
+    DatasetByIdQueryVariables
+> {
+    document = DatasetByIdDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const GetDatasetDataSqlRunDocument = gql`
     query getDatasetDataSQLRun($query: String!, $limit: Int!) {
         data {

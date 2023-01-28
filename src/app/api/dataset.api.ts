@@ -15,6 +15,8 @@ import {
     DatasetsByAccountNameQuery,
     GetMetadataBlockGQL,
     GetMetadataBlockQuery,
+    DatasetByIdQuery,
+    DatasetByIdGQL,
 } from "./kamu.graphql.interface";
 
 @Injectable({ providedIn: "root" })
@@ -25,6 +27,7 @@ export class DatasetApi {
         private datasetHistoryGQL: GetDatasetHistoryGQL,
         private datasetsByAccountNameGQL: DatasetsByAccountNameGQL,
         private metadataBlockGQL: GetMetadataBlockGQL,
+        private datasetByIdGQL: DatasetByIdGQL,
     ) {}
 
     public getDatasetMainData(params: {
@@ -110,6 +113,19 @@ export class DatasetApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<GetMetadataBlockQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public getDatasetById(datasetId: string): Observable<DatasetByIdQuery> {
+        return this.datasetByIdGQL
+            .watch({
+                datasetId,
+            })
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<DatasetByIdQuery>) => {
                     return result.data;
                 }),
             );

@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { IntervalPropertyComponent } from "./interval-property.component";
+import { OffsetIntervalPropertyComponent } from "./offset-interval-property.component";
 
-describe("IntervalPropertyComponent", () => {
-    let component: IntervalPropertyComponent;
-    let fixture: ComponentFixture<IntervalPropertyComponent>;
+describe("OffsetIntervalPropertyComponent", () => {
+    let component: OffsetIntervalPropertyComponent;
+    let fixture: ComponentFixture<OffsetIntervalPropertyComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [IntervalPropertyComponent],
+            declarations: [OffsetIntervalPropertyComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(IntervalPropertyComponent);
+        fixture = TestBed.createComponent(OffsetIntervalPropertyComponent);
         component = fixture.componentInstance;
         (component.data = {
             __typename: "OffsetInterval",

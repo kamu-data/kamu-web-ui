@@ -1,7 +1,7 @@
 import { DisplayTimeComponent } from "./../../../../../../components/display-time/display-time.component";
 import { SimplePropertyComponent } from "./../common/simple-property/simple-property.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
-import { IntervalPropertyComponent } from "../common/interval-property/interval-property.component";
+import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
 import { SizePropertyComponent } from "../common/size-property/size-property.component";
 import { HashPropertyComponent } from "../common/hash-property/hash-property.component";
 import { BlockIntervalPropertyComponent } from "../common/block-interval-property/block-interval-property.component";
@@ -25,7 +25,7 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "ExecuteQuery.DataSlice.interval": {
         label: "Interval:",
         tooltip: "Data slice produced by the transaction.",
-        presentationComponent: IntervalPropertyComponent,
+        presentationComponent: OffsetIntervalPropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-data-slice-interval",
     },
@@ -82,7 +82,7 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "ExecuteQuery.InputSlice.dataInterval": {
         label: "Data interval:",
         tooltip: "Data that went into this transaction.",
-        presentationComponent: IntervalPropertyComponent,
+        presentationComponent: OffsetIntervalPropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-input-slice-data-interval",
     },

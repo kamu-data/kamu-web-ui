@@ -8,6 +8,7 @@ import {
     QueryList,
     ChangeDetectorRef,
     ComponentRef,
+    Inject,
 } from "@angular/core";
 import {
     EventRow,
@@ -29,10 +30,15 @@ export class BaseDynamicEventComponent<TEvent extends object>
     @ViewChildren("container", { read: ViewContainerRef })
     container: QueryList<ViewContainerRef>;
     public isYamlView = false;
-    public isShowYamlToggle = true;
     public eventSections: EventSection[];
+    protected readonly shouldShowYamlView: boolean;
 
-    public constructor(private cdr: ChangeDetectorRef) {}
+    public constructor(
+        private cdr: ChangeDetectorRef,
+        @Inject("shouldShowYamlView") shouldShowYamlView: boolean,
+    ) {
+        this.shouldShowYamlView = shouldShowYamlView;
+    }
 
     ngAfterViewChecked(): void {
         if (!this.isYamlView) {

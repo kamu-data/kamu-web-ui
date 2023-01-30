@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnInit,
+} from "@angular/core";
 import { ExecuteQuery } from "src/app/api/kamu.graphql.interface";
 import { SECTION_BUILDERS_BY_EVENT_TYPE } from "../../dynamic-events/builders/event-section.builders";
 import { BaseDynamicEventComponent } from "../base-dynamic-event/base-dynamic-event.component";
@@ -13,11 +18,13 @@ export class ExecuteQueryEventComponent
     extends BaseDynamicEventComponent<ExecuteQuery>
     implements OnInit
 {
+    constructor(cdr: ChangeDetectorRef) {
+        super(cdr, false);
+    }
     ngOnInit(): void {
         this.eventSections =
             SECTION_BUILDERS_BY_EVENT_TYPE.ExecuteQuery.buildEventSections(
                 this.event,
             );
-        this.isShowYamlToggle = false;
     }
 }

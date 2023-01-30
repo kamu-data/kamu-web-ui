@@ -20,6 +20,7 @@ import { ModalService } from "src/app/components/modal/modal.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { BlockService } from "./block.service";
 import { AppDatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import _ from "lodash";
 
 @Component({
     selector: "app-metadata-block",
@@ -62,6 +63,14 @@ export class MetadataBlockComponent
             this.router.events
                 .pipe(filter((event) => event instanceof NavigationEnd))
                 .subscribe(() => {
+                    if (
+                        !_.isEqual(
+                            this.datasetInfo,
+                            this.getDatasetInfoFromUrl(),
+                        )
+                    ) {
+                        this.trackSubscription(this.loadHistory());
+                    }
                     this.datasetInfo = this.getDatasetInfoFromUrl();
                     this.trackSubscription(this.loadMetadataBlock());
                 }),
@@ -82,13 +91,17 @@ export class MetadataBlockComponent
 
     private loadMetadataBlock(): Subscription {
         return this.blockService
-            .requestMetadataBlock(this.datasetInfo, this.blockHash)
+            .requestMetadataBlock(this.getDatasetInfoFromUrl(), this.blockHash)
             .subscribe();
     }
 
     private loadHistory(page = 0): Subscription {
         return this.datasetService
-            .requestDatasetHistory(this.datasetInfo, this.blocksPerPage, page)
+            .requestDatasetHistory(
+                this.getDatasetInfoFromUrl(),
+                this.blocksPerPage,
+                page,
+            )
             .subscribe();
     }
 }

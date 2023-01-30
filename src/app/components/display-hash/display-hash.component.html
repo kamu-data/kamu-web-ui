@@ -1,14 +1,14 @@
 <ng-container *ngIf="value">
     <a
-        *ngIf="isNavigable"
+        *ngIf="navigationTargetDataset"
         [title]="value"
         [class]="class"
         data-test-id="navigableValue"
         (click)="
-            datasetInfo &&
+            navigationTargetDataset &&
                 navigateToMetadataBlock(
-                    datasetInfo.accountName,
-                    datasetInfo.datasetName,
+                    navigationTargetDataset.accountName,
+                    navigationTargetDataset.datasetName,
                     value
                 )
         "
@@ -17,7 +17,7 @@
     </a>
 
     <span
-        *ngIf="!isNavigable"
+        *ngIf="!navigationTargetDataset"
         class="mr-4"
         [title]="value"
         data-test-id="notNavigableValue"

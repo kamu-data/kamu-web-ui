@@ -1,6 +1,7 @@
 import { AddData } from "./../../../../../../api/kamu.graphql.interface";
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     Input,
     OnInit,
@@ -18,12 +19,14 @@ export class AddDataEventComponent
     extends BaseDynamicEventComponent<AddData>
     implements OnInit
 {
+    constructor(cdr: ChangeDetectorRef) {
+        super(cdr, false);
+    }
     @Input() public event: AddData;
     ngOnInit(): void {
         this.eventSections =
             SECTION_BUILDERS_BY_EVENT_TYPE.AddData.buildEventSections(
                 this.event,
             );
-        this.isShowYamlToggle = false;
     }
 }

@@ -1,4 +1,3 @@
-import { ExecuteQueryEventFragment } from "./../../../../../../api/kamu.graphql.interface";
 import { UnsupportedPropertyComponent } from "../../components/common/unsupported-property/unsupported-property.component";
 import {
     DynamicEventTypesScalar,
@@ -30,7 +29,7 @@ export abstract class EventSectionBuilder<
     public buildEventRows(
         event: TEvent,
         rowDescriptors: EventRowDescriptorsByField,
-        section: keyof TEvent | keyof ExecuteQueryEventFragment,
+        section: keyof TEvent,
         allowTypenameKey: boolean,
     ): EventRow[] {
         const rows: EventRow[] = [];

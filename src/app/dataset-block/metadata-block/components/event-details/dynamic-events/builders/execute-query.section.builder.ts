@@ -31,7 +31,7 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
                             rows: this.buildEventRows(
                                 event,
                                 EXECUTE_QUERY_SOURCE_DESCRIPTORS,
-                                section,
+                                section as keyof ExecuteQuery,
                                 false,
                             ),
                         });
@@ -58,8 +58,8 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
 
                     case ExecuteQuerySection.INPUT_SLICES: {
                         const numInputSlicesParts = event.inputSlices.length;
-                        const rows: EventRow[] = [];
                         (data as InputSlice[]).forEach((item, index) => {
+                            const rows: EventRow[] = [];
                             Object.entries(item).forEach(([key, value]) => {
                                 if (
                                     event.__typename &&

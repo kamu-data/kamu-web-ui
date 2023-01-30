@@ -1,7 +1,7 @@
 import { DisplayTimeComponent } from "src/app/components/display-time/display-time.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { HashPropertyComponent } from "../common/hash-property/hash-property.component";
-import { IntervalPropertyComponent } from "../common/interval-property/interval-property.component";
+import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
 import { SizePropertyComponent } from "../common/size-property/size-property.component";
 
 export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
@@ -32,7 +32,7 @@ export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "AddData.DataSlice.interval": {
         label: "Interval:",
         tooltip: "Data slice produced by the transaction.",
-        presentationComponent: IntervalPropertyComponent,
+        presentationComponent: OffsetIntervalPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-data-data-slice-interval",
     },

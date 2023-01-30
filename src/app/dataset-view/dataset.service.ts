@@ -53,17 +53,6 @@ export class DatasetService {
         this.datasetChanges$.next(searchDatasetInfo);
     }
 
-    private datasetInfoChanges$: Subject<DatasetBasicsFragment> =
-        new Subject<DatasetBasicsFragment>();
-
-    public get onDatasetInfoChanges(): Observable<DatasetBasicsFragment> {
-        return this.datasetInfoChanges$.asObservable();
-    }
-
-    public datasetInfoChanges(datasetInfo: DatasetBasicsFragment): void {
-        this.datasetInfoChanges$.next(datasetInfo);
-    }
-
     public requestDatasetMainData(info: DatasetInfo): Observable<void> {
         return this.datasetApi.getDatasetMainData(info).pipe(
             map((data: GetDatasetMainDataQuery) => {
@@ -162,16 +151,10 @@ export class DatasetService {
         );
     }
 
-    public requestDatasetInfoById(datasetId: string): Observable<void> {
-        return this.datasetApi.getDatasetInfoById(datasetId).pipe(
-            map((data: DatasetByIdQuery) => {
-                if (data.datasets.byId) {
-                    this.datasetInfoChanges(data.datasets.byId);
-                } else {
-                    throw new DatasetNotFoundError();
-                }
-            }),
-        );
+    public requestDatasetInfoById(
+        datasetId: string,
+    ): Observable<DatasetByIdQuery> {
+        return this.datasetApi.getDatasetInfoById(datasetId);
     }
 
     private datasetUpdate(data: DatasetBasicsFragment): void {

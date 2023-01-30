@@ -48,6 +48,7 @@ import { SizePropertyComponent } from "./components/event-details/components/com
 import { HashPropertyComponent } from "./components/event-details/components/common/hash-property/hash-property.component";
 import { BlockIntervalPropertyComponent } from "./components/event-details/components/common/block-interval-property/block-interval-property.component";
 import { OffsetIntervalPropertyComponent } from "./components/event-details/components/common/offset-interval-property/offset-interval-property.component";
+import { DatasetIdAndNamePropertyComponent } from "./components/event-details/components/common/dataset-id-and-name-property/dataset-id-and-name-property.component";
 
 @NgModule({
     declarations: [
@@ -83,6 +84,7 @@ import { OffsetIntervalPropertyComponent } from "./components/event-details/comp
         SizePropertyComponent,
         HashPropertyComponent,
         BlockIntervalPropertyComponent,
+        DatasetIdAndNamePropertyComponent,
         ExecuteQueryEventComponent,
     ],
     imports: [

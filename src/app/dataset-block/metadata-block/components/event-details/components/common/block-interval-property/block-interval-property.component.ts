@@ -1,7 +1,7 @@
 import { DatasetInfo } from "./../../../../../../../interface/navigation.interface";
 import {
     BlockInterval,
-    DatasetBasicsFragment,
+    DatasetByIdQuery,
 } from "./../../../../../../../api/kamu.graphql.interface";
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 import {
@@ -30,14 +30,17 @@ export class BlockIntervalPropertyComponent
     }
 
     ngOnInit(): void {
-        this.datasetSevice
-            .requestDatasetInfoById(this.data.datasetId)
-            .subscribe();
-        this.datasetSevice.onDatasetInfoChanges.subscribe(
-            (fragment: DatasetBasicsFragment) => {
-                this.datasetInfo.accountName = fragment.owner.name;
-                this.datasetInfo.datasetName = fragment.name as string;
-            },
+        this.trackSubscription(
+            this.datasetSevice
+                .requestDatasetInfoById(this.data.datasetId)
+                .subscribe((dataset: DatasetByIdQuery) => {
+                    if (dataset.datasets.byId) {
+                        this.datasetInfo.accountName =
+                            dataset.datasets.byId.owner.name;
+                        this.datasetInfo.datasetName = dataset.datasets.byId
+                            .name as string;
+                    }
+                }),
         );
     }
 }

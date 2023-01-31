@@ -33,8 +33,8 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
 
                     case SetTransformSection.INPUTS: {
                         const numInputsParts = event.inputs.length;
-                        const rows: EventRow[] = [];
                         (data as TransformInput[]).forEach((item, index) => {
+                            const rows: EventRow[] = [];
                             Object.entries(item.dataset).forEach(
                                 ([key, value]) => {
                                     if (

@@ -10,94 +10,234 @@
                 (pageChange)="onPageChange($event)"
             ></app-custom-pagination>
         </div>
-        <h2>Schema</h2>
-        <ng-template [ngIf]="currentState">
-            <app-dynamic-table
-                [hasTableHeader]="true"
-                [schemaFields]="currentState ? currentState.schema.fields : []"
-                [idTable]="'schema-block-table'"
-            ></app-dynamic-table>
-        </ng-template>
-        <div
-            *ngIf="
-                datasetBasics &&
-                datasetBasics.kind === 'DERIVATIVE' &&
-                currentState &&
-                currentState.metadata.metadata.currentTransform
-            "
-            class="mt-3"
-        >
-            <h2>Derivative Transformation</h2>
-            <h3>Inputs:</h3>
-            <ul>
-                <li
-                    class="app-mat-chip input-datasets-list"
-                    *ngFor="
-                        let input of currentState.metadata.metadata
-                            .currentTransform.inputs;
-                        let idx1 = index
-                    "
-                >
-                    <mat-chip (click)="selectTopic(input.dataset.kind)">{{
-                        input.dataset.kind
-                    }}</mat-chip>
-                    <a class="url" (click)="onClickDataset(input.dataset)"
-                        >{{ input.dataset.owner.name }} /
-                        {{ input.dataset.name }}</a
+
+        <ng-container *ngIf="currentState">
+            <div class="d-flex flex-column gap-4 mt-4">
+                <div class="position-relative border border-1 p-2 rounded-3">
+                    <span
+                        class="position-absolute text-muted group-box-label text-uppercase"
+                        >Schema</span
                     >
-                </li>
-            </ul>
-            <h3>Queries:</h3>
-            <div
-                *ngFor="
-                    let queryStep of currentState.metadata.metadata
-                        .currentTransform.transform.queries;
-                    let i = index
-                "
-                style="height: 400px"
-            >
-                <ngx-monaco-editor
-                    attr.data-test-id="monaco-editor-metadata-tab-{{ i }}"
-                    style="height: 100%"
-                    [options]="sqlEditorOptions"
-                    [(ngModel)]="queryStep.query"
-                ></ngx-monaco-editor>
-            </div>
-        </div>
-        <div
-            *ngIf="
-                currentState && currentState.metadata.metadata.currentLicense
-            "
-        >
-            <h2>License</h2>
-            <p>
-                <strong>ID:</strong>
-                {{ currentState.metadata.metadata.currentLicense.shortName }}
-            </p>
-            <p>
-                <strong>Name:</strong>
-                {{ currentState.metadata.metadata.currentLicense.name }}
-            </p>
-            <p *ngIf="currentState.metadata.metadata.currentLicense.spdxId">
-                <strong>SPDX ID:</strong>
-                {{ currentState.metadata.metadata.currentLicense.spdxId }}
-            </p>
-            <p>
-                <strong>Website: </strong>
-                <a
-                    data-test-id="navigateToWebsite"
-                    class="url"
-                    (click)="
-                        navigateToWebsite(
-                            currentState.metadata.metadata.currentLicense
-                                .websiteUrl
-                        )
+                    <div class="mx-4">
+                        <app-block-row-data
+                            [tooltip]="
+                                'A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.'
+                            "
+                            [label]="'Schema:'"
+                        >
+                            <app-dynamic-table
+                                [hasTableHeader]="true"
+                                [schemaFields]="
+                                    currentState
+                                        ? currentState.schema.fields
+                                        : []
+                                "
+                                [idTable]="'schema-block-table'"
+                            ></app-dynamic-table>
+                        </app-block-row-data>
+                    </div>
+                </div>
+                <div
+                    *ngIf="
+                        currentState &&
+                        currentState.metadata.metadata.currentLicense
                     "
-                    >{{
-                        currentState.metadata.metadata.currentLicense.websiteUrl
-                    }}</a
+                    class="position-relative border border-1 p-2 rounded-3"
                 >
-            </p>
-        </div>
+                    <span
+                        class="position-absolute text-muted group-box-label text-uppercase"
+                        >License</span
+                    >
+                    <div class="mx-4">
+                        <app-block-row-data
+                            [tooltip]="'Unique identifier of the license.'"
+                            [label]="'ID:'"
+                        >
+                            <span>{{
+                                currentState.metadata.metadata.currentLicense
+                                    .shortName
+                            }}</span>
+                        </app-block-row-data>
+                    </div>
+
+                    <div class="mx-4">
+                        <app-block-row-data
+                            [tooltip]="'Full name of the license.'"
+                            [label]="'Name:'"
+                        >
+                            <span>
+                                {{
+                                    currentState.metadata.metadata
+                                        .currentLicense.name
+                                }}</span
+                            >
+                        </app-block-row-data>
+                    </div>
+
+                    <div
+                        class="mx-4"
+                        *ngIf="
+                            currentState.metadata.metadata.currentLicense.spdxId
+                        "
+                    >
+                        <app-block-row-data
+                            [tooltip]="
+                                'License identifier from the SPDX License List.'
+                            "
+                            [label]="'SPDX ID:'"
+                        >
+                            <span>
+                                {{
+                                    currentState.metadata.metadata
+                                        .currentLicense.spdxId
+                                }}</span
+                            >
+                        </app-block-row-data>
+                    </div>
+
+                    <div class="mx-4">
+                        <app-block-row-data
+                            [tooltip]="'Link to website.'"
+                            [label]="'Website:'"
+                        >
+                            <app-link-property
+                                [data]="
+                                    currentState.metadata.metadata
+                                        .currentLicense.websiteUrl
+                                "
+                            ></app-link-property>
+                        </app-block-row-data>
+                    </div>
+                </div>
+
+                <div class="position-relative border border-1 p-2 rounded-3">
+                    <span
+                        class="position-absolute text-muted group-box-label text-uppercase"
+                        >Watermark</span
+                    >
+                    <div class="mx-4">
+                        <app-block-row-data
+                            [tooltip]="
+                                'Last watermark of the output data stream.'
+                            "
+                            [label]="'Watermark:'"
+                        >
+                            <app-display-time
+                                [value]="
+                                    currentState.metadata.metadata
+                                        .currentWatermark
+                                "
+                            ></app-display-time>
+                        </app-block-row-data>
+                    </div>
+                </div>
+
+                <ng-container
+                    *ngIf="
+                        currentState &&
+                        currentState.metadata.metadata.currentTransform
+                    "
+                >
+                    <div
+                        class="position-relative border border-1 p-2 rounded-3"
+                        *ngFor="
+                            let input of currentState.metadata.metadata
+                                .currentTransform.inputs;
+                            let i = index
+                        "
+                    >
+                        <span
+                            class="position-absolute text-muted group-box-label text-uppercase"
+                            >Inputs {{ i + 1 }}</span
+                        >
+                        <div class="mx-4">
+                            <app-block-row-data
+                                [tooltip]="'Unique dataset identifier.'"
+                                [label]="'Id:'"
+                            >
+                                <span>{{ input.dataset.id }}</span>
+                            </app-block-row-data>
+                        </div>
+                        <div class="mx-4">
+                            <app-block-row-data
+                                [tooltip]="'Type of the dataset.'"
+                                [label]="'Dataset type:'"
+                            >
+                                <span>{{
+                                    kindToCamelCase(input.dataset.kind)
+                                }}</span>
+                            </app-block-row-data>
+                        </div>
+                        <div class="mx-4">
+                            <app-block-row-data
+                                [tooltip]="'Type of the dataset.'"
+                                [label]="'Name:'"
+                            >
+                                <app-dataset-name-property
+                                    [data]="{
+                                        datasetName: input.dataset.name,
+                                        owner: input.dataset.owner.name
+                                    }"
+                                ></app-dataset-name-property>
+                            </app-block-row-data>
+                        </div>
+                        <div class="mx-4">
+                            <app-block-row-data
+                                [tooltip]="'Owner of the dataset.'"
+                                [label]="'Owner:'"
+                            >
+                                <app-owner-property
+                                    [data]="{
+                                        id: input.dataset.owner.id,
+                                        name: input.dataset.owner.name
+                                    }"
+                                ></app-owner-property>
+                            </app-block-row-data>
+                        </div>
+                    </div>
+                    <div
+                        class="position-relative border border-1 p-2 rounded-3"
+                    >
+                        <span
+                            class="position-absolute text-muted group-box-label text-uppercase"
+                            >Transform</span
+                        >
+                        <div class="mx-4">
+                            <app-block-row-data
+                                [tooltip]="
+                                    'Identifier of the engine used for this transformation.'
+                                "
+                                [label]="'Engine:'"
+                            >
+                                <app-engine-property
+                                    [data]="
+                                        currentState.metadata.metadata
+                                            .currentTransform.transform.engine
+                                    "
+                                ></app-engine-property>
+                            </app-block-row-data>
+                        </div>
+
+                        <div class="mx-4">
+                            <app-block-row-data
+                                [tooltip]="
+                                    'Queries use for specifying multi-step SQL transformations.'
+                                "
+                                [label]="'Queries:'"
+                            >
+                            </app-block-row-data>
+                            <div class="row my-4">
+                                <app-sql-query-viewer
+                                    [data]="
+                                        currentState.metadata.metadata
+                                            .currentTransform.transform.queries
+                                    "
+                                ></app-sql-query-viewer>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </ng-container>
     </div>
 </div>

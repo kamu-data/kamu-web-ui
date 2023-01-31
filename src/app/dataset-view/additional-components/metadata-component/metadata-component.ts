@@ -1,4 +1,5 @@
-import { NavigationService } from "src/app/services/navigation.service";
+import { DataHelpers } from "./../../../common/data.helpers";
+import { DatasetKind } from "./../../../api/kamu.graphql.interface";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -47,10 +48,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         pageInfo: PageBasedInfo;
     };
 
-    constructor(
-        private appDatasetSubsService: AppDatasetSubscriptionsService,
-        private navigationService: NavigationService,
-    ) {
+    constructor(private appDatasetSubsService: AppDatasetSubscriptionsService) {
         super();
     }
 
@@ -66,10 +64,6 @@ export class MetadataComponent extends BaseComponent implements OnInit {
                 },
             ),
         );
-    }
-
-    public navigateToWebsite(url: string): void {
-        this.navigationService.navigateToWebsite(url);
     }
 
     public selectTopic(topicName: string): void {
@@ -112,5 +106,9 @@ export class MetadataComponent extends BaseComponent implements OnInit {
                   isTextDate: true,
               })
             : "";
+    }
+
+    public kindToCamelCase(kind: DatasetKind): string {
+        return DataHelpers.datasetKind2String(kind);
     }
 }

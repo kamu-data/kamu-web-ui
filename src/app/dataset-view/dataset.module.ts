@@ -14,7 +14,6 @@ import { LineageGraphModule } from "../components/lineage-graph/lineage-graph.mo
 import { PaginationModule } from "../components/pagination-component/pagination.module";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatButtonModule } from "@angular/material/button";
-import { MatIconModule } from "@angular/material/icon";
 import { MarkdownModule } from "ngx-markdown";
 import { MatChipsModule } from "@angular/material/chips";
 import { MetadataComponent } from "./additional-components/metadata-component/metadata-component";
@@ -35,6 +34,7 @@ import { RouterModule } from "@angular/router";
 import { OverviewHistorySummaryHeaderComponent } from "../components/overview-history-summary-header/overview-history-summary-header.component";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { DisplaySizeModule } from "../common/pipes/display-size.module";
+import { SharedModule } from "../shared/shared/shared.module";
 
 @NgModule({
     imports: [
@@ -54,7 +54,6 @@ import { DisplaySizeModule } from "../common/pipes/display-size.module";
         PaginationModule,
         MatMenuModule,
         MatButtonModule,
-        MatIconModule,
         MarkdownModule,
         MatChipsModule,
         ClipboardModule,
@@ -67,6 +66,7 @@ import { DisplaySizeModule } from "../common/pipes/display-size.module";
         DisplayTimeModule,
         DisplayHashModule,
         DisplaySizeModule,
+        SharedModule,
     ],
     exports: [
         DatasetViewHeaderComponent,

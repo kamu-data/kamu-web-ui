@@ -1,7 +1,7 @@
 import AppValues from "src/app/common/app.values";
 import { DatasetInfo } from "./../../interface/navigation.interface";
 import { NavigationService } from "./../../services/navigation.service";
-import { ChangeDetectorRef, Component, Input } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { Clipboard } from "@angular/cdk/clipboard";
 
 @Component({
@@ -18,7 +18,6 @@ export class DisplayHashComponent {
     constructor(
         private navigationService: NavigationService,
         private clipboard: Clipboard,
-        private cdr: ChangeDetectorRef,
     ) {}
 
     public navigateToMetadataBlock(

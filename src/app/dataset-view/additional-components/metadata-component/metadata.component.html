@@ -110,6 +110,216 @@
                     </div>
                 </div>
 
+                <ng-container
+                    *ngIf="
+                        currentState &&
+                        currentState.metadata.metadata.currentSource
+                    "
+                >
+                    <div
+                        class="position-relative border border-1 p-2 rounded-3"
+                    >
+                        <span
+                            class="position-absolute text-muted group-box-label text-uppercase"
+                            >Fetch</span
+                        >
+                        <div
+                            class="mx-4"
+                            *ngIf="
+                                currentState.metadata.metadata.currentSource
+                                    .fetch.__typename === 'FetchStepUrl'
+                            "
+                        >
+                            <app-block-row-data
+                                [tooltip]="'URL of the data source.'"
+                                [label]="'Url:'"
+                            >
+                                <app-link-property
+                                    [data]="
+                                        currentState.metadata.metadata
+                                            .currentSource.fetch.url
+                                    "
+                                ></app-link-property>
+                            </app-block-row-data>
+                        </div>
+
+                        <div
+                            class="mx-4"
+                            *ngIf="
+                                currentState.metadata.metadata.currentSource
+                                    .fetch.__typename === 'FetchStepContainer'
+                            "
+                        >
+                            <app-block-row-data
+                                [tooltip]="
+                                    'Image name and and an optional tag.'
+                                "
+                                [label]="'Image:'"
+                            >
+                                <span>{{
+                                    currentState.metadata.metadata.currentSource
+                                        .fetch.image
+                                }}</span>
+                            </app-block-row-data>
+                        </div>
+                    </div>
+
+                    <div
+                        class="position-relative border border-1 p-2 rounded-3"
+                    >
+                        <span
+                            class="position-absolute text-muted group-box-label text-uppercase"
+                            >Read</span
+                        >
+                        <div
+                            class="mx-4"
+                            *ngIf="
+                                currentState.metadata.metadata.currentSource
+                                    .read.__typename
+                            "
+                        >
+                            <app-block-row-data
+                                [tooltip]="
+                                    'Determines where data is sourced from.'
+                                "
+                                [label]="'Type:'"
+                            >
+                                <span>{{
+                                    readSectionMapperType[
+                                        currentState.metadata.metadata
+                                            .currentSource.read.__typename
+                                    ]
+                                }}</span>
+                            </app-block-row-data>
+                        </div>
+
+                        <div
+                            class="mx-4"
+                            *ngIf="
+                                (currentState.metadata.metadata.currentSource
+                                    .read.__typename === 'ReadStepCsv' ||
+                                    currentState.metadata.metadata.currentSource
+                                        .read.__typename ===
+                                        'ReadStepJsonLines') &&
+                                currentState.metadata.metadata.currentSource
+                                    .read.schema
+                            "
+                        >
+                            <app-block-row-data
+                                [tooltip]="
+                                    'A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.'
+                                "
+                                [label]="'Schema:'"
+                            >
+                                <app-schema-property
+                                    [data]="
+                                        currentState.metadata.metadata
+                                            .currentSource.read.schema
+                                    "
+                                ></app-schema-property>
+                            </app-block-row-data>
+                        </div>
+                    </div>
+
+                    <div
+                        class="position-relative border border-1 p-2 rounded-3"
+                    >
+                        <span
+                            class="position-absolute text-muted group-box-label text-uppercase"
+                            >Merge</span
+                        >
+                        <div
+                            class="mx-4"
+                            *ngIf="
+                                currentState.metadata.metadata.currentSource
+                                    .merge.__typename === 'MergeStrategyLedger'
+                            "
+                        >
+                            <app-block-row-data
+                                [tooltip]="
+                                    'Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset.'
+                                "
+                                [label]="'Strategy:'"
+                            >
+                                <app-merge-strategy-property
+                                    [data]="
+                                        currentState.metadata.metadata
+                                            .currentSource.merge.__typename
+                                    "
+                                ></app-merge-strategy-property>
+                            </app-block-row-data>
+                        </div>
+
+                        <div
+                            class="mx-4"
+                            *ngIf="
+                                currentState.metadata.metadata.currentSource
+                                    .merge.__typename === 'MergeStrategyLedger'
+                            "
+                        >
+                            <app-block-row-data
+                                [tooltip]="
+                                    'Names of the columns that uniquely identify the record throughout its lifetime.'
+                                "
+                                [label]="'Primary key:'"
+                            >
+                                <app-cards-property
+                                    [data]="
+                                        currentState.metadata.metadata
+                                            .currentSource.merge.primaryKey
+                                    "
+                                ></app-cards-property>
+                            </app-block-row-data>
+                        </div>
+                    </div>
+
+                    <div
+                        *ngIf="
+                            currentState.metadata.metadata.currentSource
+                                .preprocess
+                        "
+                        class="position-relative border border-1 p-2 rounded-3"
+                    >
+                        <span
+                            class="position-absolute text-muted group-box-label text-uppercase"
+                            >Preprocess</span
+                        >
+                        <div class="mx-4">
+                            <app-block-row-data
+                                [tooltip]="
+                                    'Identifier of the engine used for this transformation.'
+                                "
+                                [label]="'Engine:'"
+                            >
+                                <app-engine-property
+                                    [data]="
+                                        currentState.metadata.metadata
+                                            .currentSource.preprocess.engine
+                                    "
+                                ></app-engine-property>
+                            </app-block-row-data>
+                        </div>
+
+                        <div class="mx-4">
+                            <app-block-row-data
+                                [tooltip]="
+                                    'Queries use for specifying multi-step SQL transformations.'
+                                "
+                                [label]="'Queries:'"
+                            >
+                            </app-block-row-data>
+                            <div class="row my-4">
+                                <app-sql-query-viewer
+                                    [data]="
+                                        currentState.metadata.metadata
+                                            .currentSource.preprocess.queries
+                                    "
+                                ></app-sql-query-viewer>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
                 <div class="position-relative border border-1 p-2 rounded-3">
                     <span
                         class="position-absolute text-muted group-box-label text-uppercase"

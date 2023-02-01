@@ -23,12 +23,9 @@ import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
 import { SetPollingSourceEventComponent } from "./components/event-details/components/set-polling-source-event/set-polling-source-event.component";
 import { ToggleComponent } from "src/app/components/toggle/toggle.component";
 import { SeedEventComponent } from "./components/event-details/components/seed-event/seed-event.component";
-import { MergeStrategyPropertyComponent } from "./components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
 import { HighlightModule } from "ngx-highlightjs";
 import { DynamicTableModule } from "src/app/components/dynamic-table/dynamic-table.module";
-import { SchemaPropertyComponent } from "./components/event-details/components/common/schema-property/schema-property.component";
 import { EnvVariablesPropertyComponent } from "./components/event-details/components/common/env-variables-property/env-variables-property.component";
-import { CardsPropertyComponent } from "./components/event-details/components/common/cards-property/cards-property.component";
 import { UnsupportedPropertyComponent } from "./components/event-details/components/common/unsupported-property/unsupported-property.component";
 import { YamlEventViewerComponent } from "./components/event-details/components/common/yaml-event-viewer/yaml-event-viewer.component";
 import { SetTransformEventComponent } from "./components/event-details/components/set-transform-event/set-transform-event.component";
@@ -47,12 +44,9 @@ import { BaseDynamicEventComponent } from "./components/event-details/components
         EventTypeFilterPipe,
         BlockHashFilterPipe,
         ToggleComponent,
-        MergeStrategyPropertyComponent,
         SimplePropertyComponent,
         SeparatorPropertyComponent,
-        SchemaPropertyComponent,
         EnvVariablesPropertyComponent,
-        CardsPropertyComponent,
         UnsupportedPropertyComponent,
         YamlEventViewerComponent,
         BaseDynamicEventComponent,

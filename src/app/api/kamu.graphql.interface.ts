@@ -1164,6 +1164,11 @@ export type DatasetMetadataSummaryFragment = {
         currentLicense?:
             | ({ __typename?: "SetLicense" } & LicenseFragment)
             | null;
+        currentSource?:
+            | ({
+                  __typename?: "SetPollingSource";
+              } & SetPollingSourceEventFragment)
+            | null;
         currentTransform?:
             | ({ __typename?: "SetTransform" } & DatasetTransformFragment)
             | null;
@@ -1510,60 +1515,6 @@ export const LicenseFragmentDoc = gql`
         websiteUrl
     }
 `;
-export const DatasetTransformContentFragmentDoc = gql`
-    fragment DatasetTransformContent on TransformSql {
-        engine
-        version
-        queries {
-            alias
-            query
-        }
-        temporalTables {
-            name
-            primaryKey
-        }
-    }
-`;
-export const DatasetTransformFragmentDoc = gql`
-    fragment DatasetTransform on SetTransform {
-        inputs {
-            dataset {
-                ...DatasetBasics
-            }
-        }
-        transform {
-            ...DatasetTransformContent
-        }
-    }
-    ${DatasetBasicsFragmentDoc}
-    ${DatasetTransformContentFragmentDoc}
-`;
-export const DatasetReadmeFragmentDoc = gql`
-    fragment DatasetReadme on Dataset {
-        metadata {
-            currentReadme
-        }
-    }
-`;
-export const AddDataEventFragmentDoc = gql`
-    fragment AddDataEvent on AddData {
-        addDataWatermark: outputWatermark
-        inputCheckpoint
-        outputData {
-            interval {
-                start
-                end
-            }
-            logicalHash
-            physicalHash
-            size
-        }
-        outputCheckpoint {
-            physicalHash
-            size
-        }
-    }
-`;
 export const SetPollingSourceEventFragmentDoc = gql`
     fragment SetPollingSourceEvent on SetPollingSource {
         fetch {
@@ -1687,6 +1638,60 @@ export const SetPollingSourceEventFragmentDoc = gql`
         }
     }
 `;
+export const DatasetTransformContentFragmentDoc = gql`
+    fragment DatasetTransformContent on TransformSql {
+        engine
+        version
+        queries {
+            alias
+            query
+        }
+        temporalTables {
+            name
+            primaryKey
+        }
+    }
+`;
+export const DatasetTransformFragmentDoc = gql`
+    fragment DatasetTransform on SetTransform {
+        inputs {
+            dataset {
+                ...DatasetBasics
+            }
+        }
+        transform {
+            ...DatasetTransformContent
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${DatasetTransformContentFragmentDoc}
+`;
+export const DatasetReadmeFragmentDoc = gql`
+    fragment DatasetReadme on Dataset {
+        metadata {
+            currentReadme
+        }
+    }
+`;
+export const AddDataEventFragmentDoc = gql`
+    fragment AddDataEvent on AddData {
+        addDataWatermark: outputWatermark
+        inputCheckpoint
+        outputData {
+            interval {
+                start
+                end
+            }
+            logicalHash
+            physicalHash
+            size
+        }
+        outputCheckpoint {
+            physicalHash
+            size
+        }
+    }
+`;
 export const MetadataBlockFragmentDoc = gql`
     fragment MetadataBlock on MetadataBlockExtended {
         blockHash
@@ -1771,6 +1776,9 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
             currentLicense {
                 ...License
             }
+            currentSource {
+                ...SetPollingSourceEvent
+            }
             currentWatermark
             currentTransform {
                 ...DatasetTransform
@@ -1787,6 +1795,7 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
     }
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
+    ${SetPollingSourceEventFragmentDoc}
     ${DatasetTransformFragmentDoc}
     ${DatasetReadmeFragmentDoc}
     ${DatasetLastUpdateFragmentDoc}

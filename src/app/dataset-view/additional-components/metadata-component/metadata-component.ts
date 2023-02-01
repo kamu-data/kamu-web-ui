@@ -111,4 +111,9 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     public kindToCamelCase(kind: DatasetKind): string {
         return DataHelpers.datasetKind2String(kind);
     }
+
+    public readSectionMapperType: Record<string, string> = {
+        ReadStepCsv: "Csv",
+        ReadStepJsonLines: "Json",
+    };
 }

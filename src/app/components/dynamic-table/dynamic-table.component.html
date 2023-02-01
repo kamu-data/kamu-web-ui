@@ -4,8 +4,12 @@
             *ngFor="let disCol of displayedColumns; let colIndex = index"
             matColumnDef="{{ disCol }}"
         >
-            <th mat-header-cell *matHeaderCellDef>
-                {{ changeColumnName(disCol) }}
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+                [attr.data-test-id]="'column-name-' + colIndex"
+            >
+                {{ disCol }}
             </th>
             <td mat-cell *matCellDef="let element">{{ element[disCol] }}</td>
         </ng-container>

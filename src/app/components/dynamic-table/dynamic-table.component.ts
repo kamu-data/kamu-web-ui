@@ -2,14 +2,11 @@ import {
     AfterContentInit,
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
     Input,
     OnChanges,
     OnInit,
-    Output,
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import { capitalizeFirstLetter } from "src/app/common/app.helpers";
 import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
 import { TableSourceRowInterface } from "./dynamic-table.interface";
 
@@ -26,7 +23,6 @@ export class DynamicTableComponent
     @Input() public schemaFields: DataSchemaField[];
     @Input() public dataRows?: DataRow[];
     @Input() public idTable = "";
-    @Output() public selectRowEmit = new EventEmitter<string>();
 
     public dataSource = new MatTableDataSource<TableSourceRowInterface>([]);
     public displayedColumns: string[] = [];
@@ -41,26 +37,6 @@ export class DynamicTableComponent
 
     public ngAfterContentInit(): void {
         this.displayTable();
-    }
-
-    public changeColumnName(columnName: string): string {
-        columnName = columnName.replace("_", " ");
-        let newColumnName = "";
-
-        for (let i = 0; i < columnName.length; i++) {
-            if (columnName.charAt(i) === columnName.charAt(i).toUpperCase()) {
-                newColumnName += " " + columnName.charAt(i);
-            } else {
-                newColumnName += columnName.charAt(i);
-            }
-        }
-        newColumnName = newColumnName.toLocaleLowerCase();
-
-        return capitalizeFirstLetter(newColumnName);
-    }
-
-    public onSelectRow(row: string): void {
-        this.selectRowEmit.emit(row);
     }
 
     private displayTable(): void {

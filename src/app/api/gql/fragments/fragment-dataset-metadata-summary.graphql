@@ -6,6 +6,9 @@ fragment DatasetMetadataSummary on Dataset {
     currentLicense {
       ...License
     }
+    currentSource {
+      ...SetPollingSourceEvent
+    }
     currentWatermark
     currentTransform {
       ...DatasetTransform

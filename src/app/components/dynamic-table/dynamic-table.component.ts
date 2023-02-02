@@ -2,18 +2,13 @@ import {
     AfterContentInit,
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
     Input,
     OnChanges,
     OnInit,
-    Output,
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import { capitalizeFirstLetter } from "src/app/common/app.helpers";
 import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
-import {
-    TableSourceRowInterface,
-} from "./dynamic-table.interface";
+import { TableSourceRowInterface } from "./dynamic-table.interface";
 
 @Component({
     selector: "app-dynamic-table",
@@ -28,7 +23,6 @@ export class DynamicTableComponent
     @Input() public schemaFields: DataSchemaField[];
     @Input() public dataRows?: DataRow[];
     @Input() public idTable = "";
-    @Output() public selectRowEmit = new EventEmitter<string>();
 
     public dataSource = new MatTableDataSource<TableSourceRowInterface>([]);
     public displayedColumns: string[] = [];
@@ -45,40 +39,30 @@ export class DynamicTableComponent
         this.displayTable();
     }
 
-    public changeColumnName(columnName: string): string {
-        columnName = columnName.replace("_", " ");
-        let newColumnName = "";
-
-        for (let i = 0; i < columnName.length; i++) {
-            if (columnName.charAt(i) === columnName.charAt(i).toUpperCase()) {
-                newColumnName += " " + columnName.charAt(i);
-            } else {
-                newColumnName += columnName.charAt(i);
-            }
-        }
-        newColumnName = newColumnName.toLocaleLowerCase();
-
-        return capitalizeFirstLetter(newColumnName);
-    }
-
-    public onSelectRow(row: string): void {
-        this.selectRowEmit.emit(row);
-    }
-
     private displayTable(): void {
         // Cornercase - schema is empty, nothing to display
         if (this.schemaFields.length === 0) {
             this.dataSource.data = [];
             this.displayedColumns = [];
 
-        // Special case: displaying schema itself
+            // Special case: displaying schema itself
         } else if (!this.dataRows) {
             this.dataSource.data = this.schemaFields;
-            this.displayedColumns = Object.keys(this.schemaFields[0]);
+            const arrFieldsLength = this.schemaFields.map(
+                (item) => Object.keys(item).length,
+            );
+            const indexFieldMaxLength = arrFieldsLength.indexOf(
+                Math.max.apply(null, arrFieldsLength),
+            );
+            this.displayedColumns = Object.keys(
+                this.schemaFields[indexFieldMaxLength],
+            );
 
-        // Casual case, displaying data
+            // Casual case, displaying data
         } else {
-            this.displayedColumns = this.schemaFields.map((f: DataSchemaField) => f.name);
+            this.displayedColumns = this.schemaFields.map(
+                (f: DataSchemaField) => f.name,
+            );
             this.dataSource.data = this.dataRows;
         }
     }

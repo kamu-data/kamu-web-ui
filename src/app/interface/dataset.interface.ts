@@ -22,6 +22,7 @@ export interface DataSchemaField {
     name: string;
     repetition: string;
     type: string;
+    logical_type?: string;
 }
 
 export interface DatasetsAccountResponse {

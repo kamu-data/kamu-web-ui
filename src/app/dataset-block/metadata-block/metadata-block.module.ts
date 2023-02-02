@@ -49,6 +49,7 @@ import { HashPropertyComponent } from "./components/event-details/components/com
 import { BlockIntervalPropertyComponent } from "./components/event-details/components/common/block-interval-property/block-interval-property.component";
 import { OffsetIntervalPropertyComponent } from "./components/event-details/components/common/offset-interval-property/offset-interval-property.component";
 import { DatasetIdAndNamePropertyComponent } from "./components/event-details/components/common/dataset-id-and-name-property/dataset-id-and-name-property.component";
+import { YamlViewSectionComponent } from "./components/yaml-view-section/yaml-view-section.component";
 
 @NgModule({
     declarations: [
@@ -86,6 +87,7 @@ import { DatasetIdAndNamePropertyComponent } from "./components/event-details/co
         BlockIntervalPropertyComponent,
         DatasetIdAndNamePropertyComponent,
         ExecuteQueryEventComponent,
+        YamlViewSectionComponent,
     ],
     imports: [
         CommonModule,

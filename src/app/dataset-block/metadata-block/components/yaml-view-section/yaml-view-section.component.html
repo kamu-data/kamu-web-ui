@@ -1,0 +1,7 @@
+<div
+    class="container-content mt-4"
+    *ngIf="block && (isSetPollingSourceEvent || isSetTransformEvent)"
+>
+    <p class="text-center text-muted">YAML format:</p>
+    <app-yaml-event-viewer [event]="block.event"> </app-yaml-event-viewer>
+</div>

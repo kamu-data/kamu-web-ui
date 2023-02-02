@@ -31,7 +31,7 @@ describe("DisplayHashComponent", () => {
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
         component.value = TEST_BLOCK_HASH;
-        component.datasetInfo = mockDatasetInfo;
+        component.navigationTargetDataset = mockDatasetInfo;
         fixture.detectChanges();
     });
 
@@ -79,7 +79,7 @@ describe("DisplayHashComponent", () => {
     }));
 
     it("should check hash length", () => {
-        component.isNavigable = false;
+        component.navigationTargetDataset = undefined;
         fixture.detectChanges();
         const spanElement = findElementByDataTestId(
             fixture,

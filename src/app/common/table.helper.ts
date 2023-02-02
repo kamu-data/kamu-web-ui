@@ -7,5 +7,6 @@ export const extractSchemaFieldsFromData = (
         name: item,
         repetition: "",
         type: "",
+        logical_type: "",
     }));
 };

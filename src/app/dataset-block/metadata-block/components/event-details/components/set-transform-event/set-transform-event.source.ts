@@ -40,7 +40,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetTransform.Dataset.name": {
         label: "Name:",
-        tooltip: "Alias of the dataset.",
+        tooltip: "Name of the dataset.",
         presentationComponent: DatasetNameByIdPropertyComponent,
         separateRowForValue: false,
         dataTestId: "set-transform-dataset-name",
@@ -52,5 +52,13 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         presentationComponent: OwnerPropertyComponent,
         separateRowForValue: false,
         dataTestId: "set-transform-dataset-owner",
+    },
+
+    "SetTransform.Dataset.alias": {
+        label: "Query alias:",
+        tooltip: "Query alias of the dataset.",
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "set-transform-dataset-alias",
     },
 };

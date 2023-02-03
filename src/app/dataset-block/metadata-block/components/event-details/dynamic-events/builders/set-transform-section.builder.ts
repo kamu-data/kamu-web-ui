@@ -35,29 +35,30 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                         const numInputsParts = event.inputs.length;
                         (data as TransformInput[]).forEach((item, index) => {
                             const rows: EventRow[] = [];
-                            Object.entries(item.dataset).forEach(
-                                ([key, value]) => {
-                                    if (
-                                        event.__typename &&
-                                        item.dataset.__typename &&
-                                        key !== "__typename"
-                                    ) {
-                                        rows.push(
-                                            this.buildSupportedRow(
-                                                event.__typename,
-                                                SET_TRANSFORM_SOURCE_DESCRIPTORS,
-                                                item.dataset.__typename,
-                                                key,
-                                                this.valueTransformMapper(
-                                                    key as keyof Dataset,
-                                                    value,
-                                                    item,
-                                                ),
+                            Object.entries({
+                                ...item.dataset,
+                                alias: item.dataset.name as string,
+                            }).forEach(([key, value]) => {
+                                if (
+                                    event.__typename &&
+                                    item.dataset.__typename &&
+                                    key !== "__typename"
+                                ) {
+                                    rows.push(
+                                        this.buildSupportedRow(
+                                            event.__typename,
+                                            SET_TRANSFORM_SOURCE_DESCRIPTORS,
+                                            item.dataset.__typename,
+                                            key,
+                                            this.valueTransformMapper(
+                                                key as keyof Dataset,
+                                                value,
+                                                item,
                                             ),
-                                        );
-                                    }
-                                },
-                            );
+                                        ),
+                                    );
+                                }
+                            });
                             result.push({
                                 title:
                                     section +

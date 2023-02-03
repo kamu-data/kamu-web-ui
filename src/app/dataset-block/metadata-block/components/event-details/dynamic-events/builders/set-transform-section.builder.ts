@@ -91,11 +91,7 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
             case "kind":
                 return this.kindDatasetCapitalize(value as string);
             case "name":
-                return {
-                    datasetName: value,
-                    owner: inputItem.dataset.owner.name,
-                };
-
+                return inputItem.dataset.id;
             default:
                 return value;
         }

@@ -5,7 +5,7 @@ import { OffsetIntervalPropertyComponent } from "../common/offset-interval-prope
 import { SizePropertyComponent } from "../common/size-property/size-property.component";
 import { HashPropertyComponent } from "../common/hash-property/hash-property.component";
 import { BlockIntervalPropertyComponent } from "../common/block-interval-property/block-interval-property.component";
-import { DatasetIdAndNamePropertyComponent } from "../common/dataset-id-and-name-property/dataset-id-and-name-property.component";
+import { DatasetNameByIdPropertyComponent } from "../common/dataset-name-by-id-property/dataset-name-by-id-property.component";
 
 export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "ExecuteQuery.DataSlice.logicalHash": {
@@ -65,9 +65,9 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     },
 
     "ExecuteQuery.InputSlice.datasetId": {
-        label: "Id:",
-        tooltip: "Input dataset identifier.",
-        presentationComponent: DatasetIdAndNamePropertyComponent,
+        label: "Name:",
+        tooltip: "Name of the dataset.",
+        presentationComponent: DatasetNameByIdPropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-input-slice-id",
     },

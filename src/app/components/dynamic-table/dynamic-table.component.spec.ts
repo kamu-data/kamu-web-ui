@@ -26,9 +26,8 @@ describe("DynamicTableComponent", () => {
 
         fixture = TestBed.createComponent(DynamicTableComponent);
         component = fixture.componentInstance;
-        component.hasTableHeader = true;
         component.schemaFields = mockSchemaFields;
-        fixture.detectChanges();
+        component.hasTableHeader = true;
     });
 
     it("should create", () => {
@@ -36,6 +35,7 @@ describe("DynamicTableComponent", () => {
     });
 
     it("should check column names", () => {
+        fixture.detectChanges();
         component.ngOnChanges();
         Object.keys(mockSchemaFields[0]).forEach(
             (item: string, index: number) => {
@@ -46,5 +46,22 @@ describe("DynamicTableComponent", () => {
                 expect(el.textContent).toEqual(` ${item} `);
             },
         );
+    });
+
+    it("should check table if schemaFields is empty", () => {
+        component.schemaFields = [];
+        fixture.detectChanges();
+        expect(component.dataSource.data).toEqual([]);
+        expect(component.displayedColumns).toEqual([]);
+    });
+
+    it("should check table if schemaFields is exist", () => {
+        component.schemaFields = [
+            { name: "testName", repetition: "testRepetiton", type: "testType" },
+        ];
+        component.dataRows = [];
+        fixture.detectChanges();
+        expect(component.dataSource.data).toBeDefined();
+        expect(component.displayedColumns).toBeDefined();
     });
 });

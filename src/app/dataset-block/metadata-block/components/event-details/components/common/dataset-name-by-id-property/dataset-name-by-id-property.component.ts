@@ -14,11 +14,11 @@ import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-dataset-id-and-name-property",
-    templateUrl: "./dataset-id-and-name-property.component.html",
-    styleUrls: ["./dataset-id-and-name-property.component.sass"],
+    templateUrl: "./dataset-name-by-id-property.component.html",
+    styleUrls: ["./dataset-name-by-id-property.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetIdAndNamePropertyComponent
+export class DatasetNameByIdPropertyComponent
     extends BasePropertyComponent
     implements OnInit
 {

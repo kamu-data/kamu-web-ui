@@ -1,6 +1,5 @@
 import {
     AfterContentInit,
-    ChangeDetectionStrategy,
     Component,
     Input,
     OnChanges,
@@ -14,7 +13,7 @@ import { TableSourceRowInterface } from "./dynamic-table.interface";
     selector: "app-dynamic-table",
     templateUrl: "./dynamic-table.component.html",
     styleUrls: ["./dynamic-table.sass"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DynamicTableComponent
     implements OnInit, OnChanges, AfterContentInit

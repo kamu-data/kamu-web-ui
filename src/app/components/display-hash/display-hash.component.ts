@@ -13,7 +13,7 @@ export class DisplayHashComponent {
     @Input() public value: string;
     @Input() public navigationTargetDataset?: DatasetInfo;
     @Input() public showCopyButton = false;
-    @Input() public class = "mr-4 hashBlock";
+    @Input() public class = "hashBlock";
 
     constructor(
         private navigationService: NavigationService,

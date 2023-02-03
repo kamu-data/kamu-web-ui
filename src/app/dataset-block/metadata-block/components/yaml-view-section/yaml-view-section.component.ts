@@ -40,4 +40,8 @@ export class YamlViewSectionComponent extends BaseComponent implements OnInit {
     public get isSetTransformEvent(): boolean {
         return this.block.event.__typename === SupportedEvents.SetTransform;
     }
+
+    public get isEventWithYamlView(): boolean {
+        return this.isSetPollingSourceEvent || this.isSetTransformEvent;
+    }
 }

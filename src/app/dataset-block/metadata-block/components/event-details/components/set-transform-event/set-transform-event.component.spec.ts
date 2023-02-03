@@ -1,3 +1,4 @@
+import { ApolloTestingModule } from "apollo-angular/testing";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SetTransform } from "src/app/api/kamu.graphql.interface";
@@ -22,6 +23,7 @@ describe("SetTransformEventComponent", () => {
                 EnginePropertyComponent,
                 SqlQueryViewerComponent,
             ],
+            imports: [ApolloTestingModule],
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
 

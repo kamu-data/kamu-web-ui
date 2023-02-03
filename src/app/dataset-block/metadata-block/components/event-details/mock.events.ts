@@ -2,6 +2,7 @@ import {
     CompressionFormat,
     DatasetTransformFragment,
     ExecuteQueryEventFragment,
+    SetLicense,
     SetPollingSource,
 } from "./../../../../api/kamu.graphql.interface";
 import {
@@ -169,4 +170,12 @@ export const mockExecuteQuery: ExecuteQueryEventFragment = {
         physicalHash: "zW1otipGpjScUH8C2RfaF4s8RshReBbQVPDf2fPrp2R8Ft2",
         size: 2560,
     },
+};
+
+export const mockSetLicense: SetLicense = {
+    __typename: "SetLicense",
+    shortName: "OGL-Canada-2.0",
+    name: "Open Government Licence - Canada",
+    spdxId: "OGL-Canada-2.0",
+    websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
 };

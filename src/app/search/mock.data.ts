@@ -540,7 +540,11 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 },
                                 event: {
                                     __typename: "SetLicense",
+                                    shortName: "OGL-Canada-2.0",
                                     name: "Open Government Licence - Canada",
+                                    spdxId: "OGL-Canada-2.0",
+                                    websiteUrl:
+                                        "https://open.canada.ca/en/open-government-licence-canada",
                                 },
                             },
                             {

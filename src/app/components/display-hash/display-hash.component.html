@@ -12,17 +12,14 @@
                     value
                 )
         "
-    >
-        {{ value | slice: -8 }}
-    </a>
+    >{{ value | slice: -8 }}</a>
 
     <span
         *ngIf="!navigationTargetDataset"
         class="mr-1"
         [title]="value"
         data-test-id="notNavigableValue"
-        >{{ value | slice: -8 }}</span
-    >
+        >{{ value | slice: -8 }}</span>
 
     <button
         *ngIf="showCopyButton"

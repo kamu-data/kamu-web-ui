@@ -59,8 +59,11 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
                     case ExecuteQuerySection.INPUT_SLICES: {
                         const numInputSlicesParts = event.inputSlices.length;
                         (data as InputSlice[]).forEach((item, index) => {
-                            const rows: EventRow[] = [];
-                            Object.entries(item).forEach(([key, value]) => {
+                            let rows: EventRow[] = [];
+                            Object.entries({
+                                id: item.datasetId as string,
+                                ...item,
+                            }).forEach(([key, value]) => {
                                 if (
                                     event.__typename &&
                                     item.__typename &&
@@ -89,6 +92,7 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
                                         : ""),
                                 rows,
                             });
+                            rows = [];
                         });
                         break;
                     }

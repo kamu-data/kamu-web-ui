@@ -69,6 +69,14 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         tooltip: "Name of the dataset.",
         presentationComponent: DatasetNameByIdPropertyComponent,
         separateRowForValue: false,
+        dataTestId: "execute-query-input-slice-name",
+    },
+
+    "ExecuteQuery.InputSlice.id": {
+        label: "Id:",
+        tooltip: "Unique dataset identifier..",
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
         dataTestId: "execute-query-input-slice-id",
     },
 

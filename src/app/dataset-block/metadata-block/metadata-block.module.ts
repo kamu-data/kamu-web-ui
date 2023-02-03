@@ -34,6 +34,7 @@ import { ExecuteQueryEventComponent } from "./components/event-details/component
 import { SizePropertyComponent } from "./components/event-details/components/common/size-property/size-property.component";
 import { HashPropertyComponent } from "./components/event-details/components/common/hash-property/hash-property.component";
 import { BlockIntervalPropertyComponent } from "./components/event-details/components/common/block-interval-property/block-interval-property.component";
+import { SetLicenseEventComponent } from "./components/event-details/components/set-license-event/set-license-event.component";
 
 @NgModule({
     declarations: [
@@ -59,6 +60,7 @@ import { BlockIntervalPropertyComponent } from "./components/event-details/compo
         SizePropertyComponent,
         HashPropertyComponent,
         BlockIntervalPropertyComponent,
+        SetLicenseEventComponent,
     ],
     imports: [
         CommonModule,

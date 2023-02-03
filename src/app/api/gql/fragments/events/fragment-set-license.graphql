@@ -1,0 +1,6 @@
+fragment SetLicenseEvent on SetLicense {
+  shortName
+  name
+  spdxId
+  websiteUrl
+}

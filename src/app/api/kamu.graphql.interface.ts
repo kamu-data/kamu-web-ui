@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "apollo-angular";
+import { gql } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -888,6 +888,14 @@ export type ExecuteQueryEventFragment = {
     } | null;
 };
 
+export type SetLicenseEventFragment = {
+    __typename?: "SetLicense";
+    shortName: string;
+    name: string;
+    spdxId?: string | null;
+    websiteUrl: string;
+};
+
 export type SetPollingSourceEventFragment = {
     __typename?: "SetPollingSource";
     fetch:
@@ -1312,7 +1320,7 @@ export type MetadataBlockFragment = {
         | { __typename: "Seed"; datasetId: any; datasetKind: DatasetKind }
         | { __typename: "SetAttachments" }
         | { __typename: "SetInfo" }
-        | { __typename: "SetLicense"; name: string }
+        | ({ __typename: "SetLicense" } & SetLicenseEventFragment)
         | ({ __typename: "SetPollingSource" } & SetPollingSourceEventFragment)
         | ({ __typename: "SetTransform" } & DatasetTransformFragment)
         | { __typename: "SetVocab" }
@@ -1752,6 +1760,14 @@ export const AddDataEventFragmentDoc = gql`
         }
     }
 `;
+export const SetLicenseEventFragmentDoc = gql`
+    fragment SetLicenseEvent on SetLicense {
+        shortName
+        name
+        spdxId
+        websiteUrl
+    }
+`;
 export const MetadataBlockFragmentDoc = gql`
     fragment MetadataBlock on MetadataBlockExtended {
         blockHash
@@ -1781,15 +1797,14 @@ export const MetadataBlockFragmentDoc = gql`
             ... on SetInfo {
                 __typename
             }
-            ... on SetLicense {
-                name
-            }
+            ...SetLicenseEvent
             ...SetPollingSourceEvent
         }
     }
     ${DatasetTransformFragmentDoc}
     ${ExecuteQueryEventFragmentDoc}
     ${AddDataEventFragmentDoc}
+    ${SetLicenseEventFragmentDoc}
     ${SetPollingSourceEventFragmentDoc}
 `;
 export const DatasetPageInfoFragmentDoc = gql`

@@ -4,6 +4,7 @@ import {
     Seed,
     SetTransform,
     ExecuteQuery,
+    SetLicense,
 } from "./../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "./supported.events";
 import {
@@ -80,6 +81,14 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     public get executeQueryEvent(): ExecuteQuery {
         return this.block.event as ExecuteQuery;
+    }
+
+    public get isSetLicenseEvent(): boolean {
+        return this.block.event.__typename === SupportedEvents.SetLicense;
+    }
+
+    public get setLicenseEvent(): SetLicense {
+        return this.block.event as SetLicense;
     }
 
     ngOnInit(): void {

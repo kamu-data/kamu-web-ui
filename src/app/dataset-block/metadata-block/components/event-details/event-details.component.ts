@@ -3,6 +3,7 @@ import {
     SetPollingSource,
     Seed,
     SetTransform,
+    ExecuteQuery,
 } from "./../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "./supported.events";
 import {
@@ -73,12 +74,22 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
         return this.block.event as Seed;
     }
 
+    public get isExecuteQueryEvent(): boolean {
+        return this.block.event.__typename === SupportedEvents.ExecuteQuery;
+    }
+
+    public get executeQueryEvent(): ExecuteQuery {
+        return this.block.event as ExecuteQuery;
+    }
+
     ngOnInit(): void {
-        this.blockService.onMetadataBlockChanges.subscribe(
-            (block: MetadataBlockFragment) => {
-                this.block = block;
-                this.cdr.detectChanges();
-            },
+        this.trackSubscription(
+            this.blockService.onMetadataBlockChanges.subscribe(
+                (block: MetadataBlockFragment) => {
+                    this.block = block;
+                    this.cdr.detectChanges();
+                },
+            ),
         );
     }
 }

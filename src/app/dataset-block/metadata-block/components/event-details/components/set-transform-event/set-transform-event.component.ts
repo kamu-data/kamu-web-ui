@@ -16,6 +16,8 @@ export class SetTransformEventComponent
 {
     ngOnInit(): void {
         this.eventSections =
-            SECTION_BUILDERS_BY_EVENT_TYPE.SetTransform.buildEventSections(this.event);
+            SECTION_BUILDERS_BY_EVENT_TYPE.SetTransform.buildEventSections(
+                this.event,
+            );
     }
 }

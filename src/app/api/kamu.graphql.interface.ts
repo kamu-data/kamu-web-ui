@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -725,6 +725,18 @@ export type User = Account & {
     name: Scalars["String"];
 };
 
+export type DatasetByIdQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type DatasetByIdQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: ({ __typename?: "Dataset" } & DatasetBasicsFragment) | null;
+    };
+};
+
 export type GetDatasetDataSqlRunQueryVariables = Exact<{
     query: Scalars["String"];
     limit: Scalars["Int"];
@@ -838,6 +850,37 @@ export type AddDataEventFragment = {
         size: number;
         interval: { __typename?: "OffsetInterval"; start: number; end: number };
     };
+    outputCheckpoint?: {
+        __typename?: "Checkpoint";
+        physicalHash: any;
+        size: number;
+    } | null;
+};
+
+export type ExecuteQueryEventFragment = {
+    __typename?: "ExecuteQuery";
+    inputCheckpoint?: any | null;
+    watermark?: any | null;
+    queryOutputData?: {
+        __typename?: "DataSlice";
+        logicalHash: any;
+        physicalHash: any;
+        interval: { __typename?: "OffsetInterval"; start: number; end: number };
+    } | null;
+    inputSlices: Array<{
+        __typename?: "InputSlice";
+        datasetId: any;
+        blockInterval?: {
+            __typename?: "BlockInterval";
+            start: any;
+            end: any;
+        } | null;
+        dataInterval?: {
+            __typename?: "OffsetInterval";
+            start: number;
+            end: number;
+        } | null;
+    }>;
     outputCheckpoint?: {
         __typename?: "Checkpoint";
         physicalHash: any;
@@ -1265,19 +1308,7 @@ export type MetadataBlockFragment = {
         | { __typename: "User"; id: any; name: string };
     event:
         | ({ __typename: "AddData" } & AddDataEventFragment)
-        | {
-              __typename: "ExecuteQuery";
-              queryOutputData?: {
-                  __typename?: "DataSlice";
-                  logicalHash: any;
-                  physicalHash: any;
-                  interval: {
-                      __typename?: "OffsetInterval";
-                      start: number;
-                      end: number;
-                  };
-              } | null;
-          }
+        | ({ __typename: "ExecuteQuery" } & ExecuteQueryEventFragment)
         | { __typename: "Seed"; datasetId: any; datasetKind: DatasetKind }
         | { __typename: "SetAttachments" }
         | { __typename: "SetInfo" }
@@ -1673,6 +1704,35 @@ export const DatasetReadmeFragmentDoc = gql`
         }
     }
 `;
+export const ExecuteQueryEventFragmentDoc = gql`
+    fragment ExecuteQueryEvent on ExecuteQuery {
+        queryOutputData: outputData {
+            interval {
+                start
+                end
+            }
+            logicalHash
+            physicalHash
+        }
+        inputCheckpoint
+        watermark: outputWatermark
+        inputSlices {
+            datasetId
+            blockInterval {
+                start
+                end
+            }
+            dataInterval {
+                start
+                end
+            }
+        }
+        outputCheckpoint {
+            physicalHash
+            size
+        }
+    }
+`;
 export const AddDataEventFragmentDoc = gql`
     fragment AddDataEvent on AddData {
         addDataWatermark: outputWatermark
@@ -1713,16 +1773,7 @@ export const MetadataBlockFragmentDoc = gql`
                 outputWatermark
             }
             ...DatasetTransform
-            ... on ExecuteQuery {
-                queryOutputData: outputData {
-                    interval {
-                        start
-                        end
-                    }
-                    logicalHash
-                    physicalHash
-                }
-            }
+            ...ExecuteQueryEvent
             ...AddDataEvent
             ... on SetAttachments {
                 __typename
@@ -1737,6 +1788,7 @@ export const MetadataBlockFragmentDoc = gql`
         }
     }
     ${DatasetTransformFragmentDoc}
+    ${ExecuteQueryEventFragmentDoc}
     ${AddDataEventFragmentDoc}
     ${SetPollingSourceEventFragmentDoc}
 `;
@@ -1866,6 +1918,30 @@ export const DatasetSearchOverviewFragmentDoc = gql`
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
 `;
+export const DatasetByIdDocument = gql`
+    query datasetById($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                ...DatasetBasics
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetByIdGQL extends Apollo.Query<
+    DatasetByIdQuery,
+    DatasetByIdQueryVariables
+> {
+    document = DatasetByIdDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const GetDatasetDataSqlRunDocument = gql`
     query getDatasetDataSQLRun($query: String!, $limit: Int!) {
         data {

@@ -15,6 +15,8 @@ export class SetPollingSourceEventComponent
 {
     ngOnInit(): void {
         this.eventSections =
-            SECTION_BUILDERS_BY_EVENT_TYPE.SetPollingSource.buildEventSections(this.event);
+            SECTION_BUILDERS_BY_EVENT_TYPE.SetPollingSource.buildEventSections(
+                this.event,
+            );
     }
 }

@@ -1,16 +1,4 @@
-<div class="d-flex justify-content-end">
-    <span class="me-2">Show as yaml</span>
-    <app-toggle
-        [isToggled]="isYamlView"
-        (toggled)="onToggleView($event)"
-    ></app-toggle>
-</div>
-
-<div *ngIf="isYamlView" class="layout mt-4">
-    <app-yaml-event-viewer [event]="event"></app-yaml-event-viewer>
-</div>
-
-<ng-container *ngIf="!isYamlView">
+<ng-container>
     <div class="d-flex flex-column gap-4 mt-4">
         <div
             class="position-relative border border-1 p-2 rounded-3"

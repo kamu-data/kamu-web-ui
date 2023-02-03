@@ -4,6 +4,8 @@ import { BasePropertyComponent } from "../components/common/base-property/base-p
 export enum DynamicEventTypes {
     SetPollingSource = "SetPollingSource",
     SetTransform = "SetTransform",
+    ExecuteQuery = "ExecuteQuery",
+    AddData = "AddData",
 }
 
 export type DynamicEventTypesScalar = `${DynamicEventTypes}`;
@@ -16,7 +18,7 @@ export interface EventRowDescriptor {
     presentationComponent: Type<BasePropertyComponent>;
 }
 
-export type EventRowDescriptorsByField = Record<string, EventRowDescriptor>
+export type EventRowDescriptorsByField = Record<string, EventRowDescriptor>;
 
 export interface EventRow {
     descriptor: EventRowDescriptor;

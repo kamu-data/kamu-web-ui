@@ -49,4 +49,12 @@ describe("EventDetailsComponent", () => {
             blockFragment.event as AddDataEventFragment,
         );
     });
+
+    it("should check onMetadataBlockChanges subscribe", () => {
+        const mockBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName
+            ?.metadata.chain.blockByHash as MetadataBlockFragment;
+        blockService.metadataBlockChanges(mockBlock);
+        component.ngOnInit();
+        expect(component.block).toEqual(mockBlock);
+    });
 });

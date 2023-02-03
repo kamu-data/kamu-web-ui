@@ -1,27 +1,25 @@
 <ng-container *ngIf="value">
     <a
-        *ngIf="isNavigable"
+        *ngIf="navigationTargetDataset"
         [title]="value"
         [class]="class"
         data-test-id="navigableValue"
         (click)="
-            navigateToMetadataBlock(
-                datasetInfo.accountName,
-                datasetInfo.datasetName,
-                value
-            )
+            navigationTargetDataset &&
+                navigateToMetadataBlock(
+                    navigationTargetDataset.accountName,
+                    navigationTargetDataset.datasetName,
+                    value
+                )
         "
-    >
-        {{ value | slice: -8 }}
-    </a>
+    >{{ value | slice: -8 }}</a>
 
     <span
-        *ngIf="!isNavigable"
-        class="mr-4"
+        *ngIf="!navigationTargetDataset"
+        class="mr-1"
         [title]="value"
         data-test-id="notNavigableValue"
-        >{{ value | slice: -8 }}</span
-    >
+        >{{ value | slice: -8 }}</span>
 
     <button
         *ngIf="showCopyButton"

@@ -45,7 +45,7 @@
             >
                 <app-display-time
                     class="no-wrap"
-                    [value]="block.systemTime"
+                    [data]="block.systemTime"
                     [dataTestId]="'time-block-header'"
                 >
                 </app-display-time>
@@ -55,10 +55,8 @@
                 label="Block Hash:"
             >
                 <app-display-hash
-                    [datasetInfo]="datasetInfo"
                     [value]="block.blockHash"
                     [showCopyButton]="true"
-                    [isNavigable]="false"
                 ></app-display-hash>
             </app-block-row-data>
 
@@ -68,7 +66,7 @@
             >
                 <app-display-hash
                     [value]="block.prevBlockHash"
-                    [datasetInfo]="datasetInfo"
+                    [navigationTargetDataset]="datasetInfo"
                     [showCopyButton]="true"
                 ></app-display-hash>
             </app-block-row-data>

@@ -2,6 +2,7 @@ import { SqlExecutionError } from "./../common/errors";
 import {
     DataQueryResultErrorKind,
     DataQueryResultSuccessViewFragment,
+    DatasetByIdQuery,
     DatasetLineageFragment,
     DatasetPageInfoFragment,
 } from "./../api/kamu.graphql.interface";
@@ -59,7 +60,8 @@ export class DatasetService {
                     const dataTail = data.datasets.byOwnerAndName.data.tail;
                     if (dataTail.__typename === "DataQueryResultSuccess") {
                         const schema: DatasetSchema = JSON.parse(
-                            data.datasets.byOwnerAndName.metadata.currentSchema.content,
+                            data.datasets.byOwnerAndName.metadata.currentSchema
+                                .content,
                         ) as DatasetSchema;
 
                         this.datasetUpdate(data.datasets.byOwnerAndName);
@@ -149,6 +151,12 @@ export class DatasetService {
         );
     }
 
+    public requestDatasetInfoById(
+        datasetId: string,
+    ): Observable<DatasetByIdQuery> {
+        return this.datasetApi.getDatasetInfoById(datasetId);
+    }
+
     private datasetUpdate(data: DatasetBasicsFragment): void {
         const dataset: DatasetBasicsFragment = data;
         this.datasetChanges(dataset);
@@ -182,7 +190,10 @@ export class DatasetService {
         this.appDatasetSubsService.changeDatasetData(dataUpdate);
     }
 
-    private metadataTabDataUpdate(data: GetDatasetMainDataQuery, schema: DatasetSchema): void {
+    private metadataTabDataUpdate(
+        data: GetDatasetMainDataQuery,
+        schema: DatasetSchema,
+    ): void {
         if (data.datasets.byOwnerAndName) {
             const metadata: DatasetMetadataSummaryFragment =
                 data.datasets.byOwnerAndName;

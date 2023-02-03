@@ -11,10 +11,9 @@ import { Clipboard } from "@angular/cdk/clipboard";
 })
 export class DisplayHashComponent {
     @Input() public value: string;
-    @Input() public datasetInfo: DatasetInfo;
+    @Input() public navigationTargetDataset?: DatasetInfo;
     @Input() public showCopyButton = false;
-    @Input() public class = "mr-4 hashBlock";
-    @Input() public isNavigable = true;
+    @Input() public class = "mr-1 hashBlock";
 
     constructor(
         private navigationService: NavigationService,

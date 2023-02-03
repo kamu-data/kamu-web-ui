@@ -14,6 +14,7 @@ import { SchemaPropertyComponent } from "src/app/dataset-block/metadata-block/co
 import { DynamicTableModule } from "src/app/components/dynamic-table/dynamic-table.module";
 import { MergeStrategyPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
+import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 
 @NgModule({
     declarations: [
@@ -34,6 +35,7 @@ import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/com
         MatIconModule,
         HighlightModule,
         DynamicTableModule,
+        DisplaySizeModule,
     ],
     exports: [
         BlockRowDataComponent,
@@ -46,6 +48,8 @@ import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/com
         SchemaPropertyComponent,
         MergeStrategyPropertyComponent,
         CardsPropertyComponent,
+
+        DisplaySizeModule,
     ],
 })
 export class SharedModule {}

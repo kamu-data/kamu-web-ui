@@ -55,13 +55,6 @@ describe("SetPollingSourceEventComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check toggle yaml view", () => {
-        const testValue = true;
-        component.isYamlView = false;
-        component.onToggleView(testValue);
-        expect(component.isYamlView).toBe(testValue);
-    });
-
     it("should check render event data", () => {
         const url = findElementByDataTestId(
             fixture,

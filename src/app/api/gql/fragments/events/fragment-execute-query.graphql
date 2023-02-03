@@ -1,0 +1,27 @@
+fragment ExecuteQueryEvent on ExecuteQuery {
+  queryOutputData: outputData {
+    interval {
+      start
+      end
+    }
+    logicalHash
+    physicalHash
+  }
+  inputCheckpoint
+  watermark: outputWatermark
+  inputSlices {
+    datasetId
+    blockInterval {
+      start
+      end
+    }
+    dataInterval {
+      start
+      end
+    }
+  }
+  outputCheckpoint {
+    physicalHash
+    size
+  }
+}

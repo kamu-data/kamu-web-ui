@@ -1,5 +1,11 @@
 import { UnsupportedPropertyComponent } from "../../components/common/unsupported-property/unsupported-property.component";
-import { DynamicEventTypesScalar, EventRow, EventRowDescriptor, EventRowDescriptorsByField, EventSection } from "../dynamic-events.model";
+import {
+    DynamicEventTypesScalar,
+    EventRow,
+    EventRowDescriptor,
+    EventRowDescriptorsByField,
+    EventSection,
+} from "../dynamic-events.model";
 
 export interface GenericDynamicEventType extends Record<string, unknown> {
     __typename?: DynamicEventTypesScalar;
@@ -32,7 +38,15 @@ export abstract class EventSectionBuilder<
         ] as GenericEventSectionType;
         Object.entries(sectionObject).forEach(([key, value]) => {
             if (value && (key !== "__typename" || allowTypenameKey)) {
-                rows.push(this.buildEventRow(event, rowDescriptors, sectionObject, key, value));
+                rows.push(
+                    this.buildEventRow(
+                        event,
+                        rowDescriptors,
+                        sectionObject,
+                        key,
+                        value,
+                    ),
+                );
             }
         });
 
@@ -49,7 +63,9 @@ export abstract class EventSectionBuilder<
         const eventType = event.__typename;
         if (event.__typename && eventType && "__typename" in sectionObject) {
             const sectionType = sectionObject.__typename as string;
-            const keyExists = Object.keys(rowDescriptors).includes(`${eventType}.${sectionType}.${key}`);
+            const keyExists = Object.keys(rowDescriptors).includes(
+                `${eventType}.${sectionType}.${key}`,
+            );
             if (keyExists) {
                 return this.buildSupportedRow(
                     event.__typename,

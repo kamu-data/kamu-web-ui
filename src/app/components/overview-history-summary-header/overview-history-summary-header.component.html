@@ -73,7 +73,7 @@
                 >
                     <app-display-hash
                         [value]="metadataBlockFragment.blockHash"
-                        [datasetInfo]="{
+                        [navigationTargetDataset]="{
                             accountName: metadataBlockFragment.author.name,
                             datasetName: this.datasetName
                         }"
@@ -83,7 +83,7 @@
                     ></app-display-hash>
                     <a class="link--secondary ml-3">
                         <app-display-time
-                            [value]="systemTime"
+                            [data]="systemTime"
                             class="no-wrap"
                             [dataTestId]="'time-overview-history-summary'"
                         ></app-display-time>

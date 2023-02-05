@@ -164,7 +164,11 @@ it("should check description for SetLicense block", () => {
         ...metadataBlockSetVocab,
         event: {
             __typename: "SetLicense",
+            shortName: "OGL-Canada-2.0",
             name: "GPL",
+            spdxId: "OGL-Canada-2.0",
+            websiteUrl:
+                "https://open.canada.ca/en/open-government-licence-canada",
         },
     };
     expect(DataHelpers.descriptionForMetadataBlock(setLicenseBlock)).toEqual(

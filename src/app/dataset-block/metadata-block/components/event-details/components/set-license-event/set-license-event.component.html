@@ -1,0 +1,40 @@
+<div *ngIf="event" class="position-relative border border-1 p-2 rounded-3">
+    <span class="position-absolute text-muted group-box-label text-uppercase"
+        >License</span
+    >
+    <div class="mx-4">
+        <app-block-row-data
+            [tooltip]="'Unique identifier of the license.'"
+            [label]="'ID:'"
+        >
+            <span>{{ event.shortName }}</span>
+        </app-block-row-data>
+    </div>
+
+    <div class="mx-4">
+        <app-block-row-data
+            [tooltip]="'Full name of the license.'"
+            [label]="'Name:'"
+        >
+            <span> {{ event.name }}</span>
+        </app-block-row-data>
+    </div>
+
+    <div class="mx-4" *ngIf="event.spdxId">
+        <app-block-row-data
+            [tooltip]="'License identifier from the SPDX License List.'"
+            [label]="'SPDX ID:'"
+        >
+            <span> {{ event.spdxId }}</span>
+        </app-block-row-data>
+    </div>
+
+    <div class="mx-4">
+        <app-block-row-data
+            [tooltip]="'Link to the official website.'"
+            [label]="'Website:'"
+        >
+            <app-link-property [data]="event.websiteUrl"></app-link-property>
+        </app-block-row-data>
+    </div>
+</div>

@@ -26,9 +26,7 @@ fragment MetadataBlock on MetadataBlockExtended {
     ... on SetInfo {
       __typename
     }
-    ... on SetLicense {
-      name
-    }
+    ...SetLicenseEvent
     ...SetPollingSourceEvent
   }
 }

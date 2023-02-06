@@ -27,10 +27,10 @@ export class YamlEventViewerComponent<TEvent extends object> {
     // Temporary solution, later data will come from server
     public get yamlEventText(): string {
         let result = "";
-        let propertyName;
+        let propertyName: string;
         Object.entries(this.event).forEach(([key, value]) => {
-            key !== "__typename" && value ? (result += `${key}:\n`) : "";
-            if (value && key !== "__typename") {
+            if (value && key !== "__typename" && typeof value === "object") {
+                result += `${key}:\n`;
                 if (key === "inputs") {
                     (value as TransformInput[]).map((item: TransformInput) => {
                         result += `${this.FIRST_LEVEL_SHIFT}- kind: ${
@@ -50,7 +50,7 @@ export class YamlEventViewerComponent<TEvent extends object> {
                 } else {
                     Object.entries(value as object).forEach(
                         ([property, data]) => {
-                            if (data) {
+                            if (data && !Array.isArray(value)) {
                                 property === "__typename"
                                     ? (propertyName = "kind")
                                     : (propertyName = property);
@@ -61,9 +61,17 @@ export class YamlEventViewerComponent<TEvent extends object> {
                                     data as string,
                                     property,
                                 )}\n`;
+                            } else if (data) {
+                                result += `${this.FIRST_LEVEL_SHIFT}- ${
+                                    data as string
+                                }\n`;
                             }
                         },
                     );
+                }
+            } else {
+                if (key !== "__typename" && value) {
+                    result += `${key}: ${value as string}\n`;
                 }
             }
         });

@@ -72,6 +72,17 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
             },
             event: {
                 __typename: "SetInfo",
+                description: "Confirmed positive cases of COVID-19 in Ontario.",
+                keywords: [
+                    "Healthcare",
+                    "Epidemiology",
+                    "COVID-19",
+                    "SARS-CoV-2",
+                    "Disaggregated",
+                    "Anonymized",
+                    "Ontario",
+                    "Canada",
+                ],
             },
         },
     ],

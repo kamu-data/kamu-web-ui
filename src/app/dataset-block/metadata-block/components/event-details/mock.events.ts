@@ -2,6 +2,7 @@ import {
     CompressionFormat,
     DatasetTransformFragment,
     ExecuteQueryEventFragment,
+    SetInfo,
     SetLicense,
     SetPollingSource,
 } from "./../../../../api/kamu.graphql.interface";
@@ -178,4 +179,19 @@ export const mockSetLicense: SetLicense = {
     name: "Open Government Licence - Canada",
     spdxId: "OGL-Canada-2.0",
     websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
+};
+
+export const mockSetInfo: SetInfo = {
+    __typename: "SetInfo",
+    description: "Confirmed positive cases of COVID-19 in Ontario.",
+    keywords: [
+        "Healthcare",
+        "Epidemiology",
+        "COVID-19",
+        "SARS-CoV-2",
+        "Disaggregated",
+        "Anonymized",
+        "Ontario",
+        "Canada",
+    ],
 };

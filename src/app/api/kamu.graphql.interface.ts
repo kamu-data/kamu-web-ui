@@ -1319,7 +1319,7 @@ export type MetadataBlockFragment = {
         | ({ __typename: "ExecuteQuery" } & ExecuteQueryEventFragment)
         | { __typename: "Seed"; datasetId: any; datasetKind: DatasetKind }
         | { __typename: "SetAttachments" }
-        | { __typename: "SetInfo" }
+        | ({ __typename: "SetInfo" } & DatasetCurrentInfoFragment)
         | ({ __typename: "SetLicense" } & SetLicenseEventFragment)
         | ({ __typename: "SetPollingSource" } & SetPollingSourceEventFragment)
         | ({ __typename: "SetTransform" } & DatasetTransformFragment)
@@ -1794,9 +1794,7 @@ export const MetadataBlockFragmentDoc = gql`
             ... on SetAttachments {
                 __typename
             }
-            ... on SetInfo {
-                __typename
-            }
+            ...DatasetCurrentInfo
             ...SetLicenseEvent
             ...SetPollingSourceEvent
         }
@@ -1804,6 +1802,7 @@ export const MetadataBlockFragmentDoc = gql`
     ${DatasetTransformFragmentDoc}
     ${ExecuteQueryEventFragmentDoc}
     ${AddDataEventFragmentDoc}
+    ${DatasetCurrentInfoFragmentDoc}
     ${SetLicenseEventFragmentDoc}
     ${SetPollingSourceEventFragmentDoc}
 `;

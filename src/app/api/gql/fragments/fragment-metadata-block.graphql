@@ -23,9 +23,7 @@ fragment MetadataBlock on MetadataBlockExtended {
     ... on SetAttachments {
       __typename
     }
-    ... on SetInfo {
-      __typename
-    }
+    ...DatasetCurrentInfo
     ...SetLicenseEvent
     ...SetPollingSourceEvent
   }

@@ -37,6 +37,10 @@
         ></app-set-attachments-event>
     </ng-container>
 
+    <ng-container *ngIf="isSetInfoEvent">
+        <app-set-info-event [event]="setInfoEvent"></app-set-info-event>
+    </ng-container>
+
     <ng-container *ngIf="!isSupportedEvent">
         <p class="text-center mt-2">
             <mat-icon class="text-danger align-middle">block</mat-icon>

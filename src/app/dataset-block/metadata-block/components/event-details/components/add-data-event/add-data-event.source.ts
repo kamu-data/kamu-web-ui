@@ -13,6 +13,14 @@ export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "add-data-watermark",
     },
 
+    "AddData.string.inputCheckpoint": {
+        label: "Input hash:",
+        tooltip: "Hash of the checkpoint file used to restore ingestion state.",
+        presentationComponent: HashPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "add-data-input-checkpoint",
+    },
+
     "AddData.DataSlice.logicalHash": {
         label: "Logical hash:",
         tooltip: "Logical hash sum of the data in this slice.",

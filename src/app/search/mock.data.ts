@@ -56,7 +56,7 @@ export const mockAutocompleteItems: DatasetAutocompleteItem[] = [
     },
 ];
 
-const mockMetadataCurrentInfo: DatasetCurrentInfoFragment = {
+export const mockMetadataCurrentInfo: DatasetCurrentInfoFragment = {
     __typename: "SetInfo",
     description: "Confirmed positive cases of COVID-19 in Alberta.",
     keywords: [
@@ -591,6 +591,18 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 },
                                 event: {
                                     __typename: "SetInfo",
+                                    description:
+                                        "Confirmed positive cases of COVID-19 in Ontario.",
+                                    keywords: [
+                                        "Healthcare",
+                                        "Epidemiology",
+                                        "COVID-19",
+                                        "SARS-CoV-2",
+                                        "Disaggregated",
+                                        "Anonymized",
+                                        "Ontario",
+                                        "Canada",
+                                    ],
                                 },
                             },
                             {
@@ -625,6 +637,18 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 },
                                 event: {
                                     __typename: "SetInfo",
+                                    description:
+                                        "Confirmed positive cases of COVID-19 in Ontario.",
+                                    keywords: [
+                                        "Healthcare",
+                                        "Epidemiology",
+                                        "COVID-19",
+                                        "SARS-CoV-2",
+                                        "Disaggregated",
+                                        "Anonymized",
+                                        "Ontario",
+                                        "Canada",
+                                    ],
                                 },
                             },
                             {

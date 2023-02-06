@@ -1,0 +1,24 @@
+<div *ngIf="event" class="position-relative border border-1 p-2 rounded-3">
+    <span class="position-absolute text-muted group-box-label text-uppercase"
+        >Information</span
+    >
+    <div class="mx-4" *ngIf="event.description">
+        <app-block-row-data
+            [tooltip]="'Brief single-sentence summary of a dataset.'"
+            [label]="'Description:'"
+        >
+            <span>{{ event.description }}</span>
+        </app-block-row-data>
+    </div>
+
+    <div class="mx-4" *ngIf="event.keywords">
+        <app-block-row-data
+            [tooltip]="
+                'Keywords, search terms, or tags used to describe the dataset.'
+            "
+            [label]="'Keywords:'"
+        >
+            <app-cards-property [data]="event.keywords"></app-cards-property>
+        </app-block-row-data>
+    </div>
+</div>

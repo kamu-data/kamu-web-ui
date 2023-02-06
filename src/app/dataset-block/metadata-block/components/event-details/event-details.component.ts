@@ -6,6 +6,7 @@ import {
     ExecuteQuery,
     SetLicense,
     SetAttachments,
+    SetInfo,
 } from "./../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "./supported.events";
 import {
@@ -98,6 +99,14 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     public get setAttachmentsEvent(): SetAttachments {
         return this.block.event as SetAttachments;
+    }
+
+    public get isSetInfoEvent(): boolean {
+        return this.block.event.__typename === SupportedEvents.SetInfo;
+    }
+
+    public get setInfoEvent(): SetInfo {
+        return this.block.event as SetInfo;
     }
 
     ngOnInit(): void {

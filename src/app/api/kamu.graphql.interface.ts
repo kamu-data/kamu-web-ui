@@ -888,6 +888,18 @@ export type ExecuteQueryEventFragment = {
     } | null;
 };
 
+export type SetAttachmentsEventFragment = {
+    __typename?: "SetAttachments";
+    attachments: {
+        __typename?: "AttachmentsEmbedded";
+        items: Array<{
+            __typename?: "AttachmentEmbedded";
+            path: string;
+            content: string;
+        }>;
+    };
+};
+
 export type SetLicenseEventFragment = {
     __typename?: "SetLicense";
     shortName: string;
@@ -1318,7 +1330,7 @@ export type MetadataBlockFragment = {
         | ({ __typename: "AddData" } & AddDataEventFragment)
         | ({ __typename: "ExecuteQuery" } & ExecuteQueryEventFragment)
         | { __typename: "Seed"; datasetId: any; datasetKind: DatasetKind }
-        | { __typename: "SetAttachments" }
+        | ({ __typename: "SetAttachments" } & SetAttachmentsEventFragment)
         | ({ __typename: "SetInfo" } & DatasetCurrentInfoFragment)
         | ({ __typename: "SetLicense" } & SetLicenseEventFragment)
         | ({ __typename: "SetPollingSource" } & SetPollingSourceEventFragment)
@@ -1760,6 +1772,18 @@ export const AddDataEventFragmentDoc = gql`
         }
     }
 `;
+export const SetAttachmentsEventFragmentDoc = gql`
+    fragment SetAttachmentsEvent on SetAttachments {
+        attachments {
+            ... on AttachmentsEmbedded {
+                items {
+                    path
+                    content
+                }
+            }
+        }
+    }
+`;
 export const SetLicenseEventFragmentDoc = gql`
     fragment SetLicenseEvent on SetLicense {
         shortName
@@ -1791,9 +1815,7 @@ export const MetadataBlockFragmentDoc = gql`
             ...DatasetTransform
             ...ExecuteQueryEvent
             ...AddDataEvent
-            ... on SetAttachments {
-                __typename
-            }
+            ...SetAttachmentsEvent
             ...DatasetCurrentInfo
             ...SetLicenseEvent
             ...SetPollingSourceEvent
@@ -1802,6 +1824,7 @@ export const MetadataBlockFragmentDoc = gql`
     ${DatasetTransformFragmentDoc}
     ${ExecuteQueryEventFragmentDoc}
     ${AddDataEventFragmentDoc}
+    ${SetAttachmentsEventFragmentDoc}
     ${DatasetCurrentInfoFragmentDoc}
     ${SetLicenseEventFragmentDoc}
     ${SetPollingSourceEventFragmentDoc}

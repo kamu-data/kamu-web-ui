@@ -31,6 +31,12 @@
         ></app-set-license-event>
     </ng-container>
 
+    <ng-container *ngIf="isSetAttachmentsEvent">
+        <app-set-attachments-event
+            [event]="setAttachmentsEvent"
+        ></app-set-attachments-event>
+    </ng-container>
+
     <ng-container *ngIf="isSetInfoEvent">
         <app-set-info-event [event]="setInfoEvent"></app-set-info-event>
     </ng-container>

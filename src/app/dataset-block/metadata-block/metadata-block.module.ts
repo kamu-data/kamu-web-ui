@@ -35,6 +35,7 @@ import { SizePropertyComponent } from "./components/event-details/components/com
 import { HashPropertyComponent } from "./components/event-details/components/common/hash-property/hash-property.component";
 import { BlockIntervalPropertyComponent } from "./components/event-details/components/common/block-interval-property/block-interval-property.component";
 import { SetLicenseEventComponent } from "./components/event-details/components/set-license-event/set-license-event.component";
+import { SetAttachmentsEventComponent } from "./components/event-details/components/set-attachments-event/set-attachments-event.component";
 import { SetInfoEventComponent } from "./components/event-details/components/set-info-event/set-info-event.component";
 
 @NgModule({
@@ -62,6 +63,7 @@ import { SetInfoEventComponent } from "./components/event-details/components/set
         HashPropertyComponent,
         BlockIntervalPropertyComponent,
         SetLicenseEventComponent,
+        SetAttachmentsEventComponent,
         SetInfoEventComponent,
     ],
     imports: [

@@ -5,6 +5,7 @@ import {
     SetTransform,
     ExecuteQuery,
     SetLicense,
+    SetAttachments,
     SetInfo,
 } from "./../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "./supported.events";
@@ -90,6 +91,14 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     public get setLicenseEvent(): SetLicense {
         return this.block.event as SetLicense;
+    }
+
+    public get isSetAttachmentsEvent(): boolean {
+        return this.block.event.__typename === SupportedEvents.SetAttachments;
+    }
+
+    public get setAttachmentsEvent(): SetAttachments {
+        return this.block.event as SetAttachments;
     }
 
     public get isSetInfoEvent(): boolean {

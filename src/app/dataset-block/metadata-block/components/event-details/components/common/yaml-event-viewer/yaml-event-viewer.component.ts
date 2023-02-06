@@ -1,5 +1,8 @@
+import { DataHelpers } from "src/app/common/data.helpers";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import {
+    AttachmentEmbedded,
+    AttachmentsEmbedded,
     SqlQueryStep,
     TransformInput,
 } from "src/app/api/kamu.graphql.interface";
@@ -22,6 +25,8 @@ export class YamlEventViewerComponent<TEvent extends object> {
         TransformSql: "sql",
         ReadStepJsonLines: "jsonLines",
         Dataset: "dataset",
+        AttachmentsEmbedded: "attachmentsEmbedded",
+        AttachmentEmbedded: "embedded",
     };
 
     // Temporary solution, later data will come from server
@@ -47,6 +52,18 @@ export class YamlEventViewerComponent<TEvent extends object> {
                         }\n`;
                         result += `${this.SECOND_LEVEL_SHIFT}owner: ${item.dataset.owner.name}\n`;
                     });
+                } else if (key === "attachments") {
+                    (value as AttachmentsEmbedded).items.map(
+                        (item: AttachmentEmbedded) => {
+                            result += `${this.FIRST_LEVEL_SHIFT}kind: ${
+                                this.kindMapper[item.__typename as string]
+                            }\n`;
+                            result += `${this.SECOND_LEVEL_SHIFT}- path: ${item.path}\n`;
+                            result += `${
+                                this.SECOND_LEVEL_SHIFT
+                            }content: ${this.escapeText(item.content)}\n`;
+                        },
+                    );
                 } else {
                     Object.entries(value as object).forEach(
                         ([property, data]) => {
@@ -91,5 +108,9 @@ export class YamlEventViewerComponent<TEvent extends object> {
         } else {
             return data as string;
         }
+    }
+
+    private escapeText(text: string): string {
+        return DataHelpers.escapeText(text);
     }
 }

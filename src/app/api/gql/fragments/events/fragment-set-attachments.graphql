@@ -1,0 +1,10 @@
+fragment SetAttachmentsEvent on SetAttachments {
+  attachments {
+    ... on AttachmentsEmbedded {
+      items {
+        path
+        content
+      }
+    }
+  }
+}

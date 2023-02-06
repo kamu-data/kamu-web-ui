@@ -15,6 +15,7 @@ import { DynamicTableModule } from "src/app/components/dynamic-table/dynamic-tab
 import { MergeStrategyPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
+import { MarkdownModule } from "ngx-markdown";
 
 @NgModule({
     declarations: [
@@ -36,6 +37,7 @@ import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
         HighlightModule,
         DynamicTableModule,
         DisplaySizeModule,
+        MarkdownModule,
     ],
     exports: [
         BlockRowDataComponent,
@@ -48,7 +50,7 @@ import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
         SchemaPropertyComponent,
         MergeStrategyPropertyComponent,
         CardsPropertyComponent,
-
+        MarkdownModule,
         DisplaySizeModule,
     ],
 })

@@ -41,7 +41,15 @@ export class YamlViewSectionComponent extends BaseComponent implements OnInit {
         return this.block.event.__typename === SupportedEvents.SetTransform;
     }
 
+    public get isSetAttachmentsEvent(): boolean {
+        return this.block.event.__typename === SupportedEvents.SetAttachments;
+    }
+
     public get isEventWithYamlView(): boolean {
-        return this.isSetPollingSourceEvent || this.isSetTransformEvent;
+        return (
+            this.isSetPollingSourceEvent ||
+            this.isSetTransformEvent ||
+            this.isSetAttachmentsEvent
+        );
     }
 }

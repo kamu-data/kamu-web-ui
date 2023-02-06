@@ -27,6 +27,7 @@ export class DataHelpers {
         "Basic information updated";
     public static readonly BLOCK_DESCRIBE_SET_ATTACHMENTS =
         "Attachments updated";
+    private static SHIFT_ATTACHMENTS_VIEW = "\u00A0".repeat(12);
 
     public static descriptionForEngine(name: string): EventPropertyLogo {
         switch (name) {
@@ -108,5 +109,23 @@ export class DataHelpers {
             case "SetAttachments":
                 return DataHelpers.BLOCK_DESCRIBE_SET_ATTACHMENTS;
         }
+    }
+
+    public static escapeText(text: string): string {
+        const htmlEscapes: Record<string, string> = {
+            "#": "#",
+            "<": "/<",
+            ">": "/>",
+        };
+        const reUnescapedHtml = /[#<>]/g;
+        const reHasUnescapedHtml = RegExp(reUnescapedHtml.source);
+        return reHasUnescapedHtml.test(text)
+            ? `|\n${this.SHIFT_ATTACHMENTS_VIEW}${text
+                  .replace(reUnescapedHtml, (chr) => htmlEscapes[chr])
+                  .replace(
+                      /(\r\n|\n|\r)/gm,
+                      "\n" + this.SHIFT_ATTACHMENTS_VIEW,
+                  )}`
+            : text;
     }
 }

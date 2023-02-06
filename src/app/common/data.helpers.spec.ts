@@ -84,6 +84,17 @@ it("should check description for SetAttachments block", () => {
         ...metadataBlockSetVocab,
         event: {
             __typename: "SetAttachments",
+            attachments: {
+                __typename: "AttachmentsEmbedded",
+                items: [
+                    {
+                        __typename: "AttachmentEmbedded",
+                        path: "README.md",
+                        content:
+                            "# Confirmed positive cases of COVID-19 in Quebec\n\nThis dataset compiles daily snapshots of publicly reported data on 2019 Novel Coronavirus (COVID-19) testing in Quebec.\n\nData includes:\n- approximation of onset date\n- age group\n- patient gender\n- case acquisition information\n- patient outcome\n- reporting Public Health Unit (PHU)\n- postal code, website, longitude, and latitude of PHU\n\nThis dataset is subject to change. Please review the daily epidemiologic summaries for information on variables, methodology, and technical considerations.\n\n**Related dataset(s)**:\n- [Daily aggregate count of confirmed positive cases of COVID-19 in Quebec](#todo)\n",
+                    },
+                ],
+            },
         },
     };
     expect(

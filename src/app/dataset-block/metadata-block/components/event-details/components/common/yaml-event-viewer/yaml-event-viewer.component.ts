@@ -1,5 +1,8 @@
+import { DataHelpers } from "src/app/common/data.helpers";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import {
+    AttachmentEmbedded,
+    AttachmentsEmbedded,
     SqlQueryStep,
     TransformInput,
 } from "src/app/api/kamu.graphql.interface";
@@ -22,15 +25,17 @@ export class YamlEventViewerComponent<TEvent extends object> {
         TransformSql: "sql",
         ReadStepJsonLines: "jsonLines",
         Dataset: "dataset",
+        AttachmentsEmbedded: "attachmentsEmbedded",
+        AttachmentEmbedded: "embedded",
     };
 
     // Temporary solution, later data will come from server
     public get yamlEventText(): string {
         let result = "";
-        let propertyName;
+        let propertyName: string;
         Object.entries(this.event).forEach(([key, value]) => {
-            key !== "__typename" && value ? (result += `${key}:\n`) : "";
-            if (value && key !== "__typename") {
+            if (value && key !== "__typename" && typeof value === "object") {
+                result += `${key}:\n`;
                 if (key === "inputs") {
                     (value as TransformInput[]).map((item: TransformInput) => {
                         result += `${this.FIRST_LEVEL_SHIFT}- kind: ${
@@ -47,10 +52,22 @@ export class YamlEventViewerComponent<TEvent extends object> {
                         }\n`;
                         result += `${this.SECOND_LEVEL_SHIFT}owner: ${item.dataset.owner.name}\n`;
                     });
+                } else if (key === "attachments") {
+                    (value as AttachmentsEmbedded).items.map(
+                        (item: AttachmentEmbedded) => {
+                            result += `${this.FIRST_LEVEL_SHIFT}kind: ${
+                                this.kindMapper[item.__typename as string]
+                            }\n`;
+                            result += `${this.SECOND_LEVEL_SHIFT}- path: ${item.path}\n`;
+                            result += `${
+                                this.SECOND_LEVEL_SHIFT
+                            }content: ${this.escapeText(item.content)}\n`;
+                        },
+                    );
                 } else {
                     Object.entries(value as object).forEach(
                         ([property, data]) => {
-                            if (data) {
+                            if (data && !Array.isArray(value)) {
                                 property === "__typename"
                                     ? (propertyName = "kind")
                                     : (propertyName = property);
@@ -61,9 +78,17 @@ export class YamlEventViewerComponent<TEvent extends object> {
                                     data as string,
                                     property,
                                 )}\n`;
+                            } else if (data) {
+                                result += `${this.FIRST_LEVEL_SHIFT}- ${
+                                    data as string
+                                }\n`;
                             }
                         },
                     );
+                }
+            } else {
+                if (key !== "__typename" && value) {
+                    result += `${key}: ${value as string}\n`;
                 }
             }
         });
@@ -83,5 +108,9 @@ export class YamlEventViewerComponent<TEvent extends object> {
         } else {
             return data as string;
         }
+    }
+
+    private escapeText(text: string): string {
+        return DataHelpers.escapeText(text);
     }
 }

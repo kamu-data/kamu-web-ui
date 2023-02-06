@@ -20,9 +20,8 @@ fragment MetadataBlock on MetadataBlockExtended {
     ...DatasetTransform
     ...ExecuteQueryEvent
     ...AddDataEvent
-    ... on SetAttachments {
-      __typename
-    }
+    ...SetAttachmentsEvent
+
     ... on SetInfo {
       __typename
     }

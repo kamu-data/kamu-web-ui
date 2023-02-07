@@ -7,7 +7,9 @@
             [tooltip]="'Name of the system time column.'"
             [label]="'System time column:'"
         >
-            <span>{{ event.systemTimeColumn }}</span>
+            <app-cards-property
+                [data]="[event.systemTimeColumn]"
+            ></app-cards-property>
         </app-block-row-data>
     </div>
     <div class="mx-4" *ngIf="event.eventTimeColumn">
@@ -15,7 +17,9 @@
             [tooltip]="'Name of the event time column.'"
             [label]="'Event time column:'"
         >
-            <span>{{ event.eventTimeColumn }}</span>
+            <app-cards-property
+                [data]="[event.eventTimeColumn]"
+            ></app-cards-property>
         </app-block-row-data>
     </div>
     <div class="mx-4" *ngIf="event.offsetColumn">
@@ -23,7 +27,9 @@
             [tooltip]="'Name of the offset column.'"
             [label]="'Offset column:'"
         >
-            <span>{{ event.offsetColumn }}</span>
+            <app-cards-property
+                [data]="[event.offsetColumn]"
+            ></app-cards-property>
         </app-block-row-data>
     </div>
 </div>

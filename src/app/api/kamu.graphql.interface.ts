@@ -888,6 +888,12 @@ export type ExecuteQueryEventFragment = {
     } | null;
 };
 
+export type SeedEventFragment = {
+    __typename?: "Seed";
+    datasetId: any;
+    datasetKind: DatasetKind;
+};
+
 export type SetAttachmentsEventFragment = {
     __typename?: "SetAttachments";
     attachments: {
@@ -1029,6 +1035,11 @@ export type SetVocabEventFragment = {
     systemTimeColumn?: string | null;
     eventTimeColumn?: string | null;
     offsetColumn?: string | null;
+};
+
+export type SetWatermarkEventFragment = {
+    __typename?: "SetWatermark";
+    outputWatermark: any;
 };
 
 export type AccountDetailsFragment = {
@@ -1336,14 +1347,14 @@ export type MetadataBlockFragment = {
     event:
         | ({ __typename: "AddData" } & AddDataEventFragment)
         | ({ __typename: "ExecuteQuery" } & ExecuteQueryEventFragment)
-        | { __typename: "Seed"; datasetId: any; datasetKind: DatasetKind }
+        | ({ __typename: "Seed" } & SeedEventFragment)
         | ({ __typename: "SetAttachments" } & SetAttachmentsEventFragment)
         | ({ __typename: "SetInfo" } & DatasetCurrentInfoFragment)
         | ({ __typename: "SetLicense" } & SetLicenseEventFragment)
         | ({ __typename: "SetPollingSource" } & SetPollingSourceEventFragment)
         | ({ __typename: "SetTransform" } & DatasetTransformFragment)
         | ({ __typename: "SetVocab" } & SetVocabEventFragment)
-        | { __typename: "SetWatermark"; outputWatermark: any };
+        | ({ __typename: "SetWatermark" } & SetWatermarkEventFragment);
 };
 
 export type GithubLoginMutationVariables = Exact<{
@@ -1731,6 +1742,17 @@ export const DatasetReadmeFragmentDoc = gql`
         }
     }
 `;
+export const SeedEventFragmentDoc = gql`
+    fragment SeedEvent on Seed {
+        datasetId
+        datasetKind
+    }
+`;
+export const SetWatermarkEventFragmentDoc = gql`
+    fragment SetWatermarkEvent on SetWatermark {
+        outputWatermark
+    }
+`;
 export const SetVocabEventFragmentDoc = gql`
     fragment SetVocabEvent on SetVocab {
         systemTimeColumn
@@ -1819,13 +1841,8 @@ export const MetadataBlockFragmentDoc = gql`
         }
         event {
             __typename
-            ... on Seed {
-                datasetId
-                datasetKind
-            }
-            ... on SetWatermark {
-                outputWatermark
-            }
+            ...SeedEvent
+            ...SetWatermarkEvent
             ...SetVocabEvent
             ...DatasetTransform
             ...ExecuteQueryEvent
@@ -1836,6 +1853,8 @@ export const MetadataBlockFragmentDoc = gql`
             ...SetPollingSourceEvent
         }
     }
+    ${SeedEventFragmentDoc}
+    ${SetWatermarkEventFragmentDoc}
     ${SetVocabEventFragmentDoc}
     ${DatasetTransformFragmentDoc}
     ${ExecuteQueryEventFragmentDoc}

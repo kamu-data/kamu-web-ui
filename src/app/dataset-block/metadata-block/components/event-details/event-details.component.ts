@@ -8,6 +8,7 @@ import {
     SetAttachments,
     SetInfo,
     SetVocab,
+    SetWatermark,
 } from "./../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "./supported.events";
 import {
@@ -116,6 +117,14 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     public get setVocabEvent(): SetVocab {
         return this.block.event as SetVocab;
+    }
+
+    public get isSetWatermarkEvent(): boolean {
+        return this.block.event.__typename === SupportedEvents.SetWatermark;
+    }
+
+    public get setWatermarkEvent(): SetWatermark {
+        return this.block.event as SetWatermark;
     }
 
     ngOnInit(): void {

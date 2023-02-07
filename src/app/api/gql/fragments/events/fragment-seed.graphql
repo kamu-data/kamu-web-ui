@@ -1,0 +1,4 @@
+fragment SeedEvent on Seed {
+  datasetId
+  datasetKind
+}

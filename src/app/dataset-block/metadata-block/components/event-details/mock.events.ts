@@ -7,6 +7,7 @@ import {
     SetLicense,
     SetPollingSource,
     SetVocab,
+    SetWatermark,
 } from "./../../../../api/kamu.graphql.interface";
 import {
     AddDataEventFragment,
@@ -218,4 +219,9 @@ export const mockSetVocab: SetVocab = {
     systemTimeColumn: null,
     eventTimeColumn: "case_reported_date",
     offsetColumn: null,
+};
+
+export const mockSetWatermark: SetWatermark = {
+    __typename: "SetWatermark",
+    outputWatermark: "2022-08-05T21:17:30.639588217+00:00",
 };

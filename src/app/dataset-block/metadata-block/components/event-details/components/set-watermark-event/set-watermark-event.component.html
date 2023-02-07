@@ -1,0 +1,13 @@
+<div *ngIf="event" class="position-relative border border-1 p-2 rounded-3">
+    <span class="position-absolute text-muted group-box-label text-uppercase"
+        >Output watermark</span
+    >
+    <div class="mx-4">
+        <app-block-row-data
+            [tooltip]="'Last watermark of the output data stream.'"
+            [label]="'Watermark:'"
+        >
+            <app-display-time [data]="event.outputWatermark"></app-display-time>
+        </app-block-row-data>
+    </div>
+</div>

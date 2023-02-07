@@ -10,14 +10,8 @@ fragment MetadataBlock on MetadataBlockExtended {
   }
   event {
     __typename
-    ... on Seed {
-      datasetId
-      datasetKind
-    }
-    ... on SetWatermark {
-      outputWatermark
-    }
-
+    ...SeedEvent
+    ...SetWatermarkEvent
     ...SetVocabEvent
     ...DatasetTransform
     ...ExecuteQueryEvent

@@ -38,6 +38,7 @@ import { SetLicenseEventComponent } from "./components/event-details/components/
 import { SetAttachmentsEventComponent } from "./components/event-details/components/set-attachments-event/set-attachments-event.component";
 import { SetInfoEventComponent } from "./components/event-details/components/set-info-event/set-info-event.component";
 import { SetVocabEventComponent } from "./components/event-details/components/set-vocab-event/set-vocab-event.component";
+import { SetWatermarkEventComponent } from "./components/event-details/components/set-watermark-event/set-watermark-event.component";
 
 @NgModule({
     declarations: [
@@ -67,6 +68,7 @@ import { SetVocabEventComponent } from "./components/event-details/components/se
         SetAttachmentsEventComponent,
         SetInfoEventComponent,
         SetVocabEventComponent,
+        SetWatermarkEventComponent,
     ],
     imports: [
         CommonModule,

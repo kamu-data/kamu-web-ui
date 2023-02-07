@@ -45,6 +45,12 @@
         <app-set-vocab-event [event]="setVocabEvent"></app-set-vocab-event>
     </ng-container>
 
+    <ng-container *ngIf="isSetWatermarkEvent">
+        <app-set-watermark-event
+            [event]="setWatermarkEvent"
+        ></app-set-watermark-event>
+    </ng-container>
+
     <ng-container *ngIf="!isSupportedEvent">
         <p class="text-center mt-2">
             <mat-icon class="text-danger align-middle">block</mat-icon>

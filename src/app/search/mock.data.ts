@@ -620,6 +620,9 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 },
                                 event: {
                                     __typename: "SetVocab",
+                                    systemTimeColumn: null,
+                                    eventTimeColumn: "case_reported_date",
+                                    offsetColumn: null,
                                 },
                             },
                             {

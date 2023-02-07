@@ -7,6 +7,7 @@ import {
     SetLicense,
     SetAttachments,
     SetInfo,
+    SetVocab,
 } from "./../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "./supported.events";
 import {
@@ -107,6 +108,14 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     public get setInfoEvent(): SetInfo {
         return this.block.event as SetInfo;
+    }
+
+    public get isSetVocabEvent(): boolean {
+        return this.block.event.__typename === SupportedEvents.SetVocab;
+    }
+
+    public get setVocabEvent(): SetVocab {
+        return this.block.event as SetVocab;
     }
 
     ngOnInit(): void {

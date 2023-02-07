@@ -53,13 +53,18 @@ export class YamlViewSectionComponent extends BaseComponent implements OnInit {
         return this.block.event.__typename === SupportedEvents.SetInfo;
     }
 
+    public get isSetVocabEvent(): boolean {
+        return this.block.event.__typename === SupportedEvents.SetVocab;
+    }
+
     public get isEventWithYamlView(): boolean {
         return (
             this.isSetPollingSourceEvent ||
             this.isSetTransformEvent ||
             this.isSetAttachmentsEvent ||
             this.isSetLicenseEvent ||
-            this.isSetInfoEvent
+            this.isSetInfoEvent ||
+            this.isSetVocabEvent
         );
     }
 }

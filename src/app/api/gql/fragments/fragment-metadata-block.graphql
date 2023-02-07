@@ -17,6 +17,8 @@ fragment MetadataBlock on MetadataBlockExtended {
     ... on SetWatermark {
       outputWatermark
     }
+
+    ...SetVocabEvent
     ...DatasetTransform
     ...ExecuteQueryEvent
     ...AddDataEvent

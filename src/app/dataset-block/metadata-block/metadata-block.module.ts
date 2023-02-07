@@ -37,6 +37,7 @@ import { BlockIntervalPropertyComponent } from "./components/event-details/compo
 import { SetLicenseEventComponent } from "./components/event-details/components/set-license-event/set-license-event.component";
 import { SetAttachmentsEventComponent } from "./components/event-details/components/set-attachments-event/set-attachments-event.component";
 import { SetInfoEventComponent } from "./components/event-details/components/set-info-event/set-info-event.component";
+import { SetVocabEventComponent } from "./components/event-details/components/set-vocab-event/set-vocab-event.component";
 
 @NgModule({
     declarations: [
@@ -65,6 +66,7 @@ import { SetInfoEventComponent } from "./components/event-details/components/set
         SetLicenseEventComponent,
         SetAttachmentsEventComponent,
         SetInfoEventComponent,
+        SetVocabEventComponent,
     ],
     imports: [
         CommonModule,

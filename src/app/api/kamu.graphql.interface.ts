@@ -1024,6 +1024,13 @@ export type SetPollingSourceEventFragment = {
     } | null;
 };
 
+export type SetVocabEventFragment = {
+    __typename?: "SetVocab";
+    systemTimeColumn?: string | null;
+    eventTimeColumn?: string | null;
+    offsetColumn?: string | null;
+};
+
 export type AccountDetailsFragment = {
     __typename?: "AccountInfo";
     login: string;
@@ -1335,7 +1342,7 @@ export type MetadataBlockFragment = {
         | ({ __typename: "SetLicense" } & SetLicenseEventFragment)
         | ({ __typename: "SetPollingSource" } & SetPollingSourceEventFragment)
         | ({ __typename: "SetTransform" } & DatasetTransformFragment)
-        | { __typename: "SetVocab" }
+        | ({ __typename: "SetVocab" } & SetVocabEventFragment)
         | { __typename: "SetWatermark"; outputWatermark: any };
 };
 
@@ -1724,6 +1731,13 @@ export const DatasetReadmeFragmentDoc = gql`
         }
     }
 `;
+export const SetVocabEventFragmentDoc = gql`
+    fragment SetVocabEvent on SetVocab {
+        systemTimeColumn
+        eventTimeColumn
+        offsetColumn
+    }
+`;
 export const ExecuteQueryEventFragmentDoc = gql`
     fragment ExecuteQueryEvent on ExecuteQuery {
         queryOutputData: outputData {
@@ -1812,6 +1826,7 @@ export const MetadataBlockFragmentDoc = gql`
             ... on SetWatermark {
                 outputWatermark
             }
+            ...SetVocabEvent
             ...DatasetTransform
             ...ExecuteQueryEvent
             ...AddDataEvent
@@ -1821,6 +1836,7 @@ export const MetadataBlockFragmentDoc = gql`
             ...SetPollingSourceEvent
         }
     }
+    ${SetVocabEventFragmentDoc}
     ${DatasetTransformFragmentDoc}
     ${ExecuteQueryEventFragmentDoc}
     ${AddDataEventFragmentDoc}

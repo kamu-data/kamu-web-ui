@@ -50,7 +50,7 @@ export class MetadataBlockComponent
     public datasetViewType = DatasetViewTypeEnum.History;
     public blockHash: string;
     public datasetHistoryUpdate: MaybeNull<DatasetHistoryUpdate> = null;
-    private blocksPerPage = 4;
+    private blocksPerPage = 10;
 
     ngOnInit(): void {
         this.datasetInfo = this.getDatasetInfoFromUrl();

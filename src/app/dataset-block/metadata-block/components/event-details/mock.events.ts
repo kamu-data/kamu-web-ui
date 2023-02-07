@@ -6,6 +6,7 @@ import {
     SetInfo,
     SetLicense,
     SetPollingSource,
+    SetVocab,
 } from "./../../../../api/kamu.graphql.interface";
 import {
     AddDataEventFragment,
@@ -210,4 +211,11 @@ export const mockSetInfo: SetInfo = {
         "Ontario",
         "Canada",
     ],
+};
+
+export const mockSetVocab: SetVocab = {
+    __typename: "SetVocab",
+    systemTimeColumn: null,
+    eventTimeColumn: "case_reported_date",
+    offsetColumn: null,
 };

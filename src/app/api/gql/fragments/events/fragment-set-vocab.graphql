@@ -1,0 +1,5 @@
+fragment SetVocabEvent on SetVocab {
+  systemTimeColumn
+  eventTimeColumn
+  offsetColumn
+}

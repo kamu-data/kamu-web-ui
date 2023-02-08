@@ -12,27 +12,26 @@
                     value
                 )
         "
-    >{{ value | slice: -8 }}</a>
+        >{{ value | slice: -8 }}</a
+    >
 
     <span
         *ngIf="!navigationTargetDataset"
         class="mr-1"
         [title]="value"
         data-test-id="notNavigableValue"
-        >{{ value | slice: -8 }}</span>
+        >{{ value | slice: -8 }}</span
+    >
 
     <button
         *ngIf="showCopyButton"
-        (click)="copyToClipboard($event, value)"
+        (click)="copyToClipboard(value)"
         class="btn btn-sm btn-gray clipboard-btn"
         role="button"
         data-test-id="copyToClipboardButton"
     >
         <div style="position: relative; display: inline-block">
             <svg-icon name="copy"></svg-icon>
-        </div>
-        <div style="position: relative; display: none">
-            <svg-icon name="checked"></svg-icon>
         </div>
     </button>
 </ng-container>

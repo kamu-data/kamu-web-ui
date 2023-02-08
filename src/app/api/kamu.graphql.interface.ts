@@ -173,7 +173,7 @@ export type DataQueryResultSuccess = {
     __typename?: "DataQueryResultSuccess";
     data: DataBatch;
     limit: Scalars["Int"];
-    schema: DataSchema;
+    schema?: Maybe<DataSchema>;
 };
 
 export type DataSchema = {
@@ -1053,11 +1053,11 @@ export type AccountDetailsFragment = {
 
 export type DataQueryResultSuccessViewFragment = {
     __typename?: "DataQueryResultSuccess";
-    schema: {
+    schema?: {
         __typename?: "DataSchema";
         format: DataSchemaFormat;
         content: string;
-    };
+    } | null;
     data: {
         __typename?: "DataBatch";
         format: DataBatchFormat;

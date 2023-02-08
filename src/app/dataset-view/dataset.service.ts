@@ -134,9 +134,10 @@ export class DatasetService {
                 if (queryResult.__typename === "DataQueryResultSuccess") {
                     const content: DataRow[] =
                         DatasetService.parseDataRows(queryResult);
-                    const schema: DatasetSchema = DatasetService.parseSchema(
-                        queryResult.schema.content,
-                    );
+                    const schema: DatasetSchema = 
+                        queryResult.schema
+                            ? DatasetService.parseSchema(queryResult.schema.content)
+                            : DEFAULT_DATASET_SCHEMA;
                     const dataUpdate: DataUpdate = { content, schema };
                     this.appDatasetSubsService.changeDatasetData(dataUpdate);
                 } else if (

@@ -49,7 +49,8 @@
               "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.css",
               "node_modules/prismjs/plugins/command-line/prism-command-line.css",
               "node_modules/katex/dist/katex.min.css",
-              "node_modules/highlight.js/styles/atom-one-light.css"
+              "node_modules/highlight.js/styles/atom-one-light.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "node_modules/prismjs/prism.js",
@@ -119,7 +120,8 @@
               "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.css",
               "node_modules/prismjs/plugins/command-line/prism-command-line.css",
               "node_modules/katex/dist/katex.min.css",
-              "node_modules/highlight.js/styles/atom-one-light.css"
+              "node_modules/highlight.js/styles/atom-one-light.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "node_modules/prismjs/prism.js",

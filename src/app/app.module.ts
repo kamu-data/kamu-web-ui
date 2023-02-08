@@ -65,6 +65,7 @@ import { AngularSvgIconPreloaderModule } from "angular-svg-icon-preloader";
 import { DatasetsTabComponent } from "./auth/account/additional-components/datasets-tab/datasets-tab.component";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
+import { ToastrModule } from "ngx-toastr";
 
 const Services = [
     {
@@ -176,6 +177,12 @@ const MatModules = [
             configUrl: "./assets/svg/icons.json",
         }),
         HighlightModule,
+        ToastrModule.forRoot({
+            timeOut: 2000,
+            positionClass: "toast-bottom-right",
+            newestOnTop: false,
+            preventDuplicates: true,
+        }), // ToastrModule added
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

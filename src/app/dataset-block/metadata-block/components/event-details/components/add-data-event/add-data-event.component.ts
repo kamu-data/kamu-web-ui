@@ -2,8 +2,9 @@ import { AddData } from "./../../../../../../api/kamu.graphql.interface";
 import {
     ChangeDetectionStrategy,
     Component,
-    Input,
+    OnChanges,
     OnInit,
+    SimpleChanges,
 } from "@angular/core";
 import { BaseDynamicEventComponent } from "../base-dynamic-event/base-dynamic-event.component";
 import { SECTION_BUILDERS_BY_EVENT_TYPE } from "../../dynamic-events/builders/event-section.builders";
@@ -16,10 +17,19 @@ import { SECTION_BUILDERS_BY_EVENT_TYPE } from "../../dynamic-events/builders/ev
 })
 export class AddDataEventComponent
     extends BaseDynamicEventComponent<AddData>
-    implements OnInit
+    implements OnChanges, OnInit
 {
-    @Input() public event: AddData;
-    ngOnInit(): void {
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (!changes.event.firstChange) {
+            this.buildSections();
+        }
+    }
+
+    public ngOnInit(): void {
+        this.buildSections();
+    }
+
+    private buildSections(): void {
         this.eventSections =
             SECTION_BUILDERS_BY_EVENT_TYPE.AddData.buildEventSections(
                 this.event,

@@ -19,7 +19,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^14.2.0",
+    "@angular/animations": "^14.2.12",
     "@angular/cdk": "^14.2.0",
     "@angular/common": "^14.2.0",
     "@angular/compiler": "^14.2.0",
@@ -52,6 +52,7 @@
     "ngx-highlightjs": "^7.0.1",
     "ngx-markdown": "^14.0.1",
     "ngx-monaco-editor": "^12.0.0",
+    "ngx-toastr": "^16.0.2",
     "npx": "^10.2.2",
     "rxjs": "~6.5.3",
     "subsink": "^1.0.2",

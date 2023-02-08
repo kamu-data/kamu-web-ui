@@ -39,6 +39,7 @@ import { SetAttachmentsEventComponent } from "./components/event-details/compone
 import { SetInfoEventComponent } from "./components/event-details/components/set-info-event/set-info-event.component";
 import { SetVocabEventComponent } from "./components/event-details/components/set-vocab-event/set-vocab-event.component";
 import { SetWatermarkEventComponent } from "./components/event-details/components/set-watermark-event/set-watermark-event.component";
+import { TemporalTablesPropertyComponent } from "./components/event-details/components/common/temporal-tables-property/temporal-tables-property.component";
 
 @NgModule({
     declarations: [
@@ -64,6 +65,7 @@ import { SetWatermarkEventComponent } from "./components/event-details/component
         SizePropertyComponent,
         HashPropertyComponent,
         BlockIntervalPropertyComponent,
+        TemporalTablesPropertyComponent,
         SetLicenseEventComponent,
         SetAttachmentsEventComponent,
         SetInfoEventComponent,

@@ -13,6 +13,7 @@ import {
     DataRow,
     DatasetLineageNode,
     DatasetSchema,
+    DEFAULT_DATASET_SCHEMA,
 } from "../interface/dataset.interface";
 import {
     DatasetBasicsFragment,
@@ -34,6 +35,7 @@ import {
 import { DatasetApi } from "../api/dataset.api";
 import { DatasetNotFoundError } from "../common/errors";
 import { catchError, map } from "rxjs/operators";
+
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {
@@ -59,10 +61,10 @@ export class DatasetService {
                 if (data.datasets.byOwnerAndName) {
                     const dataTail = data.datasets.byOwnerAndName.data.tail;
                     if (dataTail.__typename === "DataQueryResultSuccess") {
-                        const schema: DatasetSchema = JSON.parse(
-                            data.datasets.byOwnerAndName.metadata.currentSchema
-                                .content,
-                        ) as DatasetSchema;
+                        const schema: DatasetSchema = 
+                            data.datasets.byOwnerAndName.metadata.currentSchema 
+                                ? JSON.parse(data.datasets.byOwnerAndName.metadata.currentSchema.content) as DatasetSchema 
+                                : DEFAULT_DATASET_SCHEMA;
 
                         this.datasetUpdate(data.datasets.byOwnerAndName);
                         this.overviewTabDataUpdate(

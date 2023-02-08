@@ -271,7 +271,7 @@ export type DatasetMetadata = {
     /** Current readme file as discovered from attachments associated with the dataset */
     currentReadme?: Maybe<Scalars["String"]>;
     /** Latest data schema */
-    currentSchema: DataSchema;
+    currentSchema?: Maybe<DataSchema>;
     /** Current source used by the root dataset */
     currentSource?: Maybe<SetPollingSource>;
     /** Current transformation used by the derivative dataset */
@@ -1253,11 +1253,11 @@ export type DatasetMetadataSummaryFragment = {
         currentTransform?:
             | ({ __typename?: "SetTransform" } & DatasetTransformFragment)
             | null;
-        currentSchema: {
+        currentSchema?: {
             __typename: "DataSchema";
             format: DataSchemaFormat;
             content: string;
-        };
+        } | null;
     };
 } & DatasetReadmeFragment &
     DatasetLastUpdateFragment;

@@ -9,6 +9,7 @@ import { emitClickOnElement } from "src/app/common/base-test.helpers.spec";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { mockDataUpdate, mockSqlErrorUpdate } from "../data-tabs.mock";
 import { first } from "rxjs/operators";
+import { DEFAULT_DATASET_SCHEMA } from "src/app/interface/dataset.interface";
 
 describe("DataComponent", () => {
     let component: DataComponent;
@@ -47,12 +48,12 @@ describe("DataComponent", () => {
     it("should check #ngOninit", () => {
         component.datasetBasics = mockDatasetBasicsFragment;
         expect(component.currentData).toEqual([]);
-        expect(component.currentSchema).toEqual(DataComponent.DefaultDatasetSchema);
+        expect(component.currentSchema).toEqual(DEFAULT_DATASET_SCHEMA);
         expect(component.sqlErrorMarker).toBe(null);
 
         component.ngOnInit();
         expect(component.currentData).toEqual([]);
-        expect(component.currentSchema).toEqual(DataComponent.DefaultDatasetSchema);
+        expect(component.currentSchema).toEqual(DEFAULT_DATASET_SCHEMA);
         expect(component.sqlRequestCode).toEqual(
             `select\n  *\nfrom 'mockName'`,
         );
@@ -72,7 +73,7 @@ describe("DataComponent", () => {
         appDatasetSubsService.observeSqlErrorOccurred(mockSqlErrorUpdate);
 
         expect(component.currentData).toEqual([]);
-        expect(component.currentSchema).toEqual(DataComponent.DefaultDatasetSchema);
+        expect(component.currentSchema).toEqual(DEFAULT_DATASET_SCHEMA);
         expect(component.sqlErrorMarker).toBe(mockSqlErrorUpdate.error);        
     });
 });

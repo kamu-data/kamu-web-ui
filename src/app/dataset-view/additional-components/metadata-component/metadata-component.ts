@@ -19,6 +19,7 @@ import {
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
 import { momentConvertDatetoLocalWithFormat } from "src/app/common/app.helpers";
+import { MaybeNull } from "src/app/common/app.types";
 
 @Component({
     selector: "app-metadata",
@@ -43,7 +44,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     };
 
     public currentState?: {
-        schema: DatasetSchema;
+        schema: MaybeNull<DatasetSchema>;
         metadata: DatasetMetadataSummaryFragment;
         pageInfo: PageBasedInfo;
     };

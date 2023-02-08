@@ -11,7 +11,7 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import { DataRow, DatasetSchema, DEFAULT_DATASET_SCHEMA } from "../../../interface/dataset.interface";
+import { DataRow, DatasetSchema } from "../../../interface/dataset.interface";
 import DataTabValues from "./mock.data";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { BaseComponent } from "src/app/common/base.component";
@@ -40,7 +40,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     public sqlRequestCode = `select\n  *\nfrom `;
 
     public sqlErrorMarker: MaybeNull<string> = null;
-    public currentSchema: DatasetSchema = DEFAULT_DATASET_SCHEMA;
+    public currentSchema: MaybeNull<DatasetSchema> = null;
     public currentData: DataRow[] = [];
 
     constructor(
@@ -70,7 +70,7 @@ export class DataComponent extends BaseComponent implements OnInit {
             this.appDatasetSubsService.onDatasetDataSqlErrorOccured.subscribe(
                 (dataSqlErrorUpdate: DataSqlErrorUpdate) => {
                     this.currentData = [];
-                    this.currentSchema = DEFAULT_DATASET_SCHEMA;
+                    this.currentSchema = null;
                     this.sqlErrorMarker = dataSqlErrorUpdate.error;
                     this.cdr.markForCheck();
                 },

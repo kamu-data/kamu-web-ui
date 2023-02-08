@@ -1,11 +1,13 @@
 <div class="dataset-view-data-result-container">
     <div class="search-result-container__content">
-        <h2 class="box-title align-items-center pb-3 m-0">Schema:</h2>
-        <app-dynamic-table
-            [hasTableHeader]="true"
-            [schemaFields]="currentSchema ? currentSchema.fields : []"
-            [idTable]="'schema-block-table'"
-        ></app-dynamic-table>
+        <ng-container *ngIf="currentSchema">
+            <h2 class="box-title align-items-center pb-3 m-0">Schema:</h2>
+            <app-dynamic-table
+                [hasTableHeader]="true"
+                [schemaFields]="currentSchema.fields"
+                [idTable]="'schema-block-table'"
+            ></app-dynamic-table>
+        </ng-container>
         <div>
             <h2 class="box-title align-items-center pb-3 pt-3 m-0">
                 Saved Queries

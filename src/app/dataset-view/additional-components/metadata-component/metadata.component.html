@@ -13,7 +13,7 @@
 
         <ng-container *ngIf="currentState">
             <div class="d-flex flex-column gap-4 mt-4">
-                <div class="position-relative border border-1 p-2 rounded-3">
+                <div class="position-relative border border-1 p-2 rounded-3" *ngIf="currentState.schema">
                     <span
                         class="position-absolute text-muted group-box-label text-uppercase"
                         >Schema</span
@@ -27,11 +27,7 @@
                         >
                             <app-dynamic-table
                                 [hasTableHeader]="true"
-                                [schemaFields]="
-                                    currentState
-                                        ? currentState.schema.fields
-                                        : []
-                                "
+                                [schemaFields]="currentState.schema.fields"
                                 [idTable]="'schema-block-table'"
                             ></app-dynamic-table>
                         </app-block-row-data>
@@ -39,7 +35,6 @@
                 </div>
                 <div
                     *ngIf="
-                        currentState &&
                         currentState.metadata.metadata.currentLicense
                     "
                     class="position-relative border border-1 p-2 rounded-3"
@@ -112,7 +107,6 @@
 
                 <ng-container
                     *ngIf="
-                        currentState &&
                         currentState.metadata.metadata.currentSource
                     "
                 >

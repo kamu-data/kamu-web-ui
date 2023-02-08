@@ -18,12 +18,6 @@ export interface DatasetSchema {
     fields: DataSchemaField[];
 }
 
-export const DEFAULT_DATASET_SCHEMA: DatasetSchema = {
-    name: "arrow_schema",
-    type: "struct",
-    fields: [],
-};
-
 export interface DataSchemaField {
     name: string;
     repetition: string;

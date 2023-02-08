@@ -7,16 +7,17 @@ import {
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
 import { DataRow, DatasetSchema } from "../interface/dataset.interface";
+import { MaybeNull } from "../common/app.types";
 
 export interface OverviewDataUpdate {
-    schema: DatasetSchema;
+    schema: MaybeNull<DatasetSchema>;
     content: DataRow[];
     overview: DatasetOverviewFragment;
     size: DatasetDataSizeFragment;
 }
 
 export interface DataUpdate {
-    schema: DatasetSchema;
+    schema: MaybeNull<DatasetSchema>;
     content: DataRow[];
 }
 
@@ -25,7 +26,7 @@ export interface DataSqlErrorUpdate {
 }
 
 export interface MetadataSchemaUpdate {
-    schema: DatasetSchema;
+    schema: MaybeNull<DatasetSchema>;
     metadata: DatasetMetadataSummaryFragment;
     pageInfo: DatasetPageInfoFragment;
 }

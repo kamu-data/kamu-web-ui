@@ -20,6 +20,7 @@ import {
 } from "../../../api/kamu.graphql.interface";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { DataRow, DatasetSchema } from "src/app/interface/dataset.interface";
+import { MaybeNull } from "src/app/common/app.types";
 
 @Component({
     selector: "app-overview",
@@ -34,7 +35,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     @Output() selectTopicEmit = new EventEmitter<string>();
 
     public currentState?: {
-        schema: DatasetSchema;
+        schema: MaybeNull<DatasetSchema>;
         data: DataRow[];
         overview: DatasetOverviewFragment;
         size: DatasetDataSizeFragment;

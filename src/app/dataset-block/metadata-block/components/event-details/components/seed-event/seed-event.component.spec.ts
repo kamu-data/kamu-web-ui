@@ -1,12 +1,5 @@
-import AppValues from "src/app/common/app.values";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
-import {
-    ComponentFixture,
-    fakeAsync,
-    flush,
-    TestBed,
-    tick,
-} from "@angular/core/testing";
+import { ComponentFixture, fakeAsync, TestBed } from "@angular/core/testing";
 import {
     findElementByDataTestId,
     emitClickOnElement,
@@ -14,18 +7,23 @@ import {
 import { mockSeed } from "../../mock.events";
 
 import { SeedEventComponent } from "./seed-event.component";
+import { ToastrModule, ToastrService } from "ngx-toastr";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 describe("SeedEventComponent", () => {
     let component: SeedEventComponent;
     let fixture: ComponentFixture<SeedEventComponent>;
+    let toastService: ToastrService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [SeedEventComponent],
+            imports: [ToastrModule.forRoot(), BrowserAnimationsModule],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SeedEventComponent);
+        toastService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
         component.event = mockSeed;
         fixture.detectChanges();
@@ -35,25 +33,17 @@ describe("SeedEventComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check call copyToClipboard method", fakeAsync(() => {
+    it("should check copyToClipboard button is exist", fakeAsync(() => {
         const copyToClipboardButton = findElementByDataTestId(
             fixture,
             "copyToClipboardId",
         );
         expect(copyToClipboardButton).toBeDefined();
+    }));
 
+    it("should check copyToClipboard button is work", fakeAsync(() => {
+        const successToastServiceSpy = spyOn(toastService, "success");
         emitClickOnElement(fixture, '[data-test-id="copyToClipboardId"]');
-
-        expect(
-            copyToClipboardButton.classList.contains("clipboard-btn--success"),
-        ).toEqual(true);
-
-        tick(AppValues.LONG_DELAY_MS);
-
-        expect(
-            copyToClipboardButton.classList.contains("clipboard-btn--success"),
-        ).toEqual(false);
-
-        flush();
+        expect(successToastServiceSpy).toHaveBeenCalledWith("Copied");
     }));
 });

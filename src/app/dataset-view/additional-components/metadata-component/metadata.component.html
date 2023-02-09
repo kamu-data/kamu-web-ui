@@ -162,6 +162,24 @@
                                 }}</span>
                             </app-block-row-data>
                         </div>
+
+                        <div
+                            class="mx-4"
+                            *ngIf="
+                                currentState.metadata.metadata.currentSource
+                                    .fetch.__typename === 'FetchStepFilesGlob'
+                            "
+                        >
+                            <app-block-row-data
+                                [tooltip]="'Path with a glob pattern.'"
+                                [label]="'Path:'"
+                            >
+                                <span>{{
+                                    currentState.metadata.metadata.currentSource
+                                        .fetch.path
+                                }}</span>
+                            </app-block-row-data>
+                        </div>
                     </div>
 
                     <div
@@ -320,7 +338,10 @@
                     </div>
                 </ng-container>
 
-                <div class="position-relative border border-1 p-2 rounded-3">
+                <div
+                    class="position-relative border border-1 p-2 rounded-3"
+                    *ngIf="currentState.metadata.metadata.currentWatermark"
+                >
                     <span
                         class="position-absolute text-muted group-box-label text-uppercase"
                         >Watermark</span

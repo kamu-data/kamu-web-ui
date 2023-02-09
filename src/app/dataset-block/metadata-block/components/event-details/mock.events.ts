@@ -134,7 +134,18 @@ export const mockSetTransform: DatasetTransformFragment = {
                 query: "SELECT\n  id,\n  date_reported as reported_date,\n  case when lower(gender) = 'male' then 'M' \n       when lower(gender) = 'female' then 'F' \n       else 'U' end as gender,\n  case when age_group = 'Under 1 year' then '<20'\n       when age_group = '1-4 years' then '<20'\n       when age_group = '5-9 years' then '<20'\n       when age_group = '10-19 years' then '<20'\n       when age_group = '20-29 years' then '20s'\n       when age_group = '30-39 years' then '30s'\n       when age_group = '40-49 years' then '40s'\n       when age_group = '50-59 years' then '50s'\n       when age_group = '60-69 years' then '60s'\n       when age_group = '70-79 years' then '70s'\n       when age_group = '80+ years' then '80s'\n       else 'UNKNOWN' end as age_group,\n  zone as location\n  FROM `alberta.case-details`\n",
             },
         ],
-        temporalTables: null,
+        temporalTables: [
+            {
+                __typename: "TemporalTable",
+                name: "account.tokens.portfolio.usd",
+                primaryKey: ["token_symbol"],
+            },
+            {
+                __typename: "TemporalTable",
+                name: "com.cryptocompare.ohlcv.eth-usd",
+                primaryKey: ["from_symbol"],
+            },
+        ],
     },
 };
 

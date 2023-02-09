@@ -1,3 +1,4 @@
+import { TemporalTablesPropertyComponent } from "./../common/temporal-tables-property/temporal-tables-property.component";
 import { SimplePropertyComponent } from "./../common/simple-property/simple-property.component";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
@@ -20,6 +21,15 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         presentationComponent: SqlQueryViewerComponent,
         separateRowForValue: true,
         dataTestId: "set-transform-transformSql-queries",
+    },
+
+    "SetTransform.TransformSql.temporalTables": {
+        label: "Temporal tables:",
+        tooltip:
+            "Temporary Flink-specific extension for creating temporal tables from streams.",
+        presentationComponent: TemporalTablesPropertyComponent,
+        separateRowForValue: true,
+        dataTestId: "set-transform-transformSql-temporal-tables",
     },
 
     "SetTransform.Dataset.id": {

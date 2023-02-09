@@ -10,6 +10,7 @@ import { SimplePropertyComponent } from "../common/simple-property/simple-proper
 import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
 
 import { SetTransformEventComponent } from "./set-transform-event.component";
+import { TemporalTablesPropertyComponent } from "../common/temporal-tables-property/temporal-tables-property.component";
 
 describe("SetTransformEventComponent", () => {
     let component: SetTransformEventComponent;
@@ -22,6 +23,7 @@ describe("SetTransformEventComponent", () => {
                 SimplePropertyComponent,
                 EnginePropertyComponent,
                 SqlQueryViewerComponent,
+                TemporalTablesPropertyComponent,
             ],
             imports: [ApolloTestingModule],
             schemas: [NO_ERRORS_SCHEMA],

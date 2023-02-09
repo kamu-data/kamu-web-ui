@@ -1,9 +1,15 @@
 import { DataHelpers } from "src/app/common/data.helpers";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Input,
+} from "@angular/core";
 import {
     AttachmentEmbedded,
     AttachmentsEmbedded,
     SqlQueryStep,
+    TemporalTable,
     TransformInput,
 } from "src/app/api/kamu.graphql.interface";
 
@@ -14,6 +20,7 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class YamlEventViewerComponent<TEvent extends object> {
+    constructor(private cdr: ChangeDetectorRef) {}
     @Input() public event: TEvent;
     private readonly FIRST_LEVEL_SHIFT = "\u00A0\u00A0";
     private readonly SECOND_LEVEL_SHIFT = "\u00A0\u00A0\u00A0\u00A0";
@@ -67,21 +74,35 @@ export class YamlEventViewerComponent<TEvent extends object> {
                 } else {
                     Object.entries(value as object).forEach(
                         ([property, data]) => {
-                            if (data && !Array.isArray(value)) {
-                                property === "__typename"
-                                    ? (propertyName = "kind")
-                                    : (propertyName = property);
+                            if (property === "temporalTables" && data) {
+                                result += `${this.FIRST_LEVEL_SHIFT}${property}:\n`;
+                                (data as TemporalTable[]).map(
+                                    (item: TemporalTable) => {
+                                        result += `${this.FIRST_LEVEL_SHIFT}${this.SECOND_LEVEL_SHIFT}- name: ${item.name}\n`;
+                                        result += `${this.FIRST_LEVEL_SHIFT}${this.SECOND_LEVEL_SHIFT}  primaryKey:\n`;
+                                        item.primaryKey.map(
+                                            (field: string) =>
+                                                (result += `${this.SECOND_LEVEL_SHIFT}${this.SECOND_LEVEL_SHIFT}${this.SECOND_LEVEL_SHIFT}- ${field}\n`),
+                                        );
+                                    },
+                                );
+                            } else {
+                                if (data && !Array.isArray(value)) {
+                                    property === "__typename"
+                                        ? (propertyName = "kind")
+                                        : (propertyName = property);
 
-                                result += `${
-                                    this.FIRST_LEVEL_SHIFT
-                                }${propertyName}: ${this.getPropertyValue(
-                                    data as string,
-                                    property,
-                                )}\n`;
-                            } else if (data) {
-                                result += `${this.FIRST_LEVEL_SHIFT}- ${
-                                    data as string
-                                }\n`;
+                                    result += `${
+                                        this.FIRST_LEVEL_SHIFT
+                                    }${propertyName}: ${this.getPropertyValue(
+                                        data as string,
+                                        property,
+                                    )}\n`;
+                                } else if (data) {
+                                    result += `${this.FIRST_LEVEL_SHIFT}- ${
+                                        data as string
+                                    }\n`;
+                                }
                             }
                         },
                     );

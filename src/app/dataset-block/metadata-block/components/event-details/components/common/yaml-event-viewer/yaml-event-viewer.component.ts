@@ -1,4 +1,3 @@
-import { PrepStep } from "./../../../../../../../api/kamu.graphql.interface";
 import { DataHelpers } from "src/app/common/data.helpers";
 import {
     ChangeDetectionStrategy,
@@ -37,6 +36,7 @@ export class YamlEventViewerComponent<TEvent extends object> {
         AttachmentsEmbedded: "attachmentsEmbedded",
         AttachmentEmbedded: "embedded",
         PrepStepPipe: "pipe",
+        FetchStepFilesGlob: "glob",
     };
 
     // Temporary solution, later data will come from server

@@ -10,7 +10,6 @@ import { CardsPropertyComponent } from "../common/cards-property/cards-property.
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 
-
 export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepUrl.url": {
         label: "Url:",
@@ -18,6 +17,14 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         presentationComponent: LinkPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-fetchStepUrl-url",
+    },
+
+    "SetPollingSource.FetchStepFilesGlob.path": {
+        label: "Path:",
+        tooltip: "Path with a glob pattern.",
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepFilesGlob-path",
     },
 
     "SetPollingSource.FetchStepContainer.image": {

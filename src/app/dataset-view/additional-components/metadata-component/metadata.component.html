@@ -162,6 +162,24 @@
                                 }}</span>
                             </app-block-row-data>
                         </div>
+
+                        <div
+                            class="mx-4"
+                            *ngIf="
+                                currentState.metadata.metadata.currentSource
+                                    .fetch.__typename === 'FetchStepFilesGlob'
+                            "
+                        >
+                            <app-block-row-data
+                                [tooltip]="'Path with a glob pattern.'"
+                                [label]="'Path:'"
+                            >
+                                <span>{{
+                                    currentState.metadata.metadata.currentSource
+                                        .fetch.path
+                                }}</span>
+                            </app-block-row-data>
+                        </div>
                     </div>
 
                     <div

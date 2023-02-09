@@ -34,6 +34,8 @@ import {
 import { DatasetApi } from "../api/dataset.api";
 import { DatasetNotFoundError } from "../common/errors";
 import { catchError, map } from "rxjs/operators";
+import { MaybeNull } from "../common/app.types";
+
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {
@@ -59,10 +61,10 @@ export class DatasetService {
                 if (data.datasets.byOwnerAndName) {
                     const dataTail = data.datasets.byOwnerAndName.data.tail;
                     if (dataTail.__typename === "DataQueryResultSuccess") {
-                        const schema: DatasetSchema = JSON.parse(
-                            data.datasets.byOwnerAndName.metadata.currentSchema
-                                .content,
-                        ) as DatasetSchema;
+                        const schema: MaybeNull<DatasetSchema> = 
+                            data.datasets.byOwnerAndName.metadata.currentSchema 
+                                ? JSON.parse(data.datasets.byOwnerAndName.metadata.currentSchema.content) as DatasetSchema 
+                                : null;
 
                         this.datasetUpdate(data.datasets.byOwnerAndName);
                         this.overviewTabDataUpdate(
@@ -132,9 +134,10 @@ export class DatasetService {
                 if (queryResult.__typename === "DataQueryResultSuccess") {
                     const content: DataRow[] =
                         DatasetService.parseDataRows(queryResult);
-                    const schema: DatasetSchema = DatasetService.parseSchema(
-                        queryResult.schema.content,
-                    );
+                    const schema: MaybeNull<DatasetSchema> = 
+                        queryResult.schema
+                            ? DatasetService.parseSchema(queryResult.schema.content)
+                            : null;
                     const dataUpdate: DataUpdate = { content, schema };
                     this.appDatasetSubsService.changeDatasetData(dataUpdate);
                 } else if (
@@ -165,7 +168,7 @@ export class DatasetService {
     private overviewTabDataUpdate(
         overview: DatasetOverviewFragment,
         size: DatasetDataSizeFragment,
-        schema: DatasetSchema,
+        schema: MaybeNull<DatasetSchema>,
         tail: DataQueryResultSuccessViewFragment,
     ): void {
         const content: DataRow[] = DatasetService.parseDataRows(tail);
@@ -182,7 +185,7 @@ export class DatasetService {
     }
 
     private dataTabDataUpdate(
-        schema: DatasetSchema,
+        schema: MaybeNull<DatasetSchema>,
         tail: DataQueryResultSuccessViewFragment,
     ): void {
         const content: DataRow[] = DatasetService.parseDataRows(tail);
@@ -192,7 +195,7 @@ export class DatasetService {
 
     private metadataTabDataUpdate(
         data: GetDatasetMainDataQuery,
-        schema: DatasetSchema,
+        schema: MaybeNull<DatasetSchema>,
     ): void {
         if (data.datasets.byOwnerAndName) {
             const metadata: DatasetMetadataSummaryFragment =

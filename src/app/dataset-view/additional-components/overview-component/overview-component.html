@@ -38,8 +38,9 @@
                 [datasetName]="datasetBasics.name"
             ></app-overview-history-summary-header>
             <app-dynamic-table
+                *ngIf="currentState && currentState.schema"
                 [hasTableHeader]="true"
-                [schemaFields]="currentState ? currentState.schema.fields : []"
+                [schemaFields]="currentState.schema.fields"
                 [dataRows]="currentState ? currentState.data : []"
             ></app-dynamic-table>
             <div id="file-readme-dataset-template-md" class="file my-4">

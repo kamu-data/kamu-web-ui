@@ -25,11 +25,6 @@ import { MaybeNull } from "src/app/common/app.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent extends BaseComponent implements OnInit {
-    public static readonly DefaultDatasetSchema: DatasetSchema = {
-        name: "arrow_schema",
-        type: "struct",
-        fields: [],
-    };
 
     @Input() public datasetBasics?: DatasetBasicsFragment;
     @Output() public runSQLRequestEmit = new EventEmitter<string>();
@@ -45,7 +40,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     public sqlRequestCode = `select\n  *\nfrom `;
 
     public sqlErrorMarker: MaybeNull<string> = null;
-    public currentSchema: DatasetSchema = DataComponent.DefaultDatasetSchema;
+    public currentSchema: MaybeNull<DatasetSchema> = null;
     public currentData: DataRow[] = [];
 
     constructor(
@@ -75,7 +70,7 @@ export class DataComponent extends BaseComponent implements OnInit {
             this.appDatasetSubsService.onDatasetDataSqlErrorOccured.subscribe(
                 (dataSqlErrorUpdate: DataSqlErrorUpdate) => {
                     this.currentData = [];
-                    this.currentSchema = DataComponent.DefaultDatasetSchema;
+                    this.currentSchema = null;
                     this.sqlErrorMarker = dataSqlErrorUpdate.error;
                     this.cdr.markForCheck();
                 },

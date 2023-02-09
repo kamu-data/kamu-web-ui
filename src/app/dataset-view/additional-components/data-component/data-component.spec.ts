@@ -47,12 +47,12 @@ describe("DataComponent", () => {
     it("should check #ngOninit", () => {
         component.datasetBasics = mockDatasetBasicsFragment;
         expect(component.currentData).toEqual([]);
-        expect(component.currentSchema).toEqual(DataComponent.DefaultDatasetSchema);
+        expect(component.currentSchema).toEqual(null);
         expect(component.sqlErrorMarker).toBe(null);
 
         component.ngOnInit();
         expect(component.currentData).toEqual([]);
-        expect(component.currentSchema).toEqual(DataComponent.DefaultDatasetSchema);
+        expect(component.currentSchema).toEqual(null);
         expect(component.sqlRequestCode).toEqual(
             `select\n  *\nfrom 'mockName'`,
         );
@@ -72,7 +72,7 @@ describe("DataComponent", () => {
         appDatasetSubsService.observeSqlErrorOccurred(mockSqlErrorUpdate);
 
         expect(component.currentData).toEqual([]);
-        expect(component.currentSchema).toEqual(DataComponent.DefaultDatasetSchema);
+        expect(component.currentSchema).toEqual(null);
         expect(component.sqlErrorMarker).toBe(mockSqlErrorUpdate.error);        
     });
 });

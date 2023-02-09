@@ -125,6 +125,7 @@ it("should check description for SetTransform block", () => {
             inputs: [
                 {
                     __typename: "TransformInput",
+                    name: "alias",
                     dataset: {
                         __typename: "Dataset",
                         id: "did:odf:z4k88e8uENDqbAKHbhZF2xXAQrAF19cnqGqArUB9RVStSZHQNeP",

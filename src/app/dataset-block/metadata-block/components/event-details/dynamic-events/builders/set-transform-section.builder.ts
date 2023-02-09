@@ -37,7 +37,7 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                             const rows: EventRow[] = [];
                             Object.entries({
                                 ...item.dataset,
-                                alias: item.dataset.name as string,
+                                alias: item.name as string,
                             }).forEach(([key, value]) => {
                                 if (
                                     event.__typename &&

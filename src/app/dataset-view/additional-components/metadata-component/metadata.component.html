@@ -338,7 +338,10 @@
                     </div>
                 </ng-container>
 
-                <div class="position-relative border border-1 p-2 rounded-3">
+                <div
+                    class="position-relative border border-1 p-2 rounded-3"
+                    *ngIf="currentState.metadata.metadata.currentWatermark"
+                >
                     <span
                         class="position-absolute text-muted group-box-label text-uppercase"
                         >Watermark</span

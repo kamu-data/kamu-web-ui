@@ -1320,6 +1320,7 @@ export type DatasetTransformFragment = {
     __typename?: "SetTransform";
     inputs: Array<{
         __typename?: "TransformInput";
+        name: any;
         dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
     }>;
     transform: {
@@ -1724,6 +1725,7 @@ export const DatasetTransformContentFragmentDoc = gql`
 export const DatasetTransformFragmentDoc = gql`
     fragment DatasetTransform on SetTransform {
         inputs {
+            name
             dataset {
                 ...DatasetBasics
             }

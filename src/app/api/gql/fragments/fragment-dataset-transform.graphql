@@ -1,5 +1,6 @@
 fragment DatasetTransform on SetTransform {
   inputs {
+    name
     dataset {
       ...DatasetBasics
     }

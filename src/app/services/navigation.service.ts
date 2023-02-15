@@ -65,6 +65,7 @@ export class NavigationService {
                     params.page === 1
                         ? { tab: params.tab }
                         : { tab: params.tab, page: params.page },
+                state: params.state,
             }),
         );
     }

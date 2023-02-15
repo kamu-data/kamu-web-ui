@@ -3,6 +3,7 @@ export interface DatasetNavigationParams {
     datasetName: string;
     tab?: string;
     page?: number;
+    state?: object;
 }
 export interface DatasetInfo {
     accountName: string;

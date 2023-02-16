@@ -60,7 +60,7 @@ describe("DataComponent", () => {
         expect(component.sqlErrorMarker).toBe(null);
         component.ngOnInit();
         expect(component.sqlRequestCode).toEqual(
-            `select\n  *\nfrom 'mockName'\nwhere offset>=0 and offset<100\norder by offset desc\nlimit 50`,
+            `select\n  *\nfrom 'mockName'\nwhere offset>=0 and offset<=100\norder by offset desc`,
         );
     });
 

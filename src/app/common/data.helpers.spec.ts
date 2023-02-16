@@ -225,7 +225,7 @@ it("should check description for AddData block", () => {
         },
     };
     expect(DataHelpers.descriptionForMetadataBlock(addDataBlock)).toEqual(
-        "Added 400 new records",
+        "Added 401 new records",
     );
 });
 
@@ -314,10 +314,10 @@ it("should check description for ExecuteQuery block", () => {
     };
 
     expect(DataHelpers.descriptionForMetadataBlock(addDataBlockEmpty)).toEqual(
-        "Transformation produced 0 new records",
+        "Transformation produced 1 new records",
     );
 
     expect(
         DataHelpers.descriptionForMetadataBlock(addDataBlockNonEmpty),
-    ).toEqual("Transformation produced 21 new records");
+    ).toEqual("Transformation produced 22 new records");
 });

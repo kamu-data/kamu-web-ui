@@ -113,7 +113,7 @@ export class DataComponent extends BaseComponent implements OnInit {
                 typeof offset.start !== "undefined" &&
                 typeof offset.end !== "undefined"
             ) {
-                this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<${offset.end}\norder by ${this.offsetColumnName} desc\nlimit 50`;
+                this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
             }
         }
     }

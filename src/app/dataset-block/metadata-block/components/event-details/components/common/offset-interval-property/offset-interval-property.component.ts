@@ -27,7 +27,7 @@ export class OffsetIntervalPropertyComponent
 {
     @Input() public data: {
         block: OffsetInterval;
-        datasetId: string;
+        datasetId: string | null;
     };
     private datasetInfo: DatasetInfo = { accountName: "", datasetName: "" };
     constructor(

@@ -1,3 +1,4 @@
+import { mockSetVocab } from "./../dataset-block/metadata-block/components/event-details/mock.events";
 import {
     DataBatchFormat,
     DataQueryResultErrorKind,
@@ -179,6 +180,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                 __typename: "DatasetMetadata",
                 currentInfo: mockMetadataCurrentInfo,
                 currentLicense: mockMetadataCurrentLicense,
+                currentVocab: mockSetVocab,
                 currentWatermark: "2022-08-01T00:00:00+00:00",
                 currentTransform: null,
                 currentSource: {

@@ -1,3 +1,4 @@
+import AppValues from "src/app/common/app.values";
 import { OffsetInterval } from "./../../../api/kamu.graphql.interface";
 import { Location } from "@angular/common";
 import {
@@ -43,7 +44,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     public sqlErrorMarker: MaybeNull<string> = null;
     public currentSchema: MaybeNull<DatasetSchema> = null;
     public currentData: DataRow[] = [];
-    private offsetInterval: OffsetInterval | null = null;
+    private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
 
     constructor(
         private appDatasetSubsService: AppDatasetSubscriptionsService,
@@ -58,10 +59,13 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.buildSqlRequestCode();
         this.trackSubscriptions(
             this.appDatasetSubsService.onDatasetDataChanges.subscribe(
                 (dataUpdate: DataUpdate) => {
+                    if (dataUpdate.currentVocab?.offsetColumn) {
+                        this.offsetColumnName =
+                            dataUpdate.currentVocab.offsetColumn;
+                    }
                     this.currentData = dataUpdate.content;
                     this.currentSchema = dataUpdate.schema;
                     this.sqlErrorMarker = null;
@@ -77,6 +81,7 @@ export class DataComponent extends BaseComponent implements OnInit {
                 },
             ),
         );
+        this.buildSqlRequestCode();
     }
 
     onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
@@ -97,7 +102,6 @@ export class DataComponent extends BaseComponent implements OnInit {
             // @param editor The editor instance is passed in as a convenience
             run: runQueryFn,
         });
-        //runQueryFn();
         this.onRunSQLRequest();
     }
 
@@ -109,7 +113,7 @@ export class DataComponent extends BaseComponent implements OnInit {
                 typeof offset.start !== "undefined" &&
                 typeof offset.end !== "undefined"
             ) {
-                this.sqlRequestCode += `\nwhere offset>=${offset.start} and offset<=${offset.end}\norder by offset desc\nlimit 50`;
+                this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<${offset.end}\norder by ${this.offsetColumnName} desc\nlimit 50`;
             }
         }
     }

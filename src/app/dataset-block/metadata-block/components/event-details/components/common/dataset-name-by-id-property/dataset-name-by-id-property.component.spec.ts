@@ -36,7 +36,7 @@ describe("DatasetIdAndNamePropertyComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should sheck call requestDatasetInfoById from datasetSevice in ngOnInit", () => {
+    it("should check call requestDatasetInfoById from datasetSevice in ngOnInit", () => {
         const requestDatasetInfoByIdSpy = spyOn(
             datasetSevice,
             "requestDatasetInfoById",

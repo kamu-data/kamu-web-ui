@@ -1,4 +1,7 @@
-import { DatasetPageInfoFragment } from "./../api/kamu.graphql.interface";
+import {
+    DatasetPageInfoFragment,
+    SetVocab,
+} from "./../api/kamu.graphql.interface";
 import {
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
@@ -19,6 +22,7 @@ export interface OverviewDataUpdate {
 export interface DataUpdate {
     schema: MaybeNull<DatasetSchema>;
     content: DataRow[];
+    currentVocab?: SetVocab;
 }
 
 export interface DataSqlErrorUpdate {

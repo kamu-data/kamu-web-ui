@@ -1,8 +1,27 @@
-<p class="bg-value">
-    start:
-    <span [attr.data-test-id]="dataTestId + '-start'">{{ data.start }}</span>
-</p>
-<br />
-<p class="bg-value">
-    end: <span [attr.data-test-id]="dataTestId + '-end'">{{ data.end }}</span>
-</p>
+<div class="d-flex flex-row align-items-center" *ngIf="data">
+    <div class="me-4">
+        <span class="bg-value">
+            start:
+            <span [attr.data-test-id]="dataTestId + '-start'">{{
+                data.block.start
+            }}</span>
+        </span>
+        &nbsp; &nbsp;
+        <span class="bg-value">
+            end:
+            <span [attr.data-test-id]="dataTestId + '-end'">{{
+                data.block.end
+            }}</span>
+        </span>
+    </div>
+    <div class="flex-grow-1">
+        <button
+            type="button"
+            placement="left"
+            (click)="navigateToQuery()"
+            class="signed-commit-badge verified signed-commit-badge-small"
+        >
+            See data
+        </button>
+    </div>
+</div>

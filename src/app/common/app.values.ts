@@ -16,6 +16,7 @@ export default class AppValues {
     public static readonly SQL_QUERY_LIMIT = 50;
     public static readonly SHORT_DELAY_MS = 200;
     public static readonly LONG_DELAY_MS = 2000;
+    public static readonly DEFAULT_OFFSET_COLUMN_NAME = "offset";
     public static readonly CLIBPOARD_KAMU_CLI =
         "kamu pull kamu.dev/anonymous/dataset";
     public static readonly CLIPBOARD_KAFKA =

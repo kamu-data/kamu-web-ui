@@ -40,6 +40,7 @@ import { SetInfoEventComponent } from "./components/event-details/components/set
 import { SetVocabEventComponent } from "./components/event-details/components/set-vocab-event/set-vocab-event.component";
 import { SetWatermarkEventComponent } from "./components/event-details/components/set-watermark-event/set-watermark-event.component";
 import { TemporalTablesPropertyComponent } from "./components/event-details/components/common/temporal-tables-property/temporal-tables-property.component";
+import { OffsetIntervalPropertyComponent } from "./components/event-details/components/common/offset-interval-property/offset-interval-property.component";
 
 @NgModule({
     declarations: [
@@ -59,6 +60,7 @@ import { TemporalTablesPropertyComponent } from "./components/event-details/comp
         EnvVariablesPropertyComponent,
         UnsupportedPropertyComponent,
         YamlEventViewerComponent,
+        OffsetIntervalPropertyComponent,
         BaseDynamicEventComponent,
         ExecuteQueryEventComponent,
         YamlViewSectionComponent,

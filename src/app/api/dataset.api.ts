@@ -1,3 +1,4 @@
+import AppValues from "src/app/common/app.values";
 import { ApolloQueryResult } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 
@@ -39,7 +40,7 @@ export class DatasetApi {
             .watch({
                 accountName: params.accountName,
                 datasetName: params.datasetName,
-                limit: params.numRecords ?? 10,
+                limit: params.numRecords ?? AppValues.SQL_QUERY_LIMIT,
             })
             .valueChanges.pipe(
                 first(),

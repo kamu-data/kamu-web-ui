@@ -278,6 +278,8 @@ export type DatasetMetadata = {
     currentTransform?: Maybe<SetTransform>;
     /** Current upstream dependencies of a dataset */
     currentUpstreamDependencies: Array<Dataset>;
+    /** Current vocabulary associated with the dataset */
+    currentVocab?: Maybe<SetVocab>;
     /** Last recorded watermark */
     currentWatermark?: Maybe<Scalars["DateTime"]>;
 };
@@ -1258,6 +1260,9 @@ export type DatasetMetadataSummaryFragment = {
             format: DataSchemaFormat;
             content: string;
         } | null;
+        currentVocab?:
+            | ({ __typename?: "SetVocab" } & SetVocabEventFragment)
+            | null;
     };
 } & DatasetReadmeFragment &
     DatasetLastUpdateFragment;
@@ -1737,6 +1742,13 @@ export const DatasetTransformFragmentDoc = gql`
     ${DatasetBasicsFragmentDoc}
     ${DatasetTransformContentFragmentDoc}
 `;
+export const SetVocabEventFragmentDoc = gql`
+    fragment SetVocabEvent on SetVocab {
+        systemTimeColumn
+        eventTimeColumn
+        offsetColumn
+    }
+`;
 export const DatasetReadmeFragmentDoc = gql`
     fragment DatasetReadme on Dataset {
         metadata {
@@ -1753,13 +1765,6 @@ export const SeedEventFragmentDoc = gql`
 export const SetWatermarkEventFragmentDoc = gql`
     fragment SetWatermarkEvent on SetWatermark {
         outputWatermark
-    }
-`;
-export const SetVocabEventFragmentDoc = gql`
-    fragment SetVocabEvent on SetVocab {
-        systemTimeColumn
-        eventTimeColumn
-        offsetColumn
     }
 `;
 export const ExecuteQueryEventFragmentDoc = gql`
@@ -1914,6 +1919,9 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
                 content
                 __typename
             }
+            currentVocab {
+                ...SetVocabEvent
+            }
             __typename
         }
         ...DatasetReadme
@@ -1923,6 +1931,7 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
     ${LicenseFragmentDoc}
     ${SetPollingSourceEventFragmentDoc}
     ${DatasetTransformFragmentDoc}
+    ${SetVocabEventFragmentDoc}
     ${DatasetReadmeFragmentDoc}
     ${DatasetLastUpdateFragmentDoc}
 `;

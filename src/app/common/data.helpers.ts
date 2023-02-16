@@ -81,14 +81,16 @@ export class DataHelpers {
             case "AddData":
                 return `Added ${
                     event.outputData.interval.end -
-                    event.outputData.interval.start
+                    event.outputData.interval.start +
+                    1
                 } new records`;
             case "ExecuteQuery":
                 return `Transformation produced ${
                     event.queryOutputData
                         ? event.queryOutputData.interval.end -
-                          event.queryOutputData.interval.start
-                        : "0"
+                          event.queryOutputData.interval.start +
+                          1
+                        : 0
                 } new records`;
             case "Seed":
                 return DataHelpers.BLOCK_DESCRIBE_SEED;

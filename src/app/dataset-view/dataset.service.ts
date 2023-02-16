@@ -5,6 +5,7 @@ import {
     DatasetByIdQuery,
     DatasetLineageFragment,
     DatasetPageInfoFragment,
+    SetVocab,
 } from "./../api/kamu.graphql.interface";
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { Injectable } from "@angular/core";
@@ -36,13 +37,14 @@ import { DatasetNotFoundError } from "../common/errors";
 import { catchError, map } from "rxjs/operators";
 import { MaybeNull } from "../common/app.types";
 
-
 @Injectable({ providedIn: "root" })
 export class DatasetService {
     constructor(
         private datasetApi: DatasetApi,
         private appDatasetSubsService: AppDatasetSubscriptionsService,
     ) {}
+
+    private currentSetVocab: SetVocab;
 
     private datasetChanges$: Subject<DatasetBasicsFragment> =
         new Subject<DatasetBasicsFragment>();
@@ -61,10 +63,13 @@ export class DatasetService {
                 if (data.datasets.byOwnerAndName) {
                     const dataTail = data.datasets.byOwnerAndName.data.tail;
                     if (dataTail.__typename === "DataQueryResultSuccess") {
-                        const schema: MaybeNull<DatasetSchema> = 
-                            data.datasets.byOwnerAndName.metadata.currentSchema 
-                                ? JSON.parse(data.datasets.byOwnerAndName.metadata.currentSchema.content) as DatasetSchema 
-                                : null;
+                        const schema: MaybeNull<DatasetSchema> = data.datasets
+                            .byOwnerAndName.metadata.currentSchema
+                            ? (JSON.parse(
+                                  data.datasets.byOwnerAndName.metadata
+                                      .currentSchema.content,
+                              ) as DatasetSchema)
+                            : null;
 
                         this.datasetUpdate(data.datasets.byOwnerAndName);
                         this.overviewTabDataUpdate(
@@ -73,7 +78,13 @@ export class DatasetService {
                             schema,
                             dataTail,
                         );
-                        this.dataTabDataUpdate(schema, dataTail);
+                        this.currentSetVocab = data.datasets.byOwnerAndName
+                            .metadata.currentVocab as SetVocab;
+                        this.dataTabDataUpdate(
+                            schema,
+                            dataTail,
+                            this.currentSetVocab,
+                        );
                         this.metadataTabDataUpdate(data, schema);
                         this.lineageTabDataUpdate(
                             data.datasets.byOwnerAndName,
@@ -134,11 +145,15 @@ export class DatasetService {
                 if (queryResult.__typename === "DataQueryResultSuccess") {
                     const content: DataRow[] =
                         DatasetService.parseDataRows(queryResult);
-                    const schema: MaybeNull<DatasetSchema> = 
-                        queryResult.schema
-                            ? DatasetService.parseSchema(queryResult.schema.content)
-                            : null;
-                    const dataUpdate: DataUpdate = { content, schema };
+                    const schema: MaybeNull<DatasetSchema> = queryResult.schema
+                        ? DatasetService.parseSchema(queryResult.schema.content)
+                        : null;
+
+                    const dataUpdate: DataUpdate = {
+                        content,
+                        schema,
+                        currentVocab: this.currentSetVocab,
+                    };
                     this.appDatasetSubsService.changeDatasetData(dataUpdate);
                 } else if (
                     queryResult.errorKind ===
@@ -187,9 +202,10 @@ export class DatasetService {
     private dataTabDataUpdate(
         schema: MaybeNull<DatasetSchema>,
         tail: DataQueryResultSuccessViewFragment,
+        currentVocab?: SetVocab,
     ): void {
         const content: DataRow[] = DatasetService.parseDataRows(tail);
-        const dataUpdate: DataUpdate = { content, schema };
+        const dataUpdate: DataUpdate = { content, schema, currentVocab };
         this.appDatasetSubsService.changeDatasetData(dataUpdate);
     }
 

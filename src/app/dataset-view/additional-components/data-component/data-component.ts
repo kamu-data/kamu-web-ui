@@ -1,3 +1,6 @@
+import AppValues from "src/app/common/app.values";
+import { OffsetInterval } from "./../../../api/kamu.graphql.interface";
+import { Location } from "@angular/common";
 import {
     DataSqlErrorUpdate,
     DataUpdate,
@@ -25,7 +28,6 @@ import { MaybeNull } from "src/app/common/app.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent extends BaseComponent implements OnInit {
-
     @Input() public datasetBasics?: DatasetBasicsFragment;
     @Output() public runSQLRequestEmit = new EventEmitter<string>();
     public sqlEditorOptions = {
@@ -42,10 +44,12 @@ export class DataComponent extends BaseComponent implements OnInit {
     public sqlErrorMarker: MaybeNull<string> = null;
     public currentSchema: MaybeNull<DatasetSchema> = null;
     public currentData: DataRow[] = [];
+    private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
 
     constructor(
         private appDatasetSubsService: AppDatasetSubscriptionsService,
         private cdr: ChangeDetectorRef,
+        private location: Location,
     ) {
         super();
     }
@@ -55,12 +59,13 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        if (this.datasetBasics) {
-            this.sqlRequestCode += `'${this.datasetBasics.name as string}'`;
-        }
         this.trackSubscriptions(
             this.appDatasetSubsService.onDatasetDataChanges.subscribe(
                 (dataUpdate: DataUpdate) => {
+                    if (dataUpdate.currentVocab?.offsetColumn) {
+                        this.offsetColumnName =
+                            dataUpdate.currentVocab.offsetColumn;
+                    }
                     this.currentData = dataUpdate.content;
                     this.currentSchema = dataUpdate.schema;
                     this.sqlErrorMarker = null;
@@ -76,6 +81,7 @@ export class DataComponent extends BaseComponent implements OnInit {
                 },
             ),
         );
+        this.buildSqlRequestCode();
     }
 
     onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
@@ -96,5 +102,19 @@ export class DataComponent extends BaseComponent implements OnInit {
             // @param editor The editor instance is passed in as a convenience
             run: runQueryFn,
         });
+        this.onRunSQLRequest();
+    }
+
+    private buildSqlRequestCode(): void {
+        if (this.datasetBasics) {
+            this.sqlRequestCode += `'${this.datasetBasics.name as string}'`;
+            const offset = this.location.getState() as Partial<OffsetInterval>;
+            if (
+                typeof offset.start !== "undefined" &&
+                typeof offset.end !== "undefined"
+            ) {
+                this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
+            }
+        }
     }
 }

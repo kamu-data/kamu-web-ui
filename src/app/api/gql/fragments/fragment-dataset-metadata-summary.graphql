@@ -18,6 +18,9 @@ fragment DatasetMetadataSummary on Dataset {
       content
       __typename
     }
+    currentVocab {
+       ...SetVocabEvent
+    }
     __typename
   }
   ...DatasetReadme

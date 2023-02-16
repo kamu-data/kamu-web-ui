@@ -90,7 +90,7 @@ export class DataHelpers {
                         ? event.queryOutputData.interval.end -
                           event.queryOutputData.interval.start +
                           1
-                        : "1"
+                        : 0
                 } new records`;
             case "Seed":
                 return DataHelpers.BLOCK_DESCRIBE_SEED;

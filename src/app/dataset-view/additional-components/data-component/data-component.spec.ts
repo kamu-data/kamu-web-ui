@@ -9,23 +9,33 @@ import { emitClickOnElement } from "src/app/common/base-test.helpers.spec";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { mockDataUpdate, mockSqlErrorUpdate } from "../data-tabs.mock";
 import { first } from "rxjs/operators";
+import { RouterTestingModule } from "@angular/router/testing";
+import { Location } from "@angular/common";
 
 describe("DataComponent", () => {
     let component: DataComponent;
     let fixture: ComponentFixture<DataComponent>;
     let appDatasetSubsService: AppDatasetSubscriptionsService;
-
+    let location: Location;
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [CdkAccordionModule, MatIconModule, MatMenuModule],
+            imports: [
+                CdkAccordionModule,
+                MatIconModule,
+                MatMenuModule,
+                RouterTestingModule,
+            ],
             declarations: [DataComponent],
+
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DataComponent);
         appDatasetSubsService = TestBed.inject(AppDatasetSubscriptionsService);
+        location = TestBed.inject(Location);
         component = fixture.componentInstance;
-        fixture.detectChanges();
+        component.datasetBasics = mockDatasetBasicsFragment;
+        spyOn(location, "getState").and.returnValue({ start: 0, end: 100 });
     });
 
     it("should create", () => {
@@ -45,34 +55,30 @@ describe("DataComponent", () => {
     });
 
     it("should check #ngOninit", () => {
-        component.datasetBasics = mockDatasetBasicsFragment;
         expect(component.currentData).toEqual([]);
         expect(component.currentSchema).toEqual(null);
         expect(component.sqlErrorMarker).toBe(null);
-
         component.ngOnInit();
-        expect(component.currentData).toEqual([]);
-        expect(component.currentSchema).toEqual(null);
         expect(component.sqlRequestCode).toEqual(
-            `select\n  *\nfrom 'mockName'`,
+            `select\n  *\nfrom 'mockName'\nwhere offset>=0 and offset<=100\norder by offset desc\nlimit 50`,
         );
-        expect(component.sqlErrorMarker).toBe(null);        
     });
 
     it("should check successful query result update", () => {
+        fixture.detectChanges();
         appDatasetSubsService.changeDatasetData(mockDataUpdate);
 
         expect(component.currentData).toEqual(mockDataUpdate.content);
         expect(component.currentSchema).toEqual(mockDataUpdate.schema);
         expect(component.sqlErrorMarker).toBe(null);
-   
     });
 
     it("should check invalid SQL result update", () => {
+        fixture.detectChanges();
         appDatasetSubsService.observeSqlErrorOccurred(mockSqlErrorUpdate);
 
         expect(component.currentData).toEqual([]);
         expect(component.currentSchema).toEqual(null);
-        expect(component.sqlErrorMarker).toBe(mockSqlErrorUpdate.error);        
+        expect(component.sqlErrorMarker).toBe(mockSqlErrorUpdate.error);
     });
 });

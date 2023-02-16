@@ -55,9 +55,9 @@ export class OffsetIntervalPropertyComponent
     }
 
     public navigateToQuery(): void {
-        this.datasetInfo = this.data.datasetId
-            ? this.datasetInfo
-            : this.getDatasetInfoFromUrl();
+        if (!this.data.datasetId) {
+            this.datasetInfo = this.getDatasetInfoFromUrl();
+        }
         this.navigationService.navigateToDatasetView({
             ...this.datasetInfo,
             tab: DatasetViewTypeEnum.Data,

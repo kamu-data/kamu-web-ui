@@ -158,7 +158,7 @@ describe("NavigationService", () => {
         service.navigateToDatasetView(mockParams);
         expect(routerSpy).toHaveBeenCalledWith(
             [mockParams.accountName, mockParams.datasetName],
-            { queryParams: { tab: mockParams.tab } },
+            { queryParams: { tab: mockParams.tab }, state: undefined },
         );
     });
 
@@ -173,7 +173,10 @@ describe("NavigationService", () => {
         service.navigateToDatasetView(mockParams);
         expect(routerSpy).toHaveBeenCalledWith(
             [mockParams.accountName, mockParams.datasetName],
-            { queryParams: { tab: mockParams.tab, page: mockParams.page } },
+            {
+                queryParams: { tab: mockParams.tab, page: mockParams.page },
+                state: undefined,
+            },
         );
     });
 

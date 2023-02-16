@@ -1,3 +1,4 @@
+import { ApolloModule } from "apollo-angular";
 import { SizePropertyComponent } from "./../common/size-property/size-property.component";
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
@@ -5,6 +6,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { mockAddData } from "../../mock.events";
 
 import { AddDataEventComponent } from "./add-data-event.component";
+import { ActivatedRoute } from "@angular/router";
+import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
 
 describe("AddDataEventComponent", () => {
     let component: AddDataEventComponent;
@@ -21,9 +24,32 @@ describe("AddDataEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [AddDataEventComponent, SizePropertyComponent],
+            declarations: [
+                AddDataEventComponent,
+                SizePropertyComponent,
+                OffsetIntervalPropertyComponent,
+            ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
-            imports: [DisplaySizeModule],
+            providers: [
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            ],
+            imports: [DisplaySizeModule, ApolloModule],
         })
 
             .overrideComponent(AddDataEventComponent, {

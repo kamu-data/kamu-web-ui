@@ -1,16 +1,16 @@
-<div class="d-flex flex-row align-items-center">
+<div class="d-flex flex-row align-items-center" *ngIf="data">
     <div class="me-4">
         <span class="bg-value">
             start:
             <span [attr.data-test-id]="dataTestId + '-start'">{{
-                data.start
+                data.block.start
             }}</span>
         </span>
         &nbsp; &nbsp;
         <span class="bg-value">
             end:
             <span [attr.data-test-id]="dataTestId + '-end'">{{
-                data.end
+                data.block.end
             }}</span>
         </span>
     </div>

@@ -1,4 +1,8 @@
-import { ExecuteQuery, InputSlice } from "src/app/api/kamu.graphql.interface";
+import {
+    DataSlice,
+    ExecuteQuery,
+    InputSlice,
+} from "src/app/api/kamu.graphql.interface";
 import { EXECUTE_QUERY_SOURCE_DESCRIPTORS } from "../../components/execute-query-event/execute-query-event.source";
 import { EventRow, EventSection } from "../dynamic-events.model";
 import { EventSectionBuilder } from "./event-section.builder";
@@ -24,7 +28,6 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {
                 switch (section) {
-                    case ExecuteQuerySection.QUERY_OUTPUT_DATA:
                     case ExecuteQuerySection.OUTPUT_CHECKPOINT: {
                         result.push({
                             title: this.sectionTitleMapper[section],
@@ -35,6 +38,33 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
                                 false,
                             ),
                         });
+                        break;
+                    }
+                    case ExecuteQuerySection.QUERY_OUTPUT_DATA: {
+                        const rows: EventRow[] = [];
+                        Object.entries(data as DataSlice).forEach(
+                            ([key, value]) => {
+                                if (event.__typename && key !== "__typename") {
+                                    rows.push(
+                                        this.buildSupportedRow(
+                                            event.__typename,
+                                            EXECUTE_QUERY_SOURCE_DESCRIPTORS,
+                                            "DataSlice",
+                                            key,
+                                            this.valueTransformMapper(
+                                                key as keyof DataSlice,
+                                                value,
+                                            ),
+                                        ),
+                                    );
+                                }
+                            },
+                        );
+                        result.push({
+                            title: this.sectionTitleMapper[section],
+                            rows,
+                        });
+
                         break;
                     }
                     case ExecuteQuerySection.INPUT_CHECKPOINT:
@@ -110,17 +140,22 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
     }
 
     private valueTransformMapper(
-        key: keyof InputSlice,
+        key: keyof InputSlice | keyof DataSlice,
         value: unknown,
-        inputItem: InputSlice,
+        inputItem?: InputSlice,
     ): unknown {
         switch (key) {
             case "blockInterval":
+            case "dataInterval":
                 return {
                     block: value,
-                    datasetId: inputItem.datasetId as string,
+                    datasetId: inputItem?.datasetId as string,
                 };
-
+            case "interval":
+                return {
+                    block: value,
+                    datasetId: null,
+                };
             default:
                 return value;
         }

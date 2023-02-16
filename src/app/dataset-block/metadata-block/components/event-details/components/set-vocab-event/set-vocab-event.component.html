@@ -2,7 +2,6 @@
     <span class="position-absolute text-muted group-box-label text-uppercase"
         >Information</span
     >
-    <pre>{{ event | json }}</pre>
     <div class="mx-4" *ngIf="event.systemTimeColumn">
         <app-block-row-data
             [tooltip]="'Name of the system time column.'"

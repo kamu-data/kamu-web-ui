@@ -1,6 +1,6 @@
-import { AddData } from "src/app/api/kamu.graphql.interface";
+import { AddData, DataSlice } from "src/app/api/kamu.graphql.interface";
 import { ADD_DATA_SOURCE_DESCRIPTORS } from "../../components/add-data-event/add-data-event.source";
-import { EventSection } from "../dynamic-events.model";
+import { EventRow, EventSection } from "../dynamic-events.model";
 import { EventSectionBuilder } from "./event-section.builder";
 
 export enum AddDataSection {
@@ -22,8 +22,7 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {
                 switch (section) {
-                    case AddDataSection.OUTPUT_CHECKPOINT:
-                    case AddDataSection.OUTPUT_DATA: {
+                    case AddDataSection.OUTPUT_CHECKPOINT: {
                         result.push({
                             title: this.sectionTitleMapper[section],
                             rows: this.buildEventRows(
@@ -35,6 +34,35 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
                         });
                         break;
                     }
+
+                    case AddDataSection.OUTPUT_DATA: {
+                        const rows: EventRow[] = [];
+                        Object.entries(data as DataSlice).forEach(
+                            ([key, value]) => {
+                                if (event.__typename && key !== "__typename") {
+                                    rows.push(
+                                        this.buildSupportedRow(
+                                            event.__typename,
+                                            ADD_DATA_SOURCE_DESCRIPTORS,
+                                            "DataSlice",
+                                            key,
+                                            this.valueTransformMapper(
+                                                key as keyof DataSlice,
+                                                value,
+                                            ),
+                                        ),
+                                    );
+                                }
+                            },
+                        );
+                        result.push({
+                            title: this.sectionTitleMapper[section],
+                            rows,
+                        });
+
+                        break;
+                    }
+
                     case AddDataSection.INPUT_CHECKPOINT:
                     case AddDataSection.ADD_DATA_WATERMARK: {
                         if (event.__typename) {
@@ -64,5 +92,21 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
             }
         });
         return result;
+    }
+
+    private valueTransformMapper(
+        key: keyof DataSlice,
+        value: unknown,
+    ): unknown {
+        switch (key) {
+            case "interval":
+                return {
+                    block: value,
+                    datasetId: null,
+                };
+
+            default:
+                return value;
+        }
     }
 }

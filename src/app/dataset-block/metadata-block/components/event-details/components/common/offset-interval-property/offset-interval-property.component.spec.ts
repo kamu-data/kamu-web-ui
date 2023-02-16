@@ -14,9 +14,8 @@ describe("OffsetIntervalPropertyComponent", () => {
         fixture = TestBed.createComponent(OffsetIntervalPropertyComponent);
         component = fixture.componentInstance;
         (component.data = {
-            __typename: "OffsetInterval",
-            start: 0,
-            end: 596125,
+            block: { __typename: "OffsetInterval", start: 0, end: 596125 },
+            datasetId: "csadsdsdsd",
         }),
             fixture.detectChanges();
     });

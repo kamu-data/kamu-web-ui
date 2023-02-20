@@ -168,6 +168,8 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                 __typename: "DatasetMetadata",
                 chain: {
                     __typename: "MetadataChain",
+                    blockByHashEncoded:
+                        "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2022-08-05T21:17:30.621941313Z\n  prevBlockHash: zW1auBfep4NvrY6RqNN7asdjTzuNMAugdcsw7VfrsQFDqj1\n  sequenceNumber: 3\n  event:\n    kind: setInfo\n    description: British Columbia COVID-19 case data updated regularly from the B.C. Centre for Disease Control, Provincial Health Services Authority and the B.C. Ministry of Health.\n    keywords:\n    - Healthcare\n    - Epidemiology\n    - COVID-19\n    - SARS-CoV-2\n    - Disaggregated\n    - Anonymized\n    - British Columbia\n    - Canada\n",
                     blockByHash: {
                         __typename: "MetadataBlockExtended",
                         blockHash:

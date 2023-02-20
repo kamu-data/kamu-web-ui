@@ -17,6 +17,7 @@ import { SupportedEvents } from "../event-details/supported.events";
 })
 export class YamlViewSectionComponent extends BaseComponent implements OnInit {
     public block: MetadataBlockFragment;
+    public yamlEventText: string;
     constructor(
         private blockService: BlockService,
         private cdr: ChangeDetectorRef,
@@ -25,11 +26,16 @@ export class YamlViewSectionComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.trackSubscription(
+        this.trackSubscriptions(
             this.blockService.onMetadataBlockChanges.subscribe((block) => {
                 this.block = block;
                 this.cdr.detectChanges();
             }),
+            this.blockService.onMetadataBlockAsYamlChanges.subscribe(
+                (yamlEventText: string) => {
+                    this.yamlEventText = yamlEventText;
+                },
+            ),
         );
     }
 
@@ -61,6 +67,10 @@ export class YamlViewSectionComponent extends BaseComponent implements OnInit {
         return this.block.event.__typename === SupportedEvents.SetWatermark;
     }
 
+    public get isSeedEvent(): boolean {
+        return this.block.event.__typename === SupportedEvents.Seed;
+    }
+
     public get isEventWithYamlView(): boolean {
         return (
             this.isSetPollingSourceEvent ||
@@ -69,7 +79,8 @@ export class YamlViewSectionComponent extends BaseComponent implements OnInit {
             this.isSetLicenseEvent ||
             this.isSetInfoEvent ||
             this.isSetVocabEvent ||
-            this.isSetWatermarkEvent
+            this.isSetWatermarkEvent ||
+            this.isSeedEvent
         );
     }
 }

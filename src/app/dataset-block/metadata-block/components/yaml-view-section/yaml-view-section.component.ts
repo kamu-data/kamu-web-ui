@@ -29,11 +29,11 @@ export class YamlViewSectionComponent extends BaseComponent implements OnInit {
         this.trackSubscriptions(
             this.blockService.onMetadataBlockChanges.subscribe((block) => {
                 this.block = block;
-                this.cdr.detectChanges();
             }),
             this.blockService.onMetadataBlockAsYamlChanges.subscribe(
                 (yamlEventText: string) => {
                     this.yamlEventText = yamlEventText;
+                    this.cdr.detectChanges();
                 },
             ),
         );

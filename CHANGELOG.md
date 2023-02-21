@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Link between AddData/ExecuteQuery events and queries tab for the event-specific data intervals
+### Changed
+- Yaml representation of events coming from the GraphQL server instead of frontend-side generation
 
 
 ## [0.5.1] - 2023-02-10

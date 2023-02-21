@@ -123,10 +123,61 @@ export type Checkpoint = {
     size: Scalars["Int"];
 };
 
+export type CommitResult = {
+    message: Scalars["String"];
+};
+
+export type CommitResultAppendError = CommitResult & {
+    __typename?: "CommitResultAppendError";
+    message: Scalars["String"];
+};
+
+export type CommitResultSuccess = CommitResult & {
+    __typename?: "CommitResultSuccess";
+    message: Scalars["String"];
+    newHead: Scalars["Multihash"];
+    oldHead?: Maybe<Scalars["Multihash"]>;
+};
+
 export enum CompressionFormat {
     Gzip = "GZIP",
     Zip = "ZIP",
 }
+
+export type CreateDatasetFromSnapshotResult = {
+    message: Scalars["String"];
+};
+
+export type CreateDatasetResult = {
+    message: Scalars["String"];
+};
+
+export type CreateDatasetResultInvalidSnapshot =
+    CreateDatasetFromSnapshotResult & {
+        __typename?: "CreateDatasetResultInvalidSnapshot";
+        message: Scalars["String"];
+    };
+
+export type CreateDatasetResultMissingInputs =
+    CreateDatasetFromSnapshotResult & {
+        __typename?: "CreateDatasetResultMissingInputs";
+        message: Scalars["String"];
+        missingInputs: Array<Scalars["String"]>;
+    };
+
+export type CreateDatasetResultNameCollision = CreateDatasetFromSnapshotResult &
+    CreateDatasetResult & {
+        __typename?: "CreateDatasetResultNameCollision";
+        datasetName: Scalars["DatasetName"];
+        message: Scalars["String"];
+    };
+
+export type CreateDatasetResultSuccess = CreateDatasetFromSnapshotResult &
+    CreateDatasetResult & {
+        __typename?: "CreateDatasetResultSuccess";
+        dataset: Dataset;
+        message: Scalars["String"];
+    };
 
 export type DataBatch = {
     __typename?: "DataBatch";
@@ -298,6 +349,10 @@ export type Datasets = {
     byId?: Maybe<Dataset>;
     /** Returns dataset by its owner and name */
     byOwnerAndName?: Maybe<Dataset>;
+    /** Creates a new empty dataset */
+    createEmpty: CreateDatasetResult;
+    /** Creates a new dataset from provided DatasetSnapshot manifest */
+    createFromSnapshot: CreateDatasetFromSnapshotResult;
 };
 
 export type DatasetsByAccountIdArgs = {
@@ -319,6 +374,18 @@ export type DatasetsByIdArgs = {
 export type DatasetsByOwnerAndNameArgs = {
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
+};
+
+export type DatasetsCreateEmptyArgs = {
+    accountId: Scalars["AccountID"];
+    datasetKind: DatasetKind;
+    datasetName: Scalars["DatasetName"];
+};
+
+export type DatasetsCreateFromSnapshotArgs = {
+    accountId: Scalars["AccountID"];
+    snapshot: Scalars["String"];
+    snapshotFormat: MetadataManifestFormat;
 };
 
 export type EnvVar = {
@@ -445,8 +512,12 @@ export type MetadataChain = {
     __typename?: "MetadataChain";
     /** Returns a metadata block corresponding to the specified hash */
     blockByHash?: Maybe<MetadataBlockExtended>;
+    /** Returns a metadata block corresponding to the specified hash and encoded in desired format */
+    blockByHashEncoded?: Maybe<Scalars["String"]>;
     /** Iterates all metadata blocks in the reverse chronological order */
     blocks: MetadataBlockConnection;
+    /** Commits new event to the metadata chain */
+    commitEvent: CommitResult;
     /** Returns all named metadata block references */
     refs: Array<BlockRef>;
 };
@@ -455,9 +526,19 @@ export type MetadataChainBlockByHashArgs = {
     hash: Scalars["Multihash"];
 };
 
+export type MetadataChainBlockByHashEncodedArgs = {
+    format: MetadataManifestFormat;
+    hash: Scalars["Multihash"];
+};
+
 export type MetadataChainBlocksArgs = {
     page?: InputMaybe<Scalars["Int"]>;
     perPage?: InputMaybe<Scalars["Int"]>;
+};
+
+export type MetadataChainCommitEventArgs = {
+    event: Scalars["String"];
+    eventFormat: MetadataManifestFormat;
 };
 
 export type MetadataEvent =
@@ -471,6 +552,22 @@ export type MetadataEvent =
     | SetTransform
     | SetVocab
     | SetWatermark;
+
+export enum MetadataManifestFormat {
+    Yaml = "YAML",
+}
+
+export type MetadataManifestMalformed = CommitResult &
+    CreateDatasetFromSnapshotResult & {
+        __typename?: "MetadataManifestMalformed";
+        message: Scalars["String"];
+    };
+
+export type MetadataManifestUnsupportedVersion = CommitResult &
+    CreateDatasetFromSnapshotResult & {
+        __typename?: "MetadataManifestUnsupportedVersion";
+        message: Scalars["String"];
+    };
 
 export type Mutation = {
     __typename?: "Mutation";
@@ -1414,6 +1511,7 @@ export type GetMetadataBlockQuery = {
                 __typename?: "DatasetMetadata";
                 chain: {
                     __typename?: "MetadataChain";
+                    blockByHashEncoded?: string | null;
                     blockByHash?:
                         | ({
                               __typename?: "MetadataBlockExtended";
@@ -2257,6 +2355,7 @@ export const GetMetadataBlockDocument = gql`
             ) {
                 metadata {
                     chain {
+                        blockByHashEncoded(hash: $blockHash, format: YAML)
                         blockByHash(hash: $blockHash) {
                             ...MetadataBlock
                         }

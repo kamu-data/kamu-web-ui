@@ -31,6 +31,18 @@ describe("YamlViewSectionComponent", () => {
             ?.metadata.chain.blockByHash as MetadataBlockFragment;
         blockService.metadataBlockChanges(mockBlock);
         component.ngOnInit();
+        fixture.detectChanges();
         expect(component.block).toEqual(mockBlock);
+    });
+
+    it("should check onMetadataBlockAsYamlChanges subscribe", () => {
+        const mockBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName
+            ?.metadata.chain.blockByHashEncoded as string | undefined;
+        if (mockBlock) {
+            blockService.metadataBlockAsYamlChanges(mockBlock);
+            component.ngOnInit();
+            fixture.detectChanges();
+            expect(component.yamlEventText).toEqual(mockBlock);
+        }
     });
 });

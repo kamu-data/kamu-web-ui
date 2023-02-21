@@ -25,6 +25,17 @@ export class BlockService {
         this.metadataBlockChanges$.next(block);
     }
 
+    private metadataBlockAsYamlChanges$: Subject<string> =
+        new Subject<string>();
+
+    public get onMetadataBlockAsYamlChanges(): Observable<string> {
+        return this.metadataBlockAsYamlChanges$.asObservable();
+    }
+
+    public metadataBlockAsYamlChanges(block: string): void {
+        this.metadataBlockAsYamlChanges$.next(block);
+    }
+
     public requestMetadataBlock(
         info: DatasetInfo,
         blockHash: string,
@@ -34,7 +45,12 @@ export class BlockService {
                 if (data.datasets.byOwnerAndName) {
                     const block = data.datasets.byOwnerAndName.metadata.chain
                         .blockByHash as MetadataBlockFragment;
+                    const blockAsYaml = data.datasets.byOwnerAndName.metadata
+                        .chain.blockByHashEncoded as string | undefined;
                     this.metadataBlockChanges(block);
+                    if (blockAsYaml) {
+                        this.metadataBlockAsYamlChanges(blockAsYaml);
+                    }
                 }
             }),
         );

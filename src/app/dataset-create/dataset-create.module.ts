@@ -7,7 +7,7 @@ import { DatasetCreateComponent } from "./dataset-create.component";
 import { SearchAdditionalButtonsModule } from "../components/search-additional-buttons/search-additional-buttons.module";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MonacoEditorModule } from "ngx-monaco-editor";
 import { MatDividerModule } from "@angular/material/divider";
 import { AngularSvgIconModule } from "angular-svg-icon";
@@ -25,6 +25,7 @@ import { AngularSvgIconModule } from "angular-svg-icon";
         MonacoEditorModule,
         MatDividerModule,
         AngularSvgIconModule,
+        ReactiveFormsModule,
     ],
     exports: [DatasetCreateComponent],
     declarations: [DatasetCreateComponent],

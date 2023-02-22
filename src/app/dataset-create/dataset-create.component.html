@@ -2,88 +2,98 @@
     <h1 class="title">Create a new dataset</h1>
     <p class="text-muted fs-6">A dataset is a durable collection of data</p>
     <mat-divider></mat-divider>
-    <div class="my-4 d-flex flex-row align-items-end">
-        <div class="w-25">
-            <label for="owner" class="fs-12 fw-bold">Owner </label
-            ><span class="text-danger">*</span><br />
-            <select
-                class="form-select custom-form-control d-inline"
-                [disabled]="showMonacoEditor"
-            >
-                <option selected>kamu</option>
-            </select>
-        </div>
-        <span class="mx-2 fs-3 align-self-end pb-2">/</span>
-        <div class="w-50">
-            <label for="dataset-name" class="fs-12 fw-bold">Dataset name</label
-            ><span class="text-danger">*</span><br />
-            <input
-                type="text"
-                class="form-control custom-form-control d-inline"
-                id="dataset-name"
-                [disabled]="showMonacoEditor"
-            />
-        </div>
-    </div>
-    <mat-divider></mat-divider>
-    <div class="my-4">
-        <label class="d-flex" for="kind-root">
-            <input
-                name="kind"
-                type="radio"
-                value="root"
-                checked="checked"
-                [disabled]="showMonacoEditor"
-            />
-            <div class="ps-3">
-                <span> Root</span><br /><span class="fs-12 text-muted"
-                    >(Use this type if you are the publisher of data or will be
-                    importing it from an external source.)</span
+    <form [formGroup]="createDatasetForm" (ngSubmit)="onCreateDataset()">
+        <div class="my-4 d-flex flex-row align-items-end">
+            <div class="w-25">
+                <label for="owner" class="fs-12">Owner </label
+                ><span class="text-danger">*</span><br />
+                <select
+                    class="form-select custom-form-control d-inline"
+                    formControlName="owner"
                 >
+                    <option [ngValue]="owner" *ngFor="let owner of owners">
+                        {{ owner }}
+                    </option>
+                </select>
             </div>
-        </label>
-        <br />
-        <label for="kind-derivative" class="mt-2 d-flex">
-            <input
-                name="kind"
-                type="radio"
-                value="derivative"
-                [disabled]="showMonacoEditor"
-            />
-            <div class="ps-3">
-                <span> Derivative</span><br /><span class="fs-12 text-muted"
-                    >(Use this type if you are improving or building upon
-                    existing datasets.)</span
-                >
+            <span class="mx-2 fs-3 align-self-end pb-2">/</span>
+            <div class="w-50">
+                <label for="dataset-name" class="fs-12">Dataset name</label
+                ><span class="text-danger">*</span><br />
+                <input
+                    type="text"
+                    class="form-control custom-form-control d-inline"
+                    id="dataset-name"
+                    formControlName="datasetName"
+                />
             </div>
-        </label>
-    </div>
-    <mat-divider></mat-divider>
-    <div>
-        <label for="visibility-public" class="my-3">
-            <input
-                name="visibility"
-                type="radio"
-                value="public"
-                checked="checked"
-            />
-            <svg-icon name="public" class="ms-1"></svg-icon>
-            <span>Public</span>
-        </label>
-        <br />
-        <label for="visibility-private" class="my-3 text-muted">
-            <input name="visibility" type="radio" value="private" disabled />
-            <svg-icon name="private" class="text-muted ms-1"></svg-icon>
-            <span>Private</span>
-        </label>
-    </div>
-    <mat-divider></mat-divider>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="my-4">
+            <label class="d-flex" for="kind-root">
+                <input
+                    name="kind"
+                    type="radio"
+                    value="root"
+                    formControlName="kind"
+                />
+                <div class="ps-3">
+                    <span> Root</span><br /><span class="fs-12 text-muted"
+                        >(Use this type if you are the publisher of data or will
+                        be importing it from an external source.)</span
+                    >
+                </div>
+            </label>
+            <br />
+            <label for="kind-derivative" class="mt-2 d-flex">
+                <input
+                    name="kind"
+                    type="radio"
+                    value="derivative"
+                    formControlName="kind"
+                />
+                <div class="ps-3">
+                    <span> Derivative</span><br /><span class="fs-12 text-muted"
+                        >(Use this type if you are improving or building upon
+                        existing datasets.)</span
+                    >
+                </div>
+            </label>
+        </div>
+        <mat-divider></mat-divider>
+        <div>
+            <label for="visibility-public" class="my-3">
+                <input
+                    name="visibility"
+                    type="radio"
+                    value="public"
+                    checked="checked"
+                    disabled
+                />
+                <svg-icon name="public" class="ms-1"></svg-icon>
+                <span>Public</span>
+            </label>
+            <br />
+            <label for="visibility-private" class="my-3 text-muted">
+                <input
+                    name="visibility"
+                    type="radio"
+                    value="private"
+                    disabled
+                />
+                <svg-icon name="private" class="text-muted ms-1"></svg-icon>
+                <span>Private</span>
+            </label>
+        </div>
+        <mat-divider></mat-divider>
+    </form>
 
     <div class="my-4">
         <label class="form-yaml-checkbox-label"
             ><input
                 type="checkbox"
                 class="checkbox"
+                (change)="onShowMonacoEditor()"
                 [(ngModel)]="showMonacoEditor"
             />
             Initialize from YAML snapshot</label
@@ -128,7 +138,11 @@
     </div>
     <mat-divider></mat-divider>
     <div class="mt-4 mb-4">
-        <button (click)="onCreateDataset()" class="btn-create">
+        <button
+            (click)="onCreateDataset()"
+            class="btn-create"
+            [disabled]="!isFormValid"
+        >
             Create dataset
         </button>
     </div>

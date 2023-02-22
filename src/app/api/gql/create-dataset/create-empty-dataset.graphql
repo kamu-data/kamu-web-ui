@@ -1,0 +1,15 @@
+query createEmptyDataset(
+  $accountId: AccountID!
+  $datasetKind: DatasetKind!
+  $datasetName: DatasetName!
+) {
+  datasets {
+    createEmpty(
+      accountId: $accountId
+      datasetKind: $datasetKind
+      datasetName: $datasetName
+    ) {
+      message
+    }
+  }
+}

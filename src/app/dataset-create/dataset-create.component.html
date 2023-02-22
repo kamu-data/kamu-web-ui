@@ -107,7 +107,6 @@
                 style="height: 400px"
                 [options]="sqlEditorOptions"
                 [(ngModel)]="yamlTemplate"
-                (onInit)="init($event)"
             ></ngx-monaco-editor>
         </div>
         <input
@@ -145,5 +144,8 @@
         >
             Create dataset
         </button>
+    </div>
+    <div *ngIf="errorMessage">
+        <p class="text-danger fs-6">Error:<br />{{ errorMessage }}</p>
     </div>
 </div>

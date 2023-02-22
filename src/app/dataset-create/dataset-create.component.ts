@@ -1,12 +1,16 @@
+import { BaseComponent } from "src/app/common/base.component";
 /* eslint-disable @typescript-eslint/unbound-method */
+import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "./../common/app.types";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    OnInit,
 } from "@angular/core";
 import * as monaco from "monaco-editor";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AppDatasetCreateService } from "./dataset-create.service";
 
 @Component({
     selector: "app-dataset-create",
@@ -14,13 +18,13 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
     styleUrls: ["./dataset-create.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetCreateComponent {
+export class DatasetCreateComponent extends BaseComponent implements OnInit {
     public yamlTemplate: MaybeNull<string> = "";
     public fileName: MaybeNull<string> = "";
     public showMonacoEditor = false;
+    public errorMessage = "";
     public initialHint = "# You can edit this file\n";
     public owners = ["kamu"];
-
     public sqlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
         {
             theme: "vs",
@@ -30,21 +34,52 @@ export class DatasetCreateComponent {
                 enabled: false,
             },
         };
-
     public createDatasetForm: FormGroup = this.fb.group({
         owner: ["kamu", [Validators.required]],
         datasetName: ["", [Validators.required]],
         kind: ["root", [Validators.required]],
     });
+    private kindMapper: Record<string, DatasetKind> = {
+        root: DatasetKind.Root,
+        derivative: DatasetKind.Derivative,
+    };
 
-    constructor(private cdr: ChangeDetectorRef, private fb: FormBuilder) {}
-
-    public onCreateDataset(): void {
-        console.log("create", this.createDatasetForm.value);
+    constructor(
+        private cdr: ChangeDetectorRef,
+        private fb: FormBuilder,
+        private datasetCreateService: AppDatasetCreateService,
+    ) {
+        super();
     }
 
-    public init(editor: monaco.editor.IStandaloneCodeEditor): void {
-        // console.log("value", editor.getModel()?.getValue());
+    ngOnInit(): void {
+        this.trackSubscription(
+            this.datasetCreateService.onErrorMessageChanges.subscribe(
+                (message: string) => {
+                    this.errorMessage = message;
+                    this.cdr.detectChanges();
+                },
+            ),
+        );
+    }
+
+    public get isFormValid(): boolean {
+        if (this.yamlTemplate) return true;
+        return this.createDatasetForm.valid;
+    }
+
+    public onCreateDataset(): void {
+        const accountId = this.createDatasetForm.controls.owner.value as string;
+        const kind =
+            this.kindMapper[
+                this.createDatasetForm.controls.kind.value as string
+            ];
+        const datasetName = this.createDatasetForm.controls.datasetName
+            .value as string;
+
+        this.datasetCreateService
+            .createEmptyDataset(accountId, kind, datasetName)
+            .subscribe();
     }
 
     public onFileSelected(event: Event): void {
@@ -62,11 +97,6 @@ export class DatasetCreateComponent {
             this.cdr.detectChanges();
         };
         fileReader.readAsText(file);
-    }
-
-    public get isFormValid(): boolean {
-        if (this.yamlTemplate) return true;
-        return this.createDatasetForm.valid;
     }
 
     public onShowMonacoEditor(): void {

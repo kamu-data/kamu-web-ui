@@ -1,4 +1,6 @@
 import {
+    CreateDatasetFromSnapshotGQL,
+    CreateDatasetFromSnapshotQuery,
     CreateEmptyDatasetQuery,
     DatasetKind,
 } from "src/app/api/kamu.graphql.interface";
@@ -35,6 +37,7 @@ export class DatasetApi {
         private metadataBlockGQL: GetMetadataBlockGQL,
         private datasetByIdGQL: DatasetByIdGQL,
         private createEmptyDatasetGQL: CreateEmptyDatasetGQL,
+        private createDatasetFromSnapshotGQL: CreateDatasetFromSnapshotGQL,
     ) {}
 
     public getDatasetMainData(params: {
@@ -135,6 +138,24 @@ export class DatasetApi {
                 map((result: ApolloQueryResult<DatasetByIdQuery>) => {
                     return result.data;
                 }),
+            );
+    }
+
+    public createDatasetFromSnapshot(
+        accountId: string,
+        snapshot: string,
+    ): Observable<CreateDatasetFromSnapshotQuery> {
+        return this.createDatasetFromSnapshotGQL
+            .watch({ accountId, snapshot })
+            .valueChanges.pipe(
+                first(),
+                map(
+                    (
+                        result: ApolloQueryResult<CreateDatasetFromSnapshotQuery>,
+                    ) => {
+                        return result.data;
+                    },
+                ),
             );
     }
 

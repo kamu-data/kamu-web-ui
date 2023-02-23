@@ -1,4 +1,7 @@
-import { CreateEmptyDatasetQuery } from "./../api/kamu.graphql.interface";
+import {
+    CreateDatasetFromSnapshotQuery,
+    CreateEmptyDatasetQuery,
+} from "./../api/kamu.graphql.interface";
 import { Observable, Subject } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { Injectable } from "@angular/core";
@@ -45,6 +48,34 @@ export class AppDatasetCreateService {
                     } else {
                         this.errorMessageChanges(
                             data.datasets.createEmpty.message,
+                        );
+                    }
+                }),
+            );
+    }
+
+    public createDatasetFromSnapshot(
+        accountId: string,
+        snapshot: string,
+    ): Observable<void> {
+        return this.datasetApi
+            .createDatasetFromSnapshot(accountId, snapshot)
+            .pipe(
+                map((data: CreateDatasetFromSnapshotQuery) => {
+                    if (
+                        data.datasets.createFromSnapshot.__typename ===
+                        "CreateDatasetResultSuccess"
+                    ) {
+                        const datasetName = data.datasets.createFromSnapshot
+                            .dataset.name as string;
+                        this.navigationService.navigateToDatasetView({
+                            accountName: accountId,
+                            datasetName,
+                            tab: DatasetViewTypeEnum.Overview,
+                        });
+                    } else {
+                        this.errorMessageChanges(
+                            data.datasets.createFromSnapshot.message,
                         );
                     }
                 }),

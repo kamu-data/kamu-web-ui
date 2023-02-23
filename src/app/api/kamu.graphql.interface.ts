@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "apollo-angular";
+import { gql } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -840,6 +840,41 @@ export type CreateEmptyDatasetQuery = {
                   message: string;
               }
             | { __typename?: "CreateDatasetResultSuccess"; message: string };
+    };
+};
+
+export type CreateDatasetFromSnapshotQueryVariables = Exact<{
+    accountId: Scalars["AccountID"];
+    snapshot: Scalars["String"];
+}>;
+
+export type CreateDatasetFromSnapshotQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        createFromSnapshot:
+            | {
+                  __typename?: "CreateDatasetResultInvalidSnapshot";
+                  message: string;
+              }
+            | {
+                  __typename?: "CreateDatasetResultMissingInputs";
+                  message: string;
+              }
+            | {
+                  __typename?: "CreateDatasetResultNameCollision";
+                  message: string;
+              }
+            | {
+                  __typename?: "CreateDatasetResultSuccess";
+                  message: string;
+                  dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+              }
+            | { __typename?: "MetadataManifestMalformed"; message: string }
+            | {
+                  __typename?: "MetadataManifestUnsupportedVersion";
+                  message: string;
+              };
     };
 };
 
@@ -2144,6 +2179,42 @@ export class CreateEmptyDatasetGQL extends Apollo.Query<
     CreateEmptyDatasetQueryVariables
 > {
     document = CreateEmptyDatasetDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const CreateDatasetFromSnapshotDocument = gql`
+    query createDatasetFromSnapshot(
+        $accountId: AccountID!
+        $snapshot: String!
+    ) {
+        datasets {
+            createFromSnapshot(
+                accountId: $accountId
+                snapshot: $snapshot
+                snapshotFormat: YAML
+            ) {
+                message
+                ... on CreateDatasetResultSuccess {
+                    dataset {
+                        ...DatasetBasics
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class CreateDatasetFromSnapshotGQL extends Apollo.Query<
+    CreateDatasetFromSnapshotQuery,
+    CreateDatasetFromSnapshotQueryVariables
+> {
+    document = CreateDatasetFromSnapshotDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

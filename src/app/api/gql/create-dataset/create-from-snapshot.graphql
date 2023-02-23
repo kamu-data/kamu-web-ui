@@ -1,0 +1,16 @@
+query createDatasetFromSnapshot($accountId: AccountID!, $snapshot: String!) {
+  datasets {
+    createFromSnapshot(
+      accountId: $accountId
+      snapshot: $snapshot
+      snapshotFormat: YAML
+    ) {
+      message
+      ... on CreateDatasetResultSuccess {
+        dataset {
+          ...DatasetBasics
+        }
+      }
+    }
+  }
+}

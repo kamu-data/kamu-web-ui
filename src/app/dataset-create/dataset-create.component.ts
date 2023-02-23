@@ -69,17 +69,9 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
     }
 
     public onCreateDataset(): void {
-        const accountId = this.createDatasetForm.controls.owner.value as string;
-        const kind =
-            this.kindMapper[
-                this.createDatasetForm.controls.kind.value as string
-            ];
-        const datasetName = this.createDatasetForm.controls.datasetName
-            .value as string;
-
-        this.datasetCreateService
-            .createEmptyDataset(accountId, kind, datasetName)
-            .subscribe();
+        this.showMonacoEditor
+            ? this.createDatasetFromSnapshot()
+            : this.createDatasetFromForm();
     }
 
     public onFileSelected(event: Event): void {
@@ -101,6 +93,31 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
 
     public onShowMonacoEditor(): void {
         this.setAvailabilityControls();
+    }
+
+    private createDatasetFromForm(): void {
+        const accountId = this.createDatasetForm.controls.owner.value as string;
+        const kind =
+            this.kindMapper[
+                this.createDatasetForm.controls.kind.value as string
+            ];
+        const datasetName = this.createDatasetForm.controls.datasetName
+            .value as string;
+        this.trackSubscription(
+            this.datasetCreateService
+                .createEmptyDataset(accountId, kind, datasetName)
+                .subscribe(),
+        );
+    }
+
+    private createDatasetFromSnapshot(): void {
+        if (this.yamlTemplate) {
+            this.trackSubscription(
+                this.datasetCreateService
+                    .createDatasetFromSnapshot("kamu", this.yamlTemplate)
+                    .subscribe(),
+            );
+        }
     }
 
     private setAvailabilityControls(): void {

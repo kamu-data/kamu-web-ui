@@ -19,13 +19,12 @@ import { AppDatasetCreateService } from "./dataset-create.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetCreateComponent extends BaseComponent implements OnInit {
-    public yamlTemplate: MaybeNull<string> = "";
-    public fileName: MaybeNull<string> = "";
-    public showMonacoEditor = false;
-    public errorMessage = "";
-    public initialHint = "# You can edit this file\n";
-    public owners = ["kamu"];
-    public sqlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
+    private readonly kindMapper: Record<string, DatasetKind> = {
+        root: DatasetKind.Root,
+        derivative: DatasetKind.Derivative,
+    };
+    public readonly initialHint = "# You can edit this file\n";
+    public readonly sqlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
         {
             theme: "vs",
             language: "yaml",
@@ -34,15 +33,22 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
                 enabled: false,
             },
         };
+    public yamlTemplate = "";
+    public fileName: MaybeNull<string> = "";
+    public showMonacoEditor = false;
+    public errorMessage = "";
+    public owners = ["kamu"];
     public createDatasetForm: FormGroup = this.fb.group({
         owner: ["kamu", [Validators.required]],
-        datasetName: ["", [Validators.required]],
+        datasetName: [
+            "",
+            [
+                Validators.required,
+                Validators.pattern(/^[a-zA-Z0-9]+[a-zA-Z0-9-.]*$/),
+            ],
+        ],
         kind: ["root", [Validators.required]],
     });
-    private kindMapper: Record<string, DatasetKind> = {
-        root: DatasetKind.Root,
-        derivative: DatasetKind.Derivative,
-    };
 
     constructor(
         private cdr: ChangeDetectorRef,
@@ -63,6 +69,10 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
         );
     }
 
+    public get datasetName() {
+        return this.createDatasetForm.get("datasetName");
+    }
+
     public get isFormValid(): boolean {
         if (this.yamlTemplate) return true;
         return this.createDatasetForm.valid;
@@ -75,7 +85,6 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
     }
 
     public onFileSelected(event: Event): void {
-        this.yamlTemplate = "";
         const input = event.target as HTMLInputElement;
         if (!input.files?.length) {
             return;
@@ -89,6 +98,7 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
             this.cdr.detectChanges();
         };
         fileReader.readAsText(file);
+        this.yamlTemplate = "";
     }
 
     public onShowMonacoEditor(): void {
@@ -130,6 +140,8 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
             this.createDatasetForm.controls.datasetName.enable();
             this.createDatasetForm.controls.owner.enable();
             this.createDatasetForm.controls.kind.enable();
+            this.errorMessage = "";
+            this.cdr.detectChanges();
         }
     }
 }

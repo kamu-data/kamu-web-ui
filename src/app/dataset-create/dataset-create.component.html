@@ -3,7 +3,7 @@
     <p class="text-muted fs-6">A dataset is a durable collection of data</p>
     <mat-divider></mat-divider>
     <form [formGroup]="createDatasetForm" (ngSubmit)="onCreateDataset()">
-        <div class="my-4 d-flex flex-row align-items-end">
+        <div class="my-4 d-flex align-items-start">
             <div class="w-25">
                 <label for="owner" class="fs-12">Owner </label
                 ><span class="text-danger">*</span><br />
@@ -16,7 +16,7 @@
                     </option>
                 </select>
             </div>
-            <span class="mx-2 fs-3 align-self-end pb-2">/</span>
+            <span class="mx-2 fs-3 align-self-start divider">/</span>
             <div class="w-50">
                 <label for="dataset-name" class="fs-12">Dataset name</label
                 ><span class="text-danger">*</span><br />
@@ -25,7 +25,25 @@
                     class="form-control custom-form-control d-inline"
                     id="dataset-name"
                     formControlName="datasetName"
-                />
+                    required
+                /><br />
+                <div
+                    *ngIf="
+                        datasetName?.invalid &&
+                        (datasetName?.touched || datasetName?.dirty)
+                    "
+                >
+                    <span
+                        *ngIf="datasetName?.errors?.['required']"
+                        class="text-danger fs-12"
+                        >Name is required</span
+                    >
+                    <span
+                        *ngIf="datasetName?.errors?.['pattern']"
+                        class="text-danger fs-12"
+                        >Invalid dataset name</span
+                    >
+                </div>
             </div>
         </div>
         <mat-divider></mat-divider>
@@ -117,14 +135,8 @@
             #fileUpload
         />
         <div class="my-4 d-flex justify-content-end align-items-center">
-            <span class="fs-6">{{ fileName || "No file uploaded yet." }}</span>
-            <button
-                mat-mini-fab
-                color="primary"
-                (click)="fileUpload.click()"
-                class="upload-btn ms-2"
-            >
-                <mat-icon>attach_file</mat-icon>
+            <button (click)="fileUpload.click()" class="upload-btn ms-2">
+                Upload from file
             </button>
         </div>
     </ng-container>

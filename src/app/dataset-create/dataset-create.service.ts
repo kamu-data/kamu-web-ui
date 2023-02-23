@@ -9,17 +9,18 @@ import { DatasetKind } from "../api/kamu.graphql.interface";
 import { map } from "rxjs/operators";
 import { NavigationService } from "../services/navigation.service";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
+import { DatasetNotFoundError } from "../common/errors";
 
 @Injectable({ providedIn: "root" })
 export class AppDatasetCreateService {
     private errorMessageChanges$: Subject<string> = new Subject<string>();
 
-    public get onErrorMessageChanges(): Observable<string> {
-        return this.errorMessageChanges$.asObservable();
+    private errorMessageChanges(message: string): void {
+        this.errorMessageChanges$.next(message);
     }
 
-    public errorMessageChanges(message: string): void {
-        this.errorMessageChanges$.next(message);
+    public get onErrorMessageChanges(): Observable<string> {
+        return this.errorMessageChanges$.asObservable();
     }
 
     public constructor(
@@ -62,21 +63,25 @@ export class AppDatasetCreateService {
             .createDatasetFromSnapshot(accountId, snapshot)
             .pipe(
                 map((data: CreateDatasetFromSnapshotQuery) => {
-                    if (
-                        data.datasets.createFromSnapshot.__typename ===
-                        "CreateDatasetResultSuccess"
-                    ) {
-                        const datasetName = data.datasets.createFromSnapshot
-                            .dataset.name as string;
-                        this.navigationService.navigateToDatasetView({
-                            accountName: accountId,
-                            datasetName,
-                            tab: DatasetViewTypeEnum.Overview,
-                        });
+                    if (data.datasets.__typename) {
+                        if (
+                            data.datasets.createFromSnapshot.__typename ===
+                            "CreateDatasetResultSuccess"
+                        ) {
+                            const datasetName = data.datasets.createFromSnapshot
+                                .dataset.name as string;
+                            this.navigationService.navigateToDatasetView({
+                                accountName: accountId,
+                                datasetName,
+                                tab: DatasetViewTypeEnum.Overview,
+                            });
+                        } else {
+                            this.errorMessageChanges(
+                                data.datasets.createFromSnapshot.message,
+                            );
+                        }
                     } else {
-                        this.errorMessageChanges(
-                            data.datasets.createFromSnapshot.message,
-                        );
+                        throw new DatasetNotFoundError();
                     }
                 }),
             );

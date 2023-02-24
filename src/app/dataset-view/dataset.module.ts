@@ -1,3 +1,4 @@
+import { MatDividerModule } from "@angular/material/divider";
 import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
 import { DisplayTimeModule } from "./../components/display-time/display-time.module";
 import { ModuleWithProviders, NgModule } from "@angular/core";
@@ -66,6 +67,7 @@ import { SharedModule } from "../shared/shared/shared.module";
         DisplayTimeModule,
         DisplayHashModule,
         DisplaySizeModule,
+        MatDividerModule,
         SharedModule,
     ],
     exports: [

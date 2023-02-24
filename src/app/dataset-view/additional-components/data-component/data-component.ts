@@ -102,7 +102,9 @@ export class DataComponent extends BaseComponent implements OnInit {
             // @param editor The editor instance is passed in as a convenience
             run: runQueryFn,
         });
-        this.onRunSQLRequest();
+        if (this.currentData.length > 0) {
+            this.onRunSQLRequest();
+        }
     }
 
     private buildSqlRequestCode(): void {

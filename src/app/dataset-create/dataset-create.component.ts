@@ -140,6 +140,7 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
             this.createDatasetForm.controls.datasetName.enable();
             this.createDatasetForm.controls.owner.enable();
             this.createDatasetForm.controls.kind.enable();
+            this.yamlTemplate = "";
             this.errorMessage = "";
             this.cdr.detectChanges();
         }

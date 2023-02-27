@@ -25,6 +25,7 @@
                     class="form-control custom-form-control d-inline"
                     id="dataset-name"
                     formControlName="datasetName"
+                    data-test-id="dataset-name"
                     required
                 /><br />
                 <div
@@ -113,6 +114,7 @@
                 class="checkbox"
                 (change)="onShowMonacoEditor()"
                 [(ngModel)]="showMonacoEditor"
+                data-test-id="show-monaco-editor"
             />
             Initialize from YAML snapshot</label
         >
@@ -125,6 +127,7 @@
                 style="height: 400px"
                 [options]="sqlEditorOptions"
                 [(ngModel)]="yamlTemplate"
+                ngDefaultControl
             ></ngx-monaco-editor>
         </div>
         <input
@@ -132,10 +135,15 @@
             class="file-input d-none"
             onclick="this.value = null"
             (change)="onFileSelected($event)"
+            data-test-id="input-file"
             #fileUpload
         />
         <div class="my-4 d-flex justify-content-end align-items-center">
-            <button (click)="fileUpload.click()" class="upload-btn ms-2">
+            <button
+                (click)="fileUpload.click()"
+                class="upload-btn ms-2"
+                data-test-id="upload-file-button"
+            >
                 Upload from file
             </button>
         </div>
@@ -153,6 +161,7 @@
             (click)="onCreateDataset()"
             class="btn-create"
             [disabled]="!isFormValid"
+            data-test-id="create-dataset"
         >
             Create dataset
         </button>

@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { YamlViewSectionComponent } from "./yaml-view-section.component";
 import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+import { ChangeDetectionStrategy } from "@angular/core";
 
 describe("YamlViewSectionComponent", () => {
     let component: YamlViewSectionComponent;
@@ -14,7 +15,12 @@ describe("YamlViewSectionComponent", () => {
         await TestBed.configureTestingModule({
             declarations: [YamlViewSectionComponent],
             imports: [ApolloTestingModule],
-        }).compileComponents();
+        })
+            .overrideComponent(YamlViewSectionComponent, {
+                set: { changeDetection: ChangeDetectionStrategy.Default },
+            })
+
+            .compileComponents();
 
         fixture = TestBed.createComponent(YamlViewSectionComponent);
         blockService = TestBed.inject(BlockService);
@@ -26,7 +32,7 @@ describe("YamlViewSectionComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check onMetadataBlockChanges subscribe", () => {
+    it("should check onMetadataBlockChanges subscribe with ExecuteQuery ", () => {
         const mockBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName
             ?.metadata.chain.blockByHash as MetadataBlockFragment;
         blockService.metadataBlockChanges(mockBlock);

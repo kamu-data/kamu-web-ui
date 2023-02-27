@@ -14,7 +14,7 @@ import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 export class AppDatasetCreateService {
     private errorMessageChanges$: Subject<string> = new Subject<string>();
 
-    private errorMessageChanges(message: string): void {
+    public errorMessageChanges(message: string): void {
         this.errorMessageChanges$.next(message);
     }
 

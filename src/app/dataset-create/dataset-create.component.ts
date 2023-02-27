@@ -44,7 +44,9 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
             "",
             [
                 Validators.required,
-                Validators.pattern(/^[a-zA-Z0-9]+[a-zA-Z0-9-.]*$/),
+                Validators.pattern(
+                    /^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/,
+                ),
             ],
         ],
         kind: ["root", [Validators.required]],

@@ -474,10 +474,24 @@
         <ng-container
             *ngIf="
                 !currentState?.metadata?.metadata?.currentSource &&
-                !currentState?.metadata?.metadata?.currentTransform
+                currentState?.metadata?.kind === 'ROOT'
             "
         >
-            <h3 class="box-title text-center">There is no metadata.</h3>
+            <h3 class="box-title text-center">
+                There is no metadata. Need add
+                <a class="add-link" href="#"> Add SetPoullingSource event</a>
+            </h3>
+        </ng-container>
+        <ng-container
+            *ngIf="
+                !currentState?.metadata?.metadata?.currentTransform &&
+                currentState?.metadata?.kind === 'DERIVATIVE'
+            "
+        >
+            <h3 class="box-title text-center">
+                There is no metadata. Need add
+                <a class="add-link" href="#"> Add SetTransform event</a>
+            </h3>
         </ng-container>
     </div>
 </div>

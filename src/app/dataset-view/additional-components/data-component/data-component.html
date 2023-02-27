@@ -176,18 +176,20 @@
                 [dataRows]="currentData || []"
             ></app-dynamic-table>
         </ng-container>
-        <ng-container *ngIf="!sqlErrorMarker || !currentSchema || !currentData">
+        <ng-container
+            *ngIf="!sqlErrorMarker || !currentSchema || !currentData.length"
+        >
             <mat-divider></mat-divider>
             <h3 class="box-title text-center pt-4 author">
                 Need
                 <a
                     *ngIf="!currentData.length && currentSchema"
-                    class="add-data-link"
+                    class="add-link"
                     href="#"
                 >
                     add data</a
                 >
-                <a *ngIf="!currentSchema" class="add-schema-link" href="#">
+                <a *ngIf="!currentSchema" class="add-link" href="#">
                     add schema</a
                 >.
             </h3>

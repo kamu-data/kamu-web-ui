@@ -1415,7 +1415,8 @@ export type DatasetMetadataSummaryFragment = {
             | ({ __typename?: "SetVocab" } & SetVocabEventFragment)
             | null;
     };
-} & DatasetReadmeFragment &
+} & DatasetBasicsFragment &
+    DatasetReadmeFragment &
     DatasetLastUpdateFragment;
 
 export type DatasetOverviewFragment = {
@@ -2052,6 +2053,7 @@ export const DatasetLastUpdateFragmentDoc = gql`
 `;
 export const DatasetMetadataSummaryFragmentDoc = gql`
     fragment DatasetMetadataSummary on Dataset {
+        ...DatasetBasics
         metadata {
             currentInfo {
                 ...DatasetCurrentInfo
@@ -2079,6 +2081,7 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
         ...DatasetReadme
         ...DatasetLastUpdate
     }
+    ${DatasetBasicsFragmentDoc}
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
     ${SetPollingSourceEventFragmentDoc}

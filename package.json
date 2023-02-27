@@ -1,6 +1,6 @@
 {
   "name": "kamu-platform",
-  "version": "0.0.0",
+  "version": "0.5.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --watch",
@@ -15,7 +15,10 @@
     "gql-update-schema": "curl https://raw.githubusercontent.com/kamu-data/kamu-cli/master/resources/schema.gql > resources/schema.graphql",
     "gql-codegen": "graphql-codegen --config gql-codegen.yml && prettier --write src/app/api/kamu.graphql.interface.ts && sed -i 's/import { gql } from \"apollo-angular\"/import { gql } from \"@apollo\\/client\\/core\"/g' src/app/api/kamu.graphql.interface.ts",
     "prepare": "husky install",
-    "install_pretty_quick": "npx husky set .husky/pre-commit \"npx pretty-quick --staged\""
+    "install_pretty_quick": "npx husky set .husky/pre-commit \"npx pretty-quick --staged\"",
+    "preversion": "",
+    "version": "sed -i \"s/KAMU_WEB_UI_VERSION =.*/KAMU_WEB_UI_VERSION = $npm_package_version/\" images/Makefile && git add images/Makefile",
+    "postversion": ""
   },
   "private": true,
   "dependencies": {

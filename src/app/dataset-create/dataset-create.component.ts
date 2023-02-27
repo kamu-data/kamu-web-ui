@@ -34,7 +34,6 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
             },
         };
     public yamlTemplate = "";
-    public fileName: MaybeNull<string> = "";
     public showMonacoEditor = false;
     public errorMessage = "";
     public owners = ["kamu"];
@@ -86,21 +85,24 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
             : this.createDatasetFromForm();
     }
 
-    public onFileSelected(event: Event): void {
-        const input = event.target as HTMLInputElement;
-        if (!input.files?.length) {
-            return;
-        }
-        const file = input.files[0];
-        this.fileName = file.name;
-        const fileReader: FileReader = new FileReader();
-        fileReader.onload = () => {
-            this.yamlTemplate += this.initialHint;
-            this.yamlTemplate += fileReader.result as string;
-            this.cdr.detectChanges();
-        };
-        fileReader.readAsText(file);
-        this.yamlTemplate = "";
+    public onFileSelected(event: Event): Promise<MaybeNull<string>> {
+        return new Promise<string>((resolve) => {
+            const input = event.target as HTMLInputElement;
+            if (!input.files?.length) {
+                resolve("");
+            } else {
+                const file = input.files[0];
+                const fileReader: FileReader = new FileReader();
+                fileReader.onload = () => {
+                    this.yamlTemplate += this.initialHint;
+                    this.yamlTemplate += fileReader.result as string;
+                    resolve(this.yamlTemplate);
+                    this.cdr.detectChanges();
+                };
+                fileReader.readAsText(file);
+                this.yamlTemplate = "";
+            }
+        });
     }
 
     public onShowMonacoEditor(): void {

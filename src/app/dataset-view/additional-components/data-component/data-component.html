@@ -179,9 +179,17 @@
         <ng-container *ngIf="!sqlErrorMarker || !currentSchema || !currentData">
             <mat-divider></mat-divider>
             <h3 class="box-title text-center pt-4 author">
-                The current dataset is empty or need schema. Need
-                <a class="add-data-link" href="#"> add data</a> or
-                <a class="add-schema-link" href="#"> add schema</a>.
+                Need
+                <a
+                    *ngIf="!currentData.length && currentSchema"
+                    class="add-data-link"
+                    href="#"
+                >
+                    add data</a
+                >
+                <a *ngIf="!currentSchema" class="add-schema-link" href="#">
+                    add schema</a
+                >.
             </h3>
         </ng-container>
     </div>

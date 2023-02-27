@@ -90,20 +90,66 @@ describe("DatasetCreateComponent", () => {
         expect(component.showMonacoEditor).toBeFalse();
     });
 
-    it("should check call uploadFile when file picked)", () => {
-        const mockFile = new File([""], "test.yaml", { type: "text/html" });
+    it("should check call uploadFile when file picked)", async () => {
+        const checkboxInput = findElementByDataTestId(
+            fixture,
+            "show-monaco-editor",
+        ) as HTMLInputElement;
+
+        checkboxInput.click();
+        fixture.detectChanges();
+
+        const mockFile = new File(["test content"], "test.yaml", {
+            type: "text/html",
+        });
         const mockEvt = { target: { files: [mockFile] } };
-
-        component.onFileSelected(mockEvt as unknown as Event);
-
-        expect(component.fileName).toBe("test.yaml");
+        try {
+            const result = await component.onFileSelected(
+                mockEvt as unknown as Event,
+            );
+            expect(result).toBe("# You can edit this file\ntest content");
+        } catch (error) {
+            console.log(error);
+        }
     });
 
-    it("should check call uploadFile when file not picked)", () => {
+    it("should check call uploadFile when file not picked)", async () => {
+        const checkboxInput = findElementByDataTestId(
+            fixture,
+            "show-monaco-editor",
+        ) as HTMLInputElement;
+
+        checkboxInput.click();
+        fixture.detectChanges();
+
         const mockEvt = { target: { files: [] } };
+        try {
+            const result = await component.onFileSelected(
+                mockEvt as unknown as Event,
+            );
+            expect(result).toBe("");
+        } catch (error) {
+            console.log(error);
+        }
+    });
 
-        component.onFileSelected(mockEvt as unknown as Event);
-
-        expect(component.fileName).toBe("");
+    [
+        { datasetName: "test.test", valid: true },
+        { datasetName: "t-test.test", valid: true },
+        { datasetName: "test.t-test", valid: true },
+        { datasetName: "t-test.t-test", valid: true },
+        { datasetName: "-test.test", valid: false },
+        { datasetName: "test.-tests", valid: false },
+        { datasetName: "test.", valid: false },
+        { datasetName: ".test", valid: false },
+        { datasetName: "", valid: false },
+    ].forEach((item: { datasetName: string; valid: boolean }) => {
+        it(`should check valid form with datasetName=${item.datasetName}`, () => {
+            component.createDatasetForm.patchValue({
+                datasetName: item.datasetName,
+            });
+            fixture.detectChanges();
+            expect(component.createDatasetForm.valid).toBe(item.valid);
+        });
     });
 });

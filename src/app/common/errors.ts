@@ -98,7 +98,7 @@ export class KamuErrorHandler implements KamuErrorVisitor {
         promiseWithCatch(
             this.modalService.error({
                 title: ErrorTexts.ERROR_TITLE_REQUEST_FAILED,
-                message: e.message 
+                message: e.message
                     ? `${ErrorTexts.ERROR_EXECUTING_SQL_QUERY}: ${e.message}`
                     : ErrorTexts.ERROR_EXECUTING_SQL_QUERY,
                 yesButtonText: "Close",

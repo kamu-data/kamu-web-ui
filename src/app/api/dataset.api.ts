@@ -1,3 +1,9 @@
+import {
+    CreateDatasetFromSnapshotGQL,
+    CreateDatasetFromSnapshotQuery,
+    CreateEmptyDatasetQuery,
+    DatasetKind,
+} from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { ApolloQueryResult } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
@@ -18,6 +24,7 @@ import {
     GetMetadataBlockQuery,
     DatasetByIdQuery,
     DatasetByIdGQL,
+    CreateEmptyDatasetGQL,
 } from "./kamu.graphql.interface";
 
 @Injectable({ providedIn: "root" })
@@ -29,6 +36,8 @@ export class DatasetApi {
         private datasetsByAccountNameGQL: DatasetsByAccountNameGQL,
         private metadataBlockGQL: GetMetadataBlockGQL,
         private datasetByIdGQL: DatasetByIdGQL,
+        private createEmptyDatasetGQL: CreateEmptyDatasetGQL,
+        private createDatasetFromSnapshotGQL: CreateDatasetFromSnapshotGQL,
     ) {}
 
     public getDatasetMainData(params: {
@@ -127,6 +136,39 @@ export class DatasetApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<DatasetByIdQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public createDatasetFromSnapshot(
+        accountId: string,
+        snapshot: string,
+    ): Observable<CreateDatasetFromSnapshotQuery> {
+        return this.createDatasetFromSnapshotGQL
+            .watch({ accountId, snapshot })
+            .valueChanges.pipe(
+                first(),
+                map(
+                    (
+                        result: ApolloQueryResult<CreateDatasetFromSnapshotQuery>,
+                    ) => {
+                        return result.data;
+                    },
+                ),
+            );
+    }
+
+    public createEmptyDataset(
+        accountId: string,
+        datasetKind: DatasetKind,
+        datasetName: string,
+    ): Observable<CreateEmptyDatasetQuery> {
+        return this.createEmptyDatasetGQL
+            .watch({ accountId, datasetKind, datasetName })
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<CreateEmptyDatasetQuery>) => {
                     return result.data;
                 }),
             );

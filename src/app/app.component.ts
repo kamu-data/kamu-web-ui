@@ -25,7 +25,6 @@ import _ from "lodash";
 import { isMobileView, promiseWithCatch } from "./common/app.helpers";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [
-    ProjectLinks.URL_DATASET_CREATE,
     ProjectLinks.URL_LOGIN,
     ProjectLinks.URL_GITHUB_CALLBACK,
 ];

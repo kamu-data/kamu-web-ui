@@ -824,6 +824,60 @@ export type User = Account & {
     name: Scalars["String"];
 };
 
+export type CreateEmptyDatasetQueryVariables = Exact<{
+    accountId: Scalars["AccountID"];
+    datasetKind: DatasetKind;
+    datasetName: Scalars["DatasetName"];
+}>;
+
+export type CreateEmptyDatasetQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        createEmpty:
+            | {
+                  __typename?: "CreateDatasetResultNameCollision";
+                  message: string;
+              }
+            | { __typename?: "CreateDatasetResultSuccess"; message: string };
+    };
+};
+
+export type CreateDatasetFromSnapshotQueryVariables = Exact<{
+    accountId: Scalars["AccountID"];
+    snapshot: Scalars["String"];
+}>;
+
+export type CreateDatasetFromSnapshotQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        createFromSnapshot:
+            | {
+                  __typename?: "CreateDatasetResultInvalidSnapshot";
+                  message: string;
+              }
+            | {
+                  __typename?: "CreateDatasetResultMissingInputs";
+                  message: string;
+              }
+            | {
+                  __typename?: "CreateDatasetResultNameCollision";
+                  message: string;
+              }
+            | {
+                  __typename?: "CreateDatasetResultSuccess";
+                  message: string;
+                  dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+              }
+            | { __typename?: "MetadataManifestMalformed"; message: string }
+            | {
+                  __typename?: "MetadataManifestUnsupportedVersion";
+                  message: string;
+              };
+    };
+};
+
 export type DatasetByIdQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
 }>;
@@ -1361,7 +1415,8 @@ export type DatasetMetadataSummaryFragment = {
             | ({ __typename?: "SetVocab" } & SetVocabEventFragment)
             | null;
     };
-} & DatasetReadmeFragment &
+} & DatasetBasicsFragment &
+    DatasetReadmeFragment &
     DatasetLastUpdateFragment;
 
 export type DatasetOverviewFragment = {
@@ -1998,6 +2053,7 @@ export const DatasetLastUpdateFragmentDoc = gql`
 `;
 export const DatasetMetadataSummaryFragmentDoc = gql`
     fragment DatasetMetadataSummary on Dataset {
+        ...DatasetBasics
         metadata {
             currentInfo {
                 ...DatasetCurrentInfo
@@ -2025,6 +2081,7 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
         ...DatasetReadme
         ...DatasetLastUpdate
     }
+    ${DatasetBasicsFragmentDoc}
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
     ${SetPollingSourceEventFragmentDoc}
@@ -2099,6 +2156,73 @@ export const DatasetSearchOverviewFragmentDoc = gql`
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
 `;
+export const CreateEmptyDatasetDocument = gql`
+    query createEmptyDataset(
+        $accountId: AccountID!
+        $datasetKind: DatasetKind!
+        $datasetName: DatasetName!
+    ) {
+        datasets {
+            createEmpty(
+                accountId: $accountId
+                datasetKind: $datasetKind
+                datasetName: $datasetName
+            ) {
+                message
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class CreateEmptyDatasetGQL extends Apollo.Query<
+    CreateEmptyDatasetQuery,
+    CreateEmptyDatasetQueryVariables
+> {
+    document = CreateEmptyDatasetDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const CreateDatasetFromSnapshotDocument = gql`
+    query createDatasetFromSnapshot(
+        $accountId: AccountID!
+        $snapshot: String!
+    ) {
+        datasets {
+            createFromSnapshot(
+                accountId: $accountId
+                snapshot: $snapshot
+                snapshotFormat: YAML
+            ) {
+                message
+                ... on CreateDatasetResultSuccess {
+                    dataset {
+                        ...DatasetBasics
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class CreateDatasetFromSnapshotGQL extends Apollo.Query<
+    CreateDatasetFromSnapshotQuery,
+    CreateDatasetFromSnapshotQueryVariables
+> {
+    document = CreateDatasetFromSnapshotDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const DatasetByIdDocument = gql`
     query datasetById($datasetId: DatasetID!) {
         datasets {

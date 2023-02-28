@@ -43,7 +43,11 @@
                 [schemaFields]="currentState.schema.fields"
                 [dataRows]="currentState ? currentState.data : []"
             ></app-dynamic-table>
-            <div id="file-readme-dataset-template-md" class="file my-4">
+            <div
+                id="file-readme-dataset-template-md"
+                class="file my-4"
+                *ngIf="currentState.overview.metadata.currentReadme"
+            >
                 <div class="file-header d-flex align-items-center">
                     <div
                         class="file-info pr-4 d-flex flex-order-1 flex-auto align-items-center"
@@ -71,10 +75,7 @@
                         <svg-icon name="pencil"></svg-icon>
                     </button>
                 </div>
-                <div
-                    class="file-content"
-                    *ngIf="currentState.overview.metadata.currentReadme"
-                >
+                <div class="file-content">
                     <ng-template [ngIf]="isMarkdownEditView">
                         <textarea
                             class="variable-textarea"

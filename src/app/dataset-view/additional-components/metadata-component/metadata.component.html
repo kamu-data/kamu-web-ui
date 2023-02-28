@@ -13,7 +13,10 @@
 
         <ng-container *ngIf="currentState">
             <div class="d-flex flex-column gap-4 mt-4">
-                <div class="position-relative border border-1 p-2 rounded-3" *ngIf="currentState.schema">
+                <div
+                    class="position-relative border border-1 p-2 rounded-3"
+                    *ngIf="currentState.schema"
+                >
                     <span
                         class="position-absolute text-muted group-box-label text-uppercase"
                         >Schema</span
@@ -34,9 +37,7 @@
                     </div>
                 </div>
                 <div
-                    *ngIf="
-                        currentState.metadata.metadata.currentLicense
-                    "
+                    *ngIf="currentState.metadata.metadata.currentLicense"
                     class="position-relative border border-1 p-2 rounded-3"
                 >
                     <span
@@ -106,9 +107,7 @@
                 </div>
 
                 <ng-container
-                    *ngIf="
-                        currentState.metadata.metadata.currentSource
-                    "
+                    *ngIf="currentState.metadata.metadata.currentSource"
                 >
                     <div
                         class="position-relative border border-1 p-2 rounded-3"
@@ -424,9 +423,9 @@
                                 [tooltip]="'Query alias of the dataset.'"
                                 [label]="'Query alias:'"
                             >
-                            <span>{{ input.name }}</span>
+                                <span>{{ input.name }}</span>
                             </app-block-row-data>
-                        </div>                        
+                        </div>
                     </div>
                     <div
                         class="position-relative border border-1 p-2 rounded-3"
@@ -471,6 +470,28 @@
                     </div>
                 </ng-container>
             </div>
+        </ng-container>
+        <ng-container
+            *ngIf="
+                !currentState?.metadata?.metadata?.currentSource &&
+                currentState?.metadata?.kind === 'ROOT'
+            "
+        >
+            <h3 class="box-title text-center">
+                There is no metadata. Need add
+                <a class="add-link" href="#"> SetPoullingSource event</a>
+            </h3>
+        </ng-container>
+        <ng-container
+            *ngIf="
+                !currentState?.metadata?.metadata?.currentTransform &&
+                currentState?.metadata?.kind === 'DERIVATIVE'
+            "
+        >
+            <h3 class="box-title text-center">
+                There is no metadata. Need add
+                <a class="add-link" href="#"> SetTransform event</a>
+            </h3>
         </ng-container>
     </div>
 </div>

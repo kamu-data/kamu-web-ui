@@ -112,6 +112,7 @@
                     data-test-id="runSqlQueryButton"
                     name="run sql button"
                     (click)="onRunSQLRequest()"
+                    [disabled]="!currentData.length"
                     class="sql-run-button rounded-left-2 border-right-0 btnGroup-item btn d-flex justify-content-center align-items-center"
                 >
                     <span>Run</span><mat-icon>play_arrow</mat-icon>
@@ -168,13 +169,26 @@
             <h2 class="box-title align-items-center pb-3 pt-3 m-0">Error:</h2>
             <p class="sql-error-message">{{ sqlErrorMarker }}</p>
         </ng-container>
-        <ng-container *ngIf="!sqlErrorMarker">
-            <h2 class="box-title align-items-center pb-3 pt-3 m-0">Result:</h2>
+        <ng-container *ngIf="!sqlErrorMarker && currentSchema && currentData">
+            <h2 class="box-title align-items-center py-3 m-0">Result:</h2>
             <app-dynamic-table
                 [hasTableHeader]="true"
                 [schemaFields]="currentSchema ? currentSchema.fields : []"
                 [dataRows]="currentData || []"
             ></app-dynamic-table>
+        </ng-container>
+        <ng-container
+            *ngIf="!sqlErrorMarker || !currentSchema || !currentData.length"
+        >
+            <mat-divider></mat-divider>
+            <h3
+                class="box-title text-center pt-4 author"
+                *ngIf="!currentData.length"
+            >
+                Need
+                <a class="add-link" href="#"> add data</a>
+                .
+            </h3>
         </ng-container>
     </div>
 </div>

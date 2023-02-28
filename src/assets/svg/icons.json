@@ -95,6 +95,18 @@
     {
       "iconName": "search",
       "iconPath": "/assets/svg/search.svg"
+    },
+    {
+      "iconName": "public",
+      "iconPath": "/assets/svg/public.svg"
+    },
+    {
+      "iconName": "private",
+      "iconPath": "/assets/svg/private.svg"
+    },
+    {
+      "iconName": "information",
+      "iconPath": "/assets/svg/information.svg"
     }
   ],
   "customIcons": []

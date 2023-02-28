@@ -1,47 +1,173 @@
-<div class="app-main-container" role="main" id="dataset-create">
-    <div class="dataset-create-container">
-        <h1>Create a new:</h1>
-        <div class="dataset-create-content">
-            <div class="search-result-container__content">
-                <div class="dataset-create-content__image-container">
-                    <img
-                        src="assets/images/root_dataset_background.png"
-                        alt="root_dataset_background"
-                    />
-                    <img
-                        src="assets/icons/root_dataset_icon.png"
-                        alt="root_dataset_icon"
-                    />
-                </div>
-                <h2>Root Dataset</h2>
-                <p>
-                    Use this type if you are the publisher of data or will be
-                    importing it from an external source.
-                </p>
-                <button class="app-active-button">New Root Dataset</button>
-                <span class="dataset-create-tipText">See an example</span>
+<div class="layout mt-4 px-4">
+    <h1 class="title">Create a new dataset</h1>
+    <p class="text-muted fs-6">A dataset is a durable collection of data</p>
+    <mat-divider></mat-divider>
+    <form [formGroup]="createDatasetForm" (ngSubmit)="onCreateDataset()">
+        <div class="my-4 d-flex align-items-start">
+            <div class="w-25">
+                <label for="owner" class="fs-12">Owner </label
+                ><span class="text-danger">*</span><br />
+                <select
+                    class="form-select custom-form-control d-inline"
+                    formControlName="owner"
+                >
+                    <option [ngValue]="owner" *ngFor="let owner of owners">
+                        {{ owner }}
+                    </option>
+                </select>
             </div>
-            <div class="search-result-container__content">
-                <div class="dataset-create-content__image-container">
-                    <img
-                        src="assets/images/derivative_dataset_background.png"
-                        alt="derivative_dataset_background"
-                    />
-                    <img
-                        src="assets/icons/derivative_dataset_icon.png"
-                        alt="derivative_dataset_icon"
-                    />
+            <span class="mx-2 fs-3 align-self-start divider">/</span>
+            <div class="w-50">
+                <label for="dataset-name" class="fs-12">Dataset name</label
+                ><span class="text-danger">*</span><br />
+                <input
+                    type="text"
+                    class="form-control custom-form-control d-inline"
+                    id="dataset-name"
+                    formControlName="datasetName"
+                    data-test-id="dataset-name"
+                    required
+                /><br />
+                <div
+                    *ngIf="
+                        datasetName?.invalid &&
+                        (datasetName?.touched || datasetName?.dirty)
+                    "
+                >
+                    <span
+                        *ngIf="datasetName?.errors?.['required']"
+                        class="text-danger fs-12"
+                        >Name is required</span
+                    >
+                    <span
+                        *ngIf="datasetName?.errors?.['pattern']"
+                        class="text-danger fs-12"
+                        >Invalid dataset name</span
+                    >
                 </div>
-                <h2>Derivative Dataset</h2>
-                <p>
-                    Use this type if you are improving or building upon existing
-                    datasets.
-                </p>
-                <button class="app-active-button">
-                    New Derivative Dataset
-                </button>
-                <span class="dataset-create-tipText">See an example</span>
             </div>
         </div>
+        <mat-divider></mat-divider>
+        <div class="my-4">
+            <label class="d-flex" for="kind-root">
+                <input
+                    name="kind"
+                    type="radio"
+                    value="root"
+                    formControlName="kind"
+                />
+                <div class="ps-3">
+                    <span> Root</span><br /><span class="fs-12 text-muted"
+                        >(Use this type if you are the publisher of data or will
+                        be importing it from an external source.)</span
+                    >
+                </div>
+            </label>
+            <br />
+            <label for="kind-derivative" class="mt-2 d-flex">
+                <input
+                    name="kind"
+                    type="radio"
+                    value="derivative"
+                    formControlName="kind"
+                />
+                <div class="ps-3">
+                    <span> Derivative</span><br /><span class="fs-12 text-muted"
+                        >(Use this type if you are improving or building upon
+                        existing datasets.)</span
+                    >
+                </div>
+            </label>
+        </div>
+        <mat-divider></mat-divider>
+        <div>
+            <label for="visibility-public" class="my-3">
+                <input
+                    name="visibility"
+                    type="radio"
+                    value="public"
+                    checked="checked"
+                    disabled
+                />
+                <svg-icon name="public" class="ms-1"></svg-icon>
+                <span>Public</span>
+            </label>
+            <br />
+            <label for="visibility-private" class="my-3 text-muted">
+                <input
+                    name="visibility"
+                    type="radio"
+                    value="private"
+                    disabled
+                />
+                <svg-icon name="private" class="text-muted ms-1"></svg-icon>
+                <span>Private</span>
+            </label>
+        </div>
+        <mat-divider></mat-divider>
+    </form>
+
+    <div class="my-4">
+        <label class="form-yaml-checkbox-label"
+            ><input
+                type="checkbox"
+                class="checkbox"
+                (change)="onShowMonacoEditor()"
+                [(ngModel)]="showMonacoEditor"
+                data-test-id="show-monaco-editor"
+            />
+            Initialize from YAML snapshot</label
+        >
+    </div>
+    <ng-container *ngIf="showMonacoEditor">
+        <div
+            class="container-monaco border border-1 mt-4 ps-2 pe-2 pt-4 rounded-3"
+        >
+            <ngx-monaco-editor
+                style="height: 400px"
+                [options]="sqlEditorOptions"
+                [(ngModel)]="yamlTemplate"
+                ngDefaultControl
+                data-test-id="monaco-editor"
+            ></ngx-monaco-editor>
+        </div>
+        <input
+            type="file"
+            class="file-input d-none"
+            onclick="this.value = null"
+            (change)="onFileSelected($event)"
+            data-test-id="input-file"
+            #fileUpload
+        />
+        <div class="my-4 d-flex justify-content-end align-items-center">
+            <button
+                (click)="fileUpload.click()"
+                class="upload-btn ms-2"
+                data-test-id="upload-file-button"
+            >
+                Upload from file
+            </button>
+        </div>
+    </ng-container>
+    <mat-divider></mat-divider>
+    <div class="my-4 d-flex align-items-center text-muted">
+        <svg-icon class="me-1" name="information"></svg-icon>
+        <span class="fs-6 pt-1"
+            >You are creating a dataset in your personal account.</span
+        >
+    </div>
+    <mat-divider></mat-divider>
+    <div class="mt-4 mb-4">
+        <button
+            (click)="onCreateDataset()"
+            class="btn-create"
+            [disabled]="!isFormValid"
+            data-test-id="create-dataset"
+        >
+            Create dataset
+        </button>
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+        <p class="text-danger fs-6">Error:<br />{{ errorMessage }}</p>
     </div>
 </div>

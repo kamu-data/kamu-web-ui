@@ -1,4 +1,5 @@
 fragment DatasetMetadataSummary on Dataset {
+  ...DatasetBasics
   metadata {
     currentInfo {
       ...DatasetCurrentInfo
@@ -19,7 +20,7 @@ fragment DatasetMetadataSummary on Dataset {
       __typename
     }
     currentVocab {
-       ...SetVocabEvent
+      ...SetVocabEvent
     }
     __typename
   }

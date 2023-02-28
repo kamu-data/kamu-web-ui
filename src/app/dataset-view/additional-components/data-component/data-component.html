@@ -180,15 +180,12 @@
             *ngIf="!sqlErrorMarker || !currentSchema || !currentData.length"
         >
             <mat-divider></mat-divider>
-            <h3 class="box-title text-center pt-4 author">
+            <h3
+                class="box-title text-center pt-4 author"
+                *ngIf="!currentData.length && currentSchema"
+            >
                 Need
-                <a
-                    *ngIf="!currentData.length && currentSchema"
-                    class="add-link"
-                    href="#"
-                >
-                    add data</a
-                >
+                <a class="add-link" href="#"> add data</a>
                 <a *ngIf="!currentSchema" class="add-link" href="#">
                     add schema</a
                 >.

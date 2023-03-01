@@ -9,28 +9,132 @@
                 class="d-flex flex-column flex-justify-between pb-3 mb-3 position-relative"
             >
                 <ng-container
-                    *ngIf="currentState.overview.metadata.currentInfo?.description"
+                    *ngIf="currentState.overview.metadata.currentInfo?.description;else  noCurrentInfo"
                 >
-                    <h2 class="box-title align-items-center pb-3">
-                        Description
-                    </h2>
+                    <div
+                        class="d-flex justify-content-between align-items-center"
+                    >
+                        <h2 class="box-title align-items-center pb-3">
+                            Description
+                        </h2>
+                        <button
+                            class="btn-sm btn custom-edit"
+                            aria-label="Edit dataset details"
+                            data-test-id="edit-dataset-details"
+                            title="Edit dataset details"
+                            (click)="openInformationModal(content)"
+                        >
+                            <svg-icon name="pencil"></svg-icon>
+                        </button>
+                    </div>
                     <p>
                         {{
                         currentState.overview.metadata.currentInfo.description
                         }}
                     </p>
+                    <div class="app-mat-chip">
+                        <mat-chip-list aria-label="Tags selection">
+                            <div
+                                *ngFor="let keyword of currentState.overview.metadata.currentInfo?.keywords"
+                            >
+                                <mat-chip
+                                    (click)="selectTopic(datasetBasics.kind)"
+                                    >{{ keyword }}</mat-chip
+                                >
+                            </div>
+                        </mat-chip-list>
+                    </div>
                 </ng-container>
-                <div class="app-mat-chip">
-                    <mat-chip-list aria-label="Tags selection">
-                        <div
-                            *ngFor="let keyword of currentState.overview.metadata.currentInfo?.keywords"
+                <ng-template #noCurrentInfo>
+                    <p>
+                        You can add
+                        <a
+                            class="text-decoration-none"
+                            (click)="openInformationModal(content)"
+                            >information</a
                         >
-                            <mat-chip (click)="selectTopic(datasetBasics.kind)"
-                                >{{ keyword }}</mat-chip
+                        about dataset.
+                    </p>
+                </ng-template>
+                <ng-template #content let-modal>
+                    <div ngbAutoFocus class="d-flex p-4">
+                        <div class="flex-grow-1 ms-2 text-center">
+                            <span class="fs-5 fw-bold">
+                                {{isDetailsExist?'Edit':'Add'}} dataset
+                                details</span
                             >
                         </div>
-                    </mat-chip-list>
-                </div>
+                        <div>
+                            <button
+                                type="button"
+                                class="btn-close"
+                                aria-label="Close"
+                                (click)="modal.dismiss()"
+                            ></button>
+                        </div>
+                    </div>
+                    <div class="px-4">
+                        <mat-divider></mat-divider>
+                    </div>
+
+                    <div class="body p-4">
+                        <div>
+                            <label for="dataset-descriptio" class="form-label"
+                                >Description</label
+                            >
+                            <textarea
+                                class="form-control"
+                                id="dataset-description"
+                                placeholder="Please enter description..."
+                                rows="5"
+                                [(ngModel)]="description"
+                            >
+                            </textarea>
+                        </div>
+                        <div class="mt-5 mb-3">
+                            <label for="keywords" class="form-label mb-3"
+                                >Keywords</label
+                            >
+
+                            <mat-chip-list
+                                class="w-100"
+                                #chipList
+                                aria-label="Keyword selection"
+                            >
+                                <mat-chip
+                                    class="custom-mat-chip"
+                                    *ngFor="let keyword of keywords"
+                                >
+                                    {{keyword}}
+                                    <button
+                                        matChipRemove
+                                        (click)="removeKeyword(keyword)"
+                                    >
+                                        <mat-icon>cancel</mat-icon>
+                                    </button>
+                                </mat-chip>
+                            </mat-chip-list>
+                            <div class="mt-3">
+                                <input
+                                    class="form-control w-100"
+                                    [matChipInputFor]="chipList"
+                                    (matChipInputTokenEnd)="addKeywordFromInput($event)"
+                                    placeholder="Please enter keyword..."
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 d-flex justify-content-end">
+                        <button
+                            type="button"
+                            class="btn btn-success"
+                            (click)="modal.close()"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </ng-template>
             </div>
             <app-overview-history-summary-header
                 [metadataBlockFragment]="metadataFragmentBlock"

@@ -1,3 +1,4 @@
+import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
 import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
 import { DisplayTimeModule } from "./../components/display-time/display-time.module";
@@ -68,6 +69,7 @@ import { SharedModule } from "../shared/shared/shared.module";
         DisplayHashModule,
         DisplaySizeModule,
         MatDividerModule,
+        MatFormFieldModule,
         SharedModule,
     ],
     exports: [

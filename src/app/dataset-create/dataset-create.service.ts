@@ -10,6 +10,7 @@ import { DatasetKind } from "../api/kamu.graphql.interface";
 import { map } from "rxjs/operators";
 import { NavigationService } from "../services/navigation.service";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
+import { DatasetService } from "../dataset-view/dataset.service";
 
 @Injectable({ providedIn: "root" })
 export class AppDatasetCreateService {
@@ -23,9 +24,20 @@ export class AppDatasetCreateService {
         return this.errorMessageChanges$.asObservable();
     }
 
+    private errorSetInfoCommitChanges$: Subject<string> = new Subject<string>();
+
+    public errorSetInfoCommitChanges(message: string): void {
+        this.errorSetInfoCommitChanges$.next(message);
+    }
+
+    public get onErrorSetInfoCommitChanges(): Observable<string> {
+        return this.errorSetInfoCommitChanges$.asObservable();
+    }
+
     public constructor(
         private datasetApi: DatasetApi,
         private navigationService: NavigationService,
+        private datasetService: DatasetService,
     ) {}
 
     public createEmptyDataset(
@@ -94,9 +106,21 @@ export class AppDatasetCreateService {
                 map((data: CommitEventToDatasetQuery) => {
                     if (
                         data.datasets.byOwnerAndName?.metadata.chain.commitEvent
-                            .__typename === "CommitResultSuccess"
+                            .__typename === "CommitResultAppendError" ||
+                        data.datasets.byOwnerAndName?.metadata.chain.commitEvent
+                            .__typename === "MetadataManifestMalformed"
                     ) {
-                        console.log("Succes");
+                        this.errorSetInfoCommitChanges(
+                            data.datasets.byOwnerAndName.metadata.chain
+                                .commitEvent.message,
+                        );
+                    } else {
+                        this.datasetService
+                            .requestDatasetMainData({
+                                accountName,
+                                datasetName,
+                            })
+                            .subscribe();
                     }
                 }),
             );

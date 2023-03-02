@@ -23,6 +23,7 @@ import { DataRow, DatasetSchema } from "src/app/interface/dataset.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { MatChipInputEvent } from "@angular/material/chips";
+import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 
 @Component({
     selector: "app-overview",
@@ -38,6 +39,9 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     @Output() selectTopicEmit = new EventEmitter<string>();
     public keywordsSet = new Set([] as string[]);
     public description = "";
+    private readonly initialTemplate =
+        "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setInfo\n";
+    private yamlSetInfoTemplate: string;
 
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
@@ -51,16 +55,14 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get isDetailsExist(): boolean {
-        return (
-            !!this.currentState?.overview.metadata.currentInfo.description ||
-            !!this.currentState?.overview.metadata.currentInfo.keywords?.length
-        );
+        return !!this.description || !!this.keywords.length;
     }
 
     constructor(
         private appDatasetSubsService: AppDatasetSubscriptionsService,
         private navigationService: NavigationService,
         private modalService: NgbModal,
+        private createDatasetService: AppDatasetCreateService,
     ) {
         super();
     }
@@ -75,29 +77,23 @@ export class OverviewComponent extends BaseComponent implements OnInit {
                         size: overviewUpdate.size,
                         overview: overviewUpdate.overview,
                     };
-                    if (
-                        this.currentState.overview.metadata.currentInfo.keywords
-                    ) {
-                        this.currentState.overview.metadata.currentInfo.keywords.reduce(
-                            (set: Set<string>, keyword: string) =>
-                                set.add(keyword),
-                            this.keywordsSet,
-                        );
-                    } else {
-                        this.keywordsSet.clear();
-                    }
-                    if (
-                        this.currentState.overview.metadata.currentInfo
-                            .description
-                    ) {
-                        this.description =
-                            this.currentState.overview.metadata.currentInfo.description;
-                    } else {
-                        this.description = "";
-                    }
+
+                    this.currentState.overview.metadata.currentInfo.keywords
+                        ? this.currentState.overview.metadata.currentInfo.keywords.reduce(
+                              (set: Set<string>, keyword: string) =>
+                                  set.add(keyword),
+                              this.keywordsSet,
+                          )
+                        : this.keywordsSet.clear();
+
+                    this.currentState.overview.metadata.currentInfo.description
+                        ? (this.description =
+                              this.currentState.overview.metadata.currentInfo.description)
+                        : (this.description = "");
                 },
             ),
         );
+        this.yamlSetInfoTemplate = this.initialTemplate;
     }
 
     public showWebsite(url: string): void {
@@ -124,6 +120,35 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public openInformationModal(content: unknown) {
         this.modalService.open(content, { centered: true });
+    }
+
+    public commitSetInfoEvent(): void {
+        if (this.datasetBasics) {
+            this.trackSubscription(
+                this.createDatasetService
+                    .commitEventToDataset(
+                        this.datasetBasics.owner.name,
+                        this.datasetBasics.name as string,
+                        this.buildYamlSetInfoEvent(),
+                    )
+                    .subscribe(() => {
+                        this.yamlSetInfoTemplate = this.initialTemplate;
+                    }),
+            );
+        }
+    }
+
+    private buildYamlSetInfoEvent(): string {
+        if (this.description)
+            this.yamlSetInfoTemplate += `  description: ${this.description}\n`;
+        if (this.keywords.length) {
+            this.yamlSetInfoTemplate += `  keywords:\n`;
+            this.keywords.forEach(
+                (keyword: string) =>
+                    (this.yamlSetInfoTemplate += `    - ${keyword}\n`),
+            );
+        }
+        return this.yamlSetInfoTemplate;
     }
 
     public addKeywordFromInput(event: MatChipInputEvent) {

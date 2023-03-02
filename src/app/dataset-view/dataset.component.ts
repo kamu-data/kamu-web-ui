@@ -58,7 +58,7 @@ export class DatasetComponent
 
     public ngOnInit(): void {
         this.checkWindowSize();
-        this.trackSubscription(
+        this.trackSubscriptions(
             this.router.events
                 .pipe(
                     filter((event) => event instanceof NavigationEnd),
@@ -70,23 +70,19 @@ export class DatasetComponent
                         this.getCurrentPageFromUrl(),
                     );
                 }),
-        );
-        this.appDatasetService
-            .requestDatasetMainData(this.getDatasetInfoFromUrl())
-            .subscribe();
-
-        this.initDatasetViewByType(
-            this.getDatasetInfoFromUrl(),
-            this.getCurrentPageFromUrl(),
-        );
-
-        this.trackSubscription(
+            this.appDatasetService
+                .requestDatasetMainData(this.getDatasetInfoFromUrl())
+                .subscribe(),
             this.appDatasetService.onDatasetChanges.subscribe(
                 (basics: DatasetBasicsFragment) => {
                     this.datasetBasics = basics;
                     this.cdr.markForCheck();
                 },
             ),
+        );
+        this.initDatasetViewByType(
+            this.getDatasetInfoFromUrl(),
+            this.getCurrentPageFromUrl(),
         );
     }
 

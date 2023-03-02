@@ -1,4 +1,5 @@
 import {
+    CommitEventToDatasetQuery,
     CreateDatasetFromSnapshotQuery,
     CreateEmptyDatasetQuery,
 } from "./../api/kamu.graphql.interface";
@@ -77,6 +78,25 @@ export class AppDatasetCreateService {
                         this.errorMessageChanges(
                             data.datasets.createFromSnapshot.message,
                         );
+                    }
+                }),
+            );
+    }
+
+    public commitEventToDataset(
+        accountName: string,
+        datasetName: string,
+        event: string,
+    ): Observable<void> {
+        return this.datasetApi
+            .commitEvent(accountName, datasetName, event)
+            .pipe(
+                map((data: CommitEventToDatasetQuery) => {
+                    if (
+                        data.datasets.byOwnerAndName?.metadata.chain.commitEvent
+                            .__typename === "CommitResultSuccess"
+                    ) {
+                        console.log("Succes");
                     }
                 }),
             );

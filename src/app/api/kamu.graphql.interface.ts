@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -822,6 +822,44 @@ export type User = Account & {
     id: Scalars["AccountID"];
     /** Symbolic account name */
     name: Scalars["String"];
+};
+
+export type CommitEventToDatasetQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
+    event: Scalars["String"];
+}>;
+
+export type CommitEventToDatasetQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byOwnerAndName?: {
+            __typename?: "Dataset";
+            metadata: {
+                __typename?: "DatasetMetadata";
+                chain: {
+                    __typename?: "MetadataChain";
+                    commitEvent:
+                        | {
+                              __typename: "CommitResultAppendError";
+                              message: string;
+                          }
+                        | {
+                              __typename: "CommitResultSuccess";
+                              message: string;
+                              oldHead?: any | null;
+                              newHead: any;
+                          }
+                        | {
+                              __typename: "MetadataManifestMalformed";
+                              message: string;
+                          }
+                        | { __typename: "MetadataManifestUnsupportedVersion" };
+                };
+            };
+        } | null;
+    };
 };
 
 export type CreateEmptyDatasetQueryVariables = Exact<{
@@ -2156,6 +2194,53 @@ export const DatasetSearchOverviewFragmentDoc = gql`
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
 `;
+export const CommitEventToDatasetDocument = gql`
+    query commitEventToDataset(
+        $accountName: AccountName!
+        $datasetName: DatasetName!
+        $event: String!
+    ) {
+        datasets {
+            byOwnerAndName(
+                accountName: $accountName
+                datasetName: $datasetName
+            ) {
+                metadata {
+                    chain {
+                        commitEvent(event: $event, eventFormat: YAML) {
+                            __typename
+                            ... on CommitResultSuccess {
+                                message
+                                oldHead
+                                newHead
+                            }
+                            ... on MetadataManifestMalformed {
+                                message
+                            }
+                            ... on CommitResultAppendError {
+                                message
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class CommitEventToDatasetGQL extends Apollo.Query<
+    CommitEventToDatasetQuery,
+    CommitEventToDatasetQueryVariables
+> {
+    document = CommitEventToDatasetDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const CreateEmptyDatasetDocument = gql`
     query createEmptyDataset(
         $accountId: AccountID!

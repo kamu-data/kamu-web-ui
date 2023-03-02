@@ -55,7 +55,7 @@ import { AppDatasetSubscriptionsService } from "./dataset-view/dataset.subscript
 import { SpinnerModule } from "./components/spinner/spinner.module";
 import { DatasetApi } from "./api/dataset.api";
 import { ErrorHandlerService } from "./services/error-handler.service";
-import { AppSettingsService } from "./services/settings.service";
+
 import { SettingsComponent } from "./auth/settings/settings.component";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { DatasetListModule } from "./components/dataset-list-component/dataset-list.module";
@@ -82,7 +82,6 @@ const Services = [
     AuthApi,
     SearchApi,
     DatasetApi,
-    AppSettingsService,
     HttpLink,
     SearchService,
     DatasetService,

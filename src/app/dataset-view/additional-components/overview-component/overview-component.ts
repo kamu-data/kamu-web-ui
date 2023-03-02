@@ -1,3 +1,4 @@
+import { TemplatesYamlEventsService } from "./../../../services/templates-yaml-events.service";
 import { OverviewDataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetKind } from "./../../../api/kamu.graphql.interface";
 import {
@@ -21,9 +22,10 @@ import {
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { DataRow, DatasetSchema } from "src/app/interface/dataset.interface";
 import { MaybeNull } from "src/app/common/app.types";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { MatChipInputEvent } from "@angular/material/chips";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
+import { DetailsModalComponent } from "./components/details-modal/details-modal.component";
 
 @Component({
     selector: "app-overview",
@@ -37,11 +39,6 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;
     @Output() toggleReadmeViewEmit = new EventEmitter<null>();
     @Output() selectTopicEmit = new EventEmitter<string>();
-    public keywordsSet = new Set([] as string[]);
-    public description = "";
-    private readonly initialTemplate =
-        "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setInfo\n";
-    private yamlSetInfoTemplate: string;
 
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
@@ -50,19 +47,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         size: DatasetDataSizeFragment;
     };
 
-    public get keywords(): string[] {
-        return Array.from(this.keywordsSet);
-    }
-
-    public get isDetailsExist(): boolean {
-        return !!this.description || !!this.keywords.length;
-    }
-
     constructor(
         private appDatasetSubsService: AppDatasetSubscriptionsService,
         private navigationService: NavigationService,
         private modalService: NgbModal,
-        private createDatasetService: AppDatasetCreateService,
     ) {
         super();
     }
@@ -77,23 +65,9 @@ export class OverviewComponent extends BaseComponent implements OnInit {
                         size: overviewUpdate.size,
                         overview: overviewUpdate.overview,
                     };
-
-                    this.currentState.overview.metadata.currentInfo.keywords
-                        ? this.currentState.overview.metadata.currentInfo.keywords.reduce(
-                              (set: Set<string>, keyword: string) =>
-                                  set.add(keyword),
-                              this.keywordsSet,
-                          )
-                        : this.keywordsSet.clear();
-
-                    this.currentState.overview.metadata.currentInfo.description
-                        ? (this.description =
-                              this.currentState.overview.metadata.currentInfo.description)
-                        : (this.description = "");
                 },
             ),
         );
-        this.yamlSetInfoTemplate = this.initialTemplate;
     }
 
     public showWebsite(url: string): void {
@@ -118,47 +92,12 @@ export class OverviewComponent extends BaseComponent implements OnInit {
             : undefined;
     }
 
-    public openInformationModal(content: unknown) {
-        this.modalService.open(content, { centered: true });
-    }
+    public openInformationModal() {
+        const modalRef = this.modalService.open(DetailsModalComponent);
 
-    public commitSetInfoEvent(): void {
-        if (this.datasetBasics) {
-            this.trackSubscription(
-                this.createDatasetService
-                    .commitEventToDataset(
-                        this.datasetBasics.owner.name,
-                        this.datasetBasics.name as string,
-                        this.buildYamlSetInfoEvent(),
-                    )
-                    .subscribe(() => {
-                        this.yamlSetInfoTemplate = this.initialTemplate;
-                    }),
-            );
-        }
-    }
-
-    private buildYamlSetInfoEvent(): string {
-        if (this.description)
-            this.yamlSetInfoTemplate += `  description: ${this.description}\n`;
-        if (this.keywords.length) {
-            this.yamlSetInfoTemplate += `  keywords:\n`;
-            this.keywords.forEach(
-                (keyword: string) =>
-                    (this.yamlSetInfoTemplate += `    - ${keyword}\n`),
-            );
-        }
-        return this.yamlSetInfoTemplate;
-    }
-
-    public addKeywordFromInput(event: MatChipInputEvent) {
-        if (event.value) {
-            this.keywordsSet.add(event.value);
-            event.chipInput.clear();
-        }
-    }
-
-    public removeKeyword(keyword: string) {
-        this.keywordsSet.delete(keyword);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        modalRef.componentInstance.currentState = this.currentState;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        modalRef.componentInstance.datasetBasics = this.datasetBasics;
     }
 }

@@ -1,9 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    Input,
-    OnInit,
-} from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { MatChipInputEvent } from "@angular/material/chips";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import {
@@ -23,13 +18,13 @@ import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-even
     styleUrls: ["./details-modal.component.sass"],
 })
 export class DetailsModalComponent extends BaseComponent implements OnInit {
-    @Input() public currentState: {
+    @Input() public currentState?: {
         schema: MaybeNull<DatasetSchema>;
         data: DataRow[];
         overview: DatasetOverviewFragment;
         size: DatasetDataSizeFragment;
     };
-    @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input() public datasetBasics?: DatasetBasicsFragment;
     public keywordsSet = new Set([] as string[]);
     public description: string;
     constructor(
@@ -49,32 +44,33 @@ export class DetailsModalComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.currentState.overview.metadata.currentInfo.keywords
+        this.currentState?.overview.metadata.currentInfo.keywords
             ? this.currentState.overview.metadata.currentInfo.keywords.reduce(
                   (set: Set<string>, keyword: string) => set.add(keyword),
                   this.keywordsSet,
               )
             : this.keywordsSet.clear();
 
-        this.currentState.overview.metadata.currentInfo.description
+        this.currentState?.overview.metadata.currentInfo.description
             ? (this.description =
                   this.currentState.overview.metadata.currentInfo.description)
             : (this.description = "");
     }
 
     public commitSetInfoEvent(): void {
-        this.trackSubscription(
-            this.createDatasetService
-                .commitEventToDataset(
-                    this.datasetBasics.owner.name,
-                    this.datasetBasics.name as string,
-                    this.yamlEventService.buildYamlSetInfoEvent(
-                        this.description,
-                        this.keywords,
-                    ),
-                )
-                .subscribe(),
-        );
+        if (this.datasetBasics)
+            this.trackSubscription(
+                this.createDatasetService
+                    .commitEventToDataset(
+                        this.datasetBasics.owner.name,
+                        this.datasetBasics.name as string,
+                        this.yamlEventService.buildYamlSetInfoEvent(
+                            this.description,
+                            this.keywords,
+                        ),
+                    )
+                    .subscribe(),
+            );
     }
 
     public addKeywordFromInput(event: MatChipInputEvent) {

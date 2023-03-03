@@ -1,4 +1,3 @@
-import { TemplatesYamlEventsService } from "./../../../services/templates-yaml-events.service";
 import { OverviewDataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetKind } from "./../../../api/kamu.graphql.interface";
 import {
@@ -23,8 +22,6 @@ import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.serv
 import { DataRow, DatasetSchema } from "src/app/interface/dataset.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { MatChipInputEvent } from "@angular/material/chips";
-import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { DetailsModalComponent } from "./components/details-modal/details-modal.component";
 
 @Component({
@@ -93,11 +90,12 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public openInformationModal() {
-        const modalRef = this.modalService.open(DetailsModalComponent);
-
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        modalRef.componentInstance.currentState = this.currentState;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        modalRef.componentInstance.datasetBasics = this.datasetBasics;
+        const modalRef: NgbModalRef = this.modalService.open(
+            DetailsModalComponent,
+        );
+        (modalRef.componentInstance as DetailsModalComponent).currentState =
+            this.currentState;
+        (modalRef.componentInstance as DetailsModalComponent).datasetBasics =
+            this.datasetBasics;
     }
 }

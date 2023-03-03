@@ -177,13 +177,17 @@ export class DatasetApi {
             );
     }
 
-    public commitEvent(
-        accountName: string,
-        datasetName: string,
-        event: string,
-    ): Observable<CommitEventToDatasetQuery> {
+    public commitEvent(params: {
+        accountName: string;
+        datasetName: string;
+        event: string;
+    }): Observable<CommitEventToDatasetQuery> {
         return this.commitEventToDataset
-            .watch({ accountName, datasetName, event })
+            .watch({
+                accountName: params.accountName,
+                datasetName: params.datasetName,
+                event: params.event,
+            })
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<CommitEventToDatasetQuery>) => {

@@ -101,7 +101,7 @@ export class AppDatasetCreateService {
         event: string,
     ): Observable<void> {
         return this.datasetApi
-            .commitEvent(accountName, datasetName, event)
+            .commitEvent({ accountName, datasetName, event })
             .pipe(
                 map((data: CommitEventToDatasetQuery) => {
                     if (

@@ -19,7 +19,7 @@
 
 <div class="body p-4">
     <div>
-        <label for="dataset-descriptio" class="form-label">Description</label>
+        <label for="dataset-description" class="form-label">Description</label>
         <textarea
             class="form-control"
             id="dataset-description"
@@ -46,6 +46,7 @@
                 [matChipInputFor]="chipList"
                 (matChipInputTokenEnd)="addKeywordFromInput($event)"
                 placeholder="Please enter keyword..."
+                data-test-id="input-keyword"
             />
         </div>
     </div>
@@ -56,6 +57,7 @@
         type="button"
         class="btn btn-success"
         (click)="commitSetInfoEvent(); activeModal.close()"
+        data-test-id="commit-event"
     >
         Save
     </button>

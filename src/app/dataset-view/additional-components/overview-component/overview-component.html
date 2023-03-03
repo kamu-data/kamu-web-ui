@@ -56,10 +56,6 @@
                     </button>
                 </div>
             </div>
-            <!-- <app-details-modal
-                [currentState]="currentState"
-                [datasetBasics]="datasetBasics"
-            ></app-details-modal> -->
 
             <ng-template #noDetails>
                 <div
@@ -71,6 +67,7 @@
                         <a
                             class="text-decoration-none"
                             (click)="openInformationModal()"
+                            data-test-id="'open-information-modal'"
                             >information</a
                         >
                         about dataset.

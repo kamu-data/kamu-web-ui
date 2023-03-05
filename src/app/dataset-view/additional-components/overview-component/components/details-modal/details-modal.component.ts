@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { MatChipInputEvent } from "@angular/material/chips";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { isEqual } from "lodash";
 import {
     DatasetOverviewFragment,
     DatasetDataSizeFragment,
@@ -17,7 +18,7 @@ import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-even
     templateUrl: "./details-modal.component.html",
     styleUrls: ["./details-modal.component.sass"],
 })
-export class DetailsModalComponent extends BaseComponent implements OnInit {
+export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     @Input() public currentState?: {
         schema: MaybeNull<DatasetSchema>;
         data: DataRow[];
@@ -26,7 +27,9 @@ export class DetailsModalComponent extends BaseComponent implements OnInit {
     };
     @Input() public datasetBasics?: DatasetBasicsFragment;
     public keywordsSet = new Set([] as string[]);
-    public description: string;
+    public description = "";
+    public initialDescription = "";
+    public initialKeywords: string[] = [];
     constructor(
         private createDatasetService: AppDatasetCreateService,
         private yamlEventService: TemplatesYamlEventsService,
@@ -43,16 +46,27 @@ export class DetailsModalComponent extends BaseComponent implements OnInit {
         return !!this.description || !!this.keywords.length;
     }
 
+    public get isDetailsNotChanged(): boolean {
+        return (
+            this.description === this.initialDescription &&
+            isEqual(this.keywords, this.initialKeywords)
+        );
+    }
+
     ngOnInit(): void {
-        this.currentState?.overview.metadata.currentInfo.keywords
-            ? this.currentState.overview.metadata.currentInfo.keywords.reduce(
-                  (set: Set<string>, keyword: string) => set.add(keyword),
-                  this.keywordsSet,
-              )
-            : this.keywordsSet.clear();
+        if (this.currentState?.overview.metadata.currentInfo.keywords) {
+            this.initialKeywords =
+                this.currentState.overview.metadata.currentInfo.keywords;
+            this.currentState.overview.metadata.currentInfo.keywords.reduce(
+                (set: Set<string>, keyword: string) => set.add(keyword),
+                this.keywordsSet,
+            );
+        } else {
+            this.keywordsSet.clear();
+        }
 
         this.currentState?.overview.metadata.currentInfo.description
-            ? (this.description =
+            ? (this.description = this.initialDescription =
                   this.currentState.overview.metadata.currentInfo.description)
             : (this.description = "");
     }

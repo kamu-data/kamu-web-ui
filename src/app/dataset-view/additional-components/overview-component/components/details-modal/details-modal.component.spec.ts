@@ -11,7 +11,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
-import { DetailsModalComponent } from "./details-modal.component";
+import { EditDetailsModalComponent } from "./details-modal.component";
 import {
     mockMetadataSchemaUpdate,
     mockOverviewDataUpdate,
@@ -22,13 +22,13 @@ import {
     DatasetOverviewFragment,
 } from "src/app/api/kamu.graphql.interface";
 
-describe("DetailsModalComponent", () => {
-    let component: DetailsModalComponent;
-    let fixture: ComponentFixture<DetailsModalComponent>;
+describe("EditDetailsModalComponent", () => {
+    let component: EditDetailsModalComponent;
+    let fixture: ComponentFixture<EditDetailsModalComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DetailsModalComponent],
+            declarations: [EditDetailsModalComponent],
             imports: [
                 ApolloModule,
                 ApolloTestingModule,
@@ -39,7 +39,7 @@ describe("DetailsModalComponent", () => {
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(DetailsModalComponent);
+        fixture = TestBed.createComponent(EditDetailsModalComponent);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsFragment;
         component.currentState = {

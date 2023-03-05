@@ -37,7 +37,7 @@ import { OverviewHistorySummaryHeaderComponent } from "../components/overview-hi
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { DisplaySizeModule } from "../common/pipes/display-size.module";
 import { SharedModule } from "../shared/shared/shared.module";
-import { DetailsModalComponent } from "./additional-components/overview-component/components/details-modal/details-modal.component";
+import { EditDetailsModalComponent } from "./additional-components/overview-component/components/details-modal/details-modal.component";
 
 @NgModule({
     imports: [
@@ -96,7 +96,7 @@ import { DetailsModalComponent } from "./additional-components/overview-componen
         OverviewComponent,
         LineageComponent,
         HistoryComponent,
-        DetailsModalComponent,
+        EditDetailsModalComponent,
     ],
 })
 export class DatasetModule {

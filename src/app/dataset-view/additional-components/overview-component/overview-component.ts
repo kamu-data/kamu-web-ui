@@ -22,7 +22,7 @@ import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.serv
 import { DataRow, DatasetSchema } from "src/app/interface/dataset.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { DetailsModalComponent } from "./components/details-modal/details-modal.component";
+import { EditDetailsModalComponent } from "./components/details-modal/details-modal.component";
 
 @Component({
     selector: "app-overview",
@@ -91,11 +91,12 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public openInformationModal() {
         const modalRef: NgbModalRef = this.modalService.open(
-            DetailsModalComponent,
+            EditDetailsModalComponent,
         );
-        (modalRef.componentInstance as DetailsModalComponent).currentState =
+        (modalRef.componentInstance as EditDetailsModalComponent).currentState =
             this.currentState;
-        (modalRef.componentInstance as DetailsModalComponent).datasetBasics =
-            this.datasetBasics;
+        (
+            modalRef.componentInstance as EditDetailsModalComponent
+        ).datasetBasics = this.datasetBasics;
     }
 }

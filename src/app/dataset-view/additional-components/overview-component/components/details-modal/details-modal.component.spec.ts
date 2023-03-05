@@ -75,7 +75,18 @@ describe("EditDetailsModalComponent", () => {
             component,
             "commitSetInfoEvent",
         ).and.callThrough();
+
+        const inputKeyword = findElementByDataTestId(fixture, "input-keyword");
+        component.addKeywordFromInput({
+            input: inputKeyword,
+            value: "keyword1",
+            chipInput: {
+                clear: () => undefined,
+            },
+        } as MatChipInputEvent);
+        fixture.detectChanges();
         emitClickOnElement(fixture, '[data-test-id="commit-event"]');
+
         expect(commitSetInfoEventSpy).toHaveBeenCalledTimes(1);
     });
 

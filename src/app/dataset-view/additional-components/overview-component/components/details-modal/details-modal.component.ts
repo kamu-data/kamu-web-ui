@@ -46,7 +46,7 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
         return !!this.description || !!this.keywords.length;
     }
 
-    public get isDetailsNotChanged(): boolean {
+    public get unmodifiedDetails(): boolean {
         return (
             this.description === this.initialDescription &&
             isEqual(this.keywords, this.initialKeywords)

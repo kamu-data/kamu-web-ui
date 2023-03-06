@@ -58,7 +58,7 @@
         class="btn btn-success"
         (click)="commitSetInfoEvent(); activeModal.close()"
         data-test-id="commit-event"
-        [disabled]="isDetailsNotChanged"
+        [disabled]="unmodifiedDetails"
     >
         Save
     </button>

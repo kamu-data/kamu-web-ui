@@ -21,10 +21,13 @@ import {
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { DataRow, DatasetSchema } from "src/app/interface/dataset.interface";
 import { MaybeNull } from "src/app/common/app.types";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { EditDetailsModalComponent } from "./components/details-modal/details-modal.component";
 
 @Component({
     selector: "app-overview",
     templateUrl: "overview-component.html",
+    styleUrls: ["./overview-component.sass"],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -44,6 +47,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     constructor(
         private appDatasetSubsService: AppDatasetSubscriptionsService,
         private navigationService: NavigationService,
+        private modalService: NgbModal,
     ) {
         super();
     }
@@ -83,5 +87,16 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         return this.currentState
             ? this.currentState.overview.metadata.chain.blocks.nodes[0]
             : undefined;
+    }
+
+    public openInformationModal() {
+        const modalRef: NgbModalRef = this.modalService.open(
+            EditDetailsModalComponent,
+        );
+        (modalRef.componentInstance as EditDetailsModalComponent).currentState =
+            this.currentState;
+        (
+            modalRef.componentInstance as EditDetailsModalComponent
+        ).datasetBasics = this.datasetBasics;
     }
 }

@@ -6,32 +6,75 @@
     >
         <div>
             <div
-                class="d-flex flex-column flex-justify-between pb-3 mb-3 position-relative"
+                *ngIf="currentState.overview.metadata.currentInfo.description || currentState.overview.metadata.currentInfo.keywords?.length; else noDetails"
+                class="d-flex flex-row flex-justify-between mb-3"
             >
-                <ng-container
-                    *ngIf="currentState.overview.metadata.currentInfo?.description"
-                >
-                    <h2 class="box-title align-items-center pb-3">
-                        Description
-                    </h2>
-                    <p>
-                        {{
-                        currentState.overview.metadata.currentInfo.description
-                        }}
-                    </p>
-                </ng-container>
-                <div class="app-mat-chip">
-                    <mat-chip-list aria-label="Tags selection">
-                        <div
-                            *ngFor="let keyword of currentState.overview.metadata.currentInfo?.keywords"
-                        >
-                            <mat-chip (click)="selectTopic(datasetBasics.kind)"
-                                >{{ keyword }}</mat-chip
+                <div class="d-flex flex-column me-auto">
+                    <div
+                        *ngIf="currentState.overview.metadata.currentInfo?.description"
+                    >
+                        <h2 class="box-title align-items-center pb-3">
+                            Description
+                        </h2>
+
+                        <p>
+                            {{
+                            currentState.overview.metadata.currentInfo.description
+                            }}
+                        </p>
+                    </div>
+                    <div
+                        class="app-mat-chip"
+                        *ngIf="currentState.overview.metadata.currentInfo?.keywords"
+                    >
+                        <h2 class="box-title align-items-center pt-3">
+                            Keywords
+                        </h2>
+                        <mat-chip-list aria-label="Tags selection">
+                            <div
+                                *ngFor="let keyword of currentState.overview.metadata.currentInfo?.keywords"
                             >
-                        </div>
-                    </mat-chip-list>
+                                <mat-chip
+                                    (click)="selectTopic(datasetBasics.kind)"
+                                    >{{ keyword }}</mat-chip
+                                >
+                            </div>
+                        </mat-chip-list>
+                    </div>
+                </div>
+                <div
+                    *ngIf="currentState.overview.metadata.currentInfo.description || currentState.overview.metadata.currentInfo.keywords?.length"
+                >
+                    <button
+                        class="btn-sm btn custom-edit"
+                        aria-label="Edit dataset details"
+                        data-test-id="edit-dataset-details"
+                        title="Edit dataset details"
+                        (click)="openInformationModal()"
+                    >
+                        <svg-icon name="pencil"></svg-icon>
+                    </button>
                 </div>
             </div>
+
+            <ng-template #noDetails>
+                <div
+                    class="my-4"
+                    *ngIf="!currentState.overview.metadata.currentInfo.description && !currentState.overview.metadata.currentInfo.keywords?.length"
+                >
+                    <p>
+                        You can add
+                        <a
+                            class="text-decoration-none"
+                            (click)="openInformationModal()"
+                            data-test-id="'open-information-modal'"
+                            >information</a
+                        >
+                        about dataset.
+                    </p>
+                </div>
+            </ng-template>
+
             <app-overview-history-summary-header
                 [metadataBlockFragment]="metadataFragmentBlock"
                 [numBlocksTotal]="currentState.overview.metadata.chain.blocks.totalCount || 0"

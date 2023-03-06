@@ -1,3 +1,4 @@
+import { CommitEventToDatasetQuery } from "./../api/kamu.graphql.interface";
 import { mockSetVocab } from "./../dataset-block/metadata-block/components/event-details/mock.events";
 import {
     DataBatchFormat,
@@ -742,3 +743,26 @@ export const mockDatasetDataSqlRunInternalErrorResponse: GetDatasetDataSqlRunQue
             },
         },
     };
+
+export const mockCommitEventResponse: CommitEventToDatasetQuery = {
+    datasets: {
+        byOwnerAndName: {
+            metadata: {
+                chain: {
+                    commitEvent: {
+                        __typename: "CommitResultSuccess",
+                        message: "Success",
+                        oldHead:
+                            "zW1nXNFNR3oFTVnBTkFCkFRJu3ELxFh2XbK1KWP6MgGgTdB",
+                        newHead:
+                            "zW1hgfvGgmdsbrDMhVoBE5TRX2RX4DV2mhh4QgEAeA3fx4Q",
+                    },
+                    __typename: "MetadataChain",
+                },
+                __typename: "DatasetMetadata",
+            },
+            __typename: "Dataset",
+        },
+        __typename: "Datasets",
+    },
+};

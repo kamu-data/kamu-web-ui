@@ -7,6 +7,7 @@ import {
     TEST_USER_NAME,
 } from "./mock/dataset.mock";
 import {
+    mockCommitEventResponse,
     mockDatasetHistoryResponse,
     mockDatasetMainDataResponse,
 } from "./../search/mock.data";
@@ -17,6 +18,8 @@ import {
 } from "apollo-angular/testing";
 import { DatasetApi } from "./dataset.api";
 import {
+    CommitEventToDatasetDocument,
+    CommitEventToDatasetQuery,
     DatasetsByAccountNameDocument,
     DatasetsByAccountNameQuery,
     GetDatasetDataSqlRunDocument,
@@ -181,6 +184,27 @@ describe("DatasetApi", () => {
         expect(op.operation.variables.blockHash).toEqual(TEST_BLOCK_HASH);
         op.flush({
             data: mockGetMetadataBlockQuery,
+        });
+    });
+
+    it("should commit event", () => {
+        service
+            .commitEvent({
+                accountName: TEST_USER_NAME,
+                datasetName: TEST_DATASET_NAME,
+                event: "mock event",
+            })
+            .subscribe((res: CommitEventToDatasetQuery) => {
+                expect(
+                    res.datasets.byOwnerAndName?.metadata.chain.commitEvent
+                        .__typename,
+                ).toEqual("CommitResultSuccess");
+            });
+
+        const op = controller.expectOne(CommitEventToDatasetDocument);
+
+        op.flush({
+            data: mockCommitEventResponse,
         });
     });
 });

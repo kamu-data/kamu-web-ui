@@ -1,5 +1,10 @@
+import { ApolloModule } from "apollo-angular";
+import { Apollo } from "apollo-angular";
 import { mockDatasetBasicsFragment } from "./../../../search/mock.data";
-import { mockMetadataSchemaUpdate, mockOverviewDataUpdate } from "./../data-tabs.mock";
+import {
+    mockMetadataSchemaUpdate,
+    mockOverviewDataUpdate,
+} from "./../data-tabs.mock";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewComponent } from "./overview-component";
@@ -8,22 +13,27 @@ import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { first } from "rxjs/operators";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;
     let fixture: ComponentFixture<OverviewComponent>;
     let appDatasetSubsService: AppDatasetSubscriptionsService;
     let navigationService: NavigationService;
+    let modalService: NgbModal;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [OverviewComponent],
+            imports: [ApolloModule],
+            providers: [Apollo],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
 
         fixture = TestBed.createComponent(OverviewComponent);
         appDatasetSubsService = TestBed.inject(AppDatasetSubscriptionsService);
         navigationService = TestBed.inject(NavigationService);
+        modalService = TestBed.inject(NgbModal);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsFragment;
         fixture.detectChanges();
@@ -90,5 +100,11 @@ describe("OverviewComponent", () => {
 
         component.selectTopic(topicName);
         expect(emitterSubscription$.closed).toBeTrue();
+    });
+
+    it("should open information modal window", () => {
+        const openModalSpy = spyOn(modalService, "open").and.callThrough();
+        component.openInformationModal();
+        expect(openModalSpy).toHaveBeenCalledTimes(1);
     });
 });

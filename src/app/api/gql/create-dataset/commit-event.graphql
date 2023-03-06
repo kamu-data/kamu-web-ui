@@ -1,0 +1,28 @@
+query commitEventToDataset(
+  $accountName: AccountName!
+  $datasetName: DatasetName!
+  $event: String!
+) {
+  datasets {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      metadata {
+        chain {
+          commitEvent(event: $event, eventFormat: YAML) {
+            __typename
+            ... on CommitResultSuccess {
+              message
+              oldHead
+              newHead
+            }
+            ... on MetadataManifestMalformed {
+              message
+            }
+            ... on CommitResultAppendError {
+              message
+            }
+          }
+        }
+      }
+    }
+  }
+}

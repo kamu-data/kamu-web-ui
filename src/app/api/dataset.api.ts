@@ -1,4 +1,6 @@
 import {
+    CommitEventToDatasetGQL,
+    CommitEventToDatasetQuery,
     CreateDatasetFromSnapshotGQL,
     CreateDatasetFromSnapshotQuery,
     CreateEmptyDatasetQuery,
@@ -38,6 +40,7 @@ export class DatasetApi {
         private datasetByIdGQL: DatasetByIdGQL,
         private createEmptyDatasetGQL: CreateEmptyDatasetGQL,
         private createDatasetFromSnapshotGQL: CreateDatasetFromSnapshotGQL,
+        private commitEventToDataset: CommitEventToDatasetGQL,
     ) {}
 
     public getDatasetMainData(params: {
@@ -169,6 +172,25 @@ export class DatasetApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<CreateEmptyDatasetQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public commitEvent(params: {
+        accountName: string;
+        datasetName: string;
+        event: string;
+    }): Observable<CommitEventToDatasetQuery> {
+        return this.commitEventToDataset
+            .watch({
+                accountName: params.accountName,
+                datasetName: params.datasetName,
+                event: params.event,
+            })
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<CommitEventToDatasetQuery>) => {
                     return result.data;
                 }),
             );

@@ -1,3 +1,4 @@
+import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
 import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
 import { DisplayTimeModule } from "./../components/display-time/display-time.module";
@@ -36,6 +37,7 @@ import { OverviewHistorySummaryHeaderComponent } from "../components/overview-hi
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { DisplaySizeModule } from "../common/pipes/display-size.module";
 import { SharedModule } from "../shared/shared/shared.module";
+import { EditDetailsModalComponent } from "./additional-components/overview-component/components/details-modal/details-modal.component";
 
 @NgModule({
     imports: [
@@ -68,6 +70,7 @@ import { SharedModule } from "../shared/shared/shared.module";
         DisplayHashModule,
         DisplaySizeModule,
         MatDividerModule,
+        MatFormFieldModule,
         SharedModule,
     ],
     exports: [
@@ -93,6 +96,7 @@ import { SharedModule } from "../shared/shared/shared.module";
         OverviewComponent,
         LineageComponent,
         HistoryComponent,
+        EditDetailsModalComponent,
     ],
 })
 export class DatasetModule {

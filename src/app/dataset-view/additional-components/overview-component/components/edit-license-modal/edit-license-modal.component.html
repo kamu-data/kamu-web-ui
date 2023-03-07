@@ -1,6 +1,9 @@
 <div ngbAutoFocus class="d-flex p-4">
     <div class="flex-grow-1 ms-2 text-center">
-        <span class="fs-5 fw-bold"> {{ "Edit" }} dataset license</span>
+        <span class="fs-5 fw-bold">
+            {{ licenseForm.controls["name"].value ? "Edit" : "Add" }} dataset
+            license</span
+        >
     </div>
     <div>
         <button

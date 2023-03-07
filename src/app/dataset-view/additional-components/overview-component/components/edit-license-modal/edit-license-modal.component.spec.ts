@@ -3,8 +3,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo, ApolloModule } from "apollo-angular";
-import { ApolloTestingModule } from "apollo-angular/build/testing";
-
 import { EditLicenseModalComponent } from "./edit-license-modal.component";
 
 describe("EditLicenseModalComponent", () => {

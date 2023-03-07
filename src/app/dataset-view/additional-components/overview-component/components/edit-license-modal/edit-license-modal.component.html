@@ -116,7 +116,7 @@
         type="button"
         class="btn btn-success"
         data-test-id="save-license"
-        (click)="onEditLicense()"
+        (click)="onEditLicense(); activeModal.close()"
         [disabled]="!licenseForm.valid"
     >
         Save

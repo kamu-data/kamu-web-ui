@@ -137,8 +137,21 @@
     </div>
     <div class="card">
         <nav class="flex-row mat-typography">
-            <div class="card--row card--title">
-                <h2>Details</h2>
+            <div
+                class="card--row card--title d-flex align-items-center justify-content-between"
+            >
+                <div class="pt-3">
+                    <h2>Details</h2>
+                </div>
+                <button
+                    *ngIf="!currentState?.overview?.metadata?.currentLicense"
+                    type="button"
+                    placement="left"
+                    class="signed-commit-badge verified signed-commit-badge-small"
+                    (click)="openLicenseModal()"
+                >
+                    Add license
+                </button>
             </div>
             <div class="card--row dataset-info">
                 <ng-template [ngIf]="datasetBasics && currentState">

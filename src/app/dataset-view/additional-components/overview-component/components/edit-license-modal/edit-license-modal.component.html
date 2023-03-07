@@ -75,22 +75,22 @@
                 class="form-control"
                 id="license-url"
                 placeholder="Please enter url..."
-                formControlName="url"
+                formControlName="websiteUrl"
             />
             <div
                 *ngIf="
-                    !licenseForm.controls['url'].valid &&
-                    licenseForm.controls['url'].touched
+                    !licenseForm.controls['websiteUrl'].valid &&
+                    licenseForm.controls['websiteUrl'].touched
                 "
             >
                 <div
-                    *ngIf="licenseForm.controls['url'].errors?.required"
+                    *ngIf="licenseForm.controls['websiteUrl'].errors?.required"
                     class="mt-1"
                 >
                     <span class="text-danger fs-12"> Url is required</span>
                 </div>
                 <div
-                    *ngIf="licenseForm.controls['url'].errors?.pattern"
+                    *ngIf="licenseForm.controls['websiteUrl'].errors?.pattern"
                     class="mt-1"
                 >
                     <span class="text-danger fs-12"> Url format is wrong</span>

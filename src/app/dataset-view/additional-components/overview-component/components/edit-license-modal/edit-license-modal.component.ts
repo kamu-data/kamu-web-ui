@@ -27,7 +27,7 @@ export class EditLicenseModalComponent implements OnInit {
     public licenseForm: FormGroup = this.fb.group({
         name: ["", [Validators.required]],
         shortName: ["", [Validators.required]],
-        url: [
+        websiteUrl: [
             "",
             [
                 Validators.required,
@@ -40,7 +40,16 @@ export class EditLicenseModalComponent implements OnInit {
     constructor(public activeModal: NgbActiveModal, private fb: FormBuilder) {}
 
     ngOnInit(): void {
-        console.log("");
+        if (this.currentState?.overview.metadata.currentLicense) {
+            const { name, shortName, spdxId, websiteUrl } =
+                this.currentState.overview.metadata.currentLicense;
+            this.licenseForm.patchValue({
+                name,
+                shortName,
+                spdxId,
+                websiteUrl,
+            });
+        }
     }
 
     public onEditLicense(): void {

@@ -1,3 +1,4 @@
+import { EditLicenseModalComponent } from "./components/edit-license-modal/edit-license-modal.component";
 import { OverviewDataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetKind } from "./../../../api/kamu.graphql.interface";
 import {
@@ -22,7 +23,7 @@ import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.serv
 import { DataRow, DatasetSchema } from "src/app/interface/dataset.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { EditDetailsModalComponent } from "./components/details-modal/details-modal.component";
+import { EditDetailsModalComponent } from "./components/edit-details-modal/edit-details-modal.component";
 
 @Component({
     selector: "app-overview",
@@ -97,6 +98,17 @@ export class OverviewComponent extends BaseComponent implements OnInit {
             this.currentState;
         (
             modalRef.componentInstance as EditDetailsModalComponent
+        ).datasetBasics = this.datasetBasics;
+    }
+
+    public openLicenseModal() {
+        const modalRef: NgbModalRef = this.modalService.open(
+            EditLicenseModalComponent,
+        );
+        (modalRef.componentInstance as EditLicenseModalComponent).currentState =
+            this.currentState;
+        (
+            modalRef.componentInstance as EditLicenseModalComponent
         ).datasetBasics = this.datasetBasics;
     }
 }

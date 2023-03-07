@@ -1,3 +1,4 @@
+import { ReactiveFormsModule } from "@angular/forms";
 import { ApolloModule } from "apollo-angular";
 import { Apollo } from "apollo-angular";
 import { mockDatasetBasicsFragment } from "./../../../search/mock.data";
@@ -25,7 +26,7 @@ describe("OverviewComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [OverviewComponent],
-            imports: [ApolloModule],
+            imports: [ApolloModule, ReactiveFormsModule],
             providers: [Apollo],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
@@ -105,6 +106,12 @@ describe("OverviewComponent", () => {
     it("should open information modal window", () => {
         const openModalSpy = spyOn(modalService, "open").and.callThrough();
         component.openInformationModal();
+        expect(openModalSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should open license modal window", () => {
+        const openModalSpy = spyOn(modalService, "open").and.callThrough();
+        component.openLicenseModal();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
     });
 });

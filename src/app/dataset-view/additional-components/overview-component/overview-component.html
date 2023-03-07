@@ -137,8 +137,20 @@
     </div>
     <div class="card">
         <nav class="flex-row mat-typography">
-            <div class="card--row card--title">
-                <h2>Details</h2>
+            <div
+                class="card--row card--title d-flex align-items-center justify-content-between"
+            >
+                <div class="pt-3">
+                    <h2>Details</h2>
+                </div>
+                <button
+                    *ngIf="!currentState?.overview?.metadata?.currentLicense"
+                    type="button"
+                    class="signed-commit-badge verified signed-commit-badge-small"
+                    (click)="openLicenseModal()"
+                >
+                    Add license
+                </button>
             </div>
             <div class="card--row dataset-info">
                 <ng-template [ngIf]="datasetBasics && currentState">
@@ -167,21 +179,36 @@
                         <div class="dataset-info--sub-block">
                             <h2 class="dataset-info--subtitle">License:</h2>
                         </div>
-                        <div class="dataset-info--sub-block">
-                            <a
-                                class="link--primary"
-                                (click)="showWebsite(currentState.overview.metadata.currentLicense.websiteUrl)"
-                            >
-                                <p
-                                    class="dataset-info--text"
-                                    placement="bottom"
-                                    [ngbTooltip]="currentState.overview.metadata.currentLicense.name"
+                        <div
+                            class="dataset-info--sub-block d-flex align-items-center"
+                        >
+                            <div>
+                                <a
+                                    class="link--primary text-break"
+                                    (click)="showWebsite(currentState.overview.metadata.currentLicense.websiteUrl)"
                                 >
-                                    {{
-                                    currentState.overview.metadata.currentLicense.shortName
-                                    }}
-                                </p>
-                            </a>
+                                    <span
+                                        class="dataset-info--text"
+                                        placement="bottom"
+                                        [ngbTooltip]="currentState.overview.metadata.currentLicense.name"
+                                    >
+                                        {{
+                                        currentState.overview.metadata.currentLicense.shortName
+                                        }}
+                                    </span>
+                                </a>
+                            </div>
+                            <div>
+                                <button
+                                    class="btn-sm btn custom-edit ms-3"
+                                    aria-label="Edit dataset details"
+                                    data-test-id="edit-dataset-license"
+                                    title="Edit dataset license"
+                                    (click)="openLicenseModal()"
+                                >
+                                    <svg-icon name="pencil"></svg-icon>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="dataset-info--block">

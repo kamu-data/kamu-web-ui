@@ -7,9 +7,9 @@ export default class AppValues {
     public static readonly DEFAULT_USERNAME = "anonymous";
     public static readonly DEFAULT_AVATAR_URL =
         "https://avatars.githubusercontent.com/u/11951648?v=4";
-    public static readonly HTTP_PATTERN = new RegExp(
-        /^(http:\/\/)|(https:\/\/)/i,
-    );
+    public static readonly URL_PATTERN =
+        "(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?";
+
     public static readonly DISPLAY_DATE_FORMAT = "DD MMM YYYY";
     public static readonly DISPLAY_TOOLTIP_DATE_FORMAT = "MMM D, YYYY, HH:mm A";
     public static readonly UNIMPLEMENTED_MESSAGE = "Feature coming soon";

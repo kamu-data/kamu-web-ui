@@ -202,7 +202,8 @@ describe("DatasetApi", () => {
             });
 
         const op = controller.expectOne(CommitEventToDatasetDocument);
-
+        expect(op.operation.variables.accountName).toEqual(TEST_USER_NAME);
+        expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
         op.flush({
             data: mockCommitEventResponse,
         });

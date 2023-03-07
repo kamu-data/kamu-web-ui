@@ -179,30 +179,36 @@
                         <div class="dataset-info--sub-block">
                             <h2 class="dataset-info--subtitle">License:</h2>
                         </div>
-                        <div class="dataset-info--sub-block d-inline-flex">
-                            <a
-                                class="link--primary"
-                                (click)="showWebsite(currentState.overview.metadata.currentLicense.websiteUrl)"
-                            >
-                                <span
-                                    class="dataset-info--text"
-                                    placement="bottom"
-                                    [ngbTooltip]="currentState.overview.metadata.currentLicense.name"
+                        <div
+                            class="dataset-info--sub-block d-flex align-items-center"
+                        >
+                            <div>
+                                <a
+                                    class="link--primary text-break"
+                                    (click)="showWebsite(currentState.overview.metadata.currentLicense.websiteUrl)"
                                 >
-                                    {{
-                                    currentState.overview.metadata.currentLicense.shortName
-                                    }}
-                                </span>
-                            </a>
-                            <button
-                                class="btn-sm btn custom-edit ms-3"
-                                aria-label="Edit dataset details"
-                                data-test-id="edit-dataset-license"
-                                title="Edit dataset license"
-                                (click)="openLicenseModal()"
-                            >
-                                <svg-icon name="pencil"></svg-icon>
-                            </button>
+                                    <span
+                                        class="dataset-info--text"
+                                        placement="bottom"
+                                        [ngbTooltip]="currentState.overview.metadata.currentLicense.name"
+                                    >
+                                        {{
+                                        currentState.overview.metadata.currentLicense.shortName
+                                        }}
+                                    </span>
+                                </a>
+                            </div>
+                            <div>
+                                <button
+                                    class="btn-sm btn custom-edit ms-3"
+                                    aria-label="Edit dataset details"
+                                    data-test-id="edit-dataset-license"
+                                    title="Edit dataset license"
+                                    (click)="openLicenseModal()"
+                                >
+                                    <svg-icon name="pencil"></svg-icon>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="dataset-info--block">

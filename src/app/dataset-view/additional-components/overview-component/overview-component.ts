@@ -105,7 +105,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         const modalRef: NgbModalRef = this.modalService.open(
             EditLicenseModalComponent,
         );
-        (modalRef.componentInstance as EditDetailsModalComponent).currentState =
+        (modalRef.componentInstance as EditLicenseModalComponent).currentState =
             this.currentState;
         (
             modalRef.componentInstance as EditLicenseModalComponent

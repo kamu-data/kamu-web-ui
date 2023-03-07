@@ -33,10 +33,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
         shortName: ["", [Validators.required]],
         websiteUrl: [
             "",
-            [
-                Validators.required,
-                Validators.pattern(AppValues.URL_REX_EXPRESSION),
-            ],
+            [Validators.required, Validators.pattern(AppValues.URL_PATTERN)],
         ],
         spdxId: [""],
     });

@@ -1,0 +1,124 @@
+<div ngbAutoFocus class="d-flex p-4">
+    <div class="flex-grow-1 ms-2 text-center">
+        <span class="fs-5 fw-bold"> {{ "Edit" }} dataset license</span>
+    </div>
+    <div>
+        <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="activeModal.close()"
+        ></button>
+    </div>
+</div>
+<div class="px-4">
+    <mat-divider></mat-divider>
+</div>
+
+<div class="body p-4">
+    <form [formGroup]="licenseForm" (ngSubmit)="onEditLicense()">
+        <div class="mt-4">
+            <label for="license-name" class="form-label"
+                >Name <span class="text-danger">*</span></label
+            >
+            <input
+                class="form-control"
+                id="license-name"
+                placeholder="Please enter name..."
+                formControlName="name"
+            />
+            <div
+                *ngIf="
+                    !licenseForm.controls['name'].valid &&
+                    licenseForm.controls['name'].touched
+                "
+            >
+                <div
+                    *ngIf="licenseForm.controls['name'].errors?.required"
+                    class="mt-1"
+                >
+                    <span class="text-danger fs-12"> Name is required</span>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4">
+            <label for="license-short-name" class="form-label"
+                >Short name <span class="text-danger">*</span></label
+            >
+            <input
+                class="form-control"
+                id="license-short-name"
+                placeholder="Please enter short name..."
+                formControlName="shortName"
+            />
+            <div
+                *ngIf="
+                    !licenseForm.controls['shortName'].valid &&
+                    licenseForm.controls['shortName'].touched
+                "
+            >
+                <div
+                    *ngIf="licenseForm.controls['shortName'].errors?.required"
+                    class="mt-1"
+                >
+                    <span class="text-danger fs-12">
+                        Short name is required</span
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="mt-4">
+            <label for="license-url" class="form-label"
+                >Url <span class="text-danger">*</span></label
+            >
+            <input
+                class="form-control"
+                id="license-url"
+                placeholder="Please enter url..."
+                formControlName="url"
+            />
+            <div
+                *ngIf="
+                    !licenseForm.controls['url'].valid &&
+                    licenseForm.controls['url'].touched
+                "
+            >
+                <div
+                    *ngIf="licenseForm.controls['url'].errors?.required"
+                    class="mt-1"
+                >
+                    <span class="text-danger fs-12"> Url is required</span>
+                </div>
+                <div
+                    *ngIf="licenseForm.controls['url'].errors?.pattern"
+                    class="mt-1"
+                >
+                    <span class="text-danger fs-12"> Url format is wrong</span>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4">
+            <label for="license-spdxId" class="form-label"
+                >License identifier
+            </label>
+            <input
+                class="form-control"
+                id="license-license-spdxId"
+                placeholder="Please enter identifier..."
+                formControlName="spdxId"
+            />
+        </div>
+    </form>
+</div>
+
+<div class="p-4 d-flex justify-content-end">
+    <button
+        type="button"
+        class="btn btn-success"
+        data-test-id="save-license"
+        (click)="onEditLicense()"
+        [disabled]="!licenseForm.valid"
+    >
+        Save
+    </button>
+</div>

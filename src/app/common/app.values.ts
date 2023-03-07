@@ -7,6 +7,8 @@ export default class AppValues {
     public static readonly DEFAULT_USERNAME = "anonymous";
     public static readonly DEFAULT_AVATAR_URL =
         "https://avatars.githubusercontent.com/u/11951648?v=4";
+    public static readonly URL_REX_EXPRESSION =
+        "[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}(.[a-z]{2,4})?\b(/[-a-zA-Z0-9@:%_+.~#?&//=]*)?";
     public static readonly HTTP_PATTERN = new RegExp(
         /^(http:\/\/)|(https:\/\/)/i,
     );

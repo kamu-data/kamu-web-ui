@@ -7,7 +7,7 @@ import { CommonModule } from "@angular/common";
 import { DatasetComponent } from "./dataset.component";
 import { SearchAdditionalButtonsModule } from "../components/search-additional-buttons/search-additional-buttons.module";
 import { NgbModule, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DynamicTableModule } from "../components/dynamic-table/dynamic-table.module";
 import { SearchSidenavModule } from "../components/search-sidenav/search-sidenav.module";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -37,7 +37,8 @@ import { OverviewHistorySummaryHeaderComponent } from "../components/overview-hi
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { DisplaySizeModule } from "../common/pipes/display-size.module";
 import { SharedModule } from "../shared/shared/shared.module";
-import { EditDetailsModalComponent } from "./additional-components/overview-component/components/details-modal/details-modal.component";
+import { EditDetailsModalComponent } from "./additional-components/overview-component/components/edit-details-modal/edit-details-modal.component";
+import { EditLicenseModalComponent } from "./additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
 
 @NgModule({
     imports: [
@@ -72,6 +73,7 @@ import { EditDetailsModalComponent } from "./additional-components/overview-comp
         MatDividerModule,
         MatFormFieldModule,
         SharedModule,
+        ReactiveFormsModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -97,6 +99,7 @@ import { EditDetailsModalComponent } from "./additional-components/overview-comp
         LineageComponent,
         HistoryComponent,
         EditDetailsModalComponent,
+        EditLicenseModalComponent,
     ],
 })
 export class DatasetModule {

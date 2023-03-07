@@ -15,8 +15,8 @@ import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-even
 
 @Component({
     selector: "app-details-modal",
-    templateUrl: "./details-modal.component.html",
-    styleUrls: ["./details-modal.component.sass"],
+    templateUrl: "./edit-details-modal.component.html",
+    styleUrls: ["./edit-details-modal.component.sass"],
 })
 export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     @Input() public currentState?: {

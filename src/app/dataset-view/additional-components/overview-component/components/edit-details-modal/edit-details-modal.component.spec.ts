@@ -5,13 +5,13 @@ import {
 } from "src/app/common/base-test.helpers.spec";
 import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
 import { FormsModule } from "@angular/forms";
-import { mockDatasetBasicsFragment } from "./../../../../../search/mock.data";
+import { mockDatasetBasicsFragment } from "../../../../../search/mock.data";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
-import { EditDetailsModalComponent } from "./details-modal.component";
+import { EditDetailsModalComponent } from "./edit-details-modal.component";
 import {
     mockMetadataSchemaUpdate,
     mockOverviewDataUpdate,

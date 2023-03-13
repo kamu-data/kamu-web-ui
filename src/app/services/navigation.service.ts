@@ -1,3 +1,4 @@
+import { DatasetInfo } from "./../interface/navigation.interface";
 import { AccountTabs } from "./../auth/account/account.constants";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { Injectable } from "@angular/core";
@@ -54,6 +55,16 @@ export class NavigationService {
                 params.datasetName,
                 ProjectLinks.URL_BLOCK,
                 params.blockHash,
+            ]),
+        );
+    }
+
+    public navigateToAddPollingSource(params: DatasetInfo): void {
+        promiseWithCatch(
+            this.router.navigate([
+                params.accountName,
+                params.datasetName,
+                ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE,
             ]),
         );
     }

@@ -1,1 +1,331 @@
-<p>add-polling-source works!</p>
+<div class="layout">
+    <div class="mt-4">
+        <div class="border border-1 mt-4 px-2 py-4 rounded-3">
+            <form [formGroup]="pollingSourceForm" (ngSubmit)="(null)">
+                <ng-container *ngIf="currentStep === 1">
+                    <div formGroupName="fetch">
+                        <h2 class="text-center">Fetch</h2>
+                        <div class="radio-group">
+                            <div class="input-container">
+                                <input
+                                    formControlName="kind"
+                                    type="radio"
+                                    name="kind"
+                                    id="from-url"
+                                    value="url"
+                                />
+                                <div class="radio-item">
+                                    <mat-icon class="mat-icon">link</mat-icon>
+                                    <label for="from-url">Sync from URL</label>
+                                </div>
+                            </div>
+                            <div class="input-container">
+                                <input
+                                    formControlName="kind"
+                                    type="radio"
+                                    name="kind"
+                                    id="from-files"
+                                    value="filesGlob"
+                                />
+                                <div class="radio-item">
+                                    <mat-icon class="">file_upload</mat-icon>
+
+                                    <label for="from-url"
+                                        >Sync from files GLOB</label
+                                    >
+                                </div>
+                            </div>
+                            <div class="input-container">
+                                <input
+                                    formControlName="kind"
+                                    type="radio"
+                                    name="kind"
+                                    id="from-container"
+                                    value="container"
+                                />
+                                <div class="radio-item">
+                                    <mat-icon class="">input</mat-icon>
+                                    <label for="from-url"
+                                        >Sync from container</label
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div
+                                *ngIf="
+                                    fetchUrlForm.controls['kind'].value ===
+                                    'url'
+                                "
+                            >
+                                <div class="mt-4">
+                                    <label for="url-name" class="form-label"
+                                        >Url
+                                        <span class="text-danger"
+                                            >*</span
+                                        ></label
+                                    >
+                                    <input
+                                        class="form-control w-75"
+                                        id="url-name"
+                                        placeholder="Please enter url..."
+                                        formControlName="url"
+                                        data-test-id="url-name"
+                                    />
+                                    <div
+                                        *ngIf="
+                                            !fetchUrlForm.controls['url']
+                                                .valid &&
+                                            fetchUrlForm.controls['url'].touched
+                                        "
+                                    >
+                                        <div
+                                            *ngIf="
+                                                fetchUrlForm.controls['url']
+                                                    .errors?.required
+                                            "
+                                            class="mt-1"
+                                        >
+                                            <span
+                                                class="text-danger fs-12"
+                                                data-test-id="error-url-name"
+                                            >
+                                                Url is required</span
+                                            >
+                                        </div>
+                                        <div
+                                            *ngIf="
+                                                fetchUrlForm.controls['url']
+                                                    .errors?.pattern
+                                            "
+                                            class="mt-1"
+                                        >
+                                            <span
+                                                class="text-danger fs-12"
+                                                data-test-id="error-url-format"
+                                            >
+                                                Url format is wrong</span
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                *ngIf="
+                                    fetchUrlForm.controls['kind'].value ===
+                                    'filesGlob'
+                                "
+                            >
+                                filesGlob
+                            </div>
+                            <div
+                                *ngIf="
+                                    fetchUrlForm.controls['kind'].value ===
+                                    'container'
+                                "
+                            >
+                                container
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="currentStep === 2">
+                    <div formGroupName="read">
+                        <h2 class="text-center">Read</h2>
+                        <div class="radio-group">
+                            <div class="input-container">
+                                <input
+                                    formControlName="kind"
+                                    type="radio"
+                                    name="kind"
+                                    id="csv"
+                                    value="csv"
+                                />
+                                <div class="radio-item">
+                                    <mat-icon class="mat-icon"
+                                        >format_quote</mat-icon
+                                    >
+                                    <label for="csv">CSV</label>
+                                </div>
+                            </div>
+                            <div class="input-container">
+                                <input
+                                    formControlName="kind"
+                                    type="radio"
+                                    name="kind"
+                                    id="jsonLines"
+                                    value="jsonLines"
+                                />
+                                <div class="radio-item">
+                                    <mat-icon class=""
+                                        >document_scanner</mat-icon
+                                    >
+
+                                    <label for="jsonLines">Json Lines</label>
+                                </div>
+                            </div>
+                            <div class="input-container">
+                                <input
+                                    formControlName="kind"
+                                    type="radio"
+                                    name="kind"
+                                    id="geoJson"
+                                    value="geoJson"
+                                />
+                                <div class="radio-item">
+                                    <mat-icon class="">public</mat-icon>
+
+                                    <label for="geoJson">Geo Json</label>
+                                </div>
+                            </div>
+
+                            <div class="input-container">
+                                <input
+                                    formControlName="kind"
+                                    type="radio"
+                                    name="kind"
+                                    id="esriShapefile"
+                                    value="esriShapefile"
+                                />
+                                <div class="radio-item">
+                                    <mat-icon class="">rounded_corner</mat-icon>
+
+                                    <label for="esriShapefile"
+                                        >ESRI Shapefile</label
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="input-container">
+                                <input
+                                    formControlName="kind"
+                                    type="radio"
+                                    name="kind"
+                                    id="parquet"
+                                    value="parquet"
+                                />
+                                <div class="radio-item">
+                                    <mat-icon class="">view_array</mat-icon>
+
+                                    <label for="parquet">Parquet</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div
+                                *ngIf="
+                                    readCsvForm.controls['kind'].value === 'csv'
+                                "
+                            >
+                                <div class="mt-4">
+                                    <label
+                                        for="read-separator"
+                                        class="form-label"
+                                        >Separator
+                                    </label>
+                                    <input
+                                        class="form-control w-50"
+                                        id="read-separator"
+                                        placeholder="Please enter separator..."
+                                        formControlName="separator"
+                                        data-test-id="read-separator"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="currentStep === 3">
+                    <div formGroupName="merge">
+                        <h2 class="text-center">Merge</h2>
+                        <div class="radio-group">
+                            <div class="input-container">
+                                <input
+                                    formControlName="kind"
+                                    type="radio"
+                                    name="kind"
+                                    id="append"
+                                    value="append"
+                                />
+                                <div class="radio-item">
+                                    <mat-icon class="mat-icon"
+                                        >post_add</mat-icon
+                                    >
+                                    <label for="append">Append</label>
+                                </div>
+                            </div>
+                            <div class="input-container">
+                                <input
+                                    formControlName="kind"
+                                    type="radio"
+                                    name="kind"
+                                    id="ledger"
+                                    value="ledger"
+                                />
+                                <div class="radio-item">
+                                    <mat-icon class=""
+                                        >document_scanner</mat-icon
+                                    >
+
+                                    <label for="ledger">ledger</label>
+                                </div>
+                            </div>
+                            <div class="input-container">
+                                <input
+                                    formControlName="kind"
+                                    type="radio"
+                                    name="kind"
+                                    id="snapshot"
+                                    value="snapshot"
+                                />
+                                <div class="radio-item">
+                                    <mat-icon class=""
+                                        >filter_center_focus</mat-icon
+                                    >
+
+                                    <label for="snapshot">Snapshot</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </form>
+        </div>
+    </div>
+
+    <!-- <div *ngIf="true" class="col-md-5 mt-4">
+            <div class="border border-1 mt-4 px-2 py-4 rounded-3">
+                <ngx-monaco-editor
+                    style="height: 400px"
+                    [options]="sqlEditorOptions"
+                    [(ngModel)]="yamlTemplate"
+                    ngDefaultControl
+                    data-test-id="monaco-editor"
+                ></ngx-monaco-editor>
+            </div>
+        </div> -->
+    <div class="d-flex mt-4 justify-content-center">
+        <button
+            *ngIf="currentStep !== 1"
+            class="button-prev me-4"
+            (click)="prevStep()"
+        >
+            Previous
+        </button>
+        <button
+            *ngIf="currentStep !== 3"
+            class="button-next"
+            (click)="nextStep()"
+        >
+            Next
+        </button>
+        <button
+            *ngIf="currentStep === 3"
+            class="button-save"
+            (click)="nextStep()"
+        >
+            Save
+        </button>
+    </div>
+    <pre>{{ pollingSourceForm.value | json }}</pre>
+</div>

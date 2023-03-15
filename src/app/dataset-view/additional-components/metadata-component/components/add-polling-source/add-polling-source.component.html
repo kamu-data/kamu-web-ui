@@ -1,7 +1,7 @@
 <div class="layout">
     <div class="mt-4">
         <div class="border border-1 mt-4 px-2 py-4 rounded-3">
-            <form [formGroup]="pollingSourceForm" (ngSubmit)="(null)">
+            <form [formGroup]="pollingSourceForm" (ngSubmit)="onSubmit()">
                 <ng-container *ngIf="currentStep === 1">
                     <div formGroupName="fetch">
                         <h2 class="text-center">Fetch</h2>
@@ -9,6 +9,7 @@
                             <div class="input-container">
                                 <input
                                     formControlName="kind"
+                                    class="radio-input"
                                     type="radio"
                                     name="kind"
                                     id="from-url"
@@ -22,6 +23,7 @@
                             <div class="input-container">
                                 <input
                                     formControlName="kind"
+                                    class="radio-input"
                                     type="radio"
                                     name="kind"
                                     id="from-files"
@@ -38,6 +40,7 @@
                             <div class="input-container">
                                 <input
                                     formControlName="kind"
+                                    class="radio-input"
                                     type="radio"
                                     name="kind"
                                     id="from-container"
@@ -136,6 +139,7 @@
                             <div class="input-container">
                                 <input
                                     formControlName="kind"
+                                    class="radio-input"
                                     type="radio"
                                     name="kind"
                                     id="csv"
@@ -151,6 +155,7 @@
                             <div class="input-container">
                                 <input
                                     formControlName="kind"
+                                    class="radio-input"
                                     type="radio"
                                     name="kind"
                                     id="jsonLines"
@@ -167,6 +172,7 @@
                             <div class="input-container">
                                 <input
                                     formControlName="kind"
+                                    class="radio-input"
                                     type="radio"
                                     name="kind"
                                     id="geoJson"
@@ -182,6 +188,7 @@
                             <div class="input-container">
                                 <input
                                     formControlName="kind"
+                                    class="radio-input"
                                     type="radio"
                                     name="kind"
                                     id="esriShapefile"
@@ -199,6 +206,7 @@
                             <div class="input-container">
                                 <input
                                     formControlName="kind"
+                                    class="radio-input"
                                     type="radio"
                                     name="kind"
                                     id="parquet"
@@ -242,6 +250,7 @@
                             <div class="input-container">
                                 <input
                                     formControlName="kind"
+                                    class="radio-input"
                                     type="radio"
                                     name="kind"
                                     id="append"
@@ -251,28 +260,28 @@
                                     <mat-icon class="mat-icon"
                                         >post_add</mat-icon
                                     >
-                                    <label for="append">Append</label>
+                                    <label for="append">Append strategy</label>
                                 </div>
                             </div>
                             <div class="input-container">
                                 <input
                                     formControlName="kind"
+                                    class="radio-input"
                                     type="radio"
                                     name="kind"
                                     id="ledger"
                                     value="ledger"
                                 />
                                 <div class="radio-item">
-                                    <mat-icon class=""
-                                        >document_scanner</mat-icon
-                                    >
+                                    <mat-icon class="">account_tree</mat-icon>
 
-                                    <label for="ledger">ledger</label>
+                                    <label for="ledger">Ledger strategy</label>
                                 </div>
                             </div>
                             <div class="input-container">
                                 <input
                                     formControlName="kind"
+                                    class="radio-input"
                                     type="radio"
                                     name="kind"
                                     id="snapshot"
@@ -283,7 +292,9 @@
                                         >filter_center_focus</mat-icon
                                     >
 
-                                    <label for="snapshot">Snapshot</label>
+                                    <label for="snapshot"
+                                        >Snapshot strategy</label
+                                    >
                                 </div>
                             </div>
                         </div>
@@ -319,13 +330,16 @@
         >
             Next
         </button>
-        <button
-            *ngIf="currentStep === 3"
-            class="button-save"
-            (click)="nextStep()"
-        >
-            Save
-        </button>
+        <ng-container *ngIf="currentStep === 3">
+            <button class="button-save" (click)="onSubmit()">Save</button>
+            <button
+                *ngIf="currentStep === 3"
+                class="button-save ms-4"
+                (click)="onEditYaml()"
+            >
+                Edit Yaml
+            </button>
+        </ng-container>
     </div>
     <pre>{{ pollingSourceForm.value | json }}</pre>
 </div>

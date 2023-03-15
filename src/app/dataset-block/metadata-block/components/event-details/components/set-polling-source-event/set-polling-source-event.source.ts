@@ -53,6 +53,15 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "setPollingSource-mergeStrategyLedger-__typename",
     },
 
+    "SetPollingSource.MergeStrategyAppend.__typename": {
+        label: "Strategy:",
+        tooltip:
+            "Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset.",
+        presentationComponent: MergeStrategyPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-mergeStrategyAppend-__typename",
+    },
+
     "SetPollingSource.MergeStrategyLedger.primaryKey": {
         label: "Primary key:",
         tooltip:

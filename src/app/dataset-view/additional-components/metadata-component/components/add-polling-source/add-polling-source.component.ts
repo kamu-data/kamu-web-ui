@@ -1,10 +1,11 @@
+import { MonacoEditorModalComponent } from "./../monaco-editor-modal/monaco-editor-modal.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SetPollingSource } from "./../../../../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 /* eslint-disable @typescript-eslint/unbound-method */
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import * as monaco from "monaco-editor";
+
 import AppValues from "src/app/common/app.values";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
@@ -13,6 +14,7 @@ import { requireValue } from "src/app/common/app.helpers";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: "app-add-polling-source",
@@ -24,16 +26,6 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     public currentStep = 1;
     public yamlTemplate =
         "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setPollingSource\n";
-
-    public readonly sqlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
-        {
-            theme: "vs",
-            language: "yaml",
-            renderLineHighlight: "none",
-            minimap: {
-                enabled: false,
-            },
-        };
 
     //    fetch step
     public fetchUrlForm: FormGroup = this.fb.group({
@@ -131,6 +123,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         private yamlEventService: TemplatesYamlEventsService,
         private activatedRoute: ActivatedRoute,
         private navigationService: NavigationService,
+        private modalService: NgbModal,
     ) {
         super();
     }
@@ -206,6 +199,19 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     }
 
     public onEditYaml(): void {
-        console.log("edit");
+        const modalRef: NgbModalRef = this.modalService.open(
+            MonacoEditorModalComponent,
+            { size: "lg" },
+        );
+        (
+            modalRef.componentInstance as MonacoEditorModalComponent
+        ).yamlTemplate = this.yamlEventService.buildYamlSetPollingSourceEvent(
+            this.pollingSourceForm.value as Omit<
+                SetPollingSource,
+                "__typename"
+            >,
+        );
+        (modalRef.componentInstance as MonacoEditorModalComponent).datasetInfo =
+            this.getDatasetInfoFromUrl();
     }
 }

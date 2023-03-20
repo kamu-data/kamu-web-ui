@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { MonacoEditorModalComponent } from "./monaco-editor-modal.component";
+import { FinalYamlModalComponent } from "./final-yaml-modal.component";
 
 describe("MonacoEditorModalComponent", () => {
-    let component: MonacoEditorModalComponent;
-    let fixture: ComponentFixture<MonacoEditorModalComponent>;
+    let component: FinalYamlModalComponent;
+    let fixture: ComponentFixture<FinalYamlModalComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [MonacoEditorModalComponent],
+            declarations: [FinalYamlModalComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(MonacoEditorModalComponent);
+        fixture = TestBed.createComponent(FinalYamlModalComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

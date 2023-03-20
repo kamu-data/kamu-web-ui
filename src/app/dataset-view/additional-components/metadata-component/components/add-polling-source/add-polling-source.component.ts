@@ -1,8 +1,13 @@
-import { MonacoEditorModalComponent } from "./../monaco-editor-modal/monaco-editor-modal.component";
+/* eslint-disable @typescript-eslint/unbound-method */
+import {
+    fetchStepRadioControls,
+    mergeStepRadioControls,
+    readStepRadioControls,
+} from "./form-control.json";
+import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SetPollingSource } from "./../../../../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
-/* eslint-disable @typescript-eslint/unbound-method */
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
@@ -51,6 +56,8 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         filesGlob: this.fetchFilesGlobForm,
         container: this.fetchContainerForm,
     };
+
+    public fetchStepRadioData = fetchStepRadioControls;
     //    end fetch step
 
     // read step
@@ -83,6 +90,8 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         esriShapefile: this.readEsriShapefileForm,
         parquet: this.readParquetForm,
     };
+
+    public readStepRadioData = readStepRadioControls;
     // end read step
 
     // merge step
@@ -103,6 +112,8 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         snapshot: this.mergeSnapshotForm,
         ledger: this.mergeLedgerForm,
     };
+
+    public mergeStepRadioData = mergeStepRadioControls;
     // end merge
 
     public pollingSourceForm: FormGroup = this.fb.group({
@@ -176,7 +187,6 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
                         this.readCsvForm.controls.kind.value as string
                     ];
             }),
-
             this.mergeAppendForm.controls.kind.valueChanges.subscribe(() => {
                 this.pollingSourceForm.controls.merge =
                     this.mergeFormByKind[
@@ -200,18 +210,17 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
 
     public onEditYaml(): void {
         const modalRef: NgbModalRef = this.modalService.open(
-            MonacoEditorModalComponent,
+            FinalYamlModalComponent,
             { size: "lg" },
         );
-        (
-            modalRef.componentInstance as MonacoEditorModalComponent
-        ).yamlTemplate = this.yamlEventService.buildYamlSetPollingSourceEvent(
-            this.pollingSourceForm.value as Omit<
-                SetPollingSource,
-                "__typename"
-            >,
-        );
-        (modalRef.componentInstance as MonacoEditorModalComponent).datasetInfo =
+        (modalRef.componentInstance as FinalYamlModalComponent).yamlTemplate =
+            this.yamlEventService.buildYamlSetPollingSourceEvent(
+                this.pollingSourceForm.value as Omit<
+                    SetPollingSource,
+                    "__typename"
+                >,
+            );
+        (modalRef.componentInstance as FinalYamlModalComponent).datasetInfo =
             this.getDatasetInfoFromUrl();
     }
 }

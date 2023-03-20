@@ -39,7 +39,7 @@ import { DisplaySizeModule } from "../common/pipes/display-size.module";
 import { SharedModule } from "../shared/shared/shared.module";
 import { EditDetailsModalComponent } from "./additional-components/overview-component/components/edit-details-modal/edit-details-modal.component";
 import { EditLicenseModalComponent } from "./additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
-import { MonacoEditorModalComponent } from "./additional-components/metadata-component/components/monaco-editor-modal/monaco-editor-modal.component";
+import { FinalYamlModalComponent } from "./additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
 
 @NgModule({
     imports: [
@@ -101,7 +101,7 @@ import { MonacoEditorModalComponent } from "./additional-components/metadata-com
         HistoryComponent,
         EditDetailsModalComponent,
         EditLicenseModalComponent,
-        MonacoEditorModalComponent,
+        FinalYamlModalComponent,
     ],
 })
 export class DatasetModule {

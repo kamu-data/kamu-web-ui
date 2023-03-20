@@ -11,12 +11,12 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
-    selector: "app-monaco-editor-modal",
-    templateUrl: "./monaco-editor-modal.component.html",
-    styleUrls: ["./monaco-editor-modal.component.sass"],
+    selector: "app-final-yaml-modal",
+    templateUrl: "./final-yaml-modal.component.html",
+    styleUrls: ["./final-yaml-modal.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MonacoEditorModalComponent extends BaseComponent {
+export class FinalYamlModalComponent extends BaseComponent {
     @Input() public yamlTemplate: string;
     @Input() datasetInfo: DatasetInfo;
     public readonly sqlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =

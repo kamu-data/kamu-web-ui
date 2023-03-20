@@ -42,6 +42,8 @@ import { EditDetailsModalComponent } from "./additional-components/overview-comp
 import { EditLicenseModalComponent } from "./additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
 import { FinalYamlModalComponent } from "./additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
 import { FetchStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/fetch-step/fetch-step.component";
+import { ReadStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/read-step/read-step.component";
+import { MergeStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/merge-step/merge-step.component";
 
 @NgModule({
     imports: [
@@ -87,6 +89,8 @@ import { FetchStepComponent } from "./additional-components/metadata-component/c
         MetadataComponent,
         DataComponent,
         FetchStepComponent,
+        ReadStepComponent,
+        MergeStepComponent,
         OverviewComponent,
         LineageComponent,
         HistoryComponent,
@@ -107,6 +111,8 @@ import { FetchStepComponent } from "./additional-components/metadata-component/c
         EditLicenseModalComponent,
         FinalYamlModalComponent,
         FetchStepComponent,
+        ReadStepComponent,
+        MergeStepComponent,
     ],
 })
 export class DatasetModule {

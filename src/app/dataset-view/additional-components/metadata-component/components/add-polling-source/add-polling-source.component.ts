@@ -1,16 +1,10 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import {
-    fetchStepRadioControls,
-    mergeStepRadioControls,
-    readStepRadioControls,
-} from "./form-control.source";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SetPollingSource } from "./../../../../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-
 import AppValues from "src/app/common/app.values";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
@@ -56,9 +50,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         filesGlob: this.fetchFilesGlobForm,
         container: this.fetchContainerForm,
     };
-
-    public fetchStepRadioData = fetchStepRadioControls;
-    //    end fetch step
+    // end fetch step
 
     // read step
     public readCsvForm: FormGroup = this.fb.group({
@@ -91,7 +83,6 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         parquet: this.readParquetForm,
     };
 
-    public readStepRadioData = readStepRadioControls;
     // end read step
 
     // merge step
@@ -112,8 +103,6 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         snapshot: this.mergeSnapshotForm,
         ledger: this.mergeLedgerForm,
     };
-
-    public mergeStepRadioData = mergeStepRadioControls;
     // end merge
 
     public pollingSourceForm: FormGroup = this.fb.group({

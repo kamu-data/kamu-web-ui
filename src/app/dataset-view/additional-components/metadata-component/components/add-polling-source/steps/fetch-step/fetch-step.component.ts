@@ -5,17 +5,14 @@ import {
     Component,
     Input,
     OnInit,
-    ViewEncapsulation,
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-
 import { fetchStepRadioControls } from "../../form-control.source";
 
 @Component({
     selector: "app-fetch-step",
     templateUrl: "./fetch-step.component.html",
     styleUrls: ["./fetch-step.component.sass"],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FetchStepComponent implements OnInit {

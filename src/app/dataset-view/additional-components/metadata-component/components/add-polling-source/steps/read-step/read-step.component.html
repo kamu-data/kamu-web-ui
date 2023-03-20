@@ -1,0 +1,37 @@
+<ng-container [formGroup]="form">
+    <div>
+        <h2 class="text-center">Read</h2>
+        <div class="radio-group mt-4">
+            <div class="input-container" *ngFor="let step of readStepRadioData">
+                <input
+                    formControlName="kind"
+                    class="radio-input"
+                    type="radio"
+                    [id]="step.id"
+                    [value]="step.value"
+                />
+                <div class="radio-item">
+                    <mat-icon class="mat-icon">{{ step.icon }}</mat-icon>
+                    <label [for]="step.id">{{ step.label }}</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 row">
+            <div *ngIf="readCsvForm.controls['kind'].value === 'csv'">
+                <div class="col-md-8 offset-md-2">
+                    <label for="read-separator" class="form-label"
+                        >Separator
+                    </label>
+                    <input
+                        class="form-control"
+                        id="read-separator"
+                        placeholder="Please enter separator..."
+                        formControlName="separator"
+                        data-test-id="read-separator"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

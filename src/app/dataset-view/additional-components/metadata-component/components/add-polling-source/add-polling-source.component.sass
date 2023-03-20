@@ -1,49 +1,13 @@
 @import 'bootstrap/scss/bootstrap'
+
 .layout
     max-width: 768px
     width: 100%
     margin-right: auto
     margin-left: auto
     padding-bottom: 100px
-.radio-group
-    display: flex
-    flex-wrap: wrap
-    justify-content: center
-    gap: 20px
 
-    .input-container
-        position: relative
-        height: 6rem
-        width: 12rem
-        .radio-input
-            position: absolute
-            height: 100%
-            width: 100%
-            margin: 0
-            cursor: pointer
-            z-index: 2
-            opacity: 0
-            &:checked
-                & + .radio-item
-                    border: 2px solid #1461b5f1
-                    background-color: #f1f5f9f1
-
-        .radio-item
-            display: flex
-            flex-direction: column
-            justify-content: center
-            align-items: center
-            border: 1px solid black
-            height: 100%
-            border-radius: 10px
-            transition: all 200ms ease
-            .mat-icon
-                color: #1461b5f1
-                font-size: 34px
-                height: 34px
-                width: 34px
-
-.button-next, .button-prev, .button-save
+.button-save
     background: #2c974b
     border-color: rgba(27, 31, 36, 0.15)
     color: #ffffff

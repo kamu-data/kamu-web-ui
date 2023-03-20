@@ -1,3 +1,4 @@
+import { MatIconModule } from "@angular/material/icon";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
 import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
@@ -40,6 +41,7 @@ import { SharedModule } from "../shared/shared/shared.module";
 import { EditDetailsModalComponent } from "./additional-components/overview-component/components/edit-details-modal/edit-details-modal.component";
 import { EditLicenseModalComponent } from "./additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
 import { FinalYamlModalComponent } from "./additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
+import { FetchStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/fetch-step/fetch-step.component";
 
 @NgModule({
     imports: [
@@ -75,6 +77,7 @@ import { FinalYamlModalComponent } from "./additional-components/metadata-compon
         MatFormFieldModule,
         SharedModule,
         ReactiveFormsModule,
+        MatIconModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -83,6 +86,7 @@ import { FinalYamlModalComponent } from "./additional-components/metadata-compon
         DatasetViewMenuComponent,
         MetadataComponent,
         DataComponent,
+        FetchStepComponent,
         OverviewComponent,
         LineageComponent,
         HistoryComponent,
@@ -102,6 +106,7 @@ import { FinalYamlModalComponent } from "./additional-components/metadata-compon
         EditDetailsModalComponent,
         EditLicenseModalComponent,
         FinalYamlModalComponent,
+        FetchStepComponent,
     ],
 })
 export class DatasetModule {

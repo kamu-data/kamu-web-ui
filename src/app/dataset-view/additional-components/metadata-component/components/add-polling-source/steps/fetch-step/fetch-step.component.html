@@ -1,0 +1,77 @@
+<ng-container [formGroup]="form">
+    <div>
+        <h2 class="text-center">Fetch</h2>
+        <div class="radio-group mt-4">
+            <div
+                class="input-container"
+                *ngFor="let step of fetchStepRadioData"
+            >
+                <input
+                    formControlName="kind"
+                    class="radio-input"
+                    type="radio"
+                    [id]="step.id"
+                    [value]="step.value"
+                />
+                <div class="radio-item">
+                    <mat-icon class="mat-icon">{{ step.icon }}</mat-icon>
+                    <label [for]="step.id">{{ step.label }}</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 row">
+            <div *ngIf="fetchUrlForm.controls['kind'].value === 'url'">
+                <div class="col-md-8 offset-md-2">
+                    <label for="url-name" class="form-label"
+                        >Url <span class="text-danger">*</span></label
+                    >
+                    <input
+                        class="form-control"
+                        id="url-name"
+                        placeholder="Please enter url..."
+                        formControlName="url"
+                        data-test-id="url-name"
+                    />
+                    <div
+                        *ngIf="
+                            !fetchUrlForm.controls['url'].valid &&
+                            fetchUrlForm.controls['url'].touched
+                        "
+                    >
+                        <div
+                            *ngIf="
+                                fetchUrlForm.controls['url'].errors?.required
+                            "
+                            class="mt-1"
+                        >
+                            <span
+                                class="text-danger fs-12"
+                                data-test-id="error-url-name"
+                            >
+                                Url is required</span
+                            >
+                        </div>
+                        <div
+                            *ngIf="fetchUrlForm.controls['url'].errors?.pattern"
+                            class="mt-1"
+                        >
+                            <span
+                                class="text-danger fs-12"
+                                data-test-id="error-url-format"
+                            >
+                                Url format is wrong</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="fetchUrlForm.controls['kind'].value === 'filesGlob'">
+                filesGlob
+            </div>
+            <div *ngIf="fetchUrlForm.controls['kind'].value === 'container'">
+                container
+            </div>
+        </div>
+    </div>
+</ng-container>

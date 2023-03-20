@@ -3,7 +3,7 @@ import {
     fetchStepRadioControls,
     mergeStepRadioControls,
     readStepRadioControls,
-} from "./form-control.json";
+} from "./form-control.source";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SetPollingSource } from "./../../../../../api/kamu.graphql.interface";
@@ -20,6 +20,7 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { PollingSourceSteps } from "./add-polling-source.types";
 
 @Component({
     selector: "app-add-polling-source",
@@ -28,9 +29,8 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddPollingSourceComponent extends BaseComponent implements OnInit {
-    public currentStep = 1;
-    public yamlTemplate =
-        "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setPollingSource\n";
+    public currentStep: PollingSourceSteps = PollingSourceSteps.FETCH;
+    public steps: typeof PollingSourceSteps = PollingSourceSteps;
 
     //    fetch step
     public fetchUrlForm: FormGroup = this.fb.group({
@@ -117,15 +117,9 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     // end merge
 
     public pollingSourceForm: FormGroup = this.fb.group({
-        fetch: this.fetchFormByKind[
-            this.fetchUrlForm.controls.kind.value as string
-        ],
-        read: this.readFormByKind[
-            this.readCsvForm.controls.kind.value as string
-        ],
-        merge: this.mergeFormByKind[
-            this.mergeAppendForm.controls.kind.value as string
-        ],
+        fetch: this.fetchUrlForm,
+        read: this.readCsvForm,
+        merge: this.mergeAppendForm,
     });
 
     constructor(
@@ -143,12 +137,8 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         this.stepKindChanges();
     }
 
-    public nextStep(): void {
-        this.currentStep++;
-    }
-
-    public prevStep(): void {
-        this.currentStep--;
+    public changeStep(step: PollingSourceSteps): void {
+        this.currentStep = step;
     }
 
     public onSubmit(): void {

@@ -9,56 +9,33 @@
                         [fetchFilesGlobForm]="fetchFilesGlobForm"
                         [fetchContainerForm]="fetchContainerForm"
                     ></app-fetch-step>
-                    <div class="d-flex mt-4 justify-content-center">
-                        <button
-                            class="btn btn-primary"
-                            [disabled]="!fetchUrlForm.valid"
-                            (click)="changeStep(steps.READ)"
-                        >
-                            Next
-                        </button>
-                    </div>
+                    <app-stepper-navigation
+                        [prevStep]="null"
+                        [nextStep]="steps.READ"
+                        (changeStepEmitter)="changeStep($event)"
+                    ></app-stepper-navigation>
                 </ng-container>
                 <ng-container *ngIf="currentStep === steps.READ">
                     <app-read-step
                         formGroupName="read"
                         [readCsvForm]="readCsvForm"
                     ></app-read-step>
-                    <div class="d-flex mt-4 justify-content-center">
-                        <button
-                            class="btn btn-primary me-4"
-                            (click)="changeStep(steps.FETCH)"
-                        >
-                            Previous
-                        </button>
-                        <button
-                            class="btn btn-primary"
-                            (click)="changeStep(steps.MERGE)"
-                        >
-                            Next
-                        </button>
-                    </div>
+
+                    <app-stepper-navigation
+                        [prevStep]="steps.FETCH"
+                        [nextStep]="steps.MERGE"
+                        (changeStepEmitter)="changeStep($event)"
+                    ></app-stepper-navigation>
                 </ng-container>
                 <ng-container *ngIf="currentStep === steps.MERGE">
                     <app-merge-step formGroupName="merge"></app-merge-step>
-                    <div class="d-flex mt-4 justify-content-center">
-                        <button
-                            class="btn btn-primary me-4"
-                            (click)="changeStep(steps.READ)"
-                        >
-                            Previous
-                        </button>
-
-                        <button class="button-save" (click)="onSubmit()">
-                            Save
-                        </button>
-                        <button
-                            class="btn btn-outline-primary ms-4"
-                            (click)="onEditYaml()"
-                        >
-                            Edit Yaml
-                        </button>
-                    </div>
+                    <app-stepper-navigation
+                        [prevStep]="steps.READ"
+                        [nextStep]="null"
+                        (changeStepEmitter)="changeStep($event)"
+                        (saveEventEmitter)="onSubmit()"
+                        (editYamlEmitter)="onEditYaml()"
+                    ></app-stepper-navigation>
                 </ng-container>
             </form>
         </div>

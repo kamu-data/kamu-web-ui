@@ -1,5 +1,5 @@
 export enum PollingSourceSteps {
-    FETCH,
+    FETCH = 1,
     PREPARE,
     READ,
     PREPROCESS,

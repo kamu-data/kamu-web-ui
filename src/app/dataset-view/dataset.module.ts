@@ -44,6 +44,7 @@ import { FinalYamlModalComponent } from "./additional-components/metadata-compon
 import { FetchStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/fetch-step/fetch-step.component";
 import { ReadStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/read-step/read-step.component";
 import { MergeStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/merge-step/merge-step.component";
+import { StepperNavigationComponent } from "./additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
 
 @NgModule({
     imports: [
@@ -91,6 +92,7 @@ import { MergeStepComponent } from "./additional-components/metadata-component/c
         FetchStepComponent,
         ReadStepComponent,
         MergeStepComponent,
+        StepperNavigationComponent,
         OverviewComponent,
         LineageComponent,
         HistoryComponent,
@@ -113,6 +115,7 @@ import { MergeStepComponent } from "./additional-components/metadata-component/c
         FetchStepComponent,
         ReadStepComponent,
         MergeStepComponent,
+        StepperNavigationComponent,
     ],
 })
 export class DatasetModule {

@@ -1,3 +1,4 @@
+import { ReactiveFormsModule } from "@angular/forms";
 import { TestBed } from "@angular/core/testing";
 
 import { PollingSourceFormService } from "./polling-source-form.service";
@@ -6,7 +7,9 @@ describe("PollingSourceFormService", () => {
     let service: PollingSourceFormService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            imports: [ReactiveFormsModule],
+        });
         service = TestBed.inject(PollingSourceFormService);
     });
 

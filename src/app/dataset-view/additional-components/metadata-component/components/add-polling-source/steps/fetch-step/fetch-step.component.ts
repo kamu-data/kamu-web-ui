@@ -16,11 +16,8 @@ import { fetchStepRadioControls } from "../../form-control.source";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FetchStepComponent implements OnInit {
-    @Input() public fetchUrlForm: FormGroup;
-    @Input() public fetchFilesGlobForm: FormGroup;
-    @Input() public fetchContainerForm: FormGroup;
+    @Input() public fetchForm: FormGroup;
     form: FormGroup;
-
     public fetchStepRadioData = fetchStepRadioControls;
 
     constructor(private rootFormGroupDirective: FormGroupDirective) {}

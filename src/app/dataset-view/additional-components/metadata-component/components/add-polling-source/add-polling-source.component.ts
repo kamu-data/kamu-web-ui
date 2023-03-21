@@ -4,8 +4,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { SetPollingSource } from "./../../../../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import AppValues from "src/app/common/app.values";
+import { FormBuilder, FormGroup } from "@angular/forms";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 import { ActivatedRoute, ParamMap } from "@angular/router";
@@ -15,6 +14,7 @@ import ProjectLinks from "src/app/project-links";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { PollingSourceSteps } from "./add-polling-source.types";
+import { PollingSourceFormService } from "src/app/services/polling-source-form.service";
 
 @Component({
     selector: "app-add-polling-source",
@@ -25,90 +25,14 @@ import { PollingSourceSteps } from "./add-polling-source.types";
 export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     public currentStep: PollingSourceSteps = PollingSourceSteps.FETCH;
     public steps: typeof PollingSourceSteps = PollingSourceSteps;
-
-    //    fetch step
-    public fetchUrlForm: FormGroup = this.fb.group({
-        kind: ["url"],
-        url: [
-            "",
-            [Validators.required, Validators.pattern(AppValues.URL_PATTERN)],
-        ],
-    });
-
-    public fetchFilesGlobForm: FormGroup = this.fb.group({
-        kind: ["filesGlob"],
-        path: ["", [Validators.required]],
-    });
-
-    public fetchContainerForm: FormGroup = this.fb.group({
-        kind: ["container"],
-        image: ["", [Validators.required]],
-    });
-
-    private fetchFormByKind: Record<string, FormGroup> = {
-        url: this.fetchUrlForm,
-        filesGlob: this.fetchFilesGlobForm,
-        container: this.fetchContainerForm,
-    };
-    // end fetch step
-
-    // read step
-    public readCsvForm: FormGroup = this.fb.group({
-        kind: ["csv"],
-        separator: [""],
-    });
-
-    public readJsonLinesForm: FormGroup = this.fb.group({
-        kind: ["jsonLines"],
-        dateFormat: [""],
-    });
-
-    private readGeoJsonForm: FormGroup = this.fb.group({
-        kind: ["geoJson"],
-    });
-
-    public readEsriShapefileForm: FormGroup = this.fb.group({
-        kind: ["esriShapefile"],
-    });
-
-    public readParquetForm: FormGroup = this.fb.group({
-        kind: ["parquet"],
-    });
-
-    private readFormByKind: Record<string, FormGroup> = {
-        csv: this.readCsvForm,
-        jsonLines: this.readJsonLinesForm,
-        geoJson: this.readGeoJsonForm,
-        esriShapefile: this.readEsriShapefileForm,
-        parquet: this.readParquetForm,
-    };
-
-    // end read step
-
-    // merge step
-    public mergeAppendForm: FormGroup = this.fb.group({
-        kind: ["append"],
-    });
-
-    public mergeLedgerForm: FormGroup = this.fb.group({
-        kind: ["ledger"],
-    });
-
-    public mergeSnapshotForm: FormGroup = this.fb.group({
-        kind: ["snapshot"],
-    });
-
-    private mergeFormByKind: Record<string, FormGroup> = {
-        append: this.mergeAppendForm,
-        snapshot: this.mergeSnapshotForm,
-        ledger: this.mergeLedgerForm,
-    };
-    // end merge
+    public fetchForm: FormGroup = this.formService.fetchFormByKind.url;
+    public readForm: FormGroup = this.formService.readFormByKind.csv;
+    public mergeForm: FormGroup = this.formService.mergeFormByKind.append;
 
     public pollingSourceForm: FormGroup = this.fb.group({
-        fetch: this.fetchUrlForm,
-        read: this.readCsvForm,
-        merge: this.mergeAppendForm,
+        fetch: this.fetchForm,
+        read: this.readForm,
+        merge: this.mergeForm,
     });
 
     constructor(
@@ -118,6 +42,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private navigationService: NavigationService,
         private modalService: NgbModal,
+        private formService: PollingSourceFormService,
     ) {
         super();
     }
@@ -154,22 +79,22 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
 
     private stepKindChanges(): void {
         this.trackSubscriptions(
-            this.fetchUrlForm.controls.kind.valueChanges.subscribe(() => {
+            this.fetchForm.controls.kind.valueChanges.subscribe(() => {
                 this.pollingSourceForm.controls.fetch =
-                    this.fetchFormByKind[
-                        this.fetchUrlForm.controls.kind.value as string
+                    this.formService.fetchFormByKind[
+                        this.fetchForm.controls.kind.value as string
                     ];
             }),
-            this.readCsvForm.controls.kind.valueChanges.subscribe(() => {
+            this.readForm.controls.kind.valueChanges.subscribe(() => {
                 this.pollingSourceForm.controls.read =
-                    this.readFormByKind[
-                        this.readCsvForm.controls.kind.value as string
+                    this.formService.readFormByKind[
+                        this.readForm.controls.kind.value as string
                     ];
             }),
-            this.mergeAppendForm.controls.kind.valueChanges.subscribe(() => {
+            this.mergeForm.controls.kind.valueChanges.subscribe(() => {
                 this.pollingSourceForm.controls.merge =
-                    this.mergeFormByKind[
-                        this.mergeAppendForm.controls.kind.value as string
+                    this.formService.mergeFormByKind[
+                        this.mergeForm.controls.kind.value as string
                     ];
             }),
         );

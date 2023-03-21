@@ -21,7 +21,7 @@
         </div>
 
         <div class="mt-4 row">
-            <div *ngIf="fetchUrlForm.controls['kind'].value === 'url'">
+            <div *ngIf="fetchForm.controls['kind'].value === 'url'">
                 <div class="col-md-8 offset-md-2">
                     <label for="url-name" class="form-label"
                         >Url <span class="text-danger">*</span></label
@@ -35,14 +35,12 @@
                     />
                     <div
                         *ngIf="
-                            !fetchUrlForm.controls['url'].valid &&
-                            fetchUrlForm.controls['url'].touched
+                            !fetchForm.controls['url'].valid &&
+                            fetchForm.controls['url'].touched
                         "
                     >
                         <div
-                            *ngIf="
-                                fetchUrlForm.controls['url'].errors?.required
-                            "
+                            *ngIf="fetchForm.controls['url'].errors?.required"
                             class="mt-1"
                         >
                             <span
@@ -53,7 +51,7 @@
                             >
                         </div>
                         <div
-                            *ngIf="fetchUrlForm.controls['url'].errors?.pattern"
+                            *ngIf="fetchForm.controls['url'].errors?.pattern"
                             class="mt-1"
                         >
                             <span
@@ -66,10 +64,10 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="fetchUrlForm.controls['kind'].value === 'filesGlob'">
+            <div *ngIf="fetchForm.controls['kind'].value === 'filesGlob'">
                 filesGlob
             </div>
-            <div *ngIf="fetchUrlForm.controls['kind'].value === 'container'">
+            <div *ngIf="fetchForm.controls['kind'].value === 'container'">
                 container
             </div>
         </div>

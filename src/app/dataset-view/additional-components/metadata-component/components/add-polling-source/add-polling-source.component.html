@@ -5,9 +5,7 @@
                 <ng-container *ngIf="currentStep === steps.FETCH">
                     <app-fetch-step
                         formGroupName="fetch"
-                        [fetchUrlForm]="fetchUrlForm"
-                        [fetchFilesGlobForm]="fetchFilesGlobForm"
-                        [fetchContainerForm]="fetchContainerForm"
+                        [fetchForm]="fetchForm"
                     ></app-fetch-step>
                     <app-stepper-navigation
                         [prevStep]="null"
@@ -18,9 +16,8 @@
                 <ng-container *ngIf="currentStep === steps.READ">
                     <app-read-step
                         formGroupName="read"
-                        [readCsvForm]="readCsvForm"
+                        [readForm]="readForm"
                     ></app-read-step>
-
                     <app-stepper-navigation
                         [prevStep]="steps.FETCH"
                         [nextStep]="steps.MERGE"
@@ -28,7 +25,10 @@
                     ></app-stepper-navigation>
                 </ng-container>
                 <ng-container *ngIf="currentStep === steps.MERGE">
-                    <app-merge-step formGroupName="merge"></app-merge-step>
+                    <app-merge-step
+                        formGroupName="merge"
+                        [mergeForm]="mergeForm"
+                    ></app-merge-step>
                     <app-stepper-navigation
                         [prevStep]="steps.READ"
                         [nextStep]="null"

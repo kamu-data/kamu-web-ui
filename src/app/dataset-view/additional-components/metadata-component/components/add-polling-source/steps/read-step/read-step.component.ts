@@ -14,9 +14,8 @@ import { readStepRadioControls } from "../../form-control.source";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReadStepComponent implements OnInit {
-    @Input() public readCsvForm: FormGroup;
+    @Input() public readForm: FormGroup;
     public form: FormGroup;
-
     public readStepRadioData = readStepRadioControls;
 
     constructor(private rootFormGroupDirective: FormGroupDirective) {}

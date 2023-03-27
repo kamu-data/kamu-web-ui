@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormBuilder, FormControl, FormGroupDirective } from "@angular/forms";
+import { FormBuilder, FormGroupDirective } from "@angular/forms";
 
 import { ReadStepComponent } from "./read-step.component";
 
@@ -10,7 +10,7 @@ describe("ReadStepComponent", () => {
     const fb = new FormBuilder();
     const formGroupDirective = new FormGroupDirective([], []);
     formGroupDirective.form = fb.group({
-        read: fb.control(new FormControl()),
+        read: fb.group({}),
     });
 
     beforeEach(async () => {
@@ -26,9 +26,6 @@ describe("ReadStepComponent", () => {
 
         fixture = TestBed.createComponent(ReadStepComponent);
         component = fixture.componentInstance;
-        component.readForm = fb.group({
-            kind: ["csv"],
-        });
         fixture.detectChanges();
     });
 

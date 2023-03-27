@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormBuilder, FormGroupDirective, FormControl } from "@angular/forms";
+import { FormBuilder, FormGroupDirective } from "@angular/forms";
 import { FetchStepComponent } from "./fetch-step.component";
 
 describe("FetchStepComponent", () => {
@@ -10,13 +10,14 @@ describe("FetchStepComponent", () => {
     const fb = new FormBuilder();
     const formGroupDirective = new FormGroupDirective([], []);
     formGroupDirective.form = fb.group({
-        fetch: fb.control(new FormControl()),
+        fetch: fb.group({}),
     });
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [FetchStepComponent],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
+
             providers: [
                 FormGroupDirective,
                 FormBuilder,
@@ -26,6 +27,7 @@ describe("FetchStepComponent", () => {
 
         fixture = TestBed.createComponent(FetchStepComponent);
         component = fixture.componentInstance;
+
         fixture.detectChanges();
     });
 

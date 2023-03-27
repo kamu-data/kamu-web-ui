@@ -1,75 +1,176 @@
-<ng-container [formGroup]="form">
-    <div>
-        <h2 class="text-center">Fetch</h2>
-        <div class="radio-group mt-4">
-            <div
-                class="input-container"
-                *ngFor="let step of fetchStepRadioData"
-            >
-                <input
-                    formControlName="kind"
-                    class="radio-input"
-                    type="radio"
-                    [id]="step.id"
-                    [value]="step.value"
-                />
-                <div class="radio-item">
-                    <mat-icon class="mat-icon">{{ step.icon }}</mat-icon>
-                    <label [for]="step.id">{{ step.label }}</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-4 row">
-            <div *ngIf="fetchForm.controls['kind'].value === 'url'">
-                <div class="col-md-8 offset-md-2">
-                    <label for="url-name" class="form-label"
-                        >Url <span class="text-danger">*</span></label
-                    >
-                    <input
-                        class="form-control"
-                        id="url-name"
-                        placeholder="Please enter url..."
-                        formControlName="url"
-                        data-test-id="url-name"
-                    />
-                    <div
-                        *ngIf="
-                            !fetchForm.controls['url'].valid &&
-                            fetchForm.controls['url'].touched
-                        "
-                    >
-                        <div
-                            *ngIf="fetchForm.controls['url'].errors?.required"
-                            class="mt-1"
-                        >
-                            <span
-                                class="text-danger fs-12"
-                                data-test-id="error-url-name"
-                            >
-                                Url is required</span
-                            >
-                        </div>
-                        <div
-                            *ngIf="fetchForm.controls['url'].errors?.pattern"
-                            class="mt-1"
-                        >
-                            <span
-                                class="text-danger fs-12"
-                                data-test-id="error-url-format"
-                            >
-                                Url format is wrong</span
-                            >
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div *ngIf="fetchForm.controls['kind'].value === 'filesGlob'">
-                filesGlob
-            </div>
-            <div *ngIf="fetchForm.controls['kind'].value === 'container'">
-                container
+<div formGroupName="fetch" *ngIf="fetchForm">
+    <h2 class="text-center">Fetch</h2>
+    <div class="radio-group mt-4">
+        <div class="input-container" *ngFor="let step of fetchStepRadioData">
+            <input
+                formControlName="kind"
+                class="radio-input"
+                type="radio"
+                [id]="step.id"
+                [value]="step.value"
+            />
+            <div class="radio-item">
+                <mat-icon class="mat-icon">{{ step.icon }}</mat-icon>
+                <label [for]="step.id">{{ step.label }}</label>
             </div>
         </div>
     </div>
-</ng-container>
+
+    <div class="mt-4 row">
+        <div *ngIf="fetchForm?.get('kind')?.value === 'url'">
+            <div class="col-md-8 offset-md-2" *ngIf="fetchForm?.get('url')">
+                <label for="url-name" class="form-label"
+                    >Url <span class="text-danger">*</span></label
+                >
+                <input
+                    class="form-control"
+                    id="url-name"
+                    placeholder="Please enter url..."
+                    formControlName="url"
+                    data-test-id="url-name"
+                />
+                <div
+                    *ngIf="
+                        !fetchForm?.get('url')?.valid &&
+                        fetchForm?.get('url')?.touched
+                    "
+                >
+                    <div
+                        *ngIf="fetchForm?.get('url')?.errors?.required"
+                        class="mt-1"
+                    >
+                        <span
+                            class="text-danger fs-12"
+                            data-test-id="error-url-name"
+                        >
+                            Url is required</span
+                        >
+                    </div>
+                    <div
+                        *ngIf="fetchForm?.get('url')?.errors?.pattern"
+                        class="mt-1"
+                    >
+                        <span
+                            class="text-danger fs-12"
+                            data-test-id="error-url-format"
+                        >
+                            Url format is wrong</span
+                        >
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div
+                    class="col-md-8 offset-md-2"
+                    *ngIf="fetchForm?.get('headers')"
+                >
+                    <label class="form-label">Headers</label>
+                    <ng-container
+                        formArrayName="headers"
+                        *ngFor="let item of headers.controls; let i = index"
+                    >
+                        <div class="row mb-2" [formGroupName]="i">
+                            <div class="col-md-5">
+                                <input
+                                    class="form-control"
+                                    placeholder="Header name"
+                                    formControlName="name"
+                                />
+                            </div>
+                            <div class="col-md-5">
+                                <input
+                                    class="form-control col-md-5"
+                                    placeholder="Header value"
+                                    formControlName="value"
+                                />
+                            </div>
+                            <div
+                                class="col-md-2 d-flex justify-content-center align-items-center"
+                            >
+                                <button
+                                    class="btn btn-light"
+                                    (click)="removeHeader(i)"
+                                >
+                                    x
+                                </button>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <div>
+                        <button
+                            type="button"
+                            class="add-header-button"
+                            (click)="addHeader()"
+                        >
+                            <span>+ Add header</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="fetchForm?.get('kind')?.value === 'filesGlob'">
+            <div class="col-md-8 offset-md-2" *ngIf="fetchForm?.get('path')">
+                <label for="url-name" class="form-label"
+                    >Path <span class="text-danger">*</span></label
+                >
+                <input
+                    class="form-control"
+                    id="url-name"
+                    placeholder="Please enter url..."
+                    formControlName="path"
+                    data-test-id="url-name"
+                />
+                <div
+                    *ngIf="
+                        !fetchForm?.get('path')?.valid &&
+                        fetchForm?.get('path')?.touched
+                    "
+                >
+                    <div
+                        *ngIf="fetchForm?.get('path')?.errors?.required"
+                        class="mt-1"
+                    >
+                        <span
+                            class="text-danger fs-12"
+                            data-test-id="error-url-name"
+                        >
+                            Path is required</span
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="fetchForm?.get('kind')?.value === 'container'">
+            <div class="col-md-8 offset-md-2" *ngIf="fetchForm?.get('image')">
+                <label for="url-name" class="form-label"
+                    >Image <span class="text-danger">*</span></label
+                >
+                <input
+                    class="form-control"
+                    id="image"
+                    placeholder="Please enter image..."
+                    formControlName="image"
+                    data-test-id="image"
+                />
+                <div
+                    *ngIf="
+                        !fetchForm?.get('image')?.valid &&
+                        fetchForm?.get('image')?.touched
+                    "
+                >
+                    <div
+                        *ngIf="fetchForm?.get('image')?.errors?.required"
+                        class="mt-1"
+                    >
+                        <span
+                            class="text-danger fs-12"
+                            data-test-id="error-url-name"
+                        >
+                            Image is required</span
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

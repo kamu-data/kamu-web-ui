@@ -1,4 +1,4 @@
-<ng-container [formGroup]="form">
+<ng-container formGroupName="merge" *ngIf="mergeForm">
     <div>
         <h2 class="text-center">Merge</h2>
         <div class="radio-group mt-4">
@@ -18,6 +18,109 @@
                     <label [for]="step.id">{{ step.label }}</label>
                 </div>
             </div>
+        </div>
+        <div class="mt-4 row">
+            <div *ngIf="mergeForm?.get('kind')?.value === 'append'"></div>
+            <div *ngIf="mergeForm?.get('kind')?.value === 'ledger'">
+                <div class="row mt-4" formArrayName="primaryKey">
+                    <div
+                        class="col-md-8 offset-md-2"
+                        *ngIf="mergeForm?.get('primaryKey')"
+                    >
+                        <div
+                            *ngFor="let key of primaryKey.controls; index as i"
+                        >
+                            <div class="row mt-4">
+                                <div class="col-md-10">
+                                    <input
+                                        class="form-control"
+                                        placeholder="Enter primary key ..."
+                                        [formControlName]="i"
+                                    />
+                                </div>
+                                <div
+                                    class="col-md-2 d-flex justify-content-center align-items-center"
+                                >
+                                    <button
+                                        class="btn btn-light"
+                                        (click)="removePrimaryKey(i)"
+                                    >
+                                        x
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button
+                                type="button"
+                                class="add-primary-key-button mt-2"
+                                (click)="addPrimaryKey()"
+                            >
+                                <span>+ Add primary key</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="mergeForm?.get('kind')?.value === 'snapshot'">
+                <div class="row mt-4" formArrayName="primaryKey">
+                    <div
+                        class="col-md-8 offset-md-2"
+                        *ngIf="mergeForm?.get('primaryKey')"
+                    >
+                        <div
+                            *ngFor="let key of primaryKey.controls; index as i"
+                        >
+                            <div class="row mt-4">
+                                <div class="col-md-10">
+                                    <input
+                                        class="form-control"
+                                        placeholder="Enter primary key ..."
+                                        [formControlName]="i"
+                                    />
+                                </div>
+                                <div
+                                    class="col-md-2 d-flex justify-content-center align-items-center"
+                                >
+                                    <button
+                                        class="btn btn-light"
+                                        (click)="removePrimaryKey(i)"
+                                    >
+                                        x
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button
+                                type="button"
+                                class="add-primary-key-button mt-2"
+                                (click)="addPrimaryKey()"
+                            >
+                                <span>+ Add primary key</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="col-md-8 offset-md-2 mt-4"
+                    *ngIf="mergeForm.get('observationColumn')"
+                >
+                    <label for="read-observationColumn" class="form-label"
+                        >Observation column
+                    </label>
+                    <input
+                        class="form-control"
+                        id="read-observationColumn"
+                        placeholder="Please enter column name..."
+                        formControlName="observationColumn"
+                        data-test-id="read-observationColumn"
+                    />
+                </div>
+            </div>
+        </div>
+        <div *ngIf="errorMessage" class="alert alert-danger mt-2" role="alert">
+            <p class="text-danger fs-6">Error:<br />{{ errorMessage }}</p>
         </div>
     </div>
 </ng-container>

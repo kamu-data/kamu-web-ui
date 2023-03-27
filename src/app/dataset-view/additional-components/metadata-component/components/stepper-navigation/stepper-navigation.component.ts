@@ -18,6 +18,7 @@ import { PollingSourceSteps } from "../add-polling-source/add-polling-source.typ
 export class StepperNavigationComponent {
     @Input() public nextStep: MaybeNull<PollingSourceSteps>;
     @Input() public prevStep: MaybeNull<PollingSourceSteps>;
+    @Input() public validStep: boolean;
     @Output() public changeStepEmitter = new EventEmitter<PollingSourceSteps>();
     @Output() public saveEventEmitter = new EventEmitter<null>();
     @Output() public editYamlEmitter = new EventEmitter<null>();

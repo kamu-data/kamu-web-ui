@@ -26,7 +26,6 @@ describe("MergeStepComponent", () => {
 
         fixture = TestBed.createComponent(MergeStepComponent);
         component = fixture.componentInstance;
-        component.mergeForm = formGroupDirective.form;
         fixture.detectChanges();
     });
 

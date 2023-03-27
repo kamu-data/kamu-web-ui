@@ -4,11 +4,8 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import * as monaco from "monaco-editor";
 
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-
-import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-final-yaml-modal",
@@ -32,7 +29,6 @@ export class FinalYamlModalComponent extends BaseComponent {
     constructor(
         public activeModal: NgbActiveModal,
         private createDatasetService: AppDatasetCreateService,
-        private navigationService: NavigationService,
     ) {
         super();
     }
@@ -47,10 +43,6 @@ export class FinalYamlModalComponent extends BaseComponent {
                 )
                 .subscribe(() => {
                     this.activeModal.close("close modal");
-                    this.navigationService.navigateToDatasetView({
-                        ...this.datasetInfo,
-                        tab: DatasetViewTypeEnum.Metadata,
-                    });
                 }),
         );
     }

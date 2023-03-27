@@ -3,35 +3,29 @@
         <div class="border border-1 mt-4 px-2 py-4 rounded-3">
             <form [formGroup]="pollingSourceForm">
                 <ng-container *ngIf="currentStep === steps.FETCH">
-                    <app-fetch-step
-                        formGroupName="fetch"
-                        [fetchForm]="fetchForm"
-                    ></app-fetch-step>
+                    <app-fetch-step></app-fetch-step>
                     <app-stepper-navigation
                         [prevStep]="null"
                         [nextStep]="steps.READ"
+                        [validStep]="fetchForm.valid"
                         (changeStepEmitter)="changeStep($event)"
                     ></app-stepper-navigation>
                 </ng-container>
                 <ng-container *ngIf="currentStep === steps.READ">
-                    <app-read-step
-                        formGroupName="read"
-                        [readForm]="readForm"
-                    ></app-read-step>
+                    <app-read-step></app-read-step>
                     <app-stepper-navigation
                         [prevStep]="steps.FETCH"
                         [nextStep]="steps.MERGE"
+                        [validStep]="readForm.valid"
                         (changeStepEmitter)="changeStep($event)"
                     ></app-stepper-navigation>
                 </ng-container>
                 <ng-container *ngIf="currentStep === steps.MERGE">
-                    <app-merge-step
-                        formGroupName="merge"
-                        [mergeForm]="mergeForm"
-                    ></app-merge-step>
+                    <app-merge-step></app-merge-step>
                     <app-stepper-navigation
                         [prevStep]="steps.READ"
                         [nextStep]="null"
+                        [validStep]="mergeForm.valid"
                         (changeStepEmitter)="changeStep($event)"
                         (saveEventEmitter)="onSubmit()"
                         (editYamlEmitter)="onEditYaml()"

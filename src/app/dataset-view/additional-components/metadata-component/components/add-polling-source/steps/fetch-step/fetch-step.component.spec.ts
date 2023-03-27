@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import {
-    FormBuilder,
-    FormGroupDirective,
-    FormControl,
-    Validators,
-} from "@angular/forms";
+import { FormBuilder, FormGroupDirective, FormControl } from "@angular/forms";
 import { FetchStepComponent } from "./fetch-step.component";
 
 describe("FetchStepComponent", () => {
@@ -31,10 +26,6 @@ describe("FetchStepComponent", () => {
 
         fixture = TestBed.createComponent(FetchStepComponent);
         component = fixture.componentInstance;
-        component.fetchForm = fb.group({
-            kind: ["url"],
-            url: ["", [Validators.required]],
-        });
         fixture.detectChanges();
     });
 

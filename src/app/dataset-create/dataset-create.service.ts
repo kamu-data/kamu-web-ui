@@ -24,14 +24,14 @@ export class AppDatasetCreateService {
         return this.errorMessageChanges$.asObservable();
     }
 
-    private errorSetInfoCommitChanges$: Subject<string> = new Subject<string>();
+    private errorCommitEventChanges$: Subject<string> = new Subject<string>();
 
-    public errorSetInfoCommitChanges(message: string): void {
-        this.errorSetInfoCommitChanges$.next(message);
+    public errorCommitEventChanges(message: string): void {
+        this.errorCommitEventChanges$.next(message);
     }
 
-    public get onErrorSetInfoCommitChanges(): Observable<string> {
-        return this.errorSetInfoCommitChanges$.asObservable();
+    public get onErrorCommitEventChanges(): Observable<string> {
+        return this.errorCommitEventChanges$.asObservable();
     }
 
     public constructor(
@@ -110,7 +110,7 @@ export class AppDatasetCreateService {
                         data.datasets.byOwnerAndName?.metadata.chain.commitEvent
                             .__typename === "MetadataManifestMalformed"
                     ) {
-                        this.errorSetInfoCommitChanges(
+                        this.errorCommitEventChanges(
                             data.datasets.byOwnerAndName.metadata.chain
                                 .commitEvent.message,
                         );
@@ -121,6 +121,11 @@ export class AppDatasetCreateService {
                                 datasetName,
                             })
                             .subscribe();
+                        this.navigationService.navigateToDatasetView({
+                            accountName,
+                            datasetName,
+                            tab: DatasetViewTypeEnum.Metadata,
+                        });
                     }
                 }),
             );

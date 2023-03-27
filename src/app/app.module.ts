@@ -67,7 +67,6 @@ import { ClipboardModule } from "@angular/cdk/clipboard";
 import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { ToastrModule } from "ngx-toastr";
 import { AddPollingSourceComponent } from "./dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source.component";
-import { PollingSourceFormService } from "./services/polling-source-form.service";
 
 const Services = [
     {
@@ -89,7 +88,6 @@ const Services = [
     DatasetService,
     NavigationService,
     AppDatasetSubscriptionsService,
-    PollingSourceFormService,
 
     {
         provide: APOLLO_OPTIONS,

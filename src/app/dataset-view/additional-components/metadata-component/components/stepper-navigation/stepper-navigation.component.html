@@ -9,12 +9,19 @@
     <button
         *ngIf="nextStep"
         class="btn btn-primary"
+        [disabled]="!validStep"
         (click)="changeStep(nextStep)"
     >
         Next
     </button>
     <ng-container *ngIf="!nextStep">
-        <button (click)="saveEvent()" class="button-save">Save</button>
+        <button
+            (click)="saveEvent()"
+            class="button-save"
+            [disabled]="!validStep"
+        >
+            Save
+        </button>
         <button (click)="editYaml()" class="btn btn-outline-primary ms-4">
             Edit Yaml
         </button>

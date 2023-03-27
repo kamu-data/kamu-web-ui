@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
-import { NavigationService } from "src/app/services/navigation.service";
 import { SetPollingSource } from "./../../../../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+} from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
@@ -23,6 +26,8 @@ import { PollingSourceSteps } from "./add-polling-source.types";
 export class AddPollingSourceComponent extends BaseComponent {
     public currentStep: PollingSourceSteps = PollingSourceSteps.FETCH;
     public steps: typeof PollingSourceSteps = PollingSourceSteps;
+    public isAddPrepareStep = false;
+    public isAddPreprocessStep = false;
 
     public pollingSourceForm: FormGroup = this.fb.group({
         fetch: this.fb.group({
@@ -48,12 +53,40 @@ export class AddPollingSourceComponent extends BaseComponent {
         return this.pollingSourceForm.get("merge") as FormGroup;
     }
 
+    public onCheckedPrepareStep(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        if (input.checked) {
+            this.pollingSourceForm.addControl(
+                "prepare",
+                this.fb.group({
+                    kind: "pipe",
+                }),
+            );
+        } else {
+            this.pollingSourceForm.removeControl("prepare");
+        }
+    }
+
+    public onCheckedPreprocessStep(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        if (input.checked) {
+            this.pollingSourceForm.addControl(
+                "preprocess",
+                this.fb.group({
+                    kind: "sql",
+                }),
+            );
+        } else {
+            this.pollingSourceForm.removeControl("preprocess");
+        }
+    }
+
     constructor(
         private fb: FormBuilder,
         private createDatasetService: AppDatasetCreateService,
         private yamlEventService: TemplatesYamlEventsService,
         private activatedRoute: ActivatedRoute,
-        private navigationService: NavigationService,
+        private cdr: ChangeDetectorRef,
         private modalService: NgbModal,
     ) {
         super();

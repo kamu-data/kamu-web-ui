@@ -45,6 +45,8 @@ import { FetchStepComponent } from "./additional-components/metadata-component/c
 import { ReadStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/read-step/read-step.component";
 import { MergeStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/merge-step/merge-step.component";
 import { StepperNavigationComponent } from "./additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
+import { PrepareStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/prepare-step/prepare-step.component";
+import { PreprocessStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/preprocess-step/preprocess-step.component";
 
 @NgModule({
     imports: [
@@ -92,6 +94,8 @@ import { StepperNavigationComponent } from "./additional-components/metadata-com
         FetchStepComponent,
         ReadStepComponent,
         MergeStepComponent,
+        PrepareStepComponent,
+        PreprocessStepComponent,
         StepperNavigationComponent,
         OverviewComponent,
         LineageComponent,
@@ -115,6 +119,8 @@ import { StepperNavigationComponent } from "./additional-components/metadata-com
         FetchStepComponent,
         ReadStepComponent,
         MergeStepComponent,
+        PrepareStepComponent,
+        PreprocessStepComponent,
         StepperNavigationComponent,
     ],
 })

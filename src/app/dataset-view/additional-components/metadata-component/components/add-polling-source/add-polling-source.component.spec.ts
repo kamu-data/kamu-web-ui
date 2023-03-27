@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
+import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { AddPollingSourceComponent } from "./add-polling-source.component";
@@ -14,7 +14,7 @@ describe("AddPollingSourceComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [AddPollingSourceComponent],
-            imports: [ApolloTestingModule, ReactiveFormsModule],
+            imports: [ApolloTestingModule, ReactiveFormsModule, FormsModule],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 FormBuilder,

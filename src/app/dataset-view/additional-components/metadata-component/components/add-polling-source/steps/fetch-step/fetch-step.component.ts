@@ -1,12 +1,19 @@
+import { SetPollingSourceSection } from "./../../../../../../../dataset-block/metadata-block/components/event-details/dynamic-events/builders/set-polling-source-section.builder";
+import { RadioControlType } from "./../../form-control.source";
 import { FetchStep } from "./../../../../../../../api/kamu.graphql.interface";
 /* eslint-disable @typescript-eslint/unbound-method */
 import { BaseComponent } from "src/app/common/base.component";
-import { FormBuilder, Validators } from "@angular/forms";
+import { FormBuilder, ValidatorFn, Validators } from "@angular/forms";
 import { ControlContainer, FormGroupDirective } from "@angular/forms";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { fetchStepRadioControls } from "../../form-control.source";
-import AppValues from "src/app/common/app.values";
+import {
+    JsonFormControls,
+    JsonFormData,
+    JsonFormValidators,
+} from "../../add-polling-source-form.types";
+import { fetchFormData } from "./fetch-form-data";
 
 @Component({
     selector: "app-fetch-step",
@@ -19,7 +26,8 @@ import AppValues from "src/app/common/app.values";
 })
 export class FetchStepComponent extends BaseComponent implements OnInit {
     public parentForm: FormGroup;
-    public fetchStepRadioData = fetchStepRadioControls;
+    public fetchStepRadioData: RadioControlType[] = fetchStepRadioControls;
+    public fetchFormData: JsonFormData = fetchFormData;
 
     constructor(
         private rootFormGroupDirective: FormGroupDirective,
@@ -30,12 +38,12 @@ export class FetchStepComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.parentForm = this.rootFormGroupDirective.form;
-        this.initUrlFetchStep();
+        this.initForm("url");
         this.chooseFetchStep();
     }
 
     public get fetchForm(): FormGroup {
-        return this.parentForm.get("fetch") as FormGroup;
+        return this.parentForm.get(SetPollingSourceSection.FETCH) as FormGroup;
     }
 
     public chooseFetchStep(): void {
@@ -47,47 +55,47 @@ export class FetchStepComponent extends BaseComponent implements OnInit {
                     .forEach((item: string) =>
                         this.fetchForm.removeControl(item),
                     );
-
-                switch (kind) {
-                    case "url": {
-                        this.initUrlFetchStep();
-                        break;
-                    }
-                    case "filesGlob": {
-                        this.initFilesGlobFetchStep();
-                        break;
-                    }
-                    case "container": {
-                        this.initContainerFetchStep();
-                        break;
-                    }
-                }
+                this.initForm(kind);
             });
         if (subscription) this.trackSubscription(subscription);
     }
 
-    private initUrlFetchStep(): void {
-        this.fetchForm.addControl(
-            "url",
-            this.fb.control("", [
-                Validators.required,
-                Validators.pattern(AppValues.URL_PATTERN),
-            ]),
-        );
-        this.fetchForm.addControl("headers", this.fb.array([]));
+    private initForm(kind: string): void {
+        this.fetchFormData[kind].controls.forEach((item: JsonFormControls) => {
+            if (item.type === "array-key-value") {
+                this.fetchForm.addControl(item.name, this.fb.array([]));
+            } else {
+                this.fetchForm.addControl(
+                    item.name,
+                    this.fb.control(
+                        item.value,
+                        this.getValidators(item.validators),
+                    ),
+                );
+            }
+        });
     }
 
-    private initFilesGlobFetchStep(): void {
-        this.fetchForm.addControl(
-            "path",
-            this.fb.control("", [Validators.required]),
-        );
-    }
-
-    private initContainerFetchStep(): void {
-        this.fetchForm.addControl(
-            "image",
-            this.fb.control("", [Validators.required]),
-        );
+    private getValidators(validators: JsonFormValidators): ValidatorFn[] {
+        const validatorsToAdd: ValidatorFn[] = [];
+        Object.entries(validators).forEach(([key, value]) => {
+            switch (key) {
+                case "required":
+                    if (value) {
+                        validatorsToAdd.push(Validators.required);
+                    }
+                    break;
+                case "pattern":
+                    if (value) {
+                        validatorsToAdd.push(
+                            Validators.pattern(value as RegExp),
+                        );
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
+        return validatorsToAdd;
     }
 }

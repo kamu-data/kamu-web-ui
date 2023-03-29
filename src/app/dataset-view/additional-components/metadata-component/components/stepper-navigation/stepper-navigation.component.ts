@@ -7,7 +7,7 @@ import {
     Input,
     Output,
 } from "@angular/core";
-import { PollingSourceSteps } from "../add-polling-source/add-polling-source.types";
+import { SetPollingSourceSection } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/set-polling-source-section.builder";
 
 @Component({
     selector: "app-stepper-navigation",
@@ -16,16 +16,17 @@ import { PollingSourceSteps } from "../add-polling-source/add-polling-source.typ
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepperNavigationComponent {
-    @Input() public nextStep: MaybeNull<PollingSourceSteps>;
-    @Input() public prevStep: MaybeNull<PollingSourceSteps>;
+    @Input() public nextStep: MaybeNull<SetPollingSourceSection>;
+    @Input() public prevStep: MaybeNull<SetPollingSourceSection>;
     @Input() public validStep: boolean;
-    @Output() public changeStepEmitter = new EventEmitter<PollingSourceSteps>();
+    @Output() public changeStepEmitter =
+        new EventEmitter<SetPollingSourceSection>();
     @Output() public saveEventEmitter = new EventEmitter<null>();
     @Output() public editYamlEmitter = new EventEmitter<null>();
 
     constructor(private cdr: ChangeDetectorRef) {}
 
-    public changeStep(step: PollingSourceSteps): void {
+    public changeStep(step: SetPollingSourceSection): void {
         this.changeStepEmitter.emit(step);
     }
 

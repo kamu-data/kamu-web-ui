@@ -4,58 +4,33 @@
         [form]="fetchForm"
         [data]="fetchStepRadioData"
     ></app-select-kind-field>
-    <div class="mt-4 row">
-        <div *ngIf="fetchForm?.get('kind')?.value === 'url'">
-            <div class="col-md-8 offset-md-2" *ngIf="fetchForm?.get('url')">
-                <app-input-field
-                    [form]="fetchForm"
-                    controlName="url"
-                    label="Url"
-                    placeholder="Please enter url ..."
-                    [requiredField]="true"
-                    dataTestId="fetch-url"
-                    id="url"
-                ></app-input-field>
-            </div>
-            <div class="row mt-4">
-                <div
-                    class="col-md-8 offset-md-2"
-                    *ngIf="fetchForm?.get('headers')"
-                >
+    <div class="row">
+        <ng-container
+            *ngFor="
+                let control of fetchFormData[fetchForm.get('kind')?.value]
+                    .controls
+            "
+        >
+            <div class="col-md-8 offset-md-2 mt-4">
+                <ng-container *ngIf="control.type === 'text'">
+                    <app-input-field
+                        [form]="fetchForm"
+                        [controlName]="control.name"
+                        [label]="control.label"
+                        [value]="control.value"
+                        [requiredField]="control.validators.required"
+                        [placeholder]="control.placeholder"
+                    ></app-input-field>
+                </ng-container>
+                <ng-container *ngIf="control.type === 'array-key-value'">
                     <app-key-value-field
                         [form]="fetchForm"
-                        formArrayName="headers"
-                        label="Headers"
-                        buttonText="+ Add headers"
+                        [formArrayName]="control.options?.formArrayName!"
+                        [label]="control.label!"
+                        [buttonText]="control.options?.buttonText!"
                     ></app-key-value-field>
-                </div>
+                </ng-container>
             </div>
-        </div>
-        <div *ngIf="fetchForm?.get('kind')?.value === 'filesGlob'">
-            <div class="col-md-8 offset-md-2" *ngIf="fetchForm?.get('path')">
-                <app-input-field
-                    [form]="fetchForm"
-                    controlName="path"
-                    label="Path"
-                    placeholder="Please enter path ..."
-                    [requiredField]="true"
-                    dataTestId="fetch-path"
-                    id="path"
-                ></app-input-field>
-            </div>
-        </div>
-        <div *ngIf="fetchForm?.get('kind')?.value === 'container'">
-            <div class="col-md-8 offset-md-2" *ngIf="fetchForm?.get('image')">
-                <app-input-field
-                    [form]="fetchForm"
-                    controlName="image"
-                    label="Image"
-                    placeholder="Please enter image ..."
-                    [requiredField]="true"
-                    dataTestId="fetch-image"
-                    id="image"
-                ></app-input-field>
-            </div>
-        </div>
+        </ng-container>
     </div>
 </div>

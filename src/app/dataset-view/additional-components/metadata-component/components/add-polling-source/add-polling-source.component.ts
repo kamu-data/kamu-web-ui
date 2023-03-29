@@ -11,7 +11,7 @@ import { requireValue } from "src/app/common/app.helpers";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { PollingSourceSteps } from "./add-polling-source.types";
+import { SetPollingSourceSection } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/set-polling-source-section.builder";
 
 @Component({
     selector: "app-add-polling-source",
@@ -20,8 +20,8 @@ import { PollingSourceSteps } from "./add-polling-source.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddPollingSourceComponent extends BaseComponent {
-    public currentStep: PollingSourceSteps = PollingSourceSteps.FETCH;
-    public steps: typeof PollingSourceSteps = PollingSourceSteps;
+    public currentStep: SetPollingSourceSection = SetPollingSourceSection.FETCH;
+    public steps: typeof SetPollingSourceSection = SetPollingSourceSection;
     public isAddPrepareStep = false;
     public isAddPreprocessStep = false;
 
@@ -39,17 +39,19 @@ export class AddPollingSourceComponent extends BaseComponent {
 
     public get fetchForm(): FormGroup {
         return this.pollingSourceForm.get(
-            PollingSourceSteps.FETCH,
+            SetPollingSourceSection.FETCH,
         ) as FormGroup;
     }
 
     public get readForm(): FormGroup {
-        return this.pollingSourceForm.get(PollingSourceSteps.READ) as FormGroup;
+        return this.pollingSourceForm.get(
+            SetPollingSourceSection.READ,
+        ) as FormGroup;
     }
 
     public get mergeForm(): FormGroup {
         return this.pollingSourceForm.get(
-            PollingSourceSteps.MERGE,
+            SetPollingSourceSection.MERGE,
         ) as FormGroup;
     }
 
@@ -57,13 +59,15 @@ export class AddPollingSourceComponent extends BaseComponent {
         const input = event.target as HTMLInputElement;
         if (input.checked) {
             this.pollingSourceForm.addControl(
-                "prepare",
+                SetPollingSourceSection.PREPARE,
                 this.fb.group({
                     kind: "pipe",
                 }),
             );
         } else {
-            this.pollingSourceForm.removeControl("prepare");
+            this.pollingSourceForm.removeControl(
+                SetPollingSourceSection.PREPARE,
+            );
         }
     }
 
@@ -71,13 +75,15 @@ export class AddPollingSourceComponent extends BaseComponent {
         const input = event.target as HTMLInputElement;
         if (input.checked) {
             this.pollingSourceForm.addControl(
-                "preprocess",
+                SetPollingSourceSection.PREPROCESS,
                 this.fb.group({
                     kind: "sql",
                 }),
             );
         } else {
-            this.pollingSourceForm.removeControl("preprocess");
+            this.pollingSourceForm.removeControl(
+                SetPollingSourceSection.PREPROCESS,
+            );
         }
     }
 
@@ -91,7 +97,7 @@ export class AddPollingSourceComponent extends BaseComponent {
         super();
     }
 
-    public changeStep(step: PollingSourceSteps): void {
+    public changeStep(step: SetPollingSourceSection): void {
         this.currentStep = step;
     }
 

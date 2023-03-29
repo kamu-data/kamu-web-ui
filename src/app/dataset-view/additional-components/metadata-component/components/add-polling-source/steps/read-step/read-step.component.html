@@ -6,10 +6,10 @@
             [data]="readStepRadioData"
         ></app-select-kind-field>
         <div class="mt-4 row">
-            <div *ngIf="readForm?.get('kind')?.value === 'csv'">
+            <div *ngIf="readForm.get('kind')?.value === 'csv'">
                 <div
                     class="col-md-8 offset-md-2"
-                    *ngIf="readForm?.get('separator')"
+                    *ngIf="readForm.get('separator')"
                 >
                     <app-input-field
                         [form]="readForm"
@@ -22,7 +22,7 @@
                 </div>
                 <div
                     class="col-md-8 offset-md-2 mt-4"
-                    *ngIf="readForm?.get('encoding')"
+                    *ngIf="readForm.get('encoding')"
                 >
                     <app-input-field
                         [form]="readForm"
@@ -35,7 +35,7 @@
                 </div>
                 <div
                     class="col-md-8 offset-md-2 mt-4"
-                    *ngIf="readForm?.get('quote')"
+                    *ngIf="readForm.get('quote')"
                 >
                     <app-input-field
                         [form]="readForm"
@@ -48,7 +48,7 @@
                 </div>
                 <div
                     class="col-md-8 offset-md-2 mt-4"
-                    *ngIf="readForm?.get('header')"
+                    *ngIf="readForm.get('header')"
                 >
                     <app-checkbox-field
                         [form]="readForm"
@@ -59,10 +59,10 @@
                     </app-checkbox-field>
                 </div>
             </div>
-            <div *ngIf="readForm?.get('kind')?.value === 'jsonLines'">
+            <div *ngIf="readForm.get('kind')?.value === 'jsonLines'">
                 <div
                     class="col-md-8 offset-md-2"
-                    *ngIf="readForm?.get('dateFormat')"
+                    *ngIf="readForm.get('dateFormat')"
                 >
                     <app-input-field
                         [form]="readForm"

@@ -3,7 +3,7 @@ import { EventSectionBuilder } from "./event-section.builder";
 import { SET_POLLING_SOURCE_DESCRIPTORS } from "../../components/set-polling-source-event/set-polling-source-event.source";
 import { EventRow, EventSection } from "../dynamic-events.model";
 
-enum SetPollingSourceSection {
+export enum SetPollingSourceSection {
     READ = "read",
     FETCH = "fetch",
     MERGE = "merge",
@@ -12,7 +12,6 @@ enum SetPollingSourceSection {
 }
 
 export class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSource> {
-
     public buildEventSections(event: SetPollingSource): EventSection[] {
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {

@@ -1,0 +1,31 @@
+<ng-container [formGroup]="form">
+    <div formArrayName="primaryKey">
+        <div *ngFor="let key of primaryKey.controls; index as i">
+            <div class="row mt-4">
+                <div class="col-md-10">
+                    <input
+                        class="form-control"
+                        placeholder="Enter primary key ..."
+                        [formControlName]="i"
+                    />
+                </div>
+                <div
+                    class="col-md-2 d-flex justify-content-center align-items-center"
+                >
+                    <button class="btn btn-light" (click)="removePrimaryKey(i)">
+                        x
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <button
+                type="button"
+                class="add-primary-key-button mt-2"
+                (click)="addPrimaryKey()"
+            >
+                <span>+ Add primary key</span>
+            </button>
+        </div>
+    </div>
+</ng-container>

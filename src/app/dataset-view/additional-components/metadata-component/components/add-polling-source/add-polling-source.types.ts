@@ -1,7 +1,7 @@
 export enum PollingSourceSteps {
-    FETCH = 1,
-    PREPARE,
-    READ,
-    PREPROCESS,
-    MERGE,
+    FETCH = "fetch",
+    PREPARE = "prepare",
+    READ = "read",
+    PREPROCESS = "prerocess",
+    MERGE = "merge",
 }

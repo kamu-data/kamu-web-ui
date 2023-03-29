@@ -2,11 +2,7 @@
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { SetPollingSource } from "./../../../../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
@@ -42,15 +38,19 @@ export class AddPollingSourceComponent extends BaseComponent {
     });
 
     public get fetchForm(): FormGroup {
-        return this.pollingSourceForm.get("fetch") as FormGroup;
+        return this.pollingSourceForm.get(
+            PollingSourceSteps.FETCH,
+        ) as FormGroup;
     }
 
     public get readForm(): FormGroup {
-        return this.pollingSourceForm.get("read") as FormGroup;
+        return this.pollingSourceForm.get(PollingSourceSteps.READ) as FormGroup;
     }
 
     public get mergeForm(): FormGroup {
-        return this.pollingSourceForm.get("merge") as FormGroup;
+        return this.pollingSourceForm.get(
+            PollingSourceSteps.MERGE,
+        ) as FormGroup;
     }
 
     public onCheckedPrepareStep(event: Event): void {
@@ -86,7 +86,6 @@ export class AddPollingSourceComponent extends BaseComponent {
         private createDatasetService: AppDatasetCreateService,
         private yamlEventService: TemplatesYamlEventsService,
         private activatedRoute: ActivatedRoute,
-        private cdr: ChangeDetectorRef,
         private modalService: NgbModal,
     ) {
         super();

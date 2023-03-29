@@ -47,6 +47,7 @@ import { MergeStepComponent } from "./additional-components/metadata-component/c
 import { StepperNavigationComponent } from "./additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
 import { PrepareStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/prepare-step/prepare-step.component";
 import { PreprocessStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/preprocess-step/preprocess-step.component";
+import { PollingSourceFormComponentsModule } from "./additional-components/metadata-component/components/form-components/polling-source-form-components.module";
 
 @NgModule({
     imports: [
@@ -83,6 +84,7 @@ import { PreprocessStepComponent } from "./additional-components/metadata-compon
         SharedModule,
         ReactiveFormsModule,
         MatIconModule,
+        PollingSourceFormComponentsModule,
     ],
     exports: [
         DatasetViewHeaderComponent,

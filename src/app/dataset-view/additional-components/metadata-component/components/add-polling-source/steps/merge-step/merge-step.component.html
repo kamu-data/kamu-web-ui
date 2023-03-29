@@ -1,121 +1,47 @@
 <ng-container formGroupName="merge" *ngIf="mergeForm">
     <div>
         <h2 class="text-center">Merge</h2>
-        <div class="radio-group mt-4">
-            <div
-                class="input-container"
-                *ngFor="let step of mergeStepRadioData"
-            >
-                <input
-                    formControlName="kind"
-                    class="radio-input"
-                    type="radio"
-                    [id]="step.id"
-                    [value]="step.value"
-                />
-                <div class="radio-item">
-                    <mat-icon class="mat-icon">{{ step.icon }}</mat-icon>
-                    <label [for]="step.id">{{ step.label }}</label>
-                </div>
-            </div>
-        </div>
+        <app-select-kind-field
+            [form]="mergeForm"
+            [data]="mergeStepRadioData"
+        ></app-select-kind-field>
         <div class="mt-4 row">
-            <div *ngIf="mergeForm?.get('kind')?.value === 'append'"></div>
-            <div *ngIf="mergeForm?.get('kind')?.value === 'ledger'">
-                <div class="row mt-4" formArrayName="primaryKey">
+            <div *ngIf="mergeForm.get('kind')?.value === 'append'"></div>
+            <div *ngIf="mergeForm.get('kind')?.value === 'ledger'">
+                <div>
                     <div
                         class="col-md-8 offset-md-2"
                         *ngIf="mergeForm?.get('primaryKey')"
                     >
-                        <div
-                            *ngFor="let key of primaryKey.controls; index as i"
-                        >
-                            <div class="row mt-4">
-                                <div class="col-md-10">
-                                    <input
-                                        class="form-control"
-                                        placeholder="Enter primary key ..."
-                                        [formControlName]="i"
-                                    />
-                                </div>
-                                <div
-                                    class="col-md-2 d-flex justify-content-center align-items-center"
-                                >
-                                    <button
-                                        class="btn btn-light"
-                                        (click)="removePrimaryKey(i)"
-                                    >
-                                        x
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <button
-                                type="button"
-                                class="add-primary-key-button mt-2"
-                                (click)="addPrimaryKey()"
-                            >
-                                <span>+ Add primary key</span>
-                            </button>
-                        </div>
+                        <app-array-keys-field
+                            [form]="mergeForm"
+                        ></app-array-keys-field>
                     </div>
                 </div>
             </div>
             <div *ngIf="mergeForm?.get('kind')?.value === 'snapshot'">
-                <div class="row mt-4" formArrayName="primaryKey">
+                <div class="row mt-4">
                     <div
                         class="col-md-8 offset-md-2"
-                        *ngIf="mergeForm?.get('primaryKey')"
+                        *ngIf="mergeForm.get('primaryKey')"
                     >
-                        <div
-                            *ngFor="let key of primaryKey.controls; index as i"
-                        >
-                            <div class="row mt-4">
-                                <div class="col-md-10">
-                                    <input
-                                        class="form-control"
-                                        placeholder="Enter primary key ..."
-                                        [formControlName]="i"
-                                    />
-                                </div>
-                                <div
-                                    class="col-md-2 d-flex justify-content-center align-items-center"
-                                >
-                                    <button
-                                        class="btn btn-light"
-                                        (click)="removePrimaryKey(i)"
-                                    >
-                                        x
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <button
-                                type="button"
-                                class="add-primary-key-button mt-2"
-                                (click)="addPrimaryKey()"
-                            >
-                                <span>+ Add primary key</span>
-                            </button>
-                        </div>
+                        <app-array-keys-field
+                            [form]="mergeForm"
+                        ></app-array-keys-field>
                     </div>
                 </div>
                 <div
                     class="col-md-8 offset-md-2 mt-4"
                     *ngIf="mergeForm.get('observationColumn')"
                 >
-                    <label for="read-observationColumn" class="form-label"
-                        >Observation column
-                    </label>
-                    <input
-                        class="form-control"
-                        id="read-observationColumn"
+                    <app-input-field
+                        [form]="mergeForm"
+                        controlName="observationColumn"
+                        label="Observation column"
                         placeholder="Please enter column name..."
-                        formControlName="observationColumn"
-                        data-test-id="read-observationColumn"
-                    />
+                        dataTestId="merge-observationColumn"
+                        id="observationColumn"
+                    ></app-input-field>
                 </div>
             </div>
         </div>

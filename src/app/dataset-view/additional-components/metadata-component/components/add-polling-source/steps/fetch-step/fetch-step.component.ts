@@ -1,7 +1,7 @@
 import { FetchStep } from "./../../../../../../../api/kamu.graphql.interface";
 /* eslint-disable @typescript-eslint/unbound-method */
 import { BaseComponent } from "src/app/common/base.component";
-import { FormArray, FormBuilder, Validators } from "@angular/forms";
+import { FormBuilder, Validators } from "@angular/forms";
 import { ControlContainer, FormGroupDirective } from "@angular/forms";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
@@ -34,19 +34,8 @@ export class FetchStepComponent extends BaseComponent implements OnInit {
         this.chooseFetchStep();
     }
 
-    public get headersForm(): FormGroup {
-        return this.fb.group({
-            name: [null],
-            value: [null],
-        });
-    }
-
     public get fetchForm(): FormGroup {
         return this.parentForm.get("fetch") as FormGroup;
-    }
-
-    public get headers(): FormArray {
-        return this.fetchForm.get("headers") as FormArray;
     }
 
     public chooseFetchStep(): void {
@@ -75,14 +64,6 @@ export class FetchStepComponent extends BaseComponent implements OnInit {
                 }
             });
         if (subscription) this.trackSubscription(subscription);
-    }
-
-    public addHeader(): void {
-        this.headers.push(this.headersForm);
-    }
-
-    public removeHeader(index: number): void {
-        this.headers.removeAt(index);
     }
 
     private initUrlFetchStep(): void {

@@ -8,7 +8,6 @@ import {
 } from "@angular/core";
 import {
     ControlContainer,
-    FormArray,
     FormBuilder,
     FormGroup,
     FormGroupDirective,
@@ -43,10 +42,6 @@ export class MergeStepComponent extends BaseComponent implements OnInit {
 
     public get mergeForm(): FormGroup {
         return this.parentForm.get("merge") as FormGroup;
-    }
-
-    public get primaryKey(): FormArray {
-        return this.mergeForm.get("primaryKey") as FormArray;
     }
 
     ngOnInit(): void {
@@ -87,14 +82,6 @@ export class MergeStepComponent extends BaseComponent implements OnInit {
             });
 
         if (subscription) this.trackSubscription(subscription);
-    }
-
-    public addPrimaryKey(): void {
-        this.primaryKey.push(this.fb.control("", [Validators.required]));
-    }
-
-    public removePrimaryKey(index: number): void {
-        this.primaryKey.removeAt(index);
     }
 
     private initLedgerStrategy(): void {

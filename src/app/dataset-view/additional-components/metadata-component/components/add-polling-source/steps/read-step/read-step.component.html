@@ -1,80 +1,62 @@
 <ng-container formGroupName="read" *ngIf="readForm">
     <div>
         <h2 class="text-center">Read</h2>
-        <div class="radio-group mt-4">
-            <div class="input-container" *ngFor="let step of readStepRadioData">
-                <input
-                    formControlName="kind"
-                    class="radio-input"
-                    type="radio"
-                    [id]="step.id"
-                    [value]="step.value"
-                />
-                <div class="radio-item">
-                    <mat-icon class="mat-icon">{{ step.icon }}</mat-icon>
-                    <label [for]="step.id">{{ step.label }}</label>
-                </div>
-            </div>
-        </div>
-
+        <app-select-kind-field
+            [form]="readForm"
+            [data]="readStepRadioData"
+        ></app-select-kind-field>
         <div class="mt-4 row">
             <div *ngIf="readForm?.get('kind')?.value === 'csv'">
                 <div
                     class="col-md-8 offset-md-2"
                     *ngIf="readForm?.get('separator')"
                 >
-                    <label for="read-separator" class="form-label"
-                        >Separator
-                    </label>
-                    <input
-                        class="form-control"
-                        id="read-separator"
-                        placeholder="Please enter separator..."
-                        formControlName="separator"
-                        data-test-id="read-separator"
-                    />
+                    <app-input-field
+                        [form]="readForm"
+                        controlName="separator"
+                        label="Separator"
+                        placeholder="Please enter separator ..."
+                        dataTestId="read-separator"
+                        id="separator"
+                    ></app-input-field>
                 </div>
                 <div
                     class="col-md-8 offset-md-2 mt-4"
                     *ngIf="readForm?.get('encoding')"
                 >
-                    <label for="read-encoding" class="form-label"
-                        >Encoding
-                    </label>
-                    <input
-                        class="form-control"
-                        id="read-encoding"
-                        placeholder="Please enter encoding..."
-                        formControlName="encoding"
-                        data-test-id="read-encoding"
-                    />
+                    <app-input-field
+                        [form]="readForm"
+                        controlName="encoding"
+                        label="Encoding"
+                        placeholder="Please enter encoding ..."
+                        dataTestId="read-separator"
+                        id="separator"
+                    ></app-input-field>
                 </div>
                 <div
                     class="col-md-8 offset-md-2 mt-4"
                     *ngIf="readForm?.get('quote')"
                 >
-                    <label for="read-quote" class="form-label">Quote </label>
-                    <input
-                        class="form-control"
-                        id="read-quote"
-                        placeholder="Please enter quote..."
-                        formControlName="quote"
-                        data-test-id="read-quote"
-                    />
+                    <app-input-field
+                        [form]="readForm"
+                        controlName="quote"
+                        label="Quote"
+                        placeholder="Please enter quote ..."
+                        dataTestId="read-quote"
+                        id="quote"
+                    ></app-input-field>
                 </div>
                 <div
                     class="col-md-8 offset-md-2 mt-4"
                     *ngIf="readForm?.get('header')"
                 >
-                    <div class="form-check">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            formControlName="header"
-                            data-test-id="read-header"
-                        />
-                        <label class="form-check-label"> Header </label>
-                    </div>
+                    <app-checkbox-field
+                        [form]="readForm"
+                        label="Header"
+                        dataTestId="read-header"
+                        controlName="header"
+                    >
+                    </app-checkbox-field>
                 </div>
             </div>
             <div *ngIf="readForm?.get('kind')?.value === 'jsonLines'">
@@ -82,16 +64,14 @@
                     class="col-md-8 offset-md-2"
                     *ngIf="readForm?.get('dateFormat')"
                 >
-                    <label for="read-date-format" class="form-label"
-                        >Date format
-                    </label>
-                    <input
-                        class="form-control"
-                        id="read-date-format"
-                        placeholder="Please enter date..."
-                        formControlName="dateFormat"
-                        data-test-id="read-date-format"
-                    />
+                    <app-input-field
+                        [form]="readForm"
+                        controlName="dateFormat"
+                        label="Date format"
+                        placeholder="Please enter date ..."
+                        dataTestId="read-date-format"
+                        id="date-format"
+                    ></app-input-field>
                 </div>
             </div>
         </div>

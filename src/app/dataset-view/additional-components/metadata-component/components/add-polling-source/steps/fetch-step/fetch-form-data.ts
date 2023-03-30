@@ -1,7 +1,7 @@
 import AppValues from "src/app/common/app.values";
 import { JsonFormData } from "../../add-polling-source-form.types";
 
-export const fetchFormData: JsonFormData = {
+export const FETCH_FORM_DATA: JsonFormData = {
     url: {
         controls: [
             {

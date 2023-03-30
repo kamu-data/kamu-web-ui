@@ -9,6 +9,14 @@ import {
 } from "@angular/forms";
 import { readStepRadioControls } from "../../form-control.source";
 import { ReadStep } from "src/app/api/kamu.graphql.interface";
+import { SetPollingSourceSection } from "src/app/shared/shared.types";
+import {
+    ControlType,
+    JsonFormControls,
+    JsonFormData,
+} from "../../add-polling-source-form.types";
+import { READ_FORM_DATA } from "./read-form-data";
+import { getValidators } from "src/app/common/data.helpers";
 
 @Component({
     selector: "app-read-step",
@@ -22,6 +30,8 @@ import { ReadStep } from "src/app/api/kamu.graphql.interface";
 export class ReadStepComponent extends BaseComponent implements OnInit {
     public parentForm: FormGroup;
     public readStepRadioData = readStepRadioControls;
+    public readFormData: JsonFormData = READ_FORM_DATA;
+    public controlType: typeof ControlType = ControlType;
 
     constructor(
         private rootFormGroupDirective: FormGroupDirective,
@@ -32,15 +42,15 @@ export class ReadStepComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.parentForm = this.rootFormGroupDirective.form;
-        this.initCsvReadStep();
+        this.initForm("csv");
         this.chooseReadStep();
     }
 
     public get readForm(): FormGroup {
-        return this.parentForm.get("read") as FormGroup;
+        return this.parentForm.get(SetPollingSourceSection.READ) as FormGroup;
     }
 
-    private chooseReadStep(): void {
+    public chooseReadStep(): void {
         const subscription = this.readForm
             .get("kind")
             ?.valueChanges.subscribe((kind: string) => {
@@ -49,38 +59,75 @@ export class ReadStepComponent extends BaseComponent implements OnInit {
                     .forEach((item: string) =>
                         this.readForm.removeControl(item),
                     );
-                switch (kind) {
-                    case "csv": {
-                        this.initCsvReadStep();
-                        break;
-                    }
-                    case "jsonLines": {
-                        this.initJsonLinesReadStep();
-                        break;
-                    }
-                    case "geoJson": {
-                        break;
-                    }
-                    case "esriShapefile": {
-                        break;
-                    }
-                    case "parquet": {
-                        break;
-                    }
-                }
+                this.initForm(kind);
             });
-
         if (subscription) this.trackSubscription(subscription);
     }
 
-    private initCsvReadStep(): void {
-        this.readForm.addControl("separator", this.fb.control(""));
-        this.readForm.addControl("encoding", this.fb.control(""));
-        this.readForm.addControl("quote", this.fb.control(""));
-        this.readForm.addControl("header", this.fb.control(false));
-    }
+    private initForm(kind: string): void {
+        this.readFormData[kind].controls.forEach((item: JsonFormControls) => {
+            if (item.type === this.controlType.ARRAY_KEY_VALUE) {
+                this.readForm.addControl(item.name, this.fb.array([]));
+            } else {
+                this.readForm.addControl(
+                    item.name,
+                    this.fb.control(item.value, getValidators(item.validators)),
+                );
+            }
+        });
 
-    private initJsonLinesReadStep(): void {
-        this.readForm.addControl("dateFormat", this.fb.control(""));
+        // ngOnInit(): void {
+        //     this.parentForm = this.rootFormGroupDirective.form;
+        //     this.initCsvReadStep();
+        //     this.chooseReadStep();
+        // }
+
+        // public get readForm(): FormGroup {
+        //     return this.parentForm.get("read") as FormGroup;
+        // }
+
+        // private chooseReadStep(): void {
+        //     const subscription = this.readForm
+        //         .get("kind")
+        //         ?.valueChanges.subscribe((kind: string) => {
+        //             Object.keys(this.readForm.value as ReadStep)
+        //                 .filter((key: string) => key !== "kind")
+        //                 .forEach((item: string) =>
+        //                     this.readForm.removeControl(item),
+        //                 );
+        //             switch (kind) {
+        //                 case "csv": {
+        //                     this.initCsvReadStep();
+        //                     break;
+        //                 }
+        //                 case "jsonLines": {
+        //                     this.initJsonLinesReadStep();
+        //                     break;
+        //                 }
+        //                 case "geoJson": {
+        //                     break;
+        //                 }
+        //                 case "esriShapefile": {
+        //                     break;
+        //                 }
+        //                 case "parquet": {
+        //                     break;
+        //                 }
+        //             }
+        //         });
+
+        //     if (subscription) this.trackSubscription(subscription);
+        // }
+
+        // private initCsvReadStep(): void {
+        //     this.readForm.addControl("separator", this.fb.control(""));
+        //     this.readForm.addControl("encoding", this.fb.control(""));
+        //     this.readForm.addControl("quote", this.fb.control(""));
+        //     this.readForm.addControl("header", this.fb.control(false));
+        // }
+
+        // private initJsonLinesReadStep(): void {
+        //     this.readForm.addControl("dateFormat", this.fb.control(""));
+        // }
     }
 }

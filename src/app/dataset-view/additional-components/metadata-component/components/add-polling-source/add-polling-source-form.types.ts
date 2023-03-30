@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface JsonFormValidators {
     required?: boolean;
     minLength?: number;
@@ -12,8 +13,8 @@ interface JsonFormControlOptions {
 
 export interface JsonFormControls {
     name: string;
-    label: string | null;
-    value: string | null;
+    label: string;
+    value: any;
     type: string;
     placeholder?: string;
     options?: JsonFormControlOptions;
@@ -27,3 +28,9 @@ export type JsonFormData = Record<
         controls: JsonFormControls[];
     }
 >;
+
+export enum ControlType {
+    TEXT = "text",
+    ARRAY_KEY_VALUE = "array-key-value",
+    CHECKBOX = "checkbox",
+}

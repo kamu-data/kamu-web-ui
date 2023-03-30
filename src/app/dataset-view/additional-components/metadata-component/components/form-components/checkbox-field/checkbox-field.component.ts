@@ -12,4 +12,5 @@ export class CheckboxFieldComponent {
     @Input() controlName: string;
     @Input() label: string;
     @Input() dataTestId?: string;
+    @Input() checked: string;
 }

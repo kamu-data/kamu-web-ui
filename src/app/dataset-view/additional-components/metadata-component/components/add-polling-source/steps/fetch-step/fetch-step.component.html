@@ -12,7 +12,7 @@
             "
         >
             <div class="col-md-8 offset-md-2 mt-4">
-                <ng-container *ngIf="control.type === 'text'">
+                <ng-container *ngIf="control.type === controlType.TEXT">
                     <app-input-field
                         [form]="fetchForm"
                         [controlName]="control.name"
@@ -22,7 +22,9 @@
                         [placeholder]="control.placeholder"
                     ></app-input-field>
                 </ng-container>
-                <ng-container *ngIf="control.type === 'array-key-value'">
+                <ng-container
+                    *ngIf="control.type === controlType.ARRAY_KEY_VALUE"
+                >
                     <app-key-value-field
                         [form]="fetchForm"
                         [formArrayName]="control.options?.formArrayName!"

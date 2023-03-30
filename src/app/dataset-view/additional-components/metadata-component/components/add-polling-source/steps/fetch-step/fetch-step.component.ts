@@ -1,9 +1,10 @@
-import { SetPollingSourceSection } from "./../../../../../../../dataset-block/metadata-block/components/event-details/dynamic-events/builders/set-polling-source-section.builder";
+import { ControlType } from "./../../add-polling-source-form.types";
+
 import { RadioControlType } from "./../../form-control.source";
 import { FetchStep } from "./../../../../../../../api/kamu.graphql.interface";
 /* eslint-disable @typescript-eslint/unbound-method */
 import { BaseComponent } from "src/app/common/base.component";
-import { FormBuilder, ValidatorFn, Validators } from "@angular/forms";
+import { FormBuilder } from "@angular/forms";
 import { ControlContainer, FormGroupDirective } from "@angular/forms";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
@@ -11,9 +12,10 @@ import { fetchStepRadioControls } from "../../form-control.source";
 import {
     JsonFormControls,
     JsonFormData,
-    JsonFormValidators,
 } from "../../add-polling-source-form.types";
-import { fetchFormData } from "./fetch-form-data";
+import { FETCH_FORM_DATA } from "./fetch-form-data";
+import { SetPollingSourceSection } from "src/app/shared/shared.types";
+import { getValidators } from "src/app/common/data.helpers";
 
 @Component({
     selector: "app-fetch-step",
@@ -27,7 +29,8 @@ import { fetchFormData } from "./fetch-form-data";
 export class FetchStepComponent extends BaseComponent implements OnInit {
     public parentForm: FormGroup;
     public fetchStepRadioData: RadioControlType[] = fetchStepRadioControls;
-    public fetchFormData: JsonFormData = fetchFormData;
+    public fetchFormData: JsonFormData = FETCH_FORM_DATA;
+    public controlType: typeof ControlType = ControlType;
 
     constructor(
         private rootFormGroupDirective: FormGroupDirective,
@@ -62,40 +65,14 @@ export class FetchStepComponent extends BaseComponent implements OnInit {
 
     private initForm(kind: string): void {
         this.fetchFormData[kind].controls.forEach((item: JsonFormControls) => {
-            if (item.type === "array-key-value") {
+            if (item.type === this.controlType.ARRAY_KEY_VALUE) {
                 this.fetchForm.addControl(item.name, this.fb.array([]));
             } else {
                 this.fetchForm.addControl(
                     item.name,
-                    this.fb.control(
-                        item.value,
-                        this.getValidators(item.validators),
-                    ),
+                    this.fb.control(item.value, getValidators(item.validators)),
                 );
             }
         });
-    }
-
-    private getValidators(validators: JsonFormValidators): ValidatorFn[] {
-        const validatorsToAdd: ValidatorFn[] = [];
-        Object.entries(validators).forEach(([key, value]) => {
-            switch (key) {
-                case "required":
-                    if (value) {
-                        validatorsToAdd.push(Validators.required);
-                    }
-                    break;
-                case "pattern":
-                    if (value) {
-                        validatorsToAdd.push(
-                            Validators.pattern(value as RegExp),
-                        );
-                    }
-                    break;
-                default:
-                    break;
-            }
-        });
-        return validatorsToAdd;
     }
 }

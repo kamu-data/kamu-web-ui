@@ -16,6 +16,7 @@ import {
 import { mergeStepRadioControls } from "../../form-control.source";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { MergeStrategy } from "src/app/api/kamu.graphql.interface";
+import { SetPollingSourceSection } from "src/app/shared/shared.types";
 
 @Component({
     selector: "app-merge-step",
@@ -41,7 +42,7 @@ export class MergeStepComponent extends BaseComponent implements OnInit {
     }
 
     public get mergeForm(): FormGroup {
-        return this.parentForm.get("merge") as FormGroup;
+        return this.parentForm.get(SetPollingSourceSection.MERGE) as FormGroup;
     }
 
     ngOnInit(): void {

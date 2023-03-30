@@ -10,8 +10,8 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 export class InputFieldComponent {
     @Input() form: FormGroup;
     @Input() controlName: string;
-    @Input() label: string | null;
-    @Input() value: string | null;
+    @Input() label: string;
+    @Input() value: string;
     @Input() placeholder?: string;
     @Input() requiredField?: boolean;
     @Input() id?: string;

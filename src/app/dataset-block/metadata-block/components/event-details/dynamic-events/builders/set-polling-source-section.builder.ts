@@ -2,14 +2,7 @@ import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
 import { EventSectionBuilder } from "./event-section.builder";
 import { SET_POLLING_SOURCE_DESCRIPTORS } from "../../components/set-polling-source-event/set-polling-source-event.source";
 import { EventRow, EventSection } from "../dynamic-events.model";
-
-export enum SetPollingSourceSection {
-    READ = "read",
-    FETCH = "fetch",
-    MERGE = "merge",
-    PREPROCESS = "preprocess",
-    PREPARE = "prepare",
-}
+import { SetPollingSourceSection } from "src/app/shared/shared.types";
 
 export class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSource> {
     public buildEventSections(event: SetPollingSource): EventSection[] {

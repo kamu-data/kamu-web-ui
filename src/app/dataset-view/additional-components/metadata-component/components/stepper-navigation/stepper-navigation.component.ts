@@ -7,7 +7,7 @@ import {
     Input,
     Output,
 } from "@angular/core";
-import { SetPollingSourceSection } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/set-polling-source-section.builder";
+import { SetPollingSourceSection } from "src/app/shared/shared.types";
 
 @Component({
     selector: "app-stepper-navigation",

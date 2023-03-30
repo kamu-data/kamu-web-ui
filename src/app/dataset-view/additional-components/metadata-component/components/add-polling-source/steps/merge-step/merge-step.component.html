@@ -5,45 +5,24 @@
             [form]="mergeForm"
             [data]="mergeStepRadioData"
         ></app-select-kind-field>
-        <div class="mt-4 row">
-            <div *ngIf="mergeForm.get('kind')?.value === 'append'"></div>
-            <div *ngIf="mergeForm.get('kind')?.value === 'ledger'">
-                <div>
-                    <div
-                        class="col-md-8 offset-md-2"
-                        *ngIf="mergeForm.get('primaryKey')"
+        <div class="row">
+            <ng-container
+                *ngFor="
+                    let control of mergeFormData[mergeForm.get('kind')?.value]
+                        .controls
+                "
+            >
+                <div class="col-md-8 offset-md-2 mt-4">
+                    <ng-container
+                        *ngIf="control.type === controlType.ARRAY_KEY"
                     >
                         <app-array-keys-field
                             [form]="mergeForm"
+                            [controlName]="control.name"
                         ></app-array-keys-field>
-                    </div>
+                    </ng-container>
                 </div>
-            </div>
-            <div *ngIf="mergeForm?.get('kind')?.value === 'snapshot'">
-                <div class="row mt-4">
-                    <div
-                        class="col-md-8 offset-md-2"
-                        *ngIf="mergeForm.get('primaryKey')"
-                    >
-                        <app-array-keys-field
-                            [form]="mergeForm"
-                        ></app-array-keys-field>
-                    </div>
-                </div>
-                <div
-                    class="col-md-8 offset-md-2 mt-4"
-                    *ngIf="mergeForm.get('observationColumn')"
-                >
-                    <app-input-field
-                        [form]="mergeForm"
-                        controlName="observationColumn"
-                        label="Observation column"
-                        placeholder="Please enter column name..."
-                        dataTestId="merge-observationColumn"
-                        id="observationColumn"
-                    ></app-input-field>
-                </div>
-            </div>
+            </ng-container>
         </div>
         <div *ngIf="errorMessage" class="alert alert-danger mt-2" role="alert">
             <p class="text-danger fs-6">Error:<br />{{ errorMessage }}</p>

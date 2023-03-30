@@ -33,4 +33,5 @@ export enum ControlType {
     TEXT = "text",
     ARRAY_KEY_VALUE = "array-key-value",
     CHECKBOX = "checkbox",
+    ARRAY_KEY = "array-key",
 }

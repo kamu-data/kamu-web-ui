@@ -10,11 +10,12 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 })
 export class ArrayKeysFieldComponent {
     @Input() form: FormGroup;
+    @Input() controlName: string;
 
     constructor(private fb: FormBuilder) {}
 
     public get primaryKey(): FormArray {
-        return this.form.get("primaryKey") as FormArray;
+        return this.form.get(this.controlName) as FormArray;
     }
 
     public addPrimaryKey(): void {

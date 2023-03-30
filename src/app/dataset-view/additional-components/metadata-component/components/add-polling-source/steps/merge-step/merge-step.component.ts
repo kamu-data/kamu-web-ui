@@ -17,6 +17,13 @@ import { mergeStepRadioControls } from "../../form-control.source";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { MergeStrategy } from "src/app/api/kamu.graphql.interface";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
+import { getValidators } from "src/app/common/data.helpers";
+import {
+    JsonFormData,
+    JsonFormControls,
+    ControlType,
+} from "../../add-polling-source-form.types";
+import { MERGE_FORM_DATA } from "./merge-form-data";
 
 @Component({
     selector: "app-merge-step",
@@ -31,6 +38,8 @@ export class MergeStepComponent extends BaseComponent implements OnInit {
     public parentForm: FormGroup;
     public mergeStepRadioData = mergeStepRadioControls;
     public errorMessage = "";
+    public mergeFormData: JsonFormData = MERGE_FORM_DATA;
+    public controlType: typeof ControlType = ControlType;
 
     constructor(
         private rootFormGroupDirective: FormGroupDirective,
@@ -44,21 +53,13 @@ export class MergeStepComponent extends BaseComponent implements OnInit {
     public get mergeForm(): FormGroup {
         return this.parentForm.get(SetPollingSourceSection.MERGE) as FormGroup;
     }
-
     ngOnInit(): void {
         this.parentForm = this.rootFormGroupDirective.form;
+        this.initForm("append");
         this.chooseMergeStep();
-        this.trackSubscription(
-            this.createDatasetService.onErrorCommitEventChanges.subscribe(
-                (message: string) => {
-                    this.errorMessage = message;
-                    this.cdr.detectChanges();
-                },
-            ),
-        );
     }
 
-    private chooseMergeStep(): void {
+    public chooseMergeStep(): void {
         const subscription = this.mergeForm
             .get("kind")
             ?.valueChanges.subscribe((kind: string) => {
@@ -67,36 +68,21 @@ export class MergeStepComponent extends BaseComponent implements OnInit {
                     .forEach((item: string) =>
                         this.mergeForm.removeControl(item),
                     );
-                switch (kind) {
-                    case "append": {
-                        break;
-                    }
-                    case "ledger": {
-                        this.initLedgerStrategy();
-                        break;
-                    }
-                    case "snapshot": {
-                        this.initSnapshotStrategy();
-                        break;
-                    }
-                }
+                this.initForm(kind);
             });
-
         if (subscription) this.trackSubscription(subscription);
     }
 
-    private initLedgerStrategy(): void {
-        this.mergeForm.addControl(
-            "primaryKey",
-            this.fb.array([], [Validators.required]),
-        );
-    }
-
-    private initSnapshotStrategy(): void {
-        this.mergeForm.addControl(
-            "primaryKey",
-            this.fb.array([], [Validators.required]),
-        );
-        this.mergeForm.addControl("observationColumn", this.fb.control(""));
+    private initForm(kind: string): void {
+        this.mergeFormData[kind].controls.forEach((item: JsonFormControls) => {
+            if (item.type === this.controlType.ARRAY_KEY) {
+                this.mergeForm.addControl(item.name, this.fb.array([]));
+            } else {
+                this.mergeForm.addControl(
+                    item.name,
+                    this.fb.control(item.value, getValidators(item.validators)),
+                );
+            }
+        });
     }
 }

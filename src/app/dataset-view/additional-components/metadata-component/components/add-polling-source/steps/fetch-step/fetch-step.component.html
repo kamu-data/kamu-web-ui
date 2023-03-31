@@ -2,13 +2,14 @@
     <h2 class="text-center">Fetch</h2>
     <app-select-kind-field
         [form]="fetchForm"
-        [data]="fetchStepRadioData"
+        [data]="sectionStepRadioData"
     ></app-select-kind-field>
     <div class="row">
         <ng-container
             *ngFor="
-                let control of fetchFormData[fetchForm.get('kind')?.value]
-                    .controls
+                let control of sectionFormData[
+                    fetchForm.get(kindNameControl)?.value
+                ].controls
             "
         >
             <div class="col-md-8 offset-md-2 mt-4">

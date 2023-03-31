@@ -1,3 +1,10 @@
+import {
+    FetchKind,
+    ReadKind,
+    MergeKind,
+    PrepareKind,
+    PreprocessKind,
+} from "./add-polling-source-form.types";
 /* eslint-disable @typescript-eslint/unbound-method */
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { SetPollingSource } from "./../../../../../api/kamu.graphql.interface";
@@ -24,16 +31,21 @@ export class AddPollingSourceComponent extends BaseComponent {
     public steps: typeof SetPollingSourceSection = SetPollingSourceSection;
     public isAddPrepareStep = false;
     public isAddPreprocessStep = false;
+    private defaultFetchKind = FetchKind.URL;
+    private defaultReadKind = ReadKind.CSV;
+    private defaultMergeKind = MergeKind.APPEND;
+    private defaultPrepareKind = PrepareKind.PIPE;
+    private defaultPreprocessKind = PreprocessKind.SQL;
 
     public pollingSourceForm: FormGroup = this.fb.group({
         fetch: this.fb.group({
-            kind: ["url"],
+            kind: [this.defaultFetchKind],
         }),
         read: this.fb.group({
-            kind: ["csv"],
+            kind: [this.defaultReadKind],
         }),
         merge: this.fb.group({
-            kind: ["append"],
+            kind: [this.defaultMergeKind],
         }),
     });
 
@@ -61,7 +73,7 @@ export class AddPollingSourceComponent extends BaseComponent {
             this.pollingSourceForm.addControl(
                 SetPollingSourceSection.PREPARE,
                 this.fb.group({
-                    kind: "pipe",
+                    kind: this.defaultPrepareKind,
                 }),
             );
         } else {
@@ -77,7 +89,7 @@ export class AddPollingSourceComponent extends BaseComponent {
             this.pollingSourceForm.addControl(
                 SetPollingSourceSection.PREPROCESS,
                 this.fb.group({
-                    kind: "sql",
+                    kind: this.defaultPreprocessKind,
                 }),
             );
         } else {

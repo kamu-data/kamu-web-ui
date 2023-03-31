@@ -35,3 +35,32 @@ export enum ControlType {
     CHECKBOX = "checkbox",
     ARRAY_KEY = "array-key",
 }
+
+export enum FetchKind {
+    URL = "url",
+    FILES_GLOB = "filesGlob",
+    CONTAINER = "container",
+}
+
+export enum ReadKind {
+    CSV = "csv",
+    JSON_LINES = "jsonLines",
+    GEO_JSON = "geoJson",
+    ESRI_SHAPEFILE = "esriShapefile",
+    PARQUET = "parquet",
+}
+
+export enum MergeKind {
+    APPEND = "append",
+    LEDGER = "ledger",
+    SNAPSHOT = "snapshot",
+}
+
+export enum PrepareKind {
+    PIPE = "pipe",
+    DECOMPRESS = "decompress",
+}
+
+export enum PreprocessKind {
+    SQL = "sql",
+}

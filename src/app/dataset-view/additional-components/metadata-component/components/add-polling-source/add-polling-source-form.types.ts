@@ -20,6 +20,7 @@ export interface JsonFormControls {
     options?: JsonFormControlOptions;
     required?: boolean;
     validators: JsonFormValidators;
+    dataTestId?: string;
 }
 
 export type JsonFormData = Record<

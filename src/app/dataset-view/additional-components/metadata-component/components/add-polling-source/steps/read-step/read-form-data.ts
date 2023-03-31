@@ -33,6 +33,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: false,
                 type: "checkbox",
                 validators: {},
+                dataTestId: "header",
             },
         ],
     },

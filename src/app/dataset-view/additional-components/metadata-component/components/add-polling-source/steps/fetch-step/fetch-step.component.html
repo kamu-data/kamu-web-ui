@@ -9,7 +9,7 @@
             *ngFor="
                 let control of sectionFormData[
                     fetchForm.get(kindNameControl)?.value
-                ].controls
+                ]?.controls
             "
         >
             <div class="col-md-8 offset-md-2 mt-4">

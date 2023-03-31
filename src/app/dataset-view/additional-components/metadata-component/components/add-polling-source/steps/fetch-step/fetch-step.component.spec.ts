@@ -27,7 +27,6 @@ describe("FetchStepComponent", () => {
 
         fixture = TestBed.createComponent(FetchStepComponent);
         component = fixture.componentInstance;
-
         fixture.detectChanges();
     });
 

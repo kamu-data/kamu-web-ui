@@ -2,7 +2,7 @@
     <label class="form-label">{{ label }}</label>
     <ng-container
         [formArrayName]="controlName"
-        *ngFor="let item of items.controls; let i = index"
+        *ngFor="let item of items?.controls; let i = index"
     >
         <div class="row mb-2" [formGroupName]="i">
             <div class="col-md-5">

@@ -1,3 +1,4 @@
+import { READ_STEP_RADIO_CONTROLS } from "./../../form-control.source";
 /* eslint-disable @typescript-eslint/unbound-method */
 import { BaseComponent } from "src/app/common/base.component";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
@@ -7,7 +8,6 @@ import {
     FormGroup,
     FormGroupDirective,
 } from "@angular/forms";
-import { readStepRadioControls } from "../../form-control.source";
 import { ReadStep } from "src/app/api/kamu.graphql.interface";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import {
@@ -29,7 +29,7 @@ import { getValidators } from "src/app/common/data.helpers";
 })
 export class ReadStepComponent extends BaseComponent implements OnInit {
     public parentForm: FormGroup;
-    public readStepRadioData = readStepRadioControls;
+    public readStepRadioData = READ_STEP_RADIO_CONTROLS;
     public readFormData: JsonFormData = READ_FORM_DATA;
     public controlType: typeof ControlType = ControlType;
 
@@ -75,59 +75,5 @@ export class ReadStepComponent extends BaseComponent implements OnInit {
                 );
             }
         });
-
-        // ngOnInit(): void {
-        //     this.parentForm = this.rootFormGroupDirective.form;
-        //     this.initCsvReadStep();
-        //     this.chooseReadStep();
-        // }
-
-        // public get readForm(): FormGroup {
-        //     return this.parentForm.get("read") as FormGroup;
-        // }
-
-        // private chooseReadStep(): void {
-        //     const subscription = this.readForm
-        //         .get("kind")
-        //         ?.valueChanges.subscribe((kind: string) => {
-        //             Object.keys(this.readForm.value as ReadStep)
-        //                 .filter((key: string) => key !== "kind")
-        //                 .forEach((item: string) =>
-        //                     this.readForm.removeControl(item),
-        //                 );
-        //             switch (kind) {
-        //                 case "csv": {
-        //                     this.initCsvReadStep();
-        //                     break;
-        //                 }
-        //                 case "jsonLines": {
-        //                     this.initJsonLinesReadStep();
-        //                     break;
-        //                 }
-        //                 case "geoJson": {
-        //                     break;
-        //                 }
-        //                 case "esriShapefile": {
-        //                     break;
-        //                 }
-        //                 case "parquet": {
-        //                     break;
-        //                 }
-        //             }
-        //         });
-
-        //     if (subscription) this.trackSubscription(subscription);
-        // }
-
-        // private initCsvReadStep(): void {
-        //     this.readForm.addControl("separator", this.fb.control(""));
-        //     this.readForm.addControl("encoding", this.fb.control(""));
-        //     this.readForm.addControl("quote", this.fb.control(""));
-        //     this.readForm.addControl("header", this.fb.control(false));
-        // }
-
-        // private initJsonLinesReadStep(): void {
-        //     this.readForm.addControl("dateFormat", this.fb.control(""));
-        // }
     }
 }

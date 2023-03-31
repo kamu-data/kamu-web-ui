@@ -1,5 +1,6 @@
 import { FormGroup } from "@angular/forms";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { BaseField } from "../base-field";
 
 @Component({
     selector: "app-checkbox-field",
@@ -7,10 +8,6 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
     styleUrls: ["./checkbox-field.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CheckboxFieldComponent {
-    @Input() form: FormGroup;
-    @Input() controlName: string;
-    @Input() label: string;
-    @Input() dataTestId?: string;
+export class CheckboxFieldComponent extends BaseField {
     @Input() checked: string;
 }

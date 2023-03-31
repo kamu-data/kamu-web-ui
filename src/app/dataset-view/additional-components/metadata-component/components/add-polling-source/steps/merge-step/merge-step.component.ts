@@ -1,3 +1,4 @@
+import { MERGE_STEP_RADIO_CONTROLS } from "./../../form-control.source";
 /* eslint-disable @typescript-eslint/unbound-method */
 import { BaseComponent } from "src/app/common/base.component";
 import {
@@ -11,9 +12,7 @@ import {
     FormBuilder,
     FormGroup,
     FormGroupDirective,
-    Validators,
 } from "@angular/forms";
-import { mergeStepRadioControls } from "../../form-control.source";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { MergeStrategy } from "src/app/api/kamu.graphql.interface";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
@@ -36,7 +35,7 @@ import { MERGE_FORM_DATA } from "./merge-form-data";
 })
 export class MergeStepComponent extends BaseComponent implements OnInit {
     public parentForm: FormGroup;
-    public mergeStepRadioData = mergeStepRadioControls;
+    public mergeStepRadioData = MERGE_STEP_RADIO_CONTROLS;
     public errorMessage = "";
     public mergeFormData: JsonFormData = MERGE_FORM_DATA;
     public controlType: typeof ControlType = ControlType;
@@ -57,6 +56,14 @@ export class MergeStepComponent extends BaseComponent implements OnInit {
         this.parentForm = this.rootFormGroupDirective.form;
         this.initForm("append");
         this.chooseMergeStep();
+        this.trackSubscription(
+            this.createDatasetService.onErrorCommitEventChanges.subscribe(
+                (message: string) => {
+                    this.errorMessage = message;
+                    this.cdr.detectChanges();
+                },
+            ),
+        );
     }
 
     public chooseMergeStep(): void {

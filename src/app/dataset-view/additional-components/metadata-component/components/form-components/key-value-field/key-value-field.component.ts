@@ -1,5 +1,6 @@
 import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { BaseField } from "../base-field";
 
 @Component({
     selector: "app-key-value-field",
@@ -7,16 +8,15 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
     styleUrls: ["./key-value-field.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KeyValueFieldComponent {
-    @Input() public form: FormGroup;
-    @Input() public formArrayName: string;
-    @Input() public label: string;
+export class KeyValueFieldComponent extends BaseField {
     @Input() public buttonText: string;
 
-    constructor(private fb: FormBuilder) {}
+    constructor(private fb: FormBuilder) {
+        super();
+    }
 
     public get items(): FormArray {
-        return this.form.get(this.formArrayName) as FormArray;
+        return this.form.get(this.controlName) as FormArray;
     }
 
     public get keyValueForm(): FormGroup {

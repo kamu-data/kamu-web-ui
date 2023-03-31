@@ -1,6 +1,9 @@
 import { ControlType } from "./../../add-polling-source-form.types";
 
-import { RadioControlType } from "./../../form-control.source";
+import {
+    FETCH_STEP_RADIO_CONTROLS,
+    RadioControlType,
+} from "./../../form-control.source";
 import { FetchStep } from "./../../../../../../../api/kamu.graphql.interface";
 /* eslint-disable @typescript-eslint/unbound-method */
 import { BaseComponent } from "src/app/common/base.component";
@@ -8,7 +11,6 @@ import { FormBuilder } from "@angular/forms";
 import { ControlContainer, FormGroupDirective } from "@angular/forms";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { fetchStepRadioControls } from "../../form-control.source";
 import {
     JsonFormControls,
     JsonFormData,
@@ -28,7 +30,7 @@ import { getValidators } from "src/app/common/data.helpers";
 })
 export class FetchStepComponent extends BaseComponent implements OnInit {
     public parentForm: FormGroup;
-    public fetchStepRadioData: RadioControlType[] = fetchStepRadioControls;
+    public fetchStepRadioData: RadioControlType[] = FETCH_STEP_RADIO_CONTROLS;
     public fetchFormData: JsonFormData = FETCH_FORM_DATA;
     public controlType: typeof ControlType = ControlType;
 

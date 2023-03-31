@@ -1,11 +1,10 @@
 <div [formGroup]="form">
-    <label [for]="id" class="form-label"
+    <label class="form-label"
         >{{ label }}
         <span *ngIf="requiredField" class="text-danger">*</span></label
     >
     <input
         class="form-control"
-        [id]="id"
         [placeholder]="placeholder"
         [formControlName]="controlName"
         [attr.data-test-id]="dataTestId"

@@ -1,5 +1,6 @@
 import { FormGroup } from "@angular/forms";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { BaseField } from "../base-field";
 
 @Component({
     selector: "app-input-field",
@@ -7,13 +8,8 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
     styleUrls: ["./input-field.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputFieldComponent {
-    @Input() form: FormGroup;
-    @Input() controlName: string;
-    @Input() label: string;
-    @Input() value: string;
-    @Input() placeholder?: string;
-    @Input() requiredField?: boolean;
-    @Input() id?: string;
-    @Input() dataTestId?: string;
+export class InputFieldComponent extends BaseField {
+    @Input() public value: string;
+    @Input() public placeholder?: string;
+    @Input() public requiredField?: boolean;
 }

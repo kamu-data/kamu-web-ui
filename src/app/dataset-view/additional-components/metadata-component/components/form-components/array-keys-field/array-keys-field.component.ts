@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { BaseField } from "../base-field";
 
 @Component({
     selector: "app-array-keys-field",
@@ -8,21 +9,22 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
     styleUrls: ["./array-keys-field.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ArrayKeysFieldComponent {
-    @Input() form: FormGroup;
-    @Input() controlName: string;
+export class ArrayKeysFieldComponent extends BaseField {
+    @Input() public buttonText: string;
 
-    constructor(private fb: FormBuilder) {}
+    constructor(private fb: FormBuilder) {
+        super();
+    }
 
-    public get primaryKey(): FormArray {
+    public get items(): FormArray {
         return this.form.get(this.controlName) as FormArray;
     }
 
     public addPrimaryKey(): void {
-        this.primaryKey.push(this.fb.control("", [Validators.required]));
+        this.items.push(this.fb.control("", [Validators.required]));
     }
 
     public removePrimaryKey(index: number): void {
-        this.primaryKey.removeAt(index);
+        this.items.removeAt(index);
     }
 }

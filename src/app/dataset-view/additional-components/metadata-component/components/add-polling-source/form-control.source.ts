@@ -4,7 +4,7 @@ export interface RadioControlType {
     icon: string;
     label: string;
 }
-export const fetchStepRadioControls: RadioControlType[] = [
+export const FETCH_STEP_RADIO_CONTROLS: RadioControlType[] = [
     {
         id: "from-url",
         value: "url",
@@ -25,7 +25,7 @@ export const fetchStepRadioControls: RadioControlType[] = [
     },
 ];
 
-export const readStepRadioControls: RadioControlType[] = [
+export const READ_STEP_RADIO_CONTROLS: RadioControlType[] = [
     {
         id: "csv",
         value: "csv",
@@ -58,7 +58,7 @@ export const readStepRadioControls: RadioControlType[] = [
     },
 ];
 
-export const mergeStepRadioControls: RadioControlType[] = [
+export const MERGE_STEP_RADIO_CONTROLS: RadioControlType[] = [
     {
         id: "append",
         value: "append",

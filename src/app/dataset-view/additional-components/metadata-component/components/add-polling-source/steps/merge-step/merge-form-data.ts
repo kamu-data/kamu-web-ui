@@ -8,9 +8,13 @@ export const MERGE_FORM_DATA: JsonFormData = {
         controls: [
             {
                 name: "primaryKey",
-                label: "Primary key",
+                label: "Primary keys",
                 value: "",
                 type: "array-key",
+                options: {
+                    formArrayName: "primaryKey",
+                    buttonText: "+ Add primary key",
+                },
                 validators: {},
             },
         ],
@@ -19,9 +23,13 @@ export const MERGE_FORM_DATA: JsonFormData = {
         controls: [
             {
                 name: "primaryKey",
-                label: "Primary key",
+                label: "Primary keys",
                 value: "",
                 type: "array-key",
+                options: {
+                    formArrayName: "primaryKey",
+                    buttonText: "+ Add primary key",
+                },
                 validators: {},
             },
         ],

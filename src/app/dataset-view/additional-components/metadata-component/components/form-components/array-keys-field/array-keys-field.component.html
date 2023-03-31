@@ -1,7 +1,8 @@
 <ng-container [formGroup]="form">
-    <div formArrayName="primaryKey">
-        <div *ngFor="let key of primaryKey.controls; index as i">
-            <div class="row mt-4">
+    <label class="form-label">{{ label }}</label>
+    <div [formArrayName]="controlName">
+        <div *ngFor="let key of items.controls; index as i">
+            <div class="row mt-2">
                 <div class="col-md-10">
                     <input
                         class="form-control"
@@ -24,7 +25,7 @@
                 class="add-primary-key-button mt-2"
                 (click)="addPrimaryKey()"
             >
-                <span>+ Add primary key</span>
+                <span>{{ buttonText }}</span>
             </button>
         </div>
     </div>

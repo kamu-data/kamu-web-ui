@@ -37,7 +37,13 @@
         <div class="border border-1 mt-4 px-2 py-4 rounded-3">
             <form [formGroup]="pollingSourceForm">
                 <ng-container *ngIf="currentStep === steps.FETCH">
-                    <app-fetch-step></app-fetch-step>
+                    <app-base-step
+                        [sectionStepRadioData]="fetchStepRadioData"
+                        [sectionFormData]="fetchFormData"
+                        [defaultKind]="fetchDefaultKind"
+                        [groupName]="steps.FETCH"
+                        [title]="'Fetch'"
+                    ></app-base-step>
                     <app-stepper-navigation
                         [prevStep]="null"
                         [nextStep]="
@@ -58,7 +64,13 @@
                 </ng-container>
 
                 <ng-container *ngIf="currentStep === steps.READ">
-                    <app-read-step></app-read-step>
+                    <app-base-step
+                        [sectionStepRadioData]="readStepRadioData"
+                        [sectionFormData]="readFormData"
+                        [defaultKind]="readDefaultKind"
+                        [groupName]="steps.READ"
+                        [title]="'Read'"
+                    ></app-base-step>
                     <app-stepper-navigation
                         [prevStep]="
                             isAddPrepareStep ? steps.PREPARE : steps.FETCH
@@ -80,7 +92,23 @@
                     ></app-stepper-navigation>
                 </ng-container>
                 <ng-container *ngIf="currentStep === steps.MERGE">
-                    <app-merge-step></app-merge-step>
+                    <app-base-step
+                        [sectionStepRadioData]="mergeStepRadioData"
+                        [sectionFormData]="mergeFormData"
+                        [defaultKind]="mergeDefaultKind"
+                        [groupName]="steps.MERGE"
+                        [title]="'Merge'"
+                    >
+                        <div
+                            *ngIf="errorMessage"
+                            class="alert alert-danger mt-2"
+                            role="alert"
+                        >
+                            <p class="text-danger fs-6">
+                                Error:<br />{{ errorMessage }}
+                            </p>
+                        </div></app-base-step
+                    >
                     <app-stepper-navigation
                         [prevStep]="steps.READ"
                         [nextStep]="null"

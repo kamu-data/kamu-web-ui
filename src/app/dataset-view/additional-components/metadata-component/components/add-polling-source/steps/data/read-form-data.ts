@@ -41,7 +41,7 @@ export const READ_FORM_DATA: JsonFormData = {
         controls: [
             {
                 name: "dateFormat",
-                label: "Date formatr",
+                label: "Date format",
                 value: "",
                 type: "text",
                 placeholder: "Enter date",

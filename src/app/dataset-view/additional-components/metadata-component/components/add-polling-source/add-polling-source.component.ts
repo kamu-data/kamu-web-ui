@@ -9,7 +9,12 @@ import {
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { SetPollingSource } from "./../../../../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnInit,
+} from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
@@ -19,6 +24,14 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
+import {
+    FETCH_STEP_RADIO_CONTROLS,
+    MERGE_STEP_RADIO_CONTROLS,
+    READ_STEP_RADIO_CONTROLS,
+} from "./form-control.source";
+import { FETCH_FORM_DATA } from "./steps/data/fetch-form-data";
+import { READ_FORM_DATA } from "./steps/data/read-form-data";
+import { MERGE_FORM_DATA } from "./steps/data/merge-form-data";
 
 @Component({
     selector: "app-add-polling-source",
@@ -26,26 +39,37 @@ import { SetPollingSourceSection } from "src/app/shared/shared.types";
     styleUrls: ["./add-polling-source.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddPollingSourceComponent extends BaseComponent {
+export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     public currentStep: SetPollingSourceSection = SetPollingSourceSection.FETCH;
     public steps: typeof SetPollingSourceSection = SetPollingSourceSection;
     public isAddPrepareStep = false;
     public isAddPreprocessStep = false;
-    private defaultFetchKind = FetchKind.URL;
-    private defaultReadKind = ReadKind.CSV;
-    private defaultMergeKind = MergeKind.APPEND;
+    public errorMessage = "";
+    // --------------------------------
     private defaultPrepareKind = PrepareKind.PIPE;
     private defaultPreprocessKind = PreprocessKind.SQL;
+    // ---------------------------------
+    public fetchStepRadioData = FETCH_STEP_RADIO_CONTROLS;
+    public fetchFormData = FETCH_FORM_DATA;
+    public fetchDefaultKind = FetchKind.URL;
+    // ---------------------------------
+    public readStepRadioData = READ_STEP_RADIO_CONTROLS;
+    public readFormData = READ_FORM_DATA;
+    public readDefaultKind = ReadKind.CSV;
+    // ---------------------------------
+    public mergeStepRadioData = MERGE_STEP_RADIO_CONTROLS;
+    public mergeFormData = MERGE_FORM_DATA;
+    public mergeDefaultKind = MergeKind.APPEND;
 
     public pollingSourceForm: FormGroup = this.fb.group({
         fetch: this.fb.group({
-            kind: [this.defaultFetchKind],
+            kind: [this.fetchDefaultKind],
         }),
         read: this.fb.group({
-            kind: [this.defaultReadKind],
+            kind: [this.readDefaultKind],
         }),
         merge: this.fb.group({
-            kind: [this.defaultMergeKind],
+            kind: [this.mergeDefaultKind],
         }),
     });
 
@@ -105,8 +129,20 @@ export class AddPollingSourceComponent extends BaseComponent {
         private yamlEventService: TemplatesYamlEventsService,
         private activatedRoute: ActivatedRoute,
         private modalService: NgbModal,
+        private cdr: ChangeDetectorRef,
     ) {
         super();
+    }
+
+    ngOnInit(): void {
+        this.trackSubscription(
+            this.createDatasetService.onErrorCommitEventChanges.subscribe(
+                (message: string) => {
+                    this.errorMessage = message;
+                    this.cdr.detectChanges();
+                },
+            ),
+        );
     }
 
     public changeStep(step: SetPollingSourceSection): void {

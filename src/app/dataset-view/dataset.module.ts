@@ -41,9 +41,7 @@ import { SharedModule } from "../shared/shared/shared.module";
 import { EditDetailsModalComponent } from "./additional-components/overview-component/components/edit-details-modal/edit-details-modal.component";
 import { EditLicenseModalComponent } from "./additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
 import { FinalYamlModalComponent } from "./additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
-import { FetchStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/fetch-step/fetch-step.component";
-import { ReadStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/read-step/read-step.component";
-import { MergeStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/merge-step/merge-step.component";
+import { BaseStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/base-step/base-step.component";
 import { StepperNavigationComponent } from "./additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
 import { PrepareStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/prepare-step/prepare-step.component";
 import { PreprocessStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/preprocess-step/preprocess-step.component";
@@ -93,9 +91,7 @@ import { PollingSourceFormComponentsModule } from "./additional-components/metad
         DatasetViewMenuComponent,
         MetadataComponent,
         DataComponent,
-        FetchStepComponent,
-        ReadStepComponent,
-        MergeStepComponent,
+        BaseStepComponent,
         PrepareStepComponent,
         PreprocessStepComponent,
         StepperNavigationComponent,
@@ -118,9 +114,7 @@ import { PollingSourceFormComponentsModule } from "./additional-components/metad
         EditDetailsModalComponent,
         EditLicenseModalComponent,
         FinalYamlModalComponent,
-        FetchStepComponent,
-        ReadStepComponent,
-        MergeStepComponent,
+        BaseStepComponent,
         PrepareStepComponent,
         PreprocessStepComponent,
         StepperNavigationComponent,

@@ -2,11 +2,12 @@
     <label class="form-label">{{ label }}</label>
     <ng-container [formArrayName]="controlName">
         <table
-            #table
             mat-table
             id="schema-field"
             [dataSource]="items.controls"
             class="mat-table cdk-table"
+            cdkDropList
+            (cdkDropListDropped)="drag($event)"
         >
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef width="40%">name</th>
@@ -55,12 +56,16 @@
                 class="table-header-background"
                 *matHeaderRowDef="displayedColumns"
             ></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr
+                mat-row
+                *matRowDef="let row; columns: displayedColumns"
+                cdkDrag
+            ></tr>
         </table>
     </ng-container>
     <div class="mt-2">
         <button (click)="addRow()" class="btn-sm btn add-button">
-            +Add row
+            <span class="fw-bold">+</span> Add row
         </button>
     </div>
 </div>

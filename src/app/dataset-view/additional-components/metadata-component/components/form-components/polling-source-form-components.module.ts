@@ -9,6 +9,7 @@ import { KeyValueFieldComponent } from "./key-value-field/key-value-field.compon
 import { SelectKindFieldComponent } from "./select-kind-field/select-kind-field.component";
 import { SchemaFieldComponent } from "./schema-field/schema-field.component";
 import { MatTableModule } from "@angular/material/table";
+import { DragDropModule } from "@angular/cdk/drag-drop";
 @NgModule({
     declarations: [
         InputFieldComponent,
@@ -26,6 +27,12 @@ import { MatTableModule } from "@angular/material/table";
         SelectKindFieldComponent,
         SchemaFieldComponent,
     ],
-    imports: [CommonModule, ReactiveFormsModule, MatIconModule, MatTableModule],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatIconModule,
+        MatTableModule,
+        DragDropModule,
+    ],
 })
 export class PollingSourceFormComponentsModule {}

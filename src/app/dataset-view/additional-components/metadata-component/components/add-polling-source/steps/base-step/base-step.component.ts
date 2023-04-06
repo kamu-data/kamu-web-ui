@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { BaseComponent } from "src/app/common/base.component";
 import { ControlType, JsonFormData } from "../../add-polling-source-form.types";
 import { RadioControlType } from "../../form-control.source";
 import { FetchStep } from "../../../../../../../api/kamu.graphql.interface";
-/* eslint-disable @typescript-eslint/unbound-method */
 import { FormBuilder } from "@angular/forms";
 import { ControlContainer, FormGroupDirective } from "@angular/forms";
 import {
@@ -32,7 +32,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     @Input() public groupName: string;
     @Input() public title: string;
     public controlType: typeof ControlType = ControlType;
-    public kindNameControl = "kind";
+    public readonly kindNameControl = "kind";
     constructor(
         private rootFormGroupDirective: FormGroupDirective,
         private fb: FormBuilder,
@@ -69,7 +69,8 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
             (item: JsonFormControls) => {
                 if (
                     item.type === this.controlType.ARRAY_KEY_VALUE ||
-                    item.type === this.controlType.ARRAY_KEY
+                    item.type === this.controlType.ARRAY_KEY ||
+                    item.type === this.controlType.SCHEMA
                 ) {
                     this.sectionForm.addControl(item.name, this.fb.array([]));
                 } else {

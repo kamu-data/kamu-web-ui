@@ -1,0 +1,66 @@
+<div class="d-flex flex-column dynamic-table" [formGroup]="form">
+    <label class="form-label">{{ label }}</label>
+    <ng-container [formArrayName]="controlName">
+        <table
+            #table
+            mat-table
+            id="schema-field"
+            [dataSource]="items.controls"
+            class="mat-table cdk-table"
+        >
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef width="40%">name</th>
+                <td mat-cell *matCellDef="let element" [formGroup]="element">
+                    <input
+                        placeholder="Enter name"
+                        formControlName="name"
+                        class="w-100"
+                    />
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef width="40%">type</th>
+                <td mat-cell *matCellDef="let element" [formGroup]="element">
+                    <select formControlName="type" class="w-95">
+                        <option *ngFor="let type of availableTypes">
+                            {{ type }}
+                        </option>
+                    </select>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th
+                    mat-header-cell
+                    class="text-center"
+                    *matHeaderCellDef
+                    width="20%"
+                >
+                    actions
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                    <div class="custom-cell">
+                        <mat-icon
+                            class="icon fs-5"
+                            title="delete"
+                            (click)="deleteRow(i)"
+                            >delete</mat-icon
+                        >
+                    </div>
+                </td>
+            </ng-container>
+            <tr
+                mat-header-row
+                class="table-header-background"
+                *matHeaderRowDef="displayedColumns"
+            ></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+    </ng-container>
+    <div class="mt-2">
+        <button (click)="addRow()" class="btn-sm btn add-button">
+            +Add row
+        </button>
+    </div>
+</div>

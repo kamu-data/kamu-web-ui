@@ -4,6 +4,13 @@ export const READ_FORM_DATA: JsonFormData = {
     csv: {
         controls: [
             {
+                name: "schema",
+                label: "Schema",
+                value: "",
+                type: "schema",
+                validators: {},
+            },
+            {
                 name: "separator",
                 label: "Separator",
                 value: "",

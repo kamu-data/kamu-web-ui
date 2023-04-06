@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { SchemaType } from "./../form-components/schema-field/schema-field.component";
 import {
     FetchKind,
     ReadKind,
@@ -5,7 +8,6 @@ import {
     PrepareKind,
     PreprocessKind,
 } from "./add-polling-source-form.types";
-/* eslint-disable @typescript-eslint/unbound-method */
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { SetPollingSource } from "./../../../../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
@@ -183,6 +185,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
             FinalYamlModalComponent,
             { size: "lg" },
         );
+        this.transformSchema();
         (modalRef.componentInstance as FinalYamlModalComponent).yamlTemplate =
             this.yamlEventService.buildYamlSetPollingSourceEvent(
                 this.pollingSourceForm.value as Omit<
@@ -192,5 +195,16 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
             );
         (modalRef.componentInstance as FinalYamlModalComponent).datasetInfo =
             this.getDatasetInfoFromUrl();
+    }
+
+    private transformSchema(): void {
+        const form = this.pollingSourceForm.value;
+        if (form.read.schema) {
+            form.read.schema = (form.read.schema as SchemaType[]).map(
+                (item) => {
+                    return `${item.name} ${item.type}`;
+                },
+            );
+        }
     }
 }

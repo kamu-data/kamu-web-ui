@@ -35,6 +35,7 @@ export enum ControlType {
     ARRAY_KEY_VALUE = "array-key-value",
     CHECKBOX = "checkbox",
     ARRAY_KEY = "array-key",
+    SCHEMA = "schema",
 }
 
 export enum FetchKind {

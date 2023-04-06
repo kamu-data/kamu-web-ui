@@ -51,8 +51,16 @@
                     >
                     </app-checkbox-field>
                 </ng-container>
+                <ng-container *ngIf="control.type === controlType.SCHEMA">
+                    <app-schema-field
+                        [form]="sectionForm"
+                        [controlName]="control.name"
+                        [label]="control.label"
+                    >
+                    </app-schema-field>
+                </ng-container>
             </div>
-            <ng-content></ng-content>
         </ng-container>
+        <ng-content></ng-content>
     </div>
 </div>

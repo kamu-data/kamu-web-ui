@@ -1,7 +1,7 @@
 import { MatIconModule } from "@angular/material/icon";
 import { ReactiveFormsModule } from "@angular/forms";
 import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { CommonModule, JsonPipe } from "@angular/common";
 import { InputFieldComponent } from "./input-field/input-field.component";
 import { CheckboxFieldComponent } from "./checkbox-field/checkbox-field.component";
 import { ArrayKeysFieldComponent } from "./array-keys-field/array-keys-field.component";
@@ -10,6 +10,7 @@ import { SelectKindFieldComponent } from "./select-kind-field/select-kind-field.
 import { SchemaFieldComponent } from "./schema-field/schema-field.component";
 import { MatTableModule } from "@angular/material/table";
 import { DragDropModule } from "@angular/cdk/drag-drop";
+import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 @NgModule({
     declarations: [
         InputFieldComponent,
@@ -33,6 +34,8 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
         MatIconModule,
         MatTableModule,
         DragDropModule,
+        NgbTypeaheadModule,
+        JsonPipe,
     ],
 })
 export class PollingSourceFormComponentsModule {}

@@ -1,6 +1,7 @@
 <div class="d-flex mt-4 justify-content-center">
     <button
         *ngIf="prevStep"
+        type="button"
         class="btn btn-primary me-4"
         (click)="changeStep(prevStep)"
     >
@@ -8,6 +9,7 @@
     </button>
     <button
         *ngIf="nextStep"
+        type="button"
         class="btn btn-primary"
         [disabled]="!validStep"
         (click)="changeStep(nextStep)"
@@ -16,13 +18,18 @@
     </button>
     <ng-container *ngIf="!nextStep">
         <button
+            type="button"
             (click)="saveEvent()"
             class="button-save"
             [disabled]="!validStep"
         >
             Save
         </button>
-        <button (click)="editYaml()" class="btn btn-outline-primary ms-4">
+        <button
+            type="button"
+            (click)="editYaml()"
+            class="btn btn-outline-primary ms-4"
+        >
             Edit Yaml
         </button>
     </ng-container>

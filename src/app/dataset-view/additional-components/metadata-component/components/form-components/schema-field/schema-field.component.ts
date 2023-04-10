@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -15,6 +16,7 @@ import {
     FormArray,
     FormControl,
     FormGroup,
+    Validators,
 } from "@angular/forms";
 import { MatTable } from "@angular/material/table";
 import { CdkDragDrop } from "@angular/cdk/drag-drop";
@@ -26,6 +28,7 @@ import {
     filter,
     map,
 } from "rxjs/operators";
+import { log } from "console";
 
 export interface SchemaType {
     name: string;
@@ -132,8 +135,8 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
     public addRow(): void {
         this.items.push(
             new FormGroup({
-                name: new FormControl(""),
-                type: new FormControl(this.defaultType),
+                name: new FormControl("", [Validators.required]),
+                type: new FormControl(this.defaultType, [Validators.required]),
             }),
         );
         this.table.renderRows();

@@ -24,8 +24,6 @@ export class StepperNavigationComponent {
     @Output() public saveEventEmitter = new EventEmitter<null>();
     @Output() public editYamlEmitter = new EventEmitter<null>();
 
-    constructor(private cdr: ChangeDetectorRef) {}
-
     public changeStep(step: SetPollingSourceSection): void {
         this.changeStepEmitter.emit(step);
     }

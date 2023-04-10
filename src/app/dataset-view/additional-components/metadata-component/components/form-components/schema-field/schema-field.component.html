@@ -11,14 +11,18 @@
             (cdkDropListDropped)="drag($event)"
         >
             <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>name</th>
+                <th mat-header-cell *matHeaderCellDef width="40%">name</th>
                 <td mat-cell *matCellDef="let element" [formGroup]="element">
-                    <input placeholder="Enter name" formControlName="name" />
+                    <input
+                        type="text"
+                        placeholder="Enter name"
+                        formControlName="name"
+                    />
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="type">
-                <th mat-header-cell *matHeaderCellDef>type</th>
+                <th mat-header-cell *matHeaderCellDef width="40%">type</th>
                 <td
                     mat-cell
                     *matCellDef="let element; let i = index"
@@ -65,7 +69,7 @@
         </table>
     </ng-container>
     <div class="mt-2">
-        <button (click)="addRow()" class="btn-sm btn add-button">
+        <button (click)="addRow()" type="button" class="btn-sm btn add-button">
             <span class="fw-bold">+</span> Add row
         </button>
     </div>

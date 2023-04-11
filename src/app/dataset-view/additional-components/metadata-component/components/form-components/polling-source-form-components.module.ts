@@ -11,6 +11,7 @@ import { SchemaFieldComponent } from "./schema-field/schema-field.component";
 import { MatTableModule } from "@angular/material/table";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
+import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 @NgModule({
     declarations: [
         InputFieldComponent,
@@ -36,6 +37,7 @@ import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
         DragDropModule,
         NgbTypeaheadModule,
         JsonPipe,
+        RxReactiveFormsModule,
     ],
 })
 export class PollingSourceFormComponentsModule {}

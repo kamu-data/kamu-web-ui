@@ -38,6 +38,7 @@
     "@apollo/client": "^3.0.0",
     "@ng-bootstrap/ng-bootstrap": "13.0.0",
     "@popperjs/core": "^2.10.2",
+    "@rxweb/reactive-form-validators": "^13.0.0",
     "@schematics/angular": "^14.2.1",
     "@swimlane/ngx-graph": "8.0.2",
     "angular-svg-icon": "^14.0.0",

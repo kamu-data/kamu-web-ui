@@ -4,7 +4,6 @@
     font-size: 14px!important
 
 #schema-field *
-    font-size: 1rem
     height: 34px
 .add-button
     border: 1px solid grey
@@ -18,13 +17,13 @@ table
         border: 1px solid
         color: $app-color-fg-default
         padding: 0px
-
         border-color: $app-color-border-default
         input
             outline: none
             border: 0
             padding-left: 10px
             padding-right: 10px
+            width: 100%
 
     .mat-header-cell
         color: $app-color-fg-default
@@ -43,3 +42,7 @@ table
         vertical-align: text-top
         &:hover
             cursor: pointer
+
+    input.ng-invalid.ng-dirty
+        background-color: #DA5235
+        color: white

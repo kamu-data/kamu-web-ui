@@ -1,3 +1,4 @@
+import { requireValue } from "src/app/common/app.helpers";
 /* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
@@ -29,6 +30,7 @@ import {
     map,
 } from "rxjs/operators";
 import { log } from "console";
+import { RxwebValidators } from "@rxweb/reactive-form-validators";
 
 export interface SchemaType {
     name: string;
@@ -135,8 +137,16 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
     public addRow(): void {
         this.items.push(
             new FormGroup({
-                name: new FormControl("", [Validators.required]),
-                type: new FormControl(this.defaultType, [Validators.required]),
+                name: new FormControl("", [
+                    RxwebValidators.unique(),
+                    RxwebValidators.required(),
+                    RxwebValidators.noneOf({
+                        matchValues: this.availableTypes,
+                    }),
+                ]),
+                type: new FormControl(this.defaultType, [
+                    RxwebValidators.required(),
+                ]),
             }),
         );
         this.table.renderRows();

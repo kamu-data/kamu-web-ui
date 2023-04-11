@@ -7,13 +7,17 @@
                     <input
                         class="form-control"
                         placeholder="Enter primary key ..."
-                        [formControlName]="i"
+                        formControlName="{{ i }}"
                     />
                 </div>
                 <div
                     class="col-md-2 d-flex justify-content-center align-items-center"
                 >
-                    <button class="btn btn-light" (click)="removePrimaryKey(i)">
+                    <button
+                        class="btn btn-light"
+                        type="button"
+                        (click)="removePrimaryKey(i)"
+                    >
                         x
                     </button>
                 </div>

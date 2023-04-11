@@ -12,12 +12,48 @@
         >
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef width="40%">name</th>
-                <td mat-cell *matCellDef="let element" [formGroup]="element">
+                <td
+                    mat-cell
+                    *matCellDef="let element; let i = index"
+                    [formGroup]="element"
+                >
                     <input
                         type="text"
                         placeholder="Enter name"
                         formControlName="name"
                     />
+                    <ng-container
+                        *ngIf="
+                            items.controls[i].get('name')?.hasError('unique')
+                        "
+                    >
+                        <small class="text-danger ps-2">
+                            Name is not unique</small
+                        >
+                    </ng-container>
+                    <ng-container
+                        *ngIf="
+                            items.controls[i].get('name')?.hasError('noneOf')
+                        "
+                    >
+                        <small class="text-danger ps-2">
+                            Type cannot be name</small
+                        >
+                    </ng-container>
+                    <ng-container
+                        *ngIf="
+                            items.controls[i]
+                                .get('name')
+                                ?.hasError('required') &&
+                            items.controls[i].get('name')?.invalid &&
+                            (items.controls[i].get('name')?.dirty ||
+                                items.controls[i].get('name')?.touched)
+                        "
+                    >
+                        <small class="text-danger ps-2">
+                            Name is required</small
+                        >
+                    </ng-container>
                 </td>
             </ng-container>
 
@@ -68,6 +104,7 @@
             ></tr>
         </table>
     </ng-container>
+
     <div class="mt-2">
         <button (click)="addRow()" type="button" class="btn-sm btn add-button">
             <span class="fw-bold">+</span> Add row

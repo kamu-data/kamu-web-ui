@@ -1,8 +1,3 @@
-import { requireValue } from "src/app/common/app.helpers";
-/* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -17,19 +12,11 @@ import {
     FormArray,
     FormControl,
     FormGroup,
-    Validators,
 } from "@angular/forms";
 import { MatTable } from "@angular/material/table";
-import { CdkDragDrop } from "@angular/cdk/drag-drop";
 import { Observable, OperatorFunction, Subject, merge } from "rxjs";
 import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
-import {
-    debounceTime,
-    distinctUntilChanged,
-    filter,
-    map,
-} from "rxjs/operators";
-import { log } from "console";
+import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 
 export interface SchemaType {
@@ -53,8 +40,8 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
     private clickObservableList = Array<Subject<SchemaType>>();
     private ngbTypeHeader: NgbTypeahead;
 
-    public displayedColumns: string[] = ["name", "type", "actions"];
-    public availableTypes = [
+    public readonly DISPLAYED_COLUMNS: string[] = ["name", "type", "actions"];
+    public readonly AVAILABLE_TYPES = [
         "STRING",
         "BIGINT",
         "TIMESTAMP(p)",
@@ -74,6 +61,7 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
             this.focus$.subscribe((item) => {
                 const tableIndex = this.items.controls.findIndex(
                     (element: AbstractControl) =>
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                         element.value.name === item.name,
                 );
                 this.focusObservableList.some((focus, index) => {
@@ -96,34 +84,15 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
             debounceTime(200),
             distinctUntilChanged(),
         );
-        const inputClick$ = new Subject<SchemaType>();
-        this.clickObservableList.push(inputClick$);
-        const clicksWithClosedPopup$ = inputClick$.pipe(
-            filter((item) => {
-                const tableIndex = this.items.controls.findIndex(
-                    (element: AbstractControl) =>
-                        element.value.name === item.name,
-                );
-                this.ngbType.some((value, index) => {
-                    if (tableIndex === index) {
-                        this.ngbTypeHeader = value;
-                        return true;
-                    }
-                    return false;
-                });
-                return this.ngbTypeHeader && !this.ngbTypeHeader.isPopupOpen();
-            }),
-            map(() => ""),
-        );
         // input focus stream for each control
         const inputFocus$ = new Subject<SchemaType>();
         this.focusObservableList.push(inputFocus$);
         const focusSteam$ = inputFocus$.pipe(map(() => ""));
-        return merge(debouncedText$, focusSteam$, clicksWithClosedPopup$).pipe(
+        return merge(debouncedText$, focusSteam$).pipe(
             map((term) =>
                 term === ""
-                    ? this.availableTypes
-                    : this.availableTypes.filter((v) =>
+                    ? this.AVAILABLE_TYPES
+                    : this.AVAILABLE_TYPES.filter((v) =>
                           v.toLowerCase().includes(term.toLowerCase()),
                       ),
             ),
@@ -141,7 +110,7 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
                     RxwebValidators.unique(),
                     RxwebValidators.required(),
                     RxwebValidators.noneOf({
-                        matchValues: this.availableTypes,
+                        matchValues: this.AVAILABLE_TYPES,
                     }),
                 ]),
                 type: new FormControl(this.defaultType, [
@@ -154,29 +123,19 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
 
     public deleteRow(index: number): void {
         this.items.removeAt(index);
+        this.focusObservableList.splice(index, 1);
         this.table.renderRows();
     }
 
-    public drag(event: CdkDragDrop<SchemaType[]>) {
-        this.moveItemInFormArray(
-            this.items,
-            event.previousIndex,
-            event.currentIndex,
-        );
-        this.table.renderRows();
-    }
-
-    private moveItemInFormArray(
-        formArray: FormArray,
-        fromIndex: number,
-        toIndex: number,
-    ): void {
-        const dir = toIndex > fromIndex ? 1 : -1;
-        const item = formArray.at(fromIndex);
-        for (let i = fromIndex; i * dir < toIndex * dir; i = i + dir) {
-            const current = formArray.at(i + dir);
-            formArray.setControl(i, current);
+    public swap(index: number, direction: number): void {
+        const condition =
+            direction > 0 ? index === this.items.length - 1 : index === 0;
+        if (condition) {
+            return;
         }
-        formArray.setControl(toIndex, item);
+        const current = this.items.at(index);
+        this.items.removeAt(index);
+        this.items.insert(index + direction, current);
+        this.table.renderRows();
     }
 }

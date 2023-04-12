@@ -42,7 +42,7 @@ import { MERGE_FORM_DATA } from "./steps/data/merge-form-data";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddPollingSourceComponent extends BaseComponent implements OnInit {
-    public currentStep: SetPollingSourceSection = SetPollingSourceSection.READ;
+    public currentStep: SetPollingSourceSection = SetPollingSourceSection.FETCH;
     public steps: typeof SetPollingSourceSection = SetPollingSourceSection;
     public isAddPrepareStep = false;
     public isAddPreprocessStep = false;
@@ -51,16 +51,16 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     private defaultPrepareKind = PrepareKind.PIPE;
     private defaultPreprocessKind = PreprocessKind.SQL;
     // ---------------------------------
-    public fetchStepRadioData = FETCH_STEP_RADIO_CONTROLS;
-    public fetchFormData = FETCH_FORM_DATA;
+    public readonly fetchStepRadioData = FETCH_STEP_RADIO_CONTROLS;
+    public readonly fetchFormData = FETCH_FORM_DATA;
     public fetchDefaultKind = FetchKind.URL;
     // ---------------------------------
-    public readStepRadioData = READ_STEP_RADIO_CONTROLS;
-    public readFormData = READ_FORM_DATA;
+    public readonly readStepRadioData = READ_STEP_RADIO_CONTROLS;
+    public readonly readFormData = READ_FORM_DATA;
     public readDefaultKind = ReadKind.CSV;
     // ---------------------------------
-    public mergeStepRadioData = MERGE_STEP_RADIO_CONTROLS;
-    public mergeFormData = MERGE_FORM_DATA;
+    public readonly mergeStepRadioData = MERGE_STEP_RADIO_CONTROLS;
+    public readonly mergeFormData = MERGE_FORM_DATA;
     public mergeDefaultKind = MergeKind.APPEND;
 
     public pollingSourceForm: FormGroup = this.fb.group({

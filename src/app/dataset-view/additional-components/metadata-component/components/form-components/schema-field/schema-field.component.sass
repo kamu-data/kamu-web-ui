@@ -35,7 +35,7 @@ table
     .custom-cell
         width: 100%
         text-align: center
-        line-height: 200%
+        line-height: 155%
         padding: 5px
 
     .icon
@@ -43,6 +43,12 @@ table
         &:hover
             cursor: pointer
 
-    input.ng-invalid.ng-dirty
+    input.ng-invalid.ng-touched, input.ng-invalid.ng-dirty
         background-color: #DA5235
         color: white
+
+    .order
+        border: 1px solid black
+        height: 20px!important
+        width: 20px!important
+        border-radius: 50%

@@ -1,7 +1,6 @@
 import { MaybeNull } from "src/app/common/app.types";
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     EventEmitter,
     Input,

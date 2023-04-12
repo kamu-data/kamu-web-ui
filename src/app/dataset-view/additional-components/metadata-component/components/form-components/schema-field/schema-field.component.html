@@ -7,8 +7,6 @@
             id="schema-field"
             [dataSource]="items.controls"
             class="mat-table cdk-table"
-            cdkDropList
-            (cdkDropListDropped)="drag($event)"
         >
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef width="40%">name</th>
@@ -46,8 +44,8 @@
                                 .get('name')
                                 ?.hasError('required') &&
                             items.controls[i].get('name')?.invalid &&
-                            (items.controls[i].get('name')?.dirty ||
-                                items.controls[i].get('name')?.touched)
+                            (items.controls[i].get('name')?.touched ||
+                                items.controls[i].get('name')?.dirty)
                         "
                     >
                         <small class="text-danger ps-2">
@@ -83,7 +81,19 @@
                 <td mat-cell *matCellDef="let element; let i = index">
                     <div class="custom-cell">
                         <mat-icon
-                            class="icon fs-5"
+                            class="icon fs-5 order"
+                            title="move down"
+                            (click)="swap(i, 1)"
+                            >expand_more</mat-icon
+                        >
+                        <mat-icon
+                            class="icon fs-5 mx-2 order"
+                            title="move up"
+                            (click)="swap(i, -1)"
+                            >expand_less</mat-icon
+                        >
+                        <mat-icon
+                            class="icon fs-5 mt-1"
                             title="delete"
                             (click)="deleteRow(i)"
                             >delete</mat-icon
@@ -94,14 +104,9 @@
             <tr
                 mat-header-row
                 class="table-header-background"
-                *matHeaderRowDef="displayedColumns"
+                *matHeaderRowDef="DISPLAYED_COLUMNS"
             ></tr>
-            <tr
-                mat-row
-                *matRowDef="let row; columns: displayedColumns"
-                cdkDrag
-                cdkDragLockAxis="y"
-            ></tr>
+            <tr mat-row *matRowDef="let row; columns: DISPLAYED_COLUMNS"></tr>
         </table>
     </ng-container>
 

@@ -42,7 +42,7 @@ import { MERGE_FORM_DATA } from "./steps/data/merge-form-data";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddPollingSourceComponent extends BaseComponent implements OnInit {
-    public currentStep: SetPollingSourceSection = SetPollingSourceSection.FETCH;
+    public currentStep: SetPollingSourceSection = SetPollingSourceSection.READ;
     public steps: typeof SetPollingSourceSection = SetPollingSourceSection;
     public isAddPrepareStep = false;
     public isAddPreprocessStep = false;
@@ -152,6 +152,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     }
 
     public onSubmit(): void {
+        this.transformSchema();
         this.trackSubscription(
             this.createDatasetService
                 .commitEventToDataset(

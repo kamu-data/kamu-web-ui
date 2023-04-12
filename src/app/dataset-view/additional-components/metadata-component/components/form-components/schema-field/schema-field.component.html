@@ -20,36 +20,9 @@
                         placeholder="Enter name"
                         formControlName="name"
                     />
-                    <ng-container
-                        *ngIf="
-                            items.controls[i].get('name')?.hasError('unique')
-                        "
-                    >
+                    <ng-container *ngIf="nameControlError(i)">
                         <small class="text-danger ps-2">
-                            Name is not unique</small
-                        >
-                    </ng-container>
-                    <ng-container
-                        *ngIf="
-                            items.controls[i].get('name')?.hasError('noneOf')
-                        "
-                    >
-                        <small class="text-danger ps-2">
-                            Type cannot be name</small
-                        >
-                    </ng-container>
-                    <ng-container
-                        *ngIf="
-                            items.controls[i]
-                                .get('name')
-                                ?.hasError('required') &&
-                            items.controls[i].get('name')?.invalid &&
-                            (items.controls[i].get('name')?.touched ||
-                                items.controls[i].get('name')?.dirty)
-                        "
-                    >
-                        <small class="text-danger ps-2">
-                            Name is required</small
+                            {{ nameControlError(i) }}</small
                         >
                     </ng-container>
                 </td>

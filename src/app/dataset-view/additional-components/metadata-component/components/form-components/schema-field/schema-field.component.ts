@@ -1,3 +1,4 @@
+import { MaybeNull } from "./../../../../../../common/app.types";
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -31,7 +32,6 @@ export interface SchemaType {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SchemaFieldComponent extends BaseField implements AfterViewInit {
-    private defaultType = "";
     @ViewChild(MatTable) table: MatTable<unknown>;
     @ViewChildren("ngbTypeahed") ngbType: QueryList<NgbTypeahead>;
     public focus$ = new Subject<SchemaType>();
@@ -39,6 +39,7 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
     private focusObservableList = Array<Subject<SchemaType>>();
     private clickObservableList = Array<Subject<SchemaType>>();
     private ngbTypeHeader: NgbTypeahead;
+    private defaultType = "";
 
     public readonly DISPLAYED_COLUMNS: string[] = ["name", "type", "actions"];
     public readonly AVAILABLE_TYPES = [
@@ -54,6 +55,11 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
         "DATE",
         "TIME",
     ];
+    public readonly VALIDATION_MESSAGES: Record<string, string> = {
+        unique: "Name is not unique",
+        noneOf: "Type cannot be name",
+        required: "Name is required",
+    };
 
     ngAfterViewInit(): void {
         let focusItem$ = new Subject<SchemaType>();
@@ -101,6 +107,26 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
 
     public get items(): FormArray {
         return this.form.get(this.controlName) as FormArray;
+    }
+
+    public nameControlByIndex(index: number): MaybeNull<AbstractControl> {
+        return this.items.controls[index].get("name");
+    }
+
+    public nameControlError(index: number): string {
+        let errorMessage = "";
+        if (this.nameControlByIndex(index)?.hasError("unique")) {
+            errorMessage = this.VALIDATION_MESSAGES.unique;
+        } else if (this.nameControlByIndex(index)?.hasError("noneOf")) {
+            errorMessage = this.VALIDATION_MESSAGES.noneOf;
+        } else if (
+            this.nameControlByIndex(index)?.hasError("required") &&
+            (this.nameControlByIndex(index)?.touched ||
+                this.nameControlByIndex(index)?.dirty)
+        ) {
+            errorMessage = this.VALIDATION_MESSAGES.required;
+        }
+        return errorMessage;
     }
 
     public addRow(): void {

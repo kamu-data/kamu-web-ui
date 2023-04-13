@@ -37,8 +37,6 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
     public focus$ = new Subject<SchemaType>();
     public click$ = new Subject<SchemaType>();
     private focusObservableList = Array<Subject<SchemaType>>();
-    private clickObservableList = Array<Subject<SchemaType>>();
-    private ngbTypeHeader: NgbTypeahead;
     private defaultType = "";
 
     public readonly DISPLAYED_COLUMNS: string[] = ["name", "type", "actions"];

@@ -9,7 +9,6 @@ import { KeyValueFieldComponent } from "./key-value-field/key-value-field.compon
 import { SelectKindFieldComponent } from "./select-kind-field/select-kind-field.component";
 import { SchemaFieldComponent } from "./schema-field/schema-field.component";
 import { MatTableModule } from "@angular/material/table";
-import { DragDropModule } from "@angular/cdk/drag-drop";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 @NgModule({
@@ -34,7 +33,6 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
         ReactiveFormsModule,
         MatIconModule,
         MatTableModule,
-        DragDropModule,
         NgbTypeaheadModule,
         JsonPipe,
         RxReactiveFormsModule,

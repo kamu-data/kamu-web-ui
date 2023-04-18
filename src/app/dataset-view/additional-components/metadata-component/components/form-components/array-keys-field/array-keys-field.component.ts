@@ -11,6 +11,7 @@ import { BaseField } from "../base-field";
 })
 export class ArrayKeysFieldComponent extends BaseField {
     @Input() public buttonText: string;
+    @Input() public placeholder: string;
 
     constructor(private fb: FormBuilder) {
         super();

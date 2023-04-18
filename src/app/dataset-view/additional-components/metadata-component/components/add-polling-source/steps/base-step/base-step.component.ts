@@ -60,6 +60,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                         this.sectionForm.removeControl(item),
                     );
                 this.initForm(kind);
+                this.sectionForm.updateValueAndValidity();
             });
         if (subscription) this.trackSubscription(subscription);
     }
@@ -73,6 +74,13 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                     item.type === this.controlType.SCHEMA
                 ) {
                     this.sectionForm.addControl(item.name, this.fb.array([]));
+                } else if (item.type === this.controlType.EVENT_TIME) {
+                    this.sectionForm.addControl(
+                        item.name,
+                        this.fb.group({
+                            kind: ["fromMetadata"],
+                        }),
+                    );
                 } else {
                     this.sectionForm.addControl(
                         item.name,

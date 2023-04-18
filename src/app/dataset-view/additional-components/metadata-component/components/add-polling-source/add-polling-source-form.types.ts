@@ -36,6 +36,7 @@ export enum ControlType {
     CHECKBOX = "checkbox",
     ARRAY_KEY = "array-key",
     SCHEMA = "schema",
+    EVENT_TIME = "event-time",
 }
 
 export enum FetchKind {
@@ -65,4 +66,9 @@ export enum PrepareKind {
 
 export enum PreprocessKind {
     SQL = "sql",
+}
+
+export enum EventTimeSourceKind {
+    FROM_METADATA = "fromMetadata",
+    FROM_PATH = "fromPath",
 }

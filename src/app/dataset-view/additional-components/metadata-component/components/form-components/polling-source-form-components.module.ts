@@ -11,6 +11,7 @@ import { SchemaFieldComponent } from "./schema-field/schema-field.component";
 import { MatTableModule } from "@angular/material/table";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+import { EventTimeFieldComponent } from "./event-time-field/event-time-field.component";
 @NgModule({
     declarations: [
         InputFieldComponent,
@@ -19,6 +20,7 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
         KeyValueFieldComponent,
         SelectKindFieldComponent,
         SchemaFieldComponent,
+        EventTimeFieldComponent,
     ],
     exports: [
         InputFieldComponent,
@@ -27,6 +29,7 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
         KeyValueFieldComponent,
         SelectKindFieldComponent,
         SchemaFieldComponent,
+        EventTimeFieldComponent,
     ],
     imports: [
         CommonModule,

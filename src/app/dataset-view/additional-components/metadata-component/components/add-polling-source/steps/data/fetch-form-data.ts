@@ -16,6 +16,14 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 },
             },
             {
+                name: "eventTime",
+                label: "Event time",
+                value: "",
+                type: "event-time",
+                validators: {},
+            },
+
+            {
                 name: "headers",
                 value: "",
                 label: "Headers",
@@ -40,6 +48,14 @@ export const FETCH_FORM_DATA: JsonFormData = {
                     required: true,
                 },
             },
+            {
+                name: "order",
+                label: "Order",
+                value: "",
+                type: "text",
+                placeholder: "Enter order",
+                validators: {},
+            },
         ],
     },
     container: {
@@ -49,10 +65,46 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 label: "Image",
                 value: "",
                 type: "text",
-                placeholder: "Enter image",
+                placeholder: "Enter image..",
                 validators: {
                     required: true,
                 },
+            },
+            {
+                name: "command",
+                label: "Commands",
+                placeholder: "Enter command...",
+                value: "",
+                type: "array-key",
+                options: {
+                    formArrayName: "command",
+                    buttonText: "+ Add command",
+                },
+                validators: {},
+            },
+            {
+                name: "args",
+                label: "Arguments",
+                placeholder: "Enter argument...",
+                value: "",
+                type: "array-key",
+                options: {
+                    formArrayName: "args",
+                    buttonText: "+ Add argument",
+                },
+                validators: {},
+            },
+
+            {
+                name: "env",
+                value: "",
+                label: "Environment variables",
+                type: "array-key-value",
+                options: {
+                    formArrayName: "env",
+                    buttonText: "+ Add variable",
+                },
+                validators: {},
             },
         ],
     },

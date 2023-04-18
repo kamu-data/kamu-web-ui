@@ -1,0 +1,31 @@
+<div [formGroup]="form">
+    <ng-container formGroupName="eventTime">
+        <label class="form-label">{{ label }} </label><br />
+        <div class="form-check">
+            <input
+                class="form-check-input"
+                type="radio"
+                formControlName="kind"
+                name="kind"
+                type="radio"
+                value="fromMetadata"
+            />
+            <label class="form-check-label" for=""> From metadata </label>
+        </div>
+        <div class="form-check mt-1">
+            <input
+                class="form-check-input"
+                type="radio"
+                name="kind"
+                formControlName="kind"
+                type="radio"
+                value="fromPath"
+            />
+            <label class="form-check-label" for=""> From path </label>
+        </div>
+
+        <ng-container *ngIf="currentSource === eventTimeSourceKind.FROM_PATH">
+            <div class="mt-2">PATH</div>
+        </ng-container>
+    </ng-container>
+</div>

@@ -39,6 +39,7 @@
                         [controlName]="control.name"
                         [label]="control.label"
                         [buttonText]="control.options?.buttonText!"
+                        [placeholder]="control.placeholder!"
                     ></app-array-keys-field>
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.CHECKBOX">
@@ -58,6 +59,14 @@
                         [label]="control.label"
                     >
                     </app-schema-field>
+                </ng-container>
+                <ng-container *ngIf="control.type === controlType.EVENT_TIME">
+                    <app-event-time-field
+                        [form]="sectionForm"
+                        [controlName]="control.name"
+                        [label]="control.label"
+                    >
+                    </app-event-time-field>
                 </ng-container>
             </div>
         </ng-container>

@@ -15,30 +15,38 @@ export class EventTimeFieldComponent extends BaseField implements OnInit {
     public currentSource = EventTimeSourceKind.FROM_METADATA;
     public eventTimeSourceKind: typeof EventTimeSourceKind =
         EventTimeSourceKind;
+    public readonly kindNameControl = "kind";
 
     constructor(private fb: FormBuilder) {
         super();
     }
+    public get eventTimeGroup(): FormGroup {
+        return this.form.get(this.controlName) as FormGroup;
+    }
     ngOnInit(): void {
-        const eventTimeControl = this.form.get(this.controlName) as FormGroup;
-        // eventTimeControl.valueChanges.subscribe(
-        //     (sourceObject: EventTimeSource & { kind: string }) => {
-        //         const { kind } = sourceObject;
-        //         if (kind === this.eventTimeSourceKind.FROM_METADATA) {
-        //             this.currentSource = EventTimeSourceKind.FROM_METADATA;
-        //         } else {
-        //             this.currentSource = EventTimeSourceKind.FROM_PATH;
-        //             eventTimeControl.addControl(
-        //                 "pattern",
-        //                 this.fb.control("", RxwebValidators.required()),
-        //             );
+        this.chooseEventTimeSource();
+    }
 
-        //             // eventTimeControl.addControl(
-        //             //     "timestampFormat",
-        //             //     new FormControl(""),
-        //             // );
-        //         }
-        //     },
-        // );
+    private chooseEventTimeSource(): void {
+        const subscription = this.eventTimeGroup
+            .get(this.kindNameControl)
+            ?.valueChanges.subscribe((kind: string) => {
+                if (kind === this.eventTimeSourceKind.FROM_METADATA) {
+                    this.currentSource = EventTimeSourceKind.FROM_METADATA;
+                    this.eventTimeGroup.removeControl("pattern");
+                    this.eventTimeGroup.removeControl("timestampFormat");
+                } else {
+                    this.currentSource = EventTimeSourceKind.FROM_PATH;
+                    this.eventTimeGroup.addControl(
+                        "pattern",
+                        this.fb.control("", RxwebValidators.required()),
+                    );
+                    this.eventTimeGroup.addControl(
+                        "timestampFormat",
+                        this.fb.control(""),
+                    );
+                }
+            });
+        if (subscription) this.trackSubscription(subscription);
     }
 }

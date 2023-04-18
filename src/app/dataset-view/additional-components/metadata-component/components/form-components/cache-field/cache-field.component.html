@@ -1,0 +1,10 @@
+<div class="form-check" [formGroup]="form">
+    <input
+        class="form-check-input"
+        type="checkbox"
+        [(ngModel)]="isCache"
+        (change)="onCheckedCache($event)"
+        [ngModelOptions]="{ standalone: true }"
+    />
+    <label class="form-check-label"> {{ label }} </label>
+</div>

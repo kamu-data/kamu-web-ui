@@ -68,6 +68,14 @@
                     >
                     </app-event-time-field>
                 </ng-container>
+                <ng-container *ngIf="control.type === controlType.CACHE">
+                    <app-cache-field
+                        [form]="sectionForm"
+                        [controlName]="control.name"
+                        [label]="control.label"
+                    >
+                    </app-cache-field>
+                </ng-container>
             </div>
         </ng-container>
         <ng-content></ng-content>

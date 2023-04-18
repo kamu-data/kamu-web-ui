@@ -33,6 +33,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     @Input() public title: string;
     public controlType: typeof ControlType = ControlType;
     public readonly kindNameControl = "kind";
+    private readonly defaultEventTimeSource = "fromMetadata";
     constructor(
         private rootFormGroupDirective: FormGroupDirective,
         private fb: FormBuilder,
@@ -78,7 +79,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                     this.sectionForm.addControl(
                         item.name,
                         this.fb.group({
-                            kind: ["fromMetadata"],
+                            kind: [this.defaultEventTimeSource],
                         }),
                     );
                 } else {

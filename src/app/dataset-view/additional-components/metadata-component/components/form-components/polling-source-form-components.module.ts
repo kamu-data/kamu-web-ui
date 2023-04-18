@@ -1,5 +1,5 @@
 import { MatIconModule } from "@angular/material/icon";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgModule } from "@angular/core";
 import { CommonModule, JsonPipe } from "@angular/common";
 import { InputFieldComponent } from "./input-field/input-field.component";
@@ -12,6 +12,7 @@ import { MatTableModule } from "@angular/material/table";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { EventTimeFieldComponent } from "./event-time-field/event-time-field.component";
+import { CacheFieldComponent } from "./cache-field/cache-field.component";
 @NgModule({
     declarations: [
         InputFieldComponent,
@@ -21,6 +22,7 @@ import { EventTimeFieldComponent } from "./event-time-field/event-time-field.com
         SelectKindFieldComponent,
         SchemaFieldComponent,
         EventTimeFieldComponent,
+        CacheFieldComponent,
     ],
     exports: [
         InputFieldComponent,
@@ -30,10 +32,12 @@ import { EventTimeFieldComponent } from "./event-time-field/event-time-field.com
         SelectKindFieldComponent,
         SchemaFieldComponent,
         EventTimeFieldComponent,
+        CacheFieldComponent,
     ],
     imports: [
         CommonModule,
         ReactiveFormsModule,
+        FormsModule,
         MatIconModule,
         MatTableModule,
         NgbTypeaheadModule,

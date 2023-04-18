@@ -37,6 +37,7 @@ export enum ControlType {
     ARRAY_KEY = "array-key",
     SCHEMA = "schema",
     EVENT_TIME = "event-time",
+    CACHE = "cache",
 }
 
 export enum FetchKind {

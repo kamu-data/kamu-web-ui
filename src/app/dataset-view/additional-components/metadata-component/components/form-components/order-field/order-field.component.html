@@ -1,0 +1,36 @@
+<div [formGroup]="form">
+    <label class="form-label">{{ "Order" }} </label><br />
+    <div class="form-check">
+        <input
+            class="form-check-input"
+            type="radio"
+            formControlName="order"
+            [name]="'order'"
+            type="radio"
+            [value]="'none'"
+        />
+        <label class="form-check-label" for=""> None </label>
+    </div>
+    <div class="form-check mt-1">
+        <input
+            class="form-check-input"
+            type="radio"
+            [name]="'order'"
+            formControlName="order"
+            type="radio"
+            [value]="'byName'"
+        />
+        <label class="form-check-label" for=""> By name </label>
+    </div>
+    <div class="form-check mt-1">
+        <input
+            class="form-check-input"
+            type="radio"
+            [name]="'order'"
+            formControlName="order"
+            type="radio"
+            [value]="'byEventTime'"
+        />
+        <label class="form-check-label" for=""> By event time </label>
+    </div>
+</div>

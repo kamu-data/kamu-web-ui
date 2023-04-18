@@ -76,6 +76,13 @@
                     >
                     </app-cache-field>
                 </ng-container>
+                <ng-container *ngIf="control.type === controlType.ORDER">
+                    <app-order-field
+                        [form]="sectionForm"
+                        [controlName]="control.name"
+                        [label]="control.label"
+                    ></app-order-field>
+                </ng-container>
             </div>
         </ng-container>
         <ng-content></ng-content>

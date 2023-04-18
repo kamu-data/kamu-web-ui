@@ -38,6 +38,7 @@ export enum ControlType {
     SCHEMA = "schema",
     EVENT_TIME = "event-time",
     CACHE = "cache",
+    ORDER = "order",
 }
 
 export enum FetchKind {

@@ -13,6 +13,7 @@ import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { EventTimeFieldComponent } from "./event-time-field/event-time-field.component";
 import { CacheFieldComponent } from "./cache-field/cache-field.component";
+import { OrderFieldComponent } from "./order-field/order-field.component";
 @NgModule({
     declarations: [
         InputFieldComponent,
@@ -23,6 +24,7 @@ import { CacheFieldComponent } from "./cache-field/cache-field.component";
         SchemaFieldComponent,
         EventTimeFieldComponent,
         CacheFieldComponent,
+        OrderFieldComponent,
     ],
     exports: [
         InputFieldComponent,
@@ -33,6 +35,7 @@ import { CacheFieldComponent } from "./cache-field/cache-field.component";
         SchemaFieldComponent,
         EventTimeFieldComponent,
         CacheFieldComponent,
+        OrderFieldComponent,
     ],
     imports: [
         CommonModule,

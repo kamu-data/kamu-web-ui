@@ -119,7 +119,10 @@ export class MetadataComponent extends BaseComponent implements OnInit {
 
     public readSectionMapperType: Record<string, string> = {
         ReadStepCsv: "Csv",
-        ReadStepJsonLines: "Json",
+        ReadStepJsonLines: "Json lines",
+        ReadStepGeoJson: "Geo json",
+        ReadStepEsriShapefile: "Esri shapefile",
+        ReadStepParquet: "Parquet",
     };
 
     public navigateToAddPollingSource(): void {

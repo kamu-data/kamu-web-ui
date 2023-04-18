@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { BaseField } from "../base-field";
 import { EventTimeSourceKind } from "../../add-polling-source/add-polling-source-form.types";
-import { EventTimeSource } from "src/app/api/kamu.graphql.interface";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { FormBuilder, FormGroup } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 
 @Component({

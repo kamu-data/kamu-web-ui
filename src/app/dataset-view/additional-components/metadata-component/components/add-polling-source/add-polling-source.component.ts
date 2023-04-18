@@ -153,6 +153,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
 
     public onSubmit(): void {
         this.transformSchema();
+        this.processFetchOrderControl();
         this.trackSubscription(
             this.createDatasetService
                 .commitEventToDataset(
@@ -187,6 +188,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
             { size: "lg" },
         );
         this.transformSchema();
+        this.processFetchOrderControl();
         (modalRef.componentInstance as FinalYamlModalComponent).yamlTemplate =
             this.yamlEventService.buildYamlSetPollingSourceEvent(
                 this.pollingSourceForm.value as Omit<
@@ -206,6 +208,13 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
                     return `${item.name} ${item.type}`;
                 },
             );
+        }
+    }
+
+    private processFetchOrderControl(): void {
+        const form = this.pollingSourceForm.value;
+        if (form.fetch.order && form.fetch.order === "none") {
+            delete form.fetch.order;
         }
     }
 }

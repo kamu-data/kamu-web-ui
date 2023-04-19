@@ -4,6 +4,7 @@ export interface RadioControlType {
     icon: string;
     label: string;
 }
+
 export const FETCH_STEP_RADIO_CONTROLS: RadioControlType[] = [
     {
         id: "from-url",

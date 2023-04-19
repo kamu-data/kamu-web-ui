@@ -48,20 +48,20 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     public isAddPreprocessStep = false;
     public errorMessage = "";
     // --------------------------------
-    private defaultPrepareKind = PrepareKind.PIPE;
-    private defaultPreprocessKind = PreprocessKind.SQL;
+    private readonly defaultPrepareKind = PrepareKind.PIPE;
+    private readonly defaultPreprocessKind = PreprocessKind.SQL;
     // ---------------------------------
     public readonly fetchStepRadioData = FETCH_STEP_RADIO_CONTROLS;
     public readonly fetchFormData = FETCH_FORM_DATA;
-    public fetchDefaultKind = FetchKind.URL;
+    public readonly fetchDefaultKind = FetchKind.URL;
     // ---------------------------------
     public readonly readStepRadioData = READ_STEP_RADIO_CONTROLS;
     public readonly readFormData = READ_FORM_DATA;
-    public readDefaultKind = ReadKind.CSV;
+    public readonly readDefaultKind = ReadKind.CSV;
     // ---------------------------------
     public readonly mergeStepRadioData = MERGE_STEP_RADIO_CONTROLS;
     public readonly mergeFormData = MERGE_FORM_DATA;
-    public mergeDefaultKind = MergeKind.APPEND;
+    public readonly mergeDefaultKind = MergeKind.APPEND;
 
     public pollingSourceForm: FormGroup = this.fb.group({
         fetch: this.fb.group({

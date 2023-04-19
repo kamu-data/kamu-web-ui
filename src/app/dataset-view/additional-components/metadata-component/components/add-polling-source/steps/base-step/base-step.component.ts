@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/unbound-method */
 import { BaseComponent } from "src/app/common/base.component";
 import { ControlType, JsonFormData } from "../../add-polling-source-form.types";
 import { RadioControlType } from "../../form-control.source";
-import { FetchStep } from "../../../../../../../api/kamu.graphql.interface";
 import { FormBuilder } from "@angular/forms";
 import { ControlContainer, FormGroupDirective } from "@angular/forms";
 import {
@@ -43,7 +43,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.parentForm = this.rootFormGroupDirective.form;
-        this.initForm(this.defaultKind);
+        this.initForm(this.sectionForm.get(this.kindNameControl)?.value);
         this.chooseFetchKind();
     }
 
@@ -55,7 +55,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
         const subscription = this.sectionForm
             .get(this.kindNameControl)
             ?.valueChanges.subscribe((kind: string) => {
-                Object.keys(this.sectionForm.value as FetchStep)
+                Object.keys(this.sectionForm.value)
                     .filter((key: string) => key !== this.kindNameControl)
                     .forEach((item: string) =>
                         this.sectionForm.removeControl(item),
@@ -65,15 +65,18 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
             });
         if (subscription) this.trackSubscription(subscription);
     }
+    private isArrayControl(type: ControlType): boolean {
+        return [
+            this.controlType.ARRAY_KEY_VALUE,
+            this.controlType.ARRAY_KEY,
+            this.controlType.SCHEMA,
+        ].includes(type);
+    }
 
     private initForm(kind: string): void {
         this.sectionFormData[kind].controls.forEach(
             (item: JsonFormControls) => {
-                if (
-                    item.type === this.controlType.ARRAY_KEY_VALUE ||
-                    item.type === this.controlType.ARRAY_KEY ||
-                    item.type === this.controlType.SCHEMA
-                ) {
+                if (this.isArrayControl(item.type as ControlType)) {
                     this.sectionForm.addControl(item.name, this.fb.array([]));
                 } else if (item.type === this.controlType.EVENT_TIME) {
                     this.sectionForm.addControl(

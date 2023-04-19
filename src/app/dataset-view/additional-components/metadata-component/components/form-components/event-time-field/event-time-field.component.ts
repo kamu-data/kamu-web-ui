@@ -11,10 +11,12 @@ import { RxwebValidators } from "@rxweb/reactive-form-validators";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventTimeFieldComponent extends BaseField implements OnInit {
-    public currentSource = EventTimeSourceKind.FROM_METADATA;
+    public currentSource: EventTimeSourceKind;
     public eventTimeSourceKind: typeof EventTimeSourceKind =
         EventTimeSourceKind;
     public readonly kindNameControl = "kind";
+    public readonly patternNameControl = "pattern";
+    public readonly timestampFormatNameControl = "timestampFormat";
 
     constructor(private fb: FormBuilder) {
         super();
@@ -27,21 +29,25 @@ export class EventTimeFieldComponent extends BaseField implements OnInit {
     }
 
     private chooseEventTimeSource(): void {
+        this.currentSource = this.eventTimeGroup.get(this.kindNameControl)
+            ?.value as EventTimeSourceKind;
         const subscription = this.eventTimeGroup
             .get(this.kindNameControl)
             ?.valueChanges.subscribe((kind: string) => {
                 if (kind === this.eventTimeSourceKind.FROM_METADATA) {
                     this.currentSource = EventTimeSourceKind.FROM_METADATA;
-                    this.eventTimeGroup.removeControl("pattern");
-                    this.eventTimeGroup.removeControl("timestampFormat");
+                    this.eventTimeGroup.removeControl(this.patternNameControl);
+                    this.eventTimeGroup.removeControl(
+                        this.timestampFormatNameControl,
+                    );
                 } else {
                     this.currentSource = EventTimeSourceKind.FROM_PATH;
                     this.eventTimeGroup.addControl(
-                        "pattern",
+                        this.patternNameControl,
                         this.fb.control("", RxwebValidators.required()),
                     );
                     this.eventTimeGroup.addControl(
-                        "timestampFormat",
+                        this.timestampFormatNameControl,
                         this.fb.control(""),
                     );
                 }

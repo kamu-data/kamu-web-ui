@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { BaseField } from "../base-field";
 import { FormControl } from "@angular/forms";
+import { ORDER_RADIO_CONTROL } from "./order-field.types";
 
 @Component({
     selector: "app-order-field",
@@ -9,6 +10,7 @@ import { FormControl } from "@angular/forms";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderFieldComponent extends BaseField implements OnInit {
+    public readonly orderRadioControl = ORDER_RADIO_CONTROL;
     ngOnInit(): void {
         this.form.addControl("order", new FormControl("none"));
     }

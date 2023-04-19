@@ -63,7 +63,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
             {
                 name: "order",
-                label: "Order123",
+                label: "Order",
                 value: "none",
                 type: "order",
                 validators: {},

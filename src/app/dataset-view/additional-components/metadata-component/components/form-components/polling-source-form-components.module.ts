@@ -14,6 +14,7 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { EventTimeFieldComponent } from "./event-time-field/event-time-field.component";
 import { CacheFieldComponent } from "./cache-field/cache-field.component";
 import { OrderFieldComponent } from "./order-field/order-field.component";
+import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 @NgModule({
     declarations: [
         InputFieldComponent,
@@ -46,6 +47,7 @@ import { OrderFieldComponent } from "./order-field/order-field.component";
         NgbTypeaheadModule,
         JsonPipe,
         RxReactiveFormsModule,
+        NgxTrimDirectiveModule,
     ],
 })
 export class PollingSourceFormComponentsModule {}

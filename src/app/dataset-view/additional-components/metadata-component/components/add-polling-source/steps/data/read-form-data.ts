@@ -24,7 +24,9 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: "",
                 type: "text",
                 placeholder: "Enter separator...",
-                validators: {},
+                validators: {
+                    maxLength: 1,
+                },
             },
             {
                 name: "encoding",
@@ -32,7 +34,9 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: "",
                 type: "text",
                 placeholder: "Enter encoding...",
-                validators: {},
+                validators: {
+                    maxLength: 1,
+                },
             },
             {
                 name: "quote",
@@ -40,7 +44,9 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: "",
                 type: "text",
                 placeholder: "Enter quote character...",
-                validators: {},
+                validators: {
+                    maxLength: 1,
+                },
             },
             {
                 name: "escape",
@@ -48,7 +54,9 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: "",
                 type: "text",
                 placeholder: "Enter escape character...",
-                validators: {},
+                validators: {
+                    maxLength: 1,
+                },
             },
             {
                 name: "comment",
@@ -56,7 +64,9 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: "",
                 type: "text",
                 placeholder: "Enter comment character...",
-                validators: {},
+                validators: {
+                    maxLength: 1,
+                },
             },
             {
                 name: "nullValue",

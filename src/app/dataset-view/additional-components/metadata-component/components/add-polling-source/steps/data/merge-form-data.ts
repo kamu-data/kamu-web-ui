@@ -55,14 +55,6 @@ export const MERGE_FORM_DATA: JsonFormData = {
                 validators: {},
             },
             {
-                name: "observationColumn",
-                label: "Observation column",
-                value: "",
-                type: "text",
-                placeholder: "Enter column name...",
-                validators: {},
-            },
-            {
                 name: "obsvAdded",
                 label: "Observation added",
                 value: "",

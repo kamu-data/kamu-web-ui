@@ -150,6 +150,11 @@ export const getValidators = (
                     validatorsToAdd.push(Validators.pattern(value as RegExp));
                 }
                 break;
+            case "maxLength":
+                if (value) {
+                    validatorsToAdd.push(Validators.maxLength(value as number));
+                }
+                break;
             default:
                 break;
         }

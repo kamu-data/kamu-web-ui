@@ -57,6 +57,7 @@
     "ngx-markdown": "^14.0.1",
     "ngx-monaco-editor": "^12.0.0",
     "ngx-toastr": "^16.0.2",
+    "ngx-trim-directive": "^2.0.0",
     "npx": "^10.2.2",
     "rxjs": "~6.5.3",
     "subsink": "^1.0.2",

@@ -1,0 +1,30 @@
+<div [formGroup]="form">
+    <label class="form-label"
+        >{{ label }}
+        <span *ngIf="requiredField" class="text-danger">*</span></label
+    >
+    <input
+        class="form-control"
+        [placeholder]="placeholder"
+        [formControlName]="controlName"
+        [attr.data-test-id]="dataTestId"
+        [ngbTypeahead]="search"
+        (focus)="focus$.next($any($event).target.value)"
+        (click)="click$.next($any($event).target.value)"
+        #instance="ngbTypeahead"
+    />
+    <div
+        *ngIf="
+            !form?.get(controlName)?.valid && form?.get(controlName)?.touched
+        "
+    >
+        <div *ngIf="form?.get(controlName)?.errors?.maxlength" class="mt-1">
+            <span
+                class="text-danger fs-12"
+                [attr.data-test-id]="'error-{{controlName}}-maxLength'"
+            >
+                Field can be max 1 character.</span
+            >
+        </div>
+    </div>
+</div>

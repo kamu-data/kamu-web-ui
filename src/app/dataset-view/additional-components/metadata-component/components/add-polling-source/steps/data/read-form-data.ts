@@ -19,31 +19,32 @@ export const READ_FORM_DATA: JsonFormData = {
                 dataTestId: "header",
             },
             {
-                name: "separator",
-                label: "Separator",
-                value: "",
-                type: "text",
-                placeholder: "Enter separator...",
-                validators: {
-                    maxLength: 1,
-                },
-            },
-            {
                 name: "encoding",
                 label: "Encoding",
                 value: "",
                 type: "text",
-                placeholder: "Enter encoding...",
+                placeholder: "Enter encoding type...",
+                validators: {},
+            },
+            {
+                name: "separator",
+                label: "Separator",
+                value: "",
+                type: "typeahead",
+                placeholder: "--Select character--",
+                list: [",", ";", "|"],
                 validators: {
                     maxLength: 1,
                 },
             },
+
             {
                 name: "quote",
                 label: "Quote character",
                 value: "",
-                type: "text",
-                placeholder: "Enter quote character...",
+                type: "typeahead",
+                placeholder: "--Select character--",
+                list: ['"', "'"],
                 validators: {
                     maxLength: 1,
                 },
@@ -52,8 +53,9 @@ export const READ_FORM_DATA: JsonFormData = {
                 name: "escape",
                 label: "Escape character",
                 value: "",
-                type: "text",
+                type: "typeahead",
                 placeholder: "Enter escape character...",
+                list: ["/"],
                 validators: {
                     maxLength: 1,
                 },
@@ -62,8 +64,9 @@ export const READ_FORM_DATA: JsonFormData = {
                 name: "comment",
                 label: "Comment character",
                 value: "",
-                type: "text",
-                placeholder: "Enter comment character...",
+                type: "typeahead",
+                placeholder: "--Select character--",
+                list: ["#", "*"],
                 validators: {
                     maxLength: 1,
                 },

@@ -15,6 +15,7 @@ import { EventTimeFieldComponent } from "./event-time-field/event-time-field.com
 import { CacheFieldComponent } from "./cache-field/cache-field.component";
 import { OrderFieldComponent } from "./order-field/order-field.component";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
+import { TypeaheadFieldComponent } from "./typeahead-field/typeahead-field.component";
 @NgModule({
     declarations: [
         InputFieldComponent,
@@ -26,6 +27,7 @@ import { NgxTrimDirectiveModule } from "ngx-trim-directive";
         EventTimeFieldComponent,
         CacheFieldComponent,
         OrderFieldComponent,
+        TypeaheadFieldComponent,
     ],
     exports: [
         InputFieldComponent,
@@ -37,6 +39,7 @@ import { NgxTrimDirectiveModule } from "ngx-trim-directive";
         EventTimeFieldComponent,
         CacheFieldComponent,
         OrderFieldComponent,
+        TypeaheadFieldComponent,
     ],
     imports: [
         CommonModule,

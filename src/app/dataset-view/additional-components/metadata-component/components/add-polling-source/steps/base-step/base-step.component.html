@@ -83,6 +83,15 @@
                         [label]="control.label"
                     ></app-order-field>
                 </ng-container>
+                <ng-container *ngIf="control.type === controlType.TYPEAHEAD">
+                    <app-typeahead-field
+                        [form]="sectionForm"
+                        [controlName]="control.name"
+                        [label]="control.label"
+                        [placeholder]="control.placeholder!"
+                        [data]="control.list!"
+                    ></app-typeahead-field>
+                </ng-container>
             </div>
         </ng-container>
         <ng-content></ng-content>

@@ -21,6 +21,7 @@ export interface JsonFormControls {
     required?: boolean;
     validators: JsonFormValidators;
     dataTestId?: string;
+    list?: string[];
 }
 
 export type JsonFormData = Record<
@@ -39,6 +40,7 @@ export enum ControlType {
     EVENT_TIME = "event-time",
     CACHE = "cache",
     ORDER = "order",
+    TYPEAHEAD = "typeahead",
 }
 
 export enum FetchKind {

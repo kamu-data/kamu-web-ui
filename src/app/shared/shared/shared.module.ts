@@ -50,6 +50,7 @@ import { MarkdownModule } from "ngx-markdown";
         SchemaPropertyComponent,
         MergeStrategyPropertyComponent,
         CardsPropertyComponent,
+        TooltipIconComponent,
         MarkdownModule,
         DisplaySizeModule,
     ],

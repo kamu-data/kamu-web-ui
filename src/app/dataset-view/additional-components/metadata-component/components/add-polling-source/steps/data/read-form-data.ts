@@ -8,6 +8,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Schema",
                 value: "",
                 type: "schema",
+                tooltip:
+                    "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
                 validators: {},
             },
             {
@@ -15,6 +17,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Header",
                 value: false,
                 type: "checkbox",
+                tooltip: "Use the first line as names of columns.",
                 validators: {},
                 dataTestId: "header",
             },
@@ -23,6 +26,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Encoding",
                 value: "",
                 type: "text",
+                tooltip: "Decodes the CSV files by the given encoding type.",
                 placeholder: "Enter encoding type...",
                 validators: {},
             },
@@ -32,6 +36,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: "",
                 type: "typeahead",
                 placeholder: "--Select character--",
+                tooltip:
+                    "Sets a single character as a separator for each field and value.",
                 list: [",", ";", "|"],
                 validators: {
                     maxLength: 1,
@@ -44,6 +50,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: "",
                 type: "typeahead",
                 placeholder: "--Select character--",
+                tooltip:
+                    "Sets a single character used for escaping quoted values where the separator can be part of the value. Set an empty string to turn off quotations.",
                 list: ['"', "'"],
                 validators: {
                     maxLength: 1,
@@ -55,6 +63,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: "",
                 type: "typeahead",
                 placeholder: "Enter escape character...",
+                tooltip:
+                    "Sets a single character used for escaping quotes inside an already quoted value.",
                 list: ["/"],
                 validators: {
                     maxLength: 1,
@@ -66,6 +76,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: "",
                 type: "typeahead",
                 placeholder: "--Select character--",
+                tooltip:
+                    "Sets a single character used for skipping lines beginning with this character.",
                 list: ["#", "*"],
                 validators: {
                     maxLength: 1,
@@ -76,6 +88,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Null value",
                 value: "",
                 type: "text",
+                tooltip: "Sets the string representation of a null value.",
                 placeholder: "Enter null value...",
                 validators: {},
             },
@@ -84,6 +97,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Empty value",
                 value: "",
                 type: "text",
+                tooltip: "Sets the string representation of an empty value.",
                 placeholder: "Enter empty value...",
                 validators: {},
             },
@@ -92,6 +106,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Nan value",
                 value: "",
                 type: "text",
+                tooltip:
+                    "Sets the string representation of a non-number value.",
                 placeholder: "Enter nan value...",
                 validators: {},
             },
@@ -100,6 +116,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Positive infinity value",
                 value: "",
                 type: "text",
+                tooltip:
+                    "Sets the string representation of a positive infinity value.",
                 placeholder: "Enter positive infinity value...",
                 validators: {},
             },
@@ -108,6 +126,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Negative infinity value",
                 value: "",
                 type: "text",
+                tooltip:
+                    "Sets the string representation of a negative infinity value.",
                 placeholder: "Enter negative infinity value...",
                 validators: {},
             },
@@ -116,6 +136,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Date format",
                 value: "",
                 type: "typeahead",
+                tooltip: "Sets the string that indicates a date format.",
                 placeholder: "--Select format--",
                 list: [
                     "YYYY-MM-DDTHH:mm:ss.sss",
@@ -133,6 +154,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: "",
                 type: "typeahead",
                 placeholder: "--Select format--",
+                tooltip: "Sets the string that indicates a timestamp format.",
                 list: [
                     "YYYY-MM-DDTHH:mm:ss.sss",
                     "YYYY-MM-DDTHH:mm:ss",
@@ -148,6 +170,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Enforce schema",
                 value: false,
                 type: "checkbox",
+                tooltip:
+                    "If it is set to true, the specified or inferred schema will be forcibly applied to datasource files, and headers in CSV files will be ignored. If the option is set to false, the schema will be validated against all headers in CSV files in the case when the header option is set to true.",
                 validators: {},
                 dataTestId: "enforceSchema",
             },
@@ -156,6 +180,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Infer schema",
                 value: false,
                 type: "checkbox",
+                tooltip:
+                    "Infers the input schema automatically from data. It requires one extra pass over the data.",
                 validators: {},
                 dataTestId: "inferSchema",
             },
@@ -164,6 +190,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Ignore leading whitespace",
                 value: false,
                 type: "checkbox",
+                tooltip:
+                    "A flag indicating whether or not leading whitespaces from values being read should be skipped.",
                 validators: {},
                 dataTestId: "ignoreLeadingWhiteSpace",
             },
@@ -172,14 +200,17 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Ignore trailing whitespace",
                 value: false,
                 type: "checkbox",
+                tooltip:
+                    "A flag indicating whether or not trailing whitespaces from values being read should be skipped.",
                 validators: {},
                 dataTestId: "ignoreTrailingWhiteSpace",
             },
             {
                 name: "multiLine",
-                label: "MultiLine",
+                label: "Multi line",
                 value: false,
                 type: "checkbox",
+                tooltip: "Parse one record, which may span multiple lines.",
                 validators: {},
                 dataTestId: "multiLine",
             },
@@ -192,6 +223,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Schema",
                 value: "",
                 type: "schema",
+                tooltip:
+                    "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
                 validators: {},
             },
             {
@@ -199,6 +232,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Date format",
                 value: "",
                 type: "text",
+                tooltip: "Sets the string that indicates a date format.",
                 placeholder: "Enter date",
                 validators: {},
             },
@@ -207,6 +241,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Encoding",
                 value: "",
                 type: "text",
+                tooltip:
+                    "Allows to forcibly set one of standard basic or extended encoding.",
                 placeholder: "Enter encoding...",
                 validators: {},
             },
@@ -215,6 +251,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Timestamp format",
                 value: "",
                 type: "text",
+                tooltip: "Sets the string that indicates a timestamp format.",
                 placeholder: "Enter timestamp format...",
                 validators: {},
             },
@@ -223,6 +260,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "MultiLine",
                 value: false,
                 type: "checkbox",
+                tooltip:
+                    "Parse one record, which may span multiple lines, per file.",
                 validators: {},
                 dataTestId: "multiLine",
             },
@@ -231,6 +270,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Primitives as string",
                 value: false,
                 type: "checkbox",
+                tooltip: "Infers all primitive values as a string type.",
                 validators: {},
                 dataTestId: "primitivesAsString",
             },
@@ -243,6 +283,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Schema",
                 value: "",
                 type: "schema",
+                tooltip:
+                    "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
                 validators: {},
             },
         ],
@@ -254,6 +296,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Schema",
                 value: "",
                 type: "schema",
+                tooltip:
+                    "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
                 validators: {},
             },
             {
@@ -261,6 +305,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Path",
                 value: "",
                 type: "text",
+                tooltip:
+                    "Path to a data file within a multi-file archive. Can contain glob patterns.",
                 placeholder: "Enter path to data file...",
                 validators: {},
             },
@@ -272,6 +318,8 @@ export const READ_FORM_DATA: JsonFormData = {
                 name: "schema",
                 label: "Schema",
                 value: "",
+                tooltip:
+                    "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
                 type: "schema",
                 validators: {},
             },

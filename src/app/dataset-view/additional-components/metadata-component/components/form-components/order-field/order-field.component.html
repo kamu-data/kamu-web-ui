@@ -1,6 +1,9 @@
 <div [formGroup]="form">
-    <label class="form-label">{{ label }} </label><br />
-    <ng-container *ngFor="let control of orderRadioControl">
+    <div class="d-flex">
+        <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
+        <label class="form-label">{{ label }} </label>
+    </div>
+    <div class="ms-4" *ngFor="let control of orderRadioControl">
         <div class="form-check">
             <input
                 class="form-check-input"
@@ -12,5 +15,5 @@
             />
             <label class="form-check-label" for=""> {{ control.label }} </label>
         </div>
-    </ng-container>
+    </div>
 </div>

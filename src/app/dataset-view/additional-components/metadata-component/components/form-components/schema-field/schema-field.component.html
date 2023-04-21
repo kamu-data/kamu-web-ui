@@ -1,5 +1,8 @@
 <div class="d-flex flex-column dynamic-table" [formGroup]="form">
-    <label class="form-label">{{ label }}</label>
+    <div class="d-flex">
+        <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
+        <label class="form-label">{{ label }} </label>
+    </div>
 
     <ng-container [formArrayName]="controlName">
         <table

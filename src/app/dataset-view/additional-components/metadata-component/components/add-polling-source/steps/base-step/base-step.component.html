@@ -21,6 +21,7 @@
                         [value]="control.value"
                         [requiredField]="control.validators.required"
                         [placeholder]="control.placeholder"
+                        [tooltip]="control.tooltip!"
                     ></app-input-field>
                 </ng-container>
                 <ng-container
@@ -31,6 +32,7 @@
                         [controlName]="control.options?.formArrayName!"
                         [label]="control.label!"
                         [buttonText]="control.options?.buttonText!"
+                        [tooltip]="control.tooltip!"
                     ></app-key-value-field>
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.ARRAY_KEY">
@@ -40,6 +42,7 @@
                         [label]="control.label"
                         [buttonText]="control.options?.buttonText!"
                         [placeholder]="control.placeholder!"
+                        [tooltip]="control.tooltip!"
                     ></app-array-keys-field>
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.CHECKBOX">
@@ -49,6 +52,7 @@
                         [label]="control.label"
                         [checked]="control.value"
                         [dataTestId]="control.dataTestId"
+                        [tooltip]="control.tooltip!"
                     >
                     </app-checkbox-field>
                 </ng-container>
@@ -57,6 +61,7 @@
                         [form]="sectionForm"
                         [controlName]="control.name"
                         [label]="control.label"
+                        [tooltip]="control.tooltip!"
                     >
                     </app-schema-field>
                 </ng-container>
@@ -65,6 +70,7 @@
                         [form]="sectionForm"
                         [controlName]="control.name"
                         [label]="control.label"
+                        [tooltip]="control.tooltip!"
                     >
                     </app-event-time-field>
                 </ng-container>
@@ -73,6 +79,7 @@
                         [form]="sectionForm"
                         [controlName]="control.name"
                         [label]="control.label"
+                        [tooltip]="control.tooltip!"
                     >
                     </app-cache-field>
                 </ng-container>
@@ -81,6 +88,7 @@
                         [form]="sectionForm"
                         [controlName]="control.name"
                         [label]="control.label"
+                        [tooltip]="control.tooltip!"
                     ></app-order-field>
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.TYPEAHEAD">
@@ -90,6 +98,7 @@
                         [label]="control.label"
                         [placeholder]="control.placeholder!"
                         [data]="control.list!"
+                        [tooltip]="control.tooltip!"
                     ></app-typeahead-field>
                 </ng-container>
             </div>

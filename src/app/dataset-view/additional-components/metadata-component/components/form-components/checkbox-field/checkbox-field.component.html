@@ -1,4 +1,4 @@
-<div class="form-check" [formGroup]="form">
+<div class="form-check d-flex gap-2" [formGroup]="form">
     <input
         class="form-check-input"
         type="checkbox"
@@ -7,4 +7,5 @@
         [checked]="checked"
     />
     <label class="form-check-label"> {{ label }} </label>
+    <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
 </div>

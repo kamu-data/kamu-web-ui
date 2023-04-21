@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { SchemaType } from "./../form-components/schema-field/schema-field.component";
 import {
     FetchKind,
     ReadKind,
@@ -34,6 +33,7 @@ import {
 import { FETCH_FORM_DATA } from "./steps/data/fetch-form-data";
 import { READ_FORM_DATA } from "./steps/data/read-form-data";
 import { MERGE_FORM_DATA } from "./steps/data/merge-form-data";
+import { ProcessFormService } from "./process-form.service";
 
 @Component({
     selector: "app-add-polling-source",
@@ -132,6 +132,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private modalService: NgbModal,
         private cdr: ChangeDetectorRef,
+        private processFormService: ProcessFormService,
     ) {
         super();
     }
@@ -152,8 +153,10 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     }
 
     public onSubmit(): void {
-        this.transformSchema();
-        this.processFetchOrderControl();
+        this.processFormService.transformSchema(this.pollingSourceForm);
+        this.processFormService.processFetchOrderControl(
+            this.pollingSourceForm,
+        );
         this.trackSubscription(
             this.createDatasetService
                 .commitEventToDataset(
@@ -187,8 +190,10 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
             FinalYamlModalComponent,
             { size: "lg" },
         );
-        this.transformSchema();
-        this.processFetchOrderControl();
+        this.processFormService.transformSchema(this.pollingSourceForm);
+        this.processFormService.processFetchOrderControl(
+            this.pollingSourceForm,
+        );
         (modalRef.componentInstance as FinalYamlModalComponent).yamlTemplate =
             this.yamlEventService.buildYamlSetPollingSourceEvent(
                 this.pollingSourceForm.value as Omit<
@@ -198,17 +203,6 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
             );
         (modalRef.componentInstance as FinalYamlModalComponent).datasetInfo =
             this.getDatasetInfoFromUrl();
-    }
-
-    private transformSchema(): void {
-        const form = this.pollingSourceForm.value;
-        if (form.read.schema) {
-            form.read.schema = (form.read.schema as SchemaType[]).map(
-                (item) => {
-                    return `${item.name} ${item.type}`;
-                },
-            );
-        }
     }
 
     private processFetchOrderControl(): void {

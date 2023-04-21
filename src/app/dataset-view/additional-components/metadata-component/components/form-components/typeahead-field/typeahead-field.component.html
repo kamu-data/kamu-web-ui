@@ -1,8 +1,11 @@
 <div [formGroup]="form">
-    <label class="form-label"
-        >{{ label }}
-        <span *ngIf="requiredField" class="text-danger">*</span></label
-    >
+    <div class="d-flex">
+        <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
+        <label class="form-label"
+            >{{ label }}
+            <span *ngIf="requiredField" class="text-danger">*</span></label
+        >
+    </div>
     <input
         class="form-control"
         [placeholder]="placeholder"

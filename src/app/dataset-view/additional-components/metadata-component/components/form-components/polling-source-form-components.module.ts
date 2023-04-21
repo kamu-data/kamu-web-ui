@@ -16,6 +16,7 @@ import { CacheFieldComponent } from "./cache-field/cache-field.component";
 import { OrderFieldComponent } from "./order-field/order-field.component";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 import { TypeaheadFieldComponent } from "./typeahead-field/typeahead-field.component";
+import { SharedModule } from "src/app/shared/shared/shared.module";
 @NgModule({
     declarations: [
         InputFieldComponent,
@@ -51,6 +52,7 @@ import { TypeaheadFieldComponent } from "./typeahead-field/typeahead-field.compo
         JsonPipe,
         RxReactiveFormsModule,
         NgxTrimDirectiveModule,
+        SharedModule,
     ],
 })
 export class PollingSourceFormComponentsModule {}

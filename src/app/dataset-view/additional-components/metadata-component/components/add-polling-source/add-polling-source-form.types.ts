@@ -16,6 +16,7 @@ export interface JsonFormControls {
     label: string;
     value: any;
     type: string;
+    tooltip?: string;
     placeholder?: string;
     options?: JsonFormControlOptions;
     required?: boolean;

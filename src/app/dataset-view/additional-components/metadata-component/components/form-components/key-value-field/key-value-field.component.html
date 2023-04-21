@@ -1,5 +1,8 @@
 <div [formGroup]="form">
-    <label class="form-label">{{ label }}</label>
+    <div class="d-flex">
+        <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
+        <label class="form-label">{{ label }} </label><br />
+    </div>
     <ng-container
         [formArrayName]="controlName"
         *ngFor="let item of items?.controls; let i = index"
@@ -30,7 +33,7 @@
             </div>
         </div>
     </ng-container>
-    <div>
+    <div class="ms-4">
         <button type="button" class="add-header-button" (click)="addItem()">
             <span>{{ buttonText }}</span>
         </button>

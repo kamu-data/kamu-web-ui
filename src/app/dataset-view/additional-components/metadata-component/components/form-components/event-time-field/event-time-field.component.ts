@@ -16,6 +16,10 @@ export class EventTimeFieldComponent extends BaseField implements OnInit {
         EventTimeSourceKind;
     public readonly kindNameControl = "kind";
     public readonly patternNameControl = "pattern";
+    public readonly patternTooltip =
+        "Regular expression where first group contains the timestamp string.";
+    public readonly timestampTooltip =
+        "Format of the expected timestamp in java.text.SimpleDateFormat form.";
     public readonly timestampFormatNameControl = "timestampFormat";
     public formats: string[] = [
         "YYYY-MM-DDTHH:mm:ss.sss",

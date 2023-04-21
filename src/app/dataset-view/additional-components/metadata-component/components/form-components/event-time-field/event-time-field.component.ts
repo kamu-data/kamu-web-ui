@@ -17,6 +17,14 @@ export class EventTimeFieldComponent extends BaseField implements OnInit {
     public readonly kindNameControl = "kind";
     public readonly patternNameControl = "pattern";
     public readonly timestampFormatNameControl = "timestampFormat";
+    public formats: string[] = [
+        "YYYY-MM-DDTHH:mm:ss.sss",
+        "YYYY-MM-DDTHH:mm:ss",
+        "YYYY-MM-DD",
+        "YYYY-M-DTHH:mm:ss.sss",
+        "YYYY-M-DTHH:mm:ss",
+        "YYYY-M-D",
+    ];
 
     constructor(private fb: FormBuilder) {
         super();

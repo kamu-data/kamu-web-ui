@@ -30,7 +30,9 @@ export function findElementByDataTestId<T>(
     fixture: ComponentFixture<T>,
     id: string,
 ): HTMLElement {
-    const debugElement: MaybeNull<DebugElement> = fixture.debugElement.query(By.css(`[data-test-id="${id}"]`));
+    const debugElement: MaybeNull<DebugElement> = fixture.debugElement.query(
+        By.css(`[data-test-id="${id}"]`),
+    );
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (debugElement) {
         return debugElement.nativeElement as HTMLElement;

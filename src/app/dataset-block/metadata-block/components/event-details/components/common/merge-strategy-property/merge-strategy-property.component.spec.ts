@@ -1,23 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { MergeStrategyPropertyComponent } from './merge-strategy-property.component';
+import { MergeStrategyPropertyComponent } from "./merge-strategy-property.component";
 
-describe('MergeStrategyPropertyComponent', () => {
-  let component: MergeStrategyPropertyComponent;
-  let fixture: ComponentFixture<MergeStrategyPropertyComponent>;
+describe("MergeStrategyPropertyComponent", () => {
+    let component: MergeStrategyPropertyComponent;
+    let fixture: ComponentFixture<MergeStrategyPropertyComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ MergeStrategyPropertyComponent ]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [MergeStrategyPropertyComponent],
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(MergeStrategyPropertyComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(MergeStrategyPropertyComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });

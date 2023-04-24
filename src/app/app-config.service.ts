@@ -20,11 +20,11 @@ export class AppConfigService {
 
     private static loadAppConfig(): AppConfig {
         const request = new XMLHttpRequest();
-        request.open('GET', "/assets/runtime-config.json", false);  
+        request.open("GET", "/assets/runtime-config.json", false);
         request.send(null);
         const data: AppConfig = JSON.parse(request.responseText) as AppConfig;
         return {
-            apiServerGqlUrl: AppConfigService.toRemoteURL(data.apiServerGqlUrl)
+            apiServerGqlUrl: AppConfigService.toRemoteURL(data.apiServerGqlUrl),
         };
     }
 

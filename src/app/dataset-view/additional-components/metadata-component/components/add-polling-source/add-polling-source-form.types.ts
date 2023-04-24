@@ -9,13 +9,14 @@ export interface JsonFormValidators {
 interface JsonFormControlOptions {
     buttonText?: string;
     formArrayName?: string;
+    innerTooltips?: Record<string, string>;
 }
 
 export interface JsonFormControls {
     name: string;
     label: string;
     value: any;
-    type: string;
+    type: ControlType;
     tooltip?: string;
     placeholder?: string;
     options?: JsonFormControlOptions;

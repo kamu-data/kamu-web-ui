@@ -26,7 +26,9 @@
                 class="text-danger fs-12"
                 [attr.data-test-id]="'error-{{controlName}}-maxLength'"
             >
-                Field can be max 1 character.</span
+                Field can be max {{ maxLength }} character{{
+                    maxLength && maxLength > 1 ? "s" : ""
+                }}.</span
             >
         </div>
     </div>

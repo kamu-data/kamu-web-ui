@@ -1,5 +1,7 @@
 <div [formGroupName]="groupName" *ngIf="sectionForm">
-    <h2 class="text-center">{{ title }}</h2>
+    <h2 class="text-center">
+        {{ title }}
+    </h2>
     <app-select-kind-field
         [form]="sectionForm"
         [data]="sectionStepRadioData"
@@ -66,13 +68,14 @@
                     </app-schema-field>
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.EVENT_TIME">
-                    <app-event-time-field
+                    <app-select-date-format-field
                         [form]="sectionForm"
                         [controlName]="control.name"
                         [label]="control.label"
                         [tooltip]="control.tooltip!"
+                        [innerTooltips]="control.options?.innerTooltips!"
                     >
-                    </app-event-time-field>
+                    </app-select-date-format-field>
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.CACHE">
                     <app-cache-field
@@ -99,6 +102,7 @@
                         [placeholder]="control.placeholder!"
                         [data]="control.list!"
                         [tooltip]="control.tooltip!"
+                        [maxLength]="control.validators.maxLength"
                     ></app-typeahead-field>
                 </ng-container>
             </div>

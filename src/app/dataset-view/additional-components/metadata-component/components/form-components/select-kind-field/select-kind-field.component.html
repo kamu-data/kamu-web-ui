@@ -1,4 +1,9 @@
-<div class="radio-group" [formGroup]="form">
+<div
+    class="radio-group"
+    [formGroup]="form"
+    placement="top"
+    ngbTooltip="Tooltip on top"
+>
     <div class="input-container" *ngFor="let step of data">
         <input
             formControlName="kind"

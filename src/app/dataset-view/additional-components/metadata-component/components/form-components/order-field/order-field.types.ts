@@ -1,10 +1,12 @@
+import { SourceOrder } from "../../add-polling-source/process-form.service.types";
+
 export interface OrderControlType {
     label: string;
-    value: "none" | "byName" | "byEventTime";
+    value: SourceOrder;
 }
 
 export const ORDER_RADIO_CONTROL: OrderControlType[] = [
-    { label: "None", value: "none" },
-    { label: "By name", value: "byName" },
-    { label: "By event time", value: "byEventTime" },
+    { label: "None", value: SourceOrder.NONE },
+    { label: "By name", value: SourceOrder.BY_NAME },
+    { label: "By event time", value: SourceOrder.BY_EVENT_TIME },
 ];

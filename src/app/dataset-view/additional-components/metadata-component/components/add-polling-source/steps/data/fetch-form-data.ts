@@ -1,5 +1,5 @@
 import AppValues from "src/app/common/app.values";
-import { JsonFormData } from "../../add-polling-source-form.types";
+import { ControlType, JsonFormData } from "../../add-polling-source-form.types";
 
 export const FETCH_FORM_DATA: JsonFormData = {
     url: {
@@ -8,7 +8,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 name: "url",
                 label: "Url",
                 value: "",
-                type: "text",
+                type: ControlType.TEXT,
                 placeholder: "Enter url",
                 tooltip: "URL of the data source.",
                 validators: {
@@ -20,16 +20,24 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 name: "eventTime",
                 label: "Event time",
                 value: "",
-                type: "event-time",
+                type: ControlType.EVENT_TIME,
                 tooltip:
                     "Describes how event time is extracted from the source metadata.",
+                options: {
+                    innerTooltips: {
+                        fromMetadata:
+                            "Extracts event time from the source's metadata.",
+                        fromPath:
+                            "Extracts event time from the path component of the source.",
+                    },
+                },
                 validators: {},
             },
             {
                 name: "headers",
                 value: "",
                 label: "Headers",
-                type: "array-key-value",
+                type: ControlType.ARRAY_KEY_VALUE,
                 tooltip:
                     "Headers to pass during the request (e.g. HTTP Authorization)",
                 options: {
@@ -42,7 +50,9 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 name: "cache",
                 label: "Use cache",
                 value: "",
-                type: "cache",
+                tooltip:
+                    "After source was processed once it will never be ingested again.",
+                type: ControlType.CACHE,
                 validators: {},
             },
         ],
@@ -53,7 +63,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 name: "path",
                 label: "Path",
                 value: "",
-                type: "text",
+                type: ControlType.TEXT,
                 placeholder: "Enter path",
                 tooltip: "Path with a glob pattern.",
                 validators: {
@@ -65,25 +75,35 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 name: "order",
                 label: "Order",
                 value: "none",
-                type: "order",
+                type: ControlType.ORDER,
                 tooltip:
-                    "Specifies how input files should be ordered before ingestion.Order is important as every file will be processed individually and will advance the dataset's watermark.",
+                    "Specifies how input files should be ordered before ingestion. Order is important as every file will be processed individually and will advance the dataset's watermark.",
                 validators: {},
             },
             {
                 name: "eventTime",
                 label: "Event time",
                 value: "",
-                type: "event-time",
+                type: ControlType.EVENT_TIME,
                 tooltip:
                     "Describes how event time is extracted from the source metadata.",
                 validators: {},
+                options: {
+                    innerTooltips: {
+                        fromMetadata:
+                            "Extracts event time from the source's metadata.",
+                        fromPath:
+                            "Extracts event time from the path component of the source.",
+                    },
+                },
             },
             {
                 name: "cache",
                 label: "Use cache",
                 value: "",
-                type: "cache",
+                type: ControlType.CACHE,
+                tooltip:
+                    "After source was processed once it will never be ingested again.",
                 validators: {},
             },
         ],
@@ -94,7 +114,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 name: "image",
                 label: "Image",
                 value: "",
-                type: "text",
+                type: ControlType.TEXT,
                 placeholder: "Enter image..",
                 tooltip: "Image name and and an optional tag.",
                 validators: {
@@ -106,7 +126,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 label: "Commands",
                 placeholder: "Enter command...",
                 value: "",
-                type: "array-key",
+                type: ControlType.ARRAY_KEY,
                 tooltip:
                     "Specifies the entrypoint. Not executed within a shell. The default OCI image's ENTRYPOINT is used if this is not provided.",
                 options: {
@@ -120,7 +140,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 label: "Arguments",
                 placeholder: "Enter argument...",
                 value: "",
-                type: "array-key",
+                type: ControlType.ARRAY_KEY,
                 tooltip:
                     "Arguments to the entrypoint. The OCI image's CMD is used if this is not provided.",
                 options: {
@@ -134,7 +154,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 name: "env",
                 value: "",
                 label: "Environment variables",
-                type: "array-key-value",
+                type: ControlType.ARRAY_KEY_VALUE,
                 tooltip:
                     "Environment variables to propagate into or set in the container.",
                 options: {

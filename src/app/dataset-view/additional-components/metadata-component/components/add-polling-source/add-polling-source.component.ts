@@ -42,36 +42,36 @@ import { ProcessFormService } from "./process-form.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddPollingSourceComponent extends BaseComponent implements OnInit {
-    public currentStep: SetPollingSourceSection = SetPollingSourceSection.READ;
+    public currentStep: SetPollingSourceSection = SetPollingSourceSection.FETCH;
     public steps: typeof SetPollingSourceSection = SetPollingSourceSection;
     public isAddPrepareStep = false;
     public isAddPreprocessStep = false;
     public errorMessage = "";
     // --------------------------------
-    private readonly defaultPrepareKind = PrepareKind.PIPE;
-    private readonly defaultPreprocessKind = PreprocessKind.SQL;
+    private readonly DEFAULT_PREPARE_KIND = PrepareKind.PIPE;
+    private readonly DEFAULT_PREPROCESS_KIND = PreprocessKind.SQL;
     // ---------------------------------
-    public readonly fetchStepRadioData = FETCH_STEP_RADIO_CONTROLS;
-    public readonly fetchFormData = FETCH_FORM_DATA;
-    public readonly fetchDefaultKind = FetchKind.URL;
+    public readonly FETCH_STEP_RADIO_DATA = FETCH_STEP_RADIO_CONTROLS;
+    public readonly FETCH_FORM_DATA = FETCH_FORM_DATA;
+    public readonly FETCH_DEFAULT_KIND = FetchKind.URL;
     // ---------------------------------
-    public readonly readStepRadioData = READ_STEP_RADIO_CONTROLS;
-    public readonly readFormData = READ_FORM_DATA;
-    public readonly readDefaultKind = ReadKind.CSV;
+    public readonly READ_STEP_RADIO_DATA = READ_STEP_RADIO_CONTROLS;
+    public readonly READ_FORM_DATA = READ_FORM_DATA;
+    public readonly READ_DEFAULT_KIND = ReadKind.CSV;
     // ---------------------------------
-    public readonly mergeStepRadioData = MERGE_STEP_RADIO_CONTROLS;
-    public readonly mergeFormData = MERGE_FORM_DATA;
-    public readonly mergeDefaultKind = MergeKind.APPEND;
+    public readonly MERGE_STEP_RADIO_DATA = MERGE_STEP_RADIO_CONTROLS;
+    public readonly MERGE_FORM_DATA = MERGE_FORM_DATA;
+    public readonly MERGE_DEFAULT_KIND = MergeKind.APPEND;
 
     public pollingSourceForm: FormGroup = this.fb.group({
         fetch: this.fb.group({
-            kind: [this.fetchDefaultKind],
+            kind: [this.FETCH_DEFAULT_KIND],
         }),
         read: this.fb.group({
-            kind: [this.readDefaultKind],
+            kind: [this.READ_DEFAULT_KIND],
         }),
         merge: this.fb.group({
-            kind: [this.mergeDefaultKind],
+            kind: [this.MERGE_DEFAULT_KIND],
         }),
     });
 
@@ -99,7 +99,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
             this.pollingSourceForm.addControl(
                 SetPollingSourceSection.PREPARE,
                 this.fb.group({
-                    kind: this.defaultPrepareKind,
+                    kind: this.DEFAULT_PREPARE_KIND,
                 }),
             );
         } else {
@@ -115,7 +115,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
             this.pollingSourceForm.addControl(
                 SetPollingSourceSection.PREPROCESS,
                 this.fb.group({
-                    kind: this.defaultPreprocessKind,
+                    kind: this.DEFAULT_PREPROCESS_KIND,
                 }),
             );
         } else {
@@ -153,10 +153,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     }
 
     public onSubmit(): void {
-        this.processFormService.transformSchema(this.pollingSourceForm);
-        this.processFormService.processFetchOrderControl(
-            this.pollingSourceForm,
-        );
+        this.processFormService.transformForm(this.pollingSourceForm);
         this.trackSubscription(
             this.createDatasetService
                 .commitEventToDataset(
@@ -190,10 +187,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
             FinalYamlModalComponent,
             { size: "lg" },
         );
-        this.processFormService.transformSchema(this.pollingSourceForm);
-        this.processFormService.processFetchOrderControl(
-            this.pollingSourceForm,
-        );
+        this.processFormService.transformForm(this.pollingSourceForm);
         (modalRef.componentInstance as FinalYamlModalComponent).yamlTemplate =
             this.yamlEventService.buildYamlSetPollingSourceEvent(
                 this.pollingSourceForm.value as Omit<
@@ -203,12 +197,5 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
             );
         (modalRef.componentInstance as FinalYamlModalComponent).datasetInfo =
             this.getDatasetInfoFromUrl();
-    }
-
-    private processFetchOrderControl(): void {
-        const form = this.pollingSourceForm.value;
-        if (form.fetch.order && form.fetch.order === "none") {
-            delete form.fetch.order;
-        }
     }
 }

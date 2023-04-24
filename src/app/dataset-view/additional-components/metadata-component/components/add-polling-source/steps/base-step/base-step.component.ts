@@ -34,6 +34,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     public controlType: typeof ControlType = ControlType;
     public readonly kindNameControl = "kind";
     private readonly defaultEventTimeSource = "fromMetadata";
+
     constructor(
         private rootFormGroupDirective: FormGroupDirective,
         private fb: FormBuilder,
@@ -65,6 +66,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
             });
         if (subscription) this.trackSubscription(subscription);
     }
+
     private isArrayControl(type: ControlType): boolean {
         return [
             this.controlType.ARRAY_KEY_VALUE,
@@ -76,7 +78,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     private initForm(kind: string): void {
         this.sectionFormData[kind].controls.forEach(
             (item: JsonFormControls) => {
-                if (this.isArrayControl(item.type as ControlType)) {
+                if (this.isArrayControl(item.type)) {
                     this.sectionForm.addControl(item.name, this.fb.array([]));
                 } else if (item.type === this.controlType.EVENT_TIME) {
                     this.sectionForm.addControl(

@@ -5,27 +5,33 @@
             <label class="form-label">{{ label }} </label><br />
         </div>
         <div class="ms-4">
-            <div class="form-check">
+            <div class="form-check d-flex gap-2">
                 <input
                     class="form-check-input"
                     type="radio"
                     formControlName="kind"
-                    [name]="kindNameControl"
+                    [name]="KIND_NAME_CONTROL"
                     type="radio"
                     [value]="eventTimeSourceKind.FROM_METADATA"
                 />
                 <label class="form-check-label" for=""> From metadata </label>
+                <app-tooltip-icon
+                    [tooltip]="innerTooltips.fromMetadata"
+                ></app-tooltip-icon>
             </div>
-            <div class="form-check mt-1">
+            <div class="form-check mt-1 d-flex gap-2">
                 <input
                     class="form-check-input"
                     type="radio"
-                    [name]="kindNameControl"
+                    [name]="KIND_NAME_CONTROL"
                     formControlName="kind"
                     type="radio"
                     [value]="eventTimeSourceKind.FROM_PATH"
                 />
                 <label class="form-check-label" for=""> From path </label>
+                <app-tooltip-icon
+                    [tooltip]="innerTooltips.fromPath"
+                ></app-tooltip-icon>
             </div>
             <ng-container
                 *ngIf="currentSource === eventTimeSourceKind.FROM_PATH"
@@ -33,22 +39,22 @@
                 <div class="mt-3">
                     <app-input-field
                         [form]="eventTimeGroup"
-                        [controlName]="patternNameControl"
+                        [controlName]="PATTERN_NAME_CONTROL"
                         [label]="'Pattern'"
                         [value]="''"
                         [requiredField]="true"
                         [placeholder]="'Enter pattern...'"
-                        [tooltip]="patternTooltip"
+                        [tooltip]="PATTERN_TOOLTIP"
                     ></app-input-field>
                 </div>
                 <div class="mt-3">
                     <app-typeahead-field
                         [form]="eventTimeGroup"
-                        [controlName]="timestampFormatNameControl"
+                        [controlName]="TIMESTAMP_FORMAT_NAME_CONTROL"
                         [label]="'Timestamp format'"
                         [placeholder]="'--Select timestamp format--'"
-                        [data]="formats"
-                        [tooltip]="timestampTooltip"
+                        [data]="FORMATS"
+                        [tooltip]="TIMESTAMP_TOOLTIP"
                     ></app-typeahead-field>
                 </div>
             </ng-container>

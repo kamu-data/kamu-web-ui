@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/unbound-method */
 import { FormArray, FormBuilder, Validators } from "@angular/forms";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { BaseField } from "../base-field";
@@ -22,6 +21,7 @@ export class ArrayKeysFieldComponent extends BaseField {
     }
 
     public addPrimaryKey(): void {
+        // eslint-disable-next-line @typescript-eslint/unbound-method
         this.items.push(this.fb.control("", [Validators.required]));
     }
 

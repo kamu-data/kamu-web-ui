@@ -1,4 +1,4 @@
-<div class="form-check ms-2" [formGroup]="form">
+<div class="form-check ms-2 d-flex gap-2" [formGroup]="form">
     <input
         class="form-check-input"
         type="checkbox"
@@ -7,4 +7,5 @@
         [ngModelOptions]="{ standalone: true }"
     />
     <label class="form-check-label"> {{ label }} </label>
+    <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
 </div>

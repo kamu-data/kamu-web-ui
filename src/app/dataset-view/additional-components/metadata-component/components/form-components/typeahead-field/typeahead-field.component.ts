@@ -23,8 +23,9 @@ import {
 })
 export class TypeaheadFieldComponent extends BaseField {
     @Input() public data: string[];
-    @Input() public requiredField?: boolean;
+    @Input() public requiredField = false;
     @Input() public placeholder?: string;
+    @Input() public maxLength?: number;
     @ViewChild("instance", { static: true }) public instance: NgbTypeahead;
     public focus$ = new Subject<string>();
     public click$ = new Subject<string>();

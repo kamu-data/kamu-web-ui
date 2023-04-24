@@ -1,27 +1,36 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    Input,
+    OnInit,
+} from "@angular/core";
 import { BaseField } from "../base-field";
 import { EventTimeSourceKind } from "../../add-polling-source/add-polling-source-form.types";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 
 @Component({
-    selector: "app-event-time-field",
-    templateUrl: "./event-time-field.component.html",
-    styleUrls: ["./event-time-field.component.sass"],
+    selector: "app-select-date-format-field",
+    templateUrl: "./select-date-format-field.component.html",
+    styleUrls: ["./select-date-format-field.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventTimeFieldComponent extends BaseField implements OnInit {
+export class SelectDateFormatFieldComponent
+    extends BaseField
+    implements OnInit
+{
+    @Input() public innerTooltips: Record<string, string>;
     public currentSource: EventTimeSourceKind;
     public eventTimeSourceKind: typeof EventTimeSourceKind =
         EventTimeSourceKind;
-    public readonly kindNameControl = "kind";
-    public readonly patternNameControl = "pattern";
-    public readonly patternTooltip =
+    public readonly KIND_NAME_CONTROL = "kind";
+    public readonly PATTERN_NAME_CONTROL = "pattern";
+    public readonly PATTERN_TOOLTIP =
         "Regular expression where first group contains the timestamp string.";
-    public readonly timestampTooltip =
+    public readonly TIMESTAMP_TOOLTIP =
         "Format of the expected timestamp in java.text.SimpleDateFormat form.";
-    public readonly timestampFormatNameControl = "timestampFormat";
-    public formats: string[] = [
+    public readonly TIMESTAMP_FORMAT_NAME_CONTROL = "timestampFormat";
+    public readonly FORMATS: string[] = [
         "YYYY-MM-DDTHH:mm:ss.sss",
         "YYYY-MM-DDTHH:mm:ss",
         "YYYY-MM-DD",
@@ -33,33 +42,37 @@ export class EventTimeFieldComponent extends BaseField implements OnInit {
     constructor(private fb: FormBuilder) {
         super();
     }
-    public get eventTimeGroup(): FormGroup {
-        return this.form.get(this.controlName) as FormGroup;
-    }
+
     ngOnInit(): void {
         this.chooseEventTimeSource();
     }
 
+    public get eventTimeGroup(): FormGroup {
+        return this.form.get(this.controlName) as FormGroup;
+    }
+
     private chooseEventTimeSource(): void {
-        this.currentSource = this.eventTimeGroup.get(this.kindNameControl)
+        this.currentSource = this.eventTimeGroup.get(this.KIND_NAME_CONTROL)
             ?.value as EventTimeSourceKind;
         const subscription = this.eventTimeGroup
-            .get(this.kindNameControl)
+            .get(this.KIND_NAME_CONTROL)
             ?.valueChanges.subscribe((kind: string) => {
                 if (kind === this.eventTimeSourceKind.FROM_METADATA) {
                     this.currentSource = EventTimeSourceKind.FROM_METADATA;
-                    this.eventTimeGroup.removeControl(this.patternNameControl);
                     this.eventTimeGroup.removeControl(
-                        this.timestampFormatNameControl,
+                        this.PATTERN_NAME_CONTROL,
+                    );
+                    this.eventTimeGroup.removeControl(
+                        this.TIMESTAMP_FORMAT_NAME_CONTROL,
                     );
                 } else {
                     this.currentSource = EventTimeSourceKind.FROM_PATH;
                     this.eventTimeGroup.addControl(
-                        this.patternNameControl,
+                        this.PATTERN_NAME_CONTROL,
                         this.fb.control("", RxwebValidators.required()),
                     );
                     this.eventTimeGroup.addControl(
-                        this.timestampFormatNameControl,
+                        this.TIMESTAMP_FORMAT_NAME_CONTROL,
                         this.fb.control(""),
                     );
                 }

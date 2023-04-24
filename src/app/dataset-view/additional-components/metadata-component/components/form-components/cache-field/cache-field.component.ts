@@ -10,25 +10,35 @@ import { BaseField } from "../base-field";
 })
 export class CacheFieldComponent extends BaseField implements OnInit {
     public isCache = false;
-    private readonly controlCache = "cache";
+    private readonly CONTROL_CACHE = "cache";
+
     constructor(private fb: FormBuilder) {
         super();
     }
+
     ngOnInit(): void {
-        this.form.removeControl(this.controlCache);
+        this.initField();
     }
 
     public onCheckedCache(event: Event) {
         const input = event.target as HTMLInputElement;
         if (input.checked) {
             this.form.addControl(
-                this.controlCache,
+                this.CONTROL_CACHE,
                 this.fb.group({
                     kind: "forever",
                 }),
             );
             return;
         }
-        this.form.removeControl(this.controlCache);
+        this.form.removeControl(this.CONTROL_CACHE);
+    }
+
+    private initField(): void {
+        if (!this.form.get(this.CONTROL_CACHE)?.value) {
+            this.form.removeControl(this.CONTROL_CACHE);
+        } else {
+            this.isCache = true;
+        }
     }
 }

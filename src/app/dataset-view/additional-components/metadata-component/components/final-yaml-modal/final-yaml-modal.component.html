@@ -28,6 +28,14 @@
         <button
             ngbAutofocus
             type="button"
+            class="btn btn-outline-danger"
+            (click)="activeModal.close()"
+        >
+            Cancel
+        </button>
+        <button
+            ngbAutofocus
+            type="button"
             class="btn btn-outline-success"
             (click)="saveEvent()"
         >

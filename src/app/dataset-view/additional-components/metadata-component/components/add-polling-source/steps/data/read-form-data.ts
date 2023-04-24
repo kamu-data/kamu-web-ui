@@ -1,3 +1,4 @@
+import { TooltipsTexts } from "src/app/common/tooltips.text";
 import { ControlType, JsonFormData } from "../../add-polling-source-form.types";
 
 export const READ_FORM_DATA: JsonFormData = {
@@ -8,8 +9,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Schema",
                 value: "",
                 type: ControlType.SCHEMA,
-                tooltip:
-                    "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
+                tooltip: TooltipsTexts.SCHEMA,
                 validators: {},
             },
             {
@@ -17,7 +17,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Header",
                 value: false,
                 type: ControlType.CHECKBOX,
-                tooltip: "Use the first line as names of columns.",
+                tooltip: TooltipsTexts.HEADER,
                 validators: {},
                 dataTestId: "header",
             },
@@ -26,7 +26,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Encoding",
                 value: "",
                 type: ControlType.TEXT,
-                tooltip: "Decodes the CSV files by the given encoding type.",
+                tooltip: TooltipsTexts.ENCODING,
                 placeholder: "Enter encoding type...",
                 validators: {},
             },
@@ -36,8 +36,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: "",
                 type: ControlType.TYPEAHEAD,
                 placeholder: "--Select character--",
-                tooltip:
-                    "Sets a single character as a separator for each field and value.",
+                tooltip: TooltipsTexts.SEPARATOR,
                 list: [",", ";", "|"],
                 validators: {
                     maxLength: 1,
@@ -50,8 +49,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: "",
                 type: ControlType.TYPEAHEAD,
                 placeholder: "--Select character--",
-                tooltip:
-                    "Sets a single character used for escaping quoted values where the separator can be part of the value. Set an empty string to turn off quotations.",
+                tooltip: TooltipsTexts.QUOTE,
                 list: ['"', "'"],
                 validators: {
                     maxLength: 1,
@@ -63,8 +61,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: "",
                 type: ControlType.TYPEAHEAD,
                 placeholder: "Enter escape character...",
-                tooltip:
-                    "Sets a single character used for escaping quotes inside an already quoted value.",
+                tooltip: TooltipsTexts.ESCAPE,
                 list: ["\\"],
                 validators: {
                     maxLength: 1,
@@ -76,8 +73,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: "",
                 type: ControlType.TYPEAHEAD,
                 placeholder: "--Select character--",
-                tooltip:
-                    "Sets a single character used for skipping lines beginning with this character.",
+                tooltip: TooltipsTexts.COMMENT,
                 list: ["#", "*"],
                 validators: {
                     maxLength: 1,
@@ -88,7 +84,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Null value",
                 value: "",
                 type: ControlType.TEXT,
-                tooltip: "Sets the string representation of a null value.",
+                tooltip: TooltipsTexts.NULL_VALUE,
                 placeholder: "Enter null value...",
                 validators: {},
             },
@@ -97,7 +93,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Empty value",
                 value: "",
                 type: ControlType.TEXT,
-                tooltip: "Sets the string representation of an empty value.",
+                tooltip: TooltipsTexts.EMPTY_VALUE,
                 placeholder: "Enter empty value...",
                 validators: {},
             },
@@ -106,8 +102,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Nan value",
                 value: "",
                 type: ControlType.TEXT,
-                tooltip:
-                    "Sets the string representation of a non-number value.",
+                tooltip: TooltipsTexts.NAN_VALUE,
                 placeholder: "Enter nan value...",
                 validators: {},
             },
@@ -116,8 +111,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Positive infinity value",
                 value: "",
                 type: ControlType.TEXT,
-                tooltip:
-                    "Sets the string representation of a positive infinity value.",
+                tooltip: TooltipsTexts.POSITIVE_INFINITY,
                 placeholder: "Enter positive infinity value...",
                 validators: {},
             },
@@ -126,8 +120,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Negative infinity value",
                 value: "",
                 type: ControlType.TEXT,
-                tooltip:
-                    "Sets the string representation of a negative infinity value.",
+                tooltip: TooltipsTexts.NEGATIVE_INFINITY,
                 placeholder: "Enter negative infinity value...",
                 validators: {},
             },
@@ -136,7 +129,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Date format",
                 value: "",
                 type: ControlType.TYPEAHEAD,
-                tooltip: "Sets the string that indicates a date format.",
+                tooltip: TooltipsTexts.DATE_FORMAT,
                 placeholder: "--Select format--",
                 list: [
                     "YYYY-MM-DDTHH:mm:ss.sss",
@@ -154,7 +147,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: "",
                 type: ControlType.TYPEAHEAD,
                 placeholder: "--Select format--",
-                tooltip: "Sets the string that indicates a timestamp format.",
+                tooltip: TooltipsTexts.TIMESTAMP_FORMAT,
                 list: [
                     "YYYY-MM-DDTHH:mm:ss.sss",
                     "YYYY-MM-DDTHH:mm:ss",
@@ -170,8 +163,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Enforce schema",
                 value: false,
                 type: ControlType.CHECKBOX,
-                tooltip:
-                    "If it is set to true, the specified or inferred schema will be forcibly applied to datasource files, and headers in CSV files will be ignored. If the option is set to false, the schema will be validated against all headers in CSV files in the case when the header option is set to true.",
+                tooltip: TooltipsTexts.ENFORCE_SCHEMA,
                 validators: {},
                 dataTestId: "enforceSchema",
             },
@@ -180,8 +172,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Infer schema",
                 value: false,
                 type: ControlType.CHECKBOX,
-                tooltip:
-                    "Infers the input schema automatically from data. It requires one extra pass over the data.",
+                tooltip: TooltipsTexts.INFER_SCHEMA,
                 validators: {},
                 dataTestId: "inferSchema",
             },
@@ -190,8 +181,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Ignore leading whitespace",
                 value: false,
                 type: ControlType.CHECKBOX,
-                tooltip:
-                    "A flag indicating whether or not leading whitespaces from values being read should be skipped.",
+                tooltip: TooltipsTexts.IGNORE_LEADING_WHITESPACE,
                 validators: {},
                 dataTestId: "ignoreLeadingWhiteSpace",
             },
@@ -200,8 +190,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Ignore trailing whitespace",
                 value: false,
                 type: ControlType.CHECKBOX,
-                tooltip:
-                    "A flag indicating whether or not trailing whitespaces from values being read should be skipped.",
+                tooltip: TooltipsTexts.QUIGNORE_TRAILING_WHITESPACEOTE,
                 validators: {},
                 dataTestId: "ignoreTrailingWhiteSpace",
             },
@@ -210,7 +199,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Multi line",
                 value: false,
                 type: ControlType.CHECKBOX,
-                tooltip: "Parse one record, which may span multiple lines.",
+                tooltip: TooltipsTexts.MULTI_LINE,
                 validators: {},
                 dataTestId: "multiLine",
             },
@@ -223,8 +212,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Schema",
                 value: "",
                 type: ControlType.SCHEMA,
-                tooltip:
-                    "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
+                tooltip: TooltipsTexts.SCHEMA,
                 validators: {},
             },
             {
@@ -232,8 +220,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Encoding",
                 value: "",
                 type: ControlType.TEXT,
-                tooltip:
-                    "Allows to forcibly set one of standard basic or extended encoding.",
+                tooltip: TooltipsTexts.ENCODING,
                 placeholder: "Enter encoding...",
                 validators: {},
             },
@@ -242,7 +229,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Date format",
                 value: "",
                 type: ControlType.TYPEAHEAD,
-                tooltip: "Sets the string that indicates a date format.",
+                tooltip: TooltipsTexts.DATE_FORMAT,
                 placeholder: "--Select format--",
                 list: [
                     "YYYY-MM-DDTHH:mm:ss.sss",
@@ -261,7 +248,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 value: "",
                 type: ControlType.TYPEAHEAD,
                 placeholder: "--Select format--",
-                tooltip: "Sets the string that indicates a timestamp format.",
+                tooltip: TooltipsTexts.TIMESTAMP_FORMAT,
                 list: [
                     "YYYY-MM-DDTHH:mm:ss.sss",
                     "YYYY-MM-DDTHH:mm:ss",
@@ -277,8 +264,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "MultiLine",
                 value: false,
                 type: ControlType.CHECKBOX,
-                tooltip:
-                    "Parse one record, which may span multiple lines, per file.",
+                tooltip: TooltipsTexts.MULTI_LINE,
                 validators: {},
                 dataTestId: "multiLine",
             },
@@ -287,7 +273,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Primitives as string",
                 value: false,
                 type: ControlType.CHECKBOX,
-                tooltip: "Infers all primitive values as a string type.",
+                tooltip: TooltipsTexts.PRIMITIVE_AS_STRING,
                 validators: {},
                 dataTestId: "primitivesAsString",
             },
@@ -300,8 +286,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Schema",
                 value: "",
                 type: ControlType.SCHEMA,
-                tooltip:
-                    "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
+                tooltip: TooltipsTexts.SCHEMA,
                 validators: {},
             },
         ],
@@ -313,8 +298,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Schema",
                 value: "",
                 type: ControlType.SCHEMA,
-                tooltip:
-                    "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
+                tooltip: TooltipsTexts.SCHEMA,
                 validators: {},
             },
             {
@@ -322,8 +306,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Path",
                 value: "",
                 type: ControlType.TEXT,
-                tooltip:
-                    "Path to a data file within a multi-file archive. Can contain glob patterns.",
+                tooltip: TooltipsTexts.SUB_PATH,
                 placeholder: "Enter path to data file...",
                 validators: {},
             },
@@ -335,8 +318,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 name: "schema",
                 label: "Schema",
                 value: "",
-                tooltip:
-                    "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.",
+                tooltip: TooltipsTexts.SCHEMA,
                 type: ControlType.SCHEMA,
                 validators: {},
             },

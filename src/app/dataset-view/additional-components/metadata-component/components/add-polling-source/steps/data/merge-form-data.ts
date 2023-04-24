@@ -1,3 +1,4 @@
+import { TooltipsTexts } from "src/app/common/tooltips.text";
 import { ControlType, JsonFormData } from "../../add-polling-source-form.types";
 
 export const MERGE_FORM_DATA: JsonFormData = {
@@ -12,8 +13,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
                 value: "",
                 type: ControlType.ARRAY_KEY,
                 placeholder: "Enter primary key...",
-                tooltip:
-                    "Names of the columns that uniquely identify the record throughout its lifetime",
+                tooltip: TooltipsTexts.PRIMARY_KEYS,
                 options: {
                     formArrayName: "primaryKey",
                     buttonText: "+ Add primary key",
@@ -29,8 +29,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
                 label: "Primary keys",
                 placeholder: "Enter primary key...",
                 value: "",
-                tooltip:
-                    "Names of the columns that uniquely identify the record throughout its lifetime",
+                tooltip: TooltipsTexts.PRIMARY_KEYS,
                 type: ControlType.ARRAY_KEY,
                 options: {
                     formArrayName: "primaryKey",
@@ -44,8 +43,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
                 placeholder: "Enter column name...",
                 value: "",
                 type: ControlType.ARRAY_KEY,
-                tooltip:
-                    "Names of the columns to compared to determine if a row has changed between two snapshots.",
+                tooltip: TooltipsTexts.COMPARE_COLUMNS,
                 options: {
                     formArrayName: "compareColumns",
                     buttonText: "+ Add column name",
@@ -57,8 +55,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
                 label: "Observation column",
                 value: "",
                 type: ControlType.TEXT,
-                tooltip:
-                    "Name of the observation type column that will be added to the data.",
+                tooltip: TooltipsTexts.OBSERVATION_COLUMN,
                 placeholder: "Enter column name...",
                 validators: {},
             },
@@ -67,8 +64,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
                 label: "Observation added",
                 value: "",
                 type: ControlType.TEXT,
-                tooltip:
-                    "Name of the observation type when the data with certain primary key is seen for the first time.",
+                tooltip: TooltipsTexts.OBSERVATION_ADDED,
                 placeholder: "Enter name...",
                 validators: {},
             },
@@ -77,8 +73,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
                 label: "Observation changed",
                 value: "",
                 type: ControlType.TEXT,
-                tooltip:
-                    "Name of the observation type when the data with certain primary key has changed compared to the last time it was seen.",
+                tooltip: TooltipsTexts.OBSERVATION_CHANGED,
                 placeholder: "Enter name...",
                 validators: {},
             },
@@ -87,8 +82,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
                 label: "Observation removed",
                 value: "",
                 type: ControlType.TEXT,
-                tooltip:
-                    "Name of the observation type when the data with certain primary key has been seen before but now is missing from the snapshot.",
+                tooltip: TooltipsTexts.OBSERVATION_REMOVED,
                 placeholder: "Enter name...",
                 validators: {},
             },

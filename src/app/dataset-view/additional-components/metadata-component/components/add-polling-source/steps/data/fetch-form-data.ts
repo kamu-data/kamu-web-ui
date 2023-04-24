@@ -1,5 +1,6 @@
 import AppValues from "src/app/common/app.values";
 import { ControlType, JsonFormData } from "../../add-polling-source-form.types";
+import { TooltipsTexts } from "src/app/common/tooltips.text";
 
 export const FETCH_FORM_DATA: JsonFormData = {
     url: {
@@ -10,7 +11,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 value: "",
                 type: ControlType.TEXT,
                 placeholder: "Enter url",
-                tooltip: "URL of the data source.",
+                tooltip: TooltipsTexts.URL,
                 validators: {
                     required: true,
                     pattern: AppValues.URL_PATTERN,
@@ -21,14 +22,11 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 label: "Event time",
                 value: "",
                 type: ControlType.EVENT_TIME,
-                tooltip:
-                    "Describes how event time is extracted from the source metadata.",
+                tooltip: TooltipsTexts.EVENT_TIME,
                 options: {
                     innerTooltips: {
-                        fromMetadata:
-                            "Extracts event time from the source's metadata.",
-                        fromPath:
-                            "Extracts event time from the path component of the source.",
+                        fromMetadata: TooltipsTexts.EVENT_TIME_FROM_METADATA,
+                        fromPath: TooltipsTexts.EVENT_TIME_FROM_PATH,
                     },
                 },
                 validators: {},
@@ -38,8 +36,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 value: "",
                 label: "Headers",
                 type: ControlType.ARRAY_KEY_VALUE,
-                tooltip:
-                    "Headers to pass during the request (e.g. HTTP Authorization)",
+                tooltip: TooltipsTexts.HEADERS,
                 options: {
                     formArrayName: "headers",
                     buttonText: "+ Add headers",
@@ -50,8 +47,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 name: "cache",
                 label: "Use cache",
                 value: "",
-                tooltip:
-                    "After source was processed once it will never be ingested again.",
+                tooltip: TooltipsTexts.CACHE,
                 type: ControlType.CACHE,
                 validators: {},
             },
@@ -65,7 +61,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 value: "",
                 type: ControlType.TEXT,
                 placeholder: "Enter path",
-                tooltip: "Path with a glob pattern.",
+                tooltip: TooltipsTexts.PATH,
                 validators: {
                     required: true,
                 },
@@ -76,8 +72,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 label: "Order",
                 value: "none",
                 type: ControlType.ORDER,
-                tooltip:
-                    "Specifies how input files should be ordered before ingestion. Order is important as every file will be processed individually and will advance the dataset's watermark.",
+                tooltip: TooltipsTexts.PATH,
                 validators: {},
             },
             {
@@ -85,15 +80,12 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 label: "Event time",
                 value: "",
                 type: ControlType.EVENT_TIME,
-                tooltip:
-                    "Describes how event time is extracted from the source metadata.",
+                tooltip: TooltipsTexts.EVENT_TIME,
                 validators: {},
                 options: {
                     innerTooltips: {
-                        fromMetadata:
-                            "Extracts event time from the source's metadata.",
-                        fromPath:
-                            "Extracts event time from the path component of the source.",
+                        fromMetadata: TooltipsTexts.EVENT_TIME_FROM_METADATA,
+                        fromPath: TooltipsTexts.EVENT_TIME_FROM_PATH,
                     },
                 },
             },
@@ -102,8 +94,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 label: "Use cache",
                 value: "",
                 type: ControlType.CACHE,
-                tooltip:
-                    "After source was processed once it will never be ingested again.",
+                tooltip: TooltipsTexts.CACHE,
                 validators: {},
             },
         ],
@@ -116,7 +107,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 value: "",
                 type: ControlType.TEXT,
                 placeholder: "Enter image..",
-                tooltip: "Image name and and an optional tag.",
+                tooltip: TooltipsTexts.IMAGE,
                 validators: {
                     required: true,
                 },
@@ -127,8 +118,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 placeholder: "Enter command...",
                 value: "",
                 type: ControlType.ARRAY_KEY,
-                tooltip:
-                    "Specifies the entrypoint. Not executed within a shell. The default OCI image's ENTRYPOINT is used if this is not provided.",
+                tooltip: TooltipsTexts.COMMANDS,
                 options: {
                     formArrayName: "command",
                     buttonText: "+ Add command",
@@ -141,8 +131,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 placeholder: "Enter argument...",
                 value: "",
                 type: ControlType.ARRAY_KEY,
-                tooltip:
-                    "Arguments to the entrypoint. The OCI image's CMD is used if this is not provided.",
+                tooltip: TooltipsTexts.ARGUMENTS,
                 options: {
                     formArrayName: "args",
                     buttonText: "+ Add argument",
@@ -155,8 +144,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 value: "",
                 label: "Environment variables",
                 type: ControlType.ARRAY_KEY_VALUE,
-                tooltip:
-                    "Environment variables to propagate into or set in the container.",
+                tooltip: TooltipsTexts.ENVIROMENT_VARIABLES,
                 options: {
                     formArrayName: "env",
                     buttonText: "+ Add variable",

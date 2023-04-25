@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/unbound-method */
 import { BaseComponent } from "src/app/common/base.component";
 import { ControlType, JsonFormData } from "../../add-polling-source-form.types";
 import { RadioControlType } from "../../form-control.source";
@@ -32,8 +30,9 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     @Input() public groupName: string;
     @Input() public title: string;
     public controlType: typeof ControlType = ControlType;
-    public readonly kindNameControl = "kind";
-    private readonly defaultEventTimeSource = "fromMetadata";
+    public readonly KIND_NAME_CONTROL = "kind";
+    public readonly SCHEMA_NAME_CONTROL = "schema";
+    private readonly DEFAULT_EVENT_TIME_SOURCE = "fromMetadata";
 
     constructor(
         private rootFormGroupDirective: FormGroupDirective,
@@ -44,7 +43,9 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.parentForm = this.rootFormGroupDirective.form;
-        this.initForm(this.sectionForm.get(this.kindNameControl)?.value);
+        this.initForm(
+            this.sectionForm.get(this.KIND_NAME_CONTROL)?.value as string,
+        );
         this.chooseFetchKind();
     }
 
@@ -54,13 +55,19 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
 
     public chooseFetchKind(): void {
         const subscription = this.sectionForm
-            .get(this.kindNameControl)
+            .get(this.KIND_NAME_CONTROL)
             ?.valueChanges.subscribe((kind: string) => {
-                Object.keys(this.sectionForm.value)
-                    .filter((key: string) => key !== this.kindNameControl)
-                    .forEach((item: string) =>
-                        this.sectionForm.removeControl(item),
-                    );
+                Object.keys(this.sectionForm.value as object)
+                    .filter(
+                        (key: string) =>
+                            ![
+                                this.KIND_NAME_CONTROL,
+                                this.SCHEMA_NAME_CONTROL,
+                            ].includes(key),
+                    )
+                    .forEach((item: string) => {
+                        this.sectionForm.removeControl(item);
+                    });
                 this.initForm(kind);
                 this.sectionForm.updateValueAndValidity();
             });
@@ -84,7 +91,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                     this.sectionForm.addControl(
                         item.name,
                         this.fb.group({
-                            kind: [this.defaultEventTimeSource],
+                            kind: [this.DEFAULT_EVENT_TIME_SOURCE],
                         }),
                     );
                 } else {

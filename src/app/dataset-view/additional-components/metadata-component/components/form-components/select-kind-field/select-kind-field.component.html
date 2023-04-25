@@ -1,9 +1,4 @@
-<div
-    class="radio-group"
-    [formGroup]="form"
-    placement="top"
-    ngbTooltip="Tooltip on top"
->
+<div class="radio-group" [formGroup]="form">
     <div class="input-container" *ngFor="let step of data">
         <input
             formControlName="kind"
@@ -11,6 +6,11 @@
             type="radio"
             [id]="step.id"
             [value]="step.value"
+            placement="top"
+            [ngbTooltip]="step.tooltip"
+            [openDelay]="openDelay"
+            tooltipClass="tooltip-class"
+            container="body"
         />
         <div class="radio-item">
             <mat-icon class="mat-icon">{{ step.icon }}</mat-icon>

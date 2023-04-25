@@ -86,4 +86,23 @@ export class TooltipsTexts {
     public static readonly DECOMPRESS_SUB_PATH =
         "Path to a data file within a multi-file archive. Can contain glob patterns.";
     public static readonly COMMAND = "Command to execute and its arguments.";
+    public static readonly FROM_URL =
+        "Pulls data from one of the supported sources by its URL.";
+    public static readonly FROM_FILES_GLOB =
+        "Uses glob operator to match files on the local file system.";
+    public static readonly FROM_CONTAINER =
+        "Runs the specified OCI container to fetch data from an arbitrary source.";
+    public static readonly READ_CSV = "Reader for comma-separated files.";
+    public static readonly READ_JSON_LINES =
+        "Reader for files containing concatenation of multiple JSON records with the same schema.";
+    public static readonly READ_GEO_JSON = "Reader for GeoJSON files.";
+    public static readonly READ_ESRI_SHAPE_FILE =
+        "Reader for ESRI Shapefile format.";
+    public static readonly READ_PARQUET = "Reader for Apache Parquet format.";
+    public static readonly APPEND_STRATEGY =
+        "Under this strategy polled data will be appended in its original form to the already ingested data without modifications.";
+    public static readonly LEDGER_STRATEGY =
+        "Ledger merge strategy.\n\nThis strategy should be used for data sources containing append-only event\nstreams. New data dumps can have new rows added, but once data already\nmade it into one dump it never changes or disappears.\n\nA system time column will be added to the data to indicate the time\nwhen the record was observed first by the system.\n\nIt relies on a user-specified primary key columns to identify which records\nwere already seen and not duplicate them.\n\nIt will always preserve all columns from existing and new snapshots, so\nthe set of columns can only grow.";
+    public static readonly SNAPSHOT_STRATEGY =
+        'Snapshot merge strategy.\n\nThis strategy can be used for data dumps that are taken periodical\nand contain only the latest state of the observed entity or system.\nOver time such dumps can have new rows added, and old rows either removed\nor modified.\n\nThis strategy transforms snapshot data into an append-only event stream\nwhere data already added is immutable. It does so by treating rows in\nsnapshots as "observation" events and adding an "observed" column\nthat will contain:\n  - "I" - when a row appears for the first time\n  - "D" - when row disappears\n  - "U" - whenever any row data has changed\n\nIt relies on a user-specified primary key columns to correlate the rows\nbetween the two snapshots.\n\nThe time when a snapshot was taken (event time) is usually captured in some\nform of metadata (e.g. in the name of the snapshot file, or in the caching\nheaders). In order to populate the event time we rely on the `FetchStep`\nto extract the event time from metadata. User then should specify the name\nof the event time column that will be populated from this value.\n\nIf the data contains a column that is guaranteed to change whenever\nany of the data columns changes (for example this can be a last\nmodification timestamp, an incremental version, or a data hash), then\nit can be specified as modification indicator to speed up the detection of\nmodified rows.\n\nSchema Changes:\n\nThis strategy will always preserve all columns from the existing and new snapshots, so the set of columns can only grow.';
 }

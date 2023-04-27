@@ -9,8 +9,12 @@ import {
 } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";
-import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
+import {
+    NgbTooltipModule,
+    NgbTypeaheadModule,
+} from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 
 describe("SchemaFieldComponent", () => {
     let component: SchemaFieldComponent;
@@ -18,7 +22,7 @@ describe("SchemaFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SchemaFieldComponent],
+            declarations: [SchemaFieldComponent, TooltipIconComponent],
             providers: [FormBuilder],
             imports: [
                 ReactiveFormsModule,
@@ -26,6 +30,7 @@ describe("SchemaFieldComponent", () => {
                 MatTableModule,
                 NgbTypeaheadModule,
                 RxReactiveFormsModule,
+                NgbTooltipModule,
             ],
         }).compileComponents();
 

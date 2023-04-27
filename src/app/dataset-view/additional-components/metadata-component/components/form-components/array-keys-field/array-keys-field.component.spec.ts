@@ -5,8 +5,9 @@ import {
     FormGroup,
     ReactiveFormsModule,
 } from "@angular/forms";
-
 import { ArrayKeysFieldComponent } from "./array-keys-field.component";
+import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
+import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 
 describe("ArrayKeysFieldComponent", () => {
     let component: ArrayKeysFieldComponent;
@@ -14,9 +15,9 @@ describe("ArrayKeysFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ArrayKeysFieldComponent],
+            declarations: [ArrayKeysFieldComponent, TooltipIconComponent],
             providers: [FormBuilder],
-            imports: [ReactiveFormsModule],
+            imports: [ReactiveFormsModule, NgbTooltipModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ArrayKeysFieldComponent);

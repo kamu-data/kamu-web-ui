@@ -10,7 +10,6 @@ import { BaseField } from "../base-field";
 })
 export class CacheFieldComponent extends BaseField implements OnInit {
     public isCache = false;
-    private readonly CONTROL_CACHE = "cache";
 
     constructor(private fb: FormBuilder) {
         super();
@@ -24,19 +23,19 @@ export class CacheFieldComponent extends BaseField implements OnInit {
         const input = event.target as HTMLInputElement;
         if (input.checked) {
             this.form.addControl(
-                this.CONTROL_CACHE,
+                this.controlName,
                 this.fb.group({
                     kind: "forever",
                 }),
             );
             return;
         }
-        this.form.removeControl(this.CONTROL_CACHE);
+        this.form.removeControl(this.controlName);
     }
 
     private initField(): void {
-        if (!this.form.get(this.CONTROL_CACHE)?.value) {
-            this.form.removeControl(this.CONTROL_CACHE);
+        if (!this.form.get(this.controlName)?.value) {
+            this.form.removeControl(this.controlName);
         } else {
             this.isCache = true;
         }

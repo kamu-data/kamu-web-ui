@@ -1,6 +1,6 @@
 <div class="layout">
     <div class="mt-4">
-        <ng-container *ngIf="currentStep === steps.FETCH">
+        <!-- <ng-container *ngIf="currentStep === steps.FETCH">
             <div class="row">
                 <div class="col mt-4">
                     <div class="form-check">
@@ -33,7 +33,7 @@
                     </div>
                 </div>
             </div>
-        </ng-container>
+        </ng-container> -->
         <div class="border border-1 mt-4 px-2 py-4 rounded-3">
             <form [formGroup]="pollingSourceForm">
                 <ng-container *ngIf="currentStep === steps.FETCH">

@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-
 import { InputFieldComponent } from "./input-field.component";
+import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
+import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 
 describe("InputFieldComponent", () => {
     let component: InputFieldComponent;
@@ -9,8 +10,8 @@ describe("InputFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [InputFieldComponent],
-            imports: [ReactiveFormsModule],
+            declarations: [InputFieldComponent, TooltipIconComponent],
+            imports: [ReactiveFormsModule, NgbTooltipModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(InputFieldComponent);

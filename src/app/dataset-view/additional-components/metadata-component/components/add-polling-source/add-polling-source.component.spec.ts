@@ -1,14 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import {
-    FormArray,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-} from "@angular/forms";
+import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AddPollingSourceComponent } from "./add-polling-source.component";
 import { ActivatedRoute } from "@angular/router";
@@ -67,20 +60,6 @@ describe("AddPollingSourceComponent", () => {
         createDatasetService = TestBed.inject(AppDatasetCreateService);
         modalRef = modalService.open(FinalYamlModalComponent);
         component = fixture.componentInstance;
-        component.pollingSourceForm = new FormGroup({
-            fetch: new FormGroup({
-                kind: new FormControl(component.FETCH_DEFAULT_KIND),
-                order: new FormControl("none"),
-            }),
-            read: new FormGroup({
-                kind: new FormControl(component.READ_DEFAULT_KIND),
-                schema: new FormArray([]),
-            }),
-            merge: new FormGroup({
-                kind: new FormControl(component.MERGE_DEFAULT_KIND),
-            }),
-        });
-
         fixture.detectChanges();
     });
 
@@ -89,6 +68,7 @@ describe("AddPollingSourceComponent", () => {
     });
 
     it("should check open edit modal", () => {
+        component.ngOnInit();
         const openModalSpy = spyOn(modalService, "open").and.returnValue(
             modalRef,
         );
@@ -97,6 +77,7 @@ describe("AddPollingSourceComponent", () => {
     });
 
     it("should check submit yaml", () => {
+        component.ngOnInit();
         const submitYamlSpy = spyOn(
             createDatasetService,
             "commitEventToDataset",
@@ -106,6 +87,7 @@ describe("AddPollingSourceComponent", () => {
     });
 
     it("should check change step", () => {
+        component.ngOnInit();
         expect(component.currentStep).toBe(SetPollingSourceSection.FETCH);
         component.changeStep(SetPollingSourceSection.READ);
         fixture.detectChanges();

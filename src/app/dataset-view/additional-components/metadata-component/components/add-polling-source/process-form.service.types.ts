@@ -13,6 +13,6 @@ export interface OrderControlType {
 }
 export interface SchemaControlType {
     read: {
-        schema: SchemaType[] | string[];
+        schema?: SchemaType[] | string[];
     };
 }

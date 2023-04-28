@@ -17,9 +17,13 @@ export class ProcessFormService {
 
     private transformSchema(formGroup: FormGroup): void {
         const form = formGroup.value as SchemaControlType;
-        form.read.schema = (form.read.schema as SchemaType[]).map((item) => {
-            return `${item.name} ${item.type}`;
-        });
+        if (form.read.schema) {
+            form.read.schema = (form.read.schema as SchemaType[]).map(
+                (item) => {
+                    return `${item.name} ${item.type}`;
+                },
+            );
+        }
     }
 
     private processFetchOrderControl(formGroup: FormGroup): void {

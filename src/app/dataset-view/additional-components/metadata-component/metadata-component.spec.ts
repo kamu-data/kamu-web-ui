@@ -3,9 +3,15 @@ import { MetadataSchemaUpdate } from "../../dataset.subscriptions.interface";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { mockMetadataSchemaUpdate } from "../data-tabs.mock";
 import { MetadataComponent } from "./metadata-component";
-import { ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { ChangeDetectionStrategy } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
 import { mockDatasetBasicsFragment } from "src/app/search/mock.data";
+import { BlockRowDataComponent } from "src/app/dataset-block/metadata-block/components/block-row-data/block-row-data.component";
+import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
+import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { MatIconModule } from "@angular/material/icon";
+import { MetadataBlockModule } from "src/app/dataset-block/metadata-block/metadata-block.module";
+import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 
 describe("MetadataComponent", () => {
     let component: MetadataComponent;
@@ -15,8 +21,26 @@ describe("MetadataComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [MetadataComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            declarations: [
+                MetadataComponent,
+                BlockRowDataComponent,
+                TooltipIconComponent,
+            ],
+            imports: [NgbTooltipModule, MatIconModule, MetadataBlockModule],
+            providers: [
+                {
+                    provide: HIGHLIGHT_OPTIONS,
+                    useValue: {
+                        coreLibraryLoader: () =>
+                            import("highlight.js/lib/core"),
+                        languages: {
+                            sql: () => import("highlight.js/lib/languages/sql"),
+                            yaml: () =>
+                                import("highlight.js/lib/languages/yaml"),
+                        },
+                    },
+                },
+            ],
         })
             .overrideComponent(MetadataComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

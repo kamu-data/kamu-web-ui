@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy } from "@angular/core";
+import { ChangeDetectionStrategy } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -10,6 +10,10 @@ import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.co
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { Observable } from "rxjs";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
+import { MonacoEditorModule } from "ngx-monaco-editor";
+import { StepperNavigationComponent } from "../stepper-navigation/stepper-navigation.component";
+import { BaseStepComponent } from "./steps/base-step/base-step.component";
+import { PollingSourceFormComponentsModule } from "../form-components/polling-source-form-components.module";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
@@ -20,14 +24,19 @@ describe("AddPollingSourceComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [AddPollingSourceComponent],
+            declarations: [
+                AddPollingSourceComponent,
+                StepperNavigationComponent,
+                BaseStepComponent,
+            ],
             imports: [
                 ApolloTestingModule,
                 ReactiveFormsModule,
                 FormsModule,
                 NgbModule,
+                MonacoEditorModule.forRoot(),
+                PollingSourceFormComponentsModule,
             ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 FormBuilder,
                 Apollo,

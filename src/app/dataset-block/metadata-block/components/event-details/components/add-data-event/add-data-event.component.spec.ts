@@ -1,13 +1,19 @@
+import { ToastrModule } from "ngx-toastr";
 import { ApolloModule } from "apollo-angular";
 import { SizePropertyComponent } from "./../common/size-property/size-property.component";
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
-import { ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { mockAddData } from "../../mock.events";
-
 import { AddDataEventComponent } from "./add-data-event.component";
 import { ActivatedRoute } from "@angular/router";
 import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
+import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.component";
+import { AngularSvgIconModule } from "angular-svg-icon";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
+import { MatIconModule } from "@angular/material/icon";
+import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 
 describe("AddDataEventComponent", () => {
     let component: AddDataEventComponent;
@@ -28,8 +34,9 @@ describe("AddDataEventComponent", () => {
                 AddDataEventComponent,
                 SizePropertyComponent,
                 OffsetIntervalPropertyComponent,
+                BlockRowDataComponent,
+                TooltipIconComponent,
             ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 {
                     provide: ActivatedRoute,
@@ -49,9 +56,16 @@ describe("AddDataEventComponent", () => {
                     },
                 },
             ],
-            imports: [DisplaySizeModule, ApolloModule],
+            imports: [
+                DisplaySizeModule,
+                ApolloModule,
+                MatIconModule,
+                NgbTooltipModule,
+                ToastrModule.forRoot(),
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
+            ],
         })
-
             .overrideComponent(AddDataEventComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

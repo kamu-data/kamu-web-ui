@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/unbound-method */
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import {
     FormBuilder,
@@ -14,6 +12,7 @@ import { FETCH_STEP_RADIO_CONTROLS } from "../../form-control.source";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { PollingSourceFormComponentsModule } from "../../../form-components/polling-source-form-components.module";
 
 describe("BaseStepComponent", () => {
     let component: BaseStepComponent;
@@ -29,8 +28,11 @@ describe("BaseStepComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [BaseStepComponent, TooltipIconComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
-            imports: [ReactiveFormsModule, NgbTooltipModule],
+            imports: [
+                ReactiveFormsModule,
+                NgbTooltipModule,
+                PollingSourceFormComponentsModule,
+            ],
             providers: [
                 FormGroupDirective,
                 FormBuilder,

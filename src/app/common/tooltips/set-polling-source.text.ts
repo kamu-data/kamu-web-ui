@@ -1,5 +1,6 @@
-export class TooltipsTexts {
+export class SetPollingSourceToolipsTexts {
     public static readonly URL = "URL of the data source.";
+
     public static readonly EVENT_TIME =
         "Describes how event time is extracted from the source metadata.";
     public static readonly EVENT_TIME_FROM_METADATA =

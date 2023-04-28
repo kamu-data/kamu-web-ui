@@ -14,7 +14,7 @@ import {
 } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { EventTimeSourceKind } from "../../add-polling-source/add-polling-source-form.types";
-import { TooltipsTexts } from "src/app/common/tooltips.text";
+import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/set-polling-source.text";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/compiler";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 
@@ -49,8 +49,8 @@ describe("SelectDateFormatFieldComponent", () => {
         });
         component.controlName = "eventTime";
         (component.innerTooltips = {
-            fromMetadata: TooltipsTexts.EVENT_TIME_FROM_METADATA,
-            fromPath: TooltipsTexts.EVENT_TIME_FROM_PATH,
+            fromMetadata: SetPollingSourceToolipsTexts.EVENT_TIME_FROM_METADATA,
+            fromPath: SetPollingSourceToolipsTexts.EVENT_TIME_FROM_PATH,
         }),
             (component.currentSource = EventTimeSourceKind.FROM_METADATA);
         fixture.detectChanges();

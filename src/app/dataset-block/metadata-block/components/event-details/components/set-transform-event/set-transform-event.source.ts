@@ -5,11 +5,12 @@ import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-vi
 import { OwnerPropertyComponent } from "../common/owner-property/owner-property.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { DatasetNameByIdPropertyComponent } from "../common/dataset-name-by-id-property/dataset-name-by-id-property.component";
+import { SetTransformToolipsTexts } from "src/app/common/tooltips/set-transform.text";
 
 export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetTransform.TransformSql.engine": {
         label: "Engine:",
-        tooltip: "Identifier of the engine used for this transformation.",
+        tooltip: SetTransformToolipsTexts.ENGINE,
         presentationComponent: EnginePropertyComponent,
         separateRowForValue: false,
         dataTestId: "set-transform-transformSql-engine",
@@ -17,7 +18,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetTransform.TransformSql.queries": {
         label: "Queries:",
-        tooltip: "Queries use for specifying multi-step SQL transformations.",
+        tooltip: SetTransformToolipsTexts.QUERIES,
         presentationComponent: SqlQueryViewerComponent,
         separateRowForValue: true,
         dataTestId: "set-transform-transformSql-queries",
@@ -25,8 +26,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetTransform.TransformSql.temporalTables": {
         label: "Temporal tables:",
-        tooltip:
-            "Temporary Flink-specific extension for creating temporal tables from streams.",
+        tooltip: SetTransformToolipsTexts.TEMPORAL_TABLES,
         presentationComponent: TemporalTablesPropertyComponent,
         separateRowForValue: true,
         dataTestId: "set-transform-transformSql-temporal-tables",
@@ -34,7 +34,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetTransform.Dataset.id": {
         label: "Id:",
-        tooltip: "Unique dataset identifier.",
+        tooltip: SetTransformToolipsTexts.DATASET_ID,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "set-transform-dataset-id",
@@ -42,7 +42,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetTransform.Dataset.kind": {
         label: "Dataset type:",
-        tooltip: "Type of the dataset.",
+        tooltip: SetTransformToolipsTexts.DATASET_KIND,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "set-transform-dataset-kind",
@@ -50,7 +50,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetTransform.Dataset.name": {
         label: "Name:",
-        tooltip: "Name of the dataset.",
+        tooltip: SetTransformToolipsTexts.DATASET_NAME,
         presentationComponent: DatasetNameByIdPropertyComponent,
         separateRowForValue: false,
         dataTestId: "set-transform-dataset-name",
@@ -58,7 +58,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetTransform.Dataset.owner": {
         label: "Owner:",
-        tooltip: "Owner of the dataset.",
+        tooltip: SetTransformToolipsTexts.DATASET_OWNER,
         presentationComponent: OwnerPropertyComponent,
         separateRowForValue: false,
         dataTestId: "set-transform-dataset-owner",
@@ -66,7 +66,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetTransform.Dataset.alias": {
         label: "Query alias:",
-        tooltip: "Query alias of the dataset.",
+        tooltip: SetTransformToolipsTexts.DATASET_ALIAS,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "set-transform-dataset-alias",

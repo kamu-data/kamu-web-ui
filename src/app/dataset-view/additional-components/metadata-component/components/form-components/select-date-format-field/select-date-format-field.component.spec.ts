@@ -59,4 +59,20 @@ describe("SelectDateFormatFieldComponent", () => {
     it("should create", () => {
         expect(component).toBeTruthy();
     });
+
+    it("should change type to fromPath", () => {
+        component.eventTimeGroup.patchValue({
+            kind: EventTimeSourceKind.FROM_PATH,
+        });
+        fixture.detectChanges();
+        expect(component.currentSource).toBe(EventTimeSourceKind.FROM_PATH);
+    });
+
+    it("should change type to fromMetadata", () => {
+        component.eventTimeGroup.patchValue({
+            kind: EventTimeSourceKind.FROM_METADATA,
+        });
+        fixture.detectChanges();
+        expect(component.currentSource).toBe(EventTimeSourceKind.FROM_METADATA);
+    });
 });

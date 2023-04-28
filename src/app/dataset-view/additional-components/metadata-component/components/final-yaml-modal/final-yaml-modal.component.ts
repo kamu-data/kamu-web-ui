@@ -41,9 +41,8 @@ export class FinalYamlModalComponent extends BaseComponent {
                     this.datasetInfo.datasetName,
                     this.yamlTemplate,
                 )
-                .subscribe(() => {
-                    this.activeModal.close("close modal");
-                }),
+                .subscribe(),
         );
+        this.activeModal.close("close modal");
     }
 }

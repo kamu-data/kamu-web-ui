@@ -29,6 +29,7 @@
                     type="button"
                     class="btn btn-light"
                     (click)="removeItem(i)"
+                    attr.data-test-id="item-{{ i }}"
                 >
                     x
                 </button>
@@ -36,7 +37,12 @@
         </div>
     </ng-container>
     <div class="ms-4">
-        <button type="button" class="add-header-button" (click)="addItem()">
+        <button
+            type="button"
+            class="add-header-button"
+            data-test-id="add-button"
+            (click)="addItem()"
+        >
             <span>{{ buttonText }}</span>
         </button>
     </div>

@@ -124,7 +124,7 @@ export class AppDatasetCreateService {
                         this.navigationService.navigateToDatasetView({
                             accountName,
                             datasetName,
-                            tab: DatasetViewTypeEnum.Metadata,
+                            tab: DatasetViewTypeEnum.Overview,
                         });
                     }
                 }),

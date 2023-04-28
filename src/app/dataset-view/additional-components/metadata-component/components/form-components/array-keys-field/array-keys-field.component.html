@@ -20,6 +20,7 @@
                     <button
                         class="btn btn-light"
                         type="button"
+                        data-test-id="remove-key-button"
                         (click)="removePrimaryKey(i)"
                     >
                         x
@@ -32,6 +33,7 @@
                 type="button"
                 class="add-primary-key-button mt-2"
                 (click)="addPrimaryKey()"
+                data-test-id="add-key-button"
             >
                 <span>{{ buttonText }}</span>
             </button>

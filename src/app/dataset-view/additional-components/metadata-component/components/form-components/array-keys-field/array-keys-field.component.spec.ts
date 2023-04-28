@@ -1,13 +1,14 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import {
+    FormArray,
     FormBuilder,
-    FormControl,
     FormGroup,
     ReactiveFormsModule,
 } from "@angular/forms";
 import { ArrayKeysFieldComponent } from "./array-keys-field.component";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { emitClickOnElement } from "src/app/common/base-test.helpers.spec";
 
 describe("ArrayKeysFieldComponent", () => {
     let component: ArrayKeysFieldComponent;
@@ -22,12 +23,22 @@ describe("ArrayKeysFieldComponent", () => {
 
         fixture = TestBed.createComponent(ArrayKeysFieldComponent);
         component = fixture.componentInstance;
-        component.form = new FormGroup({ test: new FormControl("") });
-        component.controlName = "test";
+        component.form = new FormGroup({ primaryKey: new FormArray([]) });
+        component.controlName = "primaryKey";
         fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should check add key and remove key", () => {
+        expect(component.items.length).toBe(0);
+        emitClickOnElement(fixture, '[data-test-id="add-key-button"]');
+        fixture.detectChanges();
+        expect(component.items.length).toBe(1);
+        emitClickOnElement(fixture, '[data-test-id="remove-key-button"]');
+        fixture.detectChanges();
+        expect(component.items.length).toBe(0);
     });
 });

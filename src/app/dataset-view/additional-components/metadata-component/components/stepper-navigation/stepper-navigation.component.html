@@ -12,6 +12,7 @@
         type="button"
         class="btn btn-primary"
         [disabled]="!validStep"
+        data-test-id="next-button"
         (click)="changeStep(nextStep)"
     >
         Next
@@ -21,6 +22,7 @@
             type="button"
             (click)="saveEvent()"
             class="button-save"
+            data-test-id="save-button"
             [disabled]="!validStep"
         >
             Save
@@ -29,6 +31,7 @@
             type="button"
             (click)="editYaml()"
             class="btn btn-outline-primary ms-4"
+            data-test-id="edit-button"
         >
             Edit Yaml
         </button>

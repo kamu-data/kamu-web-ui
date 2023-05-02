@@ -10,6 +10,7 @@
                     rel="author"
                     data-hovercard-type="organization"
                     (click)="showOwnerPage()"
+                    data-test-id='show-owner-link'
                     >{{ datasetInfo.accountName}}</a
                 >
             </span>
@@ -18,6 +19,7 @@
                 <a
                     data-pjax="#repo-content-pjax-container"
                     (click)="showDatasetView()"
+                    data-test-id='show-dataset-link'
                     >{{ datasetInfo.datasetName }}</a
                 >
             </strong>

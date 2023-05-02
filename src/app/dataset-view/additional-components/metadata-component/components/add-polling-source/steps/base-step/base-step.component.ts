@@ -53,7 +53,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
         return this.parentForm.get(this.groupName) as FormGroup;
     }
 
-    public chooseFetchKind(): void {
+    private chooseFetchKind(): void {
         const subscription = this.sectionForm
             .get(this.KIND_NAME_CONTROL)
             ?.valueChanges.subscribe((kind: string) => {
@@ -69,7 +69,6 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                         this.sectionForm.removeControl(item);
                     });
                 this.initForm(kind);
-                this.sectionForm.updateValueAndValidity();
             });
         if (subscription) this.trackSubscription(subscription);
     }

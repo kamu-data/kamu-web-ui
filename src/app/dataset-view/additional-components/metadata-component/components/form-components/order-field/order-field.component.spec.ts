@@ -4,6 +4,8 @@ import { OrderFieldComponent } from "./order-field.component";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { SourceOrder } from "../../add-polling-source/process-form.service.types";
 
 describe("OrderFieldComponent", () => {
     let component: OrderFieldComponent;
@@ -24,5 +26,23 @@ describe("OrderFieldComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should check switch control", () => {
+        expect(component.form.value).toEqual({ order: SourceOrder.NONE });
+
+        emitClickOnElementByDataTestId(
+            fixture,
+            `radio-${SourceOrder.BY_NAME}-control`,
+        );
+        expect(component.form.value).toEqual({ order: SourceOrder.BY_NAME });
+
+        emitClickOnElementByDataTestId(
+            fixture,
+            `radio-${SourceOrder.BY_EVENT_TIME}-control`,
+        );
+        expect(component.form.value).toEqual({
+            order: SourceOrder.BY_EVENT_TIME,
+        });
     });
 });

@@ -1,4 +1,4 @@
-import { emitClickOnElement } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ToggleComponent } from "./toggle.component";
@@ -26,7 +26,7 @@ describe("ToggleComponent", () => {
         const expectedValue = true;
         const toggledSpy = spyOn(component.toggled, "emit");
 
-        emitClickOnElement(fixture, '[data-test-id="toggle-button"]');
+        emitClickOnElementByDataTestId(fixture, "toggle-button");
 
         expect(component.isToggled).toBeTrue();
         expect(toggledSpy).toHaveBeenCalledWith(expectedValue);

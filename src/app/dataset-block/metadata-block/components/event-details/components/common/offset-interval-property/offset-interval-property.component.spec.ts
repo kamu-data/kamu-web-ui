@@ -1,12 +1,11 @@
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ActivatedRoute } from "@angular/router";
-
 import { OffsetIntervalPropertyComponent } from "./offset-interval-property.component";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { of } from "rxjs";
 import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
+import { snapshotParamMapMock } from "src/app/common/base-test.helpers.spec";
 
 describe("OffsetIntervalPropertyComponent", () => {
     let component: OffsetIntervalPropertyComponent;
@@ -18,25 +17,7 @@ describe("OffsetIntervalPropertyComponent", () => {
         await TestBed.configureTestingModule({
             declarations: [OffsetIntervalPropertyComponent],
             imports: [ApolloTestingModule],
-            providers: [
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
-                        },
-                    },
-                },
-            ],
+            providers: [snapshotParamMapMock],
         }).compileComponents();
 
         fixture = TestBed.createComponent(OffsetIntervalPropertyComponent);

@@ -8,7 +8,7 @@ import { DatasetListItemComponent } from "./dataset-list-item.component";
 import { NgbModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatDividerModule } from "@angular/material/divider";
 import { mockDatasetListItem } from "src/app/api/mock/dataset.mock";
-import { emitClickOnElement } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 
 describe("DatasetListItemComponent", () => {
     let component: DatasetListItemComponent;
@@ -46,8 +46,8 @@ describe("DatasetListItemComponent", () => {
             navigationService,
             "navigateToOwnerView",
         );
-        emitClickOnElement(fixture, '[data-test-id="button-popover-verified"]');
-        emitClickOnElement(fixture, '[data-test-id="dataset-owner-name"]');
+        emitClickOnElementByDataTestId(fixture, "button-popover-verified");
+        emitClickOnElementByDataTestId(fixture, "dataset-owner-name");
 
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
             component.row.owner.name,
@@ -56,7 +56,7 @@ describe("DatasetListItemComponent", () => {
 
     it("should check click on dataset name", () => {
         const selectDatasetEmitSpy = spyOn(component.selectDatasetEmit, "emit");
-        emitClickOnElement(fixture, '[data-test-id="dataset-name-button-0"]');
+        emitClickOnElementByDataTestId(fixture, "dataset-name-button-0");
         expect(selectDatasetEmitSpy).toHaveBeenCalledWith(mockDatasetListItem);
     });
 });

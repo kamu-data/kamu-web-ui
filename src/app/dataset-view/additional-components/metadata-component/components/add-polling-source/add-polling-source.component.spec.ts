@@ -4,16 +4,16 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AddPollingSourceComponent } from "./add-polling-source.component";
-import { ActivatedRoute } from "@angular/router";
 import { NgbModal, NgbModalRef, NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
-import { Observable } from "rxjs";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { MonacoEditorModule } from "ngx-monaco-editor";
 import { StepperNavigationComponent } from "../stepper-navigation/stepper-navigation.component";
 import { BaseStepComponent } from "./steps/base-step/base-step.component";
 import { PollingSourceFormComponentsModule } from "../form-components/polling-source-form-components.module";
+import { snapshotParamMapMock } from "src/app/common/base-test.helpers.spec";
+import { of } from "rxjs";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
@@ -37,27 +37,7 @@ describe("AddPollingSourceComponent", () => {
                 MonacoEditorModule.forRoot(),
                 PollingSourceFormComponentsModule,
             ],
-            providers: [
-                FormBuilder,
-                Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
-                        },
-                    },
-                },
-            ],
+            providers: [FormBuilder, Apollo, snapshotParamMapMock],
         })
             .overrideComponent(AddPollingSourceComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
@@ -69,6 +49,8 @@ describe("AddPollingSourceComponent", () => {
         createDatasetService = TestBed.inject(AppDatasetCreateService);
         modalRef = modalService.open(FinalYamlModalComponent);
         component = fixture.componentInstance;
+        component.currentStep = SetPollingSourceSection.FETCH;
+        component.ngOnInit();
         fixture.detectChanges();
     });
 
@@ -90,17 +72,16 @@ describe("AddPollingSourceComponent", () => {
         const submitYamlSpy = spyOn(
             createDatasetService,
             "commitEventToDataset",
-        ).and.returnValue(new Observable());
+        ).and.returnValue(of());
         component.onSubmit();
         expect(submitYamlSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check change step", () => {
-        component.ngOnInit();
-        expect(component.currentStep).toBe(SetPollingSourceSection.FETCH);
         component.changeStep(SetPollingSourceSection.READ);
         fixture.detectChanges();
         expect(component.currentStep).toBe(SetPollingSourceSection.READ);
+
         component.changeStep(SetPollingSourceSection.MERGE);
         fixture.detectChanges();
         expect(component.currentStep).toBe(SetPollingSourceSection.MERGE);
@@ -109,8 +90,8 @@ describe("AddPollingSourceComponent", () => {
     it("should check error message", () => {
         const errorMessage = "test error message";
         expect(component.errorMessage).toBe("");
+
         createDatasetService.errorCommitEventChanges(errorMessage);
-        component.ngOnInit();
         expect(component.errorMessage).toBe(errorMessage);
     });
 });

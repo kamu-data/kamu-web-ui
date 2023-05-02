@@ -19,7 +19,7 @@ import {
     FormsModule,
     ReactiveFormsModule,
 } from "@angular/forms";
-import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { findInputElememtByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { interval } from "rxjs";
 import { map, take } from "rxjs/operators";
 import AppValues from "src/app/common/app.values";
@@ -56,10 +56,7 @@ describe("TypeaheadFieldComponent", () => {
     });
 
     it("should check call search method", fakeAsync(() => {
-        const inputEl = findElementByDataTestId(
-            fixture,
-            "typeahead",
-        ) as HTMLInputElement;
+        const inputEl = findInputElememtByDataTestId(fixture, "typeahead");
         inputEl.click();
         const textMock$ = interval(100).pipe(
             take(2),

@@ -1,4 +1,4 @@
-import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/set-polling-source.text";
+import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
 import { ControlType, JsonFormData } from "../../add-polling-source-form.types";
 
 export const READ_FORM_DATA: JsonFormData = {

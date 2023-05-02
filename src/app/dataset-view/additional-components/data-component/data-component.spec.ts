@@ -5,7 +5,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { DataComponent } from "./data-component";
-import { emitClickOnElement } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { mockDataUpdate, mockSqlErrorUpdate } from "../data-tabs.mock";
 import { first } from "rxjs/operators";
@@ -49,7 +49,7 @@ describe("DataComponent", () => {
                 expect(query).toEqual(component.sqlRequestCode),
             );
 
-        emitClickOnElement(fixture, '[data-test-id="runSqlQueryButton"]');
+        emitClickOnElementByDataTestId(fixture, "runSqlQueryButton");
         fixture.detectChanges();
         expect(emitterSubscription$.closed).toBeTrue();
     });

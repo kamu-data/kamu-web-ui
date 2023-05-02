@@ -14,7 +14,7 @@ import {
 } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { EventTimeSourceKind } from "../../add-polling-source/add-polling-source-form.types";
-import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/set-polling-source.text";
+import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 
 describe("SelectDateFormatFieldComponent", () => {

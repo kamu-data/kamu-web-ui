@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { StepperNavigationComponent } from "./stepper-navigation.component";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { emitClickOnElement } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 
 describe("StepperNavigationComponent", () => {
     let component: StepperNavigationComponent;
@@ -31,7 +31,7 @@ describe("StepperNavigationComponent", () => {
         component.validStep = true;
         component.nextStep = SetPollingSourceSection.READ;
         fixture.detectChanges();
-        emitClickOnElement(fixture, '[data-test-id="next-button"]');
+        emitClickOnElementByDataTestId(fixture, "next-button");
         expect(changeStepEmitterSpy).toHaveBeenCalledWith(
             SetPollingSourceSection.READ,
         );
@@ -46,7 +46,7 @@ describe("StepperNavigationComponent", () => {
         component.validStep = true;
         component.nextStep = null;
         fixture.detectChanges();
-        emitClickOnElement(fixture, '[data-test-id="save-button"]');
+        emitClickOnElementByDataTestId(fixture, "save-button");
         expect(changeStepEmitterSpy).toHaveBeenCalledWith();
     });
 
@@ -59,7 +59,7 @@ describe("StepperNavigationComponent", () => {
         component.validStep = true;
         component.nextStep = null;
         fixture.detectChanges();
-        emitClickOnElement(fixture, '[data-test-id="edit-button"]');
+        emitClickOnElementByDataTestId(fixture, "edit-button");
         expect(changeStepEmitterSpy).toHaveBeenCalledWith();
     });
 });

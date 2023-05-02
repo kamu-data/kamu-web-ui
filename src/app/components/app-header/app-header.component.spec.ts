@@ -12,6 +12,7 @@ import {
 } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import {
+    dispatchInputEvent,
     emitClickOnElement,
     findElementByDataTestId,
     findNativeElement,
@@ -272,12 +273,7 @@ describe("AppHeaderComponent", () => {
 
         // Run search query
         const SEARCH_QUERY = "query";
-        const elSearchInput = findElementByDataTestId(
-            fixture,
-            "searchInput",
-        ) as HTMLInputElement;
-        elSearchInput.value = SEARCH_QUERY;
-        elSearchInput.dispatchEvent(new Event("input"));
+        dispatchInputEvent(fixture, "searchInput", SEARCH_QUERY);
         tick(AppValues.SHORT_DELAY_MS); // debouncer
 
         // This should activate search API and update view

@@ -8,7 +8,7 @@ import {
 import { ArrayKeysFieldComponent } from "./array-keys-field.component";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { emitClickOnElement } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 
 describe("ArrayKeysFieldComponent", () => {
     let component: ArrayKeysFieldComponent;
@@ -34,10 +34,12 @@ describe("ArrayKeysFieldComponent", () => {
 
     it("should check add key and remove key", () => {
         expect(component.items.length).toBe(0);
-        emitClickOnElement(fixture, '[data-test-id="add-key-button"]');
+
+        emitClickOnElementByDataTestId(fixture, "add-key-button");
         fixture.detectChanges();
         expect(component.items.length).toBe(1);
-        emitClickOnElement(fixture, '[data-test-id="remove-key-button"]');
+
+        emitClickOnElementByDataTestId(fixture, "remove-key-button");
         fixture.detectChanges();
         expect(component.items.length).toBe(0);
     });

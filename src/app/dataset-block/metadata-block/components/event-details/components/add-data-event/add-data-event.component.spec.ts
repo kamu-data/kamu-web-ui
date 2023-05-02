@@ -6,7 +6,6 @@ import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { mockAddData } from "../../mock.events";
 import { AddDataEventComponent } from "./add-data-event.component";
-import { ActivatedRoute } from "@angular/router";
 import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
 import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.component";
 import { AngularSvgIconModule } from "angular-svg-icon";
@@ -14,6 +13,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { snapshotParamMapMock } from "src/app/common/base-test.helpers.spec";
 
 describe("AddDataEventComponent", () => {
     let component: AddDataEventComponent;
@@ -37,25 +37,7 @@ describe("AddDataEventComponent", () => {
                 BlockRowDataComponent,
                 TooltipIconComponent,
             ],
-            providers: [
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
-                        },
-                    },
-                },
-            ],
+            providers: [snapshotParamMapMock],
             imports: [
                 DisplaySizeModule,
                 ApolloModule,

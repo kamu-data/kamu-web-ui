@@ -9,7 +9,7 @@ import { EnvVariablesPropertyComponent } from "../common/env-variables-property/
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
-import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/set-polling-source.text";
+import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepUrl.url": {

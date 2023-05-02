@@ -12,6 +12,7 @@
                 [name]="controlName"
                 type="radio"
                 [value]="control.value"
+                attr.data-test-id="radio-{{ control.value }}-control"
             />
             <label class="form-check-label" for=""> {{ control.label }} </label>
         </div>

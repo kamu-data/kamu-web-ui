@@ -12,7 +12,7 @@ import {
 import { MatMenuModule } from "@angular/material/menu";
 import { DatasetViewMenuComponent } from "./dataset-view-menu-component";
 import {
-    emitClickOnElement,
+    emitClickOnElementByDataTestId,
     findElementByDataTestId,
 } from "src/app/common/base-test.helpers.spec";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -54,7 +54,7 @@ describe("DatasetViewMenuComponent", () => {
                 component.datasetNavigation,
                 item as keyof DatasetNavigationInterface,
             ).and.callThrough();
-            emitClickOnElement(fixture, `[data-test-id=${item}]`);
+            emitClickOnElementByDataTestId(fixture, `${item}`);
             fixture.detectChanges();
             if (item === "navigateToHistory" || item === "navigateToMetadata") {
                 expect(navigateSpy).toHaveBeenCalledWith(1);
@@ -65,7 +65,7 @@ describe("DatasetViewMenuComponent", () => {
     });
 
     it("should copy to clipboard", fakeAsync(() => {
-        emitClickOnElement(fixture, '[data-test-id="searchAdditionalButtons"]');
+        emitClickOnElementByDataTestId(fixture, "searchAdditionalButtons");
 
         const menu = findElementByDataTestId(fixture, "menu");
         expect(menu).toBeDefined();
@@ -74,7 +74,7 @@ describe("DatasetViewMenuComponent", () => {
             fixture,
             "copyToClipboard",
         );
-        emitClickOnElement(fixture, '[data-test-id="copyToClipboard"]');
+        emitClickOnElementByDataTestId(fixture, "copyToClipboard");
         expect(
             copyToClipboardButton.classList.contains("clipboard-btn--success"),
         ).toEqual(true);

@@ -18,7 +18,7 @@ import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/compo
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import {
     findElement,
-    findElementByDataTestId,
+    findInputElememtByDataTestId,
 } from "src/app/common/base-test.helpers.spec";
 
 describe("CacheFieldComponent", () => {
@@ -46,10 +46,7 @@ describe("CacheFieldComponent", () => {
     });
 
     it("should check change state checkbox", () => {
-        const cacheCheckbox = findElementByDataTestId(
-            fixture,
-            dataTestId,
-        ) as HTMLInputElement;
+        const cacheCheckbox = findInputElememtByDataTestId(fixture, dataTestId);
         expect(cacheCheckbox.checked).toBeFalse();
         expect(component.isCache).toBeFalse();
     });

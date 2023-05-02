@@ -5,7 +5,6 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { ExecuteQueryEventComponent } from "./execute-query-event.component";
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { SizePropertyComponent } from "../common/size-property/size-property.component";
-import { ActivatedRoute } from "@angular/router";
 import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
 import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.component";
 import { ToastrModule } from "ngx-toastr";
@@ -14,6 +13,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { snapshotParamMapMock } from "src/app/common/base-test.helpers.spec";
 
 describe("ExecuteQueryEventComponent", () => {
     let component: ExecuteQueryEventComponent;
@@ -37,25 +37,7 @@ describe("ExecuteQueryEventComponent", () => {
                 AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
             ],
-            providers: [
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
-                        },
-                    },
-                },
-            ],
+            providers: [snapshotParamMapMock],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ExecuteQueryEventComponent);

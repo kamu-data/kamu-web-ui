@@ -1,6 +1,6 @@
 import AppValues from "src/app/common/app.values";
 import { ControlType, JsonFormData } from "../../add-polling-source-form.types";
-import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/set-polling-source.text";
+import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
 
 export const FETCH_FORM_DATA: JsonFormData = {
     url: {

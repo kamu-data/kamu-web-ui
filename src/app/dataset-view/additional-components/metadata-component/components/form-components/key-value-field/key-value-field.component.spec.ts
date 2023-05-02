@@ -9,7 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { KeyValueFieldComponent } from "./key-value-field.component";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { emitClickOnElement } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 
 describe("KeyValueFieldComponent", () => {
     let component: KeyValueFieldComponent;
@@ -38,15 +38,15 @@ describe("KeyValueFieldComponent", () => {
 
     it("should check add new item to array", () => {
         expect(component.items.length).toBe(0);
-        emitClickOnElement(fixture, '[data-test-id="add-button"]');
+        emitClickOnElementByDataTestId(fixture, "add-button");
         fixture.detectChanges();
         expect(component.items.length).toBe(1);
     });
 
     it("should check delete item from array", () => {
-        emitClickOnElement(fixture, '[data-test-id="add-button"]');
+        emitClickOnElementByDataTestId(fixture, "add-button");
         fixture.detectChanges();
-        emitClickOnElement(fixture, '[data-test-id="item-0"]');
+        emitClickOnElementByDataTestId(fixture, "item-0");
         fixture.detectChanges();
         expect(component.items.length).toBe(0);
     });

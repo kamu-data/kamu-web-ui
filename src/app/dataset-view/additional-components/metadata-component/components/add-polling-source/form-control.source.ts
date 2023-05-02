@@ -1,4 +1,9 @@
-import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/set-polling-source.text";
+import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
+import {
+    FetchKind,
+    MergeKind,
+    ReadKind,
+} from "./add-polling-source-form.types";
 
 export interface RadioControlType {
     id: string;
@@ -11,21 +16,21 @@ export interface RadioControlType {
 export const FETCH_STEP_RADIO_CONTROLS: RadioControlType[] = [
     {
         id: "from-url",
-        value: "url",
+        value: FetchKind.URL,
         icon: "link",
         label: "Sync from URL",
         tooltip: SetPollingSourceToolipsTexts.FROM_URL,
     },
     {
         id: "from-filesGlob",
-        value: "filesGlob",
+        value: FetchKind.FILES_GLOB,
         icon: "file_upload",
         label: "Sync from files GLOB",
         tooltip: SetPollingSourceToolipsTexts.FROM_FILES_GLOB,
     },
     {
         id: "from-container",
-        value: "container",
+        value: FetchKind.CONTAINER,
         icon: "input",
         label: "Sync from container",
         tooltip: SetPollingSourceToolipsTexts.FROM_CONTAINER,
@@ -35,35 +40,35 @@ export const FETCH_STEP_RADIO_CONTROLS: RadioControlType[] = [
 export const READ_STEP_RADIO_CONTROLS: RadioControlType[] = [
     {
         id: "csv",
-        value: "csv",
+        value: ReadKind.CSV,
         icon: "format_quote",
         label: "CSV",
         tooltip: SetPollingSourceToolipsTexts.READ_CSV,
     },
     {
         id: "jsonLines",
-        value: "jsonLines",
+        value: ReadKind.JSON_LINES,
         icon: "document_scanner",
         label: "Json Lines",
         tooltip: SetPollingSourceToolipsTexts.READ_JSON_LINES,
     },
     {
         id: "geoJson",
-        value: "geoJson",
+        value: ReadKind.GEO_JSON,
         icon: "public",
         label: "Geo Json",
         tooltip: SetPollingSourceToolipsTexts.READ_GEO_JSON,
     },
     {
         id: "esriShapefile",
-        value: "esriShapefile",
+        value: ReadKind.ESRI_SHAPEFILE,
         icon: "rounded_corner",
         label: "ESRI Shapefile",
         tooltip: SetPollingSourceToolipsTexts.READ_ESRI_SHAPE_FILE,
     },
     {
         id: "parquet",
-        value: "parquet",
+        value: ReadKind.PARQUET,
         icon: "view_array",
         label: "Parquet",
         tooltip: SetPollingSourceToolipsTexts.READ_PARQUET,
@@ -73,21 +78,21 @@ export const READ_STEP_RADIO_CONTROLS: RadioControlType[] = [
 export const MERGE_STEP_RADIO_CONTROLS: RadioControlType[] = [
     {
         id: "append",
-        value: "append",
+        value: MergeKind.APPEND,
         icon: "post_add",
         label: "Append strategy",
         tooltip: SetPollingSourceToolipsTexts.APPEND_STRATEGY,
     },
     {
         id: "ledger",
-        value: "ledger",
+        value: MergeKind.LEDGER,
         icon: "account_tree",
         label: "Ledger strategy",
         tooltip: SetPollingSourceToolipsTexts.LEDGER_STRATEGY,
     },
     {
         id: "snapshot",
-        value: "snapshot",
+        value: MergeKind.SNAPSHOT,
         icon: "filter_center_focus",
         label: "Snapshot strategy",
         tooltip: SetPollingSourceToolipsTexts.SNAPSHOT_STRATEGY,

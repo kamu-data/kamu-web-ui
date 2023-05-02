@@ -3,9 +3,9 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloModule } from "apollo-angular";
 import { FinalYamlModalComponent } from "./final-yaml-modal.component";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
-import { emitClickOnElement } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { Observable } from "rxjs";
+import { of } from "rxjs";
 import { FormsModule } from "@angular/forms";
 import { MonacoEditorModule } from "ngx-monaco-editor";
 
@@ -18,6 +18,7 @@ describe("FinalYamlModalComponent", () => {
     let component: FinalYamlModalComponent;
     let fixture: ComponentFixture<FinalYamlModalComponent>;
     let createDatasetService: AppDatasetCreateService;
+    let activeModal: NgbActiveModal;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -28,6 +29,7 @@ describe("FinalYamlModalComponent", () => {
 
         fixture = TestBed.createComponent(FinalYamlModalComponent);
         createDatasetService = TestBed.inject(AppDatasetCreateService);
+        activeModal = TestBed.inject(NgbActiveModal);
         component = fixture.componentInstance;
         component.yamlTemplate = "test yaml";
         component.datasetInfo = testDatasetInfo;
@@ -42,8 +44,12 @@ describe("FinalYamlModalComponent", () => {
         const commitEventToDatasetSpy = spyOn(
             createDatasetService,
             "commitEventToDataset",
-        ).and.returnValue(new Observable());
-        emitClickOnElement(fixture, '[data-test-id="save-event"]');
+        ).and.returnValue(of());
+        const closeModalSpy = spyOn(activeModal, "close");
+
+        emitClickOnElementByDataTestId(fixture, "save-event");
+
         expect(commitEventToDatasetSpy).toHaveBeenCalledTimes(1);
+        expect(closeModalSpy).toHaveBeenCalledTimes(1);
     });
 });

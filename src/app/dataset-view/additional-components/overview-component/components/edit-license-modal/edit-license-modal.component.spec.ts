@@ -9,8 +9,9 @@ import {
     DatasetDataSizeFragment,
 } from "src/app/api/kamu.graphql.interface";
 import {
-    emitClickOnElement,
+    emitClickOnElementByDataTestId,
     findElementByDataTestId,
+    findInputElememtByDataTestId,
 } from "src/app/common/base-test.helpers.spec";
 import { mockDatasetBasicsFragment } from "src/app/search/mock.data";
 import {
@@ -70,7 +71,7 @@ describe("EditLicenseModalComponent", () => {
             "onEditLicense",
         ).and.callThrough();
 
-        emitClickOnElement(fixture, '[data-test-id="save-license"]');
+        emitClickOnElementByDataTestId(fixture, "save-license");
         expect(onEditLicenseSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -88,10 +89,10 @@ describe("EditLicenseModalComponent", () => {
         component.licenseForm.patchValue({
             websiteUrl: "bad url",
         });
-        const inputEl: HTMLInputElement = findElementByDataTestId(
+        const inputEl: HTMLInputElement = findInputElememtByDataTestId(
             fixture,
             `license-websiteUrl`,
-        ) as HTMLInputElement;
+        );
         const focusEvent = new InputEvent("focus");
         inputEl.dispatchEvent(focusEvent);
         fixture.detectChanges();
@@ -113,10 +114,10 @@ describe("EditLicenseModalComponent", () => {
         fixture.detectChanges();
 
         ["name", "shortName", "websiteUrl"].forEach((controlName: string) => {
-            const inputEl: HTMLInputElement = findElementByDataTestId(
+            const inputEl: HTMLInputElement = findInputElememtByDataTestId(
                 fixture,
                 `license-${controlName}`,
-            ) as HTMLInputElement;
+            );
 
             const focusEvent = new InputEvent("focus");
             inputEl.dispatchEvent(focusEvent);

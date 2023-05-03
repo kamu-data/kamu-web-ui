@@ -4,7 +4,6 @@ import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.serv
 import { mockMetadataSchemaUpdate } from "../data-tabs.mock";
 import { MetadataComponent } from "./metadata-component";
 import { ChangeDetectionStrategy } from "@angular/core";
-import { NavigationService } from "src/app/services/navigation.service";
 import { mockDatasetBasicsFragment } from "src/app/search/mock.data";
 import { BlockRowDataComponent } from "src/app/dataset-block/metadata-block/components/block-row-data/block-row-data.component";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
@@ -17,7 +16,6 @@ describe("MetadataComponent", () => {
     let component: MetadataComponent;
     let fixture: ComponentFixture<MetadataComponent>;
     let appDatasetSubsService: AppDatasetSubscriptionsService;
-    let navigationService: NavigationService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -49,7 +47,6 @@ describe("MetadataComponent", () => {
 
         fixture = TestBed.createComponent(MetadataComponent);
         appDatasetSubsService = TestBed.inject(AppDatasetSubscriptionsService);
-        navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsFragment;
         fixture.detectChanges();
@@ -69,18 +66,6 @@ describe("MetadataComponent", () => {
         fixture.detectChanges();
 
         expect(component.currentState).toBeDefined();
-    });
-
-    it("should navigate to create SetPollingSource event page", () => {
-        const navigateToAddPollingSourceSpy = spyOn(
-            navigationService,
-            "navigateToAddPollingSource",
-        );
-        component.navigateToAddPollingSource();
-        expect(navigateToAddPollingSourceSpy).toHaveBeenCalledWith({
-            accountName: mockDatasetBasicsFragment.owner.name,
-            datasetName: mockDatasetBasicsFragment.name as string,
-        });
     });
 
     it("should check select topic", () => {

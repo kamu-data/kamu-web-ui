@@ -63,6 +63,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
                         size: overviewUpdate.size,
                         overview: overviewUpdate.overview,
                     };
+                    console.log("state", this.currentState);
                 },
             ),
         );
@@ -110,5 +111,13 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         (
             modalRef.componentInstance as EditLicenseModalComponent
         ).datasetBasics = this.datasetBasics;
+    }
+
+    public navigateToAddPollingSource(): void {
+        if (this.datasetBasics)
+            this.navigationService.navigateToAddPollingSource({
+                accountName: this.datasetBasics.owner.name,
+                datasetName: this.datasetBasics.name as string,
+            });
     }
 }

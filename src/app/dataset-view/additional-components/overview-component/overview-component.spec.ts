@@ -113,4 +113,16 @@ describe("OverviewComponent", () => {
         component.openLicenseModal();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
     });
+
+    it("should navigate to create SetPollingSource event page", () => {
+        const navigateToAddPollingSourceSpy = spyOn(
+            navigationService,
+            "navigateToAddPollingSource",
+        );
+        component.navigateToAddPollingSource();
+        expect(navigateToAddPollingSourceSpy).toHaveBeenCalledWith({
+            accountName: mockDatasetBasicsFragment.owner.name,
+            datasetName: mockDatasetBasicsFragment.name as string,
+        });
+    });
 });

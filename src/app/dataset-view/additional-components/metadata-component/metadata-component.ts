@@ -1,4 +1,3 @@
-import { NavigationService } from "src/app/services/navigation.service";
 import { DataHelpers } from "./../../../common/data.helpers";
 import { DatasetKind } from "./../../../api/kamu.graphql.interface";
 import {
@@ -50,10 +49,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         pageInfo: PageBasedInfo;
     };
 
-    constructor(
-        private appDatasetSubsService: AppDatasetSubscriptionsService,
-        private navigationService: NavigationService,
-    ) {
+    constructor(private appDatasetSubsService: AppDatasetSubscriptionsService) {
         super();
     }
 
@@ -124,12 +120,4 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         ReadStepEsriShapefile: "Esri shapefile",
         ReadStepParquet: "Parquet",
     };
-
-    public navigateToAddPollingSource(): void {
-        if (this.datasetBasics)
-            this.navigationService.navigateToAddPollingSource({
-                accountName: this.datasetBasics.owner.name,
-                datasetName: this.datasetBasics.name as string,
-            });
-    }
 }

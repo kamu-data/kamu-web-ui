@@ -13,6 +13,7 @@ describe("OrderPropertyComponent", () => {
 
         fixture = TestBed.createComponent(OrderPropertyComponent);
         component = fixture.componentInstance;
+        component.data = "BY_NAME";
         fixture.detectChanges();
     });
 

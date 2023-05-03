@@ -190,6 +190,8 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                         __typename: "FetchStepUrl",
                         url: "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=SPY&outputsize=full&datatype=csv&apikey=${{ env.ALPHA_VANTAGE_API_KEY }}",
                         eventTime: null,
+                        headers: null,
+                        cache: null,
                     },
                     read: {
                         __typename: "ReadStepCsv",

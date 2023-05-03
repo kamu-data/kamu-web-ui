@@ -13,6 +13,7 @@ describe("EventTimePropertyComponent", () => {
 
         fixture = TestBed.createComponent(EventTimePropertyComponent);
         component = fixture.componentInstance;
+        component.data = { __typename: "EventTimeSourceFromMetadata" };
         fixture.detectChanges();
     });
 

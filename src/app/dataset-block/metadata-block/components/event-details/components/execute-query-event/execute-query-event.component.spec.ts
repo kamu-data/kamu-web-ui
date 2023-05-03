@@ -1,13 +1,19 @@
 import { ExecuteQuery } from "./../../../../../../api/kamu.graphql.interface";
 import { mockExecuteQuery } from "./../../mock.events";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ExecuteQueryEventComponent } from "./execute-query-event.component";
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { SizePropertyComponent } from "../common/size-property/size-property.component";
-import { ActivatedRoute } from "@angular/router";
 import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
+import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.component";
+import { ToastrModule } from "ngx-toastr";
+import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
+import { MatIconModule } from "@angular/material/icon";
+import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { AngularSvgIconModule } from "angular-svg-icon";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { snapshotParamMapMock } from "src/app/common/base-test.helpers.spec";
 
 describe("ExecuteQueryEventComponent", () => {
     let component: ExecuteQueryEventComponent;
@@ -19,28 +25,19 @@ describe("ExecuteQueryEventComponent", () => {
                 ExecuteQueryEventComponent,
                 SizePropertyComponent,
                 OffsetIntervalPropertyComponent,
+                BlockRowDataComponent,
+                TooltipIconComponent,
             ],
-            imports: [ApolloTestingModule, DisplaySizeModule],
-            providers: [
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
-                        },
-                    },
-                },
+            imports: [
+                ApolloTestingModule,
+                DisplaySizeModule,
+                MatIconModule,
+                NgbTooltipModule,
+                ToastrModule.forRoot(),
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
             ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            providers: [snapshotParamMapMock],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ExecuteQueryEventComponent);

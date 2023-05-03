@@ -23,7 +23,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^14.2.12",
-    "@angular/cdk": "^14.2.0",
+    "@angular/cdk": "^14.2.7",
     "@angular/common": "^14.2.0",
     "@angular/compiler": "^14.2.0",
     "@angular/core": "^14.2.0",
@@ -38,6 +38,7 @@
     "@apollo/client": "^3.0.0",
     "@ng-bootstrap/ng-bootstrap": "13.0.0",
     "@popperjs/core": "^2.10.2",
+    "@rxweb/reactive-form-validators": "^13.0.0",
     "@schematics/angular": "^14.2.1",
     "@swimlane/ngx-graph": "8.0.2",
     "angular-svg-icon": "^14.0.0",
@@ -56,10 +57,12 @@
     "ngx-markdown": "^14.0.1",
     "ngx-monaco-editor": "^12.0.0",
     "ngx-toastr": "^16.0.2",
+    "ngx-trim-directive": "^2.0.0",
     "npx": "^10.2.2",
     "rxjs": "~6.5.3",
     "subsink": "^1.0.2",
     "tslib": "^2.0.0",
+    "yaml": "^2.2.1",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

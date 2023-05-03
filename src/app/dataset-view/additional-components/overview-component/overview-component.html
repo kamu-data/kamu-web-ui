@@ -74,6 +74,21 @@
                     </p>
                 </div>
             </ng-template>
+            <div
+                class="my-4"
+                *ngIf="!currentState.schema && currentState.overview.kind === 'ROOT'"
+            >
+                <p>
+                    You can add
+                    <a
+                        class="text-decoration-none"
+                        (click)="navigateToAddPollingSource()"
+                    >
+                        source</a
+                    >
+                    dataset
+                </p>
+            </div>
 
             <app-overview-history-summary-header
                 [metadataBlockFragment]="metadataFragmentBlock"

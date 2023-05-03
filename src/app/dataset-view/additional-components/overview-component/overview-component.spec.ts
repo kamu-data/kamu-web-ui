@@ -12,9 +12,9 @@ import { OverviewComponent } from "./overview-component";
 import { OverviewDataUpdate } from "../../dataset.subscriptions.interface";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { NavigationService } from "src/app/services/navigation.service";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { first } from "rxjs/operators";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { MatChipsModule } from "@angular/material/chips";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;
@@ -26,9 +26,8 @@ describe("OverviewComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [OverviewComponent],
-            imports: [ApolloModule, ReactiveFormsModule],
+            imports: [ApolloModule, ReactiveFormsModule, MatChipsModule],
             providers: [Apollo],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
 
         fixture = TestBed.createComponent(OverviewComponent);
@@ -113,5 +112,17 @@ describe("OverviewComponent", () => {
         const openModalSpy = spyOn(modalService, "open").and.callThrough();
         component.openLicenseModal();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should navigate to create SetPollingSource event page", () => {
+        const navigateToAddPollingSourceSpy = spyOn(
+            navigationService,
+            "navigateToAddPollingSource",
+        );
+        component.navigateToAddPollingSource();
+        expect(navigateToAddPollingSourceSpy).toHaveBeenCalledWith({
+            accountName: mockDatasetBasicsFragment.owner.name,
+            datasetName: mockDatasetBasicsFragment.name as string,
+        });
     });
 });

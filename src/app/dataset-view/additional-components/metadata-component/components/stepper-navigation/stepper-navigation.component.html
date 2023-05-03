@@ -1,0 +1,39 @@
+<div class="d-flex mt-4 justify-content-center">
+    <button
+        *ngIf="prevStep"
+        type="button"
+        class="btn btn-primary me-4"
+        (click)="changeStep(prevStep)"
+    >
+        Previous
+    </button>
+    <button
+        *ngIf="nextStep"
+        type="button"
+        class="btn btn-primary"
+        [disabled]="!validStep"
+        data-test-id="next-button"
+        (click)="changeStep(nextStep)"
+    >
+        Next
+    </button>
+    <ng-container *ngIf="!nextStep">
+        <button
+            type="button"
+            (click)="saveEvent()"
+            class="button-save"
+            data-test-id="save-button"
+            [disabled]="!validStep"
+        >
+            Save
+        </button>
+        <button
+            type="button"
+            (click)="editYaml()"
+            class="btn btn-outline-primary ms-4"
+            data-test-id="edit-button"
+        >
+            Edit Yaml
+        </button>
+    </ng-container>
+</div>

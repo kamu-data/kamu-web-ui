@@ -1,0 +1,42 @@
+<ng-container [formGroup]="form">
+    <div class="d-flex">
+        <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
+        <label class="form-label">{{ label }} </label>
+    </div>
+    <div [formArrayName]="controlName">
+        <div *ngFor="let key of items?.controls; index as i">
+            <div class="row mt-3">
+                <div class="col-md-10">
+                    <input
+                        class="form-control"
+                        [placeholder]="placeholder"
+                        formControlName="{{ i }}"
+                        trim
+                    />
+                </div>
+                <div
+                    class="col-md-2 d-flex justify-content-end align-items-center"
+                >
+                    <button
+                        class="btn btn-light"
+                        type="button"
+                        data-test-id="remove-key-button"
+                        (click)="removePrimaryKey(i)"
+                    >
+                        x
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="ms-4">
+            <button
+                type="button"
+                class="add-primary-key-button mt-2"
+                (click)="addPrimaryKey()"
+                data-test-id="add-key-button"
+            >
+                <span>{{ buttonText }}</span>
+            </button>
+        </div>
+    </div>
+</ng-container>

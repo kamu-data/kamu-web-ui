@@ -1,0 +1,20 @@
+<div [formGroup]="form">
+    <div class="d-flex">
+        <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
+        <label class="form-label">{{ label }} </label>
+    </div>
+    <div class="ms-4" *ngFor="let control of ORDER_RADIO_CONTROL">
+        <div class="form-check">
+            <input
+                class="form-check-input"
+                type="radio"
+                [formControlName]="controlName"
+                [name]="controlName"
+                type="radio"
+                [value]="control.value"
+                attr.data-test-id="radio-{{ control.value }}-control"
+            />
+            <label class="form-check-label" for=""> {{ control.label }} </label>
+        </div>
+    </div>
+</div>

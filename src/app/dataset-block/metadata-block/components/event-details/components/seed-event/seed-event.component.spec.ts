@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, fakeAsync, TestBed } from "@angular/core/testing";
 import {
     findElementByDataTestId,
-    emitClickOnElement,
+    emitClickOnElementByDataTestId,
 } from "src/app/common/base-test.helpers.spec";
 import { mockSeed } from "../../mock.events";
 
@@ -43,7 +43,7 @@ describe("SeedEventComponent", () => {
 
     it("should check copyToClipboard button is work", fakeAsync(() => {
         const successToastServiceSpy = spyOn(toastService, "success");
-        emitClickOnElement(fixture, '[data-test-id="copyToClipboardId"]');
+        emitClickOnElementByDataTestId(fixture, "copyToClipboardId");
         expect(successToastServiceSpy).toHaveBeenCalledWith("Copied");
     }));
 });

@@ -33,7 +33,6 @@ import {
 import { first } from "rxjs/operators";
 import _ from "lodash";
 
-
 describe("AppDatasetService", () => {
     let service: DatasetService;
     let datasetApi: DatasetApi;
@@ -194,7 +193,9 @@ describe("AppDatasetService", () => {
                     fail("Unexpected success");
                 },
                 (e: Error) => {
-                    expect(e).toEqual(new SqlExecutionError(executionFailureMessage));
+                    expect(e).toEqual(
+                        new SqlExecutionError(executionFailureMessage),
+                    );
                 },
             );
         expect(subscription$.closed).toBeTrue();
@@ -262,13 +263,19 @@ describe("AppDatasetService", () => {
             of(mockDatasetDataSqlRunResponse),
         );
 
-        const subscriptionDataChanges$ = appDatasetSubsService.onDatasetDataChanges
-            .pipe(first())
-            .subscribe(() => { /* Intentionally blank */ });
+        const subscriptionDataChanges$ =
+            appDatasetSubsService.onDatasetDataChanges
+                .pipe(first())
+                .subscribe(() => {
+                    /* Intentionally blank */
+                });
 
-        const subscriptionErrorChanges$ = appDatasetSubsService.onDatasetDataSqlErrorOccured
-            .pipe(first())
-            .subscribe(() => { /* Intentionally blank */ });
+        const subscriptionErrorChanges$ =
+            appDatasetSubsService.onDatasetDataSqlErrorOccured
+                .pipe(first())
+                .subscribe(() => {
+                    /* Intentionally blank */
+                });
 
         service.requestDatasetDataSqlRun(query, limit).subscribe();
 
@@ -283,18 +290,21 @@ describe("AppDatasetService", () => {
             of(mockDatasetDataSqlRunInvalidSqlResponse),
         );
 
-        const subscriptionDataChanges$ = appDatasetSubsService.onDatasetDataChanges
-            .pipe(first())
-            .subscribe(() => { /* Intentionally blank */ });
+        const subscriptionDataChanges$ =
+            appDatasetSubsService.onDatasetDataChanges
+                .pipe(first())
+                .subscribe(() => {
+                    /* Intentionally blank */
+                });
 
-        const subscriptionErrorChanges$ = appDatasetSubsService.onDatasetDataSqlErrorOccured
-            .pipe(first())
-            .subscribe(
-                (update: DataSqlErrorUpdate) => {
-                    const errorResult = mockDatasetDataSqlRunInvalidSqlResponse.data.query as DataQueryResultError;
+        const subscriptionErrorChanges$ =
+            appDatasetSubsService.onDatasetDataSqlErrorOccured
+                .pipe(first())
+                .subscribe((update: DataSqlErrorUpdate) => {
+                    const errorResult = mockDatasetDataSqlRunInvalidSqlResponse
+                        .data.query as DataQueryResultError;
                     expect(update.error).toEqual(errorResult.errorMessage);
-                }
-            );
+                });
 
         service.requestDatasetDataSqlRun(query, limit).subscribe();
 
@@ -309,11 +319,11 @@ describe("AppDatasetService", () => {
             of(mockDatasetDataSqlRunInternalErrorResponse),
         );
 
-        appDatasetSubsService.onDatasetDataChanges.subscribe(
-            () => fail("Unexpected data update"),
+        appDatasetSubsService.onDatasetDataChanges.subscribe(() =>
+            fail("Unexpected data update"),
         );
-        appDatasetSubsService.onDatasetDataSqlErrorOccured.subscribe(
-            () => fail("Unexpected SQL error update"),
+        appDatasetSubsService.onDatasetDataSqlErrorOccured.subscribe(() =>
+            fail("Unexpected SQL error update"),
         );
 
         const subscription$ = service
@@ -324,8 +334,12 @@ describe("AppDatasetService", () => {
                     fail("Unexpected success");
                 },
                 (e: Error) => {
-                    const errorResult = mockDatasetDataSqlRunInternalErrorResponse.data.query as DataQueryResultError;
-                    expect(e).toEqual(new SqlExecutionError(errorResult.errorMessage));
+                    const errorResult =
+                        mockDatasetDataSqlRunInternalErrorResponse.data
+                            .query as DataQueryResultError;
+                    expect(e).toEqual(
+                        new SqlExecutionError(errorResult.errorMessage),
+                    );
                 },
             );
         expect(subscription$.closed).toBeTrue();
@@ -338,11 +352,11 @@ describe("AppDatasetService", () => {
             throwError(new SqlExecutionError()),
         );
 
-        appDatasetSubsService.onDatasetDataChanges.subscribe(
-            () => fail("Unexpected data update"),
+        appDatasetSubsService.onDatasetDataChanges.subscribe(() =>
+            fail("Unexpected data update"),
         );
-        appDatasetSubsService.onDatasetDataSqlErrorOccured.subscribe(
-            () => fail("Unexpected SQL error update"),
+        appDatasetSubsService.onDatasetDataSqlErrorOccured.subscribe(() =>
+            fail("Unexpected SQL error update"),
         );
 
         const subscription$ = service

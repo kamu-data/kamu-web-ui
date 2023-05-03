@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { TEST_BLOCK_HASH } from "./../../api/mock/dataset.mock";
 import { ComponentFixture, fakeAsync, TestBed } from "@angular/core/testing";
 import {
-    emitClickOnElement,
+    emitClickOnElementByDataTestId,
     findElementByDataTestId,
 } from "src/app/common/base-test.helpers.spec";
 import { mockDatasetInfo } from "src/app/search/mock.data";
@@ -42,7 +42,7 @@ describe("DisplayHashComponent", () => {
             navigationService,
             "navigateToMetadataBlock",
         );
-        emitClickOnElement(fixture, '[data-test-id="navigableValue"]');
+        emitClickOnElementByDataTestId(fixture, "navigableValue");
 
         expect(navigateToMetadataBlockSpy).toHaveBeenCalledWith({
             datasetName: mockDatasetInfo.datasetName,
@@ -66,7 +66,7 @@ describe("DisplayHashComponent", () => {
         const successToastServiceSpy = spyOn(toastService, "success");
         component.showCopyButton = true;
         fixture.detectChanges();
-        emitClickOnElement(fixture, '[data-test-id="copyToClipboardButton"]');
+        emitClickOnElementByDataTestId(fixture, "copyToClipboardButton");
 
         expect(successToastServiceSpy).toHaveBeenCalledWith("Copied");
     }));

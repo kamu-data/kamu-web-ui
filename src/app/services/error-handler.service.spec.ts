@@ -76,7 +76,7 @@ describe("ErrorHandlerService", () => {
         service.handleError(new InvalidSqlError(errorText));
         expect(modalServiceSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
-                message: `${ErrorTexts.ERROR_INVALID_SQL_QUERY}: ${errorText}`
+                message: `${ErrorTexts.ERROR_INVALID_SQL_QUERY}: ${errorText}`,
             }),
         );
     });

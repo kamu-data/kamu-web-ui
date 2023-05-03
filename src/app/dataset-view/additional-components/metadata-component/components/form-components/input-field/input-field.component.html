@@ -1,0 +1,48 @@
+<div [formGroup]="form">
+    <div class="d-flex">
+        <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
+        <label class="form-label"
+            >{{ label }}
+            <span *ngIf="requiredField" class="text-danger">*</span></label
+        >
+    </div>
+    <input
+        class="form-control"
+        [placeholder]="placeholder"
+        [formControlName]="controlName"
+        [attr.data-test-id]="dataTestId"
+        [value]="value"
+        trim
+    />
+    <div
+        *ngIf="
+            form.get(controlName)?.invalid &&
+            (form.get(controlName)?.touched || form.get(controlName)?.dirty)
+        "
+    >
+        <div *ngIf="form?.get(controlName)?.errors?.required" class="mt-1">
+            <span
+                class="text-danger fs-12"
+                attr.data-test-id="error-{{ controlName }}-required"
+            >
+                Field is required</span
+            >
+        </div>
+        <div *ngIf="form?.get(controlName)?.errors?.pattern" class="mt-1">
+            <span
+                class="text-danger fs-12"
+                attr.data-test-id="error-{{ controlName }}-pattern"
+            >
+                Field format is wrong</span
+            >
+        </div>
+        <div *ngIf="form?.get(controlName)?.errors?.maxlength" class="mt-1">
+            <span
+                class="text-danger fs-12"
+                attr.data-test-id="error-{{ controlName }}-maxLength"
+            >
+                Field can be max 1 character</span
+            >
+        </div>
+    </div>
+</div>

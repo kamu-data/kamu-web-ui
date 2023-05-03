@@ -1,6 +1,6 @@
 import { ApolloTestingModule } from "apollo-angular/testing";
 import {
-    emitClickOnElement,
+    emitClickOnElementByDataTestId,
     findElementByDataTestId,
 } from "src/app/common/base-test.helpers.spec";
 import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
@@ -85,7 +85,7 @@ describe("EditDetailsModalComponent", () => {
             },
         } as MatChipInputEvent);
         fixture.detectChanges();
-        emitClickOnElement(fixture, '[data-test-id="commit-event"]');
+        emitClickOnElementByDataTestId(fixture, "commit-event");
 
         expect(commitSetInfoEventSpy).toHaveBeenCalledTimes(1);
     });

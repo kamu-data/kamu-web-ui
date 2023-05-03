@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/unbound-method */
+import { ValidatorFn, Validators } from "@angular/forms";
 import {
     DatasetKind,
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
+import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
 
 export class DataHelpers {
     public static datasetKind2String(kind: DatasetKind): string {
@@ -131,3 +134,30 @@ export class DataHelpers {
             : text;
     }
 }
+export const getValidators = (
+    validators: JsonFormValidators,
+): ValidatorFn[] => {
+    const validatorsToAdd: ValidatorFn[] = [];
+    Object.entries(validators).forEach(([key, value]) => {
+        switch (key) {
+            case "required":
+                if (value) {
+                    validatorsToAdd.push(Validators.required);
+                }
+                break;
+            case "pattern":
+                if (value) {
+                    validatorsToAdd.push(Validators.pattern(value as RegExp));
+                }
+                break;
+            case "maxLength":
+                if (value) {
+                    validatorsToAdd.push(Validators.maxLength(value as number));
+                }
+                break;
+            default:
+                break;
+        }
+    });
+    return validatorsToAdd;
+};

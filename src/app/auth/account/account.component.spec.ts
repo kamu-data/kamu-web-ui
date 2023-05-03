@@ -7,7 +7,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import {
-    emitClickOnElement,
+    emitClickOnElementByDataTestId,
     routerMock,
 } from "src/app/common/base-test.helpers.spec";
 
@@ -75,7 +75,7 @@ describe("AccountComponent", () => {
                 navigationService,
                 "navigateToOwnerView",
             );
-            emitClickOnElement(fixture, `[data-test-id="account-${tab}-tab"]`);
+            emitClickOnElementByDataTestId(fixture, `account-${tab}-tab`);
             expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
                 mockAccountDetails.login,
                 tab,

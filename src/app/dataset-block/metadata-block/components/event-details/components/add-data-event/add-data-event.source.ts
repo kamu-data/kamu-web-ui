@@ -3,11 +3,12 @@ import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.
 import { HashPropertyComponent } from "../common/hash-property/hash-property.component";
 import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
 import { SizePropertyComponent } from "../common/size-property/size-property.component";
+import { AddDataToolipsTexts } from "src/app/common/tooltips/add-data.text";
 
 export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "AddData.string.addDataWatermark": {
         label: "Watermark:",
-        tooltip: "Last watermark of the output data stream.",
+        tooltip: AddDataToolipsTexts.WATERMARK,
         presentationComponent: DisplayTimeComponent,
         separateRowForValue: false,
         dataTestId: "add-data-watermark",
@@ -15,7 +16,7 @@ export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddData.string.inputCheckpoint": {
         label: "Input hash:",
-        tooltip: "Hash of the checkpoint file used to restore ingestion state.",
+        tooltip: AddDataToolipsTexts.INPUT_HASH,
         presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-data-input-checkpoint",
@@ -23,7 +24,7 @@ export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddData.DataSlice.logicalHash": {
         label: "Logical hash:",
-        tooltip: "Logical hash sum of the data in this slice.",
+        tooltip: AddDataToolipsTexts.LOGICAL_HASH,
         presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-data-data-slice-logical-hash",
@@ -31,7 +32,7 @@ export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddData.DataSlice.physicalHash": {
         label: "Physical hash:",
-        tooltip: "Hash sum of the data part file.",
+        tooltip: AddDataToolipsTexts.DATA_SLICE_PHYSICAL_HASH,
         presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-data-data-slice-physical-hash",
@@ -39,7 +40,7 @@ export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddData.DataSlice.interval": {
         label: "Interval:",
-        tooltip: "Data slice produced by the transaction.",
+        tooltip: AddDataToolipsTexts.DATA_SLICE_INTERVAL,
         presentationComponent: OffsetIntervalPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-data-data-slice-interval",
@@ -47,7 +48,7 @@ export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddData.DataSlice.size": {
         label: "Size:",
-        tooltip: "Size of data file in bytes.",
+        tooltip: AddDataToolipsTexts.DATA_SLICE_SIZE,
         presentationComponent: SizePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-data-data-slice-size",
@@ -55,7 +56,7 @@ export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddData.Checkpoint.physicalHash": {
         label: "Physical hash:",
-        tooltip: "Hash sum of the checkpoint file.",
+        tooltip: AddDataToolipsTexts.CHECKPOINT_PHYSICAL_HASH,
         presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-data-checkpoint-physical-hash",
@@ -63,7 +64,7 @@ export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddData.Checkpoint.size": {
         label: "Size:",
-        tooltip: "Size of checkpoint file in bytes.",
+        tooltip: AddDataToolipsTexts.CHECKPOINT_SIZE,
         presentationComponent: SizePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-data-checkpoint-size",

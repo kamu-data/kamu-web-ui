@@ -1,4 +1,7 @@
-import { CommitEventToDatasetQuery } from "./../api/kamu.graphql.interface";
+import {
+    CommitEventToDatasetQuery,
+    PageBasedInfo,
+} from "./../api/kamu.graphql.interface";
 import { mockSetVocab } from "./../dataset-block/metadata-block/components/event-details/mock.events";
 import {
     DataBatchFormat,
@@ -20,6 +23,13 @@ import {
     DatasetSearchResult,
     TypeNames,
 } from "../interface/search.interface";
+
+export const mockPageBasedInfo: PageBasedInfo = {
+    currentPage: 1,
+    hasNextPage: true,
+    hasPreviousPage: true,
+    totalPages: 7,
+};
 
 export const mockDatasetInfo: DatasetInfo = {
     accountName: "kamu",

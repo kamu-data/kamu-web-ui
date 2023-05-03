@@ -203,17 +203,13 @@
                                 }}</span>
                             </app-block-row-data>
                         </div>
-
                         <div
                             class="mx-4"
                             *ngIf="
-                                (currentState.metadata.metadata.currentSource
-                                    .read.__typename === 'ReadStepCsv' ||
-                                    currentState.metadata.metadata.currentSource
-                                        .read.__typename ===
-                                        'ReadStepJsonLines') &&
                                 currentState.metadata.metadata.currentSource
-                                    .read.schema
+                                    .read.schema &&
+                                currentState.metadata.metadata.currentSource
+                                    .read.schema.length > 0
                             "
                         >
                             <app-block-row-data
@@ -243,7 +239,7 @@
                             class="mx-4"
                             *ngIf="
                                 currentState.metadata.metadata.currentSource
-                                    .merge.__typename === 'MergeStrategyLedger'
+                                    .merge.__typename
                             "
                         >
                             <app-block-row-data
@@ -477,10 +473,7 @@
                 currentState?.metadata?.kind === 'ROOT'
             "
         >
-            <h3 class="box-title text-center">
-                There is no metadata. Need add
-                <a class="add-link" href="#"> SetPoullingSource event</a>
-            </h3>
+            <h3 class="box-title text-center">There is no metadata.</h3>
         </ng-container>
         <ng-container
             *ngIf="

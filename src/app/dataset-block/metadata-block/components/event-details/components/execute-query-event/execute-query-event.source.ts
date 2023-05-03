@@ -6,18 +6,19 @@ import { SizePropertyComponent } from "../common/size-property/size-property.com
 import { HashPropertyComponent } from "../common/hash-property/hash-property.component";
 import { BlockIntervalPropertyComponent } from "../common/block-interval-property/block-interval-property.component";
 import { DatasetNameByIdPropertyComponent } from "../common/dataset-name-by-id-property/dataset-name-by-id-property.component";
+import { ExecuteQueryToolipsTexts } from "src/app/common/tooltips/execute-query.text";
 
 export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "ExecuteQuery.DataSlice.logicalHash": {
         label: "Logical hash:",
-        tooltip: "Logical hash sum of the data in this slice.",
+        tooltip: ExecuteQueryToolipsTexts.DATA_SLICE_LOGICAL_HASH,
         presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-data-slice-engine",
     },
     "ExecuteQuery.DataSlice.physicalHash": {
         label: "Physical hash:",
-        tooltip: "Hash sum of the data part file.",
+        tooltip: ExecuteQueryToolipsTexts.DATA_SLICE_PHYSICAL_HASH,
         presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-data-slice-physical-hash",
@@ -25,7 +26,7 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "ExecuteQuery.DataSlice.interval": {
         label: "Interval:",
-        tooltip: "Data slice produced by the transaction.",
+        tooltip: ExecuteQueryToolipsTexts.DATA_SLICE_INTERVAL,
         presentationComponent: OffsetIntervalPropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-data-slice-interval",
@@ -33,8 +34,7 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "ExecuteQuery.string.inputCheckpoint": {
         label: "Checkpoint:",
-        tooltip:
-            "Hash of the checkpoint file used to restore transformation state.",
+        tooltip: ExecuteQueryToolipsTexts.INPUT_CHECKPOINT,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-inputCheckpoint",
@@ -42,7 +42,7 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "ExecuteQuery.string.watermark": {
         label: "Watermark:",
-        tooltip: "Last watermark of the output data stream.",
+        tooltip: ExecuteQueryToolipsTexts.WATERMARK,
         presentationComponent: DisplayTimeComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-watermark",
@@ -50,7 +50,7 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "ExecuteQuery.Checkpoint.physicalHash": {
         label: "Physical hash:",
-        tooltip: "Hash sum of the checkpoint file.",
+        tooltip: ExecuteQueryToolipsTexts.CHECKPOINT_PHYSICAL_HASH,
         presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-checkpoint-physical-hash",
@@ -58,7 +58,7 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "ExecuteQuery.Checkpoint.size": {
         label: "Size:",
-        tooltip: "Size of checkpoint file in bytes.",
+        tooltip: ExecuteQueryToolipsTexts.CHECKPOINT_SIZE,
         presentationComponent: SizePropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-checkpoint-size",
@@ -66,7 +66,7 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "ExecuteQuery.InputSlice.datasetId": {
         label: "Name:",
-        tooltip: "Name of the dataset.",
+        tooltip: ExecuteQueryToolipsTexts.INPUT_SLICE_DATASET_ID,
         presentationComponent: DatasetNameByIdPropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-input-slice-name",
@@ -74,7 +74,7 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "ExecuteQuery.InputSlice.id": {
         label: "Id:",
-        tooltip: "Unique dataset identifier..",
+        tooltip: ExecuteQueryToolipsTexts.INPUT_SLICE_ID,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-input-slice-id",
@@ -82,7 +82,7 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "ExecuteQuery.InputSlice.blockInterval": {
         label: "Block interval:",
-        tooltip: "Blocks that went into this transaction.",
+        tooltip: ExecuteQueryToolipsTexts.INPUT_SLICE_BLOCK_INTERVAL,
         presentationComponent: BlockIntervalPropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-input-slice-block-interval",
@@ -90,7 +90,7 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "ExecuteQuery.InputSlice.dataInterval": {
         label: "Data interval:",
-        tooltip: "Data that went into this transaction.",
+        tooltip: ExecuteQueryToolipsTexts.INPUT_SLICE_DATA_INTERVAL,
         presentationComponent: OffsetIntervalPropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-query-input-slice-data-interval",

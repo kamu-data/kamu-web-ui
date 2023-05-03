@@ -15,5 +15,5 @@ import {
 })
 export class TooltipIconComponent {
     @Input() public tooltip: string;
-    public openDelay: number = AppValues.SHORT_DELAY_MS;
+    public readonly OPEN_DELAY: number = AppValues.SHORT_DELAY_MS;
 }

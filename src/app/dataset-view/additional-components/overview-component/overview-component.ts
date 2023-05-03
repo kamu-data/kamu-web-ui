@@ -63,7 +63,6 @@ export class OverviewComponent extends BaseComponent implements OnInit {
                         size: overviewUpdate.size,
                         overview: overviewUpdate.overview,
                     };
-                    console.log("state", this.currentState);
                 },
             ),
         );

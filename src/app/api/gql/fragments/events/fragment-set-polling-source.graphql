@@ -11,6 +11,13 @@ fragment SetPollingSourceEvent on SetPollingSource {
           __typename
         }
       }
+      headers {
+        name
+        value
+      }
+      cache {
+        __typename
+      }
     }
     ... on FetchStepFilesGlob {
       path

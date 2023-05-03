@@ -1144,6 +1144,12 @@ export type SetPollingSourceEventFragment = {
                         timestampFormat?: string | null;
                     }
                   | null;
+              headers?: Array<{
+                  __typename?: "RequestHeader";
+                  name: string;
+                  value: string;
+              }> | null;
+              cache?: { __typename: "SourceCachingForever" } | null;
           };
     read:
         | {
@@ -1794,6 +1800,13 @@ export const SetPollingSourceEventFragmentDoc = gql`
                     ... on EventTimeSourceFromMetadata {
                         __typename
                     }
+                }
+                headers {
+                    name
+                    value
+                }
+                cache {
+                    __typename
                 }
             }
             ... on FetchStepFilesGlob {

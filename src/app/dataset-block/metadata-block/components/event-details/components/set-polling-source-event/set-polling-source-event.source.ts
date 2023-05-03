@@ -9,36 +9,103 @@ import { EnvVariablesPropertyComponent } from "../common/env-variables-property/
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
-import { TooltipsTexts } from "src/app/common/tooltips.text";
+import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
+import { EventTimePropertyComponent } from "../common/event-time-property/event-time-property.component";
+import { CachePropertyComponent } from "../common/cache-property/cache-property.component";
+import { OrderPropertyComponent } from "../common/order-property/order-property.component";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepUrl.url": {
         label: "Url:",
-        tooltip: TooltipsTexts.URL,
+        tooltip: SetPollingSourceToolipsTexts.URL,
         presentationComponent: LinkPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-fetchStepUrl-url",
     },
 
+    "SetPollingSource.FetchStepUrl.eventTime": {
+        label: "Event time:",
+        tooltip: SetPollingSourceToolipsTexts.EVENT_TIME,
+        presentationComponent: EventTimePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-fetchStepUrl-eventTime",
+    },
+
+    "SetPollingSource.FetchStepUrl.headers": {
+        label: "Headers:",
+        tooltip: SetPollingSourceToolipsTexts.HEADERS,
+        presentationComponent: EnvVariablesPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-fetchStepUrl-headers",
+    },
+
+    "SetPollingSource.FetchStepUrl.cache": {
+        label: "Cache:",
+        tooltip: SetPollingSourceToolipsTexts.CACHE,
+        presentationComponent: CachePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-fetchStepUrl-cache",
+    },
+
     "SetPollingSource.FetchStepFilesGlob.path": {
         label: "Path:",
-        tooltip: TooltipsTexts.PATH,
+        tooltip: SetPollingSourceToolipsTexts.PATH,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-FetchStepFilesGlob-path",
     },
 
+    "SetPollingSource.FetchStepFilesGlob.eventTime": {
+        label: "Event time:",
+        tooltip: SetPollingSourceToolipsTexts.EVENT_TIME,
+        presentationComponent: EventTimePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepFilesGlob-eventTime",
+    },
+
+    "SetPollingSource.FetchStepFilesGlob.cache": {
+        label: "Cache:",
+        tooltip: SetPollingSourceToolipsTexts.CACHE,
+        presentationComponent: CachePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepFilesGlob-cache",
+    },
+
+    "SetPollingSource.FetchStepFilesGlob.order": {
+        label: "Order:",
+        tooltip: SetPollingSourceToolipsTexts.ORDER,
+        presentationComponent: OrderPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepFilesGlob-order",
+    },
+
     "SetPollingSource.FetchStepContainer.image": {
         label: "Image:",
-        tooltip: TooltipsTexts.IMAGE,
+        tooltip: SetPollingSourceToolipsTexts.IMAGE,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-fetchStepContainer-image",
     },
 
+    "SetPollingSource.FetchStepContainer.command": {
+        label: "Commands:",
+        tooltip: SetPollingSourceToolipsTexts.ENVIROMENT_VARIABLES,
+        presentationComponent: CardsPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-fetchStepContainer-command",
+    },
+
+    "SetPollingSource.FetchStepContainer.args": {
+        label: "Arguments:",
+        tooltip: SetPollingSourceToolipsTexts.ARGUMENTS,
+        presentationComponent: CardsPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-fetchStepContainer-args",
+    },
+
     "SetPollingSource.FetchStepContainer.env": {
         label: "Environment variables:",
-        tooltip: TooltipsTexts.ENVIROMENT_VARIABLES,
+        tooltip: SetPollingSourceToolipsTexts.ENVIROMENT_VARIABLES,
         presentationComponent: EnvVariablesPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-fetchStepContainer-env",
@@ -46,7 +113,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.MergeStrategyLedger.__typename": {
         label: "Strategy:",
-        tooltip: TooltipsTexts.MERGE_STRATEGY_LEDGER,
+        tooltip: SetPollingSourceToolipsTexts.MERGE_STRATEGY_LEDGER,
         presentationComponent: MergeStrategyPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-mergeStrategyLedger-__typename",
@@ -54,7 +121,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.MergeStrategyAppend.__typename": {
         label: "Strategy:",
-        tooltip: TooltipsTexts.MERGE_STRATEGY_APPEND,
+        tooltip: SetPollingSourceToolipsTexts.MERGE_STRATEGY_APPEND,
         presentationComponent: MergeStrategyPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-mergeStrategyAppend-__typename",
@@ -62,7 +129,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.MergeStrategyLedger.primaryKey": {
         label: "Primary key:",
-        tooltip: TooltipsTexts.PRIMARY_KEYS,
+        tooltip: SetPollingSourceToolipsTexts.PRIMARY_KEYS,
         presentationComponent: CardsPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-mergeStrategyLedger-primaryKey",
@@ -70,7 +137,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.TransformSql.engine": {
         label: "Engine:",
-        tooltip: TooltipsTexts.ENGINE,
+        tooltip: SetPollingSourceToolipsTexts.ENGINE,
         presentationComponent: EnginePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-transformSql-engine",
@@ -78,7 +145,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.TransformSql.queries": {
         label: "Queries:",
-        tooltip: TooltipsTexts.QUERIES,
+        tooltip: SetPollingSourceToolipsTexts.QUERIES,
         presentationComponent: SqlQueryViewerComponent,
         separateRowForValue: true,
         dataTestId: "setPollingSource-transformSql-queries",
@@ -86,7 +153,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.ReadStepJsonLines.schema": {
         label: "Schema:",
-        tooltip: TooltipsTexts.SCHEMA,
+        tooltip: SetPollingSourceToolipsTexts.SCHEMA,
         presentationComponent: SchemaPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-readStepJsonLines-schema",
@@ -94,7 +161,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.ReadStepCsv.separator": {
         label: "Separator:",
-        tooltip: TooltipsTexts.SEPARATOR,
+        tooltip: SetPollingSourceToolipsTexts.SEPARATOR,
         presentationComponent: SeparatorPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-readStepCsv-separator",
@@ -102,7 +169,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.ReadStepCsv.schema": {
         label: "Schema:",
-        tooltip: TooltipsTexts.SCHEMA,
+        tooltip: SetPollingSourceToolipsTexts.SCHEMA,
         presentationComponent: SchemaPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-readStepCsv-schema",
@@ -110,14 +177,14 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.ReadStepCsv.header": {
         label: "Header:",
-        tooltip: TooltipsTexts.HEADER,
+        tooltip: SetPollingSourceToolipsTexts.HEADER,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-readStepCsv-header",
     },
     "SetPollingSource.ReadStepCsv.enforceSchema": {
         label: "Enforce schema:",
-        tooltip: TooltipsTexts.ENFORCE_SCHEMA,
+        tooltip: SetPollingSourceToolipsTexts.ENFORCE_SCHEMA,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-readStepCsv-enforceSchema",
@@ -125,7 +192,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.ReadStepCsv.timestampFormat": {
         label: "Timestamp format:",
-        tooltip: TooltipsTexts.TIMESTAMP_FORMAT,
+        tooltip: SetPollingSourceToolipsTexts.TIMESTAMP_FORMAT,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-readStepCsv-timestampFormat",
@@ -133,7 +200,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.PrepStepDecompress.format": {
         label: "Format:",
-        tooltip: TooltipsTexts.DECOMPRESS_FORMAT,
+        tooltip: SetPollingSourceToolipsTexts.DECOMPRESS_FORMAT,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-prepStepDecompress-format",
@@ -141,7 +208,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.PrepStepDecompress.subPath": {
         label: "SubPath:",
-        tooltip: TooltipsTexts.DECOMPRESS_SUB_PATH,
+        tooltip: SetPollingSourceToolipsTexts.DECOMPRESS_SUB_PATH,
         presentationComponent: LinkPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-prepStepDecompress-subPath",
@@ -149,7 +216,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.PrepStepPipe.command": {
         label: "Command:",
-        tooltip: TooltipsTexts.COMMAND,
+        tooltip: SetPollingSourceToolipsTexts.COMMAND,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-prepStepPipe-command",

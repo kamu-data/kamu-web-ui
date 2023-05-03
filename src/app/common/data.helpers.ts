@@ -73,6 +73,19 @@ export class DataHelpers {
         }
     }
 
+    public static descriptionOrder(name: string): string {
+        switch (name) {
+            case "BY_NAME": {
+                return "By name";
+            }
+            case "BY_EVENT_TIME": {
+                return "By event time";
+            }
+            default:
+                return "Unknown order";
+        }
+    }
+
     public static descriptionForMetadataBlock(
         block: MetadataBlockFragment,
     ): string {

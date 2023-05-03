@@ -1,0 +1,11 @@
+<div class="form-check d-flex gap-2" [formGroup]="form">
+    <input
+        class="form-check-input"
+        type="checkbox"
+        [formControlName]="controlName"
+        [attr.data-test-id]="dataTestId"
+        [checked]="checked"
+    />
+    <label class="form-check-label"> {{ label }} </label>
+    <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
+</div>

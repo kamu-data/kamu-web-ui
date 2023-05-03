@@ -1,3 +1,4 @@
+import { AddPollingSourceComponent } from "./dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source.component";
 import { MetadataBlockComponent } from "./dataset-block/metadata-block/metadata-block.component";
 import { AuthenticationGuard } from "./auth/authentication.guard";
 import { SettingsComponent } from "./auth/settings/settings.component";
@@ -70,6 +71,12 @@ export const routes: Routes = [
                 component: DatasetComponent,
             },
         ],
+    },
+    {
+        path:
+            `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
+            `/${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
+        component: AddPollingSourceComponent,
     },
     {
         path: "**",

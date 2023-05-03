@@ -1,23 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { TemporalTablesPropertyComponent } from './temporal-tables-property.component';
+import { TemporalTablesPropertyComponent } from "./temporal-tables-property.component";
 
-describe('TemporalTablesPropertyComponent', () => {
-  let component: TemporalTablesPropertyComponent;
-  let fixture: ComponentFixture<TemporalTablesPropertyComponent>;
+describe("TemporalTablesPropertyComponent", () => {
+    let component: TemporalTablesPropertyComponent;
+    let fixture: ComponentFixture<TemporalTablesPropertyComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ TemporalTablesPropertyComponent ]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [TemporalTablesPropertyComponent],
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(TemporalTablesPropertyComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(TemporalTablesPropertyComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });

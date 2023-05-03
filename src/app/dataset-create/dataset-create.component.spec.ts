@@ -1,5 +1,5 @@
-import { Observable } from "rxjs";
-import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { of } from "rxjs";
+import { findInputElememtByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -51,7 +51,7 @@ describe("DatasetCreateComponent", () => {
         const createDatasetFromFormSpy = spyOn(
             datasetCreateService,
             "createEmptyDataset",
-        ).and.returnValue(new Observable());
+        ).and.returnValue(of());
 
         component.onCreateDataset();
 
@@ -64,7 +64,7 @@ describe("DatasetCreateComponent", () => {
         const createDatasetFromSnapshotSpy = spyOn(
             datasetCreateService,
             "createDatasetFromSnapshot",
-        ).and.returnValue(new Observable());
+        ).and.returnValue(of());
 
         component.onCreateDataset();
 
@@ -72,10 +72,10 @@ describe("DatasetCreateComponent", () => {
     });
 
     it("should check switch checkbox `Initialize from YAML snapshot`)", () => {
-        const checkboxInput = findElementByDataTestId(
+        const checkboxInput = findInputElememtByDataTestId(
             fixture,
             "show-monaco-editor",
-        ) as HTMLInputElement;
+        );
         expect(checkboxInput.checked).toBeFalse();
         expect(component.showMonacoEditor).toBeFalse();
 
@@ -91,10 +91,10 @@ describe("DatasetCreateComponent", () => {
     });
 
     it("should check call uploadFile when file picked)", async () => {
-        const checkboxInput = findElementByDataTestId(
+        const checkboxInput = findInputElememtByDataTestId(
             fixture,
             "show-monaco-editor",
-        ) as HTMLInputElement;
+        );
 
         checkboxInput.click();
         fixture.detectChanges();
@@ -114,10 +114,10 @@ describe("DatasetCreateComponent", () => {
     });
 
     it("should check call uploadFile when file not picked)", async () => {
-        const checkboxInput = findElementByDataTestId(
+        const checkboxInput = findInputElememtByDataTestId(
             fixture,
             "show-monaco-editor",
-        ) as HTMLInputElement;
+        );
 
         checkboxInput.click();
         fixture.detectChanges();

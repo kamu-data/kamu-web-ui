@@ -6,7 +6,10 @@ import { FormsModule } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BlockNavigationComponent } from "./block-navigation.component";
 import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
-import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import {
+    dispatchInputEvent,
+    findElementByDataTestId,
+} from "src/app/common/base-test.helpers.spec";
 
 describe("BlockNavigationComponent", () => {
     let component: BlockNavigationComponent;
@@ -32,15 +35,9 @@ describe("BlockNavigationComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should ckeck clear search filter", () => {
+    it("should check clear search filter", () => {
         const testSearchHash = "Qwedfdfdfv";
-        const searchInput = findElementByDataTestId(
-            fixture,
-            "searchHash",
-        ) as HTMLInputElement;
-        searchInput.value = testSearchHash;
-        searchInput.dispatchEvent(new Event("input"));
-        fixture.detectChanges();
+        dispatchInputEvent(fixture, "searchHash", testSearchHash);
         expect(component.searchHash).toEqual(testSearchHash);
 
         const clearIcon = findElementByDataTestId(fixture, "clearSearchHash");
@@ -49,20 +46,15 @@ describe("BlockNavigationComponent", () => {
         expect(component.searchHash).toBe("");
     });
 
-    it("should ckeck calls highlightHash method", () => {
+    it("should check calls highlightHash method", () => {
         const testSearchHash = "zW1";
-        component.datasetHistory = mockHistoryUpdate;
-        const searchInput = findElementByDataTestId(
-            fixture,
-            "searchHash",
-        ) as HTMLInputElement;
-        searchInput.value = testSearchHash;
-        searchInput.dispatchEvent(new Event("input"));
         const highlightHashSpy = spyOn(
             component,
             "highlightHash",
         ).and.callThrough();
-        fixture.detectChanges();
+        component.datasetHistory = mockHistoryUpdate;
+
+        dispatchInputEvent(fixture, "searchHash", testSearchHash);
 
         expect(highlightHashSpy).toHaveBeenCalledTimes(2);
     });

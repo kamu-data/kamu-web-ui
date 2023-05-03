@@ -1,3 +1,4 @@
+import { MatIconModule } from "@angular/material/icon";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
 import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
@@ -39,6 +40,12 @@ import { DisplaySizeModule } from "../common/pipes/display-size.module";
 import { SharedModule } from "../shared/shared/shared.module";
 import { EditDetailsModalComponent } from "./additional-components/overview-component/components/edit-details-modal/edit-details-modal.component";
 import { EditLicenseModalComponent } from "./additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
+import { FinalYamlModalComponent } from "./additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
+import { BaseStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/base-step/base-step.component";
+import { StepperNavigationComponent } from "./additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
+import { PrepareStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/prepare-step/prepare-step.component";
+import { PreprocessStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/preprocess-step/preprocess-step.component";
+import { PollingSourceFormComponentsModule } from "./additional-components/metadata-component/components/form-components/polling-source-form-components.module";
 
 @NgModule({
     imports: [
@@ -74,6 +81,8 @@ import { EditLicenseModalComponent } from "./additional-components/overview-comp
         MatFormFieldModule,
         SharedModule,
         ReactiveFormsModule,
+        MatIconModule,
+        PollingSourceFormComponentsModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -82,6 +91,10 @@ import { EditLicenseModalComponent } from "./additional-components/overview-comp
         DatasetViewMenuComponent,
         MetadataComponent,
         DataComponent,
+        BaseStepComponent,
+        PrepareStepComponent,
+        PreprocessStepComponent,
+        StepperNavigationComponent,
         OverviewComponent,
         LineageComponent,
         HistoryComponent,
@@ -100,6 +113,11 @@ import { EditLicenseModalComponent } from "./additional-components/overview-comp
         HistoryComponent,
         EditDetailsModalComponent,
         EditLicenseModalComponent,
+        FinalYamlModalComponent,
+        BaseStepComponent,
+        PrepareStepComponent,
+        PreprocessStepComponent,
+        StepperNavigationComponent,
     ],
 })
 export class DatasetModule {

@@ -1,6 +1,7 @@
-import { SetLicense } from "./../api/kamu.graphql.interface";
+import { SetLicense, SetPollingSource } from "./../api/kamu.graphql.interface";
 import { Injectable } from "@angular/core";
 import { MaybeNull } from "../common/app.types";
+import { stringify } from "yaml";
 
 @Injectable({
     providedIn: "root",
@@ -10,6 +11,12 @@ export class TemplatesYamlEventsService {
         "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setInfo\n";
     private readonly initialSetLicenseTemplate =
         "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setLicense\n";
+
+    private readonly initialTemplate = {
+        kind: "MetadataEvent",
+        version: 1,
+        content: {},
+    };
 
     public buildYamlSetInfoEvent(
         description: MaybeNull<string>,
@@ -35,5 +42,15 @@ export class TemplatesYamlEventsService {
         result += `  websiteUrl: ${params.websiteUrl}\n`;
         if (params.spdxId) result += `  spdxId: ${params.spdxId.toString()}\n`;
         return result;
+    }
+
+    public buildYamlSetPollingSourceEvent(
+        params: Omit<SetPollingSource, "__typename">,
+    ): string {
+        this.initialTemplate.content = {
+            kind: "setPollingSource",
+            ...params,
+        };
+        return stringify(this.initialTemplate);
     }
 }

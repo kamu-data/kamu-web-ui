@@ -1,0 +1,105 @@
+<div class="d-flex flex-column dynamic-table" [formGroup]="form">
+    <div class="d-flex">
+        <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
+        <label class="form-label">{{ label }} </label>
+    </div>
+
+    <ng-container [formArrayName]="controlName">
+        <table
+            mat-table
+            id="schema-field"
+            [dataSource]="items.controls"
+            class="mat-table cdk-table"
+        >
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef width="40%">name</th>
+                <td
+                    mat-cell
+                    *matCellDef="let element; let i = index"
+                    [formGroup]="element"
+                >
+                    <input
+                        type="text"
+                        placeholder="Enter name"
+                        formControlName="name"
+                        trim
+                        attr.data-test-id="name-control-{{ i }}"
+                    />
+                    <ng-container *ngIf="nameControlError(i)">
+                        <small class="text-danger ps-2">
+                            {{ nameControlError(i) }}</small
+                        >
+                    </ng-container>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef width="40%">type</th>
+                <td
+                    mat-cell
+                    *matCellDef="let element; let i = index"
+                    [formGroup]="element"
+                >
+                    <input
+                        type="text"
+                        class="w-100"
+                        formControlName="type"
+                        placeholder="-- Select type --"
+                        [ngbTypeahead]="search"
+                        attr.data-test-id="type-control-{{ i }}"
+                        (focus)="focus$.next(items.controls[i].value)"
+                        (click)="click$.next(items.controls[i].value)"
+                    />
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell class="text-center" *matHeaderCellDef>
+                    actions
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                    <div class="custom-cell">
+                        <mat-icon
+                            class="icon fs-5 order"
+                            title="move down"
+                            (click)="swap(i, 1)"
+                            attr.data-test-id="move-down-button-{{ i }}"
+                            >expand_more</mat-icon
+                        >
+                        <mat-icon
+                            class="icon fs-5 mx-2 order"
+                            title="move up"
+                            (click)="swap(i, -1)"
+                            attr.data-test-id="move-up-button-{{ i }}"
+                            >expand_less</mat-icon
+                        >
+                        <mat-icon
+                            class="icon fs-5 mt-1"
+                            title="delete"
+                            (click)="deleteRow(i)"
+                            attr.data-test-id="delete-row-button-{{ i }}"
+                            >delete</mat-icon
+                        >
+                    </div>
+                </td>
+            </ng-container>
+            <tr
+                mat-header-row
+                class="table-header-background"
+                *matHeaderRowDef="DISPLAYED_COLUMNS"
+            ></tr>
+            <tr mat-row *matRowDef="let row; columns: DISPLAYED_COLUMNS"></tr>
+        </table>
+    </ng-container>
+
+    <div class="mt-2">
+        <button
+            (click)="addRow()"
+            type="button"
+            class="btn-sm btn add-button"
+            data-test-id="add-row-button"
+        >
+            <span class="fw-bold">+</span> Add row
+        </button>
+    </div>
+</div>

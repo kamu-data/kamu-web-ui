@@ -10,6 +10,9 @@ import { CardsPropertyComponent } from "../common/cards-property/cards-property.
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
+import { EventTimePropertyComponent } from "../common/event-time-property/event-time-property.component";
+import { CachePropertyComponent } from "../common/cache-property/cache-property.component";
+import { OrderPropertyComponent } from "../common/order-property/order-property.component";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepUrl.url": {
@@ -20,6 +23,30 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "setPollingSource-fetchStepUrl-url",
     },
 
+    "SetPollingSource.FetchStepUrl.eventTime": {
+        label: "Event time:",
+        tooltip: SetPollingSourceToolipsTexts.EVENT_TIME,
+        presentationComponent: EventTimePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-fetchStepUrl-eventTime",
+    },
+
+    "SetPollingSource.FetchStepUrl.headers": {
+        label: "Headers:",
+        tooltip: SetPollingSourceToolipsTexts.HEADERS,
+        presentationComponent: EnvVariablesPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-fetchStepUrl-headers",
+    },
+
+    "SetPollingSource.FetchStepUrl.cache": {
+        label: "Cache:",
+        tooltip: SetPollingSourceToolipsTexts.CACHE,
+        presentationComponent: CachePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-fetchStepUrl-cache",
+    },
+
     "SetPollingSource.FetchStepFilesGlob.path": {
         label: "Path:",
         tooltip: SetPollingSourceToolipsTexts.PATH,
@@ -28,12 +55,52 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "setPollingSource-FetchStepFilesGlob-path",
     },
 
+    "SetPollingSource.FetchStepFilesGlob.eventTime": {
+        label: "Event time:",
+        tooltip: SetPollingSourceToolipsTexts.EVENT_TIME,
+        presentationComponent: EventTimePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepFilesGlob-eventTime",
+    },
+
+    "SetPollingSource.FetchStepFilesGlob.cache": {
+        label: "Cache:",
+        tooltip: SetPollingSourceToolipsTexts.CACHE,
+        presentationComponent: CachePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepFilesGlob-cache",
+    },
+
+    "SetPollingSource.FetchStepFilesGlob.order": {
+        label: "Order:",
+        tooltip: SetPollingSourceToolipsTexts.ORDER,
+        presentationComponent: OrderPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepFilesGlob-order",
+    },
+
     "SetPollingSource.FetchStepContainer.image": {
         label: "Image:",
         tooltip: SetPollingSourceToolipsTexts.IMAGE,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-fetchStepContainer-image",
+    },
+
+    "SetPollingSource.FetchStepContainer.command": {
+        label: "Commands:",
+        tooltip: SetPollingSourceToolipsTexts.ENVIROMENT_VARIABLES,
+        presentationComponent: CardsPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-fetchStepContainer-command",
+    },
+
+    "SetPollingSource.FetchStepContainer.args": {
+        label: "Arguments:",
+        tooltip: SetPollingSourceToolipsTexts.ARGUMENTS,
+        presentationComponent: CardsPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-fetchStepContainer-args",
     },
 
     "SetPollingSource.FetchStepContainer.env": {

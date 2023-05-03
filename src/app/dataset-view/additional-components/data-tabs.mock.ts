@@ -151,6 +151,8 @@ export const mockOverviewDataUpdate = {
                     __typename: "FetchStepUrl",
                     url: "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=SPY&outputsize=full&datatype=csv&apikey=${{ env.ALPHA_VANTAGE_API_KEY }}",
                     eventTime: null,
+                    headers: null,
+                    cache: null,
                 },
                 read: {
                     __typename: "ReadStepCsv",
@@ -549,6 +551,8 @@ export const mockOverviewWithSetInfo = {
                 __typename: "FetchStepUrl",
                 url: "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=SPY&outputsize=full&datatype=csv&apikey=${{ env.ALPHA_VANTAGE_API_KEY }}",
                 eventTime: null,
+                headers: null,
+                cache: null,
             },
             read: {
                 __typename: "ReadStepCsv",
@@ -698,6 +702,8 @@ export const mockOverviewWithSetLicense = {
                 __typename: "FetchStepUrl",
                 url: "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=SPY&outputsize=full&datatype=csv&apikey=${{ env.ALPHA_VANTAGE_API_KEY }}",
                 eventTime: null,
+                headers: null,
+                cache: null,
             },
             read: {
                 __typename: "ReadStepCsv",

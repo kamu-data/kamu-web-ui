@@ -41,6 +41,9 @@ import { SetVocabEventComponent } from "./components/event-details/components/se
 import { SetWatermarkEventComponent } from "./components/event-details/components/set-watermark-event/set-watermark-event.component";
 import { TemporalTablesPropertyComponent } from "./components/event-details/components/common/temporal-tables-property/temporal-tables-property.component";
 import { OffsetIntervalPropertyComponent } from "./components/event-details/components/common/offset-interval-property/offset-interval-property.component";
+import { CachePropertyComponent } from "./components/event-details/components/common/cache-property/cache-property.component";
+import { EventTimePropertyComponent } from "./components/event-details/components/common/event-time-property/event-time-property.component";
+import { OrderPropertyComponent } from "./components/event-details/components/common/order-property/order-property.component";
 
 @NgModule({
     declarations: [
@@ -73,6 +76,9 @@ import { OffsetIntervalPropertyComponent } from "./components/event-details/comp
         SetInfoEventComponent,
         SetVocabEventComponent,
         SetWatermarkEventComponent,
+        CachePropertyComponent,
+        EventTimePropertyComponent,
+        OrderPropertyComponent,
     ],
     imports: [
         CommonModule,

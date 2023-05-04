@@ -182,6 +182,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         separateRowForValue: false,
         dataTestId: "setPollingSource-readStepCsv-header",
     },
+
     "SetPollingSource.ReadStepCsv.enforceSchema": {
         label: "Enforce schema:",
         tooltip: SetPollingSourceToolipsTexts.ENFORCE_SCHEMA,
@@ -220,5 +221,69 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-prepStepPipe-command",
+    },
+
+    "SetPollingSource.ReadStepEsriShapefile.schema": {
+        label: "Schema:",
+        tooltip: SetPollingSourceToolipsTexts.SCHEMA,
+        presentationComponent: SchemaPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepEsriShapefile-schema",
+    },
+
+    "SetPollingSource.ReadStepEsriShapefile.subPath": {
+        label: "Sub path:",
+        tooltip: SetPollingSourceToolipsTexts.SUB_PATH,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepEsriShapefile-subPath",
+    },
+
+    "SetPollingSource.ReadStepJsonLines.dateFormat": {
+        label: "Date format:",
+        tooltip: SetPollingSourceToolipsTexts.DATE_FORMAT,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepJsonLines-dateFormat",
+    },
+
+    "SetPollingSource.ReadStepJsonLines.encoding": {
+        label: "Encoding:",
+        tooltip: SetPollingSourceToolipsTexts.ENCODING,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepJsonLines-encoding",
+    },
+
+    "SetPollingSource.ReadStepJsonLines.multiLine": {
+        label: "Multi line:",
+        tooltip: SetPollingSourceToolipsTexts.MULTI_LINE,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepJsonLines-multiLine",
+    },
+
+    "SetPollingSource.ReadStepJsonLines.primitivesAsString": {
+        label: "Primitive as string:",
+        tooltip: SetPollingSourceToolipsTexts.PRIMITIVE_AS_STRING,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepJsonLines-primitivesAsString",
+    },
+
+    "SetPollingSource.ReadStepJsonLines.timestampFormat": {
+        label: "Timestamp format:",
+        tooltip: SetPollingSourceToolipsTexts.TIMESTAMP_FORMAT,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepJsonLines-timestampFormat",
+    },
+
+    "SetPollingSource.ReadStepParquet.schema": {
+        label: "Schema:",
+        tooltip: SetPollingSourceToolipsTexts.SCHEMA,
+        presentationComponent: SchemaPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepParquet-schema",
     },
 };

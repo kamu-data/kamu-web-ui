@@ -3,4 +3,9 @@ fragment DatasetOverview on Dataset {
   ...DatasetDetails
   ...DatasetReadme
   ...DatasetLastUpdate
+  metadata {
+    currentSource {
+      __typename
+    }
+  }
 }

@@ -76,7 +76,7 @@
             </ng-template>
             <div
                 class="my-4"
-                *ngIf="!currentState.schema && currentState.overview.kind === 'ROOT'"
+                *ngIf="!currentState.overview.metadata.currentSource && currentState.overview.kind === 'ROOT'"
             >
                 <p>
                     You can add

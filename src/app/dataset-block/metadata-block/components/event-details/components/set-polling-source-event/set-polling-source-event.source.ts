@@ -175,6 +175,38 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "setPollingSource-readStepCsv-schema",
     },
 
+    "SetPollingSource.ReadStepCsv.encoding": {
+        label: "Encoding:",
+        tooltip: SetPollingSourceToolipsTexts.ENCODING,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-encoding",
+    },
+
+    "SetPollingSource.ReadStepCsv.quote": {
+        label: "Quote character:",
+        tooltip: SetPollingSourceToolipsTexts.QUOTE,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-quote",
+    },
+
+    "SetPollingSource.ReadStepCsv.escape": {
+        label: "Escape character:",
+        tooltip: SetPollingSourceToolipsTexts.ESCAPE,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-escape",
+    },
+
+    "SetPollingSource.ReadStepCsv.comment": {
+        label: "Comment character:",
+        tooltip: SetPollingSourceToolipsTexts.COMMENT,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-comment",
+    },
+
     "SetPollingSource.ReadStepCsv.header": {
         label: "Header:",
         tooltip: SetPollingSourceToolipsTexts.HEADER,
@@ -182,12 +214,101 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         separateRowForValue: false,
         dataTestId: "setPollingSource-readStepCsv-header",
     },
+
     "SetPollingSource.ReadStepCsv.enforceSchema": {
         label: "Enforce schema:",
         tooltip: SetPollingSourceToolipsTexts.ENFORCE_SCHEMA,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-readStepCsv-enforceSchema",
+    },
+
+    "SetPollingSource.ReadStepCsv.inferSchema": {
+        label: "Infer schema:",
+        tooltip: SetPollingSourceToolipsTexts.INFER_SCHEMA,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-inferSchema",
+    },
+
+    "SetPollingSource.ReadStepCsv.ignoreLeadingWhiteSpace": {
+        label: "Ignore leading whitespace:",
+        tooltip: SetPollingSourceToolipsTexts.IGNORE_LEADING_WHITESPACE,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-ignoreLeadingWhiteSpace",
+    },
+
+    "SetPollingSource.ReadStepCsv.ignoreTrailingWhiteSpace": {
+        label: "Ignore trailing whitespace:",
+        tooltip: SetPollingSourceToolipsTexts.QUIGNORE_TRAILING_WHITESPACEOTE,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-ignoreTrailingWhiteSpace",
+    },
+
+    "SetPollingSource.ReadStepCsv.nullValue": {
+        label: "Null value:",
+        tooltip: SetPollingSourceToolipsTexts.NULL_VALUE,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-nullValue",
+    },
+
+    "SetPollingSource.ReadStepCsv.emptyValue": {
+        label: "Empty value:",
+        tooltip: SetPollingSourceToolipsTexts.EMPTY_VALUE,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-emptyValue",
+    },
+
+    "SetPollingSource.ReadStepCsv.nanValue": {
+        label: "Nan value:",
+        tooltip: SetPollingSourceToolipsTexts.NAN_VALUE,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-nanValue",
+    },
+
+    "SetPollingSource.ReadStepCsv.positiveInf": {
+        label: "Possitive infinity:",
+        tooltip: SetPollingSourceToolipsTexts.POSITIVE_INFINITY,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-positiveInf",
+    },
+
+    "SetPollingSource.ReadStepCsv.negativeInf": {
+        label: "Negative infinity:",
+        tooltip: SetPollingSourceToolipsTexts.NEGATIVE_INFINITY,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-negativeInf",
+    },
+
+    "SetPollingSource.ReadStepCsv.dateFormat": {
+        label: "Date format:",
+        tooltip: SetPollingSourceToolipsTexts.DATE_FORMAT,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-dateFormat",
+    },
+
+    "SetPollingSource.ReadStepCsv.multiLine": {
+        label: "Multi line:",
+        tooltip: SetPollingSourceToolipsTexts.MULTI_LINE,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-readStepCsv-multiLine",
+    },
+
+    "SetPollingSource.ReadStepGeoJson.schema": {
+        label: "Schema:",
+        tooltip: SetPollingSourceToolipsTexts.SCHEMA,
+        presentationComponent: SchemaPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepGeoJson-schema",
     },
 
     "SetPollingSource.ReadStepCsv.timestampFormat": {

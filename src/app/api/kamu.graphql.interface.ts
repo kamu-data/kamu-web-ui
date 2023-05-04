@@ -1465,6 +1465,10 @@ export type DatasetMetadataSummaryFragment = {
 
 export type DatasetOverviewFragment = {
     __typename?: "Dataset";
+    metadata: {
+        __typename?: "DatasetMetadata";
+        currentSource?: { __typename: "SetPollingSource" } | null;
+    };
 } & DatasetDescriptionFragment &
     DatasetDetailsFragment &
     DatasetReadmeFragment &
@@ -2179,6 +2183,11 @@ export const DatasetOverviewFragmentDoc = gql`
         ...DatasetDetails
         ...DatasetReadme
         ...DatasetLastUpdate
+        metadata {
+            currentSource {
+                __typename
+            }
+        }
     }
     ${DatasetDescriptionFragmentDoc}
     ${DatasetDetailsFragmentDoc}

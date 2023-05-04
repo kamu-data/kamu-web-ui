@@ -343,6 +343,62 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "setPollingSource-prepStepPipe-command",
     },
 
+    "SetPollingSource.MergeStrategySnapshot.__typename": {
+        label: "Strategy:",
+        tooltip: SetPollingSourceToolipsTexts.SNAPSHOT_STRATEGY,
+        presentationComponent: MergeStrategyPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-MergeStrategySnapshot-__typename",
+    },
+
+    "SetPollingSource.MergeStrategySnapshot.primaryKey": {
+        label: "Primary key:",
+        tooltip: SetPollingSourceToolipsTexts.PRIMARY_KEYS,
+        presentationComponent: CardsPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-MergeStrategySnapshot-__primaryKey",
+    },
+
+    "SetPollingSource.MergeStrategySnapshot.compareColumns": {
+        label: "Compare columns:",
+        tooltip: SetPollingSourceToolipsTexts.COMPARE_COLUMNS,
+        presentationComponent: CardsPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-MergeStrategySnapshot-compareColumns",
+    },
+
+    "SetPollingSource.MergeStrategySnapshot.observationColumn": {
+        label: "Observation column:",
+        tooltip: SetPollingSourceToolipsTexts.OBSERVATION_COLUMN,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-MergeStrategySnapshot-observationColumn",
+    },
+
+    "SetPollingSource.MergeStrategySnapshot.obsvAdded": {
+        label: "Observation added:",
+        tooltip: SetPollingSourceToolipsTexts.OBSERVATION_ADDED,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-MergeStrategySnapshot-obsvAdded",
+    },
+
+    "SetPollingSource.MergeStrategySnapshot.obsvChanged": {
+        label: "Observation changed:",
+        tooltip: SetPollingSourceToolipsTexts.OBSERVATION_CHANGED,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-MergeStrategySnapshot-obsvChanged",
+    },
+
+    "SetPollingSource.MergeStrategySnapshot.obsvRemoved": {
+        label: "Observation removed:",
+        tooltip: SetPollingSourceToolipsTexts.OBSERVATION_REMOVED,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-MergeStrategySnapshot-obsvRemoved",
+    },
+
     "SetPollingSource.ReadStepEsriShapefile.schema": {
         label: "Schema:",
         tooltip: SetPollingSourceToolipsTexts.SCHEMA,

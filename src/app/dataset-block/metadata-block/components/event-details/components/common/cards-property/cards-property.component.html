@@ -1,5 +1,8 @@
-<ul>
+<ul *ngIf="data.length && data.length > 0; else noData">
     <li *ngFor="let key of data; let i = index">
         <span [attr.data-test-id]="dataTestId + '-' + i">{{ key }} </span>
     </li>
 </ul>
+<ng-template #noData>
+    <p>none</p>
+</ng-template>

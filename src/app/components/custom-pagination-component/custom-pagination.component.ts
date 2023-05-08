@@ -47,11 +47,6 @@ export class CustomPaginationComponent implements OnChanges {
         this.pageChange.emit(this.pageIndex);
     }
 
-    pageChangeIndex(index: number) {
-        this.pageIndex = index;
-        this.pageChange.emit(this.pageIndex);
-    }
-
     pageChangeForward() {
         if (this.pageIndex < this.totalSizeOfPages) {
             this.pageIndex = this.pageIndex + 1;

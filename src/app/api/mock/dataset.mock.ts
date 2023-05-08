@@ -229,3 +229,93 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
         },
     },
 };
+
+export const MOCK_NODES = [
+    {
+        id: "didodfz4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
+        label: "com.naturalearthdata.admin0.countries.50m",
+        data: {
+            id: "did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
+            name: "com.naturalearthdata.admin0.countries.50m",
+            kind: "ROOT",
+            isRoot: true,
+            isCurrent: true,
+            color: "#7aa3e5",
+        },
+        meta: {
+            forceDimensions: false,
+        },
+        dimension: {
+            width: 308.9427490234375,
+            height: 30,
+        },
+        position: {
+            x: 174.47137451171875,
+            y: 65,
+        },
+        transform: "translate(20, 50)",
+    },
+    {
+        id: "didodfz4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
+        label: "com.naturalearthdata.admin0.countries",
+        data: {
+            id: "did:odf:z4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
+            name: "com.naturalearthdata.admin0.countries",
+            kind: "DERIVATIVE",
+            isRoot: false,
+            isCurrent: false,
+            color: "#a8385d",
+        },
+        meta: {
+            forceDimensions: false,
+        },
+        dimension: {
+            width: 279.571044921875,
+            height: 90,
+        },
+        position: {
+            x: 568.728271484375,
+            y: 65,
+        },
+        transform: "translate(428.9427490234375, 20)",
+    },
+];
+
+export const MOCK_LINKS = [
+    {
+        id: "didodfz4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj__and__didodfz4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
+        source: "didodfz4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
+        target: "didodfz4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
+    },
+];
+
+export const MOCK_CLUSTERS = [
+    {
+        id: "ROOT_cluster",
+        label: "ROOT",
+        data: {
+            customColor: "#A52A2A59",
+        },
+        position: {
+            x: 10,
+            y: 10,
+        },
+        childNodeIds: [
+            "did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
+        ],
+    },
+    {
+        id: "DERIVATIVE_cluster",
+        label: "DERIVATIVE",
+        data: {
+            customColor: "#00800039",
+        },
+        position: {
+            x: 10,
+            y: 10,
+        },
+        childNodeIds: [
+            "did:odf:z4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
+        ],
+    },
+];

@@ -1,7 +1,6 @@
 import AppValues from "src/app/common/app.values";
 import { DatasetNavigationInterface } from "./../dataset-view.interface";
 import { FormsModule } from "@angular/forms";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import {
     ComponentFixture,
     fakeAsync,
@@ -16,6 +15,11 @@ import {
     findElementByDataTestId,
 } from "src/app/common/base-test.helpers.spec";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { AngularSvgIconModule } from "angular-svg-icon";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatIconModule } from "@angular/material/icon";
 
 describe("DatasetViewMenuComponent", () => {
     let component: DatasetViewMenuComponent;
@@ -32,9 +36,17 @@ describe("DatasetViewMenuComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [MatMenuModule, FormsModule, BrowserAnimationsModule],
+            imports: [
+                MatMenuModule,
+                FormsModule,
+                BrowserAnimationsModule,
+                MatButtonToggleModule,
+                MatTabsModule,
+                MatIconModule,
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
+            ],
             declarations: [DatasetViewMenuComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetViewMenuComponent);

@@ -1,6 +1,7 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SchemaPropertyComponent } from "./schema-property.component";
+import { DynamicTableComponent } from "src/app/components/dynamic-table/dynamic-table.component";
+import { MatTableModule } from "@angular/material/table";
 
 describe("SchemaPropertyComponent", () => {
     let component: SchemaPropertyComponent;
@@ -8,8 +9,8 @@ describe("SchemaPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SchemaPropertyComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            declarations: [SchemaPropertyComponent, DynamicTableComponent],
+            imports: [MatTableModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SchemaPropertyComponent);

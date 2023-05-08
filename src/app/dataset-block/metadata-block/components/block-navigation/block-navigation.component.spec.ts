@@ -1,7 +1,6 @@
 import { EventTypeFilterPipe } from "./pipes/event-type-filter.pipe";
 import { BlockHashFilterPipe } from "./pipes/block-hash-filter.pipe";
 import { mockHistoryUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BlockNavigationComponent } from "./block-navigation.component";
@@ -10,6 +9,12 @@ import {
     dispatchInputEvent,
     findElementByDataTestId,
 } from "src/app/common/base-test.helpers.spec";
+import { PaginationModule } from "src/app/components/pagination-component/pagination.module";
+import { MatIconModule } from "@angular/material/icon";
+import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { AngularSvgIconModule } from "angular-svg-icon";
+import { ToastrModule } from "ngx-toastr";
 
 describe("BlockNavigationComponent", () => {
     let component: BlockNavigationComponent;
@@ -22,8 +27,16 @@ describe("BlockNavigationComponent", () => {
                 BlockHashFilterPipe,
                 EventTypeFilterPipe,
             ],
-            imports: [FormsModule, NgMultiSelectDropDownModule],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            imports: [
+                FormsModule,
+                NgMultiSelectDropDownModule,
+                PaginationModule,
+                MatIconModule,
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
+                DisplayHashModule,
+                ToastrModule.forRoot(),
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(BlockNavigationComponent);

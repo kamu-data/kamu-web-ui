@@ -1,8 +1,12 @@
 import { mockSetWatermark } from "./../../mock.events";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SetWatermarkEventComponent } from "./set-watermark-event.component";
+import { DisplayTimeModule } from "src/app/components/display-time/display-time.module";
+import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.component";
+import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
+import { MatIconModule } from "@angular/material/icon";
+import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 
 describe("SetWatermarkEventComponent", () => {
     let component: SetWatermarkEventComponent;
@@ -10,8 +14,12 @@ describe("SetWatermarkEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SetWatermarkEventComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            declarations: [
+                SetWatermarkEventComponent,
+                BlockRowDataComponent,
+                TooltipIconComponent,
+            ],
+            imports: [DisplayTimeModule, MatIconModule, NgbTooltipModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SetWatermarkEventComponent);

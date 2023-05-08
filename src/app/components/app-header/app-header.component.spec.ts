@@ -2,7 +2,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import { FormsModule } from "@angular/forms";
 import { MatMenuModule } from "@angular/material/menu";
-import { ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { ChangeDetectionStrategy } from "@angular/core";
 import {
     ComponentFixture,
     fakeAsync,
@@ -35,6 +35,9 @@ import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { NavigationService } from "src/app/services/navigation.service";
+import { NotificationIndicatorComponent } from "../notification-indicator/notification-indicator.component";
+import { AngularSvgIconModule } from "angular-svg-icon";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("AppHeaderComponent", () => {
     let component: AppHeaderComponent;
@@ -57,9 +60,10 @@ describe("AppHeaderComponent", () => {
                 NgbTypeaheadModule,
                 RouterTestingModule,
                 ApolloTestingModule,
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
             ],
-            declarations: [AppHeaderComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            declarations: [AppHeaderComponent, NotificationIndicatorComponent],
             providers: [
                 Apollo,
                 { provide: Router, useValue: routerMock },

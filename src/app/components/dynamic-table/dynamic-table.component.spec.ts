@@ -1,4 +1,3 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatTableModule } from "@angular/material/table";
 import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
@@ -20,7 +19,6 @@ describe("DynamicTableComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [DynamicTableComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             imports: [MatTableModule],
         }).compileComponents();
 

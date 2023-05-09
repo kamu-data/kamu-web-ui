@@ -6,7 +6,6 @@ import {
 import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
 import { FormsModule } from "@angular/forms";
 import { mockDatasetBasicsFragment } from "../../../../../search/mock.data";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
@@ -21,6 +20,8 @@ import {
     DatasetDataSizeFragment,
     DatasetOverviewFragment,
 } from "src/app/api/kamu.graphql.interface";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
 
 describe("EditDetailsModalComponent", () => {
     let component: EditDetailsModalComponent;
@@ -34,9 +35,10 @@ describe("EditDetailsModalComponent", () => {
                 ApolloTestingModule,
                 FormsModule,
                 MatChipsModule,
+                MatDividerModule,
+                MatIconModule,
             ],
             providers: [Apollo, NgbActiveModal],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
 
         fixture = TestBed.createComponent(EditDetailsModalComponent);

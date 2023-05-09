@@ -1,14 +1,15 @@
 import { NavigationService } from "./../../services/navigation.service";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatChipsModule } from "@angular/material/chips";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { DatasetListItemComponent } from "./dataset-list-item.component";
 import { NgbModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatDividerModule } from "@angular/material/divider";
 import { mockDatasetListItem } from "src/app/api/mock/dataset.mock";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { DisplayTimeModule } from "../display-time/display-time.module";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { AngularSvgIconModule } from "angular-svg-icon";
 
 describe("DatasetListItemComponent", () => {
     let component: DatasetListItemComponent;
@@ -24,8 +25,10 @@ describe("DatasetListItemComponent", () => {
                 MatDividerModule,
                 MatIconModule,
                 NgbModule,
+                DisplayTimeModule,
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
             ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetListItemComponent);

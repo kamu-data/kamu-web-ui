@@ -1,7 +1,7 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { HashPropertyComponent } from "./hash-property.component";
+import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
+import { ToastrModule } from "ngx-toastr";
 
 describe("HashPropertyComponent", () => {
     let component: HashPropertyComponent;
@@ -10,7 +10,7 @@ describe("HashPropertyComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [HashPropertyComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            imports: [DisplayHashModule, ToastrModule.forRoot()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(HashPropertyComponent);

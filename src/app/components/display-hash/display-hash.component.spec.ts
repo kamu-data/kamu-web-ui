@@ -1,6 +1,5 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { TEST_BLOCK_HASH } from "./../../api/mock/dataset.mock";
-import { ComponentFixture, fakeAsync, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
@@ -10,6 +9,8 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DisplayHashComponent } from "./display-hash.component";
 import { ToastrModule, ToastrService } from "ngx-toastr";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { AngularSvgIconModule } from "angular-svg-icon";
 
 describe("DisplayHashComponent", () => {
     let component: DisplayHashComponent;
@@ -20,8 +21,12 @@ describe("DisplayHashComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [DisplayHashComponent],
-            imports: [ToastrModule.forRoot(), BrowserAnimationsModule],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            imports: [
+                ToastrModule.forRoot(),
+                BrowserAnimationsModule,
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DisplayHashComponent);
@@ -51,7 +56,7 @@ describe("DisplayHashComponent", () => {
         });
     });
 
-    it("should check copyToClipboard button is exist", fakeAsync(() => {
+    it("should check copyToClipboard button is exist", () => {
         component.showCopyButton = true;
         fixture.detectChanges();
 
@@ -60,16 +65,15 @@ describe("DisplayHashComponent", () => {
             "copyToClipboardButton",
         );
         expect(copyToClipboardButton).toBeDefined();
-    }));
+    });
 
-    it("should check copyToClipboard button is work", fakeAsync(() => {
+    it("should check copyToClipboard button is work", () => {
         const successToastServiceSpy = spyOn(toastService, "success");
         component.showCopyButton = true;
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "copyToClipboardButton");
-
         expect(successToastServiceSpy).toHaveBeenCalledWith("Copied");
-    }));
+    });
 
     it("should check hash length", () => {
         component.navigationTargetDataset = undefined;

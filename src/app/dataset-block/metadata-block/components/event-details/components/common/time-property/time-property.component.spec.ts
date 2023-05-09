@@ -1,7 +1,6 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { TimePropertyComponent } from "./time-property.component";
+import { DisplayTimeModule } from "src/app/components/display-time/display-time.module";
 
 describe("TimePropertyComponent", () => {
     let component: TimePropertyComponent;
@@ -10,7 +9,7 @@ describe("TimePropertyComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [TimePropertyComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            imports: [DisplayTimeModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(TimePropertyComponent);

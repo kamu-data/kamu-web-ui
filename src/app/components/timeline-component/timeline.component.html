@@ -56,6 +56,7 @@
                                             block.blockHash
                                         )
                                     "
+                                    data-test-id="navigate-to-block"
                                     >{{ descriptionForMetadataBlock(block) }}</a
                                 >
                             </div>
@@ -122,6 +123,7 @@
                                     ngbPopover="Verified"
                                     [popoverTitle]="popTitle"
                                     [ngbPopover]="popContent"
+                                    data-test-id="button-verified"
                                 >
                                     Verified
                                 </button>
@@ -186,7 +188,10 @@
             />
         </a>
         <span class="signed-commit-signer-name flex-1">
-            <a class="signer" (click)="navigateToOwnerView('testName')"
+            <a
+                class="signer"
+                (click)="navigateToOwnerView('testName')"
+                data-test-id="navigate-to-owner-link"
                 >owner.name</a
             >
             row.owner.name

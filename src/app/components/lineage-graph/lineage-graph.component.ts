@@ -43,6 +43,7 @@ export class LineageGraphComponent implements OnChanges, OnInit {
         this.graphNodes = this.nodes;
         this.graphClusters = this.clusters;
     }
+
     public ngOnChanges(changes: SimpleChanges): void {
         const clusters: SimpleChange = changes.clusters;
         const nodes: SimpleChange = changes.nodes;
@@ -63,17 +64,5 @@ export class LineageGraphComponent implements OnChanges, OnInit {
 
     public onClickNode(node: Node): void {
         this.onClickNodeEvent.emit(node);
-    }
-
-    // See: https://stackoverflow.com/questions/62874476/ngx-graph-linktemplate-links-middle-pointer-alignment-issue
-    getXYForCenteredLinkCircle(link: Edge): [number, number] {
-        const myPath = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "path",
-        );
-        myPath.setAttributeNS(null, "d", link.line ?? "");
-        const length = myPath.getTotalLength();
-        const p = myPath.getPointAtLength(length / 2);
-        return [p.x, p.y]; // Consider the center coordinates of the circle
     }
 }

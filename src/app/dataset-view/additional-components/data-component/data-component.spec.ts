@@ -1,5 +1,4 @@
 import { mockDatasetBasicsFragment } from "./../../../search/mock.data";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatIconModule } from "@angular/material/icon";
@@ -11,6 +10,9 @@ import { mockDataUpdate, mockSqlErrorUpdate } from "../data-tabs.mock";
 import { first } from "rxjs/operators";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Location } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { MonacoEditorModule } from "ngx-monaco-editor";
+import { MatDividerModule } from "@angular/material/divider";
 
 describe("DataComponent", () => {
     let component: DataComponent;
@@ -24,10 +26,11 @@ describe("DataComponent", () => {
                 MatIconModule,
                 MatMenuModule,
                 RouterTestingModule,
+                FormsModule,
+                MonacoEditorModule.forRoot(),
+                MatDividerModule,
             ],
             declarations: [DataComponent],
-
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DataComponent);

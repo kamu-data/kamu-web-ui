@@ -1,10 +1,13 @@
 import { mockDatasetMainDataResponse } from "./../../../../../../../search/mock.data";
 import { DatasetService } from "./../../../../../../../dataset-view/dataset.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BlockIntervalPropertyComponent } from "./block-interval-property.component";
 import { of } from "rxjs";
+import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
+import { ToastrModule } from "ngx-toastr";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { AngularSvgIconModule } from "angular-svg-icon";
 
 describe("BlockIntervalPropertyComponent", () => {
     let component: BlockIntervalPropertyComponent;
@@ -14,8 +17,13 @@ describe("BlockIntervalPropertyComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [BlockIntervalPropertyComponent],
-            imports: [ApolloTestingModule],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            imports: [
+                ApolloTestingModule,
+                DisplayHashModule,
+                ToastrModule.forRoot(),
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(BlockIntervalPropertyComponent);

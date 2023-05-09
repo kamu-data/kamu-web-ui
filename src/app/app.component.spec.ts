@@ -19,19 +19,20 @@ import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { AuthApi } from "./api/auth.api";
 import { ModalService } from "./components/modal/modal.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { of } from "rxjs";
 import ProjectLinks from "./project-links";
 import {
     routerMock,
     routerMockEventSubject,
 } from "./common/base-test.helpers.spec";
-import { NavigationEnd, Router } from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import {
     mockAccountDetails,
     mockUserInfoFromAccessToken,
 } from "./api/mock/auth.mock";
 import { FetchAccountInfoGQL } from "./api/kamu.graphql.interface";
+import { AppHeaderComponent } from "./components/app-header/app-header.component";
+import { SpinnerComponent } from "./components/spinner/spinner/spinner.component";
 
 describe("AppComponent", () => {
     let component: AppComponent;
@@ -39,6 +40,8 @@ describe("AppComponent", () => {
     let navigationService: NavigationService;
     let authApi: AuthApi;
     let fetchAccountInfoGQL: FetchAccountInfoGQL;
+    const DEFAULT_SEARCH_QUERY = "defaultSearchQuery";
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
@@ -48,8 +51,12 @@ describe("AppComponent", () => {
                 NgbTypeaheadModule,
                 FormsModule,
             ],
-            declarations: [AppComponent, ModalComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            declarations: [
+                AppComponent,
+                ModalComponent,
+                AppHeaderComponent,
+                SpinnerComponent,
+            ],
             providers: [
                 SearchService,
                 SearchApi,
@@ -57,14 +64,24 @@ describe("AppComponent", () => {
                 NavigationService,
                 ModalService,
                 { provide: Router, useValue: routerMock },
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
+                    },
+                },
             ],
         }).compileComponents();
+
         routerMock.url = ProjectLinks.URL_HOME;
         fixture = TestBed.createComponent(AppComponent);
         navigationService = TestBed.inject(NavigationService);
         authApi = TestBed.inject(AuthApi);
         fetchAccountInfoGQL = TestBed.inject(FetchAccountInfoGQL);
         component = fixture.componentInstance;
+        routerMockEventSubject.next(
+            new NavigationEnd(1, ProjectLinks.URL_LOGIN, ""),
+        );
         fixture.detectChanges();
     });
 

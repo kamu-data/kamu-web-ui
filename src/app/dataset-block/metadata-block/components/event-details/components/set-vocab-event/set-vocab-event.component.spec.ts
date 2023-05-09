@@ -1,8 +1,11 @@
 import { mockSetVocab } from "./../../mock.events";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { SetVocabEventComponent } from "./set-vocab-event.component";
+import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
+import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.component";
+import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
+import { MatIconModule } from "@angular/material/icon";
+import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 
 describe("SetVocabEventComponent", () => {
     let component: SetVocabEventComponent;
@@ -10,8 +13,13 @@ describe("SetVocabEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SetVocabEventComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            declarations: [
+                SetVocabEventComponent,
+                CardsPropertyComponent,
+                BlockRowDataComponent,
+                TooltipIconComponent,
+            ],
+            imports: [MatIconModule, NgbTooltipModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SetVocabEventComponent);

@@ -5,20 +5,17 @@ import { ActivatedRoute } from "@angular/router";
 import { of } from "rxjs";
 import { AuthApi } from "src/app/api/auth.api";
 import { GithubCallbackComponent } from "./github.callback";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 
 describe("GithubCallbackComponent", () => {
     let component: GithubCallbackComponent;
     let fixture: ComponentFixture<GithubCallbackComponent>;
     let authApiService: AuthApi;
     let navigationService: NavigationService;
-
     const GITHUB_TEST_CODE = "11111111";
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [GithubCallbackComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 {
                     provide: ActivatedRoute,

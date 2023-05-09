@@ -1,11 +1,11 @@
 import { mockAccountDetails } from "./../../api/mock/auth.mock";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { RouterTestingModule } from "@angular/router/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
-
 import { SettingsComponent } from "./settings.component";
+import { AngularSvgIconModule } from "angular-svg-icon";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("SettingsComponent", () => {
     let component: SettingsComponent;
@@ -14,8 +14,12 @@ describe("SettingsComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [SettingsComponent],
-            imports: [ApolloTestingModule, RouterTestingModule],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            imports: [
+                ApolloTestingModule,
+                RouterTestingModule,
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
+            ],
             providers: [
                 {
                     provide: ActivatedRoute,

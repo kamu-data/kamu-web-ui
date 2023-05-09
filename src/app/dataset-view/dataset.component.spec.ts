@@ -4,7 +4,6 @@ import {
     mockNode,
 } from "./../search/mock.data";
 import { DatasetService } from "./dataset.service";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -20,6 +19,19 @@ import {
     routerMockEventSubject,
 } from "../common/base-test.helpers.spec";
 import AppValues from "../common/app.values";
+import { OverviewComponent } from "./additional-components/overview-component/overview-component";
+import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu-component";
+import { MatMenuModule } from "@angular/material/menu";
+import { FormsModule } from "@angular/forms";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { DatasetViewHeaderComponent } from "./dataset-view-header/dataset-view-header-component";
+import { SearchAdditionalButtonsComponent } from "../components/search-additional-buttons/search-additional-buttons.component";
+import { MatTabsModule } from "@angular/material/tabs";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { SearchAdditionalButtonsNavComponent } from "../components/search-additional-buttons/search-additional-buttons-nav.component";
+import { AngularSvgIconModule } from "angular-svg-icon";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { MatIconModule } from "@angular/material/icon";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -30,9 +42,27 @@ describe("DatasetComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatasetComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
-            imports: [ApolloModule, ApolloTestingModule, RouterTestingModule],
+            declarations: [
+                DatasetComponent,
+                OverviewComponent,
+                DatasetViewMenuComponent,
+                DatasetViewHeaderComponent,
+                SearchAdditionalButtonsComponent,
+                SearchAdditionalButtonsNavComponent,
+            ],
+            imports: [
+                ApolloModule,
+                ApolloTestingModule,
+                RouterTestingModule,
+                MatMenuModule,
+                MatButtonToggleModule,
+                FormsModule,
+                MatTabsModule,
+                BrowserAnimationsModule,
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
+                MatIconModule,
+            ],
             providers: [
                 DatasetApi,
                 Apollo,

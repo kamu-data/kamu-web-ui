@@ -1,7 +1,7 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { EnvVariablesPropertyComponent } from "./env-variables-property.component";
+import { DynamicTableComponent } from "src/app/components/dynamic-table/dynamic-table.component";
+import { MatTableModule } from "@angular/material/table";
 
 describe("EnvVariablesPropertyComponent", () => {
     let component: EnvVariablesPropertyComponent;
@@ -9,8 +9,11 @@ describe("EnvVariablesPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EnvVariablesPropertyComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            declarations: [
+                EnvVariablesPropertyComponent,
+                DynamicTableComponent,
+            ],
+            imports: [MatTableModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(EnvVariablesPropertyComponent);

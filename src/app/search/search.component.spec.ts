@@ -1,3 +1,4 @@
+import { MatChipsModule } from "@angular/material/chips";
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { AuthApi } from "./../api/auth.api";
 import { SearchApi } from "./../api/search.api";
@@ -8,7 +9,6 @@ import { NavigationService } from "../services/navigation.service";
 import { SearchService } from "./search.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ModalService } from "../components/modal/modal.service";
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { RouterTestingModule } from "@angular/router/testing";
 import { mockSearchOverviewResponse } from "../api/mock/search.mock";
 import { of } from "rxjs";
@@ -20,6 +20,19 @@ import {
     routerMock,
     routerMockEventSubject,
 } from "../common/base-test.helpers.spec";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { DatasetListComponent } from "../components/dataset-list-component/dataset-list.component";
+import { FormsModule } from "@angular/forms";
+import { DatasetListItemComponent } from "../components/dataset-list-item/dataset-list-item.component";
+import {
+    NgbPaginationModule,
+    NgbPopoverModule,
+    NgbRatingModule,
+} from "@ng-bootstrap/ng-bootstrap";
+import { DisplayTimeModule } from "../components/display-time/display-time.module";
+import { MatIconModule } from "@angular/material/icon";
+import { PaginationComponent } from "../components/pagination-component/pagination.component";
+import { MatDividerModule } from "@angular/material/divider";
 
 describe("SearchComponent", () => {
     let component: SearchComponent;
@@ -33,9 +46,25 @@ describe("SearchComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SearchComponent],
-            imports: [ApolloTestingModule, RouterTestingModule],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            declarations: [
+                SearchComponent,
+                DatasetListComponent,
+                DatasetListItemComponent,
+                PaginationComponent,
+            ],
+            imports: [
+                ApolloTestingModule,
+                RouterTestingModule,
+                MatCheckboxModule,
+                FormsModule,
+                NgbRatingModule,
+                DisplayTimeModule,
+                NgbPopoverModule,
+                MatIconModule,
+                MatChipsModule,
+                NgbPaginationModule,
+                MatDividerModule,
+            ],
             providers: [
                 NavigationService,
                 SearchService,

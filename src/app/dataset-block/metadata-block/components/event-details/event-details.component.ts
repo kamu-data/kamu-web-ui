@@ -21,7 +21,6 @@ import {
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { BlockService } from "../../block.service";
-
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 @Component({

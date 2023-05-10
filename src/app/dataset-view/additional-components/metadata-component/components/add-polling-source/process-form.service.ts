@@ -5,6 +5,8 @@ import {
     SchemaControlType,
     OrderControlType,
 } from "./process-form.service.types";
+import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
+import { SetPollingSourceSection } from "src/app/shared/shared.types";
 
 @Injectable({
     providedIn: "root",
@@ -13,6 +15,7 @@ export class ProcessFormService {
     public transformForm(formGroup: FormGroup): void {
         this.transformSchema(formGroup);
         this.processFetchOrderControl(formGroup);
+        this.removeEmptyControls(formGroup);
     }
 
     private transformSchema(formGroup: FormGroup): void {
@@ -30,6 +33,43 @@ export class ProcessFormService {
         const form = formGroup.value as OrderControlType;
         if (form.fetch.order && form.fetch.order === "none") {
             delete form.fetch.order;
+        }
+    }
+
+    private removeEmptyControls(formGroup: FormGroup): void {
+        const form = formGroup.value as SetPollingSource;
+        Object.entries(form[SetPollingSourceSection.READ]).forEach(
+            ([key, value]) => {
+                if (!value || (Array.isArray(value) && !value.length)) {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-dynamic-delete
+                    delete formGroup.value[SetPollingSourceSection.READ][key];
+                }
+            },
+        );
+        Object.entries(form[SetPollingSourceSection.MERGE]).forEach(
+            ([key, value]) => {
+                if (!value || (Array.isArray(value) && !value.length)) {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-dynamic-delete
+                    delete formGroup.value[SetPollingSourceSection.MERGE][key];
+                }
+            },
+        );
+        Object.entries(form[SetPollingSourceSection.FETCH]).forEach(
+            ([key, value]) => {
+                if (!value || (Array.isArray(value) && !value.length)) {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-dynamic-delete
+                    delete formGroup.value[SetPollingSourceSection.FETCH][key];
+                }
+            },
+        );
+        if (
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            !formGroup.value[SetPollingSourceSection.FETCH].eventTime
+                .timestampFormat
+        ) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            delete formGroup.value[SetPollingSourceSection.FETCH].eventTime
+                .timestampFormat;
         }
     }
 }

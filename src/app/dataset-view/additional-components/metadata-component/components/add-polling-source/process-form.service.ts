@@ -20,7 +20,9 @@ export class ProcessFormService {
         if (form.read.schema) {
             form.read.schema = (form.read.schema as SchemaType[]).map(
                 (item) => {
-                    return `${item.name} ${item.type}`;
+                    return `${this.processSchemaName(item.name.trim())} ${
+                        item.type
+                    }`;
                 },
             );
         }
@@ -31,5 +33,9 @@ export class ProcessFormService {
         if (form.fetch.order && form.fetch.order === "none") {
             delete form.fetch.order;
         }
+    }
+
+    private processSchemaName(name: string): string {
+        return /\s/.test(name) ? `\`${name}\`` : name;
     }
 }

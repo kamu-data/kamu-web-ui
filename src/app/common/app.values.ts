@@ -8,6 +8,8 @@ export default class AppValues {
     public static readonly DEFAULT_AVATAR_URL =
         "https://avatars.githubusercontent.com/u/11951648?v=4";
     public static readonly URL_PATTERN = /^(http:\/\/)|(https:\/\/)/i;
+    public static readonly SCHEMA_NAME_PATTERN =
+        /^[a-zA-Z0-9]+[a-zA-Z0-9\s(_)]*$/i;
 
     public static readonly DISPLAY_DATE_FORMAT = "DD MMM YYYY";
     public static readonly DISPLAY_TOOLTIP_DATE_FORMAT = "MMM D, YYYY, HH:mm A";

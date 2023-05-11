@@ -50,9 +50,6 @@ describe("SchemaFieldComponent", () => {
                     name: new FormControl("id", [
                         RxwebValidators.unique(),
                         RxwebValidators.required(),
-                        RxwebValidators.noneOf({
-                            matchValues: component.AVAILABLE_TYPES,
-                        }),
                     ]),
                     type: new FormControl("BIGINT", [
                         RxwebValidators.required(),
@@ -96,13 +93,6 @@ describe("SchemaFieldComponent", () => {
         expect(component.nameControlError(1)).toBe("Name is required");
     });
 
-    it("should check noneOf validation message", () => {
-        component.addRow();
-        fixture.detectChanges();
-        dispatchInputEvent(fixture, "name-control-1", "STRING");
-        expect(component.nameControlError(1)).toBe("Type cannot be name");
-    });
-
     it("should check swap row", () => {
         component.addRow();
         fixture.detectChanges();
@@ -127,5 +117,12 @@ describe("SchemaFieldComponent", () => {
         emitClickOnElementByDataTestId(fixture, "move-up-button-0");
         fixture.detectChanges();
         expect(component.items.controls[0].get("name")?.value).toBe("id");
+    });
+
+    it("should check pattern validation message", () => {
+        component.addRow();
+        fixture.detectChanges();
+        dispatchInputEvent(fixture, "name-control-1", "&");
+        expect(component.nameControlError(1)).toBe("Incorrect character");
     });
 });

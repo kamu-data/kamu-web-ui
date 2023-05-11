@@ -13,12 +13,14 @@ import {
     FormArray,
     FormControl,
     FormGroup,
+    Validators,
 } from "@angular/forms";
 import { MatTable } from "@angular/material/table";
 import { Observable, OperatorFunction, Subject, merge } from "rxjs";
 import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
 import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
+import AppValues from "src/app/common/app.values";
 
 export interface SchemaType {
     name: string;
@@ -55,8 +57,8 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
     ];
     public readonly VALIDATION_MESSAGES: Record<string, string> = {
         unique: "Name is not unique",
-        noneOf: "Type cannot be name",
         required: "Name is required",
+        pattern: "Incorrect character",
     };
 
     ngAfterViewInit(): void {
@@ -115,8 +117,8 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
         let errorMessage = "";
         if (this.nameControlByIndex(index)?.hasError("unique")) {
             errorMessage = this.VALIDATION_MESSAGES.unique;
-        } else if (this.nameControlByIndex(index)?.hasError("noneOf")) {
-            errorMessage = this.VALIDATION_MESSAGES.noneOf;
+        } else if (this.nameControlByIndex(index)?.hasError("pattern")) {
+            errorMessage = this.VALIDATION_MESSAGES.pattern;
         } else if (
             this.nameControlByIndex(index)?.hasError("required") &&
             (this.nameControlByIndex(index)?.touched ||
@@ -133,9 +135,7 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
                 name: new FormControl("", [
                     RxwebValidators.unique(),
                     RxwebValidators.required(),
-                    RxwebValidators.noneOf({
-                        matchValues: this.AVAILABLE_TYPES,
-                    }),
+                    Validators.pattern(AppValues.SCHEMA_NAME_PATTERN),
                 ]),
                 type: new FormControl(this.defaultType, [
                     RxwebValidators.required(),
@@ -161,5 +161,9 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
         this.items.removeAt(index);
         this.items.insert(index + direction, current);
         this.table.renderRows();
+    }
+
+    public changeNameInput(e: Event): void {
+        console.log(e);
     }
 }

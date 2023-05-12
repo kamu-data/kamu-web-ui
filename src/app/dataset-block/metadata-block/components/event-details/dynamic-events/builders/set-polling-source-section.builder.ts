@@ -15,7 +15,9 @@ export class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPolli
                     case SetPollingSourceSection.MERGE:
                     case SetPollingSourceSection.PREPROCESS: {
                         const allowTypenameKey =
-                            section === SetPollingSourceSection.MERGE;
+                            section === SetPollingSourceSection.MERGE ||
+                            section === SetPollingSourceSection.READ ||
+                            section === SetPollingSourceSection.FETCH;
                         result.push({
                             title: section,
                             rows: this.buildEventRows(

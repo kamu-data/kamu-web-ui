@@ -13,8 +13,18 @@ import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.t
 import { EventTimePropertyComponent } from "../common/event-time-property/event-time-property.component";
 import { CachePropertyComponent } from "../common/cache-property/cache-property.component";
 import { OrderPropertyComponent } from "../common/order-property/order-property.component";
+import { CommandPropertyComponent } from "../common/command-property/command-property.component";
+import { StepTypePropertyComponent } from "../common/step-type-property/step-type-property.component";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
+    "SetPollingSource.FetchStepUrl.__typename": {
+        label: "Type:",
+        tooltip: SetPollingSourceToolipsTexts.FROM_URL,
+        presentationComponent: StepTypePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepUrl-__typename",
+    },
+
     "SetPollingSource.FetchStepUrl.url": {
         label: "Url:",
         tooltip: SetPollingSourceToolipsTexts.URL,
@@ -47,6 +57,14 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "setPollingSource-fetchStepUrl-cache",
     },
 
+    "SetPollingSource.FetchStepFilesGlob.__typename": {
+        label: "Type:",
+        tooltip: SetPollingSourceToolipsTexts.FROM_FILES_GLOB,
+        presentationComponent: StepTypePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepFilesGlob-__typename",
+    },
+
     "SetPollingSource.FetchStepFilesGlob.path": {
         label: "Path:",
         tooltip: SetPollingSourceToolipsTexts.PATH,
@@ -77,6 +95,14 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         presentationComponent: OrderPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-FetchStepFilesGlob-order",
+    },
+
+    "SetPollingSource.FetchStepContainer.__typename": {
+        label: "Type:",
+        tooltip: SetPollingSourceToolipsTexts.FROM_CONTAINER,
+        presentationComponent: StepTypePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepContainer-__typename",
     },
 
     "SetPollingSource.FetchStepContainer.image": {
@@ -151,12 +177,28 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "setPollingSource-transformSql-queries",
     },
 
+    "SetPollingSource.ReadStepJsonLines.__typename": {
+        label: "Type:",
+        tooltip: SetPollingSourceToolipsTexts.READ_JSON_LINES,
+        presentationComponent: StepTypePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepJsonLines-__typename",
+    },
+
     "SetPollingSource.ReadStepJsonLines.schema": {
         label: "Schema:",
         tooltip: SetPollingSourceToolipsTexts.SCHEMA,
         presentationComponent: SchemaPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-readStepJsonLines-schema",
+    },
+
+    "SetPollingSource.ReadStepCsv.__typename": {
+        label: "Type:",
+        tooltip: SetPollingSourceToolipsTexts.READ_CSV,
+        presentationComponent: StepTypePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepCsv-__typename",
     },
 
     "SetPollingSource.ReadStepCsv.separator": {
@@ -303,6 +345,14 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "setPollingSource-readStepCsv-multiLine",
     },
 
+    "SetPollingSource.ReadStepGeoJson.__typename": {
+        label: "Type:",
+        tooltip: SetPollingSourceToolipsTexts.READ_GEO_JSON,
+        presentationComponent: StepTypePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepGeoJson-__typename",
+    },
+
     "SetPollingSource.ReadStepGeoJson.schema": {
         label: "Schema:",
         tooltip: SetPollingSourceToolipsTexts.SCHEMA,
@@ -338,7 +388,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.PrepStepPipe.command": {
         label: "Command:",
         tooltip: SetPollingSourceToolipsTexts.COMMAND,
-        presentationComponent: SimplePropertyComponent,
+        presentationComponent: CommandPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-prepStepPipe-command",
     },
@@ -399,6 +449,14 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "setPollingSource-MergeStrategySnapshot-obsvRemoved",
     },
 
+    "SetPollingSource.ReadStepEsriShapefile.__typename": {
+        label: "Type:",
+        tooltip: SetPollingSourceToolipsTexts.READ_ESRI_SHAPE_FILE,
+        presentationComponent: StepTypePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepEsriShapefile-__typename",
+    },
+
     "SetPollingSource.ReadStepEsriShapefile.schema": {
         label: "Schema:",
         tooltip: SetPollingSourceToolipsTexts.SCHEMA,
@@ -453,6 +511,14 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-readStepJsonLines-timestampFormat",
+    },
+
+    "SetPollingSource.ReadStepParquet.__typename": {
+        label: "Type:",
+        tooltip: SetPollingSourceToolipsTexts.READ_PARQUET,
+        presentationComponent: StepTypePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepParquet-__typename",
     },
 
     "SetPollingSource.ReadStepParquet.schema": {

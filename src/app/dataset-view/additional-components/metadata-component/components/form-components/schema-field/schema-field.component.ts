@@ -162,8 +162,4 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
         this.items.insert(index + direction, current);
         this.table.renderRows();
     }
-
-    public changeNameInput(e: Event): void {
-        console.log(e);
-    }
 }

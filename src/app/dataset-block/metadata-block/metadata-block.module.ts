@@ -44,6 +44,8 @@ import { OffsetIntervalPropertyComponent } from "./components/event-details/comp
 import { CachePropertyComponent } from "./components/event-details/components/common/cache-property/cache-property.component";
 import { EventTimePropertyComponent } from "./components/event-details/components/common/event-time-property/event-time-property.component";
 import { OrderPropertyComponent } from "./components/event-details/components/common/order-property/order-property.component";
+import { CommandPropertyComponent } from "./components/event-details/components/common/command-property/command-property.component";
+import { StepTypePropertyComponent } from "./components/event-details/components/common/step-type-property/step-type-property.component";
 
 @NgModule({
     declarations: [
@@ -79,6 +81,8 @@ import { OrderPropertyComponent } from "./components/event-details/components/co
         CachePropertyComponent,
         EventTimePropertyComponent,
         OrderPropertyComponent,
+        CommandPropertyComponent,
+        StepTypePropertyComponent,
     ],
     imports: [
         CommonModule,

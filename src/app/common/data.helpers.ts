@@ -8,19 +8,6 @@ import { EventPropertyLogo } from "../dataset-block/metadata-block/components/ev
 import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
 
 export class DataHelpers {
-    public static datasetKind2String(kind: DatasetKind): string {
-        return kind.charAt(0).toUpperCase() + kind.slice(1).toLowerCase();
-    }
-
-    /**
-     * Format bytes as human-readable text.
-     *
-     * @param bytes Number of bytes.
-     * @param decimalPlaces Number of decimal places to display.
-     *
-     * @return Formatted string.
-     */
-
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
     public static readonly BLOCK_DESCRIBE_SET_TRANSFORM = "Query changed";
     public static readonly BLOCK_DESCRIBE_SET_VOCAB = "Vocabulary changed";
@@ -30,7 +17,11 @@ export class DataHelpers {
         "Basic information updated";
     public static readonly BLOCK_DESCRIBE_SET_ATTACHMENTS =
         "Attachments updated";
-    private static SHIFT_ATTACHMENTS_VIEW = "\u00A0".repeat(12);
+    private static readonly SHIFT_ATTACHMENTS_VIEW = "\u00A0".repeat(12);
+
+    public static datasetKind2String(kind: DatasetKind): string {
+        return kind.charAt(0).toUpperCase() + kind.slice(1).toLowerCase();
+    }
 
     public static descriptionForEngine(name: string): EventPropertyLogo {
         switch (name) {
@@ -86,6 +77,38 @@ export class DataHelpers {
             }
             default:
                 return "Unknown order";
+        }
+    }
+
+    public static descriptionSetPollingSourceSteps(name: string): string {
+        switch (name) {
+            case "ReadStepCsv": {
+                return "CSV";
+            }
+            case "ReadStepEsriShapefile": {
+                return "Esri Shapefile";
+            }
+            case "ReadStepGeoJson": {
+                return "Geo Json";
+            }
+            case "ReadStepJsonLines": {
+                return "Json Lines";
+            }
+            case "ReadStepParquet": {
+                return "Parquet";
+            }
+            case "FetchStepUrl": {
+                return "Url";
+            }
+            case "FetchStepContainer": {
+                return "Container";
+            }
+
+            case "FetchStepFilesGlob": {
+                return "Files Glob";
+            }
+            default:
+                return "Unknown type";
         }
     }
 

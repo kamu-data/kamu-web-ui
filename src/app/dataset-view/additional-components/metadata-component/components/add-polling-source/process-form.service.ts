@@ -51,7 +51,7 @@ export class ProcessFormService {
             Object.entries(form[formKey]).forEach(([key, value]) => {
                 if (!value || (Array.isArray(value) && !value.length)) {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-dynamic-delete
-                    delete formGroup.value[SetPollingSourceSection.READ][key];
+                    delete formGroup.value[formKey][key];
                 }
             });
         });

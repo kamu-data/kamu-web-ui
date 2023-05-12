@@ -8,6 +8,10 @@ describe("ProcessFormService", () => {
     const formGroup = new FormGroup({
         fetch: new FormGroup({
             order: new FormControl("none"),
+            eventTime: new FormGroup({
+                kind: new FormControl("fromMetadata"),
+                timestampFormat: new FormControl(""),
+            }),
         }),
         read: new FormGroup({
             kind: new FormControl("csv"),
@@ -17,6 +21,9 @@ describe("ProcessFormService", () => {
                     type: new FormControl("BIGINT"),
                 }),
             ]),
+        }),
+        merge: new FormGroup({
+            kind: new FormControl("append"),
         }),
     });
 
@@ -35,12 +42,17 @@ describe("ProcessFormService", () => {
             "transformForm",
         ).and.callThrough();
         const initialResult = {
-            fetch: { order: "none" },
+            fetch: {
+                order: "none",
+                eventTime: { kind: "fromMetadata", timestampFormat: "" },
+            },
             read: { kind: "csv", schema: [{ name: "id", type: "BIGINT" }] },
+            merge: { kind: "append" },
         };
         const expectedResult = {
-            fetch: {},
+            fetch: { eventTime: { kind: "fromMetadata" } },
             read: { kind: "csv", schema: ["id BIGINT"] },
+            merge: { kind: "append" },
         };
         expect(formGroup.value).toEqual(initialResult);
 

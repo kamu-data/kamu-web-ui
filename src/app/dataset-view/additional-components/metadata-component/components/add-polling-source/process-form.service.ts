@@ -38,30 +38,43 @@ export class ProcessFormService {
 
     private removeEmptyControls(formGroup: FormGroup): void {
         const form = formGroup.value as SetPollingSource;
-        Object.entries(form[SetPollingSourceSection.READ]).forEach(
-            ([key, value]) => {
+
+        [
+            SetPollingSourceSection.READ,
+            SetPollingSourceSection.MERGE,
+            SetPollingSourceSection.FETCH,
+        ].forEach((key: SetPollingSourceSection) => {
+            Object.entries(form[key]).forEach(([key, value]) => {
                 if (!value || (Array.isArray(value) && !value.length)) {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-dynamic-delete
                     delete formGroup.value[SetPollingSourceSection.READ][key];
                 }
-            },
-        );
-        Object.entries(form[SetPollingSourceSection.MERGE]).forEach(
-            ([key, value]) => {
-                if (!value || (Array.isArray(value) && !value.length)) {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-dynamic-delete
-                    delete formGroup.value[SetPollingSourceSection.MERGE][key];
-                }
-            },
-        );
-        Object.entries(form[SetPollingSourceSection.FETCH]).forEach(
-            ([key, value]) => {
-                if (!value || (Array.isArray(value) && !value.length)) {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-dynamic-delete
-                    delete formGroup.value[SetPollingSourceSection.FETCH][key];
-                }
-            },
-        );
+            });
+        });
+        // Object.entries(form[SetPollingSourceSection.READ]).forEach(
+        //     ([key, value]) => {
+        //         if (!value || (Array.isArray(value) && !value.length)) {
+        //             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-dynamic-delete
+        //             delete formGroup.value[SetPollingSourceSection.READ][key];
+        //         }
+        //     },
+        // );
+        // Object.entries(form[SetPollingSourceSection.MERGE]).forEach(
+        //     ([key, value]) => {
+        //         if (!value || (Array.isArray(value) && !value.length)) {
+        //             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-dynamic-delete
+        //             delete formGroup.value[SetPollingSourceSection.MERGE][key];
+        //         }
+        //     },
+        // );
+        // Object.entries(form[SetPollingSourceSection.FETCH]).forEach(
+        //     ([key, value]) => {
+        //         if (!value || (Array.isArray(value) && !value.length)) {
+        //             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-dynamic-delete
+        //             delete formGroup.value[SetPollingSourceSection.FETCH][key];
+        //         }
+        //     },
+        // );
         if (
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             !formGroup.value[SetPollingSourceSection.FETCH].eventTime

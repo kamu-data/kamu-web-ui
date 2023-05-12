@@ -23,7 +23,9 @@ export class ProcessFormService {
         if (form.read.schema) {
             form.read.schema = (form.read.schema as SchemaType[]).map(
                 (item) => {
-                    return `${item.name} ${item.type}`;
+                    return `${this.processSchemaName(item.name.trim())} ${
+                        item.type
+                    }`;
                 },
             );
         }
@@ -64,5 +66,9 @@ export class ProcessFormService {
             delete formGroup.value[SetPollingSourceSection.FETCH].eventTime
                 .timestampFormat;
         }
+    }
+    
+    private processSchemaName(name: string): string {
+        return /\s/.test(name) ? `\`${name}\`` : name;
     }
 }

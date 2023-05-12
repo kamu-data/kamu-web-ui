@@ -63,12 +63,13 @@
                     *ngIf="!currentState.overview.metadata.currentInfo.description && !currentState.overview.metadata.currentInfo.keywords?.length"
                 >
                     <p>
-                        You can add
+                        You can
                         <a
                             class="text-decoration-none"
                             (click)="openInformationModal()"
                             data-test-id="'open-information-modal'"
-                            >information</a
+                        >
+                            Add information</a
                         >
                         about dataset.
                     </p>
@@ -79,14 +80,13 @@
                 *ngIf="!currentState.overview.metadata.currentSource && currentState.overview.kind === 'ROOT'"
             >
                 <p>
-                    You can add
+                    You can
                     <a
                         class="text-decoration-none"
                         (click)="navigateToAddPollingSource()"
                     >
-                        source</a
+                        Add data source</a
                     >
-                    dataset
                 </p>
             </div>
 
@@ -96,11 +96,18 @@
                 [datasetName]="datasetBasics.name"
             ></app-overview-history-summary-header>
             <app-dynamic-table
-                *ngIf="currentState && currentState.schema"
+                *ngIf="currentState && currentState.schema;else noData"
                 [hasTableHeader]="true"
                 [schemaFields]="currentState.schema.fields"
                 [dataRows]="currentState ? currentState.data : []"
             ></app-dynamic-table>
+            <ng-template #noData>
+                <div
+                    class="mt-4 p-3 text-center no-data-container border border-2"
+                >
+                    No data
+                </div>
+            </ng-template>
             <div
                 id="file-readme-dataset-template-md"
                 class="file my-4"

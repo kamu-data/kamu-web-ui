@@ -20,6 +20,7 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { momentConvertDatetoLocalWithFormat } from "src/app/common/app.helpers";
 import { MaybeNull } from "src/app/common/app.types";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-metadata",
@@ -49,7 +50,10 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         pageInfo: PageBasedInfo;
     };
 
-    constructor(private appDatasetSubsService: AppDatasetSubscriptionsService) {
+    constructor(
+        private appDatasetSubsService: AppDatasetSubscriptionsService,
+        private navigationService: NavigationService,
+    ) {
         super();
     }
 
@@ -120,4 +124,12 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         ReadStepEsriShapefile: "Esri shapefile",
         ReadStepParquet: "Parquet",
     };
+
+    public navigateToEditPollingSource(): void {
+        if (this.datasetBasics)
+            this.navigationService.navigateToAddPollingSource({
+                accountName: this.datasetBasics.owner.name,
+                datasetName: this.datasetBasics.name as string,
+            });
+    }
 }

@@ -1,9 +1,9 @@
 import { SchemaType } from "../form-components/schema-field/schema-field.component";
 
 export enum SourceOrder {
-    NONE = "none",
-    BY_NAME = "byName",
-    BY_EVENT_TIME = "byEventTime",
+    NONE = "NONE",
+    BY_NAME = "BY_NAME",
+    BY_EVENT_TIME = "BY_EVENT_TIME",
 }
 
 export interface OrderControlType {

@@ -8,7 +8,10 @@ import {
     PreprocessKind,
 } from "./add-polling-source-form.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
-import { SetPollingSource } from "./../../../../../api/kamu.graphql.interface";
+import {
+    DatasetMetadataSummaryFragment,
+    SetPollingSource,
+} from "./../../../../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import {
     ChangeDetectionStrategy,
@@ -34,6 +37,10 @@ import { FETCH_FORM_DATA } from "./steps/data/fetch-form-data";
 import { READ_FORM_DATA } from "./steps/data/read-form-data";
 import { MERGE_FORM_DATA } from "./steps/data/merge-form-data";
 import { ProcessFormService } from "./process-form.service";
+import { AppDatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { MaybeNull } from "src/app/common/app.types";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 
 @Component({
     selector: "app-add-polling-source",
@@ -47,6 +54,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     public isAddPrepareStep = false;
     public isAddPreprocessStep = false;
     public errorMessage = "";
+    public eventMetadata: MaybeNull<DatasetMetadataSummaryFragment>;
     // --------------------------------
     private readonly DEFAULT_PREPARE_KIND = PrepareKind.PIPE;
     private readonly DEFAULT_PREPROCESS_KIND = PreprocessKind.SQL;
@@ -133,15 +141,31 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         private modalService: NgbModal,
         private cdr: ChangeDetectorRef,
         private processFormService: ProcessFormService,
+        private appDatasetSubsService: AppDatasetSubscriptionsService,
+        private appDatasetService: DatasetService,
     ) {
         super();
     }
 
     ngOnInit(): void {
-        this.trackSubscription(
+        this.trackSubscriptions(
+            this.appDatasetService
+                .requestDatasetMainData(this.getDatasetInfoFromUrl())
+                .subscribe(),
             this.createDatasetService.onErrorCommitEventChanges.subscribe(
                 (message: string) => {
                     this.errorMessage = message;
+                    this.cdr.detectChanges();
+                },
+            ),
+
+            this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
+                (schemaUpdate: MetadataSchemaUpdate) => {
+                    console.log(
+                        "addPollingSource==>",
+                        schemaUpdate.metadata.metadata.currentSource,
+                    );
+                    this.eventMetadata = schemaUpdate.metadata;
                     this.cdr.detectChanges();
                 },
             ),

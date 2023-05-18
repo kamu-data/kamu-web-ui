@@ -1,5 +1,6 @@
 <div class="search-result-container__content" id="searchResultContainerContent">
     <div id="metadata-block">
+        <!-- <pre>{{ currentState | json }}</pre> -->
         <div id="pagination-block" *ngIf="currentState">
             <app-custom-pagination
                 [hash]="latestBlockhash"
@@ -9,6 +10,23 @@
                 [total]="totalPages"
                 (pageChange)="onPageChange($event)"
             ></app-custom-pagination>
+        </div>
+        <div
+            class="text-end"
+            *ngIf="
+                currentState?.metadata?.kind === 'ROOT' &&
+                currentState?.metadata?.metadata?.currentSource
+            "
+        >
+            <p>
+                <a
+                    class="text-decoration-none"
+                    data-test-id="'edit-source-link'"
+                    (click)="navigateToEditPollingSource()"
+                >
+                    Edit source</a
+                >
+            </p>
         </div>
 
         <ng-container *ngIf="currentState">

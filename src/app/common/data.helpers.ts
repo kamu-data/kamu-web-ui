@@ -23,6 +23,10 @@ export class DataHelpers {
         return kind.charAt(0).toUpperCase() + kind.slice(1).toLowerCase();
     }
 
+    public static toLowercase(s: string): string {
+        return s.charAt(0).toLowerCase() + s.slice(1);
+    }
+
     public static descriptionForEngine(name: string): EventPropertyLogo {
         switch (name) {
             case "flink":
@@ -83,7 +87,7 @@ export class DataHelpers {
     public static descriptionSetPollingSourceSteps(name: string): string {
         switch (name) {
             case "ReadStepCsv": {
-                return "CSV";
+                return "Csv";
             }
             case "ReadStepEsriShapefile": {
                 return "Esri Shapefile";

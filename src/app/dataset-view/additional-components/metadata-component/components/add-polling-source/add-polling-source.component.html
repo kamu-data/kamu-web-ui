@@ -43,6 +43,7 @@
                         [defaultKind]="FETCH_DEFAULT_KIND"
                         [groupName]="steps.FETCH"
                         [title]="'Fetch'"
+                        [eventMetadata]="eventMetadata"
                     ></app-base-step>
                     <app-stepper-navigation
                         [prevStep]="null"
@@ -70,6 +71,7 @@
                         [defaultKind]="READ_DEFAULT_KIND"
                         [groupName]="steps.READ"
                         [title]="'Read'"
+                        [eventMetadata]="eventMetadata"
                     ></app-base-step>
                     <app-stepper-navigation
                         [prevStep]="
@@ -98,6 +100,7 @@
                         [defaultKind]="MERGE_DEFAULT_KIND"
                         [groupName]="steps.MERGE"
                         [title]="'Merge'"
+                        [eventMetadata]="eventMetadata"
                     >
                         <div
                             *ngIf="errorMessage"

@@ -7,12 +7,15 @@ import {
 } from "./process-form.service.types";
 import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
+import { FetchKind } from "./add-polling-source-form.types";
 
 @Injectable({
     providedIn: "root",
 })
 export class ProcessFormService {
     public transformForm(formGroup: FormGroup): void {
+        console.log("service", formGroup.value);
+
         this.transformSchema(formGroup);
         this.processFetchOrderControl(formGroup);
         this.removeEmptyControls(formGroup);
@@ -57,7 +60,11 @@ export class ProcessFormService {
                 }
             });
         });
+
         if (
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            formGroup.value[SetPollingSourceSection.FETCH].kind !==
+                FetchKind.CONTAINER &&
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             !formGroup.value[SetPollingSourceSection.FETCH].eventTime
                 .timestampFormat
@@ -67,7 +74,7 @@ export class ProcessFormService {
                 .timestampFormat;
         }
     }
-    
+
     private processSchemaName(name: string): string {
         return /\s/.test(name) ? `\`${name}\`` : name;
     }

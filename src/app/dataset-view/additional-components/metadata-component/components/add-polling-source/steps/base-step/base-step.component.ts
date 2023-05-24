@@ -68,6 +68,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
         this.chooseFetchKind();
         this.initEditFetchStep();
         this.initEditReadStep();
+        this.initEditMergeStep();
     }
 
     private initEditFetchStep(): void {
@@ -83,15 +84,41 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                         ].__typename as string,
                     ).replace(/\s/g, ""),
                 ),
+                ...this.eventMetadata.metadata.currentSource.fetch,
             });
+            if (
+                (this.eventMetadata.metadata.currentSource.fetch.__typename ===
+                    "FetchStepUrl" &&
+                    this.eventMetadata.metadata.currentSource.fetch.eventTime
+                        ?.__typename === "EventTimeSourceFromPath") ||
+                (this.eventMetadata.metadata.currentSource.fetch.__typename ===
+                    "FetchStepFilesGlob" &&
+                    this.eventMetadata.metadata.currentSource.fetch.eventTime
+                        ?.__typename === "EventTimeSourceFromPath")
+            ) {
+                const eventTimeGroup = this.sectionForm.controls
+                    .eventTime as FormGroup;
+
+                const pattern =
+                    this.eventMetadata.metadata.currentSource.fetch.eventTime
+                        .pattern;
+                const timestampFormat =
+                    this.eventMetadata.metadata.currentSource.fetch.eventTime
+                        .timestampFormat;
+                eventTimeGroup.addControl(
+                    "pattern",
+                    this.fb.control(pattern, RxwebValidators.required()),
+                );
+                eventTimeGroup.addControl(
+                    "timestampFormat",
+                    this.fb.control(timestampFormat),
+                );
+            }
+
             switch (
                 this.eventMetadata.metadata.currentSource.fetch.__typename
             ) {
                 case "FetchStepContainer": {
-                    this.sectionForm.patchValue({
-                        image: this.eventMetadata.metadata.currentSource.fetch
-                            .image,
-                    });
                     const env = this.sectionForm.controls.env as FormArray;
                     this.eventMetadata.metadata.currentSource.fetch.env?.forEach(
                         (item) => {
@@ -129,16 +156,6 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                     break;
                 }
                 case "FetchStepUrl": {
-                    const url =
-                        this.eventMetadata.metadata.currentSource.fetch.url;
-                    const cache = this.eventMetadata.metadata.currentSource
-                        .fetch.cache
-                        ? true
-                        : false;
-                    this.sectionForm.patchValue({
-                        url,
-                        cache,
-                    });
                     const headers = this.sectionForm.controls
                         .headers as FormArray;
                     this.eventMetadata.metadata.currentSource.fetch.headers?.forEach(
@@ -151,39 +168,9 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                             );
                         },
                     );
-                    const eventTimeGroup = this.sectionForm.controls
-                        .eventTime as FormGroup;
-                    if (
-                        this.eventMetadata.metadata.currentSource.fetch
-                            .eventTime?.__typename === "EventTimeSourceFromPath"
-                    ) {
-                        const pattern =
-                            this.eventMetadata.metadata.currentSource.fetch
-                                .eventTime.pattern;
-                        const timestampFormat =
-                            this.eventMetadata.metadata.currentSource.fetch
-                                .eventTime.timestampFormat;
-                        eventTimeGroup.addControl(
-                            "pattern",
-                            this.fb.control(
-                                pattern,
-                                RxwebValidators.required(),
-                            ),
-                        );
-                        eventTimeGroup.addControl(
-                            "timestampFormat",
-                            this.fb.control(timestampFormat),
-                        );
-                    }
                     break;
                 }
                 case "FetchStepFilesGlob": {
-                    const path =
-                        this.eventMetadata.metadata.currentSource.fetch.path;
-                    const cache = this.eventMetadata.metadata.currentSource
-                        .fetch.cache
-                        ? true
-                        : false;
                     const order = this.eventMetadata.metadata.currentSource
                         .fetch.order
                         ? DataHelpers.descriptionEditOrder(
@@ -192,35 +179,8 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                           )
                         : "NONE";
                     this.sectionForm.patchValue({
-                        path,
-                        cache,
                         order,
                     });
-
-                    const eventTimeGroup = this.sectionForm.controls
-                        .eventTime as FormGroup;
-                    if (
-                        this.eventMetadata.metadata.currentSource.fetch
-                            .eventTime?.__typename === "EventTimeSourceFromPath"
-                    ) {
-                        const pattern =
-                            this.eventMetadata.metadata.currentSource.fetch
-                                .eventTime.pattern;
-                        const timestampFormat =
-                            this.eventMetadata.metadata.currentSource.fetch
-                                .eventTime.timestampFormat;
-                        eventTimeGroup.addControl(
-                            "pattern",
-                            this.fb.control(
-                                pattern,
-                                RxwebValidators.required(),
-                            ),
-                        );
-                        eventTimeGroup.addControl(
-                            "timestampFormat",
-                            this.fb.control(timestampFormat),
-                        );
-                    }
                     break;
                 }
             }
@@ -243,19 +203,69 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                 ...this.eventMetadata.metadata.currentSource.read,
             });
             const schema = this.sectionForm.controls.schema as FormArray;
-            this.eventMetadata.metadata.currentSource.read.schema?.forEach(
-                (item) => {
-                    schema.push(
-                        this.fb.group({
-                            name: [item.split(" ")[0]],
-                            type: [item.split(" ")[1]],
-                        }),
-                    );
-                },
-            );
+            if (!(schema.value as string[]).length) {
+                this.eventMetadata.metadata.currentSource.read.schema?.forEach(
+                    (item) => {
+                        schema.push(
+                            this.fb.group({
+                                name: [item.split(" ")[0]],
+                                type: [item.split(" ")[1]],
+                            }),
+                        );
+                    },
+                );
+            }
         }
     }
 
+    private initEditMergeStep(): void {
+        if (
+            this.eventMetadata?.metadata.currentSource &&
+            this.groupName === SetPollingSourceSection.MERGE
+        ) {
+            this.sectionForm.patchValue({
+                kind: DataHelpers.toLowercase(
+                    DataHelpers.descriptionSetPollingSourceSteps(
+                        this.eventMetadata.metadata.currentSource[
+                            this.groupName
+                        ].__typename as string,
+                    ).replace(/\s/g, ""),
+                ),
+                ...this.eventMetadata.metadata.currentSource.merge,
+            });
+            switch (
+                this.eventMetadata.metadata.currentSource.merge.__typename
+            ) {
+                case "MergeStrategyLedger": {
+                    const primaryKey = this.sectionForm.controls
+                        .primaryKey as FormArray;
+                    this.eventMetadata.metadata.currentSource.merge.primaryKey.forEach(
+                        (item) => {
+                            primaryKey.push(this.fb.control(item));
+                        },
+                    );
+                    break;
+                }
+                case "MergeStrategySnapshot": {
+                    const primaryKey = this.sectionForm.controls
+                        .primaryKey as FormArray;
+                    this.eventMetadata.metadata.currentSource.merge.primaryKey.forEach(
+                        (item) => {
+                            primaryKey.push(this.fb.control(item));
+                        },
+                    );
+                    const compareColumns = this.sectionForm.controls
+                        .compareColumns as FormArray;
+                    this.eventMetadata.metadata.currentSource.merge.compareColumns?.forEach(
+                        (item) => {
+                            compareColumns.push(this.fb.control(item));
+                        },
+                    );
+                    break;
+                }
+            }
+        }
+    }
     private chooseFetchKind(): void {
         const subscription = this.sectionForm
             .get(this.KIND_NAME_CONTROL)
@@ -269,7 +279,8 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                             ].includes(key),
                     )
                     .forEach((item: string) => {
-                        this.sectionForm.removeControl(item);
+                        if (item !== "eventTime")
+                            this.sectionForm.removeControl(item);
                     });
                 this.initForm(kind);
             });
@@ -285,7 +296,14 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     }
 
     private getEventTimeType(): string {
-        if (
+        if (this.isEventTimeFromPath()) {
+            return EventTimeSourceKind.FROM_PATH;
+        }
+        return this.DEFAULT_EVENT_TIME_SOURCE;
+    }
+
+    private isEventTimeFromPath(): boolean {
+        return (
             (this.eventMetadata?.metadata.currentSource?.fetch.__typename ===
                 "FetchStepUrl" &&
                 this.eventMetadata.metadata.currentSource.fetch.eventTime
@@ -294,10 +312,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                 "FetchStepFilesGlob" &&
                 this.eventMetadata.metadata.currentSource.fetch.eventTime
                     ?.__typename === "EventTimeSourceFromPath")
-        ) {
-            return EventTimeSourceKind.FROM_PATH;
-        }
-        return this.DEFAULT_EVENT_TIME_SOURCE;
+        );
     }
 
     private initForm(kind: string): void {

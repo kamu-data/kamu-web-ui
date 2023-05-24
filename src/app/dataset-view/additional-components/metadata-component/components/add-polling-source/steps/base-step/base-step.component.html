@@ -2,10 +2,6 @@
     <h2 class="text-center">
         {{ title }}
     </h2>
-    <pre>Data: {{ eventMetadata | json }}</pre>
-    <pre> Section form: {{ sectionForm.value | json }}</pre>
-    <pre> Section form valid: {{ sectionForm.valid | json }}</pre>
-
     <app-select-kind-field
         [form]="sectionForm"
         [data]="sectionStepRadioData"

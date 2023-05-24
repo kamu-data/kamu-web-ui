@@ -19,6 +19,7 @@ export class ProcessFormService {
         this.processFetchOrderControl(formGroup);
         this.removeEmptyControls(formGroup);
         this.processFetchCacheControl(formGroup);
+        this.processEventTimeControl(formGroup);
     }
 
     private transformSchema(formGroup: FormGroup): void {
@@ -38,6 +39,13 @@ export class ProcessFormService {
         const form = formGroup.value as OrderControlType;
         if (form.fetch.cache) {
             form.fetch.cache = { kind: "forever" };
+        }
+    }
+
+    private processEventTimeControl(formGroup: FormGroup): void {
+        const form = formGroup.value as OrderControlType;
+        if (form.fetch.eventTime && form.fetch.kind === "container") {
+            delete form.fetch.eventTime;
         }
     }
 

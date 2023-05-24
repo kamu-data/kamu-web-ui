@@ -120,9 +120,17 @@ export class DataHelpers {
             case "FetchStepContainer": {
                 return "Container";
             }
-
             case "FetchStepFilesGlob": {
                 return "Files Glob";
+            }
+            case "MergeStrategyLedger": {
+                return "Ledger";
+            }
+            case "MergeStrategyAppend": {
+                return "Append";
+            }
+            case "MergeStrategySnapshot": {
+                return "Snapshot";
             }
             default:
                 return "Unknown type";

@@ -37,11 +37,9 @@ import { FETCH_FORM_DATA } from "./steps/data/fetch-form-data";
 import { READ_FORM_DATA } from "./steps/data/read-form-data";
 import { MERGE_FORM_DATA } from "./steps/data/merge-form-data";
 import { ProcessFormService } from "./process-form.service";
-import { MaybeNull } from "src/app/common/app.types";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { AppDatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { take } from "rxjs/operators";
 import { Observable } from "rxjs";
 
 @Component({

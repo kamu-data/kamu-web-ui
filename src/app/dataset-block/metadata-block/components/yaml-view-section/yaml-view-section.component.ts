@@ -8,7 +8,6 @@ import {
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { BlockService } from "../../block.service";
 import { SupportedEvents } from "../event-details/supported.events";
-import { parse, stringify } from "yaml";
 
 @Component({
     selector: "app-yaml-view-section",

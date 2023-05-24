@@ -66,8 +66,8 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
             this.sectionForm.get(this.KIND_NAME_CONTROL)?.value as string,
         );
         this.chooseFetchKind();
-
         this.initEditFetchStep();
+        this.initEditReadStep();
     }
 
     private initEditFetchStep(): void {
@@ -224,7 +224,35 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                     break;
                 }
             }
-            console.log("section-form-value", this.sectionForm.value);
+        }
+    }
+
+    private initEditReadStep(): void {
+        if (
+            this.eventMetadata?.metadata.currentSource &&
+            this.groupName === SetPollingSourceSection.READ
+        ) {
+            this.sectionForm.patchValue({
+                kind: DataHelpers.toLowercase(
+                    DataHelpers.descriptionSetPollingSourceSteps(
+                        this.eventMetadata.metadata.currentSource[
+                            this.groupName
+                        ].__typename as string,
+                    ).replace(/\s/g, ""),
+                ),
+                ...this.eventMetadata.metadata.currentSource.read,
+            });
+            const schema = this.sectionForm.controls.schema as FormArray;
+            this.eventMetadata.metadata.currentSource.read.schema?.forEach(
+                (item) => {
+                    schema.push(
+                        this.fb.group({
+                            name: [item.split(" ")[0]],
+                            type: [item.split(" ")[1]],
+                        }),
+                    );
+                },
+            );
         }
     }
 

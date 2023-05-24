@@ -67,6 +67,7 @@
 
                 <ng-container *ngIf="currentStep === steps.READ">
                     <app-base-step
+                        *ngIf="eventMetadata$ | async"
                         [sectionStepRadioData]="READ_STEP_RADIO_DATA"
                         [sectionFormData]="READ_FORM_DATA"
                         [defaultKind]="READ_DEFAULT_KIND"
@@ -96,6 +97,7 @@
                 </ng-container>
                 <ng-container *ngIf="currentStep === steps.MERGE">
                     <app-base-step
+                        *ngIf="eventMetadata$ | async"
                         [sectionStepRadioData]="MERGE_STEP_RADIO_DATA"
                         [sectionFormData]="MERGE_FORM_DATA"
                         [defaultKind]="MERGE_DEFAULT_KIND"

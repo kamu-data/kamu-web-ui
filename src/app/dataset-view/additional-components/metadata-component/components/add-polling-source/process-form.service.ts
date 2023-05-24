@@ -4,6 +4,7 @@ import { SchemaType } from "../form-components/schema-field/schema-field.compone
 import {
     SchemaControlType,
     OrderControlType,
+    SourceOrder,
 } from "./process-form.service.types";
 import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
@@ -14,11 +15,10 @@ import { FetchKind } from "./add-polling-source-form.types";
 })
 export class ProcessFormService {
     public transformForm(formGroup: FormGroup): void {
-        console.log("service", formGroup.value);
-
         this.transformSchema(formGroup);
         this.processFetchOrderControl(formGroup);
         this.removeEmptyControls(formGroup);
+        this.processFetchCacheControl(formGroup);
     }
 
     private transformSchema(formGroup: FormGroup): void {
@@ -34,9 +34,16 @@ export class ProcessFormService {
         }
     }
 
+    private processFetchCacheControl(formGroup: FormGroup): void {
+        const form = formGroup.value as OrderControlType;
+        if (form.fetch.cache) {
+            form.fetch.cache = { kind: "forever" };
+        }
+    }
+
     private processFetchOrderControl(formGroup: FormGroup): void {
         const form = formGroup.value as OrderControlType;
-        if (form.fetch.order && form.fetch.order === "none") {
+        if (form.fetch.order && form.fetch.order === SourceOrder.NONE) {
             delete form.fetch.order;
         }
     }

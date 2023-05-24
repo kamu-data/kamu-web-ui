@@ -21,8 +21,8 @@ import { DatasetMetadataSummaryFragment } from "src/app/api/kamu.graphql.interfa
 import { MaybeNull } from "src/app/common/app.types";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { AppDatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "app-base-step",
@@ -41,6 +41,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     @Input() public groupName: SetPollingSourceSection;
     @Input() public title: string;
     @Input() public eventMetadata: MaybeNull<DatasetMetadataSummaryFragment>;
+    public eventMetadata$: Observable<MetadataSchemaUpdate>;
     public controlType: typeof ControlType = ControlType;
     public readonly KIND_NAME_CONTROL = "kind";
     public readonly SCHEMA_NAME_CONTROL = "schema";
@@ -51,7 +52,6 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
         private rootFormGroupDirective: FormGroupDirective,
         private fb: FormBuilder,
         private cdr: ChangeDetectorRef,
-        private appDatasetSubsService: AppDatasetSubscriptionsService,
     ) {
         super();
     }
@@ -62,36 +62,19 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.parentForm = this.rootFormGroupDirective.form;
-        if (this.eventMetadata?.metadata.currentSource)
-            console.log(
-                "===>",
-                this.eventMetadata.metadata.currentSource.fetch,
-            );
         this.initForm(
             this.sectionForm.get(this.KIND_NAME_CONTROL)?.value as string,
         );
         this.chooseFetchKind();
-        this.setFetchStepForm();
-        // this.trackSubscription(
-        //     this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
-        //         (schemaUpdate: MetadataSchemaUpdate) => {
-        //             console.log(
-        //                 "baseStep==>",
-        //                 schemaUpdate.metadata.metadata.currentSource,
-        //             );
-        //             this.eventMetadata = schemaUpdate.metadata;
-        //             this.setFetchStepForm();
-        //         },
-        //     ),
-        // );
+
+        this.initEditFetchStep();
     }
 
-    private setFetchStepForm(): void {
+    private initEditFetchStep(): void {
         if (
             this.eventMetadata?.metadata.currentSource &&
             this.groupName === SetPollingSourceSection.FETCH
         ) {
-            console.log("baseStep work");
             this.sectionForm.patchValue({
                 kind: DataHelpers.toLowercase(
                     DataHelpers.descriptionSetPollingSourceSteps(
@@ -100,12 +83,15 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                         ].__typename as string,
                     ).replace(/\s/g, ""),
                 ),
-                ...this.eventMetadata.metadata.currentSource.fetch,
             });
             switch (
                 this.eventMetadata.metadata.currentSource.fetch.__typename
             ) {
                 case "FetchStepContainer": {
+                    this.sectionForm.patchValue({
+                        image: this.eventMetadata.metadata.currentSource.fetch
+                            .image,
+                    });
                     const env = this.sectionForm.controls.env as FormArray;
                     this.eventMetadata.metadata.currentSource.fetch.env?.forEach(
                         (item) => {
@@ -143,6 +129,16 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                     break;
                 }
                 case "FetchStepUrl": {
+                    const url =
+                        this.eventMetadata.metadata.currentSource.fetch.url;
+                    const cache = this.eventMetadata.metadata.currentSource
+                        .fetch.cache
+                        ? true
+                        : false;
+                    this.sectionForm.patchValue({
+                        url,
+                        cache,
+                    });
                     const headers = this.sectionForm.controls
                         .headers as FormArray;
                     this.eventMetadata.metadata.currentSource.fetch.headers?.forEach(
@@ -161,52 +157,74 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                         this.eventMetadata.metadata.currentSource.fetch
                             .eventTime?.__typename === "EventTimeSourceFromPath"
                     ) {
+                        const pattern =
+                            this.eventMetadata.metadata.currentSource.fetch
+                                .eventTime.pattern;
+                        const timestampFormat =
+                            this.eventMetadata.metadata.currentSource.fetch
+                                .eventTime.timestampFormat;
                         eventTimeGroup.addControl(
                             "pattern",
                             this.fb.control(
-                                this.eventMetadata.metadata.currentSource.fetch
-                                    .eventTime.pattern,
+                                pattern,
                                 RxwebValidators.required(),
                             ),
                         );
                         eventTimeGroup.addControl(
                             "timestampFormat",
-                            this.fb.control(
-                                this.eventMetadata.metadata.currentSource.fetch
-                                    .eventTime.timestampFormat,
-                            ),
+                            this.fb.control(timestampFormat),
                         );
                     }
                     break;
                 }
                 case "FetchStepFilesGlob": {
+                    const path =
+                        this.eventMetadata.metadata.currentSource.fetch.path;
+                    const cache = this.eventMetadata.metadata.currentSource
+                        .fetch.cache
+                        ? true
+                        : false;
+                    const order = this.eventMetadata.metadata.currentSource
+                        .fetch.order
+                        ? DataHelpers.descriptionEditOrder(
+                              this.eventMetadata.metadata.currentSource.fetch
+                                  .order,
+                          )
+                        : "NONE";
+                    this.sectionForm.patchValue({
+                        path,
+                        cache,
+                        order,
+                    });
+
                     const eventTimeGroup = this.sectionForm.controls
                         .eventTime as FormGroup;
                     if (
                         this.eventMetadata.metadata.currentSource.fetch
                             .eventTime?.__typename === "EventTimeSourceFromPath"
                     ) {
+                        const pattern =
+                            this.eventMetadata.metadata.currentSource.fetch
+                                .eventTime.pattern;
+                        const timestampFormat =
+                            this.eventMetadata.metadata.currentSource.fetch
+                                .eventTime.timestampFormat;
                         eventTimeGroup.addControl(
                             "pattern",
                             this.fb.control(
-                                this.eventMetadata.metadata.currentSource.fetch
-                                    .eventTime.pattern,
+                                pattern,
                                 RxwebValidators.required(),
                             ),
                         );
                         eventTimeGroup.addControl(
                             "timestampFormat",
-                            this.fb.control(
-                                this.eventMetadata.metadata.currentSource.fetch
-                                    .eventTime.timestampFormat,
-                            ),
+                            this.fb.control(timestampFormat),
                         );
                     }
                     break;
                 }
             }
-
-            console.log("form-value", this.sectionForm.value);
+            console.log("section-form-value", this.sectionForm.value);
         }
     }
 
@@ -240,8 +258,10 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
 
     private getEventTimeType(): string {
         if (
-            this.eventMetadata?.metadata.currentSource?.fetch.__typename ===
-                "FetchStepUrl" ||
+            (this.eventMetadata?.metadata.currentSource?.fetch.__typename ===
+                "FetchStepUrl" &&
+                this.eventMetadata.metadata.currentSource.fetch.eventTime
+                    ?.__typename === "EventTimeSourceFromPath") ||
             (this.eventMetadata?.metadata.currentSource?.fetch.__typename ===
                 "FetchStepFilesGlob" &&
                 this.eventMetadata.metadata.currentSource.fetch.eventTime
@@ -261,8 +281,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                     this.sectionForm.addControl(
                         item.name,
                         this.fb.group({
-                            // kind: [this.getEventTimeType()],
-                            kind: [this.DEFAULT_EVENT_TIME_SOURCE],
+                            kind: [this.getEventTimeType()],
                         }),
                     );
                 } else {

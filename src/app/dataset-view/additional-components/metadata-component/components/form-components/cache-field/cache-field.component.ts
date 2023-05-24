@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    Input,
+    OnInit,
+} from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { BaseField } from "../base-field";
 
@@ -8,36 +13,17 @@ import { BaseField } from "../base-field";
     styleUrls: ["./cache-field.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CacheFieldComponent extends BaseField implements OnInit {
-    public isCache = false;
-
+export class CacheFieldComponent extends BaseField {
     constructor(private fb: FormBuilder) {
         super();
-    }
-
-    ngOnInit(): void {
-        this.initField();
     }
 
     public onCheckedCache(event: Event) {
         const input = event.target as HTMLInputElement;
         if (input.checked) {
-            this.form.addControl(
-                this.controlName,
-                this.fb.group({
-                    kind: "forever",
-                }),
-            );
-            return;
-        }
-        this.form.removeControl(this.controlName);
-    }
-
-    private initField(): void {
-        if (!this.form.get(this.controlName)?.value) {
-            this.form.removeControl(this.controlName);
+            this.form.addControl(this.controlName, this.fb.control(true));
         } else {
-            this.isCache = true;
+            this.form.removeControl(this.controlName);
         }
     }
 }

@@ -84,6 +84,19 @@ export class DataHelpers {
         }
     }
 
+    public static descriptionEditOrder(name: string): string {
+        switch (name) {
+            case "BY_NAME": {
+                return "byName";
+            }
+            case "BY_EVENT_TIME": {
+                return "byEventTime";
+            }
+            default:
+                return "Unknown order";
+        }
+    }
+
     public static descriptionSetPollingSourceSteps(name: string): string {
         switch (name) {
             case "ReadStepCsv": {

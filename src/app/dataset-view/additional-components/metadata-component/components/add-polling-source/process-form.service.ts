@@ -24,7 +24,7 @@ export class ProcessFormService {
 
     private transformSchema(formGroup: FormGroup): void {
         const form = formGroup.value as SchemaControlType;
-        if (form.read.schema) {
+        if (form.read.schema?.length) {
             form.read.schema = (form.read.schema as SchemaType[]).map(
                 (item) => {
                     return `${this.processSchemaName(item.name.trim())} ${

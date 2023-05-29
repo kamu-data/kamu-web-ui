@@ -8,10 +8,7 @@ import {
     PreprocessKind,
 } from "./add-polling-source-form.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
-import {
-    DatasetMetadataSummaryFragment,
-    SetPollingSource,
-} from "./../../../../../api/kamu.graphql.interface";
+import { SetPollingSource } from "./../../../../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import {
     ChangeDetectionStrategy,
@@ -37,10 +34,8 @@ import { FETCH_FORM_DATA } from "./steps/data/fetch-form-data";
 import { READ_FORM_DATA } from "./steps/data/read-form-data";
 import { MERGE_FORM_DATA } from "./steps/data/merge-form-data";
 import { ProcessFormService } from "./process-form.service";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { AppDatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { Observable } from "rxjs";
+import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { EditPollingSourceService } from "./edit-polling-source.service";
 
 @Component({
     selector: "app-add-polling-source",
@@ -54,8 +49,8 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     public isAddPrepareStep = false;
     public isAddPreprocessStep = false;
     public errorMessage = "";
-    public eventMetadata: DatasetMetadataSummaryFragment;
-    public eventMetadata$: Observable<MetadataSchemaUpdate>;
+    public history: DatasetHistoryUpdate;
+    public eventYamlByHash: string;
 
     // --------------------------------
     private readonly DEFAULT_PREPARE_KIND = PrepareKind.PIPE;
@@ -143,29 +138,24 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         private modalService: NgbModal,
         private cdr: ChangeDetectorRef,
         private processFormService: ProcessFormService,
-        private appDatasetSubsService: AppDatasetSubscriptionsService,
-        private appDatasetService: DatasetService,
+        private editService: EditPollingSourceService,
     ) {
         super();
     }
 
     ngOnInit(): void {
-        this.eventMetadata$ =
-            this.appDatasetSubsService.onMetadataSchemaChanges;
         this.trackSubscriptions(
-            this.appDatasetService
-                .requestDatasetMainData(this.getDatasetInfoFromUrl())
-                .subscribe(),
+            this.editService
+                .getSetPollingSourceAsYaml(this.getDatasetInfoFromUrl())
+                .subscribe(([eventYaml]) => {
+                    this.eventYamlByHash = eventYaml;
+                    this.history = this.editService.history;
+                    this.cdr.detectChanges();
+                }),
             this.createDatasetService.onErrorCommitEventChanges.subscribe(
                 (message: string) => {
                     this.errorMessage = message;
                     this.cdr.detectChanges();
-                },
-            ),
-            this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
-                (schemaUpdate: MetadataSchemaUpdate) => {
-                    this.eventMetadata = schemaUpdate.metadata;
-                    this.cdr.markForCheck();
                 },
             ),
         );

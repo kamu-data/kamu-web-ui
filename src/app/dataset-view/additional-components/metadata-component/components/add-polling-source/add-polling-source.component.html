@@ -38,13 +38,14 @@
             <form [formGroup]="pollingSourceForm">
                 <ng-container *ngIf="currentStep === steps.FETCH">
                     <app-base-step
-                        *ngIf="eventMetadata$ | async"
+                        *ngIf="history"
                         [sectionStepRadioData]="FETCH_STEP_RADIO_DATA"
                         [sectionFormData]="FETCH_FORM_DATA"
                         [defaultKind]="FETCH_DEFAULT_KIND"
                         [groupName]="steps.FETCH"
                         [title]="'Fetch'"
-                        [eventMetadata]="eventMetadata"
+                        [eventHistory]="history"
+                        [eventYamlByHash]="eventYamlByHash"
                     ></app-base-step>
                     <app-stepper-navigation
                         [prevStep]="null"
@@ -67,13 +68,13 @@
 
                 <ng-container *ngIf="currentStep === steps.READ">
                     <app-base-step
-                        *ngIf="eventMetadata$ | async"
                         [sectionStepRadioData]="READ_STEP_RADIO_DATA"
                         [sectionFormData]="READ_FORM_DATA"
                         [defaultKind]="READ_DEFAULT_KIND"
                         [groupName]="steps.READ"
                         [title]="'Read'"
-                        [eventMetadata]="eventMetadata"
+                        [eventHistory]="history"
+                        [eventYamlByHash]="eventYamlByHash"
                     ></app-base-step>
                     <app-stepper-navigation
                         [prevStep]="
@@ -97,13 +98,13 @@
                 </ng-container>
                 <ng-container *ngIf="currentStep === steps.MERGE">
                     <app-base-step
-                        *ngIf="eventMetadata$ | async"
                         [sectionStepRadioData]="MERGE_STEP_RADIO_DATA"
                         [sectionFormData]="MERGE_FORM_DATA"
                         [defaultKind]="MERGE_DEFAULT_KIND"
                         [groupName]="steps.MERGE"
                         [title]="'Merge'"
-                        [eventMetadata]="eventMetadata"
+                        [eventHistory]="history"
+                        [eventYamlByHash]="eventYamlByHash"
                     >
                         <div
                             *ngIf="errorMessage"

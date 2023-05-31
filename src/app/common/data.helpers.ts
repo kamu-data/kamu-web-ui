@@ -6,6 +6,7 @@ import {
 } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
+import { SetPollingSourceSection } from "../shared/shared.types";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -19,7 +20,9 @@ export class DataHelpers {
         "Attachments updated";
     private static readonly SHIFT_ATTACHMENTS_VIEW = "\u00A0".repeat(12);
 
-    public static datasetKind2String(kind: DatasetKind): string {
+    public static capitalizeFirstLetter(
+        kind: DatasetKind | SetPollingSourceSection,
+    ): string {
         return kind.charAt(0).toUpperCase() + kind.slice(1).toLowerCase();
     }
 
@@ -83,7 +86,7 @@ export class DataHelpers {
     public static descriptionSetPollingSourceSteps(name: string): string {
         switch (name) {
             case "ReadStepCsv": {
-                return "CSV";
+                return "Csv";
             }
             case "ReadStepEsriShapefile": {
                 return "Esri Shapefile";
@@ -103,9 +106,17 @@ export class DataHelpers {
             case "FetchStepContainer": {
                 return "Container";
             }
-
             case "FetchStepFilesGlob": {
                 return "Files Glob";
+            }
+            case "MergeStrategyLedger": {
+                return "Ledger";
+            }
+            case "MergeStrategyAppend": {
+                return "Append";
+            }
+            case "MergeStrategySnapshot": {
+                return "Snapshot";
             }
             default:
                 return "Unknown type";

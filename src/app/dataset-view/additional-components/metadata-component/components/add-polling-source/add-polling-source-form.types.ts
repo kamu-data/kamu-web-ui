@@ -78,3 +78,37 @@ export enum EventTimeSourceKind {
     FROM_METADATA = "fromMetadata",
     FROM_PATH = "fromPath",
 }
+
+export interface EditFormType {
+    fetch: {
+        kind: FetchKind;
+        eventTime?: {
+            pattern: string;
+            timestampFormat: string;
+        };
+        headers?: NameValue[];
+        env?: NameValue[];
+        command?: string[];
+        args?: string[];
+    };
+    read: {
+        kind: ReadKind;
+        schema?: string[];
+    };
+    merge: {
+        kind: MergeKind;
+        primaryKey?: string[];
+        compareColumns?: string[];
+    };
+}
+
+export interface EditFormParseType {
+    content: {
+        event: EditFormType;
+    };
+}
+
+export interface NameValue {
+    name: string;
+    value: string;
+}

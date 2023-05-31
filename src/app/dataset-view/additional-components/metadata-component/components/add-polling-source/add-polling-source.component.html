@@ -1,4 +1,4 @@
-<div class="layout">
+<div class="layout" *ngIf="history">
     <div class="mt-4">
         <!-- <ng-container *ngIf="currentStep === steps.FETCH">
             <div class="row">
@@ -41,8 +41,9 @@
                         [sectionStepRadioData]="FETCH_STEP_RADIO_DATA"
                         [sectionFormData]="FETCH_FORM_DATA"
                         [defaultKind]="FETCH_DEFAULT_KIND"
-                        [groupName]="steps.FETCH"
-                        [title]="'Fetch'"
+                        [sectionName]="steps.FETCH"
+                        [eventYamlByHash]="eventYamlByHash"
+                        eventHistory
                     ></app-base-step>
                     <app-stepper-navigation
                         [prevStep]="null"
@@ -68,8 +69,8 @@
                         [sectionStepRadioData]="READ_STEP_RADIO_DATA"
                         [sectionFormData]="READ_FORM_DATA"
                         [defaultKind]="READ_DEFAULT_KIND"
-                        [groupName]="steps.READ"
-                        [title]="'Read'"
+                        [sectionName]="steps.READ"
+                        [eventYamlByHash]="eventYamlByHash"
                     ></app-base-step>
                     <app-stepper-navigation
                         [prevStep]="
@@ -96,8 +97,8 @@
                         [sectionStepRadioData]="MERGE_STEP_RADIO_DATA"
                         [sectionFormData]="MERGE_FORM_DATA"
                         [defaultKind]="MERGE_DEFAULT_KIND"
-                        [groupName]="steps.MERGE"
-                        [title]="'Merge'"
+                        [sectionName]="steps.MERGE"
+                        [eventYamlByHash]="eventYamlByHash"
                     >
                         <div
                             *ngIf="errorMessage"

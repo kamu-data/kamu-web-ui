@@ -14,6 +14,11 @@ import { BaseStepComponent } from "./steps/base-step/base-step.component";
 import { PollingSourceFormComponentsModule } from "../form-components/polling-source-form-components.module";
 import { snapshotParamMapMock } from "src/app/common/base-test.helpers.spec";
 import { of } from "rxjs";
+import { mockDatasetHistoryResponse } from "src/app/search/mock.data";
+import {
+    DatasetPageInfoFragment,
+    MetadataBlockFragment,
+} from "src/app/api/kamu.graphql.interface";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
@@ -50,6 +55,12 @@ describe("AddPollingSourceComponent", () => {
         modalRef = modalService.open(FinalYamlModalComponent);
         component = fixture.componentInstance;
         component.currentStep = SetPollingSourceSection.FETCH;
+        component.history = {
+            history: mockDatasetHistoryResponse.datasets.byOwnerAndName
+                ?.metadata.chain.blocks.nodes as MetadataBlockFragment[],
+            pageInfo: mockDatasetHistoryResponse.datasets.byOwnerAndName
+                ?.metadata.chain.blocks.pageInfo as DatasetPageInfoFragment,
+        };
         component.ngOnInit();
         fixture.detectChanges();
     });

@@ -134,6 +134,38 @@ export class DatasetService {
             );
     }
 
+    public getDatasetHistory(
+        info: DatasetInfo,
+        numRecords: number,
+        numPage: number,
+    ): Observable<DatasetHistoryUpdate> {
+        return this.datasetApi
+            .getDatasetHistory({ ...info, numRecords, numPage })
+            .pipe(
+                map((data: GetDatasetHistoryQuery) => {
+                    if (data.datasets.byOwnerAndName) {
+                        const dataset: DatasetBasicsFragment =
+                            data.datasets.byOwnerAndName;
+                        this.datasetChanges(dataset);
+                        const pageInfo: DatasetPageInfoFragment = Object.assign(
+                            {},
+                            data.datasets.byOwnerAndName.metadata.chain.blocks
+                                .pageInfo,
+                            { currentPage: numPage },
+                        );
+                        const historyUpdate: DatasetHistoryUpdate = {
+                            history: data.datasets.byOwnerAndName.metadata.chain
+                                .blocks.nodes as MetadataBlockFragment[],
+                            pageInfo,
+                        };
+                        return historyUpdate;
+                    } else {
+                        throw new DatasetNotFoundError();
+                    }
+                }),
+            );
+    }
+
     public requestDatasetDataSqlRun(
         query: string,
         limit: number,

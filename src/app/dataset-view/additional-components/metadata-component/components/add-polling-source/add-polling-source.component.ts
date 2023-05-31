@@ -34,6 +34,9 @@ import { FETCH_FORM_DATA } from "./steps/data/fetch-form-data";
 import { READ_FORM_DATA } from "./steps/data/read-form-data";
 import { MERGE_FORM_DATA } from "./steps/data/merge-form-data";
 import { ProcessFormService } from "./process-form.service";
+import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { EditPollingSourceService } from "./edit-polling-source.service";
+import { MaybeNull } from "src/app/common/app.types";
 
 @Component({
     selector: "app-add-polling-source",
@@ -47,6 +50,9 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     public isAddPrepareStep = false;
     public isAddPreprocessStep = false;
     public errorMessage = "";
+    public history: DatasetHistoryUpdate;
+    public eventYamlByHash: MaybeNull<string>;
+
     // --------------------------------
     private readonly DEFAULT_PREPARE_KIND = PrepareKind.PIPE;
     private readonly DEFAULT_PREPROCESS_KIND = PreprocessKind.SQL;
@@ -133,12 +139,23 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         private modalService: NgbModal,
         private cdr: ChangeDetectorRef,
         private processFormService: ProcessFormService,
+        private editService: EditPollingSourceService,
     ) {
         super();
     }
 
     ngOnInit(): void {
-        this.trackSubscription(
+        this.trackSubscriptions(
+            this.editService
+                .getSetPollingSourceAsYaml(this.getDatasetInfoFromUrl())
+                // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+                .subscribe((result: [string, void] | null) => {
+                    if (result) {
+                        this.eventYamlByHash = result[0];
+                    }
+                    this.history = this.editService.history;
+                    this.cdr.detectChanges();
+                }),
             this.createDatasetService.onErrorCommitEventChanges.subscribe(
                 (message: string) => {
                     this.errorMessage = message;

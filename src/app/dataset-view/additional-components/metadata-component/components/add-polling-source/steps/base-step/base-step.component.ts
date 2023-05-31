@@ -1,17 +1,27 @@
 import { BaseComponent } from "src/app/common/base.component";
-import { ControlType, JsonFormData } from "../../add-polling-source-form.types";
+import {
+    ControlType,
+    EditFormType,
+    EventTimeSourceKind,
+    JsonFormData,
+} from "../../add-polling-source-form.types";
 import { RadioControlType } from "../../form-control.source";
 import { FormBuilder } from "@angular/forms";
 import { ControlContainer, FormGroupDirective } from "@angular/forms";
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     Input,
     OnInit,
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { JsonFormControls } from "../../add-polling-source-form.types";
-import { getValidators } from "src/app/common/data.helpers";
+import { DataHelpers, getValidators } from "src/app/common/data.helpers";
+import { SetPollingSourceSection } from "src/app/shared/shared.types";
+import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { EditPollingSourceService } from "../../edit-polling-source.service";
+import { MaybeNull } from "src/app/common/app.types";
 
 @Component({
     selector: "app-base-step",
@@ -27,18 +37,31 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     @Input() public sectionStepRadioData: RadioControlType[];
     @Input() public sectionFormData: JsonFormData;
     @Input() public defaultKind: string;
-    @Input() public groupName: string;
-    @Input() public title: string;
+    @Input() public sectionName: SetPollingSourceSection;
+    @Input() public eventYamlByHash: MaybeNull<string> = null;
+    private editFormValue: EditFormType;
     public controlType: typeof ControlType = ControlType;
     public readonly KIND_NAME_CONTROL = "kind";
     public readonly SCHEMA_NAME_CONTROL = "schema";
-    private readonly DEFAULT_EVENT_TIME_SOURCE = "fromMetadata";
+    private readonly DEFAULT_EVENT_TIME_SOURCE =
+        EventTimeSourceKind.FROM_METADATA;
+    private readonly EVENT_TIME_CONTROL = "eventTime";
 
     constructor(
         private rootFormGroupDirective: FormGroupDirective,
         private fb: FormBuilder,
+        private cdr: ChangeDetectorRef,
+        private editService: EditPollingSourceService,
     ) {
         super();
+    }
+
+    public get sectionForm(): FormGroup {
+        return this.parentForm.get(this.sectionName) as FormGroup;
+    }
+
+    public get title(): string {
+        return DataHelpers.capitalizeFirstLetter(this.sectionName);
     }
 
     ngOnInit(): void {
@@ -47,10 +70,21 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
             this.sectionForm.get(this.KIND_NAME_CONTROL)?.value as string,
         );
         this.chooseFetchKind();
+        this.initEditForm();
+        this.cdr.detectChanges();
     }
 
-    public get sectionForm(): FormGroup {
-        return this.parentForm.get(this.groupName) as FormGroup;
+    private initEditForm(): void {
+        if (this.eventYamlByHash) {
+            this.editFormValue = this.editService.parseEventFromYaml(
+                this.eventYamlByHash,
+            );
+            this.editService.patchFormValues(
+                this.sectionForm,
+                this.editFormValue,
+                this.sectionName,
+            );
+        }
     }
 
     private chooseFetchKind(): void {
@@ -66,7 +100,8 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                             ].includes(key),
                     )
                     .forEach((item: string) => {
-                        this.sectionForm.removeControl(item);
+                        if (item !== this.EVENT_TIME_CONTROL)
+                            this.sectionForm.removeControl(item);
                     });
                 this.initForm(kind);
             });

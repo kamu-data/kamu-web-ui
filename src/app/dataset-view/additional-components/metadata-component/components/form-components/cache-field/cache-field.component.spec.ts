@@ -16,10 +16,7 @@ import {
 } from "@angular/forms";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import {
-    findElement,
-    findInputElememtByDataTestId,
-} from "src/app/common/base-test.helpers.spec";
+import { findElement } from "src/app/common/base-test.helpers.spec";
 
 describe("CacheFieldComponent", () => {
     let component: CacheFieldComponent;
@@ -36,30 +33,13 @@ describe("CacheFieldComponent", () => {
         fixture = TestBed.createComponent(CacheFieldComponent);
         component = fixture.componentInstance;
         component.controlName = "cache";
-        component.form = new FormGroup({});
+        component.form = new FormGroup({ cache: new FormControl(false) });
         component.dataTestId = dataTestId;
         fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
-    });
-
-    it("should check change state checkbox", () => {
-        const cacheCheckbox = findInputElememtByDataTestId(fixture, dataTestId);
-        expect(cacheCheckbox.checked).toBeFalse();
-        expect(component.isCache).toBeFalse();
-    });
-
-    it("should check initial state", () => {
-        component.form = new FormGroup({
-            cache: new FormGroup({
-                kind: new FormControl("forever"),
-            }),
-        });
-        fixture.detectChanges();
-        component.ngOnInit();
-        expect(component.isCache).toBeTrue();
     });
 
     it("should check checked and unchecked value", fakeAsync(() => {

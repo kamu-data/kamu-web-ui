@@ -14,6 +14,8 @@ import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/compo
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { PollingSourceFormComponentsModule } from "../../../form-components/polling-source-form-components.module";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { Apollo } from "apollo-angular";
+import { DatasetApi } from "src/app/api/dataset.api";
 
 const fb = new FormBuilder();
 const formGroupDirective = new FormGroupDirective([], []);
@@ -36,6 +38,8 @@ describe("BaseStepComponent", () => {
                 PollingSourceFormComponentsModule,
             ],
             providers: [
+                Apollo,
+                DatasetApi,
                 FormGroupDirective,
                 FormBuilder,
                 { provide: FormGroupDirective, useValue: formGroupDirective },
@@ -47,7 +51,7 @@ describe("BaseStepComponent", () => {
         component.defaultKind = FetchKind.URL;
         component.sectionFormData = FETCH_FORM_DATA;
         component.sectionStepRadioData = FETCH_STEP_RADIO_CONTROLS;
-        component.groupName = SetPollingSourceSection.FETCH;
+        component.sectionName = SetPollingSourceSection.FETCH;
         fixture.detectChanges();
     });
 
@@ -61,12 +65,14 @@ describe("BaseStepComponent", () => {
             url: "",
             eventTime: { kind: "fromMetadata" },
             headers: [],
+            cache: "",
         };
         const expectedFilesGlobForm = {
             kind: "filesGlob",
             path: "",
-            order: "none",
             eventTime: { kind: "fromMetadata" },
+            order: "NONE",
+            cache: "",
         };
         const expectedContainerForm = {
             kind: "container",
@@ -74,6 +80,7 @@ describe("BaseStepComponent", () => {
             command: [],
             args: [],
             env: [],
+            eventTime: { kind: "fromMetadata" },
         };
         expect(component.sectionForm.value).toEqual(expectedUrlForm);
 

@@ -72,7 +72,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
             {
                 name: "order",
                 label: "Order",
-                value: "none",
+                value: "NONE",
                 type: ControlType.ORDER,
                 tooltip: SetPollingSourceToolipsTexts.PATH,
                 validators: {},
@@ -145,7 +145,12 @@ export const FETCH_FORM_DATA: JsonFormData = {
 
             {
                 name: "env",
-                value: "",
+                value: [
+                    {
+                        name: "ETH_NODE_PROVIDER_URL",
+                        value: null,
+                    },
+                ],
                 label: "Environment variables",
                 type: ControlType.ARRAY_KEY_VALUE,
                 tooltip: SetPollingSourceToolipsTexts.ENVIROMENT_VARIABLES,

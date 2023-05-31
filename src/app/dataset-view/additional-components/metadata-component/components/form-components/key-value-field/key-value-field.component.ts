@@ -21,8 +21,8 @@ export class KeyValueFieldComponent extends BaseField {
 
     public get keyValueForm(): FormGroup {
         return this.fb.group({
-            name: [null],
-            value: [null],
+            name: this.fb.control(""),
+            value: this.fb.control(""),
         });
     }
 

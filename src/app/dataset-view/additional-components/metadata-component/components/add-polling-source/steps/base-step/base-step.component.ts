@@ -38,7 +38,6 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     @Input() public sectionFormData: JsonFormData;
     @Input() public defaultKind: string;
     @Input() public sectionName: SetPollingSourceSection;
-    @Input() public eventHistory: DatasetHistoryUpdate;
     @Input() public eventYamlByHash: MaybeNull<string> = null;
     private editFormValue: EditFormType;
     public controlType: typeof ControlType = ControlType;

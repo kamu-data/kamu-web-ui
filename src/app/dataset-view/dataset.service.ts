@@ -138,7 +138,7 @@ export class DatasetService {
         info: DatasetInfo,
         numRecords: number,
         numPage: number,
-    ) {
+    ): Observable<DatasetHistoryUpdate> {
         return this.datasetApi
             .getDatasetHistory({ ...info, numRecords, numPage })
             .pipe(

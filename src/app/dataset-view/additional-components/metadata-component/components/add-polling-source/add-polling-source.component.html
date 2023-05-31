@@ -42,8 +42,8 @@
                         [sectionFormData]="FETCH_FORM_DATA"
                         [defaultKind]="FETCH_DEFAULT_KIND"
                         [sectionName]="steps.FETCH"
-                        [eventHistory]="history"
                         [eventYamlByHash]="eventYamlByHash"
+                        eventHistory
                     ></app-base-step>
                     <app-stepper-navigation
                         [prevStep]="null"
@@ -70,7 +70,6 @@
                         [sectionFormData]="READ_FORM_DATA"
                         [defaultKind]="READ_DEFAULT_KIND"
                         [sectionName]="steps.READ"
-                        [eventHistory]="history"
                         [eventYamlByHash]="eventYamlByHash"
                     ></app-base-step>
                     <app-stepper-navigation
@@ -99,7 +98,6 @@
                         [sectionFormData]="MERGE_FORM_DATA"
                         [defaultKind]="MERGE_DEFAULT_KIND"
                         [sectionName]="steps.MERGE"
-                        [eventHistory]="history"
                         [eventYamlByHash]="eventYamlByHash"
                     >
                         <div

@@ -7,11 +7,12 @@ describe("ProcessFormService", () => {
     let service: ProcessFormService;
     const formGroup = new FormGroup({
         fetch: new FormGroup({
-            order: new FormControl("none"),
+            order: new FormControl("NONE"),
             eventTime: new FormGroup({
                 kind: new FormControl("fromMetadata"),
                 timestampFormat: new FormControl(""),
             }),
+            cache: new FormControl(false),
         }),
         read: new FormGroup({
             kind: new FormControl("csv"),
@@ -43,8 +44,9 @@ describe("ProcessFormService", () => {
         ).and.callThrough();
         const initialResult = {
             fetch: {
-                order: "none",
+                order: "NONE",
                 eventTime: { kind: "fromMetadata", timestampFormat: "" },
+                cache: false,
             },
             read: { kind: "csv", schema: [{ name: "id", type: "BIGINT" }] },
             merge: { kind: "append" },
@@ -55,9 +57,7 @@ describe("ProcessFormService", () => {
             merge: { kind: "append" },
         };
         expect(formGroup.value).toEqual(initialResult);
-
         service.transformForm(formGroup);
-
         expect(transformFormSpy).toHaveBeenCalledTimes(1);
         expect(formGroup.value as SchemaControlType).toEqual(expectedResult);
     });

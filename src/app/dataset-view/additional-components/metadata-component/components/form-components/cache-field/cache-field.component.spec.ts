@@ -9,6 +9,7 @@ import {
 import { CacheFieldComponent } from "./cache-field.component";
 import {
     FormBuilder,
+    FormControl,
     FormGroup,
     FormsModule,
     ReactiveFormsModule,
@@ -32,7 +33,7 @@ describe("CacheFieldComponent", () => {
         fixture = TestBed.createComponent(CacheFieldComponent);
         component = fixture.componentInstance;
         component.controlName = "cache";
-        component.form = new FormGroup({});
+        component.form = new FormGroup({ cache: new FormControl(false) });
         component.dataTestId = dataTestId;
         fixture.detectChanges();
     });

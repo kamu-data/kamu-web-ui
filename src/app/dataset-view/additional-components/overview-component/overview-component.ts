@@ -81,7 +81,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public datasetKind(kind: DatasetKind): string {
-        return DataHelpers.datasetKind2String(kind);
+        return DataHelpers.capitalizeFirstLetter(kind);
     }
 
     get metadataFragmentBlock(): MetadataBlockFragment | undefined {

@@ -6,6 +6,7 @@ import {
 } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
+import { SetPollingSourceSection } from "../shared/shared.types";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -19,12 +20,10 @@ export class DataHelpers {
         "Attachments updated";
     private static readonly SHIFT_ATTACHMENTS_VIEW = "\u00A0".repeat(12);
 
-    public static datasetKind2String(kind: DatasetKind): string {
+    public static capitalizeFirstLetter(
+        kind: DatasetKind | SetPollingSourceSection,
+    ): string {
         return kind.charAt(0).toUpperCase() + kind.slice(1).toLowerCase();
-    }
-
-    public static toLowercase(s: string): string {
-        return s.charAt(0).toLowerCase() + s.slice(1);
     }
 
     public static descriptionForEngine(name: string): EventPropertyLogo {
@@ -78,19 +77,6 @@ export class DataHelpers {
             }
             case "BY_EVENT_TIME": {
                 return "By event time";
-            }
-            default:
-                return "Unknown order";
-        }
-    }
-
-    public static descriptionEditOrder(name: string): string {
-        switch (name) {
-            case "BY_NAME": {
-                return "byName";
-            }
-            case "BY_EVENT_TIME": {
-                return "byEventTime";
             }
             default:
                 return "Unknown order";

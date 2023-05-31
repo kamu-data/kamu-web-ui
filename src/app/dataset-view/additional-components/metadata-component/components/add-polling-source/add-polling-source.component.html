@@ -1,4 +1,4 @@
-<div class="layout">
+<div class="layout" *ngIf="history">
     <div class="mt-4">
         <!-- <ng-container *ngIf="currentStep === steps.FETCH">
             <div class="row">
@@ -38,12 +38,10 @@
             <form [formGroup]="pollingSourceForm">
                 <ng-container *ngIf="currentStep === steps.FETCH">
                     <app-base-step
-                        *ngIf="history"
                         [sectionStepRadioData]="FETCH_STEP_RADIO_DATA"
                         [sectionFormData]="FETCH_FORM_DATA"
                         [defaultKind]="FETCH_DEFAULT_KIND"
-                        [groupName]="steps.FETCH"
-                        [title]="'Fetch'"
+                        [sectionName]="steps.FETCH"
                         [eventHistory]="history"
                         [eventYamlByHash]="eventYamlByHash"
                     ></app-base-step>
@@ -71,8 +69,7 @@
                         [sectionStepRadioData]="READ_STEP_RADIO_DATA"
                         [sectionFormData]="READ_FORM_DATA"
                         [defaultKind]="READ_DEFAULT_KIND"
-                        [groupName]="steps.READ"
-                        [title]="'Read'"
+                        [sectionName]="steps.READ"
                         [eventHistory]="history"
                         [eventYamlByHash]="eventYamlByHash"
                     ></app-base-step>
@@ -101,8 +98,7 @@
                         [sectionStepRadioData]="MERGE_STEP_RADIO_DATA"
                         [sectionFormData]="MERGE_FORM_DATA"
                         [defaultKind]="MERGE_DEFAULT_KIND"
-                        [groupName]="steps.MERGE"
-                        [title]="'Merge'"
+                        [sectionName]="steps.MERGE"
                         [eventHistory]="history"
                         [eventYamlByHash]="eventYamlByHash"
                     >

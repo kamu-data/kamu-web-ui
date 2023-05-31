@@ -1,11 +1,10 @@
 import { Injectable } from "@angular/core";
-import { zip } from "rxjs";
-import { switchMap, map } from "rxjs/operators";
+import { EMPTY, Observable, iif, of, zip } from "rxjs";
+import { switchMap, map, expand, last } from "rxjs/operators";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { AppDatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { parse } from "yaml";
 import {
@@ -24,13 +23,14 @@ import { RxwebValidators } from "@rxweb/reactive-form-validators";
 })
 export class EditPollingSourceService {
     private currentPage = 0;
-    private historyLength = 200;
+    private readonly PATTERN_CONTROL = "pattern";
+    private readonly TIMESTAMP_FORMAT_CONTROL = "timestampFormat";
+    private historyPageSize = 100;
     public history: DatasetHistoryUpdate;
 
     constructor(
         private appDatasetService: DatasetService,
         private blockService: BlockService,
-        private appDatasetSubsService: AppDatasetSubscriptionsService,
         private fb: FormBuilder,
     ) {}
 
@@ -60,30 +60,43 @@ export class EditPollingSourceService {
         }
     }
 
-    public getSetPollingSourceAsYaml(info: DatasetInfo) {
+    public getSetPollingSourceAsYaml(
+        info: DatasetInfo,
+        // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+    ): Observable<[string, void] | null> {
         return this.appDatasetService
-            .requestDatasetHistory(info, this.historyLength, this.currentPage)
+            .getDatasetHistory(info, this.historyPageSize, this.currentPage)
             .pipe(
-                switchMap(
-                    () => this.appDatasetSubsService.onDatasetHistoryChanges,
-                ),
+                expand((h: DatasetHistoryUpdate) => {
+                    const filteredHistory = this.filterHistoryByType(h.history);
+                    return filteredHistory.length === 0 &&
+                        h.pageInfo.hasNextPage
+                        ? this.appDatasetService.getDatasetHistory(
+                              info,
+                              this.historyPageSize,
+                              h.pageInfo.currentPage + 1,
+                          )
+                        : EMPTY;
+                }),
                 map((h: DatasetHistoryUpdate) => {
                     this.history = h;
-                    const lastBlock = h.history.filter(
-                        (item: MetadataBlockFragment) =>
-                            item.event.__typename === "SetPollingSource",
-                    )[0];
-                    if (typeof lastBlock === "object") {
-                        return lastBlock.blockHash as string;
-                    }
-                    return h.history[0].blockHash as string;
+                    const filteredHistory = this.filterHistoryByType(h.history);
+                    return filteredHistory;
                 }),
-                switchMap((hash: string) =>
-                    zip(
-                        this.blockService.onMetadataBlockAsYamlChanges,
-                        this.blockService.requestMetadataBlock(info, hash),
+                switchMap((filteredHistory: MetadataBlockFragment[]) =>
+                    iif(
+                        () => !filteredHistory.length,
+                        of(null),
+                        zip(
+                            this.blockService.onMetadataBlockAsYamlChanges,
+                            this.blockService.requestMetadataBlock(
+                                info,
+                                filteredHistory[0]?.blockHash as string,
+                            ),
+                        ),
                     ),
                 ),
+                last(),
             );
     }
 
@@ -91,44 +104,11 @@ export class EditPollingSourceService {
         sectionForm: FormGroup,
         editFormValue: EditFormType,
     ): void {
-        sectionForm.patchValue(editFormValue.fetch);
-        const eventTimeGroup = sectionForm.controls.eventTime as FormGroup;
-        const pattern = editFormValue.fetch.eventTime?.pattern;
-        const timestampFormat = editFormValue.fetch.eventTime?.timestampFormat;
-        eventTimeGroup.addControl("pattern", this.fb.control(pattern));
-        eventTimeGroup.addControl(
-            "timestampFormat",
-            this.fb.control(timestampFormat),
-        );
+        this.initFetchCommonControls(sectionForm, editFormValue);
         if (editFormValue.fetch.kind === FetchKind.URL) {
-            const headers = sectionForm.controls.headers as FormArray;
-            if ((headers.value as NameValue[]).length == 0)
-                editFormValue.fetch.headers?.forEach((item) => {
-                    headers.push(
-                        this.fb.group({
-                            name: [item.name],
-                            value: [item.value],
-                        }),
-                    );
-                });
+            this.initFetchUrlControls(sectionForm, editFormValue);
         } else if (editFormValue.fetch.kind === FetchKind.CONTAINER) {
-            const env = sectionForm.controls.env as FormArray;
-            editFormValue.fetch.env?.forEach((item) => {
-                env.push(
-                    this.fb.group({
-                        name: [item.name],
-                        value: [item.value],
-                    }),
-                );
-            });
-            const command = sectionForm.controls.command as FormArray;
-            editFormValue.fetch.command?.forEach((item) => {
-                command.push(this.fb.control(item, RxwebValidators.required()));
-            });
-            const args = sectionForm.controls.args as FormArray;
-            editFormValue.fetch.args?.forEach((item) => {
-                args.push(this.fb.control(item, RxwebValidators.required()));
-            });
+            this.initFetchContainerControls(sectionForm, editFormValue);
         }
     }
 
@@ -144,14 +124,24 @@ export class EditPollingSourceService {
             editFormValue.read.schema.length
         ) {
             editFormValue.read.schema.forEach((item) => {
+                const result = item.split(" ");
                 schema.push(
                     this.fb.group({
-                        name: [item.split(" ")[0]],
-                        type: [item.split(" ")[1]],
+                        name: [result[0]],
+                        type: [result[1]],
                     }),
                 );
             });
         }
+    }
+
+    private filterHistoryByType(
+        history: MetadataBlockFragment[],
+    ): MetadataBlockFragment[] {
+        return history.filter(
+            (item: MetadataBlockFragment) =>
+                item.event.__typename === "SetPollingSource",
+        );
     }
 
     private patchMergeStep(
@@ -172,5 +162,68 @@ export class EditPollingSourceService {
                 compareColumns.push(this.fb.control(item));
             });
         }
+    }
+
+    private initFetchCommonControls(
+        sectionForm: FormGroup,
+        editFormValue: EditFormType,
+    ): void {
+        sectionForm.patchValue(editFormValue.fetch);
+        const eventTimeGroup = sectionForm.controls.eventTime as FormGroup;
+        const pattern = editFormValue.fetch.eventTime?.pattern;
+        const timestampFormat = editFormValue.fetch.eventTime?.timestampFormat;
+        eventTimeGroup.addControl(
+            this.PATTERN_CONTROL,
+            this.fb.control(pattern),
+        );
+        eventTimeGroup.addControl(
+            this.TIMESTAMP_FORMAT_CONTROL,
+            this.fb.control(timestampFormat),
+        );
+    }
+
+    private initFetchUrlControls(
+        sectionForm: FormGroup,
+        editFormValue: EditFormType,
+    ): void {
+        const headers = sectionForm.controls.headers as FormArray;
+        if (
+            (headers.value as NameValue[]).length == 0 &&
+            editFormValue.fetch.headers
+        ) {
+            this.initNameValueControl(editFormValue.fetch.headers, headers);
+        }
+    }
+
+    private initFetchContainerControls(
+        sectionForm: FormGroup,
+        editFormValue: EditFormType,
+    ): void {
+        const env = sectionForm.controls.env as FormArray;
+        if (editFormValue.fetch.env) {
+            this.initNameValueControl(editFormValue.fetch.env, env);
+        }
+        const command = sectionForm.controls.command as FormArray;
+        editFormValue.fetch.command?.forEach((item) => {
+            command.push(this.fb.control(item, RxwebValidators.required()));
+        });
+        const args = sectionForm.controls.args as FormArray;
+        editFormValue.fetch.args?.forEach((item) => {
+            args.push(this.fb.control(item, RxwebValidators.required()));
+        });
+    }
+
+    private initNameValueControl(
+        array: NameValue[],
+        formArray: FormArray,
+    ): void {
+        array.forEach((item) => {
+            formArray.push(
+                this.fb.group({
+                    name: [item.name],
+                    value: [item.value],
+                }),
+            );
+        });
     }
 }

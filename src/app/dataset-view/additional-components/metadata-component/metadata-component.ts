@@ -114,7 +114,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     }
 
     public kindToCamelCase(kind: DatasetKind): string {
-        return DataHelpers.datasetKind2String(kind);
+        return DataHelpers.capitalizeFirstLetter(kind);
     }
 
     public readSectionMapperType: Record<string, string> = {

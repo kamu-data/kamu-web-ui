@@ -19,7 +19,7 @@ export class SeedEventComponent {
     ) {}
 
     public datasetKind(kind: DatasetKind): string {
-        return DataHelpers.datasetKind2String(kind);
+        return DataHelpers.capitalizeFirstLetter(kind);
     }
 
     public copyToClipboard(text: string): void {

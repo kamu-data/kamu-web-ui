@@ -36,6 +36,7 @@ import { MERGE_FORM_DATA } from "./steps/data/merge-form-data";
 import { ProcessFormService } from "./process-form.service";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { EditPollingSourceService } from "./edit-polling-source.service";
+import { MaybeNull } from "src/app/common/app.types";
 
 @Component({
     selector: "app-add-polling-source",
@@ -50,7 +51,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     public isAddPreprocessStep = false;
     public errorMessage = "";
     public history: DatasetHistoryUpdate;
-    public eventYamlByHash: string;
+    public eventYamlByHash: MaybeNull<string>;
 
     // --------------------------------
     private readonly DEFAULT_PREPARE_KIND = PrepareKind.PIPE;
@@ -147,8 +148,11 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         this.trackSubscriptions(
             this.editService
                 .getSetPollingSourceAsYaml(this.getDatasetInfoFromUrl())
-                .subscribe(([eventYaml]) => {
-                    this.eventYamlByHash = eventYaml;
+                // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+                .subscribe((result: [string, void] | null) => {
+                    if (result) {
+                        this.eventYamlByHash = result[0];
+                    }
                     this.history = this.editService.history;
                     this.cdr.detectChanges();
                 }),

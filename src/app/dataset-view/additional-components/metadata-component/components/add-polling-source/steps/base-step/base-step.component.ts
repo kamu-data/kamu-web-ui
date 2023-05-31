@@ -17,10 +17,11 @@ import {
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { JsonFormControls } from "../../add-polling-source-form.types";
-import { getValidators } from "src/app/common/data.helpers";
+import { DataHelpers, getValidators } from "src/app/common/data.helpers";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { EditPollingSourceService } from "../../edit-polling-source.service";
+import { MaybeNull } from "src/app/common/app.types";
 
 @Component({
     selector: "app-base-step",
@@ -36,16 +37,16 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     @Input() public sectionStepRadioData: RadioControlType[];
     @Input() public sectionFormData: JsonFormData;
     @Input() public defaultKind: string;
-    @Input() public groupName: SetPollingSourceSection;
-    @Input() public title: string;
+    @Input() public sectionName: SetPollingSourceSection;
     @Input() public eventHistory: DatasetHistoryUpdate;
-    @Input() public eventYamlByHash: string;
+    @Input() public eventYamlByHash: MaybeNull<string> = null;
     private editFormValue: EditFormType;
     public controlType: typeof ControlType = ControlType;
     public readonly KIND_NAME_CONTROL = "kind";
     public readonly SCHEMA_NAME_CONTROL = "schema";
     private readonly DEFAULT_EVENT_TIME_SOURCE =
         EventTimeSourceKind.FROM_METADATA;
+    private readonly EVENT_TIME_CONTROL = "eventTime";
 
     constructor(
         private rootFormGroupDirective: FormGroupDirective,
@@ -57,7 +58,11 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     }
 
     public get sectionForm(): FormGroup {
-        return this.parentForm.get(this.groupName) as FormGroup;
+        return this.parentForm.get(this.sectionName) as FormGroup;
+    }
+
+    public get title(): string {
+        return DataHelpers.capitalizeFirstLetter(this.sectionName);
     }
 
     ngOnInit(): void {
@@ -71,14 +76,14 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     }
 
     private initEditForm(): void {
-        if (this.eventHistory.history.length !== 1) {
+        if (this.eventYamlByHash) {
             this.editFormValue = this.editService.parseEventFromYaml(
                 this.eventYamlByHash,
             );
             this.editService.patchFormValues(
                 this.sectionForm,
                 this.editFormValue,
-                this.groupName,
+                this.sectionName,
             );
         }
     }
@@ -96,7 +101,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                             ].includes(key),
                     )
                     .forEach((item: string) => {
-                        if (item !== "eventTime")
+                        if (item !== this.EVENT_TIME_CONTROL)
                             this.sectionForm.removeControl(item);
                     });
                 this.initForm(kind);

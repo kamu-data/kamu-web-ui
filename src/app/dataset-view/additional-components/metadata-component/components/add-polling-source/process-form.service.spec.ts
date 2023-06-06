@@ -61,4 +61,51 @@ describe("ProcessFormService", () => {
         expect(transformFormSpy).toHaveBeenCalledTimes(1);
         expect(formGroup.value as SchemaControlType).toEqual(expectedResult);
     });
+
+    it("should check remove eventTime when fetch type is container ", () => {
+        const formGroupFetchContainer = new FormGroup({
+            fetch: new FormGroup({
+                kind: new FormControl("container"),
+                eventTime: new FormGroup({
+                    kind: new FormControl("fromMetadata"),
+                    timestampFormat: new FormControl(""),
+                }),
+            }),
+            read: new FormGroup({
+                kind: new FormControl("csv"),
+                schema: new FormArray([
+                    new FormGroup({
+                        name: new FormControl("id (A.M.)"),
+                        type: new FormControl("BIGINT"),
+                    }),
+                ]),
+            }),
+            merge: new FormGroup({
+                kind: new FormControl("append"),
+            }),
+        });
+
+        const initialResult = {
+            fetch: {
+                kind: "container",
+                eventTime: { kind: "fromMetadata", timestampFormat: "" },
+            },
+            read: {
+                kind: "csv",
+                schema: [{ name: "id (A.M.)", type: "BIGINT" }],
+            },
+            merge: { kind: "append" },
+        };
+        const expectedResult = {
+            fetch: { kind: "container" },
+            read: { kind: "csv", schema: ["`id (A.M.)` BIGINT"] },
+            merge: { kind: "append" },
+        };
+        expect(formGroupFetchContainer.value).toEqual(initialResult);
+        service.transformForm(formGroupFetchContainer);
+
+        expect(formGroupFetchContainer.value as SchemaControlType).toEqual(
+            expectedResult,
+        );
+    });
 });

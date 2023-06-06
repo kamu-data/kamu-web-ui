@@ -19,6 +19,7 @@ import {
     DatasetPageInfoFragment,
     MetadataBlockFragment,
 } from "src/app/api/kamu.graphql.interface";
+import { EditPollingSourceService } from "./edit-polling-source.service";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
@@ -26,6 +27,7 @@ describe("AddPollingSourceComponent", () => {
     let modalService: NgbModal;
     let modalRef: NgbModalRef;
     let createDatasetService: AppDatasetCreateService;
+    let editService: EditPollingSourceService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -51,6 +53,8 @@ describe("AddPollingSourceComponent", () => {
 
         fixture = TestBed.createComponent(AddPollingSourceComponent);
         modalService = TestBed.inject(NgbModal);
+        editService = TestBed.inject(EditPollingSourceService);
+
         createDatasetService = TestBed.inject(AppDatasetCreateService);
         modalRef = modalService.open(FinalYamlModalComponent);
         component = fixture.componentInstance;
@@ -76,6 +80,15 @@ describe("AddPollingSourceComponent", () => {
         );
         component.onEditYaml();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check eventYamlByHash is not null", () => {
+        const mockEventYamlByHash = "test_tyaml";
+        spyOn(editService, "getSetPollingSourceAsYaml").and.returnValue(
+            of([mockEventYamlByHash, undefined]),
+        );
+        component.ngOnInit();
+        expect(component.eventYamlByHash).toEqual(mockEventYamlByHash);
     });
 
     it("should check submit yaml", () => {

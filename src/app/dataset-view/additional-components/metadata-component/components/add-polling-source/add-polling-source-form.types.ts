@@ -80,20 +80,33 @@ export enum EventTimeSourceKind {
 }
 
 export interface EditFormType {
+    kind?: string;
     fetch: {
         kind: FetchKind;
         eventTime?: {
-            pattern: string;
-            timestampFormat: string;
+            kind: string;
+            pattern?: string;
+            timestampFormat?: string;
         };
         headers?: NameValue[];
         env?: NameValue[];
         command?: string[];
         args?: string[];
+        path?: string;
     };
     read: {
         kind: ReadKind;
         schema?: string[];
+        separator?: string;
+        encoding?: string;
+        quote?: string;
+        escape?: string;
+        enforceSchema?: boolean;
+        nanValue?: string;
+        positiveInf?: string;
+        negativeInf?: string;
+        dateFormat?: string;
+        timestampFormat?: string;
     };
     merge: {
         kind: MergeKind;

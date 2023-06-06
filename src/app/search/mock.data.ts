@@ -23,6 +23,13 @@ import {
     DatasetSearchResult,
     TypeNames,
 } from "../interface/search.interface";
+import {
+    EditFormType,
+    FetchKind,
+    ReadKind,
+    MergeKind,
+} from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
+import { DatasetHistoryUpdate } from "../dataset-view/dataset.subscriptions.interface";
 
 export const mockPageBasedInfo: PageBasedInfo = {
     currentPage: 1,
@@ -776,5 +783,149 @@ export const mockCommitEventResponse: CommitEventToDatasetQuery = {
             __typename: "Dataset",
         },
         __typename: "Datasets",
+    },
+};
+
+export const mockParseEventFromYamlToObject: EditFormType = {
+    kind: "setPollingSource",
+    fetch: {
+        kind: FetchKind.FILES_GLOB,
+        path: "path",
+        eventTime: {
+            kind: "fromMetadata",
+        },
+    },
+    read: {
+        kind: ReadKind.CSV,
+        separator: ",",
+        encoding: "UTF-8",
+        quote: '"',
+        escape: "\\",
+        enforceSchema: true,
+        nanValue: "NaN",
+        positiveInf: "Inf",
+        negativeInf: "-Inf",
+        dateFormat: "yyyy-MM-dd",
+        timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
+    },
+    merge: {
+        kind: MergeKind.APPEND,
+    },
+};
+
+export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
+    history: [
+        {
+            __typename: "MetadataBlockExtended",
+            blockHash: "zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u",
+            prevBlockHash: null,
+            systemTime: "2023-06-02T08:44:28.324101693+00:00",
+            sequenceNumber: 0,
+            author: {
+                __typename: "User",
+                id: "1",
+                name: "kamu",
+            },
+            event: {
+                __typename: "Seed",
+                datasetId:
+                    "did:odf:z4k88e8nBPEwSAHGs8pXfm39J3RijoXGtCcp24HhAt3t4VmX2fN",
+                datasetKind: DatasetKind.Root,
+            },
+        },
+        {
+            __typename: "MetadataBlockExtended",
+            blockHash: "zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u",
+            prevBlockHash: null,
+            systemTime: "2023-06-02T08:44:28.324101693+00:00",
+            sequenceNumber: 0,
+            author: {
+                __typename: "User",
+                id: "1",
+                name: "kamu",
+            },
+            event: {
+                __typename: "Seed",
+                datasetId:
+                    "did:odf:z4k88e8nBPEwSAHGs8pXfm39J3RijoXGtCcp24HhAt3t4VmX2fN",
+                datasetKind: DatasetKind.Root,
+            },
+        },
+        {
+            __typename: "MetadataBlockExtended",
+            blockHash: "zW1nqifmGW3NoCZXWyzPgrtmnGoC7wctsr93V9npsdTKbT4",
+            prevBlockHash: "zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u",
+            systemTime: "2023-06-02T08:44:54.984731027+00:00",
+            sequenceNumber: 1,
+            author: {
+                __typename: "User",
+                id: "1",
+                name: "kamu",
+            },
+            event: {
+                __typename: "SetPollingSource",
+                fetch: {
+                    __typename: "FetchStepFilesGlob",
+                    path: "path",
+                    eventTime: {
+                        __typename: "EventTimeSourceFromMetadata",
+                    },
+                    cache: null,
+                    order: null,
+                },
+                read: {
+                    __typename: "ReadStepCsv",
+                    schema: null,
+                    separator: ",",
+                    encoding: "UTF-8",
+                    quote: '"',
+                    escape: "\\",
+                    comment: null,
+                    header: null,
+                    enforceSchema: true,
+                    inferSchema: null,
+                    ignoreLeadingWhiteSpace: null,
+                    ignoreTrailingWhiteSpace: null,
+                    nullValue: null,
+                    emptyValue: null,
+                    nanValue: "NaN",
+                    positiveInf: "Inf",
+                    negativeInf: "-Inf",
+                    dateFormat: "yyyy-MM-dd",
+                    timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
+                    multiLine: null,
+                },
+                merge: {
+                    __typename: "MergeStrategyAppend",
+                },
+                prepare: null,
+                preprocess: null,
+            },
+        },
+        {
+            __typename: "MetadataBlockExtended",
+            blockHash: "zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u",
+            prevBlockHash: null,
+            systemTime: "2023-06-02T08:44:28.324101693+00:00",
+            sequenceNumber: 0,
+            author: {
+                __typename: "User",
+                id: "1",
+                name: "kamu",
+            },
+            event: {
+                __typename: "Seed",
+                datasetId:
+                    "did:odf:z4k88e8nBPEwSAHGs8pXfm39J3RijoXGtCcp24HhAt3t4VmX2fN",
+                datasetKind: DatasetKind.Root,
+            },
+        },
+    ],
+    pageInfo: {
+        __typename: "PageBasedInfo",
+        hasNextPage: true,
+        hasPreviousPage: false,
+        currentPage: 0,
+        totalPages: 4,
     },
 };

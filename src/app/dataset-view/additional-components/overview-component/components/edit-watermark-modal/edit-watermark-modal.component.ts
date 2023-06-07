@@ -29,6 +29,7 @@ export class EditWatermarkModalComponent
     @Input() public currentWatermark: MaybeNull<string>;
     @Input() public datasetBasics?: DatasetBasicsFragment;
     public date: Date | string;
+    public tooltip = "Description of the watermark.";
 
     constructor(
         public activeModal: NgbActiveModal,

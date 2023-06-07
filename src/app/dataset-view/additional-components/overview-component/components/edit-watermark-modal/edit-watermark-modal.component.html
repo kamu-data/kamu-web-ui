@@ -1,8 +1,6 @@
 <div class="d-flex p-4">
     <div class="flex-grow-1 ms-2 text-center">
-        <span class="fs-5 fw-bold">
-            {{ currentWatermark ? "Edit" : "Add" }} watermark</span
-        >
+        <span class="fs-5 fw-bold"> Set Watermark</span>
     </div>
     <div>
         <button
@@ -16,8 +14,29 @@
 <div class="px-4">
     <mat-divider></mat-divider>
 </div>
+<div class="p-4">
+    <div class="d-flex align-middle">
+        <span>
+            <mat-icon class="fs-4">help_outline</mat-icon>
+        </span>
+        <p class="ps-2">
+            A watermark defines a point in event time for which with a high
+            probability all preceding events have been already observed. Telling
+            the system
+            <em
+                >"You most likely will not get any events with time less than T
+                any more"</em
+            >
+            allows it to advance the downstream computations, like windowed
+            aggregations and streaming joins, and ensure consistent results.
+            Watermarks are typically advanced automatically based on observed
+            data or information from the data source, but you can also set them
+            manually here.
+        </p>
+    </div>
+</div>
 
-<div class="body p-top100 text-center">
+<div class="body text-center">
     <div class="d-flex align-items-center justify-content-center">
         <input
             [(ngModel)]="date"

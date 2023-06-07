@@ -17,7 +17,7 @@
     <mat-divider></mat-divider>
 </div>
 
-<div class="body p-4 text-center">
+<div class="body p-top100 text-center">
     <div class="d-flex align-items-center justify-content-center">
         <input
             [(ngModel)]="date"
@@ -27,12 +27,19 @@
             name="fromDate"
             [min]="currentWatermark || date"
         />
-        <owl-date-time
-            #fromdatepicker
-            (afterPickerClosed)="setDateTime()"
-        ></owl-date-time>
+        <owl-date-time #fromdatepicker></owl-date-time>
         <span [owlDateTimeTrigger]="fromdatepicker" class="trigger ms-2"
             ><mat-icon>calendar_month</mat-icon>
         </span>
     </div>
+</div>
+<div class="p-4 d-flex justify-content-end">
+    <button
+        type="button"
+        class="btn btn-success"
+        (click)="commitSetWatermarkEvent(); activeModal.close()"
+        data-test-id="commit-event"
+    >
+        Save
+    </button>
 </div>

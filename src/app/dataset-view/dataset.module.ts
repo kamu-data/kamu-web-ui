@@ -51,6 +51,7 @@ import {
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
 } from "@danielmoncada/angular-datetime-picker";
+import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 
 @NgModule({
     imports: [
@@ -90,6 +91,7 @@ import {
         PollingSourceFormComponentsModule,
         OwlDateTimeModule,
         OwlNativeDateTimeModule,
+        OwlMomentDateTimeModule,
     ],
     exports: [
         DatasetViewHeaderComponent,

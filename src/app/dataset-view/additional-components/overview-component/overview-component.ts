@@ -121,6 +121,9 @@ export class OverviewComponent extends BaseComponent implements OnInit {
             modalRef.componentInstance as EditWatermarkModalComponent
         ).currentWatermark = this.currentState?.overview.metadata
             .currentWatermark as string;
+        (
+            modalRef.componentInstance as EditWatermarkModalComponent
+        ).datasetBasics = this.datasetBasics;
     }
 
     public navigateToAddPollingSource(): void {

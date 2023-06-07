@@ -37,6 +37,7 @@
     "@angular/service-worker": "14.2.0",
     "@apollo/client": "^3.0.0",
     "@danielmoncada/angular-datetime-picker": "^16.0.1",
+    "@danielmoncada/angular-datetime-picker-moment-adapter": "^3.0.1",
     "@ng-bootstrap/ng-bootstrap": "13.0.0",
     "@popperjs/core": "^2.10.2",
     "@rxweb/reactive-form-validators": "^13.0.0",

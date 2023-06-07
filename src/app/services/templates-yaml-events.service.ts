@@ -11,6 +11,8 @@ export class TemplatesYamlEventsService {
         "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setInfo\n";
     private readonly initialSetLicenseTemplate =
         "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setLicense\n";
+    private readonly initialSetWatermarkTemplate =
+        "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setWatermark\n";
 
     private readonly initialTemplate = {
         kind: "MetadataEvent",
@@ -52,5 +54,11 @@ export class TemplatesYamlEventsService {
             ...params,
         };
         return stringify(this.initialTemplate);
+    }
+
+    public buildYamlSetWatermarkEvent(dateTime: string): string {
+        let result = this.initialSetWatermarkTemplate;
+        result += `  outputWatermark: ${dateTime}`;
+        return result;
     }
 }

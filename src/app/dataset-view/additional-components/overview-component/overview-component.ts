@@ -24,6 +24,7 @@ import { DataRow, DatasetSchema } from "src/app/interface/dataset.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { EditDetailsModalComponent } from "./components/edit-details-modal/edit-details-modal.component";
+import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/edit-watermark-modal.component";
 
 @Component({
     selector: "app-overview",
@@ -63,6 +64,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
                         size: overviewUpdate.size,
                         overview: overviewUpdate.overview,
                     };
+                    console.log("state=", this.currentState);
                 },
             ),
         );
@@ -101,7 +103,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         ).datasetBasics = this.datasetBasics;
     }
 
-    public openLicenseModal() {
+    public openLicenseModal(): void {
         const modalRef: NgbModalRef = this.modalService.open(
             EditLicenseModalComponent,
         );
@@ -110,6 +112,16 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         (
             modalRef.componentInstance as EditLicenseModalComponent
         ).datasetBasics = this.datasetBasics;
+    }
+
+    public openWatermarkModal(): void {
+        const modalRef: NgbModalRef = this.modalService.open(
+            EditWatermarkModalComponent,
+        );
+        (
+            modalRef.componentInstance as EditWatermarkModalComponent
+        ).currentWatermark = this.currentState?.overview.metadata
+            .currentWatermark as string;
     }
 
     public navigateToAddPollingSource(): void {

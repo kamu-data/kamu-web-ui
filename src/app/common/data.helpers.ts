@@ -207,3 +207,13 @@ export const getValidators = (
     });
     return validatorsToAdd;
 };
+
+export const MY_MOMENT_FORMATS = {
+    parseInput: "DD/MM/YYYY HH:mm:ss",
+    fullPickerInput: "DD/MM/YYYY HH:mm:ss",
+    datePickerInput: "DD/MM/YYYY",
+    timePickerInput: "HH:mm:ss",
+    monthYearLabel: "MMM YYYY",
+    dateA11yLabel: "LL",
+    monthYearA11yLabel: "MMMM YYYY",
+};

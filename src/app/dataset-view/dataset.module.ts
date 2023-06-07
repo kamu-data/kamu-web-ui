@@ -46,7 +46,11 @@ import { StepperNavigationComponent } from "./additional-components/metadata-com
 import { PrepareStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/prepare-step/prepare-step.component";
 import { PreprocessStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/preprocess-step/preprocess-step.component";
 import { PollingSourceFormComponentsModule } from "./additional-components/metadata-component/components/form-components/polling-source-form-components.module";
-import { EditWatermarkModalComponent } from './additional-components/overview-component/components/edit-watermark-modal/edit-watermark-modal.component';
+import { EditWatermarkModalComponent } from "./additional-components/overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
+import {
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
+} from "@danielmoncada/angular-datetime-picker";
 
 @NgModule({
     imports: [
@@ -84,6 +88,8 @@ import { EditWatermarkModalComponent } from './additional-components/overview-co
         ReactiveFormsModule,
         MatIconModule,
         PollingSourceFormComponentsModule,
+        OwlDateTimeModule,
+        OwlNativeDateTimeModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -121,6 +127,9 @@ import { EditWatermarkModalComponent } from './additional-components/overview-co
         StepperNavigationComponent,
         EditWatermarkModalComponent,
     ],
+    // providers: [
+    //     { provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS },
+    // ],
 })
 export class DatasetModule {
     public static forRoot(): ModuleWithProviders<DatasetModule> {

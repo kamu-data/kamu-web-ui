@@ -17,12 +17,22 @@
     <mat-divider></mat-divider>
 </div>
 
-<div class="body p-4">
-    <p>{{ currentWatermark }}</p>
-    <app-display-time
-        *ngIf="currentWatermark"
-        class="dataset-info--text"
-        [title]="currentWatermark"
-        [data]="currentWatermark"
-    ></app-display-time>
+<div class="body p-4 text-center">
+    <div class="d-flex align-items-center justify-content-center">
+        <input
+            [(ngModel)]="date"
+            [owlDateTime]="fromdatepicker"
+            placeholder="Date Time"
+            class="form-control w-75"
+            name="fromDate"
+            [min]="currentWatermark || date"
+        />
+        <owl-date-time
+            #fromdatepicker
+            (afterPickerClosed)="setDateTime()"
+        ></owl-date-time>
+        <span [owlDateTimeTrigger]="fromdatepicker" class="trigger ms-2"
+            ><mat-icon>calendar_month</mat-icon>
+        </span>
+    </div>
 </div>

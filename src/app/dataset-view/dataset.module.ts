@@ -129,9 +129,6 @@ import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-
         StepperNavigationComponent,
         EditWatermarkModalComponent,
     ],
-    // providers: [
-    //     { provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS },
-    // ],
 })
 export class DatasetModule {
     public static forRoot(): ModuleWithProviders<DatasetModule> {

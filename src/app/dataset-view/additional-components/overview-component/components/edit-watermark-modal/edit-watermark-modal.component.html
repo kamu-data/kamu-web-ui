@@ -44,7 +44,7 @@
             placeholder="Date Time"
             class="form-control w-75"
             name="fromDate"
-            [min]="currentWatermark || date"
+            [min]="currentWatermark ? currentWatermark : null"
         />
         <owl-date-time #fromdatepicker></owl-date-time>
         <span [owlDateTimeTrigger]="fromdatepicker" class="trigger ms-2"

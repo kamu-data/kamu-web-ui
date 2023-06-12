@@ -7,6 +7,7 @@ import {
 } from "@angular/core";
 import { OWL_DATE_TIME_FORMATS } from "@danielmoncada/angular-datetime-picker";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import moment from "moment";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { MY_MOMENT_FORMATS } from "src/app/common/data.helpers";
@@ -29,7 +30,7 @@ export class EditWatermarkModalComponent
     @Input() public currentWatermark: MaybeNull<string>;
     @Input() public datasetBasics?: DatasetBasicsFragment;
     public date: Date | string;
-    public tooltip = "Description of the watermark.";
+    public timeZone = "Europe/Kiev";
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -39,19 +40,32 @@ export class EditWatermarkModalComponent
         super();
     }
     ngOnInit(): void {
-        this.date = this.currentWatermark ? this.currentWatermark : new Date();
+        this.date = new Date();
+    }
+
+    public get isDateValid(): boolean {
+        return moment(this.currentWatermark).isAfter(this.date);
+    }
+
+    public get currentTimeZone(): string {
+        return Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
+
+    public get minLocalWatermark(): string {
+        return this.currentWatermark
+            ? new Date(this.currentWatermark).toISOString()
+            : "";
     }
 
     public commitSetWatermarkEvent(): void {
+        const date = JSON.stringify(this.date);
         if (this.datasetBasics) {
             this.trackSubscription(
                 this.createDatasetService
                     .commitEventToDataset(
                         this.datasetBasics.owner.name,
                         this.datasetBasics.name as string,
-                        this.yamlEventService.buildYamlSetWatermarkEvent(
-                            JSON.stringify(this.date),
-                        ),
+                        this.yamlEventService.buildYamlSetWatermarkEvent(date),
                     )
                     .subscribe(),
             );

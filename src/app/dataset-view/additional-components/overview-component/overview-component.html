@@ -284,25 +284,21 @@
                             ></app-display-time>
                         </div>
                     </div>
-                    <div
-                        class="dataset-info--block"
-                        *ngIf="currentState.overview.kind==='ROOT'"
-                    >
+                    <div class="dataset-info--block">
                         <div class="dataset-info--sub-block">
                             <h2 class="dataset-info--subtitle">Watermark:</h2>
                         </div>
                         <div
-                            class="dataset-info--sub-block d-flex align-items-center"
+                            class="dataset-info--sub-block d-flex align-items-center ps-3"
                             *ngIf="currentState && currentState.overview.metadata.currentWatermark;else noWatermark"
                         >
                             <app-display-time
-                                class="dataset-info--text"
                                 [title]="currentState.overview.metadata.currentWatermark"
                                 [data]="currentState.overview.metadata.currentWatermark"
                             ></app-display-time>
-                            <div>
+                            <div *ngIf="currentState.overview.kind==='ROOT'">
                                 <button
-                                    class="btn-sm btn custom-edit"
+                                    class="btn-sm btn custom-edit ms-4"
                                     aria-label="Edit watermark details"
                                     data-test-id="edit-dataset-watermark"
                                     title="Edit watewrmark"

@@ -209,8 +209,8 @@ export const getValidators = (
 };
 
 export const MY_MOMENT_FORMATS = {
-    parseInput: "DD/MM/YYYY HH:mm:ss",
-    fullPickerInput: "DD/MM/YYYY HH:mm:ss",
+    parseInput: "DD/MM/YY HH:mm:ss",
+    fullPickerInput: "DD/MM/YYYY HH:mm:ss A z",
     datePickerInput: "DD/MM/YYYY",
     timePickerInput: "HH:mm:ss",
     monthYearLabel: "MMM YYYY",

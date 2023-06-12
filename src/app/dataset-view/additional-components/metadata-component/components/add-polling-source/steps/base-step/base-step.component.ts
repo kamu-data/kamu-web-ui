@@ -19,7 +19,6 @@ import { FormGroup } from "@angular/forms";
 import { JsonFormControls } from "../../add-polling-source-form.types";
 import { DataHelpers, getValidators } from "src/app/common/data.helpers";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { EditPollingSourceService } from "../../edit-polling-source.service";
 import { MaybeNull } from "src/app/common/app.types";
 

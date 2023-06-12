@@ -7,7 +7,7 @@ import {
 } from "@angular/core";
 import { OWL_DATE_TIME_FORMATS } from "@danielmoncada/angular-datetime-picker";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import moment from "moment";
+import moment from "moment-timezone";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { MY_MOMENT_FORMATS } from "src/app/common/data.helpers";
@@ -58,7 +58,7 @@ export class EditWatermarkModalComponent
     }
 
     public commitSetWatermarkEvent(): void {
-        const date = JSON.stringify(this.date);
+        const date = moment.utc(this.date).tz(this.timeZone).format();
         if (this.datasetBasics) {
             this.trackSubscription(
                 this.createDatasetService

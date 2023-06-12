@@ -9,18 +9,28 @@ import {
     MergeKind,
     ReadKind,
 } from "./add-polling-source-form.types";
-import { mockParseEventFromYamlToObject } from "src/app/search/mock.data";
+import {
+    mockDatasetInfo,
+    mockHistoryEditPollingSourceService,
+    mockParseEventFromYamlToObject,
+} from "src/app/search/mock.data";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { Partial } from "lodash";
+import { of } from "rxjs";
+import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 
-fdescribe("EditPollingSourceService", () => {
+describe("EditPollingSourceService", () => {
     let service: EditPollingSourceService;
+    let appDatasetService: DatasetService;
+    let blockService: BlockService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo, DatasetApi, FormBuilder],
         });
         service = TestBed.inject(EditPollingSourceService);
+        appDatasetService = TestBed.inject(DatasetService);
+        blockService = TestBed.inject(BlockService);
     });
 
     it("should be created", () => {
@@ -32,6 +42,21 @@ fdescribe("EditPollingSourceService", () => {
             "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-06-02T08:44:54.984731027Z\n  prevBlockHash: zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u\n  sequenceNumber: 1\n  event:\n    kind: setPollingSource\n    fetch:\n      kind: filesGlob\n      path: path\n      eventTime:\n        kind: fromMetadata\n    read:\n      kind: csv\n      separator: ','\n      encoding: UTF-8\n      quote: '\"'\n      escape: \\\n      enforceSchema: true\n      nanValue: NaN\n      positiveInf: Inf\n      negativeInf: -Inf\n      dateFormat: yyyy-MM-dd\n      timestampFormat: yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]\n    merge:\n      kind: append\n";
         const result: EditFormType = mockParseEventFromYamlToObject;
         expect(service.parseEventFromYaml(mockEventYaml)).toEqual(result);
+    });
+
+    it("should check subscribe of getSetPollingSourceAsYaml", () => {
+        const mockHistory = mockHistoryEditPollingSourceService;
+        spyOn(appDatasetService, "getDatasetHistory").and.returnValue(
+            of(mockHistory),
+        );
+        spyOn(blockService, "requestMetadataBlock").and.returnValue(of());
+        blockService.metadataBlockAsYamlChanges("test yaml");
+        service.getSetPollingSourceAsYaml(mockDatasetInfo).subscribe(
+            () => null,
+            () => {
+                expect(service.history).toBeDefined();
+            },
+        );
     });
 
     it("should be check patch form with fetch url step and without headers", () => {
@@ -168,5 +193,71 @@ fdescribe("EditPollingSourceService", () => {
             result.command,
         );
         expect(sectionFetchForm.value.args as string[]).toEqual(result.args);
+    });
+
+    it("should be check patch form with read CSV step with schema", () => {
+        const sectionReadForm = new FormGroup({
+            kind: new FormControl("csv"),
+            schema: new FormArray([]),
+        });
+        const editFormValue = {
+            fetch: {
+                kind: FetchKind.CONTAINER,
+                image: "test_image",
+                env: [],
+                command: ["-a"],
+                args: ["arg1"],
+            },
+            read: {
+                kind: ReadKind.CSV,
+                schema: ["id BIGINT"],
+            },
+            merge: {
+                kind: MergeKind.APPEND,
+            },
+        };
+        const groupName = SetPollingSourceSection.READ;
+        service.patchFormValues(sectionReadForm, editFormValue, groupName);
+        expect(sectionReadForm.value.schema?.length).toEqual(1);
+    });
+
+    it("should be check patch form with merge CSV step with schema", () => {
+        const sectionMergeForm = new FormGroup({
+            kind: new FormControl("snapshot"),
+            primaryKey: new FormArray([]),
+            compareColumns: new FormArray([]),
+        });
+        const editFormValue = {
+            fetch: {
+                kind: FetchKind.CONTAINER,
+                image: "test_image",
+                env: [],
+                command: ["-a"],
+                args: ["arg1"],
+            },
+            read: {
+                kind: ReadKind.CSV,
+                schema: ["id BIGINT"],
+            },
+            merge: {
+                kind: MergeKind.SNAPSHOT,
+                primaryKey: ["id", "test"],
+                compareColumns: ["id"],
+            },
+        };
+        const groupName = SetPollingSourceSection.MERGE;
+        const result = {
+            kind: "snapshot",
+            primaryKey: ["id", "test"],
+            compareColumns: ["id"],
+        };
+        service.patchFormValues(sectionMergeForm, editFormValue, groupName);
+        expect(sectionMergeForm.value.kind).toEqual(result.kind);
+        expect(sectionMergeForm.value.primaryKey?.length).toEqual(
+            result.primaryKey.length,
+        );
+        expect(sectionMergeForm.value.compareColumns?.length).toEqual(
+            result.compareColumns.length,
+        );
     });
 });

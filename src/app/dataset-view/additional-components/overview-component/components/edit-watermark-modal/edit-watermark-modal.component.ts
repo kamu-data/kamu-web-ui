@@ -30,7 +30,7 @@ export class EditWatermarkModalComponent
     @Input() public currentWatermark: MaybeNull<string>;
     @Input() public datasetBasics?: DatasetBasicsFragment;
     public date: Date | string;
-    public timeZone = "Europe/Kiev";
+    public readonly timeZone = "Europe/Kiev";
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -45,10 +45,6 @@ export class EditWatermarkModalComponent
 
     public get isDateValid(): boolean {
         return moment(this.currentWatermark).isAfter(this.date);
-    }
-
-    public get currentTimeZone(): string {
-        return Intl.DateTimeFormat().resolvedOptions().timeZone;
     }
 
     public get minLocalWatermark(): string {

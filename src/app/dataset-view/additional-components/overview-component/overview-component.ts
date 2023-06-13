@@ -95,35 +95,31 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         const modalRef: NgbModalRef = this.modalService.open(
             EditDetailsModalComponent,
         );
-        (modalRef.componentInstance as EditDetailsModalComponent).currentState =
-            this.currentState;
-        (
-            modalRef.componentInstance as EditDetailsModalComponent
-        ).datasetBasics = this.datasetBasics;
+        const modalRefInstance =
+            modalRef.componentInstance as EditDetailsModalComponent;
+        modalRefInstance.currentState = this.currentState;
+        modalRefInstance.datasetBasics = this.datasetBasics;
     }
 
     public openLicenseModal(): void {
         const modalRef: NgbModalRef = this.modalService.open(
             EditLicenseModalComponent,
         );
-        (modalRef.componentInstance as EditLicenseModalComponent).currentState =
-            this.currentState;
-        (
-            modalRef.componentInstance as EditLicenseModalComponent
-        ).datasetBasics = this.datasetBasics;
+        const modalRefInstance =
+            modalRef.componentInstance as EditLicenseModalComponent;
+        modalRefInstance.currentState = this.currentState;
+        modalRefInstance.datasetBasics = this.datasetBasics;
     }
 
     public openWatermarkModal(): void {
         const modalRef: NgbModalRef = this.modalService.open(
             EditWatermarkModalComponent,
         );
-        (
-            modalRef.componentInstance as EditWatermarkModalComponent
-        ).currentWatermark = this.currentState?.overview.metadata
+        const modalRefInstance =
+            modalRef.componentInstance as EditWatermarkModalComponent;
+        modalRefInstance.currentWatermark = this.currentState?.overview.metadata
             .currentWatermark as string;
-        (
-            modalRef.componentInstance as EditWatermarkModalComponent
-        ).datasetBasics = this.datasetBasics;
+        modalRefInstance.datasetBasics = this.datasetBasics;
     }
 
     public navigateToAddPollingSource(): void {

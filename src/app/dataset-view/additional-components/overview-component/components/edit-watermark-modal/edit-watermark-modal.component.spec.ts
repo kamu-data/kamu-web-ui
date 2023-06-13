@@ -57,11 +57,11 @@ describe("EditWatermarkModalComponent", () => {
         expect(component.date).toEqual(result);
     });
 
-    it("should check init date when currentWatermark is defined", () => {
-        const result = "mock_value";
-        component.currentWatermark = result;
-        component.ngOnInit();
-        expect(component.date).toEqual(result);
+    it("should check init minLocalWatermark when currentWatermark is not null", () => {
+        (component.currentWatermark = "2023-03-12T00:00:00+00:00"),
+            fixture.detectChanges();
+        const result = "2023-03-12T00:00:00.000Z";
+        expect(component.minLocalWatermark).toEqual(result);
     });
 
     it("should check commit SetWatermark event", () => {

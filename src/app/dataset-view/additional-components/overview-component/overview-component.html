@@ -284,20 +284,49 @@
                             ></app-display-time>
                         </div>
                     </div>
-                    <div
-                        class="dataset-info--block"
-                        *ngIf="currentState && currentState.overview.metadata.currentWatermark"
-                    >
+                    <div class="dataset-info--block">
                         <div class="dataset-info--sub-block">
                             <h2 class="dataset-info--subtitle">Watermark:</h2>
                         </div>
-                        <div class="dataset-info--sub-block">
+                        <div
+                            class="dataset-info--sub-block d-flex align-items-center ps-3"
+                            *ngIf="currentState && currentState.overview.metadata.currentWatermark;else noWatermark"
+                        >
                             <app-display-time
-                                class="dataset-info--text"
                                 [title]="currentState.overview.metadata.currentWatermark"
                                 [data]="currentState.overview.metadata.currentWatermark"
                             ></app-display-time>
+                            <div *ngIf="currentState.overview.kind==='ROOT'">
+                                <button
+                                    class="btn-sm btn custom-edit ms-4"
+                                    aria-label="Edit watermark details"
+                                    data-test-id="edit-dataset-watermark"
+                                    title="Edit watewrmark"
+                                    (click)="openWatermarkModal()"
+                                >
+                                    <svg-icon name="pencil"></svg-icon>
+                                </button>
+                            </div>
                         </div>
+                        <ng-template #noWatermark>
+                            <div
+                                class="dataset-info--sub-block d-flex align-items-center ms-4"
+                            >
+                                <div class="me-4">-</div>
+                                <div>
+                                    <button
+                                        class="signed-commit-badge verified signed-commit-badge-small"
+                                        aria-label="Edit watermark details"
+                                        data-test-id="edit-dataset-watermark"
+                                        title="Add watewrmark"
+                                        type="button"
+                                        (click)="openWatermarkModal()"
+                                    >
+                                        Add watermark
+                                    </button>
+                                </div>
+                            </div>
+                        </ng-template>
                     </div>
                 </ng-template>
             </div>

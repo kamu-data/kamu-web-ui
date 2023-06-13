@@ -18,6 +18,7 @@ export class DataHelpers {
         "Basic information updated";
     public static readonly BLOCK_DESCRIBE_SET_ATTACHMENTS =
         "Attachments updated";
+    public static readonly BLOCK_DESCRIBE_SET_WATERMARK = "Watermark updated";
     private static readonly SHIFT_ATTACHMENTS_VIEW = "\u00A0".repeat(12);
 
     public static capitalizeFirstLetter(
@@ -149,9 +150,7 @@ export class DataHelpers {
             case "SetVocab":
                 return DataHelpers.BLOCK_DESCRIBE_SET_VOCAB;
             case "SetWatermark":
-                return `Watermark updated to ${
-                    event.outputWatermark as string
-                }`;
+                return DataHelpers.BLOCK_DESCRIBE_SET_WATERMARK;
             case "SetPollingSource":
                 return DataHelpers.BLOCK_DESCRIBE_SET_POLLING_SOURCE;
             case "SetInfo":
@@ -207,4 +206,14 @@ export const getValidators = (
         }
     });
     return validatorsToAdd;
+};
+
+export const MY_MOMENT_FORMATS = {
+    parseInput: "DD/MM/YY HH:mm:ss",
+    fullPickerInput: "DD/MM/YYYY HH:mm:ss A z",
+    datePickerInput: "DD/MM/YYYY",
+    timePickerInput: "HH:mm:ss",
+    monthYearLabel: "MMM YYYY",
+    dateA11yLabel: "LL",
+    monthYearA11yLabel: "MMMM YYYY",
 };

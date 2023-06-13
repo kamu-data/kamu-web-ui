@@ -3,6 +3,8 @@
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap'
 @import "assets/styles/var"
+@import "@danielmoncada/angular-datetime-picker/assets/style/picker.min.css"
+
 body
   font-size: 14px
   overflow-x: hidden
@@ -1026,3 +1028,9 @@ pre
 
 .cdk-drop-list-dragging .mat-row:not(.cdk-drag-placeholder)
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1)
+
+.cdk-overlay-container
+  z-index: 9999 !important
+
+.cdk-global-scrollblock
+  overflow: hidden !important

@@ -201,7 +201,7 @@ it("should check description for SetWatermark block", () => {
         },
     };
     expect(DataHelpers.descriptionForMetadataBlock(setWatermarkBlock)).toEqual(
-        `Watermark updated to ${watermarkTime}`,
+        `Watermark updated`,
     );
 });
 

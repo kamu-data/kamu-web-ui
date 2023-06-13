@@ -39,8 +39,10 @@
 <div class="body text-center">
     <div class="d-flex align-items-center pb-4 ms-4 ps-4">
         <span class="me-4">Time zone:</span>
-        <select class="form-select w-50" [(ngModel)]="timeZone">
-            <option [ngValue]="'Europe/Kiev'">Europe/Kiev(UTC+2)</option>
+        <select class="form-select w-75" [(ngModel)]="timeZone">
+            <option [ngValue]="timeZone">
+                (UTC{{ createOffset(this.date) }}) {{ timeZone }}
+            </option>
         </select>
     </div>
     <div class="d-flex align-items-center ms-4 ps-4">
@@ -49,7 +51,7 @@
             [(ngModel)]="date"
             [owlDateTime]="fromdatepicker"
             placeholder="Date Time"
-            class="form-control w-50 ms-4"
+            class="form-control w-65 ms-4"
             name="fromDate"
             [min]="minLocalWatermark"
         />

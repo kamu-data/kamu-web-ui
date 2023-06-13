@@ -29,8 +29,8 @@ export class EditWatermarkModalComponent
 {
     @Input() public currentWatermark: MaybeNull<string>;
     @Input() public datasetBasics?: DatasetBasicsFragment;
-    public date: Date | string;
-    public timeZone = "Europe/Kiev";
+    public date: Date;
+    public timeZone = this.currentTimeZone;
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -45,6 +45,22 @@ export class EditWatermarkModalComponent
 
     public get isDateValid(): boolean {
         return moment(this.currentWatermark).isAfter(this.date);
+    }
+
+    public get currentTimeZone(): string {
+        return moment.tz.guess();
+    }
+
+    private pad(value: number): string {
+        return value < 10 ? "0" + value.toString() : value.toString();
+    }
+
+    public createOffset(date: Date): string {
+        const sign = date.getTimezoneOffset() > 0 ? "-" : "+";
+        const offset = Math.abs(date.getTimezoneOffset());
+        const hours = this.pad(Math.floor(offset / 60));
+        const minutes = this.pad(offset % 60);
+        return sign.toString() + hours.toString() + ":" + minutes.toString();
     }
 
     public get minLocalWatermark(): string {

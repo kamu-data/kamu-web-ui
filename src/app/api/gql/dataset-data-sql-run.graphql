@@ -2,7 +2,7 @@ query getDatasetDataSQLRun($query: String!, $limit: Int!) {
   data {
     query(
       query: $query
-      queryDialect: DATA_FUSION
+      queryDialect: SQL_DATA_FUSION
       schemaFormat: PARQUET_JSON
       dataFormat: JSON
       limit: $limit

@@ -131,9 +131,12 @@ export class DataHelpers {
         switch (event.__typename) {
             case "AddData":
                 return `Added ${
-                    event.outputData.interval.end -
-                    event.outputData.interval.start +
-                    1
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                    event.outputData
+                        ? event.outputData.interval.end -
+                          event.outputData.interval.start +
+                          1
+                        : 0
                 } new records`;
             case "ExecuteQuery":
                 return `Transformation produced ${

@@ -34,9 +34,10 @@ type Accounts {
 
 type AddData {
 	inputCheckpoint: Multihash
-	outputData: DataSlice!
+	outputData: DataSlice
 	outputCheckpoint: Checkpoint
 	outputWatermark: DateTime
+	sourceState: SourceState
 }
 
 type AttachmentEmbedded {
@@ -135,6 +136,10 @@ type DataQueries {
 	Executes a specified query and returns its result
 	"""
 	query(query: String!, queryDialect: QueryDialect!, dataFormat: DataBatchFormat, schemaFormat: DataSchemaFormat, limit: Int): DataQueryResult!
+	"""
+	Lists engines known to the system and recommended for use
+	"""
+	knownEngines: [EngineDesc!]!
 }
 
 union DataQueryResult = DataQueryResultSuccess | DataQueryResultError
@@ -179,7 +184,8 @@ type Dataset {
 	id: DatasetID!
 	"""
 	Symbolic name of the dataset.
-	Name can change over the dataset's lifetime. For unique identifier use `id()`.
+	Name can change over the dataset's lifetime. For unique identifier use
+	`id()`.
 	"""
 	name: DatasetName!
 	"""
@@ -230,12 +236,14 @@ type DatasetData {
 	"""
 	numRecordsTotal: Int!
 	"""
-	An estimated size of data on disk not accounting for replication or caching
+	An estimated size of data on disk not accounting for replication or
+	caching
 	"""
 	estimatedSize: Int!
 	"""
 	Returns the specified number of the latest records in the dataset
-	This is equivalent to the SQL query: `SELECT * FROM dataset ORDER BY event_time DESC LIMIT N`
+	This is equivalent to the SQL query: `SELECT * FROM dataset ORDER BY
+	event_time DESC LIMIT N`
 	"""
 	tail(limit: Int, dataFormat: DataBatchFormat, schemaFormat: DataSchemaFormat): DataQueryResult!
 }
@@ -285,7 +293,8 @@ type DatasetMetadata {
 	"""
 	currentInfo: SetInfo!
 	"""
-	Current readme file as discovered from attachments associated with the dataset
+	Current readme file as discovered from attachments associated with the
+	dataset
 	"""
 	currentReadme: String
 	"""
@@ -333,6 +342,27 @@ Implement the DateTime<Utc> scalar
 The input/output is a string in RFC3339 format.
 """
 scalar DateTime
+
+"""
+Describes
+"""
+type EngineDesc {
+	"""
+	A short name of the engine, e.g. "Spark", "Flink".
+	Intended for use in UI for quick engine identification and selection.
+	"""
+	name: String!
+	"""
+	Language and dialect this engine is using for queries
+	Indended for configuring code highlighting and completions.
+	"""
+	dialect: QueryDialect!
+	"""
+	OCI image repository and a tag of the latest engine image, e.g.
+	"ghcr.io/kamu-data/engine-datafusion:0.1.2"
+	"""
+	latestImage: String!
+}
 
 type EnvVar {
 	name: String!
@@ -453,7 +483,8 @@ type MetadataChain {
 	"""
 	blockByHash(hash: Multihash!): MetadataBlockExtended
 	"""
-	Returns a metadata block corresponding to the specified hash and encoded in desired format
+	Returns a metadata block corresponding to the specified hash and encoded
+	in desired format
 	"""
 	blockByHashEncoded(hash: Multihash!, format: MetadataManifestFormat!): String
 	"""
@@ -484,6 +515,7 @@ scalar Multihash
 
 type Mutation {
 	auth: Auth!
+	tasks: TasksMutations!
 }
 
 type OffsetInterval {
@@ -516,7 +548,8 @@ type PageBasedInfo {
 	"""
 	currentPage: Int!
 	"""
-	Approximate number of total pages assuming number of nodes per page stays the same
+	Approximate number of total pages assuming number of nodes per page
+	stays the same
 	"""
 	totalPages: Int
 }
@@ -538,15 +571,29 @@ type Query {
 	"""
 	apiVersion: String!
 	"""
-	Dataset-related functionality group
+	Dataset-related functionality group.
+	
+	Datasets are historical streams of events recorded under a cetrain
+	schema.
 	"""
 	datasets: Datasets!
 	"""
-	Account-related functionality group
+	Account-related functionality group.
+	
+	Accounts can be individual users or organizations registered in the
+	system. This groups deals with their identities and permissions.
 	"""
 	accounts: Accounts!
 	"""
-	Search-related functionality group
+	Task-related functionality group.
+	
+	Tasks are units of scheduling that can perform many functions like
+	ingesting new data, running dataset transformations, answering ad-hoc
+	queries etc.
+	"""
+	tasks: Tasks!
+	"""
+	Search-related functionality group.
 	"""
 	search: Search!
 	"""
@@ -556,7 +603,9 @@ type Query {
 }
 
 enum QueryDialect {
-	DATA_FUSION
+	SQL_SPARK
+	SQL_FLINK
+	SQL_DATA_FUSION
 }
 
 union ReadStep = ReadStepCsv | ReadStepJsonLines | ReadStepGeoJson | ReadStepEsriShapefile | ReadStepParquet
@@ -694,11 +743,140 @@ enum SourceOrdering {
 	BY_NAME
 }
 
+type SourceState {
+	kind: String!
+	source: String!
+	value: String!
+}
+
 type SqlQueryStep {
 	alias: String
 	query: String!
 }
 
+
+type Task {
+	"""
+	Unique and stable identitfier of this task
+	"""
+	taskId: TaskID!
+	"""
+	Life-cycle status of a task
+	"""
+	status: TaskStatus!
+	"""
+	Whether the task was ordered to be cancelled
+	"""
+	cancellationRequested: Boolean!
+	"""
+	Describes a certain final outcome of the task once it reaches the
+	"finished" status
+	"""
+	outcome: TaskOutcome
+	"""
+	Time when task was originally created and placed in a queue
+	"""
+	createdAt: DateTime!
+	"""
+	Time when task transitioned into a running state
+	"""
+	ranAt: DateTime
+	"""
+	Time when cancellation of task was requested
+	"""
+	cancellationRequestedAt: DateTime
+	"""
+	Time when task has reached a final outcome
+	"""
+	finishedAt: DateTime
+}
+
+type TaskConnection {
+	"""
+	A shorthand for `edges { node { ... } }`
+	"""
+	nodes: [Task!]!
+	"""
+	Approximate number of total nodes
+	"""
+	totalCount: Int!
+	"""
+	Page information
+	"""
+	pageInfo: PageBasedInfo!
+	edges: [TaskEdge!]!
+}
+
+type TaskEdge {
+	node: Task!
+}
+
+scalar TaskID
+
+"""
+Describes a certain final outcome of the task
+"""
+enum TaskOutcome {
+	"""
+	Task succeeded
+	"""
+	SUCCESS
+	"""
+	Task failed to complete
+	"""
+	FAILED
+	"""
+	Task was cancelled by a user
+	"""
+	CANCELLED
+}
+
+"""
+Life-cycle status of a task
+"""
+enum TaskStatus {
+	"""
+	Task is waiting for capacity to be allocated to it
+	"""
+	QUEUED
+	"""
+	Task is being executed
+	"""
+	RUNNING
+	"""
+	Task has reached a certain final outcome (see [TaskOutcome])
+	"""
+	FINISHED
+}
+
+type Tasks {
+	"""
+	Returns current state of a given task
+	"""
+	getTask(taskId: TaskID!): Task
+	"""
+	Returns states of tasks associated with a given dataset ordered by
+	creation time from newest to oldest
+	"""
+	listTasksByDataset(datasetId: DatasetID!, page: Int, perPage: Int): TaskConnection!
+}
+
+type TasksMutations {
+	"""
+	Requests cancellation of the specified task
+	"""
+	cancelTask(taskId: TaskID!): Task!
+	"""
+	Schedules a task to update the specified dataset by performing polling
+	ingest or a derivative transformation
+	"""
+	createUpdateDatasetTask(datasetId: DatasetID!): Task!
+	"""
+	Schedules a task to update the specified dataset by performing polling
+	ingest or a derivative transformation
+	"""
+	createProbeTask(datasetId: DatasetID, busyTimeMs: Int, endWithOutcome: TaskOutcome): Task!
+}
 
 type TemporalTable {
 	name: String!

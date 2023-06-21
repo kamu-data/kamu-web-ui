@@ -7,5 +7,8 @@ fragment DatasetOverview on Dataset {
     currentSource {
       __typename
     }
+    currentTransform {
+      __typename
+    }
   }
 }

@@ -52,6 +52,7 @@ import {
     OwlNativeDateTimeModule,
 } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
+import { SetTransformComponent } from './additional-components/metadata-component/components/set-transform/set-transform.component';
 
 @NgModule({
     imports: [
@@ -128,6 +129,7 @@ import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-
         PreprocessStepComponent,
         StepperNavigationComponent,
         EditWatermarkModalComponent,
+        SetTransformComponent,
     ],
 })
 export class DatasetModule {

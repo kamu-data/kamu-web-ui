@@ -13,6 +13,7 @@ import { AccountComponent } from "./auth/account/account.component";
 import { GithubCallbackComponent } from "./auth/github-callback/github.callback";
 import { environment } from "../environments/environment";
 import ProjectLinks from "./project-links";
+import { SetTransformComponent } from "./dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component";
 
 const githubUrl = `https://github.com/login/oauth/authorize?scope=user:email&client_id=${environment.github_client_id}`;
 
@@ -77,6 +78,12 @@ export const routes: Routes = [
             `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
             `/${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
         component: AddPollingSourceComponent,
+    },
+    {
+        path:
+            `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
+            `/${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
+        component: SetTransformComponent,
     },
     {
         path: "**",

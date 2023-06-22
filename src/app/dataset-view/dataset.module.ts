@@ -52,8 +52,8 @@ import {
     OwlNativeDateTimeModule,
 } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
-import { SetTransformComponent } from './additional-components/metadata-component/components/set-transform/set-transform.component';
-
+import { SetTransformComponent } from "./additional-components/metadata-component/components/set-transform/set-transform.component";
+import { MatTreeModule } from "@angular/material/tree";
 @NgModule({
     imports: [
         CommonModule,
@@ -93,6 +93,7 @@ import { SetTransformComponent } from './additional-components/metadata-componen
         OwlDateTimeModule,
         OwlNativeDateTimeModule,
         OwlMomentDateTimeModule,
+        MatTreeModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -110,6 +111,7 @@ import { SetTransformComponent } from './additional-components/metadata-componen
         HistoryComponent,
         MonacoEditorModule,
         DisplayHashModule,
+        MatTreeModule,
     ],
     declarations: [
         DatasetViewHeaderComponent,

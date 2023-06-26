@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -1180,6 +1180,28 @@ export type GetDatasetMainDataQuery = {
                   DatasetMetadataSummaryFragment &
                   DatasetLineageFragment)
             | null;
+    };
+};
+
+export type GetDatasetSchemaQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type GetDatasetSchemaQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            metadata: {
+                __typename?: "DatasetMetadata";
+                currentSchema?: {
+                    __typename?: "DataSchema";
+                    format: DataSchemaFormat;
+                    content: string;
+                } | null;
+            };
+        } | null;
     };
 };
 
@@ -2653,6 +2675,34 @@ export class GetDatasetMainDataGQL extends Apollo.Query<
     GetDatasetMainDataQueryVariables
 > {
     document = GetDatasetMainDataDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const GetDatasetSchemaDocument = gql`
+    query getDatasetSchema($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                metadata {
+                    currentSchema(format: PARQUET_JSON) {
+                        format
+                        content
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetDatasetSchemaGQL extends Apollo.Query<
+    GetDatasetSchemaQuery,
+    GetDatasetSchemaQueryVariables
+> {
+    document = GetDatasetSchemaDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

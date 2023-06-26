@@ -5,6 +5,8 @@ import {
     CreateDatasetFromSnapshotQuery,
     CreateEmptyDatasetQuery,
     DatasetKind,
+    GetDatasetSchemaGQL,
+    GetDatasetSchemaQuery,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { ApolloQueryResult } from "@apollo/client/core";
@@ -41,6 +43,7 @@ export class DatasetApi {
         private createEmptyDatasetGQL: CreateEmptyDatasetGQL,
         private createDatasetFromSnapshotGQL: CreateDatasetFromSnapshotGQL,
         private commitEventToDataset: CommitEventToDatasetGQL,
+        private datasetSchemaGQL: GetDatasetSchemaGQL,
     ) {}
 
     public getDatasetMainData(params: {
@@ -92,6 +95,21 @@ export class DatasetApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<GetDatasetHistoryQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public getDatasetSchema(
+        datasetId: string,
+    ): Observable<GetDatasetSchemaQuery> {
+        return this.datasetSchemaGQL
+            .watch({
+                datasetId,
+            })
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<GetDatasetSchemaQuery>) => {
                     return result.data;
                 }),
             );

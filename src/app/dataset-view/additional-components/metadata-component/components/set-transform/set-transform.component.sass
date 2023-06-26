@@ -2,7 +2,7 @@
 .container-layout
     padding: 0 50px
 
-.w-300
+.w-425
     width: 425px
 
 .button-clear
@@ -10,3 +10,36 @@
     display: flex
     align-items: center
     justify-content: center
+
+.hover
+    cursor: pointer
+
+.node-name
+    width: 345px
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
+
+.example-tree-invisible
+    display: none
+
+.tree ul,
+.tree li
+    margin-top: 0
+    margin-bottom: 0
+    list-style-type: none
+
+/*
+ * This padding sets alignment of the nested nodes.
+ */
+.tree .mat-nested-tree-node div[role=group]
+    padding-left: 40px
+
+/*
+ * Padding for leaf nodes.
+ * Leaf nodes need to have padding so as to align with other non-leaf nodes
+ * under the same parent.
+ */
+.tree div[role=group] > .mat-tree-node
+    padding-left: 25px
+    padding-bottom: 5px

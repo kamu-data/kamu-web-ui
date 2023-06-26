@@ -5,6 +5,7 @@ import {
     DatasetByIdQuery,
     DatasetLineageFragment,
     DatasetPageInfoFragment,
+    GetDatasetSchemaQuery,
     SetVocab,
 } from "./../api/kamu.graphql.interface";
 import { DatasetInfo } from "./../interface/navigation.interface";
@@ -205,6 +206,12 @@ export class DatasetService {
         datasetId: string,
     ): Observable<DatasetByIdQuery> {
         return this.datasetApi.getDatasetInfoById(datasetId);
+    }
+
+    public requestDatasetSchema(
+        datasetId: string,
+    ): Observable<GetDatasetSchemaQuery> {
+        return this.datasetApi.getDatasetSchema(datasetId);
     }
 
     private datasetUpdate(data: DatasetBasicsFragment): void {

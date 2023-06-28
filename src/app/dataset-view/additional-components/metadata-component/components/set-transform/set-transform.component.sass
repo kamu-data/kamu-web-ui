@@ -1,3 +1,5 @@
+input
+    text-overflow: ellipsis
 
 .container-layout
     padding: 0 50px
@@ -15,7 +17,7 @@
     cursor: pointer
 
 .node-name
-    width: 345px
+    width: 445px
     overflow: hidden
     white-space: nowrap
     text-overflow: ellipsis
@@ -29,17 +31,14 @@
     margin-bottom: 0
     list-style-type: none
 
-/*
- * This padding sets alignment of the nested nodes.
- */
 .tree .mat-nested-tree-node div[role=group]
     padding-left: 40px
 
-/*
- * Padding for leaf nodes.
- * Leaf nodes need to have padding so as to align with other non-leaf nodes
- * under the same parent.
- */
 .tree div[role=group] > .mat-tree-node
     padding-left: 25px
     padding-bottom: 5px
+
+.block-query
+    padding: 15px 30px 30px
+    border: 1px solid #dee2e6
+    border-radius: 10px

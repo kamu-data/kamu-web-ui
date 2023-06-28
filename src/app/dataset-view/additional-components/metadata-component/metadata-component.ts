@@ -132,4 +132,12 @@ export class MetadataComponent extends BaseComponent implements OnInit {
                 datasetName: this.datasetBasics.name as string,
             });
     }
+
+    public navigateToEditSetTransform(): void {
+        if (this.datasetBasics)
+            this.navigationService.navigateToSetTransform({
+                accountName: this.datasetBasics.owner.name,
+                datasetName: this.datasetBasics.name as string,
+            });
+    }
 }

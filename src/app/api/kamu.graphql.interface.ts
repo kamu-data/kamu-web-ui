@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "apollo-angular";
+import { gql } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -1225,6 +1225,21 @@ export type DatasetsByAccountNameQuery = {
                 __typename?: "PageBasedInfo";
             } & DatasetPageInfoFragment;
         };
+    };
+};
+
+export type EnginesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type EnginesQuery = {
+    __typename?: "Query";
+    data: {
+        __typename?: "DataQueries";
+        knownEngines: Array<{
+            __typename?: "EngineDesc";
+            name: string;
+            dialect: QueryDialect;
+            latestImage: string;
+        }>;
     };
 };
 
@@ -2743,6 +2758,31 @@ export class DatasetsByAccountNameGQL extends Apollo.Query<
     DatasetsByAccountNameQueryVariables
 > {
     document = DatasetsByAccountNameDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const EnginesDocument = gql`
+    query engines {
+        data {
+            knownEngines {
+                name
+                dialect
+                latestImage
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class EnginesGQL extends Apollo.Query<
+    EnginesQuery,
+    EnginesQueryVariables
+> {
+    document = EnginesDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

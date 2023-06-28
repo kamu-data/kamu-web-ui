@@ -105,8 +105,108 @@
                         </mat-nested-tree-node>
                     </mat-tree>
                 </div>
+                <div class="mt-4" *ngIf="knownEngines">
+                    <p class="fs-6">Engine</p>
+                    <mat-divider class="w-425"></mat-divider>
+                    <div class="mt-4">
+                        <label for="engine-type" class="form-label">Type</label>
+                        <select
+                            class="form-select w-425"
+                            id="engine-type"
+                            [(ngModel)]="selectedEngine"
+                            (change)="onSelectType()"
+                        >
+                            <option
+                                *ngFor="let engine of knownEngines"
+                                [value]="engine.name"
+                            >
+                                {{ engine.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mt-4">
+                        <label for="engine-image" class="form-label"
+                            >Image</label
+                        >
+                        <input
+                            class="form-control w-425"
+                            id="engine-image"
+                            [(ngModel)]="selectedImage"
+                            [title]="selectedImage"
+                            disabled
+                        />
+                    </div>
+                </div>
             </div>
-            <div class="col">Column2</div>
+            <div class="col">
+                <mat-icon class="fs-4 align-middle">query_stats</mat-icon>
+                <label for="inputDatasets" class="form-label ps-1">
+                    Queries</label
+                >
+                <div
+                    class="block-query mb-3"
+                    *ngFor="let query of queries; let i = index"
+                >
+                    <div>
+                        <div
+                            class="d-flex flex-row justify-content-between align-items-end"
+                        >
+                            <div>
+                                <label for="alias-query" class="form-label"
+                                    >Alias</label
+                                >
+                                <div class="d-flex align-items-center">
+                                    <input
+                                        class="form-control w-425"
+                                        id="alias-query"
+                                        [(ngModel)]="queries[i].alias"
+                                    />
+                                    <span
+                                        *ngIf="isLastQuery(i)"
+                                        class="ms-4 badge bg-success"
+                                        >output</span
+                                    >
+                                </div>
+                            </div>
+                            <div>
+                                <mat-icon
+                                    class="fs-4 hover"
+                                    (click)="swap(i, 1)"
+                                    >expand_more</mat-icon
+                                >
+                                <mat-icon
+                                    class="fs-4 mx-2 hover"
+                                    (click)="swap(i, -1)"
+                                    >expand_less</mat-icon
+                                >
+                                <mat-icon
+                                    class="fs-4 hover"
+                                    (click)="deleteQuery(i)"
+                                    >delete</mat-icon
+                                >
+                            </div>
+                        </div>
+                        <div class="border border-1 mt-4 px-2 py-4">
+                            <ngx-monaco-editor
+                                style="height: 200px"
+                                [options]="sqlEditorOptions"
+                                [(ngModel)]="queries[i].query"
+                                ngDefaultControl
+                                data-test-id="monaco-editor-modal"
+                            ></ngx-monaco-editor>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button
+                        (click)="addQuery()"
+                        mat-stroked-button
+                        class="button-clear"
+                    >
+                        Add query
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

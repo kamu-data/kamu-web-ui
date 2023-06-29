@@ -1,4 +1,4 @@
-<div class="mb-4">
+<div class="mb-4" *ngIf="queries">
     <div class="text-center mt-4">
         <p class="fs-4">Set Transformation</p>
         <p class="text-muted">
@@ -28,7 +28,7 @@
                         <button
                             (click)="clearSearch()"
                             mat-stroked-button
-                            class="ms-2 button-clear"
+                            class="ms-2 button-custom bg-secondary text-white"
                         >
                             Clear
                         </button>
@@ -160,6 +160,7 @@
                                         class="form-control w-425"
                                         id="alias-query"
                                         [(ngModel)]="queries[i].alias"
+                                        [disabled]="isLastQuery(i)"
                                     />
                                     <span
                                         *ngIf="isLastQuery(i)"
@@ -168,7 +169,7 @@
                                     >
                                 </div>
                             </div>
-                            <div>
+                            <div *ngIf="!isLastQuery(i)">
                                 <mat-icon
                                     class="fs-4 hover"
                                     (click)="swap(i, 1)"
@@ -188,7 +189,7 @@
                         </div>
                         <div class="border border-1 mt-4 px-2 py-4">
                             <ngx-monaco-editor
-                                style="height: 200px"
+                                style="height: 300px"
                                 [options]="sqlEditorOptions"
                                 [(ngModel)]="queries[i].query"
                                 ngDefaultControl
@@ -201,12 +202,32 @@
                     <button
                         (click)="addQuery()"
                         mat-stroked-button
-                        class="button-clear"
+                        class="button-custom bg-secondary text-white"
                     >
                         Add query
                     </button>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="d-flex justify-content-end section-buttons">
+        <button
+            type="button"
+            mat-stroked-button
+            class="button-custom width-custom bg-primary text-white"
+            (click)="onEditYaml()"
+            data-test-id="edit-yaml-set-transform-button"
+        >
+            Edit Yaml
+        </button>
+        <button
+            type="button"
+            mat-stroked-button
+            class="button-custom ms-4 bg-success text-white width-custom"
+            (click)="onSaveEvent()"
+            data-test-id="save-set-transform-button"
+        >
+            Save
+        </button>
     </div>
 </div>

@@ -7,17 +7,22 @@ input
 .w-425
     width: 425px
 
-.button-clear
+.button-custom
     height: 25px
     display: flex
+    padding: 5px 10px
     align-items: center
     justify-content: center
-
-.hover
-    cursor: pointer
+    border: 1px solid black
+    border-radius: 5px
+    &:hover
+        cursor: pointer
+        filter: alpha(opacity=90)
+        -moz-opacity: 0.9
+        opacity: 0.9
 
 .node-name
-    width: 445px
+    width: 345px
     overflow: hidden
     white-space: nowrap
     text-overflow: ellipsis
@@ -42,3 +47,9 @@ input
     padding: 15px 30px 30px
     border: 1px solid #dee2e6
     border-radius: 10px
+
+.section-buttons
+    margin: 100px 40px 50px 0
+    .width-custom
+        width: 100px
+        height: 32px

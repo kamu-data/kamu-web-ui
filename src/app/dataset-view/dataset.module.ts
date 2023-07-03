@@ -54,6 +54,9 @@ import {
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { SetTransformComponent } from "./additional-components/metadata-component/components/set-transform/set-transform.component";
 import { MatTreeModule } from "@angular/material/tree";
+import { SearchSectionComponent } from "./additional-components/metadata-component/components/set-transform/components/search-section/search-section.component";
+import { EngineSectionComponent } from "./additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.component";
+import { QueriesSectionComponent } from "./additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
 @NgModule({
     imports: [
         CommonModule,
@@ -132,6 +135,9 @@ import { MatTreeModule } from "@angular/material/tree";
         StepperNavigationComponent,
         EditWatermarkModalComponent,
         SetTransformComponent,
+        SearchSectionComponent,
+        EngineSectionComponent,
+        QueriesSectionComponent,
     ],
 })
 export class DatasetModule {

@@ -60,15 +60,18 @@ export class EditPollingSourceService {
         }
     }
 
-    public getSetPollingSourceAsYaml(
+    public getEventAsYaml(
         info: DatasetInfo,
-        // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-    ): Observable<[string, void] | null> {
+        typename: string,
+    ): Observable<string | null | undefined> {
         return this.appDatasetService
             .getDatasetHistory(info, this.historyPageSize, this.currentPage)
             .pipe(
                 expand((h: DatasetHistoryUpdate) => {
-                    const filteredHistory = this.filterHistoryByType(h.history);
+                    const filteredHistory = this.filterHistoryByType(
+                        h.history,
+                        typename,
+                    );
                     return filteredHistory.length === 0 &&
                         h.pageInfo.hasNextPage
                         ? this.appDatasetService.getDatasetHistory(
@@ -80,7 +83,10 @@ export class EditPollingSourceService {
                 }),
                 map((h: DatasetHistoryUpdate) => {
                     this.history = h;
-                    const filteredHistory = this.filterHistoryByType(h.history);
+                    const filteredHistory = this.filterHistoryByType(
+                        h.history,
+                        typename,
+                    );
                     return filteredHistory;
                 }),
                 switchMap((filteredHistory: MetadataBlockFragment[]) =>
@@ -96,6 +102,9 @@ export class EditPollingSourceService {
                         ),
                     ),
                 ),
+                map((result: [string, unknown] | null) => {
+                    if (result) return result[0];
+                }),
                 last(),
             );
     }
@@ -137,10 +146,10 @@ export class EditPollingSourceService {
 
     private filterHistoryByType(
         history: MetadataBlockFragment[],
+        typename: string,
     ): MetadataBlockFragment[] {
         return history.filter(
-            (item: MetadataBlockFragment) =>
-                item.event.__typename === "SetPollingSource",
+            (item: MetadataBlockFragment) => item.event.__typename === typename,
         );
     }
 

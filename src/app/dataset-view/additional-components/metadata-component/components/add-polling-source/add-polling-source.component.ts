@@ -147,11 +147,13 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
         this.trackSubscriptions(
             this.editService
-                .getSetPollingSourceAsYaml(this.getDatasetInfoFromUrl())
-                // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-                .subscribe((result: [string, void] | null) => {
+                .getEventAsYaml(
+                    this.getDatasetInfoFromUrl(),
+                    "SetPollingSource",
+                )
+                .subscribe((result: string | undefined | null) => {
                     if (result) {
-                        this.eventYamlByHash = result[0];
+                        this.eventYamlByHash = result;
                     }
                     this.history = this.editService.history;
                     this.cdr.detectChanges();

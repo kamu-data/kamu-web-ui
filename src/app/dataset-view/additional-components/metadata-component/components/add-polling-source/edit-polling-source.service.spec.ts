@@ -51,7 +51,7 @@ describe("EditPollingSourceService", () => {
         );
         spyOn(blockService, "requestMetadataBlock").and.returnValue(of());
         blockService.metadataBlockAsYamlChanges("test yaml");
-        service.getSetPollingSourceAsYaml(mockDatasetInfo).subscribe(
+        service.getEventAsYaml(mockDatasetInfo, "SetPollingSource").subscribe(
             () => null,
             () => {
                 expect(service.history).toBeDefined();

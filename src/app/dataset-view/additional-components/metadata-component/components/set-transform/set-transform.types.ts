@@ -10,14 +10,15 @@ export type TransformSelectedInput = Omit<
 
 export interface EditSetTransformParseType {
     content: {
-        event: Omit<SetTransform, "__typename"> & {
-            kind: string;
-        };
+        event: SetTransFormYamlType;
     };
 }
 
 export type SetTransFormYamlType = Omit<SetTransform, "__typename"> & {
     kind: string;
+    transform: {
+        query?: string;
+    };
 };
 
 export interface DatasetNode {

@@ -7,7 +7,7 @@
     </div>
     <div class="container-layout mt-4" id="container-layout">
         <div class="row">
-            <div class="col">
+            <div class="col-lg-6 left-section">
                 <div class="mb-3">
                     <mat-icon class="fs-4 align-middle">input</mat-icon>
                     <label for="inputDatasets" class="form-label ps-1">
@@ -87,11 +87,15 @@
                                     </mat-icon>
                                 </button>
                                 <span class="node-name"> {{ node.name }}</span>
-                                <mat-icon
-                                    class="ms-4 fs-4 hover"
+                                <button
+                                    class="no-button"
                                     (click)="deleteInputDataset(node.name)"
-                                    >delete</mat-icon
+                                    title="Delete input dataset"
                                 >
+                                    <mat-icon class="fs-4 hover"
+                                        >delete</mat-icon
+                                    >
+                                </button>
                             </div>
 
                             <div
@@ -118,7 +122,7 @@
                         >
                             <option
                                 *ngFor="let engine of knownEngines"
-                                [value]="engine.name"
+                                [value]="engine.name.toUpperCase()"
                             >
                                 {{ engine.name }}
                             </option>
@@ -138,7 +142,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="col-lg-6 queries">
                 <mat-icon class="fs-4 align-middle">query_stats</mat-icon>
                 <label for="inputDatasets" class="form-label ps-1">
                     Queries</label
@@ -170,21 +174,34 @@
                                 </div>
                             </div>
                             <div *ngIf="!isLastQuery(i)">
-                                <mat-icon
-                                    class="fs-4 hover"
+                                <button
+                                    class="no-button"
+                                    [disabled]="isPenultimateQuery(i)"
                                     (click)="swap(i, 1)"
-                                    >expand_more</mat-icon
+                                    title="Move down"
                                 >
-                                <mat-icon
-                                    class="fs-4 mx-2 hover"
+                                    <mat-icon class="fs-4 hover"
+                                        >expand_more</mat-icon
+                                    >
+                                </button>
+                                <button
+                                    class="no-button"
                                     (click)="swap(i, -1)"
-                                    >expand_less</mat-icon
+                                    title="Move up"
                                 >
-                                <mat-icon
-                                    class="fs-4 hover"
+                                    <mat-icon class="fs-4 mx-2 hover"
+                                        >expand_less</mat-icon
+                                    >
+                                </button>
+                                <button
+                                    class="no-button"
                                     (click)="deleteQuery(i)"
-                                    >delete</mat-icon
+                                    title="Delete query"
                                 >
+                                    <mat-icon class="fs-4 hover"
+                                        >delete</mat-icon
+                                    >
+                                </button>
                             </div>
                         </div>
                         <div class="border border-1 mt-4 px-2 py-4">

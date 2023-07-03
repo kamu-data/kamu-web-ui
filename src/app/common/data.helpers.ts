@@ -39,6 +39,12 @@ export class DataHelpers {
                     name: "Apache Spark",
                     url_logo: "assets/images/apache-spark.png",
                 };
+
+            case "datafusion":
+                return {
+                    name: "Data Fusion",
+                    url_logo: "assets/images/datafusion-logo.png",
+                };
             default:
                 console.log("Engine is not defined");
                 return {
@@ -131,7 +137,6 @@ export class DataHelpers {
         switch (event.__typename) {
             case "AddData":
                 return `Added ${
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                     event.outputData
                         ? event.outputData.interval.end -
                           event.outputData.interval.start +

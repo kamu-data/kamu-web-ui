@@ -40,6 +40,7 @@ import { ViewportScroller } from "@angular/common";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
+import { EditPollingSourceService } from "../add-polling-source/edit-polling-source.service";
 @Component({
     selector: "app-set-transform",
     templateUrl: "./set-transform.component.html",
@@ -48,9 +49,9 @@ import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.s
 })
 export class SetTransformComponent extends BaseComponent implements OnInit {
     public searchDataset = "";
-    private delayTime: number = AppValues.SHORT_DELAY_MS;
+    private readonly delayTime: number = AppValues.SHORT_DELAY_MS;
     private inputDatasets = new Set([] as string[]);
-    public knownEngines: EngineDesc[];
+    public knownEngines: MaybeNull<EngineDesc[]>;
     public selectedEngine: string;
     public selectedImage: string;
     public images: string[];
@@ -58,11 +59,10 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
     public history: DatasetHistoryUpdate;
     public currentSetTransformEvent: SetTransFormYamlType;
     public queries: Omit<SqlQueryStep, "__typename">[] = [];
-
     public readonly sqlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
         {
             theme: "vs",
-            language: "yaml",
+            language: "sql",
             renderLineHighlight: "none",
             minimap: {
                 enabled: false,
@@ -79,7 +79,8 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
         private datasetService: DatasetService,
         private engineService: EngineService,
         private cdr: ChangeDetectorRef,
-        private editService: EditSetTransformService,
+        private editSetTransformService: EditSetTransformService,
+        private editService: EditPollingSourceService,
         private activatedRoute: ActivatedRoute,
         private scroll: ViewportScroller,
         private modalService: NgbModal,
@@ -97,7 +98,7 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
         this.trackSubscriptions(
             this.engineService.engines().subscribe((result: EnginesQuery) => {
                 this.knownEngines = result.data.knownEngines;
-                this.selectedEngine = this.knownEngines[0].name;
+                this.selectedEngine = this.knownEngines[0].name.toUpperCase();
                 this.selectedImage = this.knownEngines[0].latestImage;
                 this.cdr.detectChanges();
             }),
@@ -107,69 +108,70 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
     private initQueriesSection(): void {
         this.trackSubscription(
             this.editService
-                .getSetTransformAsYaml(this.getDatasetInfoFromUrl())
-                // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-                .subscribe((result: [string, void] | null) => {
+                .getEventAsYaml(this.getDatasetInfoFromUrl(), "SetTransform")
+                .subscribe((result: string | null | undefined) => {
                     if (result) {
-                        this.eventYamlByHash = result[0];
+                        this.eventYamlByHash = result;
                         this.currentSetTransformEvent =
-                            this.editService.parseEventFromYaml(
+                            this.editSetTransformService.parseEventFromYaml(
                                 this.eventYamlByHash,
                             );
-                        this.queries =
-                            this.currentSetTransformEvent.transform.queries;
-                        this.currentSetTransformEvent.inputs.forEach(
-                            (item: TransformInput) => {
-                                this.inputDatasets.add(JSON.stringify(item));
-                                this.trackSubscription(
-                                    this.datasetService
-                                        .requestDatasetSchema(item.id as string)
-                                        .subscribe(
-                                            (data: GetDatasetSchemaQuery) => {
-                                                if (data.datasets.byId) {
-                                                    const schema: MaybeNull<DatasetSchema> =
-                                                        data.datasets.byId
-                                                            .metadata
-                                                            .currentSchema
-                                                            ? (JSON.parse(
-                                                                  data.datasets
-                                                                      .byId
-                                                                      .metadata
-                                                                      .currentSchema
-                                                                      .content,
-                                                              ) as DatasetSchema)
-                                                            : null;
-                                                    this.TREE_DATA.push({
-                                                        name: item.name as string,
-                                                        children:
-                                                            schema?.fields,
-                                                    });
-                                                    this.dataSource.data =
-                                                        this.TREE_DATA;
-                                                }
-                                            },
-                                        ),
-                                );
-                            },
-                        );
+                        if (this.currentSetTransformEvent.transform.query) {
+                            this.initDefaultQueriesSection(
+                                this.currentSetTransformEvent.transform.query,
+                            );
+                        } else {
+                            this.queries =
+                                this.currentSetTransformEvent.transform.queries;
+                        }
+                        this.getInputDatasetsInfo();
                         this.initCurrentEngine();
                     } else {
-                        this.queries.push({
-                            alias: this.getDatasetInfoFromUrl().datasetName,
-                            query: "",
-                        });
-                        this.cdr.detectChanges();
+                        this.initDefaultQueriesSection();
                     }
                     this.history = this.editService.history;
                 }),
         );
     }
 
+    private initDefaultQueriesSection(query = ""): void {
+        this.queries.push({
+            alias: this.getDatasetInfoFromUrl().datasetName,
+            query,
+        });
+        this.cdr.detectChanges();
+    }
+
+    private getInputDatasetsInfo(): void {
+        this.currentSetTransformEvent.inputs.forEach((item: TransformInput) => {
+            this.inputDatasets.add(JSON.stringify(item));
+            this.trackSubscription(
+                this.datasetService
+                    .requestDatasetSchema(item.id as string)
+                    .subscribe((data: GetDatasetSchemaQuery) => {
+                        if (data.datasets.byId) {
+                            const schema: MaybeNull<DatasetSchema> = data
+                                .datasets.byId.metadata.currentSchema
+                                ? (JSON.parse(
+                                      data.datasets.byId.metadata.currentSchema
+                                          .content,
+                                  ) as DatasetSchema)
+                                : null;
+                            this.TREE_DATA.push({
+                                name: item.name as string,
+                                children: schema?.fields,
+                            });
+                            this.dataSource.data = this.TREE_DATA;
+                        }
+                    }),
+            );
+        });
+    }
+
     private initCurrentEngine(): void {
         const currentEngine: string =
             this.currentSetTransformEvent.transform.engine;
-        this.selectedEngine =
-            currentEngine[0].toUpperCase() + currentEngine.slice(1);
+        this.selectedEngine = currentEngine.toUpperCase();
         this.onSelectType();
         this.cdr.detectChanges();
     }
@@ -190,15 +192,21 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
         return index === this.queries.length - 1;
     }
 
+    public isPenultimateQuery(index: number): boolean {
+        return index === this.queries.length - 2;
+    }
+
     public hasChild(_: number, node: DatasetNode): boolean {
         return !!node.children && node.children.length > 0;
     }
 
     public onSelectType(): void {
-        const result = this.knownEngines.find(
-            (item) => item.name === this.selectedEngine,
-        );
-        if (result) this.selectedImage = result.latestImage;
+        if (this.knownEngines) {
+            const result = this.knownEngines.find(
+                (item) => item.name.toUpperCase() === this.selectedEngine,
+            );
+            if (result) this.selectedImage = result.latestImage;
+        }
     }
 
     public deleteInputDataset(datasetName: string): void {
@@ -302,7 +310,7 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
         );
         (modalRef.componentInstance as FinalYamlModalComponent).yamlTemplate =
             this.yamlEventService.buildYamlSetTransformEvent(
-                this.editService.transformEventAsObject(
+                this.editSetTransformService.transformEventAsObject(
                     this.inputDatasets,
                     this.selectedEngine,
                     this.queries,
@@ -319,7 +327,7 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
                     this.getDatasetInfoFromUrl().accountName,
                     this.getDatasetInfoFromUrl().datasetName,
                     this.yamlEventService.buildYamlSetTransformEvent(
-                        this.editService.transformEventAsObject(
+                        this.editSetTransformService.transformEventAsObject(
                             this.inputDatasets,
                             this.selectedEngine,
                             this.queries,

@@ -1,4 +1,7 @@
-<div class="mb-4" *ngIf="queries">
+<div
+    class="mb-4"
+    *ngIf="queries && datasetKind === 'DERIVATIVE'; else errorBlock"
+>
     <div class="text-center mt-4">
         <p class="fs-4">Set Transformation</p>
         <p class="text-muted">
@@ -6,7 +9,7 @@
         </p>
     </div>
     <div class="container mt-4">
-        <div class="row">
+        <div class="row pt-4">
             <div class="col-lg-4 left-section">
                 <app-search-section
                     [inputDatasets]="inputDatasets"
@@ -27,23 +30,15 @@
         </div>
     </div>
     <div class="d-flex justify-content-end section-buttons">
-        <button
-            type="button"
-            mat-stroked-button
-            class="button-custom width-custom bg-primary text-white"
-            (click)="onEditYaml()"
-            data-test-id="edit-yaml-set-transform-button"
-        >
-            Edit Yaml
-        </button>
-        <button
-            type="button"
-            mat-stroked-button
-            class="button-custom ms-4 bg-success text-white width-custom"
-            (click)="onSaveEvent()"
-            data-test-id="save-set-transform-button"
-        >
-            Save
-        </button>
+        <app-stepper-navigation
+            [prevStep]="null"
+            [nextStep]="null"
+            [validStep]="isInputDatasetsExist"
+            (saveEventEmitter)="onSaveEvent()"
+            (editYamlEmitter)="onEditYaml()"
+        ></app-stepper-navigation>
     </div>
 </div>
+<ng-template #errorBlock>
+    <app-page-not-found *ngIf="datasetKind"></app-page-not-found>>
+</ng-template>

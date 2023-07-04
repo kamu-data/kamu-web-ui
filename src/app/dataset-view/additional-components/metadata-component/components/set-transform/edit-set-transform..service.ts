@@ -4,19 +4,17 @@ import {
     SqlQueryStep,
     TransformInput,
 } from "src/app/api/kamu.graphql.interface";
-import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { parse } from "yaml";
 import {
     EditSetTransformParseType,
     SetTransFormYamlType,
 } from "./set-transform.types";
+import { BaseYamlEventService } from "src/app/common/base-yaml-event.service";
 
 @Injectable({
     providedIn: "root",
 })
-export class EditSetTransformService {
-    public history: DatasetHistoryUpdate;
-
+export class EditSetTransformService extends BaseYamlEventService {
     public parseEventFromYaml(event: string): SetTransFormYamlType {
         const editFormParseValue = parse(event) as EditSetTransformParseType;
         return editFormParseValue.content.event;

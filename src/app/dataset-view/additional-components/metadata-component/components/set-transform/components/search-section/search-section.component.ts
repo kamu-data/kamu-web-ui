@@ -13,6 +13,7 @@ import { DatasetSchema } from "src/app/interface/dataset.interface";
 import { DatasetAutocompleteItem } from "src/app/interface/search.interface";
 import { DatasetNode } from "../../set-transform.types";
 import { BaseComponent } from "src/app/common/base.component";
+import { parseCurrentSchema } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-search-section",
@@ -72,13 +73,8 @@ export class SearchSectionComponent extends BaseComponent {
                     .requestDatasetSchema(id)
                     .subscribe((data: GetDatasetSchemaQuery) => {
                         if (data.datasets.byId) {
-                            const schema: MaybeNull<DatasetSchema> = data
-                                .datasets.byId.metadata.currentSchema
-                                ? (JSON.parse(
-                                      data.datasets.byId.metadata.currentSchema
-                                          .content,
-                                  ) as DatasetSchema)
-                                : null;
+                            const schema: MaybeNull<DatasetSchema> =
+                                parseCurrentSchema(data);
                             this.TREE_DATA.push({
                                 name: value.dataset.name as string,
                                 children: schema?.fields,

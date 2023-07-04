@@ -8,7 +8,10 @@ import {
     PreprocessKind,
 } from "./add-polling-source-form.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
-import { SetPollingSource } from "./../../../../../api/kamu.graphql.interface";
+import {
+    DatasetKind,
+    SetPollingSource,
+} from "./../../../../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import {
     ChangeDetectionStrategy,
@@ -53,6 +56,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     public errorMessage = "";
     public history: DatasetHistoryUpdate;
     public eventYamlByHash: MaybeNull<string>;
+    public datasetKind: DatasetKind;
 
     // --------------------------------
     private readonly DEFAULT_PREPARE_KIND = PrepareKind.PIPE;
@@ -146,6 +150,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.getDatasetKind()
         this.trackSubscriptions(
             this.editService
                 .getEventAsYaml(
@@ -217,5 +222,13 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
             );
         (modalRef.componentInstance as FinalYamlModalComponent).datasetInfo =
             this.getDatasetInfoFromUrl();
+    }
+
+    private getDatasetKind(): void {
+        this.trackSubscription(
+            this.editService.onKindChanges.subscribe((kind: DatasetKind) => {
+                this.datasetKind = kind;
+            }),
+        );
     }
 }

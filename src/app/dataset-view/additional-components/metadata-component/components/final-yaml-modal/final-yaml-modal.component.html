@@ -39,6 +39,7 @@
             class="btn btn-outline-success"
             (click)="saveEvent()"
             data-test-id="save-event"
+            [disabled]="!enabledSaveBtn"
         >
             Save event
         </button>

@@ -1,4 +1,7 @@
-import { TransformInput } from "./../../../../../api/kamu.graphql.interface";
+import {
+    DatasetKind,
+    TransformInput,
+} from "./../../../../../api/kamu.graphql.interface";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -18,14 +21,13 @@ import {
 import { EditSetTransformService } from "./edit-set-transform..service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { ActivatedRoute, ParamMap } from "@angular/router";
-import { requireValue } from "src/app/common/app.helpers";
+import { parseCurrentSchema, requireValue } from "src/app/common/app.helpers";
 import ProjectLinks from "src/app/project-links";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetNode, SetTransFormYamlType } from "./set-transform.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
-import { EditPollingSourceService } from "../add-polling-source/edit-polling-source.service";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 @Component({
     selector: "app-set-transform",
@@ -42,12 +44,12 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
     public queries: Omit<SqlQueryStep, "__typename">[] = [];
     public dataSource = new MatTreeNestedDataSource<DatasetNode>();
     public TREE_DATA: DatasetNode[] = [];
+    public datasetKind: DatasetKind;
 
     constructor(
         private datasetService: DatasetService,
         private cdr: ChangeDetectorRef,
-        private editSetTransformService: EditSetTransformService,
-        private editService: EditPollingSourceService,
+        private editService: EditSetTransformService,
         private activatedRoute: ActivatedRoute,
         private modalService: NgbModal,
         private yamlEventService: TemplatesYamlEventsService,
@@ -57,11 +59,24 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.getDatasetKind();
         this.initQueriesSection();
     }
 
     public onSelectEngine(engine: string): void {
         this.selectedEngine = engine;
+    }
+
+    public get isInputDatasetsExist(): boolean {
+        return !!this.inputDatasets.size;
+    }
+
+    private getDatasetKind(): void {
+        this.trackSubscription(
+            this.editService.onKindChanges.subscribe((kind: DatasetKind) => {
+                this.datasetKind = kind;
+            }),
+        );
     }
 
     private initQueriesSection(): void {
@@ -71,11 +86,12 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
                     this.getDatasetInfoFromUrl(),
                     SupportedEvents.SetTransform,
                 )
+
                 .subscribe((result: string | null | undefined) => {
                     if (result) {
                         this.eventYamlByHash = result;
                         this.currentSetTransformEvent =
-                            this.editSetTransformService.parseEventFromYaml(
+                            this.editService.parseEventFromYaml(
                                 this.eventYamlByHash,
                             );
                         if (this.currentSetTransformEvent.transform.query) {
@@ -87,6 +103,8 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
                                 this.currentSetTransformEvent.transform.queries;
                         }
                         this.getInputDatasetsInfo();
+                    } else {
+                        this.initDefaultQueriesSection();
                     }
                     this.history = this.editService.history;
                     this.cdr.detectChanges();
@@ -94,12 +112,11 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
         );
     }
 
-    private initDefaultQueriesSection(query: string): void {
-        this.queries.push({
-            alias: this.getDatasetInfoFromUrl().datasetName,
-            query,
-        });
-        this.cdr.detectChanges();
+    private initDefaultQueriesSection(query = ""): void {
+        this.queries = [
+            ...this.queries,
+            { alias: this.getDatasetInfoFromUrl().datasetName, query },
+        ];
     }
 
     private getInputDatasetsInfo(): void {
@@ -111,13 +128,8 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
                         .requestDatasetSchema(item.id as string)
                         .subscribe((data: GetDatasetSchemaQuery) => {
                             if (data.datasets.byId) {
-                                const schema: MaybeNull<DatasetSchema> = data
-                                    .datasets.byId.metadata.currentSchema
-                                    ? (JSON.parse(
-                                          data.datasets.byId.metadata
-                                              .currentSchema.content,
-                                      ) as DatasetSchema)
-                                    : null;
+                                const schema: MaybeNull<DatasetSchema> =
+                                    parseCurrentSchema(data);
                                 this.TREE_DATA.push({
                                     name: item.name as string,
                                     children: schema?.fields,
@@ -147,16 +159,17 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
             FinalYamlModalComponent,
             { size: "lg" },
         );
-        (modalRef.componentInstance as FinalYamlModalComponent).yamlTemplate =
+        const instance = modalRef.componentInstance as FinalYamlModalComponent;
+        instance.yamlTemplate =
             this.yamlEventService.buildYamlSetTransformEvent(
-                this.editSetTransformService.transformEventAsObject(
+                this.editService.transformEventAsObject(
                     this.inputDatasets,
                     this.selectedEngine,
                     this.queries,
                 ),
             );
-        (modalRef.componentInstance as FinalYamlModalComponent).datasetInfo =
-            this.getDatasetInfoFromUrl();
+        instance.datasetInfo = this.getDatasetInfoFromUrl();
+        instance.enabledSaveBtn = this.isInputDatasetsExist;
     }
 
     public onSaveEvent(): void {
@@ -166,7 +179,7 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
                     this.getDatasetInfoFromUrl().accountName,
                     this.getDatasetInfoFromUrl().datasetName,
                     this.yamlEventService.buildYamlSetTransformEvent(
-                        this.editSetTransformService.transformEventAsObject(
+                        this.editService.transformEventAsObject(
                             this.inputDatasets,
                             this.selectedEngine,
                             this.queries,

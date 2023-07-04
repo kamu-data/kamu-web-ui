@@ -57,6 +57,8 @@ import { MatTreeModule } from "@angular/material/tree";
 import { SearchSectionComponent } from "./additional-components/metadata-component/components/set-transform/components/search-section/search-section.component";
 import { EngineSectionComponent } from "./additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.component";
 import { QueriesSectionComponent } from "./additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
+import { PageNotFoundComponent } from "../components/page-not-found/page-not-found.component";
+import { AddPollingSourceComponent } from "./additional-components/metadata-component/components/add-polling-source/add-polling-source.component";
 @NgModule({
     imports: [
         CommonModule,
@@ -138,6 +140,8 @@ import { QueriesSectionComponent } from "./additional-components/metadata-compon
         SearchSectionComponent,
         EngineSectionComponent,
         QueriesSectionComponent,
+        PageNotFoundComponent,
+        AddPollingSourceComponent,
     ],
 })
 export class DatasetModule {

@@ -1,11 +1,4 @@
 import { Injectable } from "@angular/core";
-import { EMPTY, Observable, iif, of, zip } from "rxjs";
-import { switchMap, map, expand, last } from "rxjs/operators";
-import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { parse } from "yaml";
 import {
     EditFormParseType,
@@ -17,23 +10,18 @@ import {
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
-import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
+import { BaseYamlEventService } from "src/app/common/base-yaml-event.service";
 
 @Injectable({
     providedIn: "root",
 })
-export class EditPollingSourceService {
-    private currentPage = 0;
+export class EditPollingSourceService extends BaseYamlEventService {
     private readonly PATTERN_CONTROL = "pattern";
     private readonly TIMESTAMP_FORMAT_CONTROL = "timestampFormat";
-    private historyPageSize = 100;
-    public history: DatasetHistoryUpdate;
 
-    constructor(
-        private appDatasetService: DatasetService,
-        private blockService: BlockService,
-        private fb: FormBuilder,
-    ) {}
+    constructor(private fb: FormBuilder) {
+        super();
+    }
 
     public parseEventFromYaml(event: string): EditFormType {
         const editFormParseValue = parse(event) as EditFormParseType;
@@ -59,56 +47,6 @@ export class EditPollingSourceService {
                 break;
             }
         }
-    }
-
-    public getEventAsYaml(
-        info: DatasetInfo,
-        typename: SupportedEvents,
-    ): Observable<string | null | undefined> {
-        return this.appDatasetService
-            .getDatasetHistory(info, this.historyPageSize, this.currentPage)
-            .pipe(
-                expand((h: DatasetHistoryUpdate) => {
-                    const filteredHistory = this.filterHistoryByType(
-                        h.history,
-                        typename,
-                    );
-                    return filteredHistory.length === 0 &&
-                        h.pageInfo.hasNextPage
-                        ? this.appDatasetService.getDatasetHistory(
-                              info,
-                              this.historyPageSize,
-                              h.pageInfo.currentPage + 1,
-                          )
-                        : EMPTY;
-                }),
-                map((h: DatasetHistoryUpdate) => {
-                    this.history = h;
-                    const filteredHistory = this.filterHistoryByType(
-                        h.history,
-                        typename,
-                    );
-                    return filteredHistory;
-                }),
-                switchMap((filteredHistory: MetadataBlockFragment[]) =>
-                    iif(
-                        () => !filteredHistory.length,
-                        of(null),
-                        zip(
-                            this.blockService.onMetadataBlockAsYamlChanges,
-                            this.blockService.requestMetadataBlock(
-                                info,
-                                filteredHistory[0]?.blockHash as string,
-                            ),
-                        ),
-                    ),
-                ),
-                map((result: [string, unknown] | null) => {
-                    if (result) return result[0];
-                    else return null;
-                }),
-                last(),
-            );
     }
 
     private patchFetchStep(
@@ -144,15 +82,6 @@ export class EditPollingSourceService {
                 );
             });
         }
-    }
-
-    private filterHistoryByType(
-        history: MetadataBlockFragment[],
-        typename: string,
-    ): MetadataBlockFragment[] {
-        return history.filter(
-            (item: MetadataBlockFragment) => item.event.__typename === typename,
-        );
     }
 
     private patchMergeStep(

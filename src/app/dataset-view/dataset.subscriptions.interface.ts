@@ -1,4 +1,5 @@
 import {
+    DatasetKind,
     DatasetPageInfoFragment,
     SetVocab,
 } from "./../api/kamu.graphql.interface";
@@ -38,6 +39,7 @@ export interface MetadataSchemaUpdate {
 export interface DatasetHistoryUpdate {
     history: MetadataBlockFragment[];
     pageInfo: DatasetPageInfoFragment;
+    kind?: DatasetKind;
 }
 
 export interface LineageUpdate {

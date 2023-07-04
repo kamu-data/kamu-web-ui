@@ -1,10 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    Input,
-    OnChanges,
-    SimpleChanges,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { SqlQueryStep } from "src/app/api/kamu.graphql.interface";
 import * as monaco from "monaco-editor";
 import { ViewportScroller } from "@angular/common";
@@ -16,26 +10,13 @@ import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/component
     styleUrls: ["./queries-section.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class QueriesSectionComponent implements OnChanges {
+export class QueriesSectionComponent {
     @Input() public queries: Omit<SqlQueryStep, "__typename">[];
     @Input() public datasetName: string;
     public readonly sqlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
         sqlEditorOptions;
 
     constructor(private scroll: ViewportScroller) {}
-
-    ngOnChanges(changes: SimpleChanges): void {
-        const currentQueries = changes.queries.currentValue as Omit<
-            SqlQueryStep,
-            "__typename"
-        >[];
-        if (!currentQueries.length) {
-            this.queries.push({
-                alias: this.datasetName,
-                query: "",
-            });
-        }
-    }
 
     public isLastQuery(index: number): boolean {
         return index === this.queries.length - 1;

@@ -2,24 +2,20 @@
     <mat-icon class="fs-4 align-middle">input</mat-icon>
     <label for="inputDatasets" class="form-label ps-1"> Input datasets</label>
     <div class="d-flex flex-row align-items-center">
-        <input
-            type="text"
-            class="form-control w-425"
-            #searchDatasets
-            placeholder="Look up a dataset..."
-            [(ngModel)]="searchDataset"
-            [ngbTypeahead]="search"
-            [resultTemplate]="rt"
-            [inputFormatter]="formatter"
-            (selectItem)="onSelectItem($event)"
-        />
-        <button
-            (click)="clearSearch()"
-            mat-stroked-button
-            class="ms-4 button-custom bg-secondary text-white"
-        >
-            Clear
-        </button>
+        <div class="d-flex flex-row position-relative">
+            <input
+                type="text"
+                class="form-control w-425"
+                #searchDatasets
+                placeholder="Look up a dataset..."
+                [(ngModel)]="searchDataset"
+                [ngbTypeahead]="search"
+                [resultTemplate]="rt"
+                [inputFormatter]="formatter"
+                (selectItem)="onSelectItem($event)"
+            />
+            <button class="inner-btn" (click)="clearSearch()">X</button>
+        </div>
     </div>
 </div>
 <ng-template #rt let-r="result" let-t="term">

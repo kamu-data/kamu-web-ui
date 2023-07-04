@@ -17,6 +17,7 @@ import {
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
+import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 
 @Injectable({
     providedIn: "root",
@@ -62,7 +63,7 @@ export class EditPollingSourceService {
 
     public getEventAsYaml(
         info: DatasetInfo,
-        typename: string,
+        typename: SupportedEvents,
     ): Observable<string | null | undefined> {
         return this.appDatasetService
             .getDatasetHistory(info, this.historyPageSize, this.currentPage)
@@ -104,6 +105,7 @@ export class EditPollingSourceService {
                 ),
                 map((result: [string, unknown] | null) => {
                     if (result) return result[0];
+                    else return null;
                 }),
                 last(),
             );

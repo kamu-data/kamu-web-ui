@@ -8,6 +8,7 @@ import {
 import { SqlQueryStep } from "src/app/api/kamu.graphql.interface";
 import * as monaco from "monaco-editor";
 import { ViewportScroller } from "@angular/common";
+import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
 
 @Component({
     selector: "app-queries-section",
@@ -19,14 +20,7 @@ export class QueriesSectionComponent implements OnChanges {
     @Input() public queries: Omit<SqlQueryStep, "__typename">[];
     @Input() public datasetName: string;
     public readonly sqlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
-        {
-            theme: "vs",
-            language: "sql",
-            renderLineHighlight: "none",
-            minimap: {
-                enabled: false,
-            },
-        };
+        sqlEditorOptions;
 
     constructor(private scroll: ViewportScroller) {}
 
@@ -47,8 +41,12 @@ export class QueriesSectionComponent implements OnChanges {
         return index === this.queries.length - 1;
     }
 
-    public isPenultimateQuery(index: number): boolean {
+    public isBeforeLastQuery(index: number): boolean {
         return index === this.queries.length - 2;
+    }
+
+    public isFirstQuery(index: number): boolean {
+        return index === 0;
     }
 
     public addQuery(): void {

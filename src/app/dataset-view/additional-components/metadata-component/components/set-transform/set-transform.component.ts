@@ -26,6 +26,7 @@ import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.co
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { EditPollingSourceService } from "../add-polling-source/edit-polling-source.service";
+import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 @Component({
     selector: "app-set-transform",
     templateUrl: "./set-transform.component.html",
@@ -33,7 +34,7 @@ import { EditPollingSourceService } from "../add-polling-source/edit-polling-sou
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetTransformComponent extends BaseComponent implements OnInit {
-    public inputDatasets = new Set([] as string[]);
+    public inputDatasets = new Set<string>();
     public selectedEngine: string;
     public eventYamlByHash: MaybeNull<string>;
     public history: DatasetHistoryUpdate;
@@ -66,7 +67,10 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
     private initQueriesSection(): void {
         this.trackSubscription(
             this.editService
-                .getEventAsYaml(this.getDatasetInfoFromUrl(), "SetTransform")
+                .getEventAsYaml(
+                    this.getDatasetInfoFromUrl(),
+                    SupportedEvents.SetTransform,
+                )
                 .subscribe((result: string | null | undefined) => {
                     if (result) {
                         this.eventYamlByHash = result;

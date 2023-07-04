@@ -160,11 +160,13 @@
             </div>
         </div>
 
-        <ngx-monaco-editor
-            (onInit)="onInitEditor($event)"
-            [options]="sqlEditorOptions"
-            [(ngModel)]="sqlRequestCode"
-        ></ngx-monaco-editor>
+        <div class="border border-1 rounded-2 px-2 py-4">
+            <ngx-monaco-editor
+                (onInit)="onInitEditor($event)"
+                [options]="sqlEditorOptions"
+                [(ngModel)]="sqlRequestCode"
+            ></ngx-monaco-editor>
+        </div>
         <ng-container *ngIf="sqlErrorMarker">
             <h2 class="box-title align-items-center pb-3 pt-3 m-0">Error:</h2>
             <p class="sql-error-message">{{ sqlErrorMarker }}</p>

@@ -18,6 +18,7 @@ import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { of } from "rxjs";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 
 describe("EditPollingSourceService", () => {
     let service: EditPollingSourceService;
@@ -51,12 +52,14 @@ describe("EditPollingSourceService", () => {
         );
         spyOn(blockService, "requestMetadataBlock").and.returnValue(of());
         blockService.metadataBlockAsYamlChanges("test yaml");
-        service.getEventAsYaml(mockDatasetInfo, "SetPollingSource").subscribe(
-            () => null,
-            () => {
-                expect(service.history).toBeDefined();
-            },
-        );
+        service
+            .getEventAsYaml(mockDatasetInfo, SupportedEvents.SetPollingSource)
+            .subscribe(
+                () => null,
+                () => {
+                    expect(service.history).toBeDefined();
+                },
+            );
     });
 
     it("should be check patch form with fetch url step and without headers", () => {

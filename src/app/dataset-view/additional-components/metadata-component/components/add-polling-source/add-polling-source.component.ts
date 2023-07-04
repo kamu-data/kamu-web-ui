@@ -37,6 +37,7 @@ import { ProcessFormService } from "./process-form.service";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { EditPollingSourceService } from "./edit-polling-source.service";
 import { MaybeNull } from "src/app/common/app.types";
+import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 
 @Component({
     selector: "app-add-polling-source",
@@ -149,7 +150,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
             this.editService
                 .getEventAsYaml(
                     this.getDatasetInfoFromUrl(),
-                    "SetPollingSource",
+                    SupportedEvents.SetPollingSource,
                 )
                 .subscribe((result: string | undefined | null) => {
                     if (result) {

@@ -42,7 +42,7 @@ export class DataHelpers {
 
             case "datafusion":
                 return {
-                    name: "Data Fusion",
+                    name: "DataFusion",
                     url_logo: "assets/images/datafusion-logo.png",
                 };
             default:

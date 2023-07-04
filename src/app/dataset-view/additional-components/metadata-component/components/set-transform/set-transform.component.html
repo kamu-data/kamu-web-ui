@@ -7,7 +7,7 @@
     </div>
     <div class="container mt-4">
         <div class="row">
-            <div class="col-lg-6 left-section">
+            <div class="col-lg-4 left-section">
                 <app-search-section
                     [inputDatasets]="inputDatasets"
                     [TREE_DATA]="TREE_DATA"
@@ -18,7 +18,7 @@
                     (onEmitSelectedEngine)="onSelectEngine($event)"
                 ></app-engine-section>
             </div>
-            <div class="col-lg-6 queries">
+            <div class="col-lg-8 queries">
                 <app-queries-section
                     [queries]="queries"
                     [datasetName]="getDatasetInfoFromUrl().datasetName"

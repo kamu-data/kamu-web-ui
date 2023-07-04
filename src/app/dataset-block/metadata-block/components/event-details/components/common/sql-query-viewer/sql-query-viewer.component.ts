@@ -1,6 +1,5 @@
 import { SqlQueryStep } from "../../../../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { sqlEditorOptionsForEvents } from "../../../config-editor.events";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 
 @Component({
@@ -11,5 +10,4 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
 })
 export class SqlQueryViewerComponent extends BasePropertyComponent {
     @Input() public data: SqlQueryStep[];
-    public sqlEditorOptions = sqlEditorOptionsForEvents;
 }

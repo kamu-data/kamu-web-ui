@@ -150,7 +150,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.getDatasetKind()
+        this.getDatasetKind();
         this.trackSubscriptions(
             this.editService
                 .getEventAsYaml(

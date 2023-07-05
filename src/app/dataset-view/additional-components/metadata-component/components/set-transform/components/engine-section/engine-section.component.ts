@@ -4,10 +4,8 @@ import {
     Component,
     EventEmitter,
     Input,
-    OnChanges,
     OnInit,
     Output,
-    SimpleChanges,
 } from "@angular/core";
 import { EngineDesc, EnginesQuery } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
@@ -21,10 +19,7 @@ import { EngineService } from "src/app/services/engine.service";
     styleUrls: ["./engine-section.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EngineSectionComponent
-    extends BaseComponent
-    implements OnInit, OnChanges
-{
+export class EngineSectionComponent extends BaseComponent implements OnInit {
     @Input() public knownEngines: MaybeNull<EngineDesc[]>;
     @Input() public currentSetTransformEvent: MaybeNull<SetTransFormYamlType>;
     @Input() public selectedEngine: string;
@@ -37,14 +32,6 @@ export class EngineSectionComponent
         private engineService: EngineService,
     ) {
         super();
-    }
-
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (
-            changes.currentSetTransformEvent.previousValue !==
-            changes.currentSetTransformEvent.currentValue
-        )
-            this.initCurrentEngine();
     }
 
     public ngOnInit(): void {
@@ -69,6 +56,7 @@ export class EngineSectionComponent
                 this.knownEngines = result.data.knownEngines;
                 this.selectedEngine = this.knownEngines[0].name.toUpperCase();
                 this.selectedImage = this.knownEngines[0].latestImage;
+                this.initCurrentEngine();
                 this.onEmitSelectedEngine.emit(this.selectedEngine);
                 this.cdr.detectChanges();
             }),

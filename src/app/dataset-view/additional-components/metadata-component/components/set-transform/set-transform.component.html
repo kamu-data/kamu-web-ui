@@ -31,8 +31,6 @@
     </div>
     <div class="d-flex justify-content-end section-buttons">
         <app-stepper-navigation
-            [prevStep]="null"
-            [nextStep]="null"
             [validStep]="isInputDatasetsExist"
             (saveEventEmitter)="onSaveEvent()"
             (editYamlEmitter)="onEditYaml()"

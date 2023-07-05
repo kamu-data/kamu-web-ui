@@ -15,7 +15,7 @@ export abstract class BaseYamlEventService {
     private appDatasetService = inject(DatasetService);
     private blockService = inject(BlockService);
     private currentPage = 0;
-    private historyPageSize = 100;
+    private readonly historyPageSize = 100;
     public history: DatasetHistoryUpdate;
     private kindChanges$: Subject<DatasetKind> = new Subject<DatasetKind>();
     public changeKindChanges(data: DatasetKind): void {

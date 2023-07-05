@@ -62,7 +62,13 @@
                         }}
                     </mat-icon>
                 </button>
-                <span class="node-name"> {{ node.name }}</span>
+
+                <a
+                    class="node-name"
+                    (click)="navigateToDataset(node.owner, node.name)"
+                >
+                    {{ node.name }}</a
+                >
                 <button
                     class="no-button"
                     (click)="deleteInputDataset(node.name)"

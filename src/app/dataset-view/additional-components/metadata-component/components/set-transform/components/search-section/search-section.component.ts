@@ -4,7 +4,10 @@ import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { OperatorFunction, Observable } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
-import { GetDatasetSchemaQuery } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    GetDatasetSchemaQuery,
+} from "src/app/api/kamu.graphql.interface";
 import { SearchApi } from "src/app/api/search.api";
 import { MaybeNull } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
@@ -14,6 +17,7 @@ import { DatasetAutocompleteItem } from "src/app/interface/search.interface";
 import { DatasetNode } from "../../set-transform.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { parseCurrentSchema } from "src/app/common/app.helpers";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-search-section",
@@ -34,6 +38,7 @@ export class SearchSectionComponent extends BaseComponent {
     constructor(
         private appSearchAPI: SearchApi,
         private datasetService: DatasetService,
+        private navigationService: NavigationService,
     ) {
         super();
     }
@@ -73,11 +78,15 @@ export class SearchSectionComponent extends BaseComponent {
                     .requestDatasetSchema(id)
                     .subscribe((data: GetDatasetSchemaQuery) => {
                         if (data.datasets.byId) {
+                            const owner = (
+                                data.datasets.byId as DatasetBasicsFragment
+                            ).owner.name;
                             const schema: MaybeNull<DatasetSchema> =
                                 parseCurrentSchema(data);
                             this.TREE_DATA.push({
                                 name: value.dataset.name as string,
                                 children: schema?.fields,
+                                owner,
                             });
                             this.dataSource.data = this.TREE_DATA;
                         }
@@ -104,5 +113,12 @@ export class SearchSectionComponent extends BaseComponent {
 
     public hasChild(_: number, node: DatasetNode): boolean {
         return !!node.children && node.children.length > 0;
+    }
+
+    public navigateToDataset(accountName: string, datasetName: string): void {
+        this.navigationService.navigateToDatasetView({
+            accountName,
+            datasetName,
+        });
     }
 }

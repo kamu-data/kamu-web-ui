@@ -1,4 +1,5 @@
 import {
+    DatasetBasicsFragment,
     DatasetKind,
     TransformInput,
 } from "./../../../../../api/kamu.graphql.interface";
@@ -128,11 +129,15 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
                         .requestDatasetSchema(item.id as string)
                         .subscribe((data: GetDatasetSchemaQuery) => {
                             if (data.datasets.byId) {
+                                const owner = (
+                                    data.datasets.byId as DatasetBasicsFragment
+                                ).owner.name;
                                 const schema: MaybeNull<DatasetSchema> =
                                     parseCurrentSchema(data);
                                 this.TREE_DATA.push({
                                     name: item.name as string,
                                     children: schema?.fields,
+                                    owner,
                                 });
                                 this.dataSource.data = this.TREE_DATA;
                             }

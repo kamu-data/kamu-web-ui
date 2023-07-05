@@ -1191,17 +1191,19 @@ export type GetDatasetSchemaQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
-        byId?: {
-            __typename?: "Dataset";
-            metadata: {
-                __typename?: "DatasetMetadata";
-                currentSchema?: {
-                    __typename?: "DataSchema";
-                    format: DataSchemaFormat;
-                    content: string;
-                } | null;
-            };
-        } | null;
+        byId?:
+            | ({
+                  __typename?: "Dataset";
+                  metadata: {
+                      __typename?: "DatasetMetadata";
+                      currentSchema?: {
+                          __typename?: "DataSchema";
+                          format: DataSchemaFormat;
+                          content: string;
+                      } | null;
+                  };
+              } & DatasetBasicsFragment)
+            | null;
     };
 };
 
@@ -2699,6 +2701,7 @@ export const GetDatasetSchemaDocument = gql`
     query getDatasetSchema($datasetId: DatasetID!) {
         datasets {
             byId(datasetId: $datasetId) {
+                ...DatasetBasics
                 metadata {
                     currentSchema(format: PARQUET_JSON) {
                         format
@@ -2708,6 +2711,7 @@ export const GetDatasetSchemaDocument = gql`
             }
         }
     }
+    ${DatasetBasicsFragmentDoc}
 `;
 
 @Injectable({

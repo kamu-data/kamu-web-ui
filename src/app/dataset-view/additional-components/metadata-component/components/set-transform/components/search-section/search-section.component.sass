@@ -9,15 +9,17 @@
     left: calc(100% - 30px)
     &:hover
         color: blue
-
-.node-name
-    width: 300px
-    overflow: hidden
+.node-name-block
+    width: 335px
     white-space: nowrap
-    text-overflow: ellipsis
-    text-decoration: none
-    &:hover
-        text-decoration: underline
+    .node-link
+        text-overflow: ellipsis
+        overflow: hidden
+    .node-name
+        white-space: nowrap
+        text-decoration: none
+        &:hover
+            text-decoration: underline
 
 .example-tree-invisible
     display: none

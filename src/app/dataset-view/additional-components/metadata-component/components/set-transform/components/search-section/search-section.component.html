@@ -69,20 +69,31 @@
                         }}
                     </mat-icon>
                 </button>
-
-                <a
-                    class="node-name"
-                    (click)="navigateToDataset(node.owner, node.name)"
+                <div
+                    class="d-flex align-items-center justify-content-between node-name-block"
                 >
-                    {{ node.name }}</a
-                >
-                <button
-                    class="no-button"
-                    (click)="deleteInputDataset(node.name)"
-                    title="Delete input dataset"
-                >
-                    <mat-icon class="fs-4 hover">delete</mat-icon>
-                </button>
+                    <div class="node-link">
+                        <a
+                            class="node-name"
+                            (click)="navigateToOwner(node.owner)"
+                        >
+                            {{ node.owner }} </a
+                        >/
+                        <a
+                            class="node-name"
+                            (click)="navigateToDataset(node.owner, node.name)"
+                        >
+                            {{ node.name }}</a
+                        >
+                    </div>
+                    <button
+                        class="no-button d-flex"
+                        (click)="deleteInputDataset(node.name)"
+                        title="Delete input dataset"
+                    >
+                        <mat-icon class="fs-4 hover">delete</mat-icon>
+                    </button>
+                </div>
             </div>
 
             <div

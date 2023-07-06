@@ -121,4 +121,8 @@ export class SearchSectionComponent extends BaseComponent {
             datasetName,
         });
     }
+
+    public navigateToOwner(owner: string): void {
+        this.navigationService.navigateToOwnerView(owner);
+    }
 }

@@ -72,6 +72,10 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
         return !!this.inputDatasets.size;
     }
 
+    // private owners(): string[] {
+    //     return this.TREE_DATA.map((item) => item.owner) as string[];
+    // }
+
     private getDatasetKind(): void {
         this.trackSubscription(
             this.editService.onKindChanges.subscribe((kind: DatasetKind) => {
@@ -171,6 +175,7 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
                     this.inputDatasets,
                     this.selectedEngine,
                     this.queries,
+                    //  this.owners(),
                 ),
             );
         instance.datasetInfo = this.getDatasetInfoFromUrl();
@@ -188,6 +193,7 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
                             this.inputDatasets,
                             this.selectedEngine,
                             this.queries,
+                            //   this.owners(),
                         ),
                     ),
                 )

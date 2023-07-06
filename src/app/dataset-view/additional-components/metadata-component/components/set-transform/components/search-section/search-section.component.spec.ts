@@ -116,6 +116,18 @@ describe("SearchSectionComponent", () => {
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(datasetInfo);
     });
 
+    it("should navigate to owner view", () => {
+        const owner = "kamu";
+        const navigateToOwnerViewSpy = spyOn(
+            navigationService,
+            "navigateToOwnerView",
+        );
+
+        component.navigateToOwner(owner);
+
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(owner);
+    });
+
     it("should check select input dataset", () => {
         const mockNgbTypeaheadSelectItemEvent = {
             item: {

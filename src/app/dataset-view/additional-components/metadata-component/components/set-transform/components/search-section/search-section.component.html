@@ -6,6 +6,7 @@
             <input
                 type="text"
                 class="form-control w-425"
+                data-test-id="searchInputDatasets"
                 #searchDatasets
                 placeholder="Look up a dataset..."
                 [(ngModel)]="searchDataset"
@@ -14,7 +15,13 @@
                 [inputFormatter]="formatter"
                 (selectItem)="onSelectItem($event)"
             />
-            <button class="inner-btn" (click)="clearSearch()">X</button>
+            <button
+                class="inner-btn"
+                (click)="clearSearch()"
+                data-test-id="clear-input"
+            >
+                X
+            </button>
         </div>
     </div>
 </div>

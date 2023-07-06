@@ -12,7 +12,6 @@ import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/component
 })
 export class QueriesSectionComponent {
     @Input() public queries: Omit<SqlQueryStep, "__typename">[];
-    @Input() public datasetName: string;
     public readonly sqlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
         sqlEditorOptions;
 
@@ -43,11 +42,6 @@ export class QueriesSectionComponent {
     }
 
     public swap(index: number, direction: number): void {
-        const condition =
-            direction > 0 ? index === this.queries.length - 1 : index === 0;
-        if (condition) {
-            return;
-        }
         const current = this.queries.find((_, i) => index === i);
         this.queries.splice(index, 1);
         if (current) {

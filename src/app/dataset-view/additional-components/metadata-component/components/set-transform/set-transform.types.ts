@@ -17,6 +17,7 @@ export interface EditSetTransformParseType {
 export type SetTransFormYamlType = Omit<SetTransform, "__typename"> & {
     kind: string;
     transform: {
+        kind: string;
         query?: string;
     };
 };

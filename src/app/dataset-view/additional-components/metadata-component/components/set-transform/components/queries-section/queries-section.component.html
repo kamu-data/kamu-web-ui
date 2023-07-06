@@ -4,7 +4,13 @@
         <label for="inputDatasets" class="form-label ps-1"> Queries</label>
     </div>
     <div class="d-flex justify-content-end mt-2 mb-3">
-        <button (click)="addQuery()" class="button-style">+ Add query</button>
+        <button
+            (click)="addQuery()"
+            class="button-style"
+            data-test-id="set-transform-add-query"
+        >
+            + Add query
+        </button>
     </div>
     <div class="block-query mb-3" *ngFor="let query of queries; let i = index">
         <div>
@@ -33,6 +39,7 @@
                         [disabled]="isBeforeLastQuery(i)"
                         (click)="swap(i, 1)"
                         title="Move down"
+                        attr.data-test-id="move-down-query-{{ i }}"
                     >
                         <mat-icon class="fs-4 hover">expand_more</mat-icon>
                     </button>
@@ -41,6 +48,7 @@
                         (click)="swap(i, -1)"
                         title="Move up"
                         [disabled]="isFirstQuery(i)"
+                        attr.data-test-id="move-up-query-{{ i }}"
                     >
                         <mat-icon class="fs-4 mx-2 hover">expand_less</mat-icon>
                     </button>
@@ -48,6 +56,7 @@
                         class="no-button"
                         (click)="deleteQuery(i)"
                         title="Delete query"
+                        attr.data-test-id="remove-query-{{ i }}"
                     >
                         <mat-icon class="fs-4 hover">delete</mat-icon>
                     </button>

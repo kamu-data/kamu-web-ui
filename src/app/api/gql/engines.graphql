@@ -1,0 +1,9 @@
+query engines {
+  data {
+    knownEngines {
+      name
+      dialect
+      latestImage
+    }
+  }
+}

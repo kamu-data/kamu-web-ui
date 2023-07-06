@@ -1,7 +1,14 @@
 import { ChangeDetectionStrategy } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {
+    FormArray,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+} from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AddPollingSourceComponent } from "./add-polling-source.component";
 import { NgbModal, NgbModalRef, NgbModule } from "@ng-bootstrap/ng-bootstrap";
@@ -65,6 +72,29 @@ describe("AddPollingSourceComponent", () => {
             pageInfo: mockDatasetHistoryResponse.datasets.byOwnerAndName
                 ?.metadata.chain.blocks.pageInfo as DatasetPageInfoFragment,
         };
+        component.pollingSourceForm = new FormGroup({
+            fetch: new FormGroup({
+                kind: new FormControl("url"),
+                order: new FormControl("NONE"),
+                eventTime: new FormGroup({
+                    kind: new FormControl("fromMetadata"),
+                    timestampFormat: new FormControl(""),
+                }),
+                cache: new FormControl(false),
+            }),
+            read: new FormGroup({
+                kind: new FormControl("csv"),
+                schema: new FormArray([
+                    new FormGroup({
+                        name: new FormControl("id"),
+                        type: new FormControl("BIGINT"),
+                    }),
+                ]),
+            }),
+            merge: new FormGroup({
+                kind: new FormControl("append"),
+            }),
+        });
         component.ngOnInit();
         fixture.detectChanges();
     });
@@ -84,8 +114,8 @@ describe("AddPollingSourceComponent", () => {
 
     it("should check eventYamlByHash is not null", () => {
         const mockEventYamlByHash = "test_tyaml";
-        spyOn(editService, "getSetPollingSourceAsYaml").and.returnValue(
-            of([mockEventYamlByHash, undefined]),
+        spyOn(editService, "getEventAsYaml").and.returnValue(
+            of(mockEventYamlByHash),
         );
         component.ngOnInit();
         expect(component.eventYamlByHash).toEqual(mockEventYamlByHash);

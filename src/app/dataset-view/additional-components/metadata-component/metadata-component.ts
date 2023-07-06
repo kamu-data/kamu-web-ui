@@ -21,6 +21,7 @@ import {
 import { momentConvertDatetoLocalWithFormat } from "src/app/common/app.helpers";
 import { MaybeNull } from "src/app/common/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
+import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
 
 @Component({
     selector: "app-metadata",
@@ -34,14 +35,9 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     @Output() clickDatasetEmit = new EventEmitter<DatasetBasicsFragment>();
 
     public sqlEditorOptions = {
-        theme: "vs",
-        language: "sql",
+        ...sqlEditorOptions,
         readOnly: true,
         automaticLayout: true,
-        scrollBeyondLastLine: false,
-        minimap: {
-            enabled: false,
-        },
     };
 
     public currentState?: {
@@ -128,6 +124,14 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     public navigateToEditPollingSource(): void {
         if (this.datasetBasics)
             this.navigationService.navigateToAddPollingSource({
+                accountName: this.datasetBasics.owner.name,
+                datasetName: this.datasetBasics.name as string,
+            });
+    }
+
+    public navigateToEditSetTransform(): void {
+        if (this.datasetBasics)
+            this.navigationService.navigateToSetTransform({
                 accountName: this.datasetBasics.owner.name,
                 datasetName: this.datasetBasics.name as string,
             });

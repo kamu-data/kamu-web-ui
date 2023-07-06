@@ -17,7 +17,7 @@
         <div class="border border-1 mt-4 px-2 py-4 rounded-3">
             <ngx-monaco-editor
                 style="height: 400px"
-                [options]="sqlEditorOptions"
+                [options]="yamlEditorOptions"
                 [(ngModel)]="yamlTemplate"
                 ngDefaultControl
                 data-test-id="monaco-editor-modal"
@@ -39,6 +39,7 @@
             class="btn btn-outline-success"
             (click)="saveEvent()"
             data-test-id="save-event"
+            [disabled]="!enabledSaveBtn"
         >
             Save event
         </button>

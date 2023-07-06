@@ -31,6 +31,7 @@ export type Scalars = {
      */
     DateTime: any;
     Multihash: any;
+    TaskID: any;
 };
 
 export type AccessToken = {
@@ -74,8 +75,9 @@ export type AddData = {
     __typename?: "AddData";
     inputCheckpoint?: Maybe<Scalars["Multihash"]>;
     outputCheckpoint?: Maybe<Checkpoint>;
-    outputData: DataSlice;
+    outputData?: Maybe<DataSlice>;
     outputWatermark?: Maybe<Scalars["DateTime"]>;
+    sourceState?: Maybe<SourceState>;
 };
 
 export type AttachmentEmbedded = {
@@ -195,6 +197,8 @@ export enum DataBatchFormat {
 
 export type DataQueries = {
     __typename?: "DataQueries";
+    /** Lists engines known to the system and recommended for use */
+    knownEngines: Array<EngineDesc>;
     /** Executes a specified query and returns its result */
     query: DataQueryResult;
 };
@@ -262,7 +266,8 @@ export type Dataset = {
     metadata: DatasetMetadata;
     /**
      * Symbolic name of the dataset.
-     * Name can change over the dataset's lifetime. For unique identifier use `id()`.
+     * Name can change over the dataset's lifetime. For unique identifier use
+     * `id()`.
      */
     name: Scalars["DatasetName"];
     /** Returns the user or organization that owns this dataset */
@@ -282,13 +287,17 @@ export type DatasetConnection = {
 
 export type DatasetData = {
     __typename?: "DatasetData";
-    /** An estimated size of data on disk not accounting for replication or caching */
+    /**
+     * An estimated size of data on disk not accounting for replication or
+     * caching
+     */
     estimatedSize: Scalars["Int"];
     /** Total number of records in this dataset */
     numRecordsTotal: Scalars["Int"];
     /**
      * Returns the specified number of the latest records in the dataset
-     * This is equivalent to the SQL query: `SELECT * FROM dataset ORDER BY event_time DESC LIMIT N`
+     * This is equivalent to the SQL query: `SELECT * FROM dataset ORDER BY
+     * event_time DESC LIMIT N`
      */
     tail: DataQueryResult;
 };
@@ -319,7 +328,10 @@ export type DatasetMetadata = {
     currentInfo: SetInfo;
     /** Current license associated with the dataset */
     currentLicense?: Maybe<SetLicense>;
-    /** Current readme file as discovered from attachments associated with the dataset */
+    /**
+     * Current readme file as discovered from attachments associated with the
+     * dataset
+     */
     currentReadme?: Maybe<Scalars["String"]>;
     /** Latest data schema */
     currentSchema?: Maybe<DataSchema>;
@@ -386,6 +398,26 @@ export type DatasetsCreateFromSnapshotArgs = {
     accountId: Scalars["AccountID"];
     snapshot: Scalars["String"];
     snapshotFormat: MetadataManifestFormat;
+};
+
+/** Describes */
+export type EngineDesc = {
+    __typename?: "EngineDesc";
+    /**
+     * Language and dialect this engine is using for queries
+     * Indended for configuring code highlighting and completions.
+     */
+    dialect: QueryDialect;
+    /**
+     * OCI image repository and a tag of the latest engine image, e.g.
+     * "ghcr.io/kamu-data/engine-datafusion:0.1.2"
+     */
+    latestImage: Scalars["String"];
+    /**
+     * A short name of the engine, e.g. "Spark", "Flink".
+     * Intended for use in UI for quick engine identification and selection.
+     */
+    name: Scalars["String"];
 };
 
 export type EnvVar = {
@@ -512,7 +544,10 @@ export type MetadataChain = {
     __typename?: "MetadataChain";
     /** Returns a metadata block corresponding to the specified hash */
     blockByHash?: Maybe<MetadataBlockExtended>;
-    /** Returns a metadata block corresponding to the specified hash and encoded in desired format */
+    /**
+     * Returns a metadata block corresponding to the specified hash and encoded
+     * in desired format
+     */
     blockByHashEncoded?: Maybe<Scalars["String"]>;
     /** Iterates all metadata blocks in the reverse chronological order */
     blocks: MetadataBlockConnection;
@@ -572,6 +607,7 @@ export type MetadataManifestUnsupportedVersion = CommitResult &
 export type Mutation = {
     __typename?: "Mutation";
     auth: Auth;
+    tasks: TasksMutations;
 };
 
 export type OffsetInterval = {
@@ -596,7 +632,10 @@ export type PageBasedInfo = {
     hasNextPage: Scalars["Boolean"];
     /** When paginating backwards, are there more items? */
     hasPreviousPage: Scalars["Boolean"];
-    /** Approximate number of total pages assuming number of nodes per page stays the same */
+    /**
+     * Approximate number of total pages assuming number of nodes per page
+     * stays the same
+     */
     totalPages?: Maybe<Scalars["Int"]>;
 };
 
@@ -615,20 +654,40 @@ export type PrepStepPipe = {
 
 export type Query = {
     __typename?: "Query";
-    /** Account-related functionality group */
+    /**
+     * Account-related functionality group.
+     *
+     * Accounts can be individual users or organizations registered in the
+     * system. This groups deals with their identities and permissions.
+     */
     accounts: Accounts;
     /** Returns the version of the GQL API */
     apiVersion: Scalars["String"];
     /** Querying and data manipulations */
     data: DataQueries;
-    /** Dataset-related functionality group */
+    /**
+     * Dataset-related functionality group.
+     *
+     * Datasets are historical streams of events recorded under a cetrain
+     * schema.
+     */
     datasets: Datasets;
-    /** Search-related functionality group */
+    /** Search-related functionality group. */
     search: Search;
+    /**
+     * Task-related functionality group.
+     *
+     * Tasks are units of scheduling that can perform many functions like
+     * ingesting new data, running dataset transformations, answering ad-hoc
+     * queries etc.
+     */
+    tasks: Tasks;
 };
 
 export enum QueryDialect {
-    DataFusion = "DATA_FUSION",
+    SqlDataFusion = "SQL_DATA_FUSION",
+    SqlFlink = "SQL_FLINK",
+    SqlSpark = "SQL_SPARK",
 }
 
 export type ReadStep =
@@ -787,10 +846,127 @@ export enum SourceOrdering {
     ByName = "BY_NAME",
 }
 
+export type SourceState = {
+    __typename?: "SourceState";
+    kind: Scalars["String"];
+    source: Scalars["String"];
+    value: Scalars["String"];
+};
+
 export type SqlQueryStep = {
     __typename?: "SqlQueryStep";
     alias?: Maybe<Scalars["String"]>;
     query: Scalars["String"];
+};
+
+export type Task = {
+    __typename?: "Task";
+    /** Whether the task was ordered to be cancelled */
+    cancellationRequested: Scalars["Boolean"];
+    /** Time when cancellation of task was requested */
+    cancellationRequestedAt?: Maybe<Scalars["DateTime"]>;
+    /** Time when task was originally created and placed in a queue */
+    createdAt: Scalars["DateTime"];
+    /** Time when task has reached a final outcome */
+    finishedAt?: Maybe<Scalars["DateTime"]>;
+    /**
+     * Describes a certain final outcome of the task once it reaches the
+     * "finished" status
+     */
+    outcome?: Maybe<TaskOutcome>;
+    /** Time when task transitioned into a running state */
+    ranAt?: Maybe<Scalars["DateTime"]>;
+    /** Life-cycle status of a task */
+    status: TaskStatus;
+    /** Unique and stable identitfier of this task */
+    taskId: Scalars["TaskID"];
+};
+
+export type TaskConnection = {
+    __typename?: "TaskConnection";
+    edges: Array<TaskEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<Task>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount: Scalars["Int"];
+};
+
+export type TaskEdge = {
+    __typename?: "TaskEdge";
+    node: Task;
+};
+
+/** Describes a certain final outcome of the task */
+export enum TaskOutcome {
+    /** Task was cancelled by a user */
+    Cancelled = "CANCELLED",
+    /** Task failed to complete */
+    Failed = "FAILED",
+    /** Task succeeded */
+    Success = "SUCCESS",
+}
+
+/** Life-cycle status of a task */
+export enum TaskStatus {
+    /** Task has reached a certain final outcome (see [TaskOutcome]) */
+    Finished = "FINISHED",
+    /** Task is waiting for capacity to be allocated to it */
+    Queued = "QUEUED",
+    /** Task is being executed */
+    Running = "RUNNING",
+}
+
+export type Tasks = {
+    __typename?: "Tasks";
+    /** Returns current state of a given task */
+    getTask?: Maybe<Task>;
+    /**
+     * Returns states of tasks associated with a given dataset ordered by
+     * creation time from newest to oldest
+     */
+    listTasksByDataset: TaskConnection;
+};
+
+export type TasksGetTaskArgs = {
+    taskId: Scalars["TaskID"];
+};
+
+export type TasksListTasksByDatasetArgs = {
+    datasetId: Scalars["DatasetID"];
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+};
+
+export type TasksMutations = {
+    __typename?: "TasksMutations";
+    /** Requests cancellation of the specified task */
+    cancelTask: Task;
+    /**
+     * Schedules a task to update the specified dataset by performing polling
+     * ingest or a derivative transformation
+     */
+    createProbeTask: Task;
+    /**
+     * Schedules a task to update the specified dataset by performing polling
+     * ingest or a derivative transformation
+     */
+    createUpdateDatasetTask: Task;
+};
+
+export type TasksMutationsCancelTaskArgs = {
+    taskId: Scalars["TaskID"];
+};
+
+export type TasksMutationsCreateProbeTaskArgs = {
+    busyTimeMs?: InputMaybe<Scalars["Int"]>;
+    datasetId?: InputMaybe<Scalars["DatasetID"]>;
+    endWithOutcome?: InputMaybe<TaskOutcome>;
+};
+
+export type TasksMutationsCreateUpdateDatasetTaskArgs = {
+    datasetId: Scalars["DatasetID"];
 };
 
 export type TemporalTable = {
@@ -1007,6 +1183,30 @@ export type GetDatasetMainDataQuery = {
     };
 };
 
+export type GetDatasetSchemaQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type GetDatasetSchemaQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?:
+            | ({
+                  __typename?: "Dataset";
+                  metadata: {
+                      __typename?: "DatasetMetadata";
+                      currentSchema?: {
+                          __typename?: "DataSchema";
+                          format: DataSchemaFormat;
+                          content: string;
+                      } | null;
+                  };
+              } & DatasetBasicsFragment)
+            | null;
+    };
+};
+
 export type DatasetsByAccountNameQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     perPage?: InputMaybe<Scalars["Int"]>;
@@ -1030,17 +1230,32 @@ export type DatasetsByAccountNameQuery = {
     };
 };
 
+export type EnginesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type EnginesQuery = {
+    __typename?: "Query";
+    data: {
+        __typename?: "DataQueries";
+        knownEngines: Array<{
+            __typename?: "EngineDesc";
+            name: string;
+            dialect: QueryDialect;
+            latestImage: string;
+        }>;
+    };
+};
+
 export type AddDataEventFragment = {
     __typename?: "AddData";
     inputCheckpoint?: any | null;
     addDataWatermark?: any | null;
-    outputData: {
+    outputData?: {
         __typename?: "DataSlice";
         logicalHash: any;
         physicalHash: any;
         size: number;
         interval: { __typename?: "OffsetInterval"; start: number; end: number };
-    };
+    } | null;
     outputCheckpoint?: {
         __typename?: "Checkpoint";
         physicalHash: any;
@@ -1468,6 +1683,7 @@ export type DatasetOverviewFragment = {
     metadata: {
         __typename?: "DatasetMetadata";
         currentSource?: { __typename: "SetPollingSource" } | null;
+        currentTransform?: { __typename: "SetTransform" } | null;
     };
 } & DatasetDescriptionFragment &
     DatasetDetailsFragment &
@@ -2187,6 +2403,9 @@ export const DatasetOverviewFragmentDoc = gql`
             currentSource {
                 __typename
             }
+            currentTransform {
+                __typename
+            }
         }
     }
     ${DatasetDescriptionFragmentDoc}
@@ -2359,7 +2578,7 @@ export const GetDatasetDataSqlRunDocument = gql`
         data {
             query(
                 query: $query
-                queryDialect: DATA_FUSION
+                queryDialect: SQL_DATA_FUSION
                 schemaFormat: PARQUET_JSON
                 dataFormat: JSON
                 limit: $limit
@@ -2478,6 +2697,36 @@ export class GetDatasetMainDataGQL extends Apollo.Query<
         super(apollo);
     }
 }
+export const GetDatasetSchemaDocument = gql`
+    query getDatasetSchema($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                ...DatasetBasics
+                metadata {
+                    currentSchema(format: PARQUET_JSON) {
+                        format
+                        content
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetDatasetSchemaGQL extends Apollo.Query<
+    GetDatasetSchemaQuery,
+    GetDatasetSchemaQueryVariables
+> {
+    document = GetDatasetSchemaDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const DatasetsByAccountNameDocument = gql`
     query datasetsByAccountName(
         $accountName: AccountName!
@@ -2513,6 +2762,31 @@ export class DatasetsByAccountNameGQL extends Apollo.Query<
     DatasetsByAccountNameQueryVariables
 > {
     document = DatasetsByAccountNameDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const EnginesDocument = gql`
+    query engines {
+        data {
+            knownEngines {
+                name
+                dialect
+                latestImage
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class EnginesGQL extends Apollo.Query<
+    EnginesQuery,
+    EnginesQueryVariables
+> {
+    document = EnginesDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

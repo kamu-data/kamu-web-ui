@@ -69,6 +69,16 @@ export class NavigationService {
         );
     }
 
+    public navigateToSetTransform(params: DatasetInfo): void {
+        promiseWithCatch(
+            this.router.navigate([
+                params.accountName,
+                params.datasetName,
+                ProjectLinks.URL_PARAM_SET_TRANSFORM,
+            ]),
+        );
+    }
+
     public navigateToDatasetView(params: DatasetNavigationParams): void {
         promiseWithCatch(
             this.router.navigate([params.accountName, params.datasetName], {

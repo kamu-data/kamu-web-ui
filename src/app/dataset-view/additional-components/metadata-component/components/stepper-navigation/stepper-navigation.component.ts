@@ -15,9 +15,9 @@ import { SetPollingSourceSection } from "src/app/shared/shared.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepperNavigationComponent {
-    @Input() public nextStep: MaybeNull<SetPollingSourceSection>;
-    @Input() public prevStep: MaybeNull<SetPollingSourceSection>;
-    @Input() public validStep: boolean;
+    @Input() public nextStep: MaybeNull<SetPollingSourceSection> = null;
+    @Input() public prevStep: MaybeNull<SetPollingSourceSection> = null;
+    @Input() public validStep?: boolean;
     @Output() public changeStepEmitter =
         new EventEmitter<SetPollingSourceSection>();
     @Output() public saveEventEmitter = new EventEmitter<null>();

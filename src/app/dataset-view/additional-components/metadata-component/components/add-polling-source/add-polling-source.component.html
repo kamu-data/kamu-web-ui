@@ -1,4 +1,4 @@
-<div class="layout" *ngIf="history">
+<div class="layout" *ngIf="history && datasetKind === 'ROOT'; else errorBlock">
     <div class="mt-4">
         <!-- <ng-container *ngIf="currentStep === steps.FETCH">
             <div class="row">
@@ -123,3 +123,6 @@
         </div>
     </div>
 </div>
+<ng-template #errorBlock>
+    <app-page-not-found *ngIf="datasetKind"></app-page-not-found>
+</ng-template>

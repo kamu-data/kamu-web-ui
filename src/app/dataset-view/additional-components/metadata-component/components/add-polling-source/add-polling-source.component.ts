@@ -8,7 +8,10 @@ import {
     PreprocessKind,
 } from "./add-polling-source-form.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
-import { SetPollingSource } from "./../../../../../api/kamu.graphql.interface";
+import {
+    DatasetKind,
+    SetPollingSource,
+} from "./../../../../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import {
     ChangeDetectionStrategy,
@@ -37,6 +40,7 @@ import { ProcessFormService } from "./process-form.service";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { EditPollingSourceService } from "./edit-polling-source.service";
 import { MaybeNull } from "src/app/common/app.types";
+import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 
 @Component({
     selector: "app-add-polling-source",
@@ -52,6 +56,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     public errorMessage = "";
     public history: DatasetHistoryUpdate;
     public eventYamlByHash: MaybeNull<string>;
+    public datasetKind: DatasetKind;
 
     // --------------------------------
     private readonly DEFAULT_PREPARE_KIND = PrepareKind.PIPE;
@@ -145,13 +150,16 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.getDatasetKind();
         this.trackSubscriptions(
             this.editService
-                .getSetPollingSourceAsYaml(this.getDatasetInfoFromUrl())
-                // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-                .subscribe((result: [string, void] | null) => {
+                .getEventAsYaml(
+                    this.getDatasetInfoFromUrl(),
+                    SupportedEvents.SetPollingSource,
+                )
+                .subscribe((result: string | undefined | null) => {
                     if (result) {
-                        this.eventYamlByHash = result[0];
+                        this.eventYamlByHash = result;
                     }
                     this.history = this.editService.history;
                     this.cdr.detectChanges();
@@ -214,5 +222,13 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
             );
         (modalRef.componentInstance as FinalYamlModalComponent).datasetInfo =
             this.getDatasetInfoFromUrl();
+    }
+
+    private getDatasetKind(): void {
+        this.trackSubscription(
+            this.editService.onKindChanges.subscribe((kind: DatasetKind) => {
+                this.datasetKind = kind;
+            }),
+        );
     }
 }

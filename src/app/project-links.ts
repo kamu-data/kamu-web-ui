@@ -29,6 +29,7 @@ export default class ProjectLinks {
     public static readonly URL_PARAM_BLOCK_HASH: string = "blockHash";
     public static readonly URL_PARAM_ADD_POLLING_SOURCE: string =
         "add-polling-source";
+    public static readonly URL_PARAM_SET_TRANSFORM: string = "set-transform";
 
     public static readonly URL_QUERY_PARAM_TAB: string = "tab";
     public static readonly URL_QUERY_PARAM_PAGE: string = "page";

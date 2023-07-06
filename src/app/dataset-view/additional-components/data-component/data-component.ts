@@ -21,6 +21,7 @@ import { BaseComponent } from "src/app/common/base.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import * as monaco from "monaco-editor";
 import { MaybeNull } from "src/app/common/app.types";
+import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
 
 @Component({
     selector: "app-data",
@@ -30,14 +31,7 @@ import { MaybeNull } from "src/app/common/app.types";
 export class DataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;
     @Output() public runSQLRequestEmit = new EventEmitter<string>();
-    public sqlEditorOptions = {
-        theme: "vs",
-        language: "sql",
-        renderLineHighlight: "none",
-        minimap: {
-            enabled: false,
-        },
-    };
+    public sqlEditorOptions = sqlEditorOptions;
     public savedQueries = DataTabValues.savedQueries;
     public sqlRequestCode = `select\n  *\nfrom `;
 

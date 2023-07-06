@@ -52,7 +52,13 @@ import {
     OwlNativeDateTimeModule,
 } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
-
+import { SetTransformComponent } from "./additional-components/metadata-component/components/set-transform/set-transform.component";
+import { MatTreeModule } from "@angular/material/tree";
+import { SearchSectionComponent } from "./additional-components/metadata-component/components/set-transform/components/search-section/search-section.component";
+import { EngineSectionComponent } from "./additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.component";
+import { QueriesSectionComponent } from "./additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
+import { PageNotFoundComponent } from "../components/page-not-found/page-not-found.component";
+import { AddPollingSourceComponent } from "./additional-components/metadata-component/components/add-polling-source/add-polling-source.component";
 @NgModule({
     imports: [
         CommonModule,
@@ -92,6 +98,7 @@ import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-
         OwlDateTimeModule,
         OwlNativeDateTimeModule,
         OwlMomentDateTimeModule,
+        MatTreeModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -109,6 +116,7 @@ import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-
         HistoryComponent,
         MonacoEditorModule,
         DisplayHashModule,
+        MatTreeModule,
     ],
     declarations: [
         DatasetViewHeaderComponent,
@@ -128,6 +136,12 @@ import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-
         PreprocessStepComponent,
         StepperNavigationComponent,
         EditWatermarkModalComponent,
+        SetTransformComponent,
+        SearchSectionComponent,
+        EngineSectionComponent,
+        QueriesSectionComponent,
+        PageNotFoundComponent,
+        AddPollingSourceComponent,
     ],
 })
 export class DatasetModule {

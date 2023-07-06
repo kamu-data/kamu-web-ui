@@ -24,7 +24,7 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
         derivative: DatasetKind.Derivative,
     };
     public readonly initialHint = "# You can edit this file\n";
-    public readonly sqlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
+    public readonly yamlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
         {
             theme: "vs",
             language: "yaml",

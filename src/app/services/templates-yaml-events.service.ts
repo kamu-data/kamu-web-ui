@@ -1,4 +1,8 @@
-import { SetLicense, SetPollingSource } from "./../api/kamu.graphql.interface";
+import {
+    SetLicense,
+    SetPollingSource,
+    SetTransform,
+} from "./../api/kamu.graphql.interface";
 import { Injectable } from "@angular/core";
 import { MaybeNull } from "../common/app.types";
 import { stringify } from "yaml";
@@ -51,6 +55,16 @@ export class TemplatesYamlEventsService {
     ): string {
         this.initialTemplate.content = {
             kind: "setPollingSource",
+            ...params,
+        };
+        return stringify(this.initialTemplate);
+    }
+
+    public buildYamlSetTransformEvent(
+        params: Omit<SetTransform, "__typename">,
+    ): string {
+        this.initialTemplate.content = {
+            kind: "setTransform",
             ...params,
         };
         return stringify(this.initialTemplate);

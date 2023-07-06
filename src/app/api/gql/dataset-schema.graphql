@@ -1,0 +1,13 @@
+query getDatasetSchema($datasetId: DatasetID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      ...DatasetBasics
+      metadata {
+        currentSchema(format: PARQUET_JSON) {
+          format
+          content
+        }
+      }
+    }
+  }
+}

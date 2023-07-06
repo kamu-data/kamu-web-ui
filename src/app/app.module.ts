@@ -66,7 +66,6 @@ import { DatasetsTabComponent } from "./auth/account/additional-components/datas
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { ToastrModule } from "ngx-toastr";
-import { AddPollingSourceComponent } from "./dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source.component";
 
 const Services = [
     {
@@ -137,7 +136,6 @@ const MatModules = [
         NotificationIndicatorComponent,
         SettingsComponent,
         DatasetsTabComponent,
-        AddPollingSourceComponent,
     ],
     imports: [
         AppRoutingModule,

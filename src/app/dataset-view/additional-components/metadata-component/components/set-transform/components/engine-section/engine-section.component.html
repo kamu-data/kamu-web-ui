@@ -1,0 +1,30 @@
+<div class="mt-4" *ngIf="knownEngines">
+    <p class="fs-6">Engine</p>
+    <mat-divider class="w-425"></mat-divider>
+    <div class="mt-4">
+        <label for="engine-type" class="form-label">Type</label>
+        <select
+            class="form-select w-425"
+            id="engine-type"
+            [(ngModel)]="selectedEngine"
+            (change)="onSelectType()"
+        >
+            <option
+                *ngFor="let engine of knownEngines"
+                [value]="engine.name.toUpperCase()"
+            >
+                {{ engine.name }}
+            </option>
+        </select>
+    </div>
+    <div class="mt-4">
+        <label for="engine-image" class="form-label">Image</label>
+        <input
+            class="form-control w-425"
+            id="engine-image"
+            [(ngModel)]="selectedImage"
+            [title]="selectedImage"
+            disabled
+        />
+    </div>
+</div>

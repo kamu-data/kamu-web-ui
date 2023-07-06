@@ -5,6 +5,7 @@ import {
     DatasetByIdQuery,
     DatasetLineageFragment,
     DatasetPageInfoFragment,
+    GetDatasetSchemaQuery,
     SetVocab,
 } from "./../api/kamu.graphql.interface";
 import { DatasetInfo } from "./../interface/navigation.interface";
@@ -36,6 +37,7 @@ import { DatasetApi } from "../api/dataset.api";
 import { DatasetNotFoundError } from "../common/errors";
 import { catchError, map } from "rxjs/operators";
 import { MaybeNull } from "../common/app.types";
+import { parseCurrentSchema } from "../common/app.helpers";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {
@@ -63,14 +65,8 @@ export class DatasetService {
                 if (data.datasets.byOwnerAndName) {
                     const dataTail = data.datasets.byOwnerAndName.data.tail;
                     if (dataTail.__typename === "DataQueryResultSuccess") {
-                        const schema: MaybeNull<DatasetSchema> = data.datasets
-                            .byOwnerAndName.metadata.currentSchema
-                            ? (JSON.parse(
-                                  data.datasets.byOwnerAndName.metadata
-                                      .currentSchema.content,
-                              ) as DatasetSchema)
-                            : null;
-
+                        const schema: MaybeNull<DatasetSchema> =
+                            parseCurrentSchema(data);
                         this.datasetUpdate(data.datasets.byOwnerAndName);
                         this.overviewTabDataUpdate(
                             data.datasets.byOwnerAndName,
@@ -157,6 +153,7 @@ export class DatasetService {
                             history: data.datasets.byOwnerAndName.metadata.chain
                                 .blocks.nodes as MetadataBlockFragment[],
                             pageInfo,
+                            kind: data.datasets.byOwnerAndName.kind,
                         };
                         return historyUpdate;
                     } else {
@@ -205,6 +202,12 @@ export class DatasetService {
         datasetId: string,
     ): Observable<DatasetByIdQuery> {
         return this.datasetApi.getDatasetInfoById(datasetId);
+    }
+
+    public requestDatasetSchema(
+        datasetId: string,
+    ): Observable<GetDatasetSchemaQuery> {
+        return this.datasetApi.getDatasetSchema(datasetId);
     }
 
     private datasetUpdate(data: DatasetBasicsFragment): void {

@@ -89,6 +89,20 @@
                     >
                 </p>
             </div>
+            <div
+                class="my-4"
+                *ngIf="!currentState.overview.metadata.currentTransform && currentState.overview.kind === 'DERIVATIVE'"
+            >
+                <p>
+                    You can
+                    <a
+                        class="text-decoration-none"
+                        (click)="navigateToSetTransform()"
+                    >
+                        Add transformation</a
+                    >
+                </p>
+            </div>
 
             <app-overview-history-summary-header
                 [metadataBlockFragment]="metadataFragmentBlock"

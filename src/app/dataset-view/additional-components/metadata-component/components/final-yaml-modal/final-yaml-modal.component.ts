@@ -15,8 +15,9 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 })
 export class FinalYamlModalComponent extends BaseComponent {
     @Input() public yamlTemplate: string;
-    @Input() datasetInfo: DatasetInfo;
-    public readonly sqlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
+    @Input() public datasetInfo: DatasetInfo;
+    @Input() public enabledSaveBtn = true;
+    public readonly yamlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
         {
             theme: "vs",
             language: "yaml",
@@ -24,6 +25,7 @@ export class FinalYamlModalComponent extends BaseComponent {
             minimap: {
                 enabled: false,
             },
+            scrollBeyondLastLine: false,
         };
 
     constructor(

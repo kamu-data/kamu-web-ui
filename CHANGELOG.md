@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Merge step
 - The ability to edit SetPollingSource event
 - Editing SetWaterMark event
+- Editing SetTransform event
 
 ## [0.6.0] - 2023-02-27
 

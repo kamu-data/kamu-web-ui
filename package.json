@@ -42,7 +42,7 @@
     "@popperjs/core": "^2.10.2",
     "@rxweb/reactive-form-validators": "^13.0.1",
     "@schematics/angular": "^14.2.1",
-    "@swimlane/ngx-graph": "8.0.2",
+    "@swimlane/ngx-graph": "8.2.1",
     "angular-svg-icon": "^14.0.0",
     "angular-svg-icon-preloader": "^4.0.1",
     "apollo-angular": "^4.0.1",

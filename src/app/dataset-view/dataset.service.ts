@@ -66,7 +66,10 @@ export class DatasetService {
                     const dataTail = data.datasets.byOwnerAndName.data.tail;
                     if (dataTail.__typename === "DataQueryResultSuccess") {
                         const schema: MaybeNull<DatasetSchema> =
-                            parseCurrentSchema(data);
+                            parseCurrentSchema(
+                                data.datasets.byOwnerAndName.metadata
+                                    .currentSchema,
+                            );
                         this.datasetUpdate(data.datasets.byOwnerAndName);
                         this.overviewTabDataUpdate(
                             data.datasets.byOwnerAndName,

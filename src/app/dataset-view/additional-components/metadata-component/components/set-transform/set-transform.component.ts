@@ -137,7 +137,10 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
                                     data.datasets.byId as DatasetBasicsFragment
                                 ).owner.name;
                                 const schema: MaybeNull<DatasetSchema> =
-                                    parseCurrentSchema(data);
+                                    parseCurrentSchema(
+                                        data.datasets.byId.metadata
+                                            .currentSchema,
+                                    );
                                 this.TREE_DATA.push({
                                     name: item.name as string,
                                     children: schema?.fields,

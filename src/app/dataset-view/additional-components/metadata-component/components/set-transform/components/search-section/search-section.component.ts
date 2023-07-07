@@ -82,7 +82,9 @@ export class SearchSectionComponent extends BaseComponent {
                                 data.datasets.byId as DatasetBasicsFragment
                             ).owner.name;
                             const schema: MaybeNull<DatasetSchema> =
-                                parseCurrentSchema(data);
+                                parseCurrentSchema(
+                                    data.datasets.byId.metadata.currentSchema,
+                                );
                             this.TREE_DATA.push({
                                 name: value.dataset.name as string,
                                 children: schema?.fields,

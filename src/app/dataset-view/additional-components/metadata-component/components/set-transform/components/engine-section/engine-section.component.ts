@@ -8,11 +8,6 @@ import {
     Output,
 } from "@angular/core";
 import {
-    ControlContainer,
-    FormGroup,
-    FormGroupDirective,
-} from "@angular/forms";
-import {
     EngineDesc,
     EnginesQuery,
     Transform,
@@ -62,9 +57,14 @@ export class EngineSectionComponent extends BaseComponent implements OnInit {
         this.trackSubscription(
             this.engineService.engines().subscribe((result: EnginesQuery) => {
                 this.knownEngines = result.data.knownEngines;
-                this.selectedEngine = this.knownEngines[0].name.toUpperCase();
-                this.selectedImage = this.knownEngines[0].latestImage;
-                this.initCurrentEngine();
+                if (!this.selectedEngine) {
+                    this.selectedEngine =
+                        this.knownEngines[0].name.toUpperCase();
+                    this.selectedImage = this.knownEngines[0].latestImage;
+                    this.initCurrentEngine();
+                } else {
+                    this.onSelectType();
+                }
                 this.onEmitSelectedEngine.emit(this.selectedEngine);
                 this.cdr.detectChanges();
             }),

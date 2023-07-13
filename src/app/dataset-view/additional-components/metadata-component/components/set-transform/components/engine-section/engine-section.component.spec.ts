@@ -54,14 +54,14 @@ describe("EngineSectionComponent", () => {
         flush();
     }));
 
-    // it("should check init engine and image when currentSetTransformEvent is not null", fakeAsync(() => {
-    //     component.currentSetTransformEvent = mockCurrentSetTransform;
-    //     fixture.detectChanges();
-    //     component.ngOnInit();
-    //     tick();
-    //     expect(component.selectedEngine).toBe(
-    //         mockCurrentSetTransform.transform.engine.toUpperCase(),
-    //     );
-    //     flush();
-    // }));
+    it("should check init engine and image when currentSetTransformEvent is not null", fakeAsync(() => {
+        //    component.currentSetTransformEvent = mockCurrentSetTransform;
+        fixture.detectChanges();
+        component.ngOnInit();
+        tick();
+        expect(component.selectedEngine).toBe(
+            mockCurrentSetTransform.transform.engine.toUpperCase(),
+        );
+        flush();
+    }));
 });

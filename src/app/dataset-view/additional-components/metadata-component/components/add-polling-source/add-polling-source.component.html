@@ -1,39 +1,5 @@
 <div class="layout" *ngIf="history && datasetKind === 'ROOT'; else errorBlock">
     <div class="mt-4">
-        <!-- <ng-container *ngIf="currentStep === steps.FETCH">
-            <div class="row">
-                <div class="col mt-4">
-                    <div class="form-check">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            [(ngModel)]="isAddPrepareStep"
-                            (change)="onCheckedPrepareStep($event)"
-                            data-test-id="read-isAddPrepareStep"
-                        />
-                        <label class="form-check-label">
-                            Add PREPARE step
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col">
-                    <div class="form-check">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            [(ngModel)]="isAddPreprocessStep"
-                            (change)="onCheckedPreprocessStep($event)"
-                            data-test-id="read-isAddPreprocessStep"
-                        />
-                        <label class="form-check-label">
-                            Add PREPROCESS step
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </ng-container> -->
         <div class="border border-1 mt-4 px-2 py-4 rounded-3">
             <form [formGroup]="pollingSourceForm">
                 <ng-container *ngIf="currentStep === steps.FETCH">
@@ -81,6 +47,9 @@
                     <app-preprocess-step
                         [pollingSourceForm]="pollingSourceForm"
                         [eventYamlByHash]="eventYamlByHash"
+                        [preprocessValue]="preprocessStepValue"
+                        [isShowPreprocessStep]="isShowPreprocessStep"
+                        (showPreprcessStepEmitter)="onShowPreprcessStep($event)"
                     ></app-preprocess-step>
                     <app-stepper-navigation
                         [prevStep]="steps.READ"
@@ -119,7 +88,6 @@
             </form>
         </div>
     </div>
-    <pre>{{ pollingSourceForm.value | json }}</pre>
 </div>
 <ng-template #errorBlock>
     <app-page-not-found *ngIf="datasetKind"></app-page-not-found>

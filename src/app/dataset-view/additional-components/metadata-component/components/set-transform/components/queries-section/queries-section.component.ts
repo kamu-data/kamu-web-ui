@@ -1,15 +1,8 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    Input,
-    OnDestroy,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { SqlQueryStep } from "src/app/api/kamu.graphql.interface";
 import * as monaco from "monaco-editor";
 import { ViewportScroller } from "@angular/common";
 import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
-import { MaybeNull } from "src/app/common/app.types";
-import { FormArray, FormControl, FormGroup } from "@angular/forms";
 
 @Component({
     selector: "app-queries-section",
@@ -19,7 +12,6 @@ import { FormArray, FormControl, FormGroup } from "@angular/forms";
 })
 export class QueriesSectionComponent {
     @Input() public queries: Omit<SqlQueryStep, "__typename">[];
-    @Input() public preprocessQueries?: MaybeNull<FormArray>;
     public readonly sqlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
         sqlEditorOptions;
 
@@ -42,13 +34,6 @@ export class QueriesSectionComponent {
             alias: "",
             query: "",
         });
-        this.preprocessQueries?.insert(
-            0,
-            new FormGroup({
-                alias: new FormControl(this.queries[0].alias),
-                query: new FormControl(this.queries[0].query),
-            }),
-        );
         this.scroll.scrollToPosition([0, 0]);
     }
 

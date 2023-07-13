@@ -6,6 +6,7 @@ import {
     MergeKind,
     PrepareKind,
     PreprocessKind,
+    PreprocessStepValue,
 } from "./add-polling-source-form.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import {
@@ -51,12 +52,16 @@ import { SupportedEvents } from "src/app/dataset-block/metadata-block/components
 export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     public currentStep: SetPollingSourceSection = SetPollingSourceSection.FETCH;
     public steps: typeof SetPollingSourceSection = SetPollingSourceSection;
-    public isAddPrepareStep = false;
-    public isAddPreprocessStep = false;
+
+    public isShowPreprocessStep = false;
     public errorMessage = "";
     public history: DatasetHistoryUpdate;
     public eventYamlByHash: MaybeNull<string>;
     public datasetKind: DatasetKind;
+    public preprocessStepValue: PreprocessStepValue = {
+        engine: "",
+        queries: [],
+    };
 
     // --------------------------------
     private readonly DEFAULT_PREPARE_KIND = PrepareKind.PIPE;
@@ -81,11 +86,6 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         read: this.fb.group({
             kind: [this.READ_DEFAULT_KIND],
         }),
-        preprocess: this.fb.group({
-            kind: [this.DEFAULT_PREPROCESS_KIND],
-            engine: [],
-            queries: this.fb.array([]),
-        }),
         merge: this.fb.group({
             kind: [this.MERGE_DEFAULT_KIND],
         }),
@@ -108,38 +108,6 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
             SetPollingSourceSection.MERGE,
         ) as FormGroup;
     }
-
-    // public onCheckedPrepareStep(event: Event): void {
-    //     const input = event.target as HTMLInputElement;
-    //     if (input.checked) {
-    //         this.pollingSourceForm.addControl(
-    //             SetPollingSourceSection.PREPARE,
-    //             this.fb.group({
-    //                 kind: this.DEFAULT_PREPARE_KIND,
-    //             }),
-    //         );
-    //     } else {
-    //         this.pollingSourceForm.removeControl(
-    //             SetPollingSourceSection.PREPARE,
-    //         );
-    //     }
-    // }
-
-    // public onCheckedPreprocessStep(event: Event): void {
-    //     const input = event.target as HTMLInputElement;
-    //     if (input.checked) {
-    //         this.pollingSourceForm.addControl(
-    //             SetPollingSourceSection.PREPROCESS,
-    //             this.fb.group({
-    //                 kind: this.DEFAULT_PREPROCESS_KIND,
-    //             }),
-    //         );
-    //     } else {
-    //         this.pollingSourceForm.removeControl(
-    //             SetPollingSourceSection.PREPROCESS,
-    //         );
-    //     }
-    // }
 
     constructor(
         private fb: FormBuilder,
@@ -194,6 +162,9 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
                             SetPollingSource,
                             "__typename"
                         >,
+                        this.isShowPreprocessStep
+                            ? this.preprocessStepValue
+                            : null,
                     ),
                 )
                 .subscribe(),
@@ -224,11 +195,15 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
                     SetPollingSource,
                     "__typename"
                 >,
+                this.isShowPreprocessStep ? this.preprocessStepValue : null,
             );
         (modalRef.componentInstance as FinalYamlModalComponent).datasetInfo =
             this.getDatasetInfoFromUrl();
     }
 
+    public onShowPreprcessStep(showPreprocessStep: boolean): void {
+        this.isShowPreprocessStep = showPreprocessStep;
+    }
     private getDatasetKind(): void {
         this.trackSubscription(
             this.editService.onKindChanges.subscribe((kind: DatasetKind) => {

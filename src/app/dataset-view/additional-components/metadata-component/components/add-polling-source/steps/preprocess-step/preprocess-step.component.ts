@@ -1,24 +1,22 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    EventEmitter,
     Input,
     OnInit,
+    Output,
 } from "@angular/core";
-import {
-    ControlContainer,
-    FormArray,
-    FormBuilder,
-    FormGroup,
-    FormGroupDirective,
-} from "@angular/forms";
-import { SetPollingSourceSection } from "src/app/shared/shared.types";
+import { FormGroup } from "@angular/forms";
 import {
     EditFormType,
-    PreprocessKind,
+    PreprocessStepValue,
 } from "../../add-polling-source-form.types";
 import { MaybeNull } from "src/app/common/app.types";
 import { EditPollingSourceService } from "../../edit-polling-source.service";
-import { SqlQueryStep } from "src/app/api/kamu.graphql.interface";
+import { ActivatedRoute, ParamMap } from "@angular/router";
+import { requireValue } from "src/app/common/app.helpers";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-preprocess-step",
@@ -27,17 +25,16 @@ import { SqlQueryStep } from "src/app/api/kamu.graphql.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreprocessStepComponent implements OnInit {
-    public isAddPreprocessStep = false;
+    @Input() public isShowPreprocessStep: boolean;
     @Input() public pollingSourceForm: FormGroup;
     @Input() public eventYamlByHash: MaybeNull<string> = null;
-    public selectedEngine: string;
+    @Input() public preprocessValue: PreprocessStepValue;
+    @Output() public showPreprcessStepEmitter = new EventEmitter<boolean>();
     public setPollingSourceEvent: MaybeNull<EditFormType> = null;
-    public queries: Omit<SqlQueryStep, "__typename">[] = [];
-    private readonly DEFAULT_PREPROCESS_KIND = PreprocessKind.SQL;
 
     constructor(
-        private fb: FormBuilder,
         private editService: EditPollingSourceService,
+        private activatedRoute: ActivatedRoute,
     ) {}
 
     ngOnInit(): void {
@@ -45,69 +42,59 @@ export class PreprocessStepComponent implements OnInit {
             this.setPollingSourceEvent = this.editService.parseEventFromYaml(
                 this.eventYamlByHash,
             );
-            if (this.setPollingSourceEvent.preprocess?.engine) {
-                this.isAddPreprocessStep = true;
-                this.initDefaultQueriesSection(
-                    this.setPollingSourceEvent.preprocess.query,
-                );
-                this.preprocessForm.patchValue({
-                    engine: this.setPollingSourceEvent.preprocess.engine,
-                });
-
-                if (this.preprocessQueries.length == 0) {
-                    this.preprocessQueries.push(
-                        this.fb.group({
-                            alias: "",
-                            query: this.setPollingSourceEvent.preprocess.query,
-                        }),
-                    );
-                }
+            if (this.setPollingSourceEvent.preprocess) {
+                this.showPreprcessStepEmitter.emit(true);
+                this.initExistingQueries();
             } else {
                 this.initDefaultQueriesSection();
             }
         }
     }
 
-    public get preprocessForm(): FormGroup {
-        return this.pollingSourceForm.get(
-            SetPollingSourceSection.PREPROCESS,
-        ) as FormGroup;
+    public onSelectEngine(engine: string): void {
+        this.preprocessValue.engine = engine;
     }
 
-    public get preprocessQueries(): FormArray {
-        return this.pollingSourceForm.get("preprocess.queries") as FormArray;
+    public getDatasetInfoFromUrl(): DatasetInfo {
+        const paramMap: ParamMap = this.activatedRoute.snapshot.paramMap;
+        return {
+            accountName: requireValue(
+                paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
+            ),
+            datasetName: requireValue(
+                paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
+            ),
+        };
     }
 
     public onCheckedPreprocessStep(event: Event): void {
         const input = event.target as HTMLInputElement;
         if (input.checked) {
-            this.pollingSourceForm.addControl(
-                SetPollingSourceSection.PREPROCESS,
-                this.fb.group({
-                    kind: this.DEFAULT_PREPROCESS_KIND,
-                    engine: "",
-                }),
-            );
-            if (this.setPollingSourceEvent?.preprocess) {
-                this.preprocessForm.patchValue({
-                    engine: this.setPollingSourceEvent.preprocess.engine,
-                });
-            }
+            this.showPreprcessStepEmitter.emit(true);
         } else {
-            this.pollingSourceForm.removeControl(
-                SetPollingSourceSection.PREPROCESS,
-            );
+            this.showPreprcessStepEmitter.emit(false);
         }
     }
 
-    public onSelectEngine(engine: string): void {
-        this.selectedEngine = engine.toUpperCase();
-        this.preprocessForm.patchValue({
-            engine: engine.toLowerCase(),
-        });
+    private initDefaultQueriesSection(query = ""): void {
+        if (!this.preprocessValue.queries.length) {
+            this.preprocessValue.queries.push({
+                alias: this.getDatasetInfoFromUrl().datasetName,
+                query,
+            });
+        }
     }
 
-    private initDefaultQueriesSection(query = ""): void {
-        this.queries = [...this.queries, { alias: "", query }];
+    private initExistingQueries(): void {
+        if (this.preprocessValue.queries.length === 0) {
+            if (this.setPollingSourceEvent?.preprocess?.query) {
+                this.initDefaultQueriesSection(
+                    this.setPollingSourceEvent.preprocess.query,
+                );
+            } else if (this.setPollingSourceEvent?.preprocess?.queries.length) {
+                this.preprocessValue.queries =
+                    this.setPollingSourceEvent.preprocess.queries;
+            }
+        }
     }
 }

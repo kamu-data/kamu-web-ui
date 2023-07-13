@@ -1,4 +1,4 @@
-import { Transform } from "src/app/api/kamu.graphql.interface";
+import { SqlQueryStep, Transform } from "src/app/api/kamu.graphql.interface";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface JsonFormValidators {
@@ -130,4 +130,9 @@ export interface EditFormParseType {
 export interface NameValue {
     name: string;
     value: string;
+}
+
+export interface PreprocessStepValue {
+    engine: string;
+    queries: Omit<SqlQueryStep, "__typename">[];
 }

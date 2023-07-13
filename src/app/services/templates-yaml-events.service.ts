@@ -6,6 +6,10 @@ import {
 import { Injectable } from "@angular/core";
 import { MaybeNull } from "../common/app.types";
 import { stringify } from "yaml";
+import {
+    PreprocessKind,
+    PreprocessStepValue,
+} from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
 
 @Injectable({
     providedIn: "root",
@@ -52,11 +56,25 @@ export class TemplatesYamlEventsService {
 
     public buildYamlSetPollingSourceEvent(
         params: Omit<SetPollingSource, "__typename">,
+        preprocessStepValue: MaybeNull<PreprocessStepValue>,
     ): string {
         this.initialTemplate.content = {
             kind: "setPollingSource",
             ...params,
         };
+        if (
+            preprocessStepValue?.queries.length &&
+            preprocessStepValue.queries[0].query
+        ) {
+            this.initialTemplate.content = {
+                ...this.initialTemplate.content,
+                preprocess: {
+                    kind: PreprocessKind.SQL,
+                    engine: preprocessStepValue.engine.toLowerCase(),
+                    queries: preprocessStepValue.queries,
+                },
+            };
+        }
         return stringify(this.initialTemplate);
     }
 

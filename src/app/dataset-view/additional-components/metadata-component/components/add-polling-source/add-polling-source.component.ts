@@ -81,6 +81,11 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         read: this.fb.group({
             kind: [this.READ_DEFAULT_KIND],
         }),
+        preprocess: this.fb.group({
+            kind: [this.DEFAULT_PREPROCESS_KIND],
+            engine: [],
+            queries: this.fb.array([]),
+        }),
         merge: this.fb.group({
             kind: [this.MERGE_DEFAULT_KIND],
         }),
@@ -104,37 +109,37 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         ) as FormGroup;
     }
 
-    public onCheckedPrepareStep(event: Event): void {
-        const input = event.target as HTMLInputElement;
-        if (input.checked) {
-            this.pollingSourceForm.addControl(
-                SetPollingSourceSection.PREPARE,
-                this.fb.group({
-                    kind: this.DEFAULT_PREPARE_KIND,
-                }),
-            );
-        } else {
-            this.pollingSourceForm.removeControl(
-                SetPollingSourceSection.PREPARE,
-            );
-        }
-    }
+    // public onCheckedPrepareStep(event: Event): void {
+    //     const input = event.target as HTMLInputElement;
+    //     if (input.checked) {
+    //         this.pollingSourceForm.addControl(
+    //             SetPollingSourceSection.PREPARE,
+    //             this.fb.group({
+    //                 kind: this.DEFAULT_PREPARE_KIND,
+    //             }),
+    //         );
+    //     } else {
+    //         this.pollingSourceForm.removeControl(
+    //             SetPollingSourceSection.PREPARE,
+    //         );
+    //     }
+    // }
 
-    public onCheckedPreprocessStep(event: Event): void {
-        const input = event.target as HTMLInputElement;
-        if (input.checked) {
-            this.pollingSourceForm.addControl(
-                SetPollingSourceSection.PREPROCESS,
-                this.fb.group({
-                    kind: this.DEFAULT_PREPROCESS_KIND,
-                }),
-            );
-        } else {
-            this.pollingSourceForm.removeControl(
-                SetPollingSourceSection.PREPROCESS,
-            );
-        }
-    }
+    // public onCheckedPreprocessStep(event: Event): void {
+    //     const input = event.target as HTMLInputElement;
+    //     if (input.checked) {
+    //         this.pollingSourceForm.addControl(
+    //             SetPollingSourceSection.PREPROCESS,
+    //             this.fb.group({
+    //                 kind: this.DEFAULT_PREPROCESS_KIND,
+    //             }),
+    //         );
+    //     } else {
+    //         this.pollingSourceForm.removeControl(
+    //             SetPollingSourceSection.PREPROCESS,
+    //         );
+    //     }
+    // }
 
     constructor(
         private fb: FormBuilder,

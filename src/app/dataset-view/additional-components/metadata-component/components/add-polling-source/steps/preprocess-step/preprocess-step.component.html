@@ -1,1 +1,29 @@
-<p>preprocess-step works!</p>
+<div>
+    <h2 class="text-center">Preprocess</h2>
+    <div class="d-flex justify-content-center mt-4">
+        <div class="form-check">
+            <input
+                class="form-check-input"
+                type="checkbox"
+                [(ngModel)]="isAddPreprocessStep"
+                (change)="onCheckedPreprocessStep($event)"
+                data-test-id="read-isAddPreprocessStep"
+            />
+            <label class="form-check-label"> Use Preprocess step </label>
+        </div>
+    </div>
+    <ng-container *ngIf="isAddPreprocessStep">
+        <div class="d-flex justify-content-center mb-4">
+            <app-engine-section
+                [currentSetTransformEvent]="setPollingSourceEvent?.preprocess"
+                (onEmitSelectedEngine)="onSelectEngine($event)"
+            ></app-engine-section>
+        </div>
+        <div class="container-queries">
+            <app-queries-section
+                [preprocessQueries]="preprocessQueries"
+                [queries]="queries"
+            ></app-queries-section>
+        </div>
+    </ng-container>
+</div>

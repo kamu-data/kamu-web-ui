@@ -7,9 +7,17 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import { EngineDesc, EnginesQuery } from "src/app/api/kamu.graphql.interface";
+import {
+    ControlContainer,
+    FormGroup,
+    FormGroupDirective,
+} from "@angular/forms";
+import {
+    EngineDesc,
+    EnginesQuery,
+    Transform,
+} from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
-import { SetTransFormYamlType } from "../../set-transform.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { EngineService } from "src/app/services/engine.service";
 
@@ -21,7 +29,7 @@ import { EngineService } from "src/app/services/engine.service";
 })
 export class EngineSectionComponent extends BaseComponent implements OnInit {
     @Input() public knownEngines: MaybeNull<EngineDesc[]>;
-    @Input() public currentSetTransformEvent: MaybeNull<SetTransFormYamlType>;
+    @Input() public currentSetTransformEvent: Transform | undefined;
     @Input() public selectedEngine: string;
     @Output() public onEmitSelectedEngine: EventEmitter<string> =
         new EventEmitter<string>();
@@ -64,9 +72,8 @@ export class EngineSectionComponent extends BaseComponent implements OnInit {
     }
 
     private initCurrentEngine(): void {
-        if (this.currentSetTransformEvent) {
-            const currentEngine: string =
-                this.currentSetTransformEvent.transform.engine;
+        if (this.currentSetTransformEvent?.engine) {
+            const currentEngine: string = this.currentSetTransformEvent.engine;
             this.selectedEngine = currentEngine.toUpperCase();
             this.onSelectType();
         }

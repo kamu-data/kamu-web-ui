@@ -36,6 +36,7 @@ export const mockCurrentSetTransform: SetTransFormYamlType = {
         kind: "sql",
         engine: "flink",
         queries: [],
+        query: "",
     },
 };
 

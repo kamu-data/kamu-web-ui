@@ -47,9 +47,7 @@
                     ></app-base-step>
                     <app-stepper-navigation
                         [prevStep]="null"
-                        [nextStep]="
-                            isAddPrepareStep ? steps.PREPARE : steps.READ
-                        "
+                        [nextStep]="steps.PREPARE"
                         [validStep]="fetchForm.valid"
                         (changeStepEmitter)="changeStep($event)"
                     ></app-stepper-navigation>
@@ -73,18 +71,17 @@
                         [eventYamlByHash]="eventYamlByHash"
                     ></app-base-step>
                     <app-stepper-navigation
-                        [prevStep]="
-                            isAddPrepareStep ? steps.PREPARE : steps.FETCH
-                        "
-                        [nextStep]="
-                            isAddPreprocessStep ? steps.PREPROCESS : steps.MERGE
-                        "
+                        [prevStep]="steps.PREPARE"
+                        [nextStep]="steps.PREPROCESS"
                         [validStep]="readForm.valid"
                         (changeStepEmitter)="changeStep($event)"
                     ></app-stepper-navigation>
                 </ng-container>
                 <ng-container *ngIf="currentStep === steps.PREPROCESS">
-                    <app-preprocess-step></app-preprocess-step>
+                    <app-preprocess-step
+                        [pollingSourceForm]="pollingSourceForm"
+                        [eventYamlByHash]="eventYamlByHash"
+                    ></app-preprocess-step>
                     <app-stepper-navigation
                         [prevStep]="steps.READ"
                         [nextStep]="steps.MERGE"
@@ -111,7 +108,7 @@
                         </div></app-base-step
                     >
                     <app-stepper-navigation
-                        [prevStep]="steps.READ"
+                        [prevStep]="steps.PREPROCESS"
                         [nextStep]="null"
                         [validStep]="mergeForm.valid"
                         (changeStepEmitter)="changeStep($event)"
@@ -122,6 +119,7 @@
             </form>
         </div>
     </div>
+    <pre>{{ pollingSourceForm.value | json }}</pre>
 </div>
 <ng-template #errorBlock>
     <app-page-not-found *ngIf="datasetKind"></app-page-not-found>

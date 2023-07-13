@@ -1,3 +1,5 @@
+import { Transform } from "src/app/api/kamu.graphql.interface";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface JsonFormValidators {
     required?: boolean;
@@ -112,6 +114,10 @@ export interface EditFormType {
         kind: MergeKind;
         primaryKey?: string[];
         compareColumns?: string[];
+    };
+    preprocess?: Transform & {
+        kind: PreprocessKind.SQL;
+        query?: string;
     };
 }
 

@@ -20,10 +20,7 @@ import {
     SqlQueryStep,
 } from "src/app/api/kamu.graphql.interface";
 import { EditSetTransformService } from "./edit-set-transform..service";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { ActivatedRoute, ParamMap } from "@angular/router";
-import { parseCurrentSchema, requireValue } from "src/app/common/app.helpers";
-import ProjectLinks from "src/app/project-links";
+import { parseCurrentSchema } from "src/app/common/app.helpers";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetNode, SetTransFormYamlType } from "./set-transform.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
@@ -51,7 +48,6 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
         private datasetService: DatasetService,
         private cdr: ChangeDetectorRef,
         private editService: EditSetTransformService,
-        private activatedRoute: ActivatedRoute,
         private modalService: NgbModal,
         private yamlEventService: TemplatesYamlEventsService,
         private createDatasetService: AppDatasetCreateService,
@@ -152,18 +148,6 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
                 );
             },
         );
-    }
-
-    public getDatasetInfoFromUrl(): DatasetInfo {
-        const paramMap: ParamMap = this.activatedRoute.snapshot.paramMap;
-        return {
-            accountName: requireValue(
-                paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
-            ),
-            datasetName: requireValue(
-                paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
-            ),
-        };
     }
 
     public onEditYaml(): void {

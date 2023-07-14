@@ -1,9 +1,4 @@
-import {
-    ActivatedRoute,
-    NavigationEnd,
-    Router,
-    RouterEvent,
-} from "@angular/router";
+import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { SearchService } from "./search.service";
 import {
     DatasetSearchResult,
@@ -148,7 +143,6 @@ export class SearchComponent extends BaseComponent implements OnInit {
         private navigationService: NavigationService,
         private searchService: SearchService,
         private router: Router,
-        private activatedRoute: ActivatedRoute,
         private cdr: ChangeDetectorRef,
     ) {
         super();

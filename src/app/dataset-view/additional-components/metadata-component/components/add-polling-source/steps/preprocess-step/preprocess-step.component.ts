@@ -12,10 +12,7 @@ import {
 } from "../../add-polling-source-form.types";
 import { MaybeNull } from "src/app/common/app.types";
 import { EditPollingSourceService } from "../../edit-polling-source.service";
-import { ActivatedRoute, ParamMap } from "@angular/router";
-import { requireValue } from "src/app/common/app.helpers";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import ProjectLinks from "src/app/project-links";
+import { BaseComponent } from "src/app/common/base.component";
 
 @Component({
     selector: "app-preprocess-step",
@@ -23,17 +20,16 @@ import ProjectLinks from "src/app/project-links";
     styleUrls: ["./preprocess-step.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PreprocessStepComponent implements OnInit {
+export class PreprocessStepComponent extends BaseComponent implements OnInit {
     @Input() public showPreprocessStep: boolean;
     @Input() public eventYamlByHash: MaybeNull<string> = null;
     @Input() public preprocessValue: PreprocessStepValue;
     @Output() public showPreprocessStepEmitter = new EventEmitter<boolean>();
     public setPollingSourceEvent: MaybeNull<EditFormType> = null;
 
-    constructor(
-        private editService: EditPollingSourceService,
-        private activatedRoute: ActivatedRoute,
-    ) {}
+    constructor(private editService: EditPollingSourceService) {
+        super();
+    }
 
     ngOnInit(): void {
         if (this.eventYamlByHash) {
@@ -51,18 +47,6 @@ export class PreprocessStepComponent implements OnInit {
 
     public onSelectEngine(engine: string): void {
         this.preprocessValue.engine = engine;
-    }
-
-    public getDatasetInfoFromUrl(): DatasetInfo {
-        const paramMap: ParamMap = this.activatedRoute.snapshot.paramMap;
-        return {
-            accountName: requireValue(
-                paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
-            ),
-            datasetName: requireValue(
-                paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
-            ),
-        };
     }
 
     public onCheckedPreprocessStep(event: Event): void {

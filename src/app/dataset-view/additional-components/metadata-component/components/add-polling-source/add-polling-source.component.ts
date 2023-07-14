@@ -23,10 +23,6 @@ import {
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
-import { ActivatedRoute, ParamMap } from "@angular/router";
-import { requireValue } from "src/app/common/app.helpers";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import ProjectLinks from "src/app/project-links";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import {
@@ -113,7 +109,6 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         private fb: FormBuilder,
         private createDatasetService: AppDatasetCreateService,
         private yamlEventService: TemplatesYamlEventsService,
-        private activatedRoute: ActivatedRoute,
         private modalService: NgbModal,
         private cdr: ChangeDetectorRef,
         private processFormService: ProcessFormService,
@@ -169,18 +164,6 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
                 )
                 .subscribe(),
         );
-    }
-
-    public getDatasetInfoFromUrl(): DatasetInfo {
-        const paramMap: ParamMap = this.activatedRoute.snapshot.paramMap;
-        return {
-            accountName: requireValue(
-                paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
-            ),
-            datasetName: requireValue(
-                paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
-            ),
-        };
     }
 
     public onEditYaml(): void {

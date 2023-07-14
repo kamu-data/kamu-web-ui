@@ -10,7 +10,7 @@ import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { EngineService } from "src/app/services/engine.service";
 import { of } from "rxjs";
-import { mockCurrentSetTransform, mockEngines } from "../../mock.data";
+import { mockEngines } from "../../mock.data";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { mockSetPollingSourceEvent } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";

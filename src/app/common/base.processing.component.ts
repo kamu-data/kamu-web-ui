@@ -6,19 +6,14 @@ import {
 } from "../dataset-view/dataset-view.interface";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
 import { NavigationService } from "./../services/navigation.service";
-import { promiseWithCatch, requireValue } from "./app.helpers";
+import { promiseWithCatch } from "./app.helpers";
 import { BaseComponent } from "./base.component";
-import { ActivatedRoute, ParamMap } from "@angular/router";
-import ProjectLinks from "../project-links";
+import { inject } from "@angular/core";
 
 export class BaseProcessingComponent extends BaseComponent {
-    constructor(
-        protected navigationService: NavigationService,
-        protected modalService: ModalService,
-        protected activatedRoute: ActivatedRoute,
-    ) {
-        super();
-    }
+    public navigationService = inject(NavigationService);
+    public modalService = inject(ModalService);
+
     public showOwnerPage(ownerName: string): void {
         this.navigationService.navigateToOwnerView(ownerName);
     }
@@ -89,18 +84,5 @@ export class BaseProcessingComponent extends BaseComponent {
 
     private onClickDeriveFrom(): void {
         console.log("onClickDeriveFrom");
-    }
-
-    public getDatasetInfoFromUrl(): DatasetInfo {
-        const paramMap: ParamMap = this.activatedRoute.snapshot.paramMap;
-        return {
-            // Both parameters are mandatory in URL, router would not activate this component otherwise
-            accountName: requireValue(
-                paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
-            ),
-            datasetName: requireValue(
-                paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
-            ),
-        };
     }
 }

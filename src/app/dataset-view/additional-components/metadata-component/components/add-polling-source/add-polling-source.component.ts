@@ -53,7 +53,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     public currentStep: SetPollingSourceSection = SetPollingSourceSection.FETCH;
     public steps: typeof SetPollingSourceSection = SetPollingSourceSection;
 
-    public isShowPreprocessStep = false;
+    public showPreprocessStep = false;
     public errorMessage = "";
     public history: DatasetHistoryUpdate;
     public eventYamlByHash: MaybeNull<string>;
@@ -162,7 +162,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
                             SetPollingSource,
                             "__typename"
                         >,
-                        this.isShowPreprocessStep
+                        this.showPreprocessStep
                             ? this.preprocessStepValue
                             : null,
                     ),
@@ -195,15 +195,16 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
                     SetPollingSource,
                     "__typename"
                 >,
-                this.isShowPreprocessStep ? this.preprocessStepValue : null,
+                this.showPreprocessStep ? this.preprocessStepValue : null,
             );
         (modalRef.componentInstance as FinalYamlModalComponent).datasetInfo =
             this.getDatasetInfoFromUrl();
     }
 
     public onShowPreprcessStep(showPreprocessStep: boolean): void {
-        this.isShowPreprocessStep = showPreprocessStep;
+        this.showPreprocessStep = showPreprocessStep;
     }
+
     private getDatasetKind(): void {
         this.trackSubscription(
             this.editService.onKindChanges.subscribe((kind: DatasetKind) => {

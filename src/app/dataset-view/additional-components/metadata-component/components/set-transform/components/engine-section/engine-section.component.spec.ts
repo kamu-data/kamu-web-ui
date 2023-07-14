@@ -13,6 +13,7 @@ import { of } from "rxjs";
 import { mockCurrentSetTransform, mockEngines } from "../../mock.data";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
+import { mockSetPollingSourceEvent } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 describe("EngineSectionComponent", () => {
     let component: EngineSectionComponent;
@@ -55,13 +56,15 @@ describe("EngineSectionComponent", () => {
     }));
 
     it("should check init engine and image when currentSetTransformEvent is not null", fakeAsync(() => {
-        //    component.currentSetTransformEvent = mockCurrentSetTransform;
+        component.currentSetTransformEvent =
+            mockSetPollingSourceEvent.preprocess;
         fixture.detectChanges();
         component.ngOnInit();
         tick();
-        expect(component.selectedEngine).toBe(
-            mockCurrentSetTransform.transform.engine.toUpperCase(),
-        );
+        if (mockSetPollingSourceEvent.preprocess)
+            expect(component.selectedEngine).toBe(
+                mockSetPollingSourceEvent.preprocess.engine.toUpperCase(),
+            );
         flush();
     }));
 });

@@ -6,7 +6,6 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import { FormGroup } from "@angular/forms";
 import {
     EditFormType,
     PreprocessStepValue,
@@ -25,11 +24,10 @@ import ProjectLinks from "src/app/project-links";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreprocessStepComponent implements OnInit {
-    @Input() public isShowPreprocessStep: boolean;
-    @Input() public pollingSourceForm: FormGroup;
+    @Input() public showPreprocessStep: boolean;
     @Input() public eventYamlByHash: MaybeNull<string> = null;
     @Input() public preprocessValue: PreprocessStepValue;
-    @Output() public showPreprcessStepEmitter = new EventEmitter<boolean>();
+    @Output() public showPreprocessStepEmitter = new EventEmitter<boolean>();
     public setPollingSourceEvent: MaybeNull<EditFormType> = null;
 
     constructor(
@@ -43,7 +41,7 @@ export class PreprocessStepComponent implements OnInit {
                 this.eventYamlByHash,
             );
             if (this.setPollingSourceEvent.preprocess) {
-                this.showPreprcessStepEmitter.emit(true);
+                this.showPreprocessStepEmitter.emit(true);
                 this.initExistingQueries();
             } else {
                 this.initDefaultQueriesSection();
@@ -69,11 +67,7 @@ export class PreprocessStepComponent implements OnInit {
 
     public onCheckedPreprocessStep(event: Event): void {
         const input = event.target as HTMLInputElement;
-        if (input.checked) {
-            this.showPreprcessStepEmitter.emit(true);
-        } else {
-            this.showPreprcessStepEmitter.emit(false);
-        }
+        this.showPreprocessStepEmitter.emit(input.checked);
     }
 
     private initDefaultQueriesSection(query = ""): void {

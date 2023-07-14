@@ -11,6 +11,11 @@ export const mockEngines: EnginesQuery = {
     data: {
         knownEngines: [
             {
+                dialect: QueryDialect.SqlSpark,
+                latestImage: "ghcr.io/kamu-data/engine-spark:0.1.2",
+                name: "Spark",
+            },
+            {
                 dialect: QueryDialect.SqlDataFusion,
                 latestImage: "ghcr.io/kamu-data/engine-datafusion:0.1.2",
                 name: "DataFusion",
@@ -19,11 +24,6 @@ export const mockEngines: EnginesQuery = {
                 dialect: QueryDialect.SqlFlink,
                 latestImage: "ghcr.io/kamu-data/engine-flink:0.1.2",
                 name: "Flink",
-            },
-            {
-                dialect: QueryDialect.SqlSpark,
-                latestImage: "ghcr.io/kamu-data/engine-spark:0.1.2",
-                name: "Spark",
             },
         ],
     },

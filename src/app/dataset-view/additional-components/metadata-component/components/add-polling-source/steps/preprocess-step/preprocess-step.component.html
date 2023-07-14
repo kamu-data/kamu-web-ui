@@ -5,14 +5,14 @@
             <input
                 class="form-check-input"
                 type="checkbox"
-                [(ngModel)]="isShowPreprocessStep"
+                [(ngModel)]="showPreprocessStep"
                 (change)="onCheckedPreprocessStep($event)"
                 data-test-id="read-isAddPreprocessStep"
             />
             <label class="form-check-label"> Use Preprocess step </label>
         </div>
     </div>
-    <ng-container *ngIf="isShowPreprocessStep">
+    <ng-container *ngIf="showPreprocessStep">
         <div class="d-flex justify-content-center mb-4">
             <app-engine-section
                 [currentSetTransformEvent]="setPollingSourceEvent?.preprocess"

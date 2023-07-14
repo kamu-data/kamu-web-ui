@@ -45,11 +45,12 @@
                 </ng-container>
                 <ng-container *ngIf="currentStep === steps.PREPROCESS">
                     <app-preprocess-step
-                        [pollingSourceForm]="pollingSourceForm"
                         [eventYamlByHash]="eventYamlByHash"
                         [preprocessValue]="preprocessStepValue"
-                        [isShowPreprocessStep]="isShowPreprocessStep"
-                        (showPreprcessStepEmitter)="onShowPreprcessStep($event)"
+                        [showPreprocessStep]="showPreprocessStep"
+                        (showPreprocessStepEmitter)="
+                            onShowPreprcessStep($event)
+                        "
                     ></app-preprocess-step>
                     <app-stepper-navigation
                         [prevStep]="steps.READ"

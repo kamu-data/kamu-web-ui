@@ -10,7 +10,8 @@ import {
 import {
     EngineDesc,
     EnginesQuery,
-    Transform,
+    Maybe,
+    TransformSql,
 } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
@@ -24,7 +25,7 @@ import { EngineService } from "src/app/services/engine.service";
 })
 export class EngineSectionComponent extends BaseComponent implements OnInit {
     @Input() public knownEngines: MaybeNull<EngineDesc[]>;
-    @Input() public currentSetTransformEvent: Transform | undefined;
+    @Input() public currentSetTransformEvent: Maybe<TransformSql> | undefined;
     @Input() public selectedEngine: string;
     @Output() public onEmitSelectedEngine: EventEmitter<string> =
         new EventEmitter<string>();

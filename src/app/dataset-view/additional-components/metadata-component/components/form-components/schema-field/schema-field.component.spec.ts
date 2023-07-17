@@ -23,6 +23,7 @@ import {
     dispatchInputEvent,
     emitClickOnElementByDataTestId,
 } from "src/app/common/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("SchemaFieldComponent", () => {
     let component: SchemaFieldComponent;
@@ -39,6 +40,7 @@ describe("SchemaFieldComponent", () => {
                 NgbTypeaheadModule,
                 RxReactiveFormsModule,
                 NgbTooltipModule,
+                SharedTestModule,
             ],
         }).compileComponents();
 

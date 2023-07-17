@@ -16,6 +16,7 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { EventTimeSourceKind } from "../../add-polling-source/add-polling-source-form.types";
 import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
+import { ActivatedRoute } from "@angular/router";
 
 describe("SelectDateFormatFieldComponent", () => {
     let component: SelectDateFormatFieldComponent;
@@ -27,7 +28,26 @@ describe("SelectDateFormatFieldComponent", () => {
                 SelectDateFormatFieldComponent,
                 TooltipIconComponent,
             ],
-            providers: [FormBuilder],
+            providers: [
+                FormBuilder,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            ],
             imports: [
                 ReactiveFormsModule,
                 MatIconModule,

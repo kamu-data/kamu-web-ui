@@ -8,6 +8,7 @@ import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.
 import { ToastrModule } from "ngx-toastr";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AngularSvgIconModule } from "angular-svg-icon";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("BlockIntervalPropertyComponent", () => {
     let component: BlockIntervalPropertyComponent;
@@ -23,6 +24,7 @@ describe("BlockIntervalPropertyComponent", () => {
                 ToastrModule.forRoot(),
                 AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
+                SharedTestModule,
             ],
         }).compileComponents();
 

@@ -16,6 +16,7 @@ import { PollingSourceFormComponentsModule } from "../../../form-components/poll
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { Apollo } from "apollo-angular";
 import { DatasetApi } from "src/app/api/dataset.api";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 const fb = new FormBuilder();
 const formGroupDirective = new FormGroupDirective([], []);
@@ -36,6 +37,7 @@ describe("BaseStepComponent", () => {
                 ReactiveFormsModule,
                 NgbTooltipModule,
                 PollingSourceFormComponentsModule,
+                SharedTestModule,
             ],
             providers: [
                 Apollo,

@@ -13,7 +13,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { snapshotParamMapMock } from "src/app/common/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("ExecuteQueryEventComponent", () => {
     let component: ExecuteQueryEventComponent;
@@ -36,8 +36,8 @@ describe("ExecuteQueryEventComponent", () => {
                 ToastrModule.forRoot(),
                 AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
+                SharedTestModule,
             ],
-            providers: [snapshotParamMapMock],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ExecuteQueryEventComponent);

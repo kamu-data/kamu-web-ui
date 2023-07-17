@@ -11,6 +11,7 @@ import { NgbPopoverModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
 import { DisplayTimeModule } from "src/app/components/display-time/display-time.module";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("DatasetsTabComponent", () => {
     let component: DatasetsTabComponent;
@@ -26,6 +27,7 @@ describe("DatasetsTabComponent", () => {
                 MatChipsModule,
                 NgbPopoverModule,
                 MatDividerModule,
+                SharedTestModule,
             ],
             providers: [DatasetApi],
             declarations: [DatasetsTabComponent, DatasetListItemComponent],

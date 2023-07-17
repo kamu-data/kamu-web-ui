@@ -6,6 +6,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ApolloModule } from "apollo-angular";
 import { DatasetCreateComponent } from "./dataset-create.component";
 import { AppDatasetCreateService } from "./dataset-create.service";
+import { SharedTestModule } from "../common/shared-test.module";
 
 describe("DatasetCreateComponent", () => {
     let component: DatasetCreateComponent;
@@ -15,7 +16,12 @@ describe("DatasetCreateComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [DatasetCreateComponent],
-            imports: [ReactiveFormsModule, ApolloModule, FormsModule],
+            imports: [
+                ReactiveFormsModule,
+                ApolloModule,
+                FormsModule,
+                SharedTestModule,
+            ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         })
             .overrideComponent(DatasetCreateComponent, {

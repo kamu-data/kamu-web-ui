@@ -9,7 +9,6 @@ import { mockDatasetBasicsFragment } from "../../../../../search/mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-
 import { EditDetailsModalComponent } from "./edit-details-modal.component";
 import {
     mockMetadataSchemaUpdate,
@@ -22,6 +21,7 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("EditDetailsModalComponent", () => {
     let component: EditDetailsModalComponent;
@@ -37,6 +37,7 @@ describe("EditDetailsModalComponent", () => {
                 MatChipsModule,
                 MatDividerModule,
                 MatIconModule,
+                SharedTestModule,
             ],
             providers: [Apollo, NgbActiveModal],
         }).compileComponents();

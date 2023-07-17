@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { CommandPropertyComponent } from "./command-property.component";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("CommandPropertyComponent", () => {
     let component: CommandPropertyComponent;
@@ -9,6 +9,7 @@ describe("CommandPropertyComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [CommandPropertyComponent],
+            imports: [SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(CommandPropertyComponent);

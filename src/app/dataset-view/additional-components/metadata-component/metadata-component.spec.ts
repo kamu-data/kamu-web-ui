@@ -11,6 +11,7 @@ import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatIconModule } from "@angular/material/icon";
 import { MetadataBlockModule } from "src/app/dataset-block/metadata-block/metadata-block.module";
 import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("MetadataComponent", () => {
     let component: MetadataComponent;
@@ -24,7 +25,12 @@ describe("MetadataComponent", () => {
                 BlockRowDataComponent,
                 TooltipIconComponent,
             ],
-            imports: [NgbTooltipModule, MatIconModule, MetadataBlockModule],
+            imports: [
+                NgbTooltipModule,
+                MatIconModule,
+                MetadataBlockModule,
+                SharedTestModule,
+            ],
             providers: [
                 {
                     provide: HIGHLIGHT_OPTIONS,

@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SchemaPropertyComponent } from "./schema-property.component";
 import { DynamicTableComponent } from "src/app/components/dynamic-table/dynamic-table.component";
 import { MatTableModule } from "@angular/material/table";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("SchemaPropertyComponent", () => {
     let component: SchemaPropertyComponent;
@@ -10,7 +11,7 @@ describe("SchemaPropertyComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [SchemaPropertyComponent, DynamicTableComponent],
-            imports: [MatTableModule],
+            imports: [MatTableModule, SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SchemaPropertyComponent);

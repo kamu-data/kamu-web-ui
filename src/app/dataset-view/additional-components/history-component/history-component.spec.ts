@@ -3,6 +3,7 @@ import { first } from "rxjs/operators";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { mockHistoryUpdate } from "../data-tabs.mock";
 import { HistoryComponent } from "./history-component";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("HistoryComponent", () => {
     let component: HistoryComponent;
@@ -12,6 +13,7 @@ describe("HistoryComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [HistoryComponent],
+            imports: [SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(HistoryComponent);

@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { HashPropertyComponent } from "./hash-property.component";
 import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
 import { ToastrModule } from "ngx-toastr";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("HashPropertyComponent", () => {
     let component: HashPropertyComponent;
@@ -10,7 +11,11 @@ describe("HashPropertyComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [HashPropertyComponent],
-            imports: [DisplayHashModule, ToastrModule.forRoot()],
+            imports: [
+                DisplayHashModule,
+                ToastrModule.forRoot(),
+                SharedTestModule,
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(HashPropertyComponent);

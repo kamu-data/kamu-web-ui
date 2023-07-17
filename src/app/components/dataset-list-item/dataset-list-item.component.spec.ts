@@ -10,6 +10,7 @@ import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers
 import { DisplayTimeModule } from "../display-time/display-time.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AngularSvgIconModule } from "angular-svg-icon";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("DatasetListItemComponent", () => {
     let component: DatasetListItemComponent;
@@ -28,6 +29,7 @@ describe("DatasetListItemComponent", () => {
                 DisplayTimeModule,
                 AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
+                SharedTestModule,
             ],
         }).compileComponents();
 

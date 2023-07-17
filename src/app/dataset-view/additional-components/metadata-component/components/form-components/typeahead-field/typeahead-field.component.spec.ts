@@ -23,6 +23,7 @@ import { findInputElememtByDataTestId } from "src/app/common/base-test.helpers.s
 import { interval } from "rxjs";
 import { map, take } from "rxjs/operators";
 import AppValues from "src/app/common/app.values";
+import { ActivatedRoute } from "@angular/router";
 
 describe("TypeaheadFieldComponent", () => {
     let component: TypeaheadFieldComponent;
@@ -37,6 +38,25 @@ describe("TypeaheadFieldComponent", () => {
                 FormsModule,
                 ReactiveFormsModule,
                 NgbTooltipModule,
+            ],
+            providers: [
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
             ],
         }).compileComponents();
 

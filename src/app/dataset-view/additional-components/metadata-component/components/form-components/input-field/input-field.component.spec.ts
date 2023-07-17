@@ -15,6 +15,7 @@ import {
 } from "src/app/common/base-test.helpers.spec";
 import { ChangeDetectionStrategy } from "@angular/core";
 import AppValues from "src/app/common/app.values";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("InputFieldComponent", () => {
     let component: InputFieldComponent;
@@ -23,7 +24,7 @@ describe("InputFieldComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [InputFieldComponent, TooltipIconComponent],
-            imports: [ReactiveFormsModule, NgbTooltipModule],
+            imports: [ReactiveFormsModule, NgbTooltipModule, SharedTestModule],
         })
             .overrideComponent(InputFieldComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

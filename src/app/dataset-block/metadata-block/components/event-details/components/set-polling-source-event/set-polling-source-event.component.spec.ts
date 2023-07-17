@@ -7,7 +7,6 @@ import { CardsPropertyComponent } from "./../common/cards-property/cards-propert
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { mockSetPollingSourceEvent } from "../../mock.events";
-
 import { SetPollingSourceEventComponent } from "./set-polling-source-event.component";
 import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
@@ -19,6 +18,7 @@ import { SimplePropertyComponent } from "../common/simple-property/simple-proper
 import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
 import { UnsupportedPropertyComponent } from "../common/unsupported-property/unsupported-property.component";
 import { YamlEventViewerComponent } from "../common/yaml-event-viewer/yaml-event-viewer.component";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("SetPollingSourceEventComponent", () => {
     let component: SetPollingSourceEventComponent;
@@ -40,6 +40,7 @@ describe("SetPollingSourceEventComponent", () => {
                 UnsupportedPropertyComponent,
                 YamlEventViewerComponent,
             ],
+            imports: [SharedTestModule],
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
 

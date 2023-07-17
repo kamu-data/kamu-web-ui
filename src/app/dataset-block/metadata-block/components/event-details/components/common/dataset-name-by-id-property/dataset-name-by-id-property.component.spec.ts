@@ -6,6 +6,7 @@ import { DatasetNameByIdPropertyComponent } from "./dataset-name-by-id-property.
 import { of } from "rxjs";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("DatasetIdAndNamePropertyComponent", () => {
     let component: DatasetNameByIdPropertyComponent;
@@ -20,7 +21,7 @@ describe("DatasetIdAndNamePropertyComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [DatasetNameByIdPropertyComponent],
-            imports: [ApolloTestingModule],
+            imports: [ApolloTestingModule, SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetNameByIdPropertyComponent);

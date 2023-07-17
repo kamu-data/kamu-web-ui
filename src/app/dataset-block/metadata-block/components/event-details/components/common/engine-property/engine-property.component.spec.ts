@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { EnginePropertyComponent } from "./engine-property.component";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("EnginePropertyComponent", () => {
     let component: EnginePropertyComponent;
@@ -9,6 +9,7 @@ describe("EnginePropertyComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [EnginePropertyComponent],
+            imports: [SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(EnginePropertyComponent);

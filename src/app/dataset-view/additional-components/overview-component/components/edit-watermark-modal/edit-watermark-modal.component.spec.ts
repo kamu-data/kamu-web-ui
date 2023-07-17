@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { EditWatermarkModalComponent } from "./edit-watermark-modal.component";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
@@ -16,6 +15,7 @@ import { mockDatasetBasicsFragment } from "src/app/search/mock.data";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { of } from "rxjs";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("EditWatermarkModalComponent", () => {
     let component: EditWatermarkModalComponent;
@@ -34,6 +34,7 @@ describe("EditWatermarkModalComponent", () => {
                 OwlNativeDateTimeModule,
                 OwlMomentDateTimeModule,
                 FormsModule,
+                SharedTestModule,
             ],
         }).compileComponents();
 

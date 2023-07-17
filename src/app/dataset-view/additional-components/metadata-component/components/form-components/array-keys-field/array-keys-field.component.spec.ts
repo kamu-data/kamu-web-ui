@@ -9,6 +9,7 @@ import { ArrayKeysFieldComponent } from "./array-keys-field.component";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("ArrayKeysFieldComponent", () => {
     let component: ArrayKeysFieldComponent;
@@ -18,7 +19,7 @@ describe("ArrayKeysFieldComponent", () => {
         await TestBed.configureTestingModule({
             declarations: [ArrayKeysFieldComponent, TooltipIconComponent],
             providers: [FormBuilder],
-            imports: [ReactiveFormsModule, NgbTooltipModule],
+            imports: [ReactiveFormsModule, NgbTooltipModule, SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ArrayKeysFieldComponent);

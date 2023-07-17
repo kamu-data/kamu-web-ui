@@ -20,6 +20,7 @@ import {
 } from "../../../data-tabs.mock";
 import { EditLicenseModalComponent } from "./edit-license-modal.component";
 import { MatDividerModule } from "@angular/material/divider";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("EditLicenseModalComponent", () => {
     let component: EditLicenseModalComponent;
@@ -33,6 +34,7 @@ describe("EditLicenseModalComponent", () => {
                 FormsModule,
                 ReactiveFormsModule,
                 MatDividerModule,
+                SharedTestModule,
             ],
             providers: [Apollo, NgbActiveModal],
         }).compileComponents();

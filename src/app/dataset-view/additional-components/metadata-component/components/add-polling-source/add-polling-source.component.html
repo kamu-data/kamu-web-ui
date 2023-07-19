@@ -19,7 +19,10 @@
                     ></app-stepper-navigation>
                 </ng-container>
                 <ng-container *ngIf="currentStep === steps.PREPARE">
-                    <app-prepare-step></app-prepare-step>
+                    <app-prepare-step
+                        [eventYamlByHash]="eventYamlByHash"
+                        [sectionName]="steps.PREPARE"
+                    ></app-prepare-step>
                     <app-stepper-navigation
                         [prevStep]="steps.FETCH"
                         [nextStep]="steps.READ"
@@ -89,6 +92,7 @@
             </form>
         </div>
     </div>
+    <!-- <pre>{{ pollingSourceForm.value | json }}</pre> -->
 </div>
 <ng-template #errorBlock>
     <app-page-not-found *ngIf="datasetKind"></app-page-not-found>

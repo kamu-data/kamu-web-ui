@@ -8,7 +8,7 @@ import {
 } from "./process-form.service.types";
 import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { FetchKind } from "./add-polling-source-form.types";
+import { EditFormType, FetchKind } from "./add-polling-source-form.types";
 
 @Injectable({
     providedIn: "root",
@@ -19,6 +19,8 @@ export class ProcessFormService {
         this.processFetchOrderControl(formGroup);
         this.removeEmptyControls(formGroup);
         this.processEventTimeControl(formGroup);
+        this.processEmptyPrepareStep(formGroup);
+        this.processPipeCommandControl(formGroup);
     }
 
     private transformSchema(formGroup: FormGroup): void {
@@ -34,6 +36,27 @@ export class ProcessFormService {
                     }`;
                 },
             );
+        }
+    }
+
+    private processPipeCommandControl(formGroup: FormGroup): void {
+        const form = formGroup.value as EditFormType;
+        if (form.prepare && form.prepare.length > 0) {
+            form.prepare.map((item) => {
+                if (item.kind === "pipe" && typeof item.command === "string") {
+                    item.command = item.command.trim().split(" ");
+                }
+                if (item.kind === "decompress" && !item.subPath) {
+                    delete item.subPath;
+                }
+            });
+        }
+    }
+
+    private processEmptyPrepareStep(formGroup: FormGroup): void {
+        const form = formGroup.value as EditFormType;
+        if (form.prepare && !form.prepare.length) {
+            delete form.prepare;
         }
     }
 

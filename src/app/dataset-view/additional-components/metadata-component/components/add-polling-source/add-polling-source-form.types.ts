@@ -119,6 +119,12 @@ export interface EditFormType {
         kind: PreprocessKind.SQL;
         query?: string;
     };
+    prepare?: {
+        kind: string;
+        command?: string[] | string;
+        format?: string;
+        subPath?: string;
+    }[];
 }
 
 export interface EditFormParseType {

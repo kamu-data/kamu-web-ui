@@ -4,8 +4,6 @@ import {
     FetchKind,
     ReadKind,
     MergeKind,
-    PrepareKind,
-    PreprocessKind,
     PreprocessStepValue,
 } from "./add-polling-source-form.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
@@ -48,7 +46,6 @@ import { SupportedEvents } from "src/app/dataset-block/metadata-block/components
 export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     public currentStep: SetPollingSourceSection = SetPollingSourceSection.FETCH;
     public steps: typeof SetPollingSourceSection = SetPollingSourceSection;
-
     public showPreprocessStep = false;
     public errorMessage = "";
     public history: DatasetHistoryUpdate;
@@ -58,10 +55,6 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         engine: "",
         queries: [],
     };
-
-    // --------------------------------
-    private readonly DEFAULT_PREPARE_KIND = PrepareKind.PIPE;
-    private readonly DEFAULT_PREPROCESS_KIND = PreprocessKind.SQL;
     // ---------------------------------
     public readonly FETCH_STEP_RADIO_DATA = FETCH_STEP_RADIO_CONTROLS;
     public readonly FETCH_FORM_DATA = FETCH_FORM_DATA;
@@ -79,6 +72,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         fetch: this.fb.group({
             kind: [this.FETCH_DEFAULT_KIND],
         }),
+        prepare: this.fb.array([]),
         read: this.fb.group({
             kind: [this.READ_DEFAULT_KIND],
         }),

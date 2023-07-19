@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import {
+    FormArray,
     FormBuilder,
     FormControl,
     FormGroupDirective,
     ReactiveFormsModule,
 } from "@angular/forms";
 import { BaseStepComponent } from "./base-step.component";
-import { FetchKind } from "../../add-polling-source-form.types";
+import { FetchKind, PrepareKind } from "../../add-polling-source-form.types";
 import { FETCH_FORM_DATA } from "../data/fetch-form-data";
 import { FETCH_STEP_RADIO_CONTROLS } from "../../form-control.source";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
@@ -19,11 +20,17 @@ import { DatasetApi } from "src/app/api/dataset.api";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 
 const fb = new FormBuilder();
-const formGroupDirective = new FormGroupDirective([], []);
+export const formGroupDirective = new FormGroupDirective([], []);
 formGroupDirective.form = fb.group({
     fetch: fb.group({
         kind: new FormControl(FetchKind.URL),
     }),
+    prepare: new FormArray([
+        fb.group({
+            kind: PrepareKind.PIPE,
+            command: "a -t x",
+        }),
+    ]),
 });
 
 describe("BaseStepComponent", () => {

@@ -8,7 +8,11 @@ import {
 } from "./process-form.service.types";
 import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { EditFormType, FetchKind } from "./add-polling-source-form.types";
+import {
+    EditFormType,
+    FetchKind,
+    PrepareKind,
+} from "./add-polling-source-form.types";
 
 @Injectable({
     providedIn: "root",
@@ -43,10 +47,13 @@ export class ProcessFormService {
         const form = formGroup.value as EditFormType;
         if (form.prepare && form.prepare.length > 0) {
             form.prepare.map((item) => {
-                if (item.kind === "pipe" && typeof item.command === "string") {
+                if (
+                    item.kind === PrepareKind.PIPE &&
+                    typeof item.command === "string"
+                ) {
                     item.command = item.command.trim().split(" ");
                 }
-                if (item.kind === "decompress" && !item.subPath) {
+                if (item.kind === PrepareKind.DECOMPRESS && !item.subPath) {
                     delete item.subPath;
                 }
             });

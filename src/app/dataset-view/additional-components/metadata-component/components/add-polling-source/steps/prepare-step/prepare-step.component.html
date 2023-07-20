@@ -27,6 +27,21 @@
                     <label class="form-label"> Command </label>
                 </div>
                 <input class="form-control" formControlName="command" />
+                <div
+                    *ngIf="
+                        sectionForm.controls[i].get('command')?.errors
+                            ?.required &&
+                        sectionForm.controls[i].get('command')?.touched
+                    "
+                    class="mt-1"
+                >
+                    <span
+                        class="text-danger fs-12"
+                        attr.data-test-id="error-{{ i }}-required"
+                    >
+                        Field is required</span
+                    >
+                </div>
                 <div class="buttons-section d-flex flex-row">
                     <button
                         class="no-button"
@@ -66,9 +81,7 @@
             >
                 <h3 class="text-center">Decompress</h3>
                 <div class="mb-3">
-                    <label class="form-label"
-                        >Format <span class="text-danger">*</span></label
-                    >
+                    <label class="form-label">Format </label>
                     <select class="form-select" formControlName="format">
                         <option value="zip">ZIP</option>
                         <option value="gzip">GZIP</option>

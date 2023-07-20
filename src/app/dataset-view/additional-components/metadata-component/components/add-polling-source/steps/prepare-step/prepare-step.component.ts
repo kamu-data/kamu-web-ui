@@ -10,12 +10,14 @@ import {
     FormBuilder,
     FormGroup,
     FormGroupDirective,
+    Validators,
 } from "@angular/forms";
 import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { EditFormType, PrepareKind } from "../../add-polling-source-form.types";
 import { EditPollingSourceService } from "../../edit-polling-source.service";
+import { RxwebValidators } from "@rxweb/reactive-form-validators";
 
 @Component({
     selector: "app-prepare-step",
@@ -60,7 +62,11 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
                 ) {
                     group = this.fb.group({
                         kind: this.fb.control(PrepareKind.PIPE),
-                        command: this.fb.control(item.command.join(" ")),
+                        command: this.fb.control(
+                            item.command.join(" "),
+                            // eslint-disable-next-line @typescript-eslint/unbound-method
+                            Validators.required,
+                        ),
                     });
                 } else if (item.kind === PrepareKind.DECOMPRESS) {
                     group = this.fb.group({
@@ -82,7 +88,11 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
         this.sectionForm.push(
             this.fb.group({
                 kind: this.fb.control(PrepareKind.PIPE),
-                command: this.fb.control(""),
+                command: this.fb.control(
+                    "",
+                    // eslint-disable-next-line @typescript-eslint/unbound-method
+                    Validators.required,
+                ),
             }),
         );
     }
@@ -91,7 +101,7 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
         this.sectionForm.push(
             this.fb.group({
                 kind: this.fb.control(PrepareKind.DECOMPRESS),
-                format: this.fb.control(""),
+                format: this.fb.control("zip"),
                 subPath: this.fb.control(""),
             }),
         );

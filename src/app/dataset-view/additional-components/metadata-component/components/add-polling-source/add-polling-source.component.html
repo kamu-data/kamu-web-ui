@@ -26,7 +26,7 @@
                     <app-stepper-navigation
                         [prevStep]="steps.FETCH"
                         [nextStep]="steps.READ"
-                        [validStep]="fetchForm.valid"
+                        [validStep]="prepareForm.valid"
                         (changeStepEmitter)="changeStep($event)"
                     ></app-stepper-navigation>
                 </ng-container>
@@ -92,7 +92,6 @@
             </form>
         </div>
     </div>
-    <!-- <pre>{{ pollingSourceForm.value | json }}</pre> -->
 </div>
 <ng-template #errorBlock>
     <app-page-not-found *ngIf="datasetKind"></app-page-not-found>

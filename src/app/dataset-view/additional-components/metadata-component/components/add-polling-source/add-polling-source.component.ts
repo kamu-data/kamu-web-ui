@@ -18,7 +18,7 @@ import {
     Component,
     OnInit,
 } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -85,6 +85,12 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         return this.pollingSourceForm.get(
             SetPollingSourceSection.FETCH,
         ) as FormGroup;
+    }
+
+    public get prepareForm(): FormArray {
+        return this.pollingSourceForm.get(
+            SetPollingSourceSection.PREPARE,
+        ) as FormArray;
     }
 
     public get readForm(): FormGroup {

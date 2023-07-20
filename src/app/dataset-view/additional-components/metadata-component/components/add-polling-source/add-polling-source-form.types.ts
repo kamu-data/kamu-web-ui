@@ -72,6 +72,11 @@ export enum PrepareKind {
     DECOMPRESS = "decompress",
 }
 
+export enum DecompressFormat {
+    ZIP = "zip",
+    GZIP = "gzip",
+}
+
 export enum PreprocessKind {
     SQL = "sql",
 }

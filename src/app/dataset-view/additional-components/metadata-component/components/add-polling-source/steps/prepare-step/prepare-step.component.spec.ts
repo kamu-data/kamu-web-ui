@@ -13,7 +13,10 @@ import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { MatIconModule } from "@angular/material/icon";
 import { mockSetPollingSourceEventYaml } from "../../../set-transform/mock.data";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
-import { PrepareKind } from "../../add-polling-source-form.types";
+import {
+    DecompressFormat,
+    PrepareKind,
+} from "../../add-polling-source-form.types";
 
 describe("PrepareStepComponent", () => {
     let component: PrepareStepComponent;
@@ -55,7 +58,7 @@ describe("PrepareStepComponent", () => {
     it("should check add decompress", () => {
         const result = {
             kind: PrepareKind.DECOMPRESS,
-            format: "",
+            format: DecompressFormat.ZIP,
             subPath: "",
         };
         component.sectionForm.clear();

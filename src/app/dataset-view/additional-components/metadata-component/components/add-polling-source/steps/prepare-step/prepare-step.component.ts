@@ -15,9 +15,12 @@ import {
 import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { EditFormType, PrepareKind } from "../../add-polling-source-form.types";
+import {
+    DecompressFormat,
+    EditFormType,
+    PrepareKind,
+} from "../../add-polling-source-form.types";
 import { EditPollingSourceService } from "../../edit-polling-source.service";
-import { RxwebValidators } from "@rxweb/reactive-form-validators";
 
 @Component({
     selector: "app-prepare-step",
@@ -101,7 +104,7 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
         this.sectionForm.push(
             this.fb.group({
                 kind: this.fb.control(PrepareKind.DECOMPRESS),
-                format: this.fb.control("zip"),
+                format: this.fb.control(DecompressFormat.ZIP),
                 subPath: this.fb.control(""),
             }),
         );

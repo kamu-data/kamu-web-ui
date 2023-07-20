@@ -13,6 +13,7 @@ import {
     FetchKind,
     PrepareKind,
 } from "./add-polling-source-form.types";
+import AppValues from "src/app/common/app.values";
 
 @Injectable({
     providedIn: "root",
@@ -51,7 +52,9 @@ export class ProcessFormService {
                     item.kind === PrepareKind.PIPE &&
                     typeof item.command === "string"
                 ) {
-                    item.command = item.command.trim().split(" ");
+                    item.command = item.command
+                        .trim()
+                        .match(AppValues.SPLIT_ARGUMENTS_PATTERN) as string[];
                 }
                 if (item.kind === PrepareKind.DECOMPRESS && !item.subPath) {
                     delete item.subPath;

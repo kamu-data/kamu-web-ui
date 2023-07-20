@@ -17,6 +17,7 @@ import {
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { findElement } from "src/app/common/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("CacheFieldComponent", () => {
     let component: CacheFieldComponent;
@@ -27,7 +28,12 @@ describe("CacheFieldComponent", () => {
         await TestBed.configureTestingModule({
             declarations: [CacheFieldComponent, TooltipIconComponent],
             providers: [FormBuilder],
-            imports: [ReactiveFormsModule, FormsModule, NgbTooltipModule],
+            imports: [
+                ReactiveFormsModule,
+                FormsModule,
+                NgbTooltipModule,
+                SharedTestModule,
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(CacheFieldComponent);

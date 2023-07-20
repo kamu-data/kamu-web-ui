@@ -10,9 +10,11 @@ import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { EngineService } from "src/app/services/engine.service";
 import { of } from "rxjs";
-import { mockCurrentSetTransform, mockEngines } from "../../mock.data";
+import { mockEngines } from "../../mock.data";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
+import { mockSetPollingSourceEvent } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("EngineSectionComponent", () => {
     let component: EngineSectionComponent;
@@ -28,6 +30,7 @@ describe("EngineSectionComponent", () => {
                 ApolloTestingModule,
                 FormsModule,
                 MatDividerModule,
+                SharedTestModule,
             ],
         }).compileComponents();
 
@@ -55,13 +58,15 @@ describe("EngineSectionComponent", () => {
     }));
 
     it("should check init engine and image when currentSetTransformEvent is not null", fakeAsync(() => {
-        component.currentSetTransformEvent = mockCurrentSetTransform;
+        component.currentSetTransformEvent =
+            mockSetPollingSourceEvent.preprocess;
         fixture.detectChanges();
         component.ngOnInit();
         tick();
-        expect(component.selectedEngine).toBe(
-            mockCurrentSetTransform.transform.engine.toUpperCase(),
-        );
+        if (mockSetPollingSourceEvent.preprocess)
+            expect(component.selectedEngine).toBe(
+                mockSetPollingSourceEvent.preprocess.engine.toUpperCase(),
+            );
         flush();
     }));
 });

@@ -6,6 +6,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BlockHeaderComponent } from "./block-header.component";
 import { Apollo } from "apollo-angular";
 import { MatMenuModule } from "@angular/material/menu";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("BlockHeaderComponent", () => {
     let component: BlockHeaderComponent;
@@ -14,7 +15,12 @@ describe("BlockHeaderComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [BlockHeaderComponent],
-            imports: [MatMenuModule, MatIconModule, MatDividerModule],
+            imports: [
+                MatMenuModule,
+                MatIconModule,
+                MatDividerModule,
+                SharedTestModule,
+            ],
             providers: [Apollo, DatasetApi],
         }).compileComponents();
 

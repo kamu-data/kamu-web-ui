@@ -17,7 +17,9 @@
                     [dataSource]="dataSource"
                 ></app-search-section>
                 <app-engine-section
-                    [currentSetTransformEvent]="currentSetTransformEvent"
+                    [currentSetTransformEvent]="
+                        currentSetTransformEvent?.transform
+                    "
                     (onEmitSelectedEngine)="onSelectEngine($event)"
                 ></app-engine-section>
             </div>

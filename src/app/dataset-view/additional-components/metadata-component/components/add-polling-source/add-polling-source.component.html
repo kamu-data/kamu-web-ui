@@ -1,39 +1,5 @@
 <div class="layout" *ngIf="history && datasetKind === 'ROOT'; else errorBlock">
     <div class="mt-4">
-        <!-- <ng-container *ngIf="currentStep === steps.FETCH">
-            <div class="row">
-                <div class="col mt-4">
-                    <div class="form-check">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            [(ngModel)]="isAddPrepareStep"
-                            (change)="onCheckedPrepareStep($event)"
-                            data-test-id="read-isAddPrepareStep"
-                        />
-                        <label class="form-check-label">
-                            Add PREPARE step
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col">
-                    <div class="form-check">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            [(ngModel)]="isAddPreprocessStep"
-                            (change)="onCheckedPreprocessStep($event)"
-                            data-test-id="read-isAddPreprocessStep"
-                        />
-                        <label class="form-check-label">
-                            Add PREPROCESS step
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </ng-container> -->
         <div class="border border-1 mt-4 px-2 py-4 rounded-3">
             <form [formGroup]="pollingSourceForm">
                 <ng-container *ngIf="currentStep === steps.FETCH">
@@ -47,19 +13,20 @@
                     ></app-base-step>
                     <app-stepper-navigation
                         [prevStep]="null"
-                        [nextStep]="
-                            isAddPrepareStep ? steps.PREPARE : steps.READ
-                        "
+                        [nextStep]="steps.PREPARE"
                         [validStep]="fetchForm.valid"
                         (changeStepEmitter)="changeStep($event)"
                     ></app-stepper-navigation>
                 </ng-container>
                 <ng-container *ngIf="currentStep === steps.PREPARE">
-                    <app-prepare-step></app-prepare-step>
+                    <app-prepare-step
+                        [eventYamlByHash]="eventYamlByHash"
+                        [sectionName]="steps.PREPARE"
+                    ></app-prepare-step>
                     <app-stepper-navigation
                         [prevStep]="steps.FETCH"
                         [nextStep]="steps.READ"
-                        [validStep]="fetchForm.valid"
+                        [validStep]="prepareForm.valid"
                         (changeStepEmitter)="changeStep($event)"
                     ></app-stepper-navigation>
                 </ng-container>
@@ -73,18 +40,21 @@
                         [eventYamlByHash]="eventYamlByHash"
                     ></app-base-step>
                     <app-stepper-navigation
-                        [prevStep]="
-                            isAddPrepareStep ? steps.PREPARE : steps.FETCH
-                        "
-                        [nextStep]="
-                            isAddPreprocessStep ? steps.PREPROCESS : steps.MERGE
-                        "
+                        [prevStep]="steps.PREPARE"
+                        [nextStep]="steps.PREPROCESS"
                         [validStep]="readForm.valid"
                         (changeStepEmitter)="changeStep($event)"
                     ></app-stepper-navigation>
                 </ng-container>
                 <ng-container *ngIf="currentStep === steps.PREPROCESS">
-                    <app-preprocess-step></app-preprocess-step>
+                    <app-preprocess-step
+                        [eventYamlByHash]="eventYamlByHash"
+                        [preprocessValue]="preprocessStepValue"
+                        [showPreprocessStep]="showPreprocessStep"
+                        (showPreprocessStepEmitter)="
+                            onShowPreprcessStep($event)
+                        "
+                    ></app-preprocess-step>
                     <app-stepper-navigation
                         [prevStep]="steps.READ"
                         [nextStep]="steps.MERGE"
@@ -111,7 +81,7 @@
                         </div></app-base-step
                     >
                     <app-stepper-navigation
-                        [prevStep]="steps.READ"
+                        [prevStep]="steps.PREPROCESS"
                         [nextStep]="null"
                         [validStep]="mergeForm.valid"
                         (changeStepEmitter)="changeStep($event)"

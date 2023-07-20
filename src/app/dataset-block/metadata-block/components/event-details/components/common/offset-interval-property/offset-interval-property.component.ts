@@ -8,10 +8,7 @@ import {
     OnInit,
 } from "@angular/core";
 import { OffsetInterval } from "src/app/api/kamu.graphql.interface";
-import { ActivatedRoute, ParamMap } from "@angular/router";
-import { requireValue } from "src/app/common/app.helpers";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import ProjectLinks from "src/app/project-links";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 
@@ -31,7 +28,6 @@ export class OffsetIntervalPropertyComponent
     };
     private datasetInfo: DatasetInfo = { accountName: "", datasetName: "" };
     constructor(
-        private activatedRoute: ActivatedRoute,
         private navigationService: NavigationService,
         private datasetSevice: DatasetService,
     ) {
@@ -66,17 +62,5 @@ export class OffsetIntervalPropertyComponent
                 end: this.data.block.end,
             },
         });
-    }
-
-    private getDatasetInfoFromUrl(): DatasetInfo {
-        const paramMap: ParamMap = this.activatedRoute.snapshot.paramMap;
-        return {
-            accountName: requireValue(
-                paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
-            ),
-            datasetName: requireValue(
-                paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
-            ),
-        };
     }
 }

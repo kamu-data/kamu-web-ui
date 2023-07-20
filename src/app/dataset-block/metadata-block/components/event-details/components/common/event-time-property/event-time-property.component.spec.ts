@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { EventTimePropertyComponent } from "./event-time-property.component";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("EventTimePropertyComponent", () => {
     let component: EventTimePropertyComponent;
@@ -9,6 +9,7 @@ describe("EventTimePropertyComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [EventTimePropertyComponent],
+            imports: [SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(EventTimePropertyComponent);

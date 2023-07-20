@@ -34,6 +34,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockGetDatasetSchemaQuery } from "../../mock.data";
 import { DatasetNode } from "../../set-transform.types";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("SearchSectionComponent", () => {
     let component: SearchSectionComponent;
@@ -53,6 +54,7 @@ describe("SearchSectionComponent", () => {
                 NgbTypeaheadModule,
                 MatIconModule,
                 FormsModule,
+                SharedTestModule,
             ],
         }).compileComponents();
 

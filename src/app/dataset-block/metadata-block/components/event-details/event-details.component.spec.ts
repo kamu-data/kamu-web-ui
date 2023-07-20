@@ -8,6 +8,7 @@ import { EventDetailsComponent } from "./event-details.component";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { AddDataEventFragment } from "./../../../../api/kamu.graphql.interface";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("EventDetailsComponent", () => {
     let component: EventDetailsComponent;
@@ -20,6 +21,7 @@ describe("EventDetailsComponent", () => {
                 EventDetailsComponent,
                 SetPollingSourceEventComponent,
             ],
+            imports: [SharedTestModule],
             providers: [Apollo, DatasetApi],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();

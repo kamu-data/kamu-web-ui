@@ -5,11 +5,11 @@ import {
     ReactiveFormsModule,
 } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { KeyValueFieldComponent } from "./key-value-field.component";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("KeyValueFieldComponent", () => {
     let component: KeyValueFieldComponent;
@@ -19,7 +19,7 @@ describe("KeyValueFieldComponent", () => {
         await TestBed.configureTestingModule({
             declarations: [KeyValueFieldComponent, TooltipIconComponent],
             providers: [FormBuilder],
-            imports: [ReactiveFormsModule, NgbTooltipModule],
+            imports: [ReactiveFormsModule, NgbTooltipModule, SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(KeyValueFieldComponent);

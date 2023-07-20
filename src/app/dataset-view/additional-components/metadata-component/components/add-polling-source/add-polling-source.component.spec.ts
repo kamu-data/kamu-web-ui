@@ -19,7 +19,6 @@ import { MonacoEditorModule } from "ngx-monaco-editor";
 import { StepperNavigationComponent } from "../stepper-navigation/stepper-navigation.component";
 import { BaseStepComponent } from "./steps/base-step/base-step.component";
 import { PollingSourceFormComponentsModule } from "../form-components/polling-source-form-components.module";
-import { snapshotParamMapMock } from "src/app/common/base-test.helpers.spec";
 import { of } from "rxjs";
 import { mockDatasetHistoryResponse } from "src/app/search/mock.data";
 import {
@@ -27,6 +26,7 @@ import {
     MetadataBlockFragment,
 } from "src/app/api/kamu.graphql.interface";
 import { EditPollingSourceService } from "./edit-polling-source.service";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
@@ -50,8 +50,9 @@ describe("AddPollingSourceComponent", () => {
                 NgbModule,
                 MonacoEditorModule.forRoot(),
                 PollingSourceFormComponentsModule,
+                SharedTestModule,
             ],
-            providers: [FormBuilder, Apollo, snapshotParamMapMock],
+            providers: [FormBuilder, Apollo],
         })
             .overrideComponent(AddPollingSourceComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

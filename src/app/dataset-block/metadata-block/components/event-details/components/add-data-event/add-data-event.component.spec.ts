@@ -13,7 +13,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { snapshotParamMapMock } from "src/app/common/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("AddDataEventComponent", () => {
     let component: AddDataEventComponent;
@@ -37,7 +37,6 @@ describe("AddDataEventComponent", () => {
                 BlockRowDataComponent,
                 TooltipIconComponent,
             ],
-            providers: [snapshotParamMapMock],
             imports: [
                 DisplaySizeModule,
                 ApolloModule,
@@ -46,6 +45,7 @@ describe("AddDataEventComponent", () => {
                 ToastrModule.forRoot(),
                 AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
+                SharedTestModule,
             ],
         })
             .overrideComponent(AddDataEventComponent, {

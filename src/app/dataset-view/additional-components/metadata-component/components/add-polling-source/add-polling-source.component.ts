@@ -4,8 +4,7 @@ import {
     FetchKind,
     ReadKind,
     MergeKind,
-    PrepareKind,
-    PreprocessKind,
+    PreprocessStepValue,
 } from "./add-polling-source-form.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import {
@@ -19,13 +18,9 @@ import {
     Component,
     OnInit,
 } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
-import { ActivatedRoute, ParamMap } from "@angular/router";
-import { requireValue } from "src/app/common/app.helpers";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import ProjectLinks from "src/app/project-links";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import {
@@ -51,16 +46,15 @@ import { SupportedEvents } from "src/app/dataset-block/metadata-block/components
 export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     public currentStep: SetPollingSourceSection = SetPollingSourceSection.FETCH;
     public steps: typeof SetPollingSourceSection = SetPollingSourceSection;
-    public isAddPrepareStep = false;
-    public isAddPreprocessStep = false;
+    public showPreprocessStep = false;
     public errorMessage = "";
     public history: DatasetHistoryUpdate;
     public eventYamlByHash: MaybeNull<string>;
     public datasetKind: DatasetKind;
-
-    // --------------------------------
-    private readonly DEFAULT_PREPARE_KIND = PrepareKind.PIPE;
-    private readonly DEFAULT_PREPROCESS_KIND = PreprocessKind.SQL;
+    public preprocessStepValue: PreprocessStepValue = {
+        engine: "",
+        queries: [],
+    };
     // ---------------------------------
     public readonly FETCH_STEP_RADIO_DATA = FETCH_STEP_RADIO_CONTROLS;
     public readonly FETCH_FORM_DATA = FETCH_FORM_DATA;
@@ -78,6 +72,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         fetch: this.fb.group({
             kind: [this.FETCH_DEFAULT_KIND],
         }),
+        prepare: this.fb.array([]),
         read: this.fb.group({
             kind: [this.READ_DEFAULT_KIND],
         }),
@@ -92,6 +87,12 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         ) as FormGroup;
     }
 
+    public get prepareForm(): FormArray {
+        return this.pollingSourceForm.get(
+            SetPollingSourceSection.PREPARE,
+        ) as FormArray;
+    }
+
     public get readForm(): FormGroup {
         return this.pollingSourceForm.get(
             SetPollingSourceSection.READ,
@@ -104,43 +105,10 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         ) as FormGroup;
     }
 
-    public onCheckedPrepareStep(event: Event): void {
-        const input = event.target as HTMLInputElement;
-        if (input.checked) {
-            this.pollingSourceForm.addControl(
-                SetPollingSourceSection.PREPARE,
-                this.fb.group({
-                    kind: this.DEFAULT_PREPARE_KIND,
-                }),
-            );
-        } else {
-            this.pollingSourceForm.removeControl(
-                SetPollingSourceSection.PREPARE,
-            );
-        }
-    }
-
-    public onCheckedPreprocessStep(event: Event): void {
-        const input = event.target as HTMLInputElement;
-        if (input.checked) {
-            this.pollingSourceForm.addControl(
-                SetPollingSourceSection.PREPROCESS,
-                this.fb.group({
-                    kind: this.DEFAULT_PREPROCESS_KIND,
-                }),
-            );
-        } else {
-            this.pollingSourceForm.removeControl(
-                SetPollingSourceSection.PREPROCESS,
-            );
-        }
-    }
-
     constructor(
         private fb: FormBuilder,
         private createDatasetService: AppDatasetCreateService,
         private yamlEventService: TemplatesYamlEventsService,
-        private activatedRoute: ActivatedRoute,
         private modalService: NgbModal,
         private cdr: ChangeDetectorRef,
         private processFormService: ProcessFormService,
@@ -189,22 +157,13 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
                             SetPollingSource,
                             "__typename"
                         >,
+                        this.showPreprocessStep
+                            ? this.preprocessStepValue
+                            : null,
                     ),
                 )
                 .subscribe(),
         );
-    }
-
-    public getDatasetInfoFromUrl(): DatasetInfo {
-        const paramMap: ParamMap = this.activatedRoute.snapshot.paramMap;
-        return {
-            accountName: requireValue(
-                paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
-            ),
-            datasetName: requireValue(
-                paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
-            ),
-        };
     }
 
     public onEditYaml(): void {
@@ -219,9 +178,14 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
                     SetPollingSource,
                     "__typename"
                 >,
+                this.showPreprocessStep ? this.preprocessStepValue : null,
             );
         (modalRef.componentInstance as FinalYamlModalComponent).datasetInfo =
             this.getDatasetInfoFromUrl();
+    }
+
+    public onShowPreprcessStep(showPreprocessStep: boolean): void {
+        this.showPreprocessStep = showPreprocessStep;
     }
 
     private getDatasetKind(): void {

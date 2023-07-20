@@ -1,10 +1,10 @@
 <div class="mt-4" *ngIf="knownEngines">
     <p class="fs-6">Engine</p>
-    <mat-divider class="w-425"></mat-divider>
+    <mat-divider class="w-350"></mat-divider>
     <div class="mt-4">
         <label for="engine-type" class="form-label">Type</label>
         <select
-            class="form-select w-425"
+            class="form-select w-350"
             id="engine-type"
             [(ngModel)]="selectedEngine"
             (change)="onSelectType()"
@@ -20,7 +20,7 @@
     <div class="mt-4">
         <label for="engine-image" class="form-label">Image</label>
         <input
-            class="form-control w-425"
+            class="form-control w-350"
             id="engine-image"
             [(ngModel)]="selectedImage"
             [title]="selectedImage"

@@ -5,7 +5,7 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { of } from "rxjs";
 import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
-import { snapshotParamMapMock } from "src/app/common/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("OffsetIntervalPropertyComponent", () => {
     let component: OffsetIntervalPropertyComponent;
@@ -16,8 +16,7 @@ describe("OffsetIntervalPropertyComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [OffsetIntervalPropertyComponent],
-            imports: [ApolloTestingModule],
-            providers: [snapshotParamMapMock],
+            imports: [ApolloTestingModule, SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(OffsetIntervalPropertyComponent);

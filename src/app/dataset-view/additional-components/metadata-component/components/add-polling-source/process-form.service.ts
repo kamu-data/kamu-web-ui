@@ -8,7 +8,12 @@ import {
 } from "./process-form.service.types";
 import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { FetchKind } from "./add-polling-source-form.types";
+import {
+    EditFormType,
+    FetchKind,
+    PrepareKind,
+} from "./add-polling-source-form.types";
+import AppValues from "src/app/common/app.values";
 
 @Injectable({
     providedIn: "root",
@@ -19,6 +24,8 @@ export class ProcessFormService {
         this.processFetchOrderControl(formGroup);
         this.removeEmptyControls(formGroup);
         this.processEventTimeControl(formGroup);
+        this.processEmptyPrepareStep(formGroup);
+        this.processPipeCommandControl(formGroup);
     }
 
     private transformSchema(formGroup: FormGroup): void {
@@ -34,6 +41,32 @@ export class ProcessFormService {
                     }`;
                 },
             );
+        }
+    }
+
+    private processPipeCommandControl(formGroup: FormGroup): void {
+        const form = formGroup.value as EditFormType;
+        if (form.prepare && form.prepare.length > 0) {
+            form.prepare.map((item) => {
+                if (
+                    item.kind === PrepareKind.PIPE &&
+                    typeof item.command === "string"
+                ) {
+                    item.command = item.command
+                        .trim()
+                        .match(AppValues.SPLIT_ARGUMENTS_PATTERN) as string[];
+                }
+                if (item.kind === PrepareKind.DECOMPRESS && !item.subPath) {
+                    delete item.subPath;
+                }
+            });
+        }
+    }
+
+    private processEmptyPrepareStep(formGroup: FormGroup): void {
+        const form = formGroup.value as EditFormType;
+        if (form.prepare && !form.prepare.length) {
+            delete form.prepare;
         }
     }
 

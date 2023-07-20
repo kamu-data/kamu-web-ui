@@ -7,9 +7,13 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import { EngineDesc, EnginesQuery } from "src/app/api/kamu.graphql.interface";
+import {
+    EngineDesc,
+    EnginesQuery,
+    Maybe,
+    TransformSql,
+} from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
-import { SetTransFormYamlType } from "../../set-transform.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { EngineService } from "src/app/services/engine.service";
 
@@ -21,7 +25,7 @@ import { EngineService } from "src/app/services/engine.service";
 })
 export class EngineSectionComponent extends BaseComponent implements OnInit {
     @Input() public knownEngines: MaybeNull<EngineDesc[]>;
-    @Input() public currentSetTransformEvent: MaybeNull<SetTransFormYamlType>;
+    @Input() public currentSetTransformEvent: Maybe<TransformSql> | undefined;
     @Input() public selectedEngine: string;
     @Output() public onEmitSelectedEngine: EventEmitter<string> =
         new EventEmitter<string>();
@@ -54,9 +58,14 @@ export class EngineSectionComponent extends BaseComponent implements OnInit {
         this.trackSubscription(
             this.engineService.engines().subscribe((result: EnginesQuery) => {
                 this.knownEngines = result.data.knownEngines;
-                this.selectedEngine = this.knownEngines[0].name.toUpperCase();
-                this.selectedImage = this.knownEngines[0].latestImage;
-                this.initCurrentEngine();
+                if (!this.selectedEngine) {
+                    this.selectedEngine =
+                        this.knownEngines[0].name.toUpperCase();
+                    this.selectedImage = this.knownEngines[0].latestImage;
+                    this.initCurrentEngine();
+                } else {
+                    this.onSelectType();
+                }
                 this.onEmitSelectedEngine.emit(this.selectedEngine);
                 this.cdr.detectChanges();
             }),
@@ -64,9 +73,8 @@ export class EngineSectionComponent extends BaseComponent implements OnInit {
     }
 
     private initCurrentEngine(): void {
-        if (this.currentSetTransformEvent) {
-            const currentEngine: string =
-                this.currentSetTransformEvent.transform.engine;
+        if (this.currentSetTransformEvent?.engine) {
+            const currentEngine: string = this.currentSetTransformEvent.engine;
             this.selectedEngine = currentEngine.toUpperCase();
             this.onSelectType();
         }

@@ -5,6 +5,7 @@ import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.serv
 import { mockLineageUpdate } from "../data-tabs.mock";
 import { first } from "rxjs/operators";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("LineageComponent", () => {
     let component: LineageComponent;
@@ -14,6 +15,7 @@ describe("LineageComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [LineageComponent],
+            imports: [SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(LineageComponent);

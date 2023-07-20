@@ -7,6 +7,7 @@ import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.co
 import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("SetWatermarkEventComponent", () => {
     let component: SetWatermarkEventComponent;
@@ -19,7 +20,12 @@ describe("SetWatermarkEventComponent", () => {
                 BlockRowDataComponent,
                 TooltipIconComponent,
             ],
-            imports: [DisplayTimeModule, MatIconModule, NgbTooltipModule],
+            imports: [
+                DisplayTimeModule,
+                MatIconModule,
+                NgbTooltipModule,
+                SharedTestModule,
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SetWatermarkEventComponent);

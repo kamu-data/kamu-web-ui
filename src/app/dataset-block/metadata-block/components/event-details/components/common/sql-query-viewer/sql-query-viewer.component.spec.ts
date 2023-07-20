@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { SqlQueryViewerComponent } from "./sql-query-viewer.component";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("SqlQueryViewerComponent", () => {
     let component: SqlQueryViewerComponent;
@@ -9,6 +9,7 @@ describe("SqlQueryViewerComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [SqlQueryViewerComponent],
+            imports: [SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SqlQueryViewerComponent);

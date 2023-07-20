@@ -15,6 +15,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { first } from "rxjs/operators";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { MatChipsModule } from "@angular/material/chips";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;
@@ -26,7 +27,12 @@ describe("OverviewComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [OverviewComponent],
-            imports: [ApolloModule, ReactiveFormsModule, MatChipsModule],
+            imports: [
+                ApolloModule,
+                ReactiveFormsModule,
+                MatChipsModule,
+                SharedTestModule,
+            ],
             providers: [Apollo],
         }).compileComponents();
 

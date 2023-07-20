@@ -6,6 +6,7 @@ import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.compone
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { LinkPropertyComponent } from "../common/link-property/link-property.component";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("SetLicenseEventComponent", () => {
     let component: SetLicenseEventComponent;
@@ -19,7 +20,7 @@ describe("SetLicenseEventComponent", () => {
                 TooltipIconComponent,
                 LinkPropertyComponent,
             ],
-            imports: [MatIconModule, NgbTooltipModule],
+            imports: [MatIconModule, NgbTooltipModule, SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SetLicenseEventComponent);

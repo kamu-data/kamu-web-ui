@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import {
+    FormArray,
     FormBuilder,
     FormControl,
     FormGroupDirective,
@@ -16,13 +17,15 @@ import { PollingSourceFormComponentsModule } from "../../../form-components/poll
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { Apollo } from "apollo-angular";
 import { DatasetApi } from "src/app/api/dataset.api";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 const fb = new FormBuilder();
-const formGroupDirective = new FormGroupDirective([], []);
+export const formGroupDirective = new FormGroupDirective([], []);
 formGroupDirective.form = fb.group({
     fetch: fb.group({
         kind: new FormControl(FetchKind.URL),
     }),
+    prepare: new FormArray([]),
 });
 
 describe("BaseStepComponent", () => {
@@ -36,6 +39,7 @@ describe("BaseStepComponent", () => {
                 ReactiveFormsModule,
                 NgbTooltipModule,
                 PollingSourceFormComponentsModule,
+                SharedTestModule,
             ],
             providers: [
                 Apollo,

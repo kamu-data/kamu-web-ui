@@ -1,4 +1,3 @@
-import { NavigationService } from "./../services/navigation.service";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -10,12 +9,10 @@ import {
 } from "@angular/core";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { DatasetService } from "./dataset.service";
-import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
+import { NavigationEnd, Router } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter, tap } from "rxjs/operators";
-import { ModalService } from "../components/modal/modal.service";
 import { DatasetBasicsFragment } from "../api/kamu.graphql.interface";
-
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { promiseWithCatch } from "../common/app.helpers";
@@ -49,11 +46,8 @@ export class DatasetComponent
         private appDatasetService: DatasetService,
         private router: Router,
         private cdr: ChangeDetectorRef,
-        activatedRoute: ActivatedRoute,
-        navigationService: NavigationService,
-        modalService: ModalService,
     ) {
-        super(navigationService, modalService, activatedRoute);
+        super();
     }
 
     public ngOnInit(): void {

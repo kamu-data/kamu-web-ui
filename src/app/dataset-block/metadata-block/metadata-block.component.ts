@@ -15,9 +15,7 @@ import {
 
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { filter, pluck } from "rxjs/operators";
-import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { ModalService } from "src/app/components/modal/modal.service";
-import { NavigationService } from "src/app/services/navigation.service";
+import { NavigationEnd, Router } from "@angular/router";
 import { BlockService } from "./block.service";
 import { AppDatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import _ from "lodash";
@@ -39,11 +37,8 @@ export class MetadataBlockComponent
         private appDatasetSubsService: AppDatasetSubscriptionsService,
         private cdr: ChangeDetectorRef,
         private router: Router,
-        navigationService: NavigationService,
-        modalService: ModalService,
-        activatedRoute: ActivatedRoute,
     ) {
-        super(navigationService, modalService, activatedRoute);
+        super();
     }
 
     public datasetInfo: DatasetInfo;

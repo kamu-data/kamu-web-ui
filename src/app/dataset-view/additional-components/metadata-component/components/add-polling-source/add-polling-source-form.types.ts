@@ -1,3 +1,5 @@
+import { SqlQueryStep, Transform } from "src/app/api/kamu.graphql.interface";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface JsonFormValidators {
     required?: boolean;
@@ -70,6 +72,11 @@ export enum PrepareKind {
     DECOMPRESS = "decompress",
 }
 
+export enum DecompressFormat {
+    ZIP = "zip",
+    GZIP = "gzip",
+}
+
 export enum PreprocessKind {
     SQL = "sql",
 }
@@ -113,6 +120,16 @@ export interface EditFormType {
         primaryKey?: string[];
         compareColumns?: string[];
     };
+    preprocess?: Transform & {
+        kind: PreprocessKind.SQL;
+        query?: string;
+    };
+    prepare?: {
+        kind: string;
+        command?: string[] | string;
+        format?: string;
+        subPath?: string;
+    }[];
 }
 
 export interface EditFormParseType {
@@ -124,4 +141,9 @@ export interface EditFormParseType {
 export interface NameValue {
     name: string;
     value: string;
+}
+
+export interface PreprocessStepValue {
+    engine: string;
+    queries: Omit<SqlQueryStep, "__typename">[];
 }

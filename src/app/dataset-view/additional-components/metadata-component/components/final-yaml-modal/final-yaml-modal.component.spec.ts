@@ -8,6 +8,7 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { of } from "rxjs";
 import { FormsModule } from "@angular/forms";
 import { MonacoEditorModule } from "ngx-monaco-editor";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 const testDatasetInfo: DatasetInfo = {
     accountName: "testAccountName",
@@ -24,7 +25,12 @@ describe("FinalYamlModalComponent", () => {
         await TestBed.configureTestingModule({
             declarations: [FinalYamlModalComponent],
             providers: [NgbActiveModal],
-            imports: [ApolloModule, FormsModule, MonacoEditorModule.forRoot()],
+            imports: [
+                ApolloModule,
+                FormsModule,
+                MonacoEditorModule.forRoot(),
+                SharedTestModule,
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FinalYamlModalComponent);

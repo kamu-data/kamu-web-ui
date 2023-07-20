@@ -7,7 +7,7 @@ import {
     ReactiveFormsModule,
 } from "@angular/forms";
 import { BaseStepComponent } from "./base-step.component";
-import { FetchKind, PrepareKind } from "../../add-polling-source-form.types";
+import { FetchKind } from "../../add-polling-source-form.types";
 import { FETCH_FORM_DATA } from "../data/fetch-form-data";
 import { FETCH_STEP_RADIO_CONTROLS } from "../../form-control.source";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
@@ -25,12 +25,7 @@ formGroupDirective.form = fb.group({
     fetch: fb.group({
         kind: new FormControl(FetchKind.URL),
     }),
-    prepare: new FormArray([
-        fb.group({
-            kind: PrepareKind.PIPE,
-            command: "a -t x",
-        }),
-    ]),
+    prepare: new FormArray([]),
 });
 
 describe("BaseStepComponent", () => {

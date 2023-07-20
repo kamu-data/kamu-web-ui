@@ -2,8 +2,18 @@
 <div class="d-flex justify-content-center flex-column align-items-center mt-4">
     <p class="text-center mt-2">
         Defines how raw data is prepared before reading. You can add
-        <a class="prepare-item" (click)="addPipe()">Pipe</a> and
-        <a class="prepare-item" (click)="addDecompress()"> Decompress</a> steps.
+        <a class="prepare-item" (click)="addPipe()" data-test-id="add-pipe"
+            >Pipe</a
+        >
+        and
+        <a
+            class="prepare-item"
+            (click)="addDecompress()"
+            data-test-id="add-decompress"
+        >
+            Decompress</a
+        >
+        steps.
     </p>
 </div>
 <div [formArrayName]="sectionName">
@@ -21,7 +31,7 @@
                     <button
                         class="no-button"
                         title="Move down"
-                        attr.data-test-id="move-down-query-{{ i }}"
+                        attr.data-test-id="move-down-item-{{ i }}"
                         (click)="swap(i, 1)"
                         [disabled]="isLastItem(i)"
                     >
@@ -30,7 +40,7 @@
                     <button
                         class="no-button"
                         title="Move up"
-                        attr.data-test-id="move-up-query-{{ i }}"
+                        attr.data-test-id="move-up-item-{{ i }}"
                         (click)="swap(i, -1)"
                         [disabled]="isFirstItem(i)"
                     >
@@ -38,8 +48,8 @@
                     </button>
                     <button
                         class="no-button"
-                        title="Delete query"
-                        attr.data-test-id="remove-query-{{ i }}"
+                        title="Delete item"
+                        attr.data-test-id="remove-item-{{ i }}"
                         (click)="delete(i)"
                     >
                         <mat-icon class="fs-4 hover">delete</mat-icon>
@@ -72,7 +82,7 @@
                     <button
                         class="no-button"
                         title="Move down"
-                        attr.data-test-id="move-down-query-{{ i }}"
+                        attr.data-test-id="move-down-item-{{ i }}"
                         (click)="swap(i, 1)"
                         [disabled]="isLastItem(i)"
                     >
@@ -81,7 +91,7 @@
                     <button
                         class="no-button"
                         title="Move up"
-                        attr.data-test-id="move-up-query-{{ i }}"
+                        attr.data-test-id="move-up-item-{{ i }}"
                         (click)="swap(i, -1)"
                         [disabled]="isFirstItem(i)"
                     >
@@ -89,8 +99,8 @@
                     </button>
                     <button
                         class="no-button"
-                        title="Delete query"
-                        attr.data-test-id="remove-query-{{ i }}"
+                        title="Delete item"
+                        attr.data-test-id="remove-item-{{ i }}"
                         (click)="delete(i)"
                     >
                         <mat-icon class="fs-4 hover">delete</mat-icon>

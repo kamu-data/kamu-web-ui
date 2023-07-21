@@ -12,9 +12,6 @@ $palette: mat-palette($mat-indigo)
 // Create the theme
 $theme: mat-light-theme($palette, $palette)
 
-// Include component specific mixin
-@include mat-stepper-theme($theme)
-
 // Or wrap inside another selector to scope the styles to only one specific component
 app-add-polling-source 
   @include mat-stepper-theme($theme)

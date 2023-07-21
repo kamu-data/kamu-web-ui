@@ -2,6 +2,8 @@
     <button
         *ngIf="prevStep"
         type="button"
+        mat-button
+        matStepperPrevious
         class="btn btn-primary me-4"
         (click)="changeStep(prevStep)"
     >
@@ -11,6 +13,8 @@
         *ngIf="nextStep"
         type="button"
         class="btn btn-primary"
+        mat-button
+        matStepperNext
         [disabled]="!validStep"
         data-test-id="next-button"
         (click)="changeStep(nextStep)"
@@ -23,7 +27,7 @@
             (click)="saveEvent()"
             class="button-save"
             data-test-id="save-button"
-            [disabled]="!validStep"
+            [disabled]="!validStep || !validAllSteps"
         >
             Save
         </button>

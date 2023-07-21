@@ -1,9 +1,23 @@
+
 @import '@angular/material/theming'
+@include mat-core()
 @import "bootstrap-icons/font/bootstrap-icons.css"
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap'
 @import "assets/styles/var"
 @import "@danielmoncada/angular-datetime-picker/assets/style/picker.min.css"
+
+// Use the desired palette
+$palette: mat-palette($mat-indigo)
+// Create the theme
+$theme: mat-light-theme($palette, $palette)
+
+// Include component specific mixin
+@include mat-stepper-theme($theme)
+
+// Or wrap inside another selector to scope the styles to only one specific component
+app-add-polling-source 
+  @include mat-stepper-theme($theme)
 
 body
   font-size: 14px

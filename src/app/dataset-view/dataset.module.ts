@@ -59,6 +59,7 @@ import { EngineSectionComponent } from "./additional-components/metadata-compone
 import { QueriesSectionComponent } from "./additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
 import { PageNotFoundComponent } from "../components/page-not-found/page-not-found.component";
 import { AddPollingSourceComponent } from "./additional-components/metadata-component/components/add-polling-source/add-polling-source.component";
+import { MatStepperModule } from "@angular/material/stepper";
 @NgModule({
     imports: [
         CommonModule,
@@ -99,6 +100,7 @@ import { AddPollingSourceComponent } from "./additional-components/metadata-comp
         OwlNativeDateTimeModule,
         OwlMomentDateTimeModule,
         MatTreeModule,
+        MatStepperModule,
     ],
     exports: [
         DatasetViewHeaderComponent,

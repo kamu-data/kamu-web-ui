@@ -189,7 +189,6 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
                 this.showPreprocessStep ? this.preprocessStepValue : null,
             );
         instance.datasetInfo = this.getDatasetInfoFromUrl();
-        instance.enabledSaveBtn = this.pollingSourceForm.valid;
     }
 
     public onShowPreprcessStep(showPreprocessStep: boolean): void {

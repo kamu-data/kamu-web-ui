@@ -2,9 +2,18 @@
     <div class="mt-4">
         <div class="border border-1 mt-4 px-2 py-4 rounded-3">
             <form [formGroup]="pollingSourceForm">
-                <mat-stepper linear #stepper>
-                    <mat-step [stepControl]="fetchForm">
-                        <ng-template matStepLabel>Fetch</ng-template>
+                <mat-stepper #stepper>
+                    <mat-step
+                        [stepControl]="fetchForm"
+                        errorMessage="Field is required"
+                    >
+                        <ng-template matStepLabel>
+                            <div
+                                class="stepper-header-overlay"
+                                (click)="onShowErrors()"
+                            ></div>
+                            Fetch</ng-template
+                        >
                         <div class="container-step">
                             <app-base-step
                                 [sectionStepRadioData]="FETCH_STEP_RADIO_DATA"
@@ -28,7 +37,7 @@
                         [stepControl]="prepareForm"
                         errorMessage="Field is required"
                     >
-                        <ng-template matStepLabel>Prepare</ng-template>
+                        <ng-template matStepLabel> Prepare </ng-template>
                         <div class="container-step">
                             <app-prepare-step
                                 [eventYamlByHash]="eventYamlByHash"
@@ -42,8 +51,17 @@
                             ></app-stepper-navigation>
                         </div>
                     </mat-step>
-                    <mat-step [stepControl]="readForm">
-                        <ng-template matStepLabel>Read</ng-template>
+                    <mat-step
+                        [stepControl]="readForm"
+                        errorMessage="Field is required"
+                    >
+                        <ng-template matStepLabel>
+                            <div
+                                class="stepper-header-overlay"
+                                (click)="onShowErrors()"
+                            ></div>
+                            Read</ng-template
+                        >
                         <div class="container-step">
                             <app-base-step
                                 [sectionStepRadioData]="READ_STEP_RADIO_DATA"

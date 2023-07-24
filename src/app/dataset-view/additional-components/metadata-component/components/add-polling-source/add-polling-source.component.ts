@@ -178,8 +178,9 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
             FinalYamlModalComponent,
             { size: "lg" },
         );
+        const instance = modalRef.componentInstance as FinalYamlModalComponent;
         this.processFormService.transformForm(this.pollingSourceForm);
-        (modalRef.componentInstance as FinalYamlModalComponent).yamlTemplate =
+        instance.yamlTemplate =
             this.yamlEventService.buildYamlSetPollingSourceEvent(
                 this.pollingSourceForm.value as Omit<
                     SetPollingSource,
@@ -187,8 +188,8 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
                 >,
                 this.showPreprocessStep ? this.preprocessStepValue : null,
             );
-        (modalRef.componentInstance as FinalYamlModalComponent).datasetInfo =
-            this.getDatasetInfoFromUrl();
+        instance.datasetInfo = this.getDatasetInfoFromUrl();
+        instance.enabledSaveBtn = this.pollingSourceForm.valid;
     }
 
     public onShowPreprcessStep(showPreprocessStep: boolean): void {

@@ -12,11 +12,13 @@ import { MatIconModule } from "@angular/material/icon";
 import { MetadataBlockModule } from "src/app/dataset-block/metadata-block/metadata-block.module";
 import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("MetadataComponent", () => {
     let component: MetadataComponent;
     let fixture: ComponentFixture<MetadataComponent>;
     let appDatasetSubsService: AppDatasetSubscriptionsService;
+    let navigationService: NavigationService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -53,6 +55,7 @@ describe("MetadataComponent", () => {
 
         fixture = TestBed.createComponent(MetadataComponent);
         appDatasetSubsService = TestBed.inject(AppDatasetSubscriptionsService);
+        navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsFragment;
         fixture.detectChanges();
@@ -94,5 +97,29 @@ describe("MetadataComponent", () => {
         const pageChangeEmitSpy = spyOn(component.pageChangeEmit, "emit");
         component.onPageChange(pageNumber);
         expect(pageChangeEmitSpy).toHaveBeenCalledWith(pageNumber);
+    });
+
+    it("should check navigate to edit SetPollingSource event", () => {
+        const navigateToAddPollingSourceSpy = spyOn(
+            navigationService,
+            "navigateToAddPollingSource",
+        );
+        component.navigateToEditPollingSource();
+        expect(navigateToAddPollingSourceSpy).toHaveBeenCalledWith({
+            accountName: mockDatasetBasicsFragment.owner.name,
+            datasetName: mockDatasetBasicsFragment.name as string,
+        });
+    });
+
+    it("should check navigate to edit SetTransform event", () => {
+        const navigateToSetTransformSpy = spyOn(
+            navigationService,
+            "navigateToSetTransform",
+        );
+        component.navigateToEditSetTransform();
+        expect(navigateToSetTransformSpy).toHaveBeenCalledWith({
+            accountName: mockDatasetBasicsFragment.owner.name,
+            datasetName: mockDatasetBasicsFragment.name as string,
+        });
     });
 });

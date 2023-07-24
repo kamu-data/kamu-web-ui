@@ -22,6 +22,7 @@ import { PollingSourceFormComponentsModule } from "../form-components/polling-so
 import { of } from "rxjs";
 import { mockDatasetHistoryResponse } from "src/app/search/mock.data";
 import {
+    DatasetKind,
     DatasetPageInfoFragment,
     MetadataBlockFragment,
 } from "src/app/api/kamu.graphql.interface";
@@ -66,6 +67,7 @@ describe("AddPollingSourceComponent", () => {
         createDatasetService = TestBed.inject(AppDatasetCreateService);
         modalRef = modalService.open(FinalYamlModalComponent);
         component = fixture.componentInstance;
+        component.showPreprocessStep = false;
         component.currentStep = SetPollingSourceSection.FETCH;
         component.history = {
             history: mockDatasetHistoryResponse.datasets.byOwnerAndName
@@ -76,6 +78,7 @@ describe("AddPollingSourceComponent", () => {
         component.pollingSourceForm = new FormGroup({
             fetch: new FormGroup({
                 kind: new FormControl("url"),
+                url: new FormControl(""),
                 order: new FormControl("NONE"),
                 eventTime: new FormGroup({
                     kind: new FormControl("fromMetadata"),
@@ -148,5 +151,19 @@ describe("AddPollingSourceComponent", () => {
 
         createDatasetService.errorCommitEventChanges(errorMessage);
         expect(component.errorMessage).toBe(errorMessage);
+    });
+
+    it("should check init dataset kind", () => {
+        expect(component.datasetKind).toBeUndefined();
+        editService.changeKindChanges(DatasetKind.Root);
+        editService.onKindChanges.subscribe(() => {
+            expect(component.datasetKind).toEqual(DatasetKind.Root);
+        });
+    });
+
+    it("should check change showPreprocessStep property", () => {
+        expect(component.showPreprocessStep).toEqual(false);
+        component.onShowPreprcessStep(true);
+        expect(component.showPreprocessStep).toEqual(true);
     });
 });

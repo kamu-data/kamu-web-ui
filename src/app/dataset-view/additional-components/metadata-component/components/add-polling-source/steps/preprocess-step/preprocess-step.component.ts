@@ -42,6 +42,8 @@ export class PreprocessStepComponent extends BaseComponent implements OnInit {
             } else {
                 this.initDefaultQueriesSection();
             }
+        } else {
+            this.initDefaultQueriesSection();
         }
     }
 

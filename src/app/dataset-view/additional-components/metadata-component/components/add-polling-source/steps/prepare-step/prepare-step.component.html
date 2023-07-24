@@ -24,9 +24,16 @@
             >
                 <h3 class="text-center">Pipe</h3>
                 <div>
-                    <label class="form-label"> Command </label>
+                    <label class="form-label">
+                        Command <span class="text-danger">*</span>
+                    </label>
                 </div>
-                <input class="form-control" formControlName="command" />
+                <input
+                    class="form-control"
+                    formControlName="command"
+                    required
+                />
+
                 <div
                     *ngIf="
                         sectionForm.controls[i].get('command')?.errors

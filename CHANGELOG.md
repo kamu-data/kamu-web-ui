@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The ability to edit SetPollingSource event
 - Editing SetWaterMark event
 - Editing SetTransform event
+- Support defining initial polling source information for the root datasets interactively (SetPollingSource event):
+  - Prepare step(optional)
+  - Preprocess step(optional)
+- Create a navigator to display the state of the interactive input for the SetPollingSource event
 
 ## [0.6.0] - 2023-02-27
 

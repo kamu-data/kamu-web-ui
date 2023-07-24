@@ -36,6 +36,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     @Input() public sectionStepRadioData: RadioControlType[];
     @Input() public sectionFormData: JsonFormData;
     @Input() public defaultKind: string;
+    @Input() public description: string;
     @Input() public sectionName: SetPollingSourceSection;
     @Input() public eventYamlByHash: MaybeNull<string> = null;
     private editFormValue: EditFormType;

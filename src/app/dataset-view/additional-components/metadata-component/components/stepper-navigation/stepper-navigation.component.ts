@@ -18,6 +18,7 @@ export class StepperNavigationComponent {
     @Input() public nextStep: MaybeNull<SetPollingSourceSection> = null;
     @Input() public prevStep: MaybeNull<SetPollingSourceSection> = null;
     @Input() public validStep?: boolean;
+    @Input() public validAllSteps? = false;
     @Output() public changeStepEmitter =
         new EventEmitter<SetPollingSourceSection>();
     @Output() public saveEventEmitter = new EventEmitter<null>();

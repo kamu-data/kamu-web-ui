@@ -36,12 +36,19 @@ import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions
 import { EditPollingSourceService } from "./edit-polling-source.service";
 import { MaybeNull } from "src/app/common/app.types";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
+import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
 
 @Component({
     selector: "app-add-polling-source",
     templateUrl: "./add-polling-source.component.html",
     styleUrls: ["./add-polling-source.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        {
+            provide: STEPPER_GLOBAL_OPTIONS,
+            useValue: { showError: true },
+        },
+    ],
 })
 export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     public currentStep: SetPollingSourceSection = SetPollingSourceSection.FETCH;
@@ -171,8 +178,9 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
             FinalYamlModalComponent,
             { size: "lg" },
         );
+        const instance = modalRef.componentInstance as FinalYamlModalComponent;
         this.processFormService.transformForm(this.pollingSourceForm);
-        (modalRef.componentInstance as FinalYamlModalComponent).yamlTemplate =
+        instance.yamlTemplate =
             this.yamlEventService.buildYamlSetPollingSourceEvent(
                 this.pollingSourceForm.value as Omit<
                     SetPollingSource,
@@ -180,8 +188,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
                 >,
                 this.showPreprocessStep ? this.preprocessStepValue : null,
             );
-        (modalRef.componentInstance as FinalYamlModalComponent).datasetInfo =
-            this.getDatasetInfoFromUrl();
+        instance.datasetInfo = this.getDatasetInfoFromUrl();
     }
 
     public onShowPreprcessStep(showPreprocessStep: boolean): void {
@@ -194,5 +201,16 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
                 this.datasetKind = kind;
             }),
         );
+    }
+
+    public onShowErrors(): void {
+        const elems =
+            document.querySelectorAll<HTMLInputElement>("input.ng-invalid");
+        elems.forEach((element: HTMLInputElement) => {
+            setTimeout(() => {
+                element.focus();
+                element.blur();
+            });
+        });
     }
 }

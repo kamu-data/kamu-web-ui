@@ -4,6 +4,7 @@ fragment DatasetTransform on SetTransform {
     dataset {
       ...DatasetBasics
     }
+    datasetRef
   }
   transform {
     ...DatasetTransformContent

@@ -45,7 +45,6 @@ describe("StepperNavigationComponent", () => {
         component.prevStep = SetPollingSourceSection.READ;
         component.validStep = true;
         component.nextStep = null;
-        component.validAllSteps = true;
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "save-button");
         expect(changeStepEmitterSpy).toHaveBeenCalledWith();

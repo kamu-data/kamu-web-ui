@@ -30,13 +30,8 @@ export class EditSetTransformService extends BaseYamlEventService {
         inputDatasets: Set<string>,
         engine: string,
         queries: Omit<SqlQueryStep, "__typename">[],
-        // owners: string[],
     ): Omit<SetTransform, "__typename"> {
         return {
-            // inputs: this.transformInputsDatasets(
-            //     this.parseInputDatasets(inputDatasets),
-            //     owners,
-            // ),
             inputs: this.parseInputDatasets(inputDatasets),
             transform: {
                 kind: "sql",

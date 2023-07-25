@@ -126,8 +126,7 @@
                             <app-stepper-navigation
                                 [prevStep]="steps.PREPROCESS"
                                 [nextStep]="null"
-                                [validStep]="mergeForm.valid"
-                                [validAllSteps]="pollingSourceForm.valid"
+                                [validStep]="pollingSourceForm.valid"
                                 (changeStepEmitter)="changeStep($event)"
                                 (saveEventEmitter)="onSubmit()"
                                 (editYamlEmitter)="onEditYaml()"

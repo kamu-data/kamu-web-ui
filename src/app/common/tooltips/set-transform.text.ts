@@ -10,4 +10,6 @@ export class SetTransformToolipsTexts {
     public static readonly DATASET_NAME = "Name of the dataset.";
     public static readonly DATASET_OWNER = "Owner of the dataset.";
     public static readonly DATASET_ALIAS = "Query alias of the dataset.";
+    public static readonly DATASET_REF =
+        "A local or remote dataset reference to use in dataset resolutions.";
 }

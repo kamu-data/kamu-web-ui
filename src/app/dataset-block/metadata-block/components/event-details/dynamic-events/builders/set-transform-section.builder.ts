@@ -35,10 +35,17 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                         const numInputsParts = event.inputs.length;
                         (data as TransformInput[]).forEach((item, index) => {
                             const rows: EventRow[] = [];
-                            Object.entries({
-                                ...item.dataset,
-                                alias: item.name as string,
-                            }).forEach(([key, value]) => {
+                            const object = item.datasetRef
+                                ? {
+                                      ...item.dataset,
+                                      alias: item.name as string,
+                                      datasetRef: item.datasetRef as string,
+                                  }
+                                : {
+                                      ...item.dataset,
+                                      alias: item.name as string,
+                                  };
+                            Object.entries(object).forEach(([key, value]) => {
                                 if (
                                     event.__typename &&
                                     item.dataset.__typename &&
@@ -93,6 +100,7 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                 return this.kindDatasetCapitalize(value as string);
             case "name":
                 return inputItem.dataset.id;
+
             default:
                 return value;
         }

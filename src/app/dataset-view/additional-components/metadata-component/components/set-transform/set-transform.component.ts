@@ -162,7 +162,6 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
                     this.inputDatasets,
                     this.selectedEngine,
                     this.queries,
-                    //  this.owners(),
                 ),
             );
         instance.datasetInfo = this.getDatasetInfoFromUrl();
@@ -180,7 +179,6 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
                             this.inputDatasets,
                             this.selectedEngine,
                             this.queries,
-                            //   this.owners(),
                         ),
                     ),
                 )

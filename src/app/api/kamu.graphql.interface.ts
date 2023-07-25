@@ -24,6 +24,7 @@ export type Scalars = {
     AccountName: any;
     DatasetID: any;
     DatasetName: any;
+    DatasetRefAny: any;
     /**
      * Implement the DateTime<Utc> scalar
      *
@@ -170,6 +171,7 @@ export type CreateDatasetResultMissingInputs =
 export type CreateDatasetResultNameCollision = CreateDatasetFromSnapshotResult &
     CreateDatasetResult & {
         __typename?: "CreateDatasetResultNameCollision";
+        accountName?: Maybe<Scalars["AccountName"]>;
         datasetName: Scalars["DatasetName"];
         message: Scalars["String"];
     };
@@ -980,6 +982,7 @@ export type Transform = TransformSql;
 export type TransformInput = {
     __typename?: "TransformInput";
     dataset: Dataset;
+    datasetRef?: Maybe<Scalars["DatasetRefAny"]>;
     id?: Maybe<Scalars["DatasetID"]>;
     name: Scalars["DatasetName"];
 };
@@ -1742,6 +1745,7 @@ export type DatasetTransformFragment = {
     inputs: Array<{
         __typename?: "TransformInput";
         name: any;
+        datasetRef?: any | null;
         dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
     }>;
     transform: {
@@ -2158,6 +2162,7 @@ export const DatasetTransformFragmentDoc = gql`
             dataset {
                 ...DatasetBasics
             }
+            datasetRef
         }
         transform {
             ...DatasetTransformContent

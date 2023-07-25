@@ -71,4 +71,12 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         separateRowForValue: false,
         dataTestId: "set-transform-dataset-alias",
     },
+
+    "SetTransform.Dataset.datasetRef": {
+        label: "Dataset reference:",
+        tooltip: SetTransformToolipsTexts.DATASET_REF,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "set-transform-dataset-dataset-ref",
+    },
 };

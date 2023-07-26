@@ -45,6 +45,6 @@ export class FinalYamlModalComponent extends BaseComponent {
                 )
                 .subscribe(),
         );
-        this.activeModal.close("close modal");
+        this.activeModal.close(this.yamlTemplate);
     }
 }

@@ -35,6 +35,7 @@ import { ProcessFormService } from "./process-form.service";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { EditPollingSourceService } from "./edit-polling-source.service";
 import { MaybeNull } from "src/app/common/app.types";
+import { from } from "rxjs";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
 
@@ -57,6 +58,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
     public errorMessage = "";
     public history: DatasetHistoryUpdate;
     public eventYamlByHash: MaybeNull<string>;
+    public changedEventYamlByHash: string;
     public datasetKind: DatasetKind;
     public preprocessStepValue: PreprocessStepValue = {
         engine: "",
@@ -180,15 +182,20 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
         );
         const instance = modalRef.componentInstance as FinalYamlModalComponent;
         this.processFormService.transformForm(this.pollingSourceForm);
-        instance.yamlTemplate =
-            this.yamlEventService.buildYamlSetPollingSourceEvent(
-                this.pollingSourceForm.value as Omit<
-                    SetPollingSource,
-                    "__typename"
-                >,
-                this.showPreprocessStep ? this.preprocessStepValue : null,
-            );
+
+        instance.yamlTemplate = this.errorMessage
+            ? this.changedEventYamlByHash
+            : this.yamlEventService.buildYamlSetPollingSourceEvent(
+                  this.pollingSourceForm.value as Omit<
+                      SetPollingSource,
+                      "__typename"
+                  >,
+                  this.showPreprocessStep ? this.preprocessStepValue : null,
+              );
         instance.datasetInfo = this.getDatasetInfoFromUrl();
+        from(modalRef.result).subscribe((eventYaml) => {
+            this.changedEventYamlByHash = eventYaml;
+        });
     }
 
     public onShowPreprcessStep(showPreprocessStep: boolean): void {

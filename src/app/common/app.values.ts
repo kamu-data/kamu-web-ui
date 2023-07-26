@@ -10,7 +10,8 @@ export default class AppValues {
     public static readonly URL_PATTERN = /^(http:\/\/)|(https:\/\/)/i;
     public static readonly SCHEMA_NAME_PATTERN =
         /^[a-zA-Z0-9]+[a-zA-Z0-9\s(_)]*$/i;
-    public static readonly SPLIT_ARGUMENTS_PATTERN = /\w+|"[^"]+"/g;
+    public static readonly SPLIT_ARGUMENTS_PATTERN =
+        /[^\s"']+|"([^"]*)"+|'([^']*)'/g;
 
     public static readonly DISPLAY_DATE_FORMAT = "DD MMM YYYY";
     public static readonly DISPLAY_TOOLTIP_DATE_FORMAT = "MMM D, YYYY, HH:mm A";

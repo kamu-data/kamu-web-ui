@@ -19,7 +19,7 @@ import { MonacoEditorModule } from "ngx-monaco-editor";
 import { StepperNavigationComponent } from "../stepper-navigation/stepper-navigation.component";
 import { BaseStepComponent } from "./steps/base-step/base-step.component";
 import { PollingSourceFormComponentsModule } from "../form-components/polling-source-form-components.module";
-import { of } from "rxjs";
+import { of, from } from "rxjs";
 import { mockDatasetHistoryResponse } from "src/app/search/mock.data";
 import {
     DatasetKind,
@@ -116,6 +116,23 @@ describe("AddPollingSourceComponent", () => {
         expect(openModalSpy).toHaveBeenCalledTimes(1);
     });
 
+    it("should check open edit modal after error", () => {
+        const mockError = "Some error";
+        expect(component.errorMessage).toBe("");
+        expect(component.changedEventYamlByHash).toBeUndefined();
+        createDatasetService.errorCommitEventChanges(mockError);
+        expect(component.errorMessage).toBe(mockError);
+
+        component.onEditYaml();
+        const modal = modalService.open(FinalYamlModalComponent, {
+            size: "lg",
+        });
+
+        from(modal.result).subscribe(() => {
+            expect(component.changedEventYamlByHash).toBeDefined();
+        });
+    });
+
     it("should check eventYamlByHash is not null", () => {
         const mockEventYamlByHash = "test_tyaml";
         spyOn(editService, "getEventAsYaml").and.returnValue(
@@ -131,7 +148,7 @@ describe("AddPollingSourceComponent", () => {
             createDatasetService,
             "commitEventToDataset",
         ).and.returnValue(of());
-        component.onSubmit();
+        component.onSaveEvent();
         expect(submitYamlSpy).toHaveBeenCalledTimes(1);
     });
 

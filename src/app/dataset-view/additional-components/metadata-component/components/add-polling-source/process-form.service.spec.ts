@@ -2,6 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { ProcessFormService } from "./process-form.service";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { SchemaControlType } from "./process-form.service.types";
+import { PrepareKind } from "./add-polling-source-form.types";
 
 describe("ProcessFormService", () => {
     let service: ProcessFormService;
@@ -102,6 +103,50 @@ describe("ProcessFormService", () => {
             merge: { kind: "append" },
         };
         expect(formGroupFetchContainer.value).toEqual(initialResult);
+        service.transformForm(formGroupFetchContainer);
+
+        expect(formGroupFetchContainer.value as SchemaControlType).toEqual(
+            expectedResult,
+        );
+    });
+
+    it("should check parse command correct on the PREPARE step. ", () => {
+        const formGroupFetchContainer = new FormGroup({
+            fetch: new FormGroup({
+                kind: new FormControl("container"),
+                eventTime: new FormGroup({
+                    kind: new FormControl("fromMetadata"),
+                    timestampFormat: new FormControl(""),
+                }),
+            }),
+            prepare: new FormArray([
+                new FormGroup({
+                    kind: new FormControl(PrepareKind.PIPE),
+                    command: new FormControl("i -c '1,/OBSERVATION/d'"),
+                }),
+            ]),
+            read: new FormGroup({
+                kind: new FormControl("csv"),
+                schema: new FormArray([
+                    new FormGroup({
+                        name: new FormControl("id (A.M.)"),
+                        type: new FormControl("BIGINT"),
+                    }),
+                ]),
+            }),
+            merge: new FormGroup({
+                kind: new FormControl("append"),
+            }),
+        });
+
+        const expectedResult = {
+            fetch: { kind: "container" },
+            read: { kind: "csv", schema: ["`id (A.M.)` BIGINT"] },
+            prepare: [
+                { kind: "pipe", command: ["i", "-c", "'1,/OBSERVATION/d'"] },
+            ],
+            merge: { kind: "append" },
+        };
         service.transformForm(formGroupFetchContainer);
 
         expect(formGroupFetchContainer.value as SchemaControlType).toEqual(

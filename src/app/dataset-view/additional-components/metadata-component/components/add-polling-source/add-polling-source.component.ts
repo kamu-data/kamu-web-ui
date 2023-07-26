@@ -194,7 +194,7 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
               );
         instance.datasetInfo = this.getDatasetInfoFromUrl();
         this.trackSubscription(
-            from(modalRef.result).subscribe((eventYaml) => {
+            from(modalRef.result).subscribe((eventYaml: string) => {
                 this.changedEventYamlByHash = eventYaml;
             }),
         );

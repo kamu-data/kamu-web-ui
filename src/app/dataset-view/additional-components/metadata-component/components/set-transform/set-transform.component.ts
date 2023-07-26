@@ -27,6 +27,7 @@ import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.co
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
+import { from } from "rxjs";
 @Component({
     selector: "app-set-transform",
     templateUrl: "./set-transform.component.html",
@@ -43,6 +44,8 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
     public dataSource = new MatTreeNestedDataSource<DatasetNode>();
     public TREE_DATA: DatasetNode[] = [];
     public datasetKind: DatasetKind;
+    public errorMessage = "";
+    public changedEventYamlByHash: string;
 
     constructor(
         private datasetService: DatasetService,
@@ -58,6 +61,7 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
         this.getDatasetKind();
         this.initQueriesSection();
+        this.subsribeErrorMessage();
     }
 
     public onSelectEngine(engine: string): void {
@@ -68,9 +72,16 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
         return !!this.inputDatasets.size;
     }
 
-    // private owners(): string[] {
-    //     return this.TREE_DATA.map((item) => item.owner) as string[];
-    // }
+    private subsribeErrorMessage(): void {
+        this.trackSubscription(
+            this.createDatasetService.onErrorCommitEventChanges.subscribe(
+                (message: string) => {
+                    this.errorMessage = message;
+                    this.cdr.detectChanges();
+                },
+            ),
+        );
+    }
 
     private getDatasetKind(): void {
         this.trackSubscription(
@@ -156,16 +167,22 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
             { size: "lg" },
         );
         const instance = modalRef.componentInstance as FinalYamlModalComponent;
-        instance.yamlTemplate =
-            this.yamlEventService.buildYamlSetTransformEvent(
-                this.editService.transformEventAsObject(
-                    this.inputDatasets,
-                    this.selectedEngine,
-                    this.queries,
-                ),
-            );
+        instance.yamlTemplate = this.errorMessage
+            ? this.changedEventYamlByHash
+            : this.yamlEventService.buildYamlSetTransformEvent(
+                  this.editService.transformEventAsObject(
+                      this.inputDatasets,
+                      this.selectedEngine,
+                      this.queries,
+                  ),
+              );
         instance.datasetInfo = this.getDatasetInfoFromUrl();
         instance.enabledSaveBtn = this.isInputDatasetsExist;
+        this.trackSubscription(
+            from(modalRef.result).subscribe((eventYaml: string) => {
+                this.changedEventYamlByHash = eventYaml;
+            }),
+        );
     }
 
     public onSaveEvent(): void {

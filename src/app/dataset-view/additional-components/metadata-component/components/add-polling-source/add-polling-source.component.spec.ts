@@ -148,7 +148,7 @@ describe("AddPollingSourceComponent", () => {
             createDatasetService,
             "commitEventToDataset",
         ).and.returnValue(of());
-        component.onSubmit();
+        component.onSaveEvent();
         expect(submitYamlSpy).toHaveBeenCalledTimes(1);
     });
 

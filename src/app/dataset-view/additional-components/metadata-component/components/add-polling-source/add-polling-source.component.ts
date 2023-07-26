@@ -11,17 +11,9 @@ import {
     DatasetKind,
     SetPollingSource,
 } from "./../../../../../api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/base.component";
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    OnInit,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
-import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
-import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import {
     FETCH_STEP_RADIO_CONTROLS,
@@ -32,12 +24,11 @@ import { FETCH_FORM_DATA } from "./steps/data/fetch-form-data";
 import { READ_FORM_DATA } from "./steps/data/read-form-data";
 import { MERGE_FORM_DATA } from "./steps/data/merge-form-data";
 import { ProcessFormService } from "./process-form.service";
-import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { EditPollingSourceService } from "./edit-polling-source.service";
-import { MaybeNull } from "src/app/common/app.types";
 import { from } from "rxjs";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
+import { BaseMainEventComponent } from "../base-main-event.component";
 
 @Component({
     selector: "app-add-polling-source",
@@ -51,15 +42,13 @@ import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
         },
     ],
 })
-export class AddPollingSourceComponent extends BaseComponent implements OnInit {
+export class AddPollingSourceComponent
+    extends BaseMainEventComponent
+    implements OnInit
+{
     public currentStep: SetPollingSourceSection = SetPollingSourceSection.FETCH;
     public steps: typeof SetPollingSourceSection = SetPollingSourceSection;
     public showPreprocessStep = false;
-    public errorMessage = "";
-    public history: DatasetHistoryUpdate;
-    public eventYamlByHash: MaybeNull<string>;
-    public changedEventYamlByHash: string;
-    public datasetKind: DatasetKind;
     public preprocessStepValue: PreprocessStepValue = {
         engine: "",
         queries: [],
@@ -116,10 +105,6 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private createDatasetService: AppDatasetCreateService,
-        private yamlEventService: TemplatesYamlEventsService,
-        private modalService: NgbModal,
-        private cdr: ChangeDetectorRef,
         private processFormService: ProcessFormService,
         private editService: EditPollingSourceService,
     ) {
@@ -141,20 +126,15 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
                     this.history = this.editService.history;
                     this.cdr.detectChanges();
                 }),
-            this.createDatasetService.onErrorCommitEventChanges.subscribe(
-                (message: string) => {
-                    this.errorMessage = message;
-                    this.cdr.detectChanges();
-                },
-            ),
         );
+        this.subsribeErrorMessage();
     }
 
     public changeStep(step: SetPollingSourceSection): void {
         this.currentStep = step;
     }
 
-    public onSubmit(): void {
+    public onSaveEvent(): void {
         this.processFormService.transformForm(this.pollingSourceForm);
         this.trackSubscription(
             this.createDatasetService

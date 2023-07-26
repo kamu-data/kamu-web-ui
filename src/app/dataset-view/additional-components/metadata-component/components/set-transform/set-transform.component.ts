@@ -3,16 +3,10 @@ import {
     DatasetKind,
     TransformInput,
 } from "./../../../../../api/kamu.graphql.interface";
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    OnInit,
-} from "@angular/core";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { BaseComponent } from "src/app/common/base.component";
 import { MaybeNull } from "src/app/common/app.types";
 import { DatasetSchema } from "src/app/interface/dataset.interface";
 import {
@@ -21,39 +15,31 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { EditSetTransformService } from "./edit-set-transform..service";
 import { parseCurrentSchema } from "src/app/common/app.helpers";
-import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetNode, SetTransFormYamlType } from "./set-transform.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
-import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
-import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { from } from "rxjs";
+import { BaseMainEventComponent } from "../base-main-event.component";
 @Component({
     selector: "app-set-transform",
     templateUrl: "./set-transform.component.html",
     styleUrls: ["./set-transform.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SetTransformComponent extends BaseComponent implements OnInit {
+export class SetTransformComponent
+    extends BaseMainEventComponent
+    implements OnInit
+{
     public inputDatasets = new Set<string>();
     public selectedEngine: string;
-    public eventYamlByHash: MaybeNull<string>;
-    public history: DatasetHistoryUpdate;
     public currentSetTransformEvent: MaybeNull<SetTransFormYamlType>;
     public queries: Omit<SqlQueryStep, "__typename">[] = [];
     public dataSource = new MatTreeNestedDataSource<DatasetNode>();
     public TREE_DATA: DatasetNode[] = [];
-    public datasetKind: DatasetKind;
-    public errorMessage = "";
-    public changedEventYamlByHash: string;
 
     constructor(
         private datasetService: DatasetService,
-        private cdr: ChangeDetectorRef,
         private editService: EditSetTransformService,
-        private modalService: NgbModal,
-        private yamlEventService: TemplatesYamlEventsService,
-        private createDatasetService: AppDatasetCreateService,
     ) {
         super();
     }
@@ -70,17 +56,6 @@ export class SetTransformComponent extends BaseComponent implements OnInit {
 
     public get isInputDatasetsExist(): boolean {
         return !!this.inputDatasets.size;
-    }
-
-    private subsribeErrorMessage(): void {
-        this.trackSubscription(
-            this.createDatasetService.onErrorCommitEventChanges.subscribe(
-                (message: string) => {
-                    this.errorMessage = message;
-                    this.cdr.detectChanges();
-                },
-            ),
-        );
     }
 
     private getDatasetKind(): void {

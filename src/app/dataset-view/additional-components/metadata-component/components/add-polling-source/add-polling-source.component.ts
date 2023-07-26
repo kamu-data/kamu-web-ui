@@ -193,9 +193,11 @@ export class AddPollingSourceComponent extends BaseComponent implements OnInit {
                   this.showPreprocessStep ? this.preprocessStepValue : null,
               );
         instance.datasetInfo = this.getDatasetInfoFromUrl();
-        from(modalRef.result).subscribe((eventYaml) => {
-            this.changedEventYamlByHash = eventYaml;
-        });
+        this.trackSubscription(
+            from(modalRef.result).subscribe((eventYaml) => {
+                this.changedEventYamlByHash = eventYaml;
+            }),
+        );
     }
 
     public onShowPreprcessStep(showPreprocessStep: boolean): void {

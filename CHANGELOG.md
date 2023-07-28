@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Prepare step(optional)
   - Preprocess step(optional)
 - Create a navigator to display the state of the interactive input for the SetPollingSource event
+- Added pictures in the dropdown list for engines
 
 ## [0.6.0] - 2023-02-27
 

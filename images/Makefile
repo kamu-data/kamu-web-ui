@@ -2,7 +2,7 @@ IMAGE_REPO = ghcr.io/kamu-data
 
 #########################################################################################
 
-KAMU_WEB_UI_VERSION = 0.6.0
+KAMU_WEB_UI_VERSION = $(shell cat ../package.json | jq -r '.version')
 KAMU_WEB_UI_IMAGE = $(IMAGE_REPO)/kamu-web-ui
 
 #########################################################################################

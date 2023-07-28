@@ -3,19 +3,11 @@
     <mat-divider class="w-350"></mat-divider>
     <div class="mt-4">
         <label for="engine-type" class="form-label">Type</label>
-        <select
-            class="form-select w-350"
-            id="engine-type"
-            [(ngModel)]="selectedEngine"
-            (change)="onSelectType()"
-        >
-            <option
-                *ngFor="let engine of knownEngines"
-                [value]="engine.name.toUpperCase()"
-            >
-                {{ engine.name }}
-            </option>
-        </select>
+        <app-engine-select
+            [data]="knownEngines"
+            [engine]="selectedEngine"
+            (selectedEngineEmitter)="onSelectType($event)"
+        ></app-engine-select>
     </div>
     <div class="mt-4">
         <label for="engine-image" class="form-label">Image</label>

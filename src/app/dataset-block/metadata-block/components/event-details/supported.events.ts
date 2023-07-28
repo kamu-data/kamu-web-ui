@@ -13,5 +13,6 @@ export enum SupportedEvents {
 
 export interface EventPropertyLogo {
     name: string;
+    label?: string;
     url_logo?: string;
 }

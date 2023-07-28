@@ -1,0 +1,26 @@
+<div class="dropdown" #dropdown (click)="clickInput()">
+    <div class="preview">
+        <input
+            type="text"
+            placeholder="Dropdown menu"
+            readonly
+            #input
+            [value]="value"
+            readonly
+            data-test-id="input-dropdown"
+        />
+        <img
+            class="selectedImage"
+            [src]="getLogo(engine).url_logo"
+            #selectedImage
+        />
+    </div>
+    <div class="option" #option *ngIf="showDropdown">
+        <ng-container *ngFor="let item of data; let i = index">
+            <div (click)="clickShowDropdown(item)">
+                <img [src]="getLogo(item.name).url_logo" alt="" />
+                {{ getLogo(item.name).label }}
+            </div>
+        </ng-container>
+    </div>
+</div>

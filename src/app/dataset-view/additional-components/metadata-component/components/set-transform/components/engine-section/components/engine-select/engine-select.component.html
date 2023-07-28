@@ -5,16 +5,21 @@
             placeholder="Dropdown menu"
             readonly
             #input
-            [value]="engine"
+            [value]="value"
             readonly
+            data-test-id="input-dropdown"
         />
-        <img class="selectedImage" [src]="getLogo(engine)" #selectedImage />
+        <img
+            class="selectedImage"
+            [src]="getLogo(engine).url_logo"
+            #selectedImage
+        />
     </div>
     <div class="option" #option *ngIf="showDropdown">
         <ng-container *ngFor="let item of data; let i = index">
             <div (click)="clickShowDropdown(item)">
-                <img [src]="getLogo(item.name)" alt="" />
-                {{ item.name | uppercase }}
+                <img [src]="getLogo(item.name).url_logo" alt="" />
+                {{ getLogo(item.name).label }}
             </div>
         </ng-container>
     </div>

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { EngineSelectComponent } from "./engine-select.component";
 import { mockEngines } from "../../../../mock.data";
+import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 
 describe("EngineSelectComponent", () => {
     let component: EngineSelectComponent;
@@ -14,11 +15,25 @@ describe("EngineSelectComponent", () => {
         fixture = TestBed.createComponent(EngineSelectComponent);
         component = fixture.componentInstance;
         component.data = mockEngines.data.knownEngines;
-        component.engine = "Spark";
+        component.engine = "spark";
         fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should check open dropdown", () => {
+        expect(component.showDropdown).toEqual(false);
+        emitClickOnElementByDataTestId(fixture, "input-dropdown");
+        expect(component.showDropdown).toEqual(true);
+    });
+
+    it("should check close dropdown when click dropdown outside", () => {
+        expect(component.showDropdown).toEqual(false);
+        emitClickOnElementByDataTestId(fixture, "input-dropdown");
+        expect(component.showDropdown).toEqual(true);
+        document.dispatchEvent(new MouseEvent("click"));
+        expect(component.showDropdown).toEqual(false);
     });
 });

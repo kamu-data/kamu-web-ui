@@ -38,6 +38,7 @@ describe("EngineSectionComponent", () => {
         fixture = TestBed.createComponent(EngineSectionComponent);
         component = fixture.componentInstance;
         engineService = TestBed.inject(EngineService);
+        component.selectedEngine = "spark";
         spyOn(engineService, "engines").and.returnValue(of(mockEngines));
         fixture.detectChanges();
     });
@@ -66,7 +67,7 @@ describe("EngineSectionComponent", () => {
         tick();
         if (mockSetPollingSourceEvent.preprocess)
             expect(component.selectedEngine).toBe(
-                mockSetPollingSourceEvent.preprocess.engine.toUpperCase(),
+                mockSetPollingSourceEvent.preprocess.engine,
             );
         flush();
     }));

@@ -81,7 +81,7 @@ export class EngineSectionComponent extends BaseComponent implements OnInit {
         if (this.currentSetTransformEvent?.engine) {
             const currentEngine: string = this.currentSetTransformEvent.engine;
             this.selectedEngine = currentEngine;
-            this.onSelectType(this.selectedEngine.toUpperCase());
+            this.onSelectType(this.selectedEngine.toUpperCase().toLowerCase());
         }
     }
 }

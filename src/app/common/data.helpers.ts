@@ -31,18 +31,22 @@ export class DataHelpers {
         switch (name) {
             case "flink":
                 return {
-                    name: "Apache Flink",
+                    name: "flink",
+                    label: "Apache Flink",
                     url_logo: "assets/images/apache-flink.png",
                 };
+
             case "spark":
                 return {
-                    name: "Apache Spark",
+                    name: "spark",
+                    label: "Apache Spark",
                     url_logo: "assets/images/apache-spark.png",
                 };
 
             case "datafusion":
                 return {
-                    name: "DataFusion",
+                    name: "datafusion",
+                    label: "DataFusion",
                     url_logo: "assets/images/datafusion-logo.png",
                 };
             default:

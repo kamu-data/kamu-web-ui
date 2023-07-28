@@ -12,6 +12,7 @@ import {
 } from "@angular/core";
 import { EngineDesc } from "src/app/api/kamu.graphql.interface";
 import { DataHelpers } from "src/app/common/data.helpers";
+import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 
 @Component({
     selector: "app-engine-select",
@@ -47,20 +48,24 @@ export class EngineSelectComponent implements OnInit {
             this.clickShowDropdown(defaultEngine);
         }
     }
+    public get value(): string {
+        return DataHelpers.descriptionForEngine(this.engine).label ?? "";
+    }
 
-    public getLogo(name: string): string {
-        return (
-            DataHelpers.descriptionForEngine(name.toLowerCase()).url_logo ?? ""
+    public getLogo(name: string): EventPropertyLogo {
+        return DataHelpers.descriptionForEngine(
+            name.toUpperCase().toLowerCase(),
         );
     }
 
     public clickShowDropdown(item: EngineDesc): void {
+        const description = item.name.toUpperCase().toLowerCase();
         this.render.setAttribute(
             this.selectedImage.nativeElement,
             "src",
-            this.getLogo(item.name.toLowerCase()),
+            this.getLogo(description).url_logo ?? "",
         );
-        this.selectedEngineEmitter.emit(item.name.toUpperCase());
+        this.selectedEngineEmitter.emit(description);
     }
 
     public clickInput(): void {

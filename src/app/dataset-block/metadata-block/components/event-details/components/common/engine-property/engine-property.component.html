@@ -3,7 +3,9 @@
         *ngIf="descriptionEngine.url_logo"
         class="engine-logo me-3"
         [src]="descriptionEngine.url_logo"
-        [alt]="descriptionEngine.name"
+        [alt]="descriptionEngine.label"
     />
-    <span [attr.data-test-id]="dataTestId">({{ descriptionEngine.name }})</span>
+    <span [attr.data-test-id]="dataTestId"
+        >({{ descriptionEngine.label }})</span
+    >
 </div>

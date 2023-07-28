@@ -60,6 +60,7 @@ import { QueriesSectionComponent } from "./additional-components/metadata-compon
 import { PageNotFoundComponent } from "../components/page-not-found/page-not-found.component";
 import { AddPollingSourceComponent } from "./additional-components/metadata-component/components/add-polling-source/add-polling-source.component";
 import { MatStepperModule } from "@angular/material/stepper";
+import { EngineSelectComponent } from "./additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 @NgModule({
     imports: [
         CommonModule,
@@ -144,6 +145,7 @@ import { MatStepperModule } from "@angular/material/stepper";
         QueriesSectionComponent,
         PageNotFoundComponent,
         AddPollingSourceComponent,
+        EngineSelectComponent,
     ],
 })
 export class DatasetModule {

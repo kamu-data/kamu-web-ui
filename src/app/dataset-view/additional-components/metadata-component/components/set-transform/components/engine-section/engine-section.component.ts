@@ -42,14 +42,20 @@ export class EngineSectionComponent extends BaseComponent implements OnInit {
         this.initEngineSection();
     }
 
-    public onSelectType(): void {
+    public onSelectType(item: string): void {
+        this.selectedEngine = item;
         if (this.knownEngines) {
             const result = this.knownEngines.find(
-                (item) => item.name.toUpperCase() === this.selectedEngine,
+                (item) =>
+                    item.name.toUpperCase() ===
+                    this.selectedEngine.toUpperCase(),
             );
+
             if (result) {
                 this.selectedImage = result.latestImage;
-                this.onEmitSelectedEngine.emit(this.selectedEngine);
+                this.onEmitSelectedEngine.emit(
+                    this.selectedEngine.toUpperCase(),
+                );
             }
         }
     }
@@ -59,12 +65,11 @@ export class EngineSectionComponent extends BaseComponent implements OnInit {
             this.engineService.engines().subscribe((result: EnginesQuery) => {
                 this.knownEngines = result.data.knownEngines;
                 if (!this.selectedEngine) {
-                    this.selectedEngine =
-                        this.knownEngines[0].name.toUpperCase();
+                    this.selectedEngine = this.knownEngines[0].name;
                     this.selectedImage = this.knownEngines[0].latestImage;
                     this.initCurrentEngine();
                 } else {
-                    this.onSelectType();
+                    this.onSelectType(this.selectedEngine);
                 }
                 this.onEmitSelectedEngine.emit(this.selectedEngine);
                 this.cdr.detectChanges();
@@ -75,8 +80,8 @@ export class EngineSectionComponent extends BaseComponent implements OnInit {
     private initCurrentEngine(): void {
         if (this.currentSetTransformEvent?.engine) {
             const currentEngine: string = this.currentSetTransformEvent.engine;
-            this.selectedEngine = currentEngine.toUpperCase();
-            this.onSelectType();
+            this.selectedEngine = currentEngine;
+            this.onSelectType(this.selectedEngine.toUpperCase());
         }
     }
 }

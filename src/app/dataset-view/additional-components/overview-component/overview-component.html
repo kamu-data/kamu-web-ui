@@ -144,7 +144,7 @@
                         </h2>
                     </div>
                     <button
-                        class="starred rounded-2 btn-sm btn btnGroup-item d-flex justify-content-center align-items-center"
+                        class="starred rounded-2 btn-sm btn btnGroup-item custom-edit d-flex justify-content-center align-items-center"
                         aria-label="Edit this file"
                         data-test-id="toggleReadme"
                         data-hotkey="e"
@@ -154,17 +154,49 @@
                         <svg-icon name="pencil"></svg-icon>
                     </button>
                 </div>
+                <div
+                    *ngIf="isMarkdownEditView"
+                    class="edit-title d-flex align-items-center justify-content-between"
+                >
+                    <div class="left-part">
+                        <button
+                            class="edit-button"
+                            [class.active]="isEditMode"
+                            (click)="toggleEditMode()"
+                        >
+                            Edit
+                        </button>
+                        <button
+                            class="edit-button"
+                            [class.active]="!isEditMode"
+                            (click)="toggleEditMode()"
+                        >
+                            Preview
+                        </button>
+                    </div>
+                    <div class="right-part d-flex">
+                        <button
+                            class="button-changes mr-4"
+                            (click)="onCancelChanges()"
+                        >
+                            Cancel changes
+                        </button>
+                        <button class="button-changes">
+                            Commit changes...
+                        </button>
+                    </div>
+                </div>
                 <div class="file-content">
-                    <ng-template [ngIf]="isMarkdownEditView">
+                    <ng-template [ngIf]="isEditMode && isMarkdownEditView">
                         <textarea
                             class="variable-textarea"
-                            [(ngModel)]="currentState.overview.metadata.currentReadme"
+                            [(ngModel)]="readmeState"
                         ></textarea>
                     </ng-template>
-                    <ng-template [ngIf]="!isMarkdownEditView">
+                    <ng-template [ngIf]="!isEditMode || !isMarkdownEditView">
                         <markdown
                             class="variable-binding"
-                            [data]="currentState.overview.metadata.currentReadme"
+                            [data]="readmeState"
                         ></markdown>
                     </ng-template>
                 </div>

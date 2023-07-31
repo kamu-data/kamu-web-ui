@@ -34,10 +34,13 @@ import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/e
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewComponent extends BaseComponent implements OnInit {
-    @Input() public isMarkdownEditView: boolean;
+    public isMarkdownEditView = false;
     @Input() public datasetBasics?: DatasetBasicsFragment;
     @Output() toggleReadmeViewEmit = new EventEmitter<null>();
     @Output() selectTopicEmit = new EventEmitter<string>();
+    public isEditMode = true;
+    public initialReadmeState = "";
+    public readmeState = "";
 
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
@@ -64,6 +67,8 @@ export class OverviewComponent extends BaseComponent implements OnInit {
                         size: overviewUpdate.size,
                         overview: overviewUpdate.overview,
                     };
+                    this.initialReadmeState = this.readmeState =
+                        overviewUpdate.overview.metadata.currentReadme ?? "";
                 },
             ),
         );
@@ -74,7 +79,17 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public toggleReadmeView(): void {
-        this.toggleReadmeViewEmit.emit();
+        this.isMarkdownEditView = !this.isMarkdownEditView;
+    }
+
+    public toggleEditMode(): void {
+        this.isEditMode = !this.isEditMode;
+    }
+
+    public onCancelChanges(): void {
+        this.readmeState = this.initialReadmeState;
+        this.isMarkdownEditView = false;
+        this.isEditMode = true;
     }
 
     public selectTopic(topicName: string): void {

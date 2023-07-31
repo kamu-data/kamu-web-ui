@@ -35,7 +35,6 @@ export class DatasetComponent
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
 
     public lineageGraphView: [number, number] = [500, 600];
-    public isMarkdownEditView = false;
 
     @HostListener("window:resize")
     private checkWindowSize(): void {
@@ -157,10 +156,6 @@ export class DatasetComponent
 
     public initDiscussionsTab(): void {
         console.log("initDiscussionsTab");
-    }
-
-    public toggleReadmeView(): void {
-        this.isMarkdownEditView = !this.isMarkdownEditView;
     }
 
     public selectTopic(topicName: string): void {

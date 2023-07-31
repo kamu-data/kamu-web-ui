@@ -181,7 +181,11 @@
                         >
                             Cancel changes
                         </button>
-                        <button class="button-changes">
+                        <button
+                            class="button-changes"
+                            [disabled]="!readmeChanged"
+                            (click)="commitChanges()"
+                        >
                             Commit changes...
                         </button>
                     </div>

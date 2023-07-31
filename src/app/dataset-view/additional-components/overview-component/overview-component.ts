@@ -25,6 +25,8 @@ import { MaybeNull } from "src/app/common/app.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { EditDetailsModalComponent } from "./components/edit-details-modal/edit-details-modal.component";
 import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/edit-watermark-modal.component";
+import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
+import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 
 @Component({
     selector: "app-overview",
@@ -42,6 +44,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     public initialReadmeState = "";
     public readmeState = "";
 
+    public get readmeChanged(): boolean {
+        return this.initialReadmeState !== this.readmeState;
+    }
+
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
         data: DataRow[];
@@ -53,6 +59,8 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         private appDatasetSubsService: AppDatasetSubscriptionsService,
         private navigationService: NavigationService,
         private modalService: NgbModal,
+        private createDatasetService: AppDatasetCreateService,
+        private yamlEventService: TemplatesYamlEventsService,
     ) {
         super();
     }
@@ -90,6 +98,22 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         this.readmeState = this.initialReadmeState;
         this.isMarkdownEditView = false;
         this.isEditMode = true;
+    }
+
+    public commitChanges(): void {
+        console.log(this.readmeState);
+        if (this.datasetBasics)
+            this.trackSubscription(
+                this.createDatasetService
+                    .commitEventToDataset(
+                        this.datasetBasics.owner.name,
+                        this.datasetBasics.name as string,
+                        this.yamlEventService.buildYamlSetAttachmentsEvent(
+                            this.readmeState,
+                        ),
+                    )
+                    .subscribe(() => (this.isMarkdownEditView = false)),
+            );
     }
 
     public selectTopic(topicName: string): void {

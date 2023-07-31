@@ -149,14 +149,6 @@ describe("DatasetComponent", () => {
         expect(getMainDataByLineageNodeSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check toggle readme view", () => {
-        component.isMarkdownEditView = false;
-        component.toggleReadmeView();
-        expect(component.isMarkdownEditView).toBe(true);
-        component.toggleReadmeView();
-        expect(component.isMarkdownEditView).toBe(false);
-    });
-
     it("should check run SQL request", () => {
         const sqlQuery = "select * from test.table";
         const requestDatasetDataSqlRunSpy = spyOn(

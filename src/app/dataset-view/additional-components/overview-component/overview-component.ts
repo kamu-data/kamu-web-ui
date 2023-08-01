@@ -25,8 +25,6 @@ import { MaybeNull } from "src/app/common/app.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { EditDetailsModalComponent } from "./components/edit-details-modal/edit-details-modal.component";
 import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/edit-watermark-modal.component";
-import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
-import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 
 @Component({
     selector: "app-overview",
@@ -36,17 +34,9 @@ import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-even
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewComponent extends BaseComponent implements OnInit {
-    public isMarkdownEditView = false;
     @Input() public datasetBasics?: DatasetBasicsFragment;
     @Output() toggleReadmeViewEmit = new EventEmitter<null>();
     @Output() selectTopicEmit = new EventEmitter<string>();
-    public isEditMode = true;
-    public initialReadmeState = "";
-    public readmeState = "";
-
-    public get readmeChanged(): boolean {
-        return this.initialReadmeState !== this.readmeState;
-    }
 
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
@@ -59,8 +49,6 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         private appDatasetSubsService: AppDatasetSubscriptionsService,
         private navigationService: NavigationService,
         private modalService: NgbModal,
-        private createDatasetService: AppDatasetCreateService,
-        private yamlEventService: TemplatesYamlEventsService,
     ) {
         super();
     }
@@ -75,8 +63,6 @@ export class OverviewComponent extends BaseComponent implements OnInit {
                         size: overviewUpdate.size,
                         overview: overviewUpdate.overview,
                     };
-                    this.initialReadmeState = this.readmeState =
-                        overviewUpdate.overview.metadata.currentReadme ?? "";
                 },
             ),
         );
@@ -84,36 +70,6 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public showWebsite(url: string): void {
         this.navigationService.navigateToWebsite(url);
-    }
-
-    public toggleReadmeView(): void {
-        this.isMarkdownEditView = !this.isMarkdownEditView;
-    }
-
-    public toggleEditMode(): void {
-        this.isEditMode = !this.isEditMode;
-    }
-
-    public onCancelChanges(): void {
-        this.readmeState = this.initialReadmeState;
-        this.isMarkdownEditView = false;
-        this.isEditMode = true;
-    }
-
-    public commitChanges(): void {
-        console.log(this.readmeState);
-        if (this.datasetBasics)
-            this.trackSubscription(
-                this.createDatasetService
-                    .commitEventToDataset(
-                        this.datasetBasics.owner.name,
-                        this.datasetBasics.name as string,
-                        this.yamlEventService.buildYamlSetAttachmentsEvent(
-                            this.readmeState,
-                        ),
-                    )
-                    .subscribe(() => (this.isMarkdownEditView = false)),
-            );
     }
 
     public selectTopic(topicName: string): void {

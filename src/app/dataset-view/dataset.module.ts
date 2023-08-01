@@ -61,6 +61,7 @@ import { PageNotFoundComponent } from "../components/page-not-found/page-not-fou
 import { AddPollingSourceComponent } from "./additional-components/metadata-component/components/add-polling-source/add-polling-source.component";
 import { MatStepperModule } from "@angular/material/stepper";
 import { EngineSelectComponent } from "./additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
+import { ReadmeSectionComponent } from "./additional-components/overview-component/components/readme-section/readme-section.component";
 @NgModule({
     imports: [
         CommonModule,
@@ -146,6 +147,7 @@ import { EngineSelectComponent } from "./additional-components/metadata-componen
         PageNotFoundComponent,
         AddPollingSourceComponent,
         EngineSelectComponent,
+        ReadmeSectionComponent,
     ],
 })
 export class DatasetModule {

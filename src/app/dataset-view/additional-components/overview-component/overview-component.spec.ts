@@ -70,14 +70,6 @@ describe("OverviewComponent", () => {
         expect(component.metadataFragmentBlock).toEqual(undefined);
     });
 
-    it("should check toggle readme view", () => {
-        const emitterSubscription$ = component.toggleReadmeViewEmit
-            .pipe(first())
-            .subscribe();
-        component.toggleReadmeView();
-        expect(emitterSubscription$.closed).toBeTrue();
-    });
-
     [
         { kind: DatasetKind.Derivative, result: "Derivative" },
         { kind: DatasetKind.Root, result: "Root" },

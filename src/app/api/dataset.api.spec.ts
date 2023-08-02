@@ -188,10 +188,12 @@ describe("DatasetApi", () => {
     });
 
     it("should commit event", () => {
+        const mockDatasetId = "mockId";
+        const mockEvent = "mock event";
         service
             .commitEvent({
-                datasetId: "mockId",
-                event: "mock event",
+                datasetId: mockDatasetId,
+                event: mockEvent,
             })
             .subscribe(
                 (res: CommitEventToDatasetMutation | null | undefined) => {
@@ -203,8 +205,8 @@ describe("DatasetApi", () => {
             );
 
         const op = controller.expectOne(CommitEventToDatasetDocument);
-        expect(op.operation.variables.accountName).toEqual(TEST_USER_NAME);
-        expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
+        expect(op.operation.variables.datasetId).toEqual(mockDatasetId);
+        expect(op.operation.variables.event).toEqual(mockEvent);
         op.flush({
             data: mockCommitEventResponse,
         });

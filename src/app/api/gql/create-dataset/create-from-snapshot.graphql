@@ -1,4 +1,4 @@
-query createDatasetFromSnapshot($accountId: AccountID!, $snapshot: String!) {
+mutation createDatasetFromSnapshot($accountId: AccountID!, $snapshot: String!) {
   datasets {
     createFromSnapshot(
       accountId: $accountId

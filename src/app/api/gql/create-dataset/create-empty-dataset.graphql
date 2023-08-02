@@ -1,4 +1,4 @@
-query createEmptyDataset(
+mutation createEmptyDataset(
   $accountId: AccountID!
   $datasetKind: DatasetKind!
   $datasetName: DatasetName!

@@ -19,14 +19,14 @@ export const mockAccountDetails: AccountDetailsFragment = {
 
 export const mockUserInfoFromAccessToken: FetchAccountInfoMutation = {
     auth: {
-        __typename: "Auth",
+        __typename: "AuthMut",
         accountInfo: mockAccountDetails,
     },
 };
 
 export const mockGithubLoginResponse: GithubLoginMutation = {
     auth: {
-        __typename: "Auth",
+        __typename: "AuthMut",
         githubLogin: {
             __typename: "LoginResponse",
             token: {

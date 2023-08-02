@@ -1,9 +1,11 @@
 import {
     CommitEventToDatasetGQL,
-    CommitEventToDatasetQuery,
+    CommitEventToDatasetMutation,
     CreateDatasetFromSnapshotGQL,
-    CreateDatasetFromSnapshotQuery,
-    CreateEmptyDatasetQuery,
+    CreateDatasetFromSnapshotMutation,
+    CreateEmptyDatasetMutation,
+    DatasetByAccountAndDatasetNameGQL,
+    DatasetByAccountAndDatasetNameQuery,
     DatasetKind,
     GetDatasetSchemaGQL,
     GetDatasetSchemaQuery,
@@ -30,6 +32,7 @@ import {
     DatasetByIdGQL,
     CreateEmptyDatasetGQL,
 } from "./kamu.graphql.interface";
+import { MutationResult } from "apollo-angular";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
@@ -40,6 +43,7 @@ export class DatasetApi {
         private datasetsByAccountNameGQL: DatasetsByAccountNameGQL,
         private metadataBlockGQL: GetMetadataBlockGQL,
         private datasetByIdGQL: DatasetByIdGQL,
+        private datasetByAccountAndDatasetNameGQL: DatasetByAccountAndDatasetNameGQL,
         private createEmptyDatasetGQL: CreateEmptyDatasetGQL,
         private createDatasetFromSnapshotGQL: CreateDatasetFromSnapshotGQL,
         private commitEventToDataset: CommitEventToDatasetGQL,
@@ -162,17 +166,38 @@ export class DatasetApi {
             );
     }
 
-    public createDatasetFromSnapshot(
-        accountId: string,
-        snapshot: string,
-    ): Observable<CreateDatasetFromSnapshotQuery> {
-        return this.createDatasetFromSnapshotGQL
-            .watch({ accountId, snapshot })
+    public getDatasetInfoByAccountAndDatasetName(
+        accountName: string,
+        datasetName: string,
+    ): Observable<DatasetByAccountAndDatasetNameQuery> {
+        return this.datasetByAccountAndDatasetNameGQL
+            .watch({
+                accountName,
+                datasetName,
+            })
             .valueChanges.pipe(
                 first(),
                 map(
                     (
-                        result: ApolloQueryResult<CreateDatasetFromSnapshotQuery>,
+                        result: ApolloQueryResult<DatasetByAccountAndDatasetNameQuery>,
+                    ) => {
+                        return result.data;
+                    },
+                ),
+            );
+    }
+
+    public createDatasetFromSnapshot(
+        accountId: string,
+        snapshot: string,
+    ): Observable<CreateDatasetFromSnapshotMutation | undefined | null> {
+        return this.createDatasetFromSnapshotGQL
+            .mutate({ accountId, snapshot })
+            .pipe(
+                first(),
+                map(
+                    (
+                        result: MutationResult<CreateDatasetFromSnapshotMutation>,
                     ) => {
                         return result.data;
                     },
@@ -184,31 +209,29 @@ export class DatasetApi {
         accountId: string,
         datasetKind: DatasetKind,
         datasetName: string,
-    ): Observable<CreateEmptyDatasetQuery> {
+    ): Observable<CreateEmptyDatasetMutation | null | undefined> {
         return this.createEmptyDatasetGQL
-            .watch({ accountId, datasetKind, datasetName })
-            .valueChanges.pipe(
+            .mutate({ accountId, datasetKind, datasetName })
+            .pipe(
                 first(),
-                map((result: ApolloQueryResult<CreateEmptyDatasetQuery>) => {
+                map((result: MutationResult<CreateEmptyDatasetMutation>) => {
                     return result.data;
                 }),
             );
     }
 
     public commitEvent(params: {
-        accountName: string;
-        datasetName: string;
+        datasetId: string;
         event: string;
-    }): Observable<CommitEventToDatasetQuery> {
+    }): Observable<CommitEventToDatasetMutation | null | undefined> {
         return this.commitEventToDataset
-            .watch({
-                accountName: params.accountName,
-                datasetName: params.datasetName,
+            .mutate({
+                datasetId: params.datasetId,
                 event: params.event,
             })
-            .valueChanges.pipe(
+            .pipe(
                 first(),
-                map((result: ApolloQueryResult<CommitEventToDatasetQuery>) => {
+                map((result: MutationResult<CommitEventToDatasetMutation>) => {
                     return result.data;
                 }),
             );

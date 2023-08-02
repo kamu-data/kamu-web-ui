@@ -1,13 +1,14 @@
 import {
-    CommitEventToDatasetQuery,
-    CreateDatasetFromSnapshotQuery,
-    CreateEmptyDatasetQuery,
+    CommitEventToDatasetMutation,
+    CreateDatasetFromSnapshotMutation,
+    CreateEmptyDatasetMutation,
+    DatasetByAccountAndDatasetNameQuery,
 } from "./../api/kamu.graphql.interface";
 import { Observable, Subject } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { Injectable } from "@angular/core";
 import { DatasetKind } from "../api/kamu.graphql.interface";
-import { map } from "rxjs/operators";
+import { map, switchMap } from "rxjs/operators";
 import { NavigationService } from "../services/navigation.service";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 import { DatasetService } from "../dataset-view/dataset.service";
@@ -33,6 +34,7 @@ export class AppDatasetCreateService {
     public get onErrorCommitEventChanges(): Observable<string> {
         return this.errorCommitEventChanges$.asObservable();
     }
+    private cache = new Map<string, string>();
 
     public constructor(
         private datasetApi: DatasetApi,
@@ -48,9 +50,9 @@ export class AppDatasetCreateService {
         return this.datasetApi
             .createEmptyDataset(accountId, datasetKind, datasetName)
             .pipe(
-                map((data: CreateEmptyDatasetQuery) => {
+                map((data: CreateEmptyDatasetMutation | null | undefined) => {
                     if (
-                        data.datasets.createEmpty.__typename ===
+                        data?.datasets.createEmpty.__typename ===
                         "CreateDatasetResultSuccess"
                     ) {
                         this.navigationService.navigateToDatasetView({
@@ -59,9 +61,10 @@ export class AppDatasetCreateService {
                             tab: DatasetViewTypeEnum.Overview,
                         });
                     } else {
-                        this.errorMessageChanges(
-                            data.datasets.createEmpty.message,
-                        );
+                        if (data)
+                            this.errorMessageChanges(
+                                data.datasets.createEmpty.message,
+                            );
                     }
                 }),
             );
@@ -74,24 +77,32 @@ export class AppDatasetCreateService {
         return this.datasetApi
             .createDatasetFromSnapshot(accountId, snapshot)
             .pipe(
-                map((data: CreateDatasetFromSnapshotQuery) => {
-                    if (
-                        data.datasets.createFromSnapshot.__typename ===
-                        "CreateDatasetResultSuccess"
-                    ) {
-                        const datasetName = data.datasets.createFromSnapshot
-                            .dataset.name as string;
-                        this.navigationService.navigateToDatasetView({
-                            accountName: accountId,
-                            datasetName,
-                            tab: DatasetViewTypeEnum.Overview,
-                        });
-                    } else {
-                        this.errorMessageChanges(
-                            data.datasets.createFromSnapshot.message,
-                        );
-                    }
-                }),
+                map(
+                    (
+                        data:
+                            | CreateDatasetFromSnapshotMutation
+                            | null
+                            | undefined,
+                    ) => {
+                        if (
+                            data?.datasets.createFromSnapshot.__typename ===
+                            "CreateDatasetResultSuccess"
+                        ) {
+                            const datasetName = data.datasets.createFromSnapshot
+                                .dataset.name as string;
+                            this.navigationService.navigateToDatasetView({
+                                accountName: accountId,
+                                datasetName,
+                                tab: DatasetViewTypeEnum.Overview,
+                            });
+                        } else {
+                            if (data)
+                                this.errorMessageChanges(
+                                    data.datasets.createFromSnapshot.message,
+                                );
+                        }
+                    },
+                ),
             );
     }
 
@@ -100,34 +111,55 @@ export class AppDatasetCreateService {
         datasetName: string,
         event: string,
     ): Observable<void> {
-        return this.datasetApi
-            .commitEvent({ accountName, datasetName, event })
-            .pipe(
-                map((data: CommitEventToDatasetQuery) => {
-                    if (
-                        data.datasets.byOwnerAndName?.metadata.chain.commitEvent
-                            .__typename === "CommitResultAppendError" ||
-                        data.datasets.byOwnerAndName?.metadata.chain.commitEvent
-                            .__typename === "MetadataManifestMalformed"
-                    ) {
-                        this.errorCommitEventChanges(
-                            data.datasets.byOwnerAndName.metadata.chain
-                                .commitEvent.message,
-                        );
-                    } else {
-                        this.datasetService
-                            .requestDatasetMainData({
-                                accountName,
-                                datasetName,
-                            })
-                            .subscribe();
-                        this.navigationService.navigateToDatasetView({
+        const key = `${accountName}${datasetName}`;
+        let observable: Observable<
+            CommitEventToDatasetMutation | null | undefined
+        >;
+        if (this.cache.has(key)) {
+            observable = this.datasetApi.commitEvent({
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                datasetId: this.cache.get(key)!,
+                event,
+            });
+        } else {
+            observable = this.datasetApi
+                .getDatasetInfoByAccountAndDatasetName(accountName, datasetName)
+                .pipe(
+                    switchMap((x: DatasetByAccountAndDatasetNameQuery) => {
+                        const id = x.datasets.byOwnerAndName?.id as string;
+                        this.cache.set(key, id);
+                        return this.datasetApi.commitEvent({
+                            datasetId: id,
+                            event,
+                        });
+                    }),
+                );
+        }
+        return observable.pipe(
+            map((data: CommitEventToDatasetMutation | undefined | null) => {
+                if (
+                    data?.datasets.byId?.metadata.chain.commitEvent
+                        .__typename === "CommitResultAppendError" ||
+                    data?.datasets.byId?.metadata.chain.commitEvent
+                        .__typename === "MetadataManifestMalformed"
+                ) {
+                    this.errorCommitEventChanges(
+                        data.datasets.byId.metadata.chain.commitEvent.message,
+                    );
+                } else {
+                    this.datasetService
+                        .requestDatasetMainData({
                             accountName,
                             datasetName,
-                            tab: DatasetViewTypeEnum.Overview,
-                        });
-                    }
-                }),
-            );
+                        })
+                        .subscribe();
+                    this.navigationService.navigateToDatasetView({
+                        accountName,
+                        datasetName,
+                        tab: DatasetViewTypeEnum.Overview,
+                    });
+                }
+            }),
+        );
     }
 }

@@ -9,6 +9,8 @@ import {
     DatasetKind,
     GetDatasetSchemaGQL,
     GetDatasetSchemaQuery,
+    UpdateReadmeGQL,
+    UpdateReadmeMutation,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { ApolloQueryResult } from "@apollo/client/core";
@@ -46,8 +48,9 @@ export class DatasetApi {
         private datasetByAccountAndDatasetNameGQL: DatasetByAccountAndDatasetNameGQL,
         private createEmptyDatasetGQL: CreateEmptyDatasetGQL,
         private createDatasetFromSnapshotGQL: CreateDatasetFromSnapshotGQL,
-        private commitEventToDataset: CommitEventToDatasetGQL,
+        private commitEventToDatasetGQL: CommitEventToDatasetGQL,
         private datasetSchemaGQL: GetDatasetSchemaGQL,
+        private updateReadmeGQL: UpdateReadmeGQL,
     ) {}
 
     public getDatasetMainData(params: {
@@ -224,7 +227,7 @@ export class DatasetApi {
         datasetId: string;
         event: string;
     }): Observable<CommitEventToDatasetMutation | null | undefined> {
-        return this.commitEventToDataset
+        return this.commitEventToDatasetGQL
             .mutate({
                 datasetId: params.datasetId,
                 event: params.event,
@@ -232,6 +235,23 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<CommitEventToDatasetMutation>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public updateReadme(
+        datasetId: string,
+        content: string,
+    ): Observable<UpdateReadmeMutation | null | undefined> {
+        return this.updateReadmeGQL
+            .mutate({
+                datasetId,
+                content,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<UpdateReadmeMutation>) => {
                     return result.data;
                 }),
             );

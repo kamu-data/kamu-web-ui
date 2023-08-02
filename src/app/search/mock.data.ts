@@ -1,5 +1,5 @@
 import {
-    CommitEventToDatasetQuery,
+    CommitEventToDatasetMutation,
     PageBasedInfo,
 } from "./../api/kamu.graphql.interface";
 import { mockSetVocab } from "./../dataset-block/metadata-block/components/event-details/mock.events";
@@ -763,9 +763,9 @@ export const mockDatasetDataSqlRunInternalErrorResponse: GetDatasetDataSqlRunQue
         },
     };
 
-export const mockCommitEventResponse: CommitEventToDatasetQuery = {
+export const mockCommitEventResponse: CommitEventToDatasetMutation = {
     datasets: {
-        byOwnerAndName: {
+        byId: {
             metadata: {
                 chain: {
                     commitEvent: {
@@ -776,13 +776,9 @@ export const mockCommitEventResponse: CommitEventToDatasetQuery = {
                         newHead:
                             "zW1hgfvGgmdsbrDMhVoBE5TRX2RX4DV2mhh4QgEAeA3fx4Q",
                     },
-                    __typename: "MetadataChain",
                 },
-                __typename: "DatasetMetadata",
             },
-            __typename: "Dataset",
         },
-        __typename: "Datasets",
     },
 };
 

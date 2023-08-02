@@ -1153,6 +1153,32 @@ export type CreateDatasetFromSnapshotMutation = {
     };
 };
 
+export type UpdateReadmeMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    content: Scalars["String"];
+}>;
+
+export type UpdateReadmeMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            metadata: {
+                __typename?: "DatasetMetadataMut";
+                updateReadme:
+                    | { __typename: "CommitResultAppendError"; message: string }
+                    | {
+                          __typename: "CommitResultSuccess";
+                          oldHead?: any | null;
+                          message: string;
+                      }
+                    | { __typename: "NoChanges"; message: string };
+            };
+        } | null;
+    };
+};
+
 export type DatasetByAccountAndDatasetNameQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
@@ -2615,6 +2641,37 @@ export class CreateDatasetFromSnapshotGQL extends Apollo.Mutation<
     CreateDatasetFromSnapshotMutationVariables
 > {
     document = CreateDatasetFromSnapshotDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const UpdateReadmeDocument = gql`
+    mutation updateReadme($datasetId: DatasetID!, $content: String!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                metadata {
+                    updateReadme(content: $content) {
+                        __typename
+                        message
+                        ... on CommitResultSuccess {
+                            oldHead
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class UpdateReadmeGQL extends Apollo.Mutation<
+    UpdateReadmeMutation,
+    UpdateReadmeMutationVariables
+> {
+    document = UpdateReadmeDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

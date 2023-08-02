@@ -54,22 +54,6 @@ export class TemplatesYamlEventsService {
         return result;
     }
 
-    public buildYamlSetAttachmentsEvent(data: string): string {
-        this.initialTemplate.content = {
-            kind: "setAttachments",
-            attachments: {
-                kind: "embedded",
-                items: [
-                    {
-                        path: "README.md",
-                        content: data,
-                    },
-                ],
-            },
-        };
-        return stringify(this.initialTemplate);
-    }
-
     public buildYamlSetPollingSourceEvent(
         params: Omit<SetPollingSource, "__typename">,
         preprocessStepValue: MaybeNull<PreprocessStepValue>,

@@ -3,6 +3,7 @@ import {
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetMutation,
     DatasetByAccountAndDatasetNameQuery,
+    UpdateReadmeMutation,
 } from "./../api/kamu.graphql.interface";
 import { Observable, Subject } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
@@ -147,19 +148,59 @@ export class AppDatasetCreateService {
                         data.datasets.byId.metadata.chain.commitEvent.message,
                     );
                 } else {
-                    this.datasetService
-                        .requestDatasetMainData({
-                            accountName,
-                            datasetName,
-                        })
-                        .subscribe();
-                    this.navigationService.navigateToDatasetView({
-                        accountName,
-                        datasetName,
-                        tab: DatasetViewTypeEnum.Overview,
-                    });
+                    this.successActions(accountName, datasetName);
                 }
             }),
         );
+    }
+
+    public updateReadme(
+        accountName: string,
+        datasetName: string,
+        content: string,
+    ): Observable<void> {
+        const key = `${accountName}${datasetName}`;
+        let observable: Observable<UpdateReadmeMutation | null | undefined>;
+        if (this.cache.has(key)) {
+            observable = this.datasetApi.updateReadme(
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                this.cache.get(key)!,
+                content,
+            );
+        } else {
+            observable = this.datasetApi
+                .getDatasetInfoByAccountAndDatasetName(accountName, datasetName)
+                .pipe(
+                    switchMap((x: DatasetByAccountAndDatasetNameQuery) => {
+                        const id = x.datasets.byOwnerAndName?.id as string;
+                        this.cache.set(key, id);
+                        return this.datasetApi.updateReadme(id, content);
+                    }),
+                );
+        }
+        return observable.pipe(
+            map((data: UpdateReadmeMutation | null | undefined) => {
+                if (
+                    data?.datasets.byId?.metadata.updateReadme.__typename ===
+                    "CommitResultSuccess"
+                ) {
+                    this.successActions(accountName, datasetName);
+                }
+            }),
+        );
+    }
+
+    private successActions(accountName: string, datasetName: string): void {
+        this.datasetService
+            .requestDatasetMainData({
+                accountName,
+                datasetName,
+            })
+            .subscribe();
+        this.navigationService.navigateToDatasetView({
+            accountName,
+            datasetName,
+            tab: DatasetViewTypeEnum.Overview,
+        });
     }
 }

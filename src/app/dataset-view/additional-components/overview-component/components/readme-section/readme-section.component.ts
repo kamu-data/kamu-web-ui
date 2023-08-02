@@ -15,7 +15,6 @@ import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.s
 import { OverviewDataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { AppDatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { DatasetSchema, DataRow } from "src/app/interface/dataset.interface";
-import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 
 @Component({
     selector: "app-readme-section",
@@ -42,9 +41,7 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
 
     constructor(
         private appDatasetSubsService: AppDatasetSubscriptionsService,
-
         private createDatasetService: AppDatasetCreateService,
-        private yamlEventService: TemplatesYamlEventsService,
     ) {
         super();
     }
@@ -78,12 +75,10 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
         if (this.datasetBasics)
             this.trackSubscription(
                 this.createDatasetService
-                    .commitEventToDataset(
+                    .updateReadme(
                         this.datasetBasics.owner.name,
                         this.datasetBasics.name as string,
-                        this.yamlEventService.buildYamlSetAttachmentsEvent(
-                            this.readmeState,
-                        ),
+                        this.readmeState,
                     )
                     .subscribe(() => (this.isMarkdownEditView = false)),
             );

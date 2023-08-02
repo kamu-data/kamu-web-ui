@@ -5,7 +5,7 @@ import {
     DatasetByAccountAndDatasetNameQuery,
     UpdateReadmeMutation,
 } from "./../api/kamu.graphql.interface";
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, of } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { Injectable } from "@angular/core";
 import { DatasetKind } from "../api/kamu.graphql.interface";
@@ -112,31 +112,16 @@ export class AppDatasetCreateService {
         datasetName: string,
         event: string,
     ): Observable<void> {
-        const key = `${accountName}${datasetName}`;
-        let observable: Observable<
-            CommitEventToDatasetMutation | null | undefined
-        >;
-        if (this.cache.has(key)) {
-            observable = this.datasetApi.commitEvent({
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                datasetId: this.cache.get(key)!,
-                event,
-            });
-        } else {
-            observable = this.datasetApi
-                .getDatasetInfoByAccountAndDatasetName(accountName, datasetName)
-                .pipe(
-                    switchMap((x: DatasetByAccountAndDatasetNameQuery) => {
-                        const id = x.datasets.byOwnerAndName?.id as string;
-                        this.cache.set(key, id);
-                        return this.datasetApi.commitEvent({
-                            datasetId: id,
-                            event,
-                        });
-                    }),
-                );
-        }
-        return observable.pipe(
+        return this.getIdByAccountNameAndDatasetName(
+            accountName,
+            datasetName,
+        ).pipe(
+            switchMap((id: string) =>
+                this.datasetApi.commitEvent({
+                    datasetId: id,
+                    event,
+                }),
+            ),
             map((data: CommitEventToDatasetMutation | undefined | null) => {
                 if (
                     data?.datasets.byId?.metadata.chain.commitEvent
@@ -154,31 +139,39 @@ export class AppDatasetCreateService {
         );
     }
 
+    public getIdByAccountNameAndDatasetName(
+        accountName: string,
+        datasetName: string,
+    ): Observable<string> {
+        const key = `${accountName}${datasetName}`;
+        if (this.cache.has(key)) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            return of(this.cache.get(key)!);
+        } else {
+            return this.datasetApi
+                .getDatasetInfoByAccountAndDatasetName(accountName, datasetName)
+                .pipe(
+                    map((data: DatasetByAccountAndDatasetNameQuery) => {
+                        const id = data.datasets.byOwnerAndName?.id as string;
+                        this.cache.set(key, id);
+                        return id;
+                    }),
+                );
+        }
+    }
+
     public updateReadme(
         accountName: string,
         datasetName: string,
         content: string,
     ): Observable<void> {
-        const key = `${accountName}${datasetName}`;
-        let observable: Observable<UpdateReadmeMutation | null | undefined>;
-        if (this.cache.has(key)) {
-            observable = this.datasetApi.updateReadme(
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                this.cache.get(key)!,
-                content,
-            );
-        } else {
-            observable = this.datasetApi
-                .getDatasetInfoByAccountAndDatasetName(accountName, datasetName)
-                .pipe(
-                    switchMap((x: DatasetByAccountAndDatasetNameQuery) => {
-                        const id = x.datasets.byOwnerAndName?.id as string;
-                        this.cache.set(key, id);
-                        return this.datasetApi.updateReadme(id, content);
-                    }),
-                );
-        }
-        return observable.pipe(
+        return this.getIdByAccountNameAndDatasetName(
+            accountName,
+            datasetName,
+        ).pipe(
+            switchMap((id: string) =>
+                this.datasetApi.updateReadme(id, content),
+            ),
             map((data: UpdateReadmeMutation | null | undefined) => {
                 if (
                     data?.datasets.byId?.metadata.updateReadme.__typename ===

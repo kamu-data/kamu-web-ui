@@ -96,12 +96,6 @@ const Services = [
                 link: httpLink.create({
                     uri: appConfig.apiServerGqlUrl,
                 }),
-                defaultOptions: {
-                    watchQuery: {
-                        fetchPolicy: "network-only",
-                        errorPolicy: "all",
-                    },
-                },
             };
         },
         deps: [HttpLink, AppConfigService],

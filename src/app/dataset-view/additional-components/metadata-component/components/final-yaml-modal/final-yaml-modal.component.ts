@@ -2,10 +2,8 @@ import { BaseComponent } from "src/app/common/base.component";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import * as monaco from "monaco-editor";
-
-import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
-
 import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
 
 @Component({
     selector: "app-final-yaml-modal",
@@ -30,14 +28,14 @@ export class FinalYamlModalComponent extends BaseComponent {
 
     constructor(
         public activeModal: NgbActiveModal,
-        private createDatasetService: AppDatasetCreateService,
+        private datasetCommitService: DatasetCommitService,
     ) {
         super();
     }
 
     public saveEvent(): void {
         this.trackSubscription(
-            this.createDatasetService
+            this.datasetCommitService
                 .commitEventToDataset(
                     this.datasetInfo.accountName,
                     this.datasetInfo.datasetName,

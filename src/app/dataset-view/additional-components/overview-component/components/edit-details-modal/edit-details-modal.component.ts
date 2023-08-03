@@ -9,9 +9,9 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
-import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { DatasetSchema, DataRow } from "src/app/interface/dataset.interface";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
+import { DatasetCommitService } from "../../services/dataset-commit.service";
 
 @Component({
     selector: "app-details-modal",
@@ -31,7 +31,7 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     public initialDescription = "";
     public initialKeywords: string[] = [];
     constructor(
-        private createDatasetService: AppDatasetCreateService,
+        private datasetCommitService: DatasetCommitService,
         private yamlEventService: TemplatesYamlEventsService,
         public activeModal: NgbActiveModal,
     ) {
@@ -74,7 +74,7 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     public commitSetInfoEvent(): void {
         if (this.datasetBasics)
             this.trackSubscription(
-                this.createDatasetService
+                this.datasetCommitService
                     .commitEventToDataset(
                         this.datasetBasics.owner.name,
                         this.datasetBasics.name as string,

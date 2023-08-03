@@ -26,21 +26,21 @@ export class AppDatasetCreateService {
         return this.errorMessageChanges$.asObservable();
     }
 
-    private errorCommitEventChanges$: Subject<string> = new Subject<string>();
+    // private errorCommitEventChanges$: Subject<string> = new Subject<string>();
 
-    public errorCommitEventChanges(message: string): void {
-        this.errorCommitEventChanges$.next(message);
-    }
+    // public errorCommitEventChanges(message: string): void {
+    //     this.errorCommitEventChanges$.next(message);
+    // }
 
-    public get onErrorCommitEventChanges(): Observable<string> {
-        return this.errorCommitEventChanges$.asObservable();
-    }
-    private cache = new Map<string, string>();
+    // public get onErrorCommitEventChanges(): Observable<string> {
+    //     return this.errorCommitEventChanges$.asObservable();
+    // }
+
+    // private datasetIdsByAccountDatasetName = new Map<string, string>();
 
     public constructor(
         private datasetApi: DatasetApi,
         private navigationService: NavigationService,
-        private datasetService: DatasetService,
     ) {}
 
     public createEmptyDataset(
@@ -107,93 +107,93 @@ export class AppDatasetCreateService {
             );
     }
 
-    public commitEventToDataset(
-        accountName: string,
-        datasetName: string,
-        event: string,
-    ): Observable<void> {
-        return this.getIdByAccountNameAndDatasetName(
-            accountName,
-            datasetName,
-        ).pipe(
-            switchMap((id: string) =>
-                this.datasetApi.commitEvent({
-                    datasetId: id,
-                    event,
-                }),
-            ),
-            map((data: CommitEventToDatasetMutation | undefined | null) => {
-                if (
-                    data?.datasets.byId?.metadata.chain.commitEvent
-                        .__typename === "CommitResultAppendError" ||
-                    data?.datasets.byId?.metadata.chain.commitEvent
-                        .__typename === "MetadataManifestMalformed"
-                ) {
-                    this.errorCommitEventChanges(
-                        data.datasets.byId.metadata.chain.commitEvent.message,
-                    );
-                } else {
-                    this.successActions(accountName, datasetName);
-                }
-            }),
-        );
-    }
+    // public commitEventToDataset(
+    //     accountName: string,
+    //     datasetName: string,
+    //     event: string,
+    // ): Observable<void> {
+    //     return this.getIdByAccountNameAndDatasetName(
+    //         accountName,
+    //         datasetName,
+    //     ).pipe(
+    //         switchMap((id: string) =>
+    //             this.datasetApi.commitEvent({
+    //                 datasetId: id,
+    //                 event,
+    //             }),
+    //         ),
+    //         map((data: CommitEventToDatasetMutation | undefined | null) => {
+    //             if (
+    //                 data?.datasets.byId?.metadata.chain.commitEvent
+    //                     .__typename === "CommitResultAppendError" ||
+    //                 data?.datasets.byId?.metadata.chain.commitEvent
+    //                     .__typename === "MetadataManifestMalformed"
+    //             ) {
+    //                 this.errorCommitEventChanges(
+    //                     data.datasets.byId.metadata.chain.commitEvent.message,
+    //                 );
+    //             } else {
+    //                 this.updatePage(accountName, datasetName);
+    //             }
+    //         }),
+    //     );
+    // }
 
-    public getIdByAccountNameAndDatasetName(
-        accountName: string,
-        datasetName: string,
-    ): Observable<string> {
-        const key = `${accountName}${datasetName}`;
-        if (this.cache.has(key)) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            return of(this.cache.get(key)!);
-        } else {
-            return this.datasetApi
-                .getDatasetInfoByAccountAndDatasetName(accountName, datasetName)
-                .pipe(
-                    map((data: DatasetByAccountAndDatasetNameQuery) => {
-                        const id = data.datasets.byOwnerAndName?.id as string;
-                        this.cache.set(key, id);
-                        return id;
-                    }),
-                );
-        }
-    }
+    // public getIdByAccountNameAndDatasetName(
+    //     accountName: string,
+    //     datasetName: string,
+    // ): Observable<string> {
+    //     const key = `${accountName}${datasetName}`;
+    //     if (this.datasetIdsByAccountDatasetName.has(key)) {
+    //         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    //         return of(this.datasetIdsByAccountDatasetName.get(key)!);
+    //     } else {
+    //         return this.datasetApi
+    //             .getDatasetInfoByAccountAndDatasetName(accountName, datasetName)
+    //             .pipe(
+    //                 map((data: DatasetByAccountAndDatasetNameQuery) => {
+    //                     const id = data.datasets.byOwnerAndName?.id as string;
+    //                     this.datasetIdsByAccountDatasetName.set(key, id);
+    //                     return id;
+    //                 }),
+    //             );
+    //     }
+    // }
 
-    public updateReadme(
-        accountName: string,
-        datasetName: string,
-        content: string,
-    ): Observable<void> {
-        return this.getIdByAccountNameAndDatasetName(
-            accountName,
-            datasetName,
-        ).pipe(
-            switchMap((id: string) =>
-                this.datasetApi.updateReadme(id, content),
-            ),
-            map((data: UpdateReadmeMutation | null | undefined) => {
-                if (
-                    data?.datasets.byId?.metadata.updateReadme.__typename ===
-                    "CommitResultSuccess"
-                ) {
-                    this.successActions(accountName, datasetName);
-                }
-            }),
-        );
-    }
+    // public updateReadme(
+    //     accountName: string,
+    //     datasetName: string,
+    //     content: string,
+    // ): Observable<void> {
+    //     return this.getIdByAccountNameAndDatasetName(
+    //         accountName,
+    //         datasetName,
+    //     ).pipe(
+    //         switchMap((id: string) =>
+    //             this.datasetApi.updateReadme(id, content),
+    //         ),
+    //         map((data: UpdateReadmeMutation | null | undefined) => {
+    //             if (
+    //                 data?.datasets.byId?.metadata.updateReadme.__typename ===
+    //                 "CommitResultSuccess"
+    //             ) {
+    //                 this.updatePage(accountName, datasetName);
+    //             }
+    //         }),
+    //     );
+    // }
 
-    private successActions(accountName: string, datasetName: string): void {
-        this.datasetService
-            .requestDatasetMainData({
-                accountName,
-                datasetName,
-            })
-            .subscribe();
-        this.navigationService.navigateToDatasetView({
-            accountName,
-            datasetName,
-            tab: DatasetViewTypeEnum.Overview,
-        });
-    }
+    // private updatePage(accountName: string, datasetName: string): void {
+    //     this.datasetService
+    //         .requestDatasetMainData({
+    //             accountName,
+    //             datasetName,
+    //         })
+    //         .subscribe();
+    //     this.navigationService.navigateToDatasetView({
+    //         accountName,
+    //         datasetName,
+    //         tab: DatasetViewTypeEnum.Overview,
+    //     });
+    // }
 }

@@ -11,8 +11,8 @@ import moment from "moment-timezone";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { MY_MOMENT_FORMATS } from "src/app/common/data.helpers";
-import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
+import { DatasetCommitService } from "../../services/dataset-commit.service";
 
 @Component({
     selector: "app-edit-watermark-modal",
@@ -35,7 +35,7 @@ export class EditWatermarkModalComponent
     constructor(
         public activeModal: NgbActiveModal,
         private yamlEventService: TemplatesYamlEventsService,
-        private createDatasetService: AppDatasetCreateService,
+        private datasetCommitService: DatasetCommitService,
     ) {
         super();
     }
@@ -73,7 +73,7 @@ export class EditWatermarkModalComponent
         const date = moment.utc(this.date).tz(this.timeZone).format();
         if (this.datasetBasics) {
             this.trackSubscription(
-                this.createDatasetService
+                this.datasetCommitService
                     .commitEventToDataset(
                         this.datasetBasics.owner.name,
                         this.datasetBasics.name as string,

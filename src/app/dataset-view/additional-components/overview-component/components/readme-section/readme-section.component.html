@@ -1,7 +1,7 @@
 <div
     id="file-readme-dataset-template-md"
     class="file my-4"
-    *ngIf="currentState?.overview?.metadata?.currentReadme"
+    *ngIf="currentReadme"
 >
     <div class="file-header d-flex align-items-center">
         <div
@@ -31,21 +31,21 @@
         </button>
     </div>
     <div
-        *ngIf="isMarkdownEditView"
+        *ngIf="editViewShow"
         class="edit-title d-flex align-items-center justify-content-between"
     >
         <div class="left-part">
             <button
                 class="edit-button"
-                [class.active]="isEditMode"
-                (click)="toggleEditMode()"
+                [class.active]="isEditView"
+                (click)="selectMode(editMode.Edit)"
             >
                 Edit
             </button>
             <button
                 class="edit-button"
-                [class.active]="!isEditMode"
-                (click)="toggleEditMode()"
+                [class.active]="isPreviewView"
+                (click)="selectMode(editMode.Preview)"
             >
                 Preview
             </button>
@@ -57,20 +57,20 @@
             <button
                 class="button-changes"
                 [disabled]="!readmeChanged"
-                (click)="commitChanges()"
+                (click)="saveChanges()"
             >
-                Commit changes...
+                Save changes...
             </button>
         </div>
     </div>
     <div class="file-content">
-        <ng-template [ngIf]="isEditMode && isMarkdownEditView">
+        <ng-template [ngIf]="isEditView && editViewShow">
             <textarea
                 class="variable-textarea"
                 [(ngModel)]="readmeState"
             ></textarea>
         </ng-template>
-        <ng-template [ngIf]="!isEditMode || !isMarkdownEditView">
+        <ng-template [ngIf]="!isEditView || !editViewShow">
             <markdown class="variable-binding" [data]="readmeState"></markdown>
         </ng-template>
     </div>

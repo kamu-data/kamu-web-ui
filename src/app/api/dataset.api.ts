@@ -59,11 +59,17 @@ export class DatasetApi {
         numRecords?: number;
     }): Observable<GetDatasetMainDataQuery> {
         return this.datasetMainDataGQL
-            .watch({
-                accountName: params.accountName,
-                datasetName: params.datasetName,
-                limit: params.numRecords ?? AppValues.SQL_QUERY_LIMIT,
-            })
+            .watch(
+                {
+                    accountName: params.accountName,
+                    datasetName: params.datasetName,
+                    limit: params.numRecords ?? AppValues.SQL_QUERY_LIMIT,
+                },
+                {
+                    fetchPolicy: "network-only",
+                    errorPolicy: "all",
+                },
+            )
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<GetDatasetMainDataQuery>) => {

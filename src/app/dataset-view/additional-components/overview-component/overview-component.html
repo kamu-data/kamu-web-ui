@@ -122,9 +122,26 @@
                     No data
                 </div>
             </ng-template>
+            <div
+                class="my-4"
+                *ngIf="!currentState.overview.metadata.currentReadme && !addReadme"
+            >
+                <p>
+                    You can
+                    <a
+                        class="text-decoration-none"
+                        (click)="onAddReadme()"
+                        data-test-id="add-readme"
+                    >
+                        Add README.md</a
+                    >
+                </p>
+            </div>
             <app-readme-section
                 [datasetBasics]="datasetBasics"
                 [currentReadme]="currentState.overview.metadata.currentReadme"
+                [editViewShow]="addReadme"
+                (editViewShowEmmiter)="addReadme=$event"
             ></app-readme-section>
         </div>
     </div>

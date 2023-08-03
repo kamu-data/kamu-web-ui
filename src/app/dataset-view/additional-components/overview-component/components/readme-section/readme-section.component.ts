@@ -1,8 +1,10 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    EventEmitter,
     Input,
     OnInit,
+    Output,
 } from "@angular/core";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
@@ -22,7 +24,8 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
     public editMode: typeof EditMode = EditMode;
     public viewMode = EditMode.Edit;
     public readmeState = "";
-    public editViewShow = false;
+    @Input() public editViewShow = false;
+    @Output() public editViewShowEmmiter = new EventEmitter<boolean>();
 
     public get readmeChanged(): boolean {
         return this.currentReadme !== this.readmeState;
@@ -52,14 +55,12 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
 
     public toggleReadmeView(): void {
         this.editViewShow = !this.editViewShow;
+        this.editViewShowEmmiter.emit(this.editViewShow);
     }
 
     public onCancelChanges(): void {
-        if (this.currentReadme) {
-            this.readmeState = this.currentReadme;
-            this.editViewShow = false;
-            this.viewMode = EditMode.Edit;
-        }
+        this.readmeState = this.currentReadme ?? "";
+        this.reset();
     }
 
     public saveChanges(): void {
@@ -71,7 +72,15 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
                         this.datasetBasics.name as string,
                         this.readmeState,
                     )
-                    .subscribe(() => (this.editViewShow = false)),
+                    .subscribe(() => {
+                        this.reset();
+                    }),
             );
+    }
+
+    private reset(): void {
+        this.viewMode = EditMode.Edit;
+        this.editViewShow = false;
+        this.editViewShowEmmiter.emit(this.editViewShow);
     }
 }

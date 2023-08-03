@@ -3,6 +3,7 @@ import { OverviewDataUpdate } from "src/app/dataset-view/dataset.subscriptions.i
 import { DatasetKind } from "./../../../api/kamu.graphql.interface";
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     Input,
@@ -37,6 +38,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;
     @Output() toggleReadmeViewEmit = new EventEmitter<null>();
     @Output() selectTopicEmit = new EventEmitter<string>();
+    public addReadme = false;
 
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
@@ -49,6 +51,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         private appDatasetSubsService: AppDatasetSubscriptionsService,
         private navigationService: NavigationService,
         private modalService: NgbModal,
+        private cdr: ChangeDetectorRef,
     ) {
         super();
     }
@@ -131,5 +134,9 @@ export class OverviewComponent extends BaseComponent implements OnInit {
                 accountName: this.datasetBasics.owner.name,
                 datasetName: this.datasetBasics.name as string,
             });
+    }
+
+    public onAddReadme(): void {
+        this.addReadme = true;
     }
 }

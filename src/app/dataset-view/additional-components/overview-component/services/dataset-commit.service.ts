@@ -25,7 +25,7 @@ export class DatasetCommitService {
         return this.errorCommitEventChanges$.asObservable();
     }
 
-    public datasetIdsByAccountDatasetName = new Map<string, string>();
+    private datasetIdsByAccountDatasetName = new Map<string, string>();
 
     constructor(
         private datasetApi: DatasetApi,
@@ -70,9 +70,10 @@ export class DatasetCommitService {
         datasetName: string,
     ): Observable<string> {
         const key = `${accountName}${datasetName}`;
-        if (this.datasetIdsByAccountDatasetName.has(key)) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            return of(this.datasetIdsByAccountDatasetName.get(key)!);
+        const cachedId: string | undefined =
+            this.datasetIdsByAccountDatasetName.get(key);
+        if (cachedId) {
+            return of(cachedId);
         } else {
             return this.datasetApi
                 .getDatasetInfoByAccountAndDatasetName(accountName, datasetName)

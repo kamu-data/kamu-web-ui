@@ -1,7 +1,6 @@
 import {
-    CommitEventToDatasetQuery,
-    CreateDatasetFromSnapshotQuery,
-    CreateEmptyDatasetQuery,
+    CreateDatasetFromSnapshotMutation,
+    CreateEmptyDatasetMutation,
 } from "./../api/kamu.graphql.interface";
 import { Observable, Subject } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
@@ -10,7 +9,6 @@ import { DatasetKind } from "../api/kamu.graphql.interface";
 import { map } from "rxjs/operators";
 import { NavigationService } from "../services/navigation.service";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
-import { DatasetService } from "../dataset-view/dataset.service";
 
 @Injectable({ providedIn: "root" })
 export class AppDatasetCreateService {
@@ -24,20 +22,9 @@ export class AppDatasetCreateService {
         return this.errorMessageChanges$.asObservable();
     }
 
-    private errorCommitEventChanges$: Subject<string> = new Subject<string>();
-
-    public errorCommitEventChanges(message: string): void {
-        this.errorCommitEventChanges$.next(message);
-    }
-
-    public get onErrorCommitEventChanges(): Observable<string> {
-        return this.errorCommitEventChanges$.asObservable();
-    }
-
     public constructor(
         private datasetApi: DatasetApi,
         private navigationService: NavigationService,
-        private datasetService: DatasetService,
     ) {}
 
     public createEmptyDataset(
@@ -48,9 +35,9 @@ export class AppDatasetCreateService {
         return this.datasetApi
             .createEmptyDataset(accountId, datasetKind, datasetName)
             .pipe(
-                map((data: CreateEmptyDatasetQuery) => {
+                map((data: CreateEmptyDatasetMutation | null | undefined) => {
                     if (
-                        data.datasets.createEmpty.__typename ===
+                        data?.datasets.createEmpty.__typename ===
                         "CreateDatasetResultSuccess"
                     ) {
                         this.navigationService.navigateToDatasetView({
@@ -59,9 +46,10 @@ export class AppDatasetCreateService {
                             tab: DatasetViewTypeEnum.Overview,
                         });
                     } else {
-                        this.errorMessageChanges(
-                            data.datasets.createEmpty.message,
-                        );
+                        if (data)
+                            this.errorMessageChanges(
+                                data.datasets.createEmpty.message,
+                            );
                     }
                 }),
             );
@@ -74,60 +62,32 @@ export class AppDatasetCreateService {
         return this.datasetApi
             .createDatasetFromSnapshot(accountId, snapshot)
             .pipe(
-                map((data: CreateDatasetFromSnapshotQuery) => {
-                    if (
-                        data.datasets.createFromSnapshot.__typename ===
-                        "CreateDatasetResultSuccess"
-                    ) {
-                        const datasetName = data.datasets.createFromSnapshot
-                            .dataset.name as string;
-                        this.navigationService.navigateToDatasetView({
-                            accountName: accountId,
-                            datasetName,
-                            tab: DatasetViewTypeEnum.Overview,
-                        });
-                    } else {
-                        this.errorMessageChanges(
-                            data.datasets.createFromSnapshot.message,
-                        );
-                    }
-                }),
-            );
-    }
-
-    public commitEventToDataset(
-        accountName: string,
-        datasetName: string,
-        event: string,
-    ): Observable<void> {
-        return this.datasetApi
-            .commitEvent({ accountName, datasetName, event })
-            .pipe(
-                map((data: CommitEventToDatasetQuery) => {
-                    if (
-                        data.datasets.byOwnerAndName?.metadata.chain.commitEvent
-                            .__typename === "CommitResultAppendError" ||
-                        data.datasets.byOwnerAndName?.metadata.chain.commitEvent
-                            .__typename === "MetadataManifestMalformed"
-                    ) {
-                        this.errorCommitEventChanges(
-                            data.datasets.byOwnerAndName.metadata.chain
-                                .commitEvent.message,
-                        );
-                    } else {
-                        this.datasetService
-                            .requestDatasetMainData({
-                                accountName,
+                map(
+                    (
+                        data:
+                            | CreateDatasetFromSnapshotMutation
+                            | null
+                            | undefined,
+                    ) => {
+                        if (
+                            data?.datasets.createFromSnapshot.__typename ===
+                            "CreateDatasetResultSuccess"
+                        ) {
+                            const datasetName = data.datasets.createFromSnapshot
+                                .dataset.name as string;
+                            this.navigationService.navigateToDatasetView({
+                                accountName: accountId,
                                 datasetName,
-                            })
-                            .subscribe();
-                        this.navigationService.navigateToDatasetView({
-                            accountName,
-                            datasetName,
-                            tab: DatasetViewTypeEnum.Overview,
-                        });
-                    }
-                }),
+                                tab: DatasetViewTypeEnum.Overview,
+                            });
+                        } else {
+                            if (data)
+                                this.errorMessageChanges(
+                                    data.datasets.createFromSnapshot.message,
+                                );
+                        }
+                    },
+                ),
             );
     }
 }

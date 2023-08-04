@@ -49,7 +49,10 @@ export class EngineSelectComponent implements OnInit {
         }
     }
     public get value(): string {
-        return DataHelpers.descriptionForEngine(this.engine).label ?? "";
+        return (
+            DataHelpers.descriptionForEngine(this.engine.toLowerCase()).label ??
+            ""
+        );
     }
 
     public getLogo(name: string): EventPropertyLogo {

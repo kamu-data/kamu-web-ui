@@ -137,7 +137,7 @@ export class AddPollingSourceComponent
     public onSaveEvent(): void {
         this.processFormService.transformForm(this.pollingSourceForm);
         this.trackSubscription(
-            this.createDatasetService
+            this.datasetCommitService
                 .commitEventToDataset(
                     this.getDatasetInfoFromUrl().accountName,
                     this.getDatasetInfoFromUrl().datasetName,

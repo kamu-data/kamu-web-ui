@@ -13,14 +13,14 @@ import { FormsModule } from "@angular/forms";
 import timekeeper from "timekeeper";
 import { mockDatasetBasicsFragment } from "src/app/search/mock.data";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
-import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { of } from "rxjs";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { DatasetCommitService } from "../../services/dataset-commit.service";
 
 describe("EditWatermarkModalComponent", () => {
     let component: EditWatermarkModalComponent;
     let fixture: ComponentFixture<EditWatermarkModalComponent>;
-    let appDatasetCreateService: AppDatasetCreateService;
+    let datasetCommitService: DatasetCommitService;
     const FROZEN_TIME = new Date("2022-10-01 12:00:00");
 
     beforeEach(async () => {
@@ -40,7 +40,7 @@ describe("EditWatermarkModalComponent", () => {
 
         fixture = TestBed.createComponent(EditWatermarkModalComponent);
         component = fixture.componentInstance;
-        appDatasetCreateService = TestBed.inject(AppDatasetCreateService);
+        datasetCommitService = TestBed.inject(DatasetCommitService);
         component.datasetBasics = mockDatasetBasicsFragment;
     });
 
@@ -71,7 +71,7 @@ describe("EditWatermarkModalComponent", () => {
             component,
             "commitSetWatermarkEvent",
         ).and.callThrough();
-        spyOn(appDatasetCreateService, "commitEventToDataset").and.returnValue(
+        spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(
             of(),
         );
         emitClickOnElementByDataTestId(fixture, "commit-setWatermark-event");

@@ -1,12 +1,16 @@
 import {
     CommitEventToDatasetGQL,
-    CommitEventToDatasetQuery,
+    CommitEventToDatasetMutation,
     CreateDatasetFromSnapshotGQL,
-    CreateDatasetFromSnapshotQuery,
-    CreateEmptyDatasetQuery,
+    CreateDatasetFromSnapshotMutation,
+    CreateEmptyDatasetMutation,
+    DatasetByAccountAndDatasetNameGQL,
+    DatasetByAccountAndDatasetNameQuery,
     DatasetKind,
     GetDatasetSchemaGQL,
     GetDatasetSchemaQuery,
+    UpdateReadmeGQL,
+    UpdateReadmeMutation,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { ApolloQueryResult } from "@apollo/client/core";
@@ -30,6 +34,7 @@ import {
     DatasetByIdGQL,
     CreateEmptyDatasetGQL,
 } from "./kamu.graphql.interface";
+import { MutationResult } from "apollo-angular";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
@@ -40,10 +45,12 @@ export class DatasetApi {
         private datasetsByAccountNameGQL: DatasetsByAccountNameGQL,
         private metadataBlockGQL: GetMetadataBlockGQL,
         private datasetByIdGQL: DatasetByIdGQL,
+        private datasetByAccountAndDatasetNameGQL: DatasetByAccountAndDatasetNameGQL,
         private createEmptyDatasetGQL: CreateEmptyDatasetGQL,
         private createDatasetFromSnapshotGQL: CreateDatasetFromSnapshotGQL,
-        private commitEventToDataset: CommitEventToDatasetGQL,
+        private commitEventToDatasetGQL: CommitEventToDatasetGQL,
         private datasetSchemaGQL: GetDatasetSchemaGQL,
+        private updateReadmeGQL: UpdateReadmeGQL,
     ) {}
 
     public getDatasetMainData(params: {
@@ -52,11 +59,17 @@ export class DatasetApi {
         numRecords?: number;
     }): Observable<GetDatasetMainDataQuery> {
         return this.datasetMainDataGQL
-            .watch({
-                accountName: params.accountName,
-                datasetName: params.datasetName,
-                limit: params.numRecords ?? AppValues.SQL_QUERY_LIMIT,
-            })
+            .watch(
+                {
+                    accountName: params.accountName,
+                    datasetName: params.datasetName,
+                    limit: params.numRecords ?? AppValues.SQL_QUERY_LIMIT,
+                },
+                {
+                    fetchPolicy: "network-only",
+                    errorPolicy: "all",
+                },
+            )
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<GetDatasetMainDataQuery>) => {
@@ -162,17 +175,38 @@ export class DatasetApi {
             );
     }
 
-    public createDatasetFromSnapshot(
-        accountId: string,
-        snapshot: string,
-    ): Observable<CreateDatasetFromSnapshotQuery> {
-        return this.createDatasetFromSnapshotGQL
-            .watch({ accountId, snapshot })
+    public getDatasetInfoByAccountAndDatasetName(
+        accountName: string,
+        datasetName: string,
+    ): Observable<DatasetByAccountAndDatasetNameQuery> {
+        return this.datasetByAccountAndDatasetNameGQL
+            .watch({
+                accountName,
+                datasetName,
+            })
             .valueChanges.pipe(
                 first(),
                 map(
                     (
-                        result: ApolloQueryResult<CreateDatasetFromSnapshotQuery>,
+                        result: ApolloQueryResult<DatasetByAccountAndDatasetNameQuery>,
+                    ) => {
+                        return result.data;
+                    },
+                ),
+            );
+    }
+
+    public createDatasetFromSnapshot(
+        accountId: string,
+        snapshot: string,
+    ): Observable<CreateDatasetFromSnapshotMutation | undefined | null> {
+        return this.createDatasetFromSnapshotGQL
+            .mutate({ accountId, snapshot })
+            .pipe(
+                first(),
+                map(
+                    (
+                        result: MutationResult<CreateDatasetFromSnapshotMutation>,
                     ) => {
                         return result.data;
                     },
@@ -184,31 +218,46 @@ export class DatasetApi {
         accountId: string,
         datasetKind: DatasetKind,
         datasetName: string,
-    ): Observable<CreateEmptyDatasetQuery> {
+    ): Observable<CreateEmptyDatasetMutation | null | undefined> {
         return this.createEmptyDatasetGQL
-            .watch({ accountId, datasetKind, datasetName })
-            .valueChanges.pipe(
+            .mutate({ accountId, datasetKind, datasetName })
+            .pipe(
                 first(),
-                map((result: ApolloQueryResult<CreateEmptyDatasetQuery>) => {
+                map((result: MutationResult<CreateEmptyDatasetMutation>) => {
                     return result.data;
                 }),
             );
     }
 
     public commitEvent(params: {
-        accountName: string;
-        datasetName: string;
+        datasetId: string;
         event: string;
-    }): Observable<CommitEventToDatasetQuery> {
-        return this.commitEventToDataset
-            .watch({
-                accountName: params.accountName,
-                datasetName: params.datasetName,
+    }): Observable<CommitEventToDatasetMutation | null | undefined> {
+        return this.commitEventToDatasetGQL
+            .mutate({
+                datasetId: params.datasetId,
                 event: params.event,
             })
-            .valueChanges.pipe(
+            .pipe(
                 first(),
-                map((result: ApolloQueryResult<CommitEventToDatasetQuery>) => {
+                map((result: MutationResult<CommitEventToDatasetMutation>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public updateReadme(
+        datasetId: string,
+        content: string,
+    ): Observable<UpdateReadmeMutation | null | undefined> {
+        return this.updateReadmeGQL
+            .mutate({
+                datasetId,
+                content,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<UpdateReadmeMutation>) => {
                     return result.data;
                 }),
             );

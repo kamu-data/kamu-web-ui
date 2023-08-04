@@ -5,7 +5,6 @@ import { ActivatedRoute } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { EditSetTransformService } from "./edit-set-transform..service";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
-import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { of } from "rxjs";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
@@ -19,12 +18,13 @@ import {
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { DatasetNode } from "./set-transform.types";
+import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
 
 describe("SetTransformComponent", () => {
     let component: SetTransformComponent;
     let fixture: ComponentFixture<SetTransformComponent>;
     let editService: EditSetTransformService;
-    let createDatasetService: AppDatasetCreateService;
+    let datasetCommitService: DatasetCommitService;
     let modalService: NgbModal;
     let modalRef: NgbModalRef;
     let datasetService: DatasetService;
@@ -70,7 +70,7 @@ describe("SetTransformComponent", () => {
         modalService = TestBed.inject(NgbModal);
         modalRef = modalService.open(FinalYamlModalComponent);
         editService = TestBed.inject(EditSetTransformService);
-        createDatasetService = TestBed.inject(AppDatasetCreateService);
+        datasetCommitService = TestBed.inject(DatasetCommitService);
         datasetService = TestBed.inject(DatasetService);
         fixture.detectChanges();
     });
@@ -88,7 +88,7 @@ describe("SetTransformComponent", () => {
 
     it("should check save event", () => {
         const commitEventToDatasetSpy = spyOn(
-            createDatasetService,
+            datasetCommitService,
             "commitEventToDataset",
         ).and.returnValue(of());
         component.onSaveEvent();

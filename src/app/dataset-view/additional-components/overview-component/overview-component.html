@@ -123,52 +123,26 @@
                 </div>
             </ng-template>
             <div
-                id="file-readme-dataset-template-md"
-                class="file my-4"
-                *ngIf="currentState.overview.metadata.currentReadme"
+                class="my-4"
+                *ngIf="!currentState.overview.metadata.currentReadme && !addReadme"
             >
-                <div class="file-header d-flex align-items-center">
-                    <div
-                        class="file-info pr-4 d-flex flex-order-1 flex-auto align-items-center"
+                <p>
+                    You can
+                    <a
+                        class="text-decoration-none"
+                        (click)="onAddReadme()"
+                        data-test-id="add-readme"
                     >
-                        <span class="mr-2">
-                            <svg-icon name="code-square"></svg-icon>
-                        </span>
-                        <h2 class="box-title align-items-center m-0">
-                            <a
-                                href="#readme"
-                                data-view-component="true"
-                                class="link--primary"
-                                >README.md</a
-                            >
-                        </h2>
-                    </div>
-                    <button
-                        class="starred rounded-2 btn-sm btn btnGroup-item d-flex justify-content-center align-items-center"
-                        aria-label="Edit this file"
-                        data-test-id="toggleReadme"
-                        data-hotkey="e"
-                        data-disable-with=""
-                        (click)="toggleReadmeView()"
+                        Add README.md</a
                     >
-                        <svg-icon name="pencil"></svg-icon>
-                    </button>
-                </div>
-                <div class="file-content">
-                    <ng-template [ngIf]="isMarkdownEditView">
-                        <textarea
-                            class="variable-textarea"
-                            [(ngModel)]="currentState.overview.metadata.currentReadme"
-                        ></textarea>
-                    </ng-template>
-                    <ng-template [ngIf]="!isMarkdownEditView">
-                        <markdown
-                            class="variable-binding"
-                            [data]="currentState.overview.metadata.currentReadme"
-                        ></markdown>
-                    </ng-template>
-                </div>
+                </p>
             </div>
+            <app-readme-section
+                [datasetBasics]="datasetBasics"
+                [currentReadme]="currentState.overview.metadata.currentReadme"
+                [editViewShow]="addReadme"
+                (editViewShowEmmiter)="addReadme=$event"
+            ></app-readme-section>
         </div>
     </div>
     <div class="card">

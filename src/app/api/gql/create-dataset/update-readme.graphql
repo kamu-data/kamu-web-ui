@@ -1,0 +1,15 @@
+mutation updateReadme($datasetId: DatasetID!, $content: String!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      metadata {
+        updateReadme(content: $content) {
+          __typename
+          message
+          ... on CommitResultSuccess {
+            oldHead
+          }
+        }
+      }
+    }
+  }
+}

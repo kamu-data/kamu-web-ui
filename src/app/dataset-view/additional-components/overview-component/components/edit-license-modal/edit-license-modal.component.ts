@@ -12,8 +12,8 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { DatasetSchema, DataRow } from "src/app/interface/dataset.interface";
-import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
+import { DatasetCommitService } from "../../services/dataset-commit.service";
 
 @Component({
     selector: "app-edit-license-modal",
@@ -41,7 +41,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
     constructor(
         public activeModal: NgbActiveModal,
         private fb: FormBuilder,
-        private createDatasetService: AppDatasetCreateService,
+        private datasetCommitService: DatasetCommitService,
         private yamlEventService: TemplatesYamlEventsService,
     ) {
         super();
@@ -63,7 +63,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
     public onEditLicense(): void {
         if (this.datasetBasics)
             this.trackSubscription(
-                this.createDatasetService
+                this.datasetCommitService
                     .commitEventToDataset(
                         this.datasetBasics.owner.name,
                         this.datasetBasics.name as string,

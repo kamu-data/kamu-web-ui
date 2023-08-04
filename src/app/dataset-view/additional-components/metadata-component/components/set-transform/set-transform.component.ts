@@ -162,7 +162,7 @@ export class SetTransformComponent
 
     public onSaveEvent(): void {
         this.trackSubscription(
-            this.createDatasetService
+            this.datasetCommitService
                 .commitEventToDataset(
                     this.getDatasetInfoFromUrl().accountName,
                     this.getDatasetInfoFromUrl().datasetName,

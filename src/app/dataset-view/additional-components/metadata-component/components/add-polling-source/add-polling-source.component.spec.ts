@@ -13,7 +13,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AddPollingSourceComponent } from "./add-polling-source.component";
 import { NgbModal, NgbModalRef, NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
-import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { MonacoEditorModule } from "ngx-monaco-editor";
 import { StepperNavigationComponent } from "../stepper-navigation/stepper-navigation.component";
@@ -28,13 +27,14 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { EditPollingSourceService } from "./edit-polling-source.service";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
     let fixture: ComponentFixture<AddPollingSourceComponent>;
     let modalService: NgbModal;
     let modalRef: NgbModalRef;
-    let createDatasetService: AppDatasetCreateService;
+    let datasetCommitService: DatasetCommitService;
     let editService: EditPollingSourceService;
 
     beforeEach(async () => {
@@ -64,7 +64,7 @@ describe("AddPollingSourceComponent", () => {
         modalService = TestBed.inject(NgbModal);
         editService = TestBed.inject(EditPollingSourceService);
 
-        createDatasetService = TestBed.inject(AppDatasetCreateService);
+        datasetCommitService = TestBed.inject(DatasetCommitService);
         modalRef = modalService.open(FinalYamlModalComponent);
         component = fixture.componentInstance;
         component.showPreprocessStep = false;
@@ -120,7 +120,7 @@ describe("AddPollingSourceComponent", () => {
         const mockError = "Some error";
         expect(component.errorMessage).toBe("");
         expect(component.changedEventYamlByHash).toBeUndefined();
-        createDatasetService.errorCommitEventChanges(mockError);
+        datasetCommitService.errorCommitEventChanges(mockError);
         expect(component.errorMessage).toBe(mockError);
 
         component.onEditYaml();
@@ -145,7 +145,7 @@ describe("AddPollingSourceComponent", () => {
     it("should check submit yaml", () => {
         component.ngOnInit();
         const submitYamlSpy = spyOn(
-            createDatasetService,
+            datasetCommitService,
             "commitEventToDataset",
         ).and.returnValue(of());
         component.onSaveEvent();
@@ -166,7 +166,7 @@ describe("AddPollingSourceComponent", () => {
         const errorMessage = "test error message";
         expect(component.errorMessage).toBe("");
 
-        createDatasetService.errorCommitEventChanges(errorMessage);
+        datasetCommitService.errorCommitEventChanges(errorMessage);
         expect(component.errorMessage).toBe(errorMessage);
     });
 

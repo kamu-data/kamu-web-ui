@@ -30,9 +30,7 @@
 
             <ng-template [ngIf]="isDatasetViewTypeOverview">
                 <app-overview
-                    [isMarkdownEditView]="isMarkdownEditView"
                     [datasetBasics]="datasetBasics"
-                    (onToggleReadmeViewEmit)="toggleReadmeView()"
                     (selectTopicEmit)="selectTopic($event)"
                 ></app-overview>
             </ng-template>

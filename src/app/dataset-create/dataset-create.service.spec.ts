@@ -1,4 +1,7 @@
-import { CreateDatasetFromSnapshotQuery } from "./../api/kamu.graphql.interface";
+import {
+    CreateDatasetFromSnapshotMutation,
+    CreateEmptyDatasetMutation,
+} from "./../api/kamu.graphql.interface";
 import {
     mockDatasetBasicsFragment,
     mockDatasetInfo,
@@ -7,10 +10,7 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { of } from "rxjs";
 import { DatasetApi } from "../api/dataset.api";
-import {
-    CreateEmptyDatasetQuery,
-    DatasetKind,
-} from "../api/kamu.graphql.interface";
+import { DatasetKind } from "../api/kamu.graphql.interface";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 import { NavigationService } from "../services/navigation.service";
 import { AppDatasetCreateService } from "./dataset-create.service";
@@ -34,7 +34,7 @@ describe("AppDatasetCreateService", () => {
     });
 
     it("should be create empty dataset with success", () => {
-        const mockResponseSuccess: CreateEmptyDatasetQuery = {
+        const mockResponseSuccess: CreateEmptyDatasetMutation = {
             datasets: {
                 createEmpty: {
                     message: "Success",
@@ -66,7 +66,7 @@ describe("AppDatasetCreateService", () => {
     });
 
     it("should be create empty dataset with error", () => {
-        const mockResponseError: CreateEmptyDatasetQuery = {
+        const mockResponseError: CreateEmptyDatasetMutation = {
             datasets: {
                 createEmpty: {
                     message: "Fail",
@@ -101,7 +101,7 @@ describe("AppDatasetCreateService", () => {
     });
 
     it("should be create dataset using shapshot with success", () => {
-        const mockResponseSuccess: CreateDatasetFromSnapshotQuery = {
+        const mockResponseSuccess: CreateDatasetFromSnapshotMutation = {
             datasets: {
                 createFromSnapshot: {
                     message: "Success",
@@ -135,7 +135,7 @@ describe("AppDatasetCreateService", () => {
     });
 
     it("should be create dataset using shapshot with error", () => {
-        const mockResponseError: CreateDatasetFromSnapshotQuery = {
+        const mockResponseError: CreateDatasetFromSnapshotMutation = {
             datasets: {
                 createFromSnapshot: {
                     message: "Fail",

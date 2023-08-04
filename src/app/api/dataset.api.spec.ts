@@ -19,7 +19,7 @@ import {
 import { DatasetApi } from "./dataset.api";
 import {
     CommitEventToDatasetDocument,
-    CommitEventToDatasetQuery,
+    CommitEventToDatasetMutation,
     DatasetsByAccountNameDocument,
     DatasetsByAccountNameQuery,
     GetDatasetDataSqlRunDocument,
@@ -188,22 +188,25 @@ describe("DatasetApi", () => {
     });
 
     it("should commit event", () => {
+        const mockDatasetId = "mockId";
+        const mockEvent = "mock event";
         service
             .commitEvent({
-                accountName: TEST_USER_NAME,
-                datasetName: TEST_DATASET_NAME,
-                event: "mock event",
+                datasetId: mockDatasetId,
+                event: mockEvent,
             })
-            .subscribe((res: CommitEventToDatasetQuery) => {
-                expect(
-                    res.datasets.byOwnerAndName?.metadata.chain.commitEvent
-                        .__typename,
-                ).toEqual("CommitResultSuccess");
-            });
+            .subscribe(
+                (res: CommitEventToDatasetMutation | null | undefined) => {
+                    expect(
+                        res?.datasets.byId?.metadata.chain.commitEvent
+                            .__typename,
+                    ).toEqual("CommitResultSuccess");
+                },
+            );
 
         const op = controller.expectOne(CommitEventToDatasetDocument);
-        expect(op.operation.variables.accountName).toEqual(TEST_USER_NAME);
-        expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
+        expect(op.operation.variables.datasetId).toEqual(mockDatasetId);
+        expect(op.operation.variables.event).toEqual(mockEvent);
         op.flush({
             data: mockCommitEventResponse,
         });

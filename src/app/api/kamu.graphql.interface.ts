@@ -94,17 +94,17 @@ export type AttachmentsEmbedded = {
     items: Array<AttachmentEmbedded>;
 };
 
-export type Auth = {
-    __typename?: "Auth";
+export type AuthMut = {
+    __typename?: "AuthMut";
     accountInfo: AccountInfo;
     githubLogin: LoginResponse;
 };
 
-export type AuthAccountInfoArgs = {
+export type AuthMutAccountInfoArgs = {
     accessToken: Scalars["String"];
 };
 
-export type AuthGithubLoginArgs = {
+export type AuthMutGithubLoginArgs = {
     code: Scalars["String"];
 };
 
@@ -130,17 +130,19 @@ export type CommitResult = {
     message: Scalars["String"];
 };
 
-export type CommitResultAppendError = CommitResult & {
-    __typename?: "CommitResultAppendError";
-    message: Scalars["String"];
-};
+export type CommitResultAppendError = CommitResult &
+    UpdateReadmeResult & {
+        __typename?: "CommitResultAppendError";
+        message: Scalars["String"];
+    };
 
-export type CommitResultSuccess = CommitResult & {
-    __typename?: "CommitResultSuccess";
-    message: Scalars["String"];
-    newHead: Scalars["Multihash"];
-    oldHead?: Maybe<Scalars["Multihash"]>;
-};
+export type CommitResultSuccess = CommitResult &
+    UpdateReadmeResult & {
+        __typename?: "CommitResultSuccess";
+        message: Scalars["String"];
+        newHead: Scalars["Multihash"];
+        oldHead?: Maybe<Scalars["Multihash"]>;
+    };
 
 export enum CompressionFormat {
     Gzip = "GZIP",
@@ -353,6 +355,24 @@ export type DatasetMetadataCurrentSchemaArgs = {
     format?: InputMaybe<DataSchemaFormat>;
 };
 
+export type DatasetMetadataMut = {
+    __typename?: "DatasetMetadataMut";
+    /** Access to the mutable metadata chain of the dataset */
+    chain: MetadataChainMut;
+    /** Updates or clears the dataset readme */
+    updateReadme: UpdateReadmeResult;
+};
+
+export type DatasetMetadataMutUpdateReadmeArgs = {
+    content?: InputMaybe<Scalars["String"]>;
+};
+
+export type DatasetMut = {
+    __typename?: "DatasetMut";
+    /** Access to the mutable metadata of the dataset */
+    metadata: DatasetMetadataMut;
+};
+
 export type Datasets = {
     __typename?: "Datasets";
     /** Returns datasets belonging to the specified account */
@@ -363,10 +383,6 @@ export type Datasets = {
     byId?: Maybe<Dataset>;
     /** Returns dataset by its owner and name */
     byOwnerAndName?: Maybe<Dataset>;
-    /** Creates a new empty dataset */
-    createEmpty: CreateDatasetResult;
-    /** Creates a new dataset from provided DatasetSnapshot manifest */
-    createFromSnapshot: CreateDatasetFromSnapshotResult;
 };
 
 export type DatasetsByAccountIdArgs = {
@@ -390,13 +406,27 @@ export type DatasetsByOwnerAndNameArgs = {
     datasetName: Scalars["DatasetName"];
 };
 
-export type DatasetsCreateEmptyArgs = {
+export type DatasetsMut = {
+    __typename?: "DatasetsMut";
+    /** Returns a mutable dataset by its ID */
+    byId?: Maybe<DatasetMut>;
+    /** Creates a new empty dataset */
+    createEmpty: CreateDatasetResult;
+    /** Creates a new dataset from provided DatasetSnapshot manifest */
+    createFromSnapshot: CreateDatasetFromSnapshotResult;
+};
+
+export type DatasetsMutByIdArgs = {
+    datasetId: Scalars["DatasetID"];
+};
+
+export type DatasetsMutCreateEmptyArgs = {
     accountId: Scalars["AccountID"];
     datasetKind: DatasetKind;
     datasetName: Scalars["DatasetName"];
 };
 
-export type DatasetsCreateFromSnapshotArgs = {
+export type DatasetsMutCreateFromSnapshotArgs = {
     accountId: Scalars["AccountID"];
     snapshot: Scalars["String"];
     snapshotFormat: MetadataManifestFormat;
@@ -553,8 +583,6 @@ export type MetadataChain = {
     blockByHashEncoded?: Maybe<Scalars["String"]>;
     /** Iterates all metadata blocks in the reverse chronological order */
     blocks: MetadataBlockConnection;
-    /** Commits new event to the metadata chain */
-    commitEvent: CommitResult;
     /** Returns all named metadata block references */
     refs: Array<BlockRef>;
 };
@@ -573,7 +601,13 @@ export type MetadataChainBlocksArgs = {
     perPage?: InputMaybe<Scalars["Int"]>;
 };
 
-export type MetadataChainCommitEventArgs = {
+export type MetadataChainMut = {
+    __typename?: "MetadataChainMut";
+    /** Commits new event to the metadata chain */
+    commitEvent: CommitResult;
+};
+
+export type MetadataChainMutCommitEventArgs = {
     event: Scalars["String"];
     eventFormat: MetadataManifestFormat;
 };
@@ -608,9 +642,29 @@ export type MetadataManifestUnsupportedVersion = CommitResult &
 
 export type Mutation = {
     __typename?: "Mutation";
-    auth: Auth;
-    tasks: TasksMutations;
+    /** Authentication and authorization-related functionality group */
+    auth: AuthMut;
+    /**
+     * Dataset-related functionality group.
+     *
+     * Datasets are historical streams of events recorded under a cetrain
+     * schema.
+     */
+    datasets: DatasetsMut;
+    /**
+     * Tasks-related functionality group.
+     *
+     * Tasks are units of work scheduled and executed by the system to query
+     * and process data.
+     */
+    tasks: TasksMut;
 };
+
+export type NoChanges = CommitResult &
+    UpdateReadmeResult & {
+        __typename?: "NoChanges";
+        message: Scalars["String"];
+    };
 
 export type OffsetInterval = {
     __typename?: "OffsetInterval";
@@ -941,8 +995,8 @@ export type TasksListTasksByDatasetArgs = {
     perPage?: InputMaybe<Scalars["Int"]>;
 };
 
-export type TasksMutations = {
-    __typename?: "TasksMutations";
+export type TasksMut = {
+    __typename?: "TasksMut";
     /** Requests cancellation of the specified task */
     cancelTask: Task;
     /**
@@ -957,17 +1011,17 @@ export type TasksMutations = {
     createUpdateDatasetTask: Task;
 };
 
-export type TasksMutationsCancelTaskArgs = {
+export type TasksMutCancelTaskArgs = {
     taskId: Scalars["TaskID"];
 };
 
-export type TasksMutationsCreateProbeTaskArgs = {
+export type TasksMutCreateProbeTaskArgs = {
     busyTimeMs?: InputMaybe<Scalars["Int"]>;
     datasetId?: InputMaybe<Scalars["DatasetID"]>;
     endWithOutcome?: InputMaybe<TaskOutcome>;
 };
 
-export type TasksMutationsCreateUpdateDatasetTaskArgs = {
+export type TasksMutCreateUpdateDatasetTaskArgs = {
     datasetId: Scalars["DatasetID"];
 };
 
@@ -995,6 +1049,10 @@ export type TransformSql = {
     version?: Maybe<Scalars["String"]>;
 };
 
+export type UpdateReadmeResult = {
+    message: Scalars["String"];
+};
+
 export type User = Account & {
     __typename?: "User";
     /** Unique and stable identitfier of this user account */
@@ -1003,22 +1061,21 @@ export type User = Account & {
     name: Scalars["String"];
 };
 
-export type CommitEventToDatasetQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
+export type CommitEventToDatasetMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
     event: Scalars["String"];
 }>;
 
-export type CommitEventToDatasetQuery = {
-    __typename?: "Query";
+export type CommitEventToDatasetMutation = {
+    __typename?: "Mutation";
     datasets: {
-        __typename?: "Datasets";
-        byOwnerAndName?: {
-            __typename?: "Dataset";
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
             metadata: {
-                __typename?: "DatasetMetadata";
+                __typename?: "DatasetMetadataMut";
                 chain: {
-                    __typename?: "MetadataChain";
+                    __typename?: "MetadataChainMut";
                     commitEvent:
                         | {
                               __typename: "CommitResultAppendError";
@@ -1034,23 +1091,24 @@ export type CommitEventToDatasetQuery = {
                               __typename: "MetadataManifestMalformed";
                               message: string;
                           }
-                        | { __typename: "MetadataManifestUnsupportedVersion" };
+                        | { __typename: "MetadataManifestUnsupportedVersion" }
+                        | { __typename: "NoChanges" };
                 };
             };
         } | null;
     };
 };
 
-export type CreateEmptyDatasetQueryVariables = Exact<{
+export type CreateEmptyDatasetMutationVariables = Exact<{
     accountId: Scalars["AccountID"];
     datasetKind: DatasetKind;
     datasetName: Scalars["DatasetName"];
 }>;
 
-export type CreateEmptyDatasetQuery = {
-    __typename?: "Query";
+export type CreateEmptyDatasetMutation = {
+    __typename?: "Mutation";
     datasets: {
-        __typename?: "Datasets";
+        __typename?: "DatasetsMut";
         createEmpty:
             | {
                   __typename?: "CreateDatasetResultNameCollision";
@@ -1060,15 +1118,15 @@ export type CreateEmptyDatasetQuery = {
     };
 };
 
-export type CreateDatasetFromSnapshotQueryVariables = Exact<{
+export type CreateDatasetFromSnapshotMutationVariables = Exact<{
     accountId: Scalars["AccountID"];
     snapshot: Scalars["String"];
 }>;
 
-export type CreateDatasetFromSnapshotQuery = {
-    __typename?: "Query";
+export type CreateDatasetFromSnapshotMutation = {
+    __typename?: "Mutation";
     datasets: {
-        __typename?: "Datasets";
+        __typename?: "DatasetsMut";
         createFromSnapshot:
             | {
                   __typename?: "CreateDatasetResultInvalidSnapshot";
@@ -1092,6 +1150,47 @@ export type CreateDatasetFromSnapshotQuery = {
                   __typename?: "MetadataManifestUnsupportedVersion";
                   message: string;
               };
+    };
+};
+
+export type UpdateReadmeMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    content: Scalars["String"];
+}>;
+
+export type UpdateReadmeMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            metadata: {
+                __typename?: "DatasetMetadataMut";
+                updateReadme:
+                    | { __typename: "CommitResultAppendError"; message: string }
+                    | {
+                          __typename: "CommitResultSuccess";
+                          oldHead?: any | null;
+                          message: string;
+                      }
+                    | { __typename: "NoChanges"; message: string };
+            };
+        } | null;
+    };
+};
+
+export type DatasetByAccountAndDatasetNameQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
+}>;
+
+export type DatasetByAccountAndDatasetNameQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byOwnerAndName?:
+            | ({ __typename?: "Dataset" } & DatasetBasicsFragment)
+            | null;
     };
 };
 
@@ -1790,7 +1889,7 @@ export type GithubLoginMutationVariables = Exact<{
 export type GithubLoginMutation = {
     __typename?: "Mutation";
     auth: {
-        __typename?: "Auth";
+        __typename?: "AuthMut";
         githubLogin: {
             __typename?: "LoginResponse";
             token: {
@@ -1813,7 +1912,7 @@ export type FetchAccountInfoMutationVariables = Exact<{
 export type FetchAccountInfoMutation = {
     __typename?: "Mutation";
     auth: {
-        __typename?: "Auth";
+        __typename?: "AuthMut";
         accountInfo: { __typename?: "AccountInfo" } & AccountDetailsFragment;
     };
 };
@@ -2441,16 +2540,9 @@ export const DatasetSearchOverviewFragmentDoc = gql`
     ${LicenseFragmentDoc}
 `;
 export const CommitEventToDatasetDocument = gql`
-    query commitEventToDataset(
-        $accountName: AccountName!
-        $datasetName: DatasetName!
-        $event: String!
-    ) {
+    mutation commitEventToDataset($datasetId: DatasetID!, $event: String!) {
         datasets {
-            byOwnerAndName(
-                accountName: $accountName
-                datasetName: $datasetName
-            ) {
+            byId(datasetId: $datasetId) {
                 metadata {
                     chain {
                         commitEvent(event: $event, eventFormat: YAML) {
@@ -2477,9 +2569,9 @@ export const CommitEventToDatasetDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class CommitEventToDatasetGQL extends Apollo.Query<
-    CommitEventToDatasetQuery,
-    CommitEventToDatasetQueryVariables
+export class CommitEventToDatasetGQL extends Apollo.Mutation<
+    CommitEventToDatasetMutation,
+    CommitEventToDatasetMutationVariables
 > {
     document = CommitEventToDatasetDocument;
 
@@ -2488,7 +2580,7 @@ export class CommitEventToDatasetGQL extends Apollo.Query<
     }
 }
 export const CreateEmptyDatasetDocument = gql`
-    query createEmptyDataset(
+    mutation createEmptyDataset(
         $accountId: AccountID!
         $datasetKind: DatasetKind!
         $datasetName: DatasetName!
@@ -2508,9 +2600,9 @@ export const CreateEmptyDatasetDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class CreateEmptyDatasetGQL extends Apollo.Query<
-    CreateEmptyDatasetQuery,
-    CreateEmptyDatasetQueryVariables
+export class CreateEmptyDatasetGQL extends Apollo.Mutation<
+    CreateEmptyDatasetMutation,
+    CreateEmptyDatasetMutationVariables
 > {
     document = CreateEmptyDatasetDocument;
 
@@ -2519,7 +2611,7 @@ export class CreateEmptyDatasetGQL extends Apollo.Query<
     }
 }
 export const CreateDatasetFromSnapshotDocument = gql`
-    query createDatasetFromSnapshot(
+    mutation createDatasetFromSnapshot(
         $accountId: AccountID!
         $snapshot: String!
     ) {
@@ -2544,11 +2636,72 @@ export const CreateDatasetFromSnapshotDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class CreateDatasetFromSnapshotGQL extends Apollo.Query<
-    CreateDatasetFromSnapshotQuery,
-    CreateDatasetFromSnapshotQueryVariables
+export class CreateDatasetFromSnapshotGQL extends Apollo.Mutation<
+    CreateDatasetFromSnapshotMutation,
+    CreateDatasetFromSnapshotMutationVariables
 > {
     document = CreateDatasetFromSnapshotDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const UpdateReadmeDocument = gql`
+    mutation updateReadme($datasetId: DatasetID!, $content: String!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                metadata {
+                    updateReadme(content: $content) {
+                        __typename
+                        message
+                        ... on CommitResultSuccess {
+                            oldHead
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class UpdateReadmeGQL extends Apollo.Mutation<
+    UpdateReadmeMutation,
+    UpdateReadmeMutationVariables
+> {
+    document = UpdateReadmeDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetByAccountAndDatasetNameDocument = gql`
+    query datasetByAccountAndDatasetName(
+        $accountName: AccountName!
+        $datasetName: DatasetName!
+    ) {
+        datasets {
+            byOwnerAndName(
+                accountName: $accountName
+                datasetName: $datasetName
+            ) {
+                ...DatasetBasics
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetByAccountAndDatasetNameGQL extends Apollo.Query<
+    DatasetByAccountAndDatasetNameQuery,
+    DatasetByAccountAndDatasetNameQueryVariables
+> {
+    document = DatasetByAccountAndDatasetNameDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

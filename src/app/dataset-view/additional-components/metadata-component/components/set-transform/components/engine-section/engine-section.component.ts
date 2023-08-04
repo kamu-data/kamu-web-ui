@@ -7,12 +7,7 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import {
-    EngineDesc,
-    EnginesQuery,
-    Maybe,
-    TransformSql,
-} from "src/app/api/kamu.graphql.interface";
+import { EngineDesc, EnginesQuery, Maybe, TransformSql } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { EngineService } from "src/app/services/engine.service";
@@ -27,14 +22,10 @@ export class EngineSectionComponent extends BaseComponent implements OnInit {
     @Input() public knownEngines: MaybeNull<EngineDesc[]>;
     @Input() public currentSetTransformEvent: Maybe<TransformSql> | undefined;
     @Input() public selectedEngine: string;
-    @Output() public onEmitSelectedEngine: EventEmitter<string> =
-        new EventEmitter<string>();
+    @Output() public onEmitSelectedEngine: EventEmitter<string> = new EventEmitter<string>();
     public selectedImage: string;
 
-    constructor(
-        private cdr: ChangeDetectorRef,
-        private engineService: EngineService,
-    ) {
+    constructor(private cdr: ChangeDetectorRef, private engineService: EngineService) {
         super();
     }
 
@@ -46,16 +37,12 @@ export class EngineSectionComponent extends BaseComponent implements OnInit {
         this.selectedEngine = item;
         if (this.knownEngines) {
             const result = this.knownEngines.find(
-                (item) =>
-                    item.name.toUpperCase() ===
-                    this.selectedEngine.toUpperCase(),
+                (item) => item.name.toUpperCase() === this.selectedEngine.toUpperCase(),
             );
 
             if (result) {
                 this.selectedImage = result.latestImage;
-                this.onEmitSelectedEngine.emit(
-                    this.selectedEngine.toUpperCase(),
-                );
+                this.onEmitSelectedEngine.emit(this.selectedEngine.toUpperCase());
             }
         }
     }

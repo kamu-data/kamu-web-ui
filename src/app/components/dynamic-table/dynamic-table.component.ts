@@ -1,10 +1,4 @@
-import {
-    AfterContentInit,
-    Component,
-    Input,
-    OnChanges,
-    OnInit,
-} from "@angular/core";
+import { AfterContentInit, Component, Input, OnChanges, OnInit } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
 import { TableSourceRowInterface } from "./dynamic-table.interface";
@@ -15,9 +9,7 @@ import { TableSourceRowInterface } from "./dynamic-table.interface";
     styleUrls: ["./dynamic-table.sass"],
     // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DynamicTableComponent
-    implements OnInit, OnChanges, AfterContentInit
-{
+export class DynamicTableComponent implements OnInit, OnChanges, AfterContentInit {
     @Input() public hasTableHeader: boolean;
     @Input() public schemaFields: DataSchemaField[];
     @Input() public dataRows?: DataRow[];
@@ -47,21 +39,13 @@ export class DynamicTableComponent
             // Special case: displaying schema itself
         } else if (!this.dataRows) {
             this.dataSource.data = this.schemaFields;
-            const arrFieldsLength = this.schemaFields.map(
-                (item) => Object.keys(item).length,
-            );
-            const indexFieldMaxLength = arrFieldsLength.indexOf(
-                Math.max.apply(null, arrFieldsLength),
-            );
-            this.displayedColumns = Object.keys(
-                this.schemaFields[indexFieldMaxLength],
-            );
+            const arrFieldsLength = this.schemaFields.map((item) => Object.keys(item).length);
+            const indexFieldMaxLength = arrFieldsLength.indexOf(Math.max.apply(null, arrFieldsLength));
+            this.displayedColumns = Object.keys(this.schemaFields[indexFieldMaxLength]);
 
             // Casual case, displaying data
         } else {
-            this.displayedColumns = this.schemaFields.map(
-                (f: DataSchemaField) => f.name,
-            );
+            this.displayedColumns = this.schemaFields.map((f: DataSchemaField) => f.name);
             this.dataSource.data = this.dataRows;
         }
     }

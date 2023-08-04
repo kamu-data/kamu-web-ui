@@ -23,10 +23,7 @@ describe("PageNotFoundComponent", () => {
     });
 
     it("should redirect to home page", () => {
-        const navigateToHomeSpy = spyOn(
-            navigationService,
-            "navigateToHome",
-        ).and.returnValue();
+        const navigateToHomeSpy = spyOn(navigationService, "navigateToHome").and.returnValue();
         component.navigateToHome();
         expect(navigateToHomeSpy).toHaveBeenCalledWith();
     });

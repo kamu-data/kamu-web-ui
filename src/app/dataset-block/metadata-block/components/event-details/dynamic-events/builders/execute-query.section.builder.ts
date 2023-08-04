@@ -1,8 +1,4 @@
-import {
-    DataSlice,
-    ExecuteQuery,
-    InputSlice,
-} from "src/app/api/kamu.graphql.interface";
+import { DataSlice, ExecuteQuery, InputSlice } from "src/app/api/kamu.graphql.interface";
 import { EXECUTE_QUERY_SOURCE_DESCRIPTORS } from "../../components/execute-query-event/execute-query-event.source";
 import { EventRow, EventSection } from "../dynamic-events.model";
 import { EventSectionBuilder } from "./event-section.builder";
@@ -42,24 +38,19 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
                     }
                     case ExecuteQuerySection.QUERY_OUTPUT_DATA: {
                         const rows: EventRow[] = [];
-                        Object.entries(data as DataSlice).forEach(
-                            ([key, value]) => {
-                                if (event.__typename && key !== "__typename") {
-                                    rows.push(
-                                        this.buildSupportedRow(
-                                            event.__typename,
-                                            EXECUTE_QUERY_SOURCE_DESCRIPTORS,
-                                            "DataSlice",
-                                            key,
-                                            this.valueTransformMapper(
-                                                key as keyof DataSlice,
-                                                value,
-                                            ),
-                                        ),
-                                    );
-                                }
-                            },
-                        );
+                        Object.entries(data as DataSlice).forEach(([key, value]) => {
+                            if (event.__typename && key !== "__typename") {
+                                rows.push(
+                                    this.buildSupportedRow(
+                                        event.__typename,
+                                        EXECUTE_QUERY_SOURCE_DESCRIPTORS,
+                                        "DataSlice",
+                                        key,
+                                        this.valueTransformMapper(key as keyof DataSlice, value),
+                                    ),
+                                );
+                            }
+                        });
                         result.push({
                             title: this.sectionTitleMapper[section],
                             rows,
@@ -94,32 +85,21 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
                                 id: item.datasetId as string,
                                 ...item,
                             }).forEach(([key, value]) => {
-                                if (
-                                    event.__typename &&
-                                    item.__typename &&
-                                    key !== "__typename"
-                                ) {
+                                if (event.__typename && item.__typename && key !== "__typename") {
                                     rows.push(
                                         this.buildSupportedRow(
                                             event.__typename,
                                             EXECUTE_QUERY_SOURCE_DESCRIPTORS,
                                             item.__typename,
                                             key,
-                                            this.valueTransformMapper(
-                                                key as keyof InputSlice,
-                                                value,
-                                                item,
-                                            ),
+                                            this.valueTransformMapper(key as keyof InputSlice, value, item),
                                         ),
                                     );
                                 }
                             });
                             result.push({
                                 title:
-                                    this.sectionTitleMapper[section] +
-                                    (numInputSlicesParts > 1
-                                        ? `#${index + 1}`
-                                        : ""),
+                                    this.sectionTitleMapper[section] + (numInputSlicesParts > 1 ? `#${index + 1}` : ""),
                                 rows,
                             });
                             rows = [];

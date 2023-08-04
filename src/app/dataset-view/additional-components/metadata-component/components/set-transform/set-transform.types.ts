@@ -1,12 +1,6 @@
-import {
-    SetTransform,
-    TransformInput,
-} from "src/app/api/kamu.graphql.interface";
+import { SetTransform, TransformInput } from "src/app/api/kamu.graphql.interface";
 
-export type TransformSelectedInput = Omit<
-    TransformInput,
-    "__typename" | "dataset"
->;
+export type TransformSelectedInput = Omit<TransformInput, "__typename" | "dataset">;
 
 export interface EditSetTransformParseType {
     content: {

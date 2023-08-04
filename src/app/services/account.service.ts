@@ -11,13 +11,9 @@ import { map } from "rxjs/operators";
     providedIn: "root",
 })
 export class AccountService {
-    constructor(
-        private datasetApi: DatasetApi,
-        private accountApi: AccountApi,
-    ) {}
+    constructor(private datasetApi: DatasetApi, private accountApi: AccountApi) {}
 
-    private datasetsChanges$: Subject<DatasetsAccountResponse> =
-        new Subject<DatasetsAccountResponse>();
+    private datasetsChanges$: Subject<DatasetsAccountResponse> = new Subject<DatasetsAccountResponse>();
 
     public get onDatasetsChanges(): Observable<DatasetsAccountResponse> {
         return this.datasetsChanges$.asObservable();
@@ -27,24 +23,18 @@ export class AccountService {
         this.datasetsChanges$.next(datasetsInfo);
     }
 
-    public getDatasetsByAccountName(
-        name: string,
-        page: number,
-    ): Observable<void> {
+    public getDatasetsByAccountName(name: string, page: number): Observable<void> {
         return this.datasetApi.fetchDatasetsByAccountName(name, page).pipe(
             map((data: DatasetsByAccountNameQuery) => {
                 const datasets = data.datasets.byAccountName.nodes;
                 const pageInfo = data.datasets.byAccountName.pageInfo;
-                const datasetTotalCount =
-                    data.datasets.byAccountName.totalCount;
+                const datasetTotalCount = data.datasets.byAccountName.totalCount;
                 this.datasetsChanges({ datasets, pageInfo, datasetTotalCount });
             }),
         );
     }
 
-    public getAccountInfoByName(
-        name: string,
-    ): Observable<AccountDetailsFragment> {
+    public getAccountInfoByName(name: string): Observable<AccountDetailsFragment> {
         return this.accountApi.getAccountInfoByName(name);
     }
 }

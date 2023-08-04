@@ -21,8 +21,7 @@ import { AuthenticationError } from "../common/errors";
 export class AuthApi {
     private user: MaybeNull<AccountDetailsFragment> = null;
 
-    private userChanges$: Subject<MaybeNull<AccountDetailsFragment>> =
-        new Subject<MaybeNull<AccountDetailsFragment>>();
+    private userChanges$: Subject<MaybeNull<AccountDetailsFragment>> = new Subject<MaybeNull<AccountDetailsFragment>>();
 
     constructor(
         private githubLoginGQL: GithubLoginGQL,
@@ -47,17 +46,12 @@ export class AuthApi {
         this.userChanges$.next(user);
     }
 
-    public fetchUserInfoAndTokenFromGithubCallackCode(
-        code: string,
-    ): Observable<void> {
+    public fetchUserInfoAndTokenFromGithubCallackCode(code: string): Observable<void> {
         return this.githubLoginGQL.mutate({ code }).pipe(
             map((result: MutationResult<GithubLoginMutation>) => {
                 if (result.data) {
                     const data: GithubLoginMutation = result.data;
-                    localStorage.setItem(
-                        AppValues.LOCAL_STORAGE_ACCESS_TOKEN,
-                        data.auth.githubLogin.token.accessToken,
-                    );
+                    localStorage.setItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN, data.auth.githubLogin.token.accessToken);
                     this.changeUser(data.auth.githubLogin.accountInfo);
                 } else {
                     throw new AuthenticationError(result.errors ?? []);

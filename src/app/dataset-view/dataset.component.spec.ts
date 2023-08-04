@@ -1,8 +1,4 @@
-import {
-    mockDatasetBasicsFragment,
-    mockDatasetInfo,
-    mockNode,
-} from "./../search/mock.data";
+import { mockDatasetBasicsFragment, mockDatasetInfo, mockNode } from "./../search/mock.data";
 import { DatasetService } from "./dataset.service";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
@@ -14,10 +10,7 @@ import { DatasetComponent } from "./dataset.component";
 import { NavigationService } from "../services/navigation.service";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { of } from "rxjs";
-import {
-    routerMock,
-    routerMockEventSubject,
-} from "../common/base-test.helpers.spec";
+import { routerMock, routerMockEventSubject } from "../common/base-test.helpers.spec";
 import AppValues from "../common/app.values";
 import { OverviewComponent } from "./additional-components/overview-component/overview-component";
 import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu-component";
@@ -141,45 +134,28 @@ describe("DatasetComponent", () => {
     });
 
     it("should check call getMainDataByLineageNode", () => {
-        const getMainDataByLineageNodeSpy = spyOn(
-            component,
-            "getMainDataByLineageNode",
-        );
+        const getMainDataByLineageNodeSpy = spyOn(component, "getMainDataByLineageNode");
         routerMockEventSubject.next(new NavigationEnd(1, "", "redirectUrl"));
         expect(getMainDataByLineageNodeSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check run SQL request", () => {
         const sqlQuery = "select * from test.table";
-        const requestDatasetDataSqlRunSpy = spyOn(
-            appDatasetService,
-            "requestDatasetDataSqlRun",
-        ).and.returnValue(of());
+        const requestDatasetDataSqlRunSpy = spyOn(appDatasetService, "requestDatasetDataSqlRun").and.returnValue(of());
         component.onRunSQLRequest(sqlQuery);
-        expect(requestDatasetDataSqlRunSpy).toHaveBeenCalledWith(
-            sqlQuery,
-            AppValues.SQL_QUERY_LIMIT,
-        );
+        expect(requestDatasetDataSqlRunSpy).toHaveBeenCalledWith(sqlQuery, AppValues.SQL_QUERY_LIMIT);
     });
 
     it("should check page changed", () => {
         const testPageNumber = 2;
-        const navigateToDatasetViewSpy = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.onPageChange(testPageNumber);
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({ page: testPageNumber }),
-        );
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(jasmine.objectContaining({ page: testPageNumber }));
     });
 
     it("should check #selectDataset with dataset name()", () => {
         const testDatasetName = "alberta.tcc";
-        const navigateToDatasetViewSpy = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.onSelectDataset(testDatasetName);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({ datasetName: testDatasetName }),
@@ -187,10 +163,7 @@ describe("DatasetComponent", () => {
     });
 
     it("should check #selectDataset without dataset name()", () => {
-        const navigateToDatasetViewSpy = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.onSelectDataset();
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
@@ -208,16 +181,11 @@ describe("DatasetComponent", () => {
     it("should check click on metadata node ", () => {
         const selectDatasetSpy = spyOn(component, "onSelectDataset");
         component.onClickMetadataNode(mockDatasetBasicsFragment);
-        expect(selectDatasetSpy).toHaveBeenCalledWith(
-            mockDatasetBasicsFragment.name as string,
-        );
+        expect(selectDatasetSpy).toHaveBeenCalledWith(mockDatasetBasicsFragment.name as string);
     });
 
     it("should check navigate to overview tab", () => {
-        const selectDatasetSpy = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        const selectDatasetSpy = spyOn(navigationService, "navigateToDatasetView");
         component.getDatasetNavigation(mockDatasetInfo).navigateToOverview();
         expect(selectDatasetSpy).toHaveBeenCalledWith({
             datasetName: mockDatasetInfo.datasetName,
@@ -226,66 +194,38 @@ describe("DatasetComponent", () => {
     });
 
     it("should check navigate to data tab", () => {
-        const selectDatasetSpy = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        const selectDatasetSpy = spyOn(navigationService, "navigateToDatasetView");
         component.getDatasetNavigation(mockDatasetInfo).navigateToData();
-        expect(selectDatasetSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({ tab: DatasetViewTypeEnum.Data }),
-        );
+        expect(selectDatasetSpy).toHaveBeenCalledWith(jasmine.objectContaining({ tab: DatasetViewTypeEnum.Data }));
     });
 
     it("should check navigate to metadata tab", () => {
-        const selectDatasetSpy = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        const selectDatasetSpy = spyOn(navigationService, "navigateToDatasetView");
         component.getDatasetNavigation(mockDatasetInfo).navigateToMetadata(1);
-        expect(selectDatasetSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({ tab: DatasetViewTypeEnum.Metadata }),
-        );
+        expect(selectDatasetSpy).toHaveBeenCalledWith(jasmine.objectContaining({ tab: DatasetViewTypeEnum.Metadata }));
     });
 
     it("should check navigate to history tab", () => {
-        const selectDatasetSpy = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        const selectDatasetSpy = spyOn(navigationService, "navigateToDatasetView");
         component.getDatasetNavigation(mockDatasetInfo).navigateToHistory(1);
-        expect(selectDatasetSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({ tab: DatasetViewTypeEnum.History }),
-        );
+        expect(selectDatasetSpy).toHaveBeenCalledWith(jasmine.objectContaining({ tab: DatasetViewTypeEnum.History }));
     });
 
     it("should check navigate to lineage tab", () => {
-        const selectDatasetSpy = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        const selectDatasetSpy = spyOn(navigationService, "navigateToDatasetView");
         component.getDatasetNavigation(mockDatasetInfo).navigateToLineage();
-        expect(selectDatasetSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({ tab: DatasetViewTypeEnum.Lineage }),
-        );
+        expect(selectDatasetSpy).toHaveBeenCalledWith(jasmine.objectContaining({ tab: DatasetViewTypeEnum.Lineage }));
     });
 
     it("should check navigate to discussions tab", () => {
-        const selectDatasetSpy = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        const selectDatasetSpy = spyOn(navigationService, "navigateToDatasetView");
         component.getDatasetNavigation(mockDatasetInfo).navigateToDiscussions();
         expect(selectDatasetSpy).not.toHaveBeenCalled(); // TODO: implement discussions
     });
 
     it("should check navigate to owner view", () => {
-        const navigateToOwnerViewSpy = spyOn(
-            navigationService,
-            "navigateToOwnerView",
-        );
+        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
         component.showOwnerPage(mockDatasetBasicsFragment.owner.name);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
-            mockDatasetBasicsFragment.owner.name,
-        );
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(mockDatasetBasicsFragment.owner.name);
     });
 });

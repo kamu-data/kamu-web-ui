@@ -1,11 +1,5 @@
-import {
-    CreateDatasetFromSnapshotMutation,
-    CreateEmptyDatasetMutation,
-} from "./../api/kamu.graphql.interface";
-import {
-    mockDatasetBasicsFragment,
-    mockDatasetInfo,
-} from "./../search/mock.data";
+import { CreateDatasetFromSnapshotMutation, CreateEmptyDatasetMutation } from "./../api/kamu.graphql.interface";
+import { mockDatasetBasicsFragment, mockDatasetInfo } from "./../search/mock.data";
 import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { of } from "rxjs";
@@ -42,20 +36,11 @@ describe("AppDatasetCreateService", () => {
                 },
             },
         };
-        spyOn(datasetApi, "createEmptyDataset").and.returnValue(
-            of(mockResponseSuccess),
-        );
-        const spyNavigateToDatasetView = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        spyOn(datasetApi, "createEmptyDataset").and.returnValue(of(mockResponseSuccess));
+        const spyNavigateToDatasetView = spyOn(navigationService, "navigateToDatasetView");
 
         service
-            .createEmptyDataset(
-                mockDatasetInfo.accountName,
-                DatasetKind.Root,
-                mockDatasetInfo.datasetName,
-            )
+            .createEmptyDataset(mockDatasetInfo.accountName, DatasetKind.Root, mockDatasetInfo.datasetName)
             .subscribe();
 
         expect(spyNavigateToDatasetView).toHaveBeenCalledWith({
@@ -74,20 +59,11 @@ describe("AppDatasetCreateService", () => {
                 },
             },
         };
-        spyOn(datasetApi, "createEmptyDataset").and.returnValue(
-            of(mockResponseError),
-        );
-        const spyNavigateToDatasetView = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        spyOn(datasetApi, "createEmptyDataset").and.returnValue(of(mockResponseError));
+        const spyNavigateToDatasetView = spyOn(navigationService, "navigateToDatasetView");
 
         service
-            .createEmptyDataset(
-                mockDatasetInfo.accountName,
-                DatasetKind.Root,
-                mockDatasetInfo.datasetName,
-            )
+            .createEmptyDataset(mockDatasetInfo.accountName, DatasetKind.Root, mockDatasetInfo.datasetName)
             .subscribe();
 
         expect(spyNavigateToDatasetView).not.toHaveBeenCalledWith({
@@ -112,20 +88,10 @@ describe("AppDatasetCreateService", () => {
                 },
             },
         };
-        spyOn(datasetApi, "createDatasetFromSnapshot").and.returnValue(
-            of(mockResponseSuccess),
-        );
-        const spyNavigateToDatasetView = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        spyOn(datasetApi, "createDatasetFromSnapshot").and.returnValue(of(mockResponseSuccess));
+        const spyNavigateToDatasetView = spyOn(navigationService, "navigateToDatasetView");
 
-        service
-            .createDatasetFromSnapshot(
-                mockDatasetInfo.accountName,
-                "mockSnapshot",
-            )
-            .subscribe();
+        service.createDatasetFromSnapshot(mockDatasetInfo.accountName, "mockSnapshot").subscribe();
 
         expect(spyNavigateToDatasetView).toHaveBeenCalledWith({
             accountName: mockDatasetInfo.accountName,
@@ -143,20 +109,10 @@ describe("AppDatasetCreateService", () => {
                 },
             },
         };
-        spyOn(datasetApi, "createDatasetFromSnapshot").and.returnValue(
-            of(mockResponseError),
-        );
-        const spyNavigateToDatasetView = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        spyOn(datasetApi, "createDatasetFromSnapshot").and.returnValue(of(mockResponseError));
+        const spyNavigateToDatasetView = spyOn(navigationService, "navigateToDatasetView");
 
-        service
-            .createDatasetFromSnapshot(
-                mockDatasetInfo.accountName,
-                "mockSnapshot",
-            )
-            .subscribe();
+        service.createDatasetFromSnapshot(mockDatasetInfo.accountName, "mockSnapshot").subscribe();
 
         expect(spyNavigateToDatasetView).not.toHaveBeenCalledWith({
             accountName: mockDatasetInfo.accountName,

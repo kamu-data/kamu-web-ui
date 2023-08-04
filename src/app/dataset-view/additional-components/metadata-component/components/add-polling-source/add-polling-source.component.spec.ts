@@ -1,14 +1,7 @@
 import { ChangeDetectionStrategy } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import {
-    FormArray,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-} from "@angular/forms";
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AddPollingSourceComponent } from "./add-polling-source.component";
 import { NgbModal, NgbModalRef, NgbModule } from "@ng-bootstrap/ng-bootstrap";
@@ -20,11 +13,7 @@ import { BaseStepComponent } from "./steps/base-step/base-step.component";
 import { PollingSourceFormComponentsModule } from "../form-components/polling-source-form-components.module";
 import { of, from } from "rxjs";
 import { mockDatasetHistoryResponse } from "src/app/search/mock.data";
-import {
-    DatasetKind,
-    DatasetPageInfoFragment,
-    MetadataBlockFragment,
-} from "src/app/api/kamu.graphql.interface";
+import { DatasetKind, DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { EditPollingSourceService } from "./edit-polling-source.service";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
@@ -39,11 +28,7 @@ describe("AddPollingSourceComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                AddPollingSourceComponent,
-                StepperNavigationComponent,
-                BaseStepComponent,
-            ],
+            declarations: [AddPollingSourceComponent, StepperNavigationComponent, BaseStepComponent],
             imports: [
                 ApolloTestingModule,
                 ReactiveFormsModule,
@@ -70,10 +55,10 @@ describe("AddPollingSourceComponent", () => {
         component.showPreprocessStep = false;
         component.currentStep = SetPollingSourceSection.FETCH;
         component.history = {
-            history: mockDatasetHistoryResponse.datasets.byOwnerAndName
-                ?.metadata.chain.blocks.nodes as MetadataBlockFragment[],
-            pageInfo: mockDatasetHistoryResponse.datasets.byOwnerAndName
-                ?.metadata.chain.blocks.pageInfo as DatasetPageInfoFragment,
+            history: mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks
+                .nodes as MetadataBlockFragment[],
+            pageInfo: mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks
+                .pageInfo as DatasetPageInfoFragment,
         };
         component.pollingSourceForm = new FormGroup({
             fetch: new FormGroup({
@@ -109,9 +94,7 @@ describe("AddPollingSourceComponent", () => {
 
     it("should check open edit modal", () => {
         component.ngOnInit();
-        const openModalSpy = spyOn(modalService, "open").and.returnValue(
-            modalRef,
-        );
+        const openModalSpy = spyOn(modalService, "open").and.returnValue(modalRef);
         component.onEditYaml();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
     });
@@ -135,19 +118,14 @@ describe("AddPollingSourceComponent", () => {
 
     it("should check eventYamlByHash is not null", () => {
         const mockEventYamlByHash = "test_tyaml";
-        spyOn(editService, "getEventAsYaml").and.returnValue(
-            of(mockEventYamlByHash),
-        );
+        spyOn(editService, "getEventAsYaml").and.returnValue(of(mockEventYamlByHash));
         component.ngOnInit();
         expect(component.eventYamlByHash).toEqual(mockEventYamlByHash);
     });
 
     it("should check submit yaml", () => {
         component.ngOnInit();
-        const submitYamlSpy = spyOn(
-            datasetCommitService,
-            "commitEventToDataset",
-        ).and.returnValue(of());
+        const submitYamlSpy = spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
         component.onSaveEvent();
         expect(submitYamlSpy).toHaveBeenCalledTimes(1);
     });

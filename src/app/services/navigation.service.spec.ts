@@ -5,10 +5,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { TestBed } from "@angular/core/testing";
 import { NavigationService } from "./navigation.service";
 import ProjectLinks from "../project-links";
-import {
-    DatasetNavigationParams,
-    MetadataBlockNavigationParams,
-} from "../interface/navigation.interface";
+import { DatasetNavigationParams, MetadataBlockNavigationParams } from "../interface/navigation.interface";
 import { Router } from "@angular/router";
 
 describe("NavigationService", () => {
@@ -46,10 +43,7 @@ describe("NavigationService", () => {
     it("should test navigate to settings", () => {
         const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToSettings();
-        expect(routerSpy).toHaveBeenCalledWith([
-            ProjectLinks.URL_SETTINGS,
-            SettingsTabs.PROFILE,
-        ]);
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_SETTINGS, SettingsTabs.PROFILE]);
     });
 
     it("should test navigate to metadata block", () => {
@@ -85,11 +79,7 @@ describe("NavigationService", () => {
         const mockOwnerName = "Mock name";
         const testPage = 2;
         const routerSpy = spyOn(router, "navigate").and.callThrough();
-        service.navigateToOwnerView(
-            mockOwnerName,
-            AccountTabs.datasets,
-            testPage,
-        );
+        service.navigateToOwnerView(mockOwnerName, AccountTabs.datasets, testPage);
         expect(routerSpy).toHaveBeenCalledWith([mockOwnerName], {
             queryParams: { tab: AccountTabs.datasets, page: testPage },
         });
@@ -142,9 +132,7 @@ describe("NavigationService", () => {
     it("should test navigate to dataset create", () => {
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         service.navigateToDatasetCreate();
-        expect(routerSpy).toHaveBeenCalledWith([
-            ProjectLinks.URL_DATASET_CREATE,
-        ]);
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_DATASET_CREATE]);
     });
 
     it("should test navigate to dataset view to first page", () => {
@@ -156,10 +144,10 @@ describe("NavigationService", () => {
         };
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         service.navigateToDatasetView(mockParams);
-        expect(routerSpy).toHaveBeenCalledWith(
-            [mockParams.accountName, mockParams.datasetName],
-            { queryParams: { tab: mockParams.tab }, state: undefined },
-        );
+        expect(routerSpy).toHaveBeenCalledWith([mockParams.accountName, mockParams.datasetName], {
+            queryParams: { tab: mockParams.tab },
+            state: undefined,
+        });
     });
 
     it("should test navigate to dataset view to second page", () => {
@@ -171,23 +159,17 @@ describe("NavigationService", () => {
         };
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         service.navigateToDatasetView(mockParams);
-        expect(routerSpy).toHaveBeenCalledWith(
-            [mockParams.accountName, mockParams.datasetName],
-            {
-                queryParams: { tab: mockParams.tab, page: mockParams.page },
-                state: undefined,
-            },
-        );
+        expect(routerSpy).toHaveBeenCalledWith([mockParams.accountName, mockParams.datasetName], {
+            queryParams: { tab: mockParams.tab, page: mockParams.page },
+            state: undefined,
+        });
     });
 
     it("should test navigate to page not found view", () => {
         const routerSpy = spyOn(router, "navigate").and.callThrough();
         service.navigateToPageNotFound();
-        expect(routerSpy).toHaveBeenCalledWith(
-            [ProjectLinks.URL_PAGE_NOT_FOUND],
-            {
-                skipLocationChange: true,
-            },
-        );
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_PAGE_NOT_FOUND], {
+            skipLocationChange: true,
+        });
     });
 });

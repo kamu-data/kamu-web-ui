@@ -5,12 +5,8 @@
     <form [formGroup]="createDatasetForm" (ngSubmit)="onCreateDataset()">
         <div class="my-4 d-flex align-items-start">
             <div class="w-25">
-                <label for="owner" class="fs-12">Owner </label
-                ><span class="text-danger">*</span><br />
-                <select
-                    class="form-select custom-form-control d-inline"
-                    formControlName="owner"
-                >
+                <label for="owner" class="fs-12">Owner </label><span class="text-danger">*</span><br />
+                <select class="form-select custom-form-control d-inline" formControlName="owner">
                     <option [ngValue]="owner" *ngFor="let owner of owners">
                         {{ owner }}
                     </option>
@@ -18,8 +14,7 @@
             </div>
             <span class="mx-2 fs-3 align-self-start divider">/</span>
             <div class="w-50">
-                <label for="dataset-name" class="fs-12">Dataset name</label
-                ><span class="text-danger">*</span><br />
+                <label for="dataset-name" class="fs-12">Dataset name</label><span class="text-danger">*</span><br />
                 <input
                     type="text"
                     class="form-control custom-form-control d-inline"
@@ -28,53 +23,29 @@
                     data-test-id="dataset-name"
                     required
                 /><br />
-                <div
-                    *ngIf="
-                        datasetName?.invalid &&
-                        (datasetName?.touched || datasetName?.dirty)
-                    "
-                >
-                    <span
-                        *ngIf="datasetName?.errors?.['required']"
-                        class="text-danger fs-12"
-                        >Name is required</span
-                    >
-                    <span
-                        *ngIf="datasetName?.errors?.['pattern']"
-                        class="text-danger fs-12"
-                        >Invalid dataset name</span
-                    >
+                <div *ngIf="datasetName?.invalid && (datasetName?.touched || datasetName?.dirty)">
+                    <span *ngIf="datasetName?.errors?.['required']" class="text-danger fs-12">Name is required</span>
+                    <span *ngIf="datasetName?.errors?.['pattern']" class="text-danger fs-12">Invalid dataset name</span>
                 </div>
             </div>
         </div>
         <mat-divider></mat-divider>
         <div class="my-4">
             <label class="d-flex" for="kind-root">
-                <input
-                    name="kind"
-                    type="radio"
-                    value="root"
-                    formControlName="kind"
-                />
+                <input name="kind" type="radio" value="root" formControlName="kind" />
                 <div class="ps-3">
                     <span> Root</span><br /><span class="fs-12 text-muted"
-                        >(Use this type if you are the publisher of data or will
-                        be importing it from an external source.)</span
+                        >(Use this type if you are the publisher of data or will be importing it from an external
+                        source.)</span
                     >
                 </div>
             </label>
             <br />
             <label for="kind-derivative" class="mt-2 d-flex">
-                <input
-                    name="kind"
-                    type="radio"
-                    value="derivative"
-                    formControlName="kind"
-                />
+                <input name="kind" type="radio" value="derivative" formControlName="kind" />
                 <div class="ps-3">
                     <span> Derivative</span><br /><span class="fs-12 text-muted"
-                        >(Use this type if you are improving or building upon
-                        existing datasets.)</span
+                        >(Use this type if you are improving or building upon existing datasets.)</span
                     >
                 </div>
             </label>
@@ -82,24 +53,13 @@
         <mat-divider></mat-divider>
         <div>
             <label for="visibility-public" class="my-3">
-                <input
-                    name="visibility"
-                    type="radio"
-                    value="public"
-                    checked="checked"
-                    disabled
-                />
+                <input name="visibility" type="radio" value="public" checked="checked" disabled />
                 <svg-icon name="public" class="ms-1"></svg-icon>
                 <span>Public</span>
             </label>
             <br />
             <label for="visibility-private" class="my-3 text-muted">
-                <input
-                    name="visibility"
-                    type="radio"
-                    value="private"
-                    disabled
-                />
+                <input name="visibility" type="radio" value="private" disabled />
                 <svg-icon name="private" class="text-muted ms-1"></svg-icon>
                 <span>Private</span>
             </label>
@@ -120,9 +80,7 @@
         >
     </div>
     <ng-container *ngIf="showMonacoEditor">
-        <div
-            class="container-monaco border border-1 mt-4 ps-2 pe-2 pt-4 rounded-3"
-        >
+        <div class="container-monaco border border-1 mt-4 ps-2 pe-2 pt-4 rounded-3">
             <ngx-monaco-editor
                 style="height: 400px"
                 [options]="yamlEditorOptions"
@@ -140,11 +98,7 @@
             #fileUpload
         />
         <div class="my-4 d-flex justify-content-end align-items-center">
-            <button
-                (click)="fileUpload.click()"
-                class="upload-btn ms-2"
-                data-test-id="upload-file-button"
-            >
+            <button (click)="fileUpload.click()" class="upload-btn ms-2" data-test-id="upload-file-button">
                 Upload from file
             </button>
         </div>
@@ -152,18 +106,11 @@
     <mat-divider></mat-divider>
     <div class="my-4 d-flex align-items-center text-muted">
         <svg-icon class="me-1" name="information"></svg-icon>
-        <span class="fs-6 pt-1"
-            >You are creating a dataset in your personal account.</span
-        >
+        <span class="fs-6 pt-1">You are creating a dataset in your personal account.</span>
     </div>
     <mat-divider></mat-divider>
     <div class="mt-4 mb-4">
-        <button
-            (click)="onCreateDataset()"
-            class="btn-create"
-            [disabled]="!isFormValid"
-            data-test-id="create-dataset"
-        >
+        <button (click)="onCreateDataset()" class="btn-create" [disabled]="!isFormValid" data-test-id="create-dataset">
             Create dataset
         </button>
     </div>

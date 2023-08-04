@@ -17,10 +17,7 @@ describe("EventDetailsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                EventDetailsComponent,
-                SetPollingSourceEventComponent,
-            ],
+            declarations: [EventDetailsComponent, SetPollingSourceEventComponent],
             imports: [SharedTestModule],
             providers: [Apollo, DatasetApi],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -37,24 +34,20 @@ describe("EventDetailsComponent", () => {
     });
 
     it("should check #OnInit", () => {
-        const blockFragment = mockGetMetadataBlockQuery.datasets.byOwnerAndName
-            ?.metadata.chain.blockByHash as MetadataBlockFragment;
+        const blockFragment = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+            .blockByHash as MetadataBlockFragment;
         blockService.metadataBlockChanges(blockFragment);
-        spyOnProperty(component, "addDataEvent", "get").and.returnValue(
-            blockFragment.event as AddDataEventFragment,
-        );
+        spyOnProperty(component, "addDataEvent", "get").and.returnValue(blockFragment.event as AddDataEventFragment);
 
         component.ngOnInit();
 
         expect(component.block).toEqual(blockFragment);
-        expect(component.addDataEvent).toBe(
-            blockFragment.event as AddDataEventFragment,
-        );
+        expect(component.addDataEvent).toBe(blockFragment.event as AddDataEventFragment);
     });
 
     it("should check onMetadataBlockChanges subscribe", () => {
-        const mockBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName
-            ?.metadata.chain.blockByHash as MetadataBlockFragment;
+        const mockBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+            .blockByHash as MetadataBlockFragment;
         blockService.metadataBlockChanges(mockBlock);
         component.ngOnInit();
         expect(component.block).toEqual(mockBlock);

@@ -24,11 +24,7 @@ describe("PreprocessStepComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                PreprocessStepComponent,
-                QueriesSectionComponent,
-                EngineSectionComponent,
-            ],
+            declarations: [PreprocessStepComponent, QueriesSectionComponent, EngineSectionComponent],
             imports: [
                 ReactiveFormsModule,
                 ApolloModule,
@@ -57,10 +53,7 @@ describe("PreprocessStepComponent", () => {
     });
 
     it("should check switch showPreprocess checkbox", () => {
-        const onCheckedPreprocessStepSpy = spyOn(
-            component.showPreprocessStepEmitter,
-            "emit",
-        );
+        const onCheckedPreprocessStepSpy = spyOn(component.showPreprocessStepEmitter, "emit");
         emitClickOnElementByDataTestId(fixture, "showPreprocessStep");
         expect(onCheckedPreprocessStepSpy).toHaveBeenCalledTimes(1);
     });
@@ -68,9 +61,7 @@ describe("PreprocessStepComponent", () => {
     it("should check select engine", () => {
         fixture.detectChanges();
         const selectedEngine = "FLINK";
-        expect(component.preprocessValue.engine).toEqual(
-            mockPreprocessStepValue.engine,
-        );
+        expect(component.preprocessValue.engine).toEqual(mockPreprocessStepValue.engine);
         component.onSelectEngine(selectedEngine);
         expect(component.preprocessValue.engine).toEqual(selectedEngine);
     });
@@ -90,8 +81,7 @@ describe("PreprocessStepComponent", () => {
     });
 
     it("should check init default state without queries", () => {
-        component.eventYamlByHash =
-            mockSetPollingSourceEventYamlWithoutPreprocess;
+        component.eventYamlByHash = mockSetPollingSourceEventYamlWithoutPreprocess;
         component.preprocessValue = mockPreprocessStepValueWithoutQueries;
         fixture.detectChanges();
         expect(component.preprocessValue.queries.length).toEqual(1);

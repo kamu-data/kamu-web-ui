@@ -1,10 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { PrepareStepComponent } from "./prepare-step.component";
-import {
-    FormBuilder,
-    FormGroupDirective,
-    ReactiveFormsModule,
-} from "@angular/forms";
+import { FormBuilder, FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { formGroupDirective } from "../base-step/base-step.component.spec";
@@ -13,10 +9,7 @@ import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { MatIconModule } from "@angular/material/icon";
 import { mockSetPollingSourceEventYaml } from "../../../set-transform/mock.data";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
-import {
-    DecompressFormat,
-    PrepareKind,
-} from "../../add-polling-source-form.types";
+import { DecompressFormat, PrepareKind } from "../../add-polling-source-form.types";
 
 describe("PrepareStepComponent", () => {
     let component: PrepareStepComponent;

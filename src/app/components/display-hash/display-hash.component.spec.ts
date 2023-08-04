@@ -1,9 +1,6 @@
 import { TEST_BLOCK_HASH } from "./../../api/mock/dataset.mock";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import {
-    emitClickOnElementByDataTestId,
-    findElementByDataTestId,
-} from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DisplayHashComponent } from "./display-hash.component";
@@ -43,10 +40,7 @@ describe("DisplayHashComponent", () => {
     });
 
     it("should check navigate to metadata block page", () => {
-        const navigateToMetadataBlockSpy = spyOn(
-            navigationService,
-            "navigateToMetadataBlock",
-        );
+        const navigateToMetadataBlockSpy = spyOn(navigationService, "navigateToMetadataBlock");
         emitClickOnElementByDataTestId(fixture, "navigableValue");
 
         expect(navigateToMetadataBlockSpy).toHaveBeenCalledWith({
@@ -60,10 +54,7 @@ describe("DisplayHashComponent", () => {
         component.showCopyButton = true;
         fixture.detectChanges();
 
-        const copyToClipboardButton = findElementByDataTestId(
-            fixture,
-            "copyToClipboardButton",
-        );
+        const copyToClipboardButton = findElementByDataTestId(fixture, "copyToClipboardButton");
         expect(copyToClipboardButton).toBeDefined();
     });
 
@@ -78,10 +69,7 @@ describe("DisplayHashComponent", () => {
     it("should check hash length", () => {
         component.navigationTargetDataset = undefined;
         fixture.detectChanges();
-        const spanElement = findElementByDataTestId(
-            fixture,
-            "notNavigableValue",
-        );
+        const spanElement = findElementByDataTestId(fixture, "notNavigableValue");
         expect(spanElement.textContent?.length).toEqual(8);
     });
 });

@@ -2,11 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { LineageGraphComponent } from "./lineage-graph.component";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import {
-    MOCK_CLUSTERS,
-    MOCK_LINKS,
-    MOCK_NODES,
-} from "src/app/api/mock/dataset.mock";
+import { MOCK_CLUSTERS, MOCK_LINKS, MOCK_NODES } from "src/app/api/mock/dataset.mock";
 import { SimpleChange } from "@angular/core";
 
 describe("LineageGraphComponent", () => {
@@ -41,11 +37,7 @@ describe("LineageGraphComponent", () => {
     it("should check ngOnChanges", () => {
         component.ngOnChanges({
             nodes: new SimpleChange(MOCK_NODES, [MOCK_NODES[0]], false),
-            clusters: new SimpleChange(
-                MOCK_CLUSTERS,
-                [MOCK_CLUSTERS[0]],
-                false,
-            ),
+            clusters: new SimpleChange(MOCK_CLUSTERS, [MOCK_CLUSTERS[0]], false),
         });
         fixture.detectChanges();
 

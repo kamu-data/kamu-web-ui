@@ -1,11 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
@@ -67,11 +60,7 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
         if (this.datasetBasics)
             this.trackSubscription(
                 this.datasetCommitService
-                    .updateReadme(
-                        this.datasetBasics.owner.name,
-                        this.datasetBasics.name as string,
-                        this.readmeState,
-                    )
+                    .updateReadme(this.datasetBasics.owner.name, this.datasetBasics.name as string, this.readmeState)
                     .subscribe(() => {
                         this.reset();
                     }),

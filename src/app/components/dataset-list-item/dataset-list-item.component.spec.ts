@@ -47,16 +47,11 @@ describe("DatasetListItemComponent", () => {
     });
 
     it("should check navigate to owner view", () => {
-        const navigateToOwnerViewSpy = spyOn(
-            navigationService,
-            "navigateToOwnerView",
-        );
+        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
         emitClickOnElementByDataTestId(fixture, "button-popover-verified");
         emitClickOnElementByDataTestId(fixture, "dataset-owner-name");
 
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
-            component.row.owner.name,
-        );
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(component.row.owner.name);
     });
 
     it("should check click on dataset name", () => {

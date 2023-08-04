@@ -11,11 +11,7 @@ import { DynamicComponent } from "./dynamic.component";
             </div>
 
             <div class="text-center">
-                <button
-                    class="modal__btn"
-                    data-test-id="yesButton"
-                    (click)="context._close && context._close()"
-                >
+                <button class="modal__btn" data-test-id="yesButton" (click)="context._close && context._close()">
                     Close
                 </button>
             </div>

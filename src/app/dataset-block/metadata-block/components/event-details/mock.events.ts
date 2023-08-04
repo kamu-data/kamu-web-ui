@@ -9,11 +9,7 @@ import {
     SetVocab,
     SetWatermark,
 } from "./../../../../api/kamu.graphql.interface";
-import {
-    AddDataEventFragment,
-    DatasetKind,
-    Seed,
-} from "src/app/api/kamu.graphql.interface";
+import { AddDataEventFragment, DatasetKind, Seed } from "src/app/api/kamu.graphql.interface";
 export const mockAddData: AddDataEventFragment = {
     __typename: "AddData",
     addDataWatermark: "2022-08-01T00:00:00+00:00",
@@ -167,8 +163,7 @@ export const mockExecuteQuery: ExecuteQueryEventFragment = {
     inputSlices: [
         {
             __typename: "InputSlice",
-            datasetId:
-                "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+            datasetId: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
             blockInterval: {
                 __typename: "BlockInterval",
                 start: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",

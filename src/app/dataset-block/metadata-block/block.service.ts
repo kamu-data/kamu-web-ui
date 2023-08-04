@@ -2,10 +2,7 @@ import { Injectable } from "@angular/core";
 import { Subject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { DatasetApi } from "src/app/api/dataset.api";
-import {
-    GetMetadataBlockQuery,
-    MetadataBlockFragment,
-} from "src/app/api/kamu.graphql.interface";
+import { GetMetadataBlockQuery, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 @Injectable({
@@ -14,8 +11,7 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 export class BlockService {
     constructor(private datasetApi: DatasetApi) {}
 
-    private metadataBlockChanges$: Subject<MetadataBlockFragment> =
-        new Subject<MetadataBlockFragment>();
+    private metadataBlockChanges$: Subject<MetadataBlockFragment> = new Subject<MetadataBlockFragment>();
 
     public get onMetadataBlockChanges(): Observable<MetadataBlockFragment> {
         return this.metadataBlockChanges$.asObservable();
@@ -25,8 +21,7 @@ export class BlockService {
         this.metadataBlockChanges$.next(block);
     }
 
-    private metadataBlockAsYamlChanges$: Subject<string> =
-        new Subject<string>();
+    private metadataBlockAsYamlChanges$: Subject<string> = new Subject<string>();
 
     public get onMetadataBlockAsYamlChanges(): Observable<string> {
         return this.metadataBlockAsYamlChanges$.asObservable();
@@ -36,17 +31,14 @@ export class BlockService {
         this.metadataBlockAsYamlChanges$.next(block);
     }
 
-    public requestMetadataBlock(
-        info: DatasetInfo,
-        blockHash: string,
-    ): Observable<void> {
+    public requestMetadataBlock(info: DatasetInfo, blockHash: string): Observable<void> {
         return this.datasetApi.getBlockByHash({ ...info, blockHash }).pipe(
             map((data: GetMetadataBlockQuery) => {
                 if (data.datasets.byOwnerAndName) {
-                    const block = data.datasets.byOwnerAndName.metadata.chain
-                        .blockByHash as MetadataBlockFragment;
-                    const blockAsYaml = data.datasets.byOwnerAndName.metadata
-                        .chain.blockByHashEncoded as string | undefined;
+                    const block = data.datasets.byOwnerAndName.metadata.chain.blockByHash as MetadataBlockFragment;
+                    const blockAsYaml = data.datasets.byOwnerAndName.metadata.chain.blockByHashEncoded as
+                        | string
+                        | undefined;
                     this.metadataBlockChanges(block);
                     if (blockAsYaml) {
                         this.metadataBlockAsYamlChanges(blockAsYaml);

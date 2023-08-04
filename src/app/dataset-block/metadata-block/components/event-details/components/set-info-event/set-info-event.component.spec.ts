@@ -14,12 +14,7 @@ describe("SetInfoEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                SetInfoEventComponent,
-                CardsPropertyComponent,
-                BlockRowDataComponent,
-                TooltipIconComponent,
-            ],
+            declarations: [SetInfoEventComponent, CardsPropertyComponent, BlockRowDataComponent, TooltipIconComponent],
             imports: [MatIconModule, NgbTooltipModule, SharedTestModule],
         }).compileComponents();
 

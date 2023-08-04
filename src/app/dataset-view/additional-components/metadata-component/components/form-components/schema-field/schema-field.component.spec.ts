@@ -1,28 +1,13 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SchemaFieldComponent, SchemaType } from "./schema-field.component";
-import {
-    FormArray,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    ReactiveFormsModule,
-} from "@angular/forms";
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";
-import {
-    NgbTooltipModule,
-    NgbTypeaheadModule,
-} from "@ng-bootstrap/ng-bootstrap";
-import {
-    RxReactiveFormsModule,
-    RxwebValidators,
-} from "@rxweb/reactive-form-validators";
+import { NgbTooltipModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
+import { RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
-import {
-    dispatchInputEvent,
-    emitClickOnElementByDataTestId,
-} from "src/app/common/base-test.helpers.spec";
+import { dispatchInputEvent, emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("SchemaFieldComponent", () => {
@@ -49,13 +34,8 @@ describe("SchemaFieldComponent", () => {
         component.form = new FormGroup({
             schema: new FormArray([
                 new FormGroup({
-                    name: new FormControl("id", [
-                        RxwebValidators.unique(),
-                        RxwebValidators.required(),
-                    ]),
-                    type: new FormControl("BIGINT", [
-                        RxwebValidators.required(),
-                    ]),
+                    name: new FormControl("id", [RxwebValidators.unique(), RxwebValidators.required()]),
+                    type: new FormControl("BIGINT", [RxwebValidators.required()]),
                 }),
             ]),
         });

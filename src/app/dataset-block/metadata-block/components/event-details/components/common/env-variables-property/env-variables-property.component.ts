@@ -15,9 +15,7 @@ export class EnvVariablesPropertyComponent extends BasePropertyComponent {
 
     public get tableSource(): DataRow[] {
         const result: DataRow[] = [];
-        this.data.forEach(({ name, value }: EnvVar) =>
-            result.push({ name, value: value ? value : "null" }),
-        );
+        this.data.forEach(({ name, value }: EnvVar) => result.push({ name, value: value ? value : "null" }));
         return result;
     }
 

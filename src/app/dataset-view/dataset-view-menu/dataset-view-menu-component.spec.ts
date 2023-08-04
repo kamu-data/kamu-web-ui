@@ -1,19 +1,10 @@
 import AppValues from "src/app/common/app.values";
 import { DatasetNavigationInterface } from "./../dataset-view.interface";
 import { FormsModule } from "@angular/forms";
-import {
-    ComponentFixture,
-    fakeAsync,
-    flush,
-    TestBed,
-    tick,
-} from "@angular/core/testing";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { MatMenuModule } from "@angular/material/menu";
 import { DatasetViewMenuComponent } from "./dataset-view-menu-component";
-import {
-    emitClickOnElementByDataTestId,
-    findElementByDataTestId,
-} from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { AngularSvgIconModule } from "angular-svg-icon";
@@ -82,20 +73,13 @@ describe("DatasetViewMenuComponent", () => {
         const menu = findElementByDataTestId(fixture, "menu");
         expect(menu).toBeDefined();
 
-        const copyToClipboardButton = findElementByDataTestId(
-            fixture,
-            "copyToClipboard",
-        );
+        const copyToClipboardButton = findElementByDataTestId(fixture, "copyToClipboard");
         emitClickOnElementByDataTestId(fixture, "copyToClipboard");
-        expect(
-            copyToClipboardButton.classList.contains("clipboard-btn--success"),
-        ).toEqual(true);
+        expect(copyToClipboardButton.classList.contains("clipboard-btn--success")).toEqual(true);
 
         tick(AppValues.LONG_DELAY_MS);
 
-        expect(
-            copyToClipboardButton.classList.contains("clipboard-btn--success"),
-        ).toEqual(false);
+        expect(copyToClipboardButton.classList.contains("clipboard-btn--success")).toEqual(false);
 
         flush();
     }));

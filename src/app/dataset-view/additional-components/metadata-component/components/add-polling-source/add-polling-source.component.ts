@@ -1,25 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import {
-    FetchKind,
-    ReadKind,
-    MergeKind,
-    PreprocessStepValue,
-} from "./add-polling-source-form.types";
+import { FetchKind, ReadKind, MergeKind, PreprocessStepValue } from "./add-polling-source-form.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
-import {
-    DatasetKind,
-    SetPollingSource,
-} from "./../../../../../api/kamu.graphql.interface";
+import { DatasetKind, SetPollingSource } from "./../../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import {
-    FETCH_STEP_RADIO_CONTROLS,
-    MERGE_STEP_RADIO_CONTROLS,
-    READ_STEP_RADIO_CONTROLS,
-} from "./form-control.source";
+import { FETCH_STEP_RADIO_CONTROLS, MERGE_STEP_RADIO_CONTROLS, READ_STEP_RADIO_CONTROLS } from "./form-control.source";
 import { FETCH_FORM_DATA } from "./steps/data/fetch-form-data";
 import { READ_FORM_DATA } from "./steps/data/read-form-data";
 import { MERGE_FORM_DATA } from "./steps/data/merge-form-data";
@@ -42,10 +30,7 @@ import { BaseMainEventComponent } from "../base-main-event.component";
         },
     ],
 })
-export class AddPollingSourceComponent
-    extends BaseMainEventComponent
-    implements OnInit
-{
+export class AddPollingSourceComponent extends BaseMainEventComponent implements OnInit {
     public currentStep: SetPollingSourceSection = SetPollingSourceSection.FETCH;
     public steps: typeof SetPollingSourceSection = SetPollingSourceSection;
     public showPreprocessStep = false;
@@ -80,27 +65,19 @@ export class AddPollingSourceComponent
     });
 
     public get fetchForm(): FormGroup {
-        return this.pollingSourceForm.get(
-            SetPollingSourceSection.FETCH,
-        ) as FormGroup;
+        return this.pollingSourceForm.get(SetPollingSourceSection.FETCH) as FormGroup;
     }
 
     public get prepareForm(): FormArray {
-        return this.pollingSourceForm.get(
-            SetPollingSourceSection.PREPARE,
-        ) as FormArray;
+        return this.pollingSourceForm.get(SetPollingSourceSection.PREPARE) as FormArray;
     }
 
     public get readForm(): FormGroup {
-        return this.pollingSourceForm.get(
-            SetPollingSourceSection.READ,
-        ) as FormGroup;
+        return this.pollingSourceForm.get(SetPollingSourceSection.READ) as FormGroup;
     }
 
     public get mergeForm(): FormGroup {
-        return this.pollingSourceForm.get(
-            SetPollingSourceSection.MERGE,
-        ) as FormGroup;
+        return this.pollingSourceForm.get(SetPollingSourceSection.MERGE) as FormGroup;
     }
 
     constructor(
@@ -115,10 +92,7 @@ export class AddPollingSourceComponent
         this.getDatasetKind();
         this.trackSubscriptions(
             this.editService
-                .getEventAsYaml(
-                    this.getDatasetInfoFromUrl(),
-                    SupportedEvents.SetPollingSource,
-                )
+                .getEventAsYaml(this.getDatasetInfoFromUrl(), SupportedEvents.SetPollingSource)
                 .subscribe((result: string | undefined | null) => {
                     if (result) {
                         this.eventYamlByHash = result;
@@ -142,13 +116,8 @@ export class AddPollingSourceComponent
                     this.getDatasetInfoFromUrl().accountName,
                     this.getDatasetInfoFromUrl().datasetName,
                     this.yamlEventService.buildYamlSetPollingSourceEvent(
-                        this.pollingSourceForm.value as Omit<
-                            SetPollingSource,
-                            "__typename"
-                        >,
-                        this.showPreprocessStep
-                            ? this.preprocessStepValue
-                            : null,
+                        this.pollingSourceForm.value as Omit<SetPollingSource, "__typename">,
+                        this.showPreprocessStep ? this.preprocessStepValue : null,
                     ),
                 )
                 .subscribe(),
@@ -156,20 +125,14 @@ export class AddPollingSourceComponent
     }
 
     public onEditYaml(): void {
-        const modalRef: NgbModalRef = this.modalService.open(
-            FinalYamlModalComponent,
-            { size: "lg" },
-        );
+        const modalRef: NgbModalRef = this.modalService.open(FinalYamlModalComponent, { size: "lg" });
         const instance = modalRef.componentInstance as FinalYamlModalComponent;
         this.processFormService.transformForm(this.pollingSourceForm);
 
         instance.yamlTemplate = this.errorMessage
             ? this.changedEventYamlByHash
             : this.yamlEventService.buildYamlSetPollingSourceEvent(
-                  this.pollingSourceForm.value as Omit<
-                      SetPollingSource,
-                      "__typename"
-                  >,
+                  this.pollingSourceForm.value as Omit<SetPollingSource, "__typename">,
                   this.showPreprocessStep ? this.preprocessStepValue : null,
               );
         instance.datasetInfo = this.getDatasetInfoFromUrl();
@@ -193,8 +156,7 @@ export class AddPollingSourceComponent
     }
 
     public onShowErrors(): void {
-        const elems =
-            document.querySelectorAll<HTMLInputElement>("input.ng-invalid");
+        const elems = document.querySelectorAll<HTMLInputElement>("input.ng-invalid");
         elems.forEach((element: HTMLInputElement) => {
             setTimeout(() => {
                 element.focus();

@@ -44,10 +44,7 @@ describe("BlockIntervalPropertyComponent", () => {
     });
 
     it("should sheck call requestDatasetInfoById from datasetSevice in ngOnInit", () => {
-        const requestDatasetInfoByIdSpy = spyOn(
-            datasetSevice,
-            "requestDatasetInfoById",
-        ).and.returnValue(
+        const requestDatasetInfoByIdSpy = spyOn(datasetSevice, "requestDatasetInfoById").and.returnValue(
             of({
                 __typename: "Query",
                 datasets: {

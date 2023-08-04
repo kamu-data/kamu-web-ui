@@ -10,34 +10,16 @@
                 class="d-flex flex-row flex-justify-between mb-3"
             >
                 <div class="d-flex flex-column me-auto">
-                    <div
-                        *ngIf="currentState.overview.metadata.currentInfo?.description"
-                    >
-                        <h2 class="box-title align-items-center pb-3">
-                            Description
-                        </h2>
+                    <div *ngIf="currentState.overview.metadata.currentInfo?.description">
+                        <h2 class="box-title align-items-center pb-3">Description</h2>
 
-                        <p>
-                            {{
-                            currentState.overview.metadata.currentInfo.description
-                            }}
-                        </p>
+                        <p>{{ currentState.overview.metadata.currentInfo.description }}</p>
                     </div>
-                    <div
-                        class="app-mat-chip"
-                        *ngIf="currentState.overview.metadata.currentInfo?.keywords"
-                    >
-                        <h2 class="box-title align-items-center pt-3">
-                            Keywords
-                        </h2>
+                    <div class="app-mat-chip" *ngIf="currentState.overview.metadata.currentInfo?.keywords">
+                        <h2 class="box-title align-items-center pt-3">Keywords</h2>
                         <mat-chip-list aria-label="Tags selection">
-                            <div
-                                *ngFor="let keyword of currentState.overview.metadata.currentInfo?.keywords"
-                            >
-                                <mat-chip
-                                    (click)="selectTopic(datasetBasics.kind)"
-                                    >{{ keyword }}</mat-chip
-                                >
+                            <div *ngFor="let keyword of currentState.overview.metadata.currentInfo?.keywords">
+                                <mat-chip (click)="selectTopic(datasetBasics.kind)">{{ keyword }}</mat-chip>
                             </div>
                         </mat-chip-list>
                     </div>
@@ -81,12 +63,7 @@
             >
                 <p>
                     You can
-                    <a
-                        class="text-decoration-none"
-                        (click)="navigateToAddPollingSource()"
-                    >
-                        Add data source</a
-                    >
+                    <a class="text-decoration-none" (click)="navigateToAddPollingSource()"> Add data source</a>
                 </p>
             </div>
             <div
@@ -95,12 +72,7 @@
             >
                 <p>
                     You can
-                    <a
-                        class="text-decoration-none"
-                        (click)="navigateToSetTransform()"
-                    >
-                        Add transformation</a
-                    >
+                    <a class="text-decoration-none" (click)="navigateToSetTransform()"> Add transformation</a>
                 </p>
             </div>
 
@@ -116,25 +88,12 @@
                 [dataRows]="currentState ? currentState.data : []"
             ></app-dynamic-table>
             <ng-template #noData>
-                <div
-                    class="mt-4 p-3 text-center no-data-container border border-2"
-                >
-                    No data
-                </div>
+                <div class="mt-4 p-3 text-center no-data-container border border-2">No data</div>
             </ng-template>
-            <div
-                class="my-4"
-                *ngIf="!currentState.overview.metadata.currentReadme && !addReadme"
-            >
+            <div class="my-4" *ngIf="!currentState.overview.metadata.currentReadme && !addReadme">
                 <p>
                     You can
-                    <a
-                        class="text-decoration-none"
-                        (click)="onAddReadme()"
-                        data-test-id="add-readme"
-                    >
-                        Add README.md</a
-                    >
+                    <a class="text-decoration-none" (click)="onAddReadme()" data-test-id="add-readme"> Add README.md</a>
                 </p>
             </div>
             <app-readme-section
@@ -147,9 +106,7 @@
     </div>
     <div class="card">
         <nav class="flex-row mat-typography">
-            <div
-                class="card--row card--title d-flex align-items-center justify-content-between"
-            >
+            <div class="card--row card--title d-flex align-items-center justify-content-between">
                 <div class="pt-3">
                     <h2>Details</h2>
                 </div>
@@ -169,9 +126,7 @@
                             <h2 class="dataset-info--subtitle">Kind:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">
-                                {{ datasetKind(datasetBasics.kind) }}
-                            </p>
+                            <p class="dataset-info--text">{{ datasetKind(datasetBasics.kind) }}</p>
                         </div>
                     </div>
                     <div class="dataset-info--block">
@@ -182,16 +137,11 @@
                             <p class="dataset-info--text">Public</p>
                         </div>
                     </div>
-                    <div
-                        class="dataset-info--block"
-                        *ngIf="currentState.overview.metadata.currentLicense"
-                    >
+                    <div class="dataset-info--block" *ngIf="currentState.overview.metadata.currentLicense">
                         <div class="dataset-info--sub-block">
                             <h2 class="dataset-info--subtitle">License:</h2>
                         </div>
-                        <div
-                            class="dataset-info--sub-block d-flex align-items-center"
-                        >
+                        <div class="dataset-info--sub-block d-flex align-items-center">
                             <div>
                                 <a
                                     class="link--primary text-break"
@@ -202,9 +152,7 @@
                                         placement="bottom"
                                         [ngbTooltip]="currentState.overview.metadata.currentLicense.name"
                                     >
-                                        {{
-                                        currentState.overview.metadata.currentLicense.shortName
-                                        }}
+                                        {{ currentState.overview.metadata.currentLicense.shortName }}
                                     </span>
                                 </a>
                             </div>
@@ -223,15 +171,12 @@
                     </div>
                     <div class="dataset-info--block">
                         <div class="dataset-info--sub-block">
-                            <h2 class="dataset-info--subtitle">
-                                Estimated Size:
-                            </h2>
+                            <h2 class="dataset-info--subtitle">Estimated Size:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ (currentState.size.estimatedSize ?
-                                (currentState.size.estimatedSize | displaySize)
-                                : "-") }}
+                                {{ (currentState.size.estimatedSize ? (currentState.size.estimatedSize | displaySize) :
+                                "-") }}
                             </p>
                         </div>
                     </div>
@@ -241,8 +186,7 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ currentState.size.numRecordsTotal || 0 |
-                                number: "1.0-0" }}
+                                {{ currentState.size.numRecordsTotal || 0 | number: "1.0-0" }}
                             </p>
                         </div>
                     </div>
@@ -260,9 +204,7 @@
                     </div>
                     <div class="dataset-info--block" *ngIf="currentState">
                         <div class="dataset-info--sub-block">
-                            <h2 class="dataset-info--subtitle">
-                                Last Updated At:
-                            </h2>
+                            <h2 class="dataset-info--subtitle">Last Updated At:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
                             <app-display-time
@@ -297,9 +239,7 @@
                             </div>
                         </div>
                         <ng-template #noWatermark>
-                            <div
-                                class="dataset-info--sub-block d-flex align-items-center ms-4"
-                            >
+                            <div class="dataset-info--sub-block d-flex align-items-center ms-4">
                                 <div class="me-4">-</div>
                                 <div>
                                     <button

@@ -1,9 +1,4 @@
-import {
-    ComponentFixture,
-    TestBed,
-    fakeAsync,
-    tick,
-} from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { ReadmeSectionComponent } from "./readme-section.component";
 import { mockDatasetBasicsFragment } from "src/app/search/mock.data";
 import { Apollo, ApolloModule } from "apollo-angular";
@@ -92,10 +87,7 @@ describe("ReadmeSectionComponent", () => {
 
     it("should check save changes", fakeAsync(() => {
         component.readmeState = mockReadmeContent + "modified";
-        const updateReadmeSpy = spyOn(
-            datasetCommitService,
-            "updateReadme",
-        ).and.returnValue(of());
+        const updateReadmeSpy = spyOn(datasetCommitService, "updateReadme").and.returnValue(of());
         emitClickOnElementByDataTestId(fixture, "show-edit-tabs");
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "save-changes");

@@ -1,8 +1,7 @@
 <div class="search-result-container__content" id="dataset-view-history">
     <div id="history-block">
         <div *ngIf="currentPage > totalPages">
-            The current page {{ currentPage }} is greater than the total number
-            of pages {{ totalPages }}.
+            The current page {{ currentPage }} is greater than the total number of pages {{ totalPages }}.
         </div>
         <ng-template [ngIf]="currentState && currentState.history.length > 0">
             <app-timeline

@@ -21,12 +21,10 @@ export abstract class BaseMainEventComponent extends BaseComponent {
 
     protected subsribeErrorMessage(): void {
         this.trackSubscription(
-            this.datasetCommitService.onErrorCommitEventChanges.subscribe(
-                (message: string) => {
-                    this.errorMessage = message;
-                    this.cdr.detectChanges();
-                },
-            ),
+            this.datasetCommitService.onErrorCommitEventChanges.subscribe((message: string) => {
+                this.errorMessage = message;
+                this.cdr.detectChanges();
+            }),
         );
     }
 

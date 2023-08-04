@@ -1,8 +1,5 @@
 import { Injectable } from "@angular/core";
-import {
-    ModalArgumentsInterface,
-    ModalCommandInterface,
-} from "../../interface/modal.interface";
+import { ModalArgumentsInterface, ModalCommandInterface } from "../../interface/modal.interface";
 import { Subject } from "rxjs";
 
 @Injectable({
@@ -28,8 +25,7 @@ export class ModalService {
      * .then(action => console.log('User said: ', action));
      */
 
-    private showModal$: Subject<ModalCommandInterface> =
-        new Subject<ModalCommandInterface>();
+    private showModal$: Subject<ModalCommandInterface> = new Subject<ModalCommandInterface>();
     private currentModalType = "dialog";
 
     /**
@@ -46,15 +42,11 @@ export class ModalService {
         return this.currentModalType;
     }
 
-    public success(
-        options: ModalArgumentsInterface,
-    ): Promise<boolean | string> {
+    public success(options: ModalArgumentsInterface): Promise<boolean | string> {
         return this._showDialog(Object.assign(options, { status: "ok" }));
     }
 
-    public warning(
-        options: ModalArgumentsInterface,
-    ): Promise<boolean | string> {
+    public warning(options: ModalArgumentsInterface): Promise<boolean | string> {
         return this._showDialog(Object.assign(options, { status: "warning" }));
     }
 
@@ -62,17 +54,11 @@ export class ModalService {
         return this._showDialog(Object.assign(options, { status: "error" }));
     }
 
-    public dialog_question(
-        options: ModalArgumentsInterface,
-    ): Promise<boolean | string> {
-        return this._showDialog(
-            Object.assign(options, { status: "dialog_question" }),
-        );
+    public dialog_question(options: ModalArgumentsInterface): Promise<boolean | string> {
+        return this._showDialog(Object.assign(options, { status: "dialog_question" }));
     }
 
-    private _showDialog(
-        context: ModalArgumentsInterface,
-    ): Promise<boolean | string> {
+    private _showDialog(context: ModalArgumentsInterface): Promise<boolean | string> {
         this.showModal$.next({
             type: "dialog",
             context,

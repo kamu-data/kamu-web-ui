@@ -1,9 +1,6 @@
 import { NavigationService } from "src/app/services/navigation.service";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import {
-    MetadataBlockFragment,
-    PageBasedInfo,
-} from "src/app/api/kamu.graphql.interface";
+import { MetadataBlockFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import { DataHelpers } from "src/app/common/data.helpers";
 
 @Component({
@@ -23,11 +20,7 @@ export class TimelineComponent {
         this.navigationService.navigateToOwnerView(ownerName);
     }
 
-    public navigateToMetadataBlock(
-        accountName: string,
-        datasetName: string,
-        blockHash: string,
-    ): void {
+    public navigateToMetadataBlock(accountName: string, datasetName: string, blockHash: string): void {
         this.navigationService.navigateToMetadataBlock({
             accountName,
             datasetName,

@@ -26,24 +26,13 @@
             [(ngModel)]="eventTypeFilters"
         >
         </ng-multiselect-dropdown>
-        <mat-icon
-            *ngIf="!eventTypeFilters.length"
-            class="fs-5 text-muted position-list-icon"
-            >list_alt</mat-icon
-        >
+        <mat-icon *ngIf="!eventTypeFilters.length" class="fs-5 text-muted position-list-icon">list_alt</mat-icon>
     </div>
     <div class="d-flex flex-column gap-4" *ngIf="datasetHistory">
         <ng-container
-            *ngIf="
-                datasetHistory.history
-                    | eventTypeFilter: eventTypeFilters
-                    | blockHashFilter: searchHash as result
-            "
+            *ngIf="datasetHistory.history | eventTypeFilter: eventTypeFilters | blockHashFilter: searchHash as result"
         >
-            <div
-                *ngFor="let block of result"
-                class="d-flex lh-lg align-items-center justify-content-between"
-            >
+            <div *ngFor="let block of result" class="d-flex lh-lg align-items-center justify-content-between">
                 <div class="flex-grow-1 no-wrap lh-1">
                     <mat-icon class="d-inline align-middle fs-4">tag</mat-icon>
                     <app-display-hash
@@ -51,15 +40,9 @@
                         [navigationTargetDataset]="datasetInfo"
                         [showCopyButton]="false"
                     ></app-display-hash>
-                    <div
-                        [innerHTML]="highlightHash(block.blockHash, searchHash)"
-                        class="ms-4 fs-10 text-muted"
-                    ></div>
+                    <div [innerHTML]="highlightHash(block.blockHash, searchHash)" class="ms-4 fs-10 text-muted"></div>
                 </div>
-                <div
-                    class="me-4 align-self-baseline"
-                    *ngIf="currentBlockHash === block.blockHash"
-                >
+                <div class="me-4 align-self-baseline" *ngIf="currentBlockHash === block.blockHash">
                     <span class="badge bg-success">current</span>
                 </div>
                 <div class="">

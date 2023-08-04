@@ -28,10 +28,7 @@ export class DisplayTimeComponent extends BasePropertyComponent {
         return dt.format(AppValues.DISPLAY_DATE_FORMAT);
     }
 
-    private convertToRelativeTime(
-        rfc3339: string,
-        threshold?: moment.argThresholdOpts,
-    ): string {
+    private convertToRelativeTime(rfc3339: string, threshold?: moment.argThresholdOpts): string {
         const dt = moment(rfc3339);
         const delta = moment.duration(dt.diff(moment()));
         if (threshold?.d) {

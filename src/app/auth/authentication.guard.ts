@@ -7,10 +7,7 @@ import { AuthApi } from "../api/auth.api";
     providedIn: "root",
 })
 export class AuthenticationGuard implements CanActivate {
-    constructor(
-        private navigationService: NavigationService,
-        private authApi: AuthApi,
-    ) {}
+    constructor(private navigationService: NavigationService, private authApi: AuthApi) {}
     canActivate(): boolean {
         if (!this.authApi.isAuthenticated) {
             this.navigationService.navigateToHome();

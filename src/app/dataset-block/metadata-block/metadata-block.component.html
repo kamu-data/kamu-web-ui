@@ -1,16 +1,9 @@
-<div
-    class="app-main-container"
-    role="main"
-    data-test-id="metada-block-view"
-    id="metada-block-view"
->
+<div class="app-main-container" role="main" data-test-id="metada-block-view" id="metada-block-view">
     <div class="app-content">
         <app-dataset-view-header
             [datasetInfo]="datasetInfo"
             (showOwnerPageEmit)="showOwnerPage(datasetInfo.accountName)"
-            (onClickSearchAdditionalButtonEmit)="
-                onClickSearchAdditionalButton($event)
-            "
+            (onClickSearchAdditionalButtonEmit)="onClickSearchAdditionalButton($event)"
         ></app-dataset-view-header>
     </div>
 
@@ -30,13 +23,8 @@
     <div class="row px-4">
         <div class="col-md-7">
             <div class="container-content mb-4">
-                <app-block-header
-                    [datasetInfo]="datasetInfo"
-                    [blockHash]="blockHash"
-                ></app-block-header>
-                <app-event-details
-                    [datasetInfo]="datasetInfo"
-                ></app-event-details>
+                <app-block-header [datasetInfo]="datasetInfo" [blockHash]="blockHash"></app-block-header>
+                <app-event-details [datasetInfo]="datasetInfo"></app-event-details>
             </div>
         </div>
         <div class="col-md-5">

@@ -1,10 +1,4 @@
-import {
-    ActivatedRoute,
-    NavigationEnd,
-    Params,
-    Router,
-    RouterEvent,
-} from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Params, Router, RouterEvent } from "@angular/router";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -17,17 +11,8 @@ import {
     ViewChild,
 } from "@angular/core";
 import { Observable, OperatorFunction } from "rxjs";
-import {
-    debounceTime,
-    distinctUntilChanged,
-    filter,
-    map,
-    switchMap,
-} from "rxjs/operators";
-import {
-    DatasetAutocompleteItem,
-    TypeNames,
-} from "../../interface/search.interface";
+import { debounceTime, distinctUntilChanged, filter, map, switchMap } from "rxjs/operators";
+import { DatasetAutocompleteItem, TypeNames } from "../../interface/search.interface";
 import { SearchApi } from "../../api/search.api";
 import AppValues from "../../common/app.values";
 import { BaseComponent } from "src/app/common/base.component";
@@ -47,8 +32,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     @Input() public isVisible: boolean;
     @Input() public userInfo: AccountDetailsFragment;
 
-    @Output() public selectDatasetEmitter =
-        new EventEmitter<DatasetAutocompleteItem>();
+    @Output() public selectDatasetEmitter = new EventEmitter<DatasetAutocompleteItem>();
     @Output() public addNewEmitter = new EventEmitter<null>();
     @Output() public loginEmitter = new EventEmitter<null>();
     @Output() public logOutEmitter = new EventEmitter<null>();
@@ -87,11 +71,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
                     map((event) => event as RouterEvent),
                 )
                 .subscribe((event: RouterEvent) => {
-                    if (
-                        !event.url.includes(
-                            `?${ProjectLinks.URL_QUERY_PARAM_QUERY}=`,
-                        )
-                    ) {
+                    if (!event.url.includes(`?${ProjectLinks.URL_QUERY_PARAM_QUERY}=`)) {
                         this.searchQuery = "";
                         this.cdr.detectChanges();
                     }
@@ -112,16 +92,11 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
         return this.userInfo.login.length > 0;
     }
 
-    public search: OperatorFunction<
-        string,
-        readonly DatasetAutocompleteItem[]
-    > = (text$: Observable<string>) => {
+    public search: OperatorFunction<string, readonly DatasetAutocompleteItem[]> = (text$: Observable<string>) => {
         return text$.pipe(
             debounceTime(this.delayTime),
             distinctUntilChanged(),
-            switchMap((term: string) =>
-                this.appSearchAPI.autocompleteDatasetSearch(term),
-            ),
+            switchMap((term: string) => this.appSearchAPI.autocompleteDatasetSearch(term)),
         );
     };
 
@@ -130,8 +105,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     }
 
     public onClickInput(): void {
-        const typeaheadInput: HTMLElement | null =
-            document.getElementById("typeahead-http");
+        const typeaheadInput: HTMLElement | null = document.getElementById("typeahead-http");
         if (typeaheadInput) {
             typeaheadInput.focus();
         }
@@ -140,12 +114,9 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
         this.isSearchActive = false;
         if (event.item) {
-            this.selectDatasetEmitter.emit(
-                event.item as DatasetAutocompleteItem,
-            );
+            this.selectDatasetEmitter.emit(event.item as DatasetAutocompleteItem);
             setTimeout(() => {
-                const typeaheadInput: HTMLElement | null =
-                    document.getElementById("typeahead-http");
+                const typeaheadInput: HTMLElement | null = document.getElementById("typeahead-http");
                 if (typeaheadInput) {
                     typeaheadInput.blur();
                 }
@@ -154,8 +125,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     }
 
     public toggleAppHeaderMenu(): void {
-        const appHeaderButton: HTMLElement | null =
-            document.getElementById("app-header");
+        const appHeaderButton: HTMLElement | null = document.getElementById("app-header");
 
         this.isCollapsedAppHeaderMenu = !this.isCollapsedAppHeaderMenu;
         if (appHeaderButton) {

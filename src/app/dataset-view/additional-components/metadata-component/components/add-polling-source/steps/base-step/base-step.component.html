@@ -3,18 +3,9 @@
         {{ title }}
     </h2>
     <p class="text-center mb-4">{{ description }}</p>
-    <app-select-kind-field
-        [form]="sectionForm"
-        [data]="sectionStepRadioData"
-    ></app-select-kind-field>
+    <app-select-kind-field [form]="sectionForm" [data]="sectionStepRadioData"></app-select-kind-field>
     <div class="row">
-        <ng-container
-            *ngFor="
-                let control of sectionFormData[
-                    sectionForm.get(KIND_NAME_CONTROL)?.value
-                ]?.controls
-            "
-        >
+        <ng-container *ngFor="let control of sectionFormData[sectionForm.get(KIND_NAME_CONTROL)?.value]?.controls">
             <div class="col-md-8 offset-md-2 mt-4">
                 <ng-container *ngIf="control.type === controlType.TEXT">
                     <app-input-field
@@ -27,9 +18,7 @@
                         [tooltip]="control.tooltip!"
                     ></app-input-field>
                 </ng-container>
-                <ng-container
-                    *ngIf="control.type === controlType.ARRAY_KEY_VALUE"
-                >
+                <ng-container *ngIf="control.type === controlType.ARRAY_KEY_VALUE">
                     <app-key-value-field
                         [form]="sectionForm"
                         [controlName]="control.options?.formArrayName!"

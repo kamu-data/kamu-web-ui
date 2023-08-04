@@ -16,11 +16,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { NgbModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
-import {
-    HttpClient,
-    HttpClientModule,
-    HTTP_INTERCEPTORS,
-} from "@angular/common/http";
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { MatTableModule } from "@angular/material/table";
 import { CdkTableModule } from "@angular/cdk/table";
 import { InMemoryCache } from "@apollo/client/core";

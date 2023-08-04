@@ -16,12 +16,7 @@ describe("DatasetCreateComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [DatasetCreateComponent],
-            imports: [
-                ReactiveFormsModule,
-                ApolloModule,
-                FormsModule,
-                SharedTestModule,
-            ],
+            imports: [ReactiveFormsModule, ApolloModule, FormsModule, SharedTestModule],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         })
             .overrideComponent(DatasetCreateComponent, {
@@ -54,10 +49,7 @@ describe("DatasetCreateComponent", () => {
     });
 
     it("should check call createDatasetFromForm()", () => {
-        const createDatasetFromFormSpy = spyOn(
-            datasetCreateService,
-            "createEmptyDataset",
-        ).and.returnValue(of());
+        const createDatasetFromFormSpy = spyOn(datasetCreateService, "createEmptyDataset").and.returnValue(of());
 
         component.onCreateDataset();
 
@@ -67,10 +59,9 @@ describe("DatasetCreateComponent", () => {
     it("should check call createDatasetFromSnapshot()", () => {
         component.showMonacoEditor = true;
         component.yamlTemplate = "test template";
-        const createDatasetFromSnapshotSpy = spyOn(
-            datasetCreateService,
-            "createDatasetFromSnapshot",
-        ).and.returnValue(of());
+        const createDatasetFromSnapshotSpy = spyOn(datasetCreateService, "createDatasetFromSnapshot").and.returnValue(
+            of(),
+        );
 
         component.onCreateDataset();
 
@@ -78,10 +69,7 @@ describe("DatasetCreateComponent", () => {
     });
 
     it("should check switch checkbox `Initialize from YAML snapshot`)", () => {
-        const checkboxInput = findInputElememtByDataTestId(
-            fixture,
-            "show-monaco-editor",
-        );
+        const checkboxInput = findInputElememtByDataTestId(fixture, "show-monaco-editor");
         expect(checkboxInput.checked).toBeFalse();
         expect(component.showMonacoEditor).toBeFalse();
 
@@ -97,10 +85,7 @@ describe("DatasetCreateComponent", () => {
     });
 
     it("should check call uploadFile when file picked)", async () => {
-        const checkboxInput = findInputElememtByDataTestId(
-            fixture,
-            "show-monaco-editor",
-        );
+        const checkboxInput = findInputElememtByDataTestId(fixture, "show-monaco-editor");
 
         checkboxInput.click();
         fixture.detectChanges();
@@ -110,9 +95,7 @@ describe("DatasetCreateComponent", () => {
         });
         const mockEvt = { target: { files: [mockFile] } };
         try {
-            const result = await component.onFileSelected(
-                mockEvt as unknown as Event,
-            );
+            const result = await component.onFileSelected(mockEvt as unknown as Event);
             expect(result).toBe("# You can edit this file\ntest content");
         } catch (error) {
             console.log(error);
@@ -120,19 +103,14 @@ describe("DatasetCreateComponent", () => {
     });
 
     it("should check call uploadFile when file not picked)", async () => {
-        const checkboxInput = findInputElememtByDataTestId(
-            fixture,
-            "show-monaco-editor",
-        );
+        const checkboxInput = findInputElememtByDataTestId(fixture, "show-monaco-editor");
 
         checkboxInput.click();
         fixture.detectChanges();
 
         const mockEvt = { target: { files: [] } };
         try {
-            const result = await component.onFileSelected(
-                mockEvt as unknown as Event,
-            );
+            const result = await component.onFileSelected(mockEvt as unknown as Event);
             expect(result).toBe("");
         } catch (error) {
             console.log(error);

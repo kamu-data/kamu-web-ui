@@ -5,13 +5,7 @@ import { Subscription } from "rxjs";
 import ProjectLinks from "src/app/project-links";
 import { BaseProcessingComponent } from "./../../common/base.processing.component";
 import { DatasetViewTypeEnum } from "./../../dataset-view/dataset-view.interface";
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    OnInit,
-    ViewEncapsulation,
-} from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from "@angular/core";
 
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { filter, pluck } from "rxjs/operators";
@@ -27,10 +21,7 @@ import _ from "lodash";
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MetadataBlockComponent
-    extends BaseProcessingComponent
-    implements OnInit
-{
+export class MetadataBlockComponent extends BaseProcessingComponent implements OnInit {
     constructor(
         private blockService: BlockService,
         private datasetService: DatasetService,
@@ -50,33 +41,22 @@ export class MetadataBlockComponent
     ngOnInit(): void {
         this.datasetInfo = this.getDatasetInfoFromUrl();
         this.trackSubscriptions(
-            this.activatedRoute.params
-                .pipe(pluck(ProjectLinks.URL_PARAM_BLOCK_HASH))
-                .subscribe((hash: string) => {
-                    this.blockHash = hash;
-                }),
-            this.router.events
-                .pipe(filter((event) => event instanceof NavigationEnd))
-                .subscribe(() => {
-                    if (
-                        !_.isEqual(
-                            this.datasetInfo,
-                            this.getDatasetInfoFromUrl(),
-                        )
-                    ) {
-                        this.trackSubscription(this.loadHistory());
-                    }
-                    this.datasetInfo = this.getDatasetInfoFromUrl();
-                    this.trackSubscription(this.loadMetadataBlock());
-                }),
+            this.activatedRoute.params.pipe(pluck(ProjectLinks.URL_PARAM_BLOCK_HASH)).subscribe((hash: string) => {
+                this.blockHash = hash;
+            }),
+            this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+                if (!_.isEqual(this.datasetInfo, this.getDatasetInfoFromUrl())) {
+                    this.trackSubscription(this.loadHistory());
+                }
+                this.datasetInfo = this.getDatasetInfoFromUrl();
+                this.trackSubscription(this.loadMetadataBlock());
+            }),
             this.loadMetadataBlock(),
             this.loadHistory(),
-            this.appDatasetSubsService.onDatasetHistoryChanges.subscribe(
-                (result: DatasetHistoryUpdate) => {
-                    this.datasetHistoryUpdate = result;
-                    this.cdr.detectChanges();
-                },
-            ),
+            this.appDatasetSubsService.onDatasetHistoryChanges.subscribe((result: DatasetHistoryUpdate) => {
+                this.datasetHistoryUpdate = result;
+                this.cdr.detectChanges();
+            }),
         );
     }
 
@@ -85,18 +65,12 @@ export class MetadataBlockComponent
     }
 
     private loadMetadataBlock(): Subscription {
-        return this.blockService
-            .requestMetadataBlock(this.getDatasetInfoFromUrl(), this.blockHash)
-            .subscribe();
+        return this.blockService.requestMetadataBlock(this.getDatasetInfoFromUrl(), this.blockHash).subscribe();
     }
 
     private loadHistory(page = 0): Subscription {
         return this.datasetService
-            .requestDatasetHistory(
-                this.getDatasetInfoFromUrl(),
-                this.blocksPerPage,
-                page,
-            )
+            .requestDatasetHistory(this.getDatasetInfoFromUrl(), this.blocksPerPage, page)
             .subscribe();
     }
 }

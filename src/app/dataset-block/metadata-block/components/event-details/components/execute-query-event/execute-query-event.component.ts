@@ -9,14 +9,8 @@ import { BaseDynamicEventComponent } from "../base-dynamic-event/base-dynamic-ev
     styleUrls: ["../base-dynamic-event/base-dynamic-event.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExecuteQueryEventComponent
-    extends BaseDynamicEventComponent<ExecuteQuery>
-    implements OnInit
-{
+export class ExecuteQueryEventComponent extends BaseDynamicEventComponent<ExecuteQuery> implements OnInit {
     ngOnInit(): void {
-        this.eventSections =
-            SECTION_BUILDERS_BY_EVENT_TYPE.ExecuteQuery.buildEventSections(
-                this.event,
-            );
+        this.eventSections = SECTION_BUILDERS_BY_EVENT_TYPE.ExecuteQuery.buildEventSections(this.event);
     }
 }

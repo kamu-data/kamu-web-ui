@@ -9,11 +9,7 @@
             readonly
             data-test-id="input-dropdown"
         />
-        <img
-            class="selectedImage"
-            [src]="getLogo(engine).url_logo"
-            #selectedImage
-        />
+        <img class="selectedImage" [src]="getLogo(engine).url_logo" #selectedImage />
     </div>
     <div class="option" #option *ngIf="showDropdown">
         <ng-container *ngFor="let item of data; let i = index">

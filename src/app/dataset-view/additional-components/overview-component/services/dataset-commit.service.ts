@@ -33,15 +33,8 @@ export class DatasetCommitService {
         private datasetService: DatasetService,
     ) {}
 
-    public commitEventToDataset(
-        accountName: string,
-        datasetName: string,
-        event: string,
-    ): Observable<void> {
-        return this.getIdByAccountNameAndDatasetName(
-            accountName,
-            datasetName,
-        ).pipe(
+    public commitEventToDataset(accountName: string, datasetName: string, event: string): Observable<void> {
+        return this.getIdByAccountNameAndDatasetName(accountName, datasetName).pipe(
             switchMap((id: string) =>
                 this.datasetApi.commitEvent({
                     datasetId: id,
@@ -50,14 +43,10 @@ export class DatasetCommitService {
             ),
             map((data: CommitEventToDatasetMutation | undefined | null) => {
                 if (
-                    data?.datasets.byId?.metadata.chain.commitEvent
-                        .__typename === "CommitResultAppendError" ||
-                    data?.datasets.byId?.metadata.chain.commitEvent
-                        .__typename === "MetadataManifestMalformed"
+                    data?.datasets.byId?.metadata.chain.commitEvent.__typename === "CommitResultAppendError" ||
+                    data?.datasets.byId?.metadata.chain.commitEvent.__typename === "MetadataManifestMalformed"
                 ) {
-                    this.errorCommitEventChanges(
-                        data.datasets.byId.metadata.chain.commitEvent.message,
-                    );
+                    this.errorCommitEventChanges(data.datasets.byId.metadata.chain.commitEvent.message);
                 } else {
                     this.updatePage(accountName, datasetName);
                 }
@@ -65,45 +54,27 @@ export class DatasetCommitService {
         );
     }
 
-    public getIdByAccountNameAndDatasetName(
-        accountName: string,
-        datasetName: string,
-    ): Observable<string> {
+    public getIdByAccountNameAndDatasetName(accountName: string, datasetName: string): Observable<string> {
         const key = `${accountName}${datasetName}`;
-        const cachedId: string | undefined =
-            this.datasetIdsByAccountDatasetName.get(key);
+        const cachedId: string | undefined = this.datasetIdsByAccountDatasetName.get(key);
         if (cachedId) {
             return of(cachedId);
         } else {
-            return this.datasetApi
-                .getDatasetInfoByAccountAndDatasetName(accountName, datasetName)
-                .pipe(
-                    map((data: DatasetByAccountAndDatasetNameQuery) => {
-                        const id = data.datasets.byOwnerAndName?.id as string;
-                        this.datasetIdsByAccountDatasetName.set(key, id);
-                        return id;
-                    }),
-                );
+            return this.datasetApi.getDatasetInfoByAccountAndDatasetName(accountName, datasetName).pipe(
+                map((data: DatasetByAccountAndDatasetNameQuery) => {
+                    const id = data.datasets.byOwnerAndName?.id as string;
+                    this.datasetIdsByAccountDatasetName.set(key, id);
+                    return id;
+                }),
+            );
         }
     }
 
-    public updateReadme(
-        accountName: string,
-        datasetName: string,
-        content: string,
-    ): Observable<void> {
-        return this.getIdByAccountNameAndDatasetName(
-            accountName,
-            datasetName,
-        ).pipe(
-            switchMap((id: string) =>
-                this.datasetApi.updateReadme(id, content),
-            ),
+    public updateReadme(accountName: string, datasetName: string, content: string): Observable<void> {
+        return this.getIdByAccountNameAndDatasetName(accountName, datasetName).pipe(
+            switchMap((id: string) => this.datasetApi.updateReadme(id, content)),
             map((data: UpdateReadmeMutation | null | undefined) => {
-                if (
-                    data?.datasets.byId?.metadata.updateReadme.__typename ===
-                    "CommitResultSuccess"
-                ) {
+                if (data?.datasets.byId?.metadata.updateReadme.__typename === "CommitResultSuccess") {
                     this.updatePage(accountName, datasetName);
                 }
             }),

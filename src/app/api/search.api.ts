@@ -3,10 +3,7 @@ import { Injectable } from "@angular/core";
 
 import { map, first } from "rxjs/operators";
 import { Observable, of } from "rxjs";
-import {
-    DatasetAutocompleteItem,
-    TypeNames,
-} from "../interface/search.interface";
+import { DatasetAutocompleteItem, TypeNames } from "../interface/search.interface";
 
 import {
     SearchDatasetsAutocompleteGQL,
@@ -41,13 +38,9 @@ export class SearchApi {
             })
             .valueChanges.pipe(
                 first(),
-                map(
-                    (
-                        result: ApolloQueryResult<SearchDatasetsOverviewQuery>,
-                    ) => {
-                        return result.data;
-                    },
-                ),
+                map((result: ApolloQueryResult<SearchDatasetsOverviewQuery>) => {
+                    return result.data;
+                }),
             );
     }
 
@@ -58,36 +51,29 @@ export class SearchApi {
         if (id === "") {
             return of([]);
         }
-        return this.searchDatasetsAutocompleteGQL
-            .watch({ query: id, perPage })
-            .valueChanges.pipe(
-                first(),
-                map(
-                    (
-                        result: ApolloQueryResult<SearchDatasetsAutocompleteQuery>,
-                    ) => {
-                        const nodesList: DatasetAutocompleteItem[] =
-                            result.data.search.query.nodes.map((node) => ({
-                                dataset: node as DatasetBasicsFragment,
-                                __typename: node.__typename as TypeNames,
-                            }));
-                        // Add dummy result that opens search view
-                        nodesList.unshift({
-                            __typename: TypeNames.allDataType,
-                            dataset: {
-                                id,
-                                name: id,
-                                kind: DatasetKind.Root,
-                                owner: {
-                                    id: AppValues.DEFAULT_USERNAME,
-                                    name: AppValues.DEFAULT_USERNAME,
-                                },
-                            },
-                        });
-
-                        return nodesList;
+        return this.searchDatasetsAutocompleteGQL.watch({ query: id, perPage }).valueChanges.pipe(
+            first(),
+            map((result: ApolloQueryResult<SearchDatasetsAutocompleteQuery>) => {
+                const nodesList: DatasetAutocompleteItem[] = result.data.search.query.nodes.map((node) => ({
+                    dataset: node as DatasetBasicsFragment,
+                    __typename: node.__typename as TypeNames,
+                }));
+                // Add dummy result that opens search view
+                nodesList.unshift({
+                    __typename: TypeNames.allDataType,
+                    dataset: {
+                        id,
+                        name: id,
+                        kind: DatasetKind.Root,
+                        owner: {
+                            id: AppValues.DEFAULT_USERNAME,
+                            name: AppValues.DEFAULT_USERNAME,
+                        },
                     },
-                ),
-            );
+                });
+
+                return nodesList;
+            }),
+        );
     }
 }

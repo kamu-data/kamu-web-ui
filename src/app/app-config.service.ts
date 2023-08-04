@@ -31,11 +31,7 @@ export class AppConfigService {
     // If loopback or any address is used - replace hostname with hostname from the browser
     private static toRemoteURL(url: string): string {
         const turl = new URL(url);
-        if (
-            ["localhost", "127.0.0.1", "0.0.0.0", "[::]"].includes(
-                turl.hostname,
-            )
-        ) {
+        if (["localhost", "127.0.0.1", "0.0.0.0", "[::]"].includes(turl.hostname)) {
             turl.hostname = window.location.hostname;
         }
         return turl.href;

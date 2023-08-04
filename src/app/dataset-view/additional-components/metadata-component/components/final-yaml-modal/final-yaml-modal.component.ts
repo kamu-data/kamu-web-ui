@@ -15,32 +15,24 @@ export class FinalYamlModalComponent extends BaseComponent {
     @Input() public yamlTemplate: string;
     @Input() public datasetInfo: DatasetInfo;
     @Input() public enabledSaveBtn = true;
-    public readonly yamlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
-        {
-            theme: "vs",
-            language: "yaml",
-            renderLineHighlight: "none",
-            minimap: {
-                enabled: false,
-            },
-            scrollBeyondLastLine: false,
-        };
+    public readonly yamlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
+        theme: "vs",
+        language: "yaml",
+        renderLineHighlight: "none",
+        minimap: {
+            enabled: false,
+        },
+        scrollBeyondLastLine: false,
+    };
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private datasetCommitService: DatasetCommitService,
-    ) {
+    constructor(public activeModal: NgbActiveModal, private datasetCommitService: DatasetCommitService) {
         super();
     }
 
     public saveEvent(): void {
         this.trackSubscription(
             this.datasetCommitService
-                .commitEventToDataset(
-                    this.datasetInfo.accountName,
-                    this.datasetInfo.datasetName,
-                    this.yamlTemplate,
-                )
+                .commitEventToDataset(this.datasetInfo.accountName, this.datasetInfo.datasetName, this.yamlTemplate)
                 .subscribe(),
         );
         this.activeModal.close(this.yamlTemplate);

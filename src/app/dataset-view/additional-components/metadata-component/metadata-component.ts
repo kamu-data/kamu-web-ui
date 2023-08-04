@@ -1,13 +1,6 @@
 import { DataHelpers } from "./../../../common/data.helpers";
 import { DatasetKind } from "./../../../api/kamu.graphql.interface";
-import {
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DatasetSchema } from "../../../interface/dataset.interface";
 import AppValues from "../../../common/app.values";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
@@ -55,15 +48,13 @@ export class MetadataComponent extends BaseComponent implements OnInit {
 
     ngOnInit() {
         this.trackSubscription(
-            this.appDatasetSubsService.onMetadataSchemaChanges.subscribe(
-                (schemaUpdate: MetadataSchemaUpdate) => {
-                    this.currentState = {
-                        schema: schemaUpdate.schema,
-                        metadata: schemaUpdate.metadata,
-                        pageInfo: schemaUpdate.pageInfo,
-                    };
-                },
-            ),
+            this.appDatasetSubsService.onMetadataSchemaChanges.subscribe((schemaUpdate: MetadataSchemaUpdate) => {
+                this.currentState = {
+                    schema: schemaUpdate.schema,
+                    metadata: schemaUpdate.metadata,
+                    pageInfo: schemaUpdate.pageInfo,
+                };
+            }),
         );
     }
 
@@ -80,9 +71,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     }
 
     public get currentPage(): number {
-        return this.currentState
-            ? this.currentState.pageInfo.currentPage + 1
-            : 1;
+        return this.currentState ? this.currentState.pageInfo.currentPage + 1 : 1;
     }
 
     public get totalPages(): number {
@@ -91,15 +80,12 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     }
 
     public get latestBlockhash(): string {
-        return this.currentState
-            ? (this.currentState.metadata.metadata.chain.blocks.nodes[0]
-                  .blockHash as string)
-            : "";
+        return this.currentState ? (this.currentState.metadata.metadata.chain.blocks.nodes[0].blockHash as string) : "";
     }
 
     public get latestBlockSystemTime(): string {
-        const systemTimeAsString: string | undefined = this.currentState
-            ?.metadata.metadata.chain.blocks.nodes[0].systemTime as string;
+        const systemTimeAsString: string | undefined = this.currentState?.metadata.metadata.chain.blocks.nodes[0]
+            .systemTime as string;
         return systemTimeAsString
             ? momentConvertDatetoLocalWithFormat({
                   date: new Date(String(systemTimeAsString)),

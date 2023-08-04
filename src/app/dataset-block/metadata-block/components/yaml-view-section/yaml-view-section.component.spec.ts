@@ -34,8 +34,8 @@ describe("YamlViewSectionComponent", () => {
     });
 
     it("should check onMetadataBlockChanges subscribe with ExecuteQuery ", () => {
-        const mockBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName
-            ?.metadata.chain.blockByHash as MetadataBlockFragment;
+        const mockBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+            .blockByHash as MetadataBlockFragment;
         blockService.metadataBlockChanges(mockBlock);
         component.ngOnInit();
         fixture.detectChanges();
@@ -43,8 +43,9 @@ describe("YamlViewSectionComponent", () => {
     });
 
     it("should check onMetadataBlockAsYamlChanges subscribe", () => {
-        const mockBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName
-            ?.metadata.chain.blockByHashEncoded as string | undefined;
+        const mockBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHashEncoded as
+            | string
+            | undefined;
         if (mockBlock) {
             blockService.metadataBlockAsYamlChanges(mockBlock);
             component.ngOnInit();

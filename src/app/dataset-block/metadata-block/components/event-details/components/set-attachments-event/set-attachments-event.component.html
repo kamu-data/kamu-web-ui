@@ -2,31 +2,17 @@
     class="position-relative border border-1 p-2 rounded-3"
     *ngFor="let item of event.attachments.items; let i = index"
 >
-    <span class="position-absolute text-muted group-box-label text-uppercase"
-        >Attachment#{{ i + 1 }}
-    </span>
+    <span class="position-absolute text-muted group-box-label text-uppercase">Attachment#{{ i + 1 }} </span>
     <div class="mx-4">
-        <app-block-row-data
-            [tooltip]="
-                'Path to an attachment if it was materialized into a file.'
-            "
-            [label]="'Path:'"
-        >
+        <app-block-row-data [tooltip]="'Path to an attachment if it was materialized into a file.'" [label]="'Path:'">
             <span>{{ item.path }}</span>
         </app-block-row-data>
     </div>
 
     <div class="mx-4">
-        <app-block-row-data
-            [tooltip]="'Content of the attachment.'"
-            [label]="'Content:'"
-        >
-        </app-block-row-data>
+        <app-block-row-data [tooltip]="'Content of the attachment.'" [label]="'Content:'"> </app-block-row-data>
         <div class="position-relative border border-1 p-4 mb-4 rounded-3">
-            <markdown
-                class="variable-binding text-break"
-                [data]="item.content"
-            ></markdown>
+            <markdown class="variable-binding text-break" [data]="item.content"></markdown>
         </div>
     </div>
 </div>

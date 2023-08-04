@@ -3,13 +3,7 @@ import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import { FormsModule } from "@angular/forms";
 import { MatMenuModule } from "@angular/material/menu";
 import { ChangeDetectionStrategy } from "@angular/core";
-import {
-    ComponentFixture,
-    fakeAsync,
-    flush,
-    TestBed,
-    tick,
-} from "@angular/core/testing";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import {
     dispatchInputEvent,
@@ -24,10 +18,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { SearchApi } from "src/app/api/search.api";
 import { of } from "rxjs";
-import {
-    DatasetAutocompleteItem,
-    TypeNames,
-} from "src/app/interface/search.interface";
+import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { mockDatasetBasicsFragment } from "src/app/search/mock.data";
 import { first } from "rxjs/operators";
 import AppValues from "src/app/common/app.values";
@@ -46,9 +37,7 @@ describe("AppHeaderComponent", () => {
     let navigationService: NavigationService;
     const DEFAULT_SEARCH_QUERY = "defaultSearchQuery";
     function pushNavigationEnd(): void {
-        routerMockEventSubject.next(
-            new NavigationEnd(1, ProjectLinks.URL_SEARCH, ""),
-        );
+        routerMockEventSubject.next(new NavigationEnd(1, ProjectLinks.URL_SEARCH, ""));
     }
 
     beforeEach(async () => {
@@ -122,37 +111,27 @@ describe("AppHeaderComponent", () => {
             const headerMenu = findNativeElement(fixture, "#app-header");
             emitClickOnElement(fixture, "#appHeaderMenuButton");
             isExpectation
-                ? expect(
-                      headerMenu.classList.contains("Details--on"),
-                  ).toBeFalse()
-                : expect(
-                      headerMenu.classList.contains("Details--on"),
-                  ).toBeTrue();
+                ? expect(headerMenu.classList.contains("Details--on")).toBeFalse()
+                : expect(headerMenu.classList.contains("Details--on")).toBeTrue();
         });
     });
 
     it("should emit on click app logo", () => {
-        const emitterSubscription$ = component.clickAppLogoEmitter
-            .pipe(first())
-            .subscribe();
+        const emitterSubscription$ = component.clickAppLogoEmitter.pipe(first()).subscribe();
         const link = findElementByDataTestId(fixture, "appLogo");
         link.click();
         expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should emit on click Help link", () => {
-        const emitterSubscription$ = component.clickHelpEmitter
-            .pipe(first())
-            .subscribe();
+        const emitterSubscription$ = component.clickHelpEmitter.pipe(first()).subscribe();
         const link = findElementByDataTestId(fixture, "openHelpHeader");
         link.click();
         expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should emit on click AddNew link", () => {
-        const emitterSubscription$ = component.addNewEmitter
-            .pipe(first())
-            .subscribe();
+        const emitterSubscription$ = component.addNewEmitter.pipe(first()).subscribe();
         const link = findElementByDataTestId(fixture, "addNewDataset");
         link.click();
         expect(emitterSubscription$.closed).toBeTrue();
@@ -164,9 +143,7 @@ describe("AppHeaderComponent", () => {
             name: "testName",
         } as AccountDetailsFragment;
 
-        const emitterSubscription$ = component.clickSettingsEmitter
-            .pipe(first())
-            .subscribe();
+        const emitterSubscription$ = component.clickSettingsEmitter.pipe(first()).subscribe();
 
         emitClickOnElement(fixture, "#appHeaderMenuButton");
         fixture.detectChanges();
@@ -182,9 +159,7 @@ describe("AppHeaderComponent", () => {
             name: "testName",
         } as AccountDetailsFragment;
 
-        const emitterSubscription$ = component.clickUserProfileEmitter
-            .pipe(first())
-            .subscribe();
+        const emitterSubscription$ = component.clickUserProfileEmitter.pipe(first()).subscribe();
 
         emitClickOnElement(fixture, "#appHeaderMenuButton");
         fixture.detectChanges();
@@ -200,9 +175,7 @@ describe("AppHeaderComponent", () => {
             name: "testName",
         } as AccountDetailsFragment;
 
-        const emitterSubscription$ = component.clickAnalyticsEmitter
-            .pipe(first())
-            .subscribe();
+        const emitterSubscription$ = component.clickAnalyticsEmitter.pipe(first()).subscribe();
 
         emitClickOnElement(fixture, "#appHeaderMenuButton");
         fixture.detectChanges();
@@ -218,9 +191,7 @@ describe("AppHeaderComponent", () => {
             name: "testName",
         } as AccountDetailsFragment;
 
-        const emitterSubscription$ = component.logOutEmitter
-            .pipe(first())
-            .subscribe();
+        const emitterSubscription$ = component.logOutEmitter.pipe(first()).subscribe();
 
         emitClickOnElement(fixture, "#appHeaderMenuButton");
         fixture.detectChanges();
@@ -231,35 +202,27 @@ describe("AppHeaderComponent", () => {
     });
 
     it("should emit on click Login link", () => {
-        const emitterSubscription$ = component.loginEmitter
-            .pipe(first())
-            .subscribe();
+        const emitterSubscription$ = component.loginEmitter.pipe(first()).subscribe();
         const link = findElementByDataTestId(fixture, "openUserProfileHeader");
         link.click();
         expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should emit on click Billing link", () => {
-        const emitterSubscription$ = component.clickBillingEmitter
-            .pipe(first())
-            .subscribe();
+        const emitterSubscription$ = component.clickBillingEmitter.pipe(first()).subscribe();
         const link = findElementByDataTestId(fixture, "openBillingPlanHeader");
         link.click();
         expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should emit on click Your datasets link", () => {
-        const emitterSubscription$ = component.clickUserDatasetsEmitter
-            .pipe(first())
-            .subscribe();
+        const emitterSubscription$ = component.clickUserDatasetsEmitter.pipe(first()).subscribe();
         component.onUserDatasets();
         expect(emitterSubscription$.closed).toBeTrue();
     });
 
     it("should emit on click User Info link", () => {
-        const emitterSubscription$ = component.userProfileEmitter
-            .pipe(first())
-            .subscribe();
+        const emitterSubscription$ = component.userProfileEmitter.pipe(first()).subscribe();
         component.onOpenUserInfo();
         expect(emitterSubscription$.closed).toBeTrue();
     });
@@ -270,10 +233,9 @@ describe("AppHeaderComponent", () => {
             __typename: TypeNames.allDataType,
             dataset: mockDatasetBasicsFragment,
         };
-        const searchApiAutocompleteDatasetSearchSpy = spyOn(
-            searchApi,
-            "autocompleteDatasetSearch",
-        ).and.callFake(() => of([MOCK_AUTOCOMPLETE_ITEM]));
+        const searchApiAutocompleteDatasetSearchSpy = spyOn(searchApi, "autocompleteDatasetSearch").and.callFake(() =>
+            of([MOCK_AUTOCOMPLETE_ITEM]),
+        );
 
         // Run search query
         const SEARCH_QUERY = "query";
@@ -281,9 +243,7 @@ describe("AppHeaderComponent", () => {
         tick(AppValues.SHORT_DELAY_MS); // debouncer
 
         // This should activate search API and update view
-        expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(
-            SEARCH_QUERY,
-        );
+        expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(SEARCH_QUERY);
         fixture.detectChanges();
 
         // Expect emitter event with hardcoded auto-complete item
@@ -295,16 +255,10 @@ describe("AppHeaderComponent", () => {
 
         // After click on selection option, search typeahead should hide
         const typeAheadInputEl = findNativeElement(fixture, "#typeahead-http");
-        const typeAheadInputElBlurSpy = spyOn(
-            typeAheadInputEl,
-            "blur",
-        ).and.callThrough();
+        const typeAheadInputElBlurSpy = spyOn(typeAheadInputEl, "blur").and.callThrough();
 
         // Do actual click
-        const typeAheadSelectionEl = findNativeElement(
-            fixture,
-            "button.dropdown-item",
-        );
+        const typeAheadSelectionEl = findNativeElement(fixture, "button.dropdown-item");
         typeAheadSelectionEl.click();
         fixture.detectChanges();
 
@@ -319,15 +273,9 @@ describe("AppHeaderComponent", () => {
 
     it("should check search method triggers menu click on mobile view", fakeAsync(() => {
         component.isMobileView = true;
-        const triggerMenuClickSpy = spyOn(
-            component,
-            "triggerMenuClick",
-        ).and.callThrough();
+        const triggerMenuClickSpy = spyOn(component, "triggerMenuClick").and.callThrough();
 
-        const navigateToSearchSpy = spyOn(
-            navigationService,
-            "navigateToSearch",
-        );
+        const navigateToSearchSpy = spyOn(navigationService, "navigateToSearch");
 
         const event = new KeyboardEvent("keyup", {
             key: "Enter",

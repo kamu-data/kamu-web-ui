@@ -1,19 +1,7 @@
-import {
-    ComponentFixture,
-    TestBed,
-    fakeAsync,
-    flush,
-    tick,
-} from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 
 import { CacheFieldComponent } from "./cache-field.component";
-import {
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-} from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { findElement } from "src/app/common/base-test.helpers.spec";
@@ -28,12 +16,7 @@ describe("CacheFieldComponent", () => {
         await TestBed.configureTestingModule({
             declarations: [CacheFieldComponent, TooltipIconComponent],
             providers: [FormBuilder],
-            imports: [
-                ReactiveFormsModule,
-                FormsModule,
-                NgbTooltipModule,
-                SharedTestModule,
-            ],
+            imports: [ReactiveFormsModule, FormsModule, NgbTooltipModule, SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(CacheFieldComponent);
@@ -49,14 +32,8 @@ describe("CacheFieldComponent", () => {
     });
 
     it("should check checked and unchecked value", fakeAsync(() => {
-        const cacheCheckbox = findElement(
-            fixture,
-            '[data-test-id="cache-control"]',
-        );
-        const onCheckedCacheSpy = spyOn(
-            component,
-            "onCheckedCache",
-        ).and.callThrough();
+        const cacheCheckbox = findElement(fixture, '[data-test-id="cache-control"]');
+        const onCheckedCacheSpy = spyOn(component, "onCheckedCache").and.callThrough();
 
         cacheCheckbox.triggerEventHandler("change", {
             target: { checked: true },

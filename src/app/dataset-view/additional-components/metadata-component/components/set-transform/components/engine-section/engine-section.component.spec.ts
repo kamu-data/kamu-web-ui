@@ -1,10 +1,4 @@
-import {
-    ComponentFixture,
-    TestBed,
-    fakeAsync,
-    flush,
-    tick,
-} from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { EngineSectionComponent } from "./engine-section.component";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
@@ -26,13 +20,7 @@ describe("EngineSectionComponent", () => {
         await TestBed.configureTestingModule({
             declarations: [EngineSectionComponent, EngineSelectComponent],
             providers: [Apollo],
-            imports: [
-                ApolloModule,
-                ApolloTestingModule,
-                FormsModule,
-                MatDividerModule,
-                SharedTestModule,
-            ],
+            imports: [ApolloModule, ApolloTestingModule, FormsModule, MatDividerModule, SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(EngineSectionComponent);
@@ -50,25 +38,18 @@ describe("EngineSectionComponent", () => {
     it("should check init default engine and image", fakeAsync(() => {
         component.ngOnInit();
         tick();
-        expect(component.selectedEngine.toUpperCase()).toBe(
-            mockEngines.data.knownEngines[0].name.toUpperCase(),
-        );
-        expect(component.selectedImage).toBe(
-            mockEngines.data.knownEngines[0].latestImage,
-        );
+        expect(component.selectedEngine.toUpperCase()).toBe(mockEngines.data.knownEngines[0].name.toUpperCase());
+        expect(component.selectedImage).toBe(mockEngines.data.knownEngines[0].latestImage);
         flush();
     }));
 
     it("should check init engine and image when currentSetTransformEvent is not null", fakeAsync(() => {
-        component.currentSetTransformEvent =
-            mockSetPollingSourceEvent.preprocess;
+        component.currentSetTransformEvent = mockSetPollingSourceEvent.preprocess;
         fixture.detectChanges();
         component.ngOnInit();
         tick();
         if (mockSetPollingSourceEvent.preprocess)
-            expect(component.selectedEngine).toBe(
-                mockSetPollingSourceEvent.preprocess.engine,
-            );
+            expect(component.selectedEngine).toBe(mockSetPollingSourceEvent.preprocess.engine);
         flush();
     }));
 });

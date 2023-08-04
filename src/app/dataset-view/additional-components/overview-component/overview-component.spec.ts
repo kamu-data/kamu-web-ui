@@ -2,10 +2,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { ApolloModule } from "apollo-angular";
 import { Apollo } from "apollo-angular";
 import { mockDatasetBasicsFragment } from "./../../../search/mock.data";
-import {
-    mockMetadataSchemaUpdate,
-    mockOverviewDataUpdate,
-} from "./../data-tabs.mock";
+import { mockMetadataSchemaUpdate, mockOverviewDataUpdate } from "./../data-tabs.mock";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewComponent } from "./overview-component";
@@ -27,12 +24,7 @@ describe("OverviewComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [OverviewComponent],
-            imports: [
-                ApolloModule,
-                ReactiveFormsModule,
-                MatChipsModule,
-                SharedTestModule,
-            ],
+            imports: [ApolloModule, ReactiveFormsModule, MatChipsModule, SharedTestModule],
             providers: [Apollo],
         }).compileComponents();
 
@@ -81,10 +73,7 @@ describe("OverviewComponent", () => {
     });
 
     it("should check open website", () => {
-        const navigationServiceSpy = spyOn(
-            navigationService,
-            "navigateToWebsite",
-        );
+        const navigationServiceSpy = spyOn(navigationService, "navigateToWebsite");
         const testWebsite = "http://google.com";
         component.showWebsite(testWebsite);
         expect(navigationServiceSpy).toHaveBeenCalledWith(testWebsite);
@@ -113,10 +102,7 @@ describe("OverviewComponent", () => {
     });
 
     it("should navigate to create SetPollingSource event page", () => {
-        const navigateToAddPollingSourceSpy = spyOn(
-            navigationService,
-            "navigateToAddPollingSource",
-        );
+        const navigateToAddPollingSourceSpy = spyOn(navigationService, "navigateToAddPollingSource");
         component.navigateToAddPollingSource();
         expect(navigateToAddPollingSourceSpy).toHaveBeenCalledWith({
             accountName: mockDatasetBasicsFragment.owner.name,

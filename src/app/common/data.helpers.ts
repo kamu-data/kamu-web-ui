@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { ValidatorFn, Validators } from "@angular/forms";
-import {
-    DatasetKind,
-    MetadataBlockFragment,
-} from "../api/kamu.graphql.interface";
+import { DatasetKind, MetadataBlockFragment } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
 import { SetPollingSourceSection } from "../shared/shared.types";
@@ -12,18 +9,13 @@ export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
     public static readonly BLOCK_DESCRIBE_SET_TRANSFORM = "Query changed";
     public static readonly BLOCK_DESCRIBE_SET_VOCAB = "Vocabulary changed";
-    public static readonly BLOCK_DESCRIBE_SET_POLLING_SOURCE =
-        "Polling source changed";
-    public static readonly BLOCK_DESCRIBE_SET_INFO =
-        "Basic information updated";
-    public static readonly BLOCK_DESCRIBE_SET_ATTACHMENTS =
-        "Attachments updated";
+    public static readonly BLOCK_DESCRIBE_SET_POLLING_SOURCE = "Polling source changed";
+    public static readonly BLOCK_DESCRIBE_SET_INFO = "Basic information updated";
+    public static readonly BLOCK_DESCRIBE_SET_ATTACHMENTS = "Attachments updated";
     public static readonly BLOCK_DESCRIBE_SET_WATERMARK = "Watermark updated";
     private static readonly SHIFT_ATTACHMENTS_VIEW = "\u00A0".repeat(12);
 
-    public static capitalizeFirstLetter(
-        kind: DatasetKind | SetPollingSourceSection,
-    ): string {
+    public static capitalizeFirstLetter(kind: DatasetKind | SetPollingSourceSection): string {
         return kind.charAt(0).toUpperCase() + kind.slice(1).toLowerCase();
     }
 
@@ -57,9 +49,7 @@ export class DataHelpers {
         }
     }
 
-    public static descriptionMergeStrategy(
-        type: string | undefined,
-    ): EventPropertyLogo {
+    public static descriptionMergeStrategy(type: string | undefined): EventPropertyLogo {
         switch (type) {
             case "MergeStrategyLedger":
                 return {
@@ -134,25 +124,17 @@ export class DataHelpers {
         }
     }
 
-    public static descriptionForMetadataBlock(
-        block: MetadataBlockFragment,
-    ): string {
+    public static descriptionForMetadataBlock(block: MetadataBlockFragment): string {
         const event = block.event;
         switch (event.__typename) {
             case "AddData":
                 return `Added ${
-                    event.outputData
-                        ? event.outputData.interval.end -
-                          event.outputData.interval.start +
-                          1
-                        : 0
+                    event.outputData ? event.outputData.interval.end - event.outputData.interval.start + 1 : 0
                 } new records`;
             case "ExecuteQuery":
                 return `Transformation produced ${
                     event.queryOutputData
-                        ? event.queryOutputData.interval.end -
-                          event.queryOutputData.interval.start +
-                          1
+                        ? event.queryOutputData.interval.end - event.queryOutputData.interval.start + 1
                         : 0
                 } new records`;
             case "Seed":
@@ -185,16 +167,11 @@ export class DataHelpers {
         return reHasUnescapedHtml.test(text)
             ? `|\n${this.SHIFT_ATTACHMENTS_VIEW}${text
                   .replace(reUnescapedHtml, (chr) => htmlEscapes[chr])
-                  .replace(
-                      /(\r\n|\n|\r)/gm,
-                      "\n" + this.SHIFT_ATTACHMENTS_VIEW,
-                  )}`
+                  .replace(/(\r\n|\n|\r)/gm, "\n" + this.SHIFT_ATTACHMENTS_VIEW)}`
             : text;
     }
 }
-export const getValidators = (
-    validators: JsonFormValidators,
-): ValidatorFn[] => {
+export const getValidators = (validators: JsonFormValidators): ValidatorFn[] => {
     const validatorsToAdd: ValidatorFn[] = [];
     Object.entries(validators).forEach(([key, value]) => {
         switch (key) {

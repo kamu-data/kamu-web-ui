@@ -39,10 +39,7 @@ describe("ProcessFormService", () => {
     });
 
     it("should check transform form is call", () => {
-        const transformFormSpy = spyOn(
-            service,
-            "transformForm",
-        ).and.callThrough();
+        const transformFormSpy = spyOn(service, "transformForm").and.callThrough();
         const initialResult = {
             fetch: {
                 order: "NONE",
@@ -105,9 +102,7 @@ describe("ProcessFormService", () => {
         expect(formGroupFetchContainer.value).toEqual(initialResult);
         service.transformForm(formGroupFetchContainer);
 
-        expect(formGroupFetchContainer.value as SchemaControlType).toEqual(
-            expectedResult,
-        );
+        expect(formGroupFetchContainer.value as SchemaControlType).toEqual(expectedResult);
     });
 
     it("should check parse command correct on the PREPARE step. ", () => {
@@ -142,15 +137,11 @@ describe("ProcessFormService", () => {
         const expectedResult = {
             fetch: { kind: "container" },
             read: { kind: "csv", schema: ["`id (A.M.)` BIGINT"] },
-            prepare: [
-                { kind: "pipe", command: ["i", "-c", "'1,/OBSERVATION/d'"] },
-            ],
+            prepare: [{ kind: "pipe", command: ["i", "-c", "'1,/OBSERVATION/d'"] }],
             merge: { kind: "append" },
         };
         service.transformForm(formGroupFetchContainer);
 
-        expect(formGroupFetchContainer.value as SchemaControlType).toEqual(
-            expectedResult,
-        );
+        expect(formGroupFetchContainer.value as SchemaControlType).toEqual(expectedResult);
     });
 });

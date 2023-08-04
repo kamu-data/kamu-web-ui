@@ -1,21 +1,10 @@
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { SearchService } from "./search.service";
-import {
-    DatasetSearchResult,
-    SearchFilters,
-} from "../interface/search.interface";
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    OnInit,
-} from "@angular/core";
+import { DatasetSearchResult, SearchFilters } from "../interface/search.interface";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { BaseComponent } from "../common/base.component";
 import { NavigationService } from "../services/navigation.service";
-import {
-    DatasetSearchOverviewFragment,
-    PageBasedInfo,
-} from "../api/kamu.graphql.interface";
+import { DatasetSearchOverviewFragment, PageBasedInfo } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { requireValue } from "../common/app.helpers";
 import ProjectLinks from "../project-links";
@@ -161,31 +150,25 @@ export class SearchComponent extends BaseComponent implements OnInit {
                 )
                 .subscribe(() => this.changePageAndSearch()),
 
-            this.searchService.onOverviewSearchChanges.subscribe(
-                (data: DatasetSearchResult) => {
-                    this.tableData.tableSource = data.datasets;
-                    this.tableData.pageInfo = data.pageInfo;
-                    this.tableData.totalCount = data.totalCount;
-                    this.cdr.markForCheck();
-                },
-            ),
+            this.searchService.onOverviewSearchChanges.subscribe((data: DatasetSearchResult) => {
+                this.tableData.tableSource = data.datasets;
+                this.tableData.pageInfo = data.pageInfo;
+                this.tableData.totalCount = data.totalCount;
+                this.cdr.markForCheck();
+            }),
         );
     }
 
     private changePageAndSearch(): void {
         let queryValue = "";
-        const queryParam = this.activatedRoute.snapshot.queryParamMap.get(
-            ProjectLinks.URL_QUERY_PARAM_QUERY,
-        );
+        const queryParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_QUERY);
         if (queryParam) {
             queryValue = requireValue(queryParam);
         }
         this.searchValue = queryValue;
 
         let page = 1;
-        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(
-            ProjectLinks.URL_QUERY_PARAM_PAGE,
-        );
+        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
         if (pageParam) {
             page = +requireValue(pageParam);
         }
@@ -228,15 +211,10 @@ export class SearchComponent extends BaseComponent implements OnInit {
     }
 
     private onSearchDatasets(): void {
-        this.searchService.searchDatasets(
-            this.searchValue,
-            this.currentPage - 1,
-        );
+        this.searchService.searchDatasets(this.searchValue, this.currentPage - 1);
     }
 
     public updateAllComplete() {
-        this.allComplete = this.filters.every((t) =>
-            t.subtasks?.every((sub) => sub.completed),
-        );
+        this.allComplete = this.filters.every((t) => t.subtasks?.every((sub) => sub.completed));
     }
 }

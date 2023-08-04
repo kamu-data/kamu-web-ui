@@ -4,19 +4,11 @@
         <label for="inputDatasets" class="form-label ps-1"> Queries</label>
     </div>
     <div class="d-flex justify-content-end mt-2 mb-3">
-        <button
-            (click)="addQuery()"
-            class="button-style"
-            data-test-id="set-transform-add-query"
-        >
-            + Add query
-        </button>
+        <button (click)="addQuery()" class="button-style" data-test-id="set-transform-add-query">+ Add query</button>
     </div>
     <div class="block-query mb-3" *ngFor="let query of queries; let i = index">
         <div>
-            <div
-                class="d-flex flex-row justify-content-between align-items-end"
-            >
+            <div class="d-flex flex-row justify-content-between align-items-end">
                 <div>
                     <label for="alias-query" class="form-label">Alias</label>
                     <div class="d-flex align-items-center">
@@ -26,11 +18,7 @@
                             [(ngModel)]="queries[i].alias"
                             [disabled]="isLastQuery(i)"
                         />
-                        <span
-                            *ngIf="isLastQuery(i)"
-                            class="ms-4 badge bg-success"
-                            >output</span
-                        >
+                        <span *ngIf="isLastQuery(i)" class="ms-4 badge bg-success">output</span>
                     </div>
                 </div>
                 <div class="pt-4" *ngIf="!isLastQuery(i)">

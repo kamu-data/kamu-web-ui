@@ -1,10 +1,7 @@
 import AppValues from "src/app/common/app.values";
 import { OffsetInterval } from "./../../../api/kamu.graphql.interface";
 import { Location } from "@angular/common";
-import {
-    DataSqlErrorUpdate,
-    DataUpdate,
-} from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DataSqlErrorUpdate, DataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -54,18 +51,15 @@ export class DataComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         this.trackSubscriptions(
-            this.appDatasetSubsService.onDatasetDataChanges.subscribe(
-                (dataUpdate: DataUpdate) => {
-                    if (dataUpdate.currentVocab?.offsetColumn) {
-                        this.offsetColumnName =
-                            dataUpdate.currentVocab.offsetColumn;
-                    }
-                    this.currentData = dataUpdate.content;
-                    this.currentSchema = dataUpdate.schema;
-                    this.sqlErrorMarker = null;
-                    this.cdr.markForCheck();
-                },
-            ),
+            this.appDatasetSubsService.onDatasetDataChanges.subscribe((dataUpdate: DataUpdate) => {
+                if (dataUpdate.currentVocab?.offsetColumn) {
+                    this.offsetColumnName = dataUpdate.currentVocab.offsetColumn;
+                }
+                this.currentData = dataUpdate.content;
+                this.currentSchema = dataUpdate.schema;
+                this.sqlErrorMarker = null;
+                this.cdr.markForCheck();
+            }),
             this.appDatasetSubsService.onDatasetDataSqlErrorOccured.subscribe(
                 (dataSqlErrorUpdate: DataSqlErrorUpdate) => {
                     this.currentData = [];
@@ -105,10 +99,7 @@ export class DataComponent extends BaseComponent implements OnInit {
         if (this.datasetBasics) {
             this.sqlRequestCode += `'${this.datasetBasics.name as string}'`;
             const offset = this.location.getState() as Partial<OffsetInterval>;
-            if (
-                typeof offset.start !== "undefined" &&
-                typeof offset.end !== "undefined"
-            ) {
+            if (typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
                 this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
             }
         }

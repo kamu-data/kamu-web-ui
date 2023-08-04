@@ -1,39 +1,20 @@
 <div class="timeline-block">
     <div *ngFor="let block of history">
-        <div
-            class="timeline-block__item timeline-block__item--condensed pt-0 pb-2"
-        >
+        <div class="timeline-block__item timeline-block__item--condensed pt-0 pb-2">
             <div class="timeline-block__item-badge">
                 <svg-icon name="git-commit"></svg-icon>
             </div>
             <div class="timeline-block__body">
-                <ol
-                    class="mt-2 list-unstyled box box--condensed ml-n6 ml-sm-0 position-relative"
-                >
+                <ol class="mt-2 list-unstyled box box--condensed ml-n6 ml-sm-0 position-relative">
                     <li
                         class="box__row box__row--focus-gray mt-0 d-flex"
                         data-url="/kamu-data/kamu-web-ui/commits/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d/commits_list_item"
                     >
                         <div class="flex-auto min-width-0 Details">
-                            <div
-                                class="d-flex align-items-center mt-1"
-                                style="gap: 5px"
-                            >
-                                <mat-icon
-                                    *ngIf="block.event.__typename === 'Seed'"
-                                    >add_circle_outline</mat-icon
-                                >
-                                <mat-icon
-                                    *ngIf="block.event.__typename === 'AddData'"
-                                    >input</mat-icon
-                                >
-                                <mat-icon
-                                    *ngIf="
-                                        block.event.__typename ===
-                                        'ExecuteQuery'
-                                    "
-                                    >call_merge</mat-icon
-                                >
+                            <div class="d-flex align-items-center mt-1" style="gap: 5px">
+                                <mat-icon *ngIf="block.event.__typename === 'Seed'">add_circle_outline</mat-icon>
+                                <mat-icon *ngIf="block.event.__typename === 'AddData'">input</mat-icon>
+                                <mat-icon *ngIf="block.event.__typename === 'ExecuteQuery'">call_merge</mat-icon>
                                 <mat-icon
                                     *ngIf="
                                         [
@@ -50,13 +31,7 @@
                                 >
                                 <a
                                     class="link--primary font-weight-bold"
-                                    (click)="
-                                        navigateToMetadataBlock(
-                                            block.author.name,
-                                            datasetName,
-                                            block.blockHash
-                                        )
-                                    "
+                                    (click)="navigateToMetadataBlock(block.author.name, datasetName, block.blockHash)"
                                     data-test-id="navigate-to-block"
                                     >{{ descriptionForMetadataBlock(block) }}
                                 </a>
@@ -64,10 +39,7 @@
 
                             <div class="d-flex align-items-center mt-1">
                                 <div class="avatar-stack flex-self-start">
-                                    <div
-                                        class="avatar-stack__body"
-                                        aria-label=""
-                                    >
+                                    <div class="avatar-stack__body" aria-label="">
                                         <a
                                             class="avatar avatar-user"
                                             style="width: 20px; height: 20px"
@@ -94,28 +66,19 @@
                                 <div class="f6 color-fg-muted min-width-0">
                                     <a
                                         class="commit-author user-mention"
-                                        [title]="
-                                            'View all commits by ' +
-                                            block.author.name
-                                        "
+                                        [title]="'View all commits by ' + block.author.name"
                                         [routerLink]="['/', block.author.name]"
                                         >{{ block.author.name }}</a
                                     >
 
                                     committed
-                                    <app-display-time
-                                        class="no-wrap"
-                                        [data]="block.systemTime"
-                                    >
-                                    </app-display-time>
+                                    <app-display-time class="no-wrap" [data]="block.systemTime"> </app-display-time>
                                 </div>
                                 <div class="ml-1"></div>
                             </div>
                         </div>
 
-                        <div
-                            class="d-none d-md-flex align-items-center flex-shrink-0"
-                        >
+                        <div class="d-none d-md-flex align-items-center flex-shrink-0">
                             <div>
                                 <button
                                     type="button"
@@ -130,10 +93,7 @@
                                 </button>
                             </div>
 
-                            <div
-                                data-view-component="true"
-                                class="BtnGroup m-4"
-                            >
+                            <div data-view-component="true" class="BtnGroup m-4">
                                 <app-display-hash
                                     [value]="block.blockHash"
                                     [navigationTargetDataset]="{
@@ -141,9 +101,7 @@
                                         datasetName: this.datasetName
                                     }"
                                     [showCopyButton]="true"
-                                    [class]="
-                                        'text-decoration-none text-dark mr-4 hashBlock'
-                                    "
+                                    [class]="'text-decoration-none text-dark mr-4 hashBlock'"
                                 ></app-display-hash>
                             </div>
                             <div data-view-component="true" class="BtnGroup">
@@ -171,16 +129,12 @@
         </div>
         <div class="flex-1">
             This commit was signed with the committer’s
-            <strong class="signed-commit-verified-label"
-                >verified signature</strong
-            >.
+            <strong class="signed-commit-verified-label">verified signature</strong>.
         </div>
     </div>
 </ng-template>
 <ng-template #popContent>
-    <div
-        class="signer-block-info d-grid justify-content-between align-items-center"
-    >
+    <div class="signer-block-info d-grid justify-content-between align-items-center">
         <a class="pe-1" aria-label="sergiimk" href="/sergiimk">
             <img
                 src="https://avatars.githubusercontent.com/u/204914?s=64&amp;v=4"
@@ -189,20 +143,14 @@
             />
         </a>
         <span class="signed-commit-signer-name flex-1">
-            <a
-                class="signer"
-                (click)="navigateToOwnerView('testName')"
-                data-test-id="navigate-to-owner-link"
+            <a class="signer" (click)="navigateToOwnerView('testName')" data-test-id="navigate-to-owner-link"
                 >owner.name</a
             >
             row.owner.name
         </span>
     </div>
     <div class="signed-commit-footer p-1">
-        <span class="d-block"
-            >GPG key ID:
-            <span class="signed-commit-footer__id">7D279F791DB8E4F7</span></span
-        >
+        <span class="d-block">GPG key ID: <span class="signed-commit-footer__id">7D279F791DB8E4F7</span></span>
         <a
             href="https://docs.github.com/github/authenticating-to-github/displaying-verification-statuses-for-all-of-your-commits"
         >

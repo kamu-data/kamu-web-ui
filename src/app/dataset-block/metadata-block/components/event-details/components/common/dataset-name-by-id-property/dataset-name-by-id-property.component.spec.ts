@@ -37,10 +37,7 @@ describe("DatasetIdAndNamePropertyComponent", () => {
     });
 
     it("should check call requestDatasetInfoById from datasetSevice in ngOnInit", () => {
-        const requestDatasetInfoByIdSpy = spyOn(
-            datasetSevice,
-            "requestDatasetInfoById",
-        ).and.returnValue(
+        const requestDatasetInfoByIdSpy = spyOn(datasetSevice, "requestDatasetInfoById").and.returnValue(
             of({
                 __typename: "Query",
                 datasets: {
@@ -54,13 +51,8 @@ describe("DatasetIdAndNamePropertyComponent", () => {
     });
 
     it("should check navigate to dataset view", () => {
-        const navigateToDatasetViewSpy = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.navigateToDatasetView();
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining(testDatasetInfo),
-        );
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(jasmine.objectContaining(testDatasetInfo));
     });
 });

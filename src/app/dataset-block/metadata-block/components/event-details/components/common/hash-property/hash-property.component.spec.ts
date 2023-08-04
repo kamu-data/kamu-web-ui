@@ -11,11 +11,7 @@ describe("HashPropertyComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [HashPropertyComponent],
-            imports: [
-                DisplayHashModule,
-                ToastrModule.forRoot(),
-                SharedTestModule,
-            ],
+            imports: [DisplayHashModule, ToastrModule.forRoot(), SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(HashPropertyComponent);

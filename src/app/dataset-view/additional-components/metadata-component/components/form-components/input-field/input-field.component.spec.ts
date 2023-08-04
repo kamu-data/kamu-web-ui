@@ -1,18 +1,10 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import {
-    FormControl,
-    FormGroup,
-    ReactiveFormsModule,
-    Validators,
-} from "@angular/forms";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { InputFieldComponent } from "./input-field.component";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import {
-    dispatchInputEvent,
-    findInputElememtByDataTestId,
-} from "src/app/common/base-test.helpers.spec";
+import { dispatchInputEvent, findInputElememtByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { ChangeDetectionStrategy } from "@angular/core";
 import AppValues from "src/app/common/app.values";
 import { SharedTestModule } from "src/app/common/shared-test.module";
@@ -35,10 +27,7 @@ describe("InputFieldComponent", () => {
         component = fixture.componentInstance;
 
         component.form = new FormGroup({
-            test: new FormControl("", [
-                Validators.required,
-                Validators.pattern(AppValues.URL_PATTERN),
-            ]),
+            test: new FormControl("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN)]),
         });
         component.controlName = "test";
         component.dataTestId = "input";
@@ -52,10 +41,7 @@ describe("InputFieldComponent", () => {
         fixture.detectChanges();
         dispatchInputEvent(fixture, "input", "");
 
-        const requiredMessage = findInputElememtByDataTestId(
-            fixture,
-            "error-test-required",
-        );
+        const requiredMessage = findInputElememtByDataTestId(fixture, "error-test-required");
         expect(requiredMessage.textContent?.trim()).toBe("Field is required");
     });
 
@@ -67,13 +53,8 @@ describe("InputFieldComponent", () => {
 
         dispatchInputEvent(fixture, "input", "mock");
 
-        const maxLengthdMessage = findInputElememtByDataTestId(
-            fixture,
-            "error-test-maxLength",
-        );
-        expect(maxLengthdMessage.textContent?.trim()).toBe(
-            "Field can be max 1 character",
-        );
+        const maxLengthdMessage = findInputElememtByDataTestId(fixture, "error-test-maxLength");
+        expect(maxLengthdMessage.textContent?.trim()).toBe("Field can be max 1 character");
     });
 
     it("should check pattern validation error", () => {
@@ -81,12 +62,7 @@ describe("InputFieldComponent", () => {
 
         dispatchInputEvent(fixture, "input", "mock");
 
-        const patternMessage = findInputElememtByDataTestId(
-            fixture,
-            "error-test-pattern",
-        );
-        expect(patternMessage.textContent?.trim()).toBe(
-            "Field format is wrong",
-        );
+        const patternMessage = findInputElememtByDataTestId(fixture, "error-test-pattern");
+        expect(patternMessage.textContent?.trim()).toBe("Field format is wrong");
     });
 });

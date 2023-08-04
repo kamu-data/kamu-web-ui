@@ -42,9 +42,7 @@ describe("HistoryComponent", () => {
 
         const emitterSubscription$ = component.onPageChangeEmit
             .pipe(first())
-            .subscribe((notification) =>
-                expect(notification).toEqual(testChangeNotification),
-            );
+            .subscribe((notification) => expect(notification).toEqual(testChangeNotification));
 
         component.onPageChange(testChangeNotification);
         expect(emitterSubscription$.closed).toBeTrue();

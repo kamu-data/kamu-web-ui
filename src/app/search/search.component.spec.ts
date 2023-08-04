@@ -24,11 +24,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DatasetListComponent } from "../components/dataset-list-component/dataset-list.component";
 import { FormsModule } from "@angular/forms";
 import { DatasetListItemComponent } from "../components/dataset-list-item/dataset-list-item.component";
-import {
-    NgbPaginationModule,
-    NgbPopoverModule,
-    NgbRatingModule,
-} from "@ng-bootstrap/ng-bootstrap";
+import { NgbPaginationModule, NgbPopoverModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
 import { DisplayTimeModule } from "../components/display-time/display-time.module";
 import { MatIconModule } from "@angular/material/icon";
 import { PaginationComponent } from "../components/pagination-component/pagination.component";
@@ -46,12 +42,7 @@ describe("SearchComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                SearchComponent,
-                DatasetListComponent,
-                DatasetListItemComponent,
-                PaginationComponent,
-            ],
+            declarations: [SearchComponent, DatasetListComponent, DatasetListItemComponent, PaginationComponent],
             imports: [
                 ApolloTestingModule,
                 RouterTestingModule,
@@ -79,36 +70,20 @@ describe("SearchComponent", () => {
 
     function setSearchUrl(searchQuery?: string, page?: number): void {
         if (searchQuery) {
-            activeRouteMockQueryParamMap.set(
-                ProjectLinks.URL_QUERY_PARAM_QUERY,
-                searchQuery,
-            );
-        } else if (
-            activeRouteMockQueryParamMap.has(ProjectLinks.URL_QUERY_PARAM_QUERY)
-        ) {
-            activeRouteMockQueryParamMap.delete(
-                ProjectLinks.URL_QUERY_PARAM_QUERY,
-            );
+            activeRouteMockQueryParamMap.set(ProjectLinks.URL_QUERY_PARAM_QUERY, searchQuery);
+        } else if (activeRouteMockQueryParamMap.has(ProjectLinks.URL_QUERY_PARAM_QUERY)) {
+            activeRouteMockQueryParamMap.delete(ProjectLinks.URL_QUERY_PARAM_QUERY);
         }
 
         if (page) {
-            activeRouteMockQueryParamMap.set(
-                ProjectLinks.URL_QUERY_PARAM_PAGE,
-                page.toString(),
-            );
-        } else if (
-            activeRouteMockQueryParamMap.has(ProjectLinks.URL_QUERY_PARAM_PAGE)
-        ) {
-            activeRouteMockQueryParamMap.delete(
-                ProjectLinks.URL_QUERY_PARAM_PAGE,
-            );
+            activeRouteMockQueryParamMap.set(ProjectLinks.URL_QUERY_PARAM_PAGE, page.toString());
+        } else if (activeRouteMockQueryParamMap.has(ProjectLinks.URL_QUERY_PARAM_PAGE)) {
+            activeRouteMockQueryParamMap.delete(ProjectLinks.URL_QUERY_PARAM_PAGE);
         }
     }
 
     function pushNavigationEnd(): void {
-        routerMockEventSubject.next(
-            new NavigationEnd(1, ProjectLinks.URL_SEARCH, ""),
-        );
+        routerMockEventSubject.next(new NavigationEnd(1, ProjectLinks.URL_SEARCH, ""));
     }
 
     beforeEach(() => {
@@ -188,48 +163,31 @@ describe("SearchComponent", () => {
         const testCurrentPage = 2;
         component.searchValue = testSearchValue;
         fixture.detectChanges();
-        const navigationServiceSpy = spyOn(
-            navigationService,
-            "navigateToSearch",
-        );
+        const navigationServiceSpy = spyOn(navigationService, "navigateToSearch");
         component.onPageChange(testCurrentPage);
         expect(component.currentPage).toBe(testCurrentPage);
-        expect(navigationServiceSpy).toHaveBeenCalledWith(
-            testSearchValue,
-            testCurrentPage,
-        );
+        expect(navigationServiceSpy).toHaveBeenCalledWith(testSearchValue, testCurrentPage);
     });
 
     it("should check onPageChange method when page equal 0", () => {
         const testSearchValue = "test";
         component.searchValue = testSearchValue;
         fixture.detectChanges();
-        const navigationServiceSpy = spyOn(
-            navigationService,
-            "navigateToSearch",
-        );
+        const navigationServiceSpy = spyOn(navigationService, "navigateToSearch");
         component.onPageChange(0);
         expect(component.currentPage).toBe(1);
         expect(navigationServiceSpy).toHaveBeenCalledWith(testSearchValue);
     });
 
     it("should check search results update the dataset table", () => {
-        spyOn(searchApi, "overviewDatasetSearch").and.returnValue(
-            of(mockSearchOverviewResponse),
-        );
+        spyOn(searchApi, "overviewDatasetSearch").and.returnValue(of(mockSearchOverviewResponse));
 
         const testSearchQuery = "test";
         searchService.searchDatasets(testSearchQuery);
 
-        expect(component.tableData.pageInfo).toEqual(
-            mockSearchOverviewResponse.search.query.pageInfo,
-        );
-        expect(component.tableData.totalCount).toEqual(
-            mockSearchOverviewResponse.search.query.totalCount,
-        );
-        expect(component.tableData.tableSource).toEqual(
-            mockSearchOverviewResponse.search.query.nodes,
-        );
+        expect(component.tableData.pageInfo).toEqual(mockSearchOverviewResponse.search.query.pageInfo);
+        expect(component.tableData.totalCount).toEqual(mockSearchOverviewResponse.search.query.totalCount);
+        expect(component.tableData.tableSource).toEqual(mockSearchOverviewResponse.search.query.nodes);
 
         fixture.detectChanges();
     });

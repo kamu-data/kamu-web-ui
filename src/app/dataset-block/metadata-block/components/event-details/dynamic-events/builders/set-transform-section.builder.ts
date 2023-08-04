@@ -1,8 +1,5 @@
 import { Dataset } from "./../../../../../../api/kamu.graphql.interface";
-import {
-    SetTransform,
-    TransformInput,
-} from "src/app/api/kamu.graphql.interface";
+import { SetTransform, TransformInput } from "src/app/api/kamu.graphql.interface";
 import { EventSectionBuilder } from "./event-section.builder";
 import { SET_TRANSFORM_SOURCE_DESCRIPTORS } from "../../components/set-transform-event/set-transform-event.source";
 import { EventRow, EventSection } from "../dynamic-events.model";
@@ -21,12 +18,7 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                     case SetTransformSection.TRANSFORM: {
                         result.push({
                             title: section,
-                            rows: this.buildEventRows(
-                                event,
-                                SET_TRANSFORM_SOURCE_DESCRIPTORS,
-                                section,
-                                false,
-                            ),
+                            rows: this.buildEventRows(event, SET_TRANSFORM_SOURCE_DESCRIPTORS, section, false),
                         });
                         break;
                     }
@@ -46,30 +38,20 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                                       alias: item.name as string,
                                   };
                             Object.entries(object).forEach(([key, value]) => {
-                                if (
-                                    event.__typename &&
-                                    item.dataset.__typename &&
-                                    key !== "__typename"
-                                ) {
+                                if (event.__typename && item.dataset.__typename && key !== "__typename") {
                                     rows.push(
                                         this.buildSupportedRow(
                                             event.__typename,
                                             SET_TRANSFORM_SOURCE_DESCRIPTORS,
                                             item.dataset.__typename,
                                             key,
-                                            this.valueTransformMapper(
-                                                key as keyof Dataset,
-                                                value,
-                                                item,
-                                            ),
+                                            this.valueTransformMapper(key as keyof Dataset, value, item),
                                         ),
                                     );
                                 }
                             });
                             result.push({
-                                title:
-                                    section +
-                                    (numInputsParts > 1 ? `#${index + 1}` : ""),
+                                title: section + (numInputsParts > 1 ? `#${index + 1}` : ""),
                                 rows,
                             });
                         });
@@ -90,11 +72,7 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
         return kind.slice(0, 1) + kind.slice(1).toLowerCase();
     }
 
-    private valueTransformMapper(
-        key: keyof Dataset,
-        value: unknown,
-        inputItem: TransformInput,
-    ): unknown {
+    private valueTransformMapper(key: keyof Dataset, value: unknown, inputItem: TransformInput): unknown {
         switch (key) {
             case "kind":
                 return this.kindDatasetCapitalize(value as string);

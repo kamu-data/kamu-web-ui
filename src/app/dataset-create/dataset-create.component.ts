@@ -2,12 +2,7 @@ import { BaseComponent } from "src/app/common/base.component";
 /* eslint-disable @typescript-eslint/unbound-method */
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "./../common/app.types";
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    OnInit,
-} from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import * as monaco from "monaco-editor";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AppDatasetCreateService } from "./dataset-create.service";
@@ -24,15 +19,14 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
         derivative: DatasetKind.Derivative,
     };
     public readonly initialHint = "# You can edit this file\n";
-    public readonly yamlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
-        {
-            theme: "vs",
-            language: "yaml",
-            renderLineHighlight: "none",
-            minimap: {
-                enabled: false,
-            },
-        };
+    public readonly yamlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
+        theme: "vs",
+        language: "yaml",
+        renderLineHighlight: "none",
+        minimap: {
+            enabled: false,
+        },
+    };
     public yamlTemplate = "";
     public showMonacoEditor = false;
     public errorMessage = "";
@@ -41,12 +35,7 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
         owner: ["kamu", [Validators.required]],
         datasetName: [
             "",
-            [
-                Validators.required,
-                Validators.pattern(
-                    /^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/,
-                ),
-            ],
+            [Validators.required, Validators.pattern(/^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/)],
         ],
         kind: ["root", [Validators.required]],
     });
@@ -61,12 +50,10 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.trackSubscription(
-            this.datasetCreateService.onErrorMessageChanges.subscribe(
-                (message: string) => {
-                    this.errorMessage = message;
-                    this.cdr.detectChanges();
-                },
-            ),
+            this.datasetCreateService.onErrorMessageChanges.subscribe((message: string) => {
+                this.errorMessage = message;
+                this.cdr.detectChanges();
+            }),
         );
     }
 
@@ -80,9 +67,7 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
     }
 
     public onCreateDataset(): void {
-        this.showMonacoEditor
-            ? this.createDatasetFromSnapshot()
-            : this.createDatasetFromForm();
+        this.showMonacoEditor ? this.createDatasetFromSnapshot() : this.createDatasetFromForm();
     }
 
     public onFileSelected(event: Event): Promise<MaybeNull<string>> {
@@ -111,25 +96,15 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
 
     private createDatasetFromForm(): void {
         const accountId = this.createDatasetForm.controls.owner.value as string;
-        const kind =
-            this.kindMapper[
-                this.createDatasetForm.controls.kind.value as string
-            ];
-        const datasetName = this.createDatasetForm.controls.datasetName
-            .value as string;
-        this.trackSubscription(
-            this.datasetCreateService
-                .createEmptyDataset(accountId, kind, datasetName)
-                .subscribe(),
-        );
+        const kind = this.kindMapper[this.createDatasetForm.controls.kind.value as string];
+        const datasetName = this.createDatasetForm.controls.datasetName.value as string;
+        this.trackSubscription(this.datasetCreateService.createEmptyDataset(accountId, kind, datasetName).subscribe());
     }
 
     private createDatasetFromSnapshot(): void {
         if (this.yamlTemplate) {
             this.trackSubscription(
-                this.datasetCreateService
-                    .createDatasetFromSnapshot("kamu", this.yamlTemplate)
-                    .subscribe(),
+                this.datasetCreateService.createDatasetFromSnapshot("kamu", this.yamlTemplate).subscribe(),
             );
         }
     }

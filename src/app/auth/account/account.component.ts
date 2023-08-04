@@ -1,29 +1,13 @@
 import ProjectLinks from "src/app/project-links";
 import { ModalService } from "./../../components/modal/modal.service";
-import {
-    DatasetSearchOverviewFragment,
-    PageBasedInfo,
-} from "./../../api/kamu.graphql.interface";
+import { DatasetSearchOverviewFragment, PageBasedInfo } from "./../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationService } from "src/app/services/navigation.service";
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    OnInit,
-    ViewChild,
-} from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { AuthApi } from "src/app/api/auth.api";
 import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "./account.constants";
-import {
-    ActivatedRoute,
-    NavigationEnd,
-    Params,
-    Router,
-    RouterEvent,
-} from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Params, Router, RouterEvent } from "@angular/router";
 import AppValues from "src/app/common/app.values";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { AccountService } from "src/app/services/account.service";
@@ -69,14 +53,10 @@ export class AccountComponent extends BaseComponent implements OnInit {
                 params.tab
                     ? (this.accountViewType = params.tab as AccountTabs)
                     : (this.accountViewType = AccountTabs.overview);
-                params.page
-                    ? (this.currentPage = params.page as number)
-                    : (this.currentPage = 1);
+                params.page ? (this.currentPage = params.page as number) : (this.currentPage = 1);
             }),
             this.route.params.subscribe((params: Params) => {
-                this.accountName = params[
-                    ProjectLinks.URL_PARAM_ACCOUNT_NAME
-                ] as string;
+                this.accountName = params[ProjectLinks.URL_PARAM_ACCOUNT_NAME] as string;
                 this.getAccountInfo();
                 this.getDatasets();
             }),
@@ -88,14 +68,12 @@ export class AccountComponent extends BaseComponent implements OnInit {
                 .subscribe(() => {
                     this.getDatasets();
                 }),
-            this.accountService.onDatasetsChanges.subscribe(
-                (data: DatasetsAccountResponse) => {
-                    this.datasets = data.datasets;
-                    this.pageInfo = data.pageInfo;
-                    this.datasetTotalCount = data.datasetTotalCount;
-                    this.cdr.detectChanges();
-                },
-            ),
+            this.accountService.onDatasetsChanges.subscribe((data: DatasetsAccountResponse) => {
+                this.datasets = data.datasets;
+                this.pageInfo = data.pageInfo;
+                this.datasetTotalCount = data.datasetTotalCount;
+                this.cdr.detectChanges();
+            }),
         );
     }
 
@@ -142,52 +120,32 @@ export class AccountComponent extends BaseComponent implements OnInit {
     }
 
     public onSelectOverviewTab(): void {
-        this.navigationService.navigateToOwnerView(
-            this.accountName,
-            AccountTabs.overview,
-        );
+        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.overview);
     }
     public onSelectDatasetsTab(): void {
-        this.navigationService.navigateToOwnerView(
-            this.accountName,
-            AccountTabs.datasets,
-        );
+        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.datasets);
     }
 
     public onSelectOrganizationsTab(): void {
-        this.navigationService.navigateToOwnerView(
-            this.accountName,
-            AccountTabs.organizations,
-        );
+        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.organizations);
     }
 
     public onSelectInboxTab(): void {
-        this.navigationService.navigateToOwnerView(
-            this.accountName,
-            AccountTabs.inbox,
-        );
+        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.inbox);
     }
 
     public onSelectStarsTab(): void {
-        this.navigationService.navigateToOwnerView(
-            this.accountName,
-            AccountTabs.stars,
-        );
+        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.stars);
     }
 
     private getAccountInfo(): void {
-        this.accountService
-            .getAccountInfoByName(this.accountName)
-            .subscribe((user: AccountDetailsFragment) => {
-                this.user = user;
-                this.avatarLink =
-                    this.user.avatarUrl ?? AppValues.DEFAULT_AVATAR_URL;
-            });
+        this.accountService.getAccountInfoByName(this.accountName).subscribe((user: AccountDetailsFragment) => {
+            this.user = user;
+            this.avatarLink = this.user.avatarUrl ?? AppValues.DEFAULT_AVATAR_URL;
+        });
     }
 
     private getDatasets(): void {
-        this.accountService
-            .getDatasetsByAccountName(this.accountName, this.currentPage - 1)
-            .subscribe();
+        this.accountService.getDatasetsByAccountName(this.accountName, this.currentPage - 1).subscribe();
     }
 }

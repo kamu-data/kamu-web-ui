@@ -1,12 +1,5 @@
-import {
-    DatasetAutocompleteItem,
-    TypeNames,
-} from "../../interface/search.interface";
-import {
-    DatasetKind,
-    SearchDatasetsAutocompleteQuery,
-    SearchDatasetsOverviewQuery,
-} from "../kamu.graphql.interface";
+import { DatasetAutocompleteItem, TypeNames } from "../../interface/search.interface";
+import { DatasetKind, SearchDatasetsAutocompleteQuery, SearchDatasetsOverviewQuery } from "../kamu.graphql.interface";
 
 export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
     search: {
@@ -22,8 +15,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         __typename: "DatasetMetadata",
                         currentInfo: {
                             __typename: "SetInfo",
-                            description:
-                                "Confirmed positive cases of COVID-19 in Alberta.",
+                            description: "Confirmed positive cases of COVID-19 in Alberta.",
                             keywords: [
                                 "Healthcare",
                                 "Epidemiology",
@@ -40,8 +32,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                             shortName: "OGL-Canada-2.0",
                             name: "Open Government Licence - Canada",
                             spdxId: "OGL-Canada-2.0",
-                            websiteUrl:
-                                "https://open.canada.ca/en/open-government-licence-canada",
+                            websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
                         },
                         currentDownstreamDependencies: [
                             {
@@ -68,8 +59,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         __typename: "DatasetMetadata",
                         currentInfo: {
                             __typename: "SetInfo",
-                            description:
-                                "Confirmed positive cases of COVID-19 in Alberta (harmonized).",
+                            description: "Confirmed positive cases of COVID-19 in Alberta (harmonized).",
                             keywords: [
                                 "Healthcare",
                                 "Epidemiology",
@@ -87,8 +77,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                             shortName: "OGL-Canada-2.0",
                             name: "Open Government Licence - Canada",
                             spdxId: "OGL-Canada-2.0",
-                            websiteUrl:
-                                "https://open.canada.ca/en/open-government-licence-canada",
+                            websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
                         },
                         currentDownstreamDependencies: [
                             {
@@ -133,8 +122,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                             shortName: "OGL-Canada-2.0",
                             name: "Open Government Licence - Canada",
                             spdxId: "OGL-Canada-2.0",
-                            websiteUrl:
-                                "https://open.canada.ca/en/open-government-licence-canada",
+                            websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
                         },
                         currentDownstreamDependencies: [
                             {
@@ -161,8 +149,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         __typename: "DatasetMetadata",
                         currentInfo: {
                             __typename: "SetInfo",
-                            description:
-                                "Confirmed positive cases of COVID-19 in British Columbia (harmonized).",
+                            description: "Confirmed positive cases of COVID-19 in British Columbia (harmonized).",
                             keywords: [
                                 "Healthcare",
                                 "Epidemiology",
@@ -180,8 +167,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                             shortName: "OGL-Canada-2.0",
                             name: "Open Government Licence - Canada",
                             spdxId: "OGL-Canada-2.0",
-                            websiteUrl:
-                                "https://open.canada.ca/en/open-government-licence-canada",
+                            websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
                         },
                         currentDownstreamDependencies: [
                             {
@@ -226,8 +212,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                             shortName: "OGL-Canada-2.0",
                             name: "Open Government Licence - Canada",
                             spdxId: "OGL-Canada-2.0",
-                            websiteUrl:
-                                "https://open.canada.ca/en/open-government-licence-canada",
+                            websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
                         },
                         currentDownstreamDependencies: [
                             {
@@ -256,22 +241,14 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                             __typename: "SetInfo",
                             description:
                                 "Pan-Canadian COVID-19 daily case counts on per Health Region level of aggregation.",
-                            keywords: [
-                                "Healthcare",
-                                "Epidemiology",
-                                "COVID-19",
-                                "SARS-CoV-2",
-                                "Aggregated",
-                                "Canada",
-                            ],
+                            keywords: ["Healthcare", "Epidemiology", "COVID-19", "SARS-CoV-2", "Aggregated", "Canada"],
                         },
                         currentLicense: {
                             __typename: "SetLicense",
                             shortName: "OGL-Ontario",
                             name: "Open Government Licence - Ontario",
                             spdxId: null,
-                            websiteUrl:
-                                "https://www.ontario.ca/page/open-government-licence-ontario",
+                            websiteUrl: "https://www.ontario.ca/page/open-government-licence-ontario",
                         },
                         currentDownstreamDependencies: [],
                     },
@@ -323,8 +300,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                             shortName: "Proprietary",
                             name: "CryptoCompare - API License Agreement",
                             spdxId: null,
-                            websiteUrl:
-                                "https://www.cryptocompare.com/api-licence-agreement/",
+                            websiteUrl: "https://www.cryptocompare.com/api-licence-agreement/",
                         },
                         currentDownstreamDependencies: [],
                     },
@@ -368,8 +344,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         __typename: "DatasetMetadata",
                         currentInfo: {
                             __typename: "SetInfo",
-                            description:
-                                "Confirmed positive cases of COVID-19 in Ontario.",
+                            description: "Confirmed positive cases of COVID-19 in Ontario.",
                             keywords: [
                                 "Healthcare",
                                 "Epidemiology",
@@ -386,8 +361,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                             shortName: "OGL-Ontario",
                             name: "Open Government Licence - Ontario",
                             spdxId: null,
-                            websiteUrl:
-                                "https://www.ontario.ca/page/open-government-licence-ontario",
+                            websiteUrl: "https://www.ontario.ca/page/open-government-licence-ontario",
                         },
                         currentDownstreamDependencies: [
                             {

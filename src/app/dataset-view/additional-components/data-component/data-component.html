@@ -9,9 +9,7 @@
             ></app-dynamic-table>
         </ng-container>
         <div>
-            <h2 class="box-title align-items-center pb-3 pt-3 m-0">
-                Saved Queries
-            </h2>
+            <h2 class="box-title align-items-center pb-3 pt-3 m-0">Saved Queries</h2>
             <cdk-accordion class="example-accordion">
                 <cdk-accordion-item
                     *ngFor="let item of savedQueries; let index = index;"
@@ -25,37 +23,21 @@
                 >
                     <div class="datatab-activity-item">
                         <div class="datatab-expanding-row">
-                            <div
-                                class="datatab-expanding-row-header"
-                                (click)="accordionItem.toggle()"
-                            >
-                                <div
-                                    class="datatab-expanding-row-header-content"
-                                >
+                            <div class="datatab-expanding-row-header" (click)="accordionItem.toggle()">
+                                <div class="datatab-expanding-row-header-content">
                                     <div class="datatab-activity-row-summary">
-                                        <div class="datatab-activity-timestamp">
-                                            {{item.time}}
-                                        </div>
+                                        <div class="datatab-activity-timestamp">{{item.time}}</div>
                                         <div class="datatab-activity-icon">
                                             <div
                                                 class="ace-icon ace-icon-size-small cfc-color-active ace-icon-configuration ng-star-inserted"
                                             >
-                                                <mat-icon
-                                                    class="datatab-activity-icon-size"
-                                                    >query_stats</mat-icon
-                                                >
+                                                <mat-icon class="datatab-activity-icon-size">query_stats</mat-icon>
                                             </div>
                                         </div>
-                                        <div
-                                            class="datatab-activity-info-container"
-                                        >
+                                        <div class="datatab-activity-info-container">
                                             <div
                                                 class="datatab-activity-title"
-                                                style="
-                                                    overflow: hidden;
-                                                    text-overflow: ellipsis;
-                                                    white-space: nowrap;
-                                                "
+                                                style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
                                                 title=""
                                             >
                                                 <span> {{item.title}} </span>
@@ -81,9 +63,7 @@
                         [attr.aria-labelledby]="'accordion-header-' + index"
                     >
                         {{item.title}} <br />
-                        <code style="display: block; white-space: pre-wrap"
-                            >{{item.query}}</code
-                        >
+                        <code style="display: block; white-space: pre-wrap">{{item.query}}</code>
                         <div class="d-inline">
                             <div class="btnGroup-parent float-none">
                                 <button
@@ -93,8 +73,7 @@
                                     (click)="onRunSQLRequest(item.query)"
                                     class="sql-run-button rounded-2 btnGroup-item btn d-flex justify-content-center align-items-center"
                                 >
-                                    <span>Run</span
-                                    ><mat-icon>play_arrow</mat-icon>
+                                    <span>Run</span><mat-icon>play_arrow</mat-icon>
                                 </button>
                             </div>
                         </div>
@@ -129,9 +108,7 @@
                     <mat-icon>arrow_drop_down</mat-icon>
                 </button>
                 <mat-menu #menu2="matMenu">
-                    <div
-                        class="SelectMenu-modal notifications-component-menu-modal"
-                    >
+                    <div class="SelectMenu-modal notifications-component-menu-modal">
                         <div class="SelectMenu-list">
                             <button
                                 type="submit"
@@ -143,14 +120,9 @@
                                 data-targets="notifications-list-subscription-form.subscriptionButtons"
                             >
                                 <div>
-                                    <div class="f5 text-bold">
-                                        New Dataset from Query
-                                    </div>
-                                    <div
-                                        class="text-small color-fg-muted text-normal pb-1"
-                                    >
-                                        Creates new derivative dataset using
-                                        current query as the transformation.
+                                    <div class="f5 text-bold">New Dataset from Query</div>
+                                    <div class="text-small color-fg-muted text-normal pb-1">
+                                        Creates new derivative dataset using current query as the transformation.
                                     </div>
                                 </div>
                             </button>
@@ -179,14 +151,9 @@
                 [dataRows]="currentData || []"
             ></app-dynamic-table>
         </ng-container>
-        <ng-container
-            *ngIf="!sqlErrorMarker || !currentSchema || !currentData.length"
-        >
+        <ng-container *ngIf="!sqlErrorMarker || !currentSchema || !currentData.length">
             <mat-divider></mat-divider>
-            <h3
-                class="box-title text-center pt-4 author"
-                *ngIf="!currentData.length"
-            >
+            <h3 class="box-title text-center pt-4 author" *ngIf="!currentData.length">
                 Need
                 <a class="add-link"> add data</a>
                 .

@@ -1,15 +1,8 @@
 <div class="position-relative border border-1 p-2 rounded-3">
-    <span class="position-absolute text-muted group-box-label text-uppercase"
-        >Dataset info</span
-    >
+    <span class="position-absolute text-muted group-box-label text-uppercase">Dataset info</span>
     <div class="ms-4">
-        <app-block-row-data
-            tooltip="Unique identity of the dataset."
-            label="Id:"
-        >
-            <span class="fs-12 font-monospace text-break">{{
-                event.datasetId
-            }}</span>
+        <app-block-row-data tooltip="Unique identity of the dataset." label="Id:">
+            <span class="fs-12 font-monospace text-break">{{ event.datasetId }}</span>
             <button
                 (click)="copyToClipboard(event.datasetId)"
                 class="btn btn-sm btn-gray clipboard-btn ms-2"

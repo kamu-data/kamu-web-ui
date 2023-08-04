@@ -11,8 +11,7 @@ import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 
 export const TEST_USER_NAME = "test-user";
 export const TEST_DATASET_NAME = "test-dataset";
-export const TEST_BLOCK_HASH =
-    "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev";
+export const TEST_BLOCK_HASH = "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev";
 
 export const mockDatasetDataSqlRunResponse: GetDatasetDataSqlRunQuery = {
     data: {
@@ -61,8 +60,7 @@ export const mockDatasetListItem: DatasetSearchOverviewFragment = {
             shortName: "OGL-Canada-2.0",
             name: "Open Government Licence - Canada",
             spdxId: "OGL-Canada-2.0",
-            websiteUrl:
-                "https://open.canada.ca/en/open-government-licence-canada",
+            websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
         },
         currentDownstreamDependencies: [
             {
@@ -108,8 +106,7 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                         __typename: "DatasetMetadata",
                         currentInfo: {
                             __typename: "SetInfo",
-                            description:
-                                "Confirmed positive cases of COVID-19 in Alberta.",
+                            description: "Confirmed positive cases of COVID-19 in Alberta.",
                             keywords: [
                                 "Healthcare",
                                 "Epidemiology",
@@ -126,8 +123,7 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                             shortName: "OGL-Canada-2.0",
                             name: "Open Government Licence - Canada",
                             spdxId: "OGL-Canada-2.0",
-                            websiteUrl:
-                                "https://open.canada.ca/en/open-government-licence-canada",
+                            websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
                         },
                         currentDownstreamDependencies: [
                             {
@@ -172,10 +168,8 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                         "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2022-08-05T21:17:30.621941313Z\n  prevBlockHash: zW1auBfep4NvrY6RqNN7asdjTzuNMAugdcsw7VfrsQFDqj1\n  sequenceNumber: 3\n  event:\n    kind: setInfo\n    description: British Columbia COVID-19 case data updated regularly from the B.C. Centre for Disease Control, Provincial Health Services Authority and the B.C. Ministry of Health.\n    keywords:\n    - Healthcare\n    - Epidemiology\n    - COVID-19\n    - SARS-CoV-2\n    - Disaggregated\n    - Anonymized\n    - British Columbia\n    - Canada\n",
                     blockByHash: {
                         __typename: "MetadataBlockExtended",
-                        blockHash:
-                            "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev",
-                        prevBlockHash:
-                            "zW1abnmxotsSC7H6SyfbL7bpWtQrMSQktUfiJds3KWX1xfm",
+                        blockHash: "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev",
+                        prevBlockHash: "zW1abnmxotsSC7H6SyfbL7bpWtQrMSQktUfiJds3KWX1xfm",
                         systemTime: "2022-08-05T21:20:08.053635579+00:00",
                         sequenceNumber: 6,
                         author: {
@@ -192,18 +186,15 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                                     start: 0,
                                     end: 596125,
                                 },
-                                logicalHash:
-                                    "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
-                                physicalHash:
-                                    "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
+                                logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
+                                physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
                             },
                             inputCheckpoint: null,
                             watermark: "2022-08-01T00:00:00+00:00",
                             inputSlices: [
                                 {
                                     __typename: "InputSlice",
-                                    datasetId:
-                                        "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+                                    datasetId: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
                                     blockInterval: {
                                         __typename: "BlockInterval",
                                         start: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
@@ -218,8 +209,7 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                             ],
                             outputCheckpoint: {
                                 __typename: "Checkpoint",
-                                physicalHash:
-                                    "zW1otipGpjScUH8C2RfaF4s8RshReBbQVPDf2fPrp2R8Ft2",
+                                physicalHash: "zW1otipGpjScUH8C2RfaF4s8RshReBbQVPDf2fPrp2R8Ft2",
                                 size: 2560,
                             },
                         },
@@ -300,9 +290,7 @@ export const MOCK_CLUSTERS = [
             x: 10,
             y: 10,
         },
-        childNodeIds: [
-            "did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
-        ],
+        childNodeIds: ["did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj"],
     },
     {
         id: "DERIVATIVE_cluster",
@@ -314,8 +302,6 @@ export const MOCK_CLUSTERS = [
             x: 10,
             y: 10,
         },
-        childNodeIds: [
-            "did:odf:z4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
-        ],
+        childNodeIds: ["did:odf:z4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC"],
     },
 ];

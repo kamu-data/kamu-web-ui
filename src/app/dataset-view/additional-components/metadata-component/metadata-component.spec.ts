@@ -22,27 +22,16 @@ describe("MetadataComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                MetadataComponent,
-                BlockRowDataComponent,
-                TooltipIconComponent,
-            ],
-            imports: [
-                NgbTooltipModule,
-                MatIconModule,
-                MetadataBlockModule,
-                SharedTestModule,
-            ],
+            declarations: [MetadataComponent, BlockRowDataComponent, TooltipIconComponent],
+            imports: [NgbTooltipModule, MatIconModule, MetadataBlockModule, SharedTestModule],
             providers: [
                 {
                     provide: HIGHLIGHT_OPTIONS,
                     useValue: {
-                        coreLibraryLoader: () =>
-                            import("highlight.js/lib/core"),
+                        coreLibraryLoader: () => import("highlight.js/lib/core"),
                         languages: {
                             sql: () => import("highlight.js/lib/languages/sql"),
-                            yaml: () =>
-                                import("highlight.js/lib/languages/yaml"),
+                            yaml: () => import("highlight.js/lib/languages/yaml"),
                         },
                     },
                 },
@@ -68,9 +57,7 @@ describe("MetadataComponent", () => {
     it("should check #ngOninit", () => {
         expect(component.currentState).not.toBeDefined();
 
-        appDatasetSubsService.metadataSchemaChanges(
-            mockMetadataSchemaUpdate as MetadataSchemaUpdate,
-        );
+        appDatasetSubsService.metadataSchemaChanges(mockMetadataSchemaUpdate as MetadataSchemaUpdate);
         component.ngOnInit();
         fixture.detectChanges();
 
@@ -87,9 +74,7 @@ describe("MetadataComponent", () => {
     it("should check click on dataset topic", () => {
         const clickDatasetEmitSpy = spyOn(component.clickDatasetEmit, "emit");
         component.onClickDataset(mockDatasetBasicsFragment);
-        expect(clickDatasetEmitSpy).toHaveBeenCalledWith(
-            mockDatasetBasicsFragment,
-        );
+        expect(clickDatasetEmitSpy).toHaveBeenCalledWith(mockDatasetBasicsFragment);
     });
 
     it("should check page change", () => {
@@ -100,10 +85,7 @@ describe("MetadataComponent", () => {
     });
 
     it("should check navigate to edit SetPollingSource event", () => {
-        const navigateToAddPollingSourceSpy = spyOn(
-            navigationService,
-            "navigateToAddPollingSource",
-        );
+        const navigateToAddPollingSourceSpy = spyOn(navigationService, "navigateToAddPollingSource");
         component.navigateToEditPollingSource();
         expect(navigateToAddPollingSourceSpy).toHaveBeenCalledWith({
             accountName: mockDatasetBasicsFragment.owner.name,
@@ -112,10 +94,7 @@ describe("MetadataComponent", () => {
     });
 
     it("should check navigate to edit SetTransform event", () => {
-        const navigateToSetTransformSpy = spyOn(
-            navigationService,
-            "navigateToSetTransform",
-        );
+        const navigateToSetTransformSpy = spyOn(navigationService, "navigateToSetTransform");
         component.navigateToEditSetTransform();
         expect(navigateToSetTransformSpy).toHaveBeenCalledWith({
             accountName: mockDatasetBasicsFragment.owner.name,

@@ -41,33 +41,22 @@ export class EngineSelectComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const defaultEngine = this.data.find(
-            (item: EngineDesc) => item.name === this.engine,
-        );
+        const defaultEngine = this.data.find((item: EngineDesc) => item.name === this.engine);
         if (defaultEngine) {
             this.clickShowDropdown(defaultEngine);
         }
     }
     public get value(): string {
-        return (
-            DataHelpers.descriptionForEngine(this.engine.toLowerCase()).label ??
-            ""
-        );
+        return DataHelpers.descriptionForEngine(this.engine.toLowerCase()).label ?? "";
     }
 
     public getLogo(name: string): EventPropertyLogo {
-        return DataHelpers.descriptionForEngine(
-            name.toUpperCase().toLowerCase(),
-        );
+        return DataHelpers.descriptionForEngine(name.toUpperCase().toLowerCase());
     }
 
     public clickShowDropdown(item: EngineDesc): void {
         const description = item.name.toUpperCase().toLowerCase();
-        this.render.setAttribute(
-            this.selectedImage.nativeElement,
-            "src",
-            this.getLogo(description).url_logo ?? "",
-        );
+        this.render.setAttribute(this.selectedImage.nativeElement, "src", this.getLogo(description).url_logo ?? "");
         this.selectedEngineEmitter.emit(description);
     }
 

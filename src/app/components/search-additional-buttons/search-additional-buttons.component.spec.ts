@@ -10,10 +10,7 @@ describe("SearchAdditionalButtonsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                SearchAdditionalButtonsComponent,
-                SearchAdditionalButtonsNavComponent,
-            ],
+            declarations: [SearchAdditionalButtonsComponent, SearchAdditionalButtonsNavComponent],
             providers: [],
         })
             .overrideComponent(SearchAdditionalButtonsComponent, {

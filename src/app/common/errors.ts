@@ -72,9 +72,7 @@ export class KamuErrorHandler implements KamuErrorVisitor {
         promiseWithCatch(
             this.modalService.error({
                 title: ErrorTexts.ERROR_TITLE_REQUEST_FAILED,
-                message: e.networkError
-                    ? ErrorTexts.ERROR_NETWORK_DESCRIPTION
-                    : ErrorTexts.ERROR_TECHNICAL_SUPPORT,
+                message: e.networkError ? ErrorTexts.ERROR_NETWORK_DESCRIPTION : ErrorTexts.ERROR_TECHNICAL_SUPPORT,
                 yesButtonText: "Close",
             }),
         );
@@ -106,9 +104,7 @@ export class KamuErrorHandler implements KamuErrorVisitor {
         );
     }
 
-    public visitAuthenticationError(
-        authenticationError: AuthenticationError,
-    ): void {
+    public visitAuthenticationError(authenticationError: AuthenticationError): void {
         if (authenticationError.errors.length > 0) {
             authenticationError.errors.forEach((e) => logError(e));
         } else {

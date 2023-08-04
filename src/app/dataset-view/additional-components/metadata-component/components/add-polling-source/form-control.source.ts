@@ -1,9 +1,5 @@
 import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
-import {
-    FetchKind,
-    MergeKind,
-    ReadKind,
-} from "./add-polling-source-form.types";
+import { FetchKind, MergeKind, ReadKind } from "./add-polling-source-form.types";
 
 export interface RadioControlType {
     id: string;

@@ -35,15 +35,10 @@ describe("DynamicTableComponent", () => {
     it("should check column names", () => {
         fixture.detectChanges();
         component.ngOnChanges();
-        Object.keys(mockSchemaFields[0]).forEach(
-            (item: string, index: number) => {
-                const el = findElementByDataTestId(
-                    fixture,
-                    `column-name-${index}`,
-                );
-                expect(el.textContent).toEqual(` ${item} `);
-            },
-        );
+        Object.keys(mockSchemaFields[0]).forEach((item: string, index: number) => {
+            const el = findElementByDataTestId(fixture, `column-name-${index}`);
+            expect(el.textContent).toEqual(` ${item} `);
+        });
     });
 
     it("should check table if schemaFields is empty", () => {
@@ -54,9 +49,7 @@ describe("DynamicTableComponent", () => {
     });
 
     it("should check table if schemaFields is exist", () => {
-        component.schemaFields = [
-            { name: "testName", repetition: "testRepetiton", type: "testType" },
-        ];
+        component.schemaFields = [{ name: "testName", repetition: "testRepetiton", type: "testType" }];
         component.dataRows = [];
         fixture.detectChanges();
         expect(component.dataSource.data).toBeDefined();

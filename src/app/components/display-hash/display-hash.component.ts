@@ -21,11 +21,7 @@ export class DisplayHashComponent {
         private toastr: ToastrService,
     ) {}
 
-    public navigateToMetadataBlock(
-        accountName: string,
-        datasetName: string,
-        blockHash: string,
-    ): void {
+    public navigateToMetadataBlock(accountName: string, datasetName: string, blockHash: string): void {
         this.navigationService.navigateToMetadataBlock({
             accountName,
             datasetName,

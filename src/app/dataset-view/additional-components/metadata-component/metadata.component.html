@@ -12,10 +12,7 @@
         </div>
         <div
             class="text-end"
-            *ngIf="
-                currentState?.metadata?.kind === 'ROOT' &&
-                currentState?.metadata?.metadata?.currentSource
-            "
+            *ngIf="currentState?.metadata?.kind === 'ROOT' && currentState?.metadata?.metadata?.currentSource"
         >
             <p>
                 <a
@@ -30,10 +27,7 @@
 
         <div
             class="text-end"
-            *ngIf="
-                currentState?.metadata?.kind === 'DERIVATIVE' &&
-                currentState?.metadata?.metadata?.currentTransform
-            "
+            *ngIf="currentState?.metadata?.kind === 'DERIVATIVE' && currentState?.metadata?.metadata?.currentTransform"
         >
             <p>
                 <a
@@ -48,14 +42,8 @@
 
         <ng-container *ngIf="currentState">
             <div class="d-flex flex-column gap-4 mt-4">
-                <div
-                    class="position-relative border border-1 p-2 rounded-3"
-                    *ngIf="currentState.schema"
-                >
-                    <span
-                        class="position-absolute text-muted group-box-label text-uppercase"
-                        >Schema</span
-                    >
+                <div class="position-relative border border-1 p-2 rounded-3" *ngIf="currentState.schema">
+                    <span class="position-absolute text-muted group-box-label text-uppercase">Schema</span>
                     <div class="mx-4">
                         <app-block-row-data
                             [tooltip]="
@@ -75,98 +63,47 @@
                     *ngIf="currentState.metadata.metadata.currentLicense"
                     class="position-relative border border-1 p-2 rounded-3"
                 >
-                    <span
-                        class="position-absolute text-muted group-box-label text-uppercase"
-                        >License</span
-                    >
+                    <span class="position-absolute text-muted group-box-label text-uppercase">License</span>
                     <div class="mx-4">
-                        <app-block-row-data
-                            [tooltip]="'Unique identifier of the license.'"
-                            [label]="'ID:'"
-                        >
-                            <span>{{
-                                currentState.metadata.metadata.currentLicense
-                                    .shortName
-                            }}</span>
+                        <app-block-row-data [tooltip]="'Unique identifier of the license.'" [label]="'ID:'">
+                            <span>{{ currentState.metadata.metadata.currentLicense.shortName }}</span>
                         </app-block-row-data>
                     </div>
 
                     <div class="mx-4">
-                        <app-block-row-data
-                            [tooltip]="'Full name of the license.'"
-                            [label]="'Name:'"
-                        >
-                            <span>
-                                {{
-                                    currentState.metadata.metadata
-                                        .currentLicense.name
-                                }}</span
-                            >
+                        <app-block-row-data [tooltip]="'Full name of the license.'" [label]="'Name:'">
+                            <span> {{ currentState.metadata.metadata.currentLicense.name }}</span>
                         </app-block-row-data>
                     </div>
 
-                    <div
-                        class="mx-4"
-                        *ngIf="
-                            currentState.metadata.metadata.currentLicense.spdxId
-                        "
-                    >
+                    <div class="mx-4" *ngIf="currentState.metadata.metadata.currentLicense.spdxId">
                         <app-block-row-data
-                            [tooltip]="
-                                'License identifier from the SPDX License List.'
-                            "
+                            [tooltip]="'License identifier from the SPDX License List.'"
                             [label]="'SPDX ID:'"
                         >
-                            <span>
-                                {{
-                                    currentState.metadata.metadata
-                                        .currentLicense.spdxId
-                                }}</span
-                            >
+                            <span> {{ currentState.metadata.metadata.currentLicense.spdxId }}</span>
                         </app-block-row-data>
                     </div>
 
                     <div class="mx-4">
-                        <app-block-row-data
-                            [tooltip]="'Link to the official website.'"
-                            [label]="'Website:'"
-                        >
+                        <app-block-row-data [tooltip]="'Link to the official website.'" [label]="'Website:'">
                             <app-link-property
-                                [data]="
-                                    currentState.metadata.metadata
-                                        .currentLicense.websiteUrl
-                                "
+                                [data]="currentState.metadata.metadata.currentLicense.websiteUrl"
                             ></app-link-property>
                         </app-block-row-data>
                     </div>
                 </div>
 
-                <ng-container
-                    *ngIf="currentState.metadata.metadata.currentSource"
-                >
-                    <div
-                        class="position-relative border border-1 p-2 rounded-3"
-                    >
-                        <span
-                            class="position-absolute text-muted group-box-label text-uppercase"
-                            >Fetch</span
-                        >
+                <ng-container *ngIf="currentState.metadata.metadata.currentSource">
+                    <div class="position-relative border border-1 p-2 rounded-3">
+                        <span class="position-absolute text-muted group-box-label text-uppercase">Fetch</span>
                         <div
                             class="mx-4"
-                            *ngIf="
-                                currentState.metadata.metadata.currentSource
-                                    .fetch.__typename === 'FetchStepUrl'
-                            "
+                            *ngIf="currentState.metadata.metadata.currentSource.fetch.__typename === 'FetchStepUrl'"
                         >
-                            <app-block-row-data
-                                [tooltip]="'URL of the data source.'"
-                                [label]="'Url:'"
-                            >
+                            <app-block-row-data [tooltip]="'URL of the data source.'" [label]="'Url:'">
                                 <app-link-property
-                                    [data]="
-                                        currentState.metadata.metadata
-                                            .currentSource.fetch.url
-                                    "
+                                    [data]="currentState.metadata.metadata.currentSource.fetch.url"
                                 ></app-link-property>
                             </app-block-row-data>
                         </div>
@@ -174,77 +111,40 @@
                         <div
                             class="mx-4"
                             *ngIf="
-                                currentState.metadata.metadata.currentSource
-                                    .fetch.__typename === 'FetchStepContainer'
+                                currentState.metadata.metadata.currentSource.fetch.__typename === 'FetchStepContainer'
                             "
                         >
-                            <app-block-row-data
-                                [tooltip]="
-                                    'Image name and and an optional tag.'
-                                "
-                                [label]="'Image:'"
-                            >
-                                <span>{{
-                                    currentState.metadata.metadata.currentSource
-                                        .fetch.image
-                                }}</span>
+                            <app-block-row-data [tooltip]="'Image name and and an optional tag.'" [label]="'Image:'">
+                                <span>{{ currentState.metadata.metadata.currentSource.fetch.image }}</span>
                             </app-block-row-data>
                         </div>
 
                         <div
                             class="mx-4"
                             *ngIf="
-                                currentState.metadata.metadata.currentSource
-                                    .fetch.__typename === 'FetchStepFilesGlob'
+                                currentState.metadata.metadata.currentSource.fetch.__typename === 'FetchStepFilesGlob'
                             "
                         >
-                            <app-block-row-data
-                                [tooltip]="'Path with a glob pattern.'"
-                                [label]="'Path:'"
-                            >
-                                <span>{{
-                                    currentState.metadata.metadata.currentSource
-                                        .fetch.path
-                                }}</span>
+                            <app-block-row-data [tooltip]="'Path with a glob pattern.'" [label]="'Path:'">
+                                <span>{{ currentState.metadata.metadata.currentSource.fetch.path }}</span>
                             </app-block-row-data>
                         </div>
                     </div>
 
-                    <div
-                        class="position-relative border border-1 p-2 rounded-3"
-                    >
-                        <span
-                            class="position-absolute text-muted group-box-label text-uppercase"
-                            >Read</span
-                        >
-                        <div
-                            class="mx-4"
-                            *ngIf="
-                                currentState.metadata.metadata.currentSource
-                                    .read.__typename
-                            "
-                        >
-                            <app-block-row-data
-                                [tooltip]="
-                                    'Determines where data is sourced from.'
-                                "
-                                [label]="'Type:'"
-                            >
+                    <div class="position-relative border border-1 p-2 rounded-3">
+                        <span class="position-absolute text-muted group-box-label text-uppercase">Read</span>
+                        <div class="mx-4" *ngIf="currentState.metadata.metadata.currentSource.read.__typename">
+                            <app-block-row-data [tooltip]="'Determines where data is sourced from.'" [label]="'Type:'">
                                 <span>{{
-                                    readSectionMapperType[
-                                        currentState.metadata.metadata
-                                            .currentSource.read.__typename
-                                    ]
+                                    readSectionMapperType[currentState.metadata.metadata.currentSource.read.__typename]
                                 }}</span>
                             </app-block-row-data>
                         </div>
                         <div
                             class="mx-4"
                             *ngIf="
-                                currentState.metadata.metadata.currentSource
-                                    .read.schema &&
-                                currentState.metadata.metadata.currentSource
-                                    .read.schema.length > 0
+                                currentState.metadata.metadata.currentSource.read.schema &&
+                                currentState.metadata.metadata.currentSource.read.schema.length > 0
                             "
                         >
                             <app-block-row-data
@@ -254,29 +154,15 @@
                                 [label]="'Schema:'"
                             >
                                 <app-schema-property
-                                    [data]="
-                                        currentState.metadata.metadata
-                                            .currentSource.read.schema
-                                    "
+                                    [data]="currentState.metadata.metadata.currentSource.read.schema"
                                 ></app-schema-property>
                             </app-block-row-data>
                         </div>
                     </div>
 
-                    <div
-                        class="position-relative border border-1 p-2 rounded-3"
-                    >
-                        <span
-                            class="position-absolute text-muted group-box-label text-uppercase"
-                            >Merge</span
-                        >
-                        <div
-                            class="mx-4"
-                            *ngIf="
-                                currentState.metadata.metadata.currentSource
-                                    .merge.__typename
-                            "
-                        >
+                    <div class="position-relative border border-1 p-2 rounded-3">
+                        <span class="position-absolute text-muted group-box-label text-uppercase">Merge</span>
+                        <div class="mx-4" *ngIf="currentState.metadata.metadata.currentSource.merge.__typename">
                             <app-block-row-data
                                 [tooltip]="
                                     'Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset.'
@@ -284,10 +170,7 @@
                                 [label]="'Strategy:'"
                             >
                                 <app-merge-strategy-property
-                                    [data]="
-                                        currentState.metadata.metadata
-                                            .currentSource.merge.__typename
-                                    "
+                                    [data]="currentState.metadata.metadata.currentSource.merge.__typename"
                                 ></app-merge-strategy-property>
                             </app-block-row-data>
                         </div>
@@ -295,8 +178,7 @@
                         <div
                             class="mx-4"
                             *ngIf="
-                                currentState.metadata.metadata.currentSource
-                                    .merge.__typename === 'MergeStrategyLedger'
+                                currentState.metadata.metadata.currentSource.merge.__typename === 'MergeStrategyLedger'
                             "
                         >
                             <app-block-row-data
@@ -306,56 +188,37 @@
                                 [label]="'Primary key:'"
                             >
                                 <app-cards-property
-                                    [data]="
-                                        currentState.metadata.metadata
-                                            .currentSource.merge.primaryKey
-                                    "
+                                    [data]="currentState.metadata.metadata.currentSource.merge.primaryKey"
                                 ></app-cards-property>
                             </app-block-row-data>
                         </div>
                     </div>
 
                     <div
-                        *ngIf="
-                            currentState.metadata.metadata.currentSource
-                                .preprocess
-                        "
+                        *ngIf="currentState.metadata.metadata.currentSource.preprocess"
                         class="position-relative border border-1 p-2 rounded-3"
                     >
-                        <span
-                            class="position-absolute text-muted group-box-label text-uppercase"
-                            >Preprocess</span
-                        >
+                        <span class="position-absolute text-muted group-box-label text-uppercase">Preprocess</span>
                         <div class="mx-4">
                             <app-block-row-data
-                                [tooltip]="
-                                    'Identifier of the engine used for this transformation.'
-                                "
+                                [tooltip]="'Identifier of the engine used for this transformation.'"
                                 [label]="'Engine:'"
                             >
                                 <app-engine-property
-                                    [data]="
-                                        currentState.metadata.metadata
-                                            .currentSource.preprocess.engine
-                                    "
+                                    [data]="currentState.metadata.metadata.currentSource.preprocess.engine"
                                 ></app-engine-property>
                             </app-block-row-data>
                         </div>
 
                         <div class="mx-4">
                             <app-block-row-data
-                                [tooltip]="
-                                    'Queries use for specifying multi-step SQL transformations.'
-                                "
+                                [tooltip]="'Queries use for specifying multi-step SQL transformations.'"
                                 [label]="'Queries:'"
                             >
                             </app-block-row-data>
                             <div class="row my-4">
                                 <app-sql-query-viewer
-                                    [data]="
-                                        currentState.metadata.metadata
-                                            .currentSource.preprocess.queries
-                                    "
+                                    [data]="currentState.metadata.metadata.currentSource.preprocess.queries"
                                 ></app-sql-query-viewer>
                             </div>
                         </div>
@@ -366,70 +229,41 @@
                     class="position-relative border border-1 p-2 rounded-3"
                     *ngIf="currentState.metadata.metadata.currentWatermark"
                 >
-                    <span
-                        class="position-absolute text-muted group-box-label text-uppercase"
-                        >Watermark</span
-                    >
+                    <span class="position-absolute text-muted group-box-label text-uppercase">Watermark</span>
                     <div class="mx-4">
                         <app-block-row-data
-                            [tooltip]="
-                                'Last watermark of the output data stream.'
-                            "
+                            [tooltip]="'Last watermark of the output data stream.'"
                             [label]="'Watermark:'"
                         >
                             <a class="page-link">
                                 <app-display-time
-                                    [data]="
-                                        currentState.metadata.metadata
-                                            .currentWatermark
-                                    "
+                                    [data]="currentState.metadata.metadata.currentWatermark"
                                 ></app-display-time>
                             </a>
                         </app-block-row-data>
                     </div>
                 </div>
 
-                <ng-container
-                    *ngIf="
-                        currentState &&
-                        currentState.metadata.metadata.currentTransform
-                    "
-                >
+                <ng-container *ngIf="currentState && currentState.metadata.metadata.currentTransform">
                     <div
                         class="position-relative border border-1 p-2 rounded-3"
-                        *ngFor="
-                            let input of currentState.metadata.metadata
-                                .currentTransform.inputs;
-                            let i = index
-                        "
+                        *ngFor="let input of currentState.metadata.metadata.currentTransform.inputs; let i = index"
                     >
-                        <span
-                            class="position-absolute text-muted group-box-label text-uppercase"
+                        <span class="position-absolute text-muted group-box-label text-uppercase"
                             >Inputs {{ i + 1 }}</span
                         >
                         <div class="mx-4">
-                            <app-block-row-data
-                                [tooltip]="'Unique dataset identifier.'"
-                                [label]="'Id:'"
-                            >
+                            <app-block-row-data [tooltip]="'Unique dataset identifier.'" [label]="'Id:'">
                                 <span>{{ input.dataset.id }}</span>
                             </app-block-row-data>
                         </div>
                         <div class="mx-4">
-                            <app-block-row-data
-                                [tooltip]="'Type of the dataset.'"
-                                [label]="'Dataset type:'"
-                            >
-                                <span>{{
-                                    kindToCamelCase(input.dataset.kind)
-                                }}</span>
+                            <app-block-row-data [tooltip]="'Type of the dataset.'" [label]="'Dataset type:'">
+                                <span>{{ kindToCamelCase(input.dataset.kind) }}</span>
                             </app-block-row-data>
                         </div>
                         <div class="mx-4">
-                            <app-block-row-data
-                                [tooltip]="'Type of the dataset.'"
-                                [label]="'Name:'"
-                            >
+                            <app-block-row-data [tooltip]="'Type of the dataset.'" [label]="'Name:'">
                                 <app-dataset-name-property
                                     [data]="{
                                         datasetName: input.dataset.name,
@@ -439,10 +273,7 @@
                             </app-block-row-data>
                         </div>
                         <div class="mx-4">
-                            <app-block-row-data
-                                [tooltip]="'Owner of the dataset.'"
-                                [label]="'Owner:'"
-                            >
+                            <app-block-row-data [tooltip]="'Owner of the dataset.'" [label]="'Owner:'">
                                 <app-owner-property
                                     [data]="{
                                         id: input.dataset.owner.id,
@@ -452,51 +283,33 @@
                             </app-block-row-data>
                         </div>
                         <div class="mx-4">
-                            <app-block-row-data
-                                [tooltip]="'Query alias of the dataset.'"
-                                [label]="'Query alias:'"
-                            >
+                            <app-block-row-data [tooltip]="'Query alias of the dataset.'" [label]="'Query alias:'">
                                 <span>{{ input.name }}</span>
                             </app-block-row-data>
                         </div>
                     </div>
-                    <div
-                        class="position-relative border border-1 p-2 rounded-3"
-                    >
-                        <span
-                            class="position-absolute text-muted group-box-label text-uppercase"
-                            >Transform</span
-                        >
+                    <div class="position-relative border border-1 p-2 rounded-3">
+                        <span class="position-absolute text-muted group-box-label text-uppercase">Transform</span>
                         <div class="mx-4">
                             <app-block-row-data
-                                [tooltip]="
-                                    'Identifier of the engine used for this transformation.'
-                                "
+                                [tooltip]="'Identifier of the engine used for this transformation.'"
                                 [label]="'Engine:'"
                             >
                                 <app-engine-property
-                                    [data]="
-                                        currentState.metadata.metadata
-                                            .currentTransform.transform.engine
-                                    "
+                                    [data]="currentState.metadata.metadata.currentTransform.transform.engine"
                                 ></app-engine-property>
                             </app-block-row-data>
                         </div>
 
                         <div class="mx-4">
                             <app-block-row-data
-                                [tooltip]="
-                                    'Queries use for specifying multi-step SQL transformations.'
-                                "
+                                [tooltip]="'Queries use for specifying multi-step SQL transformations.'"
                                 [label]="'Queries:'"
                             >
                             </app-block-row-data>
                             <div class="row my-4">
                                 <app-sql-query-viewer
-                                    [data]="
-                                        currentState.metadata.metadata
-                                            .currentTransform.transform.queries
-                                    "
+                                    [data]="currentState.metadata.metadata.currentTransform.transform.queries"
                                 ></app-sql-query-viewer>
                             </div>
                         </div>
@@ -505,24 +318,16 @@
             </div>
         </ng-container>
         <ng-container
-            *ngIf="
-                !currentState?.metadata?.metadata?.currentSource &&
-                currentState?.metadata?.kind === 'ROOT'
-            "
+            *ngIf="!currentState?.metadata?.metadata?.currentSource && currentState?.metadata?.kind === 'ROOT'"
         >
             <h3 class="box-title text-center mt-4">There is no metadata.</h3>
         </ng-container>
         <ng-container
-            *ngIf="
-                !currentState?.metadata?.metadata?.currentTransform &&
-                currentState?.metadata?.kind === 'DERIVATIVE'
-            "
+            *ngIf="!currentState?.metadata?.metadata?.currentTransform && currentState?.metadata?.kind === 'DERIVATIVE'"
         >
             <h3 class="box-title text-center">
                 There is no metadata. Need to add
-                <a class="add-link" (click)="navigateToEditSetTransform()">
-                    SetTransform event</a
-                >
+                <a class="add-link" (click)="navigateToEditSetTransform()"> SetTransform event</a>
             </h3>
         </ng-container>
     </div>

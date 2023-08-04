@@ -1,22 +1,11 @@
-<div
-    id="file-readme-dataset-template-md"
-    class="file my-4"
-    *ngIf="currentReadme || editViewShow"
->
+<div id="file-readme-dataset-template-md" class="file my-4" *ngIf="currentReadme || editViewShow">
     <div class="file-header d-flex align-items-center">
-        <div
-            class="file-info pr-4 d-flex flex-order-1 flex-auto align-items-center"
-        >
+        <div class="file-info pr-4 d-flex flex-order-1 flex-auto align-items-center">
             <span class="mr-2">
                 <svg-icon name="code-square"></svg-icon>
             </span>
             <h2 class="box-title align-items-center m-0">
-                <a
-                    href="#readme"
-                    data-view-component="true"
-                    class="link--primary"
-                    >README.md</a
-                >
+                <a href="#readme" data-view-component="true" class="link--primary">README.md</a>
             </h2>
         </div>
         <button
@@ -28,10 +17,7 @@
             <svg-icon name="pencil"></svg-icon>
         </button>
     </div>
-    <div
-        *ngIf="editViewShow"
-        class="edit-title d-flex align-items-center justify-content-between"
-    >
+    <div *ngIf="editViewShow" class="edit-title d-flex align-items-center justify-content-between">
         <div class="left-part">
             <button
                 class="edit-button"
@@ -51,11 +37,7 @@
             </button>
         </div>
         <div class="right-part d-flex">
-            <button
-                class="button-changes mr-4"
-                data-test-id="cancel-changes"
-                (click)="onCancelChanges()"
-            >
+            <button class="button-changes mr-4" data-test-id="cancel-changes" (click)="onCancelChanges()">
                 Cancel changes
             </button>
             <button
@@ -70,10 +52,7 @@
     </div>
     <div class="file-content">
         <ng-template [ngIf]="isEditView && editViewShow">
-            <textarea
-                class="variable-textarea"
-                [(ngModel)]="readmeState"
-            ></textarea>
+            <textarea class="variable-textarea" [(ngModel)]="readmeState"></textarea>
         </ng-template>
         <ng-template [ngIf]="!isEditView || !editViewShow">
             <markdown class="variable-binding" [data]="readmeState"></markdown>

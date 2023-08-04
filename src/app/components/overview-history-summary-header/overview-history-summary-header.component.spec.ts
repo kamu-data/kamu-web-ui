@@ -2,10 +2,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { OverviewHistorySummaryHeaderComponent } from "./overview-history-summary-header.component";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import {
-    TEST_DATASET_NAME,
-    mockGetMetadataBlockQuery,
-} from "src/app/api/mock/dataset.mock";
+import { TEST_DATASET_NAME, mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { DisplayTimeModule } from "../display-time/display-time.module";
 import { DisplayHashModule } from "../display-hash/dispaly-hash.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
@@ -34,13 +31,10 @@ describe("OverviewHistorySummaryHeaderComponent", () => {
             ],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(
-            OverviewHistorySummaryHeaderComponent,
-        );
+        fixture = TestBed.createComponent(OverviewHistorySummaryHeaderComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        (component.metadataBlockFragment = mockGetMetadataBlockQuery.datasets
-            .byOwnerAndName?.metadata.chain
+        (component.metadataBlockFragment = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
             .blockByHash as MetadataBlockFragment),
             (component.numBlocksTotal = 3);
         component.datasetName = TEST_DATASET_NAME;
@@ -52,10 +46,7 @@ describe("OverviewHistorySummaryHeaderComponent", () => {
     });
 
     it("should navigate to metadata block", () => {
-        const navigateToMetadataBlockSpy = spyOn(
-            navigationService,
-            "navigateToMetadataBlock",
-        );
+        const navigateToMetadataBlockSpy = spyOn(navigationService, "navigateToMetadataBlock");
         const params: MetadataBlockNavigationParams = {
             accountName: component.authorInfo.name,
             datasetName: component.datasetName,

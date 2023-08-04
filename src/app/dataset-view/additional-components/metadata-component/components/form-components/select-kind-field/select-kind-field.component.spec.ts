@@ -33,16 +33,10 @@ describe("SelectKindFieldComponent", () => {
     it("should check switch control", () => {
         expect(component.form.value).toEqual({ kind: FetchKind.URL });
 
-        emitClickOnElementByDataTestId(
-            fixture,
-            `radio-${FetchKind.FILES_GLOB}-control`,
-        );
+        emitClickOnElementByDataTestId(fixture, `radio-${FetchKind.FILES_GLOB}-control`);
         expect(component.form.value).toEqual({ kind: FetchKind.FILES_GLOB });
 
-        emitClickOnElementByDataTestId(
-            fixture,
-            `radio-${FetchKind.CONTAINER}-control`,
-        );
+        emitClickOnElementByDataTestId(fixture, `radio-${FetchKind.CONTAINER}-control`);
         expect(component.form.value).toEqual({ kind: FetchKind.CONTAINER });
     });
 });

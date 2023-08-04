@@ -1,20 +1,7 @@
 import { MaybeNull } from "./../../../../../../common/app.types";
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    QueryList,
-    ViewChild,
-    ViewChildren,
-} from "@angular/core";
+import { AfterViewInit, ChangeDetectionStrategy, Component, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { BaseField } from "../base-field";
-import {
-    AbstractControl,
-    FormArray,
-    FormControl,
-    FormGroup,
-    Validators,
-} from "@angular/forms";
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatTable } from "@angular/material/table";
 import { Observable, OperatorFunction, Subject, merge } from "rxjs";
 import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
@@ -83,13 +70,8 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
         );
     }
 
-    public search: OperatorFunction<string, readonly string[]> = (
-        text$: Observable<string>,
-    ) => {
-        const debouncedText$ = text$.pipe(
-            debounceTime(200),
-            distinctUntilChanged(),
-        );
+    public search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) => {
+        const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
         // input focus stream for each control
         const inputFocus$ = new Subject<SchemaType>();
         this.focusObservableList.push(inputFocus$);
@@ -98,9 +80,7 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
             map((term) =>
                 term === ""
                     ? this.AVAILABLE_TYPES
-                    : this.AVAILABLE_TYPES.filter((v) =>
-                          v.toLowerCase().includes(term.toLowerCase()),
-                      ),
+                    : this.AVAILABLE_TYPES.filter((v) => v.toLowerCase().includes(term.toLowerCase())),
             ),
         );
     };
@@ -121,8 +101,7 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
             errorMessage = this.VALIDATION_MESSAGES.pattern;
         } else if (
             this.nameControlByIndex(index)?.hasError("required") &&
-            (this.nameControlByIndex(index)?.touched ||
-                this.nameControlByIndex(index)?.dirty)
+            (this.nameControlByIndex(index)?.touched || this.nameControlByIndex(index)?.dirty)
         ) {
             errorMessage = this.VALIDATION_MESSAGES.required;
         }
@@ -137,9 +116,7 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
                     RxwebValidators.required(),
                     Validators.pattern(AppValues.SCHEMA_NAME_PATTERN),
                 ]),
-                type: new FormControl(this.defaultType, [
-                    RxwebValidators.required(),
-                ]),
+                type: new FormControl(this.defaultType, [RxwebValidators.required()]),
             }),
         );
         this.table.renderRows();
@@ -152,8 +129,7 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
     }
 
     public swap(index: number, direction: number): void {
-        const condition =
-            direction > 0 ? index === this.items.length - 1 : index === 0;
+        const condition = direction > 0 ? index === this.items.length - 1 : index === 0;
         if (condition) {
             return;
         }

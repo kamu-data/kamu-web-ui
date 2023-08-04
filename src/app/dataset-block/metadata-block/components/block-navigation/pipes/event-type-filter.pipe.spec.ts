@@ -10,15 +10,12 @@ describe("EventTypeFilterPipe", () => {
     });
 
     it("should check pipe when event filter is empty", () => {
-        const block = mockGetMetadataBlockQuery.datasets.byOwnerAndName
-            ?.metadata.chain.blockByHash as MetadataBlockFragment;
+        const block = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+            .blockByHash as MetadataBlockFragment;
         const mockBlocks: MetadataBlockFragment[] = [block];
         const defaultEventFilter = [] as string[];
 
-        const result: MetadataBlockFragment[] = pipe.transform(
-            mockBlocks,
-            defaultEventFilter,
-        );
+        const result: MetadataBlockFragment[] = pipe.transform(mockBlocks, defaultEventFilter);
 
         expect(result).toEqual(mockBlocks);
     });
@@ -27,18 +24,13 @@ describe("EventTypeFilterPipe", () => {
         { eventFilter: "ExecuteQuery", match: true },
         { enventFilter: "SetLicense", match: false },
     ].forEach(({ eventFilter, match }) => {
-        it(`should check pipe when event filter is ${
-            match ? "" : "not"
-        }matches type of event`, () => {
-            const block = mockGetMetadataBlockQuery.datasets.byOwnerAndName
-                ?.metadata.chain.blockByHash as MetadataBlockFragment;
+        it(`should check pipe when event filter is ${match ? "" : "not"}matches type of event`, () => {
+            const block = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+                .blockByHash as MetadataBlockFragment;
             const mockBlocks: MetadataBlockFragment[] = [block];
             const defaultEventFilter: string[] = [eventFilter] as string[];
 
-            const result: MetadataBlockFragment[] = pipe.transform(
-                mockBlocks,
-                defaultEventFilter,
-            );
+            const result: MetadataBlockFragment[] = pipe.transform(mockBlocks, defaultEventFilter);
 
             expect(result).toEqual(match ? mockBlocks : []);
         });
@@ -48,10 +40,7 @@ describe("EventTypeFilterPipe", () => {
         const mockBlocks: MetadataBlockFragment[] = mockHistoryUpdate.history;
         const defaultEventFilter = ["AddData", "SetInfo"];
 
-        const result: MetadataBlockFragment[] = pipe.transform(
-            mockBlocks,
-            defaultEventFilter,
-        );
+        const result: MetadataBlockFragment[] = pipe.transform(mockBlocks, defaultEventFilter);
 
         expect(result).toEqual(mockBlocks);
     });

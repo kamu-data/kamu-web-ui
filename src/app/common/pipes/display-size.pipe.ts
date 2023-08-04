@@ -22,10 +22,7 @@ export class DisplaySizePipe implements PipeTransform {
         do {
             bytes /= thresh;
             ++u;
-        } while (
-            Math.round(Math.abs(bytes) * r) / r >= thresh &&
-            u < units.length - 1
-        );
+        } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
 
         return bytes.toFixed(decimalPlaces) + " " + units[u];
     }

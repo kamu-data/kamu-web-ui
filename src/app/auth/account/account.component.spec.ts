@@ -6,10 +6,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import {
-    emitClickOnElementByDataTestId,
-    routerMock,
-} from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, routerMock } from "src/app/common/base-test.helpers.spec";
 
 import { AccountComponent } from "./account.component";
 import { BehaviorSubject } from "rxjs";
@@ -33,11 +30,7 @@ describe("AccountComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [AccountComponent],
-            imports: [
-                ApolloTestingModule,
-                MatIconModule,
-                MatButtonToggleModule,
-            ],
+            imports: [ApolloTestingModule, MatIconModule, MatButtonToggleModule],
             providers: [
                 DatasetApi,
                 { provide: Router, useValue: routerMock },
@@ -71,29 +64,17 @@ describe("AccountComponent", () => {
 
     Object.values(AccountTabs).forEach((tab: string) => {
         it(`should check switch ${tab} tab`, () => {
-            const navigateToOwnerViewSpy = spyOn(
-                navigationService,
-                "navigateToOwnerView",
-            );
+            const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
             emitClickOnElementByDataTestId(fixture, `account-${tab}-tab`);
-            expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
-                mockAccountDetails.login,
-                tab,
-            );
+            expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(mockAccountDetails.login, tab);
         });
     });
 
     it("should check get data from accountService subscription", () => {
         accountService.datasetsChanges(mockDatasetsAccountResponse);
         component.ngOnInit();
-        expect(component.datasets).toEqual(
-            mockDatasetsAccountResponse.datasets,
-        );
-        expect(component.pageInfo).toEqual(
-            mockDatasetsAccountResponse.pageInfo,
-        );
-        expect(component.datasetTotalCount).toEqual(
-            mockDatasetsAccountResponse.datasetTotalCount,
-        );
+        expect(component.datasets).toEqual(mockDatasetsAccountResponse.datasets);
+        expect(component.pageInfo).toEqual(mockDatasetsAccountResponse.pageInfo);
+        expect(component.datasetTotalCount).toEqual(mockDatasetsAccountResponse.datasetTotalCount);
     });
 });

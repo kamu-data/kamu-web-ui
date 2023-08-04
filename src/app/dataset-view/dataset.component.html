@@ -1,18 +1,9 @@
-<div
-    class="app-main-container"
-    role="main"
-    data-test-id="dataset-view"
-    id="dataset-view"
->
+<div class="app-main-container" role="main" data-test-id="dataset-view" id="dataset-view">
     <div class="app-content">
         <app-dataset-view-header
             [datasetInfo]="getDatasetInfoFromUrl()"
-            (showOwnerPageEmit)="
-                showOwnerPage(getDatasetInfoFromUrl().accountName)
-            "
-            (onClickSearchAdditionalButtonEmit)="
-                onClickSearchAdditionalButton($event)
-            "
+            (showOwnerPageEmit)="showOwnerPage(getDatasetInfoFromUrl().accountName)"
+            (onClickSearchAdditionalButtonEmit)="onClickSearchAdditionalButton($event)"
         ></app-dataset-view-header>
     </div>
 
@@ -29,17 +20,11 @@
             ></app-dataset-view-menu>
 
             <ng-template [ngIf]="isDatasetViewTypeOverview">
-                <app-overview
-                    [datasetBasics]="datasetBasics"
-                    (selectTopicEmit)="selectTopic($event)"
-                ></app-overview>
+                <app-overview [datasetBasics]="datasetBasics" (selectTopicEmit)="selectTopic($event)"></app-overview>
             </ng-template>
 
             <ng-template [ngIf]="isDatasetViewTypeData && datasetBasics">
-                <app-data
-                    [datasetBasics]="datasetBasics"
-                    (runSQLRequestEmit)="onRunSQLRequest($event)"
-                ></app-data>
+                <app-data [datasetBasics]="datasetBasics" (runSQLRequestEmit)="onRunSQLRequest($event)"></app-data>
             </ng-template>
 
             <ng-template [ngIf]="isDatasetViewTypeHistory">

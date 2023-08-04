@@ -10,15 +10,12 @@ describe("BlockHashFilterPipe", () => {
     });
 
     it("should check pipe when search filter is empty", () => {
-        const block = mockGetMetadataBlockQuery.datasets.byOwnerAndName
-            ?.metadata.chain.blockByHash as MetadataBlockFragment;
+        const block = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+            .blockByHash as MetadataBlockFragment;
         const mockBlocks: MetadataBlockFragment[] = [block];
         const defaultSearchFilter = "";
 
-        const result: MetadataBlockFragment[] = pipe.transform(
-            mockBlocks,
-            defaultSearchFilter,
-        );
+        const result: MetadataBlockFragment[] = pipe.transform(mockBlocks, defaultSearchFilter);
 
         expect(result).toEqual(mockBlocks);
     });
@@ -27,18 +24,13 @@ describe("BlockHashFilterPipe", () => {
         { searchFilter: "zW1", match: true },
         { searchFilter: "zW1qqqqqqqq", match: false },
     ].forEach(({ searchFilter, match }) => {
-        it(`should check pipe when search filter is ${
-            match ? "" : "not"
-        }matches part of the hash`, () => {
-            const block = mockGetMetadataBlockQuery.datasets.byOwnerAndName
-                ?.metadata.chain.blockByHash as MetadataBlockFragment;
+        it(`should check pipe when search filter is ${match ? "" : "not"}matches part of the hash`, () => {
+            const block = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+                .blockByHash as MetadataBlockFragment;
             const mockBlocks: MetadataBlockFragment[] = [block];
             const defaultSearchFilter = searchFilter;
 
-            const result: MetadataBlockFragment[] = pipe.transform(
-                mockBlocks,
-                defaultSearchFilter,
-            );
+            const result: MetadataBlockFragment[] = pipe.transform(mockBlocks, defaultSearchFilter);
 
             expect(result).toEqual(match ? mockBlocks : []);
         });

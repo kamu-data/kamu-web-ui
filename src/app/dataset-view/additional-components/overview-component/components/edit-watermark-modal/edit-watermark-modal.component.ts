@@ -1,10 +1,5 @@
 import { MaybeNull } from "./../../../../../common/app.types";
-import {
-    ChangeDetectionStrategy,
-    Component,
-    Input,
-    OnInit,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { OWL_DATE_TIME_FORMATS } from "@danielmoncada/angular-datetime-picker";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import moment from "moment-timezone";
@@ -19,14 +14,9 @@ import { DatasetCommitService } from "../../services/dataset-commit.service";
     templateUrl: "./edit-watermark-modal.component.html",
     styleUrls: ["./edit-watermark-modal.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        { provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS },
-    ],
+    providers: [{ provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS }],
 })
-export class EditWatermarkModalComponent
-    extends BaseComponent
-    implements OnInit
-{
+export class EditWatermarkModalComponent extends BaseComponent implements OnInit {
     @Input() public currentWatermark: MaybeNull<string>;
     @Input() public datasetBasics?: DatasetBasicsFragment;
     public date: Date;
@@ -64,9 +54,7 @@ export class EditWatermarkModalComponent
     }
 
     public get minLocalWatermark(): string {
-        return this.currentWatermark
-            ? new Date(this.currentWatermark).toISOString()
-            : "";
+        return this.currentWatermark ? new Date(this.currentWatermark).toISOString() : "";
     }
 
     public commitSetWatermarkEvent(): void {

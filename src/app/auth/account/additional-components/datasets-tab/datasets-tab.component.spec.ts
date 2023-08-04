@@ -47,10 +47,7 @@ describe("DatasetsTabComponent", () => {
     });
 
     it("should check #selectDataset with datasets item", () => {
-        const navigateToDatasetViewSpy = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.onSelectDataset(mockDatasetListItem);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: mockDatasetListItem.owner.name,
@@ -61,10 +58,7 @@ describe("DatasetsTabComponent", () => {
     it("should check page changed", () => {
         const testPageNumber = 2;
         component.accountViewType = AccountTabs.datasets;
-        const navigateToOwnerViewSpy = spyOn(
-            navigationService,
-            "navigateToOwnerView",
-        );
+        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
         component.onPageChange(testPageNumber);
 
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
@@ -76,14 +70,8 @@ describe("DatasetsTabComponent", () => {
 
     it("should check page changed without cuurrent page", () => {
         component.accountViewType = AccountTabs.datasets;
-        const navigateToOwnerViewSpy = spyOn(
-            navigationService,
-            "navigateToOwnerView",
-        );
+        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
         component.onPageChange();
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
-            mockAccountDetails.login,
-            AccountTabs.datasets,
-        );
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(mockAccountDetails.login, AccountTabs.datasets);
     });
 });

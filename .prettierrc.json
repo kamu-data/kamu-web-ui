@@ -1,6 +1,7 @@
 {
   "semi": true,
   "trailingComma": "all",
+  "printWidth": 120,
   "overrides": [
     {
       "files": "*.test.ts",
@@ -9,7 +10,10 @@
       }
     },
     {
-      "files": ["*.html", "**/*.ts"],
+      "files": [
+        "*.html",
+        "**/*.ts"
+      ],
       "options": {
         "tabWidth": 4
       }

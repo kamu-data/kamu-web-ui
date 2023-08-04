@@ -157,18 +157,16 @@ export type CreateDatasetResult = {
     message: Scalars["String"];
 };
 
-export type CreateDatasetResultInvalidSnapshot =
-    CreateDatasetFromSnapshotResult & {
-        __typename?: "CreateDatasetResultInvalidSnapshot";
-        message: Scalars["String"];
-    };
+export type CreateDatasetResultInvalidSnapshot = CreateDatasetFromSnapshotResult & {
+    __typename?: "CreateDatasetResultInvalidSnapshot";
+    message: Scalars["String"];
+};
 
-export type CreateDatasetResultMissingInputs =
-    CreateDatasetFromSnapshotResult & {
-        __typename?: "CreateDatasetResultMissingInputs";
-        message: Scalars["String"];
-        missingInputs: Array<Scalars["String"]>;
-    };
+export type CreateDatasetResultMissingInputs = CreateDatasetFromSnapshotResult & {
+    __typename?: "CreateDatasetResultMissingInputs";
+    message: Scalars["String"];
+    missingInputs: Array<Scalars["String"]>;
+};
 
 export type CreateDatasetResultNameCollision = CreateDatasetFromSnapshotResult &
     CreateDatasetResult & {
@@ -458,9 +456,7 @@ export type EnvVar = {
     value?: Maybe<Scalars["String"]>;
 };
 
-export type EventTimeSource =
-    | EventTimeSourceFromMetadata
-    | EventTimeSourceFromPath;
+export type EventTimeSource = EventTimeSourceFromMetadata | EventTimeSourceFromPath;
 
 export type EventTimeSourceFromMetadata = {
     __typename?: "EventTimeSourceFromMetadata";
@@ -521,10 +517,7 @@ export type LoginResponse = {
     token: AccessToken;
 };
 
-export type MergeStrategy =
-    | MergeStrategyAppend
-    | MergeStrategyLedger
-    | MergeStrategySnapshot;
+export type MergeStrategy = MergeStrategyAppend | MergeStrategyLedger | MergeStrategySnapshot;
 
 export type MergeStrategyAppend = {
     __typename?: "MergeStrategyAppend";
@@ -746,12 +739,7 @@ export enum QueryDialect {
     SqlSpark = "SQL_SPARK",
 }
 
-export type ReadStep =
-    | ReadStepCsv
-    | ReadStepEsriShapefile
-    | ReadStepGeoJson
-    | ReadStepJsonLines
-    | ReadStepParquet;
+export type ReadStep = ReadStepCsv | ReadStepEsriShapefile | ReadStepGeoJson | ReadStepJsonLines | ReadStepParquet;
 
 export type ReadStepCsv = {
     __typename?: "ReadStepCsv";
@@ -1188,9 +1176,7 @@ export type DatasetByAccountAndDatasetNameQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
-        byOwnerAndName?:
-            | ({ __typename?: "Dataset" } & DatasetBasicsFragment)
-            | null;
+        byOwnerAndName?: ({ __typename?: "Dataset" } & DatasetBasicsFragment) | null;
     };
 };
 
@@ -1322,9 +1308,7 @@ export type DatasetsByAccountNameQuery = {
         byAccountName: {
             __typename?: "DatasetConnection";
             totalCount: number;
-            nodes: Array<
-                { __typename: "Dataset" } & DatasetSearchOverviewFragment
-            >;
+            nodes: Array<{ __typename: "Dataset" } & DatasetSearchOverviewFragment>;
             pageInfo: {
                 __typename?: "PageBasedInfo";
             } & DatasetPageInfoFragment;
@@ -1584,9 +1568,7 @@ export type DatasetBasicsFragment = {
     id: any;
     kind: DatasetKind;
     name: any;
-    owner:
-        | { __typename?: "Organization"; id: any; name: string }
-        | { __typename?: "User"; id: any; name: string };
+    owner: { __typename?: "Organization"; id: any; name: string } | { __typename?: "User"; id: any; name: string };
 };
 
 export type DatasetCurrentInfoFragment = {
@@ -1622,9 +1604,7 @@ export type DatasetDescriptionFragment = {
     metadata: {
         __typename?: "DatasetMetadata";
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
-        currentLicense?:
-            | ({ __typename?: "SetLicense" } & LicenseFragment)
-            | null;
+        currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
     };
 };
 
@@ -1641,9 +1621,7 @@ export type DatasetDetailsFragment = {
     metadata: {
         __typename?: "DatasetMetadata";
         currentWatermark?: any | null;
-        currentLicense?:
-            | ({ __typename?: "SetLicense" } & LicenseFragment)
-            | null;
+        currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
     };
 };
 
@@ -1756,25 +1734,19 @@ export type DatasetMetadataSummaryFragment = {
         __typename: "DatasetMetadata";
         currentWatermark?: any | null;
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
-        currentLicense?:
-            | ({ __typename?: "SetLicense" } & LicenseFragment)
-            | null;
+        currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
         currentSource?:
             | ({
                   __typename?: "SetPollingSource";
               } & SetPollingSourceEventFragment)
             | null;
-        currentTransform?:
-            | ({ __typename?: "SetTransform" } & DatasetTransformFragment)
-            | null;
+        currentTransform?: ({ __typename?: "SetTransform" } & DatasetTransformFragment) | null;
         currentSchema?: {
             __typename: "DataSchema";
             format: DataSchemaFormat;
             content: string;
         } | null;
-        currentVocab?:
-            | ({ __typename?: "SetVocab" } & SetVocabEventFragment)
-            | null;
+        currentVocab?: ({ __typename?: "SetVocab" } & SetVocabEventFragment) | null;
     };
 } & DatasetBasicsFragment &
     DatasetReadmeFragment &
@@ -1812,9 +1784,7 @@ export type DatasetSearchOverviewFragment = {
     metadata: {
         __typename?: "DatasetMetadata";
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
-        currentLicense?:
-            | ({ __typename?: "SetLicense" } & LicenseFragment)
-            | null;
+        currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
         currentDownstreamDependencies: Array<{
             __typename?: "Dataset";
             id: any;
@@ -1866,9 +1836,7 @@ export type MetadataBlockFragment = {
     prevBlockHash?: any | null;
     systemTime: any;
     sequenceNumber: number;
-    author:
-        | { __typename: "Organization"; id: any; name: string }
-        | { __typename: "User"; id: any; name: string };
+    author: { __typename: "Organization"; id: any; name: string } | { __typename: "User"; id: any; name: string };
     event:
         | ({ __typename: "AddData" } & AddDataEventFragment)
         | ({ __typename: "ExecuteQuery" } & ExecuteQueryEventFragment)
@@ -1975,9 +1943,7 @@ export type SearchDatasetsOverviewQuery = {
         query: {
             __typename?: "SearchResultConnection";
             totalCount: number;
-            nodes: Array<
-                { __typename: "Dataset" } & DatasetSearchOverviewFragment
-            >;
+            nodes: Array<{ __typename: "Dataset" } & DatasetSearchOverviewFragment>;
             pageInfo: {
                 __typename?: "PageBasedInfo";
             } & DatasetPageInfoFragment;
@@ -2580,17 +2546,9 @@ export class CommitEventToDatasetGQL extends Apollo.Mutation<
     }
 }
 export const CreateEmptyDatasetDocument = gql`
-    mutation createEmptyDataset(
-        $accountId: AccountID!
-        $datasetKind: DatasetKind!
-        $datasetName: DatasetName!
-    ) {
+    mutation createEmptyDataset($accountId: AccountID!, $datasetKind: DatasetKind!, $datasetName: DatasetName!) {
         datasets {
-            createEmpty(
-                accountId: $accountId
-                datasetKind: $datasetKind
-                datasetName: $datasetName
-            ) {
+            createEmpty(accountId: $accountId, datasetKind: $datasetKind, datasetName: $datasetName) {
                 message
             }
         }
@@ -2611,16 +2569,9 @@ export class CreateEmptyDatasetGQL extends Apollo.Mutation<
     }
 }
 export const CreateDatasetFromSnapshotDocument = gql`
-    mutation createDatasetFromSnapshot(
-        $accountId: AccountID!
-        $snapshot: String!
-    ) {
+    mutation createDatasetFromSnapshot($accountId: AccountID!, $snapshot: String!) {
         datasets {
-            createFromSnapshot(
-                accountId: $accountId
-                snapshot: $snapshot
-                snapshotFormat: YAML
-            ) {
+            createFromSnapshot(accountId: $accountId, snapshot: $snapshot, snapshotFormat: YAML) {
                 message
                 ... on CreateDatasetResultSuccess {
                     dataset {
@@ -2667,10 +2618,7 @@ export const UpdateReadmeDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class UpdateReadmeGQL extends Apollo.Mutation<
-    UpdateReadmeMutation,
-    UpdateReadmeMutationVariables
-> {
+export class UpdateReadmeGQL extends Apollo.Mutation<UpdateReadmeMutation, UpdateReadmeMutationVariables> {
     document = UpdateReadmeDocument;
 
     constructor(apollo: Apollo.Apollo) {
@@ -2678,15 +2626,9 @@ export class UpdateReadmeGQL extends Apollo.Mutation<
     }
 }
 export const DatasetByAccountAndDatasetNameDocument = gql`
-    query datasetByAccountAndDatasetName(
-        $accountName: AccountName!
-        $datasetName: DatasetName!
-    ) {
+    query datasetByAccountAndDatasetName($accountName: AccountName!, $datasetName: DatasetName!) {
         datasets {
-            byOwnerAndName(
-                accountName: $accountName
-                datasetName: $datasetName
-            ) {
+            byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
                 ...DatasetBasics
             }
         }
@@ -2721,10 +2663,7 @@ export const DatasetByIdDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class DatasetByIdGQL extends Apollo.Query<
-    DatasetByIdQuery,
-    DatasetByIdQueryVariables
-> {
+export class DatasetByIdGQL extends Apollo.Query<DatasetByIdQuery, DatasetByIdQueryVariables> {
     document = DatasetByIdDocument;
 
     constructor(apollo: Apollo.Apollo) {
@@ -2770,17 +2709,9 @@ export class GetDatasetDataSqlRunGQL extends Apollo.Query<
     }
 }
 export const GetDatasetHistoryDocument = gql`
-    query getDatasetHistory(
-        $accountName: AccountName!
-        $datasetName: DatasetName!
-        $perPage: Int
-        $page: Int
-    ) {
+    query getDatasetHistory($accountName: AccountName!, $datasetName: DatasetName!, $perPage: Int, $page: Int) {
         datasets {
-            byOwnerAndName(
-                accountName: $accountName
-                datasetName: $datasetName
-            ) {
+            byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
                 ...DatasetBasics
                 metadata {
                     chain {
@@ -2806,10 +2737,7 @@ export const GetDatasetHistoryDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class GetDatasetHistoryGQL extends Apollo.Query<
-    GetDatasetHistoryQuery,
-    GetDatasetHistoryQueryVariables
-> {
+export class GetDatasetHistoryGQL extends Apollo.Query<GetDatasetHistoryQuery, GetDatasetHistoryQueryVariables> {
     document = GetDatasetHistoryDocument;
 
     constructor(apollo: Apollo.Apollo) {
@@ -2817,16 +2745,9 @@ export class GetDatasetHistoryGQL extends Apollo.Query<
     }
 }
 export const GetDatasetMainDataDocument = gql`
-    query getDatasetMainData(
-        $accountName: AccountName!
-        $datasetName: DatasetName!
-        $limit: Int
-    ) {
+    query getDatasetMainData($accountName: AccountName!, $datasetName: DatasetName!, $limit: Int) {
         datasets {
-            byOwnerAndName(
-                accountName: $accountName
-                datasetName: $datasetName
-            ) {
+            byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
                 ...DatasetBasics
                 ...DatasetOverview
                 ...DatasetData
@@ -2845,10 +2766,7 @@ export const GetDatasetMainDataDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class GetDatasetMainDataGQL extends Apollo.Query<
-    GetDatasetMainDataQuery,
-    GetDatasetMainDataQueryVariables
-> {
+export class GetDatasetMainDataGQL extends Apollo.Query<GetDatasetMainDataQuery, GetDatasetMainDataQueryVariables> {
     document = GetDatasetMainDataDocument;
 
     constructor(apollo: Apollo.Apollo) {
@@ -2875,10 +2793,7 @@ export const GetDatasetSchemaDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class GetDatasetSchemaGQL extends Apollo.Query<
-    GetDatasetSchemaQuery,
-    GetDatasetSchemaQueryVariables
-> {
+export class GetDatasetSchemaGQL extends Apollo.Query<GetDatasetSchemaQuery, GetDatasetSchemaQueryVariables> {
     document = GetDatasetSchemaDocument;
 
     constructor(apollo: Apollo.Apollo) {
@@ -2886,17 +2801,9 @@ export class GetDatasetSchemaGQL extends Apollo.Query<
     }
 }
 export const DatasetsByAccountNameDocument = gql`
-    query datasetsByAccountName(
-        $accountName: AccountName!
-        $perPage: Int
-        $page: Int
-    ) {
+    query datasetsByAccountName($accountName: AccountName!, $perPage: Int, $page: Int) {
         datasets {
-            byAccountName(
-                accountName: $accountName
-                perPage: $perPage
-                page: $page
-            ) {
+            byAccountName(accountName: $accountName, perPage: $perPage, page: $page) {
                 nodes {
                     ...DatasetSearchOverview
                     __typename
@@ -2940,10 +2847,7 @@ export const EnginesDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class EnginesGQL extends Apollo.Query<
-    EnginesQuery,
-    EnginesQueryVariables
-> {
+export class EnginesGQL extends Apollo.Query<EnginesQuery, EnginesQueryVariables> {
     document = EnginesDocument;
 
     constructor(apollo: Apollo.Apollo) {
@@ -2971,10 +2875,7 @@ export const GithubLoginDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class GithubLoginGQL extends Apollo.Mutation<
-    GithubLoginMutation,
-    GithubLoginMutationVariables
-> {
+export class GithubLoginGQL extends Apollo.Mutation<GithubLoginMutation, GithubLoginMutationVariables> {
     document = GithubLoginDocument;
 
     constructor(apollo: Apollo.Apollo) {
@@ -2995,10 +2896,7 @@ export const FetchAccountInfoDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class FetchAccountInfoGQL extends Apollo.Mutation<
-    FetchAccountInfoMutation,
-    FetchAccountInfoMutationVariables
-> {
+export class FetchAccountInfoGQL extends Apollo.Mutation<FetchAccountInfoMutation, FetchAccountInfoMutationVariables> {
     document = FetchAccountInfoDocument;
 
     constructor(apollo: Apollo.Apollo) {
@@ -3006,16 +2904,9 @@ export class FetchAccountInfoGQL extends Apollo.Mutation<
     }
 }
 export const GetMetadataBlockDocument = gql`
-    query getMetadataBlock(
-        $accountName: AccountName!
-        $datasetName: DatasetName!
-        $blockHash: Multihash!
-    ) {
+    query getMetadataBlock($accountName: AccountName!, $datasetName: DatasetName!, $blockHash: Multihash!) {
         datasets {
-            byOwnerAndName(
-                accountName: $accountName
-                datasetName: $datasetName
-            ) {
+            byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
                 metadata {
                     chain {
                         blockByHashEncoded(hash: $blockHash, format: YAML)
@@ -3033,10 +2924,7 @@ export const GetMetadataBlockDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class GetMetadataBlockGQL extends Apollo.Query<
-    GetMetadataBlockQuery,
-    GetMetadataBlockQueryVariables
-> {
+export class GetMetadataBlockGQL extends Apollo.Query<GetMetadataBlockQuery, GetMetadataBlockQueryVariables> {
     document = GetMetadataBlockDocument;
 
     constructor(apollo: Apollo.Apollo) {
@@ -3044,11 +2932,7 @@ export class GetMetadataBlockGQL extends Apollo.Query<
     }
 }
 export const SearchDatasetsAutocompleteDocument = gql`
-    query searchDatasetsAutocomplete(
-        $query: String!
-        $perPage: Int
-        $page: Int
-    ) {
+    query searchDatasetsAutocomplete($query: String!, $perPage: Int, $page: Int) {
         search {
             query(query: $query, perPage: $perPage, page: $page) {
                 nodes {

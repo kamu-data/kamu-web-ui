@@ -1,24 +1,10 @@
-import {
-    NgbTooltipModule,
-    NgbTypeaheadModule,
-} from "@ng-bootstrap/ng-bootstrap";
-import {
-    ComponentFixture,
-    TestBed,
-    fakeAsync,
-    flush,
-    tick,
-} from "@angular/core/testing";
+import { NgbTooltipModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 
 import { TypeaheadFieldComponent } from "./typeahead-field.component";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
-import {
-    FormControl,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-} from "@angular/forms";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { findInputElememtByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { interval } from "rxjs";
 import { map, take } from "rxjs/operators";
@@ -32,13 +18,7 @@ describe("TypeaheadFieldComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [TypeaheadFieldComponent, TooltipIconComponent],
-            imports: [
-                NgbTypeaheadModule,
-                MatIconModule,
-                FormsModule,
-                ReactiveFormsModule,
-                NgbTooltipModule,
-            ],
+            imports: [NgbTypeaheadModule, MatIconModule, FormsModule, ReactiveFormsModule, NgbTooltipModule],
             providers: [
                 {
                     provide: ActivatedRoute,

@@ -12,8 +12,7 @@
         <label class="form-check-label"> Use Preprocess step </label>
     </div>
     <div *ngIf="!showPreprocessStep" class="text-muted text-center fs-6 mt-2">
-        Enable preprocessing query, if you would like to transform your data
-        during the ingestion process
+        Enable preprocessing query, if you would like to transform your data during the ingestion process
     </div>
 </div>
 
@@ -22,9 +21,7 @@
         <div class="col-lg-4 ps-4">
             <div class="container-engine">
                 <app-engine-section
-                    [currentSetTransformEvent]="
-                        setPollingSourceEvent?.preprocess
-                    "
+                    [currentSetTransformEvent]="setPollingSourceEvent?.preprocess"
                     [selectedEngine]="preprocessValue.engine"
                     (onEmitSelectedEngine)="onSelectEngine($event)"
                 ></app-engine-section>
@@ -32,9 +29,7 @@
         </div>
         <div class="col-lg-8">
             <div class="mt-4 px-4">
-                <app-queries-section
-                    [queries]="preprocessValue.queries"
-                ></app-queries-section>
+                <app-queries-section [queries]="preprocessValue.queries"></app-queries-section>
             </div>
         </div>
     </div>

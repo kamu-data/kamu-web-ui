@@ -1,17 +1,9 @@
 <div class="d-flex p-4">
     <div class="flex-grow-1 ms-2 text-center">
-        <span class="fs-5 fw-bold">
-            {{ licenseForm.controls["name"].value ? "Edit" : "Add" }} dataset
-            license</span
-        >
+        <span class="fs-5 fw-bold"> {{ licenseForm.controls["name"].value ? "Edit" : "Add" }} dataset license</span>
     </div>
     <div>
-        <button
-            type="button"
-            class="btn-close"
-            aria-label="Close"
-            (click)="activeModal.close()"
-        ></button>
+        <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()"></button>
     </div>
 </div>
 <div class="px-4">
@@ -21,9 +13,7 @@
 <div class="body p-4">
     <form [formGroup]="licenseForm" (ngSubmit)="onEditLicense()">
         <div class="mt-4">
-            <label for="license-name" class="form-label"
-                >Name <span class="text-danger">*</span></label
-            >
+            <label for="license-name" class="form-label">Name <span class="text-danger">*</span></label>
             <input
                 class="form-control"
                 id="license-name"
@@ -31,29 +21,14 @@
                 formControlName="name"
                 data-test-id="license-name"
             />
-            <div
-                *ngIf="
-                    !licenseForm.controls['name'].valid &&
-                    licenseForm.controls['name'].touched
-                "
-            >
-                <div
-                    *ngIf="licenseForm.controls['name'].errors?.required"
-                    class="mt-1"
-                >
-                    <span
-                        class="text-danger fs-12"
-                        data-test-id="error-license-name"
-                    >
-                        Name is required</span
-                    >
+            <div *ngIf="!licenseForm.controls['name'].valid && licenseForm.controls['name'].touched">
+                <div *ngIf="licenseForm.controls['name'].errors?.required" class="mt-1">
+                    <span class="text-danger fs-12" data-test-id="error-license-name"> Name is required</span>
                 </div>
             </div>
         </div>
         <div class="mt-4">
-            <label for="license-short-name" class="form-label"
-                >Short name <span class="text-danger">*</span></label
-            >
+            <label for="license-short-name" class="form-label">Short name <span class="text-danger">*</span></label>
             <input
                 class="form-control"
                 id="license-short-name"
@@ -61,29 +36,16 @@
                 formControlName="shortName"
                 data-test-id="license-shortName"
             />
-            <div
-                *ngIf="
-                    !licenseForm.controls['shortName'].valid &&
-                    licenseForm.controls['shortName'].touched
-                "
-            >
-                <div
-                    *ngIf="licenseForm.controls['shortName'].errors?.required"
-                    class="mt-1"
-                >
-                    <span
-                        class="text-danger fs-12"
-                        data-test-id="error-license-shortName"
-                    >
+            <div *ngIf="!licenseForm.controls['shortName'].valid && licenseForm.controls['shortName'].touched">
+                <div *ngIf="licenseForm.controls['shortName'].errors?.required" class="mt-1">
+                    <span class="text-danger fs-12" data-test-id="error-license-shortName">
                         Short name is required</span
                     >
                 </div>
             </div>
         </div>
         <div class="mt-4">
-            <label for="license-url" class="form-label"
-                >Url <span class="text-danger">*</span></label
-            >
+            <label for="license-url" class="form-label">Url <span class="text-danger">*</span></label>
             <input
                 class="form-control"
                 id="license-url"
@@ -91,40 +53,17 @@
                 formControlName="websiteUrl"
                 data-test-id="license-websiteUrl"
             />
-            <div
-                *ngIf="
-                    !licenseForm.controls['websiteUrl'].valid &&
-                    licenseForm.controls['websiteUrl'].touched
-                "
-            >
-                <div
-                    *ngIf="licenseForm.controls['websiteUrl'].errors?.required"
-                    class="mt-1"
-                >
-                    <span
-                        class="text-danger fs-12"
-                        data-test-id="error-license-websiteUrl"
-                    >
-                        Url is required</span
-                    >
+            <div *ngIf="!licenseForm.controls['websiteUrl'].valid && licenseForm.controls['websiteUrl'].touched">
+                <div *ngIf="licenseForm.controls['websiteUrl'].errors?.required" class="mt-1">
+                    <span class="text-danger fs-12" data-test-id="error-license-websiteUrl"> Url is required</span>
                 </div>
-                <div
-                    *ngIf="licenseForm.controls['websiteUrl'].errors?.pattern"
-                    class="mt-1"
-                >
-                    <span
-                        class="text-danger fs-12"
-                        data-test-id="error-url-format"
-                    >
-                        Url format is wrong</span
-                    >
+                <div *ngIf="licenseForm.controls['websiteUrl'].errors?.pattern" class="mt-1">
+                    <span class="text-danger fs-12" data-test-id="error-url-format"> Url format is wrong</span>
                 </div>
             </div>
         </div>
         <div class="mt-4">
-            <label for="license-spdxId" class="form-label"
-                >License identifier
-            </label>
+            <label for="license-spdxId" class="form-label">License identifier </label>
             <input
                 class="form-control"
                 id="license-license-spdxId"

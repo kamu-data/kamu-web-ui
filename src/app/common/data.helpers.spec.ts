@@ -1,7 +1,4 @@
-import {
-    DatasetKind,
-    MetadataBlockFragment,
-} from "../api/kamu.graphql.interface";
+import { DatasetKind, MetadataBlockFragment } from "../api/kamu.graphql.interface";
 import { mockOwnerFields } from "../search/mock.data";
 import { DataHelpers } from "./data.helpers";
 
@@ -24,9 +21,9 @@ const metadataBlockSetVocab: MetadataBlockFragment = {
 };
 
 it("should check description for SetVocab block", () => {
-    expect(
-        DataHelpers.descriptionForMetadataBlock(metadataBlockSetVocab),
-    ).toEqual(DataHelpers.BLOCK_DESCRIBE_SET_VOCAB);
+    expect(DataHelpers.descriptionForMetadataBlock(metadataBlockSetVocab)).toEqual(
+        DataHelpers.BLOCK_DESCRIBE_SET_VOCAB,
+    );
 });
 
 it("should check description for SetPollingSource block", () => {
@@ -77,9 +74,9 @@ it("should check description for SetPollingSource block", () => {
             preprocess: null,
         },
     };
-    expect(
-        DataHelpers.descriptionForMetadataBlock(setPollingSourceBlock),
-    ).toEqual(DataHelpers.BLOCK_DESCRIBE_SET_POLLING_SOURCE);
+    expect(DataHelpers.descriptionForMetadataBlock(setPollingSourceBlock)).toEqual(
+        DataHelpers.BLOCK_DESCRIBE_SET_POLLING_SOURCE,
+    );
 });
 
 it("should check description for SetAttachments block", () => {
@@ -100,9 +97,9 @@ it("should check description for SetAttachments block", () => {
             },
         },
     };
-    expect(
-        DataHelpers.descriptionForMetadataBlock(setAttachmentsBlock),
-    ).toEqual(DataHelpers.BLOCK_DESCRIBE_SET_ATTACHMENTS);
+    expect(DataHelpers.descriptionForMetadataBlock(setAttachmentsBlock)).toEqual(
+        DataHelpers.BLOCK_DESCRIBE_SET_ATTACHMENTS,
+    );
 });
 
 it("should check description for SetInfo block", () => {
@@ -112,9 +109,7 @@ it("should check description for SetInfo block", () => {
             __typename: "SetInfo",
         },
     };
-    expect(DataHelpers.descriptionForMetadataBlock(setInfoBlock)).toEqual(
-        DataHelpers.BLOCK_DESCRIBE_SET_INFO,
-    );
+    expect(DataHelpers.descriptionForMetadataBlock(setInfoBlock)).toEqual(DataHelpers.BLOCK_DESCRIBE_SET_INFO);
 });
 
 it("should check description for SetTransform block", () => {
@@ -164,14 +159,11 @@ it("should check description for Seed block", () => {
         ...metadataBlockSetVocab,
         event: {
             __typename: "Seed",
-            datasetId:
-                "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+            datasetId: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
             datasetKind: DatasetKind.Root,
         },
     };
-    expect(DataHelpers.descriptionForMetadataBlock(seedBlock)).toEqual(
-        DataHelpers.BLOCK_DESCRIBE_SEED,
-    );
+    expect(DataHelpers.descriptionForMetadataBlock(seedBlock)).toEqual(DataHelpers.BLOCK_DESCRIBE_SEED);
 });
 
 it("should check description for SetLicense block", () => {
@@ -182,13 +174,10 @@ it("should check description for SetLicense block", () => {
             shortName: "OGL-Canada-2.0",
             name: "GPL",
             spdxId: "OGL-Canada-2.0",
-            websiteUrl:
-                "https://open.canada.ca/en/open-government-licence-canada",
+            websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
         },
     };
-    expect(DataHelpers.descriptionForMetadataBlock(setLicenseBlock)).toEqual(
-        "License updated: GPL",
-    );
+    expect(DataHelpers.descriptionForMetadataBlock(setLicenseBlock)).toEqual("License updated: GPL");
 });
 
 it("should check description for SetWatermark block", () => {
@@ -200,9 +189,7 @@ it("should check description for SetWatermark block", () => {
             outputWatermark: +watermarkTime,
         },
     };
-    expect(DataHelpers.descriptionForMetadataBlock(setWatermarkBlock)).toEqual(
-        `Watermark updated`,
-    );
+    expect(DataHelpers.descriptionForMetadataBlock(setWatermarkBlock)).toEqual(`Watermark updated`);
 });
 
 it("should check description for AddData block", () => {
@@ -217,16 +204,13 @@ it("should check description for AddData block", () => {
                     start: 117,
                     end: 517,
                 },
-                logicalHash:
-                    "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
+                logicalHash: "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
                 physicalHash: "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
                 size: 100,
             },
         },
     };
-    expect(DataHelpers.descriptionForMetadataBlock(addDataBlock)).toEqual(
-        "Added 401 new records",
-    );
+    expect(DataHelpers.descriptionForMetadataBlock(addDataBlock)).toEqual("Added 401 new records");
 });
 
 it("should check description for ExecuteQuery block", () => {
@@ -241,8 +225,7 @@ it("should check description for ExecuteQuery block", () => {
                     start: 0,
                     end: 0,
                 },
-                logicalHash:
-                    "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
+                logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
                 physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
             },
             inputCheckpoint: null,
@@ -250,8 +233,7 @@ it("should check description for ExecuteQuery block", () => {
             inputSlices: [
                 {
                     __typename: "InputSlice",
-                    datasetId:
-                        "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+                    datasetId: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
                     blockInterval: {
                         __typename: "BlockInterval",
                         start: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
@@ -282,8 +264,7 @@ it("should check description for ExecuteQuery block", () => {
                     start: 0,
                     end: 21,
                 },
-                logicalHash:
-                    "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
+                logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
                 physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
             },
             inputCheckpoint: null,
@@ -291,8 +272,7 @@ it("should check description for ExecuteQuery block", () => {
             inputSlices: [
                 {
                     __typename: "InputSlice",
-                    datasetId:
-                        "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+                    datasetId: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
                     blockInterval: {
                         __typename: "BlockInterval",
                         start: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
@@ -313,11 +293,9 @@ it("should check description for ExecuteQuery block", () => {
         },
     };
 
-    expect(DataHelpers.descriptionForMetadataBlock(addDataBlockEmpty)).toEqual(
-        "Transformation produced 1 new records",
-    );
+    expect(DataHelpers.descriptionForMetadataBlock(addDataBlockEmpty)).toEqual("Transformation produced 1 new records");
 
-    expect(
-        DataHelpers.descriptionForMetadataBlock(addDataBlockNonEmpty),
-    ).toEqual("Transformation produced 22 new records");
+    expect(DataHelpers.descriptionForMetadataBlock(addDataBlockNonEmpty)).toEqual(
+        "Transformation produced 22 new records",
+    );
 });

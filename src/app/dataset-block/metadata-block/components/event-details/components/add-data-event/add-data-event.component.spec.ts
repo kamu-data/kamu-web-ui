@@ -64,10 +64,7 @@ describe("AddDataEventComponent", () => {
     });
 
     it("should check onChanges hook call", () => {
-        const spyNgOnChanges = spyOn(
-            component,
-            "ngOnChanges",
-        ).and.callThrough();
+        const spyNgOnChanges = spyOn(component, "ngOnChanges").and.callThrough();
         fixture.detectChanges();
         component.ngOnChanges(mockSimpleChanges);
         expect(spyNgOnChanges).toHaveBeenCalledTimes(1);

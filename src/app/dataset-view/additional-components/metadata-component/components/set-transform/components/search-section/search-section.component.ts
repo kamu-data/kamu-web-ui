@@ -4,10 +4,7 @@ import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { OperatorFunction, Observable } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
-import {
-    DatasetBasicsFragment,
-    GetDatasetSchemaQuery,
-} from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "src/app/api/kamu.graphql.interface";
 import { SearchApi } from "src/app/api/search.api";
 import { MaybeNull } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
@@ -30,9 +27,7 @@ export class SearchSectionComponent extends BaseComponent {
     private readonly delayTime: number = AppValues.SHORT_DELAY_MS;
     @Input() public inputDatasets: Set<string>;
 
-    public treeControl = new NestedTreeControl<DatasetNode>(
-        (node) => node.children,
-    );
+    public treeControl = new NestedTreeControl<DatasetNode>((node) => node.children);
     @Input() public dataSource: MatTreeNestedDataSource<DatasetNode>;
     @Input() public TREE_DATA: DatasetNode[];
     constructor(
@@ -43,16 +38,11 @@ export class SearchSectionComponent extends BaseComponent {
         super();
     }
 
-    public search: OperatorFunction<
-        string,
-        readonly DatasetAutocompleteItem[]
-    > = (text$: Observable<string>) => {
+    public search: OperatorFunction<string, readonly DatasetAutocompleteItem[]> = (text$: Observable<string>) => {
         return text$.pipe(
             debounceTime(this.delayTime),
             distinctUntilChanged(),
-            switchMap((term: string) =>
-                this.appSearchAPI.autocompleteDatasetSearch(term),
-            ),
+            switchMap((term: string) => this.appSearchAPI.autocompleteDatasetSearch(term)),
         );
     };
 
@@ -68,31 +58,23 @@ export class SearchSectionComponent extends BaseComponent {
             id,
             name,
         });
-        if (
-            value.__typename !== "all" &&
-            !this.inputDatasets.has(inputDataset)
-        ) {
+        if (value.__typename !== "all" && !this.inputDatasets.has(inputDataset)) {
             this.inputDatasets.add(inputDataset);
             this.trackSubscription(
-                this.datasetService
-                    .requestDatasetSchema(id)
-                    .subscribe((data: GetDatasetSchemaQuery) => {
-                        if (data.datasets.byId) {
-                            const owner = (
-                                data.datasets.byId as DatasetBasicsFragment
-                            ).owner.name;
-                            const schema: MaybeNull<DatasetSchema> =
-                                parseCurrentSchema(
-                                    data.datasets.byId.metadata.currentSchema,
-                                );
-                            this.TREE_DATA.push({
-                                name: value.dataset.name as string,
-                                children: schema?.fields,
-                                owner,
-                            });
-                            this.dataSource.data = this.TREE_DATA;
-                        }
-                    }),
+                this.datasetService.requestDatasetSchema(id).subscribe((data: GetDatasetSchemaQuery) => {
+                    if (data.datasets.byId) {
+                        const owner = (data.datasets.byId as DatasetBasicsFragment).owner.name;
+                        const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
+                            data.datasets.byId.metadata.currentSchema,
+                        );
+                        this.TREE_DATA.push({
+                            name: value.dataset.name as string,
+                            children: schema?.fields,
+                            owner,
+                        });
+                        this.dataSource.data = this.TREE_DATA;
+                    }
+                }),
             );
         }
     }
@@ -102,9 +84,7 @@ export class SearchSectionComponent extends BaseComponent {
     }
 
     public deleteInputDataset(datasetName: string): void {
-        this.TREE_DATA = this.TREE_DATA.filter(
-            (item: DatasetNode) => item.name !== datasetName,
-        );
+        this.TREE_DATA = this.TREE_DATA.filter((item: DatasetNode) => item.name !== datasetName);
         this.dataSource.data = this.TREE_DATA;
         this.inputDatasets.forEach((item) => {
             if (item.includes(datasetName)) {

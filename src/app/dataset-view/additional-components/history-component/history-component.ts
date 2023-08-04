@@ -7,10 +7,7 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import {
-    MetadataBlockFragment,
-    PageBasedInfo,
-} from "src/app/api/kamu.graphql.interface";
+import { MetadataBlockFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetHistoryUpdate } from "../../dataset.subscriptions.interface";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
@@ -30,26 +27,20 @@ export class HistoryComponent extends BaseComponent implements OnInit {
     };
     public totalPages: number;
 
-    constructor(
-        private appDatasetSubsService: AppDatasetSubscriptionsService,
-        private cdr: ChangeDetectorRef,
-    ) {
+    constructor(private appDatasetSubsService: AppDatasetSubscriptionsService, private cdr: ChangeDetectorRef) {
         super();
     }
 
     ngOnInit(): void {
         this.trackSubscription(
-            this.appDatasetSubsService.onDatasetHistoryChanges.subscribe(
-                (historyUpdate: DatasetHistoryUpdate) => {
-                    this.currentState = {
-                        pageInfo: historyUpdate.pageInfo,
-                        history: historyUpdate.history,
-                    };
-                    if (historyUpdate.pageInfo.totalPages)
-                        this.totalPages = historyUpdate.pageInfo.totalPages;
-                    this.cdr.markForCheck();
-                },
-            ),
+            this.appDatasetSubsService.onDatasetHistoryChanges.subscribe((historyUpdate: DatasetHistoryUpdate) => {
+                this.currentState = {
+                    pageInfo: historyUpdate.pageInfo,
+                    history: historyUpdate.history,
+                };
+                if (historyUpdate.pageInfo.totalPages) this.totalPages = historyUpdate.pageInfo.totalPages;
+                this.cdr.markForCheck();
+            }),
         );
     }
     public onPageChange(currentPage: number): void {
@@ -57,8 +48,6 @@ export class HistoryComponent extends BaseComponent implements OnInit {
     }
 
     public get currentPage(): number {
-        return this.currentState
-            ? this.currentState.pageInfo.currentPage + 1
-            : 1;
+        return this.currentState ? this.currentState.pageInfo.currentPage + 1 : 1;
     }
 }

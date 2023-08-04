@@ -15,10 +15,7 @@
         ></app-search-additional-buttons-nav>
     </mat-menu>
 </ng-template>
-<ng-template
-    [ngIf]="!shouldMinimizeSearchAdditionalButtons"
-    id="bigSearchAdditionalButtons"
->
+<ng-template [ngIf]="!shouldMinimizeSearchAdditionalButtons" id="bigSearchAdditionalButtons">
     <app-search-additional-buttons-nav
         (searchAdditionalButtonsMethod)="onClick($event)"
         [searchAdditionalButtonsData]="searchAdditionalButtonsData"

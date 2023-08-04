@@ -27,10 +27,7 @@ describe("DatasetNamePropertyComponent", () => {
     });
 
     it("should check navigate to datset page", () => {
-        const navigateToDatasetViewSpy = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.navigateToDatasetView();
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: component.data.owner,

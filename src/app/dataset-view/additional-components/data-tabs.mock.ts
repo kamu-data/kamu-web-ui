@@ -1,14 +1,6 @@
 import { mockDatasetBasicsFragment } from "./../../search/mock.data";
-import {
-    DatasetHistoryUpdate,
-    DataSqlErrorUpdate,
-    DataUpdate,
-} from "../dataset.subscriptions.interface";
-import {
-    CommitEventToDatasetMutation,
-    DatasetKind,
-    UpdateReadmeMutation,
-} from "src/app/api/kamu.graphql.interface";
+import { DatasetHistoryUpdate, DataSqlErrorUpdate, DataUpdate } from "../dataset.subscriptions.interface";
+import { CommitEventToDatasetMutation, DatasetKind, UpdateReadmeMutation } from "src/app/api/kamu.graphql.interface";
 
 export const mockDataUpdate: DataUpdate = {
     schema: {
@@ -55,10 +47,8 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
                         start: 0,
                         end: 596125,
                     },
-                    logicalHash:
-                        "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
-                    physicalHash:
-                        "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
+                    logicalHash: "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
+                    physicalHash: "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
                     size: 300,
                 },
             },
@@ -116,11 +106,9 @@ export const mockOverviewDataUpdate = {
             amount: 0.009679238156255232,
             eth_amount: 0.010000000272564223,
             block_number: 15284454,
-            block_hash:
-                "0x887569ff02456b8cde2ade8e0ee5b48d441800c8c6d92d1414a9648902807558",
+            block_hash: "0x887569ff02456b8cde2ade8e0ee5b48d441800c8c6d92d1414a9648902807558",
             transaction_index: 224,
-            transaction_hash:
-                "0xa88698d288550d09653e6cec3038ea30fe8f74eb40941eba93b05024037426d7",
+            transaction_hash: "0xa88698d288550d09653e6cec3038ea30fe8f74eb40941eba93b05024037426d7",
             log_index: 355,
         },
     ],
@@ -225,10 +213,8 @@ export const mockOverviewDataUpdate = {
                     nodes: [
                         {
                             __typename: "MetadataBlockExtended",
-                            blockHash:
-                                "zW1fSULqRHyTyhGXeCP4f8zX8QxcNVKNhVui42BWRdzHet3",
-                            prevBlockHash:
-                                "zW1prmMP3XKbMfdWn9MQWpy4WaT8u8LADxXb8us7CTVb1Vu",
+                            blockHash: "zW1fSULqRHyTyhGXeCP4f8zX8QxcNVKNhVui42BWRdzHet3",
+                            prevBlockHash: "zW1prmMP3XKbMfdWn9MQWpy4WaT8u8LADxXb8us7CTVb1Vu",
                             systemTime: "2022-08-05T21:15:03.947245004+00:00",
                             sequenceNumber: 14,
                             author: {
@@ -245,10 +231,8 @@ export const mockOverviewDataUpdate = {
                                         start: 0,
                                         end: 6908,
                                     },
-                                    logicalHash:
-                                        "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
-                                    physicalHash:
-                                        "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
+                                    logicalHash: "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
+                                    physicalHash: "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
                                 },
                             },
                         },
@@ -353,8 +337,7 @@ export const mockMetadataSchemaUpdate = {
             __typename: "DatasetMetadata",
             currentInfo: {
                 __typename: "SetInfo",
-                description:
-                    "Confirmed positive cases of COVID-19 in Alberta (harmonized).",
+                description: "Confirmed positive cases of COVID-19 in Alberta (harmonized).",
                 keywords: [
                     "Healthcare",
                     "Epidemiology",
@@ -372,8 +355,7 @@ export const mockMetadataSchemaUpdate = {
                 shortName: "OGL-Canada-2.0",
                 name: "Open Government Licence - Canada",
                 spdxId: "OGL-Canada-2.0",
-                websiteUrl:
-                    "https://open.canada.ca/en/open-government-licence-canada",
+                websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
             },
             currentWatermark: "2022-08-01T00:00:00+00:00",
             currentTransform: {
@@ -474,10 +456,8 @@ export const mockMetadataSchemaUpdate = {
                     nodes: [
                         {
                             __typename: "MetadataBlockExtended",
-                            blockHash:
-                                "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev",
-                            prevBlockHash:
-                                "zW1abnmxotsSC7H6SyfbL7bpWtQrMSQktUfiJds3KWX1xfm",
+                            blockHash: "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev",
+                            prevBlockHash: "zW1abnmxotsSC7H6SyfbL7bpWtQrMSQktUfiJds3KWX1xfm",
                             systemTime: "2022-08-05T21:20:08.053635579+00:00",
                             sequenceNumber: 6,
                             author: {
@@ -494,10 +474,8 @@ export const mockMetadataSchemaUpdate = {
                                         start: 0,
                                         end: 596125,
                                     },
-                                    logicalHash:
-                                        "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
-                                    physicalHash:
-                                        "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
+                                    logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
+                                    physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
                                 },
                             },
                         },
@@ -625,10 +603,8 @@ export const mockOverviewWithSetInfo = {
                 nodes: [
                     {
                         __typename: "MetadataBlockExtended",
-                        blockHash:
-                            "zW1fSULqRHyTyhGXeCP4f8zX8QxcNVKNhVui42BWRdzHet3",
-                        prevBlockHash:
-                            "zW1prmMP3XKbMfdWn9MQWpy4WaT8u8LADxXb8us7CTVb1Vu",
+                        blockHash: "zW1fSULqRHyTyhGXeCP4f8zX8QxcNVKNhVui42BWRdzHet3",
+                        prevBlockHash: "zW1prmMP3XKbMfdWn9MQWpy4WaT8u8LADxXb8us7CTVb1Vu",
                         systemTime: "2022-08-05T21:15:03.947245004+00:00",
                         sequenceNumber: 14,
                         author: {
@@ -645,10 +621,8 @@ export const mockOverviewWithSetInfo = {
                                     start: 0,
                                     end: 6908,
                                 },
-                                logicalHash:
-                                    "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
-                                physicalHash:
-                                    "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
+                                logicalHash: "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
+                                physicalHash: "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
                             },
                         },
                     },
@@ -694,8 +668,7 @@ export const mockOverviewWithSetLicense = {
             shortName: "OGL-Canada-2.0",
             name: "Open Government Licence - Canada",
             spdxId: "OGL-Canada-2.0",
-            websiteUrl:
-                "https://open.canada.ca/en/open-government-licence-canada",
+            websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
             __typename: "SetLicense",
         },
         currentWatermark: "2022-08-05T20:24:55+00:00",
@@ -776,10 +749,8 @@ export const mockOverviewWithSetLicense = {
                 nodes: [
                     {
                         __typename: "MetadataBlockExtended",
-                        blockHash:
-                            "zW1fSULqRHyTyhGXeCP4f8zX8QxcNVKNhVui42BWRdzHet3",
-                        prevBlockHash:
-                            "zW1prmMP3XKbMfdWn9MQWpy4WaT8u8LADxXb8us7CTVb1Vu",
+                        blockHash: "zW1fSULqRHyTyhGXeCP4f8zX8QxcNVKNhVui42BWRdzHet3",
+                        prevBlockHash: "zW1prmMP3XKbMfdWn9MQWpy4WaT8u8LADxXb8us7CTVb1Vu",
                         systemTime: "2022-08-05T21:15:03.947245004+00:00",
                         sequenceNumber: 14,
                         author: {
@@ -796,10 +767,8 @@ export const mockOverviewWithSetLicense = {
                                     start: 0,
                                     end: 6908,
                                 },
-                                logicalHash:
-                                    "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
-                                physicalHash:
-                                    "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
+                                logicalHash: "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
+                                physicalHash: "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
                             },
                         },
                     },
@@ -821,26 +790,24 @@ export const mockOverviewWithSetLicense = {
 
 export const mockCommitEventToDatasetMutationErrorMessage = "Fail";
 
-export const mockCommitEventToDatasetMutationError: CommitEventToDatasetMutation =
-    {
-        datasets: {
-            byId: {
-                metadata: {
-                    chain: {
-                        commitEvent: {
-                            __typename: "CommitResultAppendError",
-                            message:
-                                mockCommitEventToDatasetMutationErrorMessage,
-                        },
-                        __typename: "MetadataChainMut",
+export const mockCommitEventToDatasetMutationError: CommitEventToDatasetMutation = {
+    datasets: {
+        byId: {
+            metadata: {
+                chain: {
+                    commitEvent: {
+                        __typename: "CommitResultAppendError",
+                        message: mockCommitEventToDatasetMutationErrorMessage,
                     },
-                    __typename: "DatasetMetadataMut",
+                    __typename: "MetadataChainMut",
                 },
-                __typename: "DatasetMut",
+                __typename: "DatasetMetadataMut",
             },
-            __typename: "DatasetsMut",
+            __typename: "DatasetMut",
         },
-    };
+        __typename: "DatasetsMut",
+    },
+};
 
 export const mockCommitEventToDatasetMutation: CommitEventToDatasetMutation = {
     datasets: {
@@ -850,10 +817,8 @@ export const mockCommitEventToDatasetMutation: CommitEventToDatasetMutation = {
                     commitEvent: {
                         __typename: "CommitResultSuccess",
                         message: "Success",
-                        oldHead:
-                            "zW1cMmaF6PdmJPM6LNyy2RyyWFWkF3EojZ54ezAvT2dVgKB",
-                        newHead:
-                            "zW1eXXAXqgtfNDFt7oXpMfLfDy5Tzg3dMDLWQTz2YJE6ooX",
+                        oldHead: "zW1cMmaF6PdmJPM6LNyy2RyyWFWkF3EojZ54ezAvT2dVgKB",
+                        newHead: "zW1eXXAXqgtfNDFt7oXpMfLfDy5Tzg3dMDLWQTz2YJE6ooX",
                     },
                     __typename: "MetadataChainMut",
                 },

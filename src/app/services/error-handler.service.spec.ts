@@ -1,11 +1,6 @@
 import { ErrorTexts } from "../common/errors.text";
 import { ApolloError } from "@apollo/client/core";
-import {
-    AuthenticationError,
-    DatasetNotFoundError,
-    InvalidSqlError,
-    SqlExecutionError,
-} from "../common/errors";
+import { AuthenticationError, DatasetNotFoundError, InvalidSqlError, SqlExecutionError } from "../common/errors";
 import { ModalService } from "../components/modal/modal.service";
 import { TestBed } from "@angular/core/testing";
 import { ErrorHandlerService } from "./error-handler.service";
@@ -25,11 +20,7 @@ describe("ErrorHandlerService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                ModalService,
-                NavigationService,
-                { provide: AuthApi, useValue: authApiMock },
-            ],
+            providers: [ModalService, NavigationService, { provide: AuthApi, useValue: authApiMock }],
         });
         service = TestBed.inject(ErrorHandlerService);
         modalService = TestBed.inject(ModalService);
@@ -41,10 +32,7 @@ describe("ErrorHandlerService", () => {
     });
 
     it("should show modal window when SQL query execution fails", () => {
-        const modalServiceSpy: jasmine.Spy = spyOn(
-            modalService,
-            "error",
-        ).and.callThrough();
+        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.callThrough();
         service.handleError(new SqlExecutionError());
         expect(modalServiceSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
@@ -54,10 +42,7 @@ describe("ErrorHandlerService", () => {
     });
 
     it("should show modal window when SQL query execution fails with extra error message", () => {
-        const modalServiceSpy: jasmine.Spy = spyOn(
-            modalService,
-            "error",
-        ).and.callThrough();
+        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.callThrough();
         const errorText = "executing SQL failed";
         service.handleError(new SqlExecutionError(errorText));
         expect(modalServiceSpy).toHaveBeenCalledWith(
@@ -68,10 +53,7 @@ describe("ErrorHandlerService", () => {
     });
 
     it("should show modal window when SQL query is invalid", () => {
-        const modalServiceSpy: jasmine.Spy = spyOn(
-            modalService,
-            "error",
-        ).and.callThrough();
+        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.callThrough();
         const errorText = "bad SQL";
         service.handleError(new InvalidSqlError(errorText));
         expect(modalServiceSpy).toHaveBeenCalledWith(
@@ -82,14 +64,8 @@ describe("ErrorHandlerService", () => {
     });
 
     it("should show redirect to 404 page on dataset not found", () => {
-        const modalServiceSpy: jasmine.Spy = spyOn(
-            modalService,
-            "error",
-        ).and.stub();
-        const navigationServiceSpy: jasmine.Spy = spyOn(
-            navigationService,
-            "navigateToPageNotFound",
-        ).and.stub();
+        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.stub();
+        const navigationServiceSpy: jasmine.Spy = spyOn(navigationService, "navigateToPageNotFound").and.stub();
         navigationService.navigateToPageNotFound();
         service.handleError(new DatasetNotFoundError());
         expect(modalServiceSpy).not.toHaveBeenCalled();
@@ -98,10 +74,7 @@ describe("ErrorHandlerService", () => {
 
     it("should show modal window when connection was lost", () => {
         const mockErrorMessage = "Mock apollo error message";
-        const modalServiceSpy: jasmine.Spy = spyOn(
-            modalService,
-            "error",
-        ).and.callThrough();
+        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.callThrough();
         service.handleError(
             new ApolloError({
                 errorMessage: mockErrorMessage,
@@ -118,22 +91,14 @@ describe("ErrorHandlerService", () => {
 
     it("should log authentication errors and terminate session", () => {
         const consoleErrorSpy: jasmine.Spy = spyOn(console, "error").and.stub();
-        const authApiTerminateSessionSpy: jasmine.Spy = spyOn(
-            authApiMock,
-            "terminateSession",
-        ).and.stub();
+        const authApiTerminateSessionSpy: jasmine.Spy = spyOn(authApiMock, "terminateSession").and.stub();
         service.handleError(new AuthenticationError([]));
-        expect(consoleErrorSpy).toHaveBeenCalledWith(
-            ErrorTexts.ERROR_UNKNOWN_AUTHENTICATION,
-        );
+        expect(consoleErrorSpy).toHaveBeenCalledWith(ErrorTexts.ERROR_UNKNOWN_AUTHENTICATION);
         expect(authApiTerminateSessionSpy).toHaveBeenCalledWith();
     });
 
     it("should log unknown errors", () => {
-        const modalServiceSpy: jasmine.Spy = spyOn(
-            modalService,
-            "error",
-        ).and.callThrough();
+        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.callThrough();
         const consoleErrorSpy: jasmine.Spy = spyOn(console, "error").and.stub();
         const unknownError = new Error("Some Unknown Error");
         service.handleError(unknownError);

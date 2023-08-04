@@ -25,12 +25,7 @@ describe("FinalYamlModalComponent", () => {
         await TestBed.configureTestingModule({
             declarations: [FinalYamlModalComponent],
             providers: [NgbActiveModal],
-            imports: [
-                ApolloModule,
-                FormsModule,
-                MonacoEditorModule.forRoot(),
-                SharedTestModule,
-            ],
+            imports: [ApolloModule, FormsModule, MonacoEditorModule.forRoot(), SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FinalYamlModalComponent);
@@ -47,10 +42,7 @@ describe("FinalYamlModalComponent", () => {
     });
 
     it("should save event", () => {
-        const commitEventToDatasetSpy = spyOn(
-            datasetCommitService,
-            "commitEventToDataset",
-        ).and.returnValue(of());
+        const commitEventToDatasetSpy = spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
         const closeModalSpy = spyOn(activeModal, "close");
 
         emitClickOnElementByDataTestId(fixture, "save-event");

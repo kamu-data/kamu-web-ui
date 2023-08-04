@@ -19,16 +19,12 @@
                     </div>
                     <div class="flex-1">
                         This commit was signed with the committer’s
-                        <strong class="signed-commit-verified-label"
-                            >verified signature</strong
-                        >.
+                        <strong class="signed-commit-verified-label">verified signature</strong>.
                     </div>
                 </div>
             </ng-template>
             <ng-template #popContent>
-                <div
-                    class="signer-block-info d-grid justify-content-between align-items-center"
-                >
+                <div class="signer-block-info d-grid justify-content-between align-items-center">
                     <a class="pe-1" aria-label="sergiimk" href="/sergiimk">
                         <img
                             src="https://avatars.githubusercontent.com/u/204914?s=64&amp;v=4"
@@ -48,10 +44,7 @@
                 </div>
                 <div class="signed-commit-footer p-1">
                     <span class="d-block"
-                        >GPG key ID:
-                        <span class="signed-commit-footer__id"
-                            >7D279F791DB8E4F7</span
-                        ></span
+                        >GPG key ID: <span class="signed-commit-footer__id">7D279F791DB8E4F7</span></span
                     >
                     <a
                         href="https://docs.github.com/github/authenticating-to-github/displaying-verification-statuses-for-all-of-your-commits"
@@ -80,9 +73,7 @@
         <div class="app-mat-chip">
             <mat-chip-list aria-label="Tags selection">
                 <div *ngFor="let keyword of row.metadata.currentInfo.keywords">
-                    <mat-chip (click)="selectTopic(row.kind)">{{
-                        keyword
-                    }}</mat-chip>
+                    <mat-chip (click)="selectTopic(row.kind)">{{ keyword }}</mat-chip>
                 </div>
             </mat-chip-list>
         </div>
@@ -97,19 +88,14 @@
             </p>
             <ngb-rating [rate]="4.5" [max]="5" [readonly]="true">
                 <ng-template let-fill="fill">
-                    <span class="rating-star" [class.filled]="fill === 100"
-                        >&#9733;</span
-                    >
+                    <span class="rating-star" [class.filled]="fill === 100">&#9733;</span>
                 </ng-template>
             </ngb-rating>
             <p class="text-small color-text-secondary mr-3">
                 {{ row.metadata.currentDownstreamDependencies.length }}
                 Downstream
             </p>
-            <p
-                class="text-small color-text-secondary mr-3"
-                *ngIf="row.metadata.currentLicense"
-            >
+            <p class="text-small color-text-secondary mr-3" *ngIf="row.metadata.currentLicense">
                 {{ row.metadata.currentLicense.shortName }}
             </p>
         </div>

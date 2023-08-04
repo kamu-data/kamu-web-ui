@@ -47,10 +47,7 @@ import { PrepareStepComponent } from "./additional-components/metadata-component
 import { PreprocessStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/preprocess-step/preprocess-step.component";
 import { PollingSourceFormComponentsModule } from "./additional-components/metadata-component/components/form-components/polling-source-form-components.module";
 import { EditWatermarkModalComponent } from "./additional-components/overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
-import {
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-} from "@danielmoncada/angular-datetime-picker";
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { SetTransformComponent } from "./additional-components/metadata-component/components/set-transform/set-transform.component";
 import { MatTreeModule } from "@angular/material/tree";

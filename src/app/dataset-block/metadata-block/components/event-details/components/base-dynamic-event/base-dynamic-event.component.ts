@@ -9,10 +9,7 @@ import {
     ComponentRef,
     AfterViewChecked,
 } from "@angular/core";
-import {
-    EventRow,
-    EventSection,
-} from "../../dynamic-events/dynamic-events.model";
+import { EventRow, EventSection } from "../../dynamic-events/dynamic-events.model";
 import { BasePropertyComponent } from "../common/base-property/base-property.component";
 
 @Component({
@@ -21,9 +18,7 @@ import { BasePropertyComponent } from "../common/base-property/base-property.com
     styleUrls: ["./base-dynamic-event.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BaseDynamicEventComponent<TEvent extends object>
-    implements AfterViewChecked
-{
+export class BaseDynamicEventComponent<TEvent extends object> implements AfterViewChecked {
     @Input() public event: TEvent;
     @ViewChildren("container", { read: ViewContainerRef })
     container: QueryList<ViewContainerRef>;
@@ -41,12 +36,9 @@ export class BaseDynamicEventComponent<TEvent extends object>
             });
         this.container.forEach((vcr: ViewContainerRef, index: number) => {
             vcr.clear();
-            componentRef = vcr.createComponent<BasePropertyComponent>(
-                rows[index].descriptor.presentationComponent,
-            );
+            componentRef = vcr.createComponent<BasePropertyComponent>(rows[index].descriptor.presentationComponent);
             componentRef.setInput("data", rows[index].value);
-            componentRef.instance.dataTestId =
-                rows[index].descriptor.dataTestId;
+            componentRef.instance.dataTestId = rows[index].descriptor.dataTestId;
             componentRef.changeDetectorRef.detectChanges();
         });
     }

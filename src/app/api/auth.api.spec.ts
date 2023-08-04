@@ -2,15 +2,8 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { AuthApi } from "./auth.api";
-import {
-    AccountDetailsFragment,
-    FetchAccountInfoDocument,
-    GithubLoginDocument,
-} from "./kamu.graphql.interface";
-import {
-    ApolloTestingController,
-    ApolloTestingModule,
-} from "apollo-angular/testing";
+import { AccountDetailsFragment, FetchAccountInfoDocument, GithubLoginDocument } from "./kamu.graphql.interface";
+import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 import {
     mockGithubLoginResponse,
     mockLogin401Error,
@@ -45,14 +38,10 @@ describe("AuthApi", () => {
     });
 
     function loginViaAccessToken(): void {
-        service
-            .fetchUserInfoFromAccessToken(TEST_ACCESS_TOKEN)
-            .subscribe(() => {
-                expect(service.isAuthenticated).toBeTrue();
-                expect(service.currentUser).toBe(
-                    mockUserInfoFromAccessToken.auth.accountInfo,
-                );
-            });
+        service.fetchUserInfoFromAccessToken(TEST_ACCESS_TOKEN).subscribe(() => {
+            expect(service.isAuthenticated).toBeTrue();
+            expect(service.currentUser).toBe(mockUserInfoFromAccessToken.auth.accountInfo);
+        });
 
         const op = controller.expectOne(FetchAccountInfoDocument);
         expect(op.operation.variables.accessToken).toEqual(TEST_ACCESS_TOKEN);
@@ -63,18 +52,14 @@ describe("AuthApi", () => {
     }
 
     function loginFullyViaGithub(): void {
-        service
-            .fetchUserInfoAndTokenFromGithubCallackCode(TEST_GITHUB_CODE)
-            .subscribe(() => {
-                expect(service.isAuthenticated).toBeTrue();
-                expect(service.currentUser).toBe(
-                    mockGithubLoginResponse.auth.githubLogin.accountInfo,
-                );
-                expect(localStorageSetItemSpy).toHaveBeenCalledWith(
-                    AppValues.LOCAL_STORAGE_ACCESS_TOKEN,
-                    mockGithubLoginResponse.auth.githubLogin.token.accessToken,
-                );
-            });
+        service.fetchUserInfoAndTokenFromGithubCallackCode(TEST_GITHUB_CODE).subscribe(() => {
+            expect(service.isAuthenticated).toBeTrue();
+            expect(service.currentUser).toBe(mockGithubLoginResponse.auth.githubLogin.accountInfo);
+            expect(localStorageSetItemSpy).toHaveBeenCalledWith(
+                AppValues.LOCAL_STORAGE_ACCESS_TOKEN,
+                mockGithubLoginResponse.auth.githubLogin.token.accessToken,
+            );
+        });
 
         const op = controller.expectOne(GithubLoginDocument);
         expect(op.operation.variables.code).toEqual(TEST_GITHUB_CODE);
@@ -100,12 +85,10 @@ describe("AuthApi", () => {
 
     it("should check user changes via login with alive access token", fakeAsync(() => {
         let callbackInvoked = false;
-        service.onUserChanges.subscribe(
-            (user: MaybeNull<AccountDetailsFragment>) => {
-                callbackInvoked = true;
-                user ? checkUserIsLogged(user) : fail("User must not be null");
-            },
-        );
+        service.onUserChanges.subscribe((user: MaybeNull<AccountDetailsFragment>) => {
+            callbackInvoked = true;
+            user ? checkUserIsLogged(user) : fail("User must not be null");
+        });
 
         loginViaAccessToken();
         tick();
@@ -133,9 +116,7 @@ describe("AuthApi", () => {
             .subscribe(
                 () => fail("Unexpected success"),
                 (e: Error) => {
-                    expect(e).toEqual(
-                        new AuthenticationError([mockLogin401Error]),
-                    );
+                    expect(e).toEqual(new AuthenticationError([mockLogin401Error]));
                 },
             );
 
@@ -155,9 +136,7 @@ describe("AuthApi", () => {
             .subscribe(
                 () => fail("Unexpected success"),
                 (e: Error) => {
-                    expect(e).toEqual(
-                        new AuthenticationError([mockLogin401Error]),
-                    );
+                    expect(e).toEqual(new AuthenticationError([mockLogin401Error]));
                 },
             );
 

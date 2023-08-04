@@ -32,11 +32,7 @@ describe("SetTransformComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [SetTransformComponent],
-            imports: [
-                ApolloModule,
-                ApolloTestingModule,
-                MonacoEditorModule.forRoot(),
-            ],
+            imports: [ApolloModule, ApolloTestingModule, MonacoEditorModule.forRoot()],
             providers: [
                 Apollo,
                 {
@@ -87,10 +83,7 @@ describe("SetTransformComponent", () => {
     });
 
     it("should check save event", () => {
-        const commitEventToDatasetSpy = spyOn(
-            datasetCommitService,
-            "commitEventToDataset",
-        ).and.returnValue(of());
+        const commitEventToDatasetSpy = spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
         component.onSaveEvent();
         expect(commitEventToDatasetSpy).toHaveBeenCalledTimes(1);
     });
@@ -98,35 +91,23 @@ describe("SetTransformComponent", () => {
     it("should check open edit modal", () => {
         editService.changeKindChanges(DatasetKind.Derivative);
         component.ngOnInit();
-        const openModalSpy = spyOn(modalService, "open").and.returnValue(
-            modalRef,
-        );
+        const openModalSpy = spyOn(modalService, "open").and.returnValue(modalRef);
         component.onEditYaml();
         expect(component.datasetKind).toEqual(DatasetKind.Derivative);
         expect(openModalSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check init queries section with queries", () => {
-        spyOn(editService, "getEventAsYaml").and.callFake(() =>
-            of(mockSetTransformEventYaml),
-        );
-        spyOn(datasetService, "requestDatasetSchema").and.callFake(() =>
-            of(mockGetDatasetSchemaQuery),
-        );
+        spyOn(editService, "getEventAsYaml").and.callFake(() => of(mockSetTransformEventYaml));
+        spyOn(datasetService, "requestDatasetSchema").and.callFake(() => of(mockGetDatasetSchemaQuery));
         component.ngOnInit();
-        expect(component.currentSetTransformEvent).toEqual(
-            mockParseSetTransFormYamlType,
-        );
+        expect(component.currentSetTransformEvent).toEqual(mockParseSetTransFormYamlType);
         expect(component.TREE_DATA.length).toBe(2);
     });
 
     it("should check init queries section with query", () => {
-        spyOn(editService, "getEventAsYaml").and.callFake(() =>
-            of(mockSetTransformEventYamlWithQuery),
-        );
-        spyOn(datasetService, "requestDatasetSchema").and.callFake(() =>
-            of(mockGetDatasetSchemaQuery),
-        );
+        spyOn(editService, "getEventAsYaml").and.callFake(() => of(mockSetTransformEventYamlWithQuery));
+        spyOn(datasetService, "requestDatasetSchema").and.callFake(() => of(mockGetDatasetSchemaQuery));
         component.ngOnInit();
 
         expect(component.queries.length).toBe(1);
@@ -135,9 +116,7 @@ describe("SetTransformComponent", () => {
 
     it("should check init queries section when event is null", () => {
         spyOn(editService, "getEventAsYaml").and.callFake(() => of(null));
-        spyOn(datasetService, "requestDatasetSchema").and.callFake(() =>
-            of(mockGetDatasetSchemaQuery),
-        );
+        spyOn(datasetService, "requestDatasetSchema").and.callFake(() => of(mockGetDatasetSchemaQuery));
         component.ngOnInit();
 
         expect(component.queries.length).toBe(1);

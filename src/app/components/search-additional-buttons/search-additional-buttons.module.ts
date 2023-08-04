@@ -9,21 +9,8 @@ import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons
 import { AngularSvgIconModule } from "angular-svg-icon";
 
 @NgModule({
-    imports: [
-        MatMenuModule,
-        MatIconModule,
-        MatButtonModule,
-        CommonModule,
-        NgbPopoverModule,
-        AngularSvgIconModule,
-    ],
-    exports: [
-        SearchAdditionalButtonsComponent,
-        SearchAdditionalButtonsNavComponent,
-    ],
-    declarations: [
-        SearchAdditionalButtonsComponent,
-        SearchAdditionalButtonsNavComponent,
-    ],
+    imports: [MatMenuModule, MatIconModule, MatButtonModule, CommonModule, NgbPopoverModule, AngularSvgIconModule],
+    exports: [SearchAdditionalButtonsComponent, SearchAdditionalButtonsNavComponent],
+    declarations: [SearchAdditionalButtonsComponent, SearchAdditionalButtonsNavComponent],
 })
 export class SearchAdditionalButtonsModule {}

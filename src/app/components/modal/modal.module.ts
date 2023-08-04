@@ -8,12 +8,7 @@ import { ModalSpinnerComponent } from "./modal-spinner.component";
 
 @NgModule({
     imports: [CommonModule],
-    declarations: [
-        ModalComponent,
-        ModalDialogComponent,
-        ModalImageComponent,
-        ModalSpinnerComponent,
-    ],
+    declarations: [ModalComponent, ModalDialogComponent, ModalImageComponent, ModalSpinnerComponent],
     exports: [ModalComponent],
 })
 export class ModalModule {

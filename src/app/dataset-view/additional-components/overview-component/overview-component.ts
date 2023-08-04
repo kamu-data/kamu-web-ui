@@ -58,16 +58,14 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.trackSubscription(
-            this.appDatasetSubsService.onDatasetOverviewDataChanges.subscribe(
-                (overviewUpdate: OverviewDataUpdate) => {
-                    this.currentState = {
-                        schema: overviewUpdate.schema,
-                        data: overviewUpdate.content,
-                        size: overviewUpdate.size,
-                        overview: overviewUpdate.overview,
-                    };
-                },
-            ),
+            this.appDatasetSubsService.onDatasetOverviewDataChanges.subscribe((overviewUpdate: OverviewDataUpdate) => {
+                this.currentState = {
+                    schema: overviewUpdate.schema,
+                    data: overviewUpdate.content,
+                    size: overviewUpdate.size,
+                    overview: overviewUpdate.overview,
+                };
+            }),
         );
     }
 
@@ -84,39 +82,27 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     get metadataFragmentBlock(): MetadataBlockFragment | undefined {
-        return this.currentState
-            ? this.currentState.overview.metadata.chain.blocks.nodes[0]
-            : undefined;
+        return this.currentState ? this.currentState.overview.metadata.chain.blocks.nodes[0] : undefined;
     }
 
     public openInformationModal() {
-        const modalRef: NgbModalRef = this.modalService.open(
-            EditDetailsModalComponent,
-        );
-        const modalRefInstance =
-            modalRef.componentInstance as EditDetailsModalComponent;
+        const modalRef: NgbModalRef = this.modalService.open(EditDetailsModalComponent);
+        const modalRefInstance = modalRef.componentInstance as EditDetailsModalComponent;
         modalRefInstance.currentState = this.currentState;
         modalRefInstance.datasetBasics = this.datasetBasics;
     }
 
     public openLicenseModal(): void {
-        const modalRef: NgbModalRef = this.modalService.open(
-            EditLicenseModalComponent,
-        );
-        const modalRefInstance =
-            modalRef.componentInstance as EditLicenseModalComponent;
+        const modalRef: NgbModalRef = this.modalService.open(EditLicenseModalComponent);
+        const modalRefInstance = modalRef.componentInstance as EditLicenseModalComponent;
         modalRefInstance.currentState = this.currentState;
         modalRefInstance.datasetBasics = this.datasetBasics;
     }
 
     public openWatermarkModal(): void {
-        const modalRef: NgbModalRef = this.modalService.open(
-            EditWatermarkModalComponent,
-        );
-        const modalRefInstance =
-            modalRef.componentInstance as EditWatermarkModalComponent;
-        modalRefInstance.currentWatermark = this.currentState?.overview.metadata
-            .currentWatermark as string;
+        const modalRef: NgbModalRef = this.modalService.open(EditWatermarkModalComponent);
+        const modalRefInstance = modalRef.componentInstance as EditWatermarkModalComponent;
+        modalRefInstance.currentWatermark = this.currentState?.overview.metadata.currentWatermark as string;
         modalRefInstance.datasetBasics = this.datasetBasics;
     }
 

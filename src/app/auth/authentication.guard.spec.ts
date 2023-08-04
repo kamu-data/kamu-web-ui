@@ -20,14 +20,8 @@ describe("AuthenticationGuard", () => {
     });
 
     [true, false].forEach((expectation: boolean) => {
-        it(`should check canActive method when user is${
-            expectation ? "" : "not"
-        } authentiсation`, () => {
-            const isAuthenticatedSpy = spyOnProperty(
-                authApi,
-                "isAuthenticated",
-                "get",
-            ).and.returnValue(expectation);
+        it(`should check canActive method when user is${expectation ? "" : "not"} authentiсation`, () => {
+            const isAuthenticatedSpy = spyOnProperty(authApi, "isAuthenticated", "get").and.returnValue(expectation);
             const result = guard.canActivate();
             expect(result).toEqual(expectation);
             expect(isAuthenticatedSpy).toHaveBeenCalledWith();

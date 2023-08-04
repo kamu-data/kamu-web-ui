@@ -15,17 +15,8 @@ describe("SetWatermarkEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                SetWatermarkEventComponent,
-                BlockRowDataComponent,
-                TooltipIconComponent,
-            ],
-            imports: [
-                DisplayTimeModule,
-                MatIconModule,
-                NgbTooltipModule,
-                SharedTestModule,
-            ],
+            declarations: [SetWatermarkEventComponent, BlockRowDataComponent, TooltipIconComponent],
+            imports: [DisplayTimeModule, MatIconModule, NgbTooltipModule, SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SetWatermarkEventComponent);

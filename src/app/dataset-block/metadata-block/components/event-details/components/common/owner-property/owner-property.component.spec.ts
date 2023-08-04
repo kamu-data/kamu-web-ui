@@ -27,10 +27,7 @@ describe("OwnerPropertyComponent", () => {
     });
 
     it("should check navigate to owner page", () => {
-        const navigateToOwnerViewSpy = spyOn(
-            navigationService,
-            "navigateToOwnerView",
-        );
+        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
         const name = component.data.name;
         component.showOwner();
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(name);

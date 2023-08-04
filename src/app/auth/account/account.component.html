@@ -2,10 +2,7 @@
     <div class="custom-container">
         <div class="container-sidebar">
             <div class="d-flex mb-3 justify-content-center align-items-center">
-                <a
-                    *ngIf="isOwner; else notOwnerLink"
-                    routerLink="/v/settings/profile"
-                >
+                <a *ngIf="isOwner; else notOwnerLink" routerLink="/v/settings/profile">
                     <img
                         alt="avatar"
                         width="260"
@@ -40,9 +37,7 @@
                 </button>
             </div>
             <div class="border-top mt-5 me-4">
-                <h2 class="text-start pt-3 px-3 h6 organization">
-                    Organizations
-                </h2>
+                <h2 class="text-start pt-3 px-3 h6 organization">Organizations</h2>
                 <div class="d-flex flex-row gap-2 text-start px-3">
                     <img
                         src="https://avatars.githubusercontent.com/u/50896974?s=64&amp;v=4"
@@ -78,9 +73,7 @@
                         [checked]="isAccountViewTypeOverview"
                         (click)="onSelectOverviewTab()"
                     >
-                        <mat-icon class="text-muted fs-4"
-                            >my_library_books</mat-icon
-                        >
+                        <mat-icon class="text-muted fs-4">my_library_books</mat-icon>
                         <span class="mx-2"> Overview</span>
                     </mat-button-toggle>
                     <mat-button-toggle
@@ -91,12 +84,7 @@
                     >
                         <mat-icon class="text-muted fs-4">book</mat-icon>
                         <span class="mx-2">Datasets</span>
-                        <span
-                            title="1"
-                            data-view-component="true"
-                            class="counter"
-                            >{{ datasetTotalCount }}</span
-                        >
+                        <span title="1" data-view-component="true" class="counter">{{ datasetTotalCount }}</span>
                     </mat-button-toggle>
                     <mat-button-toggle
                         data-test-id="account-organizations-tab"
@@ -106,12 +94,7 @@
                     >
                         <mat-icon class="text-muted fs-4">people</mat-icon>
                         <span class="mx-2">Organizations </span>
-                        <span
-                            title="1"
-                            data-view-component="true"
-                            class="counter"
-                            >2</span
-                        >
+                        <span title="1" data-view-component="true" class="counter">2</span>
                     </mat-button-toggle>
 
                     <mat-button-toggle
@@ -122,12 +105,7 @@
                     >
                         <mat-icon class="text-muted fs-4">inbox</mat-icon>
                         <span class="mx-2">Inbox</span>
-                        <span
-                            title="1"
-                            data-view-component="true"
-                            class="counter"
-                            >2</span
-                        >
+                        <span title="1" data-view-component="true" class="counter">2</span>
                     </mat-button-toggle>
                     <mat-button-toggle
                         data-test-id="account-stars-tab"
@@ -137,12 +115,7 @@
                     >
                         <mat-icon class="text-muted fs-4">star_border</mat-icon>
                         <span class="mx-2">Stars</span>
-                        <span
-                            title="1"
-                            data-view-component="true"
-                            class="counter"
-                            >2</span
-                        >
+                        <span title="1" data-view-component="true" class="counter">2</span>
                     </mat-button-toggle>
                 </mat-button-toggle-group>
             </div>

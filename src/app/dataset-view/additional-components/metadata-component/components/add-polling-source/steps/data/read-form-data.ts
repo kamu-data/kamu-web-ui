@@ -131,11 +131,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 type: ControlType.TYPEAHEAD,
                 tooltip: SetPollingSourceToolipsTexts.DATE_FORMAT,
                 placeholder: "--Select format--",
-                list: [
-                    "yyyy-MM-dd:mm:ss.sss",
-                    "yyyy-MM-dd:mm:ss",
-                    "yyyy-MM-dd",
-                ],
+                list: ["yyyy-MM-dd:mm:ss.sss", "yyyy-MM-dd:mm:ss", "yyyy-MM-dd"],
                 validators: {},
             },
             {
@@ -145,11 +141,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 type: ControlType.TYPEAHEAD,
                 placeholder: "--Select format--",
                 tooltip: SetPollingSourceToolipsTexts.TIMESTAMP_FORMAT,
-                list: [
-                    "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
-                    "yyyy-MM-dd'T'HH:mm:ss",
-                    "yyyy-MM-dd",
-                ],
+                list: ["yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd"],
                 validators: {},
             },
             {
@@ -184,8 +176,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 label: "Ignore trailing whitespace",
                 value: false,
                 type: ControlType.CHECKBOX,
-                tooltip:
-                    SetPollingSourceToolipsTexts.QUIGNORE_TRAILING_WHITESPACEOTE,
+                tooltip: SetPollingSourceToolipsTexts.QUIGNORE_TRAILING_WHITESPACEOTE,
                 validators: {},
                 dataTestId: "ignoreTrailingWhiteSpace",
             },
@@ -226,11 +217,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 type: ControlType.TYPEAHEAD,
                 tooltip: SetPollingSourceToolipsTexts.DATE_FORMAT,
                 placeholder: "--Select format--",
-                list: [
-                    "yyyy-MM-dd:mm:ss.sss",
-                    "yyyy-MM-dd:mm:ss",
-                    "yyyy-MM-dd",
-                ],
+                list: ["yyyy-MM-dd:mm:ss.sss", "yyyy-MM-dd:mm:ss", "yyyy-MM-dd"],
                 validators: {},
             },
             {
@@ -240,11 +227,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 type: ControlType.TYPEAHEAD,
                 placeholder: "--Select format--",
                 tooltip: SetPollingSourceToolipsTexts.TIMESTAMP_FORMAT,
-                list: [
-                    "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
-                    "yyyy-MM-dd'T'HH:mm:ss",
-                    "yyyy-MM-dd",
-                ],
+                list: ["yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd"],
                 validators: {},
             },
             {

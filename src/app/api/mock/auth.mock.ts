@@ -1,9 +1,5 @@
 import { GraphQLError } from "graphql";
-import {
-    AccountDetailsFragment,
-    FetchAccountInfoMutation,
-    GithubLoginMutation,
-} from "../kamu.graphql.interface";
+import { AccountDetailsFragment, FetchAccountInfoMutation, GithubLoginMutation } from "../kamu.graphql.interface";
 
 export const TEST_GITHUB_CODE = "12345";
 export const TEST_ACCESS_TOKEN = "someToken";

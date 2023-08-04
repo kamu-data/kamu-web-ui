@@ -25,36 +25,26 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
                     case AddDataSection.OUTPUT_CHECKPOINT: {
                         result.push({
                             title: this.sectionTitleMapper[section],
-                            rows: this.buildEventRows(
-                                event,
-                                ADD_DATA_SOURCE_DESCRIPTORS,
-                                section,
-                                false,
-                            ),
+                            rows: this.buildEventRows(event, ADD_DATA_SOURCE_DESCRIPTORS, section, false),
                         });
                         break;
                     }
 
                     case AddDataSection.OUTPUT_DATA: {
                         const rows: EventRow[] = [];
-                        Object.entries(data as DataSlice).forEach(
-                            ([key, value]) => {
-                                if (event.__typename && key !== "__typename") {
-                                    rows.push(
-                                        this.buildSupportedRow(
-                                            event.__typename,
-                                            ADD_DATA_SOURCE_DESCRIPTORS,
-                                            "DataSlice",
-                                            key,
-                                            this.valueTransformMapper(
-                                                key as keyof DataSlice,
-                                                value,
-                                            ),
-                                        ),
-                                    );
-                                }
-                            },
-                        );
+                        Object.entries(data as DataSlice).forEach(([key, value]) => {
+                            if (event.__typename && key !== "__typename") {
+                                rows.push(
+                                    this.buildSupportedRow(
+                                        event.__typename,
+                                        ADD_DATA_SOURCE_DESCRIPTORS,
+                                        "DataSlice",
+                                        key,
+                                        this.valueTransformMapper(key as keyof DataSlice, value),
+                                    ),
+                                );
+                            }
+                        });
                         result.push({
                             title: this.sectionTitleMapper[section],
                             rows,
@@ -94,10 +84,7 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
         return result;
     }
 
-    private valueTransformMapper(
-        key: keyof DataSlice,
-        value: unknown,
-    ): unknown {
+    private valueTransformMapper(key: keyof DataSlice, value: unknown): unknown {
         switch (key) {
             case "interval":
                 return {

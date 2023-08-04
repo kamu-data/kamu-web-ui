@@ -1,17 +1,6 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    HostListener,
-    Input,
-    OnInit,
-    ViewChild,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit, ViewChild } from "@angular/core";
 import { MatSidenav } from "@angular/material/sidenav";
-import {
-    DatasetNavigationInterface,
-    DatasetViewTypeEnum,
-} from "../dataset-view.interface";
+import { DatasetNavigationInterface, DatasetViewTypeEnum } from "../dataset-view.interface";
 import { Clipboard } from "@angular/cdk/clipboard";
 import AppValues from "../../common/app.values";
 import { SideNavHelper } from "../../common/sidenav.helper";
@@ -59,8 +48,7 @@ export class DatasetViewMenuComponent implements OnInit {
         this.clipboard.copy(text);
 
         if (event.currentTarget !== null) {
-            const currentElement: HTMLButtonElement =
-                event.currentTarget as HTMLButtonElement;
+            const currentElement: HTMLButtonElement = event.currentTarget as HTMLButtonElement;
             const currentElementChildren: HTMLCollectionOf<HTMLElement> =
                 currentElement.children as HTMLCollectionOf<HTMLElement>;
             setTimeout(() => {

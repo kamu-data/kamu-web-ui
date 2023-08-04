@@ -1,34 +1,16 @@
-import {
-    ComponentFixture,
-    TestBed,
-    fakeAsync,
-    flush,
-    tick,
-} from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { SearchSectionComponent } from "./search-section.component";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { MatTreeModule, MatTreeNestedDataSource } from "@angular/material/tree";
-import {
-    NgbTypeaheadModule,
-    NgbTypeaheadSelectItemEvent,
-} from "@ng-bootstrap/ng-bootstrap";
+import { NgbTypeaheadModule, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
 import { of } from "rxjs";
 import AppValues from "src/app/common/app.values";
-import {
-    dispatchInputEvent,
-    emitClickOnElementByDataTestId,
-} from "src/app/common/base-test.helpers.spec";
-import {
-    DatasetAutocompleteItem,
-    TypeNames,
-} from "src/app/interface/search.interface";
-import {
-    mockDatasetBasicsFragment,
-    mockDatasetInfo,
-} from "src/app/search/mock.data";
+import { dispatchInputEvent, emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
+import { mockDatasetBasicsFragment, mockDatasetInfo } from "src/app/search/mock.data";
 import { SearchApi } from "src/app/api/search.api";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -78,18 +60,15 @@ describe("SearchSectionComponent", () => {
             __typename: TypeNames.datasetType,
             dataset: mockDatasetBasicsFragment,
         };
-        const searchApiAutocompleteDatasetSearchSpy = spyOn(
-            searchApi,
-            "autocompleteDatasetSearch",
-        ).and.callFake(() => of([MOCK_AUTOCOMPLETE_ITEM]));
+        const searchApiAutocompleteDatasetSearchSpy = spyOn(searchApi, "autocompleteDatasetSearch").and.callFake(() =>
+            of([MOCK_AUTOCOMPLETE_ITEM]),
+        );
 
         const SEARCH_QUERY = "query";
         dispatchInputEvent(fixture, "searchInputDatasets", SEARCH_QUERY);
         tick(AppValues.SHORT_DELAY_MS);
 
-        expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(
-            SEARCH_QUERY,
-        );
+        expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(SEARCH_QUERY);
         flush();
     }));
 
@@ -105,25 +84,16 @@ describe("SearchSectionComponent", () => {
 
     it("should navigate to dataset overview tab", () => {
         const datasetInfo = mockDatasetInfo;
-        const navigateToDatasetViewSpy = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
 
-        component.navigateToDataset(
-            datasetInfo.accountName,
-            datasetInfo.datasetName,
-        );
+        component.navigateToDataset(datasetInfo.accountName, datasetInfo.datasetName);
 
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(datasetInfo);
     });
 
     it("should navigate to owner view", () => {
         const owner = "kamu";
-        const navigateToOwnerViewSpy = spyOn(
-            navigationService,
-            "navigateToOwnerView",
-        );
+        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
 
         component.navigateToOwner(owner);
 
@@ -137,10 +107,9 @@ describe("SearchSectionComponent", () => {
                 __typename: TypeNames.datasetType,
             },
         } as NgbTypeaheadSelectItemEvent;
-        const requestDatasetSchemaSpy = spyOn(
-            datasetService,
-            "requestDatasetSchema",
-        ).and.returnValue(of(mockGetDatasetSchemaQuery));
+        const requestDatasetSchemaSpy = spyOn(datasetService, "requestDatasetSchema").and.returnValue(
+            of(mockGetDatasetSchemaQuery),
+        );
 
         component.onSelectItem(mockNgbTypeaheadSelectItemEvent);
 

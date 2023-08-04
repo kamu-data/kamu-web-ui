@@ -29,8 +29,7 @@ describe("DatasetCommitService", () => {
 
     const TEST_ACCOUNT_NAME = "accountName";
     const TEST_DATASET_NAME = "datasetName";
-    const TEST_DATASET_ID: string = mockDatasetMainDataResponse.datasets
-        .byOwnerAndName?.id as string;
+    const TEST_DATASET_ID: string = mockDatasetMainDataResponse.datasets.byOwnerAndName?.id as string;
     const TEST_EVENT_CONTENT = "event content";
 
     beforeEach(() => {
@@ -43,24 +42,13 @@ describe("DatasetCommitService", () => {
         commitService = TestBed.inject(DatasetCommitService);
         datasetService = TestBed.inject(DatasetService);
 
-        getDatasetInfoSpy = spyOn(
-            datasetApi,
-            "getDatasetInfoByAccountAndDatasetName",
-        ).and.returnValue(
-            of(
-                mockDatasetMainDataResponse as DatasetByAccountAndDatasetNameQuery,
-            ),
+        getDatasetInfoSpy = spyOn(datasetApi, "getDatasetInfoByAccountAndDatasetName").and.returnValue(
+            of(mockDatasetMainDataResponse as DatasetByAccountAndDatasetNameQuery),
         );
 
-        requestDatasetMainDataSpy = spyOn(
-            datasetService,
-            "requestDatasetMainData",
-        ).and.returnValue(of());
+        requestDatasetMainDataSpy = spyOn(datasetService, "requestDatasetMainData").and.returnValue(of());
 
-        navigationServiceSpy = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
     });
 
     it("should be created", () => {
@@ -68,18 +56,11 @@ describe("DatasetCommitService", () => {
     });
 
     function requestDatasetId(): Observable<string> {
-        return commitService.getIdByAccountNameAndDatasetName(
-            TEST_ACCOUNT_NAME,
-            TEST_DATASET_NAME,
-        );
+        return commitService.getIdByAccountNameAndDatasetName(TEST_ACCOUNT_NAME, TEST_DATASET_NAME);
     }
 
     function requestCommitEvent(): Observable<void> {
-        return commitService.commitEventToDataset(
-            TEST_ACCOUNT_NAME,
-            TEST_DATASET_NAME,
-            TEST_EVENT_CONTENT,
-        );
+        return commitService.commitEventToDataset(TEST_ACCOUNT_NAME, TEST_DATASET_NAME, TEST_EVENT_CONTENT);
     }
 
     function expectNavigatedToDatasetOverview() {
@@ -115,10 +96,7 @@ describe("DatasetCommitService", () => {
         flush();
 
         expect(eventsCount).toEqual(2);
-        expect(getDatasetInfoSpy).toHaveBeenCalledOnceWith(
-            TEST_ACCOUNT_NAME,
-            TEST_DATASET_NAME,
-        );
+        expect(getDatasetInfoSpy).toHaveBeenCalledOnceWith(TEST_ACCOUNT_NAME, TEST_DATASET_NAME);
     }));
 
     it("should check getIdByAccountNameAndDatasetName() method without cache", fakeAsync(() => {
@@ -131,16 +109,11 @@ describe("DatasetCommitService", () => {
         flush();
 
         expect(eventsCount).toEqual(1);
-        expect(getDatasetInfoSpy).toHaveBeenCalledOnceWith(
-            TEST_ACCOUNT_NAME,
-            TEST_DATASET_NAME,
-        );
+        expect(getDatasetInfoSpy).toHaveBeenCalledOnceWith(TEST_ACCOUNT_NAME, TEST_DATASET_NAME);
     }));
 
     it("should check commitEventToDataset() method", fakeAsync(() => {
-        const commitEventSpy = spyOn(datasetApi, "commitEvent").and.returnValue(
-            of(mockCommitEventToDatasetMutation),
-        );
+        const commitEventSpy = spyOn(datasetApi, "commitEvent").and.returnValue(of(mockCommitEventToDatasetMutation));
 
         requestCommitEvent().subscribe(() => {
             tick();
@@ -160,14 +133,11 @@ describe("DatasetCommitService", () => {
             of(mockCommitEventToDatasetMutationError),
         );
 
-        const errorSubscription$: Subscription =
-            commitService.onErrorCommitEventChanges
-                .pipe(first())
-                .subscribe((message) => {
-                    expect(message).toEqual(
-                        mockCommitEventToDatasetMutationErrorMessage,
-                    );
-                });
+        const errorSubscription$: Subscription = commitService.onErrorCommitEventChanges
+            .pipe(first())
+            .subscribe((message) => {
+                expect(message).toEqual(mockCommitEventToDatasetMutationErrorMessage);
+            });
 
         requestCommitEvent().subscribe(() => {
             tick();
@@ -186,23 +156,15 @@ describe("DatasetCommitService", () => {
     }));
 
     it("should check updateReadme() method ", fakeAsync(() => {
-        const updateReadmeSpy = spyOn(
-            datasetApi,
-            "updateReadme",
-        ).and.returnValue(of(mockUpdateReadmeMutation));
+        const updateReadmeSpy = spyOn(datasetApi, "updateReadme").and.returnValue(of(mockUpdateReadmeMutation));
         const README_CONTENT = "readme content";
 
-        commitService
-            .updateReadme(TEST_ACCOUNT_NAME, TEST_DATASET_NAME, README_CONTENT)
-            .subscribe(() => {
-                tick();
-            });
+        commitService.updateReadme(TEST_ACCOUNT_NAME, TEST_DATASET_NAME, README_CONTENT).subscribe(() => {
+            tick();
+        });
         flush();
 
-        expect(updateReadmeSpy).toHaveBeenCalledOnceWith(
-            TEST_DATASET_ID,
-            README_CONTENT,
-        );
+        expect(updateReadmeSpy).toHaveBeenCalledOnceWith(TEST_DATASET_ID, README_CONTENT);
         expectNavigatedToDatasetOverview();
         expectRequestedDatasetMainData();
     }));

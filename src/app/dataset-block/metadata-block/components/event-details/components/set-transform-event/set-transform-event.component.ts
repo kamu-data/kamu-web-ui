@@ -10,14 +10,8 @@ import { SECTION_BUILDERS_BY_EVENT_TYPE } from "../../dynamic-events/builders/ev
     styleUrls: ["../base-dynamic-event/base-dynamic-event.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SetTransformEventComponent
-    extends BaseDynamicEventComponent<SetTransform>
-    implements OnInit
-{
+export class SetTransformEventComponent extends BaseDynamicEventComponent<SetTransform> implements OnInit {
     ngOnInit(): void {
-        this.eventSections =
-            SECTION_BUILDERS_BY_EVENT_TYPE.SetTransform.buildEventSections(
-                this.event,
-            );
+        this.eventSections = SECTION_BUILDERS_BY_EVENT_TYPE.SetTransform.buildEventSections(this.event);
     }
 }

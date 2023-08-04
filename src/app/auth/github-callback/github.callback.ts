@@ -10,11 +10,7 @@ import { BaseComponent } from "src/app/common/base.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GithubCallbackComponent extends BaseComponent implements OnInit {
-    constructor(
-        private route: ActivatedRoute,
-        private navigationService: NavigationService,
-        private authApi: AuthApi,
-    ) {
+    constructor(private route: ActivatedRoute, private navigationService: NavigationService, private authApi: AuthApi) {
         super();
     }
 
@@ -25,9 +21,7 @@ export class GithubCallbackComponent extends BaseComponent implements OnInit {
         this.trackSubscription(
             this.route.queryParams.subscribe((param: Params) => {
                 this.authApi
-                    .fetchUserInfoAndTokenFromGithubCallackCode(
-                        param.code as string,
-                    )
+                    .fetchUserInfoAndTokenFromGithubCallackCode(param.code as string)
                     .subscribe(() => this.navigationService.navigateToHome());
             }),
         );

@@ -36,10 +36,7 @@ describe("OffsetIntervalPropertyComponent", () => {
 
     it("should check call requestDatasetInfoById from datasetSevice in ngOnInit", () => {
         fixture.detectChanges();
-        const requestDatasetInfoByIdSpy = spyOn(
-            datasetSevice,
-            "requestDatasetInfoById",
-        ).and.returnValue(
+        const requestDatasetInfoByIdSpy = spyOn(datasetSevice, "requestDatasetInfoById").and.returnValue(
             of({
                 __typename: "Query",
                 datasets: {
@@ -58,10 +55,7 @@ describe("OffsetIntervalPropertyComponent", () => {
             datasetId: null,
         }),
             fixture.detectChanges();
-        const navigateToQuerySpy = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        const navigateToQuerySpy = spyOn(navigationService, "navigateToDatasetView");
         component.navigateToQuery();
         expect(navigateToQuerySpy).toHaveBeenCalledTimes(1);
     });

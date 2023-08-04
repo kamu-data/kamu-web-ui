@@ -15,76 +15,38 @@
                 [inputFormatter]="formatter"
                 (selectItem)="onSelectItem($event)"
             />
-            <button
-                class="inner-btn"
-                (click)="clearSearch()"
-                data-test-id="clear-input"
-            >
-                X
-            </button>
+            <button class="inner-btn" (click)="clearSearch()" data-test-id="clear-input">X</button>
         </div>
     </div>
 </div>
 <ng-template #rt let-r="result" let-t="term">
-    <div
-        class="d-flex flex-row justify-content-between"
-        [style.width.px]="searchDatasets.clientWidth - 28"
-    >
+    <div class="d-flex flex-row justify-content-between" [style.width.px]="searchDatasets.clientWidth - 28">
         <div>
             <i class="bi bi-journal-album mr-2"></i>
             <ngb-highlight [result]="r.dataset.name" [term]="t"></ngb-highlight>
         </div>
-        <div
-            class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 f6 button-add color-text-tertiary ml-1"
-        >
+        <div class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 f6 button-add color-text-tertiary ml-1">
             Add
-            <span class="d-inline-block ml-1 v-align-middle"
-                ><i class="bi bi-arrow-return-left"></i
-            ></span>
+            <span class="d-inline-block ml-1 v-align-middle"><i class="bi bi-arrow-return-left"></i></span>
         </div>
     </div>
 </ng-template>
 <div class="mt-4">
-    <mat-tree
-        [dataSource]="dataSource"
-        [treeControl]="treeControl"
-        class="tree"
-    >
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-            {{ node.name }}&nbsp;&nbsp; (
-            <span class="fw-bold">{{ node.type }}</span> )
+            {{ node.name }}&nbsp;&nbsp; ( <span class="fw-bold">{{ node.type }}</span> )
         </mat-tree-node>
         <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
             <div class="mat-tree-node">
-                <button
-                    mat-icon-button
-                    matTreeNodeToggle
-                    [attr.aria-label]="'Toggle ' + node.name"
-                >
+                <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
                     <mat-icon class="mat-icon-rtl-mirror">
-                        {{
-                            treeControl.isExpanded(node)
-                                ? "expand_more"
-                                : "chevron_right"
-                        }}
+                        {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
                     </mat-icon>
                 </button>
-                <div
-                    class="d-flex align-items-center justify-content-between node-name-block"
-                >
+                <div class="d-flex align-items-center justify-content-between node-name-block">
                     <div class="node-link">
-                        <a
-                            class="node-name"
-                            (click)="navigateToOwner(node.owner)"
-                        >
-                            {{ node.owner }} </a
-                        >/
-                        <a
-                            class="node-name"
-                            (click)="navigateToDataset(node.owner, node.name)"
-                        >
-                            {{ node.name }}</a
-                        >
+                        <a class="node-name" (click)="navigateToOwner(node.owner)"> {{ node.owner }} </a>/
+                        <a class="node-name" (click)="navigateToDataset(node.owner, node.name)"> {{ node.name }}</a>
                     </div>
                     <button
                         class="no-button d-flex"
@@ -96,10 +58,7 @@
                 </div>
             </div>
 
-            <div
-                [class.example-tree-invisible]="!treeControl.isExpanded(node)"
-                role="group"
-            >
+            <div [class.example-tree-invisible]="!treeControl.isExpanded(node)" role="group">
                 <ng-container matTreeNodeOutlet></ng-container>
             </div>
         </mat-nested-tree-node>

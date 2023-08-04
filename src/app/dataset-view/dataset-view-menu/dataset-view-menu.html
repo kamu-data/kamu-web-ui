@@ -7,11 +7,7 @@
                 "
 >
     <div class="datasetViewTypeToggleGroup">
-        <mat-button-toggle-group
-            name="datasetViewType"
-            aria-label="Dataset View Type"
-            [value]="datasetViewType"
-        >
+        <mat-button-toggle-group name="datasetViewType" aria-label="Dataset View Type" [value]="datasetViewType">
             <mat-button-toggle
                 data-test-id="navigateToOverview"
                 value="overview"
@@ -78,14 +74,8 @@
                     <mat-icon>arrow_drop_down</mat-icon>
                 </button>
 
-                <mat-menu
-                    #menu2="matMenu"
-                    [hasBackdrop]="false"
-                    data-test-id="menu"
-                >
-                    <div
-                        class="SelectMenu-modal notifications-component-menu-modal"
-                    >
+                <mat-menu #menu2="matMenu" [hasBackdrop]="false" data-test-id="menu">
+                    <div class="SelectMenu-modal notifications-component-menu-modal">
                         <header class="SelectMenu-header">
                             <div class="SelectMenu-title text-bold">
                                 <svg-icon name="terminal"></svg-icon>
@@ -156,25 +146,11 @@
                                                         tabindex="0"
                                                         role="button"
                                                     >
-                                                        <div
-                                                            style="
-                                                                position: relative;
-                                                                display: inline-block;
-                                                            "
-                                                        >
-                                                            <svg-icon
-                                                                name="copy"
-                                                            ></svg-icon>
+                                                        <div style="position: relative; display: inline-block">
+                                                            <svg-icon name="copy"></svg-icon>
                                                         </div>
-                                                        <div
-                                                            style="
-                                                                position: relative;
-                                                                display: none;
-                                                            "
-                                                        >
-                                                            <svg-icon
-                                                                name="checked"
-                                                            ></svg-icon>
+                                                        <div style="position: relative; display: none">
+                                                            <svg-icon name="checked"></svg-icon>
                                                         </div>
                                                     </button>
                                                 </div>
@@ -229,43 +205,23 @@
                                                         tabindex="0"
                                                         role="button"
                                                     >
-                                                        <div
-                                                            style="
-                                                                position: relative;
-                                                                display: inline-block;
-                                                            "
-                                                        >
-                                                            <svg-icon
-                                                                name="copy"
-                                                            ></svg-icon>
+                                                        <div style="position: relative; display: inline-block">
+                                                            <svg-icon name="copy"></svg-icon>
                                                         </div>
-                                                        <div
-                                                            style="
-                                                                position: relative;
-                                                                display: none;
-                                                            "
-                                                        >
-                                                            <svg-icon
-                                                                name="checked"
-                                                            ></svg-icon>
+                                                        <div style="position: relative; display: none">
+                                                            <svg-icon name="checked"></svg-icon>
                                                         </div>
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <button class="SelectMenu-item">
-                                        As Parquet
-                                    </button>
-                                    <button class="SelectMenu-item">
-                                        As CSV
-                                    </button>
+                                    <button class="SelectMenu-item">As Parquet</button>
+                                    <button class="SelectMenu-item">As CSV</button>
                                 </mat-tab>
                                 <mat-tab label="Cite">
                                     <button class="SelectMenu-item">DOI</button>
-                                    <button class="SelectMenu-item">
-                                        Bibtech
-                                    </button>
+                                    <button class="SelectMenu-item">Bibtech</button>
                                 </mat-tab>
                             </mat-tab-group>
                         </div>

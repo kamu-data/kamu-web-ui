@@ -1,8 +1,5 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import {
-    findElementByDataTestId,
-    emitClickOnElementByDataTestId,
-} from "src/app/common/base-test.helpers.spec";
+import { findElementByDataTestId, emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { mockSeed } from "../../mock.events";
 
 import { SeedEventComponent } from "./seed-event.component";
@@ -21,11 +18,7 @@ describe("SeedEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                SeedEventComponent,
-                BlockRowDataComponent,
-                TooltipIconComponent,
-            ],
+            declarations: [SeedEventComponent, BlockRowDataComponent, TooltipIconComponent],
             imports: [
                 ToastrModule.forRoot(),
                 BrowserAnimationsModule,
@@ -47,10 +40,7 @@ describe("SeedEventComponent", () => {
     });
 
     it("should check copyToClipboard button is exist", () => {
-        const copyToClipboardButton = findElementByDataTestId(
-            fixture,
-            "copyToClipboardId",
-        );
+        const copyToClipboardButton = findElementByDataTestId(fixture, "copyToClipboardId");
         expect(copyToClipboardButton).toBeDefined();
     });
 

@@ -9,10 +9,7 @@ import {
 } from "@angular/core";
 import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import {
-    DatasetBasicsFragment,
-    DatasetKind,
-} from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { LineageUpdate } from "../../dataset.subscriptions.interface";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
@@ -31,10 +28,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
     public lineageGraphClusters: ClusterNode[] = [];
     public isAvailableLineageGraph = false;
 
-    constructor(
-        private appDatasetSubsService: AppDatasetSubscriptionsService,
-        private cdr: ChangeDetectorRef,
-    ) {
+    constructor(private appDatasetSubsService: AppDatasetSubscriptionsService, private cdr: ChangeDetectorRef) {
         super();
     }
 
@@ -67,29 +61,25 @@ export class LineageComponent extends BaseComponent implements OnInit {
         ];
 
         this.trackSubscriptions(
-            this.appDatasetSubsService.onLineageDataChanges.subscribe(
-                (lineageUpdate: LineageUpdate) => {
-                    this.updateGraph(lineageUpdate);
-                    this.cdr.markForCheck();
-                },
-            ),
+            this.appDatasetSubsService.onLineageDataChanges.subscribe((lineageUpdate: LineageUpdate) => {
+                this.updateGraph(lineageUpdate);
+                this.cdr.markForCheck();
+            }),
         );
     }
 
     private updateGraph(lineageUpdate: LineageUpdate): void {
         lineageUpdate.nodes.forEach((dataset: DatasetBasicsFragment) => {
-            this.lineageGraphClusters = this.lineageGraphClusters.map(
-                (cluster: ClusterNode) => {
-                    if (typeof cluster.childNodeIds === "undefined") {
-                        cluster.childNodeIds = [];
-                    }
+            this.lineageGraphClusters = this.lineageGraphClusters.map((cluster: ClusterNode) => {
+                if (typeof cluster.childNodeIds === "undefined") {
+                    cluster.childNodeIds = [];
+                }
 
-                    if (cluster.label === dataset.kind) {
-                        cluster.childNodeIds.push(dataset.id as string);
-                    }
-                    return cluster;
-                },
-            );
+                if (cluster.label === dataset.kind) {
+                    cluster.childNodeIds.push(dataset.id as string);
+                }
+                return cluster;
+            });
         });
 
         const edges = lineageUpdate.edges;

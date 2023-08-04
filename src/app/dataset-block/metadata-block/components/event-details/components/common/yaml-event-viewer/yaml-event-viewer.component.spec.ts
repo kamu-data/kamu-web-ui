@@ -12,9 +12,7 @@ describe("YamlEventViewerComponent with SetTransform", () => {
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
 
-        fixture = TestBed.createComponent<YamlEventViewerComponent>(
-            YamlEventViewerComponent,
-        );
+        fixture = TestBed.createComponent<YamlEventViewerComponent>(YamlEventViewerComponent);
         component = fixture.componentInstance;
         component.event = "test";
         fixture.detectChanges();

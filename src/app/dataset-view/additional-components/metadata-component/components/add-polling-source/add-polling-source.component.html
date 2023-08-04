@@ -3,15 +3,9 @@
         <div class="border border-1 mt-4 px-2 py-4 rounded-3">
             <form [formGroup]="pollingSourceForm">
                 <mat-stepper #stepper>
-                    <mat-step
-                        [stepControl]="fetchForm"
-                        errorMessage="Field is required"
-                    >
+                    <mat-step [stepControl]="fetchForm" errorMessage="Field is required">
                         <ng-template matStepLabel>
-                            <div
-                                class="stepper-header-overlay"
-                                (click)="onShowErrors()"
-                            ></div>
+                            <div class="stepper-header-overlay" (click)="onShowErrors()"></div>
                             Fetch</ng-template
                         >
                         <div class="container-step">
@@ -21,9 +15,7 @@
                                 [defaultKind]="FETCH_DEFAULT_KIND"
                                 [sectionName]="steps.FETCH"
                                 [eventYamlByHash]="eventYamlByHash"
-                                [description]="
-                                    'Determines where data is sourced from'
-                                "
+                                [description]="'Determines where data is sourced from'"
                             ></app-base-step>
                             <app-stepper-navigation
                                 [prevStep]="null"
@@ -33,10 +25,7 @@
                             ></app-stepper-navigation>
                         </div>
                     </mat-step>
-                    <mat-step
-                        [stepControl]="prepareForm"
-                        errorMessage="Field is required"
-                    >
+                    <mat-step [stepControl]="prepareForm" errorMessage="Field is required">
                         <ng-template matStepLabel> Prepare </ng-template>
                         <div class="container-step">
                             <app-prepare-step
@@ -51,15 +40,9 @@
                             ></app-stepper-navigation>
                         </div>
                     </mat-step>
-                    <mat-step
-                        [stepControl]="readForm"
-                        errorMessage="Field is required"
-                    >
+                    <mat-step [stepControl]="readForm" errorMessage="Field is required">
                         <ng-template matStepLabel>
-                            <div
-                                class="stepper-header-overlay"
-                                (click)="onShowErrors()"
-                            ></div>
+                            <div class="stepper-header-overlay" (click)="onShowErrors()"></div>
                             Read</ng-template
                         >
                         <div class="container-step">
@@ -69,9 +52,7 @@
                                 [defaultKind]="READ_DEFAULT_KIND"
                                 [sectionName]="steps.READ"
                                 [eventYamlByHash]="eventYamlByHash"
-                                [description]="
-                                    'Defines how data is read into structured format'
-                                "
+                                [description]="'Defines how data is read into structured format'"
                             ></app-base-step>
                             <app-stepper-navigation
                                 [prevStep]="steps.PREPARE"
@@ -88,9 +69,7 @@
                                 [eventYamlByHash]="eventYamlByHash"
                                 [preprocessValue]="preprocessStepValue"
                                 [showPreprocessStep]="showPreprocessStep"
-                                (showPreprocessStepEmitter)="
-                                    onShowPreprcessStep($event)
-                                "
+                                (showPreprocessStepEmitter)="onShowPreprcessStep($event)"
                             ></app-preprocess-step>
                             <app-stepper-navigation
                                 [prevStep]="steps.READ"
@@ -113,14 +92,8 @@
                                     'Determines how newly-ingested data should be merged with existing history'
                                 "
                             >
-                                <div
-                                    *ngIf="errorMessage"
-                                    class="alert alert-danger mt-2"
-                                    role="alert"
-                                >
-                                    <p class="text-danger fs-6">
-                                        Error:<br />{{ errorMessage }}
-                                    </p>
+                                <div *ngIf="errorMessage" class="alert alert-danger mt-2" role="alert">
+                                    <p class="text-danger fs-6">Error:<br />{{ errorMessage }}</p>
                                 </div></app-base-step
                             >
                             <app-stepper-navigation

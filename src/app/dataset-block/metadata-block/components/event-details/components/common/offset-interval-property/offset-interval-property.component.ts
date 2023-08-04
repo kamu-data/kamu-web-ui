@@ -1,12 +1,7 @@
 import { DatasetByIdQuery } from "./../../../../../../../api/kamu.graphql.interface";
 import { NavigationService } from "./../../../../../../../services/navigation.service";
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
-import {
-    ChangeDetectionStrategy,
-    Component,
-    Input,
-    OnInit,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { OffsetInterval } from "src/app/api/kamu.graphql.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -18,19 +13,13 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
     styleUrls: ["./offset-interval-property.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OffsetIntervalPropertyComponent
-    extends BasePropertyComponent
-    implements OnInit
-{
+export class OffsetIntervalPropertyComponent extends BasePropertyComponent implements OnInit {
     @Input() public data: {
         block: OffsetInterval;
         datasetId: string | null;
     };
     private datasetInfo: DatasetInfo = { accountName: "", datasetName: "" };
-    constructor(
-        private navigationService: NavigationService,
-        private datasetSevice: DatasetService,
-    ) {
+    constructor(private navigationService: NavigationService, private datasetSevice: DatasetService) {
         super();
     }
     ngOnInit(): void {
@@ -40,10 +29,8 @@ export class OffsetIntervalPropertyComponent
                     .requestDatasetInfoById(this.data.datasetId)
                     .subscribe((dataset: DatasetByIdQuery) => {
                         if (dataset.datasets.byId) {
-                            this.datasetInfo.accountName =
-                                dataset.datasets.byId.owner.name;
-                            this.datasetInfo.datasetName = dataset.datasets.byId
-                                .name as string;
+                            this.datasetInfo.accountName = dataset.datasets.byId.owner.name;
+                            this.datasetInfo.datasetName = dataset.datasets.byId.name as string;
                         }
                     }),
             );

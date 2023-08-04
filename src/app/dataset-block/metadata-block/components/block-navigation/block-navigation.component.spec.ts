@@ -5,10 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BlockNavigationComponent } from "./block-navigation.component";
 import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
-import {
-    dispatchInputEvent,
-    findElementByDataTestId,
-} from "src/app/common/base-test.helpers.spec";
+import { dispatchInputEvent, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { PaginationModule } from "src/app/components/pagination-component/pagination.module";
 import { MatIconModule } from "@angular/material/icon";
 import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
@@ -22,11 +19,7 @@ describe("BlockNavigationComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                BlockNavigationComponent,
-                BlockHashFilterPipe,
-                EventTypeFilterPipe,
-            ],
+            declarations: [BlockNavigationComponent, BlockHashFilterPipe, EventTypeFilterPipe],
             imports: [
                 FormsModule,
                 NgMultiSelectDropDownModule,
@@ -61,10 +54,7 @@ describe("BlockNavigationComponent", () => {
 
     it("should check calls highlightHash method", () => {
         const testSearchHash = "zW1";
-        const highlightHashSpy = spyOn(
-            component,
-            "highlightHash",
-        ).and.callThrough();
+        const highlightHashSpy = spyOn(component, "highlightHash").and.callThrough();
         component.datasetHistory = mockHistoryUpdate;
 
         dispatchInputEvent(fixture, "searchHash", testSearchHash);

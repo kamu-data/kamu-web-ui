@@ -3,10 +3,7 @@ import { AccountTabs } from "./../auth/account/account.constants";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import {
-    DatasetNavigationParams,
-    MetadataBlockNavigationParams,
-} from "../interface/navigation.interface";
+import { DatasetNavigationParams, MetadataBlockNavigationParams } from "../interface/navigation.interface";
 import ProjectLinks from "../project-links";
 
 @Injectable({ providedIn: "root" })
@@ -22,70 +19,40 @@ export class NavigationService {
     }
 
     public navigateToSearch(query?: string, page?: number): void {
-        const queryParams = query
-            ? page
-                ? { query, page }
-                : { query }
-            : page
-            ? { page }
-            : {};
-        promiseWithCatch(
-            this.router.navigate([ProjectLinks.URL_SEARCH], { queryParams }),
-        );
+        const queryParams = query ? (page ? { query, page } : { query }) : page ? { page } : {};
+        promiseWithCatch(this.router.navigate([ProjectLinks.URL_SEARCH], { queryParams }));
     }
 
     public navigateToDatasetCreate(): void {
-        promiseWithCatch(
-            this.router.navigate([ProjectLinks.URL_DATASET_CREATE]),
-        );
+        promiseWithCatch(this.router.navigate([ProjectLinks.URL_DATASET_CREATE]));
     }
 
     public navigateToSettings(): void {
-        promiseWithCatch(
-            this.router.navigate([ProjectLinks.URL_SETTINGS, "profile"]),
-        );
+        promiseWithCatch(this.router.navigate([ProjectLinks.URL_SETTINGS, "profile"]));
     }
 
-    public navigateToMetadataBlock(
-        params: MetadataBlockNavigationParams,
-    ): void {
+    public navigateToMetadataBlock(params: MetadataBlockNavigationParams): void {
         promiseWithCatch(
-            this.router.navigate([
-                params.accountName,
-                params.datasetName,
-                ProjectLinks.URL_BLOCK,
-                params.blockHash,
-            ]),
+            this.router.navigate([params.accountName, params.datasetName, ProjectLinks.URL_BLOCK, params.blockHash]),
         );
     }
 
     public navigateToAddPollingSource(params: DatasetInfo): void {
         promiseWithCatch(
-            this.router.navigate([
-                params.accountName,
-                params.datasetName,
-                ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE,
-            ]),
+            this.router.navigate([params.accountName, params.datasetName, ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE]),
         );
     }
 
     public navigateToSetTransform(params: DatasetInfo): void {
         promiseWithCatch(
-            this.router.navigate([
-                params.accountName,
-                params.datasetName,
-                ProjectLinks.URL_PARAM_SET_TRANSFORM,
-            ]),
+            this.router.navigate([params.accountName, params.datasetName, ProjectLinks.URL_PARAM_SET_TRANSFORM]),
         );
     }
 
     public navigateToDatasetView(params: DatasetNavigationParams): void {
         promiseWithCatch(
             this.router.navigate([params.accountName, params.datasetName], {
-                queryParams:
-                    params.page === 1
-                        ? { tab: params.tab }
-                        : { tab: params.tab, page: params.page },
+                queryParams: params.page === 1 ? { tab: params.tab } : { tab: params.tab, page: params.page },
                 state: params.state,
             }),
         );
@@ -95,11 +62,7 @@ export class NavigationService {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_LOGIN]));
     }
 
-    public navigateToOwnerView(
-        ownerName: string,
-        tab?: string,
-        page?: number,
-    ): void {
+    public navigateToOwnerView(ownerName: string, tab?: string, page?: number): void {
         promiseWithCatch(
             this.router.navigate([ownerName], {
                 queryParams: tab !== AccountTabs.overview ? { tab, page } : {},

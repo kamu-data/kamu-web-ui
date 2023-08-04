@@ -5,76 +5,39 @@
                 <div class="card">
                     <nav class="navbar navbar-expand">
                         <div>
-                            <h3 class="search-result-container__navbar__title">
-                                Filters
-                            </h3>
+                            <h3 class="search-result-container__navbar__title">Filters</h3>
                             <div *ngFor="let filter of filters">
                                 <span class="example-list-section">
                                     {{ filter.name }}
                                 </span>
                                 <span class="example-list-section">
                                     <ul>
-                                        <li
-                                            *ngFor="
-                                                let subtask of filter.subtasks
-                                            "
-                                        >
-                                            <ng-template
-                                                [ngIf]="!subtask.isTitle"
-                                            >
+                                        <li *ngFor="let subtask of filter.subtasks">
+                                            <ng-template [ngIf]="!subtask.isTitle">
                                                 <mat-checkbox
-                                                    [(ngModel)]="
-                                                        subtask.completed
-                                                    "
+                                                    [(ngModel)]="subtask.completed"
                                                     [color]="subtask.color"
-                                                    [disabled]="
-                                                        subtask.disabled
-                                                    "
-                                                    (ngModelChange)="
-                                                        updateAllComplete()
-                                                    "
+                                                    [disabled]="subtask.disabled"
+                                                    (ngModelChange)="updateAllComplete()"
                                                 >
                                                     {{ subtask.name }}
                                                 </mat-checkbox>
                                             </ng-template>
-                                            <ng-template
-                                                [ngIf]="subtask.isTitle"
-                                            >
-                                                <span
-                                                    class="example-list-section"
-                                                >
+                                            <ng-template [ngIf]="subtask.isTitle">
+                                                <span class="example-list-section">
                                                     {{ subtask.name }}
                                                 </span>
                                             </ng-template>
-                                            <ng-template
-                                                [ngIf]="
-                                                    subtask.subtasks &&
-                                                    subtask.subtasks.length > 0
-                                                "
-                                            >
+                                            <ng-template [ngIf]="subtask.subtasks && subtask.subtasks.length > 0">
                                                 <ul>
-                                                    <li
-                                                        *ngFor="
-                                                            let sub_subtask of subtask.subtasks
-                                                        "
-                                                    >
+                                                    <li *ngFor="let sub_subtask of subtask.subtasks">
                                                         <mat-checkbox
-                                                            [(ngModel)]="
-                                                                sub_subtask.completed
-                                                            "
-                                                            [color]="
-                                                                sub_subtask.color
-                                                            "
-                                                            [disabled]="
-                                                                subtask.disabled
-                                                            "
-                                                            (ngModelChange)="
-                                                                updateAllComplete()
-                                                            "
+                                                            [(ngModel)]="sub_subtask.completed"
+                                                            [color]="sub_subtask.color"
+                                                            [disabled]="subtask.disabled"
+                                                            (ngModelChange)="updateAllComplete()"
                                                         >
-                                                            {{
-                                                                sub_subtask.name
-                                                            }}
+                                                            {{ sub_subtask.name }}
                                                         </mat-checkbox>
                                                     </li>
                                                 </ul>
@@ -97,12 +60,7 @@
                         (selectDatasetEmit)="onSelectDataset($event)"
                     ></app-dataset-list>
 
-                    <ng-template
-                        [ngIf]="
-                            tableData.tableSource.length > 0 &&
-                            tableData.pageInfo
-                        "
-                    >
+                    <ng-template [ngIf]="tableData.tableSource.length > 0 && tableData.pageInfo">
                         <app-pagination
                             [currentPage]="currentPage"
                             [pageInfo]="tableData.pageInfo"

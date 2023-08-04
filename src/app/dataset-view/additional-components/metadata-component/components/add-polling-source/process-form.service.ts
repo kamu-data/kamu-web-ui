@@ -1,18 +1,10 @@
 import { Injectable } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { SchemaType } from "../form-components/schema-field/schema-field.component";
-import {
-    SchemaControlType,
-    OrderControlType,
-    SourceOrder,
-} from "./process-form.service.types";
+import { SchemaControlType, OrderControlType, SourceOrder } from "./process-form.service.types";
 import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import {
-    EditFormType,
-    FetchKind,
-    PrepareKind,
-} from "./add-polling-source-form.types";
+import { EditFormType, FetchKind, PrepareKind } from "./add-polling-source-form.types";
 import AppValues from "src/app/common/app.values";
 
 @Injectable({
@@ -30,17 +22,10 @@ export class ProcessFormService {
 
     private transformSchema(formGroup: FormGroup): void {
         const form = formGroup.value as SchemaControlType;
-        if (
-            form.read.schema?.length &&
-            typeof form.read.schema[0] !== "string"
-        ) {
-            form.read.schema = (form.read.schema as SchemaType[]).map(
-                (item) => {
-                    return `${this.processSchemaName(item.name.trim())} ${
-                        item.type
-                    }`;
-                },
-            );
+        if (form.read.schema?.length && typeof form.read.schema[0] !== "string") {
+            form.read.schema = (form.read.schema as SchemaType[]).map((item) => {
+                return `${this.processSchemaName(item.name.trim())} ${item.type}`;
+            });
         }
     }
 
@@ -48,13 +33,8 @@ export class ProcessFormService {
         const form = formGroup.value as EditFormType;
         if (form.prepare && form.prepare.length > 0) {
             form.prepare.map((item) => {
-                if (
-                    item.kind === PrepareKind.PIPE &&
-                    typeof item.command === "string"
-                ) {
-                    item.command = item.command
-                        .trim()
-                        .match(AppValues.SPLIT_ARGUMENTS_PATTERN) as string[];
+                if (item.kind === PrepareKind.PIPE && typeof item.command === "string") {
+                    item.command = item.command.trim().match(AppValues.SPLIT_ARGUMENTS_PATTERN) as string[];
                 }
                 if (item.kind === PrepareKind.DECOMPRESS && !item.subPath) {
                     delete item.subPath;
@@ -86,10 +66,7 @@ export class ProcessFormService {
 
     private removeEmptyControls(formGroup: FormGroup): void {
         const form = formGroup.value as SetPollingSource;
-        type FormKeys =
-            | SetPollingSourceSection.READ
-            | SetPollingSourceSection.MERGE
-            | SetPollingSourceSection.FETCH;
+        type FormKeys = SetPollingSourceSection.READ | SetPollingSourceSection.MERGE | SetPollingSourceSection.FETCH;
         const formKeys: FormKeys[] = [
             SetPollingSourceSection.READ,
             SetPollingSourceSection.MERGE,
@@ -106,15 +83,12 @@ export class ProcessFormService {
 
         if (
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            formGroup.value[SetPollingSourceSection.FETCH].kind !==
-                FetchKind.CONTAINER &&
+            formGroup.value[SetPollingSourceSection.FETCH].kind !== FetchKind.CONTAINER &&
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            !formGroup.value[SetPollingSourceSection.FETCH].eventTime
-                .timestampFormat
+            !formGroup.value[SetPollingSourceSection.FETCH].eventTime.timestampFormat
         ) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            delete formGroup.value[SetPollingSourceSection.FETCH].eventTime
-                .timestampFormat;
+            delete formGroup.value[SetPollingSourceSection.FETCH].eventTime.timestampFormat;
         }
     }
 

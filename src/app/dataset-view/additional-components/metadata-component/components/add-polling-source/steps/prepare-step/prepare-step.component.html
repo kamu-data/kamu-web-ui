@@ -2,52 +2,30 @@
 <div class="d-flex justify-content-center flex-column align-items-center mt-4">
     <p class="text-center mt-2">
         Defines how raw data is prepared before reading. You can add
-        <a class="prepare-item" (click)="addPipe()" data-test-id="add-pipe"
-            >Pipe</a
-        >
+        <a class="prepare-item" (click)="addPipe()" data-test-id="add-pipe">Pipe</a>
         and
-        <a
-            class="prepare-item"
-            (click)="addDecompress()"
-            data-test-id="add-decompress"
-        >
-            Decompress</a
-        >
+        <a class="prepare-item" (click)="addDecompress()" data-test-id="add-decompress"> Decompress</a>
         steps.
     </p>
 </div>
 <div [formArrayName]="sectionName">
     <div *ngFor="let item of sectionForm.controls; index as i">
         <ng-container *ngIf="item.value.kind === 'pipe'" [formGroupName]="i">
-            <div
-                class="p-4 border rounded-3 m-4 w-50 mx-auto position-relative"
-            >
+            <div class="p-4 border rounded-3 m-4 w-50 mx-auto position-relative">
                 <h3 class="text-center">Pipe</h3>
                 <div>
-                    <label class="form-label">
-                        Command <span class="text-danger">*</span>
-                    </label>
+                    <label class="form-label"> Command <span class="text-danger">*</span> </label>
                 </div>
-                <input
-                    class="form-control"
-                    formControlName="command"
-                    required
-                />
+                <input class="form-control" formControlName="command" required />
 
                 <div
                     *ngIf="
-                        sectionForm.controls[i].get('command')?.errors
-                            ?.required &&
+                        sectionForm.controls[i].get('command')?.errors?.required &&
                         sectionForm.controls[i].get('command')?.touched
                     "
                     class="mt-1"
                 >
-                    <span
-                        class="text-danger fs-12"
-                        attr.data-test-id="error-{{ i }}-required"
-                    >
-                        Field is required</span
-                    >
+                    <span class="text-danger fs-12" attr.data-test-id="error-{{ i }}-required"> Field is required</span>
                 </div>
                 <div class="buttons-section d-flex flex-row">
                     <button
@@ -79,13 +57,8 @@
                 </div>
             </div>
         </ng-container>
-        <ng-container
-            *ngIf="item.value.kind === 'decompress'"
-            [formGroupName]="i"
-        >
-            <div
-                class="p-4 border rounded-3 m-4 w-50 mx-auto position-relative"
-            >
+        <ng-container *ngIf="item.value.kind === 'decompress'" [formGroupName]="i">
+            <div class="p-4 border rounded-3 m-4 w-50 mx-auto position-relative">
                 <h3 class="text-center">Decompress</h3>
                 <div class="mb-3">
                     <label class="form-label">Format </label>

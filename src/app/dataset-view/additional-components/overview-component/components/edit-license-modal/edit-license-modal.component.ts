@@ -31,10 +31,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
     public licenseForm: FormGroup = this.fb.group({
         name: ["", [Validators.required]],
         shortName: ["", [Validators.required]],
-        websiteUrl: [
-            "",
-            [Validators.required, Validators.pattern(AppValues.URL_PATTERN)],
-        ],
+        websiteUrl: ["", [Validators.required, Validators.pattern(AppValues.URL_PATTERN)]],
         spdxId: [""],
     });
 
@@ -49,8 +46,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         if (this.currentState?.overview.metadata.currentLicense) {
-            const { name, shortName, spdxId, websiteUrl } =
-                this.currentState.overview.metadata.currentLicense;
+            const { name, shortName, spdxId, websiteUrl } = this.currentState.overview.metadata.currentLicense;
             this.licenseForm.patchValue({
                 name,
                 shortName,
@@ -68,10 +64,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
                         this.datasetBasics.owner.name,
                         this.datasetBasics.name as string,
                         this.yamlEventService.buildYamlSetLicenseEvent(
-                            this.licenseForm.value as Omit<
-                                SetLicense,
-                                "__typename"
-                            >,
+                            this.licenseForm.value as Omit<SetLicense, "__typename">,
                         ),
                     )
                     .subscribe(),

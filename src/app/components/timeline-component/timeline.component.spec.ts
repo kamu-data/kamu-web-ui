@@ -2,16 +2,10 @@ import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { TimelineComponent } from "./timeline.component";
-import {
-    TEST_DATASET_NAME,
-    mockGetMetadataBlockQuery,
-} from "src/app/api/mock/dataset.mock";
+import { TEST_DATASET_NAME, mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { mockPageBasedInfo } from "src/app/search/mock.data";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import {
-    emitClickOnElementByDataTestId,
-    findElementByDataTestId,
-} from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { DisplayHashModule } from "../display-hash/dispaly-hash.module";
 import { ToastrModule } from "ngx-toastr";
 import { DisplayTimeModule } from "../display-time/display-time.module";
@@ -47,8 +41,7 @@ describe("TimelineComponent", () => {
         component.datasetName = TEST_DATASET_NAME;
         component.pageInfo = mockPageBasedInfo;
         component.history = [
-            mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
-                .blockByHash as MetadataBlockFragment,
+            mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHash as MetadataBlockFragment,
         ];
 
         fixture.detectChanges();
@@ -59,27 +52,18 @@ describe("TimelineComponent", () => {
     });
 
     it("should navigate to owner view", () => {
-        const navigateToOwnerViewSpy = spyOn(
-            navigationService,
-            "navigateToOwnerView",
-        );
+        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
         emitClickOnElementByDataTestId(fixture, "button-verified");
         fixture.detectChanges();
 
-        const navigateLink = findElementByDataTestId(
-            fixture,
-            "navigate-to-owner-link",
-        );
+        const navigateLink = findElementByDataTestId(fixture, "navigate-to-owner-link");
         navigateLink.click();
 
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith("testName");
     });
 
     it("should navigate to metadata block", () => {
-        const navigateToMetadataBlockSpy = spyOn(
-            navigationService,
-            "navigateToMetadataBlock",
-        );
+        const navigateToMetadataBlockSpy = spyOn(navigationService, "navigateToMetadataBlock");
         const params: MetadataBlockNavigationParams = {
             accountName: component.history[0].author.name,
             datasetName: component.datasetName,

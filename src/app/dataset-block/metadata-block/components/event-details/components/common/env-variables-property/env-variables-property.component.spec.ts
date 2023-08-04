@@ -10,10 +10,7 @@ describe("EnvVariablesPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                EnvVariablesPropertyComponent,
-                DynamicTableComponent,
-            ],
+            declarations: [EnvVariablesPropertyComponent, DynamicTableComponent],
             imports: [MatTableModule, SharedTestModule],
         }).compileComponents();
 

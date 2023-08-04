@@ -6,22 +6,14 @@
         data-test-id="navigableValue"
         (click)="
             navigationTargetDataset &&
-                navigateToMetadataBlock(
-                    navigationTargetDataset.accountName,
-                    navigationTargetDataset.datasetName,
-                    value
-                )
+                navigateToMetadataBlock(navigationTargetDataset.accountName, navigationTargetDataset.datasetName, value)
         "
         >{{ value | slice: -8 }}</a
     >
 
-    <span
-        *ngIf="!navigationTargetDataset"
-        class="mr-1"
-        [title]="value"
-        data-test-id="notNavigableValue"
-        >{{ value | slice: -8 }}</span
-    >
+    <span *ngIf="!navigationTargetDataset" class="mr-1" [title]="value" data-test-id="notNavigableValue">{{
+        value | slice: -8
+    }}</span>
 
     <button
         *ngIf="showCopyButton"

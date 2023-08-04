@@ -1,14 +1,7 @@
 import { Injectable } from "@angular/core";
-import {
-    SetTransform,
-    SqlQueryStep,
-    TransformInput,
-} from "src/app/api/kamu.graphql.interface";
+import { SetTransform, SqlQueryStep, TransformInput } from "src/app/api/kamu.graphql.interface";
 import { parse } from "yaml";
-import {
-    EditSetTransformParseType,
-    SetTransFormYamlType,
-} from "./set-transform.types";
+import { EditSetTransformParseType, SetTransFormYamlType } from "./set-transform.types";
 import { BaseYamlEventService } from "src/app/common/base-yaml-event.service";
 
 @Injectable({
@@ -21,9 +14,7 @@ export class EditSetTransformService extends BaseYamlEventService {
     }
 
     public parseInputDatasets(datasets: Set<string>): TransformInput[] {
-        return Array.from(datasets).map(
-            (item) => JSON.parse(item) as TransformInput,
-        );
+        return Array.from(datasets).map((item) => JSON.parse(item) as TransformInput);
     }
 
     public transformEventAsObject(

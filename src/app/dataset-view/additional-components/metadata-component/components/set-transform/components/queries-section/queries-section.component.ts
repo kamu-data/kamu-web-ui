@@ -12,8 +12,7 @@ import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/component
 })
 export class QueriesSectionComponent {
     @Input() public queries: Omit<SqlQueryStep, "__typename">[];
-    public readonly sqlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
-        sqlEditorOptions;
+    public readonly sqlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions = sqlEditorOptions;
 
     constructor(private scroll: ViewportScroller) {}
 

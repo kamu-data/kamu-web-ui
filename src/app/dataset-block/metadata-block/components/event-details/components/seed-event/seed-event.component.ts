@@ -13,10 +13,7 @@ import { Clipboard } from "@angular/cdk/clipboard";
 export class SeedEventComponent {
     @Input() public event: Seed;
 
-    constructor(
-        private clipboard: Clipboard,
-        private toastService: ToastrService,
-    ) {}
+    constructor(private clipboard: Clipboard, private toastService: ToastrService) {}
 
     public datasetKind(kind: DatasetKind): string {
         return DataHelpers.capitalizeFirstLetter(kind);

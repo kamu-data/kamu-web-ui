@@ -1,25 +1,9 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    Input,
-    OnInit,
-} from "@angular/core";
-import {
-    ControlContainer,
-    FormArray,
-    FormBuilder,
-    FormGroup,
-    FormGroupDirective,
-    Validators,
-} from "@angular/forms";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ControlContainer, FormArray, FormBuilder, FormGroup, FormGroupDirective, Validators } from "@angular/forms";
 import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import {
-    DecompressFormat,
-    EditFormType,
-    PrepareKind,
-} from "../../add-polling-source-form.types";
+import { DecompressFormat, EditFormType, PrepareKind } from "../../add-polling-source-form.types";
 import { EditPollingSourceService } from "../../edit-polling-source.service";
 
 @Component({
@@ -27,9 +11,7 @@ import { EditPollingSourceService } from "../../edit-polling-source.service";
     templateUrl: "./prepare-step.component.html",
     styleUrls: ["./prepare-step.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    viewProviders: [
-        { provide: ControlContainer, useExisting: FormGroupDirective },
-    ],
+    viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
 })
 export class PrepareStepComponent extends BaseComponent implements OnInit {
     @Input() public eventYamlByHash: MaybeNull<string> = null;
@@ -48,9 +30,7 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
         this.parentForm = this.rootFormGroupDirective.form;
         if (this.eventYamlByHash) {
-            this.setPollingSourceEvent = this.editService.parseEventFromYaml(
-                this.eventYamlByHash,
-            );
+            this.setPollingSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
             this.initExistingPrepareStep(this.setPollingSourceEvent);
         }
     }
@@ -59,10 +39,7 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
         let group: FormGroup;
         if (event.prepare && this.sectionForm.length === 0) {
             event.prepare.forEach((item) => {
-                if (
-                    item.kind === PrepareKind.PIPE &&
-                    Array.isArray(item.command)
-                ) {
+                if (item.kind === PrepareKind.PIPE && Array.isArray(item.command)) {
                     group = this.fb.group({
                         kind: this.fb.control(PrepareKind.PIPE),
                         command: this.fb.control(

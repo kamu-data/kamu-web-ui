@@ -14,12 +14,7 @@ describe("OrderFieldComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [OrderFieldComponent, TooltipIconComponent],
-            imports: [
-                NgbTooltipModule,
-                ReactiveFormsModule,
-                FormsModule,
-                SharedTestModule,
-            ],
+            imports: [NgbTooltipModule, ReactiveFormsModule, FormsModule, SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(OrderFieldComponent);
@@ -36,16 +31,10 @@ describe("OrderFieldComponent", () => {
     it("should check switch control", () => {
         expect(component.form.value).toEqual({ order: SourceOrder.NONE });
 
-        emitClickOnElementByDataTestId(
-            fixture,
-            `radio-${SourceOrder.BY_NAME}-control`,
-        );
+        emitClickOnElementByDataTestId(fixture, `radio-${SourceOrder.BY_NAME}-control`);
         expect(component.form.value).toEqual({ order: SourceOrder.BY_NAME });
 
-        emitClickOnElementByDataTestId(
-            fixture,
-            `radio-${SourceOrder.BY_EVENT_TIME}-control`,
-        );
+        emitClickOnElementByDataTestId(fixture, `radio-${SourceOrder.BY_EVENT_TIME}-control`);
         expect(component.form.value).toEqual({
             order: SourceOrder.BY_EVENT_TIME,
         });

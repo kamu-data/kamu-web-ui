@@ -1,27 +1,17 @@
 <nav aria-label="Page navigation example">
     <ul class="pagination">
         <li class="page-item" [class.disabled]="pageIndex === 1">
-            <a
-                class="page-link"
-                title="Go to previous page"
-                data-test-id="backward-link"
-                (click)="pageChangeBackward()"
+            <a class="page-link" title="Go to previous page" data-test-id="backward-link" (click)="pageChangeBackward()"
                 ><mat-icon>navigate_before</mat-icon></a
             >
         </li>
         <li class="page-item">
-            <span
-                class="page-link"
-                title="You are on page as of {{ date }} {{ hash | slice: -8 }}"
+            <span class="page-link" title="You are on page as of {{ date }} {{ hash | slice: -8 }}"
                 >As of {{ date }} {{ hash | slice: -8 }}</span
             >
         </li>
         <li class="page-item" [class.disabled]="pageIndex === totalSizeOfPages">
-            <a
-                class="page-link"
-                title="Go to next page"
-                data-test-id="forward-link"
-                (click)="pageChangeForward()"
+            <a class="page-link" title="Go to next page" data-test-id="forward-link" (click)="pageChangeForward()"
                 ><span><mat-icon>navigate_next</mat-icon></span></a
             >
         </li>

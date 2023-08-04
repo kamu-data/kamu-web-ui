@@ -47,14 +47,10 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public ngOnChanges(changes: SimpleChanges): void {
         const clusters: SimpleChange = changes.clusters;
         const nodes: SimpleChange = changes.nodes;
-        if (
-            clusters.currentValue &&
-            clusters.currentValue !== clusters.previousValue
-        ) {
+        if (clusters.currentValue && clusters.currentValue !== clusters.previousValue) {
             const currentClusters = clusters.currentValue as ClusterNode[];
             this.graphClusters = currentClusters.filter(
-                (cluster: ClusterNode) =>
-                    cluster.childNodeIds && cluster.childNodeIds.length !== 0,
+                (cluster: ClusterNode) => cluster.childNodeIds && cluster.childNodeIds.length !== 0,
             );
         }
         if (nodes.currentValue && nodes.currentValue !== nodes.previousValue) {

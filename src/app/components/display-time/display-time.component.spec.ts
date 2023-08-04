@@ -41,11 +41,7 @@ describe("DisplayTimeComponent", () => {
         timekeeper.freeze(FROZEN_TIME);
     });
 
-    function testRelativeTime(
-        expectedResult: string,
-        date: Date,
-        threshold?: moment.argThresholdOpts,
-    ): void {
+    function testRelativeTime(expectedResult: string, date: Date, threshold?: moment.argThresholdOpts): void {
         component.data = date.toISOString();
         component.threshold = threshold;
         expect(component.relativeTime).toBe(expectedResult);

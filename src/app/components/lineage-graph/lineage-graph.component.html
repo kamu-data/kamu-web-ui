@@ -52,10 +52,7 @@
             >
                 {{ node.label }}
             </svg:text>
-            <svg:g
-                *ngIf="!node.data.isRoot"
-                [attr.transform]="'translate(' + node.dimension.width + ', 0)'"
-            >
+            <svg:g *ngIf="!node.data.isRoot" [attr.transform]="'translate(' + node.dimension.width + ', 0)'">
                 <svg:rect
                     x="-20"
                     y="-12"
@@ -81,11 +78,7 @@
 
     <ng-template #linkTemplate let-link>
         <svg:g class="edge">
-            <svg:path
-                class="line"
-                stroke-width="2"
-                marker-end="url(#arrow)"
-            ></svg:path>
+            <svg:path class="line" stroke-width="2" marker-end="url(#arrow)"></svg:path>
             <!--svg:text class="edge-label" text-anchor="middle">
                 <textPath
                     class="text-path"

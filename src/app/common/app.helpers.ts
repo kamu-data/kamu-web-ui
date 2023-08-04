@@ -41,15 +41,11 @@ export function momentConvertDatetoLocalWithFormat(dateParams: {
     const stringDate: Date = new Date(dateParams.date);
 
     // solution for all browsers
-    const UTCStringDate: string = moment(stringDate).format(
-        "YYYY-MM-DDTHH:mm:ss.sss",
-    );
+    const UTCStringDate: string = moment(stringDate).format("YYYY-MM-DDTHH:mm:ss.sss");
     const ISOStringDate: string = new Date(String(UTCStringDate)).toISOString();
 
     if (dateParams.isTextDate) {
-        if (
-            moment(dateParams.date).isSame(moment().subtract(1, "day"), "day")
-        ) {
+        if (moment(dateParams.date).isSame(moment().subtract(1, "day"), "day")) {
             return "Yesterday";
         }
         if (moment(dateParams.date).isSame(moment(), "day")) {
@@ -60,8 +56,6 @@ export function momentConvertDatetoLocalWithFormat(dateParams: {
     return moment(ISOStringDate).format(dateParams.format);
 }
 
-export function parseCurrentSchema(
-    data: MaybeNull<DataSchema | undefined>,
-): MaybeNull<DatasetSchema> {
+export function parseCurrentSchema(data: MaybeNull<DataSchema | undefined>): MaybeNull<DatasetSchema> {
     return data ? (JSON.parse(data.content) as DatasetSchema) : null;
 }

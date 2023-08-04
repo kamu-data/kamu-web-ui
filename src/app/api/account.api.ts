@@ -6,9 +6,7 @@ import { AccountDetailsFragment } from "./kamu.graphql.interface";
 
 @Injectable({ providedIn: "root" })
 export class AccountApi {
-    public getAccountInfoByName(
-        name: string,
-    ): Observable<AccountDetailsFragment> {
+    public getAccountInfoByName(name: string): Observable<AccountDetailsFragment> {
         return of({ ...mockAccountDetails, login: name });
     }
 }

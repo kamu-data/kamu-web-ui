@@ -20,12 +20,7 @@ export class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPolli
                             section === SetPollingSourceSection.FETCH;
                         result.push({
                             title: section,
-                            rows: this.buildEventRows(
-                                event,
-                                SET_POLLING_SOURCE_DESCRIPTORS,
-                                section,
-                                allowTypenameKey,
-                            ),
+                            rows: this.buildEventRows(event, SET_POLLING_SOURCE_DESCRIPTORS, section, allowTypenameKey),
                         });
                         break;
                     }
@@ -36,11 +31,7 @@ export class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPolli
                             event.prepare.forEach((item, index) => {
                                 const rows: EventRow[] = [];
                                 Object.entries(item).forEach(([key, value]) => {
-                                    if (
-                                        key !== "__typename" &&
-                                        item.__typename &&
-                                        event.__typename
-                                    ) {
+                                    if (key !== "__typename" && item.__typename && event.__typename) {
                                         rows.push(
                                             this.buildSupportedRow(
                                                 event.__typename,
@@ -53,11 +44,7 @@ export class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPolli
                                     }
                                 });
                                 result.push({
-                                    title:
-                                        section +
-                                        (numPrepareParts > 1
-                                            ? `#${index + 1}`
-                                            : ""),
+                                    title: section + (numPrepareParts > 1 ? `#${index + 1}` : ""),
                                     rows,
                                 });
                             });

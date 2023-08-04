@@ -1,16 +1,11 @@
 <ul class="nav searchAdditionalButtons__nav">
-    <ng-template
-        ngFor
-        let-searchAdditionalData
-        [ngForOf]="searchAdditionalButtonsData"
-    >
+    <ng-template ngFor let-searchAdditionalData [ngForOf]="searchAdditionalButtonsData">
         <li class="nav-item mr-2 pt-2">
             <div class="btnGroup-parent nav">
                 <button
                     (click)="onClickButton(searchAdditionalData.textButton)"
                     [classList]="
-                        searchAdditionalData.additionalOptions &&
-                        searchAdditionalData.additionalOptions.options
+                        searchAdditionalData.additionalOptions && searchAdditionalData.additionalOptions.options
                             ? 'starred rounded-left-2 border-right-0 additionalOptions-btn btn-sm btn btnGroup-item d-flex justify-content-between align-items-center'
                             : 'starred rounded-2 btn-sm btn btnGroup-item d-flex justify-content-between align-items-center'
                     "
@@ -29,9 +24,7 @@
                             [attr.d]="searchAdditionalData.iconSvgPath"
                         ></path>
                     </svg>
-                    <span class="d-inline mr-2">{{
-                        searchAdditionalData.textButton
-                    }}</span>
+                    <span class="d-inline mr-2">{{ searchAdditionalData.textButton }}</span>
                     <span
                         id="repo-stars-counter-unstar"
                         aria-label="2 users starred this repository"
@@ -50,20 +43,13 @@
                         class="additionalOptions-btn mat-menu-trigger starred rounded-right-2 border-1 border btn-sm btn btnGroup-item d-flex justify-content-center align-items-center mat-button mat-icon-button mat-button-base"
                         [matMenuTriggerFor]="menu2"
                     >
-                        <mat-icon class="arrowDropDown"
-                            >arrow_drop_down</mat-icon
-                        >
+                        <mat-icon class="arrowDropDown">arrow_drop_down</mat-icon>
                     </button>
                     <mat-menu #menu2="matMenu">
-                        <div
-                            class="SelectMenu-modal notifications-component-menu-modal"
-                        >
+                        <div class="SelectMenu-modal notifications-component-menu-modal">
                             <header class="SelectMenu-header">
                                 <h3 class="SelectMenu-title">
-                                    {{
-                                        searchAdditionalData.additionalOptions
-                                            .title
-                                    }}
+                                    {{ searchAdditionalData.additionalOptions.title }}
                                 </h3>
                                 <button
                                     class="SelectMenu-closeButton"
@@ -86,10 +72,7 @@
                                     <ng-template
                                         ngFor
                                         let-option
-                                        [ngForOf]="
-                                            searchAdditionalData
-                                                .additionalOptions.options
-                                        "
+                                        [ngForOf]="searchAdditionalData.additionalOptions.options"
                                     >
                                         <button
                                             type="submit"
@@ -97,9 +80,7 @@
                                             value="included"
                                             class="SelectMenu-item flex-items-start"
                                             role="menuitemradio"
-                                            [attr.aria-checked]="
-                                                option.isSelected
-                                            "
+                                            [attr.aria-checked]="option.isSelected"
                                             data-targets="notifications-list-subscription-form.subscriptionButtons"
                                         >
                                             <span class="f5">
@@ -116,9 +97,7 @@
                                                 <div class="f5 text-bold">
                                                     {{ option.title }}
                                                 </div>
-                                                <div
-                                                    class="text-small color-fg-muted text-normal pb-1"
-                                                >
+                                                <div class="text-small color-fg-muted text-normal pb-1">
                                                     {{ option.text }}
                                                 </div>
                                             </div>

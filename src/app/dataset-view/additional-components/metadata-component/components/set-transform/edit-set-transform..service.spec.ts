@@ -2,14 +2,8 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { TestBed } from "@angular/core/testing";
 import { EditSetTransformService } from "./edit-set-transform..service";
 import { Apollo, ApolloModule } from "apollo-angular";
-import {
-    SqlQueryStep,
-    TransformInput,
-} from "src/app/api/kamu.graphql.interface";
-import {
-    mockParseSetTransFormYamlType,
-    mockSetTransformEventYaml,
-} from "./mock.data";
+import { SqlQueryStep, TransformInput } from "src/app/api/kamu.graphql.interface";
+import { mockParseSetTransFormYamlType, mockSetTransformEventYaml } from "./mock.data";
 
 describe("EditSetTransformService", () => {
     let service: EditSetTransformService;
@@ -45,10 +39,7 @@ describe("EditSetTransformService", () => {
             '{"id":"did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX","name":"account.tokens.portfolio.usd"}',
         ]);
         const engine = "Spark";
-        const queries = [{ alias: "alias1", query: "query1" }] as Omit<
-            SqlQueryStep,
-            "__typename"
-        >[];
+        const queries = [{ alias: "alias1", query: "query1" }] as Omit<SqlQueryStep, "__typename">[];
         const result = {
             inputs: service.parseInputDatasets(inputDatasets),
             transform: {
@@ -57,9 +48,7 @@ describe("EditSetTransformService", () => {
                 queries,
             },
         };
-        expect(
-            service.transformEventAsObject(inputDatasets, engine, queries),
-        ).toEqual(result);
+        expect(service.transformEventAsObject(inputDatasets, engine, queries)).toEqual(result);
     });
 
     it("should check #parseEventFromYaml() method", () => {

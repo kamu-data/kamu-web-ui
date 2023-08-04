@@ -2,19 +2,11 @@ import { AuthenticationError } from "./common/errors";
 import { throwError } from "rxjs";
 import { AccountTabs } from "./auth/account/account.constants";
 import { NavigationService } from "./services/navigation.service";
-import {
-    ChangeDetectionStrategy,
-    Component,
-    HostListener,
-    OnInit,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostListener, OnInit } from "@angular/core";
 import AppValues from "./common/app.values";
 import { filter, map } from "rxjs/operators";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
-import {
-    DatasetAutocompleteItem,
-    TypeNames,
-} from "./interface/search.interface";
+import { DatasetAutocompleteItem, TypeNames } from "./interface/search.interface";
 import { AuthApi } from "./api/auth.api";
 import { ModalService } from "./components/modal/modal.service";
 import { BaseComponent } from "./common/base.component";
@@ -24,15 +16,9 @@ import { MaybeNull } from "./common/app.types";
 import _ from "lodash";
 import { isMobileView, promiseWithCatch } from "./common/app.helpers";
 
-export const ALL_URLS_WITHOUT_HEADER: string[] = [
-    ProjectLinks.URL_LOGIN,
-    ProjectLinks.URL_GITHUB_CALLBACK,
-];
+export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
 
-export const ALL_URLS_WITHOUT_ACCESS_TOKEN: string[] = [
-    ProjectLinks.URL_LOGIN,
-    ProjectLinks.URL_GITHUB_CALLBACK,
-];
+export const ALL_URLS_WITHOUT_ACCESS_TOKEN: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
 
 @Component({
     selector: "app-root",
@@ -74,18 +60,12 @@ export class AppComponent extends BaseComponent implements OnInit {
                     map((event) => event as RouterEvent),
                 )
                 .subscribe((event: RouterEvent) => {
-                    this.isHeaderVisible = this.shouldHeaderBeVisible(
-                        event.url,
-                    );
+                    this.isHeaderVisible = this.shouldHeaderBeVisible(event.url);
                 }),
 
-            this.authApi.onUserChanges.subscribe(
-                (user: MaybeNull<AccountDetailsFragment>) => {
-                    this.user = user
-                        ? _.cloneDeep(user)
-                        : AppComponent.AnonymousAccountInfo;
-                },
-            ),
+            this.authApi.onUserChanges.subscribe((user: MaybeNull<AccountDetailsFragment>) => {
+                this.user = user ? _.cloneDeep(user) : AppComponent.AnonymousAccountInfo;
+            }),
         );
         this.authentification();
     }
@@ -94,18 +74,9 @@ export class AppComponent extends BaseComponent implements OnInit {
         if (ALL_URLS_WITHOUT_ACCESS_TOKEN.includes(this.router.url)) {
             return;
         } else {
-            const accessToken: string | null = localStorage.getItem(
-                AppValues.LOCAL_STORAGE_ACCESS_TOKEN,
-            );
-            if (
-                typeof accessToken === "string" &&
-                !this.authApi.isAuthenticated
-            ) {
-                this.trackSubscription(
-                    this.authApi
-                        .fetchUserInfoFromAccessToken(accessToken)
-                        .subscribe(),
-                );
+            const accessToken: string | null = localStorage.getItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
+            if (typeof accessToken === "string" && !this.authApi.isAuthenticated) {
+                this.trackSubscription(this.authApi.fetchUserInfoFromAccessToken(accessToken).subscribe());
                 return;
             }
         }
@@ -116,9 +87,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     private shouldHeaderBeVisible(url: string): boolean {
-        return !ALL_URLS_WITHOUT_HEADER.some((item) =>
-            url.toLowerCase().includes(item),
-        );
+        return !ALL_URLS_WITHOUT_HEADER.some((item) => url.toLowerCase().includes(item));
     }
 
     public onSelectDataset(item: DatasetAutocompleteItem): void {
@@ -153,27 +122,17 @@ export class AppComponent extends BaseComponent implements OnInit {
 
     public onUserProfile(): void {
         if (this.authApi.currentUser?.login) {
-            this.navigationService.navigateToOwnerView(
-                this.authApi.currentUser.login,
-                AccountTabs.overview,
-            );
+            this.navigationService.navigateToOwnerView(this.authApi.currentUser.login, AccountTabs.overview);
         } else {
-            throwError(
-                new AuthenticationError([new Error("Login is undefined")]),
-            );
+            throwError(new AuthenticationError([new Error("Login is undefined")]));
         }
     }
 
     public onUserDatasets(): void {
         if (this.authApi.currentUser?.login) {
-            this.navigationService.navigateToOwnerView(
-                this.authApi.currentUser.login,
-                AccountTabs.datasets,
-            );
+            this.navigationService.navigateToOwnerView(this.authApi.currentUser.login, AccountTabs.datasets);
         } else {
-            throwError(
-                new AuthenticationError([new Error("Login is undefined")]),
-            );
+            throwError(new AuthenticationError([new Error("Login is undefined")]));
         }
     }
 
@@ -199,9 +158,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         if (this.authApi.currentUser?.login) {
             this.navigationService.navigateToSettings();
         } else {
-            throwError(
-                new AuthenticationError([new Error("Login is undefined")]),
-            );
+            throwError(new AuthenticationError([new Error("Login is undefined")]));
         }
     }
 

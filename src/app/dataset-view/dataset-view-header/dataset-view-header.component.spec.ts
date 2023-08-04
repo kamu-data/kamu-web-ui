@@ -22,12 +22,7 @@ describe("DatasetViewHeaderComponent", () => {
                 SearchAdditionalButtonsComponent,
                 SearchAdditionalButtonsNavComponent,
             ],
-            imports: [
-                MatIconModule,
-                MatMenuModule,
-                AngularSvgIconModule.forRoot(),
-                HttpClientTestingModule,
-            ],
+            imports: [MatIconModule, MatMenuModule, AngularSvgIconModule.forRoot(), HttpClientTestingModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetViewHeaderComponent);
@@ -43,14 +38,9 @@ describe("DatasetViewHeaderComponent", () => {
 
     it("should check onClickSearchAdditionalButtonEmit is emit", () => {
         const methodName = "test name";
-        const onClickSearchAdditionalButtonEmitSpy = spyOn(
-            component.onClickSearchAdditionalButtonEmit,
-            "emit",
-        );
+        const onClickSearchAdditionalButtonEmitSpy = spyOn(component.onClickSearchAdditionalButtonEmit, "emit");
         component.onClickSearchAdditionalButton(methodName);
-        expect(onClickSearchAdditionalButtonEmitSpy).toHaveBeenCalledWith(
-            methodName,
-        );
+        expect(onClickSearchAdditionalButtonEmitSpy).toHaveBeenCalledWith(methodName);
     });
 
     it("should check showOwnerPageEmit is emit", () => {
@@ -60,10 +50,7 @@ describe("DatasetViewHeaderComponent", () => {
     });
 
     it("should check navigate to dataset", () => {
-        const navigateToDatasetViewSpy = spyOn(
-            navigationService,
-            "navigateToDatasetView",
-        );
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         emitClickOnElementByDataTestId(fixture, "show-dataset-link");
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(mockDatasetInfo);
     });

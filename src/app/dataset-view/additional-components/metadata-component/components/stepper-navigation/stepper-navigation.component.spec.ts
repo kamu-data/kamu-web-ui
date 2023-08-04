@@ -23,25 +23,17 @@ describe("StepperNavigationComponent", () => {
     });
 
     it("should check next button is working", () => {
-        const changeStepEmitterSpy = spyOn(
-            component.changeStepEmitter,
-            "emit",
-        ).and.callThrough();
+        const changeStepEmitterSpy = spyOn(component.changeStepEmitter, "emit").and.callThrough();
         component.prevStep = null;
         component.validStep = true;
         component.nextStep = SetPollingSourceSection.READ;
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "next-button");
-        expect(changeStepEmitterSpy).toHaveBeenCalledWith(
-            SetPollingSourceSection.READ,
-        );
+        expect(changeStepEmitterSpy).toHaveBeenCalledWith(SetPollingSourceSection.READ);
     });
 
     it("should check save button is working", () => {
-        const changeStepEmitterSpy = spyOn(
-            component.saveEventEmitter,
-            "emit",
-        ).and.callThrough();
+        const changeStepEmitterSpy = spyOn(component.saveEventEmitter, "emit").and.callThrough();
         component.prevStep = SetPollingSourceSection.READ;
         component.validStep = true;
         component.nextStep = null;
@@ -51,10 +43,7 @@ describe("StepperNavigationComponent", () => {
     });
 
     it("should check edit button is working", () => {
-        const changeStepEmitterSpy = spyOn(
-            component.editYamlEmitter,
-            "emit",
-        ).and.callThrough();
+        const changeStepEmitterSpy = spyOn(component.editYamlEmitter, "emit").and.callThrough();
         component.prevStep = SetPollingSourceSection.READ;
         component.validStep = true;
         component.nextStep = null;

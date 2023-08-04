@@ -1,16 +1,9 @@
 <div class="d-flex p-4">
     <div class="flex-grow-1 ms-2 text-center">
-        <span class="fs-5 fw-bold">
-            {{ isDetailsExist ? "Edit" : "Add" }} dataset details</span
-        >
+        <span class="fs-5 fw-bold"> {{ isDetailsExist ? "Edit" : "Add" }} dataset details</span>
     </div>
     <div>
-        <button
-            type="button"
-            class="btn-close"
-            aria-label="Close"
-            (click)="activeModal.close()"
-        ></button>
+        <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()"></button>
     </div>
 </div>
 <div class="px-4">

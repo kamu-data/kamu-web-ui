@@ -1,11 +1,5 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import {
-    FormArray,
-    FormBuilder,
-    FormControl,
-    FormGroupDirective,
-    ReactiveFormsModule,
-} from "@angular/forms";
+import { FormArray, FormBuilder, FormControl, FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
 import { BaseStepComponent } from "./base-step.component";
 import { FetchKind } from "../../add-polling-source-form.types";
 import { FETCH_FORM_DATA } from "../data/fetch-form-data";
@@ -35,12 +29,7 @@ describe("BaseStepComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [BaseStepComponent, TooltipIconComponent],
-            imports: [
-                ReactiveFormsModule,
-                NgbTooltipModule,
-                PollingSourceFormComponentsModule,
-                SharedTestModule,
-            ],
+            imports: [ReactiveFormsModule, NgbTooltipModule, PollingSourceFormComponentsModule, SharedTestModule],
             providers: [
                 Apollo,
                 DatasetApi,

@@ -7,16 +7,9 @@
         <div *ngFor="let key of items?.controls; index as i">
             <div class="row mt-3">
                 <div class="col-md-10">
-                    <input
-                        class="form-control"
-                        [placeholder]="placeholder"
-                        formControlName="{{ i }}"
-                        trim
-                    />
+                    <input class="form-control" [placeholder]="placeholder" formControlName="{{ i }}" trim />
                 </div>
-                <div
-                    class="col-md-2 d-flex justify-content-end align-items-center"
-                >
+                <div class="col-md-2 d-flex justify-content-end align-items-center">
                     <button
                         class="btn btn-light"
                         type="button"

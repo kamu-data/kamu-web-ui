@@ -1,15 +1,5 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-} from "@angular/core";
-import {
-    EditFormType,
-    PreprocessStepValue,
-} from "../../add-polling-source-form.types";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { EditFormType, PreprocessStepValue } from "../../add-polling-source-form.types";
 import { MaybeNull } from "src/app/common/app.types";
 import { EditPollingSourceService } from "../../edit-polling-source.service";
 import { BaseComponent } from "src/app/common/base.component";
@@ -33,9 +23,7 @@ export class PreprocessStepComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         if (this.eventYamlByHash) {
-            this.setPollingSourceEvent = this.editService.parseEventFromYaml(
-                this.eventYamlByHash,
-            );
+            this.setPollingSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
             if (this.setPollingSourceEvent.preprocess) {
                 this.showPreprocessStepEmitter.emit(true);
                 this.initExistingQueries();
@@ -68,12 +56,9 @@ export class PreprocessStepComponent extends BaseComponent implements OnInit {
     private initExistingQueries(): void {
         if (this.preprocessValue.queries.length === 0) {
             if (this.setPollingSourceEvent?.preprocess?.query) {
-                this.initDefaultQueriesSection(
-                    this.setPollingSourceEvent.preprocess.query,
-                );
+                this.initDefaultQueriesSection(this.setPollingSourceEvent.preprocess.query);
             } else if (this.setPollingSourceEvent?.preprocess?.queries.length) {
-                this.preprocessValue.queries =
-                    this.setPollingSourceEvent.preprocess.queries;
+                this.preprocessValue.queries = this.setPollingSourceEvent.preprocess.queries;
             }
         }
     }

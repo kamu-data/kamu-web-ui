@@ -9,10 +9,7 @@ import {
 } from "@angular/core";
 
 import { DynamicComponent } from "./dynamic.component";
-import {
-    ModalCommandInterface,
-    ModalComponentType,
-} from "../../interface/modal.interface";
+import { ModalCommandInterface, ModalComponentType } from "../../interface/modal.interface";
 import { ModalDialogComponent } from "./modal-dialog.component";
 import { ModalImageComponent } from "./modal-image.component";
 import { ModalService } from "./modal.service";
@@ -24,12 +21,7 @@ import { BaseComponent } from "src/app/common/base.component";
 @Component({
     selector: "modal",
     template: `
-        <div
-            class="modal__container"
-            #container
-            tabindex="1"
-            [ngClass]="{ modal__invisible: !isVisible }"
-        ></div>
+        <div class="modal__container" #container tabindex="1" [ngClass]="{ modal__invisible: !isVisible }"></div>
     `,
 })
 export class ModalComponent extends BaseComponent implements OnInit {
@@ -56,12 +48,10 @@ export class ModalComponent extends BaseComponent implements OnInit {
 
     ngOnInit() {
         this.trackSubscription(
-            this.modalService
-                .getCommand()
-                .subscribe((command: ModalCommandInterface) => {
-                    this._execute(command);
-                    this.cdr.markForCheck();
-                }),
+            this.modalService.getCommand().subscribe((command: ModalCommandInterface) => {
+                this._execute(command);
+                this.cdr.markForCheck();
+            }),
         );
     }
 
@@ -76,10 +66,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
     _renderModal(command: ModalCommandInterface) {
         const componentType = this._getComponentType(command.type);
 
-        const factory =
-            this.componentFactoryResolver.resolveComponentFactory(
-                componentType,
-            );
+        const factory = this.componentFactoryResolver.resolveComponentFactory(componentType);
         this.componentRef = this.container.createComponent(factory);
 
         const instance = this.componentRef.instance as DynamicComponent;

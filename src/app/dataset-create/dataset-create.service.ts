@@ -1,7 +1,4 @@
-import {
-    CreateDatasetFromSnapshotMutation,
-    CreateEmptyDatasetMutation,
-} from "./../api/kamu.graphql.interface";
+import { CreateDatasetFromSnapshotMutation, CreateEmptyDatasetMutation } from "./../api/kamu.graphql.interface";
 import { Observable, Subject } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { Injectable } from "@angular/core";
@@ -22,72 +19,38 @@ export class AppDatasetCreateService {
         return this.errorMessageChanges$.asObservable();
     }
 
-    public constructor(
-        private datasetApi: DatasetApi,
-        private navigationService: NavigationService,
-    ) {}
+    public constructor(private datasetApi: DatasetApi, private navigationService: NavigationService) {}
 
-    public createEmptyDataset(
-        accountId: string,
-        datasetKind: DatasetKind,
-        datasetName: string,
-    ): Observable<void> {
-        return this.datasetApi
-            .createEmptyDataset(accountId, datasetKind, datasetName)
-            .pipe(
-                map((data: CreateEmptyDatasetMutation | null | undefined) => {
-                    if (
-                        data?.datasets.createEmpty.__typename ===
-                        "CreateDatasetResultSuccess"
-                    ) {
-                        this.navigationService.navigateToDatasetView({
-                            accountName: accountId,
-                            datasetName,
-                            tab: DatasetViewTypeEnum.Overview,
-                        });
-                    } else {
-                        if (data)
-                            this.errorMessageChanges(
-                                data.datasets.createEmpty.message,
-                            );
-                    }
-                }),
-            );
+    public createEmptyDataset(accountId: string, datasetKind: DatasetKind, datasetName: string): Observable<void> {
+        return this.datasetApi.createEmptyDataset(accountId, datasetKind, datasetName).pipe(
+            map((data: CreateEmptyDatasetMutation | null | undefined) => {
+                if (data?.datasets.createEmpty.__typename === "CreateDatasetResultSuccess") {
+                    this.navigationService.navigateToDatasetView({
+                        accountName: accountId,
+                        datasetName,
+                        tab: DatasetViewTypeEnum.Overview,
+                    });
+                } else {
+                    if (data) this.errorMessageChanges(data.datasets.createEmpty.message);
+                }
+            }),
+        );
     }
 
-    public createDatasetFromSnapshot(
-        accountId: string,
-        snapshot: string,
-    ): Observable<void> {
-        return this.datasetApi
-            .createDatasetFromSnapshot(accountId, snapshot)
-            .pipe(
-                map(
-                    (
-                        data:
-                            | CreateDatasetFromSnapshotMutation
-                            | null
-                            | undefined,
-                    ) => {
-                        if (
-                            data?.datasets.createFromSnapshot.__typename ===
-                            "CreateDatasetResultSuccess"
-                        ) {
-                            const datasetName = data.datasets.createFromSnapshot
-                                .dataset.name as string;
-                            this.navigationService.navigateToDatasetView({
-                                accountName: accountId,
-                                datasetName,
-                                tab: DatasetViewTypeEnum.Overview,
-                            });
-                        } else {
-                            if (data)
-                                this.errorMessageChanges(
-                                    data.datasets.createFromSnapshot.message,
-                                );
-                        }
-                    },
-                ),
-            );
+    public createDatasetFromSnapshot(accountId: string, snapshot: string): Observable<void> {
+        return this.datasetApi.createDatasetFromSnapshot(accountId, snapshot).pipe(
+            map((data: CreateDatasetFromSnapshotMutation | null | undefined) => {
+                if (data?.datasets.createFromSnapshot.__typename === "CreateDatasetResultSuccess") {
+                    const datasetName = data.datasets.createFromSnapshot.dataset.name as string;
+                    this.navigationService.navigateToDatasetView({
+                        accountName: accountId,
+                        datasetName,
+                        tab: DatasetViewTypeEnum.Overview,
+                    });
+                } else {
+                    if (data) this.errorMessageChanges(data.datasets.createFromSnapshot.message);
+                }
+            }),
+        );
     }
 }

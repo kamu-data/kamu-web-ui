@@ -47,16 +47,12 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     }
 
     public get unmodifiedDetails(): boolean {
-        return (
-            this.description === this.initialDescription &&
-            isEqual(this.keywords, this.initialKeywords)
-        );
+        return this.description === this.initialDescription && isEqual(this.keywords, this.initialKeywords);
     }
 
     ngOnInit(): void {
         if (this.currentState?.overview.metadata.currentInfo.keywords) {
-            this.initialKeywords =
-                this.currentState.overview.metadata.currentInfo.keywords;
+            this.initialKeywords = this.currentState.overview.metadata.currentInfo.keywords;
             this.currentState.overview.metadata.currentInfo.keywords.reduce(
                 (set: Set<string>, keyword: string) => set.add(keyword),
                 this.keywordsSet,
@@ -66,8 +62,7 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
         }
 
         this.currentState?.overview.metadata.currentInfo.description
-            ? (this.description = this.initialDescription =
-                  this.currentState.overview.metadata.currentInfo.description)
+            ? (this.description = this.initialDescription = this.currentState.overview.metadata.currentInfo.description)
             : (this.description = "");
     }
 
@@ -78,10 +73,7 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
                     .commitEventToDataset(
                         this.datasetBasics.owner.name,
                         this.datasetBasics.name as string,
-                        this.yamlEventService.buildYamlSetInfoEvent(
-                            this.description,
-                            this.keywords,
-                        ),
+                        this.yamlEventService.buildYamlSetInfoEvent(this.description, this.keywords),
                     )
                     .subscribe(),
             );

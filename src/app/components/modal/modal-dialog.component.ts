@@ -5,36 +5,22 @@ import { DynamicComponent } from "./dynamic.component";
     selector: "modal-dialog",
     template: `
         <div class="modal__content" (click)="hideAll()">
-            <div
-                [ngClass]="
-                    context && context.bigTextBlock
-                        ? 'modal__bigtest-dialog'
-                        : 'modal__dialog'
-                "
-            >
+            <div [ngClass]="context && context.bigTextBlock ? 'modal__bigtest-dialog' : 'modal__dialog'">
                 <div class="modal__dialog__header-block">
                     <h2
                         class="modal__header"
                         data-test-id="modalHeader"
                         [ngClass]="{
-                            'modal__header-ok':
-                                context && context.status === 'ok',
-                            'modal__header-warning':
-                                context && context.status === 'warning',
-                            'modal__header-error':
-                                context && context.status === 'error',
-                            'modal__header-black':
-                                context && context.status === 'dialog_question'
+                            'modal__header-ok': context && context.status === 'ok',
+                            'modal__header-warning': context && context.status === 'warning',
+                            'modal__header-error': context && context.status === 'error',
+                            'modal__header-black': context && context.status === 'dialog_question'
                         }"
                     >
                         {{ context && context.title }}
                     </h2>
 
-                    <p
-                        *ngIf="context && context.message"
-                        class="modal__msg"
-                        data-test-id="modalMessage"
-                    >
+                    <p *ngIf="context && context.message" class="modal__msg" data-test-id="modalMessage">
                         {{ context.message }}
                     </p>
                 </div>

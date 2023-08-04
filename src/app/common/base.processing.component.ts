@@ -1,9 +1,6 @@
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { ModalService } from "./../components/modal/modal.service";
-import {
-    DatasetNavigationInterface,
-    DatasetViewTypeEnum,
-} from "../dataset-view/dataset-view.interface";
+import { DatasetNavigationInterface, DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
 import { NavigationService } from "./../services/navigation.service";
 import { promiseWithCatch } from "./app.helpers";
@@ -18,9 +15,7 @@ export class BaseProcessingComponent extends BaseComponent {
         this.navigationService.navigateToOwnerView(ownerName);
     }
 
-    public getDatasetNavigation(
-        datasetInfo: DatasetInfo,
-    ): DatasetNavigationInterface {
+    public getDatasetNavigation(datasetInfo: DatasetInfo): DatasetNavigationInterface {
         return {
             navigateToOverview: () => {
                 this.navigationService.navigateToDatasetView({
@@ -66,8 +61,7 @@ export class BaseProcessingComponent extends BaseComponent {
         const mapperMethod: {
             [key in searchAdditionalButtonsEnum]: () => void;
         } = {
-            [searchAdditionalButtonsEnum.DeriveFrom]: () =>
-                this.onClickDeriveFrom(),
+            [searchAdditionalButtonsEnum.DeriveFrom]: () => this.onClickDeriveFrom(),
 
             [searchAdditionalButtonsEnum.Starred]: () => null,
             [searchAdditionalButtonsEnum.UnWatch]: () => null,

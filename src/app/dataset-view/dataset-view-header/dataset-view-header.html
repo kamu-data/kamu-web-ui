@@ -1,8 +1,6 @@
 <div class="app-content--header">
     <div class="flex-auto min-width-0 width-fit mr-3">
-        <h1
-            class="d-flex flex-wrap flex-items-center wb-break-word f3 text-normal align-items-center"
-        >
+        <h1 class="d-flex flex-wrap flex-items-center wb-break-word f3 text-normal align-items-center">
             <svg-icon name="repository"></svg-icon>
             <span class="author flex-self-stretch" itemprop="author">
                 <a
@@ -16,18 +14,12 @@
             </span>
             <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
             <strong itemprop="name" class="mr-2 flex-self-stretch author">
-                <a
-                    data-pjax="#repo-content-pjax-container"
-                    (click)="showDatasetView()"
-                    data-test-id="show-dataset-link"
+                <a data-pjax="#repo-content-pjax-container" (click)="showDatasetView()" data-test-id="show-dataset-link"
                     >{{ datasetInfo.datasetName }}</a
                 >
             </strong>
 
-            <span></span
-            ><span class="label label--secondary v-align-middle mr-1"
-                >Public</span
-            >
+            <span></span><span class="label label--secondary v-align-middle mr-1">Public</span>
 
             <button
                 type="button"

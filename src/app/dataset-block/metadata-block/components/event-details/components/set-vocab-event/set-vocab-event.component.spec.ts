@@ -14,12 +14,7 @@ describe("SetVocabEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                SetVocabEventComponent,
-                CardsPropertyComponent,
-                BlockRowDataComponent,
-                TooltipIconComponent,
-            ],
+            declarations: [SetVocabEventComponent, CardsPropertyComponent, BlockRowDataComponent, TooltipIconComponent],
             imports: [MatIconModule, NgbTooltipModule, SharedTestModule],
         }).compileComponents();
 

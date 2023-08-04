@@ -1,11 +1,6 @@
 import { BaseComponent } from "src/app/common/base.component";
 import { MetadataBlockFragment } from "./../../../../api/kamu.graphql.interface";
-import {
-    ChangeDetectionStrategy,
-    Component,
-    Input,
-    OnInit,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { Observable } from "rxjs";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { BlockService } from "../../block.service";

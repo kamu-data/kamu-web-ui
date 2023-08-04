@@ -29,11 +29,9 @@ describe("LineageComponent", () => {
     });
 
     it("should check click on Node", () => {
-        const emitterSubscription$ = component.onClickNodeEmit
-            .pipe(first())
-            .subscribe((node: Node) => {
-                expect(node).toEqual(mockNode);
-            });
+        const emitterSubscription$ = component.onClickNodeEmit.pipe(first()).subscribe((node: Node) => {
+            expect(node).toEqual(mockNode);
+        });
 
         component.onClickNode(mockNode);
         expect(emitterSubscription$.closed).toBeTrue();

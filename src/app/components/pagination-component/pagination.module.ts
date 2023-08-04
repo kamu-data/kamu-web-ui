@@ -9,15 +9,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { PaginationComponent } from "./pagination.component";
 
 @NgModule({
-    imports: [
-        MatIconModule,
-        MatButtonModule,
-        MatDividerModule,
-        NgbModule,
-        CommonModule,
-        FormsModule,
-        MatChipsModule,
-    ],
+    imports: [MatIconModule, MatButtonModule, MatDividerModule, NgbModule, CommonModule, FormsModule, MatChipsModule],
     exports: [PaginationComponent],
     declarations: [PaginationComponent],
 })

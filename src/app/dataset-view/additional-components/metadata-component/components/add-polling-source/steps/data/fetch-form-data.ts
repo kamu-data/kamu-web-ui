@@ -25,10 +25,8 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 tooltip: SetPollingSourceToolipsTexts.EVENT_TIME,
                 options: {
                     innerTooltips: {
-                        fromMetadata:
-                            SetPollingSourceToolipsTexts.EVENT_TIME_FROM_METADATA,
-                        fromPath:
-                            SetPollingSourceToolipsTexts.EVENT_TIME_FROM_PATH,
+                        fromMetadata: SetPollingSourceToolipsTexts.EVENT_TIME_FROM_METADATA,
+                        fromPath: SetPollingSourceToolipsTexts.EVENT_TIME_FROM_PATH,
                     },
                 },
                 validators: {},
@@ -86,10 +84,8 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 validators: {},
                 options: {
                     innerTooltips: {
-                        fromMetadata:
-                            SetPollingSourceToolipsTexts.EVENT_TIME_FROM_METADATA,
-                        fromPath:
-                            SetPollingSourceToolipsTexts.EVENT_TIME_FROM_PATH,
+                        fromMetadata: SetPollingSourceToolipsTexts.EVENT_TIME_FROM_METADATA,
+                        fromPath: SetPollingSourceToolipsTexts.EVENT_TIME_FROM_PATH,
                     },
                 },
             },

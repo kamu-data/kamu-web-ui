@@ -15,9 +15,7 @@ describe("TemplatesYamlEventsService", () => {
     });
 
     it("should check call buildYamlSetInfoEvent()", () => {
-        const result = service.buildYamlSetInfoEvent("mock description", [
-            "mock-keyword",
-        ]);
+        const result = service.buildYamlSetInfoEvent("mock description", ["mock-keyword"]);
         expect(result).toBe(
             "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setInfo\n" +
                 `  description: mock description\n` +

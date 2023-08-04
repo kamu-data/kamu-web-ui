@@ -3,46 +3,23 @@
         <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
         <label class="form-label">{{ label }} </label><br />
     </div>
-    <ng-container
-        [formArrayName]="controlName"
-        *ngFor="let item of items?.controls; let i = index"
-    >
+    <ng-container [formArrayName]="controlName" *ngFor="let item of items?.controls; let i = index">
         <div class="row mb-2" [formGroupName]="i">
             <div class="col-md-5">
-                <input
-                    class="form-control"
-                    placeholder="Please enter name"
-                    formControlName="name"
-                    trim
-                />
+                <input class="form-control" placeholder="Please enter name" formControlName="name" trim />
             </div>
             <div class="col-md-6">
-                <input
-                    class="form-control col-md-5"
-                    placeholder="Please enter value"
-                    formControlName="value"
-                    trim
-                />
+                <input class="form-control col-md-5" placeholder="Please enter value" formControlName="value" trim />
             </div>
             <div class="col-md-1 d-flex justify-content-end align-items-center">
-                <button
-                    type="button"
-                    class="btn btn-light"
-                    (click)="removeItem(i)"
-                    attr.data-test-id="item-{{ i }}"
-                >
+                <button type="button" class="btn btn-light" (click)="removeItem(i)" attr.data-test-id="item-{{ i }}">
                     x
                 </button>
             </div>
         </div>
     </ng-container>
     <div class="ms-4">
-        <button
-            type="button"
-            class="add-header-button"
-            data-test-id="add-button"
-            (click)="addItem()"
-        >
+        <button type="button" class="add-header-button" data-test-id="add-button" (click)="addItem()">
             <span>{{ buttonText }}</span>
         </button>
     </div>

@@ -1,8 +1,5 @@
 import { ApolloTestingModule } from "apollo-angular/testing";
-import {
-    emitClickOnElementByDataTestId,
-    findElementByDataTestId,
-} from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
 import { FormsModule } from "@angular/forms";
 import { mockDatasetBasicsFragment } from "../../../../../search/mock.data";
@@ -10,15 +7,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { EditDetailsModalComponent } from "./edit-details-modal.component";
-import {
-    mockMetadataSchemaUpdate,
-    mockOverviewDataUpdate,
-    mockOverviewWithSetInfo,
-} from "../../../data-tabs.mock";
-import {
-    DatasetDataSizeFragment,
-    DatasetOverviewFragment,
-} from "src/app/api/kamu.graphql.interface";
+import { mockMetadataSchemaUpdate, mockOverviewDataUpdate, mockOverviewWithSetInfo } from "../../../data-tabs.mock";
+import { DatasetDataSizeFragment, DatasetOverviewFragment } from "src/app/api/kamu.graphql.interface";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { SharedTestModule } from "src/app/common/shared-test.module";
@@ -48,8 +38,7 @@ describe("EditDetailsModalComponent", () => {
         component.currentState = {
             schema: mockMetadataSchemaUpdate.schema,
             data: mockOverviewDataUpdate.content,
-            overview:
-                mockOverviewDataUpdate.overview as DatasetOverviewFragment,
+            overview: mockOverviewDataUpdate.overview as DatasetOverviewFragment,
             size: mockOverviewDataUpdate.size as DatasetDataSizeFragment,
         };
         fixture.detectChanges();
@@ -74,10 +63,7 @@ describe("EditDetailsModalComponent", () => {
     });
 
     it("should check commit event", () => {
-        const commitSetInfoEventSpy = spyOn(
-            component,
-            "commitSetInfoEvent",
-        ).and.callThrough();
+        const commitSetInfoEventSpy = spyOn(component, "commitSetInfoEvent").and.callThrough();
 
         const inputKeyword = findElementByDataTestId(fixture, "input-keyword");
         component.addKeywordFromInput({

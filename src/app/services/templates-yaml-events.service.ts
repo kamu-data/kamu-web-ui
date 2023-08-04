@@ -1,8 +1,4 @@
-import {
-    SetLicense,
-    SetPollingSource,
-    SetTransform,
-} from "./../api/kamu.graphql.interface";
+import { SetLicense, SetPollingSource, SetTransform } from "./../api/kamu.graphql.interface";
 import { Injectable } from "@angular/core";
 import { MaybeNull } from "../common/app.types";
 import { stringify } from "yaml";
@@ -15,12 +11,9 @@ import {
     providedIn: "root",
 })
 export class TemplatesYamlEventsService {
-    private readonly initialSetInfoTemplate =
-        "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setInfo\n";
-    private readonly initialSetLicenseTemplate =
-        "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setLicense\n";
-    private readonly initialSetWatermarkTemplate =
-        "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setWatermark\n";
+    private readonly initialSetInfoTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setInfo\n";
+    private readonly initialSetLicenseTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setLicense\n";
+    private readonly initialSetWatermarkTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setWatermark\n";
 
     private readonly initialTemplate = {
         kind: "MetadataEvent",
@@ -28,24 +21,17 @@ export class TemplatesYamlEventsService {
         content: {},
     };
 
-    public buildYamlSetInfoEvent(
-        description: MaybeNull<string>,
-        keywords: MaybeNull<string[]>,
-    ): string {
+    public buildYamlSetInfoEvent(description: MaybeNull<string>, keywords: MaybeNull<string[]>): string {
         let result = this.initialSetInfoTemplate;
         if (description) result += `  description: ${description}\n`;
         if (keywords?.length) {
             result += `  keywords:\n`;
-            keywords.forEach(
-                (keyword: string) => (result += `    - ${keyword}\n`),
-            );
+            keywords.forEach((keyword: string) => (result += `    - ${keyword}\n`));
         }
         return result;
     }
 
-    public buildYamlSetLicenseEvent(
-        params: Omit<SetLicense, "__typename">,
-    ): string {
+    public buildYamlSetLicenseEvent(params: Omit<SetLicense, "__typename">): string {
         let result = this.initialSetLicenseTemplate;
         result += `  name: ${params.name}\n`;
         result += `  shortName: ${params.shortName}\n`;
@@ -62,10 +48,7 @@ export class TemplatesYamlEventsService {
             kind: "setPollingSource",
             ...params,
         };
-        if (
-            preprocessStepValue?.queries.length &&
-            preprocessStepValue.queries[0].query
-        ) {
+        if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
             this.initialTemplate.content = {
                 ...this.initialTemplate.content,
                 preprocess: {
@@ -78,9 +61,7 @@ export class TemplatesYamlEventsService {
         return stringify(this.initialTemplate);
     }
 
-    public buildYamlSetTransformEvent(
-        params: Omit<SetTransform, "__typename">,
-    ): string {
+    public buildYamlSetTransformEvent(params: Omit<SetTransform, "__typename">): string {
         this.initialTemplate.content = {
             kind: "setTransform",
             ...params,

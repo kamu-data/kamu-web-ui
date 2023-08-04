@@ -4,10 +4,7 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
-import {
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-} from "@danielmoncada/angular-datetime-picker";
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { FormsModule } from "@angular/forms";
 import timekeeper from "timekeeper";
@@ -59,21 +56,15 @@ describe("EditWatermarkModalComponent", () => {
     });
 
     it("should check init minLocalWatermark when currentWatermark is not null", () => {
-        (component.currentWatermark = "2023-03-12T00:00:00+00:00"),
-            fixture.detectChanges();
+        (component.currentWatermark = "2023-03-12T00:00:00+00:00"), fixture.detectChanges();
         const result = "2023-03-12T00:00:00.000Z";
         expect(component.minLocalWatermark).toEqual(result);
     });
 
     it("should check commit SetWatermark event", () => {
         fixture.detectChanges();
-        const commitSetWatermarkEventSpy = spyOn(
-            component,
-            "commitSetWatermarkEvent",
-        ).and.callThrough();
-        spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(
-            of(),
-        );
+        const commitSetWatermarkEventSpy = spyOn(component, "commitSetWatermarkEvent").and.callThrough();
+        spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
         emitClickOnElementByDataTestId(fixture, "commit-setWatermark-event");
         expect(commitSetWatermarkEventSpy).toHaveBeenCalledTimes(1);
     });

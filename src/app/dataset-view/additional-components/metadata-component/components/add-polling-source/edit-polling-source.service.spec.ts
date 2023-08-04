@@ -3,12 +3,7 @@ import { EditPollingSourceService } from "./edit-polling-source.service";
 import { Apollo } from "apollo-angular";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
-import {
-    EditFormType,
-    FetchKind,
-    MergeKind,
-    ReadKind,
-} from "./add-polling-source-form.types";
+import { EditFormType, FetchKind, MergeKind, ReadKind } from "./add-polling-source-form.types";
 import {
     mockDatasetInfo,
     mockHistoryEditPollingSourceService,
@@ -47,19 +42,15 @@ describe("EditPollingSourceService", () => {
 
     it("should check subscribe of getSetPollingSourceAsYaml", () => {
         const mockHistory = mockHistoryEditPollingSourceService;
-        spyOn(appDatasetService, "getDatasetHistory").and.returnValue(
-            of(mockHistory),
-        );
+        spyOn(appDatasetService, "getDatasetHistory").and.returnValue(of(mockHistory));
         spyOn(blockService, "requestMetadataBlock").and.returnValue(of());
         blockService.metadataBlockAsYamlChanges("test yaml");
-        service
-            .getEventAsYaml(mockDatasetInfo, SupportedEvents.SetPollingSource)
-            .subscribe(
-                () => null,
-                () => {
-                    expect(service.history).toBeDefined();
-                },
-            );
+        service.getEventAsYaml(mockDatasetInfo, SupportedEvents.SetPollingSource).subscribe(
+            () => null,
+            () => {
+                expect(service.history).toBeDefined();
+            },
+        );
     });
 
     it("should be check patch form with fetch url step and without headers", () => {
@@ -192,9 +183,7 @@ describe("EditPollingSourceService", () => {
         const groupName = SetPollingSourceSection.FETCH;
         service.patchFormValues(sectionFetchForm, editFormValue, groupName);
         expect(sectionFetchForm.value.image).toEqual(result.image);
-        expect(sectionFetchForm.value.command as string[]).toEqual(
-            result.command,
-        );
+        expect(sectionFetchForm.value.command as string[]).toEqual(result.command);
         expect(sectionFetchForm.value.args as string[]).toEqual(result.args);
     });
 
@@ -256,11 +245,7 @@ describe("EditPollingSourceService", () => {
         };
         service.patchFormValues(sectionMergeForm, editFormValue, groupName);
         expect(sectionMergeForm.value.kind).toEqual(result.kind);
-        expect(sectionMergeForm.value.primaryKey?.length).toEqual(
-            result.primaryKey.length,
-        );
-        expect(sectionMergeForm.value.compareColumns?.length).toEqual(
-            result.compareColumns.length,
-        );
+        expect(sectionMergeForm.value.primaryKey?.length).toEqual(result.primaryKey.length);
+        expect(sectionMergeForm.value.compareColumns?.length).toEqual(result.compareColumns.length);
     });
 });

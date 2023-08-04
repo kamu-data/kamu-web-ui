@@ -4,9 +4,7 @@
     </ng-container>
 
     <ng-container *ngIf="isSetPollingSourceEvent">
-        <app-set-polling-source-event
-            [event]="setPollingSourceEvent"
-        ></app-set-polling-source-event>
+        <app-set-polling-source-event [event]="setPollingSourceEvent"></app-set-polling-source-event>
     </ng-container>
 
     <ng-container *ngIf="isSeedEvent">
@@ -14,27 +12,19 @@
     </ng-container>
 
     <ng-container *ngIf="isSetTransformEvent">
-        <app-set-transform-event
-            [event]="setTransformEvent"
-        ></app-set-transform-event>
+        <app-set-transform-event [event]="setTransformEvent"></app-set-transform-event>
     </ng-container>
 
     <ng-container *ngIf="isExecuteQueryEvent">
-        <app-execute-query-event
-            [event]="executeQueryEvent"
-        ></app-execute-query-event>
+        <app-execute-query-event [event]="executeQueryEvent"></app-execute-query-event>
     </ng-container>
 
     <ng-container *ngIf="isSetLicenseEvent">
-        <app-set-license-event
-            [event]="setLicenseEvent"
-        ></app-set-license-event>
+        <app-set-license-event [event]="setLicenseEvent"></app-set-license-event>
     </ng-container>
 
     <ng-container *ngIf="isSetAttachmentsEvent">
-        <app-set-attachments-event
-            [event]="setAttachmentsEvent"
-        ></app-set-attachments-event>
+        <app-set-attachments-event [event]="setAttachmentsEvent"></app-set-attachments-event>
     </ng-container>
 
     <ng-container *ngIf="isSetInfoEvent">
@@ -46,9 +36,7 @@
     </ng-container>
 
     <ng-container *ngIf="isSetWatermarkEvent">
-        <app-set-watermark-event
-            [event]="setWatermarkEvent"
-        ></app-set-watermark-event>
+        <app-set-watermark-event [event]="setWatermarkEvent"></app-set-watermark-event>
     </ng-container>
 
     <ng-container *ngIf="!isSupportedEvent">

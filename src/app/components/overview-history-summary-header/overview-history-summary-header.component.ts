@@ -1,9 +1,6 @@
 import { NavigationService } from "./../../services/navigation.service";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import {
-    Account,
-    MetadataBlockFragment,
-} from "src/app/api/kamu.graphql.interface";
+import { Account, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
 
@@ -22,9 +19,7 @@ export class OverviewHistorySummaryHeaderComponent {
     constructor(private navigationService: NavigationService) {}
 
     get systemTime(): string {
-        return this.metadataBlockFragment
-            ? (this.metadataBlockFragment.systemTime as string)
-            : "";
+        return this.metadataBlockFragment ? (this.metadataBlockFragment.systemTime as string) : "";
     }
 
     get authorInfo(): Account {
@@ -34,18 +29,10 @@ export class OverviewHistorySummaryHeaderComponent {
     }
 
     get descriptionForMetadataBlock(): string {
-        return this.metadataBlockFragment
-            ? DataHelpers.descriptionForMetadataBlock(
-                  this.metadataBlockFragment,
-              )
-            : "";
+        return this.metadataBlockFragment ? DataHelpers.descriptionForMetadataBlock(this.metadataBlockFragment) : "";
     }
 
-    public navigateToMetadataBlock(
-        accountName: string,
-        datasetName: string,
-        blockHash: string,
-    ): void {
+    public navigateToMetadataBlock(accountName: string, datasetName: string, blockHash: string): void {
         this.navigationService.navigateToMetadataBlock({
             accountName,
             datasetName,

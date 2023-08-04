@@ -18,27 +18,17 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     public settingsTabs: typeof SettingsTabs = SettingsTabs;
     public user: AccountDetailsFragment;
 
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private authApi: AuthApi,
-    ) {
+    constructor(private router: Router, private route: ActivatedRoute, private authApi: AuthApi) {
         super();
     }
 
     ngOnInit(): void {
         this.trackSubscription(
-            this.router.events
-                .pipe(filter((event) => event instanceof NavigationEnd))
-                .subscribe(() => {
-                    this.activeTab = this.route.snapshot.params[
-                        ProjectLinks.URL_PARAM_CATEGORY
-                    ] as string;
-                }),
+            this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+                this.activeTab = this.route.snapshot.params[ProjectLinks.URL_PARAM_CATEGORY] as string;
+            }),
         );
-        this.activeTab = this.route.snapshot.params[
-            ProjectLinks.URL_PARAM_CATEGORY
-        ] as string;
+        this.activeTab = this.route.snapshot.params[ProjectLinks.URL_PARAM_CATEGORY] as string;
         if (this.authApi.currentUser) this.user = this.authApi.currentUser;
     }
 

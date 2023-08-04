@@ -13,13 +13,9 @@ export class DatasetListItemComponent {
     @Input() public row: DatasetSearchOverviewFragment;
     @Input() public isClickableRow?: boolean = false;
     @Input() public rowIndex: number;
-    @Output() public selectDatasetEmit =
-        new EventEmitter<DatasetSearchOverviewFragment>();
+    @Output() public selectDatasetEmit = new EventEmitter<DatasetSearchOverviewFragment>();
 
-    public constructor(
-        private modalService: ModalService,
-        private navigationService: NavigationService,
-    ) {}
+    public constructor(private modalService: ModalService, private navigationService: NavigationService) {}
 
     public selectTopic(topicName: string): void {
         promiseWithCatch(

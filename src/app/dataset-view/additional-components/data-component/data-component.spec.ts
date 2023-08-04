@@ -48,9 +48,7 @@ describe("DataComponent", () => {
     it("should check run sql button", () => {
         const emitterSubscription$ = component.runSQLRequestEmit
             .pipe(first())
-            .subscribe((query: string) =>
-                expect(query).toEqual(component.sqlRequestCode),
-            );
+            .subscribe((query: string) => expect(query).toEqual(component.sqlRequestCode));
 
         emitClickOnElementByDataTestId(fixture, "runSqlQueryButton");
         fixture.detectChanges();

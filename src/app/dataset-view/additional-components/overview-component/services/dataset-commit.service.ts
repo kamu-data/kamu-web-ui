@@ -117,6 +117,7 @@ export class DatasetCommitService {
                 datasetName,
             })
             .subscribe();
+
         this.navigationService.navigateToDatasetView({
             accountName,
             datasetName,

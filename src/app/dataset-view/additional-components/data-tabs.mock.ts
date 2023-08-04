@@ -819,6 +819,8 @@ export const mockOverviewWithSetLicense = {
     lastUpdatedAt: "2022-08-05T21:15:03.947245004+00:00",
 };
 
+export const mockCommitEventToDatasetMutationErrorMessage = "Fail";
+
 export const mockCommitEventToDatasetMutationError: CommitEventToDatasetMutation =
     {
         datasets: {
@@ -827,7 +829,8 @@ export const mockCommitEventToDatasetMutationError: CommitEventToDatasetMutation
                     chain: {
                         commitEvent: {
                             __typename: "CommitResultAppendError",
-                            message: "Fail",
+                            message:
+                                mockCommitEventToDatasetMutationErrorMessage,
                         },
                         __typename: "MetadataChainMut",
                     },

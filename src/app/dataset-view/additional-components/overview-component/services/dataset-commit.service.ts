@@ -25,7 +25,7 @@ export class DatasetCommitService {
         return this.errorCommitEventChanges$.asObservable();
     }
 
-    private datasetIdsByAccountDatasetName = new Map<string, string>();
+    public datasetIdsByAccountDatasetName = new Map<string, string>();
 
     constructor(
         private datasetApi: DatasetApi,

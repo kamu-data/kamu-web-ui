@@ -4,7 +4,11 @@ import {
     DataSqlErrorUpdate,
     DataUpdate,
 } from "../dataset.subscriptions.interface";
-import { DatasetKind } from "src/app/api/kamu.graphql.interface";
+import {
+    CommitEventToDatasetMutation,
+    DatasetKind,
+    UpdateReadmeMutation,
+} from "src/app/api/kamu.graphql.interface";
 
 export const mockDataUpdate: DataUpdate = {
     schema: {
@@ -813,4 +817,64 @@ export const mockOverviewWithSetLicense = {
     },
     createdAt: "2022-08-05T21:10:57.332924745+00:00",
     lastUpdatedAt: "2022-08-05T21:15:03.947245004+00:00",
+};
+
+export const mockCommitEventToDatasetMutationError: CommitEventToDatasetMutation =
+    {
+        datasets: {
+            byId: {
+                metadata: {
+                    chain: {
+                        commitEvent: {
+                            __typename: "CommitResultAppendError",
+                            message: "Fail",
+                        },
+                        __typename: "MetadataChainMut",
+                    },
+                    __typename: "DatasetMetadataMut",
+                },
+                __typename: "DatasetMut",
+            },
+            __typename: "DatasetsMut",
+        },
+    };
+
+export const mockCommitEventToDatasetMutation: CommitEventToDatasetMutation = {
+    datasets: {
+        byId: {
+            metadata: {
+                chain: {
+                    commitEvent: {
+                        __typename: "CommitResultSuccess",
+                        message: "Success",
+                        oldHead:
+                            "zW1cMmaF6PdmJPM6LNyy2RyyWFWkF3EojZ54ezAvT2dVgKB",
+                        newHead:
+                            "zW1eXXAXqgtfNDFt7oXpMfLfDy5Tzg3dMDLWQTz2YJE6ooX",
+                    },
+                    __typename: "MetadataChainMut",
+                },
+                __typename: "DatasetMetadataMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockUpdateReadmeMutation: UpdateReadmeMutation = {
+    datasets: {
+        byId: {
+            metadata: {
+                updateReadme: {
+                    __typename: "CommitResultSuccess",
+                    message: "Success",
+                    oldHead: "zW1oSh19bxPZqLhY9awS7cnFrmQUueZ5MF21wVf8poHDnaX",
+                },
+                __typename: "DatasetMetadataMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
 };

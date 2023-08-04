@@ -53,7 +53,7 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
         this.viewMode = mode;
     }
 
-    public toggleReadmeView(): void {
+    public showEditTabs(): void {
         this.editViewShow = !this.editViewShow;
         this.editViewShowEmmiter.emit(this.editViewShow);
     }

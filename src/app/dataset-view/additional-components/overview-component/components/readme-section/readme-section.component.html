@@ -22,10 +22,8 @@
         <button
             class="starred rounded-2 btn-sm btn btnGroup-item custom-edit d-flex justify-content-center align-items-center"
             aria-label="Edit this file"
-            data-test-id="toggleReadme"
-            data-hotkey="e"
-            data-disable-with=""
-            (click)="toggleReadmeView()"
+            data-test-id="show-edit-tabs"
+            (click)="showEditTabs()"
         >
             <svg-icon name="pencil"></svg-icon>
         </button>
@@ -38,6 +36,7 @@
             <button
                 class="edit-button"
                 [class.active]="isEditView"
+                data-test-id="select-edit-tab"
                 (click)="selectMode(editMode.Edit)"
             >
                 Edit
@@ -45,17 +44,23 @@
             <button
                 class="edit-button"
                 [class.active]="isPreviewView"
+                data-test-id="select-preview-tab"
                 (click)="selectMode(editMode.Preview)"
             >
                 Preview
             </button>
         </div>
         <div class="right-part d-flex">
-            <button class="button-changes mr-4" (click)="onCancelChanges()">
+            <button
+                class="button-changes mr-4"
+                data-test-id="cancel-changes"
+                (click)="onCancelChanges()"
+            >
                 Cancel changes
             </button>
             <button
                 class="button-changes"
+                data-test-id="save-changes"
                 [disabled]="!readmeChanged"
                 (click)="saveChanges()"
             >

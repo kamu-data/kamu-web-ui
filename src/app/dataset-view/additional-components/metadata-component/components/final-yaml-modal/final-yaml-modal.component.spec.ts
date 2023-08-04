@@ -2,13 +2,13 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloModule } from "apollo-angular";
 import { FinalYamlModalComponent } from "./final-yaml-modal.component";
-import { AppDatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { of } from "rxjs";
 import { FormsModule } from "@angular/forms";
 import { MonacoEditorModule } from "ngx-monaco-editor";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
 
 const testDatasetInfo: DatasetInfo = {
     accountName: "testAccountName",
@@ -18,7 +18,7 @@ const testDatasetInfo: DatasetInfo = {
 describe("FinalYamlModalComponent", () => {
     let component: FinalYamlModalComponent;
     let fixture: ComponentFixture<FinalYamlModalComponent>;
-    let createDatasetService: AppDatasetCreateService;
+    let datasetCommitService: DatasetCommitService;
     let activeModal: NgbActiveModal;
 
     beforeEach(async () => {
@@ -34,7 +34,7 @@ describe("FinalYamlModalComponent", () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(FinalYamlModalComponent);
-        createDatasetService = TestBed.inject(AppDatasetCreateService);
+        datasetCommitService = TestBed.inject(DatasetCommitService);
         activeModal = TestBed.inject(NgbActiveModal);
         component = fixture.componentInstance;
         component.yamlTemplate = "test yaml";
@@ -48,7 +48,7 @@ describe("FinalYamlModalComponent", () => {
 
     it("should save event", () => {
         const commitEventToDatasetSpy = spyOn(
-            createDatasetService,
+            datasetCommitService,
             "commitEventToDataset",
         ).and.returnValue(of());
         const closeModalSpy = spyOn(activeModal, "close");

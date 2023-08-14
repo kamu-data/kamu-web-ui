@@ -59,6 +59,7 @@ import { AddPollingSourceComponent } from "./additional-components/metadata-comp
 import { MatStepperModule } from "@angular/material/stepper";
 import { EngineSelectComponent } from "./additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 import { ReadmeSectionComponent } from "./additional-components/overview-component/components/readme-section/readme-section.component";
+import { SettingsTabComponent } from "./additional-components/settings-component/settings.component";
 @NgModule({
     imports: [
         CommonModule,
@@ -145,6 +146,7 @@ import { ReadmeSectionComponent } from "./additional-components/overview-compone
         AddPollingSourceComponent,
         EngineSelectComponent,
         ReadmeSectionComponent,
+        SettingsTabComponent,
     ],
 })
 export class DatasetModule {

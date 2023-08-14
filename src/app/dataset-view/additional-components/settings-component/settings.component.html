@@ -1,0 +1,62 @@
+<div class="custom-container px-4 p-responsive">
+    <div class="Layout-sidebar">
+        <div class="pr-md-4 pr-0">
+            <div>
+                <nav aria-label="User settings" data-view-component="true" class="NavigationList">
+                    <ul
+                        role="list"
+                        aria-label="User settings"
+                        nav_classes="org-sub-menu"
+                        data-view-component="true"
+                        class="ActionList"
+                    >
+                        <li
+                            data-item-id=""
+                            data-view-component="true"
+                            [ngClass]="{
+                                'ActionList-item--navActive': true
+                            }"
+                            class="ActionList-item org-menu-item"
+                        >
+                            <a
+                                routerLinkActive="active"
+                                data-view-component="true"
+                                class="ActionList-content ActionList-content--visual16"
+                            >
+                                <span class="ActionList-item-visual ActionList-item-visual--leading text-muted mr-2">
+                                    <svg-icon name="account"></svg-icon>
+                                </span>
+                                <span class="ActionList-item-label"> General </span>
+                            </a>
+                        </li>
+                        <mat-divider class="mt-3"></mat-divider>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="content-container">
+        <h2>General</h2>
+        <mat-divider class="mt-1 w-75 mb-2"></mat-divider>
+        <dl class="form-group d-inline-block mt-3">
+            <dt class="input-label mb-2">
+                <label for="rename-field">Dataset name</label>
+            </dt>
+            <dd>
+                <input type="text" name="new_name" class="form-control" id="rename-field" maxlength="100" />
+            </dd>
+        </dl>
+        <button class="ms-4 rename-btn" type="button">Rename</button>
+
+        <div class="mt-4">
+            <h2>Danger Zone</h2>
+            <div class="danger-zone__content d-flex justify-content-between align-items-center w-75 mt-2">
+                <div class="danger-zone__description">
+                    <p class="description">Delete this dataset</p>
+                    <p class="hint mt-2">Once you delete a dataset, there is no going back. Please be certain.</p>
+                </div>
+                <button type="button">Delete this dataset</button>
+            </div>
+        </div>
+    </div>
+</div>

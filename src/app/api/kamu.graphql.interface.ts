@@ -1794,6 +1794,25 @@ export type GetMetadataBlockQuery = {
     };
 };
 
+export type RenameDatasetMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    newName: Scalars["DatasetName"];
+}>;
+
+export type RenameDatasetMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            rename:
+                | { __typename: "RenameResultNameCollision"; message: string; collidingAlias: any }
+                | { __typename: "RenameResultNoChanges"; preservedName: any; message: string }
+                | { __typename: "RenameResultSuccess"; message: string; oldName: any; newName: any };
+        } | null;
+    };
+};
+
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
     query: Scalars["String"];
     perPage?: InputMaybe<Scalars["Int"]>;
@@ -2835,6 +2854,41 @@ export const GetMetadataBlockDocument = gql`
 })
 export class GetMetadataBlockGQL extends Apollo.Query<GetMetadataBlockQuery, GetMetadataBlockQueryVariables> {
     document = GetMetadataBlockDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const RenameDatasetDocument = gql`
+    mutation renameDataset($datasetId: DatasetID!, $newName: DatasetName!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                rename(newName: $newName) {
+                    __typename
+                    ... on RenameResultSuccess {
+                        message
+                        oldName
+                        newName
+                    }
+                    ... on RenameResultNoChanges {
+                        preservedName
+                        message
+                    }
+                    ... on RenameResultNameCollision {
+                        message
+                        collidingAlias
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class RenameDatasetGQL extends Apollo.Mutation<RenameDatasetMutation, RenameDatasetMutationVariables> {
+    document = RenameDatasetDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

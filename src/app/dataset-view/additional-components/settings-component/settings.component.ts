@@ -1,7 +1,7 @@
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DatasetSettingsService } from "./services/dataset-settings.service";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { DatasetBasicsFragment, Organization } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { BaseComponent } from "src/app/common/base.component";
 import { ModalService } from "src/app/components/modal/modal.service";
@@ -15,22 +15,24 @@ import { ModalService } from "src/app/components/modal/modal.service";
 export class SettingsTabComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;
     public renameDatasetForm: FormGroup;
+
     constructor(
         private fb: FormBuilder,
         private datasetSettingsService: DatasetSettingsService,
         private modalService: ModalService,
     ) {
         super();
-    }
-
-    ngOnInit(): void {
         this.renameDatasetForm = this.fb.group({
             datasetName: [
-                this.datasetBasics?.name,
+                this.getDatasetInfoFromUrl().datasetName,
                 // eslint-disable-next-line @typescript-eslint/unbound-method
                 [Validators.required, Validators.pattern(/^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/)],
             ],
         });
+    }
+
+    ngOnInit(): void {
+        console.log("yes");
     }
 
     public deleteDataset(): void {

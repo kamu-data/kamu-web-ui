@@ -38,16 +38,23 @@
     <div class="content-container">
         <h2>General</h2>
         <mat-divider class="mt-1 w-75 mb-2"></mat-divider>
-        <dl class="form-group d-inline-block mt-3">
-            <dt class="input-label mb-2">
-                <label for="rename-field">Dataset name</label>
-            </dt>
-            <dd>
-                <input type="text" name="new_name" class="form-control" id="rename-field" maxlength="100" />
-            </dd>
-        </dl>
-        <button class="ms-4 rename-btn" type="button">Rename</button>
-
+        <form [formGroup]="renameDatasetForm">
+            <dl class="form-group d-inline-block mt-3">
+                <dt class="input-label mb-2">
+                    <label for="rename-field">Dataset name</label>
+                </dt>
+                <dd>
+                    <input
+                        formControlName="datasetName"
+                        type="text"
+                        name="new_name"
+                        class="form-control"
+                        id="rename-field"
+                    />
+                </dd>
+            </dl>
+            <button class="ms-4 rename-btn" type="button">Rename</button>
+        </form>
         <div class="mt-4">
             <h2>Danger Zone</h2>
             <div class="danger-zone__content d-flex justify-content-between align-items-center w-75 mt-2">
@@ -55,7 +62,7 @@
                     <p class="description">Delete this dataset</p>
                     <p class="hint mt-2">Once you delete a dataset, there is no going back. Please be certain.</p>
                 </div>
-                <button type="button">Delete this dataset</button>
+                <button type="button" (click)="deleteDataset()">Delete this dataset</button>
             </div>
         </div>
     </div>

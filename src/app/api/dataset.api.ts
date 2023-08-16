@@ -7,6 +7,8 @@ import {
     DatasetByAccountAndDatasetNameGQL,
     DatasetByAccountAndDatasetNameQuery,
     DatasetKind,
+    DeleteDatasetGQL,
+    DeleteDatasetMutation,
     GetDatasetSchemaGQL,
     GetDatasetSchemaQuery,
     UpdateReadmeGQL,
@@ -51,6 +53,7 @@ export class DatasetApi {
         private commitEventToDatasetGQL: CommitEventToDatasetGQL,
         private datasetSchemaGQL: GetDatasetSchemaGQL,
         private updateReadmeGQL: UpdateReadmeGQL,
+        private deleteDatasetGQL: DeleteDatasetGQL,
     ) {}
 
     public getDatasetMainData(params: {
@@ -234,6 +237,19 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<UpdateReadmeMutation>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public deleteDataset(datasetId: string): Observable<DeleteDatasetMutation | null | undefined> {
+        return this.deleteDatasetGQL
+            .mutate({
+                datasetId,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<DeleteDatasetMutation>) => {
                     return result.data;
                 }),
             );

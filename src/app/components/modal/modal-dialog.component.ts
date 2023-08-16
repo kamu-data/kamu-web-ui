@@ -90,9 +90,9 @@ export class ModalDialogComponent extends DynamicComponent {
         }
     }
 
-    computeWidth(): number {
+    computeWidth(): string {
         const buttonsCount = this.getContextButtonsCount();
-        return buttonsCount ? 100 / buttonsCount : 100;
+        return `${100 / buttonsCount}%`;
     }
 
     private getContextButtonsCount(): number {

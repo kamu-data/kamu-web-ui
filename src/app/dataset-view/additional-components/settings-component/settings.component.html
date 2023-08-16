@@ -53,7 +53,18 @@
                     />
                 </dd>
             </dl>
-            <button class="ms-4 rename-btn" type="button">Rename</button>
+            <button
+                class="ms-4 rename-btn"
+                type="button"
+                (click)="renameDataset()"
+                [disabled]="!renameDatasetForm.valid"
+            >
+                Rename
+            </button>
+            <div *ngIf="datasetName?.invalid && (datasetName?.touched || datasetName?.dirty)">
+                <span *ngIf="datasetName?.errors?.['required']" class="text-danger fs-12">Name is required</span>
+                <span *ngIf="datasetName?.errors?.['pattern']" class="text-danger fs-12">Invalid dataset name</span>
+            </div>
         </form>
         <div class="mt-4">
             <h2>Danger Zone</h2>

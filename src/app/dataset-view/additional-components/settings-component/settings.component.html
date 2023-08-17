@@ -46,6 +46,7 @@
                         name="new_name"
                         class="form-control"
                         id="rename-field"
+                        data-test-id="rename-dataset-input"
                         (keyup)="changeName()"
                         [class.error-border-color]="renameError"
                     />
@@ -56,6 +57,7 @@
                 type="button"
                 (click)="renameDataset()"
                 [disabled]="!renameDatasetForm.valid"
+                data-test-id="rename-dataset-button"
             >
                 Rename
             </button>
@@ -74,7 +76,9 @@
                     <p class="description">Delete this dataset</p>
                     <p class="hint mt-2">Once you delete a dataset, there is no going back. Please be certain.</p>
                 </div>
-                <button type="button" (click)="deleteDataset()">Delete this dataset</button>
+                <button type="button" (click)="deleteDataset()" data-test-id="delete-dataset-button">
+                    Delete this dataset
+                </button>
             </div>
         </div>
     </div>

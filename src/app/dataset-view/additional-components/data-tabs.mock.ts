@@ -1,6 +1,12 @@
 import { mockDatasetBasicsFragment } from "./../../search/mock.data";
 import { DatasetHistoryUpdate, DataSqlErrorUpdate, DataUpdate } from "../dataset.subscriptions.interface";
-import { CommitEventToDatasetMutation, DatasetKind, UpdateReadmeMutation } from "src/app/api/kamu.graphql.interface";
+import {
+    CommitEventToDatasetMutation,
+    DatasetKind,
+    DeleteDatasetMutation,
+    RenameDatasetMutation,
+    UpdateReadmeMutation,
+} from "src/app/api/kamu.graphql.interface";
 
 export const mockDataUpdate: DataUpdate = {
     schema: {
@@ -840,6 +846,78 @@ export const mockUpdateReadmeMutation: UpdateReadmeMutation = {
                     oldHead: "zW1oSh19bxPZqLhY9awS7cnFrmQUueZ5MF21wVf8poHDnaX",
                 },
                 __typename: "DatasetMetadataMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockSuccessDeleteDatasetMutation: DeleteDatasetMutation = {
+    datasets: {
+        byId: {
+            delete: {
+                message: "Success",
+                deletedDataset: "account.tokens.portfolio",
+                __typename: "DeleteResultSuccess",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockErrorDeleteDatasetMutation: DeleteDatasetMutation = {
+    datasets: {
+        byId: {
+            delete: {
+                message: "Dataset 'account.tokens.transfers' has 1 dangling reference(s)",
+                danglingChildRefs: ["account.tokens.portfolio"],
+                notDeletedDataset: "account.tokens.transfers",
+                __typename: "DeleteResultDanglingReference",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockSuccessRenameDatasetMutation: RenameDatasetMutation = {
+    datasets: {
+        byId: {
+            rename: {
+                __typename: "RenameResultSuccess",
+                message: "Success",
+                oldName: "test10",
+                newName: "test101",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockRenameResultNameCollision: RenameDatasetMutation = {
+    datasets: {
+        byId: {
+            rename: {
+                __typename: "RenameResultNameCollision",
+                message: "Dataset 'account.portfolio' already exists",
+                collidingAlias: "account.portfolio",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockRenameResultNoChanges: RenameDatasetMutation = {
+    datasets: {
+        byId: {
+            rename: {
+                __typename: "RenameResultNoChanges",
+                preservedName: "test11",
+                message: "No changes",
             },
             __typename: "DatasetMut",
         },

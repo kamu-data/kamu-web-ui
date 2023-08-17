@@ -23,6 +23,7 @@ describe("DatasetViewMenuComponent", () => {
         navigateToHistory: () => null,
         navigateToLineage: () => null,
         navigateToDiscussions: () => null,
+        navigateToSettings: () => null,
     };
 
     beforeEach(async () => {

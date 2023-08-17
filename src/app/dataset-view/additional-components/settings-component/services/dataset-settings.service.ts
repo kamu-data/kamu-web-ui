@@ -1,4 +1,4 @@
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
 import { Injectable } from "@angular/core";
 import { DatasetApi } from "src/app/api/dataset.api";
@@ -13,6 +13,16 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
     providedIn: "root",
 })
 export class DatasetSettingsService {
+    private errorRenameDatasetChanges$: Subject<string> = new Subject<string>();
+
+    public errorRenameDatasetChanges(message: string): void {
+        this.errorRenameDatasetChanges$.next(message);
+    }
+
+    public get onErrorRenameDatasetChanges(): Observable<string> {
+        return this.errorRenameDatasetChanges$.asObservable();
+    }
+
     constructor(
         private datasetApi: DatasetApi,
         private navigationService: NavigationService,
@@ -43,7 +53,6 @@ export class DatasetSettingsService {
     public renameDataset(accountName: string, datasetId: string, newName: string): Observable<void> {
         return this.datasetApi.renameDataset(datasetId, newName).pipe(
             map((data: RenameDatasetMutation | undefined | null) => {
-                console.log("data", data);
                 if (data?.datasets.byId?.rename.__typename === "RenameResultSuccess") {
                     this.datasetService
                         .requestDatasetMainData({
@@ -58,16 +67,24 @@ export class DatasetSettingsService {
                     });
                 } else {
                     if (data) {
-                        promiseWithCatch(
-                            this.modalService.error({
-                                title: "Can't rename dataset",
-                                message: data.datasets.byId?.rename.message,
-                                yesButtonText: "Ok",
-                            }),
-                        );
+                        this.proccesRenameError(data);
                     }
                 }
             }),
         );
+    }
+
+    private proccesRenameError(data: RenameDatasetMutation): void {
+        if (data.datasets.byId?.rename.__typename === "RenameResultNameCollision") {
+            this.errorRenameDatasetChanges(data.datasets.byId.rename.message);
+        } else {
+            promiseWithCatch(
+                this.modalService.error({
+                    title: "Can't rename dataset",
+                    message: data.datasets.byId?.rename.message,
+                    yesButtonText: "Ok",
+                }),
+            );
+        }
     }
 }

@@ -8,25 +8,21 @@
                         aria-label="User settings"
                         nav_classes="org-sub-menu"
                         data-view-component="true"
-                        class="ActionList"
+                        class="action-list"
                     >
                         <li
                             data-item-id=""
                             data-view-component="true"
                             [ngClass]="{
-                                'ActionList-item--navActive': true
+                                'action-list-item--nav-active': true
                             }"
-                            class="ActionList-item org-menu-item"
+                            class="action-list-item"
                         >
-                            <a
-                                routerLinkActive="active"
-                                data-view-component="true"
-                                class="ActionList-content ActionList-content--visual16"
-                            >
-                                <span class="ActionList-item-visual ActionList-item-visual--leading text-muted mr-2">
+                            <a routerLinkActive="active" data-view-component="true" class="action-list-content">
+                                <span class="text-muted mr-2">
                                     <svg-icon name="account"></svg-icon>
                                 </span>
-                                <span class="ActionList-item-label"> General </span>
+                                <span class="action-list-item-label"> General </span>
                             </a>
                         </li>
                         <mat-divider class="mt-3"></mat-divider>
@@ -41,7 +37,7 @@
         <form [formGroup]="renameDatasetForm">
             <dl class="form-group d-inline-block mt-3">
                 <dt class="input-label mb-2">
-                    <label for="rename-field">Dataset name</label>
+                    <label for="rename-field" [class.error-color]="renameError">Dataset name</label>
                 </dt>
                 <dd>
                     <input
@@ -50,6 +46,8 @@
                         name="new_name"
                         class="form-control"
                         id="rename-field"
+                        (keyup)="changeName()"
+                        [class.error-border-color]="renameError"
                     />
                 </dd>
             </dl>
@@ -64,6 +62,9 @@
             <div *ngIf="datasetName?.invalid && (datasetName?.touched || datasetName?.dirty)">
                 <span *ngIf="datasetName?.errors?.['required']" class="text-danger fs-12">Name is required</span>
                 <span *ngIf="datasetName?.errors?.['pattern']" class="text-danger fs-12">Invalid dataset name</span>
+            </div>
+            <div *ngIf="renameError">
+                <div class="error-block">{{ renameError }}</div>
             </div>
         </form>
         <div class="mt-4">

@@ -87,6 +87,10 @@ export class DatasetViewMenuComponent implements OnInit {
         return this.datasetViewType === DatasetViewTypeEnum.Discussions;
     }
 
+    public get isDatasetViewTypeSettings(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.Settings;
+    }
+
     public onNavigateToOverview(): void {
         this.datasetNavigation.navigateToOverview();
     }
@@ -109,5 +113,9 @@ export class DatasetViewMenuComponent implements OnInit {
 
     public onNavigateToDiscussions(): void {
         this.datasetNavigation.navigateToDiscussions();
+    }
+
+    public onNavigateToSettings(): void {
+        this.datasetNavigation.navigateToSettings();
     }
 }

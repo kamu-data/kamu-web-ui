@@ -4,15 +4,9 @@ import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-    [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-    [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-    [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
     ID: string;
@@ -22,8 +16,10 @@ export type Scalars = {
     Float: number;
     AccountID: any;
     AccountName: any;
+    DatasetAlias: any;
     DatasetID: any;
     DatasetName: any;
+    DatasetRef: any;
     DatasetRefAny: any;
     /**
      * Implement the DateTime<Utc> scalar
@@ -211,6 +207,7 @@ export type DataQueriesQueryArgs = {
     query: Scalars["String"];
     queryDialect: QueryDialect;
     schemaFormat?: InputMaybe<DataSchemaFormat>;
+    skip?: InputMaybe<Scalars["Int"]>;
 };
 
 export type DataQueryResult = DataQueryResultError | DataQueryResultSuccess;
@@ -308,6 +305,7 @@ export type DatasetDataTailArgs = {
     dataFormat?: InputMaybe<DataBatchFormat>;
     limit?: InputMaybe<Scalars["Int"]>;
     schemaFormat?: InputMaybe<DataSchemaFormat>;
+    skip?: InputMaybe<Scalars["Int"]>;
 };
 
 export type DatasetEdge = {
@@ -367,8 +365,16 @@ export type DatasetMetadataMutUpdateReadmeArgs = {
 
 export type DatasetMut = {
     __typename?: "DatasetMut";
+    /** Delete the dataset */
+    delete: DeleteResult;
     /** Access to the mutable metadata of the dataset */
     metadata: DatasetMetadataMut;
+    /** Rename the dataset */
+    rename: RenameResult;
+};
+
+export type DatasetMutRenameArgs = {
+    newName: Scalars["DatasetName"];
 };
 
 export type Datasets = {
@@ -428,6 +434,23 @@ export type DatasetsMutCreateFromSnapshotArgs = {
     accountId: Scalars["AccountID"];
     snapshot: Scalars["String"];
     snapshotFormat: MetadataManifestFormat;
+};
+
+export type DeleteResult = {
+    message: Scalars["String"];
+};
+
+export type DeleteResultDanglingReference = DeleteResult & {
+    __typename?: "DeleteResultDanglingReference";
+    danglingChildRefs: Array<Scalars["DatasetRef"]>;
+    message: Scalars["String"];
+    notDeletedDataset: Scalars["DatasetAlias"];
+};
+
+export type DeleteResultSuccess = DeleteResult & {
+    __typename?: "DeleteResultSuccess";
+    deletedDataset: Scalars["DatasetAlias"];
+    message: Scalars["String"];
 };
 
 /** Describes */
@@ -790,6 +813,29 @@ export type ReadStepParquet = {
     schema?: Maybe<Array<Scalars["String"]>>;
 };
 
+export type RenameResult = {
+    message: Scalars["String"];
+};
+
+export type RenameResultNameCollision = RenameResult & {
+    __typename?: "RenameResultNameCollision";
+    collidingAlias: Scalars["DatasetAlias"];
+    message: Scalars["String"];
+};
+
+export type RenameResultNoChanges = RenameResult & {
+    __typename?: "RenameResultNoChanges";
+    message: Scalars["String"];
+    preservedName: Scalars["DatasetName"];
+};
+
+export type RenameResultSuccess = RenameResult & {
+    __typename?: "RenameResultSuccess";
+    message: Scalars["String"];
+    newName: Scalars["DatasetName"];
+    oldName: Scalars["DatasetName"];
+};
+
 export type RequestHeader = {
     __typename?: "RequestHeader";
     name: Scalars["String"];
@@ -1065,20 +1111,9 @@ export type CommitEventToDatasetMutation = {
                 chain: {
                     __typename?: "MetadataChainMut";
                     commitEvent:
-                        | {
-                              __typename: "CommitResultAppendError";
-                              message: string;
-                          }
-                        | {
-                              __typename: "CommitResultSuccess";
-                              message: string;
-                              oldHead?: any | null;
-                              newHead: any;
-                          }
-                        | {
-                              __typename: "MetadataManifestMalformed";
-                              message: string;
-                          }
+                        | { __typename: "CommitResultAppendError"; message: string }
+                        | { __typename: "CommitResultSuccess"; message: string; oldHead?: any | null; newHead: any }
+                        | { __typename: "MetadataManifestMalformed"; message: string }
                         | { __typename: "MetadataManifestUnsupportedVersion" }
                         | { __typename: "NoChanges" };
                 };
@@ -1098,10 +1133,7 @@ export type CreateEmptyDatasetMutation = {
     datasets: {
         __typename?: "DatasetsMut";
         createEmpty:
-            | {
-                  __typename?: "CreateDatasetResultNameCollision";
-                  message: string;
-              }
+            | { __typename?: "CreateDatasetResultNameCollision"; message: string }
             | { __typename?: "CreateDatasetResultSuccess"; message: string };
     };
 };
@@ -1116,28 +1148,16 @@ export type CreateDatasetFromSnapshotMutation = {
     datasets: {
         __typename?: "DatasetsMut";
         createFromSnapshot:
-            | {
-                  __typename?: "CreateDatasetResultInvalidSnapshot";
-                  message: string;
-              }
-            | {
-                  __typename?: "CreateDatasetResultMissingInputs";
-                  message: string;
-              }
-            | {
-                  __typename?: "CreateDatasetResultNameCollision";
-                  message: string;
-              }
+            | { __typename?: "CreateDatasetResultInvalidSnapshot"; message: string }
+            | { __typename?: "CreateDatasetResultMissingInputs"; message: string }
+            | { __typename?: "CreateDatasetResultNameCollision"; message: string }
             | {
                   __typename?: "CreateDatasetResultSuccess";
                   message: string;
                   dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
               }
             | { __typename?: "MetadataManifestMalformed"; message: string }
-            | {
-                  __typename?: "MetadataManifestUnsupportedVersion";
-                  message: string;
-              };
+            | { __typename?: "MetadataManifestUnsupportedVersion"; message: string };
     };
 };
 
@@ -1156,11 +1176,7 @@ export type UpdateReadmeMutation = {
                 __typename?: "DatasetMetadataMut";
                 updateReadme:
                     | { __typename: "CommitResultAppendError"; message: string }
-                    | {
-                          __typename: "CommitResultSuccess";
-                          oldHead?: any | null;
-                          message: string;
-                      }
+                    | { __typename: "CommitResultSuccess"; oldHead?: any | null; message: string }
                     | { __typename: "NoChanges"; message: string };
             };
         } | null;
@@ -1174,10 +1190,7 @@ export type DatasetByAccountAndDatasetNameQueryVariables = Exact<{
 
 export type DatasetByAccountAndDatasetNameQuery = {
     __typename?: "Query";
-    datasets: {
-        __typename?: "Datasets";
-        byOwnerAndName?: ({ __typename?: "Dataset" } & DatasetBasicsFragment) | null;
-    };
+    datasets: { __typename?: "Datasets"; byOwnerAndName?: ({ __typename?: "Dataset" } & DatasetBasicsFragment) | null };
 };
 
 export type DatasetByIdQueryVariables = Exact<{
@@ -1186,10 +1199,7 @@ export type DatasetByIdQueryVariables = Exact<{
 
 export type DatasetByIdQuery = {
     __typename?: "Query";
-    datasets: {
-        __typename?: "Datasets";
-        byId?: ({ __typename?: "Dataset" } & DatasetBasicsFragment) | null;
-    };
+    datasets: { __typename?: "Datasets"; byId?: ({ __typename?: "Dataset" } & DatasetBasicsFragment) | null };
 };
 
 export type GetDatasetDataSqlRunQueryVariables = Exact<{
@@ -1202,15 +1212,8 @@ export type GetDatasetDataSqlRunQuery = {
     data: {
         __typename?: "DataQueries";
         query:
-            | {
-                  __typename: "DataQueryResultError";
-                  errorMessage: string;
-                  errorKind: DataQueryResultErrorKind;
-              }
-            | ({
-                  __typename: "DataQueryResultSuccess";
-                  limit: number;
-              } & DataQueryResultSuccessViewFragment);
+            | { __typename: "DataQueryResultError"; errorMessage: string; errorKind: DataQueryResultErrorKind }
+            | ({ __typename: "DataQueryResultSuccess"; limit: number } & DataQueryResultSuccessViewFragment);
     };
 };
 
@@ -1235,14 +1238,8 @@ export type GetDatasetHistoryQuery = {
                           blocks: {
                               __typename?: "MetadataBlockConnection";
                               totalCount: number;
-                              nodes: Array<
-                                  {
-                                      __typename?: "MetadataBlockExtended";
-                                  } & MetadataBlockFragment
-                              >;
-                              pageInfo: {
-                                  __typename?: "PageBasedInfo";
-                              } & DatasetPageInfoFragment;
+                              nodes: Array<{ __typename?: "MetadataBlockExtended" } & MetadataBlockFragment>;
+                              pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
                           };
                       };
                   };
@@ -1284,11 +1281,7 @@ export type GetDatasetSchemaQuery = {
                   __typename?: "Dataset";
                   metadata: {
                       __typename?: "DatasetMetadata";
-                      currentSchema?: {
-                          __typename?: "DataSchema";
-                          format: DataSchemaFormat;
-                          content: string;
-                      } | null;
+                      currentSchema?: { __typename?: "DataSchema"; format: DataSchemaFormat; content: string } | null;
                   };
               } & DatasetBasicsFragment)
             | null;
@@ -1309,10 +1302,30 @@ export type DatasetsByAccountNameQuery = {
             __typename?: "DatasetConnection";
             totalCount: number;
             nodes: Array<{ __typename: "Dataset" } & DatasetSearchOverviewFragment>;
-            pageInfo: {
-                __typename?: "PageBasedInfo";
-            } & DatasetPageInfoFragment;
+            pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
         };
+    };
+};
+
+export type DeleteDatasetMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type DeleteDatasetMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            delete:
+                | {
+                      __typename?: "DeleteResultDanglingReference";
+                      message: string;
+                      danglingChildRefs: Array<any>;
+                      notDeletedDataset: any;
+                  }
+                | { __typename?: "DeleteResultSuccess"; message: string; deletedDataset: any };
+        } | null;
     };
 };
 
@@ -1322,12 +1335,7 @@ export type EnginesQuery = {
     __typename?: "Query";
     data: {
         __typename?: "DataQueries";
-        knownEngines: Array<{
-            __typename?: "EngineDesc";
-            name: string;
-            dialect: QueryDialect;
-            latestImage: string;
-        }>;
+        knownEngines: Array<{ __typename?: "EngineDesc"; name: string; dialect: QueryDialect; latestImage: string }>;
     };
 };
 
@@ -1342,11 +1350,7 @@ export type AddDataEventFragment = {
         size: number;
         interval: { __typename?: "OffsetInterval"; start: number; end: number };
     } | null;
-    outputCheckpoint?: {
-        __typename?: "Checkpoint";
-        physicalHash: any;
-        size: number;
-    } | null;
+    outputCheckpoint?: { __typename?: "Checkpoint"; physicalHash: any; size: number } | null;
 };
 
 export type ExecuteQueryEventFragment = {
@@ -1362,39 +1366,19 @@ export type ExecuteQueryEventFragment = {
     inputSlices: Array<{
         __typename?: "InputSlice";
         datasetId: any;
-        blockInterval?: {
-            __typename?: "BlockInterval";
-            start: any;
-            end: any;
-        } | null;
-        dataInterval?: {
-            __typename?: "OffsetInterval";
-            start: number;
-            end: number;
-        } | null;
+        blockInterval?: { __typename?: "BlockInterval"; start: any; end: any } | null;
+        dataInterval?: { __typename?: "OffsetInterval"; start: number; end: number } | null;
     }>;
-    outputCheckpoint?: {
-        __typename?: "Checkpoint";
-        physicalHash: any;
-        size: number;
-    } | null;
+    outputCheckpoint?: { __typename?: "Checkpoint"; physicalHash: any; size: number } | null;
 };
 
-export type SeedEventFragment = {
-    __typename?: "Seed";
-    datasetId: any;
-    datasetKind: DatasetKind;
-};
+export type SeedEventFragment = { __typename?: "Seed"; datasetId: any; datasetKind: DatasetKind };
 
 export type SetAttachmentsEventFragment = {
     __typename?: "SetAttachments";
     attachments: {
         __typename?: "AttachmentsEmbedded";
-        items: Array<{
-            __typename?: "AttachmentEmbedded";
-            path: string;
-            content: string;
-        }>;
+        items: Array<{ __typename?: "AttachmentEmbedded"; path: string; content: string }>;
     };
 };
 
@@ -1414,11 +1398,7 @@ export type SetPollingSourceEventFragment = {
               image: string;
               command?: Array<string> | null;
               args?: Array<string> | null;
-              env?: Array<{
-                  __typename?: "EnvVar";
-                  name: string;
-                  value?: string | null;
-              }> | null;
+              env?: Array<{ __typename?: "EnvVar"; name: string; value?: string | null }> | null;
           }
         | {
               __typename?: "FetchStepFilesGlob";
@@ -1426,11 +1406,7 @@ export type SetPollingSourceEventFragment = {
               order?: SourceOrdering | null;
               eventTime?:
                   | { __typename: "EventTimeSourceFromMetadata" }
-                  | {
-                        __typename?: "EventTimeSourceFromPath";
-                        pattern: string;
-                        timestampFormat?: string | null;
-                    }
+                  | { __typename?: "EventTimeSourceFromPath"; pattern: string; timestampFormat?: string | null }
                   | null;
               cache?: { __typename: "SourceCachingForever" } | null;
           }
@@ -1439,17 +1415,9 @@ export type SetPollingSourceEventFragment = {
               url: string;
               eventTime?:
                   | { __typename: "EventTimeSourceFromMetadata" }
-                  | {
-                        __typename?: "EventTimeSourceFromPath";
-                        pattern: string;
-                        timestampFormat?: string | null;
-                    }
+                  | { __typename?: "EventTimeSourceFromPath"; pattern: string; timestampFormat?: string | null }
                   | null;
-              headers?: Array<{
-                  __typename?: "RequestHeader";
-                  name: string;
-                  value: string;
-              }> | null;
+              headers?: Array<{ __typename?: "RequestHeader"; name: string; value: string }> | null;
               cache?: { __typename: "SourceCachingForever" } | null;
           };
     read:
@@ -1475,11 +1443,7 @@ export type SetPollingSourceEventFragment = {
               timestampFormat?: string | null;
               multiLine?: boolean | null;
           }
-        | {
-              __typename?: "ReadStepEsriShapefile";
-              schema?: Array<string> | null;
-              subPath?: string | null;
-          }
+        | { __typename?: "ReadStepEsriShapefile"; schema?: Array<string> | null; subPath?: string | null }
         | { __typename?: "ReadStepGeoJson"; schema?: Array<string> | null }
         | {
               __typename?: "ReadStepJsonLines";
@@ -1504,27 +1468,15 @@ export type SetPollingSourceEventFragment = {
               obsvRemoved?: string | null;
           };
     prepare?: Array<
-        | {
-              __typename?: "PrepStepDecompress";
-              format: CompressionFormat;
-              subPath?: string | null;
-          }
+        | { __typename?: "PrepStepDecompress"; format: CompressionFormat; subPath?: string | null }
         | { __typename?: "PrepStepPipe"; command: Array<string> }
     > | null;
     preprocess?: {
         __typename?: "TransformSql";
         engine: string;
         version?: string | null;
-        queries: Array<{
-            __typename?: "SqlQueryStep";
-            query: string;
-            alias?: string | null;
-        }>;
-        temporalTables?: Array<{
-            __typename?: "TemporalTable";
-            name: string;
-            primaryKey: Array<string>;
-        }> | null;
+        queries: Array<{ __typename?: "SqlQueryStep"; query: string; alias?: string | null }>;
+        temporalTables?: Array<{ __typename?: "TemporalTable"; name: string; primaryKey: Array<string> }> | null;
     } | null;
 };
 
@@ -1535,10 +1487,7 @@ export type SetVocabEventFragment = {
     offsetColumn?: string | null;
 };
 
-export type SetWatermarkEventFragment = {
-    __typename?: "SetWatermark";
-    outputWatermark: any;
-};
+export type SetWatermarkEventFragment = { __typename?: "SetWatermark"; outputWatermark: any };
 
 export type AccountDetailsFragment = {
     __typename?: "AccountInfo";
@@ -1551,16 +1500,8 @@ export type AccountDetailsFragment = {
 
 export type DataQueryResultSuccessViewFragment = {
     __typename?: "DataQueryResultSuccess";
-    schema?: {
-        __typename?: "DataSchema";
-        format: DataSchemaFormat;
-        content: string;
-    } | null;
-    data: {
-        __typename?: "DataBatch";
-        format: DataBatchFormat;
-        content: string;
-    };
+    schema?: { __typename?: "DataSchema"; format: DataSchemaFormat; content: string } | null;
+    data: { __typename?: "DataBatch"; format: DataBatchFormat; content: string };
 };
 
 export type DatasetBasicsFragment = {
@@ -1577,25 +1518,15 @@ export type DatasetCurrentInfoFragment = {
     keywords?: Array<string> | null;
 };
 
-export type DatasetDataSizeFragment = {
-    __typename?: "DatasetData";
-    numRecordsTotal: number;
-    estimatedSize: number;
-};
+export type DatasetDataSizeFragment = { __typename?: "DatasetData"; numRecordsTotal: number; estimatedSize: number };
 
 export type DatasetDataFragment = {
     __typename?: "Dataset";
     data: {
         __typename: "DatasetData";
         tail:
-            | {
-                  __typename: "DataQueryResultError";
-                  errorMessage: string;
-                  errorKind: DataQueryResultErrorKind;
-              }
-            | ({
-                  __typename: "DataQueryResultSuccess";
-              } & DataQueryResultSuccessViewFragment);
+            | { __typename: "DataQueryResultError"; errorMessage: string; errorKind: DataQueryResultErrorKind }
+            | ({ __typename: "DataQueryResultSuccess" } & DataQueryResultSuccessViewFragment);
     } & DatasetDataSizeFragment;
 };
 
@@ -1613,11 +1544,7 @@ export type DatasetDetailsFragment = {
     kind: DatasetKind;
     createdAt: any;
     lastUpdatedAt: any;
-    data: {
-        __typename?: "DatasetData";
-        estimatedSize: number;
-        numRecordsTotal: number;
-    };
+    data: { __typename?: "DatasetData"; estimatedSize: number; numRecordsTotal: number };
     metadata: {
         __typename?: "DatasetMetadata";
         currentWatermark?: any | null;
@@ -1634,14 +1561,8 @@ export type DatasetLastUpdateFragment = {
             blocks: {
                 __typename?: "MetadataBlockConnection";
                 totalCount: number;
-                nodes: Array<
-                    {
-                        __typename?: "MetadataBlockExtended";
-                    } & MetadataBlockFragment
-                >;
-                pageInfo: {
-                    __typename?: "PageBasedInfo";
-                } & DatasetPageInfoFragment;
+                nodes: Array<{ __typename?: "MetadataBlockExtended" } & MetadataBlockFragment>;
+                pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
             };
         };
     };
@@ -1672,9 +1593,7 @@ export type DatasetLineageFragment = {
                                                     metadata: {
                                                         __typename?: "DatasetMetadata";
                                                         currentUpstreamDependencies: Array<
-                                                            {
-                                                                __typename?: "Dataset";
-                                                            } & DatasetBasicsFragment
+                                                            { __typename?: "Dataset" } & DatasetBasicsFragment
                                                         >;
                                                     };
                                                 } & DatasetBasicsFragment
@@ -1709,9 +1628,7 @@ export type DatasetLineageFragment = {
                                                     metadata: {
                                                         __typename?: "DatasetMetadata";
                                                         currentDownstreamDependencies: Array<
-                                                            {
-                                                                __typename?: "Dataset";
-                                                            } & DatasetBasicsFragment
+                                                            { __typename?: "Dataset" } & DatasetBasicsFragment
                                                         >;
                                                     };
                                                 } & DatasetBasicsFragment
@@ -1735,17 +1652,9 @@ export type DatasetMetadataSummaryFragment = {
         currentWatermark?: any | null;
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
-        currentSource?:
-            | ({
-                  __typename?: "SetPollingSource";
-              } & SetPollingSourceEventFragment)
-            | null;
+        currentSource?: ({ __typename?: "SetPollingSource" } & SetPollingSourceEventFragment) | null;
         currentTransform?: ({ __typename?: "SetTransform" } & DatasetTransformFragment) | null;
-        currentSchema?: {
-            __typename: "DataSchema";
-            format: DataSchemaFormat;
-            content: string;
-        } | null;
+        currentSchema?: { __typename: "DataSchema"; format: DataSchemaFormat; content: string } | null;
         currentVocab?: ({ __typename?: "SetVocab" } & SetVocabEventFragment) | null;
     };
 } & DatasetBasicsFragment &
@@ -1785,11 +1694,7 @@ export type DatasetSearchOverviewFragment = {
         __typename?: "DatasetMetadata";
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
-        currentDownstreamDependencies: Array<{
-            __typename?: "Dataset";
-            id: any;
-            kind: DatasetKind;
-        }>;
+        currentDownstreamDependencies: Array<{ __typename?: "Dataset"; id: any; kind: DatasetKind }>;
     };
 } & DatasetBasicsFragment;
 
@@ -1797,16 +1702,8 @@ export type DatasetTransformContentFragment = {
     __typename?: "TransformSql";
     engine: string;
     version?: string | null;
-    queries: Array<{
-        __typename?: "SqlQueryStep";
-        alias?: string | null;
-        query: string;
-    }>;
-    temporalTables?: Array<{
-        __typename?: "TemporalTable";
-        name: string;
-        primaryKey: Array<string>;
-    }> | null;
+    queries: Array<{ __typename?: "SqlQueryStep"; alias?: string | null; query: string }>;
+    temporalTables?: Array<{ __typename?: "TemporalTable"; name: string; primaryKey: Array<string> }> | null;
 };
 
 export type DatasetTransformFragment = {
@@ -1817,9 +1714,7 @@ export type DatasetTransformFragment = {
         datasetRef?: any | null;
         dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
     }>;
-    transform: {
-        __typename?: "TransformSql";
-    } & DatasetTransformContentFragment;
+    transform: { __typename?: "TransformSql" } & DatasetTransformContentFragment;
 };
 
 export type LicenseFragment = {
@@ -1860,15 +1755,8 @@ export type GithubLoginMutation = {
         __typename?: "AuthMut";
         githubLogin: {
             __typename?: "LoginResponse";
-            token: {
-                __typename?: "AccessToken";
-                accessToken: string;
-                scope: string;
-                tokenType: string;
-            };
-            accountInfo: {
-                __typename?: "AccountInfo";
-            } & AccountDetailsFragment;
+            token: { __typename?: "AccessToken"; accessToken: string; scope: string; tokenType: string };
+            accountInfo: { __typename?: "AccountInfo" } & AccountDetailsFragment;
         };
     };
 };
@@ -1879,10 +1767,7 @@ export type FetchAccountInfoMutationVariables = Exact<{
 
 export type FetchAccountInfoMutation = {
     __typename?: "Mutation";
-    auth: {
-        __typename?: "AuthMut";
-        accountInfo: { __typename?: "AccountInfo" } & AccountDetailsFragment;
-    };
+    auth: { __typename?: "AuthMut"; accountInfo: { __typename?: "AccountInfo" } & AccountDetailsFragment };
 };
 
 export type GetMetadataBlockQueryVariables = Exact<{
@@ -1902,13 +1787,28 @@ export type GetMetadataBlockQuery = {
                 chain: {
                     __typename?: "MetadataChain";
                     blockByHashEncoded?: string | null;
-                    blockByHash?:
-                        | ({
-                              __typename?: "MetadataBlockExtended";
-                          } & MetadataBlockFragment)
-                        | null;
+                    blockByHash?: ({ __typename?: "MetadataBlockExtended" } & MetadataBlockFragment) | null;
                 };
             };
+        } | null;
+    };
+};
+
+export type RenameDatasetMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    newName: Scalars["DatasetName"];
+}>;
+
+export type RenameDatasetMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            rename:
+                | { __typename: "RenameResultNameCollision"; message: string; collidingAlias: any }
+                | { __typename: "RenameResultNoChanges"; preservedName: any; message: string }
+                | { __typename: "RenameResultSuccess"; message: string; oldName: any; newName: any };
         } | null;
     };
 };
@@ -1944,9 +1844,7 @@ export type SearchDatasetsOverviewQuery = {
             __typename?: "SearchResultConnection";
             totalCount: number;
             nodes: Array<{ __typename: "Dataset" } & DatasetSearchOverviewFragment>;
-            pageInfo: {
-                __typename?: "PageBasedInfo";
-            } & DatasetPageInfoFragment;
+            pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
         };
     };
 };
@@ -2832,6 +2730,36 @@ export class DatasetsByAccountNameGQL extends Apollo.Query<
         super(apollo);
     }
 }
+export const DeleteDatasetDocument = gql`
+    mutation deleteDataset($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                delete {
+                    ... on DeleteResultDanglingReference {
+                        message
+                        danglingChildRefs
+                        notDeletedDataset
+                    }
+                    ... on DeleteResultSuccess {
+                        message
+                        deletedDataset
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DeleteDatasetGQL extends Apollo.Mutation<DeleteDatasetMutation, DeleteDatasetMutationVariables> {
+    document = DeleteDatasetDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const EnginesDocument = gql`
     query engines {
         data {
@@ -2926,6 +2854,41 @@ export const GetMetadataBlockDocument = gql`
 })
 export class GetMetadataBlockGQL extends Apollo.Query<GetMetadataBlockQuery, GetMetadataBlockQueryVariables> {
     document = GetMetadataBlockDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const RenameDatasetDocument = gql`
+    mutation renameDataset($datasetId: DatasetID!, $newName: DatasetName!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                rename(newName: $newName) {
+                    __typename
+                    ... on RenameResultSuccess {
+                        message
+                        oldName
+                        newName
+                    }
+                    ... on RenameResultNoChanges {
+                        preservedName
+                        message
+                    }
+                    ... on RenameResultNameCollision {
+                        message
+                        collidingAlias
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class RenameDatasetGQL extends Apollo.Mutation<RenameDatasetMutation, RenameDatasetMutationVariables> {
+    document = RenameDatasetDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

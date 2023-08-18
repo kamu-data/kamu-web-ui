@@ -54,6 +54,13 @@ export class BaseProcessingComponent extends BaseComponent {
             navigateToDiscussions: () => {
                 console.log("Navigate to discussions");
             },
+            navigateToSettings: () => {
+                this.navigationService.navigateToDatasetView({
+                    accountName: datasetInfo.accountName,
+                    datasetName: datasetInfo.datasetName,
+                    tab: DatasetViewTypeEnum.Settings,
+                });
+            },
         };
     }
 

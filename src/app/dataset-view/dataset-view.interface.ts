@@ -5,6 +5,7 @@ export enum DatasetViewTypeEnum {
     Lineage = "lineage",
     Discussions = "discussions",
     History = "history",
+    Settings = "settings",
 }
 
 export interface DatasetNavigationInterface {
@@ -14,4 +15,5 @@ export interface DatasetNavigationInterface {
     navigateToHistory: (currentPage: number) => void;
     navigateToLineage: () => void;
     navigateToDiscussions: () => void;
+    navigateToSettings: () => void;
 }

@@ -1,0 +1,17 @@
+mutation deleteDataset($datasetId: DatasetID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      delete {
+        ... on DeleteResultDanglingReference {
+          message
+          danglingChildRefs
+          notDeletedDataset
+        }
+        ... on DeleteResultSuccess {
+          message
+          deletedDataset
+        }
+      }
+    }
+  }
+}

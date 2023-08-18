@@ -7,8 +7,12 @@ import {
     DatasetByAccountAndDatasetNameGQL,
     DatasetByAccountAndDatasetNameQuery,
     DatasetKind,
+    DeleteDatasetGQL,
+    DeleteDatasetMutation,
     GetDatasetSchemaGQL,
     GetDatasetSchemaQuery,
+    RenameDatasetGQL,
+    RenameDatasetMutation,
     UpdateReadmeGQL,
     UpdateReadmeMutation,
 } from "src/app/api/kamu.graphql.interface";
@@ -51,6 +55,8 @@ export class DatasetApi {
         private commitEventToDatasetGQL: CommitEventToDatasetGQL,
         private datasetSchemaGQL: GetDatasetSchemaGQL,
         private updateReadmeGQL: UpdateReadmeGQL,
+        private deleteDatasetGQL: DeleteDatasetGQL,
+        private renameDatasetGQL: RenameDatasetGQL,
     ) {}
 
     public getDatasetMainData(params: {
@@ -234,6 +240,33 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<UpdateReadmeMutation>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public deleteDataset(datasetId: string): Observable<DeleteDatasetMutation | null | undefined> {
+        return this.deleteDatasetGQL
+            .mutate({
+                datasetId,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<DeleteDatasetMutation>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public renameDataset(datasetId: string, newName: string): Observable<RenameDatasetMutation | null | undefined> {
+        return this.renameDatasetGQL
+            .mutate({
+                datasetId,
+                newName,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<RenameDatasetMutation>) => {
                     return result.data;
                 }),
             );

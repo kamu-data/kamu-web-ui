@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Added
+- Deleting and renaming a dataset on Settings tab
+- Added icons for dataset's tabs
+
 ## [0.8.0] - 2023-08-04
 ### Added
 - Added pictures in the dropdown list for engines
@@ -56,6 +61,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.4.0] - 2022-11-18
 ### Added
+
 - Keeping a CHANGELOG!
 - Major refactorings and productization of the web UI
-

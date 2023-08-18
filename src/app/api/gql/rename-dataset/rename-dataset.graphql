@@ -1,0 +1,22 @@
+mutation renameDataset($datasetId: DatasetID!, $newName: DatasetName!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      rename(newName: $newName) {
+        __typename
+        ... on RenameResultSuccess {
+          message
+          oldName
+          newName
+        }
+        ... on RenameResultNoChanges {
+          preservedName
+          message
+        }
+        ... on RenameResultNameCollision {
+          message
+          collidingAlias
+        }
+      }
+    }
+  }
+}

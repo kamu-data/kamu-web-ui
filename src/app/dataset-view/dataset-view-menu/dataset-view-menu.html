@@ -7,41 +7,56 @@
                 "
 >
     <div class="datasetViewTypeToggleGroup">
-        <mat-button-toggle-group name="datasetViewType" aria-label="Dataset View Type" [value]="datasetViewType">
+        <mat-button-toggle-group
+            name="datasetViewType"
+            class="mat-button-toggle-group"
+            aria-label="Dataset View Type"
+            [value]="datasetViewType"
+        >
             <mat-button-toggle
                 data-test-id="navigateToOverview"
                 value="overview"
                 [checked]="isDatasetViewTypeOverview"
                 (click)="onNavigateToOverview()"
-                >Overview
+            >
+                <mat-icon class="fs-4">visibility</mat-icon>
+                Overview
             </mat-button-toggle>
             <mat-button-toggle
                 data-test-id="navigateToData"
                 value="data"
                 [checked]="isDatasetViewTypeData"
                 (click)="onNavigateToData()"
-                >Data
+            >
+                <mat-icon class="fs-4">dataset</mat-icon>
+                Data
             </mat-button-toggle>
             <mat-button-toggle
                 data-test-id="navigateToMetadata"
                 value="metadata"
                 [checked]="isDatasetViewTypeMetadata"
                 (click)="onNavigateToMetadata()"
-                >Metadata
+            >
+                <mat-icon class="fs-4">dataset_linked</mat-icon>
+                Metadata
             </mat-button-toggle>
             <mat-button-toggle
                 data-test-id="navigateToHistory"
                 value="history"
                 [checked]="isDatasetViewTypeHistory"
                 (click)="onNavigateToHistory()"
-                >History
+            >
+                <mat-icon class="fs-4">manage_history</mat-icon>
+                History
             </mat-button-toggle>
             <mat-button-toggle
                 data-test-id="navigateToLineage"
                 value="lineage"
                 [checked]="isDatasetViewTypeLineage"
                 (click)="onNavigateToLineage()"
-                >Lineage
+            >
+                <mat-icon class="fs-4">view_module</mat-icon>
+                Lineage
             </mat-button-toggle>
             <mat-button-toggle
                 data-test-id="navigateToDiscussions"
@@ -49,7 +64,16 @@
                 [checked]="isDatasetViewTypeDiscussions"
                 (click)="onNavigateToDiscussions()"
                 disabled
-                >Discussions
+            >
+                <mat-icon class="fs-4">message</mat-icon>
+                Discussions
+            </mat-button-toggle>
+            <mat-button-toggle
+                data-test-id="navigateToSettings"
+                value="settings"
+                [checked]="isDatasetViewTypeSettings"
+                (click)="onNavigateToSettings()"
+                ><span class="d-flex"> <svg-icon name="account" class="mr-1"></svg-icon>Settings </span>
             </mat-button-toggle>
         </mat-button-toggle-group>
     </div>

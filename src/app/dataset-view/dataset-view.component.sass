@@ -4,7 +4,7 @@
 @import 'node_modules/prismjs/plugins/line-numbers/prism-line-numbers'
 @import 'node_modules/prismjs/plugins/line-highlight/prism-line-highlight'
 
-mat-button-toggle-group
+.mat-button-toggle-group
   width: fit-content
   & .mat-button-toggle-standalone.mat-button-toggle-appearance-standard, .mat-button-toggle-group-appearance-standard
     border-radius: 0 !important
@@ -74,16 +74,15 @@ mat-button-toggle
   z-index: 3 !important
   outline: none !important
 
-mat-button-toggle:hover
-  box-shadow: none !important
-  border-bottom: 1px solid !important
-  border-radius: 0 !important
-  &.mat-button-toggle-checked
-    border-bottom: 2px #000 solid !important
-
-mat-button-toggle ::ng-deep .mat-button-toggle-focus-overlay
-  background-color: transparent !important
-  opacity: 0 !important
+  &:hover
+    box-shadow: none !important
+    border-bottom: 1px solid !important
+    border-radius: 0 !important
+    &.mat-button-toggle-checked
+      border-bottom: 2px #000 solid !important
+      &:ng-deep mat-button-toggle .mat-button-toggle-focus-overlay
+        background-color: transparent !important
+        opacity: 0 !important
 
 .mat-button-toggle-checked
   border-left: none
@@ -96,3 +95,9 @@ mat-button-toggle ::ng-deep .mat-button-toggle-focus-overlay
 .mat-button-toggle-input
   background-color: none !important
   padding-left: 32px !important
+
+.tab-icon
+  position: absolute
+  left: -14px
+  top: 9px
+  font-size: 18px

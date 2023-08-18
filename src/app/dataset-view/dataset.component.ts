@@ -129,6 +129,10 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         console.log("initDiscussionsTab");
     }
 
+    public initSettingsTab(): void {
+        this.datasetViewType = DatasetViewTypeEnum.Settings;
+    }
+
     public selectTopic(topicName: string): void {
         promiseWithCatch(
             this.modalService.warning({
@@ -171,6 +175,10 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         return this.datasetViewType === DatasetViewTypeEnum.Discussions;
     }
 
+    public get isDatasetViewTypeSettings(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.Settings;
+    }
+
     private initDatasetViewByType(datasetInfo: DatasetInfo, currentPage: number): void {
         const mapperTabs: { [key in DatasetViewTypeEnum]: () => void } = {
             [DatasetViewTypeEnum.Overview]: () => this.initOverviewTab(),
@@ -179,6 +187,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
             [DatasetViewTypeEnum.History]: () => this.initHistoryTab(datasetInfo, currentPage),
             [DatasetViewTypeEnum.Lineage]: () => this.initLineageTab(),
             [DatasetViewTypeEnum.Discussions]: () => this.initDiscussionsTab(),
+            [DatasetViewTypeEnum.Settings]: () => this.initSettingsTab(),
         };
 
         this.datasetViewType = this.getDatasetViewTypeFromUrl();

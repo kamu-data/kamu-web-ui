@@ -49,6 +49,9 @@
                     (clickDatasetEmit)="onClickMetadataNode($event)"
                 ></app-metadata>
             </ng-template>
+            <ng-template [ngIf]="isDatasetViewTypeSettings">
+                <app-settings-tab [datasetBasics]="datasetBasics"></app-settings-tab>
+            </ng-template>
         </div>
     </div>
 </div>

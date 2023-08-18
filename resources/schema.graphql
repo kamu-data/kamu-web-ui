@@ -140,6 +140,7 @@ type DataQueries {
     queryDialect: QueryDialect!
     dataFormat: DataBatchFormat
     schemaFormat: DataSchemaFormat
+    skip: Int
     limit: Int
   ): DataQueryResult!
   """
@@ -220,6 +221,8 @@ type Dataset {
   lastUpdatedAt: DateTime!
 }
 
+scalar DatasetAlias
+
 type DatasetConnection {
   """
   A shorthand for `edges { node { ... } }`
@@ -251,11 +254,7 @@ type DatasetData {
   This is equivalent to the SQL query: `SELECT * FROM dataset ORDER BY
   event_time DESC LIMIT N`
   """
-  tail(
-    limit: Int
-    dataFormat: DataBatchFormat
-    schemaFormat: DataSchemaFormat
-  ): DataQueryResult!
+  tail(skip: Int, limit: Int, dataFormat: DataBatchFormat, schemaFormat: DataSchemaFormat): DataQueryResult!
 }
 
 type DatasetEdge {
@@ -333,9 +332,19 @@ type DatasetMut {
   Access to the mutable metadata of the dataset
   """
   metadata: DatasetMetadataMut!
+  """
+  Rename the dataset
+  """
+  rename(newName: DatasetName!): RenameResult!
+  """
+  Delete the dataset
+  """
+  delete: DeleteResult!
 }
 
 scalar DatasetName
+
+scalar DatasetRef
 
 scalar DatasetRefAny
 
@@ -351,19 +360,11 @@ type Datasets {
   """
   Returns datasets belonging to the specified account
   """
-  byAccountId(
-    accountId: AccountID!
-    page: Int
-    perPage: Int
-  ): DatasetConnection!
+  byAccountId(accountId: AccountID!, page: Int, perPage: Int): DatasetConnection!
   """
   Returns datasets belonging to the specified account
   """
-  byAccountName(
-    accountName: AccountName!
-    page: Int
-    perPage: Int
-  ): DatasetConnection!
+  byAccountName(accountName: AccountName!, page: Int, perPage: Int): DatasetConnection!
 }
 
 type DatasetsMut {
@@ -374,11 +375,7 @@ type DatasetsMut {
   """
   Creates a new empty dataset
   """
-  createEmpty(
-    accountId: AccountID!
-    datasetKind: DatasetKind!
-    datasetName: DatasetName!
-  ): CreateDatasetResult!
+  createEmpty(accountId: AccountID!, datasetKind: DatasetKind!, datasetName: DatasetName!): CreateDatasetResult!
   """
   Creates a new dataset from provided DatasetSnapshot manifest
   """
@@ -395,6 +392,21 @@ Implement the DateTime<Utc> scalar
 The input/output is a string in RFC3339 format.
 """
 scalar DateTime
+
+interface DeleteResult {
+  message: String!
+}
+
+type DeleteResultDanglingReference implements DeleteResult {
+  notDeletedDataset: DatasetAlias!
+  danglingChildRefs: [DatasetRef!]!
+  message: String!
+}
+
+type DeleteResultSuccess implements DeleteResult {
+  deletedDataset: DatasetAlias!
+  message: String!
+}
 
 """
 Describes
@@ -475,10 +487,7 @@ type LoginResponse {
   accountInfo: AccountInfo!
 }
 
-union MergeStrategy =
-    MergeStrategyAppend
-  | MergeStrategyLedger
-  | MergeStrategySnapshot
+union MergeStrategy = MergeStrategyAppend | MergeStrategyLedger | MergeStrategySnapshot
 
 type MergeStrategyAppend {
   dummy: String
@@ -550,10 +559,7 @@ type MetadataChainMut {
   """
   Commits new event to the metadata chain
   """
-  commitEvent(
-    event: String!
-    eventFormat: MetadataManifestFormat!
-  ): CommitResult!
+  commitEvent(event: String!, eventFormat: MetadataManifestFormat!): CommitResult!
 }
 
 union MetadataEvent =
@@ -697,12 +703,7 @@ enum QueryDialect {
   SQL_DATA_FUSION
 }
 
-union ReadStep =
-    ReadStepCsv
-  | ReadStepJsonLines
-  | ReadStepGeoJson
-  | ReadStepEsriShapefile
-  | ReadStepParquet
+union ReadStep = ReadStepCsv | ReadStepJsonLines | ReadStepGeoJson | ReadStepEsriShapefile | ReadStepParquet
 
 type ReadStepCsv {
   schema: [String!]
@@ -746,6 +747,26 @@ type ReadStepJsonLines {
 
 type ReadStepParquet {
   schema: [String!]
+}
+
+interface RenameResult {
+  message: String!
+}
+
+type RenameResultNameCollision implements RenameResult {
+  collidingAlias: DatasetAlias!
+  message: String!
+}
+
+type RenameResultNoChanges implements RenameResult {
+  preservedName: DatasetName!
+  message: String!
+}
+
+type RenameResultSuccess implements RenameResult {
+  oldName: DatasetName!
+  newName: DatasetName!
+  message: String!
 }
 
 type RequestHeader {
@@ -951,11 +972,7 @@ type Tasks {
   Returns states of tasks associated with a given dataset ordered by
   creation time from newest to oldest
   """
-  listTasksByDataset(
-    datasetId: DatasetID!
-    page: Int
-    perPage: Int
-  ): TaskConnection!
+  listTasksByDataset(datasetId: DatasetID!, page: Int, perPage: Int): TaskConnection!
 }
 
 type TasksMut {
@@ -972,11 +989,7 @@ type TasksMut {
   Schedules a task to update the specified dataset by performing polling
   ingest or a derivative transformation
   """
-  createProbeTask(
-    datasetId: DatasetID
-    busyTimeMs: Int
-    endWithOutcome: TaskOutcome
-  ): Task!
+  createProbeTask(datasetId: DatasetID, busyTimeMs: Int, endWithOutcome: TaskOutcome): Task!
 }
 
 type TemporalTable {

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Deleting and renaming a dataset on Settings tab
+- Added icons for dataset's tabs
 
 ## [0.8.0] - 2023-08-04
 

@@ -38,7 +38,7 @@ describe("DatasetSettingsService", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should check detete dataset with succes", () => {
+    it("should check detete dataset with success", () => {
         const deleteDatasetSpy = spyOn(datasetApi, "deleteDataset").and.returnValue(
             of(mockSuccessDeleteDatasetMutation),
         );
@@ -79,11 +79,11 @@ describe("DatasetSettingsService", () => {
     });
 
     it("should check rename dataset with no changes", () => {
-        const errorSpy = spyOn(modalService, "error").and.callThrough();
+        const errorRenameDatasetChangesSpy = spyOn(service, "errorRenameDatasetChanges").and.callThrough();
         const deleteDatasetSpy = spyOn(datasetApi, "renameDataset").and.returnValue(of(mockRenameResultNoChanges));
         service.renameDataset(ACCOUNT_NAME, DATASET_ID, NEW_NAME).subscribe(() => {
             expect(deleteDatasetSpy).toHaveBeenCalledTimes(1);
-            expect(errorSpy).toHaveBeenCalledTimes(1);
+            expect(errorRenameDatasetChangesSpy).toHaveBeenCalledTimes(1);
         });
     });
 });

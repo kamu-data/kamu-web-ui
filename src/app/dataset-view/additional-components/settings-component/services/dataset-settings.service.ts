@@ -75,7 +75,10 @@ export class DatasetSettingsService {
     }
 
     private proccesRenameError(data: RenameDatasetMutation): void {
-        if (data.datasets.byId?.rename.__typename === "RenameResultNameCollision") {
+        if (
+            data.datasets.byId?.rename.__typename === "RenameResultNameCollision" ||
+            data.datasets.byId?.rename.__typename === "RenameResultNoChanges"
+        ) {
             this.errorRenameDatasetChanges(data.datasets.byId.rename.message);
         } else {
             promiseWithCatch(

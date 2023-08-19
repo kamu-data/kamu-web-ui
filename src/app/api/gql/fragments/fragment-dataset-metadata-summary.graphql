@@ -1,5 +1,4 @@
 fragment DatasetMetadataSummary on Dataset {
-  ...DatasetBasics
   metadata {
     currentInfo {
       ...DatasetCurrentInfo

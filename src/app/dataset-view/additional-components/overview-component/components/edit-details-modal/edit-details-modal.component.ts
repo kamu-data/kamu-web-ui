@@ -24,7 +24,7 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
         overview: DatasetOverviewFragment;
         size: DatasetDataSizeFragment;
     };
-    @Input() public datasetBasics?: DatasetBasicsFragment;
+    @Input() public datasetBasics: DatasetBasicsFragment;
     public keywordsSet = new Set([] as string[]);
     public description = "";
     public initialDescription = "";
@@ -66,16 +66,15 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     }
 
     public commitSetInfoEvent(): void {
-        if (this.datasetBasics)
-            this.trackSubscription(
-                this.datasetCommitService
-                    .commitEventToDataset(
-                        this.datasetBasics.owner.name,
-                        this.datasetBasics.name,
-                        this.yamlEventService.buildYamlSetInfoEvent(this.description, this.keywords),
-                    )
-                    .subscribe(),
-            );
+        this.trackSubscription(
+            this.datasetCommitService
+                .commitEventToDataset(
+                    this.datasetBasics.owner.accountName,
+                    this.datasetBasics.name,
+                    this.yamlEventService.buildYamlSetInfoEvent(this.description, this.keywords),
+                )
+                .subscribe(),
+        );
     }
 
     public addKeywordFromInput(event: MatChipInputEvent) {

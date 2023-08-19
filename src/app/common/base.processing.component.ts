@@ -8,8 +8,8 @@ import { BaseComponent } from "./base.component";
 import { inject } from "@angular/core";
 
 export class BaseProcessingComponent extends BaseComponent {
-    public navigationService = inject(NavigationService);
-    public modalService = inject(ModalService);
+    protected navigationService = inject(NavigationService);
+    protected modalService = inject(ModalService);
 
     public showOwnerPage(ownerName: string): void {
         this.navigationService.navigateToOwnerView(ownerName);

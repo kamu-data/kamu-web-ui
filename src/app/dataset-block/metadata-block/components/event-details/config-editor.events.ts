@@ -1,5 +1,5 @@
 import * as monaco from "monaco-editor";
-export const sqlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
+export const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     theme: "vs",
     language: "sql",
     renderLineHighlight: "none",

@@ -1,30 +1,70 @@
 import {
+    mockDatasetBasicsWithPermissionQuery,
+    mockDatasetByAccountAndDatasetNameQuery,
     mockDatasetDataSqlRunResponse,
     mockDatasetsByAccountNameQuery,
+    mockDatassetByIdQuery,
     mockGetMetadataBlockQuery,
     TEST_BLOCK_HASH,
+    TEST_DATASET_ID,
     TEST_DATASET_NAME,
-    TEST_USER_NAME,
 } from "./mock/dataset.mock";
-import { mockCommitEventResponse, mockDatasetHistoryResponse, mockDatasetMainDataResponse } from "../search/mock.data";
-import { TestBed } from "@angular/core/testing";
+import {
+    MOCK_NEW_DATASET_NAME,
+    mockCommitEventResponse,
+    mockCreateDatasetFromSnapshotResponse,
+    mockCreateEmptyDatasetResponse,
+    mockDataset403OperationError,
+    mockDatasetHistoryResponse,
+    mockDatasetMainDataResponse,
+    mockDeleteSuccessResponse,
+    mockFullPowerDatasetPermissionsFragment,
+    mockRenameSuccessResponse,
+    mockUpdateReadmeSuccessResponse,
+} from "../search/mock.data";
+import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 import { DatasetApi } from "./dataset.api";
 import {
     CommitEventToDatasetDocument,
     CommitEventToDatasetMutation,
+    CreateDatasetFromSnapshotDocument,
+    CreateDatasetFromSnapshotMutation,
+    CreateEmptyDatasetDocument,
+    CreateEmptyDatasetMutation,
+    DataSchemaFormat,
+    DatasetByAccountAndDatasetNameDocument,
+    DatasetByAccountAndDatasetNameQuery,
+    DatasetByIdDocument,
+    DatasetByIdQuery,
+    DatasetKind,
     DatasetsByAccountNameDocument,
     DatasetsByAccountNameQuery,
+    DeleteDatasetDocument,
+    DeleteDatasetMutation,
+    GetDatasetBasicsWithPermissionsDocument,
+    GetDatasetBasicsWithPermissionsQuery,
     GetDatasetDataSqlRunDocument,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryDocument,
     GetDatasetHistoryQuery,
     GetDatasetMainDataDocument,
     GetDatasetMainDataQuery,
+    GetDatasetSchemaDocument,
+    GetDatasetSchemaQuery,
     GetMetadataBlockDocument,
     GetMetadataBlockQuery,
+    RenameDatasetDocument,
+    RenameDatasetMutation,
+    UpdateReadmeDocument,
+    UpdateReadmeMutation,
 } from "./kamu.graphql.interface";
-import { MaybeNullOrUndefined } from "../common/app.types";
+import { TEST_LOGIN } from "./mock/auth.mock";
+import { first, Observable } from "rxjs";
+import { DatasetOperationError } from "../common/errors";
+import { DocumentNode } from "graphql";
+import { mockGetDatasetSchemaQuery } from "../dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import AppValues from "../common/app.values";
 
 describe("DatasetApi", () => {
     let service: DatasetApi;
@@ -47,10 +87,10 @@ describe("DatasetApi", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should query dataset main data", () => {
-        service
+    it("should query dataset main data", fakeAsync(() => {
+        const subscription$ = service
             .getDatasetMainData({
-                accountName: TEST_USER_NAME,
+                accountName: TEST_LOGIN,
                 datasetName: TEST_DATASET_NAME,
             })
             .subscribe((res: GetDatasetMainDataQuery) => {
@@ -61,20 +101,27 @@ describe("DatasetApi", () => {
             });
 
         const op = controller.expectOne(GetDatasetMainDataDocument);
-        expect(op.operation.variables.accountName).toEqual(TEST_USER_NAME);
+        expect(op.operation.variables.accountName).toEqual(TEST_LOGIN);
         expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
 
         op.flush({
             data: mockDatasetMainDataResponse,
         });
-    });
 
-    it("should run SQL query", () => {
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
+
+        flush();
+    }));
+
+    it("should run limited SQL query", fakeAsync(() => {
         const TEST_QUERY = "test query";
-        service
+        const TEST_LIMIT = 38;
+        const subscription$ = service
             .getDatasetDataSqlRun({
                 query: TEST_QUERY,
-                limit: 50,
+                limit: TEST_LIMIT,
             })
             .subscribe((res: GetDatasetDataSqlRunQuery) => {
                 const actualQuery = res.data.query;
@@ -91,17 +138,46 @@ describe("DatasetApi", () => {
 
         const op = controller.expectOne(GetDatasetDataSqlRunDocument);
         expect(op.operation.variables.query).toEqual(TEST_QUERY);
-        expect(op.operation.variables.limit).toEqual(50);
+        expect(op.operation.variables.limit).toEqual(TEST_LIMIT);
 
         op.flush({
             data: mockDatasetDataSqlRunResponse,
         });
-    });
 
-    it("should extract dataset history", () => {
-        service
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
+
+        flush();
+    }));
+
+    it("should run SQL query with default limits", fakeAsync(() => {
+        const TEST_QUERY = "test query";
+        const subscription$ = service
+            .getDatasetDataSqlRun({
+                query: TEST_QUERY,
+            })
+            .subscribe();
+
+        const op = controller.expectOne(GetDatasetDataSqlRunDocument);
+        expect(op.operation.variables.query).toEqual(TEST_QUERY);
+        expect(op.operation.variables.limit).toEqual(AppValues.SQL_QUERY_LIMIT);
+
+        op.flush({
+            data: mockDatasetDataSqlRunResponse,
+        });
+
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
+
+        flush();
+    }));
+
+    it("should extract dataset history", fakeAsync(() => {
+        const subscription$ = service
             .getDatasetHistory({
-                accountName: TEST_USER_NAME,
+                accountName: TEST_LOGIN,
                 datasetName: TEST_DATASET_NAME,
                 numRecords: 20,
                 numPage: 1,
@@ -113,37 +189,137 @@ describe("DatasetApi", () => {
             });
 
         const op = controller.expectOne(GetDatasetHistoryDocument);
-        expect(op.operation.variables.accountName).toEqual(TEST_USER_NAME);
+        expect(op.operation.variables.accountName).toEqual(TEST_LOGIN);
         expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
 
         op.flush({
             data: mockDatasetHistoryResponse,
         });
-    });
 
-    it("should extract datasets by account name", () => {
-        service.fetchDatasetsByAccountName(TEST_USER_NAME).subscribe((res: DatasetsByAccountNameQuery) => {
-            expect(res.datasets.byAccountName.totalCount).toEqual(
-                mockDatasetsByAccountNameQuery.datasets.byAccountName.totalCount,
-            );
-            expect(res.datasets.byAccountName.nodes[0].name).toEqual(
-                mockDatasetsByAccountNameQuery.datasets.byAccountName.nodes[0].name,
-            );
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
+
+        flush();
+    }));
+
+    it("should extract dataset info by id", fakeAsync(() => {
+        const subscription$ = service.getDatasetInfoById(TEST_DATASET_ID).subscribe((res: DatasetByIdQuery) => {
+            expect(res.datasets.byId?.id).toEqual(TEST_DATASET_ID);
         });
 
+        const op = controller.expectOne(DatasetByIdDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+
+        op.flush({
+            data: mockDatassetByIdQuery,
+        });
+
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
+
+        flush();
+    }));
+
+    it("should extract dataset basics with permissions by account and dataset name", fakeAsync(() => {
+        const subscription$ = service
+            .getDatasetBasicsWithPermissions({ accountName: TEST_LOGIN, datasetName: TEST_DATASET_NAME })
+            .subscribe((res: GetDatasetBasicsWithPermissionsQuery) => {
+                expect(res.datasets.byOwnerAndName?.name).toEqual(TEST_DATASET_NAME);
+                expect(res.datasets.byOwnerAndName?.permissions).toEqual(
+                    mockFullPowerDatasetPermissionsFragment.permissions,
+                );
+            });
+
+        const op = controller.expectOne(GetDatasetBasicsWithPermissionsDocument);
+        expect(op.operation.variables.accountName).toEqual(TEST_LOGIN);
+        expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
+
+        op.flush({
+            data: mockDatasetBasicsWithPermissionQuery,
+        });
+
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
+
+        flush();
+    }));
+
+    it("should extract dataset schema by ID", fakeAsync(() => {
+        const subscription$ = service.getDatasetSchema(TEST_DATASET_ID).subscribe((res: GetDatasetSchemaQuery) => {
+            expect(res.datasets.byId?.metadata.currentSchema?.format).toEqual(DataSchemaFormat.ParquetJson);
+        });
+
+        const op = controller.expectOne(GetDatasetSchemaDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+
+        op.flush({
+            data: mockGetDatasetSchemaQuery,
+        });
+
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
+
+        flush();
+    }));
+
+    it("should extract datasets by account name", fakeAsync(() => {
+        const subscription$ = service
+            .fetchDatasetsByAccountName(TEST_LOGIN)
+            .subscribe((res: DatasetsByAccountNameQuery) => {
+                expect(res.datasets.byAccountName.totalCount).toEqual(
+                    mockDatasetsByAccountNameQuery.datasets.byAccountName.totalCount,
+                );
+                expect(res.datasets.byAccountName.nodes[0].name).toEqual(
+                    mockDatasetsByAccountNameQuery.datasets.byAccountName.nodes[0].name,
+                );
+            });
+
         const op = controller.expectOne(DatasetsByAccountNameDocument);
-        expect(op.operation.variables.accountName).toEqual(TEST_USER_NAME);
+        expect(op.operation.variables.accountName).toEqual(TEST_LOGIN);
 
         op.flush({
             data: mockDatasetsByAccountNameQuery,
         });
-    });
 
-    it("should load block by hash", () => {
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
+
+        flush();
+    }));
+
+    it("should extract dataset by account and dataset names", fakeAsync(() => {
+        const subscription$ = service
+            .getDatasetInfoByAccountAndDatasetName(TEST_LOGIN, TEST_DATASET_NAME)
+            .subscribe((res: DatasetByAccountAndDatasetNameQuery) => {
+                expect(res.datasets.byOwnerAndName?.owner.accountName).toEqual(TEST_LOGIN);
+                expect(res.datasets.byOwnerAndName?.name).toEqual(TEST_DATASET_NAME);
+            });
+
+        const op = controller.expectOne(DatasetByAccountAndDatasetNameDocument);
+        expect(op.operation.variables.accountName).toEqual(TEST_LOGIN);
+        expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
+
+        op.flush({
+            data: mockDatasetByAccountAndDatasetNameQuery,
+        });
+
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
+
+        flush();
+    }));
+
+    it("should load block by hash", fakeAsync(() => {
         const blockByHash = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHash;
-        service
+        const subscription$ = service
             .getBlockByHash({
-                accountName: TEST_USER_NAME,
+                accountName: TEST_LOGIN,
                 datasetName: TEST_DATASET_NAME,
                 blockHash: TEST_BLOCK_HASH,
             })
@@ -151,37 +327,190 @@ describe("DatasetApi", () => {
                 expect(res.datasets.byOwnerAndName?.metadata.chain.blockByHash?.blockHash).toEqual(
                     blockByHash?.blockHash,
                 );
-                expect(res.datasets.byOwnerAndName?.metadata.chain.blockByHash?.author.name).toEqual(
-                    blockByHash?.author.name,
+                expect(res.datasets.byOwnerAndName?.metadata.chain.blockByHash?.author.accountName).toEqual(
+                    blockByHash?.author.accountName,
                 );
             });
 
         const op = controller.expectOne(GetMetadataBlockDocument);
-        expect(op.operation.variables.accountName).toEqual(TEST_USER_NAME);
+        expect(op.operation.variables.accountName).toEqual(TEST_LOGIN);
         expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
         expect(op.operation.variables.blockHash).toEqual(TEST_BLOCK_HASH);
         op.flush({
             data: mockGetMetadataBlockQuery,
         });
+
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
+        flush();
+    }));
+
+    [DatasetKind.Root, DatasetKind.Derivative].forEach((datasetKind: DatasetKind) => {
+        it(`should create empty ${datasetKind} dataset`, fakeAsync(() => {
+            const mockDatasetName = "my-test";
+            const subscription$ = service
+                .createEmptyDataset(datasetKind, mockDatasetName)
+                .pipe(first())
+                .subscribe((res: CreateEmptyDatasetMutation) => {
+                    expect(res.datasets.createEmpty.__typename).toEqual("CreateDatasetResultSuccess");
+                });
+
+            const op = controller.expectOne(CreateEmptyDatasetDocument);
+            expect(op.operation.variables.datasetName).toEqual(mockDatasetName);
+            expect(op.operation.variables.datasetKind).toEqual(datasetKind);
+            op.flush({
+                data: mockCreateEmptyDatasetResponse,
+            });
+
+            tick();
+
+            expect(subscription$.closed).toBeTrue();
+            flush();
+        }));
     });
 
-    it("should commit event", () => {
-        const mockDatasetId = "mockId";
+    it("should create dataset from snapshot", fakeAsync(() => {
+        const mockSnapshot = "snapshot";
+        const subscription = service
+            .createDatasetFromSnapshot(mockSnapshot)
+            .pipe(first())
+            .subscribe((res: CreateDatasetFromSnapshotMutation) => {
+                expect(res.datasets.createFromSnapshot.__typename).toEqual("CreateDatasetResultSuccess");
+            });
+
+        const op = controller.expectOne(CreateDatasetFromSnapshotDocument);
+        expect(op.operation.variables.snapshot).toEqual(mockSnapshot);
+        op.flush({
+            data: mockCreateDatasetFromSnapshotResponse,
+        });
+
+        tick();
+
+        expect(subscription.closed).toBeTrue();
+        flush();
+    }));
+
+    it("should succesfully commit event", () => {
         const mockEvent = "mock event";
         service
             .commitEvent({
-                datasetId: mockDatasetId,
+                datasetId: TEST_DATASET_ID,
                 event: mockEvent,
             })
-            .subscribe((res: MaybeNullOrUndefined<CommitEventToDatasetMutation>) => {
-                expect(res?.datasets.byId?.metadata.chain.commitEvent.__typename).toEqual("CommitResultSuccess");
+            .subscribe((res: CommitEventToDatasetMutation) => {
+                expect(res.datasets.byId?.metadata.chain.commitEvent.__typename).toEqual("CommitResultSuccess");
             });
 
         const op = controller.expectOne(CommitEventToDatasetDocument);
-        expect(op.operation.variables.datasetId).toEqual(mockDatasetId);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
         expect(op.operation.variables.event).toEqual(mockEvent);
         op.flush({
             data: mockCommitEventResponse,
         });
+    });
+
+    it("should succesfully update dataset's readme", () => {
+        const mockReadmeContent = "someReadme";
+        service.updateReadme(TEST_DATASET_ID, mockReadmeContent).subscribe((res: UpdateReadmeMutation) => {
+            expect(res.datasets.byId?.metadata.updateReadme.__typename).toEqual("CommitResultSuccess");
+        });
+
+        const op = controller.expectOne(UpdateReadmeDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.content).toEqual(mockReadmeContent);
+        op.flush({
+            data: mockUpdateReadmeSuccessResponse,
+        });
+    });
+
+    it("should succesfully delete dataset", () => {
+        service.deleteDataset(TEST_DATASET_ID).subscribe((res: DeleteDatasetMutation) => {
+            expect(res.datasets.byId?.delete.__typename).toEqual("DeleteResultSuccess");
+        });
+
+        const op = controller.expectOne(DeleteDatasetDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        op.flush({
+            data: mockDeleteSuccessResponse,
+        });
+    });
+
+    it("should succesfully rename dataset", () => {
+        service.renameDataset(TEST_DATASET_ID, MOCK_NEW_DATASET_NAME).subscribe((res: RenameDatasetMutation) => {
+            expect(res.datasets.byId?.rename.__typename).toEqual("RenameResultSuccess");
+        });
+
+        const op = controller.expectOne(RenameDatasetDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.newName).toEqual(MOCK_NEW_DATASET_NAME);
+        op.flush({
+            data: mockRenameSuccessResponse,
+        });
+    });
+
+    interface RuntimeFailureTestCase {
+        operationName: string;
+        expectedGqlQuery: DocumentNode;
+        action(): Observable<unknown>;
+    }
+
+    [
+        {
+            operationName: "createEmpty",
+            expectedGqlQuery: CreateEmptyDatasetDocument,
+            action: (): Observable<unknown> => {
+                return service.createEmptyDataset(DatasetKind.Root, MOCK_NEW_DATASET_NAME);
+            },
+        },
+        {
+            operationName: "createFromSnapshot",
+            expectedGqlQuery: CreateDatasetFromSnapshotDocument,
+            action: (): Observable<unknown> => {
+                return service.createDatasetFromSnapshot("someSnapshot");
+            },
+        },
+        {
+            operationName: "rename",
+            expectedGqlQuery: RenameDatasetDocument,
+            action: (): Observable<unknown> => {
+                return service.renameDataset(TEST_DATASET_ID, MOCK_NEW_DATASET_NAME);
+            },
+        },
+        {
+            operationName: "delete",
+            expectedGqlQuery: DeleteDatasetDocument,
+            action: (): Observable<unknown> => service.deleteDataset(TEST_DATASET_ID),
+        },
+        {
+            operationName: "updateReadme",
+            expectedGqlQuery: UpdateReadmeDocument,
+            action: (): Observable<unknown> => service.updateReadme(TEST_DATASET_ID, "someReadmeCntent"),
+        },
+        {
+            operationName: "commitEvent",
+            expectedGqlQuery: CommitEventToDatasetDocument,
+            action: (): Observable<unknown> => service.commitEvent({ datasetId: TEST_DATASET_ID, event: "someEvent" }),
+        },
+    ].forEach((testCase: RuntimeFailureTestCase) => {
+        it(`should check how operation #${testCase.operationName} is handling runtime error`, fakeAsync(() => {
+            const subscription$ = testCase
+                .action()
+                .pipe(first())
+                .subscribe({
+                    next: () => fail("Unexpected success"),
+                    error: (e: Error) => {
+                        expect(e).toEqual(new DatasetOperationError([mockDataset403OperationError]));
+                    },
+                });
+
+            const op = controller.expectOne(testCase.expectedGqlQuery);
+            op.graphqlErrors([mockDataset403OperationError]);
+
+            tick();
+
+            expect(subscription$.closed).toBeTrue();
+            flush();
+        }));
     });
 });

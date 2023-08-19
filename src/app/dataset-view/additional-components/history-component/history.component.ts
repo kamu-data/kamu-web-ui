@@ -2,7 +2,7 @@ import { Observable } from "rxjs";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetHistoryUpdate } from "../../dataset.subscriptions.interface";
-import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 
 @Component({
     selector: "app-history",
@@ -10,11 +10,11 @@ import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.serv
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HistoryComponent extends BaseComponent {
-    @Input() public datasetName?: string;
+    @Input() public datasetName: string;
     @Output() onPageChangeEmit = new EventEmitter<number>();
-    public historyUpdate$: Observable<DatasetHistoryUpdate> = this.appDatasetSubsService.onDatasetHistoryChanges;
+    public historyUpdate$: Observable<DatasetHistoryUpdate> = this.datasetSubsService.onDatasetHistoryChanges;
 
-    constructor(private appDatasetSubsService: AppDatasetSubscriptionsService) {
+    constructor(private datasetSubsService: DatasetSubscriptionsService) {
         super();
     }
 

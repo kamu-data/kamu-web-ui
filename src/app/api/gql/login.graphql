@@ -1,0 +1,18 @@
+mutation Login($login_method: String!, $login_credentials_json: String!) {
+  auth {
+    login(loginMethod: $login_method, loginCredentialsJson: $login_credentials_json) {
+      accessToken
+      account {
+        ...Account
+      }
+    }
+  }
+}
+
+mutation FetchAccountDetails($accessToken: String!) {
+  auth {
+    accountDetails(accessToken: $accessToken) {
+      ...Account
+    }
+  }
+}

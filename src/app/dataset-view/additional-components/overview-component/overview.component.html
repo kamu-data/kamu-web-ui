@@ -1,17 +1,10 @@
 <div class="dataset-result-container">
-    <div
-        class="search-result-container__content"
-        id="searchResultContainerContent"
-        *ngIf="datasetBasics && currentState"
-    >
+    <div class="search-result-container__content" id="searchResultContainerContent" *ngIf="currentState">
         <div>
             <div
-                *ngIf="
-                    currentState.overview.metadata.currentInfo.description ||
-                        currentState.overview.metadata.currentInfo.keywords?.length;
-                    else noDetails
-                "
+                *ngIf="hasDatasetInfo; else noDetails"
                 class="d-flex flex-row flex-justify-between mb-3"
+                data-test-id="dataset-info-block"
             >
                 <div class="d-flex flex-column me-auto">
                     <div *ngIf="currentState.overview.metadata.currentInfo?.description">
@@ -28,12 +21,7 @@
                         </mat-chip-list>
                     </div>
                 </div>
-                <div
-                    *ngIf="
-                        currentState.overview.metadata.currentInfo.description ||
-                        currentState.overview.metadata.currentInfo.keywords?.length
-                    "
-                >
+                <div *ngIf="canEditDatasetInfo" data-test-id="dataset-edit-info-block">
                     <button
                         class="btn-sm btn custom-edit"
                         aria-label="Edit dataset details"
@@ -47,13 +35,7 @@
             </div>
 
             <ng-template #noDetails>
-                <div
-                    class="my-4"
-                    *ngIf="
-                        !currentState.overview.metadata.currentInfo.description &&
-                        !currentState.overview.metadata.currentInfo.keywords?.length
-                    "
-                >
+                <div class="my-4" *ngIf="canAddDatasetInfo" data-test-id="dataset-add-info-block">
                     <p>
                         You can
                         <a
@@ -67,19 +49,13 @@
                     </p>
                 </div>
             </ng-template>
-            <div
-                class="my-4"
-                *ngIf="!currentState.overview.metadata.currentSource && currentState.overview.kind === 'ROOT'"
-            >
+            <div class="my-4" *ngIf="canAddSetPollingSource" data-test-id="add-set-polling-source-block">
                 <p>
                     You can
                     <a class="text-decoration-none" (click)="navigateToAddPollingSource()"> Add data source</a>
                 </p>
             </div>
-            <div
-                class="my-4"
-                *ngIf="!currentState.overview.metadata.currentTransform && currentState.overview.kind === 'DERIVATIVE'"
-            >
+            <div class="my-4" *ngIf="canAddSetTransform" data-test-id="add-set-transform-block">
                 <p>
                     You can
                     <a class="text-decoration-none" (click)="navigateToSetTransform()"> Add transformation</a>
@@ -87,30 +63,36 @@
             </div>
 
             <app-overview-history-summary-header
+                data-test-id="overview-history-summary-header-block"
                 [metadataBlockFragment]="metadataFragmentBlock"
                 [numBlocksTotal]="currentState.overview.metadata.chain.blocks.totalCount || 0"
                 [datasetName]="datasetBasics.name"
             ></app-overview-history-summary-header>
             <app-dynamic-table
                 *ngIf="currentState && currentState.schema; else noData"
+                data-test-id="data-tail-block"
                 [hasTableHeader]="true"
                 [schemaFields]="currentState.schema.fields"
                 [dataRows]="currentState ? currentState.data : []"
             ></app-dynamic-table>
             <ng-template #noData>
-                <div class="mt-4 p-3 text-center no-data-container border border-2">No data</div>
+                <div class="mt-4 p-3 text-center no-data-container border border-2" data-test-id="no-data-tail-block">
+                    No data
+                </div>
             </ng-template>
-            <div class="my-4" *ngIf="!currentState.overview.metadata.currentReadme && !addReadme">
+            <div class="my-4" *ngIf="canAddReadme" data-test-id="add-readme-block">
                 <p>
                     You can
                     <a class="text-decoration-none" (click)="onAddReadme()" data-test-id="add-readme"> Add README.md</a>
                 </p>
             </div>
             <app-readme-section
+                data-test-id="readme-editor-block"
                 [datasetBasics]="datasetBasics"
                 [currentReadme]="currentState.overview.metadata.currentReadme"
-                [editViewShow]="addReadme"
-                (editViewShowEmmiter)="addReadme = $event"
+                [editingInProgress]="editingReadme"
+                [editable]="canEditReadme"
+                (editViewShowEmmiter)="editingReadme = $event"
             ></app-readme-section>
         </div>
     </div>
@@ -121,7 +103,8 @@
                     <h2>Details</h2>
                 </div>
                 <button
-                    *ngIf="!currentState?.overview?.metadata?.currentLicense"
+                    *ngIf="canAddLicense"
+                    data-test-id="add-license-btn"
                     type="button"
                     class="signed-commit-badge verified signed-commit-badge-small"
                     (click)="openLicenseModal()"
@@ -147,7 +130,11 @@
                             <p class="dataset-info--text">Public</p>
                         </div>
                     </div>
-                    <div class="dataset-info--block" *ngIf="currentState.overview.metadata.currentLicense">
+                    <div
+                        class="dataset-info--block"
+                        *ngIf="currentState.overview.metadata.currentLicense"
+                        data-test-id="license-block"
+                    >
                         <div class="dataset-info--sub-block">
                             <h2 class="dataset-info--subtitle">License:</h2>
                         </div>
@@ -166,7 +153,7 @@
                                     </span>
                                 </a>
                             </div>
-                            <div>
+                            <div *ngIf="canEditLicense">
                                 <button
                                     class="btn-sm btn custom-edit ms-3"
                                     aria-label="Edit dataset details"
@@ -234,17 +221,18 @@
                         <div
                             class="dataset-info--sub-block d-flex align-items-center ps-3"
                             *ngIf="currentState && currentState.overview.metadata.currentWatermark; else noWatermark"
+                            data-test-id="watermark-block"
                         >
                             <app-display-time
                                 [title]="currentState.overview.metadata.currentWatermark"
                                 [data]="currentState.overview.metadata.currentWatermark"
                             ></app-display-time>
-                            <div *ngIf="currentState.overview.kind === 'ROOT'">
+                            <div *ngIf="canEditWatermark">
                                 <button
                                     class="btn-sm btn custom-edit ms-4"
                                     aria-label="Edit watermark details"
                                     data-test-id="edit-dataset-watermark"
-                                    title="Edit watewrmark"
+                                    title="Edit watermark"
                                     (click)="openWatermarkModal()"
                                 >
                                     <svg-icon name="pencil"></svg-icon>
@@ -252,7 +240,11 @@
                             </div>
                         </div>
                         <ng-template #noWatermark>
-                            <div class="dataset-info--sub-block d-flex align-items-center ms-4">
+                            <div
+                                class="dataset-info--sub-block d-flex align-items-center ms-4"
+                                *ngIf="canAddWatermark"
+                                data-test-id="no-watermark-block"
+                            >
                                 <div class="me-4">-</div>
                                 <div>
                                     <button

@@ -107,6 +107,10 @@
     {
       "iconName": "information",
       "iconPath": "/assets/svg/information.svg"
+    },
+    {
+      "iconName": "github-logo",
+      "iconPath": "/assets/svg/git-hub.svg"
     }
   ],
   "customIcons": []

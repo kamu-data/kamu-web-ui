@@ -87,8 +87,8 @@ export class AddPollingSourceComponent extends BaseMainEventComponent implements
         super();
     }
 
-    ngOnInit(): void {
-        this.getDatasetKind();
+    public ngOnInit(): void {
+        this.checkDatasetEditability(DatasetKind.Root);
         this.trackSubscriptions(
             this.editService
                 .getEventAsYaml(this.getDatasetInfoFromUrl(), SupportedEvents.SetPollingSource)
@@ -128,12 +128,13 @@ export class AddPollingSourceComponent extends BaseMainEventComponent implements
         const instance = modalRef.componentInstance as FinalYamlModalComponent;
         this.processFormService.transformForm(this.pollingSourceForm);
 
-        instance.yamlTemplate = this.errorMessage
-            ? this.changedEventYamlByHash
-            : this.yamlEventService.buildYamlSetPollingSourceEvent(
-                  this.pollingSourceForm.value as Omit<SetPollingSource, "__typename">,
-                  this.showPreprocessStep ? this.preprocessStepValue : null,
-              );
+        instance.yamlTemplate =
+            this.errorMessage && this.changedEventYamlByHash
+                ? this.changedEventYamlByHash
+                : this.yamlEventService.buildYamlSetPollingSourceEvent(
+                      this.pollingSourceForm.value as Omit<SetPollingSource, "__typename">,
+                      this.showPreprocessStep ? this.preprocessStepValue : null,
+                  );
         instance.datasetInfo = this.getDatasetInfoFromUrl();
         this.trackSubscription(
             from(modalRef.result).subscribe((eventYaml: string) => {
@@ -144,14 +145,6 @@ export class AddPollingSourceComponent extends BaseMainEventComponent implements
 
     public onShowPreprcessStep(showPreprocessStep: boolean): void {
         this.showPreprocessStep = showPreprocessStep;
-    }
-
-    private getDatasetKind(): void {
-        this.trackSubscription(
-            this.editService.onKindChanges.subscribe((kind: DatasetKind) => {
-                this.datasetKind = kind;
-            }),
-        );
     }
 
     public onShowErrors(): void {

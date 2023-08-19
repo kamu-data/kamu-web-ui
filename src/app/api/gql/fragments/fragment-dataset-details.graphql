@@ -1,5 +1,4 @@
 fragment DatasetDetails on Dataset {
-  kind
   createdAt
   lastUpdatedAt
   data {

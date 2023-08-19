@@ -1,13 +1,13 @@
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
 import { FormsModule } from "@angular/forms";
-import { mockDatasetBasicsFragment } from "../../../../../search/mock.data";
+import { mockDatasetBasicsDerivedFragment } from "../../../../../search/mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { EditDetailsModalComponent } from "./edit-details-modal.component";
-import { mockMetadataSchemaUpdate, mockOverviewDataUpdate, mockOverviewWithSetInfo } from "../../../data-tabs.mock";
+import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewWithSetInfo } from "../../../data-tabs.mock";
 import { DatasetDataSizeFragment, DatasetOverviewFragment } from "src/app/api/kamu.graphql.interface";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -34,9 +34,9 @@ describe("EditDetailsModalComponent", () => {
 
         fixture = TestBed.createComponent(EditDetailsModalComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsFragment;
+        component.datasetBasics = mockDatasetBasicsDerivedFragment;
         component.currentState = {
-            schema: mockMetadataSchemaUpdate.schema,
+            schema: mockMetadataDerivedUpdate.schema,
             data: mockOverviewDataUpdate.content,
             overview: mockOverviewDataUpdate.overview as DatasetOverviewFragment,
             size: mockOverviewDataUpdate.size as DatasetDataSizeFragment,
@@ -50,7 +50,7 @@ describe("EditDetailsModalComponent", () => {
 
     it("should check initialize details", () => {
         component.currentState = {
-            schema: mockMetadataSchemaUpdate.schema,
+            schema: mockMetadataDerivedUpdate.schema,
             data: mockOverviewDataUpdate.content,
             overview: mockOverviewWithSetInfo as DatasetOverviewFragment,
             size: mockOverviewDataUpdate.size as DatasetDataSizeFragment,
@@ -63,9 +63,9 @@ describe("EditDetailsModalComponent", () => {
     });
 
     it("should check commit event", () => {
-        const commitSetInfoEventSpy = spyOn(component, "commitSetInfoEvent").and.callThrough();
+        const commitSetInfoEventSpy = spyOn(component, "commitSetInfoEvent").and.stub();
 
-        const inputKeyword = findElementByDataTestId(fixture, "input-keyword");
+        const inputKeyword = getElementByDataTestId(fixture, "input-keyword");
         component.addKeywordFromInput({
             input: inputKeyword,
             value: "keyword1",
@@ -80,7 +80,7 @@ describe("EditDetailsModalComponent", () => {
     });
 
     it("should check add keyword", () => {
-        const inputKeyword = findElementByDataTestId(fixture, "input-keyword");
+        const inputKeyword = getElementByDataTestId(fixture, "input-keyword");
         expect(component.keywords.length).toBe(0);
 
         component.addKeywordFromInput({
@@ -96,7 +96,7 @@ describe("EditDetailsModalComponent", () => {
     });
 
     it("should check remove keyword", () => {
-        const inputKeyword = findElementByDataTestId(fixture, "input-keyword");
+        const inputKeyword = getElementByDataTestId(fixture, "input-keyword");
         expect(component.keywords.length).toBe(0);
 
         component.addKeywordFromInput({

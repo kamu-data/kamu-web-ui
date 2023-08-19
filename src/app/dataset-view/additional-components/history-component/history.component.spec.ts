@@ -1,25 +1,50 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { first } from "rxjs/operators";
-import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { mockHistoryUpdate } from "../data-tabs.mock";
 import { HistoryComponent } from "./history.component";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { PaginationComponent } from "src/app/components/pagination-component/pagination.component";
+import { TimelineComponent } from "src/app/components/timeline-component/timeline.component";
+import { NgbPaginationModule, NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
+import { DisplayHashComponent } from "src/app/components/display-hash/display-hash.component";
+import { DisplayTimeComponent } from "src/app/components/display-time/display-time.component";
+import { AngularSvgIconModule } from "angular-svg-icon";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { ToastrModule } from "ngx-toastr";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterTestingModule } from "@angular/router/testing";
 
 describe("HistoryComponent", () => {
     let component: HistoryComponent;
     let fixture: ComponentFixture<HistoryComponent>;
-    let appDatasetSubsService: AppDatasetSubscriptionsService;
+    let datasetSubsService: DatasetSubscriptionsService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [HistoryComponent],
-            imports: [SharedTestModule],
+            declarations: [
+                HistoryComponent,
+                PaginationComponent,
+                TimelineComponent,
+                DisplayTimeComponent,
+                DisplayHashComponent,
+            ],
+            imports: [
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
+                NgbPaginationModule,
+                NgbPopoverModule,
+                MatIconModule,
+                RouterTestingModule,
+                SharedTestModule,
+                ToastrModule.forRoot(),
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(HistoryComponent);
-        appDatasetSubsService = TestBed.inject(AppDatasetSubscriptionsService);
+        datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         component = fixture.componentInstance;
-        appDatasetSubsService.changeDatasetHistory(mockHistoryUpdate);
+        datasetSubsService.changeDatasetHistory(mockHistoryUpdate);
         fixture.detectChanges();
     });
 

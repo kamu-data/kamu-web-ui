@@ -25,7 +25,7 @@ export class DatasetListComponent {
         const datasetBasics: DatasetBasicsFragment = row as DatasetBasicsFragment;
         this.selectDatasetEmit.emit({
             datasetName: datasetBasics.name,
-            accountName: datasetBasics.owner.name,
+            accountName: datasetBasics.owner.accountName,
         });
     }
 }

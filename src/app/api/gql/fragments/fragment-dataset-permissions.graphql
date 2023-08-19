@@ -1,0 +1,8 @@
+fragment DatasetPermissions on Dataset {
+  permissions {
+    canView
+    canDelete
+    canRename
+    canCommit
+  }
+}

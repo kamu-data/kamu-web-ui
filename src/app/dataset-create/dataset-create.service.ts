@@ -1,4 +1,8 @@
-import { CreateDatasetFromSnapshotMutation, CreateEmptyDatasetMutation } from "../api/kamu.graphql.interface";
+import {
+    AccountFragment,
+    CreateDatasetFromSnapshotMutation,
+    CreateEmptyDatasetMutation,
+} from "../api/kamu.graphql.interface";
 import { Observable, Subject } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { Injectable } from "@angular/core";
@@ -6,10 +10,14 @@ import { DatasetKind } from "../api/kamu.graphql.interface";
 import { map } from "rxjs/operators";
 import { NavigationService } from "../services/navigation.service";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
-import { MaybeNullOrUndefined } from "../common/app.types";
+import { MaybeNull } from "../common/app.types";
+import { LoggedUserService } from "../auth/logged-user.service";
+import { DatasetOperationError } from "../common/errors";
 
 @Injectable({ providedIn: "root" })
-export class AppDatasetCreateService {
+export class DatasetCreateService {
+    public static readonly NOT_LOGGED_USER_ERROR = "User must be logged in to create a dataset";
+
     private errorMessageChanges$: Subject<string> = new Subject<string>();
 
     public errorMessageChanges(message: string): void {
@@ -20,38 +28,52 @@ export class AppDatasetCreateService {
         return this.errorMessageChanges$.asObservable();
     }
 
-    public constructor(private datasetApi: DatasetApi, private navigationService: NavigationService) {}
+    public constructor(
+        private datasetApi: DatasetApi,
+        private loggedUserService: LoggedUserService,
+        private navigationService: NavigationService,
+    ) {}
 
-    public createEmptyDataset(accountId: string, datasetKind: DatasetKind, datasetName: string): Observable<void> {
-        return this.datasetApi.createEmptyDataset(accountId, datasetKind, datasetName).pipe(
-            map((data: MaybeNullOrUndefined<CreateEmptyDatasetMutation>) => {
-                if (data?.datasets.createEmpty.__typename === "CreateDatasetResultSuccess") {
-                    this.navigationService.navigateToDatasetView({
-                        accountName: accountId,
-                        datasetName,
-                        tab: DatasetViewTypeEnum.Overview,
-                    });
-                } else {
-                    if (data) this.errorMessageChanges(data.datasets.createEmpty.message);
-                }
-            }),
-        );
+    public createEmptyDataset(datasetKind: DatasetKind, datasetName: string): Observable<void> {
+        const loggedUser: MaybeNull<AccountFragment> = this.loggedUserService.currentlyLoggedInUser;
+        if (loggedUser) {
+            return this.datasetApi.createEmptyDataset(datasetKind, datasetName).pipe(
+                map((data: CreateEmptyDatasetMutation) => {
+                    if (data.datasets.createEmpty.__typename === "CreateDatasetResultSuccess") {
+                        this.navigationService.navigateToDatasetView({
+                            accountName: loggedUser.accountName,
+                            datasetName,
+                            tab: DatasetViewTypeEnum.Overview,
+                        });
+                    } else {
+                        this.errorMessageChanges(data.datasets.createEmpty.message);
+                    }
+                }),
+            );
+        } else {
+            throw new DatasetOperationError([new Error(DatasetCreateService.NOT_LOGGED_USER_ERROR)]);
+        }
     }
 
-    public createDatasetFromSnapshot(accountId: string, snapshot: string): Observable<void> {
-        return this.datasetApi.createDatasetFromSnapshot(accountId, snapshot).pipe(
-            map((data: MaybeNullOrUndefined<CreateDatasetFromSnapshotMutation>) => {
-                if (data?.datasets.createFromSnapshot.__typename === "CreateDatasetResultSuccess") {
-                    const datasetName = data.datasets.createFromSnapshot.dataset.name;
-                    this.navigationService.navigateToDatasetView({
-                        accountName: accountId,
-                        datasetName,
-                        tab: DatasetViewTypeEnum.Overview,
-                    });
-                } else {
-                    if (data) this.errorMessageChanges(data.datasets.createFromSnapshot.message);
-                }
-            }),
-        );
+    public createDatasetFromSnapshot(snapshot: string): Observable<void> {
+        const loggedUser: MaybeNull<AccountFragment> = this.loggedUserService.currentlyLoggedInUser;
+        if (loggedUser) {
+            return this.datasetApi.createDatasetFromSnapshot(snapshot).pipe(
+                map((data: CreateDatasetFromSnapshotMutation) => {
+                    if (data.datasets.createFromSnapshot.__typename === "CreateDatasetResultSuccess") {
+                        const datasetName = data.datasets.createFromSnapshot.dataset.name;
+                        this.navigationService.navigateToDatasetView({
+                            accountName: loggedUser.accountName,
+                            datasetName,
+                            tab: DatasetViewTypeEnum.Overview,
+                        });
+                    } else {
+                        this.errorMessageChanges(data.datasets.createFromSnapshot.message);
+                    }
+                }),
+            );
+        } else {
+            throw new DatasetOperationError([new Error(DatasetCreateService.NOT_LOGGED_USER_ERROR)]);
+        }
     }
 }

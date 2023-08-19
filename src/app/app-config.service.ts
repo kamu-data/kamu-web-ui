@@ -1,8 +1,6 @@
 import { Injectable } from "@angular/core";
-
-interface AppConfig {
-    apiServerGqlUrl: string;
-}
+import { AppConfig, AppConfigFeatureFlags, AppConfigLoginInstructions } from "./app-config.model";
+import { environment } from "src/environments/environment";
 
 @Injectable({
     providedIn: "root",
@@ -18,12 +16,33 @@ export class AppConfigService {
         return this.appConfig.apiServerGqlUrl;
     }
 
+    get featureFlags(): AppConfigFeatureFlags {
+        if (!this.appConfig) {
+            this.appConfig = AppConfigService.loadAppConfig();
+        }
+
+        return this.appConfig.featureFlags;
+    }
+
+    get loginInstructions(): AppConfigLoginInstructions | null {
+        if (!this.appConfig) {
+            this.appConfig = AppConfigService.loadAppConfig();
+        }
+
+        if (this.appConfig.loginInstructions) {
+            return this.appConfig.loginInstructions;
+        } else {
+            return null;
+        }
+    }
+
     private static loadAppConfig(): AppConfig {
         const request = new XMLHttpRequest();
-        request.open("GET", "/assets/runtime-config.json", false);
+        request.open("GET", environment.runtime_config_file, false);
         request.send(null);
         const data: AppConfig = JSON.parse(request.responseText) as AppConfig;
         return {
+            ...data,
             apiServerGqlUrl: AppConfigService.toRemoteURL(data.apiServerGqlUrl),
         };
     }

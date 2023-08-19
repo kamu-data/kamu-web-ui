@@ -1,10 +1,6 @@
-mutation createDatasetFromSnapshot($accountId: AccountID!, $snapshot: String!) {
+mutation createDatasetFromSnapshot($snapshot: String!) {
   datasets {
-    createFromSnapshot(
-      accountId: $accountId
-      snapshot: $snapshot
-      snapshotFormat: YAML
-    ) {
+    createFromSnapshot(snapshot: $snapshot, snapshotFormat: YAML) {
       message
       ... on CreateDatasetResultSuccess {
         dataset {

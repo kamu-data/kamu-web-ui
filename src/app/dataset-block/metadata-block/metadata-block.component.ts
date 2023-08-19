@@ -10,7 +10,8 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { map } from "rxjs/operators";
 import { Params } from "@angular/router";
 import { BlockService } from "./block.service";
-import { AppDatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-metadata-block",
@@ -20,38 +21,45 @@ import { AppDatasetSubscriptionsService } from "src/app/dataset-view/dataset.sub
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataBlockComponent extends BaseProcessingComponent implements OnInit {
-    constructor(
-        private blockService: BlockService,
-        private datasetService: DatasetService,
-        private appDatasetSubsService: AppDatasetSubscriptionsService,
-    ) {
-        super();
-    }
-
     public readonly HISTORY_TYPE = DatasetViewTypeEnum.History;
     private static readonly BLOCKS_PER_PAGE = 10;
 
     public datasetInfo$: Observable<DatasetInfo>;
     public blockHash$: Observable<string>;
     public datasetHistoryUpdate$: Observable<DatasetHistoryUpdate>;
+    public datasetBasics$: Observable<DatasetBasicsFragment>;
+    public datasetPermissions$: Observable<DatasetPermissionsFragment>;
+
+    constructor(
+        private blockService: BlockService,
+        private datasetService: DatasetService,
+        private datasetSubsService: DatasetSubscriptionsService,
+    ) {
+        super();
+    }
 
     public ngOnInit(): void {
+        this.datasetBasics$ = this.datasetService.onDatasetChanges;
+        this.datasetPermissions$ = this.datasetSubsService.onPermissionsDataChanges;
+        this.datasetHistoryUpdate$ = this.datasetSubsService.onDatasetHistoryChanges;
         this.datasetInfo$ = this.datasetInfoFromUrl;
         this.blockHash$ = this.activatedRoute.params.pipe(
             map((params: Params) => params[ProjectLinks.URL_PARAM_BLOCK_HASH] as string),
         );
         combineLatest([this.datasetInfo$, this.blockHash$]).subscribe(
             ([datasetInfo, blockHash]: [DatasetInfo, string]) => {
-                this.trackSubscriptions(this.blockService.requestMetadataBlock(datasetInfo, blockHash).subscribe());
+                this.trackSubscription(this.blockService.requestMetadataBlock(datasetInfo, blockHash).subscribe());
             },
         );
-        this.trackSubscription(this.loadHistory());
-
-        this.datasetHistoryUpdate$ = this.appDatasetSubsService.onDatasetHistoryChanges;
+        this.trackSubscriptions(this.loadHistory(), this.loadDatasetBasicDataWithPermissions());
     }
 
     public onPageChange(currentPage: number): void {
         this.trackSubscription(this.loadHistory(currentPage - 1));
+    }
+
+    private loadDatasetBasicDataWithPermissions(): Subscription {
+        return this.datasetService.requestDatasetBasicDataWithPermissions(this.getDatasetInfoFromUrl()).subscribe();
     }
 
     private loadHistory(page = 0): Subscription {

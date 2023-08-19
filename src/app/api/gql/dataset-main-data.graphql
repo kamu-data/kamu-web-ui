@@ -1,8 +1,4 @@
-query getDatasetMainData(
-  $accountName: AccountName!
-  $datasetName: DatasetName!
-  $limit: Int
-) {
+query getDatasetMainData($accountName: AccountName!, $datasetName: DatasetName!, $limit: Int) {
   datasets {
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       ...DatasetBasics
@@ -10,6 +6,7 @@ query getDatasetMainData(
       ...DatasetData
       ...DatasetMetadataSummary
       ...DatasetLineage
+      ...DatasetPermissions
     }
   }
 }

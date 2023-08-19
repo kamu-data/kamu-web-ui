@@ -11,13 +11,15 @@ import { DatasetCommitService } from "../../services/dataset-commit.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReadmeSectionComponent extends BaseComponent implements OnInit {
-    @Input() public datasetBasics?: DatasetBasicsFragment;
+    @Input() public datasetBasics: DatasetBasicsFragment;
     @Input() public currentReadme?: MaybeNull<string>;
+    @Input() public editingInProgress = false;
+    @Input() public editable = true;
+    @Output() public editViewShowEmmiter = new EventEmitter<boolean>();
+
     public editMode: typeof EditMode = EditMode;
     public viewMode = EditMode.Edit;
     public readmeState = "";
-    @Input() public editViewShow = false;
-    @Output() public editViewShowEmmiter = new EventEmitter<boolean>();
 
     public get readmeChanged(): boolean {
         return this.currentReadme !== this.readmeState;
@@ -27,7 +29,7 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
         super();
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         if (this.currentReadme) {
             this.readmeState = this.currentReadme;
         }
@@ -46,8 +48,8 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
     }
 
     public showEditTabs(): void {
-        this.editViewShow = !this.editViewShow;
-        this.editViewShowEmmiter.emit(this.editViewShow);
+        this.editingInProgress = !this.editingInProgress;
+        this.editViewShowEmmiter.emit(this.editingInProgress);
     }
 
     public onCancelChanges(): void {
@@ -56,19 +58,18 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
     }
 
     public saveChanges(): void {
-        if (this.datasetBasics)
-            this.trackSubscription(
-                this.datasetCommitService
-                    .updateReadme(this.datasetBasics.owner.name, this.datasetBasics.name, this.readmeState)
-                    .subscribe(() => {
-                        this.reset();
-                    }),
-            );
+        this.trackSubscription(
+            this.datasetCommitService
+                .updateReadme(this.datasetBasics.owner.accountName, this.datasetBasics.name, this.readmeState)
+                .subscribe(() => {
+                    this.reset();
+                }),
+        );
     }
 
     private reset(): void {
         this.viewMode = EditMode.Edit;
-        this.editViewShow = false;
-        this.editViewShowEmmiter.emit(this.editViewShow);
+        this.editingInProgress = false;
+        this.editViewShowEmmiter.emit(this.editingInProgress);
     }
 }

@@ -14,6 +14,7 @@ export type Scalars = {
     Boolean: boolean;
     Int: number;
     Float: number;
+    AccountDisplayName: string;
     AccountID: string;
     AccountName: string;
     DatasetAlias: string;
@@ -31,26 +32,23 @@ export type Scalars = {
     TaskID: string;
 };
 
-export type AccessToken = {
-    __typename?: "AccessToken";
-    accessToken: Scalars["String"];
-    scope: Scalars["String"];
-    tokenType: Scalars["String"];
-};
-
 export type Account = {
+    __typename?: "Account";
+    /** Symbolic account name */
+    accountName: Scalars["AccountName"];
+    /** Account type */
+    accountType: AccountType;
+    avatarUrl?: Maybe<Scalars["String"]>;
+    /** Account name to display */
+    displayName: Scalars["AccountDisplayName"];
+    /** Unique and stable identitfier of this account */
     id: Scalars["AccountID"];
-    name: Scalars["String"];
 };
 
-export type AccountInfo = {
-    __typename?: "AccountInfo";
-    avatarUrl?: Maybe<Scalars["String"]>;
-    email?: Maybe<Scalars["String"]>;
-    gravatarId?: Maybe<Scalars["String"]>;
-    login: Scalars["String"];
-    name: Scalars["String"];
-};
+export enum AccountType {
+    Organization = "ORGANIZATION",
+    User = "USER",
+}
 
 export type Accounts = {
     __typename?: "Accounts";
@@ -65,7 +63,7 @@ export type AccountsByIdArgs = {
 };
 
 export type AccountsByNameArgs = {
-    name: Scalars["String"];
+    name: Scalars["AccountName"];
 };
 
 export type AddData = {
@@ -90,18 +88,24 @@ export type AttachmentsEmbedded = {
     items: Array<AttachmentEmbedded>;
 };
 
-export type AuthMut = {
-    __typename?: "AuthMut";
-    accountInfo: AccountInfo;
-    githubLogin: LoginResponse;
+export type Auth = {
+    __typename?: "Auth";
+    enabledLoginMethods: Array<Scalars["String"]>;
 };
 
-export type AuthMutAccountInfoArgs = {
+export type AuthMut = {
+    __typename?: "AuthMut";
+    accountDetails: Account;
+    login: LoginResponse;
+};
+
+export type AuthMutAccountDetailsArgs = {
     accessToken: Scalars["String"];
 };
 
-export type AuthMutGithubLoginArgs = {
-    code: Scalars["String"];
+export type AuthMutLoginArgs = {
+    loginCredentialsJson: Scalars["String"];
+    loginMethod: Scalars["String"];
 };
 
 export type BlockInterval = {
@@ -221,6 +225,7 @@ export type DataQueryResultError = {
 export enum DataQueryResultErrorKind {
     InternalError = "INTERNAL_ERROR",
     InvalidSql = "INVALID_SQL",
+    Unauthorized = "UNAUTHORIZED",
 }
 
 export type DataQueryResultSuccess = {
@@ -251,6 +256,8 @@ export type DataSlice = {
 
 export type Dataset = {
     __typename?: "Dataset";
+    /** Returns dataset alias (user + name) */
+    alias: Scalars["DatasetAlias"];
     /** Creation time of the first metadata block in the chain */
     createdAt: Scalars["DateTime"];
     /** Access to the data of the dataset */
@@ -271,6 +278,8 @@ export type Dataset = {
     name: Scalars["DatasetName"];
     /** Returns the user or organization that owns this dataset */
     owner: Account;
+    /** Permissions of the current user */
+    permissions: DatasetPermissions;
 };
 
 export type DatasetConnection = {
@@ -377,6 +386,14 @@ export type DatasetMutRenameArgs = {
     newName: Scalars["DatasetName"];
 };
 
+export type DatasetPermissions = {
+    __typename?: "DatasetPermissions";
+    canCommit: Scalars["Boolean"];
+    canDelete: Scalars["Boolean"];
+    canRename: Scalars["Boolean"];
+    canView: Scalars["Boolean"];
+};
+
 export type Datasets = {
     __typename?: "Datasets";
     /** Returns datasets belonging to the specified account */
@@ -425,13 +442,11 @@ export type DatasetsMutByIdArgs = {
 };
 
 export type DatasetsMutCreateEmptyArgs = {
-    accountId: Scalars["AccountID"];
     datasetKind: DatasetKind;
     datasetName: Scalars["DatasetName"];
 };
 
 export type DatasetsMutCreateFromSnapshotArgs = {
-    accountId: Scalars["AccountID"];
     snapshot: Scalars["String"];
     snapshotFormat: MetadataManifestFormat;
 };
@@ -536,8 +551,8 @@ export type InputSlice = {
 
 export type LoginResponse = {
     __typename?: "LoginResponse";
-    accountInfo: AccountInfo;
-    token: AccessToken;
+    accessToken: Scalars["String"];
+    account: Account;
 };
 
 export type MergeStrategy = MergeStrategyAppend | MergeStrategyLedger | MergeStrategySnapshot;
@@ -688,14 +703,6 @@ export type OffsetInterval = {
     start: Scalars["Int"];
 };
 
-export type Organization = Account & {
-    __typename?: "Organization";
-    /** Unique and stable identitfier of this organization account */
-    id: Scalars["AccountID"];
-    /** Symbolic account name */
-    name: Scalars["String"];
-};
-
 export type PageBasedInfo = {
     __typename?: "PageBasedInfo";
     /** Index of the current page */
@@ -735,6 +742,8 @@ export type Query = {
     accounts: Accounts;
     /** Returns the version of the GQL API */
     apiVersion: Scalars["String"];
+    /** Authentication and authorization-related functionality group */
+    auth: Auth;
     /** Querying and data manipulations */
     data: DataQueries;
     /**
@@ -1087,12 +1096,13 @@ export type UpdateReadmeResult = {
     message: Scalars["String"];
 };
 
-export type User = Account & {
-    __typename?: "User";
-    /** Unique and stable identitfier of this user account */
-    id: Scalars["AccountID"];
-    /** Symbolic account name */
-    name: Scalars["String"];
+export type AccountByNameQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+}>;
+
+export type AccountByNameQuery = {
+    __typename?: "Query";
+    accounts: { __typename?: "Accounts"; byName?: ({ __typename?: "Account" } & AccountFragment) | null };
 };
 
 export type CommitEventToDatasetMutationVariables = Exact<{
@@ -1119,8 +1129,8 @@ export type CommitEventToDatasetMutation = {
                               newHead: string;
                           }
                         | { __typename: "MetadataManifestMalformed"; message: string }
-                        | { __typename: "MetadataManifestUnsupportedVersion" }
-                        | { __typename: "NoChanges" };
+                        | { __typename: "MetadataManifestUnsupportedVersion"; message: string }
+                        | { __typename: "NoChanges"; message: string };
                 };
             };
         } | null;
@@ -1128,7 +1138,6 @@ export type CommitEventToDatasetMutation = {
 };
 
 export type CreateEmptyDatasetMutationVariables = Exact<{
-    accountId: Scalars["AccountID"];
     datasetKind: DatasetKind;
     datasetName: Scalars["DatasetName"];
 }>;
@@ -1144,7 +1153,6 @@ export type CreateEmptyDatasetMutation = {
 };
 
 export type CreateDatasetFromSnapshotMutationVariables = Exact<{
-    accountId: Scalars["AccountID"];
     snapshot: Scalars["String"];
 }>;
 
@@ -1185,6 +1193,19 @@ export type UpdateReadmeMutation = {
                     | { __typename: "NoChanges"; message: string };
             };
         } | null;
+    };
+};
+
+export type GetDatasetBasicsWithPermissionsQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
+}>;
+
+export type GetDatasetBasicsWithPermissionsQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byOwnerAndName?: ({ __typename?: "Dataset" } & DatasetBasicsFragment & DatasetPermissionsFragment) | null;
     };
 };
 
@@ -1269,7 +1290,8 @@ export type GetDatasetMainDataQuery = {
                   DatasetOverviewFragment &
                   DatasetDataFragment &
                   DatasetMetadataSummaryFragment &
-                  DatasetLineageFragment)
+                  DatasetLineageFragment &
+                  DatasetPermissionsFragment)
             | null;
     };
 };
@@ -1333,6 +1355,13 @@ export type DeleteDatasetMutation = {
                 | { __typename?: "DeleteResultSuccess"; message: string; deletedDataset: string };
         } | null;
     };
+};
+
+export type GetEnabledLoginMethodsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetEnabledLoginMethodsQuery = {
+    __typename?: "Query";
+    auth: { __typename?: "Auth"; enabledLoginMethods: Array<string> };
 };
 
 export type EnginesQueryVariables = Exact<{ [key: string]: never }>;
@@ -1495,13 +1524,15 @@ export type SetVocabEventFragment = {
 
 export type SetWatermarkEventFragment = { __typename?: "SetWatermark"; outputWatermark: string };
 
-export type AccountDetailsFragment = {
-    __typename?: "AccountInfo";
-    login: string;
-    name: string;
-    email?: string | null;
+export type AccountBasicsFragment = { __typename?: "Account"; id: string; accountName: string };
+
+export type AccountFragment = {
+    __typename?: "Account";
+    id: string;
+    accountName: string;
+    displayName: string;
+    accountType: AccountType;
     avatarUrl?: string | null;
-    gravatarId?: string | null;
 };
 
 export type CurrentSourceFetchUrlFragment = {
@@ -1526,9 +1557,8 @@ export type DatasetBasicsFragment = {
     id: string;
     kind: DatasetKind;
     name: string;
-    owner:
-        | { __typename?: "Organization"; id: string; name: string }
-        | { __typename?: "User"; id: string; name: string };
+    alias: string;
+    owner: { __typename?: "Account" } & AccountBasicsFragment;
 };
 
 export type DatasetCurrentInfoFragment = {
@@ -1560,7 +1590,6 @@ export type DatasetDescriptionFragment = {
 
 export type DatasetDetailsFragment = {
     __typename?: "Dataset";
-    kind: DatasetKind;
     createdAt: string;
     lastUpdatedAt: string;
     data: { __typename?: "DatasetData"; estimatedSize: number; numRecordsTotal: number };
@@ -1589,6 +1618,7 @@ export type DatasetLastUpdateFragment = {
 
 export type DatasetLineageFragment = {
     __typename?: "Dataset";
+    owner: { __typename?: "Account"; avatarUrl?: string | null };
     metadata: {
         __typename?: "DatasetMetadata";
         currentUpstreamDependencies: Array<
@@ -1612,19 +1642,19 @@ export type DatasetLineageFragment = {
                                                     metadata: {
                                                         __typename?: "DatasetMetadata";
                                                         currentUpstreamDependencies: Array<
-                                                            { __typename?: "Dataset" } & DatasetBasicsFragment
+                                                            { __typename?: "Dataset" } & DatasetLineageBasicsFragment
                                                         >;
                                                     } & CurrentSourceFetchUrlFragment;
-                                                } & DatasetBasicsFragment
+                                                } & DatasetLineageBasicsFragment
                                             >;
                                         } & CurrentSourceFetchUrlFragment;
-                                    } & DatasetBasicsFragment
+                                    } & DatasetLineageBasicsFragment
                                 >;
                             } & CurrentSourceFetchUrlFragment;
-                        } & DatasetBasicsFragment
+                        } & DatasetLineageBasicsFragment
                     >;
                 } & CurrentSourceFetchUrlFragment;
-            } & DatasetBasicsFragment
+            } & DatasetLineageBasicsFragment
         >;
         currentDownstreamDependencies: Array<
             {
@@ -1647,22 +1677,28 @@ export type DatasetLineageFragment = {
                                                     metadata: {
                                                         __typename?: "DatasetMetadata";
                                                         currentDownstreamDependencies: Array<
-                                                            { __typename?: "Dataset" } & DatasetBasicsFragment
+                                                            { __typename?: "Dataset" } & DatasetLineageBasicsFragment
                                                         >;
                                                     } & CurrentSourceFetchUrlFragment;
-                                                } & DatasetBasicsFragment
+                                                } & DatasetLineageBasicsFragment
                                             >;
                                         } & CurrentSourceFetchUrlFragment;
-                                    } & DatasetBasicsFragment
+                                    } & DatasetLineageBasicsFragment
                                 >;
                             } & CurrentSourceFetchUrlFragment;
-                        } & DatasetBasicsFragment
+                        } & DatasetLineageBasicsFragment
                     >;
                 } & CurrentSourceFetchUrlFragment;
-            } & DatasetBasicsFragment
+            } & DatasetLineageBasicsFragment
         >;
     } & CurrentSourceFetchUrlFragment;
 };
+
+export type DatasetLineageBasicsFragment = {
+    __typename?: "Dataset";
+    metadata: { __typename?: "DatasetMetadata" } & CurrentSourceFetchUrlFragment;
+    owner: { __typename?: "Account"; avatarUrl?: string | null };
+} & DatasetBasicsFragment;
 
 export type DatasetMetadataSummaryFragment = {
     __typename?: "Dataset";
@@ -1676,8 +1712,7 @@ export type DatasetMetadataSummaryFragment = {
         currentSchema?: { __typename: "DataSchema"; format: DataSchemaFormat; content: string } | null;
         currentVocab?: ({ __typename?: "SetVocab" } & SetVocabEventFragment) | null;
     };
-} & DatasetBasicsFragment &
-    DatasetReadmeFragment &
+} & DatasetReadmeFragment &
     DatasetLastUpdateFragment;
 
 export type DatasetOverviewFragment = {
@@ -1700,6 +1735,17 @@ export type DatasetPageInfoFragment = {
     totalPages?: number | null;
 };
 
+export type DatasetPermissionsFragment = {
+    __typename?: "Dataset";
+    permissions: {
+        __typename?: "DatasetPermissions";
+        canView: boolean;
+        canDelete: boolean;
+        canRename: boolean;
+        canCommit: boolean;
+    };
+};
+
 export type DatasetReadmeFragment = {
     __typename?: "Dataset";
     metadata: { __typename?: "DatasetMetadata"; currentReadme?: string | null };
@@ -1713,7 +1759,7 @@ export type DatasetSearchOverviewFragment = {
         __typename?: "DatasetMetadata";
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
-        currentDownstreamDependencies: Array<{ __typename?: "Dataset"; id: string; kind: DatasetKind }>;
+        currentDownstreamDependencies: Array<{ __typename?: "Dataset"; id: string; kind: DatasetKind; alias: string }>;
     };
 } & DatasetBasicsFragment;
 
@@ -1750,7 +1796,7 @@ export type MetadataBlockFragment = {
     prevBlockHash?: string | null;
     systemTime: string;
     sequenceNumber: number;
-    author: { __typename: "Organization"; id: string; name: string } | { __typename: "User"; id: string; name: string };
+    author: { __typename?: "Account" } & AccountBasicsFragment;
     event:
         | ({ __typename: "AddData" } & AddDataEventFragment)
         | ({ __typename: "ExecuteQuery" } & ExecuteQueryEventFragment)
@@ -1764,29 +1810,30 @@ export type MetadataBlockFragment = {
         | ({ __typename: "SetWatermark" } & SetWatermarkEventFragment);
 };
 
-export type GithubLoginMutationVariables = Exact<{
-    code: Scalars["String"];
+export type LoginMutationVariables = Exact<{
+    login_method: Scalars["String"];
+    login_credentials_json: Scalars["String"];
 }>;
 
-export type GithubLoginMutation = {
+export type LoginMutation = {
     __typename?: "Mutation";
     auth: {
         __typename?: "AuthMut";
-        githubLogin: {
+        login: {
             __typename?: "LoginResponse";
-            token: { __typename?: "AccessToken"; accessToken: string; scope: string; tokenType: string };
-            accountInfo: { __typename?: "AccountInfo" } & AccountDetailsFragment;
+            accessToken: string;
+            account: { __typename?: "Account" } & AccountFragment;
         };
     };
 };
 
-export type FetchAccountInfoMutationVariables = Exact<{
+export type FetchAccountDetailsMutationVariables = Exact<{
     accessToken: Scalars["String"];
 }>;
 
-export type FetchAccountInfoMutation = {
+export type FetchAccountDetailsMutation = {
     __typename?: "Mutation";
-    auth: { __typename?: "AuthMut"; accountInfo: { __typename?: "AccountInfo" } & AccountDetailsFragment };
+    auth: { __typename?: "AuthMut"; accountDetails: { __typename?: "Account" } & AccountFragment };
 };
 
 export type GetMetadataBlockQueryVariables = Exact<{
@@ -1799,17 +1846,19 @@ export type GetMetadataBlockQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
-        byOwnerAndName?: {
-            __typename?: "Dataset";
-            metadata: {
-                __typename?: "DatasetMetadata";
-                chain: {
-                    __typename?: "MetadataChain";
-                    blockByHashEncoded?: string | null;
-                    blockByHash?: ({ __typename?: "MetadataBlockExtended" } & MetadataBlockFragment) | null;
-                };
-            };
-        } | null;
+        byOwnerAndName?:
+            | ({
+                  __typename?: "Dataset";
+                  metadata: {
+                      __typename?: "DatasetMetadata";
+                      chain: {
+                          __typename?: "MetadataChain";
+                          blockByHashEncoded?: string | null;
+                          blockByHash?: ({ __typename?: "MetadataBlockExtended" } & MetadataBlockFragment) | null;
+                      };
+                  };
+              } & DatasetBasicsFragment)
+            | null;
     };
 };
 
@@ -1868,13 +1917,13 @@ export type SearchDatasetsOverviewQuery = {
     };
 };
 
-export const AccountDetailsFragmentDoc = gql`
-    fragment AccountDetails on AccountInfo {
-        login
-        name
-        email
+export const AccountFragmentDoc = gql`
+    fragment Account on Account {
+        id
+        accountName
+        displayName
+        accountType
         avatarUrl
-        gravatarId
     }
 `;
 export const DatasetDataSizeFragmentDoc = gql`
@@ -1916,7 +1965,7 @@ export const DatasetDataFragmentDoc = gql`
     ${DataQueryResultSuccessViewFragmentDoc}
 `;
 export const CurrentSourceFetchUrlFragmentDoc = gql`
-    fragment currentSourceFetchUrl on DatasetMetadata {
+    fragment CurrentSourceFetchUrl on DatasetMetadata {
         currentSource {
             fetch {
                 ... on FetchStepUrl {
@@ -1926,39 +1975,62 @@ export const CurrentSourceFetchUrlFragmentDoc = gql`
         }
     }
 `;
+export const AccountBasicsFragmentDoc = gql`
+    fragment AccountBasics on Account {
+        id
+        accountName
+    }
+`;
 export const DatasetBasicsFragmentDoc = gql`
     fragment DatasetBasics on Dataset {
         id
         kind
         name
         owner {
-            id
-            name
+            ...AccountBasics
+        }
+        alias
+    }
+    ${AccountBasicsFragmentDoc}
+`;
+export const DatasetLineageBasicsFragmentDoc = gql`
+    fragment DatasetLineageBasics on Dataset {
+        ...DatasetBasics
+        metadata {
+            ...CurrentSourceFetchUrl
+        }
+        owner {
+            avatarUrl
         }
     }
+    ${DatasetBasicsFragmentDoc}
+    ${CurrentSourceFetchUrlFragmentDoc}
 `;
 export const DatasetLineageFragmentDoc = gql`
     fragment DatasetLineage on Dataset {
+        owner {
+            avatarUrl
+        }
         metadata {
-            ...currentSourceFetchUrl
+            ...CurrentSourceFetchUrl
             currentUpstreamDependencies {
-                ...DatasetBasics
+                ...DatasetLineageBasics
                 metadata {
-                    ...currentSourceFetchUrl
+                    ...CurrentSourceFetchUrl
                     currentUpstreamDependencies {
-                        ...DatasetBasics
+                        ...DatasetLineageBasics
                         metadata {
-                            ...currentSourceFetchUrl
+                            ...CurrentSourceFetchUrl
                             currentUpstreamDependencies {
-                                ...DatasetBasics
+                                ...DatasetLineageBasics
                                 metadata {
-                                    ...currentSourceFetchUrl
+                                    ...CurrentSourceFetchUrl
                                     currentUpstreamDependencies {
-                                        ...DatasetBasics
+                                        ...DatasetLineageBasics
                                         metadata {
-                                            ...currentSourceFetchUrl
+                                            ...CurrentSourceFetchUrl
                                             currentUpstreamDependencies {
-                                                ...DatasetBasics
+                                                ...DatasetLineageBasics
                                             }
                                         }
                                     }
@@ -1969,23 +2041,23 @@ export const DatasetLineageFragmentDoc = gql`
                 }
             }
             currentDownstreamDependencies {
-                ...DatasetBasics
+                ...DatasetLineageBasics
                 metadata {
-                    ...currentSourceFetchUrl
+                    ...CurrentSourceFetchUrl
                     currentDownstreamDependencies {
-                        ...DatasetBasics
+                        ...DatasetLineageBasics
                         metadata {
-                            ...currentSourceFetchUrl
+                            ...CurrentSourceFetchUrl
                             currentDownstreamDependencies {
-                                ...DatasetBasics
+                                ...DatasetLineageBasics
                                 metadata {
-                                    ...currentSourceFetchUrl
+                                    ...CurrentSourceFetchUrl
                                     currentDownstreamDependencies {
-                                        ...DatasetBasics
+                                        ...DatasetLineageBasics
                                         metadata {
-                                            ...currentSourceFetchUrl
+                                            ...CurrentSourceFetchUrl
                                             currentDownstreamDependencies {
-                                                ...DatasetBasics
+                                                ...DatasetLineageBasics
                                             }
                                         }
                                     }
@@ -1998,7 +2070,7 @@ export const DatasetLineageFragmentDoc = gql`
         }
     }
     ${CurrentSourceFetchUrlFragmentDoc}
-    ${DatasetBasicsFragmentDoc}
+    ${DatasetLineageBasicsFragmentDoc}
 `;
 export const DatasetCurrentInfoFragmentDoc = gql`
     fragment DatasetCurrentInfo on SetInfo {
@@ -2274,9 +2346,7 @@ export const MetadataBlockFragmentDoc = gql`
         systemTime
         sequenceNumber
         author {
-            __typename
-            id
-            name
+            ...AccountBasics
         }
         event {
             __typename
@@ -2292,6 +2362,7 @@ export const MetadataBlockFragmentDoc = gql`
             ...SetPollingSourceEvent
         }
     }
+    ${AccountBasicsFragmentDoc}
     ${SeedEventFragmentDoc}
     ${SetWatermarkEventFragmentDoc}
     ${SetVocabEventFragmentDoc}
@@ -2332,7 +2403,6 @@ export const DatasetLastUpdateFragmentDoc = gql`
 `;
 export const DatasetMetadataSummaryFragmentDoc = gql`
     fragment DatasetMetadataSummary on Dataset {
-        ...DatasetBasics
         metadata {
             currentInfo {
                 ...DatasetCurrentInfo
@@ -2360,7 +2430,6 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
         ...DatasetReadme
         ...DatasetLastUpdate
     }
-    ${DatasetBasicsFragmentDoc}
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
     ${SetPollingSourceEventFragmentDoc}
@@ -2385,7 +2454,6 @@ export const DatasetDescriptionFragmentDoc = gql`
 `;
 export const DatasetDetailsFragmentDoc = gql`
     fragment DatasetDetails on Dataset {
-        kind
         createdAt
         lastUpdatedAt
         data {
@@ -2421,6 +2489,16 @@ export const DatasetOverviewFragmentDoc = gql`
     ${DatasetReadmeFragmentDoc}
     ${DatasetLastUpdateFragmentDoc}
 `;
+export const DatasetPermissionsFragmentDoc = gql`
+    fragment DatasetPermissions on Dataset {
+        permissions {
+            canView
+            canDelete
+            canRename
+            canCommit
+        }
+    }
+`;
 export const DatasetSearchOverviewFragmentDoc = gql`
     fragment DatasetSearchOverview on Dataset {
         ...DatasetBasics
@@ -2436,6 +2514,7 @@ export const DatasetSearchOverviewFragmentDoc = gql`
             currentDownstreamDependencies {
                 id
                 kind
+                alias
             }
         }
     }
@@ -2443,6 +2522,27 @@ export const DatasetSearchOverviewFragmentDoc = gql`
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
 `;
+export const AccountByNameDocument = gql`
+    query accountByName($accountName: AccountName!) {
+        accounts {
+            byName(name: $accountName) {
+                ...Account
+            }
+        }
+    }
+    ${AccountFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountByNameGQL extends Apollo.Query<AccountByNameQuery, AccountByNameQueryVariables> {
+    document = AccountByNameDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const CommitEventToDatasetDocument = gql`
     mutation commitEventToDataset($datasetId: DatasetID!, $event: String!) {
         datasets {
@@ -2460,6 +2560,12 @@ export const CommitEventToDatasetDocument = gql`
                                 message
                             }
                             ... on CommitResultAppendError {
+                                message
+                            }
+                            ... on MetadataManifestUnsupportedVersion {
+                                message
+                            }
+                            ... on NoChanges {
                                 message
                             }
                         }
@@ -2484,9 +2590,9 @@ export class CommitEventToDatasetGQL extends Apollo.Mutation<
     }
 }
 export const CreateEmptyDatasetDocument = gql`
-    mutation createEmptyDataset($accountId: AccountID!, $datasetKind: DatasetKind!, $datasetName: DatasetName!) {
+    mutation createEmptyDataset($datasetKind: DatasetKind!, $datasetName: DatasetName!) {
         datasets {
-            createEmpty(accountId: $accountId, datasetKind: $datasetKind, datasetName: $datasetName) {
+            createEmpty(datasetKind: $datasetKind, datasetName: $datasetName) {
                 message
             }
         }
@@ -2507,9 +2613,9 @@ export class CreateEmptyDatasetGQL extends Apollo.Mutation<
     }
 }
 export const CreateDatasetFromSnapshotDocument = gql`
-    mutation createDatasetFromSnapshot($accountId: AccountID!, $snapshot: String!) {
+    mutation createDatasetFromSnapshot($snapshot: String!) {
         datasets {
-            createFromSnapshot(accountId: $accountId, snapshot: $snapshot, snapshotFormat: YAML) {
+            createFromSnapshot(snapshot: $snapshot, snapshotFormat: YAML) {
                 message
                 ... on CreateDatasetResultSuccess {
                     dataset {
@@ -2546,6 +2652,9 @@ export const UpdateReadmeDocument = gql`
                         ... on CommitResultSuccess {
                             oldHead
                         }
+                        ... on CommitResultAppendError {
+                            message
+                        }
                     }
                 }
             }
@@ -2558,6 +2667,32 @@ export const UpdateReadmeDocument = gql`
 })
 export class UpdateReadmeGQL extends Apollo.Mutation<UpdateReadmeMutation, UpdateReadmeMutationVariables> {
     document = UpdateReadmeDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const GetDatasetBasicsWithPermissionsDocument = gql`
+    query getDatasetBasicsWithPermissions($accountName: AccountName!, $datasetName: DatasetName!) {
+        datasets {
+            byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+                ...DatasetBasics
+                ...DatasetPermissions
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${DatasetPermissionsFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetDatasetBasicsWithPermissionsGQL extends Apollo.Query<
+    GetDatasetBasicsWithPermissionsQuery,
+    GetDatasetBasicsWithPermissionsQueryVariables
+> {
+    document = GetDatasetBasicsWithPermissionsDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
@@ -2692,6 +2827,7 @@ export const GetDatasetMainDataDocument = gql`
                 ...DatasetData
                 ...DatasetMetadataSummary
                 ...DatasetLineage
+                ...DatasetPermissions
             }
         }
     }
@@ -2700,6 +2836,7 @@ export const GetDatasetMainDataDocument = gql`
     ${DatasetDataFragmentDoc}
     ${DatasetMetadataSummaryFragmentDoc}
     ${DatasetLineageFragmentDoc}
+    ${DatasetPermissionsFragmentDoc}
 `;
 
 @Injectable({
@@ -2801,6 +2938,27 @@ export class DeleteDatasetGQL extends Apollo.Mutation<DeleteDatasetMutation, Del
         super(apollo);
     }
 }
+export const GetEnabledLoginMethodsDocument = gql`
+    query getEnabledLoginMethods {
+        auth {
+            enabledLoginMethods
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetEnabledLoginMethodsGQL extends Apollo.Query<
+    GetEnabledLoginMethodsQuery,
+    GetEnabledLoginMethodsQueryVariables
+> {
+    document = GetEnabledLoginMethodsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const EnginesDocument = gql`
     query engines {
         data {
@@ -2823,50 +2981,49 @@ export class EnginesGQL extends Apollo.Query<EnginesQuery, EnginesQueryVariables
         super(apollo);
     }
 }
-export const GithubLoginDocument = gql`
-    mutation GithubLogin($code: String!) {
+export const LoginDocument = gql`
+    mutation Login($login_method: String!, $login_credentials_json: String!) {
         auth {
-            githubLogin(code: $code) {
-                token {
-                    accessToken
-                    scope
-                    tokenType
-                }
-                accountInfo {
-                    ...AccountDetails
+            login(loginMethod: $login_method, loginCredentialsJson: $login_credentials_json) {
+                accessToken
+                account {
+                    ...Account
                 }
             }
         }
     }
-    ${AccountDetailsFragmentDoc}
+    ${AccountFragmentDoc}
 `;
 
 @Injectable({
     providedIn: "root",
 })
-export class GithubLoginGQL extends Apollo.Mutation<GithubLoginMutation, GithubLoginMutationVariables> {
-    document = GithubLoginDocument;
+export class LoginGQL extends Apollo.Mutation<LoginMutation, LoginMutationVariables> {
+    document = LoginDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
     }
 }
-export const FetchAccountInfoDocument = gql`
-    mutation FetchAccountInfo($accessToken: String!) {
+export const FetchAccountDetailsDocument = gql`
+    mutation FetchAccountDetails($accessToken: String!) {
         auth {
-            accountInfo(accessToken: $accessToken) {
-                ...AccountDetails
+            accountDetails(accessToken: $accessToken) {
+                ...Account
             }
         }
     }
-    ${AccountDetailsFragmentDoc}
+    ${AccountFragmentDoc}
 `;
 
 @Injectable({
     providedIn: "root",
 })
-export class FetchAccountInfoGQL extends Apollo.Mutation<FetchAccountInfoMutation, FetchAccountInfoMutationVariables> {
-    document = FetchAccountInfoDocument;
+export class FetchAccountDetailsGQL extends Apollo.Mutation<
+    FetchAccountDetailsMutation,
+    FetchAccountDetailsMutationVariables
+> {
+    document = FetchAccountDetailsDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
@@ -2876,6 +3033,7 @@ export const GetMetadataBlockDocument = gql`
     query getMetadataBlock($accountName: AccountName!, $datasetName: DatasetName!, $blockHash: Multihash!) {
         datasets {
             byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+                ...DatasetBasics
                 metadata {
                     chain {
                         blockByHashEncoded(hash: $blockHash, format: YAML)
@@ -2887,6 +3045,7 @@ export const GetMetadataBlockDocument = gql`
             }
         }
     }
+    ${DatasetBasicsFragmentDoc}
     ${MetadataBlockFragmentDoc}
 `;
 

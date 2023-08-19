@@ -1,19 +1,17 @@
-import { mockDatasetBasicsFragment } from "../../search/mock.data";
 import {
-    DatasetHistoryUpdate,
-    DatasetLineageBasics,
-    DataSqlErrorUpdate,
-    DataUpdate,
-    LineageUpdate,
-} from "../dataset.subscriptions.interface";
-import {
-    CommitEventToDatasetMutation,
     CurrentSourceFetchUrlFragment,
     DatasetKind,
-    DeleteDatasetMutation,
-    RenameDatasetMutation,
-    UpdateReadmeMutation,
+    DataSchemaFormat,
+    DatasetLineageBasicsFragment,
 } from "src/app/api/kamu.graphql.interface";
+import {
+    DataUpdate,
+    DataSqlErrorUpdate,
+    DatasetHistoryUpdate,
+    LineageUpdate,
+    MetadataSchemaUpdate,
+} from "../dataset.subscriptions.interface";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 
 export const mockDataUpdate: DataUpdate = {
     schema: {
@@ -47,9 +45,9 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
             prevBlockHash: "zW1ioX6fdsM4so8MPw7wqF1uKsDC7n6FEkhahZKXNcgF5E1",
             systemTime: "2022-08-05T21:19:28.817281255+00:00",
             author: {
-                __typename: "User",
+                __typename: "Account",
                 id: "1",
-                name: "kamu",
+                accountName: "kamu",
             },
             event: {
                 __typename: "AddData",
@@ -73,9 +71,9 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
             systemTime: "2022-08-05T21:17:30.613911358+00:00",
             sequenceNumber: 3,
             author: {
-                __typename: "User",
+                __typename: "Account",
                 id: "1",
-                name: "kamu",
+                accountName: "kamu",
             },
             event: {
                 __typename: "SetInfo",
@@ -112,8 +110,8 @@ export const mockCurrentSourceFetchUrlFragment: CurrentSourceFetchUrlFragment = 
     },
 };
 
-export const mockGraphNode: DatasetLineageBasics = {
-    ...mockDatasetBasicsFragment,
+export const mockGraphNode: DatasetLineageBasicsFragment = {
+    ...mockDatasetBasicsDerivedFragment,
     metadata: {
         ...mockCurrentSourceFetchUrlFragment,
     },
@@ -148,10 +146,11 @@ export const mockOverviewDataUpdate = {
         kind: DatasetKind.Root,
         name: "net.rocketpool.reth.mint-burn",
         owner: {
-            __typename: "User",
+            __typename: "Account",
             id: "1",
-            name: "kamu",
+            accountName: "kamu",
         },
+        alias: "kamu/net.rocketpool.reth.mint-burn",
         data: {
             __typename: "DatasetData",
             numRecordsTotal: 6909,
@@ -248,9 +247,9 @@ export const mockOverviewDataUpdate = {
                             systemTime: "2022-08-05T21:15:03.947245004+00:00",
                             sequenceNumber: 14,
                             author: {
-                                __typename: "User",
+                                __typename: "Account",
                                 id: "1",
-                                name: "kamu",
+                                accountName: "kamu",
                             },
                             event: {
                                 __typename: "AddData",
@@ -288,7 +287,206 @@ export const mockOverviewDataUpdate = {
     },
 };
 
-export const mockMetadataSchemaUpdate = {
+export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
+    schema: {
+        name: "spark_schema",
+        type: "struct",
+        fields: [
+            {
+                name: "offset",
+                repetition: "OPTIONAL",
+                type: "INT64",
+            },
+            {
+                name: "system_time",
+                repetition: "REQUIRED",
+                type: "INT64",
+                logicalType: "TIMESTAMP_MILLIS",
+            },
+            {
+                name: "date_reported",
+                repetition: "OPTIONAL",
+                type: "INT64",
+                logicalType: "TIMESTAMP_MILLIS",
+            },
+            {
+                name: "id",
+                repetition: "OPTIONAL",
+                type: "INT64",
+            },
+            {
+                name: "zone",
+                repetition: "OPTIONAL",
+                type: "BYTE_ARRAY",
+                logicalType: "UTF8",
+            },
+            {
+                name: "gender",
+                repetition: "OPTIONAL",
+                type: "BYTE_ARRAY",
+                logicalType: "UTF8",
+            },
+            {
+                name: "age_group",
+                repetition: "OPTIONAL",
+                type: "BYTE_ARRAY",
+                logicalType: "UTF8",
+            },
+            {
+                name: "case_status",
+                repetition: "OPTIONAL",
+                type: "BYTE_ARRAY",
+                logicalType: "UTF8",
+            },
+            {
+                name: "case_type",
+                repetition: "OPTIONAL",
+                type: "BYTE_ARRAY",
+                logicalType: "UTF8",
+            },
+        ],
+    },
+    pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+        totalPages: 1,
+        currentPage: 1,
+    },
+    metadataSummary: {
+        __typename: "Dataset",
+        metadata: {
+            __typename: "DatasetMetadata",
+            currentSource: {
+                __typename: "SetPollingSource",
+                fetch: {
+                    __typename: "FetchStepUrl",
+                    url: "https://www.alberta.ca/data/stats/covid-19-alberta-statistics-data.csv",
+                    eventTime: null,
+                    headers: null,
+                    cache: null,
+                },
+                read: {
+                    __typename: "ReadStepCsv",
+                    schema: [
+                        "id BIGINT",
+                        "date_reported TIMESTAMP",
+                        "zone STRING",
+                        "gender STRING",
+                        "age_group STRING",
+                        "case_status STRING",
+                        "case_type STRING",
+                    ],
+                    separator: null,
+                    encoding: null,
+                    quote: null,
+                    escape: null,
+                    comment: null,
+                    header: true,
+                    enforceSchema: true,
+                    inferSchema: false,
+                    ignoreLeadingWhiteSpace: null,
+                    ignoreTrailingWhiteSpace: null,
+                    nullValue: null,
+                    emptyValue: null,
+                    nanValue: null,
+                    positiveInf: null,
+                    negativeInf: null,
+                    dateFormat: null,
+                    timestampFormat: null,
+                    multiLine: null,
+                },
+                merge: {
+                    __typename: "MergeStrategyLedger",
+                    primaryKey: ["id"],
+                },
+                prepare: null,
+                preprocess: null,
+            },
+            currentTransform: null,
+            currentInfo: {
+                __typename: "SetInfo",
+                description: "Confirmed positive cases of COVID-19 in Alberta",
+                keywords: [
+                    "Healthcare",
+                    "Epidemiology",
+                    "COVID-19",
+                    "SARS-CoV-2",
+                    "Disaggregated",
+                    "Anonymized",
+                    "Alberta",
+                    "Canada",
+                ],
+            },
+            currentLicense: {
+                __typename: "SetLicense",
+                shortName: "OGL-Canada-2.0",
+                name: "Open Government Licence - Canada",
+                spdxId: "OGL-Canada-2.0",
+                websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
+            },
+            currentWatermark: "2023-06-04T00:00:00+00:00",
+            currentSchema: {
+                __typename: "DataSchema",
+                format: DataSchemaFormat.ParquetJson,
+                content:
+                    '{"name": "spark_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT64", "logicalType": "TIMESTAMP_MILLIS"}, {"name": "date_reported", "repetition": "OPTIONAL", "type": "INT64", "logicalType": "TIMESTAMP_MILLIS"}, {"name": "id", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "zone", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "gender", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "age_group", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "case_status", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "case_type", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}]}',
+            },
+            currentVocab: {
+                __typename: "SetVocab",
+                systemTimeColumn: null,
+                eventTimeColumn: "date_reported",
+                offsetColumn: null,
+            },
+
+            currentReadme:
+                "# Confirmed positive cases of COVID-19 in Alberta\n\nThis dataset compiles daily snapshots of publicly reported data on 2019 Novel Coronavirus (COVID-19) testing in Alberta.\n\nData includes:\n- approximation of onset date\n- age group\n- patient gender\n- case acquisition information\n- patient outcome\n- reporting Public Health Unit (PHU)\n- postal code, website, longitude, and latitude of PHU\n\nThis dataset is subject to change. Please review the daily epidemiologic summaries for information on variables, methodology, and technical considerations.\n\n**Related dataset(s)**:\n- [Daily aggregate count of confirmed positive cases of COVID-19 in Alberta](#todo)\n",
+            chain: {
+                __typename: "MetadataChain",
+                blocks: {
+                    __typename: "MetadataBlockConnection",
+                    nodes: [
+                        {
+                            __typename: "MetadataBlockExtended",
+                            blockHash: "zW1h1jepxH1cGJK7PwTci988ng1EiDWuEeDJHGb1wzhC3ri",
+                            prevBlockHash: "zW1fDLR8CtfhywWktkMRvysBf2eTj7cV5FerxeQty1Ty5YP",
+                            systemTime: "2023-09-04T19:27:35.059076203+00:00",
+                            sequenceNumber: 13,
+                            author: {
+                                __typename: "Account",
+                                id: "12345",
+                                accountName: "sergeiz",
+                            },
+                            event: {
+                                __typename: "SetAttachments",
+                                attachments: {
+                                    __typename: "AttachmentsEmbedded",
+                                    items: [
+                                        {
+                                            __typename: "AttachmentEmbedded",
+                                            path: "README.md",
+                                            content:
+                                                "# Confirmed positive cases of COVID-19 in Alberta\n\nThis dataset compiles daily snapshots of publicly reported data on 2019 Novel Coronavirus (COVID-19) testing in Alberta.\n\nData includes:\n- approximation of onset date\n- age group\n- patient gender\n- case acquisition information\n- patient outcome\n- reporting Public Health Unit (PHU)\n- postal code, website, longitude, and latitude of PHU\n\nThis dataset is subject to change. Please review the daily epidemiologic summaries for information on variables, methodology, and technical considerations.\n\n**Related dataset(s)**:\n- [Daily aggregate count of confirmed positive cases of COVID-19 in Alberta](#todo)\n",
+                                        },
+                                    ],
+                                },
+                            },
+                        },
+                    ],
+                    totalCount: 14,
+                    pageInfo: {
+                        __typename: "PageBasedInfo",
+                        hasNextPage: true,
+                        hasPreviousPage: false,
+                        currentPage: 0,
+                        totalPages: 14,
+                    },
+                },
+            },
+        },
+    },
+};
+
+export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
     schema: {
         name: "spark_schema",
         type: "struct",
@@ -333,36 +531,8 @@ export const mockMetadataSchemaUpdate = {
             },
         ],
     },
-    metadata: {
+    metadataSummary: {
         __typename: "Dataset",
-        id: "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7",
-        kind: "DERIVATIVE",
-        name: "alberta.case-details.hm",
-        owner: {
-            __typename: "User",
-            id: "1",
-            name: "kamu",
-        },
-        data: {
-            __typename: "DatasetData",
-            tail: {
-                __typename: "DataQueryResultSuccess",
-                schema: {
-                    __typename: "DataSchema",
-                    format: "PARQUET",
-                    content:
-                        "message arrow_schema {\n  OPTIONAL INT64 offset;\n  REQUIRED INT64 system_time (TIMESTAMP(NANOS,false));\n  OPTIONAL INT64 id;\n  OPTIONAL INT64 reported_date (TIMESTAMP(NANOS,false));\n  REQUIRED BYTE_ARRAY gender (STRING);\n  REQUIRED BYTE_ARRAY age_group (STRING);\n  OPTIONAL BYTE_ARRAY location (STRING);\n}\n",
-                },
-                data: {
-                    __typename: "DataBatch",
-                    format: "JSON",
-                    content:
-                        '[{"age_group":"50s","gender":"F","id":595254,"location":"Calgary Zone","offset":596125,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"30s","gender":"M","id":377821,"location":"North Zone","offset":596124,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"60s","gender":"F","id":595723,"location":"South Zone","offset":596123,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"30s","gender":"M","id":457371,"location":"Calgary Zone","offset":596122,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"20s","gender":"F","id":457368,"location":"Edmonton Zone","offset":596121,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"60s","gender":"F","id":351389,"location":"Edmonton Zone","offset":596120,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"80s","gender":"F","id":298274,"location":"Calgary Zone","offset":596119,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"30s","gender":"F","id":324898,"location":"Calgary Zone","offset":596118,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"70s","gender":"F","id":484338,"location":"Calgary Zone","offset":596117,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"},{"age_group":"30s","gender":"F","id":351387,"location":"Edmonton Zone","offset":596116,"reported_date":"2022-08-01 00:00:00","system_time":"2022-08-05 21:20:08.053635"}]',
-                },
-            },
-            numRecordsTotal: 596126,
-            estimatedSize: 5967476,
-        },
         metadata: {
             __typename: "DatasetMetadata",
             currentInfo: {
@@ -397,13 +567,14 @@ export const mockMetadataSchemaUpdate = {
                         dataset: {
                             __typename: "Dataset",
                             id: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
-                            kind: "ROOT",
+                            kind: DatasetKind.Root,
                             name: "alberta.case-details",
                             owner: {
-                                __typename: "User",
+                                __typename: "Account",
                                 id: "1",
-                                name: "kamu",
+                                accountName: "kamu",
                             },
+                            alias: "kamu/alberta.case-details",
                         },
                     },
                 ],
@@ -423,60 +594,10 @@ export const mockMetadataSchemaUpdate = {
             },
             currentSchema: {
                 __typename: "DataSchema",
-                format: "PARQUET_JSON",
+                format: DataSchemaFormat.ParquetJson,
                 content:
                     '{"name": "spark_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT96"}, {"name": "id", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "reported_date", "repetition": "OPTIONAL", "type": "INT96"}, {"name": "gender", "repetition": "REQUIRED", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "age_group", "repetition": "REQUIRED", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "location", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}]}',
             },
-            currentUpstreamDependencies: [
-                {
-                    __typename: "Dataset",
-                    metadata: {
-                        __typename: "DatasetMetadata",
-                        currentUpstreamDependencies: [],
-                    },
-                    id: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
-                    kind: "ROOT",
-                    name: "alberta.case-details",
-                    owner: {
-                        __typename: "User",
-                        id: "1",
-                        name: "kamu",
-                    },
-                },
-            ],
-            currentDownstreamDependencies: [
-                {
-                    __typename: "Dataset",
-                    metadata: {
-                        __typename: "DatasetMetadata",
-                        currentDownstreamDependencies: [
-                            {
-                                __typename: "Dataset",
-                                metadata: {
-                                    __typename: "DatasetMetadata",
-                                    currentDownstreamDependencies: [],
-                                },
-                                id: "did:odf:z4k88e8thqpQ7kupbJCiFbeXr5WZVCor7hmybhfmyUTLnWifwz6",
-                                kind: "DERIVATIVE",
-                                name: "canada.daily-cases",
-                                owner: {
-                                    __typename: "User",
-                                    id: "1",
-                                    name: "kamu",
-                                },
-                            },
-                        ],
-                    },
-                    id: "did:odf:z4k88e8epAntnrFDUiDYxSGkCRcTc6wNzcwbpubzLCPQLVLUMcF",
-                    kind: "DERIVATIVE",
-                    name: "canada.case-details",
-                    owner: {
-                        __typename: "User",
-                        id: "1",
-                        name: "kamu",
-                    },
-                },
-            ],
             currentReadme:
                 "# Harmonized COVID-19 case data from Alberta\n\nSee [original dataset](#todo).\n\nSee [harmonization schema and semantics](#todo).\n",
             chain: {
@@ -491,9 +612,9 @@ export const mockMetadataSchemaUpdate = {
                             systemTime: "2022-08-05T21:20:08.053635579+00:00",
                             sequenceNumber: 6,
                             author: {
-                                __typename: "User",
+                                __typename: "Account",
                                 id: "1",
-                                name: "kamu",
+                                accountName: "kamu",
                             },
                             event: {
                                 __typename: "ExecuteQuery",
@@ -507,6 +628,7 @@ export const mockMetadataSchemaUpdate = {
                                     logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
                                     physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
                                 },
+                                inputSlices: [],
                             },
                         },
                     ],
@@ -521,8 +643,6 @@ export const mockMetadataSchemaUpdate = {
                 },
             },
         },
-        createdAt: "2022-08-05T21:17:30.646318293+00:00",
-        lastUpdatedAt: "2022-08-05T21:20:08.053635579+00:00",
     },
     pageInfo: {
         hasNextPage: false,
@@ -538,10 +658,11 @@ export const mockOverviewWithSetInfo = {
     kind: DatasetKind.Root,
     name: "net.rocketpool.reth.mint-burn",
     owner: {
-        __typename: "User",
+        __typename: "Account",
         id: "1",
-        name: "kamu",
+        accountName: "kamu",
     },
+    alias: "kamu/net.rocketpool.reth.mint-burn",
     data: {
         __typename: "DatasetData",
         numRecordsTotal: 6909,
@@ -638,9 +759,9 @@ export const mockOverviewWithSetInfo = {
                         systemTime: "2022-08-05T21:15:03.947245004+00:00",
                         sequenceNumber: 14,
                         author: {
-                            __typename: "User",
+                            __typename: "Account",
                             id: "1",
-                            name: "kamu",
+                            accountName: "kamu",
                         },
                         event: {
                             __typename: "AddData",
@@ -678,10 +799,11 @@ export const mockOverviewWithSetLicense = {
     kind: DatasetKind.Root,
     name: "net.rocketpool.reth.mint-burn",
     owner: {
-        __typename: "User",
+        __typename: "Account",
         id: "1",
-        name: "kamu",
+        accountName: "kamu",
     },
+    alias: "kamu/net.rocketpool.reth.mint-burn",
     data: {
         __typename: "DatasetData",
         numRecordsTotal: 6909,
@@ -784,9 +906,9 @@ export const mockOverviewWithSetLicense = {
                         systemTime: "2022-08-05T21:15:03.947245004+00:00",
                         sequenceNumber: 14,
                         author: {
-                            __typename: "User",
+                            __typename: "Account",
                             id: "1",
-                            name: "kamu",
+                            accountName: "kamu",
                         },
                         event: {
                             __typename: "AddData",
@@ -816,135 +938,4 @@ export const mockOverviewWithSetLicense = {
     },
     createdAt: "2022-08-05T21:10:57.332924745+00:00",
     lastUpdatedAt: "2022-08-05T21:15:03.947245004+00:00",
-};
-
-export const mockCommitEventToDatasetMutationErrorMessage = "Fail";
-
-export const mockCommitEventToDatasetMutationError: CommitEventToDatasetMutation = {
-    datasets: {
-        byId: {
-            metadata: {
-                chain: {
-                    commitEvent: {
-                        __typename: "CommitResultAppendError",
-                        message: mockCommitEventToDatasetMutationErrorMessage,
-                    },
-                    __typename: "MetadataChainMut",
-                },
-                __typename: "DatasetMetadataMut",
-            },
-            __typename: "DatasetMut",
-        },
-        __typename: "DatasetsMut",
-    },
-};
-
-export const mockCommitEventToDatasetMutation: CommitEventToDatasetMutation = {
-    datasets: {
-        byId: {
-            metadata: {
-                chain: {
-                    commitEvent: {
-                        __typename: "CommitResultSuccess",
-                        message: "Success",
-                        oldHead: "zW1cMmaF6PdmJPM6LNyy2RyyWFWkF3EojZ54ezAvT2dVgKB",
-                        newHead: "zW1eXXAXqgtfNDFt7oXpMfLfDy5Tzg3dMDLWQTz2YJE6ooX",
-                    },
-                    __typename: "MetadataChainMut",
-                },
-                __typename: "DatasetMetadataMut",
-            },
-            __typename: "DatasetMut",
-        },
-        __typename: "DatasetsMut",
-    },
-};
-
-export const mockUpdateReadmeMutation: UpdateReadmeMutation = {
-    datasets: {
-        byId: {
-            metadata: {
-                updateReadme: {
-                    __typename: "CommitResultSuccess",
-                    message: "Success",
-                    oldHead: "zW1oSh19bxPZqLhY9awS7cnFrmQUueZ5MF21wVf8poHDnaX",
-                },
-                __typename: "DatasetMetadataMut",
-            },
-            __typename: "DatasetMut",
-        },
-        __typename: "DatasetsMut",
-    },
-};
-
-export const mockSuccessDeleteDatasetMutation: DeleteDatasetMutation = {
-    datasets: {
-        byId: {
-            delete: {
-                message: "Success",
-                deletedDataset: "account.tokens.portfolio",
-                __typename: "DeleteResultSuccess",
-            },
-            __typename: "DatasetMut",
-        },
-        __typename: "DatasetsMut",
-    },
-};
-
-export const mockErrorDeleteDatasetMutation: DeleteDatasetMutation = {
-    datasets: {
-        byId: {
-            delete: {
-                message: "Dataset 'account.tokens.transfers' has 1 dangling reference(s)",
-                danglingChildRefs: ["account.tokens.portfolio"],
-                notDeletedDataset: "account.tokens.transfers",
-                __typename: "DeleteResultDanglingReference",
-            },
-            __typename: "DatasetMut",
-        },
-        __typename: "DatasetsMut",
-    },
-};
-
-export const mockSuccessRenameDatasetMutation: RenameDatasetMutation = {
-    datasets: {
-        byId: {
-            rename: {
-                __typename: "RenameResultSuccess",
-                message: "Success",
-                oldName: "test10",
-                newName: "test101",
-            },
-            __typename: "DatasetMut",
-        },
-        __typename: "DatasetsMut",
-    },
-};
-
-export const mockRenameResultNameCollision: RenameDatasetMutation = {
-    datasets: {
-        byId: {
-            rename: {
-                __typename: "RenameResultNameCollision",
-                message: "Dataset 'account.portfolio' already exists",
-                collidingAlias: "account.portfolio",
-            },
-            __typename: "DatasetMut",
-        },
-        __typename: "DatasetsMut",
-    },
-};
-
-export const mockRenameResultNoChanges: RenameDatasetMutation = {
-    datasets: {
-        byId: {
-            rename: {
-                __typename: "RenameResultNoChanges",
-                preservedName: "test11",
-                message: "No changes",
-            },
-            __typename: "DatasetMut",
-        },
-        __typename: "DatasetsMut",
-    },
 };

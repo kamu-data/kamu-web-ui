@@ -1,4 +1,4 @@
-export enum SettingsTabs {
+export enum AccountSettingsTabs {
     PROFILE = "profile",
     ACCOUNT = "admin",
     APPEARANCE = "appearance",

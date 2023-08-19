@@ -9,7 +9,7 @@ const metadataBlockSetVocab: MetadataBlockFragment = {
     sequenceNumber: 14,
     systemTime: "2022-08-05T21:19:28.817281255+00:00",
     author: {
-        __typename: "User",
+        __typename: "Account",
         ...mockOwnerFields,
     },
     event: {
@@ -127,10 +127,11 @@ it("should check description for SetTransform block", () => {
                         kind: DatasetKind.Root,
                         name: "quebec.case-details",
                         owner: {
-                            __typename: "User",
+                            __typename: "Account",
                             id: "1",
-                            name: "kamu",
+                            accountName: "kamu",
                         },
+                        alias: "kamu/quebec.case-details",
                     },
                 },
             ],

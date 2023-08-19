@@ -1,0 +1,7 @@
+query accountByName($accountName: AccountName!) {
+  accounts {
+    byName(name: $accountName) {
+      ...Account
+    }
+  }
+}

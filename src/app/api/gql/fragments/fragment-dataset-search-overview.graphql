@@ -12,6 +12,7 @@ fragment DatasetSearchOverview on Dataset {
     currentDownstreamDependencies {
       id
       kind
+      alias
     }
   }
 }

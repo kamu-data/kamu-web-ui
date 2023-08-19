@@ -5,7 +5,7 @@ import { TimelineComponent } from "./timeline.component";
 import { TEST_DATASET_NAME, mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { mockPageBasedInfo } from "src/app/search/mock.data";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { DisplayHashModule } from "../display-hash/dispaly-hash.module";
 import { ToastrModule } from "ngx-toastr";
 import { DisplayTimeModule } from "../display-time/display-time.module";
@@ -56,7 +56,7 @@ describe("TimelineComponent", () => {
         emitClickOnElementByDataTestId(fixture, "button-verified");
         fixture.detectChanges();
 
-        const navigateLink = findElementByDataTestId(fixture, "navigate-to-owner-link");
+        const navigateLink = getElementByDataTestId(fixture, "navigate-to-owner-link");
         navigateLink.click();
 
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith("testName");
@@ -65,7 +65,7 @@ describe("TimelineComponent", () => {
     it("should navigate to metadata block", () => {
         const navigateToMetadataBlockSpy = spyOn(navigationService, "navigateToMetadataBlock");
         const params: MetadataBlockNavigationParams = {
-            accountName: component.history[0].author.name,
+            accountName: component.history[0].author.accountName,
             datasetName: component.datasetName,
             blockHash: component.history[0].blockHash,
         };

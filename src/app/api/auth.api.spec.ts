@@ -1,26 +1,33 @@
-import { NavigationService } from "src/app/services/navigation.service";
-import { fakeAsync, TestBed, tick } from "@angular/core/testing";
+import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { AuthApi } from "./auth.api";
-import { AccountDetailsFragment, FetchAccountInfoDocument, GithubLoginDocument } from "./kamu.graphql.interface";
+import {
+    AccountFragment,
+    FetchAccountDetailsDocument,
+    GetEnabledLoginMethodsDocument,
+    GetEnabledLoginMethodsQuery,
+    LoginDocument,
+} from "./kamu.graphql.interface";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 import {
+    mockAccountDetails,
     mockGithubLoginResponse,
     mockLogin401Error,
-    mockUserInfoFromAccessToken,
-    TEST_ACCESS_TOKEN,
+    mockPasswordLoginResponse,
+    mockAccountFromAccessToken,
+    TEST_ACCESS_TOKEN_GITHUB,
     TEST_GITHUB_CODE,
+    TEST_LOGIN,
+    TEST_PASSWORD,
 } from "./mock/auth.mock";
-import AppValues from "../common/app.values";
-import { MaybeNull } from "../common/app.types";
 import { AuthenticationError } from "../common/errors";
 import { first } from "rxjs/operators";
+import { GithubLoginCredentials, PasswordLoginCredentials } from "./auth.api.model";
+import { LoginMethod } from "../app-config.model";
 
 describe("AuthApi", () => {
     let service: AuthApi;
-    let navigationService: NavigationService;
     let controller: ApolloTestingController;
-    let localStorageSetItemSpy: jasmine.Spy;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -28,9 +35,7 @@ describe("AuthApi", () => {
             imports: [ApolloTestingModule],
         });
         service = TestBed.inject(AuthApi);
-        navigationService = TestBed.inject(NavigationService);
         controller = TestBed.inject(ApolloTestingController);
-        localStorageSetItemSpy = spyOn(localStorage, "setItem").and.stub();
     });
 
     afterEach(() => {
@@ -38,122 +43,210 @@ describe("AuthApi", () => {
     });
 
     function loginViaAccessToken(): void {
-        service.fetchUserInfoFromAccessToken(TEST_ACCESS_TOKEN).subscribe(() => {
-            expect(service.isAuthenticated).toBeTrue();
-            expect(service.currentUser).toBe(mockUserInfoFromAccessToken.auth.accountInfo);
-        });
+        service.fetchAccountFromAccessToken(TEST_ACCESS_TOKEN_GITHUB).subscribe();
 
-        const op = controller.expectOne(FetchAccountInfoDocument);
-        expect(op.operation.variables.accessToken).toEqual(TEST_ACCESS_TOKEN);
+        const op = controller.expectOne(FetchAccountDetailsDocument);
+        expect(op.operation.variables.accessToken).toEqual(TEST_ACCESS_TOKEN_GITHUB);
 
         op.flush({
-            data: mockUserInfoFromAccessToken,
+            data: mockAccountFromAccessToken,
         });
     }
 
     function loginFullyViaGithub(): void {
-        service.fetchUserInfoAndTokenFromGithubCallackCode(TEST_GITHUB_CODE).subscribe(() => {
-            expect(service.isAuthenticated).toBeTrue();
-            expect(service.currentUser).toBe(mockGithubLoginResponse.auth.githubLogin.accountInfo);
-            expect(localStorageSetItemSpy).toHaveBeenCalledWith(
-                AppValues.LOCAL_STORAGE_ACCESS_TOKEN,
-                mockGithubLoginResponse.auth.githubLogin.token.accessToken,
-            );
-        });
+        service
+            .fetchAccountAndTokenFromGithubCallackCode({ code: TEST_GITHUB_CODE } as GithubLoginCredentials)
+            .subscribe();
 
-        const op = controller.expectOne(GithubLoginDocument);
-        expect(op.operation.variables.code).toEqual(TEST_GITHUB_CODE);
+        const expectedCredentials: GithubLoginCredentials = { code: TEST_GITHUB_CODE };
+
+        const op = controller.expectOne(LoginDocument);
+        expect(op.operation.variables.login_method).toEqual(LoginMethod.GITHUB);
+        expect(op.operation.variables.login_credentials_json).toEqual(JSON.stringify(expectedCredentials));
 
         op.flush({
             data: mockGithubLoginResponse,
         });
     }
 
-    function checkUserIsLogged(user: AccountDetailsFragment): void {
-        expect(service.isAuthenticated).toBeTrue();
-        expect(service.currentUser).toEqual(user);
+    function loginFullyViaPassword(): void {
+        service
+            .fetchAccountAndTokenFromPasswordLogin({
+                login: TEST_LOGIN,
+                password: TEST_PASSWORD,
+            } as PasswordLoginCredentials)
+            .subscribe();
+
+        const expectedCredentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
+
+        const op = controller.expectOne(LoginDocument);
+        expect(op.operation.variables.login_method).toEqual(LoginMethod.PASSWORD);
+        expect(op.operation.variables.login_credentials_json).toEqual(JSON.stringify(expectedCredentials));
+
+        op.flush({
+            data: mockPasswordLoginResponse,
+        });
     }
 
     it("should be created", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should check user is initially non-authenticated", () => {
-        expect(service.isAuthenticated).toBeFalse();
-        expect(service.currentUser).toBeNull();
-    });
+    it("should check login methods access", fakeAsync(() => {
+        const mockEnabledLoginMethods: LoginMethod[] = [LoginMethod.GITHUB, LoginMethod.PASSWORD];
+        const subscription$ = service
+            .readEnabledLoginMethods()
+            .pipe(first())
+            .subscribe((enabledLoginMethods: LoginMethod[]) => {
+                expect(enabledLoginMethods).toEqual(mockEnabledLoginMethods);
+            });
 
-    it("should check user changes via login with alive access token", fakeAsync(() => {
-        let callbackInvoked = false;
-        service.onUserChanges.subscribe((user: MaybeNull<AccountDetailsFragment>) => {
-            callbackInvoked = true;
-            user ? checkUserIsLogged(user) : fail("User must not be null");
+        const op = controller.expectOne(GetEnabledLoginMethodsDocument);
+        op.flush({
+            data: {
+                auth: {
+                    enabledLoginMethods: mockEnabledLoginMethods,
+                },
+            } as GetEnabledLoginMethodsQuery,
         });
 
-        loginViaAccessToken();
         tick();
 
-        expect(callbackInvoked).toBeTrue();
+        expect(subscription$.closed).toBeTrue();
+
+        flush();
     }));
 
-    it("should check user changes via full login with github", fakeAsync(() => {
-        const subscription$ = service.onUserChanges
+    it("should check full login password  success", fakeAsync(() => {
+        const accessTokenObtained$ = service
+            .accessTokenObtained()
             .pipe(first())
-            .subscribe((user: MaybeNull<AccountDetailsFragment>) => {
-                user ? checkUserIsLogged(user) : fail("User must not be null");
+            .subscribe((token: string) => {
+                expect(token).toEqual(mockPasswordLoginResponse.auth.login.accessToken);
+            });
+
+        const accountChanged$ = service
+            .accountChanged()
+            .pipe(first())
+            .subscribe((user: AccountFragment) => {
+                expect(user).toEqual(mockAccountDetails);
+            });
+
+        loginFullyViaPassword();
+        tick();
+
+        expect(accessTokenObtained$.closed).toBeTrue();
+        expect(accountChanged$.closed).toBeTrue();
+        flush();
+    }));
+
+    it("should check full login password failure", fakeAsync(() => {
+        const subscription$ = service
+            .fetchAccountAndTokenFromPasswordLogin({
+                login: TEST_LOGIN,
+                password: TEST_PASSWORD,
+            } as PasswordLoginCredentials)
+            .pipe(first())
+            .subscribe({
+                next: () => fail("Unexpected success"),
+                error: (e: Error) => {
+                    expect(e).toEqual(new AuthenticationError([mockLogin401Error]));
+                },
+            });
+
+        const op = controller.expectOne(LoginDocument);
+        op.graphqlErrors([mockLogin401Error]);
+        tick();
+
+        expect(subscription$.closed).toBeTrue();
+        flush();
+    }));
+
+    it("should check full login Github success", fakeAsync(() => {
+        const accessTokenObtained$ = service
+            .accessTokenObtained()
+            .pipe(first())
+            .subscribe((token: string) => {
+                expect(token).toEqual(mockGithubLoginResponse.auth.login.accessToken);
+            });
+
+        const accountChanged$ = service
+            .accountChanged()
+            .pipe(first())
+            .subscribe((user: AccountFragment) => {
+                expect(user).toEqual(mockAccountDetails);
             });
 
         loginFullyViaGithub();
         tick();
 
-        expect(subscription$.closed).toBeTrue();
+        expect(accessTokenObtained$.closed).toBeTrue();
+        expect(accountChanged$.closed).toBeTrue();
+        flush();
     }));
 
-    it("should check full login GraphQL failure", fakeAsync(() => {
+    it("should check full login Github failure", fakeAsync(() => {
         const subscription$ = service
-            .fetchUserInfoAndTokenFromGithubCallackCode(TEST_GITHUB_CODE)
+            .fetchAccountAndTokenFromGithubCallackCode({ code: TEST_GITHUB_CODE } as GithubLoginCredentials)
             .pipe(first())
-            .subscribe(
-                () => fail("Unexpected success"),
-                (e: Error) => {
+            .subscribe({
+                next: () => fail("Unexpected success"),
+                error: (e: Error) => {
                     expect(e).toEqual(new AuthenticationError([mockLogin401Error]));
                 },
-            );
+            });
 
-        const op = controller.expectOne(GithubLoginDocument);
-        expect(op.operation.variables.code).toEqual(TEST_GITHUB_CODE);
-
+        const op = controller.expectOne(LoginDocument);
         op.graphqlErrors([mockLogin401Error]);
         tick();
 
         expect(subscription$.closed).toBeTrue();
+        flush();
     }));
 
-    it("should check login via access token GraphQL failure", fakeAsync(() => {
-        const subscription$ = service
-            .fetchUserInfoFromAccessToken(TEST_ACCESS_TOKEN)
+    it("should check login via access token success", fakeAsync(() => {
+        const accessTokenObtained$ = service
+            .accessTokenObtained()
             .pipe(first())
-            .subscribe(
-                () => fail("Unexpected success"),
-                (e: Error) => {
-                    expect(e).toEqual(new AuthenticationError([mockLogin401Error]));
-                },
-            );
+            .subscribe(() => {
+                fail("Unexpected call of access token update");
+            });
 
-        const op = controller.expectOne(FetchAccountInfoDocument);
-        expect(op.operation.variables.accessToken).toEqual(TEST_ACCESS_TOKEN);
+        const accountChanged$ = service
+            .accountChanged()
+            .pipe(first())
+            .subscribe((user: AccountFragment) => {
+                expect(user).toEqual(mockAccountDetails);
+            });
 
-        op.graphqlErrors([mockLogin401Error]);
-        tick();
-
-        expect(subscription$.closed).toBeTrue();
-    }));
-
-    it("should check user logout navigates to home page", () => {
-        const navigationServiceSpy = spyOn(navigationService, "navigateToHome");
         loginViaAccessToken();
-        service.logOut();
-        expect(service.currentUser).toBeNull();
-        expect(navigationServiceSpy).toHaveBeenCalledWith();
-    });
+        tick();
+
+        expect(accessTokenObtained$.closed).toBeFalse();
+        accessTokenObtained$.unsubscribe();
+
+        expect(accountChanged$.closed).toBeTrue();
+        flush();
+    }));
+
+    it("should check login via access token failure", fakeAsync(() => {
+        const subscription$ = service
+            .fetchAccountFromAccessToken(TEST_ACCESS_TOKEN_GITHUB)
+            .pipe(first())
+            .subscribe({
+                next: () => fail("Unexpected success"),
+                error: (e: Error) => {
+                    expect(e).toEqual(new AuthenticationError([mockLogin401Error]));
+                },
+            });
+
+        const op = controller.expectOne(FetchAccountDetailsDocument);
+        expect(op.operation.variables.accessToken).toEqual(TEST_ACCESS_TOKEN_GITHUB);
+
+        op.graphqlErrors([mockLogin401Error]);
+        tick();
+
+        expect(subscription$.closed).toBeTrue();
+        flush();
+    }));
 });

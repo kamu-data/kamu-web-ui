@@ -1,9 +1,15 @@
 import { DataHelpers } from "../../../common/data.helpers";
-import { DatasetKind } from "../../../api/kamu.graphql.interface";
+import {
+    DatasetKind,
+    DatasetPermissionsFragment,
+    DatasetTransformFragment,
+    LicenseFragment,
+    SetPollingSourceEventFragment,
+} from "../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DatasetSchema } from "../../../interface/dataset.interface";
 import AppValues from "../../../common/app.values";
-import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { MetadataSchemaUpdate } from "../../dataset.subscriptions.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import {
@@ -12,9 +18,10 @@ import {
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
 import { momentConvertDatetoLocalWithFormat } from "src/app/common/app.helpers";
-import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
+import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/common/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
-import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
+import { SQL_EDITOR_OPTIONS } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
+import _ from "lodash";
 
 @Component({
     selector: "app-metadata",
@@ -22,48 +29,44 @@ import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/component
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
-    @Input() public datasetBasics?: DatasetBasicsFragment;
+    @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input() public datasetPermissions: DatasetPermissionsFragment;
     @Output() pageChangeEmit = new EventEmitter<number>();
-    @Output() selectTopicEmit = new EventEmitter<string>();
-    @Output() clickDatasetEmit = new EventEmitter<DatasetBasicsFragment>();
 
-    public sqlEditorOptions = {
-        ...sqlEditorOptions,
+    public readonly SQL_EDITOR_OPTIONS = {
+        ...SQL_EDITOR_OPTIONS,
         readOnly: true,
         automaticLayout: true,
     };
 
+    public readonly ReadSectionMapping: Record<string, string> = {
+        ReadStepCsv: "Csv",
+        ReadStepJsonLines: "Json lines",
+        ReadStepGeoJson: "Geo json",
+        ReadStepEsriShapefile: "Esri shapefile",
+        ReadStepParquet: "Parquet",
+    };
+
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
-        metadata: DatasetMetadataSummaryFragment;
+        metadataSummary: DatasetMetadataSummaryFragment;
         pageInfo: PageBasedInfo;
     };
 
-    constructor(
-        private appDatasetSubsService: AppDatasetSubscriptionsService,
-        private navigationService: NavigationService,
-    ) {
+    constructor(private datasetSubsService: DatasetSubscriptionsService, private navigationService: NavigationService) {
         super();
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.trackSubscription(
-            this.appDatasetSubsService.onMetadataSchemaChanges.subscribe((schemaUpdate: MetadataSchemaUpdate) => {
+            this.datasetSubsService.onMetadataSchemaChanges.subscribe((schemaUpdate: MetadataSchemaUpdate) => {
                 this.currentState = {
                     schema: schemaUpdate.schema,
-                    metadata: schemaUpdate.metadata,
+                    metadataSummary: schemaUpdate.metadataSummary,
                     pageInfo: schemaUpdate.pageInfo,
                 };
             }),
         );
-    }
-
-    public selectTopic(topicName: string): void {
-        this.selectTopicEmit.emit(topicName);
-    }
-
-    public onClickDataset(dataset: DatasetBasicsFragment): void {
-        this.clickDatasetEmit.emit(dataset);
     }
 
     public onPageChange(currentPage: number): void {
@@ -75,17 +78,32 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     }
 
     public get totalPages(): number {
-        const totalPages = this.currentState?.pageInfo.totalPages;
-        return totalPages ?? 1;
+        return this.currentState?.pageInfo.totalPages ?? 1;
     }
 
     public get latestBlockhash(): string {
-        return this.currentState ? this.currentState.metadata.metadata.chain.blocks.nodes[0].blockHash : "";
+        return this.currentState ? this.currentState.metadataSummary.metadata.chain.blocks.nodes[0].blockHash : "";
+    }
+
+    public get currentLicense(): MaybeNullOrUndefined<LicenseFragment> {
+        return this.currentState?.metadataSummary.metadata.currentLicense;
+    }
+
+    public get currentWatermark(): MaybeNullOrUndefined<string> {
+        return this.currentState?.metadataSummary.metadata.currentWatermark;
+    }
+
+    public get currentSource(): MaybeNullOrUndefined<SetPollingSourceEventFragment> {
+        return this.currentState?.metadataSummary.metadata.currentSource;
+    }
+
+    public get currentTransform(): MaybeNullOrUndefined<DatasetTransformFragment> {
+        return this.currentState?.metadataSummary.metadata.currentTransform;
     }
 
     public get latestBlockSystemTime(): string {
         const systemTimeAsString: MaybeUndefined<string> =
-            this.currentState?.metadata.metadata.chain.blocks.nodes[0].systemTime;
+            this.currentState?.metadataSummary.metadata.chain.blocks.nodes[0].systemTime;
         return systemTimeAsString
             ? momentConvertDatetoLocalWithFormat({
                   date: new Date(String(systemTimeAsString)),
@@ -95,31 +113,45 @@ export class MetadataComponent extends BaseComponent implements OnInit {
             : "";
     }
 
+    public get canEditSetPollingSource(): boolean {
+        if (this.currentState) {
+            return (
+                this.datasetBasics.kind === DatasetKind.Root &&
+                !_.isNil(this.currentState.metadataSummary.metadata.currentSource) &&
+                this.datasetPermissions.permissions.canCommit
+            );
+        } else {
+            return false;
+        }
+    }
+
+    public get canEditSetTransform(): boolean {
+        if (this.currentState) {
+            return (
+                this.datasetBasics.kind === DatasetKind.Derivative &&
+                !_.isNil(this.currentState.metadataSummary.metadata.currentTransform) &&
+                this.datasetPermissions.permissions.canCommit
+            );
+        } else {
+            return false;
+        }
+    }
+
     public kindToCamelCase(kind: DatasetKind): string {
         return DataHelpers.capitalizeFirstLetter(kind);
     }
 
-    public readSectionMapperType: Record<string, string> = {
-        ReadStepCsv: "Csv",
-        ReadStepJsonLines: "Json lines",
-        ReadStepGeoJson: "Geo json",
-        ReadStepEsriShapefile: "Esri shapefile",
-        ReadStepParquet: "Parquet",
-    };
-
     public navigateToEditPollingSource(): void {
-        if (this.datasetBasics)
-            this.navigationService.navigateToAddPollingSource({
-                accountName: this.datasetBasics.owner.name,
-                datasetName: this.datasetBasics.name,
-            });
+        this.navigationService.navigateToAddPollingSource({
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
+        });
     }
 
     public navigateToEditSetTransform(): void {
-        if (this.datasetBasics)
-            this.navigationService.navigateToSetTransform({
-                accountName: this.datasetBasics.owner.name,
-                datasetName: this.datasetBasics.name,
-            });
+        this.navigationService.navigateToSetTransform({
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
+        });
     }
 }

@@ -1,0 +1,4 @@
+fragment AccountBasics on Account {
+  id
+  accountName
+}

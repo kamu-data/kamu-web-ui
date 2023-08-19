@@ -1,0 +1,7 @@
+fragment Account on Account {
+  id
+  accountName
+  displayName
+  accountType
+  avatarUrl
+}

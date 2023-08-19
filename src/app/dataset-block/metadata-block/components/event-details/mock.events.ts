@@ -113,10 +113,11 @@ export const mockSetTransform: DatasetTransformFragment = {
                 kind: DatasetKind.Root,
                 name: "alberta.case-details",
                 owner: {
-                    __typename: "User",
+                    __typename: "Account",
                     id: "1",
-                    name: "kamu",
+                    accountName: "kamu",
                 },
+                alias: "kamu/alberta.case-details",
             },
         },
     ],

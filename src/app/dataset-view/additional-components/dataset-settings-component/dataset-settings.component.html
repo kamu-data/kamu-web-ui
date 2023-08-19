@@ -48,12 +48,22 @@
             >
                 Rename
             </button>
-            <div *ngIf="datasetName?.invalid && (datasetName?.touched || datasetName?.dirty)">
-                <span *ngIf="datasetName?.errors?.['required']" class="text-danger fs-12">Name is required</span>
-                <span *ngIf="datasetName?.errors?.['pattern']" class="text-danger fs-12">Invalid dataset name</span>
+            <div *ngIf="datasetNameControl.invalid && (datasetNameControl.touched || datasetNameControl.dirty)">
+                <span
+                    *ngIf="datasetNameControl.errors?.required"
+                    class="text-danger fs-12"
+                    data-test-id="rename-dataset-error-name-required"
+                    >Name is required</span
+                >
+                <span
+                    *ngIf="datasetNameControl.errors?.pattern"
+                    class="text-danger fs-12"
+                    data-test-id="rename-dataset-error-name-pattern"
+                    >Invalid dataset name</span
+                >
             </div>
             <div *ngIf="renameError$ | async as renameError">
-                <div class="error-block">{{ renameError }}</div>
+                <div class="error-block" data-test-id="rename-dataset-error-custom">{{ renameError }}</div>
             </div>
         </form>
         <div class="mt-4">
@@ -63,7 +73,12 @@
                     <p class="description">Delete this dataset</p>
                     <p class="hint mt-2">Once you delete a dataset, there is no going back. Please be certain.</p>
                 </div>
-                <button type="button" (click)="deleteDataset()" data-test-id="delete-dataset-button">
+                <button
+                    type="button"
+                    [disabled]="isDeleteDatasetDisabled"
+                    (click)="deleteDataset()"
+                    data-test-id="delete-dataset-button"
+                >
                     Delete this dataset
                 </button>
             </div>

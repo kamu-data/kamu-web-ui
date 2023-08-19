@@ -1,5 +1,5 @@
 import { CreateDatasetFromSnapshotMutation, CreateEmptyDatasetMutation } from "../api/kamu.graphql.interface";
-import { mockDatasetBasicsFragment, mockDatasetInfo } from "../search/mock.data";
+import { mockDatasetBasicsDerivedFragment } from "../search/mock.data";
 import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { of } from "rxjs";
@@ -7,20 +7,25 @@ import { DatasetApi } from "../api/dataset.api";
 import { DatasetKind } from "../api/kamu.graphql.interface";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 import { NavigationService } from "../services/navigation.service";
-import { AppDatasetCreateService } from "./dataset-create.service";
+import { DatasetCreateService } from "./dataset-create.service";
+import { LoggedUserService } from "../auth/logged-user.service";
+import { mockAccountDetails } from "../api/mock/auth.mock";
+import { DatasetOperationError } from "../common/errors";
 
-describe("AppDatasetCreateService", () => {
-    let service: AppDatasetCreateService;
+describe("DatasetCreateService", () => {
+    let service: DatasetCreateService;
     let datasetApi: DatasetApi;
     let navigationService: NavigationService;
+    let loggedUserService: LoggedUserService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo],
         });
-        service = TestBed.inject(AppDatasetCreateService);
+        service = TestBed.inject(DatasetCreateService);
         datasetApi = TestBed.inject(DatasetApi);
         navigationService = TestBed.inject(NavigationService);
+        loggedUserService = TestBed.inject(LoggedUserService);
     });
 
     it("should be created", () => {
@@ -37,20 +42,29 @@ describe("AppDatasetCreateService", () => {
             },
         };
         spyOn(datasetApi, "createEmptyDataset").and.returnValue(of(mockResponseSuccess));
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         const spyNavigateToDatasetView = spyOn(navigationService, "navigateToDatasetView");
 
-        service
-            .createEmptyDataset(mockDatasetInfo.accountName, DatasetKind.Root, mockDatasetInfo.datasetName)
-            .subscribe();
+        const datasetName = "my-test";
+        service.createEmptyDataset(DatasetKind.Root, datasetName).subscribe();
 
         expect(spyNavigateToDatasetView).toHaveBeenCalledWith({
-            accountName: mockDatasetInfo.accountName,
-            datasetName: mockDatasetInfo.datasetName,
+            accountName: mockAccountDetails.accountName,
+            datasetName: datasetName,
             tab: DatasetViewTypeEnum.Overview,
         });
     });
 
-    it("should be create empty dataset with error", () => {
+    it("should check creating empty dataset needs a logged user", () => {
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(null);
+
+        const datasetName = "my-test";
+        expect(() => service.createEmptyDataset(DatasetKind.Root, datasetName)).toThrow(
+            new DatasetOperationError([new Error(DatasetCreateService.NOT_LOGGED_USER_ERROR)]),
+        );
+    });
+
+    it("should be create empty dataset with a name collision error", () => {
         const mockResponseError: CreateEmptyDatasetMutation = {
             datasets: {
                 createEmpty: {
@@ -60,17 +74,13 @@ describe("AppDatasetCreateService", () => {
             },
         };
         spyOn(datasetApi, "createEmptyDataset").and.returnValue(of(mockResponseError));
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         const spyNavigateToDatasetView = spyOn(navigationService, "navigateToDatasetView");
 
-        service
-            .createEmptyDataset(mockDatasetInfo.accountName, DatasetKind.Root, mockDatasetInfo.datasetName)
-            .subscribe();
+        const datasetName = "my-test";
+        service.createEmptyDataset(DatasetKind.Root, datasetName).subscribe();
 
-        expect(spyNavigateToDatasetView).not.toHaveBeenCalledWith({
-            accountName: mockDatasetInfo.accountName,
-            datasetName: mockDatasetInfo.datasetName,
-            tab: DatasetViewTypeEnum.Overview,
-        });
+        expect(spyNavigateToDatasetView).not.toHaveBeenCalled();
         service.onErrorMessageChanges.subscribe((error) => {
             expect(error).toBe("Fail");
         });
@@ -82,25 +92,34 @@ describe("AppDatasetCreateService", () => {
                 createFromSnapshot: {
                     message: "Success",
                     dataset: {
-                        ...mockDatasetBasicsFragment,
+                        ...mockDatasetBasicsDerivedFragment,
                     },
                     __typename: "CreateDatasetResultSuccess",
                 },
             },
         };
         spyOn(datasetApi, "createDatasetFromSnapshot").and.returnValue(of(mockResponseSuccess));
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         const spyNavigateToDatasetView = spyOn(navigationService, "navigateToDatasetView");
 
-        service.createDatasetFromSnapshot(mockDatasetInfo.accountName, "mockSnapshot").subscribe();
+        service.createDatasetFromSnapshot("mockSnapshot").subscribe();
 
         expect(spyNavigateToDatasetView).toHaveBeenCalledWith({
-            accountName: mockDatasetInfo.accountName,
-            datasetName: mockDatasetBasicsFragment.name,
+            accountName: mockAccountDetails.accountName,
+            datasetName: mockDatasetBasicsDerivedFragment.name,
             tab: DatasetViewTypeEnum.Overview,
         });
     });
 
-    it("should be create dataset using shapshot with error", () => {
+    it("should check creating dataset from snapshot needs a logged user", () => {
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(null);
+
+        expect(() => service.createDatasetFromSnapshot("mockSnapshot")).toThrow(
+            new DatasetOperationError([new Error(DatasetCreateService.NOT_LOGGED_USER_ERROR)]),
+        );
+    });
+
+    it("should be create dataset using shapshot with a name collision error", () => {
         const mockResponseError: CreateDatasetFromSnapshotMutation = {
             datasets: {
                 createFromSnapshot: {
@@ -110,15 +129,12 @@ describe("AppDatasetCreateService", () => {
             },
         };
         spyOn(datasetApi, "createDatasetFromSnapshot").and.returnValue(of(mockResponseError));
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         const spyNavigateToDatasetView = spyOn(navigationService, "navigateToDatasetView");
 
-        service.createDatasetFromSnapshot(mockDatasetInfo.accountName, "mockSnapshot").subscribe();
+        service.createDatasetFromSnapshot("mockSnapshot").subscribe();
 
-        expect(spyNavigateToDatasetView).not.toHaveBeenCalledWith({
-            accountName: mockDatasetInfo.accountName,
-            datasetName: mockDatasetBasicsFragment.name,
-            tab: DatasetViewTypeEnum.Overview,
-        });
+        expect(spyNavigateToDatasetView).not.toHaveBeenCalled();
         service.onErrorMessageChanges.subscribe((error) => {
             expect(error).toBe("Fail");
         });

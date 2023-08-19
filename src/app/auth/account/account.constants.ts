@@ -1,7 +1,7 @@
 export enum AccountTabs {
-    overview = "overview",
-    datasets = "datasets",
-    organizations = "organizations",
-    inbox = "inbox",
-    stars = "stars",
+    OVERVIEW = "overview",
+    DATASETS = "datasets",
+    ORGANIZATIONS = "organizations",
+    INBOX = "inbox",
+    STARS = "stars",
 }

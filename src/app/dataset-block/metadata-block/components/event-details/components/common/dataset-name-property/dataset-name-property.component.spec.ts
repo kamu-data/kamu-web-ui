@@ -18,7 +18,7 @@ describe("DatasetNamePropertyComponent", () => {
         fixture = TestBed.createComponent(DatasetNamePropertyComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        component.data = { datasetName: "test", owner: "testOwner" };
+        component.data = { datasetName: "test", ownerAccountName: "testOwner" };
         fixture.detectChanges();
     });
 
@@ -30,7 +30,7 @@ describe("DatasetNamePropertyComponent", () => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.navigateToDatasetView();
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
-            accountName: component.data.owner,
+            accountName: component.data.ownerAccountName,
             datasetName: component.data.datasetName,
             tab: DatasetViewTypeEnum.Overview,
             page: 1,

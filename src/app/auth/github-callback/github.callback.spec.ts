@@ -5,6 +5,7 @@ import { ActivatedRoute } from "@angular/router";
 import { of } from "rxjs";
 import { AuthApi } from "src/app/api/auth.api";
 import { GithubCallbackComponent } from "./github.callback";
+import { GithubLoginCredentials } from "src/app/api/auth.api.model";
 
 describe("GithubCallbackComponent", () => {
     let component: GithubCallbackComponent;
@@ -39,15 +40,15 @@ describe("GithubCallbackComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should call fetchUserInfoAndTokenFromGithubCallackCode method", () => {
+    it("should call fetchAccountAndTokenFromGithubCallackCode method", () => {
         const navigateToHomeSpy = spyOn(navigationService, "navigateToHome");
-        const fetchUserInfoAndTokenSpy = spyOn(
+        const fetchAccountAndTokenSpy = spyOn(
             authApiService,
-            "fetchUserInfoAndTokenFromGithubCallackCode",
+            "fetchAccountAndTokenFromGithubCallackCode",
         ).and.returnValue(of(undefined));
         component.ngOnInit();
 
-        expect(fetchUserInfoAndTokenSpy).toHaveBeenCalledWith(GITHUB_TEST_CODE);
+        expect(fetchAccountAndTokenSpy).toHaveBeenCalledWith({ code: GITHUB_TEST_CODE } as GithubLoginCredentials);
         expect(navigateToHomeSpy).toHaveBeenCalledWith();
     });
 });

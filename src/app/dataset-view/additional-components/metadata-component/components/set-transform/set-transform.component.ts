@@ -2,7 +2,6 @@ import { DatasetBasicsFragment, DatasetKind, TransformInput } from "../../../../
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MaybeNull, MaybeNullOrUndefined } from "src/app/common/app.types";
 import { DatasetSchema } from "src/app/interface/dataset.interface";
 import { GetDatasetSchemaQuery, SqlQueryStep } from "src/app/api/kamu.graphql.interface";
@@ -13,6 +12,7 @@ import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.co
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { from } from "rxjs";
 import { BaseMainEventComponent } from "../base-main-event.component";
+
 @Component({
     selector: "app-set-transform",
     templateUrl: "./set-transform.component.html",
@@ -27,12 +27,12 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     public dataSource = new MatTreeNestedDataSource<DatasetNode>();
     public TREE_DATA: DatasetNode[] = [];
 
-    constructor(private datasetService: DatasetService, private editService: EditSetTransformService) {
+    constructor(private editService: EditSetTransformService) {
         super();
     }
 
-    ngOnInit(): void {
-        this.getDatasetKind();
+    public ngOnInit(): void {
+        this.checkDatasetEditability(DatasetKind.Derivative);
         this.initQueriesSection();
         this.subsribeErrorMessage();
     }
@@ -43,14 +43,6 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
 
     public get isInputDatasetsExist(): boolean {
         return !!this.inputDatasets.size;
-    }
-
-    private getDatasetKind(): void {
-        this.trackSubscription(
-            this.editService.onKindChanges.subscribe((kind: DatasetKind) => {
-                this.datasetKind = kind;
-            }),
-        );
     }
 
     private initQueriesSection(): void {
@@ -87,7 +79,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
                 this.trackSubscription(
                     this.datasetService.requestDatasetSchema(item.id).subscribe((data: GetDatasetSchemaQuery) => {
                         if (data.datasets.byId) {
-                            const owner = (data.datasets.byId as DatasetBasicsFragment).owner.name;
+                            const owner = (data.datasets.byId as DatasetBasicsFragment).owner.accountName;
                             const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
                                 data.datasets.byId.metadata.currentSchema,
                             );
@@ -109,11 +101,12 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     public onEditYaml(): void {
         const modalRef: NgbModalRef = this.modalService.open(FinalYamlModalComponent, { size: "lg" });
         const instance = modalRef.componentInstance as FinalYamlModalComponent;
-        instance.yamlTemplate = this.errorMessage
-            ? this.changedEventYamlByHash
-            : this.yamlEventService.buildYamlSetTransformEvent(
-                  this.editService.transformEventAsObject(this.inputDatasets, this.selectedEngine, this.queries),
-              );
+        instance.yamlTemplate =
+            this.errorMessage && this.changedEventYamlByHash
+                ? this.changedEventYamlByHash
+                : this.yamlEventService.buildYamlSetTransformEvent(
+                      this.editService.transformEventAsObject(this.inputDatasets, this.selectedEngine, this.queries),
+                  );
         instance.datasetInfo = this.getDatasetInfoFromUrl();
         instance.enabledSaveBtn = this.isInputDatasetsExist;
         this.trackSubscription(

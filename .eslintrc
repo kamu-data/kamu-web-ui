@@ -20,13 +20,14 @@
   "rules": {
     "no-bitwise": 0,
     "@typescript-eslint/no-extraneous-class": ["off"],
-    "jasmine/new-line-before-expect": 0,
     "@typescript-eslint/unbound-method": [
       "error",
       {
         "ignoreStatic": true
       }
-    ]
+    ],
+    "jasmine/new-line-before-expect": 0,
+    "jasmine/no-unsafe-spy": ["off"]
   },
   "ignorePatterns": ["node_modules", "dist", "kamu.graphql.interface.ts"]
 }

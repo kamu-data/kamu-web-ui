@@ -1,18 +1,25 @@
 import { ErrorTexts } from "../common/errors.text";
 import { ApolloError } from "@apollo/client/core";
-import { AuthenticationError, DatasetNotFoundError, InvalidSqlError, SqlExecutionError } from "../common/errors";
+import {
+    AccountNotFoundError,
+    AuthenticationError,
+    DatasetNotFoundError,
+    DatasetOperationError,
+    InvalidSqlError,
+    SqlExecutionError,
+} from "../common/errors";
 import { ModalService } from "../components/modal/modal.service";
 import { TestBed } from "@angular/core/testing";
 import { ErrorHandlerService } from "./error-handler.service";
 import { NavigationService } from "./navigation.service";
-import { AuthApi } from "../api/auth.api";
+import { LoggedUserService } from "../auth/logged-user.service";
 
 describe("ErrorHandlerService", () => {
     let service: ErrorHandlerService;
     let modalService: ModalService;
     let navigationService: NavigationService;
 
-    const authApiMock = {
+    const loggedUserServiceMock = {
         terminateSession: () => {
             /* Intentionally empty */
         },
@@ -20,7 +27,11 @@ describe("ErrorHandlerService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [ModalService, NavigationService, { provide: AuthApi, useValue: authApiMock }],
+            providers: [
+                ModalService,
+                NavigationService,
+                { provide: LoggedUserService, useValue: loggedUserServiceMock },
+            ],
         });
         service = TestBed.inject(ErrorHandlerService);
         modalService = TestBed.inject(ModalService);
@@ -66,10 +77,28 @@ describe("ErrorHandlerService", () => {
     it("should show redirect to 404 page on dataset not found", () => {
         const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.stub();
         const navigationServiceSpy: jasmine.Spy = spyOn(navigationService, "navigateToPageNotFound").and.stub();
-        navigationService.navigateToPageNotFound();
+
         service.handleError(new DatasetNotFoundError());
+
         expect(modalServiceSpy).not.toHaveBeenCalled();
         expect(navigationServiceSpy).toHaveBeenCalledWith();
+    });
+
+    it("should show redirect to 404 page on account not found", () => {
+        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.stub();
+        const navigationServiceSpy: jasmine.Spy = spyOn(navigationService, "navigateToPageNotFound").and.stub();
+
+        service.handleError(new AccountNotFoundError());
+
+        expect(modalServiceSpy).not.toHaveBeenCalled();
+        expect(navigationServiceSpy).toHaveBeenCalledWith();
+    });
+
+    it("should show modal window when dataset operation fails", () => {
+        const errorText = "Some dataset error";
+        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.callThrough();
+        service.handleError(new DatasetOperationError([new Error(errorText)]));
+        expect(modalServiceSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should show modal window when connection was lost", () => {
@@ -91,7 +120,7 @@ describe("ErrorHandlerService", () => {
 
     it("should log authentication errors and terminate session", () => {
         const consoleErrorSpy: jasmine.Spy = spyOn(console, "error").and.stub();
-        const authApiTerminateSessionSpy: jasmine.Spy = spyOn(authApiMock, "terminateSession").and.stub();
+        const authApiTerminateSessionSpy: jasmine.Spy = spyOn(loggedUserServiceMock, "terminateSession").and.stub();
         service.handleError(new AuthenticationError([]));
         expect(consoleErrorSpy).toHaveBeenCalledWith(ErrorTexts.ERROR_UNKNOWN_AUTHENTICATION);
         expect(authApiTerminateSessionSpy).toHaveBeenCalledWith();

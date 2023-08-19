@@ -7,7 +7,7 @@ import { UnsubscribeOnDestroyAdapter } from "./unsubscribe.ondestroy.adapter";
 import { Observable, map } from "rxjs";
 
 export abstract class BaseComponent extends UnsubscribeOnDestroyAdapter {
-    public activatedRoute = inject(ActivatedRoute);
+    protected activatedRoute = inject(ActivatedRoute);
 
     public get searchString(): string {
         return window.location.search;

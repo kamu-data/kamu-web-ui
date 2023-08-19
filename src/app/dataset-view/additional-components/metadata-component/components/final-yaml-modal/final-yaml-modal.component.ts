@@ -14,7 +14,7 @@ export class FinalYamlModalComponent extends BaseComponent {
     @Input() public yamlTemplate: string;
     @Input() public datasetInfo: DatasetInfo;
     @Input() public enabledSaveBtn = true;
-    public readonly yamlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
+    public readonly YAML_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
         theme: "vs",
         language: "yaml",
         renderLineHighlight: "none",

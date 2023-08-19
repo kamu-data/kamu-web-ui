@@ -28,7 +28,7 @@ export class DatasetNameByIdPropertyComponent extends BasePropertyComponent impl
         this.trackSubscription(
             this.datasetSevice.requestDatasetInfoById(this.data).subscribe((dataset: DatasetByIdQuery) => {
                 if (dataset.datasets.byId) {
-                    this.datasetInfo.accountName = dataset.datasets.byId.owner.name;
+                    this.datasetInfo.accountName = dataset.datasets.byId.owner.accountName;
                     this.datasetInfo.datasetName = dataset.datasets.byId.name;
                     this.cdr.detectChanges();
                 }

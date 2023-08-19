@@ -6,11 +6,11 @@ import { Apollo } from "apollo-angular";
 import { DatasetOverviewFragment, DatasetDataSizeFragment } from "src/app/api/kamu.graphql.interface";
 import {
     emitClickOnElementByDataTestId,
-    findElementByDataTestId,
-    findInputElememtByDataTestId,
+    getElementByDataTestId,
+    getInputElememtByDataTestId,
 } from "src/app/common/base-test.helpers.spec";
-import { mockDatasetBasicsFragment } from "src/app/search/mock.data";
-import { mockMetadataSchemaUpdate, mockOverviewDataUpdate, mockOverviewWithSetLicense } from "../../../data-tabs.mock";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewWithSetLicense } from "../../../data-tabs.mock";
 import { EditLicenseModalComponent } from "./edit-license-modal.component";
 import { MatDividerModule } from "@angular/material/divider";
 import { SharedTestModule } from "src/app/common/shared-test.module";
@@ -28,9 +28,9 @@ describe("EditLicenseModalComponent", () => {
 
         fixture = TestBed.createComponent(EditLicenseModalComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsFragment;
+        component.datasetBasics = mockDatasetBasicsDerivedFragment;
         component.currentState = {
-            schema: mockMetadataSchemaUpdate.schema,
+            schema: mockMetadataDerivedUpdate.schema,
             data: mockOverviewDataUpdate.content,
             overview: mockOverviewWithSetLicense as DatasetOverviewFragment,
             size: mockOverviewDataUpdate.size as DatasetDataSizeFragment,
@@ -57,7 +57,7 @@ describe("EditLicenseModalComponent", () => {
     });
 
     it("should check call onEditLicense", () => {
-        const onEditLicenseSpy = spyOn(component, "onEditLicense").and.callThrough();
+        const onEditLicenseSpy = spyOn(component, "onEditLicense").and.stub();
 
         emitClickOnElementByDataTestId(fixture, "save-license");
         expect(onEditLicenseSpy).toHaveBeenCalledTimes(1);
@@ -77,7 +77,7 @@ describe("EditLicenseModalComponent", () => {
         component.licenseForm.patchValue({
             websiteUrl: "bad url",
         });
-        const inputEl: HTMLInputElement = findInputElememtByDataTestId(fixture, `license-websiteUrl`);
+        const inputEl: HTMLInputElement = getInputElememtByDataTestId(fixture, `license-websiteUrl`);
         const focusEvent = new InputEvent("focus");
         inputEl.dispatchEvent(focusEvent);
         fixture.detectChanges();
@@ -86,7 +86,7 @@ describe("EditLicenseModalComponent", () => {
         inputEl.dispatchEvent(blurEvent);
         fixture.detectChanges();
 
-        const errorSpan = findElementByDataTestId(fixture, `error-url-format`);
+        const errorSpan = getElementByDataTestId(fixture, `error-url-format`);
         expect(errorSpan.innerText).toBe("Url format is wrong");
     });
 
@@ -99,7 +99,7 @@ describe("EditLicenseModalComponent", () => {
         fixture.detectChanges();
 
         ["name", "shortName", "websiteUrl"].forEach((controlName: string) => {
-            const inputEl: HTMLInputElement = findInputElememtByDataTestId(fixture, `license-${controlName}`);
+            const inputEl: HTMLInputElement = getInputElememtByDataTestId(fixture, `license-${controlName}`);
 
             const focusEvent = new InputEvent("focus");
             inputEl.dispatchEvent(focusEvent);
@@ -109,7 +109,7 @@ describe("EditLicenseModalComponent", () => {
             inputEl.dispatchEvent(blurEvent);
             fixture.detectChanges();
 
-            const errorSpan = findElementByDataTestId(fixture, `error-license-${controlName}`);
+            const errorSpan = getElementByDataTestId(fixture, `error-license-${controlName}`);
             expect(errorSpan.innerText).toBeDefined();
         });
     });

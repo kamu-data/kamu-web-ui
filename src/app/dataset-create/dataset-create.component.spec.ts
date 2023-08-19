@@ -1,17 +1,20 @@
 import { of } from "rxjs";
-import { findInputElememtByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { getInputElememtByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { ApolloModule } from "apollo-angular";
 import { DatasetCreateComponent } from "./dataset-create.component";
-import { AppDatasetCreateService } from "./dataset-create.service";
+import { DatasetCreateService } from "./dataset-create.service";
 import { SharedTestModule } from "../common/shared-test.module";
+import { LoggedUserService } from "../auth/logged-user.service";
+import { mockAccountDetails } from "../api/mock/auth.mock";
 
 describe("DatasetCreateComponent", () => {
     let component: DatasetCreateComponent;
     let fixture: ComponentFixture<DatasetCreateComponent>;
-    let datasetCreateService: AppDatasetCreateService;
+    let datasetCreateService: DatasetCreateService;
+    let loggedUserService: LoggedUserService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -24,9 +27,12 @@ describe("DatasetCreateComponent", () => {
             })
             .compileComponents();
 
+        loggedUserService = TestBed.inject(LoggedUserService);
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+
         fixture = TestBed.createComponent(DatasetCreateComponent);
         component = fixture.componentInstance;
-        datasetCreateService = TestBed.inject(AppDatasetCreateService);
+        datasetCreateService = TestBed.inject(DatasetCreateService);
         fixture.detectChanges();
     });
 
@@ -34,12 +40,16 @@ describe("DatasetCreateComponent", () => {
         expect(component).toBeTruthy();
     });
 
+    it("should initialize with logged user value in selections", () => {
+        expect(component.createDatasetForm.controls.owner.value).toEqual(mockAccountDetails.accountName);
+    });
+
     it("should check error message is exist", fakeAsync(() => {
         const errorMessage = "testMessage";
         datasetCreateService.errorMessageChanges(errorMessage);
         tick();
         fixture.detectChanges();
-        const element = findInputElememtByDataTestId(fixture, "create-error-message");
+        const element = getInputElememtByDataTestId(fixture, "create-error-message");
         expect(element.textContent).toEqual(errorMessage);
         flush();
     }));
@@ -71,7 +81,7 @@ describe("DatasetCreateComponent", () => {
     });
 
     it("should check switch checkbox `Initialize from YAML snapshot`)", () => {
-        const checkboxInput = findInputElememtByDataTestId(fixture, "show-monaco-editor");
+        const checkboxInput = getInputElememtByDataTestId(fixture, "show-monaco-editor");
         expect(checkboxInput.checked).toBeFalse();
         expect(component.showMonacoEditor).toBeFalse();
 
@@ -87,7 +97,7 @@ describe("DatasetCreateComponent", () => {
     });
 
     it("should check call uploadFile when file picked)", async () => {
-        const checkboxInput = findInputElememtByDataTestId(fixture, "show-monaco-editor");
+        const checkboxInput = getInputElememtByDataTestId(fixture, "show-monaco-editor");
 
         checkboxInput.click();
         fixture.detectChanges();
@@ -100,12 +110,12 @@ describe("DatasetCreateComponent", () => {
             const result = await component.onFileSelected(mockEvt as unknown as Event);
             expect(result).toBe("# You can edit this file\ntest content");
         } catch (error) {
-            console.log(error);
+            fail(error);
         }
     });
 
     it("should check call uploadFile when file not picked)", async () => {
-        const checkboxInput = findInputElememtByDataTestId(fixture, "show-monaco-editor");
+        const checkboxInput = getInputElememtByDataTestId(fixture, "show-monaco-editor");
 
         checkboxInput.click();
         fixture.detectChanges();
@@ -115,7 +125,7 @@ describe("DatasetCreateComponent", () => {
             const result = await component.onFileSelected(mockEvt as unknown as Event);
             expect(result).toBe("");
         } catch (error) {
-            console.log(error);
+            fail(error);
         }
     });
 

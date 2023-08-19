@@ -8,7 +8,7 @@
                 class="dataset-list-container__title mb-1 pl-0"
                 (click)="isClickableRow && onSelectDataset(row)"
             >
-                {{ row.owner.name }}/{{ row.name }}
+                {{ row.owner.accountName }}/{{ row.name }}
             </button>
         </div>
         <div>
@@ -36,10 +36,10 @@
                         <a
                             data-test-id="dataset-owner-name"
                             class="signer"
-                            (click)="navigateToOwnerView(row.owner.name)"
-                            >{{ row.owner.name }}</a
+                            (click)="navigateToOwnerView(row.owner.accountName)"
+                            >{{ row.owner.accountName }}</a
                         >
-                        {{ row.owner.name }}
+                        {{ row.owner.accountName }}
                     </span>
                 </div>
                 <div class="signed-commit-footer p-1">

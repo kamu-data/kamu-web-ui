@@ -3,16 +3,18 @@ import { ModalService } from "../../components/modal/modal.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { AuthApi } from "src/app/api/auth.api";
-import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
+import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "./account.constants";
-import { ActivatedRoute, NavigationEnd, Params, Router, RouterEvent } from "@angular/router";
+import { ActivatedRoute, Params } from "@angular/router";
 import AppValues from "src/app/common/app.values";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { AccountService } from "src/app/services/account.service";
 import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
-import { filter, map } from "rxjs/operators";
+import { map, shareReplay, switchMap } from "rxjs/operators";
 import { Observable } from "rxjs";
+import { LoggedUserService } from "../logged-user.service";
+import { MaybeNull } from "src/app/common/app.types";
+import { AccountNotFoundError } from "src/app/common/errors";
 
 @Component({
     selector: "app-account",
@@ -21,74 +23,49 @@ import { Observable } from "rxjs";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountComponent extends BaseComponent implements OnInit {
-    public accountViewType = AccountTabs.overview;
-    public user: AccountDetailsFragment;
-    public accountName: string;
+    public activeTab = AccountTabs.OVERVIEW;
+    public readonly AccountTabs = AccountTabs;
+
+    public isDropdownMenu = false;
     public currentPage = 1;
-    public avatarLink: string;
+
+    public user$: Observable<AccountFragment>;
     public datasetsAccount$: Observable<DatasetsAccountResponse>;
 
     @ViewChild("containerMenu") containerMenu: ElementRef;
     @ViewChild("dropdownMenu") dropdownMenu: ElementRef;
 
     constructor(
-        private authApi: AuthApi,
         private route: ActivatedRoute,
         private navigationService: NavigationService,
-        private router: Router,
         private modalService: ModalService,
         private accountService: AccountService,
+        private loggedUserService: LoggedUserService,
     ) {
         super();
-        this.datasetsAccount$ = this.accountService.onDatasetsChanges;
     }
 
     public ngOnInit(): void {
+        const accountName$ = this.route.params.pipe(
+            map((params: Params) => params[ProjectLinks.URL_PARAM_ACCOUNT_NAME] as string),
+        );
+        this.user$ = this.pipelineAccountByName(accountName$);
+        this.datasetsAccount$ = this.pipelineAccountDatasets(this.user$);
+
         this.trackSubscriptions(
             this.route.queryParams.subscribe((params: Params) => {
-                params.tab
-                    ? (this.accountViewType = params.tab as AccountTabs)
-                    : (this.accountViewType = AccountTabs.overview);
+                params.tab ? (this.activeTab = params.tab as AccountTabs) : (this.activeTab = AccountTabs.OVERVIEW);
                 params.page ? (this.currentPage = params.page as number) : (this.currentPage = 1);
             }),
-            this.route.params.subscribe((params: Params) => {
-                this.accountName = params[ProjectLinks.URL_PARAM_ACCOUNT_NAME] as string;
-                this.getAccountInfo();
-                this.getDatasets();
-            }),
-            this.router.events
-                .pipe(
-                    filter((event) => event instanceof NavigationEnd),
-                    map((event) => event as RouterEvent),
-                )
-                .subscribe(() => {
-                    this.getDatasets();
-                }),
         );
     }
 
-    public get isAccountViewTypeOverview(): boolean {
-        return this.accountViewType === AccountTabs.overview;
+    public avatarLink(user: AccountFragment): string {
+        return user.avatarUrl ?? AppValues.DEFAULT_AVATAR_URL;
     }
 
-    public get isAccountViewTypeDatasets(): boolean {
-        return this.accountViewType === AccountTabs.datasets;
-    }
-
-    public get isAccountViewTypeOrganizations(): boolean {
-        return this.accountViewType === AccountTabs.organizations;
-    }
-
-    public get isAccountViewTypeInbox(): boolean {
-        return this.accountViewType === AccountTabs.inbox;
-    }
-
-    public get isAccountViewTypeStars(): boolean {
-        return this.accountViewType === AccountTabs.stars;
-    }
-
-    public get isOwner(): boolean {
-        return this.authApi.currentUser?.login === this.accountName;
+    public isLoggedUser(user: AccountFragment): boolean {
+        return this.loggedUserService.currentlyLoggedInUser?.accountName === user.accountName;
     }
 
     public onEditProfile(): void {
@@ -109,33 +86,44 @@ export class AccountComponent extends BaseComponent implements OnInit {
         );
     }
 
-    public onSelectOverviewTab(): void {
-        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.overview);
-    }
-    public onSelectDatasetsTab(): void {
-        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.datasets);
+    public onSelectOverviewTab(user: AccountFragment): void {
+        this.navigationService.navigateToOwnerView(user.accountName, AccountTabs.OVERVIEW);
     }
 
-    public onSelectOrganizationsTab(): void {
-        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.organizations);
+    public onSelectDatasetsTab(user: AccountFragment): void {
+        this.navigationService.navigateToOwnerView(user.accountName, AccountTabs.DATASETS);
     }
 
-    public onSelectInboxTab(): void {
-        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.inbox);
+    public onSelectOrganizationsTab(user: AccountFragment): void {
+        this.navigationService.navigateToOwnerView(user.accountName, AccountTabs.ORGANIZATIONS);
     }
 
-    public onSelectStarsTab(): void {
-        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.stars);
+    public onSelectInboxTab(user: AccountFragment): void {
+        this.navigationService.navigateToOwnerView(user.accountName, AccountTabs.INBOX);
     }
 
-    private getAccountInfo(): void {
-        this.accountService.getAccountInfoByName(this.accountName).subscribe((user: AccountDetailsFragment) => {
-            this.user = user;
-            this.avatarLink = this.user.avatarUrl ?? AppValues.DEFAULT_AVATAR_URL;
-        });
+    public onSelectStarsTab(user: AccountFragment): void {
+        this.navigationService.navigateToOwnerView(user.accountName, AccountTabs.STARS);
     }
 
-    private getDatasets(): void {
-        this.accountService.getDatasetsByAccountName(this.accountName, this.currentPage - 1).subscribe();
+    private pipelineAccountByName(accountName$: Observable<string>): Observable<AccountFragment> {
+        return accountName$.pipe(
+            switchMap((accountName: string) => {
+                return this.accountService.fetchAccountByName(accountName);
+            }),
+            shareReplay(),
+            map((account: MaybeNull<AccountFragment>) => {
+                if (account) return account;
+                throw new AccountNotFoundError();
+            }),
+        );
+    }
+
+    private pipelineAccountDatasets(account$: Observable<AccountFragment>): Observable<DatasetsAccountResponse> {
+        return account$.pipe(
+            switchMap((account: AccountFragment) => {
+                return this.accountService.getDatasetsByAccountName(account.accountName, this.currentPage - 1);
+            }),
+        );
     }
 }

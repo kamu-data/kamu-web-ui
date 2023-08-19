@@ -1,2 +1,93 @@
-<p>Please login with your <strong>GitHub account</strong>.</p>
-<a href="{{ githubUrl }}" class="login__btn login__btn--full" md-raised-button="primary"> Login </a>
+<ng-container *ngIf="!selectedLoginMethod">
+    <div class="d-flex flex-column align-items-center login-container__buttons" data-test-id="method-selection-block">
+        <img [src]="APP_LOGO" class="logo" alt="Application logo" />
+        <h1 class="text-center text-muted mt-4">Select your Login Method</h1>
+        <div class="inner-container">
+            <a
+                data-test-id="select-method-github"
+                (click)="onSelectedLoginMethod(LoginMethod.GITHUB)"
+                class="login__btn"
+                md-raised-button="primary"
+            >
+                Sign in to GitHub
+                <svg-icon class="github-logo" name="github-logo"></svg-icon>
+            </a>
+            <a
+                data-test-id="select-method-password"
+                (click)="onSelectedLoginMethod(LoginMethod.PASSWORD)"
+                class="login__btn"
+                md-raised-button="primary"
+            >
+                Login with Password
+            </a>
+        </div>
+    </div>
+</ng-container>
+<div *ngIf="selectedLoginMethod == LoginMethod.GITHUB" class="d-flex justify-content-center align-items-center">
+    <app-spinner data-test-id="github-spinner"></app-spinner>
+</div>
+<div
+    *ngIf="selectedLoginMethod == LoginMethod.PASSWORD"
+    class="d-flex justify-content-center flex-column container-form"
+    data-test-id="password-method-block"
+>
+    <img [src]="APP_LOGO" class="logo" alt="Application logo" />
+    <h1 class="text-center text-muted mt-4">Login to Kamu</h1>
+    <form [formGroup]="passwordLoginForm">
+        <div>
+            <label for="login" class="fs-12" [class.error-color]="passwordLoginError$ | async">Login</label>
+            <span class="text-danger">*</span><br />
+            <input
+                formControlName="login"
+                type="text"
+                class="form-control d-inline"
+                id="login"
+                data-test-id="input-login"
+                required
+                (keyup)="resetPasswordLoginError()"
+                [class.error-border-color]="passwordLoginError$ | async"
+            />
+            <div *ngIf="loginControl?.invalid && (loginControl?.touched || loginControl?.dirty)">
+                <span
+                    *ngIf="loginControl?.errors?.['required']"
+                    class="text-danger fs-12"
+                    data-test-id="input-login-error-required"
+                    >Login is required</span
+                >
+            </div>
+        </div>
+        <div class="mt-4">
+            <label for="password" class="fs-12" [class.error-color]="passwordLoginError$ | async">Password</label>
+            <span class="text-danger">*</span><br />
+            <input
+                formControlName="password"
+                type="password"
+                class="form-control d-inline"
+                id="password"
+                data-test-id="input-password"
+                required
+                (keyup)="resetPasswordLoginError()"
+                [class.error-border-color]="passwordLoginError$ | async"
+            />
+            <div *ngIf="passwordControl?.invalid && (passwordControl?.touched || passwordControl?.dirty)">
+                <span
+                    *ngIf="passwordControl?.errors?.['required']"
+                    class="text-danger fs-12"
+                    data-test-id="input-password-error-required"
+                    >Password is required</span
+                >
+            </div>
+        </div>
+        <button
+            [disabled]="passwordLoginForm.invalid"
+            data-test-id="submit-password"
+            (click)="onPasswordLogin()"
+            class="button-sign-in mt-4"
+        >
+            Login
+        </button>
+        <div *ngIf="passwordLoginError$ | async as passwordLoginError" class="mt-4">
+            <div class="error-block" data-test-id="password-method-error">{{ passwordLoginError }}</div>
+        </div>
+    </form>
+</div>

@@ -13,7 +13,6 @@ import {
     DatasetKind,
     DatasetBasicsFragment,
 } from "./kamu.graphql.interface";
-import AppValues from "../common/app.values";
 
 export const SEARCH_RESULTS_PER_PAGE = 10;
 
@@ -62,6 +61,7 @@ export class SearchApi {
             map((result: ApolloQueryResult<SearchDatasetsAutocompleteQuery>) => {
                 const nodesList: DatasetAutocompleteItem[] = result.data.search.query.nodes.map((node) => ({
                     dataset: node as DatasetBasicsFragment,
+                    dummy: false,
                     __typename: node.__typename as TypeNames,
                 }));
                 // Add dummy result that opens search view
@@ -72,10 +72,12 @@ export class SearchApi {
                         name: id,
                         kind: DatasetKind.Root,
                         owner: {
-                            id: AppValues.DEFAULT_USERNAME,
-                            name: AppValues.DEFAULT_USERNAME,
+                            id: "",
+                            accountName: "",
                         },
+                        alias: "",
                     },
+                    dummy: true,
                 });
 
                 return nodesList;

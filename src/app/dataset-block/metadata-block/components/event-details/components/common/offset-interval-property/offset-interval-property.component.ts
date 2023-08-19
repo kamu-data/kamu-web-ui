@@ -30,7 +30,7 @@ export class OffsetIntervalPropertyComponent extends BasePropertyComponent imple
                     .requestDatasetInfoById(this.data.datasetId)
                     .subscribe((dataset: DatasetByIdQuery) => {
                         if (dataset.datasets.byId) {
-                            this.datasetInfo.accountName = dataset.datasets.byId.owner.name;
+                            this.datasetInfo.accountName = dataset.datasets.byId.owner.accountName;
                             this.datasetInfo.datasetName = dataset.datasets.byId.name;
                         }
                     }),

@@ -7,17 +7,13 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { DatasetKind, FetchStepUrl } from "src/app/api/kamu.graphql.interface";
+import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
+import { DatasetKind, DatasetLineageBasicsFragment, FetchStepUrl } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
-import {
-    DatasetLineageBasics,
-    LineageGraphNodeData,
-    LineageGraphNodeType,
-    LineageUpdate,
-} from "../../dataset.subscriptions.interface";
-import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { LineageUpdate } from "../../dataset.subscriptions.interface";
+import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { LineageGraphNodeKind, LineageGraphNodeData, LineageNodeAccess } from "./lineage-model";
 
 @Component({
     selector: "app-lineage",
@@ -32,7 +28,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
     public lineageGraphNodes: Node[] = [];
     public isAvailableLineageGraph = false;
 
-    constructor(private appDatasetSubsService: AppDatasetSubscriptionsService, private cdr: ChangeDetectorRef) {
+    constructor(private datasetSubsService: DatasetSubscriptionsService, private cdr: ChangeDetectorRef) {
         super();
     }
 
@@ -48,7 +44,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
     public ngOnInit(): void {
         this.initLineageGraphProperty();
         this.trackSubscriptions(
-            this.appDatasetSubsService.onLineageDataChanges.subscribe((lineageUpdate: LineageUpdate) => {
+            this.datasetSubsService.onLineageDataChanges.subscribe((lineageUpdate: LineageUpdate) => {
                 this.updateGraph(lineageUpdate);
                 this.cdr.markForCheck();
             }),
@@ -60,9 +56,9 @@ export class LineageComponent extends BaseComponent implements OnInit {
         const currentDataset = lineageUpdate.origin;
         this.initLineageGraphProperty();
         this.isAvailableLineageGraph = edges.length !== 0;
-        const uniqueDatasets: Record<string, DatasetLineageBasics> = {};
-        edges.forEach((edge: DatasetLineageBasics[]) =>
-            edge.forEach((dataset: DatasetLineageBasics) => {
+        const uniqueDatasets: Record<string, DatasetLineageBasicsFragment> = {};
+        edges.forEach((edge: DatasetLineageBasicsFragment[]) =>
+            edge.forEach((dataset: DatasetLineageBasicsFragment) => {
                 uniqueDatasets[dataset.id] = dataset;
             }),
         );
@@ -78,13 +74,14 @@ export class LineageComponent extends BaseComponent implements OnInit {
         return new URL(url).hostname;
     }
 
-    private addSourceGraphNodes(data: DatasetLineageBasics[]): void {
+    private addSourceGraphNodes(data: DatasetLineageBasicsFragment[]): void {
         const extraNodes = data.filter(
-            (item: DatasetLineageBasics) =>
+            (item: DatasetLineageBasicsFragment) =>
                 item.kind === DatasetKind.Root && item.metadata.currentSource?.fetch.__typename === "FetchStepUrl",
         );
+
         const uniqueSourceNodesMap = new Map<string, Node>();
-        extraNodes.forEach((node: DatasetLineageBasics) => {
+        extraNodes.forEach((node: DatasetLineageBasicsFragment) => {
             const id = this.sanitizeID(node.id);
             const label = this.getDomainFromUrl((node.metadata.currentSource?.fetch as FetchStepUrl).url);
 
@@ -93,8 +90,8 @@ export class LineageComponent extends BaseComponent implements OnInit {
                     id: `extra-node-${id}`,
                     label,
                     data: {
-                        nodeKind: LineageGraphNodeType.Source,
-                        nodeDataObject: {},
+                        kind: LineageGraphNodeKind.Source,
+                        dataObject: {},
                     } as LineageGraphNodeData,
                 });
             }
@@ -109,33 +106,35 @@ export class LineageComponent extends BaseComponent implements OnInit {
                 });
             }
         });
+
         this.lineageGraphNodes = this.lineageGraphNodes.concat([...uniqueSourceNodesMap.values()]);
     }
 
     private addDatasetGraphNodes(
-        data: DatasetLineageBasics[],
-        edges: DatasetLineageBasics[][],
-        currentDataset: DatasetLineageBasics,
+        data: DatasetLineageBasicsFragment[],
+        edges: DatasetLineageBasicsFragment[][],
+        currentDataset: DatasetLineageBasicsFragment,
     ): void {
-        data.forEach((dataset: DatasetLineageBasics) => {
+        data.forEach((dataset: DatasetLineageBasicsFragment) => {
             this.lineageGraphNodes.push({
                 id: this.sanitizeID(dataset.id),
                 label: dataset.name,
                 data: {
-                    nodeKind: LineageGraphNodeType.Dataset,
-                    nodeDataObject: {
+                    kind: LineageGraphNodeKind.Dataset,
+                    dataObject: {
                         id: dataset.id,
                         name: dataset.name,
                         kind: dataset.kind,
-                        isRoot: dataset.kind === DatasetKind.Root,
                         isCurrent: dataset.id === currentDataset.id,
-                        access: "private",
-                        accountName: dataset.owner.name,
+                        access: LineageNodeAccess.PRIVATE,
+                        accountName: dataset.owner.accountName,
+                        avatarUrl: dataset.owner.avatarUrl,
                     },
                 } as LineageGraphNodeData,
             });
         });
-        edges.forEach((edge: DatasetLineageBasics[]) => {
+
+        edges.forEach((edge: DatasetLineageBasicsFragment[]) => {
             const source: string = this.sanitizeID(edge[0].id);
             const target: string = this.sanitizeID(edge[1].id);
             this.lineageGraphLink.push({

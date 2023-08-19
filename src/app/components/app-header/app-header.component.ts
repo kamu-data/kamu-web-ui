@@ -17,10 +17,11 @@ import { DatasetAutocompleteItem, TypeNames } from "../../interface/search.inter
 import { SearchApi } from "../../api/search.api";
 import AppValues from "../../common/app.values";
 import { BaseComponent } from "src/app/common/base.component";
-import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
+import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
+import { AppConfigFeatureFlags, LoginMethod } from "src/app/app-config.model";
 
 @Component({
     selector: "app-header",
@@ -28,34 +29,38 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppHeaderComponent extends BaseComponent implements OnInit {
-    @Input() public appLogo: string;
+    public readonly APP_LOGO = AppValues.APP_LOGO;
+    public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
+
     @Input() public isMobileView: boolean;
     @Input() public isVisible: boolean;
-    @Input() public userInfo: AccountDetailsFragment;
+    @Input() public loggedAccount: AccountFragment;
+    @Input() public featureFlags: AppConfigFeatureFlags;
+    @Input() public loginMethods: LoginMethod[];
 
-    @Output() public selectDatasetEmitter = new EventEmitter<DatasetAutocompleteItem>();
-    @Output() public addNewEmitter = new EventEmitter<null>();
-    @Output() public loginEmitter = new EventEmitter<null>();
-    @Output() public logOutEmitter = new EventEmitter<null>();
-    @Output() public userProfileEmitter = new EventEmitter<null>();
-    @Output() public clickAppLogoEmitter = new EventEmitter<null>();
-    @Output() public clickSettingsEmitter = new EventEmitter<null>();
-    @Output() public clickHelpEmitter = new EventEmitter<null>();
-    @Output() public clickAnalyticsEmitter = new EventEmitter<null>();
-    @Output() public clickBillingEmitter = new EventEmitter<null>();
-    @Output() public clickUserDatasetsEmitter = new EventEmitter<null>();
-    @Output() public clickUserProfileEmitter = new EventEmitter<null>();
+    @Output() public onSelectedDataset = new EventEmitter<DatasetAutocompleteItem>();
+    @Output() public onClickedAddNew = new EventEmitter<null>();
+    @Output() public onClickedLogin = new EventEmitter<null>();
+    @Output() public onClickedLogout = new EventEmitter<null>();
+    @Output() public onClickedOpenUserInfo = new EventEmitter<null>();
+    @Output() public onClickedAppLogo = new EventEmitter<null>();
+    @Output() public onClickedSettings = new EventEmitter<null>();
+    @Output() public onClickedHelp = new EventEmitter<null>();
+    @Output() public onClickedAnalytics = new EventEmitter<null>();
+    @Output() public onClickedBilling = new EventEmitter<null>();
+    @Output() public onClickedUserDatasets = new EventEmitter<null>();
+    @Output() public onClickedUserProfile = new EventEmitter<null>();
 
     @ViewChild("appHeaderMenuButton")
-    appHeaderMenuButton: ElementRef<HTMLElement>;
+    private appHeaderMenuButton: ElementRef<HTMLElement>;
 
-    public defaultUsername: string = AppValues.DEFAULT_USERNAME;
+    public readonly DEFAULT_USER_DISPLAY_NAME: string = AppValues.DEFAULT_USER_DISPLAY_NAME;
+
     public isSearchActive = false;
     public isCollapsedAppHeaderMenu = false;
     public searchQuery = "";
-    private delayTime: number = AppValues.SHORT_DELAY_MS;
 
-    constructor(
+    public constructor(
         private appSearchAPI: SearchApi,
         private route: ActivatedRoute,
         private router: Router,
@@ -64,7 +69,8 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     ) {
         super();
     }
-    ngOnInit(): void {
+
+    public ngOnInit(): void {
         this.trackSubscriptions(
             this.router.events
                 .pipe(
@@ -90,12 +96,12 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     }
 
     public isUserLoggedIn(): boolean {
-        return this.userInfo.login.length > 0;
+        return this.loggedAccount.accountName.length > 0;
     }
 
     public search: OperatorFunction<string, readonly DatasetAutocompleteItem[]> = (text$: Observable<string>) => {
         return text$.pipe(
-            debounceTime(this.delayTime),
+            debounceTime(AppValues.SHORT_DELAY_MS),
             distinctUntilChanged(),
             switchMap((term: string) => this.appSearchAPI.autocompleteDatasetSearch(term)),
         );
@@ -115,7 +121,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
         this.isSearchActive = false;
         if (event.item) {
-            this.selectDatasetEmitter.emit(event.item as DatasetAutocompleteItem);
+            this.onSelectedDataset.emit(event.item as DatasetAutocompleteItem);
             setTimeout(() => {
                 const typeaheadInput: MaybeNull<HTMLElement> = document.getElementById("typeahead-http");
                 if (typeaheadInput) {
@@ -163,19 +169,19 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     }
 
     public onLogin(): void {
-        this.loginEmitter.emit();
+        this.onClickedLogin.emit();
     }
 
-    public onLogOut(): void {
-        this.logOutEmitter.emit();
+    public onLogout(): void {
+        this.onClickedLogout.emit();
     }
 
     public onAddNew(): void {
-        this.addNewEmitter.emit();
+        this.onClickedAddNew.emit();
     }
 
     public onOpenUserInfo(): void {
-        this.userProfileEmitter.emit();
+        this.onClickedOpenUserInfo.emit();
     }
 
     public triggerMenuClick(): void {
@@ -186,31 +192,31 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
         this.isCollapsedAppHeaderMenu = !this.isCollapsedAppHeaderMenu;
     }
 
-    public onClickAppLogo(): void {
-        this.clickAppLogoEmitter.emit();
+    public onAppLogo(): void {
+        this.onClickedAppLogo.emit();
     }
 
     public onHelp(): void {
-        this.clickHelpEmitter.emit();
+        this.onClickedHelp.emit();
     }
 
     public onSettings(): void {
-        this.clickSettingsEmitter.emit();
+        this.onClickedSettings.emit();
     }
 
     public onAnalytics(): void {
-        this.clickAnalyticsEmitter.emit();
+        this.onClickedAnalytics.emit();
     }
 
     public onBilling(): void {
-        this.clickBillingEmitter.emit();
+        this.onClickedBilling.emit();
     }
 
     public onUserDatasets(): void {
-        this.clickUserDatasetsEmitter.emit();
+        this.onClickedUserDatasets.emit();
     }
 
     public onUserProfile(): void {
-        this.clickUserProfileEmitter.emit();
+        this.onClickedUserProfile.emit();
     }
 }

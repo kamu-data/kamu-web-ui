@@ -60,10 +60,11 @@ export const mockGetDatasetSchemaQuery: GetDatasetSchemaQuery = {
             kind: DatasetKind.Derivative,
             name: "account.tokens.portfolio.usd",
             owner: {
-                __typename: "User",
+                __typename: "Account",
                 id: "1",
-                name: "kamu",
+                accountName: "kamu",
             },
+            alias: "kamu/account.tokens.portfolio.usd",
         },
     },
 };

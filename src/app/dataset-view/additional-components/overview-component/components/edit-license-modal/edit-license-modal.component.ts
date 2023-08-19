@@ -19,7 +19,7 @@ import { DatasetCommitService } from "../../services/dataset-commit.service";
     templateUrl: "./edit-license-modal.component.html",
 })
 export class EditLicenseModalComponent extends BaseComponent implements OnInit {
-    @Input() public datasetBasics?: DatasetBasicsFragment;
+    @Input() public datasetBasics: DatasetBasicsFragment;
     @Input() public currentState?: {
         schema: MaybeNull<DatasetSchema>;
         data: DataRow[];
@@ -55,17 +55,16 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
     }
 
     public onEditLicense(): void {
-        if (this.datasetBasics)
-            this.trackSubscription(
-                this.datasetCommitService
-                    .commitEventToDataset(
-                        this.datasetBasics.owner.name,
-                        this.datasetBasics.name,
-                        this.yamlEventService.buildYamlSetLicenseEvent(
-                            this.licenseForm.value as Omit<SetLicense, "__typename">,
-                        ),
-                    )
-                    .subscribe(),
-            );
+        this.trackSubscription(
+            this.datasetCommitService
+                .commitEventToDataset(
+                    this.datasetBasics.owner.accountName,
+                    this.datasetBasics.name,
+                    this.yamlEventService.buildYamlSetLicenseEvent(
+                        this.licenseForm.value as Omit<SetLicense, "__typename">,
+                    ),
+                )
+                .subscribe(),
+        );
     }
 }

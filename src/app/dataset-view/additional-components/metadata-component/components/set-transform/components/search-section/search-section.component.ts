@@ -63,7 +63,7 @@ export class SearchSectionComponent extends BaseComponent {
             this.trackSubscription(
                 this.datasetService.requestDatasetSchema(id).subscribe((data: GetDatasetSchemaQuery) => {
                     if (data.datasets.byId) {
-                        const owner = (data.datasets.byId as DatasetBasicsFragment).owner.name;
+                        const owner = (data.datasets.byId as DatasetBasicsFragment).owner.accountName;
                         const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
                             data.datasets.byId.metadata.currentSchema,
                         );

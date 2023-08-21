@@ -9,12 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Deleting and renaming a dataset on Settings tab
 - Added icons for dataset's tabs
+### Changed
+- Upgraded to Node.JS generation 16.x
+- Upgraded to Angular 14.3
+- Switched to different Angular wrapper for Monaco editor (ngx-monaco-editor-v2)
+- Selected library updates/downgrades to align with Angular 14.3 and Node.JS 16.x
 
 ## [0.8.0] - 2023-08-04
 ### Added
 - Added pictures in the dropdown list for engines
 - Editing dataset readme file on Overview tab
-### Changed:
+### Changed
 - Internal: code formatter settings revised (print width)
 
 ## [0.7.0] - 2023-07-27

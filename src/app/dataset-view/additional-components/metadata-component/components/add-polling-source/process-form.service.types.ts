@@ -9,7 +9,7 @@ export enum SourceOrder {
 export interface OrderControlType {
     fetch: {
         kind: string;
-        order?: string;
+        order?: SourceOrder;
         cache?: { kind: string };
         eventTime?: { kind: string };
     };

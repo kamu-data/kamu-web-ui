@@ -101,8 +101,8 @@ describe("AppHeaderComponent", () => {
     });
 
     it("should check dataset type", () => {
-        expect(component.isDatasetType("Dataset")).toBeTrue();
-        expect(component.isDatasetType("all")).toBeFalse();
+        expect(component.isDatasetType(TypeNames.datasetType)).toBeTrue();
+        expect(component.isDatasetType(TypeNames.allDataType)).toBeFalse();
     });
 
     [false, true].forEach((isExpectation: boolean) => {

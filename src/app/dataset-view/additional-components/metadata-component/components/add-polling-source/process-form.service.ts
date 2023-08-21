@@ -59,7 +59,7 @@ export class ProcessFormService {
 
     private processFetchOrderControl(formGroup: FormGroup): void {
         const form = formGroup.value as OrderControlType;
-        if (form.fetch.order && form.fetch.order === SourceOrder.NONE) {
+        if (form.fetch.order === SourceOrder.NONE) {
             delete form.fetch.order;
         }
     }

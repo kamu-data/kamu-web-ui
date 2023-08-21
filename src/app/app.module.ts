@@ -44,7 +44,7 @@ import { ModalModule } from "./components/modal/modal.module";
 import { MarkdownModule } from "ngx-markdown";
 import { SecurityContext } from "@angular/core";
 import { NotificationIndicatorComponent } from "./components/notification-indicator/notification-indicator.component";
-import { MonacoEditorModule } from "ngx-monaco-editor";
+import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { AppConfigService } from "./app-config.service";
 import { NavigationService } from "./services/navigation.service";
 import { AppDatasetSubscriptionsService } from "./dataset-view/dataset.subscriptions.service";

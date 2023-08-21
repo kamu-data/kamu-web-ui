@@ -11,7 +11,7 @@ import { first } from "rxjs/operators";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Location } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { MonacoEditorModule } from "ngx-monaco-editor";
+import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { MatDividerModule } from "@angular/material/divider";
 
 describe("DataComponent", () => {

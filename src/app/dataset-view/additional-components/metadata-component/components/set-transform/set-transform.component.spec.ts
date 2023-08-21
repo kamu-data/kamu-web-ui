@@ -8,7 +8,7 @@ import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { of } from "rxjs";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
-import { MonacoEditorModule } from "ngx-monaco-editor";
+import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import {
     mockGetDatasetSchemaQuery,
     mockParseSetTransFormYamlType,

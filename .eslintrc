@@ -20,7 +20,7 @@
   "rules": {
     "no-bitwise": 0,
     "@typescript-eslint/no-extraneous-class": ["off"],
-
+    "@typescript-eslint/no-unsafe-enum-comparison": ["off"],
     "jasmine/new-line-before-expect": 0
   },
   "ignorePatterns": ["node_modules", "dist", "kamu.graphql.interface.ts"]

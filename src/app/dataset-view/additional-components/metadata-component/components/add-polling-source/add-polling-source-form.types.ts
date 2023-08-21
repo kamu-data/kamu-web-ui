@@ -125,7 +125,7 @@ export interface EditFormType {
         query?: string;
     };
     prepare?: {
-        kind: string;
+        kind: PrepareKind;
         command?: string[] | string;
         format?: string;
         subPath?: string;

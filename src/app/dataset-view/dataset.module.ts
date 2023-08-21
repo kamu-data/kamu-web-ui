@@ -22,7 +22,7 @@ import { MatChipsModule } from "@angular/material/chips";
 import { MetadataComponent } from "./additional-components/metadata-component/metadata-component";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { MatTabsModule } from "@angular/material/tabs";
-import { MonacoEditorModule } from "ngx-monaco-editor";
+import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { DataComponent } from "./additional-components/data-component/data-component";
 import { OverviewComponent } from "./additional-components/overview-component/overview-component";
 import { LineageComponent as LineageComponent } from "./additional-components/lineage-component/lineage-component";

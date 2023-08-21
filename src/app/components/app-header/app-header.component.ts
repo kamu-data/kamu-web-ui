@@ -84,7 +84,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
         );
     }
 
-    public isDatasetType(type: string): boolean {
+    public isDatasetType(type: TypeNames): boolean {
         return type === TypeNames.datasetType;
     }
 

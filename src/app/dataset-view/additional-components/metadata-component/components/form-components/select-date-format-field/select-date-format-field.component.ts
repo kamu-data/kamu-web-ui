@@ -42,20 +42,22 @@ export class SelectDateFormatFieldComponent extends BaseField implements OnInit 
 
     private chooseEventTimeSource(): void {
         this.currentSource = this.eventTimeGroup.get(this.KIND_NAME_CONTROL)?.value as EventTimeSourceKind;
-        const subscription = this.eventTimeGroup.get(this.KIND_NAME_CONTROL)?.valueChanges.subscribe((kind: string) => {
-            if (kind === this.eventTimeSourceKind.FROM_METADATA) {
-                this.currentSource = EventTimeSourceKind.FROM_METADATA;
-                this.eventTimeGroup.removeControl(this.PATTERN_NAME_CONTROL);
-                this.eventTimeGroup.removeControl(this.TIMESTAMP_FORMAT_NAME_CONTROL);
-            } else {
-                this.currentSource = EventTimeSourceKind.FROM_PATH;
-                this.eventTimeGroup.addControl(
-                    this.PATTERN_NAME_CONTROL,
-                    this.fb.control("", RxwebValidators.required()),
-                );
-                this.eventTimeGroup.addControl(this.TIMESTAMP_FORMAT_NAME_CONTROL, this.fb.control(""));
-            }
-        });
+        const subscription = this.eventTimeGroup
+            .get(this.KIND_NAME_CONTROL)
+            ?.valueChanges.subscribe((kind: EventTimeSourceKind) => {
+                if (kind === this.eventTimeSourceKind.FROM_METADATA) {
+                    this.currentSource = EventTimeSourceKind.FROM_METADATA;
+                    this.eventTimeGroup.removeControl(this.PATTERN_NAME_CONTROL);
+                    this.eventTimeGroup.removeControl(this.TIMESTAMP_FORMAT_NAME_CONTROL);
+                } else {
+                    this.currentSource = EventTimeSourceKind.FROM_PATH;
+                    this.eventTimeGroup.addControl(
+                        this.PATTERN_NAME_CONTROL,
+                        this.fb.control("", RxwebValidators.required()),
+                    );
+                    this.eventTimeGroup.addControl(this.TIMESTAMP_FORMAT_NAME_CONTROL, this.fb.control(""));
+                }
+            });
         if (subscription) this.trackSubscription(subscription);
     }
 }

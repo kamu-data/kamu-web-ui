@@ -7,7 +7,7 @@ import { AddPollingSourceComponent } from "./add-polling-source.component";
 import { NgbModal, NgbModalRef, NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { MonacoEditorModule } from "ngx-monaco-editor";
+import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { StepperNavigationComponent } from "../stepper-navigation/stepper-navigation.component";
 import { BaseStepComponent } from "./steps/base-step/base-step.component";
 import { PollingSourceFormComponentsModule } from "../form-components/polling-source-form-components.module";

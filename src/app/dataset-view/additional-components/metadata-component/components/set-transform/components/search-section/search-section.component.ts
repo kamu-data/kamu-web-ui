@@ -10,7 +10,7 @@ import { MaybeNull } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSchema } from "src/app/interface/dataset.interface";
-import { DatasetAutocompleteItem } from "src/app/interface/search.interface";
+import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { DatasetNode } from "../../set-transform.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { parseCurrentSchema } from "src/app/common/app.helpers";
@@ -58,7 +58,7 @@ export class SearchSectionComponent extends BaseComponent {
             id,
             name,
         });
-        if (value.__typename !== "all" && !this.inputDatasets.has(inputDataset)) {
+        if (value.__typename !== TypeNames.allDataType && !this.inputDatasets.has(inputDataset)) {
             this.inputDatasets.add(inputDataset);
             this.trackSubscription(
                 this.datasetService.requestDatasetSchema(id).subscribe((data: GetDatasetSchemaQuery) => {

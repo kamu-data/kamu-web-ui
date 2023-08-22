@@ -13,6 +13,7 @@ import { NavigationEnd, Router } from "@angular/router";
 import { BlockService } from "./block.service";
 import { AppDatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import _ from "lodash";
+import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-metadata-block",
@@ -37,6 +38,7 @@ export class MetadataBlockComponent extends BaseProcessingComponent implements O
     public blockHash: string;
     public datasetHistoryUpdate: MaybeNull<DatasetHistoryUpdate> = null;
     private blocksPerPage = 10;
+    public mapHistory = new Map<number, DatasetHistoryUpdate>();
 
     ngOnInit(): void {
         this.datasetInfo = this.getDatasetInfoFromUrl();
@@ -54,14 +56,31 @@ export class MetadataBlockComponent extends BaseProcessingComponent implements O
             this.loadMetadataBlock(),
             this.loadHistory(),
             this.appDatasetSubsService.onDatasetHistoryChanges.subscribe((result: DatasetHistoryUpdate) => {
-                this.datasetHistoryUpdate = result;
+                this.mapHistory.set(result.pageInfo.currentPage, result);
+                if (result.pageInfo.hasNextPage && result.pageInfo.totalPages !== this.mapHistory.size) {
+                    this.loadHistory(result.pageInfo.currentPage + 1);
+                }
+                const firstPageHistory = this.mapHistory.get(0);
+                if (firstPageHistory) {
+                    this.datasetHistoryUpdate = firstPageHistory;
+                }
                 this.cdr.detectChanges();
             }),
         );
     }
 
+    public get allHistory(): MetadataBlockFragment[] {
+        return Array.from(this.mapHistory.values())
+            .map((item) => item.history)
+            .reduce((acc, cur) => [...acc, ...cur], []);
+    }
+
     public onPageChange(currentPage: number): void {
-        this.trackSubscription(this.loadHistory(currentPage - 1));
+        const currentHistory = this.mapHistory.get(currentPage - 1);
+        if (currentHistory) {
+            this.datasetHistoryUpdate = currentHistory;
+            this.cdr.detectChanges();
+        }
     }
 
     private loadMetadataBlock(): Subscription {

@@ -4,6 +4,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { IDropdownSettings } from "ng-multiselect-dropdown";
+import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-block-navigation",
@@ -15,6 +16,7 @@ export class BlockNavigationComponent {
     @Input() public datasetHistory: MaybeNull<DatasetHistoryUpdate>;
     @Input() public currentBlockHash: string;
     @Input() public datasetInfo: DatasetInfo;
+    @Input() public allHistory: MetadataBlockFragment[];
     @Output() public onPageChangeEmit = new EventEmitter<number>();
     public searchHash = "";
     public currentPage = 1;

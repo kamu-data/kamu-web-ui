@@ -46,6 +46,7 @@ import { EventTimePropertyComponent } from "./components/event-details/component
 import { OrderPropertyComponent } from "./components/event-details/components/common/order-property/order-property.component";
 import { CommandPropertyComponent } from "./components/event-details/components/common/command-property/command-property.component";
 import { StepTypePropertyComponent } from "./components/event-details/components/common/step-type-property/step-type-property.component";
+import { NgbPaginationModule } from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
     declarations: [
@@ -98,6 +99,7 @@ import { StepTypePropertyComponent } from "./components/event-details/components
         DisplayTimeModule,
         DisplayHashModule,
         SharedModule,
+        NgbPaginationModule,
     ],
     exports: [MetadataBlockComponent],
 })

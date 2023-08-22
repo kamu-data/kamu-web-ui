@@ -26,3 +26,8 @@ export interface DatasetsAccountResponse {
     pageInfo: PageBasedInfo;
     datasetTotalCount: number;
 }
+
+export interface DatasetRequestBySql {
+    query: string;
+    limit?: number;
+}

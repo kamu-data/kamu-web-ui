@@ -140,10 +140,10 @@ describe("DatasetComponent", () => {
     });
 
     it("should check run SQL request", () => {
-        const sqlQuery = "select * from test.table";
+        const query = "select * from test.table";
         const requestDatasetDataSqlRunSpy = spyOn(appDatasetService, "requestDatasetDataSqlRun").and.returnValue(of());
-        component.onRunSQLRequest(sqlQuery);
-        expect(requestDatasetDataSqlRunSpy).toHaveBeenCalledWith(sqlQuery, AppValues.SQL_QUERY_LIMIT);
+        component.onRunSQLRequest({ query });
+        expect(requestDatasetDataSqlRunSpy).toHaveBeenCalledWith({ query });
     });
 
     it("should check page changed", () => {

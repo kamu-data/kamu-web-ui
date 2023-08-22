@@ -205,7 +205,7 @@ describe("AppDatasetService", () => {
 
         const subscriptionErrorChangesSpy = spyOn(appDatasetSubsService, "observeSqlErrorOccurred");
 
-        service.requestDatasetDataSqlRun(query, limit).subscribe();
+        service.requestDatasetDataSqlRun({ query, limit }).subscribe();
 
         expect(subscriptionDataChanges$.closed).toBeTrue();
         expect(subscriptionErrorChangesSpy).toHaveBeenCalledWith({ error: "" });
@@ -227,7 +227,7 @@ describe("AppDatasetService", () => {
                 expect(update.error).toEqual(errorResult.errorMessage);
             });
 
-        service.requestDatasetDataSqlRun(query, limit).subscribe();
+        service.requestDatasetDataSqlRun({ query, limit }).subscribe();
 
         expect(subscriptionDataChanges$.closed).toBeFalse();
         expect(subscriptionErrorChanges$.closed).toBeTrue();
@@ -242,7 +242,7 @@ describe("AppDatasetService", () => {
         appDatasetSubsService.onDatasetDataSqlErrorOccured.subscribe(() => fail("Unexpected SQL error update"));
 
         const subscription$ = service
-            .requestDatasetDataSqlRun(query, limit)
+            .requestDatasetDataSqlRun({ query, limit })
             .pipe(first())
             .subscribe(
                 () => {
@@ -265,7 +265,7 @@ describe("AppDatasetService", () => {
         appDatasetSubsService.onDatasetDataSqlErrorOccured.subscribe(() => fail("Unexpected SQL error update"));
 
         const subscription$ = service
-            .requestDatasetDataSqlRun(query, limit)
+            .requestDatasetDataSqlRun({ query, limit })
             .pipe(first())
             .subscribe(
                 () => {

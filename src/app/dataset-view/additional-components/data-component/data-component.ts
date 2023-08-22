@@ -1,9 +1,9 @@
 import AppValues from "src/app/common/app.values";
-import { OffsetInterval } from "./../../../api/kamu.graphql.interface";
+import { OffsetInterval } from "../../../api/kamu.graphql.interface";
 import { Location } from "@angular/common";
 import { DataSqlErrorUpdate, DataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { DataRow } from "../../../interface/dataset.interface";
+import { DataRow, DatasetRequestBySql } from "../../../interface/dataset.interface";
 import DataTabValues from "./mock.data";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { BaseComponent } from "src/app/common/base.component";
@@ -19,11 +19,14 @@ import { Observable, map, tap } from "rxjs";
 })
 export class DataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;
-    @Output() public runSQLRequestEmit = new EventEmitter<string>();
+    @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
     public sqlEditorOptions = sqlEditorOptions;
     public savedQueries = DataTabValues.savedQueries;
     public sqlRequestCode = `select\n  *\nfrom `;
     public currentData: DataRow[] = [];
+    public defaultLimit = AppValues.SQL_QUERY_LIMIT;
+    public queryLimits: number[] = [AppValues.SQL_QUERY_LIMIT, 100, 200, 500];
+
     private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
     public sqlErrorMarker$: Observable<string>;
     public dataUpdate$: Observable<DataUpdate>;
@@ -32,8 +35,8 @@ export class DataComponent extends BaseComponent implements OnInit {
         super();
     }
 
-    public onRunSQLRequest(sqlRequestCode?: string): void {
-        this.runSQLRequestEmit.emit(sqlRequestCode ?? this.sqlRequestCode);
+    public runSQLRequest(query: string, limit?: number): void {
+        this.runSQLRequestEmit.emit({ query, limit });
     }
 
     public ngOnInit(): void {
@@ -52,9 +55,14 @@ export class DataComponent extends BaseComponent implements OnInit {
         this.buildSqlRequestCode();
     }
 
-    onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
+    public changeLimit(limit: number): void {
+        this.defaultLimit = limit;
+        this.runSQLRequest(this.sqlRequestCode, this.defaultLimit);
+    }
+
+    public onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
         const runQueryFn = () => {
-            this.onRunSQLRequest();
+            this.runSQLRequest(this.sqlRequestCode, this.defaultLimit);
         };
         editor.addAction({
             // An unique identifier of the contributed action.
@@ -71,7 +79,7 @@ export class DataComponent extends BaseComponent implements OnInit {
             run: runQueryFn,
         });
         if (this.currentData.length > 0) {
-            this.onRunSQLRequest();
+            this.runSQLRequest(this.sqlRequestCode, this.defaultLimit);
         }
     }
 

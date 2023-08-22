@@ -70,8 +70,8 @@
                                     mat-icon-button
                                     data-test-id="runSqlQueryRequestCode"
                                     name="run sql button"
-                                    (click)="onRunSQLRequest(item.query)"
-                                    class="sql-run-button rounded-2 btn-group-item btn d-flex justify-content-center align-items-center"
+                                    (click)="runSQLRequest(item.query)"
+                                    class="sql-run-button rounded-2 btnGroup-item btn d-flex justify-content-center align-items-center"
                                 >
                                     <span>Run</span><mat-icon>play_arrow</mat-icon>
                                 </button>
@@ -90,7 +90,7 @@
                     mat-icon-button
                     data-test-id="runSqlQueryButton"
                     name="run sql button"
-                    (click)="onRunSQLRequest()"
+                    (click)="runSQLRequest(sqlRequestCode)"
                     [disabled]="!dataUpdate.content.length"
                     class="sql-run-button rounded-left-2 border-right-0 btn-group-item btn d-flex justify-content-center align-items-center"
                 >
@@ -101,13 +101,13 @@
                     mat-icon-button
                     mat-button
                     #menuTrigger="matMenuTrigger"
-                    [matMenuTriggerFor]="menu2"
+                    [matMenuTriggerFor]="menu"
                     aria-label="Example icon-button with a menu"
                     data-test-id="searchAdditionalButtons"
                 >
                     <mat-icon>arrow_drop_down</mat-icon>
                 </button>
-                <mat-menu #menu2="matMenu">
+                <mat-menu #menu="matMenu">
                     <div class="select-menu-modal notifications-component-menu-modal">
                         <div class="select-menu-list">
                             <button
@@ -145,11 +145,34 @@
         </ng-container>
         <ng-container *ngIf="!(sqlErrorMarker$ | async) && dataUpdate.schema && dataUpdate.content">
             <h2 class="box-title align-items-center py-3 m-0">Result:</h2>
+
+            <div class="query-limit mb-4 mt-4 d-flex align-items-center">
+                <p class="mb-0 mr-2">Query Limit: </p>
+                <mat-button-toggle-group
+                  *ngFor="let limit of queryLimits;"
+                  name="query-limits"
+                  aria-label="Font Style"
+                >
+                    <mat-button-toggle (change)="changeLimit(limit)" [checked]="limit === defaultLimit">{{ limit }}</mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
+
             <app-dynamic-table
                 [hasTableHeader]="true"
                 [schemaFields]="dataUpdate.schema ? dataUpdate.schema.fields : []"
                 [dataRows]="dataUpdate.content || []"
             ></app-dynamic-table>
+
+            <div class="query-limit mb-4 mt-4 d-flex align-items-center">
+                <p class="mb-0 mr-2">Query Limit: </p>
+                <mat-button-toggle-group
+                  *ngFor="let limit of queryLimits;"
+                  name="query-limits"
+                  aria-label="Font Style"
+                >
+                    <mat-button-toggle (change)="changeLimit(limit)" [checked]="limit === defaultLimit">{{ limit }}</mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
         </ng-container>
         <ng-container *ngIf="!(sqlErrorMarker$ | async) && !dataUpdate.schema">
             <mat-divider></mat-divider>

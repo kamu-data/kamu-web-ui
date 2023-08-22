@@ -30,7 +30,11 @@
     </div>
     <div class="d-flex flex-column gap-4" *ngIf="datasetHistory">
         <ng-container
-            *ngIf="datasetHistory.history | eventTypeFilter: eventTypeFilters | blockHashFilter: searchHash as result"
+            *ngIf="
+                datasetHistory.history
+                    | eventTypeFilter: eventTypeFilters:allHistory
+                    | blockHashFilter: searchHash:allHistory as result
+            "
         >
             <div *ngFor="let block of result" class="d-flex lh-lg align-items-center justify-content-between">
                 <div class="flex-grow-1 no-wrap lh-1">
@@ -52,12 +56,16 @@
             <ng-container *ngIf="result.length === 0">
                 <p class="mt-4 text-center">No block matches</p>
             </ng-container>
-            <app-pagination
-                *ngIf="result.length"
-                [currentPage]="currentPage - 1"
-                [pageInfo]="datasetHistory.pageInfo"
-                (pageChangeEvent)="onPageChange($event)"
-            ></app-pagination>
+            <ngb-pagination
+                class="d-flex justify-content-center mt-4"
+                (pageChange)="onPageChange($event)"
+                [collectionSize]="eventTypeFilters.length || searchHash ? result.length : allHistory.length"
+                [directionLinks]="false"
+                [maxSize]="7"
+                [page]="1"
+                [rotate]="true"
+                [ellipses]="true"
+            ></ngb-pagination>
         </ng-container>
     </div>
 </div>

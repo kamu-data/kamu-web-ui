@@ -5,8 +5,12 @@ import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
     name: "blockHashFilter",
 })
 export class BlockHashFilterPipe implements PipeTransform {
-    transform(blocks: MetadataBlockFragment[], filter: string): MetadataBlockFragment[] {
+    transform(
+        blocks: MetadataBlockFragment[],
+        filter: string,
+        allHistory: MetadataBlockFragment[],
+    ): MetadataBlockFragment[] {
         if (filter === "") return blocks;
-        return blocks.filter((block: MetadataBlockFragment) => (block.blockHash as string).includes(filter));
+        return allHistory.filter((block: MetadataBlockFragment) => (block.blockHash as string).includes(filter));
     }
 }

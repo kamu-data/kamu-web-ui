@@ -7,7 +7,7 @@ import {
     DatasetByAccountAndDatasetNameQuery,
     UpdateReadmeMutation,
 } from "src/app/api/kamu.graphql.interface";
-import { MaybeNullOrUndefined } from "src/app/common/app.types";
+import { MaybeNullOrUndefined, MaybeUndefined } from "src/app/common/app.types";
 import { DatasetNotFoundError } from "src/app/common/errors";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -58,7 +58,7 @@ export class DatasetCommitService {
 
     public getIdByAccountNameAndDatasetName(accountName: string, datasetName: string): Observable<string> {
         const key = `${accountName}/${datasetName}`;
-        const cachedId: string | undefined = this.datasetIdsByAccountDatasetName.get(key);
+        const cachedId: MaybeUndefined<string> = this.datasetIdsByAccountDatasetName.get(key);
         if (cachedId) {
             return of(cachedId);
         } else {

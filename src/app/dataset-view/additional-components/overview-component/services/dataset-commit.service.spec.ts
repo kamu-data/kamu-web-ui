@@ -1,3 +1,4 @@
+import { MaybeUndefined } from "./../../../../common/app.types";
 import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { DatasetCommitService } from "./dataset-commit.service";
 import { Apollo, ApolloModule } from "apollo-angular";
@@ -55,7 +56,7 @@ describe("DatasetCommitService", () => {
         expect(commitService).toBeTruthy();
     });
 
-    function requestDatasetId(): Observable<string | undefined> {
+    function requestDatasetId(): Observable<MaybeUndefined<string>> {
         return commitService.getIdByAccountNameAndDatasetName(TEST_ACCOUNT_NAME, TEST_DATASET_NAME);
     }
 

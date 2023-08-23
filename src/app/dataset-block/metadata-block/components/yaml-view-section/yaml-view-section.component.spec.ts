@@ -6,6 +6,7 @@ import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { MaybeUndefined } from "src/app/common/app.types";
 
 describe("YamlViewSectionComponent", () => {
     let component: YamlViewSectionComponent;
@@ -43,9 +44,8 @@ describe("YamlViewSectionComponent", () => {
     });
 
     it("should check onMetadataBlockAsYamlChanges subscribe", () => {
-        const mockBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHashEncoded as
-            | string
-            | undefined;
+        const mockBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+            .blockByHashEncoded as MaybeUndefined<string>;
         if (mockBlock) {
             blockService.metadataBlockAsYamlChanges(mockBlock);
             component.ngOnInit();

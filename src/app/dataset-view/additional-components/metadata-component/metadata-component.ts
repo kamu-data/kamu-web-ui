@@ -12,7 +12,7 @@ import {
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
 import { momentConvertDatetoLocalWithFormat } from "src/app/common/app.helpers";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
 import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
 
@@ -84,7 +84,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     }
 
     public get latestBlockSystemTime(): string {
-        const systemTimeAsString: string | undefined =
+        const systemTimeAsString: MaybeUndefined<string> =
             this.currentState?.metadata.metadata.chain.blocks.nodes[0].systemTime;
         return systemTimeAsString
             ? momentConvertDatetoLocalWithFormat({

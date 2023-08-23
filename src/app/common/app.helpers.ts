@@ -1,5 +1,5 @@
 import moment from "moment";
-import { MaybeNull } from "./app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "./app.types";
 import { DataSchema } from "../api/kamu.graphql.interface";
 import { DatasetSchema } from "../interface/dataset.interface";
 
@@ -56,6 +56,6 @@ export function momentConvertDatetoLocalWithFormat(dateParams: {
     return moment(ISOStringDate).format(dateParams.format);
 }
 
-export function parseCurrentSchema(data: MaybeNull<DataSchema | undefined>): MaybeNull<DatasetSchema> {
+export function parseCurrentSchema(data: MaybeNullOrUndefined<DataSchema>): MaybeNull<DatasetSchema> {
     return data ? (JSON.parse(data.content) as DatasetSchema) : null;
 }

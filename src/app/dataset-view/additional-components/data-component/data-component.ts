@@ -51,6 +51,12 @@ export class DataComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         this.trackSubscriptions(
+            this.appDatasetSubsService.onDatasetDataSqlErrorOccured.subscribe(
+                (dataSqlErrorUpdate: DataSqlErrorUpdate) => {
+                    this.sqlErrorMarker = dataSqlErrorUpdate.error;
+                    this.cdr.markForCheck();
+                },
+            ),
             this.appDatasetSubsService.onDatasetDataChanges.subscribe((dataUpdate: DataUpdate) => {
                 if (dataUpdate.currentVocab?.offsetColumn) {
                     this.offsetColumnName = dataUpdate.currentVocab.offsetColumn;
@@ -60,14 +66,6 @@ export class DataComponent extends BaseComponent implements OnInit {
                 this.sqlErrorMarker = null;
                 this.cdr.markForCheck();
             }),
-            this.appDatasetSubsService.onDatasetDataSqlErrorOccured.subscribe(
-                (dataSqlErrorUpdate: DataSqlErrorUpdate) => {
-                    this.currentData = [];
-                    this.currentSchema = null;
-                    this.sqlErrorMarker = dataSqlErrorUpdate.error;
-                    this.cdr.markForCheck();
-                },
-            ),
         );
         this.buildSqlRequestCode();
     }

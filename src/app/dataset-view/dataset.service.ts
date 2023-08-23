@@ -145,6 +145,9 @@ export class DatasetService {
                         currentVocab: this.currentSetVocab,
                     };
                     this.appDatasetSubsService.changeDatasetData(dataUpdate);
+                    this.appDatasetSubsService.observeSqlErrorOccurred({
+                        error: "",
+                    });
                 } else if (queryResult.errorKind === DataQueryResultErrorKind.InvalidSql) {
                     this.appDatasetSubsService.observeSqlErrorOccurred({
                         error: queryResult.errorMessage,

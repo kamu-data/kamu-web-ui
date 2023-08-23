@@ -101,7 +101,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     };
 
     public formatter(x: DatasetAutocompleteItem | string): string {
-        return typeof x !== "string" ? (x.dataset.name as string) : x;
+        return typeof x !== "string" ? x.dataset.name : x;
     }
 
     public onClickInput(): void {

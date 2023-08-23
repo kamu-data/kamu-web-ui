@@ -186,7 +186,7 @@ it("should check description for SetWatermark block", () => {
         ...metadataBlockSetVocab,
         event: {
             __typename: "SetWatermark",
-            outputWatermark: +watermarkTime,
+            outputWatermark: watermarkTime.toString(),
         },
     };
     expect(DataHelpers.descriptionForMetadataBlock(setWatermarkBlock)).toEqual(`Watermark updated`);

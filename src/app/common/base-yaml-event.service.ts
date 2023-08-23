@@ -7,6 +7,7 @@ import { BlockService } from "../dataset-block/metadata-block/block.service";
 import { SupportedEvents } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { DatasetHistoryUpdate } from "../dataset-view/dataset.subscriptions.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
+import { MaybeNullOrUndefined } from "./app.types";
 
 export abstract class BaseYamlEventService {
     private appDatasetService = inject(DatasetService);
@@ -22,7 +23,7 @@ export abstract class BaseYamlEventService {
         return this.kindChanges$.asObservable();
     }
 
-    public getEventAsYaml(info: DatasetInfo, typename: SupportedEvents): Observable<string | null | undefined> {
+    public getEventAsYaml(info: DatasetInfo, typename: SupportedEvents): Observable<MaybeNullOrUndefined<string>> {
         return this.appDatasetService.getDatasetHistory(info, this.historyPageSize, this.currentPage).pipe(
             expand((h: DatasetHistoryUpdate) => {
                 const filteredHistory = this.filterHistoryByType(h.history, typename);
@@ -44,7 +45,7 @@ export abstract class BaseYamlEventService {
                     of(null),
                     zip(
                         this.blockService.onMetadataBlockAsYamlChanges,
-                        this.blockService.requestMetadataBlock(info, filteredHistory[0]?.blockHash as string),
+                        this.blockService.requestMetadataBlock(info, filteredHistory[0]?.blockHash),
                     ),
                 ),
             ),

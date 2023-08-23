@@ -8,6 +8,7 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { MaybeNullOrUndefined } from "src/app/common/app.types";
 
 @Injectable({
     providedIn: "root",
@@ -32,7 +33,7 @@ export class DatasetSettingsService {
 
     public deleteDataset(datasetId: string): Observable<void> {
         return this.datasetApi.deleteDataset(datasetId).pipe(
-            map((data: DeleteDatasetMutation | undefined | null) => {
+            map((data: MaybeNullOrUndefined<DeleteDatasetMutation>) => {
                 if (data?.datasets.byId?.delete.__typename === "DeleteResultSuccess") {
                     this.navigationService.navigateToSearch();
                 } else {
@@ -52,7 +53,7 @@ export class DatasetSettingsService {
 
     public renameDataset(accountName: string, datasetId: string, newName: string): Observable<void> {
         return this.datasetApi.renameDataset(datasetId, newName).pipe(
-            map((data: RenameDatasetMutation | undefined | null) => {
+            map((data: MaybeNullOrUndefined<RenameDatasetMutation>) => {
                 if (data?.datasets.byId?.rename.__typename === "RenameResultSuccess") {
                     this.datasetService
                         .requestDatasetMainData({

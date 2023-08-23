@@ -82,7 +82,7 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
                         (data as InputSlice[]).forEach((item, index) => {
                             let rows: EventRow[] = [];
                             Object.entries({
-                                id: item.datasetId as string,
+                                id: item.datasetId,
                                 ...item,
                             }).forEach(([key, value]) => {
                                 if (event.__typename && item.__typename && key !== "__typename") {
@@ -129,7 +129,7 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
             case "dataInterval":
                 return {
                     block: value,
-                    datasetId: inputItem?.datasetId as string,
+                    datasetId: inputItem?.datasetId ?? null,
                 };
             case "interval":
                 return {

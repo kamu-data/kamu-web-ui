@@ -19,7 +19,7 @@ export class OverviewHistorySummaryHeaderComponent {
     constructor(private navigationService: NavigationService) {}
 
     get systemTime(): string {
-        return this.metadataBlockFragment ? (this.metadataBlockFragment.systemTime as string) : "";
+        return this.metadataBlockFragment ? this.metadataBlockFragment.systemTime : "";
     }
 
     get authorInfo(): Account {

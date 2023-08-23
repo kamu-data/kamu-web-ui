@@ -6,6 +6,7 @@ import { DatasetKind } from "../api/kamu.graphql.interface";
 import { map } from "rxjs/operators";
 import { NavigationService } from "../services/navigation.service";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
+import { MaybeNullOrUndefined } from "../common/app.types";
 
 @Injectable({ providedIn: "root" })
 export class AppDatasetCreateService {
@@ -23,7 +24,7 @@ export class AppDatasetCreateService {
 
     public createEmptyDataset(accountId: string, datasetKind: DatasetKind, datasetName: string): Observable<void> {
         return this.datasetApi.createEmptyDataset(accountId, datasetKind, datasetName).pipe(
-            map((data: CreateEmptyDatasetMutation | null | undefined) => {
+            map((data: MaybeNullOrUndefined<CreateEmptyDatasetMutation>) => {
                 if (data?.datasets.createEmpty.__typename === "CreateDatasetResultSuccess") {
                     this.navigationService.navigateToDatasetView({
                         accountName: accountId,
@@ -39,9 +40,9 @@ export class AppDatasetCreateService {
 
     public createDatasetFromSnapshot(accountId: string, snapshot: string): Observable<void> {
         return this.datasetApi.createDatasetFromSnapshot(accountId, snapshot).pipe(
-            map((data: CreateDatasetFromSnapshotMutation | null | undefined) => {
+            map((data: MaybeNullOrUndefined<CreateDatasetFromSnapshotMutation>) => {
                 if (data?.datasets.createFromSnapshot.__typename === "CreateDatasetResultSuccess") {
-                    const datasetName = data.datasets.createFromSnapshot.dataset.name as string;
+                    const datasetName = data.datasets.createFromSnapshot.dataset.name;
                     this.navigationService.navigateToDatasetView({
                         accountName: accountId,
                         datasetName,

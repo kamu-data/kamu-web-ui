@@ -51,7 +51,7 @@ describe("DatasetsTabComponent", () => {
         component.onSelectDataset(mockDatasetListItem);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: mockDatasetListItem.owner.name,
-            datasetName: mockDatasetListItem.name as string,
+            datasetName: mockDatasetListItem.name ,
         });
     });
 

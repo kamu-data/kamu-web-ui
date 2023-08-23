@@ -1,4 +1,4 @@
-import { MaybeNull } from "./../../../../../common/app.types";
+import { MaybeNullOrUndefined } from "./../../../../../common/app.types";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { OWL_DATE_TIME_FORMATS } from "@danielmoncada/angular-datetime-picker";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
@@ -17,7 +17,7 @@ import { DatasetCommitService } from "../../services/dataset-commit.service";
     providers: [{ provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS }],
 })
 export class EditWatermarkModalComponent extends BaseComponent implements OnInit {
-    @Input() public currentWatermark: MaybeNull<string>;
+    @Input() public currentWatermark: MaybeNullOrUndefined<string>;
     @Input() public datasetBasics?: DatasetBasicsFragment;
     public date: Date;
     public timeZone = this.currentTimeZone;
@@ -64,7 +64,7 @@ export class EditWatermarkModalComponent extends BaseComponent implements OnInit
                 this.datasetCommitService
                     .commitEventToDataset(
                         this.datasetBasics.owner.name,
-                        this.datasetBasics.name as string,
+                        this.datasetBasics.name,
                         this.yamlEventService.buildYamlSetWatermarkEvent(date),
                     )
                     .subscribe(),

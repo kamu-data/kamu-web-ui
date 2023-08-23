@@ -89,14 +89,14 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         if (this.datasetBasics) {
             this.navigationService.navigateToDatasetView({
                 accountName: this.datasetBasics.owner.name,
-                datasetName: this.datasetBasics.name as string,
+                datasetName: this.datasetBasics.name,
                 tab: this.datasetViewType,
                 page: currentPage,
             });
             this.initDatasetViewByType(
                 {
                     accountName: this.datasetBasics.owner.name,
-                    datasetName: this.datasetBasics.name as string,
+                    datasetName: this.datasetBasics.name,
                 },
                 currentPage,
             );
@@ -148,7 +148,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
     }
 
     public onClickMetadataNode(dataset: DatasetBasicsFragment): void {
-        this.onSelectDataset(dataset.name as string);
+        this.onSelectDataset(dataset.name);
     }
 
     public get isDatasetViewTypeOverview(): boolean {
@@ -218,7 +218,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         if (this.datasetBasics) {
             this.navigationService.navigateToDatasetView({
                 accountName: this.datasetBasics.owner.name,
-                datasetName: datasetName ? datasetName : (this.datasetBasics.name as string),
+                datasetName: datasetName ? datasetName : this.datasetBasics.name,
                 tab: DatasetViewTypeEnum.Lineage,
             });
         }

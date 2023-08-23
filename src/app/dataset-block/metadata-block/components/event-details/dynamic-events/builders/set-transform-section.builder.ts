@@ -30,12 +30,12 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                             const object = item.datasetRef
                                 ? {
                                       ...item.dataset,
-                                      alias: item.name as string,
-                                      datasetRef: item.datasetRef as string,
+                                      alias: item.name ,
+                                      datasetRef: item.datasetRef ,
                                   }
                                 : {
                                       ...item.dataset,
-                                      alias: item.name as string,
+                                      alias: item.name ,
                                   };
                             Object.entries(object).forEach(([key, value]) => {
                                 if (event.__typename && item.dataset.__typename && key !== "__typename") {

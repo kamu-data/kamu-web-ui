@@ -62,7 +62,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
                 this.datasetCommitService
                     .commitEventToDataset(
                         this.datasetBasics.owner.name,
-                        this.datasetBasics.name as string,
+                        this.datasetBasics.name,
                         this.yamlEventService.buildYamlSetLicenseEvent(
                             this.licenseForm.value as Omit<SetLicense, "__typename">,
                         ),

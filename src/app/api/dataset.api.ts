@@ -39,6 +39,7 @@ import {
     CreateEmptyDatasetGQL,
 } from "./kamu.graphql.interface";
 import { MutationResult } from "apollo-angular";
+import { MaybeNullOrUndefined } from "../common/app.types";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
@@ -192,7 +193,7 @@ export class DatasetApi {
     public createDatasetFromSnapshot(
         accountId: string,
         snapshot: string,
-    ): Observable<CreateDatasetFromSnapshotMutation | undefined | null> {
+    ): Observable<MaybeNullOrUndefined<CreateDatasetFromSnapshotMutation>> {
         return this.createDatasetFromSnapshotGQL.mutate({ accountId, snapshot }).pipe(
             first(),
             map((result: MutationResult<CreateDatasetFromSnapshotMutation>) => {
@@ -205,7 +206,7 @@ export class DatasetApi {
         accountId: string,
         datasetKind: DatasetKind,
         datasetName: string,
-    ): Observable<CreateEmptyDatasetMutation | null | undefined> {
+    ): Observable<MaybeNullOrUndefined<CreateEmptyDatasetMutation>> {
         return this.createEmptyDatasetGQL.mutate({ accountId, datasetKind, datasetName }).pipe(
             first(),
             map((result: MutationResult<CreateEmptyDatasetMutation>) => {
@@ -217,7 +218,7 @@ export class DatasetApi {
     public commitEvent(params: {
         datasetId: string;
         event: string;
-    }): Observable<CommitEventToDatasetMutation | null | undefined> {
+    }): Observable<MaybeNullOrUndefined<CommitEventToDatasetMutation>> {
         return this.commitEventToDatasetGQL
             .mutate({
                 datasetId: params.datasetId,
@@ -231,7 +232,7 @@ export class DatasetApi {
             );
     }
 
-    public updateReadme(datasetId: string, content: string): Observable<UpdateReadmeMutation | null | undefined> {
+    public updateReadme(datasetId: string, content: string): Observable<MaybeNullOrUndefined<UpdateReadmeMutation>> {
         return this.updateReadmeGQL
             .mutate({
                 datasetId,
@@ -245,7 +246,7 @@ export class DatasetApi {
             );
     }
 
-    public deleteDataset(datasetId: string): Observable<DeleteDatasetMutation | null | undefined> {
+    public deleteDataset(datasetId: string): Observable<MaybeNullOrUndefined<DeleteDatasetMutation>> {
         return this.deleteDatasetGQL
             .mutate({
                 datasetId,
@@ -258,7 +259,7 @@ export class DatasetApi {
             );
     }
 
-    public renameDataset(datasetId: string, newName: string): Observable<RenameDatasetMutation | null | undefined> {
+    public renameDataset(datasetId: string, newName: string): Observable<MaybeNullOrUndefined<RenameDatasetMutation>> {
         return this.renameDatasetGQL
             .mutate({
                 datasetId,

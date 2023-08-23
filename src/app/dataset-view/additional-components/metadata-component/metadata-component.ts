@@ -80,12 +80,12 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     }
 
     public get latestBlockhash(): string {
-        return this.currentState ? (this.currentState.metadata.metadata.chain.blocks.nodes[0].blockHash as string) : "";
+        return this.currentState ? this.currentState.metadata.metadata.chain.blocks.nodes[0].blockHash : "";
     }
 
     public get latestBlockSystemTime(): string {
-        const systemTimeAsString: string | undefined = this.currentState?.metadata.metadata.chain.blocks.nodes[0]
-            .systemTime as string;
+        const systemTimeAsString: string | undefined =
+            this.currentState?.metadata.metadata.chain.blocks.nodes[0].systemTime;
         return systemTimeAsString
             ? momentConvertDatetoLocalWithFormat({
                   date: new Date(String(systemTimeAsString)),
@@ -111,7 +111,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         if (this.datasetBasics)
             this.navigationService.navigateToAddPollingSource({
                 accountName: this.datasetBasics.owner.name,
-                datasetName: this.datasetBasics.name as string,
+                datasetName: this.datasetBasics.name,
             });
     }
 
@@ -119,7 +119,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         if (this.datasetBasics)
             this.navigationService.navigateToSetTransform({
                 accountName: this.datasetBasics.owner.name,
-                datasetName: this.datasetBasics.name as string,
+                datasetName: this.datasetBasics.name,
             });
     }
 }

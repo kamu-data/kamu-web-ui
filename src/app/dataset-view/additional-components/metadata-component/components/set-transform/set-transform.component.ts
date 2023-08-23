@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "src/app/common/app.types";
 import { DatasetSchema } from "src/app/interface/dataset.interface";
 import { GetDatasetSchemaQuery, SqlQueryStep } from "src/app/api/kamu.graphql.interface";
 import { EditSetTransformService } from "./edit-set-transform..service";
@@ -57,8 +57,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
         this.trackSubscription(
             this.editService
                 .getEventAsYaml(this.getDatasetInfoFromUrl(), SupportedEvents.SetTransform)
-
-                .subscribe((result: string | null | undefined) => {
+                .subscribe((result: MaybeNullOrUndefined<string>) => {
                     if (result) {
                         this.eventYamlByHash = result;
                         this.currentSetTransformEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
@@ -83,23 +82,27 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
 
     private getInputDatasetsInfo(): void {
         this.currentSetTransformEvent?.inputs.forEach((item: TransformInput) => {
-            this.inputDatasets.add(JSON.stringify(item));
-            this.trackSubscription(
-                this.datasetService.requestDatasetSchema(item.id as string).subscribe((data: GetDatasetSchemaQuery) => {
-                    if (data.datasets.byId) {
-                        const owner = (data.datasets.byId as DatasetBasicsFragment).owner.name;
-                        const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
-                            data.datasets.byId.metadata.currentSchema,
-                        );
-                        this.TREE_DATA.push({
-                            name: item.name as string,
-                            children: schema?.fields,
-                            owner,
-                        });
-                        this.dataSource.data = this.TREE_DATA;
-                    }
-                }),
-            );
+            if (item.id) {
+                this.inputDatasets.add(JSON.stringify(item));
+                this.trackSubscription(
+                    this.datasetService.requestDatasetSchema(item.id).subscribe((data: GetDatasetSchemaQuery) => {
+                        if (data.datasets.byId) {
+                            const owner = (data.datasets.byId as DatasetBasicsFragment).owner.name;
+                            const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
+                                data.datasets.byId.metadata.currentSchema,
+                            );
+                            this.TREE_DATA.push({
+                                name: item.name,
+                                children: schema?.fields,
+                                owner,
+                            });
+                            this.dataSource.data = this.TREE_DATA;
+                        }
+                    }),
+                );
+            } else {
+                throw new Error("TransformInput without an 'id' is unexpected");
+            }
         });
     }
 

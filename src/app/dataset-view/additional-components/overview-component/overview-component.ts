@@ -102,7 +102,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     public openWatermarkModal(): void {
         const modalRef: NgbModalRef = this.modalService.open(EditWatermarkModalComponent);
         const modalRefInstance = modalRef.componentInstance as EditWatermarkModalComponent;
-        modalRefInstance.currentWatermark = this.currentState?.overview.metadata.currentWatermark as string;
+        modalRefInstance.currentWatermark = this.currentState?.overview.metadata.currentWatermark;
         modalRefInstance.datasetBasics = this.datasetBasics;
     }
 
@@ -110,7 +110,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         if (this.datasetBasics)
             this.navigationService.navigateToAddPollingSource({
                 accountName: this.datasetBasics.owner.name,
-                datasetName: this.datasetBasics.name as string,
+                datasetName: this.datasetBasics.name,
             });
     }
 
@@ -118,7 +118,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         if (this.datasetBasics)
             this.navigationService.navigateToSetTransform({
                 accountName: this.datasetBasics.owner.name,
-                datasetName: this.datasetBasics.name as string,
+                datasetName: this.datasetBasics.name,
             });
     }
 

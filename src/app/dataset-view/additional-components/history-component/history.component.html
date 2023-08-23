@@ -3,7 +3,7 @@
         <div *ngIf="currentPage > totalPages">
             The current page {{ currentPage }} is greater than the total number of pages {{ totalPages }}.
         </div>
-        <ng-template [ngIf]="currentState && currentState.history.length > 0">
+        <ng-template [ngIf]="datasetName && currentState && currentState.history.length > 0">
             <app-timeline
                 [datasetName]="datasetName"
                 [history]="currentState.history"

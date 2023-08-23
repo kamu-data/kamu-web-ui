@@ -18,6 +18,7 @@ import { DatasetInfo } from "../interface/navigation.interface";
 import { promiseWithCatch } from "../common/app.helpers";
 import AppValues from "../common/app.values";
 import { BaseProcessingComponent } from "../common/base.processing.component";
+import { MaybeNull } from "../common/app.types";
 
 @Component({
     selector: "app-dataset",
@@ -71,7 +72,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
     public changeLineageGraphView(): void {
         if (this.datasetViewType === DatasetViewTypeEnum.Lineage) {
             setTimeout(() => {
-                const searchResultContainer: HTMLElement | null =
+                const searchResultContainer: MaybeNull<HTMLElement> =
                     document.getElementById("searchResultContainerContent");
                 if (searchResultContainer) {
                     const styleElement: CSSStyleDeclaration = getComputedStyle(searchResultContainer);
@@ -89,14 +90,14 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         if (this.datasetBasics) {
             this.navigationService.navigateToDatasetView({
                 accountName: this.datasetBasics.owner.name,
-                datasetName: this.datasetBasics.name as string,
+                datasetName: this.datasetBasics.name,
                 tab: this.datasetViewType,
                 page: currentPage,
             });
             this.initDatasetViewByType(
                 {
                     accountName: this.datasetBasics.owner.name,
-                    datasetName: this.datasetBasics.name as string,
+                    datasetName: this.datasetBasics.name,
                 },
                 currentPage,
             );
@@ -148,7 +149,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
     }
 
     public onClickMetadataNode(dataset: DatasetBasicsFragment): void {
-        this.onSelectDataset(dataset.name as string);
+        this.onSelectDataset(dataset.name);
     }
 
     public get isDatasetViewTypeOverview(): boolean {
@@ -195,12 +196,14 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
     }
 
     private getCurrentPageFromUrl(): number {
-        const page: string | null = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
+        const page: MaybeNull<string> = this.activatedRoute.snapshot.queryParamMap.get(
+            ProjectLinks.URL_QUERY_PARAM_PAGE,
+        );
         return page ? Number(page) : 1;
     }
 
     private getDatasetViewTypeFromUrl(): DatasetViewTypeEnum {
-        const tabValue: string | null = this.activatedRoute.snapshot.queryParamMap.get(
+        const tabValue: MaybeNull<string> = this.activatedRoute.snapshot.queryParamMap.get(
             ProjectLinks.URL_QUERY_PARAM_TAB,
         );
         if (tabValue) {
@@ -218,7 +221,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         if (this.datasetBasics) {
             this.navigationService.navigateToDatasetView({
                 accountName: this.datasetBasics.owner.name,
-                datasetName: datasetName ? datasetName : (this.datasetBasics.name as string),
+                datasetName: datasetName ? datasetName : this.datasetBasics.name,
                 tab: DatasetViewTypeEnum.Lineage,
             });
         }

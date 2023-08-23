@@ -95,7 +95,7 @@ describe("AppDatasetCreateService", () => {
 
         expect(spyNavigateToDatasetView).toHaveBeenCalledWith({
             accountName: mockDatasetInfo.accountName,
-            datasetName: mockDatasetBasicsFragment.name as string,
+            datasetName: mockDatasetBasicsFragment.name ,
             tab: DatasetViewTypeEnum.Overview,
         });
     });
@@ -116,7 +116,7 @@ describe("AppDatasetCreateService", () => {
 
         expect(spyNavigateToDatasetView).not.toHaveBeenCalledWith({
             accountName: mockDatasetInfo.accountName,
-            datasetName: mockDatasetBasicsFragment.name as string,
+            datasetName: mockDatasetBasicsFragment.name ,
             tab: DatasetViewTypeEnum.Overview,
         });
         service.onErrorMessageChanges.subscribe((error) => {

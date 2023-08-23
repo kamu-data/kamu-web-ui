@@ -1,10 +1,11 @@
+import { MaybeUndefined } from "./../../../../common/app.types";
 import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { DatasetCommitService } from "./dataset-commit.service";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { Observable, Subscription, of } from "rxjs";
-import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
+import { mockDatasetMainDataId, mockDatasetMainDataResponse } from "src/app/search/mock.data";
 import { DatasetByAccountAndDatasetNameQuery } from "src/app/api/kamu.graphql.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import {
@@ -29,7 +30,7 @@ describe("DatasetCommitService", () => {
 
     const TEST_ACCOUNT_NAME = "accountName";
     const TEST_DATASET_NAME = "datasetName";
-    const TEST_DATASET_ID: string = mockDatasetMainDataResponse.datasets.byOwnerAndName?.id as string;
+    const TEST_DATASET_ID: string = mockDatasetMainDataId;
     const TEST_EVENT_CONTENT = "event content";
 
     beforeEach(() => {
@@ -55,7 +56,7 @@ describe("DatasetCommitService", () => {
         expect(commitService).toBeTruthy();
     });
 
-    function requestDatasetId(): Observable<string> {
+    function requestDatasetId(): Observable<MaybeUndefined<string>> {
         return commitService.getIdByAccountNameAndDatasetName(TEST_ACCOUNT_NAME, TEST_DATASET_NAME);
     }
 

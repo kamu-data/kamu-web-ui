@@ -28,7 +28,7 @@ export class DatasetListComponent {
     public onSelectDataset(row: DatasetSearchOverviewFragment): void {
         const datasetBasics: DatasetBasicsFragment = row as DatasetBasicsFragment;
         this.selectDatasetEmit.emit({
-            datasetName: datasetBasics.name as string,
+            datasetName: datasetBasics.name,
             accountName: datasetBasics.owner.name,
         });
     }

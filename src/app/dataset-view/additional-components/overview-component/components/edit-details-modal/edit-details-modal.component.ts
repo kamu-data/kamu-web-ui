@@ -72,7 +72,7 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
                 this.datasetCommitService
                     .commitEventToDataset(
                         this.datasetBasics.owner.name,
-                        this.datasetBasics.name as string,
+                        this.datasetBasics.name,
                         this.yamlEventService.buildYamlSetInfoEvent(this.description, this.keywords),
                     )
                     .subscribe(),

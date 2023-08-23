@@ -1,3 +1,4 @@
+import { MaybeNull } from "./../../common/app.types";
 import { ActivatedRoute, NavigationEnd, Params, Router, RouterEvent } from "@angular/router";
 import {
     ChangeDetectionStrategy,
@@ -101,11 +102,11 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     };
 
     public formatter(x: DatasetAutocompleteItem | string): string {
-        return typeof x !== "string" ? (x.dataset.name as string) : x;
+        return typeof x !== "string" ? x.dataset.name : x;
     }
 
     public onClickInput(): void {
-        const typeaheadInput: HTMLElement | null = document.getElementById("typeahead-http");
+        const typeaheadInput: MaybeNull<HTMLElement> = document.getElementById("typeahead-http");
         if (typeaheadInput) {
             typeaheadInput.focus();
         }
@@ -116,7 +117,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
         if (event.item) {
             this.selectDatasetEmitter.emit(event.item as DatasetAutocompleteItem);
             setTimeout(() => {
-                const typeaheadInput: HTMLElement | null = document.getElementById("typeahead-http");
+                const typeaheadInput: MaybeNull<HTMLElement> = document.getElementById("typeahead-http");
                 if (typeaheadInput) {
                     typeaheadInput.blur();
                 }
@@ -125,7 +126,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     }
 
     public toggleAppHeaderMenu(): void {
-        const appHeaderButton: HTMLElement | null = document.getElementById("app-header");
+        const appHeaderButton: MaybeNull<HTMLElement> = document.getElementById("app-header");
 
         this.isCollapsedAppHeaderMenu = !this.isCollapsedAppHeaderMenu;
         if (appHeaderButton) {

@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded to Angular 14.3
 - Switched to different Angular wrapper for Monaco editor (ngx-monaco-editor-v2)
 - Selected library updates/downgrades to align with Angular 14.3 and Node.JS 16.x
-### Fixed
+- GraphQL code generator tuned to produce string type by default for scalars
 - Fixed bug with disabled state for "Run" button after error.
 
 ## [0.8.0] - 2023-08-04

@@ -60,7 +60,7 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
         if (this.datasetBasics)
             this.trackSubscription(
                 this.datasetCommitService
-                    .updateReadme(this.datasetBasics.owner.name, this.datasetBasics.name as string, this.readmeState)
+                    .updateReadme(this.datasetBasics.owner.name, this.datasetBasics.name, this.readmeState)
                     .subscribe(() => {
                         this.reset();
                     }),

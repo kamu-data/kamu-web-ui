@@ -89,7 +89,7 @@ describe("MetadataComponent", () => {
         component.navigateToEditPollingSource();
         expect(navigateToAddPollingSourceSpy).toHaveBeenCalledWith({
             accountName: mockDatasetBasicsFragment.owner.name,
-            datasetName: mockDatasetBasicsFragment.name as string,
+            datasetName: mockDatasetBasicsFragment.name ,
         });
     });
 
@@ -98,7 +98,7 @@ describe("MetadataComponent", () => {
         component.navigateToEditSetTransform();
         expect(navigateToSetTransformSpy).toHaveBeenCalledWith({
             accountName: mockDatasetBasicsFragment.owner.name,
-            datasetName: mockDatasetBasicsFragment.name as string,
+            datasetName: mockDatasetBasicsFragment.name ,
         });
     });
 });

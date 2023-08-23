@@ -17,6 +17,7 @@ import { from } from "rxjs";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
 import { BaseMainEventComponent } from "../base-main-event.component";
+import { MaybeNullOrUndefined } from "src/app/common/app.types";
 
 @Component({
     selector: "app-add-polling-source",
@@ -93,7 +94,7 @@ export class AddPollingSourceComponent extends BaseMainEventComponent implements
         this.trackSubscriptions(
             this.editService
                 .getEventAsYaml(this.getDatasetInfoFromUrl(), SupportedEvents.SetPollingSource)
-                .subscribe((result: string | undefined | null) => {
+                .subscribe((result: MaybeNullOrUndefined<string>) => {
                     if (result) {
                         this.eventYamlByHash = result;
                     }

@@ -155,12 +155,14 @@ export const mockDatasetResponseNotFound: GetDatasetMainDataQuery = {
     },
 };
 
+export const mockDatasetMainDataId = "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu";
+
 export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
     datasets: {
         __typename: "Datasets",
         byOwnerAndName: {
             __typename: "Dataset",
-            id: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+            id: mockDatasetMainDataId,
             kind: DatasetKind.Root,
             name: "alberta.case-details",
             owner: {

@@ -40,7 +40,7 @@
 
             <app-block-row-data tooltip="Hash sum of the preceding block." label="Previous Block Hash:">
                 <app-display-hash
-                    [value]="block.prevBlockHash"
+                    [value]="block.prevBlockHash ?? 'None'"
                     [navigationTargetDataset]="datasetInfo"
                     [showCopyButton]="true"
                 ></app-display-hash>

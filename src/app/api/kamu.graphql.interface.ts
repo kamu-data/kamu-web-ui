@@ -14,21 +14,21 @@ export type Scalars = {
     Boolean: boolean;
     Int: number;
     Float: number;
-    AccountID: any;
-    AccountName: any;
-    DatasetAlias: any;
-    DatasetID: any;
-    DatasetName: any;
-    DatasetRef: any;
-    DatasetRefAny: any;
+    AccountID: string;
+    AccountName: string;
+    DatasetAlias: string;
+    DatasetID: string;
+    DatasetName: string;
+    DatasetRef: string;
+    DatasetRefAny: string;
     /**
      * Implement the DateTime<Utc> scalar
      *
      * The input/output is a string in RFC3339 format.
      */
-    DateTime: any;
-    Multihash: any;
-    TaskID: any;
+    DateTime: string;
+    Multihash: string;
+    TaskID: string;
 };
 
 export type AccessToken = {
@@ -1112,7 +1112,12 @@ export type CommitEventToDatasetMutation = {
                     __typename?: "MetadataChainMut";
                     commitEvent:
                         | { __typename: "CommitResultAppendError"; message: string }
-                        | { __typename: "CommitResultSuccess"; message: string; oldHead?: any | null; newHead: any }
+                        | {
+                              __typename: "CommitResultSuccess";
+                              message: string;
+                              oldHead?: string | null;
+                              newHead: string;
+                          }
                         | { __typename: "MetadataManifestMalformed"; message: string }
                         | { __typename: "MetadataManifestUnsupportedVersion" }
                         | { __typename: "NoChanges" };
@@ -1176,7 +1181,7 @@ export type UpdateReadmeMutation = {
                 __typename?: "DatasetMetadataMut";
                 updateReadme:
                     | { __typename: "CommitResultAppendError"; message: string }
-                    | { __typename: "CommitResultSuccess"; oldHead?: any | null; message: string }
+                    | { __typename: "CommitResultSuccess"; oldHead?: string | null; message: string }
                     | { __typename: "NoChanges"; message: string };
             };
         } | null;
@@ -1321,10 +1326,10 @@ export type DeleteDatasetMutation = {
                 | {
                       __typename?: "DeleteResultDanglingReference";
                       message: string;
-                      danglingChildRefs: Array<any>;
-                      notDeletedDataset: any;
+                      danglingChildRefs: Array<string>;
+                      notDeletedDataset: string;
                   }
-                | { __typename?: "DeleteResultSuccess"; message: string; deletedDataset: any };
+                | { __typename?: "DeleteResultSuccess"; message: string; deletedDataset: string };
         } | null;
     };
 };
@@ -1341,38 +1346,38 @@ export type EnginesQuery = {
 
 export type AddDataEventFragment = {
     __typename?: "AddData";
-    inputCheckpoint?: any | null;
-    addDataWatermark?: any | null;
+    inputCheckpoint?: string | null;
+    addDataWatermark?: string | null;
     outputData?: {
         __typename?: "DataSlice";
-        logicalHash: any;
-        physicalHash: any;
+        logicalHash: string;
+        physicalHash: string;
         size: number;
         interval: { __typename?: "OffsetInterval"; start: number; end: number };
     } | null;
-    outputCheckpoint?: { __typename?: "Checkpoint"; physicalHash: any; size: number } | null;
+    outputCheckpoint?: { __typename?: "Checkpoint"; physicalHash: string; size: number } | null;
 };
 
 export type ExecuteQueryEventFragment = {
     __typename?: "ExecuteQuery";
-    inputCheckpoint?: any | null;
-    watermark?: any | null;
+    inputCheckpoint?: string | null;
+    watermark?: string | null;
     queryOutputData?: {
         __typename?: "DataSlice";
-        logicalHash: any;
-        physicalHash: any;
+        logicalHash: string;
+        physicalHash: string;
         interval: { __typename?: "OffsetInterval"; start: number; end: number };
     } | null;
     inputSlices: Array<{
         __typename?: "InputSlice";
-        datasetId: any;
-        blockInterval?: { __typename?: "BlockInterval"; start: any; end: any } | null;
+        datasetId: string;
+        blockInterval?: { __typename?: "BlockInterval"; start: string; end: string } | null;
         dataInterval?: { __typename?: "OffsetInterval"; start: number; end: number } | null;
     }>;
-    outputCheckpoint?: { __typename?: "Checkpoint"; physicalHash: any; size: number } | null;
+    outputCheckpoint?: { __typename?: "Checkpoint"; physicalHash: string; size: number } | null;
 };
 
-export type SeedEventFragment = { __typename?: "Seed"; datasetId: any; datasetKind: DatasetKind };
+export type SeedEventFragment = { __typename?: "Seed"; datasetId: string; datasetKind: DatasetKind };
 
 export type SetAttachmentsEventFragment = {
     __typename?: "SetAttachments";
@@ -1487,7 +1492,7 @@ export type SetVocabEventFragment = {
     offsetColumn?: string | null;
 };
 
-export type SetWatermarkEventFragment = { __typename?: "SetWatermark"; outputWatermark: any };
+export type SetWatermarkEventFragment = { __typename?: "SetWatermark"; outputWatermark: string };
 
 export type AccountDetailsFragment = {
     __typename?: "AccountInfo";
@@ -1506,10 +1511,12 @@ export type DataQueryResultSuccessViewFragment = {
 
 export type DatasetBasicsFragment = {
     __typename?: "Dataset";
-    id: any;
+    id: string;
     kind: DatasetKind;
-    name: any;
-    owner: { __typename?: "Organization"; id: any; name: string } | { __typename?: "User"; id: any; name: string };
+    name: string;
+    owner:
+        | { __typename?: "Organization"; id: string; name: string }
+        | { __typename?: "User"; id: string; name: string };
 };
 
 export type DatasetCurrentInfoFragment = {
@@ -1542,12 +1549,12 @@ export type DatasetDescriptionFragment = {
 export type DatasetDetailsFragment = {
     __typename?: "Dataset";
     kind: DatasetKind;
-    createdAt: any;
-    lastUpdatedAt: any;
+    createdAt: string;
+    lastUpdatedAt: string;
     data: { __typename?: "DatasetData"; estimatedSize: number; numRecordsTotal: number };
     metadata: {
         __typename?: "DatasetMetadata";
-        currentWatermark?: any | null;
+        currentWatermark?: string | null;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
     };
 };
@@ -1649,7 +1656,7 @@ export type DatasetMetadataSummaryFragment = {
     __typename?: "Dataset";
     metadata: {
         __typename: "DatasetMetadata";
-        currentWatermark?: any | null;
+        currentWatermark?: string | null;
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
         currentSource?: ({ __typename?: "SetPollingSource" } & SetPollingSourceEventFragment) | null;
@@ -1688,13 +1695,13 @@ export type DatasetReadmeFragment = {
 
 export type DatasetSearchOverviewFragment = {
     __typename?: "Dataset";
-    createdAt: any;
-    lastUpdatedAt: any;
+    createdAt: string;
+    lastUpdatedAt: string;
     metadata: {
         __typename?: "DatasetMetadata";
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
-        currentDownstreamDependencies: Array<{ __typename?: "Dataset"; id: any; kind: DatasetKind }>;
+        currentDownstreamDependencies: Array<{ __typename?: "Dataset"; id: string; kind: DatasetKind }>;
     };
 } & DatasetBasicsFragment;
 
@@ -1710,8 +1717,8 @@ export type DatasetTransformFragment = {
     __typename?: "SetTransform";
     inputs: Array<{
         __typename?: "TransformInput";
-        name: any;
-        datasetRef?: any | null;
+        name: string;
+        datasetRef?: string | null;
         dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
     }>;
     transform: { __typename?: "TransformSql" } & DatasetTransformContentFragment;
@@ -1727,11 +1734,11 @@ export type LicenseFragment = {
 
 export type MetadataBlockFragment = {
     __typename?: "MetadataBlockExtended";
-    blockHash: any;
-    prevBlockHash?: any | null;
-    systemTime: any;
+    blockHash: string;
+    prevBlockHash?: string | null;
+    systemTime: string;
     sequenceNumber: number;
-    author: { __typename: "Organization"; id: any; name: string } | { __typename: "User"; id: any; name: string };
+    author: { __typename: "Organization"; id: string; name: string } | { __typename: "User"; id: string; name: string };
     event:
         | ({ __typename: "AddData" } & AddDataEventFragment)
         | ({ __typename: "ExecuteQuery" } & ExecuteQueryEventFragment)
@@ -1806,9 +1813,9 @@ export type RenameDatasetMutation = {
         byId?: {
             __typename?: "DatasetMut";
             rename:
-                | { __typename: "RenameResultNameCollision"; message: string; collidingAlias: any }
-                | { __typename: "RenameResultNoChanges"; preservedName: any; message: string }
-                | { __typename: "RenameResultSuccess"; message: string; oldName: any; newName: any };
+                | { __typename: "RenameResultNameCollision"; message: string; collidingAlias: string }
+                | { __typename: "RenameResultNoChanges"; preservedName: string; message: string }
+                | { __typename: "RenameResultSuccess"; message: string; oldName: string; newName: string };
         } | null;
     };
 };

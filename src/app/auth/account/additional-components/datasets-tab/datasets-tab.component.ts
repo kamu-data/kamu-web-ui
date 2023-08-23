@@ -23,7 +23,7 @@ export class DatasetsTabComponent {
     public onSelectDataset(row: DatasetSearchOverviewFragment): void {
         this.navigationService.navigateToDatasetView({
             accountName: (row.owner as User).name,
-            datasetName: row.name as string,
+            datasetName: row.name ,
         });
     }
 

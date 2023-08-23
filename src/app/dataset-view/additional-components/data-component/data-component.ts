@@ -95,7 +95,7 @@ export class DataComponent extends BaseComponent implements OnInit {
 
     private buildSqlRequestCode(): void {
         if (this.datasetBasics) {
-            this.sqlRequestCode += `'${this.datasetBasics.name as string}'`;
+            this.sqlRequestCode += `'${this.datasetBasics.name }'`;
             const offset = this.location.getState() as Partial<OffsetInterval>;
             if (typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
                 this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;

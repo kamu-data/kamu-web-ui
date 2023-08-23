@@ -167,7 +167,7 @@ describe("DatasetComponent", () => {
         component.onSelectDataset();
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
-                datasetName: mockDatasetBasicsFragment.name as string,
+                datasetName: mockDatasetBasicsFragment.name,
             }),
         );
     });
@@ -181,7 +181,7 @@ describe("DatasetComponent", () => {
     it("should check click on metadata node ", () => {
         const selectDatasetSpy = spyOn(component, "onSelectDataset");
         component.onClickMetadataNode(mockDatasetBasicsFragment);
-        expect(selectDatasetSpy).toHaveBeenCalledWith(mockDatasetBasicsFragment.name as string);
+        expect(selectDatasetSpy).toHaveBeenCalledWith(mockDatasetBasicsFragment.name);
     });
 
     it("should check navigate to overview tab", () => {

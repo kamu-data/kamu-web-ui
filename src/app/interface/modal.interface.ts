@@ -1,3 +1,4 @@
+import { MaybeNull } from "../common/app.types";
 import { ModalDialogComponent } from "../components/modal/modal-dialog.component";
 import { ModalImageComponent } from "../components/modal/modal-image.component";
 import { ModalSpinnerComponent } from "../components/modal/modal-spinner.component";
@@ -47,4 +48,4 @@ export interface ModalMappingsComponent {
 
 export type ModalComponentType = "dialog" | "image" | "spinner";
 
-export type NgStyleValue = Record<string, string> | null;
+export type NgStyleValue = MaybeNull<Record<string, string>>;

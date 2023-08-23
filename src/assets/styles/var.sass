@@ -137,15 +137,17 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
     border-radius: 1px
     position: relative
     float: left
-    border-color: $app-color-border-default!important
+    border-color: $app-color-border-default
     height: inherit
     background: $app-aliceBlue
     &:last-child
       border-right-width: 1px
       border-top-right-radius: 6px
       border-bottom-right-radius: 6px
-    & span
+    span
       font-size: 12px
+    &:hover
+      border-color: $app-color-border-default
 .BtnGroup-item:first-child
   border-top-left-radius: 6px
   border-bottom-left-radius: 6px
@@ -245,7 +247,7 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
   background-color: $app-color-btn-counter-bg
 .btn:hover, .btn.hover, [open]>.btn
   background-color: $app-color-btn-hover-bg
-  border-color: $app-color-btn-hover-border !important
+  border-color: $app-color-btn-hover-border
   transition-duration: .1s
 .SelectMenu-modal
   position: relative

@@ -91,7 +91,7 @@
                     data-test-id="runSqlQueryButton"
                     name="run sql button"
                     (click)="onRunSQLRequest()"
-                    [disabled]="!currentData.length"
+                    [disabled]="!currentData.length && !sqlErrorMarker"
                     class="sql-run-button rounded-left-2 border-right-0 btnGroup-item btn d-flex justify-content-center align-items-center"
                 >
                     <span>Run</span><mat-icon>play_arrow</mat-icon>
@@ -151,7 +151,7 @@
                 [dataRows]="currentData || []"
             ></app-dynamic-table>
         </ng-container>
-        <ng-container *ngIf="!sqlErrorMarker || !currentSchema || !currentData.length">
+        <ng-container *ngIf="!sqlErrorMarker && !currentSchema">
             <mat-divider></mat-divider>
             <h3 class="box-title text-center pt-4 author" *ngIf="!currentData.length">
                 Need

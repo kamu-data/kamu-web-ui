@@ -203,16 +203,12 @@ describe("AppDatasetService", () => {
             /* Intentionally blank */
         });
 
-        const subscriptionErrorChanges$ = appDatasetSubsService.onDatasetDataSqlErrorOccured
-            .pipe(first())
-            .subscribe(() => {
-                /* Intentionally blank */
-            });
+        const subscriptionErrorChangesSpy = spyOn(appDatasetSubsService, "observeSqlErrorOccurred");
 
         service.requestDatasetDataSqlRun(query, limit).subscribe();
 
         expect(subscriptionDataChanges$.closed).toBeTrue();
-        expect(subscriptionErrorChanges$.closed).toBeFalse();
+        expect(subscriptionErrorChangesSpy).toHaveBeenCalledWith({ error: "" });
     });
 
     it("should check get SQL query data from api with invalid SQL", () => {

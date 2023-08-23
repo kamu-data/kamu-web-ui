@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { DataComponent } from "./data-component";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { mockDataUpdate, mockSqlErrorUpdate } from "../data-tabs.mock";
 import { first } from "rxjs/operators";
@@ -75,11 +75,12 @@ describe("DataComponent", () => {
     });
 
     it("should check invalid SQL result update", () => {
-        fixture.detectChanges();
+        const runSqlButton = findElementByDataTestId(fixture, "runSqlQueryButton") as HTMLButtonElement;
         appDatasetSubsService.observeSqlErrorOccurred(mockSqlErrorUpdate);
-
+        fixture.detectChanges();
         expect(component.currentData).toEqual([]);
         expect(component.currentSchema).toEqual(null);
         expect(component.sqlErrorMarker).toBe(mockSqlErrorUpdate.error);
+        expect(runSqlButton.disabled).toBe(false);
     });
 });

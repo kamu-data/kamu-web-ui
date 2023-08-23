@@ -6,6 +6,7 @@ import { OffsetInterval } from "src/app/api/kamu.graphql.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { MaybeNull } from "src/app/common/app.types";
 
 @Component({
     selector: "app-interval-property",
@@ -16,7 +17,7 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 export class OffsetIntervalPropertyComponent extends BasePropertyComponent implements OnInit {
     @Input() public data: {
         block: OffsetInterval;
-        datasetId: string | null;
+        datasetId: MaybeNull<string>;
     };
     private datasetInfo: DatasetInfo = { accountName: "", datasetName: "" };
     constructor(private navigationService: NavigationService, private datasetSevice: DatasetService) {
@@ -30,7 +31,7 @@ export class OffsetIntervalPropertyComponent extends BasePropertyComponent imple
                     .subscribe((dataset: DatasetByIdQuery) => {
                         if (dataset.datasets.byId) {
                             this.datasetInfo.accountName = dataset.datasets.byId.owner.name;
-                            this.datasetInfo.datasetName = dataset.datasets.byId.name ;
+                            this.datasetInfo.datasetName = dataset.datasets.byId.name;
                         }
                     }),
             );

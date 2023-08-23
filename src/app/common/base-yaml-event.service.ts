@@ -7,7 +7,7 @@ import { BlockService } from "../dataset-block/metadata-block/block.service";
 import { SupportedEvents } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { DatasetHistoryUpdate } from "../dataset-view/dataset.subscriptions.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { MaybeNullOrUndefined } from "./app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "./app.types";
 
 export abstract class BaseYamlEventService {
     private appDatasetService = inject(DatasetService);
@@ -49,7 +49,7 @@ export abstract class BaseYamlEventService {
                     ),
                 ),
             ),
-            map((result: [string, unknown] | null) => {
+            map((result: MaybeNull<[string, unknown]>) => {
                 if (result) return result[0];
                 else return null;
             }),

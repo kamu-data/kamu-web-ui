@@ -91,7 +91,7 @@
                     data-test-id="runSqlQueryButton"
                     name="run sql button"
                     (click)="onRunSQLRequest()"
-                    [disabled]="!currentData.length&&!sqlErrorMarker"
+                    [disabled]="!currentData.length && !sqlErrorMarker"
                     class="sql-run-button rounded-left-2 border-right-0 btnGroup-item btn d-flex justify-content-center align-items-center"
                 >
                     <span>Run</span><mat-icon>play_arrow</mat-icon>

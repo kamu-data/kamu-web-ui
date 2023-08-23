@@ -46,30 +46,34 @@ export class SettingsTabComponent extends BaseComponent implements OnInit {
     }
 
     public renameDataset(): void {
-        const datasetId = this.datasetBasics?.id as string;
-        const accountName = this.getDatasetInfoFromUrl().accountName;
-        this.trackSubscription(
-            this.datasetSettingsService
-                .renameDataset(accountName, datasetId, this.datasetName?.value as string)
-                .subscribe(),
-        );
+        if (this.datasetBasics) {
+            const datasetId = this.datasetBasics.id;
+            const accountName = this.getDatasetInfoFromUrl().accountName;
+            this.trackSubscription(
+                this.datasetSettingsService
+                    .renameDataset(accountName, datasetId, this.datasetName?.value as string)
+                    .subscribe(),
+            );
+        }
     }
 
     public deleteDataset(): void {
-        promiseWithCatch(
-            this.modalService.error({
-                title: "Delete",
-                message: "Do you want to delete a dataset?",
-                yesButtonText: "Ok",
-                noButtonText: "Cancel",
-                handler: (ok) => {
-                    if (ok) {
-                        const datasetId = this.datasetBasics?.id as string;
-                        this.trackSubscription(this.datasetSettingsService.deleteDataset(datasetId).subscribe());
-                    }
-                },
-            }),
-        );
+        if (this.datasetBasics) {
+            const datasetId = this.datasetBasics.id;
+            promiseWithCatch(
+                this.modalService.error({
+                    title: "Delete",
+                    message: "Do you want to delete a dataset?",
+                    yesButtonText: "Ok",
+                    noButtonText: "Cancel",
+                    handler: (ok) => {
+                        if (ok) {
+                            this.trackSubscription(this.datasetSettingsService.deleteDataset(datasetId).subscribe());
+                        }
+                    },
+                }),
+            );
+        }
     }
 
     public changeName(): void {

@@ -17,6 +17,7 @@ import { ModalSpinnerComponent } from "./modal-spinner.component";
 import { Location } from "@angular/common";
 import { ModalMappingsComponent } from "../../interface/modal.interface";
 import { BaseComponent } from "src/app/common/base.component";
+import { MaybeUndefined } from "src/app/common/app.types";
 
 @Component({
     selector: "modal",
@@ -28,7 +29,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
     @ViewChild("container", { read: ViewContainerRef })
     container: ViewContainerRef;
     isVisible: boolean;
-    type: string | undefined;
+    type: MaybeUndefined<string>;
 
     private componentRef: ComponentRef<unknown>;
     private mappings: ModalMappingsComponent = {

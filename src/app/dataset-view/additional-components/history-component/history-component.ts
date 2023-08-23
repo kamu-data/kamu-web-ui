@@ -18,7 +18,7 @@ import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.serv
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HistoryComponent extends BaseComponent implements OnInit {
-    @Input() public datasetName: string;
+    @Input() public datasetName?: string;
     @Output() onPageChangeEmit = new EventEmitter<number>();
 
     public currentState?: {

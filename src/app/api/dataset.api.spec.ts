@@ -28,6 +28,7 @@ import {
     GetMetadataBlockDocument,
     GetMetadataBlockQuery,
 } from "./kamu.graphql.interface";
+import { MaybeNullOrUndefined } from "../common/app.types";
 
 describe("DatasetApi", () => {
     let service: DatasetApi;
@@ -176,7 +177,7 @@ describe("DatasetApi", () => {
                 datasetId: mockDatasetId,
                 event: mockEvent,
             })
-            .subscribe((res: CommitEventToDatasetMutation | null | undefined) => {
+            .subscribe((res: MaybeNullOrUndefined<CommitEventToDatasetMutation>) => {
                 expect(res?.datasets.byId?.metadata.chain.commitEvent.__typename).toEqual("CommitResultSuccess");
             });
 

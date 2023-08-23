@@ -106,7 +106,7 @@ describe("OverviewComponent", () => {
         component.navigateToAddPollingSource();
         expect(navigateToAddPollingSourceSpy).toHaveBeenCalledWith({
             accountName: mockDatasetBasicsFragment.owner.name,
-            datasetName: mockDatasetBasicsFragment.name as string,
+            datasetName: mockDatasetBasicsFragment.name ,
         });
     });
 });

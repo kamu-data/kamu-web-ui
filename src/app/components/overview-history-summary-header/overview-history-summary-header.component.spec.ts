@@ -46,11 +46,16 @@ describe("OverviewHistorySummaryHeaderComponent", () => {
     });
 
     it("should navigate to metadata block", () => {
+        if (!component.metadataBlockFragment) {
+            fail("unexpected state");
+            return;
+        }
+
         const navigateToMetadataBlockSpy = spyOn(navigationService, "navigateToMetadataBlock");
         const params: MetadataBlockNavigationParams = {
             accountName: component.authorInfo.name,
             datasetName: component.datasetName,
-            blockHash: component.metadataBlockFragment?.blockHash as string,
+            blockHash: component.metadataBlockFragment.blockHash,
         };
 
         emitClickOnElementByDataTestId(fixture, "navigate-to-metadata-block");

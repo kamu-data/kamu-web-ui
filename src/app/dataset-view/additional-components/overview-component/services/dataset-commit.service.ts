@@ -7,6 +7,8 @@ import {
     DatasetByAccountAndDatasetNameQuery,
     UpdateReadmeMutation,
 } from "src/app/api/kamu.graphql.interface";
+import { MaybeNullOrUndefined, MaybeUndefined } from "src/app/common/app.types";
+import { DatasetNotFoundError } from "src/app/common/errors";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -41,7 +43,7 @@ export class DatasetCommitService {
                     event,
                 }),
             ),
-            map((data: CommitEventToDatasetMutation | undefined | null) => {
+            map((data: MaybeNullOrUndefined<CommitEventToDatasetMutation>) => {
                 if (
                     data?.datasets.byId?.metadata.chain.commitEvent.__typename === "CommitResultAppendError" ||
                     data?.datasets.byId?.metadata.chain.commitEvent.__typename === "MetadataManifestMalformed"
@@ -55,16 +57,20 @@ export class DatasetCommitService {
     }
 
     public getIdByAccountNameAndDatasetName(accountName: string, datasetName: string): Observable<string> {
-        const key = `${accountName}${datasetName}`;
-        const cachedId: string | undefined = this.datasetIdsByAccountDatasetName.get(key);
+        const key = `${accountName}/${datasetName}`;
+        const cachedId: MaybeUndefined<string> = this.datasetIdsByAccountDatasetName.get(key);
         if (cachedId) {
             return of(cachedId);
         } else {
             return this.datasetApi.getDatasetInfoByAccountAndDatasetName(accountName, datasetName).pipe(
                 map((data: DatasetByAccountAndDatasetNameQuery) => {
-                    const id = data.datasets.byOwnerAndName?.id as string;
-                    this.datasetIdsByAccountDatasetName.set(key, id);
-                    return id;
+                    const id = data.datasets.byOwnerAndName?.id;
+                    if (id) {
+                        this.datasetIdsByAccountDatasetName.set(key, id);
+                        return id;
+                    } else {
+                        throw new DatasetNotFoundError(key);
+                    }
                 }),
             );
         }
@@ -73,7 +79,7 @@ export class DatasetCommitService {
     public updateReadme(accountName: string, datasetName: string, content: string): Observable<void> {
         return this.getIdByAccountNameAndDatasetName(accountName, datasetName).pipe(
             switchMap((id: string) => this.datasetApi.updateReadme(id, content)),
-            map((data: UpdateReadmeMutation | null | undefined) => {
+            map((data: MaybeNullOrUndefined<UpdateReadmeMutation>) => {
                 if (data?.datasets.byId?.metadata.updateReadme.__typename === "CommitResultSuccess") {
                     this.updatePage(accountName, datasetName);
                 }

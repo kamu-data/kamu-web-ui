@@ -94,10 +94,10 @@ export class AppComponent extends BaseComponent implements OnInit {
         if (item.__typename === TypeNames.datasetType) {
             this.navigationService.navigateToDatasetView({
                 accountName: item.dataset.owner.name,
-                datasetName: item.dataset.name as string,
+                datasetName: item.dataset.name ,
             });
         } else {
-            this.navigationService.navigateToSearch(item.dataset.id as string);
+            this.navigationService.navigateToSearch(item.dataset.id );
         }
     }
     public onClickAppLogo(): void {

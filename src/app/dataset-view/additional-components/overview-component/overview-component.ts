@@ -22,7 +22,7 @@ import {
 } from "../../../api/kamu.graphql.interface";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { DataRow, DatasetSchema } from "src/app/interface/dataset.interface";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { EditDetailsModalComponent } from "./components/edit-details-modal/edit-details-modal.component";
 import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/edit-watermark-modal.component";
@@ -81,7 +81,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         return DataHelpers.capitalizeFirstLetter(kind);
     }
 
-    get metadataFragmentBlock(): MetadataBlockFragment | undefined {
+    get metadataFragmentBlock(): MaybeUndefined<MetadataBlockFragment> {
         return this.currentState ? this.currentState.overview.metadata.chain.blocks.nodes[0] : undefined;
     }
 
@@ -102,7 +102,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     public openWatermarkModal(): void {
         const modalRef: NgbModalRef = this.modalService.open(EditWatermarkModalComponent);
         const modalRefInstance = modalRef.componentInstance as EditWatermarkModalComponent;
-        modalRefInstance.currentWatermark = this.currentState?.overview.metadata.currentWatermark as string;
+        modalRefInstance.currentWatermark = this.currentState?.overview.metadata.currentWatermark;
         modalRefInstance.datasetBasics = this.datasetBasics;
     }
 
@@ -110,7 +110,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         if (this.datasetBasics)
             this.navigationService.navigateToAddPollingSource({
                 accountName: this.datasetBasics.owner.name,
-                datasetName: this.datasetBasics.name as string,
+                datasetName: this.datasetBasics.name,
             });
     }
 
@@ -118,7 +118,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         if (this.datasetBasics)
             this.navigationService.navigateToSetTransform({
                 accountName: this.datasetBasics.owner.name,
-                datasetName: this.datasetBasics.name as string,
+                datasetName: this.datasetBasics.name,
             });
     }
 

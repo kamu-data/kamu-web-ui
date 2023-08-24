@@ -11,11 +11,8 @@ import { DatasetComponent } from "./dataset-view/dataset.component";
 import { DatasetCreateComponent } from "./dataset-create/dataset-create.component";
 import { AccountComponent } from "./auth/account/account.component";
 import { GithubCallbackComponent } from "./auth/github-callback/github.callback";
-import { environment } from "../environments/environment";
 import ProjectLinks from "./project-links";
 import { SetTransformComponent } from "./dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component";
-
-const githubUrl = `https://github.com/login/oauth/authorize?scope=user:email&client_id=${environment.github_client_id}`;
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.URL_SEARCH, pathMatch: "full" },
@@ -26,10 +23,6 @@ export const routes: Routes = [
     {
         path: ProjectLinks.URL_LOGIN,
         component: LoginComponent,
-        loadChildren: () =>
-            new Promise(() => {
-                window.location.href = githubUrl;
-            }),
     },
     {
         path: ProjectLinks.URL_SEARCH,

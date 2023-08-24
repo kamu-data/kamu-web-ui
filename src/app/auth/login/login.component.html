@@ -1,2 +1,34 @@
-<p>Please login with your <strong>GitHub account</strong>.</p>
-<a href="{{ githubUrl }}" class="login__btn login__btn--full" md-raised-button="primary"> Login </a>
+<ng-container *ngIf="enableFormLoginFromServer && !showFormLogin; else defaultGitHubLogin">
+    <div class="d-flex flex-column align-items-center login-container__buttons">
+        <h1 class="text-center text-muted">Select your sign in</h1>
+        <div class="inner-container">
+            <a href="{{ githubUrl }}" class="login__btn" md-raised-button="primary">
+                Sign in to GitHub
+                <svg-icon class="github-logo" name="github-logo"></svg-icon>
+            </a>
+            <a (click)="clickLogin()" class="login__btn" md-raised-button="primary"> Sign in </a>
+        </div>
+    </div>
+</ng-container>
+<ng-template #defaultGitHubLogin>
+    <div class="d-flex justify-content-center align-items-center">
+        <app-spinner></app-spinner>
+    </div>
+</ng-template>
+<div *ngIf="showFormLogin">
+    <div class="d-flex justify-content-center flex-column container-form">
+        <img [src]="appLogo" class="logo" alt="Application logo" />
+        <h1 class="text-center text-muted mt-4">Sign in to Kamu</h1>
+        <form>
+            <div>
+                <label for="login" class="fs-12">Login</label><span class="text-danger">*</span><br />
+                <input type="text" class="form-control d-inline" id="login" data-test-id="login" required />
+            </div>
+            <div class="mt-4">
+                <label for="password" class="fs-12">Password</label><span class="text-danger">*</span><br />
+                <input type="text" class="form-control d-inline" id="password" data-test-id="password" required />
+            </div>
+            <button class="button-sigh-in mt-4">Sign in</button>
+        </form>
+    </div>
+</div>

@@ -49,90 +49,121 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
 
 .input-group-button
   vertical-align: middle
+
 .color-border-muted
   border-color: $app-color-border-muted !important
+
 .color-bg-default
   background-color: $app-color-canvas-overlay !important
+
 .color-bg-subtle
   background-color: $app-color-canvas-subtle !important
+
 .color-fg-success
   color: $app-harmonies
+
 .color-fg-default
   color: $app-color-fg-default
+
 .color-fg-muted
   color: $app-color-fg-muted
+
 .link--primary
   color: $app-color-fg-default !important
   &:hover
     color: $app-navyBlue !important
+
 .link--secondary
   color: $secondary !important
   &:hover
     color: $app-navyBlue !important
-.box-title
-  font-size: 20px
-  line-height: 20px
-  font-weight: 600
-  margin: 0
-.box-header
-  width: 100%
-  padding: 16px
-  margin: 0px
-  background-color: $app-aliceBlue
-  border-color: $app-color-border-default
-  border-style: solid
-  border-width: 1px
-  border-top-left-radius: 6px
-  border-top-right-radius: 6px
+
+.box
+  &-title
+    font-size: 20px
+    line-height: 20px
+    font-weight: 600
+    margin: 0
+  &-header
+    width: 100%
+    padding: 16px
+    margin: 0px
+    background-color: $app-aliceBlue
+    border-color: $app-color-border-default
+    border-style: solid
+    border-width: 1px
+    border-top-left-radius: 6px
+    border-top-right-radius: 6px
+
 .min-width-0
   min-width: 0 !important
+
 .d-none
   display: none
+
 .position-relative
   position: relative !important
+
 .width-full
   width: 100% !important
+
 .flex-auto
   flex: auto !important
+
 .flex-order-2
   order: 2 !important
+
 .flex-self-stretch
   align-self: stretch !important
+
 .f6
   font-size: 12px !important
+
 .color-text-tertiary
   color: $app-cloudy
+
 .color-bg-tertiary
   background-color: $app-aliceBlue
+
 .rounded-1
   border-radius: 4px !important
+
 .border-white-fade
   border-color: $app-versatileBusinessDark
+
 .rounded-2
   border-radius: 6px !important
+
 .rounded-top-1
   border-top-left-radius: 6px !important
   border-top-right-radius: 6px !important
+
 .rounded-left-2
   border-bottom-left-radius: 6px !important
   border-top-left-radius: 6px !important
+
 .border-right-0
   border-right: 0 !important
+
 .border-right-1
   border-right: 1px !important
+
 .border-left-0
   border-left: 0 !important
+
 .border-left-1
   border-left: 1px !important
+
 .rounded-right-2
   border-bottom-right-radius: 6px !important
   border-top-right-radius: 6px !important
+
 .btnGroup-parent
   float: left
   height: 28px
   width: max-content
   background: none
-  & .btnGroup-item
+  .btnGroup-item
     border-right-width: 1px
     border-radius: 1px
     position: relative
@@ -148,73 +179,97 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
       font-size: 12px
     &:hover
       border-color: $app-color-border-default
-.BtnGroup-item:first-child
-  border-top-left-radius: 6px
-  border-bottom-left-radius: 6px
-.btn.btn-gray
-  background-color: $app-background-btn
-  border-color: $app-color-btn-border !important
-  &:hover
-    background-color: $app-color-btn-hover-border
+
+.BtnGroup-item
+  &:first-child
+    border-top-left-radius: 6px
+    border-bottom-left-radius: 6px
+
+.btn
+  &.btn-gray
+    background-color: $app-background-btn
+    border-color: $app-color-btn-border !important
+    &:hover
+      background-color: $app-color-btn-hover-border
+
 .clipboard-btn
   height: 100%
   &.clipboard-btn--success
     border-color: $app-harmonies !important
+
 .mr-0
   margin-right: 0 !important
+
 .mr-1
   margin-right: 6px !important
+
 .mr-2
   margin-right: 8px !important
+
 .mr-3
   margin-right: 10px !important
+
 .mr-4
   margin-right: 20px !important
+
 .ml-3
   margin-left: 16px !important
+
 .mb-n1
   margin-bottom: -4px !important
+
 .ml-n1
   margin-left: -4px !important
+
 .mr-n1
   margin-right: -4px !important
+
 .mt-n1
   margin-top: -4px !important
-.css-truncate.css-truncate-overflow, .css-truncate .css-truncate-overflow, .css-truncate.css-truncate-target, .css-truncate .css-truncate-target
-  overflow: hidden
-  text-overflow: ellipsis
-  white-space: nowrap
-.hx_avatar_stack_commit .avatarStack
-  height: 24px
-  min-width: 24px
-.avatarStack__body
-  display: flex
-  & .avatar
-    position: relative
-    z-index: 2
+
+.css-truncate
+  &.css-truncate-overflow,&.css-truncate-target
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+  .css-truncate-overflow,.css-truncate-target
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+.hx_avatar_stack_commit
+  .avatarStack
+    height: 24px
+    min-width: 24px
+
+.avatarStack
+  position: relative
+  min-width: 26px
+  height: 20px
+  .avatarStack__body
+    position: absolute
     display: flex
-    width: 20px
-    height: 20px
-    box-sizing: content-box
-    margin-right: -11px
-    background-color: $app-color-canvas-overlay
-    border-right: 1px solid $app-color-canvas-overlay
-    border-radius: 4px
-    box-shadow: none
-    transition: margin .1s ease-in-out
-    & img
+    .avatar
+      position: relative
+      z-index: 2
+      display: flex
+      width: 20px
+      height: 20px
+      box-sizing: content-box
+      margin-right: -11px
+      background-color: $app-color-canvas-overlay
+      border-right: 1px solid $app-color-canvas-overlay
+      border-radius: 4px
+      box-shadow: none
+      transition: margin .1s ease-in-out
+    img
       border-radius: 4px
     &:first-child
       z-index: 3
     &:last-child
       z-index: 1
       border-right: 0
-.avatarStack
-  position: relative
-  min-width: 26px
-  height: 20px
-  & .avatarStack__body
-    position: absolute
+
 .avatar
   display: inline-block
   overflow: hidden
@@ -224,8 +279,9 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
   border-radius: 6px
   flex-shrink: 0
   box-shadow: 0 0 0 1px $app-color-btn-hover-border
-.avatar-user
-  border-radius: 50% !important
+  &-user
+    border-radius: 50% !important
+
 .counter
   display: inline-block
   min-width: 20px
@@ -239,16 +295,41 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
   border: 1px solid $app-color-counter-border
   border-radius: 2em
 
-.btn .Counter
-  margin-left: 2px
-  color: inherit
-  text-shadow: none
-  vertical-align: top
-  background-color: $app-color-btn-counter-bg
-.btn:hover, .btn.hover, [open]>.btn
+.btn
+  .Counter
+    margin-left: 2px
+    color: inherit
+    text-shadow: none
+    vertical-align: top
+    background-color: $app-color-btn-counter-bg
+    &:hover,&.hover
+      background-color: $app-color-btn-hover-bg
+      border-color: $app-color-btn-hover-border
+      transition-duration: .1s
+[open]>.btn
   background-color: $app-color-btn-hover-bg
   border-color: $app-color-btn-hover-border
   transition-duration: .1s
+
+.cdk-overlay-pane
+  box-shadow: $app-color-shadow-large
+.mat-menu-content
+  &:not(:empty)
+    padding-top: 0px !important
+    padding-bottom: 0px !important
+.label
+  display: inline-block
+  padding: 0 7px
+  font-size: 12px
+  font-weight: 500
+  line-height: 18px
+  border: 1px solid transparent
+  border-radius: 2em
+  border-color: $app-color-border-default
+  &--secondary
+    color: $app-color-fg-muted
+    border-color: $app-color-border-default
+
 .SelectMenu-modal
   position: relative
   z-index: 99
@@ -261,35 +342,21 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
   background-color: $app-color-canvas-overlay
   border: 1px solid $app-color-select-menu-backdrop-border
   border-radius: 12px
-  animation: SelectMenu-modal-animation .12s cubic-bezier(0, 0.1, 0.1, 1) backwards
-.cdk-overlay-pane
-  box-shadow: $app-color-shadow-large
-.mat-menu-content:not(:empty)
-  padding-top: 0px !important
-  padding-bottom: 0px !important
-.label
-  display: inline-block
-  padding: 0 7px
-  font-size: 12px
-  font-weight: 500
-  line-height: 18px
-  border: 1px solid transparent
-  border-radius: 2em
-  border-color: $app-color-border-default
-.label--secondary
-  color: $app-color-fg-muted
-  border-color: $app-color-border-default
+  animation: select-menu-modal-animation .12s cubic-bezier(0, 0.1, 0.1, 1) backwards
+
 .SelectMenu-header
   display: flex
   padding: 16px
   flex: none
   align-items: center
   border-bottom: 1px solid $app-color-border-muted
+
 .SelectMenu-title
   flex: 1
   font-size: 14px
   font-weight: 600
   margin: 0
+
 .SelectMenu-closeButton
   padding: 16px
   margin: -16px
@@ -297,6 +364,7 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
   color: $app-color-fg-muted
   background-color: transparent
   border: 0
+
 .SelectMenu-list
   position: relative
   padding: 0
@@ -307,6 +375,7 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
   overflow-y: auto
   background-color: $app-color-canvas-overlay
   -webkit-overflow-scrolling: touch
+
 .SelectMenu-item
   display: flex
   align-items: center
@@ -319,6 +388,7 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
   background-color: $app-color-canvas-overlay
   border: 0
   border-bottom: 1px solid $app-color-border-muted
+
 .SelectMenu-icon
   width: 16px
   margin-right: 8px
@@ -328,25 +398,21 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
     transition: transform .12s cubic-bezier(0.5, 0.1, 1, 0.5),visibility 0s .12s linear
     transform: scale(0)
 
-.SelectMenu-item[aria-checked="true"] .SelectMenu-icon--check
-  visibility: visible
-  transition: transform .12s cubic-bezier(0, 0, 0.2, 1),visibility 0s linear
-  transform: scale(1)
+.SelectMenu-item[aria-checked="true"]
+  .SelectMenu-icon--check
+    visibility: visible
+    transition: transform .12s cubic-bezier(0, 0, 0.2, 1),visibility 0s linear
+    transform: scale(1)
 
-::ng-deep .mat-tab-header
-  padding-top: 0 !important
-  padding-bottom: 0 !important
-  padding-right: 16px
-  padding-left: 16px
-  border-bottom: 1px solid $app-color-border-muted
-
-@keyframes SelectMenu-modal-animation
+@keyframes select-menu-modal-animation
   0%
     opacity: 0
     transform: translateY(-16px)
+
 @media (max-width: 480px)
   *
     font-size: 15px
+
 @media (max-width: 768px)
   .border-sm-top
     border-top: 1px solid #dee2e6 !important
@@ -381,33 +447,34 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
   margin-bottom: 16px
   border: 1px solid $app-color-border-default
   border-radius: 6px
-  & .file-header
+  .file-header
     padding: 5px 10px
     background-color: $app-aliceBlue
     border-bottom: 1px solid $app-color-border-default
     border-top-left-radius: 6px
     border-top-right-radius: 6px
-  & .file-info
+  .file-info
     font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace
     font-size: 12px
     line-height: 32px
-  & .file-content
+  .file-content
     padding: 40px 25px
-  & .variable-textarea
+  .variable-textarea
     width: 100%
     min-height: 300px
     height: max-content
     border: none
     outline: none
+
 markdown
-  & *
+  *
     font: revert !important
-  & h1 a
+  h1 a
     text-decoration: none
-  & h1 a:hover
+  h1 a:hover
     opacity: 0.87
     text-decoration: underline
-  & blockquote
+  blockquote
     border-left: 3px solid rgba(0,0,0,0.21)
     padding-left: 12px
     color: rgba(0,0,0,0.54)
@@ -416,11 +483,12 @@ markdown
 .app-mat-chip
   & ::ng-deep .mat-standard-chip
     cursor: pointer
-::ng-deep .mat-standard-chip
-  cursor: pointer
+
 .mat-standard-chip
   min-height: 25px
+  border-radius: 16px
   padding: 10px
+
 .mat-chip
   color: $app-navyBlue
   background: $app-aliceBlue
@@ -443,7 +511,7 @@ markdown
     background-color: $app-aliceBlue
   &--condensed
     line-height: 1.25
-    & .box__row
+    .box__row
       padding: 8px 16px
   &__row
     padding: 16px
@@ -467,7 +535,7 @@ markdown
   &__body
     display: flex
     background: $app-color-canvas-overlay
-    & .avatar
+    .avatar
       position: relative
       z-index: 2
       display: flex
@@ -487,34 +555,38 @@ markdown
         z-index: 3
       &:not(:hover)
         background-color: transparent
-  & .avatar-stack__body
+  .avatar-stack__body
     position: absolute
 ///////
 
 .signer-block-info
   z-index: 999
   grid-template-columns: 0.15fr 1fr
+
 .signed-commit-header
   line-height: 1.3
   white-space: normal
   grid-template-columns: 0.15fr 1fr
   border-top-left-radius: 6px
   border-top-right-radius: 6px
-  & *
+  *
     font-size: 15px
+
 .signed-commit-signer-name
   font-size: 14px
   text-align: left
-  & .signer
+  .signer
     display: block
     font-weight: 600
     font-size: 14px
+
 .signed-commit-footer
   &__id
     color: $app-nero
-  & span, a
+  span, a
     font-size: 12px
     line-height: 1.5
+
 .signed-commit-badge
   user-select: none
   background: none
@@ -525,14 +597,17 @@ markdown
   &:hover
     border-color: $app-harmonies
     text-decoration: none
+
 .verified-commit
   display: inline-block
   overflow: visible !important
   vertical-align: text-bottom
   fill: currentColor
+
 .signed-commit-verified-label
   color: $app-success
   white-space: nowrap
+
 .signed-commit-badge-small
   display: inline-block
   padding: 0 7px
@@ -541,16 +616,17 @@ markdown
   line-height: 18px
   border: 1px solid $verylightgrey
   border-radius: 2em
-.signed-commit__popup-header .mat-typography h3
-  margin: 0 !important
-::ng-deep ngb-popover-window.bs-popover-left>.arrow
-  display: none
 
-::ng-deep ngb-popover-window .popover-header
-  margin: 0
+.signed-commit__popup-header
+  .mat-typography
+    h3
+      margin: 0 !important
 
-.mat-standard-chip
-  border-radius: 16px
+  ::ng-deep ngb-popover-window.bs-popover-left>.arrow
+    display: none
+
+  ::ng-deep ngb-popover-window .popover-header
+    margin: 0
 
 .overflow-visible
   overflow: visible !important

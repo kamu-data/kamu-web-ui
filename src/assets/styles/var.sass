@@ -171,6 +171,9 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
     border-color: $app-color-border-default
     height: inherit
     background: $app-aliceBlue
+    &:first-child
+      &:active
+        border-color: $app-color-border-default
     &:last-child
       border-right-width: 1px
       border-top-right-radius: 6px

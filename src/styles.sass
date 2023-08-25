@@ -19,12 +19,16 @@ app-add-polling-source
 body
   font-size: 14px
   overflow-x: hidden
+
 *
   font-size: 14px
+
 .h3-custom
   font-size: 20px !important
+
 .lh-condensed
   line-height: 1.25 !important
+
 a
   text-decoration: none
   &:hover
@@ -32,14 +36,19 @@ a
     cursor: pointer
   &:active, &:hover
     outline-width: 0
+
 .sr-only
   display: none
+
 .color-text-secondary
   color: $secondary
+
 .text-small
   font-size: 12px
+
 .mat-divider
   color: $app-lightGrayishBlue
+
 .card--title
   position: relative
   padding-top: 11px
@@ -48,12 +57,15 @@ a
   border-radius: 4px 4px 0px 0px
   border-bottom: 1px solid $app-veryLightGray
   align-items: center
+
 .card--row
   padding: 11px
+
 .table-header-background
   background-color: $app--color-table-header-bg
+
 #dataset-viewer
-  & .dataset-info
+  .dataset-info
     display: grid
     &--subtitle
       box-sizing: border-box
@@ -100,10 +112,13 @@ a
       width: 40%
       padding-top: 8px
       line-height: 1
+
 .datasetViewTypeToggleGroup
-  & .mat-button-toggle-disabled .mat-button-toggle-button
-    cursor: not-allowed
-    color: rgb(0 0 0 / 51%)
+  .mat-button-toggle-disabled
+    .mat-button-toggle-button
+      cursor: not-allowed
+      color: rgb(0 0 0 / 51%)
+
 .app-active-button
   background: $app-darkSeaGreen
   border-radius: 4px
@@ -117,39 +132,49 @@ a
   &:hover, &:focus, &:active
     text-decoration: none
     color: $app-emperor
+
 .app-header
   height: 90px
-  & a
+  a
     margin: 0 20px
-  & p
+  p
     color: $app-white
     font-style: normal
     font-weight: normal
     font-size: 18px
-  & .navbar
+  .navbar
     padding: 0
-[data-test-id="appLogo"]
-  background: none
-  border: none
-.mat-progress-spinner circle
-  stroke: $app-darkSeaGreen !important
 
-.mat-menu-panel.app-header__user-menu
-  background-color: white
-  border: 1px solid $app-lightGrayishBlue
-  & .mat-menu-item
+[data-test-id="appLogo"]
+    background: none
+    border: none
+
+.mat-progress-spinner
+  circle
+    stroke: $app-darkSeaGreen !important
+
+.mat-menu-panel
+  &.app-header__user-menu
     background-color: white
-#appHeaderLogo img
-  height: 32px
-  width: 32px
+    border: 1px solid $app-lightGrayishBlue
+    .mat-menu-item
+      background-color: white
+
+#appHeaderLogo
+  img
+    height: 32px
+    width: 32px
+
 .Header-item
   display: flex
   margin-right: 16px
   align-self: stretch
   align-items: center
   flex-wrap: nowrap
+
 .Header-link
   text-decoration: none
+
 #app-header
   z-index: 32
   display: flex
@@ -158,15 +183,14 @@ a
   line-height: 1.5
   align-items: center
   justify-content: space-between
-  & .Details:not(.Details--on) .Details-content--hidden-not-important
-    display: none
-  & .Header-item--full
+  .Details:not(.Details--on)
+    .Details-content--hidden-not-important
+      display: none
+  .Header-item--full
     flex: auto
-  & a, button
+  a, button
     flex: none
-  //& .form-control
-  //  width: 300px
-  & .input-control
+  .input-control
     position: relative
     flex: 1 1 auto
     width: 1%
@@ -179,108 +203,124 @@ a
     font-weight: 400
     line-height: 1.5
     border: 1px solid #ced4da
-    //transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out
+
 .jump-to-badge-jump
   display: none
-.active-search-input input
-  color: $app-white
+
+.active-search-input
+  input
+    color: $app-white
+
 .octicon
   display: inline-block
   overflow: visible !important
   vertical-align: text-bottom
   fill: currentColor
+
 .Header-signout-btn
   background: none
   border: none
   text-align: left
   padding: initial
-#navbarNavDropdown .navbar-nav
-  width: 100%
-  & .nav-item
+
+#navbarNavDropdown
+  .navbar-nav
     width: 100%
-    transition: all .5s linear
-    line-height: 150px
-  & .active-search-input
-    width: 100%
-  & ngb-typeahead-window
-    width: 100%
-    line-height: 1
-    & ngb-highlight
-      color: $app-nero
-    & .dropdown-item
-      display: flex
-      justify-content: space-between
-      height: 30px
-      padding-left: 10px
-      padding-right: 10px
-      margin: 5px 0
-      & *
-        color: $app-nero
-      & button
-        color: $app-nero
-      &.active
-        & *
-          color: $app-white
-        & .jump-to-badge-jump
-          justify-content: center
-          align-items: center
-          display: flex
+    .nav-item
+      width: 100%
+      transition: all .5s linear
+      line-height: 150px
+      .active-search-input
+        width: 100%
+      ngb-typeahead-window
+        width: 100%
+        line-height: 1
+        ngb-highlight
           color: $app-nero
-          & *
+        .dropdown-item
+          display: flex
+          justify-content: space-between
+          height: 30px
+          padding-left: 10px
+          padding-right: 10px
+          margin: 5px 0
+          *
             color: $app-nero
+          button
+            color: $app-nero
+          &.active
+            *
+              color: $app-white
+            .jump-to-badge-jump
+              justify-content: center
+              align-items: center
+              display: flex
+              color: $app-nero
+              *
+                color: $app-nero
+
 .app-brand
   grid-area: appBrandArea
   > img
     width: 77px
     height: 55px
+
 a:visited
   color: inherit
+
 .mat-app-background, .mat-drawer-container
   background-color: $app-aliceBlue
+
 #app-header
   background-color: $app-dark
-  & *
+  *
     color: $app-primary
-  & .navbar-nav
+  .navbar-nav
     margin: auto
 
-.Details:not(.Details--on) .Details-content--hidden-not-important
-  display: none
+.Details:not(.Details--on)
+  .Details-content--hidden-not-important
+    display: none
+
 .header-search
   max-width: 100%
   transition: all .5s linear
-.header-search:focus-within
-  max-width: 100%
-  width: 100%
+
+.header-search
+  &:focus-within
+    max-width: 100%
+    width: 100%
+
 .notification-indicator-container
   width: 1.5em
+
 .app-main-container
   height: 100%
   width: 100%
-
-  & .navbar
+  .navbar
     padding: 20px
 
 .mat-drawer-inner-container
-  & .navbar-nav
+  .navbar-nav
     width: 100%
     padding: 16px
-    & .nav-item
+    .nav-item
       width: 100%
       margin-bottom: 8px
       border-radius: 4px
       padding: 12px 16px
       box-sizing: border-box
       color: $app-emperor
-    & .nav-link:hover, .nav-link:focus
-      background: $app-darkSeaGreen
-      color: $app-white
-
-  & .mat-drawer.mat-drawer-side
+    .nav-link
+      &:hover, &:focus
+        background: $app-darkSeaGreen
+        color: $app-white
+  .mat-drawer.mat-drawer-side
     width: 208px
-  & .mat-drawer-container
+  .mat-drawer-container
     background: inherit
     overflow: auto
+
 .app-content
   display: grid
   margin: 33px auto
@@ -292,17 +332,22 @@ a:visited
   &--header
     grid-template-columns: 1fr 1fr
     display: grid
+
 #dataset-view
-  a:visited
-    color: inherit
+  a
+    &:visited
+      color: inherit
+
 router-outlet
-    display: none
+  display: none
+
 .app-content__card-columns
   column-count: 1
   grid-column-gap: 1.25rem
   column-gap: 1.25rem
   orphans: 1
   widows: 1
+
 .app-header__right-column
   grid-area: appHeaderArea
   display: flex
@@ -311,24 +356,30 @@ router-outlet
   color: white
   > span
     margin-right: 5px
+
 .app-header__right-column__addnew-block
   margin-right: 5%
   display: flex
   justify-content: space-around
   background: none
   border: none
-  > span:first-child
-    margin-right: 10px
+  > span
+    &:first-child
+      margin-right: 10px
+
 .app-header__right-column__label
   display: block
-#appHeaderAdditionalBlock .button-round
-  width: 50px
-  height: 50px
-  min-width: 50px
-  border-radius: 35px
-  overflow: hidden
-  display: block
-  padding: 0
+
+#appHeaderAdditionalBlock
+  .button-round
+    width: 50px
+    height: 50px
+    min-width: 50px
+    border-radius: 35px
+    overflow: hidden
+    display: block
+    padding: 0
+
 #matmenu-signed-in-name
   white-space: nowrap
   overflow: hidden
@@ -344,10 +395,11 @@ router-outlet
   font-family: Roboto, "Helvetica Neue", sans-serif
   font-size: 14px
   font-weight: 400
-  & *
+  *
     font-family: Roboto, "Helvetica Neue", sans-serif
     font-size: 14px
     font-weight: 600
+
 .img-container-round
   width: 50px
   height: 50px
@@ -384,59 +436,70 @@ router-outlet
   &.mobileSearch
     grid-area: appMobileMenu
     position: relative
-    & i
+    i
       color: $app-primary
       font-size: 30px
+
 .search-header-container-block
   margin-bottom: 20px
+
 #search .dataset-full-result-container
   grid-template-columns: 1fr
+
 #search .dataset-result-container
   grid-template-columns: 0.25fr 1fr
+
 #search .search-result-container
   grid-template-columns: 0.25fr 1fr
+
 #search .search-result-container, #search .dataset-result-container
   & ul
     list-style-type: none
   & .mat-checkbox-layout .mat-checkbox-label
     font-size: 16px
+
 #dataset-viewer
-  & .search-result-container
+  .search-result-container
     grid-template-columns: 0.25fr 1fr
-  & .dataset-result-container
+  .dataset-result-container
     grid-template-columns: 1fr 0.35fr
-  & .dataset-view-data-result-container
+  .dataset-view-data-result-container
     grid-template-columns: 0.4fr 1fr
-#schema-block-table *, #set-polling-source-schema *, #set-polling-source-env-variables *
-  padding: 0px 8px
-  font-size: 12px
-  height: 34px
+
+#schema-block-table , #set-polling-source-schema , #set-polling-source-env-variables
+  *
+    padding: 0px 8px
+    font-size: 12px
+    height: 34px
+
 #search, #dataset-viewer
-  & .nav-link
+  .nav-link
     cursor: pointer
-  & .nav-tabs
+  .nav-tabs
     margin-bottom: 14px
     border-bottom: none
-  & .search-result-container, .dataset-result-container, .dataset-view-data-result-container
+  .search-result-container, .dataset-result-container, .dataset-view-data-result-container
     display: grid
     align-items: start
     grid-gap: 25px
-  & table
+  table
     width: 100%
-  & .search-header-container-block
+  .search-header-container-block
     width: 100%
     display: grid
     align-items: center
     justify-content: space-between
     grid-template-columns: 1fr 0.25fr
     grid-gap: 25px
-    > ul:first-child
-      align-items: center
-      margin-bottom: 9px
-    > ul:last-child
-      justify-content: flex-end
-    & .nav-tabs
-      & .nav-link
+    > ul
+      &:first-child
+        align-items: center
+        margin-bottom: 9px
+    > ul
+      &:last-child
+        justify-content: flex-end
+    .nav-tabs
+      .nav-link
         border: none
         background-color: transparent
         padding: 0.5rem 0.3rem 0 0.3rem
@@ -444,11 +507,12 @@ router-outlet
           text-decoration: underline
         &.active
           font-weight: bold
-    & .nav-link
+    .nav-link
       padding: 0.5rem 0.3rem
       color: $app-emperor
       &:hover, &:focus, &:active
         text-decoration: underline
+
 .search-result-container__content, .container-content
   overflow: auto
   padding: 20px 28px
@@ -459,31 +523,39 @@ router-outlet
   border-radius: 8px
   & [data-test-id="searchInput"]
     height: 50px
+
 .datasetViewTypeToggleGroup
   width: 100%
   overflow: auto
   margin-bottom: 20px
+
 #dataset-viewer, #search
   overflow: hidden
-.starred .starred-button-icon
-  color: $app-naples-yellow !important
-.searchAdditionalButtonsMinimizeBlock .searchAdditionalButtons__nav
-  flex-direction: column
-  background: $app-white
-  & .btnGroup-item
-    width: 100%
-  & .btnGroup-parent
-    width: 100%
-  & .nav-item
-    width: 100%
-    margin: 0 !important
-    padding: 0 !important
+
+.starred
+  .starred-button-icon
+    color: $app-naples-yellow !important
+
+.searchAdditionalButtonsMinimizeBlock
+  .searchAdditionalButtons__nav
+    flex-direction: column
+    background: $app-white
+    .btnGroup-item
+      width: 100%
+    .btnGroup-parent
+      width: 100%
+    .nav-item
+      width: 100%
+      margin: 0 !important
+      padding: 0 !important
+
 #metadata-block
   & .page-item:last-child .page-link, .page-item:first-child .page-link
     padding: 1px
   & #pagination-block
     display: flex
     justify-content: flex-end
+
 /*********** Search Page ******/
 .input-icon
   background: none
@@ -498,63 +570,71 @@ router-outlet
   height: 100%
   > i
     font-size: 18px
-[data-test-id="searchInput"]
-  padding-left: 35px
+
+#typeahead-http
   &::placeholder
     color: $app-white
 
-#searchInput.searchSidenav .input-group > [data-test-id="searchInput"].form-control
-  background: $app-white
-  color: $app-emperor
-  box-shadow: 0px 5px 4px $app-versatileBusinessDark
-  &::placeholder
+#searchInput
+  &.searchSidenav
+    .input-group
+      & > [data-test-id="searchInput"].form-control
+        background: $app-white
+        color: $app-emperor
+        box-shadow: 0px 5px 4px $app-versatileBusinessDark
+
+.input-group
+  & > [data-test-id="searchInput"].form-control
+    border-radius: 0.25rem
+    border-color: transparent
+    background: $app-emperor
     color: $app-white
-.input-group > [data-test-id="searchInput"].form-control
-  border-radius: 0.25rem
-  border-color: transparent
-  background: $app-emperor
-  color: $app-white
-  padding: 5px 12px
-.form-control:focus
-  box-shadow: 0 0 0 0.2rem #85bb906e
+    padding: 5px 12px
+
+.form-control
+  &:focus
+    box-shadow: 0 0 0 0.2rem #85bb906e
+
 .mat-header-cell
   font-size: 20px
 
 [data-test-id="searchInput"], [data-test-id="addNewBlock"],
 [data-test-id="openUserInfo"], [data-test-id="appLogo"]
   cursor: pointer
+
 .input-datasets-list
   justify-content: left
   display: flex
   align-items: baseline
   & > *:last-child
     margin-left: 16px
+
 .gist
   font-size: 16px
   color: #333
   text-align: left
   direction: ltr
   text-rendering: auto
-  & .gist-file
+  .gist-file
     margin-bottom: 1em
     font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace
     border: 1px solid #ddd
     border-bottom: 1px solid #ccc
     border-radius: 6px
-    & article
+    article
       padding: 6px
-  & .gist-data
+  .gist-data
     overflow: auto
     word-wrap: normal
     background-color: $app-color-canvas-overlay
     border-bottom: 1px solid #ddd
     border-radius: 6px 6px 0 0
-  & .markdown-body
+  .markdown-body
     font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji"
     font-size: 16px
     line-height: 1.5
     word-wrap: break-word
-    & pre
+    pre
       padding: 16px
       overflow: auto
       font-size: 85%
@@ -565,22 +645,23 @@ router-outlet
 .searchAdditionalButtons__nav
   justify-content: end
   align-items: end
+
 .searchAdditionalButtonsMinimizeBlock
-  & ul
+  ul
     background: $app-white
     border: 1px solid $app-veryLightGray
     box-sizing: border-box
     box-shadow: 0 5px 4px $app-versatileBusinessDark
     border-radius: 5px
-  & li
+  li
     border-radius: 0 !important
     border: none
     border-bottom: 1px solid #d0d7de !important
     &:last-child
       border-bottom: none !important
-    & .btnGroup-item
+    .btnGroup-item
       border: none
-    & .additionalOptions-btn
+    .additionalOptions-btn
       border-top: none !important
       border-right: none !important
       border-bottom: none !important
@@ -588,11 +669,15 @@ router-outlet
 @media (max-width: 480px)
   .app-header__right-column__label
     display: none
+
   .app-header__right-column__addnew-block
     width: 18%
-  .app-brand > img
-    width: 60px
-    height: 50px
+
+  .app-brand
+    > img
+      width: 60px
+      height: 50px
+
   .app-active-button__container
     margin-top: 7px
 
@@ -602,38 +687,49 @@ router-outlet
     &--header
       grid-template-columns: 1fr 0.1fr
       display: grid
+
   #search, #dataset-viewer
-    & .search-result-container, .dataset-view-data-result-container
+    .search-result-container, .dataset-view-data-result-container
       grid-template-columns: 1fr
-    & .search-header-container-block
-      grid-template-columns: 1fr
-      > ul:last-child
+
+  .search-header-container-block
+    grid-template-columns: 1fr
+    > ul
+      &:last-child
         justify-content: flex-start
+
   .searchAdditionalButtonsBlock
     display: flex
     justify-content: flex-end
     align-items: flex-end
+
 @media (max-width: 991px)
   #app-header
-    & #appHeaderMenuButton, #appHeaderLogo, #appHeaderAdditionalBlock
+    #appHeaderMenuButton, #appHeaderLogo, #appHeaderAdditionalBlock
       order: 0
-    & #navbarNavDropdown
+    #navbarNavDropdown
       order: 1
-    & .navbar-nav
+    .navbar-nav
       margin: 20px auto
+
   #dataset-viewer
-    & .dataset-result-container
+    .dataset-result-container
       grid-template-columns: 1fr
 
 @media (min-width: 768px)
   .header-search
     max-width: 272px
     width: 100%
-  .header-search:focus-within
-    max-width: 544px
-  #navbarNavDropdown .navbar-nav
-    & .active-search-input
-      width: 150%
+
+  .header-search
+    &:focus-within
+      max-width: 544px
+
+  #navbarNavDropdown
+    .navbar-nav
+      .active-search-input
+        width: 150%
+
 .avatar
   display: inline-block
   overflow: hidden
@@ -643,9 +739,11 @@ router-outlet
   border-radius: 6px
   flex-shrink: 0
   box-shadow: 0 0 0 1px #1b1f2426
+
 .avatar-2
   width: 20px
   height: 20px
+
 .avatar-user
   border-radius: 50% !important
 
@@ -655,7 +753,6 @@ router-outlet
   margin: 0 auto
   background: white
   box-sizing: border-box
-    //width: 70%
   max-width: 300px
   min-height: 80px
   border: 1px solid $app-nero
@@ -664,14 +761,18 @@ router-outlet
   opacity: 0
   transition: transform 1s linear
   animation: ani 1.5s forwards
+
 .modal__dialog__header-block
   width: 100%
   padding: 1.5em
+
 .modal__dialog__footer-block
   width: 100%
+
 .modal__content .modal__bigtest-dialog
   width: 90vw
   max-width: none
+
 @keyframes ani
   0%
     opacity: 0
@@ -679,51 +780,49 @@ router-outlet
   100%
     opacity: 1
     transform: translateY(0%)
+
 .modal__bigtext-block
   display: block
   width: 100%
   height: 60vh
   overflow-y: scroll
   margin-bottom: 26px
-.modal__bigtext-block__container
-  text-align: left
-  font-size: 14pt
-  font-family: "Helvetica Neue"
-  a
-    color: #0087ff
-    text-decoration: underline
-    vertical-align: baseline
-    text-decoration-skip-ink: none
-    font-style: normal
+  &__container
+    text-align: left
+    font-size: 14pt
+    font-family: "Helvetica Neue"
+    a
+      color: #0087ff
+      text-decoration: underline
+      vertical-align: baseline
+      text-decoration-skip-ink: none
+      font-style: normal
 
 .modal__header
   font-size: 1.25em
   margin-bottom: 1em
+  &-black
+    @extend .modal__header
+    color: black
+    font-size: 1.4em
+  &-error
+    @extend .modal__header
+    color: red
+  &-warning
+    @extend .modal__header
+    color: $warning
+  &-ok
+    @extend .modal__header
+    color: darkgreen
+  &-info
+    @extend .modal__header
+    color: #4494ff
 
-.modal__header-black
-  @extend .modal__header
-  color: black
-  font-size: 1.4em
-
-.modal__header-error
-  @extend .modal__header
-  color: red
-
-.modal__header-warning
-  @extend .modal__header
-  color: $warning
-
-.modal__header-ok
-  @extend .modal__header
-  color: darkgreen
-
-.modal__header-info
-  @extend .modal__header
-  color: #4494ff
 .link-green
   color: $green-100
   &__inline
     border-bottom: 1px $green-100 solid
+
 .cache-modal
   &__content
     flex-direction: column
@@ -763,6 +862,7 @@ router-outlet
       color: $app-nero
       font-size: 24px
       width: 100%
+
 .base_modal__content
   background: #0000007a
   flex-direction: column
@@ -778,10 +878,10 @@ router-outlet
   @extend .base_modal__content
   bottom: 0
   z-index: 2000
-.modal__content__unsupported-account
-  @extend .base_modal__content
-  bottom: 0
-  z-index: 1001
+  &__unsupported-account
+    @extend .base_modal__content
+    bottom: 0
+    z-index: 1001
 
 .modal__body
   @extend .text-center
@@ -801,23 +901,20 @@ router-outlet
   min-height: 13%
   position: relative
   background: url(./assets/icons/loadinfo.net.gif) no-repeat center
-  & img
+  img
     max-height: calc(100vh - 180px)
     max-width: 100%
     margin: 0 auto
-    //& .modal__btn
-    //    position: absolute
-    //    bottom: 0
-    //    left: calc(50%)
-    //    transform: translateX(-40px)
+
 .modal__dialog__unsupported-account
   @extend .modal__dialog
-  & a
+  a
     color: $blue
 
 .modal__msg
   margin: 1em 0
   word-break: break-word
+
 .button__default
   background-color: white
   @extend .button
@@ -828,17 +925,16 @@ router-outlet
   border-radius: 0px 0px 4px 4px
   min-width: 100%
   font-weight: bold
-
-.modal__btn-first
-  width: 100%
-  margin: 0
-
-.modal__btn-last
-  @extend .modal__btn-first
-  margin-top: 1em
+  &-first
+    width: 100%
+    margin: 0
+  &-last
+    @extend .modal__btn-first
+    margin-top: 1em
 
 .upload
   background-color: black
+
 #more-button
   background: $app-white
   border: 1px solid $app-veryLightGray
@@ -846,6 +942,7 @@ router-outlet
   box-shadow: 0 5px 4px $app-versatileBusinessDark
   border-radius: 8px
   color: $app-emperor
+
 .button
   height: 40px
   cursor: pointer
@@ -854,9 +951,9 @@ router-outlet
     outline: none
     &[disabled]
       opacity: 0.7
-    & img
+    img
       height: 100%
-    & .fa
+    .fa
       color: inherit
     &:active
       background: linear-gradient(to bottom, rgba(204,204,204,0.8) 100%, #eee 0%)
@@ -864,32 +961,42 @@ router-outlet
 .account-container
   grid-template-columns: 0.5fr 0.5fr
   display: grid !important
+
 app-account .dropdown-menu
   right: 0
+
 .account-additional-main-info__list
-  & .mail-outline .mat-icon
-    font-size: 20px
-    height: 20px
-    width: 20px
-.Layout.Layout--sidebarPosition-start .Layout-main
-  grid-column: 2/span 2
+  .mail-outline
+    .mat-icon
+      font-size: 20px
+      height: 20px
+      width: 20px
+
+.Layout.Layout--sidebarPosition-start
+  .Layout-main
+    grid-column: 2/span 2
+
 .UnderlineNav
   display: flex
   overflow-x: auto
   overflow-y: hidden
   justify-content: space-between
-  & .mat-icon
+  .mat-icon
     height: 20px
     width: 20px
     font-size: 20px
-[role="menu"] .UnderlineNav-item
-  display: flex
-  justify-content: flex-start
-  align-items: center
+
+[role="menu"]
+  .UnderlineNav-item
+    display: flex
+    justify-content: flex-start
+    align-items: center
+
 details summary::-webkit-details-marker,
 details summary::marker
-  display: none
-  content: ""
+    display: none
+    content: ""
+
 .UnderlineNav-item
   padding: 8px 16px
   font-size: 14px
@@ -919,13 +1026,17 @@ details summary::marker
 /******** MIXINZ ********/
 %border-none
   border: 0px
+
 %border-gray
   border: 1px solid $verylightgrey
+
 %border-green
   border-radius: 5px
   border: 1px solid #CEE794
+
 %border-darkgreentea
   border: 1px solid $darkgreentea
+
 %button-gradient
   background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(237,237,237,1) 100%)
 
@@ -959,9 +1070,10 @@ details summary::marker
 .fs-12
   font-size: 12px
 
-.multiselect-dropdown .dropdown-btn
-  color: #6c757d !important
-  padding-left: 36px !important
+.multiselect-dropdown
+  .dropdown-btn
+    color: #6c757d !important
+    padding-left: 36px !important
 
 pre
   display: flex
@@ -973,7 +1085,7 @@ pre
     line: height 1.5em
       min-height: 100%
       padding: 1em 1.2em
-  & .hljs
+  .hljs
     font-size: 15px !important
     font-weight: 500 !important
     background-color: honeydew !important
@@ -1075,5 +1187,7 @@ pre
     &:enabled
       color: blue
 
-input.ng-invalid.ng-touched, input.ng-invalid.ng-dirty
-  border-color: #dc3545
+input
+  &.ng-invalid
+    &.ng-touched, &.ng-dirty
+      border-color: #dc3545

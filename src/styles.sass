@@ -113,7 +113,7 @@ a
       padding-top: 8px
       line-height: 1
 
-.datasetViewTypeToggleGroup
+.dataset-view-type-toggle-group
   .mat-button-toggle-disabled
     .mat-button-toggle-button
       cursor: not-allowed
@@ -165,14 +165,14 @@ a
     height: 32px
     width: 32px
 
-.Header-item
+.header-item
   display: flex
   margin-right: 16px
   align-self: stretch
   align-items: center
   flex-wrap: nowrap
 
-.Header-link
+.header-link
   text-decoration: none
 
 #app-header
@@ -183,10 +183,10 @@ a
   line-height: 1.5
   align-items: center
   justify-content: space-between
-  .Details:not(.Details--on)
-    .Details-content--hidden-not-important
+  .details:not(.details--on)
+    .details-content--hidden-not-important
       display: none
-  .Header-item--full
+  .header-item--full
     flex: auto
   a, button
     flex: none
@@ -217,7 +217,7 @@ a
   vertical-align: text-bottom
   fill: currentColor
 
-.Header-signout-btn
+.header-signout-btn
   background: none
   border: none
   text-align: left
@@ -278,8 +278,8 @@ a:visited
   .navbar-nav
     margin: auto
 
-.Details:not(.Details--on)
-  .Details-content--hidden-not-important
+.details:not(.details--on)
+  .details-content--hidden-not-important
     display: none
 
 .header-search
@@ -416,7 +416,7 @@ router-outlet
     top: 0
     left: 0
 
-.searchInputContainer
+.search-input-container
   height: 42.5px
 
 #searchInput
@@ -430,7 +430,7 @@ router-outlet
   font-weight: 400
   vertical-align: middle
   box-shadow: none
-  @extend .searchInputContainer
+  @extend .search-input-container
 
 #mobileMenuButton
   &.mobileSearch
@@ -443,20 +443,16 @@ router-outlet
 .search-header-container-block
   margin-bottom: 20px
 
-#search .dataset-full-result-container
-  grid-template-columns: 1fr
-
-#search .dataset-result-container
-  grid-template-columns: 0.25fr 1fr
-
-#search .search-result-container
-  grid-template-columns: 0.25fr 1fr
-
-#search .search-result-container, #search .dataset-result-container
-  & ul
-    list-style-type: none
-  & .mat-checkbox-layout .mat-checkbox-label
-    font-size: 16px
+#search
+  .dataset-full-result-container
+    grid-template-columns: 1fr
+  .dataset-result-container, .search-result-container
+    grid-template-columns: 0.25fr 1fr
+    ul
+      list-style-type: none
+    .mat-checkbox-layout
+      .mat-checkbox-label
+        font-size: 16px
 
 #dataset-viewer
   .search-result-container
@@ -524,7 +520,7 @@ router-outlet
   & [data-test-id="searchInput"]
     height: 50px
 
-.datasetViewTypeToggleGroup
+.dataset-view-type-toggle-group
   width: 100%
   overflow: auto
   margin-bottom: 20px
@@ -536,13 +532,13 @@ router-outlet
   .starred-button-icon
     color: $app-naples-yellow !important
 
-.searchAdditionalButtonsMinimizeBlock
-  .searchAdditionalButtons__nav
+.search-additional-buttons-minimize-block
+  .search-additional-buttons__nav
     flex-direction: column
     background: $app-white
-    .btnGroup-item
+    .btn-group-item
       width: 100%
-    .btnGroup-parent
+    .btn-group-parent
       width: 100%
     .nav-item
       width: 100%
@@ -642,11 +638,11 @@ router-outlet
       background-color: $app-color-canvas-subtle
       border-radius: 6px
 
-.searchAdditionalButtons__nav
+.search-additional-buttons__nav
   justify-content: end
   align-items: end
 
-.searchAdditionalButtonsMinimizeBlock
+.search-additional-buttons-minimize-block
   ul
     background: $app-white
     border: 1px solid $app-veryLightGray
@@ -659,9 +655,9 @@ router-outlet
     border-bottom: 1px solid #d0d7de !important
     &:last-child
       border-bottom: none !important
-    .btnGroup-item
+    .btn-group-item
       border: none
-    .additionalOptions-btn
+    .additional-options-btn
       border-top: none !important
       border-right: none !important
       border-bottom: none !important
@@ -698,7 +694,7 @@ router-outlet
       &:last-child
         justify-content: flex-start
 
-  .searchAdditionalButtonsBlock
+  .search-additional-buttons-block
     display: flex
     justify-content: flex-end
     align-items: flex-end
@@ -972,11 +968,12 @@ app-account .dropdown-menu
       height: 20px
       width: 20px
 
-.Layout.Layout--sidebarPosition-start
-  .Layout-main
-    grid-column: 2/span 2
+.layout
+  &.layout--sidebar-position-start
+    .layout-main
+      grid-column: 2/span 2
 
-.UnderlineNav
+.underline-nav
   display: flex
   overflow-x: auto
   overflow-y: hidden
@@ -987,7 +984,7 @@ app-account .dropdown-menu
     font-size: 20px
 
 [role="menu"]
-  .UnderlineNav-item
+  .underline-nav-item
     display: flex
     justify-content: flex-start
     align-items: center
@@ -997,7 +994,7 @@ details summary::marker
     display: none
     content: ""
 
-.UnderlineNav-item
+.underline-nav-item
   padding: 8px 16px
   font-size: 14px
   line-height: 30px

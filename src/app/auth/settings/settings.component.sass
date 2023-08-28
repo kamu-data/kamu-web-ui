@@ -8,7 +8,7 @@
 .fw-bold-custom
   font-weight: 600
 
-.ActionList
+.action-list
   padding: 0
   &-item
     position: relative
@@ -19,7 +19,7 @@
       &:hover
         cursor: pointer
         text-decoration: none
-    &--navActive
+    &--nav__active
       background: $app-color-action-list-item-default-selected-bg
       a
         font-weight: 600
@@ -53,7 +53,7 @@
     align-items: start
     &:hover
       background: $app-color-action-list-item-default-selected-bg
-  &-sectionDivider
+  &-section-divider
     &:not(:empty)
       display: flex
       padding: 6px 8px
@@ -61,7 +61,7 @@
       font-weight: 500
       color: $app-color-fg-muted
       flex-direction: column
-  &-sectionDivider
+  &-section-divider
     &:empty
       display: block
       height: 1px

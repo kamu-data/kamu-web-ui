@@ -111,8 +111,8 @@ describe("AppHeaderComponent", () => {
             const headerMenu = findNativeElement(fixture, "#app-header");
             emitClickOnElement(fixture, "#appHeaderMenuButton");
             isExpectation
-                ? expect(headerMenu.classList.contains("Details--on")).toBeFalse()
-                : expect(headerMenu.classList.contains("Details--on")).toBeTrue();
+                ? expect(headerMenu.classList.contains("details--on")).toBeFalse()
+                : expect(headerMenu.classList.contains("details--on")).toBeTrue();
         });
     });
 

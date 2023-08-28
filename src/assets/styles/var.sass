@@ -158,12 +158,12 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
   border-bottom-right-radius: 6px !important
   border-top-right-radius: 6px !important
 
-.btnGroup-parent
+.btn-group-parent
   float: left
   height: 28px
   width: max-content
   background: none
-  .btnGroup-item
+  .btn-group-item
     border-right-width: 1px
     border-radius: 1px
     position: relative
@@ -183,10 +183,13 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
     &:hover
       border-color: $app-color-border-default
 
-.BtnGroup-item
+.btns-group-item
   &:first-child
     border-top-left-radius: 6px
     border-bottom-left-radius: 6px
+  &:last-child
+    border-top-left-radius: 0
+    border-top-left-radius: 0
 
 .btn
   &.btn-gray
@@ -241,15 +244,15 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
     white-space: nowrap
 
 .hx_avatar_stack_commit
-  .avatarStack
+  .avatar-stack
     height: 24px
     min-width: 24px
 
-.avatarStack
+.avatar-stack
   position: relative
   min-width: 26px
   height: 20px
-  .avatarStack__body
+  &__body
     position: absolute
     display: flex
     .avatar
@@ -299,7 +302,7 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
   border-radius: 2em
 
 .btn
-  .Counter
+  .counter
     margin-left: 2px
     color: inherit
     text-shadow: none
@@ -340,7 +343,7 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
     color: $app-color-fg-muted
     border-color: $app-color-border-default
 
-.SelectMenu-modal
+.select-menu-modal
   position: relative
   z-index: 99
   display: flex
@@ -354,20 +357,20 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
   border-radius: 12px
   animation: select-menu-modal-animation .12s cubic-bezier(0, 0.1, 0.1, 1) backwards
 
-.SelectMenu-header
+.select-menu-header
   display: flex
   padding: 16px
   flex: none
   align-items: center
   border-bottom: 1px solid $app-color-border-muted
 
-.SelectMenu-title
+.select-menu-title
   flex: 1
   font-size: 14px
   font-weight: 600
   margin: 0
 
-.SelectMenu-closeButton
+.select-menu-close-btn
   padding: 16px
   margin: -16px
   line-height: 1
@@ -375,7 +378,7 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
   background-color: transparent
   border: 0
 
-.SelectMenu-list
+.select-menu-list
   position: relative
   padding: 0
   margin: 0
@@ -386,7 +389,7 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
   background-color: $app-color-canvas-overlay
   -webkit-overflow-scrolling: touch
 
-.SelectMenu-item
+.select-menu-item
   display: flex
   align-items: center
   width: 100%
@@ -399,7 +402,7 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
   border: 0
   border-bottom: 1px solid $app-color-border-muted
 
-.SelectMenu-icon
+.select-menu-icon
   width: 16px
   margin-right: 8px
   flex-shrink: 0
@@ -408,8 +411,8 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
     transition: transform .12s cubic-bezier(0.5, 0.1, 1, 0.5),visibility 0s .12s linear
     transform: scale(0)
 
-.SelectMenu-item[aria-checked="true"]
-  .SelectMenu-icon--check
+.select-menu-item[aria-checked="true"]
+  .select-menu-icon--check
     visibility: visible
     transition: transform .12s cubic-bezier(0, 0, 0.2, 1),visibility 0s linear
     transform: scale(1)

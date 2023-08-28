@@ -1,13 +1,13 @@
-<ul class="nav searchAdditionalButtons__nav">
+<ul class="nav search-additional-buttons__nav">
     <ng-template ngFor let-searchAdditionalData [ngForOf]="searchAdditionalButtonsData">
         <li class="nav-item mr-2 pt-2">
-            <div class="btnGroup-parent nav">
+            <div class="btn-group-parent nav">
                 <button
                     (click)="onClickButton(searchAdditionalData.textButton)"
                     [classList]="
                         searchAdditionalData.additionalOptions && searchAdditionalData.additionalOptions.options
-                            ? 'starred rounded-left-2 border-right-0 additionalOptions-btn btn-sm btn btnGroup-item d-flex justify-content-between align-items-center'
-                            : 'starred rounded-2 btn-sm btn btnGroup-item d-flex justify-content-between align-items-center'
+                            ? 'starred rounded-left-2 border-right-0 additional-options-btn btn-sm btn btn-group-item d-flex justify-content-between align-items-center'
+                            : 'starred rounded-2 btn-sm btn btn-group-item d-flex justify-content-between align-items-center'
                     "
                 >
                     <svg
@@ -40,19 +40,19 @@
                 <ng-template [ngIf]="searchAdditionalData.additionalOptions">
                     <button
                         style="height: inherit"
-                        class="additionalOptions-btn mat-menu-trigger starred rounded-right-2 border-1 border btn-sm btn btnGroup-item d-flex justify-content-center align-items-center mat-button mat-icon-button mat-button-base"
+                        class="additional-options-btn mat-menu-trigger starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center mat-button mat-icon-button mat-button-base"
                         [matMenuTriggerFor]="menu2"
                     >
-                        <mat-icon class="arrowDropDown">arrow_drop_down</mat-icon>
+                        <mat-icon class="arrow-dropdown">arrow_drop_down</mat-icon>
                     </button>
                     <mat-menu #menu2="matMenu">
-                        <div class="SelectMenu-modal notifications-component-menu-modal">
-                            <header class="SelectMenu-header">
-                                <h3 class="SelectMenu-title">
+                        <div class="select-menu-modal notifications-component-menu-modal">
+                            <header class="select-menu-header">
+                                <h3 class="select-menu-title">
                                     {{ searchAdditionalData.additionalOptions.title }}
                                 </h3>
                                 <button
-                                    class="SelectMenu-closeButton"
+                                    class="select-menu-close-btn"
                                     type="button"
                                     aria-label="Close menu"
                                     data-action="click:notifications-list-subscription-form#closeMenu"
@@ -61,7 +61,7 @@
                                 </button>
                             </header>
 
-                            <div class="SelectMenu-list">
+                            <div class="select-menu-list">
                                 <form
                                     data-target="notifications-list-subscription-form.form"
                                     data-action="submit:notifications-list-subscription-form#submitForm"
@@ -78,7 +78,7 @@
                                             type="submit"
                                             name="do"
                                             value="included"
-                                            class="SelectMenu-item flex-items-start"
+                                            class="select-menu-item flex-items-start"
                                             role="menuitemradio"
                                             [attr.aria-checked]="option.isSelected"
                                             data-targets="notifications-list-subscription-form.subscriptionButtons"

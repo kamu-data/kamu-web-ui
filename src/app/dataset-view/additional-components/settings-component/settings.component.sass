@@ -1,139 +1,140 @@
 @import src/assets/styles/var
 p
-    margin: 0
+	margin: 0
 .custom-container
-    display: grid
-    grid-template-columns: 300px 1fr
+	display: grid
+	grid-template-columns: 300px 1fr
 
 .content-container
-    padding: 15px 30px 0px
-    h2
-        font-weight: 400
-        margin: 0
-    dl
-        margin: 0
+	padding: 15px 30px 0px
+	h2
+		font-weight: 400
+		margin: 0
+	dl
+		margin: 0
 
 .p-responsive
-    padding-left: 16px
-    a
-        text-decoration: none
-    .rename-btn
-        padding: 3px 12px
-        font-size: 14px
-        height: 32px
-        border: 1px solid rgba(27,31,36,0.25 )
-        border-radius: 6px
-        &:hover
-            background: rgba(27,31,36,0.16 )
+	padding-left: 16px
+	a
+		text-decoration: none
+	.rename-btn
+		padding: 3px 12px
+		font-size: 14px
+		height: 32px
+		border: 1px solid rgba(27,31,36,0.25 )
+		border-radius: 6px
+		&:hover
+			background: rgba(27,31,36,0.16 )
 .fw-bold-custom
-    font-weight: 600
+	font-weight: 600
 .action-list
-    padding: 0
+	padding: 0
 
 .action-list-item
-    position: relative
-    list-style: none
-    border-radius: 6px
-    text-decoration: none
+	position: relative
+	list-style: none
+	border-radius: 6px
+	text-decoration: none
 
 .action-list-item a
-    &:hover
-        cursor: pointer
-        text-decoration: none
+	&:hover
+		cursor: pointer
+		text-decoration: none
 
 .action-list-content
-    position: relative
-    display: grid
-    width: 100%
-    padding: 6px 8px
-    font-size: 14px
-    font-weight: 400
-    color: $app-color-fg-default
-    text-align: left
-    user-select: none
-    background-color: transparent
-    border: none
-    border-radius: 6px
-    transition: background 33.333ms linear
-    touch-action: manipulation
-    grid-template-rows: min-content
-    grid-template-areas: "leadingAction leadingVisual label trailingVisual trailingAction"
-    grid-template-columns: min-content max-content
-    align-items: start
-    &:hover
-        background: $app-color-action-list-item-default-selected-bg
+	position: relative
+	display: grid
+	width: 100%
+	padding: 6px 8px
+	font-size: 14px
+	font-weight: 400
+	color: $app-color-fg-default
+	text-align: left
+	user-select: none
+	background-color: transparent
+	border: none
+	border-radius: 6px
+	transition: background 33.333ms linear
+	touch-action: manipulation
+	grid-template-rows: min-content
+	grid-template-areas: "leadingAction leadingVisual label trailingVisual trailingAction"
+	grid-template-columns: min-content max-content
+	align-items: start
+	&:hover
+		background: $app-color-action-list-item-default-selected-bg
 
 .action-list-item--nav-active
-    background: $app-color-action-list-item-default-selected-bg
-    &::after
-        position: absolute
-        top: calc(50% - 12px)
-        left: -8px
-        width: 4px
-        height: 24px
-        content: ""
-        background: $app-color-accent-fg
-        border-radius: 6px
+	background: $app-color-action-list-item-default-selected-bg
+	&::after
+		position: absolute
+		top: calc(50% - 12px)
+		left: -8px
+		width: 4px
+		height: 24px
+		content: ""
+		background: $app-color-accent-fg
+		border-radius: 6px
 
 .action-list-item--navActive a
-    font-weight: 600
+	font-weight: 600
 
 .action-list-sectionDivider:empty
-    display: block
-    height: 1px
-    padding: 0
-    margin: 7px -8px 8px
-    list-style: none
-    background: $app-color-action-list-item-inline-divider
-    border: 0
+	display: block
+	height: 1px
+	padding: 0
+	margin: 7px -8px 8px
+	list-style: none
+	background: $app-color-action-list-item-inline-divider
+	border: 0
 
 .action-list-sectionDivider:not(:empty)
-    display: flex
-    padding: 6px 8px
-    font-size: 12px
-    font-weight: 500
-    color: $app-color-fg-muted
-    flex-direction: column
+	display: flex
+	padding: 6px 8px
+	font-size: 12px
+	font-weight: 500
+	color: $app-color-fg-muted
+	flex-direction: column
 
 .danger-zone__content
-    padding: 15px
-    border: 1px solid rgba(27,31,36,0.25 )
-    border-radius: 6px
-    .description
-        font-weight: 600
-    button
-        color: #CF222E
-        padding: 3px 12px
-        font-size: 14px
-        height: 32px
-        border: 1px solid rgba(27,31,36,0.25 )
-        border-radius: 6px
-        &:hover
-            background: rgba(27,31,36,0.16 )
+	padding: 15px
+	border: 1px solid rgba(27,31,36,0.25 )
+	border-radius: 6px
+	.description
+		font-weight: 600
+	button
+		color: #CF222E
+		padding: 3px 12px
+		font-size: 14px
+		height: 32px
+		border: 1px solid rgba(27,31,36,0.25 )
+		border-radius: 6px
+		white-space: nowrap
+		&:hover
+			background: rgba(27,31,36,0.16 )
 
 .error-block
-    z-index: 10
-    display: inline-block
-    padding: 4px 8px
-    font-size: 12px
-    border-style: solid
-    border-width: 1px
-    border-radius: 6px
-    background: #ffebe9
-    border-color: rgba(255, 129, 130, 0.4)
-    position: relative
-    &::before
-        content: "\A"
-        border-style: solid
-        border-width: 5px 7px 5px 5px
-        border-color: transparent rgba(255, 129, 130, 0.4) transparent transparent
-        position: absolute
-        left: 15px
-        top: -10px
-        transform: rotate(90deg)
+	z-index: 10
+	display: inline-block
+	padding: 4px 8px
+	font-size: 12px
+	border-style: solid
+	border-width: 1px
+	border-radius: 6px
+	background: #ffebe9
+	border-color: rgba(255, 129, 130, 0.4)
+	position: relative
+	&::before
+		content: "\A"
+		border-style: solid
+		border-width: 5px 7px 5px 5px
+		border-color: transparent rgba(255, 129, 130, 0.4) transparent transparent
+		position: absolute
+		left: 15px
+		top: -10px
+		transform: rotate(90deg)
 
 .error-color
-    color: #CF222E
+	color: #CF222E
 
 .error-border-color
-    border-color: #dc3545
+	border-color: #dc3545

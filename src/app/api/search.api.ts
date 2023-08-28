@@ -31,11 +31,17 @@ export class SearchApi {
         perPage = SEARCH_RESULTS_PER_PAGE,
     ): Observable<SearchDatasetsOverviewQuery> {
         return this.searchDatasetsOverviewGQL
-            .watch({
-                query: searchQuery,
-                perPage,
-                page,
-            })
+            .watch(
+                {
+                    query: searchQuery,
+                    perPage,
+                    page,
+                },
+                {
+                    fetchPolicy: "network-only",
+                    errorPolicy: "all",
+                },
+            )
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<SearchDatasetsOverviewQuery>) => {

@@ -305,21 +305,28 @@ $app-color-action-list-item-inline-divider: #d0d7de7a
     text-shadow: none
     vertical-align: top
     background-color: $app-color-btn-counter-bg
-    &:hover,&.hover
-      background-color: $app-color-btn-hover-bg
-      border-color: $app-color-btn-hover-border
-      transition-duration: .1s
-[open]>.btn
+
+.hover-effect
   background-color: $app-color-btn-hover-bg
   border-color: $app-color-btn-hover-border
   transition-duration: .1s
 
+.btn
+  &:hover,&.hover
+    @extend .hover-effect
+
+[open]
+  & > .btn
+    @extend .hover-effect
+
 .cdk-overlay-pane
   box-shadow: $app-color-shadow-large
+
 .mat-menu-content
   &:not(:empty)
     padding-top: 0px !important
     padding-bottom: 0px !important
+
 .label
   display: inline-block
   padding: 0 7px

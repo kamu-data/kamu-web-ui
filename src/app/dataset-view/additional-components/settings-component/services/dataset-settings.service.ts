@@ -75,6 +75,10 @@ export class DatasetSettingsService {
         );
     }
 
+    public resetRenameError(): void {
+        this.errorRenameDatasetChanges("");
+    }
+
     private proccesRenameError(data: RenameDatasetMutation): void {
         if (
             data.datasets.byId?.rename.__typename === "RenameResultNameCollision" ||

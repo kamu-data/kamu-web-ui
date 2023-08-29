@@ -1,5 +1,5 @@
 <ng-template [ngIf]="shouldMinimizeSearchAdditionalButtons">
-    <div class="searchAdditionalButtonsBlock">
+    <div class="search-additional-buttons-block">
         <button
             mat-icon-button
             [matMenuTriggerFor]="menu"
@@ -9,7 +9,7 @@
             <mat-icon>more_horiz</mat-icon>
         </button>
     </div>
-    <mat-menu #menu="matMenu" class="searchAdditionalButtonsMinimizeBlock">
+    <mat-menu #menu="matMenu" class="search-additional-buttons-minimize-block">
         <app-search-additional-buttons-nav
             [searchAdditionalButtonsData]="searchAdditionalButtonsData"
         ></app-search-additional-buttons-nav>

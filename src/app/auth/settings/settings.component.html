@@ -24,237 +24,231 @@
         </div>
     </div>
     <div
-        class="d-flex Layout Layout--flowRow-until-md Layout--sidebarPosition-start Layout--sidebarPosition-flowRow-start"
+        class="d-flex layout layout--flowRow-until-md layout--sidebar-position-start layout--sidebarPosition-flowRow-start"
     >
-        <div class="Layout-sidebar">
+        <div class="layout-sidebar">
             <div class="pr-md-4 pr-0">
                 <div data-catalyst="">
-                    <nav aria-label="User settings" data-view-component="true" class="NavigationList">
-                        <ul
-                            role="list"
-                            aria-label="User settings"
-                            nav_classes="org-sub-menu"
-                            data-view-component="true"
-                            class="ActionList"
-                        >
+                    <nav>
+                        <ul role="list" nav_classes="org-sub-menu" data-view-component="true" class="action-list">
                             <li
                                 data-item-id="settings_user_profile"
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'ActionList-item--navActive': activeTab === settingsTabs.PROFILE
+                                    'action-list-item--nav__active': activeTab === settingsTabs.PROFILE
                                 }"
-                                class="ActionList-item org-menu-item"
+                                class="action-list-item"
                             >
                                 <a
                                     routerLinkActive="active"
                                     [routerLink]="getRouteLink(settingsTabs.PROFILE)"
                                     aria-current="page"
                                     data-view-component="true"
-                                    class="ActionList-content ActionList-content--visual16"
+                                    class="action-list-content"
                                 >
                                     <span
-                                        class="ActionList-item-visual ActionList-item-visual--leading text-muted mr-2"
+                                        class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
                                     >
                                         <svg-icon name="public-profile"></svg-icon>
                                     </span>
-                                    <span class="ActionList-item-label"> Public profile </span>
+                                    <span class="action-list-item-label"> Public profile </span>
                                 </a>
                             </li>
                             <li
                                 data-item-id=""
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'ActionList-item--navActive': activeTab === settingsTabs.ACCOUNT
+                                    'action-list-item--nav__active': activeTab === settingsTabs.ACCOUNT
                                 }"
-                                class="ActionList-item org-menu-item"
+                                class="action-list-item"
                             >
                                 <a
                                     routerLinkActive="active"
                                     [routerLink]="getRouteLink(settingsTabs.ACCOUNT)"
                                     data-view-component="true"
-                                    class="ActionList-content ActionList-content--visual16"
+                                    class="action-list-content"
                                 >
                                     <span
-                                        class="ActionList-item-visual ActionList-item-visual--leading text-muted mr-2"
+                                        class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
                                     >
                                         <svg-icon name="account"></svg-icon>
                                     </span>
-                                    <span class="ActionList-item-label"> Account </span>
+                                    <span class="action-list-item-label"> Account </span>
                                 </a>
                             </li>
                             <li
                                 data-item-id=""
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'ActionList-item--navActive': activeTab === settingsTabs.APPEARANCE
+                                    'action-list-item--nav__active': activeTab === settingsTabs.APPEARANCE
                                 }"
-                                class="ActionList-item org-menu-item"
+                                class="action-list-item"
                             >
                                 <a
                                     routerLinkActive="active"
                                     [routerLink]="getRouteLink(settingsTabs.APPEARANCE)"
                                     data-view-component="true"
-                                    class="ActionList-content ActionList-content--visual16"
+                                    class="action-list-content"
                                 >
                                     <span
-                                        class="ActionList-item-visual ActionList-item-visual--leading text-muted mr-2"
+                                        class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
                                     >
                                         <svg-icon name="appearance"></svg-icon>
                                     </span>
-                                    <span class="ActionList-item-label"> Appearance </span>
+                                    <span class="action-list-item-label"> Appearance </span>
                                 </a>
                             </li>
                             <li
                                 data-item-id=""
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'ActionList-item--navActive': activeTab === settingsTabs.ACCESSIBILITY
+                                    'action-list-item--nav__active': activeTab === settingsTabs.ACCESSIBILITY
                                 }"
-                                class="ActionList-item org-menu-item"
+                                class="action-list-item"
                             >
                                 <a
                                     routerLinkActive="active"
                                     [routerLink]="getRouteLink(settingsTabs.ACCESSIBILITY)"
                                     data-view-component="true"
-                                    class="ActionList-content ActionList-content--visual16"
+                                    class="action-list-content"
                                 >
                                     <span
-                                        class="ActionList-item-visual ActionList-item-visual--leading text-muted mr-2"
+                                        class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
                                     >
                                         <svg-icon name="accessibility"></svg-icon>
                                     </span>
-                                    <span class="ActionList-item-label"> Accessibility </span>
+                                    <span class="action-list-item-label"> Accessibility </span>
                                 </a>
                             </li>
                             <li
                                 data-item-id=""
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'ActionList-item--navActive': activeTab === settingsTabs.NOTIFICATIONS
+                                    'action-list-item--nav__active': activeTab === settingsTabs.NOTIFICATIONS
                                 }"
-                                class="ActionList-item org-menu-item"
+                                class="action-list-item"
                             >
                                 <a
                                     routerLinkActive="active"
                                     [routerLink]="getRouteLink(settingsTabs.NOTIFICATIONS)"
                                     data-view-component="true"
-                                    class="ActionList-content ActionList-content--visual16"
+                                    class="action-list-content"
                                 >
                                     <span
-                                        class="ActionList-item-visual ActionList-item-visual--leading text-muted mr-2"
+                                        class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
                                     >
                                         <svg-icon name="notifications"></svg-icon>
                                     </span>
-                                    <span class="ActionList-item-label"> Notifications </span>
+                                    <span class="action-list-item-label"> Notifications </span>
                                 </a>
                             </li>
                             <li
                                 role="separator"
                                 aria-hidden="true"
                                 data-view-component="true"
-                                class="ActionList-sectionDivider"
+                                class="action-list-section-divider"
                             ></li>
-                            <li data-view-component="true" class="ActionList-sectionDivider">
+                            <li data-view-component="true" class="action-list-section-divider">
                                 <p
                                     id="nav-list-section-2534b94a-735f-4cd6-bfff-c0f48caf7cab"
                                     data-view-component="true"
-                                    class="ActionList-sectionDivider-title"
+                                    class="action-list-section-divider-title"
                                 >
                                     Access
                                 </p>
                             </li>
-                            <li data-view-component="true" class="ActionList-item ActionList-item--hasSubItem">
+                            <li data-view-component="true" class="action-list-item action-list-item--hasSubItem">
                                 <ul
                                     aria-labelledby="nav-list-section-2534b94a-735f-4cd6-bfff-c0f48caf7cab"
                                     data-view-component="true"
-                                    class="ActionList ActionList--subGroup"
+                                    class="action-list action-list--subGroup"
                                 >
                                     <li
                                         data-item-id=""
                                         data-view-component="true"
-                                        class="ActionList-item org-menu-item"
+                                        class="action-list-item"
                                         [ngClass]="{
-                                            'ActionList-item--navActive': activeTab === settingsTabs.BILLING
+                                            'action-list-item--nav__active': activeTab === settingsTabs.BILLING
                                         }"
                                     >
                                         <a
                                             routerLinkActive="active"
                                             [routerLink]="getRouteLink(settingsTabs.BILLING)"
                                             data-view-component="true"
-                                            class="ActionList-content ActionList-content--visual16"
+                                            class="action-list-content"
                                         >
                                             <span
-                                                class="ActionList-item-visual ActionList-item-visual--leading text-muted mr-2"
+                                                class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
                                             >
                                                 <svg-icon name="billing"></svg-icon>
                                             </span>
-                                            <span class="ActionList-item-label"> Billing and plans </span>
+                                            <span class="action-list-item-label"> Billing and plans </span>
                                         </a>
                                     </li>
                                     <li
                                         data-item-id=""
                                         data-view-component="true"
-                                        class="ActionList-item org-menu-item"
+                                        class="action-list-item"
                                         [ngClass]="{
-                                            'ActionList-item--navActive': activeTab === settingsTabs.EMAILS
+                                            'action-list-item--nav__active': activeTab === settingsTabs.EMAILS
                                         }"
                                     >
                                         <a
                                             routerLinkActive="active"
                                             [routerLink]="getRouteLink(settingsTabs.EMAILS)"
                                             data-view-component="true"
-                                            class="ActionList-content ActionList-content--visual16"
+                                            class="action-list-content"
                                         >
                                             <span
-                                                class="ActionList-item-visual ActionList-item-visual--leading text-muted mr-2"
+                                                class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
                                             >
                                                 <svg-icon name="emails"></svg-icon>
                                             </span>
-                                            <span class="ActionList-item-label"> Emails </span>
+                                            <span class="action-list-item-label"> Emails </span>
                                         </a>
                                     </li>
                                     <li
                                         data-item-id=""
                                         data-view-component="true"
-                                        class="ActionList-item org-menu-item"
+                                        class="action-list-item"
                                         [ngClass]="{
-                                            'ActionList-item--navActive': activeTab === settingsTabs.SECURITY
+                                            'action-list-item--nav__active': activeTab === settingsTabs.SECURITY
                                         }"
                                     >
                                         <a
                                             routerLinkActive="active"
                                             [routerLink]="getRouteLink(settingsTabs.SECURITY)"
                                             data-view-component="true"
-                                            class="ActionList-content ActionList-content--visual16"
+                                            class="action-list-content"
                                         >
                                             <span
-                                                class="ActionList-item-visual ActionList-item-visual--leading text-muted mr-2"
+                                                class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
                                             >
                                                 <svg-icon name="security"></svg-icon>
                                             </span>
-                                            <span class="ActionList-item-label"> Password and authentication </span>
+                                            <span class="action-list-item-label"> Password and authentication </span>
                                         </a>
                                     </li>
                                     <li
                                         data-item-id=""
                                         data-view-component="true"
-                                        class="ActionList-item org-menu-item"
+                                        class="action-list-item"
                                         [ngClass]="{
-                                            'ActionList-item--navActive': activeTab === settingsTabs.ORGANIZATIONS
+                                            'action-list-item--nav__active': activeTab === settingsTabs.ORGANIZATIONS
                                         }"
                                     >
                                         <a
                                             routerLinkActive="active"
                                             [routerLink]="getRouteLink(settingsTabs.ORGANIZATIONS)"
                                             data-view-component="true"
-                                            class="ActionList-content ActionList-content--visual16"
+                                            class="action-list-content"
                                         >
                                             <span
-                                                class="ActionList-item-visual ActionList-item-visual--leading text-muted mr-2"
+                                                class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
                                             >
                                                 <svg-icon name="organizations"></svg-icon>
                                             </span>
-                                            <span class="ActionList-item-label"> Organizations </span>
+                                            <span class="action-list-item-label"> Organizations </span>
                                         </a>
                                     </li>
                                 </ul>

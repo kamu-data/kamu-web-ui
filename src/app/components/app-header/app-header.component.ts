@@ -131,9 +131,9 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
         this.isCollapsedAppHeaderMenu = !this.isCollapsedAppHeaderMenu;
         if (appHeaderButton) {
             if (this.isCollapsedAppHeaderMenu) {
-                appHeaderButton.classList.add("Details--on");
+                appHeaderButton.classList.add("details--on");
             } else {
-                appHeaderButton.classList.remove("Details--on");
+                appHeaderButton.classList.remove("details--on");
             }
         }
     }

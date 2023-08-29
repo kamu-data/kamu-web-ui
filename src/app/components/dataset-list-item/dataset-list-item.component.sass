@@ -5,30 +5,26 @@
   display: grid
   grid-template-columns: 1fr
   grid-template-rows: 1fr
-
-.dataset-list-container__title-row
-  display: flex
-  justify-content: space-between
-  &__dataset-name
+  &__title-row
     display: flex
-    justify-content: left
-  & i
-    margin-right: 8px
-
-.dataset-list-container__title
-  display: flex
-  background: none
-  border: none
-  color: $app-navyBlue
-  font-size: 16px
-  &:hover, &:active
-    cursor: pointer
-    text-decoration: underline
+    justify-content: space-between
+    &__dataset-name
+      display: flex
+      justify-content: left
+      i
+        margin-right: 8px
+  &__title
+    display: flex
     background: none
-
-.dataset-list-container__additional-block
-  display: flex
-  gap: 5px
-  
-.dataset-list-container__description
-  font-size: 14px
+    border: none
+    color: $app-navyBlue
+    font-size: 16px
+    &:hover, &:active
+      cursor: pointer
+      text-decoration: underline
+      background: none
+  &__additional-block
+    display: flex
+    gap: 5px
+  &__description
+    font-size: 14px

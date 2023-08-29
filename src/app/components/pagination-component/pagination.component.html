@@ -5,6 +5,9 @@
         [collectionSize]="(pageInfo.totalPages || currentPage) * 10"
         [maxSize]="7"
         [(page)]="currentPage"
+        [directionLinks]="false"
+        [rotate]="true"
+        [ellipses]="true"
         (pageChange)="onPageChange(currentPage)"
         aria-label="Custom pagination"
     >

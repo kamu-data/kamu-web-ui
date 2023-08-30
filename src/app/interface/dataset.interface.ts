@@ -30,4 +30,5 @@ export interface DatasetsAccountResponse {
 export interface DatasetRequestBySql {
     query: string;
     limit?: number;
+    skip?: number;
 }

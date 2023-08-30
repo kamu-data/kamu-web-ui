@@ -87,12 +87,14 @@ export class DatasetApi {
     }
 
     public getDatasetDataSqlRun(params: DatasetRequestBySql): Observable<GetDatasetDataSqlRunQuery> {
-        return this.datasetDataSqlRunGQL.watch({ query: params.query, limit: params.limit ?? AppValues.SQL_QUERY_LIMIT }).valueChanges.pipe(
-            first(),
-            map((result: ApolloQueryResult<GetDatasetDataSqlRunQuery>) => {
-                return result.data;
-            }),
-        );
+        return this.datasetDataSqlRunGQL
+            .watch({ query: params.query, limit: params.limit ?? AppValues.SQL_QUERY_LIMIT, skip: params.skip })
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<GetDatasetDataSqlRunQuery>) => {
+                    return result.data;
+                }),
+            );
     }
 
     public getDatasetHistory(params: {

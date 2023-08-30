@@ -20,13 +20,15 @@ import { Observable, map, tap } from "rxjs";
 export class DataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
+
     public sqlEditorOptions = sqlEditorOptions;
     public savedQueries = DataTabValues.savedQueries;
     public sqlRequestCode = `select\n  *\nfrom `;
     public currentData: DataRow[] = [];
-    public defaultLimit = AppValues.SQL_QUERY_LIMIT;
-    public queryLimits: number[] = [AppValues.SQL_QUERY_LIMIT, 100, 200, 500];
+    public isAllDataLoaded = false;
 
+    private skipRows: number;
+    private rowsLimit: number;
     private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
     public sqlErrorMarker$: Observable<string>;
     public dataUpdate$: Observable<DataUpdate>;
@@ -35,8 +37,8 @@ export class DataComponent extends BaseComponent implements OnInit {
         super();
     }
 
-    public runSQLRequest(query: string, limit?: number): void {
-        this.runSQLRequestEmit.emit({ query, limit });
+    public runSQLRequest(params: DatasetRequestBySql): void {
+        this.runSQLRequestEmit.emit(params);
     }
 
     public ngOnInit(): void {
@@ -48,21 +50,30 @@ export class DataComponent extends BaseComponent implements OnInit {
                 if (dataUpdate.currentVocab?.offsetColumn) {
                     this.offsetColumnName = dataUpdate.currentVocab.offsetColumn;
                 }
-                this.currentData = dataUpdate.content;
+                this.isAllDataLoaded = dataUpdate.content.length < this.rowsLimit;
+                this.currentData = this.skipRows ? [...this.currentData, ...dataUpdate.content] : dataUpdate.content;
                 this.appDatasetSubsService.resetSqlError();
             }),
         );
         this.buildSqlRequestCode();
     }
 
-    public changeLimit(limit: number): void {
-        this.defaultLimit = limit;
-        this.runSQLRequest(this.sqlRequestCode, this.defaultLimit);
+    public loadMore(limit: number): void {
+        this.skipRows = this.skipRows ? this.skipRows + limit : AppValues.SQL_QUERY_LIMIT;
+        this.rowsLimit = limit;
+
+        const params = {
+            query: this.sqlRequestCode,
+            skip: this.skipRows,
+            limit,
+        };
+
+        this.runSQLRequest(params);
     }
 
     public onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
         const runQueryFn = () => {
-            this.runSQLRequest(this.sqlRequestCode, this.defaultLimit);
+            this.runSQLRequest({ query: this.sqlRequestCode });
         };
         editor.addAction({
             // An unique identifier of the contributed action.
@@ -79,7 +90,7 @@ export class DataComponent extends BaseComponent implements OnInit {
             run: runQueryFn,
         });
         if (this.currentData.length > 0) {
-            this.runSQLRequest(this.sqlRequestCode, this.defaultLimit);
+            this.runSQLRequest({ query: this.sqlRequestCode });
         }
     }
 

@@ -1,4 +1,4 @@
-import { mockDatasetBasicsFragment } from "./../../../search/mock.data";
+import { mockDatasetBasicsFragment } from "../../../search/mock.data";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { MatIconModule } from "@angular/material/icon";

@@ -1,4 +1,4 @@
-query getDatasetDataSQLRun($query: String!, $limit: Int!) {
+query getDatasetDataSQLRun($query: String!, $limit: Int!, $skip: Int) {
   data {
     query(
       query: $query
@@ -6,6 +6,7 @@ query getDatasetDataSQLRun($query: String!, $limit: Int!) {
       schemaFormat: PARQUET_JSON
       dataFormat: JSON
       limit: $limit
+      skip: $skip
     ) {
       __typename
       ... on DataQueryResultSuccess {

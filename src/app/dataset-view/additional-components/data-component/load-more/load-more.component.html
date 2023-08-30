@@ -1,0 +1,32 @@
+<button mat-button
+        class="mr-4"
+        [disabled]="isAllDataLoaded"
+        [title]="isAllDataLoaded ? 'No more data to load' : 'Load more data'"
+        (click)="loadMore()">
+    Load more data
+</button>
+
+<button mat-button
+        class="mr-4 btn-toggle"
+        [class.opened]="isHolderVisible"
+        (click)="toggleOptions()">
+    Options
+    <mat-icon fontIcon="chevron_right"></mat-icon>
+</button>
+
+<div class="d-flex align-items-center holder" [class.hidden]="!isHolderVisible">
+    <p class="mb-0 mr-4">Select number of rows to load:</p>
+    <mat-button-toggle-group name="query-limits" [(ngModel)]="rowsNumber" class="mr-4">
+        <ng-container *ngFor="let option of ROWS_OPTIONS;">
+            <mat-button-toggle
+                [checked]="option === rowsNumber"
+                [value]="option"
+                [attr.data-test-id]="'row-limit-' + option"
+            >
+                {{ option }}
+            </mat-button-toggle>
+        </ng-container>
+    </mat-button-toggle-group>
+    <p class="mb-0 mr-4">Or enter your number:</p>
+    <input type="number" placeholder="Enter number of rows" class="form-control small-width" [(ngModel)]="rowsNumber" data-test-id="row-limit-input">
+</div>

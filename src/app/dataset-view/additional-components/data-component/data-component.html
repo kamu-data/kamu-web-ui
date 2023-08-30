@@ -8,6 +8,7 @@
                 [idTable]="'schema-block-table'"
             ></app-dynamic-table>
         </ng-container>
+
         <div>
             <h2 class="box-title align-items-center pb-3 pt-3 m-0">Saved Queries</h2>
             <cdk-accordion class="example-accordion">
@@ -70,8 +71,8 @@
                                     mat-icon-button
                                     data-test-id="runSqlQueryRequestCode"
                                     name="run sql button"
-                                    (click)="runSQLRequest(item.query)"
-                                    class="sql-run-button rounded-2 btnGroup-item btn d-flex justify-content-center align-items-center"
+                                    (click)="runSQLRequest({ query: item.query })"
+                                    class="sql-run-button rounded-2 btn-group-item btn d-flex justify-content-center align-items-center"
                                 >
                                     <span>Run</span><mat-icon>play_arrow</mat-icon>
                                 </button>
@@ -82,6 +83,7 @@
             </cdk-accordion>
         </div>
     </div>
+
     <div class="search-result-container__content">
         <div class="sql-query-editor-header flex-column justify-content-around">
             <h2 class="box-title align-items-center pb-3 m-0">Query:</h2>
@@ -90,7 +92,7 @@
                     mat-icon-button
                     data-test-id="runSqlQueryButton"
                     name="run sql button"
-                    (click)="runSQLRequest(sqlRequestCode)"
+                    (click)="runSQLRequest({ query: sqlRequestCode })"
                     [disabled]="!dataUpdate.content.length"
                     class="sql-run-button rounded-left-2 border-right-0 btn-group-item btn d-flex justify-content-center align-items-center"
                 >
@@ -100,7 +102,6 @@
                     class="starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
                     mat-icon-button
                     mat-button
-                    #menuTrigger="matMenuTrigger"
                     [matMenuTriggerFor]="menu"
                     aria-label="Example icon-button with a menu"
                     data-test-id="searchAdditionalButtons"
@@ -146,34 +147,18 @@
         <ng-container *ngIf="!(sqlErrorMarker$ | async) && dataUpdate.schema && dataUpdate.content">
             <h2 class="box-title align-items-center py-3 m-0">Result:</h2>
 
-            <div class="query-limit mb-4 mt-4 d-flex align-items-center">
-                <p class="mb-0 mr-2">Query Limit: </p>
-                <mat-button-toggle-group
-                  *ngFor="let limit of queryLimits;"
-                  name="query-limits"
-                  aria-label="Font Style"
-                >
-                    <mat-button-toggle (change)="changeLimit(limit)" [checked]="limit === defaultLimit">{{ limit }}</mat-button-toggle>
-                </mat-button-toggle-group>
-            </div>
-
             <app-dynamic-table
                 [hasTableHeader]="true"
                 [schemaFields]="dataUpdate.schema ? dataUpdate.schema.fields : []"
                 [dataRows]="dataUpdate.content || []"
             ></app-dynamic-table>
 
-            <div class="query-limit mb-4 mt-4 d-flex align-items-center">
-                <p class="mb-0 mr-2">Query Limit: </p>
-                <mat-button-toggle-group
-                  *ngFor="let limit of queryLimits;"
-                  name="query-limits"
-                  aria-label="Font Style"
-                >
-                    <mat-button-toggle (change)="changeLimit(limit)" [checked]="limit === defaultLimit">{{ limit }}</mat-button-toggle>
-                </mat-button-toggle-group>
-            </div>
+            <app-load-more [isAllDataLoaded]="isAllDataLoaded"
+                           (loadMoreEmit)="loadMore($event)"
+                           class="mt-4"
+            ></app-load-more>
         </ng-container>
+
         <ng-container *ngIf="!(sqlErrorMarker$ | async) && !dataUpdate.schema">
             <mat-divider></mat-divider>
             <h3 class="box-title text-center pt-4 author" *ngIf="!dataUpdate.content.length">

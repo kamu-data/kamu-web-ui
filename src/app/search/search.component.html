@@ -49,21 +49,21 @@
                         </div>
                     </nav>
                 </div>
-                <div class="search-result-container__content">
+                <div class="search-result-container__content" *ngIf="tableData$ | async as data">
                     <app-dataset-list
-                        [dataSource]="tableData.tableSource"
+                        [dataSource]="data.datasets"
                         [sortOptions]="tableData.sortOptions"
                         [resultUnitText]="tableData.resultUnitText"
-                        [totalCount]="tableData.totalCount"
+                        [totalCount]="data.totalCount"
                         [hasResultQuantity]="tableData.hasResultQuantity"
                         [isClickableRow]="tableData.isClickableRow"
                         (selectDatasetEmit)="onSelectDataset($event)"
                     ></app-dataset-list>
 
-                    <ng-template [ngIf]="tableData.tableSource.length > 0 && tableData.pageInfo">
+                    <ng-template [ngIf]="data.datasets.length > 0 && data.pageInfo">
                         <app-pagination
                             [currentPage]="currentPage"
-                            [pageInfo]="tableData.pageInfo"
+                            [pageInfo]="data.pageInfo"
                             (pageChangeEvent)="onPageChange($event)"
                         ></app-pagination>
                     </ng-template>

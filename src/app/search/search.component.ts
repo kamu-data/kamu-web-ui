@@ -1,14 +1,14 @@
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { SearchService } from "./search.service";
 import { DatasetSearchResult, SearchFilters } from "../interface/search.interface";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { BaseComponent } from "../common/base.component";
 import { NavigationService } from "../services/navigation.service";
-import { DatasetSearchOverviewFragment, PageBasedInfo } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { requireValue } from "../common/app.helpers";
 import ProjectLinks from "../project-links";
 import { filter, map } from "rxjs/operators";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "app-search",
@@ -19,6 +19,7 @@ import { filter, map } from "rxjs/operators";
 export class SearchComponent extends BaseComponent implements OnInit {
     public searchValue = "";
     public currentPage = 1; // TODO: Should be zero-based and only offset for display
+    public tableData$: Observable<DatasetSearchResult> = this.searchService.onOverviewSearchChanges;
 
     private sortOptions: { value: string; label: string; active: boolean }[] = [
         { value: "best", label: "Best match", active: true },
@@ -29,12 +30,9 @@ export class SearchComponent extends BaseComponent implements OnInit {
     public allComplete = false;
 
     public tableData: {
-        tableSource: DatasetSearchOverviewFragment[];
         hasResultQuantity: boolean;
         resultUnitText: string;
         isClickableRow: boolean;
-        pageInfo: PageBasedInfo;
-        totalCount: number;
         sortOptions: { value: string; label: string; active: boolean }[];
     };
 
@@ -132,7 +130,6 @@ export class SearchComponent extends BaseComponent implements OnInit {
         private navigationService: NavigationService,
         private searchService: SearchService,
         private router: Router,
-        private cdr: ChangeDetectorRef,
     ) {
         super();
     }
@@ -149,13 +146,6 @@ export class SearchComponent extends BaseComponent implements OnInit {
                     map((event) => event as RouterEvent),
                 )
                 .subscribe(() => this.changePageAndSearch()),
-
-            this.searchService.onOverviewSearchChanges.subscribe((data: DatasetSearchResult) => {
-                this.tableData.tableSource = data.datasets;
-                this.tableData.pageInfo = data.pageInfo;
-                this.tableData.totalCount = data.totalCount;
-                this.cdr.markForCheck();
-            }),
         );
     }
 
@@ -179,17 +169,9 @@ export class SearchComponent extends BaseComponent implements OnInit {
 
     private initTableData(): void {
         this.tableData = {
-            tableSource: [],
             resultUnitText: "dataset(s) found",
             hasResultQuantity: true,
             isClickableRow: true,
-            pageInfo: {
-                hasNextPage: false,
-                hasPreviousPage: false,
-                totalPages: 1,
-                currentPage: 1,
-            },
-            totalCount: 0,
             sortOptions: this.sortOptions,
         };
     }

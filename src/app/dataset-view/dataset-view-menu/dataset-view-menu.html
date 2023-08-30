@@ -6,7 +6,7 @@
                         : ''
                 "
 >
-    <div class="datasetViewTypeToggleGroup">
+    <div class="dataset-view-type-toggle-group">
         <mat-button-toggle-group
             name="datasetViewType"
             class="mat-button-toggle-group"
@@ -78,16 +78,16 @@
         </mat-button-toggle-group>
     </div>
 
-    <ul class="nav searchAdditionalButtons__nav">
+    <ul class="nav search-additional-buttons__nav">
         <li class="nav-item mr-2">
-            <div class="btnGroup-parent">
+            <div class="btn-group-parent">
                 <button
-                    class="dataset-download-button starred rounded-left-2 border-1 border-right-0 btn-sm btn btnGroup-item d-flex justify-content-center align-items-center"
+                    class="dataset-download-button starred rounded-left-2 border-1 border-right-0 btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
                 >
                     <span class="d-inline mr-2">Download</span>
                 </button>
                 <button
-                    class="starred rounded-right-2 border-1 border btn-sm btn btnGroup-item d-flex justify-content-center align-items-center"
+                    class="starred rounded-right-2 border-1 border btn-sm btn btn-roup-item d-flex justify-content-center align-items-center"
                     mat-icon-button
                     mat-button
                     #menuTrigger="matMenuTrigger"
@@ -99,14 +99,14 @@
                 </button>
 
                 <mat-menu #menu2="matMenu" [hasBackdrop]="false" data-test-id="menu">
-                    <div class="SelectMenu-modal notifications-component-menu-modal">
-                        <header class="SelectMenu-header">
-                            <div class="SelectMenu-title text-bold">
+                    <div class="select-menu-modal notifications-component-menu-modal">
+                        <header class="select-menu-header">
+                            <div class="select-menu-title text-bold">
                                 <svg-icon name="terminal"></svg-icon>
                                 Download / Cite
                             </div>
                             <button
-                                class="SelectMenu-closeButton"
+                                class="select-menu-close-btn"
                                 type="button"
                                 aria-label="Close menu"
                                 data-action="click:notifications-list-subscription-form#closeMenu"
@@ -115,15 +115,15 @@
                             </button>
                         </header>
                         <div
-                            class="SelectMenu-list"
+                            class="select-menu-list"
                             (click)="$event.stopPropagation()"
                             (keydown)="$event.stopPropagation()"
                         >
                             <mat-tab-group>
                                 <mat-tab label="Download">
-                                    <div class="SelectMenu-item flex-column">
+                                    <div class="select-menu-item flex-column">
                                         <div
-                                            class="SelectMenu-item align-items-start p-0 border-0"
+                                            class="select-menu-item align-items-start p-0 border-0"
                                             (click)="
                                                             $event.stopPropagation()
                                                         "
@@ -134,7 +134,7 @@
                                             <p>Using kamu-cli:</p>
                                         </div>
                                         <div
-                                            class="SelectMenu-item align-items-start p-0 border-0"
+                                            class="select-menu-item align-items-start p-0 border-0"
                                             (click)="
                                                             $event.stopPropagation()
                                                         "
@@ -181,9 +181,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="SelectMenu-item flex-column">
+                                    <div class="select-menu-item flex-column">
                                         <div
-                                            class="SelectMenu-item align-items-start p-0 border-0"
+                                            class="select-menu-item align-items-start p-0 border-0"
                                             (click)="
                                                             $event.stopPropagation()
                                                         "
@@ -194,7 +194,7 @@
                                             <p>Using Kafka:</p>
                                         </div>
                                         <div
-                                            class="SelectMenu-item align-items-start p-0 border-0"
+                                            class="select-menu-item align-items-start p-0 border-0"
                                             (click)="
                                                             $event.stopPropagation()
                                                         "
@@ -240,12 +240,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <button class="SelectMenu-item">As Parquet</button>
-                                    <button class="SelectMenu-item">As CSV</button>
+                                    <button class="select-menu-item">As Parquet</button>
+                                    <button class="select-menu-item">As CSV</button>
                                 </mat-tab>
                                 <mat-tab label="Cite">
-                                    <button class="SelectMenu-item">DOI</button>
-                                    <button class="SelectMenu-item">Bibtech</button>
+                                    <button class="select-menu-item">DOI</button>
+                                    <button class="select-menu-item">Bibtech</button>
                                 </mat-tab>
                             </mat-tab-group>
                         </div>

@@ -1,26 +1,38 @@
 @import src/assets/styles/var
 
 .p-responsive
-    padding-left: 16px
-    a
-        text-decoration: none
-.fw-bold-custom
-    font-weight: 600
-.ActionList
-    padding: 0
+  padding-left: 16px
+  a
+    text-decoration: none
 
-.ActionList-item
+.fw-bold-custom
+  font-weight: 600
+
+.action-list
+  padding: 0
+  &-item
     position: relative
     list-style: none
     border-radius: 6px
     text-decoration: none
-
-.ActionList-item a
-    &:hover
+    a
+      &:hover
         cursor: pointer
         text-decoration: none
-
-.ActionList-content
+    &--nav__active
+      background: $app-color-action-list-item-default-selected-bg
+      a
+        font-weight: 600
+      &::after
+        position: absolute
+        top: calc(50% - 12px)
+        left: -8px
+        width: 4px
+        height: 24px
+        content: ""
+        background: $app-color-accent-fg
+        border-radius: 6px
+  &-content
     position: relative
     display: grid
     width: 100%
@@ -40,36 +52,21 @@
     grid-template-columns: min-content max-content
     align-items: start
     &:hover
-        background: $app-color-action-list-item-default-selected-bg
-
-.ActionList-item--navActive
-    background: $app-color-action-list-item-default-selected-bg
-    &::after
-        position: absolute
-        top: calc(50% - 12px)
-        left: -8px
-        width: 4px
-        height: 24px
-        content: ""
-        background: $app-color-accent-fg
-        border-radius: 6px
-
-.ActionList-item--navActive a
-    font-weight: 600
-
-.ActionList-sectionDivider:empty
-    display: block
-    height: 1px
-    padding: 0
-    margin: 7px -8px 8px
-    list-style: none
-    background: $app-color-action-list-item-inline-divider
-    border: 0
-
-.ActionList-sectionDivider:not(:empty)
-    display: flex
-    padding: 6px 8px
-    font-size: 12px
-    font-weight: 500
-    color: $app-color-fg-muted
-    flex-direction: column
+      background: $app-color-action-list-item-default-selected-bg
+  &-section-divider
+    &:not(:empty)
+      display: flex
+      padding: 6px 8px
+      font-size: 12px
+      font-weight: 500
+      color: $app-color-fg-muted
+      flex-direction: column
+  &-section-divider
+    &:empty
+      display: block
+      height: 1px
+      padding: 0
+      margin: 7px -8px 8px
+      list-style: none
+      background: $app-color-action-list-item-inline-divider
+      border: 0

@@ -1,6 +1,5 @@
 import ProjectLinks from "src/app/project-links";
 import { ModalService } from "./../../components/modal/modal.service";
-import { DatasetSearchOverviewFragment, PageBasedInfo } from "./../../api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
@@ -13,6 +12,7 @@ import { promiseWithCatch } from "src/app/common/app.helpers";
 import { AccountService } from "src/app/services/account.service";
 import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 import { filter, map } from "rxjs/operators";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "app-account",
@@ -23,14 +23,12 @@ import { filter, map } from "rxjs/operators";
 export class AccountComponent extends BaseComponent implements OnInit {
     public accountViewType = AccountTabs.overview;
     public user: AccountDetailsFragment;
-    public datasets: DatasetSearchOverviewFragment[] = [];
-    public pageInfo: PageBasedInfo;
     public accountTabs = AccountTabs;
     public accountName: string;
-    public datasetTotalCount: number;
     public isDropdownMenu = false;
     public currentPage = 1;
     public avatarLink: string;
+    public datasetsAccount$: Observable<DatasetsAccountResponse> = this.accountService.onDatasetsChanges;
 
     @ViewChild("containerMenu") containerMenu: ElementRef;
     @ViewChild("dropdownMenu") dropdownMenu: ElementRef;
@@ -68,12 +66,6 @@ export class AccountComponent extends BaseComponent implements OnInit {
                 .subscribe(() => {
                     this.getDatasets();
                 }),
-            this.accountService.onDatasetsChanges.subscribe((data: DatasetsAccountResponse) => {
-                this.datasets = data.datasets;
-                this.pageInfo = data.pageInfo;
-                this.datasetTotalCount = data.datasetTotalCount;
-                this.cdr.detectChanges();
-            }),
         );
     }
 

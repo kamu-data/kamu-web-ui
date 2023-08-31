@@ -1,4 +1,4 @@
-<div class="p-4 p-responsive clearfix">
+<div class="p-4 p-responsive clearfix" *ngIf="datasetsAccount$ | async as datasets">
     <div class="custom-container">
         <div class="container-sidebar">
             <div class="d-flex mb-3 justify-content-center align-items-center">
@@ -85,7 +85,9 @@
                     >
                         <mat-icon class="text-muted fs-4">book</mat-icon>
                         <span class="mx-2">Datasets</span>
-                        <span title="1" data-view-component="true" class="counter">{{ datasetTotalCount }}</span>
+                        <span title="1" data-view-component="true" class="counter">{{
+                            datasets.datasetTotalCount
+                        }}</span>
                     </mat-button-toggle>
                     <mat-button-toggle
                         data-test-id="account-organizations-tab"
@@ -125,10 +127,10 @@
             </ng-container>
             <ng-container *ngIf="isAccountViewTypeDatasets">
                 <app-datasets-tab
-                    [datasets]="datasets"
+                    [datasets]="datasets.datasets"
                     [accountName]="accountName"
                     [accountViewType]="accountViewType"
-                    [pageInfo]="pageInfo"
+                    [pageInfo]="datasets.pageInfo"
                 ></app-datasets-tab>
             </ng-container>
             <ng-container *ngIf="isAccountViewTypeOrganizations">

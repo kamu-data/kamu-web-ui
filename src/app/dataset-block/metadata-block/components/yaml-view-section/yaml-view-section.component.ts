@@ -1,8 +1,9 @@
 import { BaseComponent } from "src/app/common/base.component";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { BlockService } from "../../block.service";
 import { SupportedEvents } from "../event-details/supported.events";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "app-yaml-view-section",
@@ -12,8 +13,8 @@ import { SupportedEvents } from "../event-details/supported.events";
 })
 export class YamlViewSectionComponent extends BaseComponent implements OnInit {
     public block: MetadataBlockFragment;
-    public yamlEventText: string;
-    constructor(private blockService: BlockService, private cdr: ChangeDetectorRef) {
+    public yamlEventText$: Observable<string> = this.blockService.onMetadataBlockAsYamlChanges;
+    constructor(private blockService: BlockService) {
         super();
     }
 
@@ -21,10 +22,6 @@ export class YamlViewSectionComponent extends BaseComponent implements OnInit {
         this.trackSubscriptions(
             this.blockService.onMetadataBlockChanges.subscribe((block) => {
                 this.block = block;
-            }),
-            this.blockService.onMetadataBlockAsYamlChanges.subscribe((yamlEventText: string) => {
-                this.yamlEventText = yamlEventText;
-                this.cdr.detectChanges();
             }),
         );
     }

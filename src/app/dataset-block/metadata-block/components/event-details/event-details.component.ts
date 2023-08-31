@@ -11,11 +11,11 @@ import {
     SetWatermark,
 } from "./../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "./supported.events";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/base.component";
 import { BlockService } from "../../block.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { Observable, tap } from "rxjs";
 
 @Component({
     selector: "app-event-details",
@@ -23,13 +23,14 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
     styleUrls: ["./event-details.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventDetailsComponent extends BaseComponent implements OnInit {
+export class EventDetailsComponent {
     public block: MetadataBlockFragment;
+    public block$: Observable<MetadataBlockFragment> = this.blockService.onMetadataBlockChanges.pipe(
+        tap((block: MetadataBlockFragment) => (this.block = block)),
+    );
     @Input() public datasetInfo: DatasetInfo;
 
-    constructor(private blockService: BlockService, private cdr: ChangeDetectorRef) {
-        super();
-    }
+    constructor(private blockService: BlockService) {}
 
     public get isSupportedEvent(): boolean {
         return Object.keys(SupportedEvents).includes(this.block.event.__typename);
@@ -113,14 +114,5 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     public get setWatermarkEvent(): SetWatermark {
         return this.block.event as SetWatermark;
-    }
-
-    ngOnInit(): void {
-        this.trackSubscription(
-            this.blockService.onMetadataBlockChanges.subscribe((block: MetadataBlockFragment) => {
-                this.block = block;
-                this.cdr.detectChanges();
-            }),
-        );
     }
 }

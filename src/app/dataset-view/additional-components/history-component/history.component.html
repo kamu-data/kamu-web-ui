@@ -1,17 +1,14 @@
-<div class="search-result-container__content" id="dataset-view-history">
+<div class="search-result-container__content" id="dataset-view-history" *ngIf="historyUpdate$ | async as historyUpdate">
     <div id="history-block">
-        <div *ngIf="currentPage > totalPages">
-            The current page {{ currentPage }} is greater than the total number of pages {{ totalPages }}.
-        </div>
-        <ng-template [ngIf]="datasetName && currentState && currentState.history.length > 0">
+        <ng-template [ngIf]="datasetName && historyUpdate && historyUpdate.history.length > 0">
             <app-timeline
                 [datasetName]="datasetName"
-                [history]="currentState.history"
-                [pageInfo]="currentState.pageInfo"
+                [history]="historyUpdate.history"
+                [pageInfo]="historyUpdate.pageInfo"
             ></app-timeline>
             <app-pagination
-                [currentPage]="currentPage"
-                [pageInfo]="currentState.pageInfo"
+                [currentPage]="historyUpdate.pageInfo.currentPage + 1"
+                [pageInfo]="historyUpdate.pageInfo"
                 (pageChangeEvent)="onPageChange($event)"
             ></app-pagination>
         </ng-template>

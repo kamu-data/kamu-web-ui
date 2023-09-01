@@ -1,10 +1,4 @@
-<div
-    class="app-main-container"
-    role="main"
-    *ngIf="datasetHistoryUpdate$ | async as datasetHistoryUpdate"
-    data-test-id="metada-block-view"
-    id="metada-block-view"
->
+<div class="app-main-container" role="main" data-test-id="metada-block-view" id="metada-block-view">
     <div class="app-content">
         <app-dataset-view-header
             [datasetInfo]="datasetInfo"

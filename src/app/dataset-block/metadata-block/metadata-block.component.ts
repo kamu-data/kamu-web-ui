@@ -1,10 +1,12 @@
+import { MaybeNull } from "./../../common/app.types";
 import { DatasetHistoryUpdate } from "./../../dataset-view/dataset.subscriptions.interface";
 import { DatasetService } from "./../../dataset-view/dataset.service";
-import { Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 import ProjectLinks from "src/app/project-links";
 import { BaseProcessingComponent } from "./../../common/base.processing.component";
 import { DatasetViewTypeEnum } from "./../../dataset-view/dataset-view.interface";
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from "@angular/core";
+
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { filter, pluck } from "rxjs/operators";
 import { NavigationEnd, Router } from "@angular/router";
@@ -24,6 +26,7 @@ export class MetadataBlockComponent extends BaseProcessingComponent implements O
         private blockService: BlockService,
         private datasetService: DatasetService,
         private appDatasetSubsService: AppDatasetSubscriptionsService,
+        private cdr: ChangeDetectorRef,
         private router: Router,
     ) {
         super();
@@ -32,8 +35,8 @@ export class MetadataBlockComponent extends BaseProcessingComponent implements O
     public datasetInfo: DatasetInfo;
     public datasetViewType = DatasetViewTypeEnum.History;
     public blockHash: string;
+    public datasetHistoryUpdate: MaybeNull<DatasetHistoryUpdate> = null;
     private blocksPerPage = 10;
-    public datasetHistoryUpdate$: Observable<DatasetHistoryUpdate> = this.appDatasetSubsService.onDatasetHistoryChanges;
 
     ngOnInit(): void {
         this.datasetInfo = this.getDatasetInfoFromUrl();
@@ -50,6 +53,10 @@ export class MetadataBlockComponent extends BaseProcessingComponent implements O
             }),
             this.loadMetadataBlock(),
             this.loadHistory(),
+            this.appDatasetSubsService.onDatasetHistoryChanges.subscribe((result: DatasetHistoryUpdate) => {
+                this.datasetHistoryUpdate = result;
+                this.cdr.detectChanges();
+            }),
         );
     }
 

@@ -2,7 +2,7 @@ import ProjectLinks from "src/app/project-links";
 import { ModalService } from "./../../components/modal/modal.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationService } from "src/app/services/navigation.service";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { AuthApi } from "src/app/api/auth.api";
 import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "./account.constants";
@@ -28,7 +28,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
     public isDropdownMenu = false;
     public currentPage = 1;
     public avatarLink: string;
-    public datasetsAccount$: Observable<DatasetsAccountResponse> = this.accountService.onDatasetsChanges;
+    public datasetsAccount$: Observable<DatasetsAccountResponse>;
 
     @ViewChild("containerMenu") containerMenu: ElementRef;
     @ViewChild("dropdownMenu") dropdownMenu: ElementRef;
@@ -37,12 +37,12 @@ export class AccountComponent extends BaseComponent implements OnInit {
         private authApi: AuthApi,
         private route: ActivatedRoute,
         private navigationService: NavigationService,
-        private cdr: ChangeDetectorRef,
         private router: Router,
         private modalService: ModalService,
         private accountService: AccountService,
     ) {
         super();
+        this.datasetsAccount$ = this.accountService.onDatasetsChanges;
     }
 
     public ngOnInit(): void {

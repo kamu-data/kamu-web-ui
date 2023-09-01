@@ -15,9 +15,7 @@ import { Observable, shareReplay } from "rxjs";
 })
 export class SettingsTabComponent extends BaseComponent {
     @Input() public datasetBasics?: DatasetBasicsFragment;
-    public renameError$: Observable<string> = this.datasetSettingsService.onErrorRenameDatasetChanges.pipe(
-        shareReplay(),
-    );
+    public renameError$: Observable<string>;
     public renameDatasetForm: FormGroup;
 
     constructor(
@@ -26,6 +24,7 @@ export class SettingsTabComponent extends BaseComponent {
         private modalService: ModalService,
     ) {
         super();
+        this.renameError$ = this.datasetSettingsService.onErrorRenameDatasetChanges.pipe(shareReplay());
         this.renameDatasetForm = this.fb.group({
             datasetName: [
                 this.getDatasetInfoFromUrl().datasetName,

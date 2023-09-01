@@ -26,19 +26,12 @@ describe("YamlViewSectionComponent", () => {
         fixture = TestBed.createComponent(YamlViewSectionComponent);
         blockService = TestBed.inject(BlockService);
         component = fixture.componentInstance;
+        blockService.currentBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+            .blockByHash as MetadataBlockFragment;
         fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
-    });
-
-    it("should check onMetadataBlockChanges subscribe with ExecuteQuery ", () => {
-        const mockBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
-            .blockByHash as MetadataBlockFragment;
-        blockService.metadataBlockChanges(mockBlock);
-        component.ngOnInit();
-        fixture.detectChanges();
-        expect(component.block).toEqual(mockBlock);
     });
 });

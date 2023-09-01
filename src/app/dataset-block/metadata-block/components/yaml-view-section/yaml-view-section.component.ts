@@ -1,5 +1,4 @@
-import { BaseComponent } from "src/app/common/base.component";
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { BlockService } from "../../block.service";
 import { SupportedEvents } from "../event-details/supported.events";
@@ -11,51 +10,47 @@ import { Observable } from "rxjs";
     styleUrls: ["./yaml-view-section.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class YamlViewSectionComponent extends BaseComponent implements OnInit {
-    public block: MetadataBlockFragment;
-    public yamlEventText$: Observable<string> = this.blockService.onMetadataBlockAsYamlChanges;
+export class YamlViewSectionComponent {
+    public yamlEventText$: Observable<string>;
+
     constructor(private blockService: BlockService) {
-        super();
+        this.yamlEventText$ = this.blockService.onMetadataBlockAsYamlChanges;
     }
 
-    ngOnInit(): void {
-        this.trackSubscriptions(
-            this.blockService.onMetadataBlockChanges.subscribe((block) => {
-                this.block = block;
-            }),
-        );
+    public get currentBlock(): MetadataBlockFragment {
+        return this.blockService.currentBlock;
     }
 
     public get isSetPollingSourceEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.SetPollingSource;
+        return this.currentBlock.event.__typename === SupportedEvents.SetPollingSource;
     }
 
     public get isSetTransformEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.SetTransform;
+        return this.currentBlock.event.__typename === SupportedEvents.SetTransform;
     }
 
     public get isSetAttachmentsEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.SetAttachments;
+        return this.currentBlock.event.__typename === SupportedEvents.SetAttachments;
     }
 
     public get isSetLicenseEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.SetLicense;
+        return this.currentBlock.event.__typename === SupportedEvents.SetLicense;
     }
 
     public get isSetInfoEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.SetInfo;
+        return this.currentBlock.event.__typename === SupportedEvents.SetInfo;
     }
 
     public get isSetVocabEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.SetVocab;
+        return this.currentBlock.event.__typename === SupportedEvents.SetVocab;
     }
 
     public get isSetWatermarkEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.SetWatermark;
+        return this.currentBlock.event.__typename === SupportedEvents.SetWatermark;
     }
 
     public get isSeedEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.Seed;
+        return this.currentBlock.event.__typename === SupportedEvents.Seed;
     }
 
     public get isEventWithYamlView(): boolean {

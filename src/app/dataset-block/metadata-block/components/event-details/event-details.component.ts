@@ -15,7 +15,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { BlockService } from "../../block.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { Observable, tap } from "rxjs";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "app-event-details",
@@ -24,95 +24,96 @@ import { Observable, tap } from "rxjs";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventDetailsComponent {
-    public block: MetadataBlockFragment;
-    public block$: Observable<MetadataBlockFragment> = this.blockService.onMetadataBlockChanges.pipe(
-        tap((block: MetadataBlockFragment) => (this.block = block)),
-    );
+    public block$: Observable<MetadataBlockFragment> = this.blockService.onMetadataBlockChanges.pipe();
     @Input() public datasetInfo: DatasetInfo;
 
     constructor(private blockService: BlockService) {}
 
+    public get currentBlock(): MetadataBlockFragment {
+        return this.blockService.currentBlock;
+    }
+
     public get isSupportedEvent(): boolean {
-        return Object.keys(SupportedEvents).includes(this.block.event.__typename);
+        return Object.keys(SupportedEvents).includes(this.currentBlock.event.__typename);
     }
 
     public get isAddDataEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.AddData;
+        return this.currentBlock.event.__typename === SupportedEvents.AddData;
     }
 
     public get isSetPollingSourceEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.SetPollingSource;
+        return this.currentBlock.event.__typename === SupportedEvents.SetPollingSource;
     }
 
     public get isSetTransformEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.SetTransform;
+        return this.currentBlock.event.__typename === SupportedEvents.SetTransform;
     }
 
     public get setTransformEvent(): SetTransform {
-        return this.block.event as SetTransform;
+        return this.currentBlock.event as SetTransform;
     }
 
     public get setPollingSourceEvent(): SetPollingSource {
-        return this.block.event as SetPollingSource;
+        return this.currentBlock.event as SetPollingSource;
     }
 
     public get addDataEvent(): AddDataEventFragment {
-        return this.block.event as AddDataEventFragment;
+        return this.currentBlock.event as AddDataEventFragment;
     }
 
     public get isSeedEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.Seed;
+        return this.currentBlock.event.__typename === SupportedEvents.Seed;
     }
 
     public get seedEvent(): Seed {
-        return this.block.event as Seed;
+        return this.currentBlock.event as Seed;
     }
 
     public get isExecuteQueryEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.ExecuteQuery;
+        return this.currentBlock.event.__typename === SupportedEvents.ExecuteQuery;
     }
 
     public get executeQueryEvent(): ExecuteQuery {
-        return this.block.event as ExecuteQuery;
+        return this.currentBlock.event as ExecuteQuery;
     }
 
     public get isSetLicenseEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.SetLicense;
+        return this.currentBlock.event.__typename === SupportedEvents.SetLicense;
     }
 
     public get setLicenseEvent(): SetLicense {
-        return this.block.event as SetLicense;
+        return this.currentBlock.event as SetLicense;
     }
 
     public get isSetAttachmentsEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.SetAttachments;
+        return this.currentBlock.event.__typename === SupportedEvents.SetAttachments;
     }
 
     public get setAttachmentsEvent(): SetAttachments {
-        return this.block.event as SetAttachments;
+        return this.currentBlock.event as SetAttachments;
     }
 
     public get isSetInfoEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.SetInfo;
+        return this.currentBlock.event.__typename === SupportedEvents.SetInfo;
     }
 
     public get setInfoEvent(): SetInfo {
-        return this.block.event as SetInfo;
+        return this.currentBlock.event as SetInfo;
     }
 
     public get isSetVocabEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.SetVocab;
+        return this.currentBlock.event.__typename === SupportedEvents.SetVocab;
     }
 
     public get setVocabEvent(): SetVocab {
-        return this.block.event as SetVocab;
+        return this.currentBlock.event as SetVocab;
     }
 
     public get isSetWatermarkEvent(): boolean {
-        return this.block.event.__typename === SupportedEvents.SetWatermark;
+        return this.currentBlock.event.__typename === SupportedEvents.SetWatermark;
     }
 
     public get setWatermarkEvent(): SetWatermark {
-        return this.block.event as SetWatermark;
+        return this.currentBlock.event as SetWatermark;
     }
 }

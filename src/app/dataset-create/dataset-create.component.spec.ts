@@ -2,7 +2,7 @@ import { of } from "rxjs";
 import { findInputElememtByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { ApolloModule } from "apollo-angular";
 import { DatasetCreateComponent } from "./dataset-create.component";
 import { AppDatasetCreateService } from "./dataset-create.service";
@@ -34,13 +34,15 @@ describe("DatasetCreateComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check error message in the ngOnInit", () => {
+    it("should check error message is exist", fakeAsync(() => {
         const errorMessage = "testMessage";
-        expect(component.errorMessage).toBe("");
         datasetCreateService.errorMessageChanges(errorMessage);
-        component.ngOnInit();
-        expect(component.errorMessage).toBe(errorMessage);
-    });
+        tick();
+        fixture.detectChanges();
+        const element = findInputElememtByDataTestId(fixture, "create-error-message");
+        expect(element.textContent).toEqual(errorMessage);
+        flush();
+    }));
 
     it("should check getter isFormValid()", () => {
         component.yamlTemplate = "testYaml";

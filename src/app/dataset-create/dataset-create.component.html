@@ -114,7 +114,10 @@
             Create dataset
         </button>
     </div>
-    <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
-        <p class="text-danger fs-6">Error:<br />{{ errorMessage }}</p>
+    <div *ngIf="errorMessage$ | async as errorMessage" class="alert alert-danger" role="alert">
+        <p class="text-danger fs-6">
+            Error:<br />
+            <span class="fs-6" data-test-id="create-error-message">{{ errorMessage }}</span>
+        </p>
     </div>
 </div>

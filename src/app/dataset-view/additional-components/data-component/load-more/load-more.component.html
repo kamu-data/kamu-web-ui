@@ -15,7 +15,7 @@
         <mat-icon fontIcon="chevron_right"></mat-icon>
     </button>
 
-    <div class="d-flex align-items-center holder" [class.hidden]="!isHolderVisible">
+    <div class="d-flex flex-wrap align-items-center row-gap-3 holder" [class.hidden]="!isHolderVisible">
         <p class="mb-0 mr-4">Select number of rows to load:</p>
         <mat-button-toggle-group name="query-limits" [(ngModel)]="rowsNumber" class="mr-4">
             <ng-container *ngFor="let option of ROWS_OPTIONS;">
@@ -29,13 +29,15 @@
             </ng-container>
         </mat-button-toggle-group>
 
-        <p class="mb-0 mr-4">Or enter your number:</p>
+        <div class="d-flex flex-nowrap align-items-center">
+            <p class="mb-0 mr-4">Or enter your number:</p>
 
-        <input type="number"
-               class="form-control small-width"
-               data-test-id="row-limit-input"
-               placeholder="Enter number of rows"
-               [(ngModel)]="rowsNumber">
+            <input type="number"
+                   class="form-control small-width"
+                   data-test-id="row-limit-input"
+                   placeholder="Enter number of rows"
+                   [(ngModel)]="rowsNumber">
+        </div>
     </div>
 </ng-container>
 

@@ -63,7 +63,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     public loadMore(limit: number): void {
-        this.skipRows = this.skipRows ? this.skipRows + limit : AppValues.SQL_QUERY_LIMIT;
+        this.skipRows = this.currentData.length;
         this.rowsLimit = limit;
 
         const params = {

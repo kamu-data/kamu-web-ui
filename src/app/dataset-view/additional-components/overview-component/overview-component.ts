@@ -51,7 +51,6 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         private appDatasetSubsService: AppDatasetSubscriptionsService,
         private navigationService: NavigationService,
         private modalService: NgbModal,
-        private cdr: ChangeDetectorRef,
     ) {
         super();
     }

@@ -220,7 +220,7 @@ describe("AppDatasetService", () => {
             /* Intentionally blank */
         });
 
-        const subscriptionErrorChanges$ = appDatasetSubsService.onDatasetDataSqlErrorOccured
+        const subscriptionErrorChanges$ = appDatasetSubsService.onDatasetDataSqlErrorOccurred
             .pipe(first())
             .subscribe((update: DataSqlErrorUpdate) => {
                 const errorResult = mockDatasetDataSqlRunInvalidSqlResponse.data.query as DataQueryResultError;
@@ -239,7 +239,7 @@ describe("AppDatasetService", () => {
         spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(of(mockDatasetDataSqlRunInternalErrorResponse));
 
         appDatasetSubsService.onDatasetDataChanges.subscribe(() => fail("Unexpected data update"));
-        appDatasetSubsService.onDatasetDataSqlErrorOccured.subscribe(() => fail("Unexpected SQL error update"));
+        appDatasetSubsService.onDatasetDataSqlErrorOccurred.subscribe(() => fail("Unexpected SQL error update"));
 
         const subscription$ = service
             .requestDatasetDataSqlRun({ query, limit })
@@ -262,7 +262,7 @@ describe("AppDatasetService", () => {
         spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(throwError(new SqlExecutionError()));
 
         appDatasetSubsService.onDatasetDataChanges.subscribe(() => fail("Unexpected data update"));
-        appDatasetSubsService.onDatasetDataSqlErrorOccured.subscribe(() => fail("Unexpected SQL error update"));
+        appDatasetSubsService.onDatasetDataSqlErrorOccurred.subscribe(() => fail("Unexpected SQL error update"));
 
         const subscription$ = service
             .requestDatasetDataSqlRun({ query, limit })

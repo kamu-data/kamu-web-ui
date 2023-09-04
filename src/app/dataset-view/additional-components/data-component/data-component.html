@@ -71,7 +71,7 @@
                                     mat-icon-button
                                     data-test-id="runSqlQueryRequestCode"
                                     name="run sql button"
-                                    (click)="runSQLRequest({ query: item.query })"
+                                    (click)="runSQLRequest({ query: item.query }, true)"
                                     class="sql-run-button rounded-2 btn-group-item btn d-flex justify-content-center align-items-center"
                                 >
                                     <span>Run</span><mat-icon>play_arrow</mat-icon>
@@ -92,7 +92,7 @@
                     mat-icon-button
                     data-test-id="runSqlQueryButton"
                     name="run sql button"
-                    (click)="runSQLRequest({ query: sqlRequestCode })"
+                    (click)="runSQLRequest({ query: sqlRequestCode }, true)"
                     [disabled]="!dataUpdate.content.length"
                     class="sql-run-button rounded-left-2 border-right-0 btn-group-item btn d-flex justify-content-center align-items-center"
                 >

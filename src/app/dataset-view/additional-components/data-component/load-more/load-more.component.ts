@@ -15,7 +15,7 @@ export class LoadMoreComponent {
 
     @Output() public loadMoreEmit = new EventEmitter<number>();
 
-    readonly ROWS_OPTIONS: number[] = [
+    public readonly ROWS_OPTIONS: number[] = [
         AppValues.SQL_QUERY_LIMIT / 2,
         AppValues.SQL_QUERY_LIMIT,
         AppValues.SQL_QUERY_LIMIT * 2,

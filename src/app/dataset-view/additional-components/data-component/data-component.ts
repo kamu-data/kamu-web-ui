@@ -9,6 +9,7 @@ import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.serv
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import * as monaco from "monaco-editor";
+import { MaybeUndefined } from "src/app/common/app.types";
 import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
 import { Observable, map, tap } from "rxjs";
 
@@ -27,8 +28,8 @@ export class DataComponent extends BaseComponent implements OnInit {
     public currentData: DataRow[] = [];
     public isAllDataLoaded = false;
 
-    private skipRows: number;
-    private rowsLimit: number;
+    private skipRows: MaybeUndefined<number>;
+    private rowsLimit: number = AppValues.SQL_QUERY_LIMIT;
     private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
     public sqlErrorMarker$: Observable<string>;
     public dataUpdate$: Observable<DataUpdate>;
@@ -37,12 +38,15 @@ export class DataComponent extends BaseComponent implements OnInit {
         super();
     }
 
-    public runSQLRequest(params: DatasetRequestBySql): void {
+    public runSQLRequest(params: DatasetRequestBySql, initialSqlRun = false): void {
+        if (initialSqlRun) {
+            this.resetRowsLimits();
+        }
         this.runSQLRequestEmit.emit(params);
     }
 
     public ngOnInit(): void {
-        this.sqlErrorMarker$ = this.appDatasetSubsService.onDatasetDataSqlErrorOccured.pipe(
+        this.sqlErrorMarker$ = this.appDatasetSubsService.onDatasetDataSqlErrorOccurred.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
         );
         this.dataUpdate$ = this.appDatasetSubsService.onDatasetDataChanges.pipe(
@@ -102,5 +106,10 @@ export class DataComponent extends BaseComponent implements OnInit {
                 this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
             }
         }
+    }
+
+    private resetRowsLimits(): void {
+        this.skipRows = undefined;
+        this.rowsLimit = AppValues.SQL_QUERY_LIMIT;
     }
 }

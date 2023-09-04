@@ -43,4 +43,11 @@ describe("LoadMoreComponent", () => {
         dispatchInputEvent(fixture, "row-limit-input", newRowsNumber.toString());
         expect(component.rowsNumber).toEqual(newRowsNumber);
     }));
+
+    it("button click should emmit output with default limit", () => {
+        const defaultLimit = AppValues.SQL_QUERY_LIMIT;
+        const loadMoreEmit = spyOn(component.loadMoreEmit, "emit");
+        emitClickOnElementByDataTestId(fixture, "btn-load-more");
+        expect(loadMoreEmit).toHaveBeenCalledWith(defaultLimit);
+    });
 });

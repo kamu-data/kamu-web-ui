@@ -3,7 +3,6 @@ import { OverviewDataUpdate } from "src/app/dataset-view/dataset.subscriptions.i
 import { DatasetKind } from "./../../../api/kamu.graphql.interface";
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     EventEmitter,
     Input,

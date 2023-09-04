@@ -65,7 +65,11 @@ describe("MetadataBlockComponent", () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        params: of({ blockHash: "ewrwe213123" }),
+                        params: of({
+                            accountName: "accountName",
+                            datasetName: "datsetName",
+                            blockHash: "ewrwe213123",
+                        }),
                         snapshot: {
                             paramMap: {
                                 get: (key: string) => {

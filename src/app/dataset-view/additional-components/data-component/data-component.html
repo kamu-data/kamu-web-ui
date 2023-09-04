@@ -141,7 +141,7 @@
         </div>
         <ng-container *ngIf="sqlErrorMarker$ | async as sqlErrorMarker">
             <h2 class="box-title align-items-center pb-3 pt-3 m-0">Error:</h2>
-            <p class="sql-error-message">{{ sqlErrorMarker }}</p>
+            <p class="sql-error-message" data-test-id="sql-error-message">{{ sqlErrorMarker }}</p>
         </ng-container>
         <ng-container *ngIf="!(sqlErrorMarker$ | async) && dataUpdate.schema && dataUpdate.content">
             <h2 class="box-title align-items-center py-3 m-0">Result:</h2>

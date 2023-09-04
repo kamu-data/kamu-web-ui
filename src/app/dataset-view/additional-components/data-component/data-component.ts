@@ -1,7 +1,7 @@
 import AppValues from "src/app/common/app.values";
 import { OffsetInterval } from "./../../../api/kamu.graphql.interface";
 import { Location } from "@angular/common";
-import { DataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DataSqlErrorUpdate, DataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DataRow } from "../../../interface/dataset.interface";
 import DataTabValues from "./mock.data";
@@ -37,7 +37,9 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.sqlErrorMarker$ = this.appDatasetSubsService.onDatasetDataSqlErrorOccured.pipe(map((data) => data.error));
+        this.sqlErrorMarker$ = this.appDatasetSubsService.onDatasetDataSqlErrorOccured.pipe(
+            map((data: DataSqlErrorUpdate) => data.error),
+        );
         this.dataUpdate$ = this.appDatasetSubsService.onDatasetDataChanges.pipe(
             tap((dataUpdate: DataUpdate) => {
                 if (dataUpdate.currentVocab?.offsetColumn) {

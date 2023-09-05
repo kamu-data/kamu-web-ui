@@ -144,13 +144,13 @@
             <h2 class="box-title align-items-center pb-3 pt-3 m-0">Error:</h2>
             <p class="sql-error-message" data-test-id="sql-error-message">{{ sqlErrorMarker }}</p>
         </ng-container>
-        <ng-container *ngIf="!(sqlErrorMarker$ | async) && dataUpdate.schema && dataUpdate.content">
+        <ng-container *ngIf="!(sqlErrorMarker$ | async) && dataUpdate.schema && currentData">
             <h2 class="box-title align-items-center py-3 m-0">Result:</h2>
 
             <app-dynamic-table
                 [hasTableHeader]="true"
                 [schemaFields]="dataUpdate.schema ? dataUpdate.schema.fields : []"
-                [dataRows]="dataUpdate.content || []"
+                [dataRows]="currentData || []"
             ></app-dynamic-table>
 
             <app-load-more [isAllDataLoaded]="isAllDataLoaded"
@@ -161,7 +161,7 @@
 
         <ng-container *ngIf="!(sqlErrorMarker$ | async) && !dataUpdate.schema">
             <mat-divider></mat-divider>
-            <h3 class="box-title text-center pt-4 author" *ngIf="!dataUpdate.content.length">
+            <h3 class="box-title text-center pt-4 author" *ngIf="!currentData.length">
                 Need
                 <a class="add-link"> add data</a>
                 .

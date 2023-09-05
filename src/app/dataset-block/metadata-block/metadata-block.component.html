@@ -1,4 +1,10 @@
-<div class="app-main-container" role="main" data-test-id="metada-block-view" id="metada-block-view">
+<div
+    class="app-main-container"
+    role="main"
+    data-test-id="metada-block-view"
+    id="metada-block-view"
+    *ngIf="datasetInfo$ | async as datasetInfo"
+>
     <div class="app-content">
         <app-dataset-view-header
             [datasetInfo]="datasetInfo"
@@ -10,7 +16,7 @@
     <div class="app-content">
         <div id="dataset-viewer">
             <app-dataset-view-menu
-                [datasetViewType]="datasetViewType"
+                [datasetViewType]="HISTORY_TYPE"
                 [datasetNavigation]="
                     getDatasetNavigation({
                         accountName: datasetInfo.accountName,
@@ -20,7 +26,7 @@
             ></app-dataset-view-menu>
         </div>
     </div>
-    <div class="row px-4">
+    <div class="row px-4" *ngIf="blockHash$ | async as blockHash">
         <div class="col-md-7">
             <div class="container-content mb-4">
                 <app-block-header [datasetInfo]="datasetInfo" [blockHash]="blockHash"></app-block-header>
@@ -30,7 +36,7 @@
         <div class="col-md-5">
             <div class="container-content">
                 <app-block-navigation
-                    [datasetHistory]="datasetHistoryUpdate"
+                    [datasetHistory]="datasetHistoryUpdate$ | async"
                     [currentBlockHash]="blockHash"
                     [datasetInfo]="datasetInfo"
                     (onPageChangeEmit)="onPageChange($event)"

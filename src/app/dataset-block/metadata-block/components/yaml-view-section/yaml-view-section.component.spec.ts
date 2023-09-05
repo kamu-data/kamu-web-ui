@@ -6,7 +6,6 @@ import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { SharedTestModule } from "src/app/common/shared-test.module";
-import { MaybeUndefined } from "src/app/common/app.types";
 
 describe("YamlViewSectionComponent", () => {
     let component: YamlViewSectionComponent;
@@ -27,30 +26,12 @@ describe("YamlViewSectionComponent", () => {
         fixture = TestBed.createComponent(YamlViewSectionComponent);
         blockService = TestBed.inject(BlockService);
         component = fixture.componentInstance;
+        blockService.currentBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+            .blockByHash as MetadataBlockFragment;
         fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
-    });
-
-    it("should check onMetadataBlockChanges subscribe with ExecuteQuery ", () => {
-        const mockBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
-            .blockByHash as MetadataBlockFragment;
-        blockService.metadataBlockChanges(mockBlock);
-        component.ngOnInit();
-        fixture.detectChanges();
-        expect(component.block).toEqual(mockBlock);
-    });
-
-    it("should check onMetadataBlockAsYamlChanges subscribe", () => {
-        const mockBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
-            .blockByHashEncoded as MaybeUndefined<string>;
-        if (mockBlock) {
-            blockService.metadataBlockAsYamlChanges(mockBlock);
-            component.ngOnInit();
-            fixture.detectChanges();
-            expect(component.yamlEventText).toEqual(mockBlock);
-        }
     });
 });

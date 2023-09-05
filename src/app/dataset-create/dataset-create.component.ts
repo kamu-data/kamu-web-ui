@@ -2,10 +2,11 @@ import { BaseComponent } from "src/app/common/base.component";
 /* eslint-disable @typescript-eslint/unbound-method */
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "./../common/app.types";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import * as monaco from "monaco-editor";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AppDatasetCreateService } from "./dataset-create.service";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "app-dataset-create",
@@ -13,7 +14,7 @@ import { AppDatasetCreateService } from "./dataset-create.service";
     styleUrls: ["./dataset-create.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetCreateComponent extends BaseComponent implements OnInit {
+export class DatasetCreateComponent extends BaseComponent {
     private readonly kindMapper: Record<string, DatasetKind> = {
         root: DatasetKind.Root,
         derivative: DatasetKind.Derivative,
@@ -29,7 +30,7 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
     };
     public yamlTemplate = "";
     public showMonacoEditor = false;
-    public errorMessage = "";
+    public errorMessage$: Observable<string>;
     public owners = ["kamu"];
     public createDatasetForm: FormGroup = this.fb.group({
         owner: ["kamu", [Validators.required]],
@@ -46,15 +47,7 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
         private datasetCreateService: AppDatasetCreateService,
     ) {
         super();
-    }
-
-    ngOnInit(): void {
-        this.trackSubscription(
-            this.datasetCreateService.onErrorMessageChanges.subscribe((message: string) => {
-                this.errorMessage = message;
-                this.cdr.detectChanges();
-            }),
-        );
+        this.errorMessage$ = this.datasetCreateService.onErrorMessageChanges;
     }
 
     public get datasetName() {
@@ -120,8 +113,7 @@ export class DatasetCreateComponent extends BaseComponent implements OnInit {
             this.createDatasetForm.controls.owner.enable();
             this.createDatasetForm.controls.kind.enable();
             this.yamlTemplate = "";
-            this.errorMessage = "";
-            this.cdr.detectChanges();
+            this.datasetCreateService.errorMessageChanges("");
         }
     }
 }

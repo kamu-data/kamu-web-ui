@@ -48,13 +48,15 @@ describe("SettingsTabComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check init renameError", () => {
+    it("should check init renameError", fakeAsync(() => {
         const errorMessage = "Dataset is already exist.";
-        expect(component.renameError).toBe("");
         datasetSettingsService.errorRenameDatasetChanges(errorMessage);
-        component.ngOnInit();
-        expect(component.renameError).toEqual(errorMessage);
-    });
+        tick();
+        fixture.detectChanges();
+        const elemInput = findInputElememtByDataTestId(fixture, "rename-dataset-input");
+        expect(elemInput).toHaveClass("error-border-color");
+        flush();
+    }));
 
     it("should check rename dataset", () => {
         const renameDatasetSpy = spyOn(datasetSettingsService, "renameDataset").and.returnValue(of());
@@ -65,13 +67,12 @@ describe("SettingsTabComponent", () => {
     it("should check renameError is empty", fakeAsync(() => {
         const errorMessage = "Dataset is already exist.";
         datasetSettingsService.errorRenameDatasetChanges(errorMessage);
-        expect(component.renameError).toEqual(errorMessage);
         const input = findInputElememtByDataTestId(fixture, "rename-dataset-input");
         input.value = "newDatasetName";
         input.dispatchEvent(new Event("keyup"));
-        fixture.detectChanges();
         tick();
-        expect(component.renameError).toEqual("");
+        fixture.detectChanges();
+        expect(input).not.toHaveClass("error-border-color");
         flush();
     }));
 

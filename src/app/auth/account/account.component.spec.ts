@@ -3,11 +3,10 @@ import { mockAccountDetails } from "./../../api/mock/auth.mock";
 import { AccountTabs } from "./account.constants";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatIconModule } from "@angular/material/icon";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { emitClickOnElementByDataTestId, routerMock } from "src/app/common/base-test.helpers.spec";
-
 import { AccountComponent } from "./account.component";
 import { BehaviorSubject } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
@@ -47,7 +46,6 @@ describe("AccountComponent", () => {
         fixture = TestBed.createComponent(AccountComponent);
         navigationService = TestBed.inject(NavigationService);
         accountService = TestBed.inject(AccountService);
-        accountService.datasetsChanges(mockDatasetsAccountResponse);
         component = fixture.componentInstance;
         component.user = mockAccountDetails;
         fixture.detectChanges();
@@ -63,18 +61,14 @@ describe("AccountComponent", () => {
     });
 
     Object.values(AccountTabs).forEach((tab: string) => {
-        it(`should check switch ${tab} tab`, () => {
+        it(`should check switch ${tab} tab`, fakeAsync(() => {
+            accountService.datasetsChanges(mockDatasetsAccountResponse);
             const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+            tick();
+            fixture.detectChanges();
             emitClickOnElementByDataTestId(fixture, `account-${tab}-tab`);
             expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(mockAccountDetails.login, tab);
-        });
-    });
-
-    it("should check get data from accountService subscription", () => {
-        accountService.datasetsChanges(mockDatasetsAccountResponse);
-        component.ngOnInit();
-        expect(component.datasets).toEqual(mockDatasetsAccountResponse.datasets);
-        expect(component.pageInfo).toEqual(mockDatasetsAccountResponse.pageInfo);
-        expect(component.datasetTotalCount).toEqual(mockDatasetsAccountResponse.datasetTotalCount);
+            flush();
+        }));
     });
 });

@@ -72,4 +72,8 @@ export class AppDatasetSubscriptionsService {
     public get onLineageDataChanges(): Observable<LineageUpdate> {
         return this.lineageChanges$.asObservable();
     }
+
+    public resetSqlError(): void {
+        this.observeSqlErrorOccurred({ error: "" });
+    }
 }

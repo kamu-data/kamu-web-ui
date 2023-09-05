@@ -2,23 +2,15 @@ import AppValues from "src/app/common/app.values";
 import { OffsetInterval } from "./../../../api/kamu.graphql.interface";
 import { Location } from "@angular/common";
 import { DataSqlErrorUpdate, DataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-} from "@angular/core";
-import { DataRow, DatasetSchema } from "../../../interface/dataset.interface";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { DataRow } from "../../../interface/dataset.interface";
 import DataTabValues from "./mock.data";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import * as monaco from "monaco-editor";
-import { MaybeNull } from "src/app/common/app.types";
 import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
+import { Observable, map, tap } from "rxjs";
 
 @Component({
     selector: "app-data",
@@ -31,17 +23,12 @@ export class DataComponent extends BaseComponent implements OnInit {
     public sqlEditorOptions = sqlEditorOptions;
     public savedQueries = DataTabValues.savedQueries;
     public sqlRequestCode = `select\n  *\nfrom `;
-
-    public sqlErrorMarker: MaybeNull<string> = null;
-    public currentSchema: MaybeNull<DatasetSchema> = null;
     public currentData: DataRow[] = [];
     private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
+    public sqlErrorMarker$: Observable<string>;
+    public dataUpdate$: Observable<DataUpdate>;
 
-    constructor(
-        private appDatasetSubsService: AppDatasetSubscriptionsService,
-        private cdr: ChangeDetectorRef,
-        private location: Location,
-    ) {
+    constructor(private appDatasetSubsService: AppDatasetSubscriptionsService, private location: Location) {
         super();
     }
 
@@ -50,21 +37,16 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.trackSubscriptions(
-            this.appDatasetSubsService.onDatasetDataSqlErrorOccured.subscribe(
-                (dataSqlErrorUpdate: DataSqlErrorUpdate) => {
-                    this.sqlErrorMarker = dataSqlErrorUpdate.error;
-                    this.cdr.markForCheck();
-                },
-            ),
-            this.appDatasetSubsService.onDatasetDataChanges.subscribe((dataUpdate: DataUpdate) => {
+        this.sqlErrorMarker$ = this.appDatasetSubsService.onDatasetDataSqlErrorOccured.pipe(
+            map((data: DataSqlErrorUpdate) => data.error),
+        );
+        this.dataUpdate$ = this.appDatasetSubsService.onDatasetDataChanges.pipe(
+            tap((dataUpdate: DataUpdate) => {
                 if (dataUpdate.currentVocab?.offsetColumn) {
                     this.offsetColumnName = dataUpdate.currentVocab.offsetColumn;
                 }
                 this.currentData = dataUpdate.content;
-                this.currentSchema = dataUpdate.schema;
-                this.sqlErrorMarker = null;
-                this.cdr.markForCheck();
+                this.appDatasetSubsService.resetSqlError();
             }),
         );
         this.buildSqlRequestCode();
@@ -95,7 +77,7 @@ export class DataComponent extends BaseComponent implements OnInit {
 
     private buildSqlRequestCode(): void {
         if (this.datasetBasics) {
-            this.sqlRequestCode += `'${this.datasetBasics.name }'`;
+            this.sqlRequestCode += `'${this.datasetBasics.name}'`;
             const offset = this.location.getState() as Partial<OffsetInterval>;
             if (typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
                 this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;

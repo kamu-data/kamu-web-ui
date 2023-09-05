@@ -1,4 +1,4 @@
-<div class="py-4" *ngIf="block">
+<div class="py-4" *ngIf="block$ | async">
     <ng-container *ngIf="isAddDataEvent">
         <app-add-data-event [event]="addDataEvent"></app-add-data-event>
     </ng-container>

@@ -12,6 +12,8 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 export class BlockService {
     constructor(private datasetApi: DatasetApi) {}
 
+    public currentBlock: MetadataBlockFragment;
+
     private metadataBlockChanges$: Subject<MetadataBlockFragment> = new Subject<MetadataBlockFragment>();
 
     public get onMetadataBlockChanges(): Observable<MetadataBlockFragment> {
@@ -36,10 +38,11 @@ export class BlockService {
         return this.datasetApi.getBlockByHash({ ...info, blockHash }).pipe(
             map((data: GetMetadataBlockQuery) => {
                 if (data.datasets.byOwnerAndName) {
-                    const block = data.datasets.byOwnerAndName.metadata.chain.blockByHash as MetadataBlockFragment;
+                    this.currentBlock = data.datasets.byOwnerAndName.metadata.chain
+                        .blockByHash as MetadataBlockFragment;
                     const blockAsYaml = data.datasets.byOwnerAndName.metadata.chain
                         .blockByHashEncoded as MaybeUndefined<string>;
-                    this.metadataBlockChanges(block);
+                    this.metadataBlockChanges(this.currentBlock);
                     if (blockAsYaml) {
                         this.metadataBlockAsYamlChanges(blockAsYaml);
                     }

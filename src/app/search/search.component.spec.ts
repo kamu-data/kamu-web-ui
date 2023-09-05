@@ -2,8 +2,7 @@ import { MatChipsModule } from "@angular/material/chips";
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { AuthApi } from "./../api/auth.api";
 import { SearchApi } from "./../api/search.api";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { SearchComponent } from "./search.component";
 import { NavigationService } from "../services/navigation.service";
 import { SearchService } from "./search.service";
@@ -17,6 +16,7 @@ import ProjectLinks from "../project-links";
 import {
     activeRouteMock,
     activeRouteMockQueryParamMap,
+    findElementByDataTestId,
     routerMock,
     routerMockEventSubject,
 } from "../common/base-test.helpers.spec";
@@ -179,16 +179,18 @@ describe("SearchComponent", () => {
         expect(navigationServiceSpy).toHaveBeenCalledWith(testSearchValue);
     });
 
-    it("should check search results update the dataset table", () => {
+    it("should check search results update the dataset table", fakeAsync(() => {
         spyOn(searchApi, "overviewDatasetSearch").and.returnValue(of(mockSearchOverviewResponse));
-
         const testSearchQuery = "test";
+        component.currentPage = 1;
+
         searchService.searchDatasets(testSearchQuery);
-
-        expect(component.tableData.pageInfo).toEqual(mockSearchOverviewResponse.search.query.pageInfo);
-        expect(component.tableData.totalCount).toEqual(mockSearchOverviewResponse.search.query.totalCount);
-        expect(component.tableData.tableSource).toEqual(mockSearchOverviewResponse.search.query.nodes);
-
+        tick();
         fixture.detectChanges();
-    });
+        const datasetList = findElementByDataTestId(fixture, "dataset-list");
+        const pagination = findElementByDataTestId(fixture, "pagination");
+        expect(datasetList).toBeDefined();
+        expect(pagination).toBeDefined();
+        flush();
+    }));
 });

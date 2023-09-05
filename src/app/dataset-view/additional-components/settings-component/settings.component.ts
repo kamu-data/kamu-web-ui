@@ -1,10 +1,11 @@
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DatasetSettingsService } from "./services/dataset-settings.service";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { BaseComponent } from "src/app/common/base.component";
 import { ModalService } from "src/app/components/modal/modal.service";
+import { Observable, shareReplay } from "rxjs";
 
 @Component({
     selector: "app-settings-tab",
@@ -12,18 +13,18 @@ import { ModalService } from "src/app/components/modal/modal.service";
     styleUrls: ["./settings.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SettingsTabComponent extends BaseComponent implements OnInit {
+export class SettingsTabComponent extends BaseComponent {
     @Input() public datasetBasics?: DatasetBasicsFragment;
-    public renameError = "";
+    public renameError$: Observable<string>;
     public renameDatasetForm: FormGroup;
 
     constructor(
         private fb: FormBuilder,
         private datasetSettingsService: DatasetSettingsService,
         private modalService: ModalService,
-        private cdr: ChangeDetectorRef,
     ) {
         super();
+        this.renameError$ = this.datasetSettingsService.onErrorRenameDatasetChanges.pipe(shareReplay());
         this.renameDatasetForm = this.fb.group({
             datasetName: [
                 this.getDatasetInfoFromUrl().datasetName,
@@ -31,14 +32,6 @@ export class SettingsTabComponent extends BaseComponent implements OnInit {
                 [Validators.required, Validators.pattern(/^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/)],
             ],
         });
-    }
-    ngOnInit(): void {
-        this.trackSubscription(
-            this.datasetSettingsService.onErrorRenameDatasetChanges.subscribe((error) => {
-                this.renameError = error;
-                this.cdr.detectChanges();
-            }),
-        );
     }
 
     public get datasetName() {
@@ -77,6 +70,6 @@ export class SettingsTabComponent extends BaseComponent implements OnInit {
     }
 
     public changeName(): void {
-        this.renameError = "";
+        this.datasetSettingsService.resetRenameError();
     }
 }

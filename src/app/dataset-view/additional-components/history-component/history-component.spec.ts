@@ -19,22 +19,12 @@ describe("HistoryComponent", () => {
         fixture = TestBed.createComponent(HistoryComponent);
         appDatasetSubsService = TestBed.inject(AppDatasetSubscriptionsService);
         component = fixture.componentInstance;
+        appDatasetSubsService.changeDatasetHistory(mockHistoryUpdate);
         fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
-    });
-
-    it("should check #ngOninit", () => {
-        expect(component.currentState).not.toBeDefined();
-
-        appDatasetSubsService.changeDatasetHistory(mockHistoryUpdate);
-        component.ngOnInit();
-
-        expect(component.currentState).toBeDefined();
-        expect(component.currentPage).toBeDefined();
-        expect(component.totalPages).toBe(10);
     });
 
     it("should check change page", () => {

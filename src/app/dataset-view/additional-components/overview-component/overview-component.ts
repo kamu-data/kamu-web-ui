@@ -3,7 +3,6 @@ import { OverviewDataUpdate } from "src/app/dataset-view/dataset.subscriptions.i
 import { DatasetKind } from "./../../../api/kamu.graphql.interface";
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     EventEmitter,
     Input,
@@ -51,7 +50,6 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         private appDatasetSubsService: AppDatasetSubscriptionsService,
         private navigationService: NavigationService,
         private modalService: NgbModal,
-        private cdr: ChangeDetectorRef,
     ) {
         super();
     }

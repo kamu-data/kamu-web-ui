@@ -72,7 +72,7 @@ mat-button-toggle-group
   border-radius: 0 !important
 
 mat-button-toggle
-  border: 1px rgba(0,0,0,0) solid !important
+  border: 2px transparent solid !important
   margin-top: 5px !important
   padding: 0 5px !important
   z-index: 3 !important
@@ -83,21 +83,18 @@ mat-button-toggle
     border-radius: 0 !important
     &.mat-button-toggle-checked
       border-bottom: 2px #000 solid !important
-      &:ng-deep mat-button-toggle
+      &::ng-deep mat-button-toggle
         .mat-button-toggle-focus-overlay
           background-color: transparent !important
           opacity: 0 !important
 
 .mat-button-toggle-checked
-  border-left: none
-  border-top: none
-  border-right: none
-  border-bottom: 2px #000 solid !important
+  border-bottom-color: #000 !important
   border-radius: 0
-  background-color: none !important
+  background-color: transparent !important
 
 .mat-button-toggle-input
-  background-color: none !important
+  background-color: transparent !important
   padding-left: 32px !important
 
 .tab-icon

@@ -8,6 +8,7 @@
                 [idTable]="'schema-block-table'"
             ></app-dynamic-table>
         </ng-container>
+
         <div>
             <h2 class="box-title align-items-center pb-3 pt-3 m-0">Saved Queries</h2>
             <cdk-accordion class="example-accordion">
@@ -70,7 +71,7 @@
                                     mat-icon-button
                                     data-test-id="runSqlQueryRequestCode"
                                     name="run sql button"
-                                    (click)="onRunSQLRequest(item.query)"
+                                    (click)="runSQLRequest({ query: item.query }, true)"
                                     class="sql-run-button rounded-2 btn-group-item btn d-flex justify-content-center align-items-center"
                                 >
                                     <span>Run</span><mat-icon>play_arrow</mat-icon>
@@ -82,6 +83,7 @@
             </cdk-accordion>
         </div>
     </div>
+
     <div class="search-result-container__content">
         <div class="sql-query-editor-header flex-column justify-content-around">
             <h2 class="box-title align-items-center pb-3 m-0">Query:</h2>
@@ -90,7 +92,7 @@
                     mat-icon-button
                     data-test-id="runSqlQueryButton"
                     name="run sql button"
-                    (click)="onRunSQLRequest()"
+                    (click)="runSQLRequest({ query: sqlRequestCode }, true)"
                     [disabled]="!dataUpdate.content.length"
                     class="sql-run-button rounded-left-2 border-right-0 btn-group-item btn d-flex justify-content-center align-items-center"
                 >
@@ -100,14 +102,13 @@
                     class="starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
                     mat-icon-button
                     mat-button
-                    #menuTrigger="matMenuTrigger"
-                    [matMenuTriggerFor]="menu2"
+                    [matMenuTriggerFor]="menu"
                     aria-label="Example icon-button with a menu"
                     data-test-id="searchAdditionalButtons"
                 >
                     <mat-icon>arrow_drop_down</mat-icon>
                 </button>
-                <mat-menu #menu2="matMenu">
+                <mat-menu #menu="matMenu">
                     <div class="select-menu-modal notifications-component-menu-modal">
                         <div class="select-menu-list">
                             <button
@@ -143,17 +144,24 @@
             <h2 class="box-title align-items-center pb-3 pt-3 m-0">Error:</h2>
             <p class="sql-error-message" data-test-id="sql-error-message">{{ sqlErrorMarker }}</p>
         </ng-container>
-        <ng-container *ngIf="!(sqlErrorMarker$ | async) && dataUpdate.schema && dataUpdate.content">
+        <ng-container *ngIf="!(sqlErrorMarker$ | async) && dataUpdate.schema && currentData">
             <h2 class="box-title align-items-center py-3 m-0">Result:</h2>
+
             <app-dynamic-table
                 [hasTableHeader]="true"
                 [schemaFields]="dataUpdate.schema ? dataUpdate.schema.fields : []"
-                [dataRows]="dataUpdate.content || []"
+                [dataRows]="currentData || []"
             ></app-dynamic-table>
+
+            <app-load-more [isAllDataLoaded]="isAllDataLoaded"
+                           (loadMoreEmit)="loadMore($event)"
+                           class="mt-4"
+            ></app-load-more>
         </ng-container>
+
         <ng-container *ngIf="!(sqlErrorMarker$ | async) && !dataUpdate.schema">
             <mat-divider></mat-divider>
-            <h3 class="box-title text-center pt-4 author" *ngIf="!dataUpdate.content.length">
+            <h3 class="box-title text-center pt-4 author" *ngIf="!currentData.length">
                 Need
                 <a class="add-link"> add data</a>
                 .

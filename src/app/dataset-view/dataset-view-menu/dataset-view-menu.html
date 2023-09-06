@@ -1,10 +1,6 @@
 <div
     class="search-header-container-block"
-    [style]="
-                    isMinimizeSearchAdditionalButtons
-                        ? 'grid-template-columns: 1fr;'
-                        : ''
-                "
+    [style]="isMinimizeSearchAdditionalButtons ? 'grid-template-columns: 1fr;' : ''"
 >
     <div class="dataset-view-type-toggle-group">
         <mat-button-toggle-group
@@ -124,42 +120,27 @@
                                     <div class="select-menu-item flex-column">
                                         <div
                                             class="select-menu-item align-items-start p-0 border-0"
-                                            (click)="
-                                                            $event.stopPropagation()
-                                                        "
-                                            (keydown)="
-                                                            $event.stopPropagation()
-                                                        "
+                                            (click)="$event.stopPropagation()"
+                                            (keydown)="$event.stopPropagation()"
                                         >
                                             <p>Using kamu-cli:</p>
                                         </div>
                                         <div
                                             class="select-menu-item align-items-start p-0 border-0"
-                                            (click)="
-                                                            $event.stopPropagation()
-                                                        "
-                                            (keydown)="
-                                                            $event.stopPropagation()
-                                                        "
+                                            (click)="$event.stopPropagation()"
+                                            (keydown)="$event.stopPropagation()"
                                         >
                                             <div class="input-group">
                                                 <input
                                                     type="text"
                                                     class="form-control input-monospace input-sm color-bg-subtle"
                                                     data-autoselect=""
-                                                    [(ngModel)]="
-                                                                    clipboardKamuCli
-                                                                "
+                                                    [(ngModel)]="clipboardKamuCli"
                                                     readonly=""
                                                 />
                                                 <div class="input-group-button">
                                                     <button
-                                                        (click)="
-                                                                        copyToClipboard(
-                                                                            $event,
-                                                                            clipboardKamuCli
-                                                                        )
-                                                                    "
+                                                        (click)="copyToClipboard($event, clipboardKamuCli)"
                                                         data-test-id="copyToClipboard"
                                                         aria-label="Copy to clipboard"
                                                         class="btn btn-sm btn-gray clipboard-btn"
@@ -184,42 +165,27 @@
                                     <div class="select-menu-item flex-column">
                                         <div
                                             class="select-menu-item align-items-start p-0 border-0"
-                                            (click)="
-                                                            $event.stopPropagation()
-                                                        "
-                                            (keydown)="
-                                                            $event.stopPropagation()
-                                                        "
+                                            (click)="$event.stopPropagation()"
+                                            (keydown)="$event.stopPropagation()"
                                         >
                                             <p>Using Kafka:</p>
                                         </div>
                                         <div
                                             class="select-menu-item align-items-start p-0 border-0"
-                                            (click)="
-                                                            $event.stopPropagation()
-                                                        "
-                                            (keydown)="
-                                                            $event.stopPropagation()
-                                                        "
+                                            (click)="$event.stopPropagation()"
+                                            (keydown)="$event.stopPropagation()"
                                         >
                                             <div class="input-group">
                                                 <input
                                                     type="text"
                                                     class="form-control input-monospace input-sm color-bg-subtle"
                                                     data-autoselect=""
-                                                    [(ngModel)]="
-                                                                    clipboardKafka
-                                                                "
+                                                    [(ngModel)]="clipboardKafka"
                                                     readonly=""
                                                 />
                                                 <div class="input-group-button">
                                                     <button
-                                                        (click)="
-                                                                        copyToClipboard(
-                                                                            $event,
-                                                                            clipboardKamuCli
-                                                                        )
-                                                                    "
+                                                        (click)="copyToClipboard($event, clipboardKamuCli)"
                                                         aria-label="Copy to clipboard"
                                                         class="btn btn-sm btn-gray clipboard-btn"
                                                         data-copy-feedback="Copied!"

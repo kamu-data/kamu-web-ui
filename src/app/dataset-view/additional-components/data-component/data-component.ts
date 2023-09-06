@@ -1,14 +1,15 @@
 import AppValues from "src/app/common/app.values";
-import { OffsetInterval } from "./../../../api/kamu.graphql.interface";
+import { OffsetInterval } from "../../../api/kamu.graphql.interface";
 import { Location } from "@angular/common";
 import { DataSqlErrorUpdate, DataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { DataRow } from "../../../interface/dataset.interface";
+import { DataRow, DatasetRequestBySql } from "../../../interface/dataset.interface";
 import DataTabValues from "./mock.data";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import * as monaco from "monaco-editor";
+import { MaybeUndefined } from "src/app/common/app.types";
 import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
 import { Observable, map, tap } from "rxjs";
 
@@ -19,11 +20,16 @@ import { Observable, map, tap } from "rxjs";
 })
 export class DataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;
-    @Output() public runSQLRequestEmit = new EventEmitter<string>();
+    @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
+
     public sqlEditorOptions = sqlEditorOptions;
     public savedQueries = DataTabValues.savedQueries;
     public sqlRequestCode = `select\n  *\nfrom `;
     public currentData: DataRow[] = [];
+    public isAllDataLoaded = false;
+
+    private skipRows: MaybeUndefined<number>;
+    private rowsLimit: number = AppValues.SQL_QUERY_LIMIT;
     private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
     public sqlErrorMarker$: Observable<string>;
     public dataUpdate$: Observable<DataUpdate>;
@@ -32,12 +38,15 @@ export class DataComponent extends BaseComponent implements OnInit {
         super();
     }
 
-    public onRunSQLRequest(sqlRequestCode?: string): void {
-        this.runSQLRequestEmit.emit(sqlRequestCode ?? this.sqlRequestCode);
+    public runSQLRequest(params: DatasetRequestBySql, initialSqlRun = false): void {
+        if (initialSqlRun) {
+            this.resetRowsLimits();
+        }
+        this.runSQLRequestEmit.emit(params);
     }
 
     public ngOnInit(): void {
-        this.sqlErrorMarker$ = this.appDatasetSubsService.onDatasetDataSqlErrorOccured.pipe(
+        this.sqlErrorMarker$ = this.appDatasetSubsService.onDatasetDataSqlErrorOccurred.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
         );
         this.dataUpdate$ = this.appDatasetSubsService.onDatasetDataChanges.pipe(
@@ -45,16 +54,30 @@ export class DataComponent extends BaseComponent implements OnInit {
                 if (dataUpdate.currentVocab?.offsetColumn) {
                     this.offsetColumnName = dataUpdate.currentVocab.offsetColumn;
                 }
-                this.currentData = dataUpdate.content;
+                this.isAllDataLoaded = dataUpdate.content.length < this.rowsLimit;
+                this.currentData = this.skipRows ? [...this.currentData, ...dataUpdate.content] : dataUpdate.content;
                 this.appDatasetSubsService.resetSqlError();
             }),
         );
         this.buildSqlRequestCode();
     }
 
-    onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
+    public loadMore(limit: number): void {
+        this.skipRows = this.currentData.length;
+        this.rowsLimit = limit;
+
+        const params = {
+            query: this.sqlRequestCode,
+            skip: this.skipRows,
+            limit,
+        };
+
+        this.runSQLRequest(params);
+    }
+
+    public onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
         const runQueryFn = () => {
-            this.onRunSQLRequest();
+            this.runSQLRequest({ query: this.sqlRequestCode });
         };
         editor.addAction({
             // An unique identifier of the contributed action.
@@ -71,7 +94,7 @@ export class DataComponent extends BaseComponent implements OnInit {
             run: runQueryFn,
         });
         if (this.currentData.length > 0) {
-            this.onRunSQLRequest();
+            this.runSQLRequest({ query: this.sqlRequestCode });
         }
     }
 
@@ -83,5 +106,10 @@ export class DataComponent extends BaseComponent implements OnInit {
                 this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
             }
         }
+    }
+
+    private resetRowsLimits(): void {
+        this.skipRows = undefined;
+        this.rowsLimit = AppValues.SQL_QUERY_LIMIT;
     }
 }

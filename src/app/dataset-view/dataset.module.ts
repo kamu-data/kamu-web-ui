@@ -2,7 +2,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
 import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
-import { DisplayTimeModule } from "./../components/display-time/display-time.module";
+import { DisplayTimeModule } from "../components/display-time/display-time.module";
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { DatasetComponent } from "./dataset.component";
@@ -60,6 +60,9 @@ import { MatStepperModule } from "@angular/material/stepper";
 import { EngineSelectComponent } from "./additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 import { ReadmeSectionComponent } from "./additional-components/overview-component/components/readme-section/readme-section.component";
 import { SettingsTabComponent } from "./additional-components/settings-component/settings.component";
+import { LoadMoreComponent } from "./additional-components/data-component/load-more/load-more.component";
+import { MatInputModule } from "@angular/material/input";
+
 @NgModule({
     imports: [
         CommonModule,
@@ -101,6 +104,7 @@ import { SettingsTabComponent } from "./additional-components/settings-component
         OwlMomentDateTimeModule,
         MatTreeModule,
         MatStepperModule,
+        MatInputModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -147,6 +151,7 @@ import { SettingsTabComponent } from "./additional-components/settings-component
         EngineSelectComponent,
         ReadmeSectionComponent,
         SettingsTabComponent,
+        LoadMoreComponent,
     ],
 })
 export class DatasetModule {

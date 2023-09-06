@@ -45,7 +45,7 @@ export class AppDatasetSubscriptionsService {
         this.datasetDataSqlErrorOccurred$.next(dataSqlErrorUpdate);
     }
 
-    public get onDatasetDataSqlErrorOccured(): Observable<DataSqlErrorUpdate> {
+    public get onDatasetDataSqlErrorOccurred(): Observable<DataSqlErrorUpdate> {
         return this.datasetDataSqlErrorOccurred$.asObservable();
     }
 

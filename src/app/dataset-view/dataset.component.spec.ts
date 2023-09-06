@@ -11,7 +11,6 @@ import { NavigationService } from "../services/navigation.service";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { of } from "rxjs";
 import { routerMock, routerMockEventSubject } from "../common/base-test.helpers.spec";
-import AppValues from "../common/app.values";
 import { OverviewComponent } from "./additional-components/overview-component/overview-component";
 import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu-component";
 import { MatMenuModule } from "@angular/material/menu";
@@ -25,6 +24,7 @@ import { SearchAdditionalButtonsNavComponent } from "../components/search-additi
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatIconModule } from "@angular/material/icon";
+import AppValues from "../common/app.values";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -140,10 +140,15 @@ describe("DatasetComponent", () => {
     });
 
     it("should check run SQL request", () => {
-        const sqlQuery = "select * from test.table";
+        const params = {
+            query: "select * from test.table",
+            skip: 50,
+            limit: AppValues.SQL_QUERY_LIMIT,
+        };
+
         const requestDatasetDataSqlRunSpy = spyOn(appDatasetService, "requestDatasetDataSqlRun").and.returnValue(of());
-        component.onRunSQLRequest(sqlQuery);
-        expect(requestDatasetDataSqlRunSpy).toHaveBeenCalledWith(sqlQuery, AppValues.SQL_QUERY_LIMIT);
+        component.onRunSQLRequest(params);
+        expect(requestDatasetDataSqlRunSpy).toHaveBeenCalledWith(params);
     });
 
     it("should check page changed", () => {

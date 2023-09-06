@@ -40,6 +40,7 @@ import {
 } from "./kamu.graphql.interface";
 import { MutationResult } from "apollo-angular";
 import { MaybeNullOrUndefined } from "../common/app.types";
+import { DatasetRequestBySql } from "../interface/dataset.interface";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
@@ -85,13 +86,15 @@ export class DatasetApi {
             );
     }
 
-    public getDatasetDataSqlRun(params: { query: string; limit: number }): Observable<GetDatasetDataSqlRunQuery> {
-        return this.datasetDataSqlRunGQL.watch({ query: params.query, limit: params.limit }).valueChanges.pipe(
-            first(),
-            map((result: ApolloQueryResult<GetDatasetDataSqlRunQuery>) => {
-                return result.data;
-            }),
-        );
+    public getDatasetDataSqlRun(params: DatasetRequestBySql): Observable<GetDatasetDataSqlRunQuery> {
+        return this.datasetDataSqlRunGQL
+            .watch({ query: params.query, limit: params.limit ?? AppValues.SQL_QUERY_LIMIT, skip: params.skip })
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<GetDatasetDataSqlRunQuery>) => {
+                    return result.data;
+                }),
+            );
     }
 
     public getDatasetHistory(params: {

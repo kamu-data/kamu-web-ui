@@ -1210,6 +1210,7 @@ export type DatasetByIdQuery = {
 export type GetDatasetDataSqlRunQueryVariables = Exact<{
     query: Scalars["String"];
     limit: Scalars["Int"];
+    skip?: InputMaybe<Scalars["Int"]>;
 }>;
 
 export type GetDatasetDataSqlRunQuery = {
@@ -2576,7 +2577,7 @@ export class DatasetByIdGQL extends Apollo.Query<DatasetByIdQuery, DatasetByIdQu
     }
 }
 export const GetDatasetDataSqlRunDocument = gql`
-    query getDatasetDataSQLRun($query: String!, $limit: Int!) {
+    query getDatasetDataSQLRun($query: String!, $limit: Int!, $skip: Int) {
         data {
             query(
                 query: $query
@@ -2584,6 +2585,7 @@ export const GetDatasetDataSqlRunDocument = gql`
                 schemaFormat: PARQUET_JSON
                 dataFormat: JSON
                 limit: $limit
+                skip: $skip
             ) {
                 __typename
                 ... on DataQueryResultSuccess {

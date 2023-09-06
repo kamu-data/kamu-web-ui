@@ -16,8 +16,8 @@ import { DatasetBasicsFragment } from "../api/kamu.graphql.interface";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { promiseWithCatch } from "../common/app.helpers";
-import AppValues from "../common/app.values";
 import { BaseProcessingComponent } from "../common/base.processing.component";
+import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { MaybeNull } from "../common/app.types";
 
 @Component({
@@ -29,7 +29,6 @@ import { MaybeNull } from "../common/app.types";
 })
 export class DatasetComponent extends BaseProcessingComponent implements OnInit, OnDestroy {
     public datasetBasics?: DatasetBasicsFragment;
-    public isMinimizeSearchAdditionalButtons = false;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
 
     public lineageGraphView: [number, number] = [500, 600];
@@ -227,12 +226,9 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         }
     }
 
-    public onRunSQLRequest(query: string): void {
+    public onRunSQLRequest(params: DatasetRequestBySql): void {
         this.appDatasetService
-            .requestDatasetDataSqlRun(
-                query,
-                AppValues.SQL_QUERY_LIMIT, // TODO: Propagate limit from UI and display when it was reached
-            )
+            .requestDatasetDataSqlRun(params) // TODO: Propagate limit from UI and display when it was reached
             .subscribe();
     }
 }

@@ -11,15 +11,15 @@ import {
 import { DatasetInfo } from "./../interface/navigation.interface";
 import { Injectable } from "@angular/core";
 import { Observable, Subject, throwError } from "rxjs";
-import { DataRow, DatasetLineageNode, DatasetSchema } from "../interface/dataset.interface";
+import { DataRow, DatasetLineageNode, DatasetRequestBySql, DatasetSchema } from "../interface/dataset.interface";
 import {
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
     DatasetMetadataSummaryFragment,
     DatasetOverviewFragment,
-    GetDatasetMainDataQuery,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
+    GetDatasetMainDataQuery,
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
 import { AppDatasetSubscriptionsService } from "./dataset.subscriptions.service";
@@ -128,8 +128,8 @@ export class DatasetService {
         );
     }
 
-    public requestDatasetDataSqlRun(query: string, limit: number): Observable<void> {
-        return this.datasetApi.getDatasetDataSqlRun({ query, limit }).pipe(
+    public requestDatasetDataSqlRun(params: DatasetRequestBySql): Observable<void> {
+        return this.datasetApi.getDatasetDataSqlRun(params).pipe(
             catchError(() => throwError(new SqlExecutionError())),
             map((result: GetDatasetDataSqlRunQuery) => {
                 const queryResult = result.data.query;
@@ -168,8 +168,7 @@ export class DatasetService {
     }
 
     private datasetUpdate(data: DatasetBasicsFragment): void {
-        const dataset: DatasetBasicsFragment = data;
-        this.datasetChanges(dataset);
+        this.datasetChanges(data);
     }
 
     private overviewTabDataUpdate(

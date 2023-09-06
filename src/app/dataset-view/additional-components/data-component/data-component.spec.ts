@@ -1,4 +1,4 @@
-import { mockDatasetBasicsFragment } from "./../../../search/mock.data";
+import { mockDatasetBasicsFragment } from "../../../search/mock.data";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { MatIconModule } from "@angular/material/icon";
@@ -12,8 +12,8 @@ import { Location } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { MatDividerModule } from "@angular/material/divider";
-import { DynamicTableComponent } from "src/app/components/dynamic-table/dynamic-table.component";
-import { MatTableModule } from "@angular/material/table";
+import { LoadMoreComponent } from "./load-more/load-more.component";
+import { DynamicTableModule } from "../../../components/dynamic-table/dynamic-table.module";
 
 describe("DataComponent", () => {
     let component: DataComponent;
@@ -30,9 +30,9 @@ describe("DataComponent", () => {
                 FormsModule,
                 MonacoEditorModule.forRoot(),
                 MatDividerModule,
-                MatTableModule,
+                DynamicTableModule,
             ],
-            declarations: [DataComponent, DynamicTableComponent],
+            declarations: [DataComponent, LoadMoreComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DataComponent);
@@ -84,4 +84,27 @@ describe("DataComponent", () => {
         expect(elem.textContent).toEqual(mockSqlErrorUpdate.error);
         flush();
     }));
+
+    it("should calculate sql request params", () => {
+        appDatasetSubsService.changeDatasetData(mockDataUpdate);
+        fixture.detectChanges();
+
+        const sqlReq = spyOn(component.runSQLRequestEmit, "emit");
+        const limit = 1;
+        const params = {
+            query: component.sqlRequestCode,
+            skip: component.currentData.length,
+            limit: limit,
+        };
+
+        component.loadMore(limit);
+        appDatasetSubsService.changeDatasetData(mockDataUpdate);
+        expect(sqlReq).toHaveBeenCalledWith(params);
+
+        component.loadMore(limit);
+        params.skip = component.currentData.length;
+
+        const secondCallParams = sqlReq.calls.allArgs()[1];
+        expect(secondCallParams).toEqual([params]);
+    });
 });

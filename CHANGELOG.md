@@ -16,8 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Selected library updates/downgrades to align with Angular 14.3 and Node.JS 16.x
 - GraphQL code generator tuned to produce string type by default for scalars
 - Fixed bug with disabled state for "Run" button after error.
-- Refactor redundant selectors and cast class names to lowercase
+- Refactored redundant selectors and cast class names to lowercase
 - Fixed bug with updating the list of datasets after deletion
+- Refactored observable subscriptions to pipe async
+- Truncated fields in material table using a configurable length.
+
+
 
 ## [0.8.0] - 2023-08-04
 ### Added

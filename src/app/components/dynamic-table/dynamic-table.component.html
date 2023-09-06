@@ -4,7 +4,9 @@
             <th mat-header-cell *matHeaderCellDef [attr.data-test-id]="'column-name-' + colIndex">
                 {{ disCol }}
             </th>
-            <td mat-cell *matCellDef="let element">{{ element[disCol] }}</td>
+            <td [title]="element[disCol]" mat-cell class="truncate-cell" *matCellDef="let element">
+                {{ element[disCol] }}
+            </td>
         </ng-container>
 
         <ng-container *ngIf="hasTableHeader">

@@ -15,6 +15,7 @@ import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 @Component({
     selector: "app-lineage-graph",
     templateUrl: "./lineage-graph.component.html",
+    styleUrls: ["./lineage-graph.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineageGraphComponent implements OnChanges, OnInit {
@@ -42,6 +43,7 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public ngOnInit(): void {
         this.graphNodes = this.nodes;
         this.graphClusters = this.clusters;
+        console.log();
     }
 
     public ngOnChanges(changes: SimpleChanges): void {

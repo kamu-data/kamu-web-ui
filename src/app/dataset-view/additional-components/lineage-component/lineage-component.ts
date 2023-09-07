@@ -13,6 +13,7 @@ import { DatasetBasicsFragment, DatasetKind } from "src/app/api/kamu.graphql.int
 import { BaseComponent } from "src/app/common/base.component";
 import { LineageUpdate } from "../../dataset.subscriptions.interface";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import AppValues from "src/app/common/app.values";
 
 @Component({
     selector: "app-lineage",
@@ -76,7 +77,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
                 }
 
                 if (cluster.label === dataset.kind) {
-                    cluster.childNodeIds.push(dataset.id );
+                    cluster.childNodeIds.push(dataset.id);
                 }
                 return cluster;
             });
@@ -92,27 +93,30 @@ export class LineageComponent extends BaseComponent implements OnInit {
         const uniqueDatasets: Record<string, DatasetBasicsFragment> = {};
         edges.forEach((edge: DatasetBasicsFragment[]) =>
             edge.forEach((dataset: DatasetBasicsFragment) => {
-                uniqueDatasets[dataset.id ] = dataset;
+                uniqueDatasets[dataset.id] = dataset;
             }),
         );
 
         for (const [id, dataset] of Object.entries(uniqueDatasets)) {
             this.lineageGraphNodes.push({
                 id: this.sanitizeID(id),
-                label: dataset.name ,
+                label: dataset.name,
                 data: {
-                    id: dataset.id ,
-                    name: dataset.name ,
+                    id: dataset.id,
+                    name: dataset.name,
                     kind: dataset.kind,
                     isRoot: dataset.kind === DatasetKind.Root,
                     isCurrent: dataset.id === currentDataset.id,
+                    access: "private",
+                    account: dataset.owner.name,
+                    avatarUrl: AppValues.DEFAULT_AVATAR_URL,
                 },
             });
         }
 
         edges.forEach((edge: DatasetBasicsFragment[]) => {
-            const source: string = this.sanitizeID(edge[0].id );
-            const target: string = this.sanitizeID(edge[1].id );
+            const source: string = this.sanitizeID(edge[0].id);
+            const target: string = this.sanitizeID(edge[1].id);
 
             this.lineageGraphLink.push({
                 id: `${source}__and__${target}`,

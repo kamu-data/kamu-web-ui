@@ -34,7 +34,7 @@
         <svg:g class="node">
             <svg:rect
                 [attr.width]="node.dimension.width"
-                [attr.height]="node.dimension.height"
+                [attr.height]="node.dimension.height * 1.1"
                 [attr.rx]="5"
                 [attr.fill]="node.data.isRoot ? '#ffa500' : '#add8e6'"
                 [attr.cursor]="'pointer'"
@@ -45,18 +45,37 @@
             <svg:text
                 alignment-baseline="central"
                 [attr.x]="10"
-                [attr.y]="node.dimension.height / 2"
+                [attr.y]="node.dimension.height * 0.65"
                 [attr.font-weight]="node.data.isCurrent ? '500' : 'normal'"
                 [attr.cursor]="'pointer'"
                 (click)="!node.data.isCurrent && onClickNode(node)"
             >
                 {{ node.label }}
             </svg:text>
-            <svg:g *ngIf="!node.data.isRoot" [attr.transform]="'translate(' + node.dimension.width + ', 0)'">
+            <image
+                [attr.x]="10"
+                [attr.y]="8"
+                [attr.width]="18"
+                [attr.height]="18"
+                [attr.xlink:href]="node.data.avatarUrl"
+            />
+            <svg:text alignment-baseline="central" [attr.x]="35" [attr.y]="16" [attr.font-weight]="'normal'">
+                {{ node.data.account }}
+            </svg:text>
+            <svg:g [attr.transform]="'translate(' + node.dimension.width / 2 + ', 0)'">
+                <image
+                    [attr.x]="-12"
+                    [attr.y]="-12"
+                    [attr.width]="18"
+                    [attr.height]="18"
+                    [attr.href]="'../assets/images/private.png'"
+                />
+            </svg:g>
+            <svg:g [attr.transform]="'translate(' + node.dimension.width + ', 0)'">
                 <svg:rect
-                    x="-20"
+                    [attr.x]="node.data.isRoot ? -20 : -40"
                     y="-12"
-                    width="40"
+                    [attr.width]="node.data.isRoot ? 40 : 80"
                     height="24"
                     rx="10"
                     [attr.stroke]="'#262626'"
@@ -70,7 +89,7 @@
                     fill="black"
                     style="font-size: 12px"
                 >
-                    SQL
+                    {{ node.data.isRoot ? "Root" : "Derivative" }}
                 </svg:text>
             </svg:g>
         </svg:g>
@@ -79,29 +98,6 @@
     <ng-template #linkTemplate let-link>
         <svg:g class="edge">
             <svg:path class="line" stroke-width="2" marker-end="url(#arrow)"></svg:path>
-            <!--svg:text class="edge-label" text-anchor="middle">
-                <textPath
-                    class="text-path"
-                    [attr.href]="'#' + link.id"
-                    [style.dominant-baseline]="link.dominantBaseline"
-                    startOffset="50%"
-                >
-                    {{ link.label }}
-                </textPath>
-            </svg:text-->
         </svg:g>
     </ng-template>
-
-    <!--  <ng-template #clusterTemplate let-cluster>-->
-    <!--    <svg:g class="node cluster">-->
-    <!--      <svg:rect-->
-    <!--        [attr.width]="cluster.dimension.width"-->
-    <!--        [attr.height]="cluster.dimension.height"-->
-    <!--        [attr.fill]="cluster.data.customColor || cluster.data.color"-->
-    <!--      />-->
-    <!--      <svg:text>-->
-    <!--        {{cluster.label}}-->
-    <!--      </svg:text>-->
-    <!--    </svg:g>-->
-    <!--  </ng-template>-->
 </ngx-graph>

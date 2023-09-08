@@ -57,7 +57,7 @@
                 [attr.y]="8"
                 [attr.width]="18"
                 [attr.height]="18"
-                [attr.xlink:href]="node.data.avatarUrl"
+                [attr.xlink:href]="(getAccountUrl(node.data.account) | async)?.avatarUrl || defaultAvatarUrl"
             />
             <svg:text alignment-baseline="central" [attr.x]="35" [attr.y]="16" [attr.font-weight]="'normal'">
                 {{ node.data.account }}
@@ -66,9 +66,9 @@
                 <image
                     [attr.x]="-12"
                     [attr.y]="-12"
-                    [attr.width]="18"
-                    [attr.height]="18"
-                    [attr.href]="'../assets/images/private.png'"
+                    [attr.width]="20"
+                    [attr.height]="20"
+                    [attr.href]="node.data.isRoot ? '../assets/images/public.png' : '../assets/images/private.png'"
                 />
             </svg:g>
             <svg:g [attr.transform]="'translate(' + node.dimension.width + ', 0)'">

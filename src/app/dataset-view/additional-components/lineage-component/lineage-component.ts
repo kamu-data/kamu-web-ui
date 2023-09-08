@@ -13,7 +13,6 @@ import { DatasetBasicsFragment, DatasetKind } from "src/app/api/kamu.graphql.int
 import { BaseComponent } from "src/app/common/base.component";
 import { LineageUpdate } from "../../dataset.subscriptions.interface";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import AppValues from "src/app/common/app.values";
 
 @Component({
     selector: "app-lineage",
@@ -109,7 +108,6 @@ export class LineageComponent extends BaseComponent implements OnInit {
                     isCurrent: dataset.id === currentDataset.id,
                     access: "private",
                     account: dataset.owner.name,
-                    avatarUrl: AppValues.DEFAULT_AVATAR_URL,
                 },
             });
         }

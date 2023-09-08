@@ -11,6 +11,10 @@ import {
 } from "@angular/core";
 import { Edge, MiniMapPosition } from "@swimlane/ngx-graph";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
+import { Observable } from "rxjs";
+import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
+import AppValues from "src/app/common/app.values";
+import { AccountService } from "src/app/services/account.service";
 
 @Component({
     selector: "app-lineage-graph",
@@ -38,6 +42,9 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public miniMapPosition: MiniMapPosition;
     public graphClusters: ClusterNode[];
     public graphNodes: Node[];
+    public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
+
+    constructor(private accountService: AccountService) {}
 
     public ngOnInit(): void {
         this.graphNodes = this.nodes;
@@ -60,5 +67,9 @@ export class LineageGraphComponent implements OnChanges, OnInit {
 
     public onClickNode(node: Node): void {
         this.onClickNodeEvent.emit(node);
+    }
+
+    public getAccountUrl(accountName: string): Observable<AccountDetailsFragment> {
+        return this.accountService.getAccountInfoByName(accountName);
     }
 }

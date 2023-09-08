@@ -231,6 +231,7 @@ export const MOCK_NODES = [
             isRoot: true,
             isCurrent: true,
             color: "#7aa3e5",
+            accountName: "kamu",
         },
         meta: {
             forceDimensions: false,
@@ -255,6 +256,7 @@ export const MOCK_NODES = [
             isRoot: false,
             isCurrent: false,
             color: "#a8385d",
+            accountName: "kamu",
         },
         meta: {
             forceDimensions: false,

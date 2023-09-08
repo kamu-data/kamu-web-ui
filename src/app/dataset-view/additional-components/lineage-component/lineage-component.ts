@@ -76,7 +76,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
                 }
 
                 if (cluster.label === dataset.kind) {
-                    cluster.childNodeIds.push(dataset.id );
+                    cluster.childNodeIds.push(dataset.id);
                 }
                 return cluster;
             });
@@ -92,27 +92,29 @@ export class LineageComponent extends BaseComponent implements OnInit {
         const uniqueDatasets: Record<string, DatasetBasicsFragment> = {};
         edges.forEach((edge: DatasetBasicsFragment[]) =>
             edge.forEach((dataset: DatasetBasicsFragment) => {
-                uniqueDatasets[dataset.id ] = dataset;
+                uniqueDatasets[dataset.id] = dataset;
             }),
         );
 
         for (const [id, dataset] of Object.entries(uniqueDatasets)) {
             this.lineageGraphNodes.push({
                 id: this.sanitizeID(id),
-                label: dataset.name ,
+                label: dataset.name,
                 data: {
-                    id: dataset.id ,
-                    name: dataset.name ,
+                    id: dataset.id,
+                    name: dataset.name,
                     kind: dataset.kind,
                     isRoot: dataset.kind === DatasetKind.Root,
                     isCurrent: dataset.id === currentDataset.id,
+                    access: "private",
+                    accountName: dataset.owner.name,
                 },
             });
         }
 
         edges.forEach((edge: DatasetBasicsFragment[]) => {
-            const source: string = this.sanitizeID(edge[0].id );
-            const target: string = this.sanitizeID(edge[1].id );
+            const source: string = this.sanitizeID(edge[0].id);
+            const target: string = this.sanitizeID(edge[1].id);
 
             this.lineageGraphLink.push({
                 id: `${source}__and__${target}`,

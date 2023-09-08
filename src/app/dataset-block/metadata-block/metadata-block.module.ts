@@ -1,8 +1,8 @@
-import { SharedModule } from "./../../shared/shared/shared.module";
+import { SharedModule } from "../../shared/shared/shared.module";
 import { SeparatorPropertyComponent } from "./components/event-details/components/common/separator-property/separator-property.component";
 import { SimplePropertyComponent } from "./components/event-details/components/common/simple-property/simple-property.component";
 import { FormsModule } from "@angular/forms";
-import { DisplayTimeModule } from "./../../components/display-time/display-time.module";
+import { DisplayTimeModule } from "../../components/display-time/display-time.module";
 import { MatDividerModule } from "@angular/material/divider";
 import { EventDetailsComponent } from "./components/event-details/event-details.component";
 import { NgModule } from "@angular/core";

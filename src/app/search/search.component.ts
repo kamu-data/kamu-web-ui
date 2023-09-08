@@ -13,7 +13,7 @@ import { Observable } from "rxjs";
 @Component({
     selector: "app-search",
     templateUrl: "./search.component.html",
-    styleUrls: ["./search.component.sass"],
+    styleUrls: ["./search.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent extends BaseComponent implements OnInit {
@@ -135,6 +135,7 @@ export class SearchComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        console.log("init");
         this.initTableData();
 
         this.changePageAndSearch();

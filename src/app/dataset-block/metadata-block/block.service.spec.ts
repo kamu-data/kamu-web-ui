@@ -1,5 +1,5 @@
-import { MetadataBlockFragment } from "./../../api/kamu.graphql.interface";
-import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH } from "./../../api/mock/dataset.mock";
+import { MetadataBlockFragment } from "../../api/kamu.graphql.interface";
+import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH } from "../../api/mock/dataset.mock";
 import { Apollo } from "apollo-angular";
 import { TestBed } from "@angular/core/testing";
 

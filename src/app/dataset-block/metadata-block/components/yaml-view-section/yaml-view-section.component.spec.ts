@@ -1,4 +1,4 @@
-import { BlockService } from "./../../block.service";
+import { BlockService } from "../../block.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { YamlViewSectionComponent } from "./yaml-view-section.component";

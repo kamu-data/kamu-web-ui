@@ -1,0 +1,52 @@
+@import 'var';
+
+.toggle-group {
+    box-shadow: none;
+    border-radius: 0 !important;
+    width: fit-content;
+}
+
+.mat-button-toggle-checked {
+    border-left: none;
+    border-top: none;
+    border-right: none;
+    border-bottom: 2px solid !important;
+    border-radius: 0;
+    background-color: transparent !important;
+}
+
+.mat-button-toggle-input {
+    background-color: transparent !important;
+    padding-left: 32px !important;
+}
+
+.custom-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+}
+
+.vcard-username {
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 24px;
+    color: $app-color-fg-muted;
+}
+
+.organization {
+    font-weight: 500;
+}
+
+.btn-custom {
+    background-color: #f6f8fa;
+    border-color: #dee2e6 !important;
+    color: $app-dark;
+    font-weight: 500;
+
+    &:hover,
+    &:active,
+    &:focus {
+        background-color: #ebedf0;
+        color: $app-dark;
+    }
+}

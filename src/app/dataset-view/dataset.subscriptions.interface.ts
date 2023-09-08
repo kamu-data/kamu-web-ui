@@ -1,4 +1,4 @@
-import { DatasetKind, DatasetPageInfoFragment, SetVocab } from "./../api/kamu.graphql.interface";
+import { DatasetKind, DatasetPageInfoFragment, SetVocab } from "../api/kamu.graphql.interface";
 import {
     DatasetBasicsFragment,
     DatasetDataSizeFragment,

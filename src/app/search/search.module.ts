@@ -1,4 +1,4 @@
-import { DisplayTimeModule } from "./../components/display-time/display-time.module";
+import { DisplayTimeModule } from "../components/display-time/display-time.module";
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { SearchComponent } from "./search.component";

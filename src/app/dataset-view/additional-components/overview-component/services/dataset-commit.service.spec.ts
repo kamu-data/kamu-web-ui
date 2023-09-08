@@ -1,4 +1,4 @@
-import { MaybeUndefined } from "./../../../../common/app.types";
+import { MaybeUndefined } from "../../../../common/app.types";
 import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { DatasetCommitService } from "./dataset-commit.service";
 import { Apollo, ApolloModule } from "apollo-angular";

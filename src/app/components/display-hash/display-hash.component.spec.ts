@@ -1,4 +1,4 @@
-import { TEST_BLOCK_HASH } from "./../../api/mock/dataset.mock";
+import { TEST_BLOCK_HASH } from "../../api/mock/dataset.mock";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { mockDatasetInfo } from "src/app/search/mock.data";

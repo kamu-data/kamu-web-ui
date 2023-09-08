@@ -6,7 +6,7 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
 @Component({
     selector: "app-engine-property",
     templateUrl: "./engine-property.component.html",
-    styleUrls: ["./engine-property.component.sass"],
+    styleUrls: ["./engine-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnginePropertyComponent extends BasePropertyComponent {

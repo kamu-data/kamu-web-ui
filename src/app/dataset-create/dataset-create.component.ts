@@ -1,7 +1,7 @@
 import { BaseComponent } from "src/app/common/base.component";
 /* eslint-disable @typescript-eslint/unbound-method */
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "./../common/app.types";
+import { MaybeNull } from "../common/app.types";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import * as monaco from "monaco-editor";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -11,7 +11,7 @@ import { Observable } from "rxjs";
 @Component({
     selector: "app-dataset-create",
     templateUrl: "./dataset-create.component.html",
-    styleUrls: ["./dataset-create.component.sass"],
+    styleUrls: ["./dataset-create.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetCreateComponent extends BaseComponent {

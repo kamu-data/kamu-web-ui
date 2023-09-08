@@ -9,7 +9,7 @@ import {
     SetInfo,
     SetVocab,
     SetWatermark,
-} from "./../../../../api/kamu.graphql.interface";
+} from "../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "./supported.events";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
@@ -20,7 +20,6 @@ import { Observable } from "rxjs";
 @Component({
     selector: "app-event-details",
     templateUrl: "./event-details.component.html",
-    styleUrls: ["./event-details.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventDetailsComponent {

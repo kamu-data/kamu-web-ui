@@ -5,7 +5,7 @@ import { BaseField } from "../base-field";
 @Component({
     selector: "app-key-value-field",
     templateUrl: "./key-value-field.component.html",
-    styleUrls: ["./key-value-field.component.sass"],
+    styleUrls: ["./key-value-field.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KeyValueFieldComponent extends BaseField {

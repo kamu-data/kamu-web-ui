@@ -1,9 +1,9 @@
-import { DatasetHistoryUpdate } from "./../../dataset-view/dataset.subscriptions.interface";
-import { DatasetService } from "./../../dataset-view/dataset.service";
+import { DatasetHistoryUpdate } from "../../dataset-view/dataset.subscriptions.interface";
+import { DatasetService } from "../../dataset-view/dataset.service";
 import { Observable, Subscription, combineLatest } from "rxjs";
 import ProjectLinks from "src/app/project-links";
-import { BaseProcessingComponent } from "./../../common/base.processing.component";
-import { DatasetViewTypeEnum } from "./../../dataset-view/dataset-view.interface";
+import { BaseProcessingComponent } from "../../common/base.processing.component";
+import { DatasetViewTypeEnum } from "../../dataset-view/dataset-view.interface";
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from "@angular/core";
 
 import { DatasetInfo } from "src/app/interface/navigation.interface";
@@ -15,7 +15,7 @@ import { AppDatasetSubscriptionsService } from "src/app/dataset-view/dataset.sub
 @Component({
     selector: "app-metadata-block",
     templateUrl: "./metadata-block.component.html",
-    styleUrls: ["./metadata-block.component.sass"],
+    styleUrls: ["./metadata-block.component.scss"],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,4 +1,4 @@
-import { TooltipIconComponent } from "./../tooltip-icon/tooltip-icon.component";
+import { TooltipIconComponent } from "../tooltip-icon/tooltip-icon.component";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { BlockRowDataComponent } from "./block-row-data.component";

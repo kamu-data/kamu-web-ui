@@ -8,7 +8,7 @@ import {
     SetPollingSource,
     SetVocab,
     SetWatermark,
-} from "./../../../../api/kamu.graphql.interface";
+} from "../../../../api/kamu.graphql.interface";
 import { AddDataEventFragment, DatasetKind, Seed } from "src/app/api/kamu.graphql.interface";
 export const mockAddData: AddDataEventFragment = {
     __typename: "AddData",

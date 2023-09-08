@@ -10,7 +10,7 @@ import { BaseComponent } from "src/app/common/base.component";
 @Component({
     selector: "app-settings",
     templateUrl: "./settings.component.html",
-    styleUrls: ["./settings.component.sass"],
+    styleUrls: ["./settings.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent extends BaseComponent implements OnInit {

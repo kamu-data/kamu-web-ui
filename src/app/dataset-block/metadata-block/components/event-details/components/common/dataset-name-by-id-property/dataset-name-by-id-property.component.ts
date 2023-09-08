@@ -9,7 +9,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 @Component({
     selector: "app-dataset-id-and-name-property",
     templateUrl: "./dataset-name-by-id-property.component.html",
-    styleUrls: ["./dataset-name-by-id-property.component.sass"],
+    styleUrls: ["./dataset-name-by-id-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetNameByIdPropertyComponent extends BasePropertyComponent implements OnInit {
@@ -29,7 +29,7 @@ export class DatasetNameByIdPropertyComponent extends BasePropertyComponent impl
             this.datasetSevice.requestDatasetInfoById(this.data).subscribe((dataset: DatasetByIdQuery) => {
                 if (dataset.datasets.byId) {
                     this.datasetInfo.accountName = dataset.datasets.byId.owner.name;
-                    this.datasetInfo.datasetName = dataset.datasets.byId.name ;
+                    this.datasetInfo.datasetName = dataset.datasets.byId.name;
                     this.cdr.detectChanges();
                 }
             }),

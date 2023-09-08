@@ -6,7 +6,7 @@ import { TableSourceRowInterface } from "./dynamic-table.interface";
 @Component({
     selector: "app-dynamic-table",
     templateUrl: "./dynamic-table.component.html",
-    styleUrls: ["./dynamic-table.sass"],
+    styleUrls: ["./dynamic-table.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DynamicTableComponent implements OnInit, OnChanges, AfterContentInit {

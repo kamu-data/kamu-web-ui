@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from "@a
 @Component({
     selector: "app-tooltip-icon",
     templateUrl: "./tooltip-icon.component.html",
-    styleUrls: ["./tooltip-icon.component.sass"],
+    styleUrls: ["./tooltip-icon.component.scss"],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

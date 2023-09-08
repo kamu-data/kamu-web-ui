@@ -7,7 +7,6 @@ import { Clipboard } from "@angular/cdk/clipboard";
 @Component({
     selector: "app-seed-event",
     templateUrl: "./seed-event.component.html",
-    styleUrls: ["./seed-event.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SeedEventComponent {

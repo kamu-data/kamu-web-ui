@@ -1,8 +1,8 @@
-import { DatasetInfo } from "./../interface/navigation.interface";
-import { ModalService } from "./../components/modal/modal.service";
+import { DatasetInfo } from "../interface/navigation.interface";
+import { ModalService } from "../components/modal/modal.service";
 import { DatasetNavigationInterface, DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 import { searchAdditionalButtonsEnum } from "../search/search.interface";
-import { NavigationService } from "./../services/navigation.service";
+import { NavigationService } from "../services/navigation.service";
 import { promiseWithCatch } from "./app.helpers";
 import { BaseComponent } from "./base.component";
 import { inject } from "@angular/core";

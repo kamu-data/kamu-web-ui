@@ -6,7 +6,6 @@ import { debounceTime, distinctUntilChanged, map, filter } from "rxjs/operators"
 @Component({
     selector: "app-typeahead-field",
     templateUrl: "./typeahead-field.component.html",
-    styleUrls: ["./typeahead-field.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
 })

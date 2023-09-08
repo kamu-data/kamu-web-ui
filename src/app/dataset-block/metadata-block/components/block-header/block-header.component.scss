@@ -1,0 +1,21 @@
+.custom-button {
+    height: 28px;
+
+    span {
+        font-size: 12px;
+    }
+
+    button {
+        background-color: #ffff !important;
+
+        &:hover {
+            background-color: #f3f4f6 !important;
+            border-color: rgba(27, 31, 36, 0.1490196078) !important;
+            transition-duration: 0.1s !important;
+        }
+    }
+}
+
+button.mat-menu-item {
+    background-color: #ffff !important;
+}

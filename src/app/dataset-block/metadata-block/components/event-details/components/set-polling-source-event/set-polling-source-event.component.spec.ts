@@ -1,6 +1,6 @@
-import { FetchStepUrl, PrepStepDecompress } from "./../../../../../../api/kamu.graphql.interface";
+import { FetchStepUrl, PrepStepDecompress } from "../../../../../../api/kamu.graphql.interface";
 import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
-import { CardsPropertyComponent } from "./../common/cards-property/cards-property.component";
+import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { mockSetPollingSourceEvent } from "../../mock.events";

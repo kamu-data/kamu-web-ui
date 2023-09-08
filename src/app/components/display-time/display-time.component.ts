@@ -6,7 +6,6 @@ import AppValues from "src/app/common/app.values";
 @Component({
     selector: "app-display-time",
     templateUrl: "./display-time.component.html",
-    styleUrls: ["./display-time.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DisplayTimeComponent extends BasePropertyComponent {

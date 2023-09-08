@@ -19,7 +19,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 @Component({
     selector: "app-search-section",
     templateUrl: "./search-section.component.html",
-    styleUrls: ["./search-section.component.sass"],
+    styleUrls: ["./search-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchSectionComponent extends BaseComponent {
@@ -47,13 +47,13 @@ export class SearchSectionComponent extends BaseComponent {
     };
 
     public formatter(x: DatasetAutocompleteItem | string): string {
-        return typeof x !== "string" ? (x.dataset.name ) : x;
+        return typeof x !== "string" ? x.dataset.name : x;
     }
 
     public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
         const value = event.item as DatasetAutocompleteItem;
-        const id = value.dataset.id ;
-        const name = value.dataset.name ;
+        const id = value.dataset.id;
+        const name = value.dataset.name;
         const inputDataset = JSON.stringify({
             id,
             name,
@@ -68,7 +68,7 @@ export class SearchSectionComponent extends BaseComponent {
                             data.datasets.byId.metadata.currentSchema,
                         );
                         this.TREE_DATA.push({
-                            name: value.dataset.name ,
+                            name: value.dataset.name,
                             children: schema?.fields,
                             owner,
                         });

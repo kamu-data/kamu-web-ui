@@ -7,7 +7,6 @@ import { RxwebValidators } from "@rxweb/reactive-form-validators";
 @Component({
     selector: "app-select-date-format-field",
     templateUrl: "./select-date-format-field.component.html",
-    styleUrls: ["./select-date-format-field.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectDateFormatFieldComponent extends BaseField implements OnInit {

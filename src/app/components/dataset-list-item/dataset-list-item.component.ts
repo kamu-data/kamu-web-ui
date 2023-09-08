@@ -1,5 +1,5 @@
-import { ModalService } from "./../modal/modal.service";
-import { DatasetSearchOverviewFragment } from "./../../api/kamu.graphql.interface";
+import { ModalService } from "../modal/modal.service";
+import { DatasetSearchOverviewFragment } from "../../api/kamu.graphql.interface";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -7,7 +7,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 @Component({
     selector: "app-dataset-list-item",
     templateUrl: "./dataset-list-item.component.html",
-    styleUrls: ["./dataset-list-item.component.sass"],
+    styleUrls: ["./dataset-list-item.component.scss"],
 })
 export class DatasetListItemComponent {
     @Input() public row: DatasetSearchOverviewFragment;

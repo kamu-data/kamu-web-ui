@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { DatasetViewHeaderComponent } from "./dataset-view-header-component";
+import { DatasetViewHeaderComponent } from "./dataset-view-header.component";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 import { SearchAdditionalButtonsComponent } from "src/app/components/search-additional-buttons/search-additional-buttons.component";
 import { SearchAdditionalButtonsNavComponent } from "src/app/components/search-additional-buttons/search-additional-buttons-nav.component";

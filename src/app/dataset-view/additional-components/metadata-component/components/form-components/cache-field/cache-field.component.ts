@@ -5,7 +5,6 @@ import { BaseField } from "../base-field";
 @Component({
     selector: "app-cache-field",
     templateUrl: "./cache-field.component.html",
-    styleUrls: ["./cache-field.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CacheFieldComponent extends BaseField {

@@ -23,7 +23,6 @@ export const ALL_URLS_WITHOUT_ACCESS_TOKEN: string[] = [ProjectLinks.URL_LOGIN, 
 @Component({
     selector: "app-root",
     templateUrl: "./app.component.html",
-    styleUrls: ["./app.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent extends BaseComponent implements OnInit {
@@ -94,10 +93,10 @@ export class AppComponent extends BaseComponent implements OnInit {
         if (item.__typename === TypeNames.datasetType) {
             this.navigationService.navigateToDatasetView({
                 accountName: item.dataset.owner.name,
-                datasetName: item.dataset.name ,
+                datasetName: item.dataset.name,
             });
         } else {
-            this.navigationService.navigateToSearch(item.dataset.id );
+            this.navigationService.navigateToSearch(item.dataset.id);
         }
     }
     public onClickAppLogo(): void {

@@ -6,7 +6,7 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
 @Component({
     selector: "app-schema-property",
     templateUrl: "./schema-property.component.html",
-    styleUrls: ["./schema-property.component.sass"],
+    styleUrls: ["./schema-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SchemaPropertyComponent extends BasePropertyComponent {

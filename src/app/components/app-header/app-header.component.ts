@@ -1,4 +1,4 @@
-import { MaybeNull } from "./../../common/app.types";
+import { MaybeNull } from "../../common/app.types";
 import { ActivatedRoute, NavigationEnd, Params, Router, RouterEvent } from "@angular/router";
 import {
     ChangeDetectionStrategy,

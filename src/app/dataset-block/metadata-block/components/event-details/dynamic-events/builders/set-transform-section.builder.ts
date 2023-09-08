@@ -1,4 +1,4 @@
-import { Dataset } from "./../../../../../../api/kamu.graphql.interface";
+import { Dataset } from "../../../../../../api/kamu.graphql.interface";
 import { SetTransform, TransformInput } from "src/app/api/kamu.graphql.interface";
 import { EventSectionBuilder } from "./event-section.builder";
 import { SET_TRANSFORM_SOURCE_DESCRIPTORS } from "../../components/set-transform-event/set-transform-event.source";
@@ -30,12 +30,12 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                             const object = item.datasetRef
                                 ? {
                                       ...item.dataset,
-                                      alias: item.name ,
-                                      datasetRef: item.datasetRef ,
+                                      alias: item.name,
+                                      datasetRef: item.datasetRef,
                                   }
                                 : {
                                       ...item.dataset,
-                                      alias: item.name ,
+                                      alias: item.name,
                                   };
                             Object.entries(object).forEach(([key, value]) => {
                                 if (event.__typename && item.dataset.__typename && key !== "__typename") {

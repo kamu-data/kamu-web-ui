@@ -5,7 +5,6 @@ import { DataHelpers } from "src/app/common/data.helpers";
 @Component({
     selector: "app-step-type-property",
     templateUrl: "./step-type-property.component.html",
-    styleUrls: ["./step-type-property.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepTypePropertyComponent extends BasePropertyComponent {

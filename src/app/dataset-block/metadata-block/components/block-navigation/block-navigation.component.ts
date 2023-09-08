@@ -1,5 +1,5 @@
-import { DatasetHistoryUpdate } from "./../../../../dataset-view/dataset.subscriptions.interface";
-import { SupportedEvents } from "./../event-details/supported.events";
+import { DatasetHistoryUpdate } from "../../../../dataset-view/dataset.subscriptions.interface";
+import { SupportedEvents } from "../event-details/supported.events";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { MaybeNull } from "src/app/common/app.types";
@@ -8,7 +8,7 @@ import { IDropdownSettings } from "ng-multiselect-dropdown";
 @Component({
     selector: "app-block-navigation",
     templateUrl: "./block-navigation.component.html",
-    styleUrls: ["./block-navigation.component.sass"],
+    styleUrls: ["./block-navigation.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlockNavigationComponent {

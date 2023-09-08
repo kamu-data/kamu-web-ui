@@ -5,7 +5,7 @@ import AppValues from "../../../../common/app.values";
 @Component({
     selector: "app-load-more",
     templateUrl: "./load-more.component.html",
-    styleUrls: ["./load-more.component.sass"],
+    styleUrls: ["./load-more.component.scss"],
 })
 export class LoadMoreComponent {
     public rowsNumber: number = AppValues.SQL_QUERY_LIMIT;

@@ -1,4 +1,4 @@
-import { NavigationService } from "./../../services/navigation.service";
+import { NavigationService } from "../../services/navigation.service";
 import { MatIconModule } from "@angular/material/icon";
 import { MatChipsModule } from "@angular/material/chips";
 import { ComponentFixture, TestBed } from "@angular/core/testing";

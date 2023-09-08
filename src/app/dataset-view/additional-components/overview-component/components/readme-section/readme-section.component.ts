@@ -8,7 +8,6 @@ import { DatasetCommitService } from "../../services/dataset-commit.service";
 @Component({
     selector: "app-readme-section",
     templateUrl: "./readme-section.component.html",
-    styleUrls: ["./readme-section.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReadmeSectionComponent extends BaseComponent implements OnInit {

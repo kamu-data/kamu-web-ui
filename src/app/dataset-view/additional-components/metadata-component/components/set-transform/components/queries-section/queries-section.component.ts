@@ -7,7 +7,7 @@ import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/component
 @Component({
     selector: "app-queries-section",
     templateUrl: "./queries-section.component.html",
-    styleUrls: ["./queries-section.component.sass"],
+    styleUrls: ["./queries-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QueriesSectionComponent {

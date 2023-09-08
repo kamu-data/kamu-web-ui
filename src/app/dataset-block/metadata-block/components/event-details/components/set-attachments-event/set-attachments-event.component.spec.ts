@@ -1,4 +1,4 @@
-import { mockSetAttachments } from "./../../mock.events";
+import { mockSetAttachments } from "../../mock.events";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SetAttachmentsEventComponent } from "./set-attachments-event.component";

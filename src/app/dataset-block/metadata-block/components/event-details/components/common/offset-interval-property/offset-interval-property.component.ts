@@ -1,5 +1,5 @@
-import { DatasetByIdQuery } from "./../../../../../../../api/kamu.graphql.interface";
-import { NavigationService } from "./../../../../../../../services/navigation.service";
+import { DatasetByIdQuery } from "../../../../../../../api/kamu.graphql.interface";
+import { NavigationService } from "../../../../../../../services/navigation.service";
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { OffsetInterval } from "src/app/api/kamu.graphql.interface";
@@ -11,7 +11,7 @@ import { MaybeNull } from "src/app/common/app.types";
 @Component({
     selector: "app-interval-property",
     templateUrl: "./offset-interval-property.component.html",
-    styleUrls: ["./offset-interval-property.component.sass"],
+    styleUrls: ["./offset-interval-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OffsetIntervalPropertyComponent extends BasePropertyComponent implements OnInit {

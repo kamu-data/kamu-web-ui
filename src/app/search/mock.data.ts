@@ -1,5 +1,5 @@
-import { CommitEventToDatasetMutation, PageBasedInfo } from "./../api/kamu.graphql.interface";
-import { mockSetVocab } from "./../dataset-block/metadata-block/components/event-details/mock.events";
+import { CommitEventToDatasetMutation, PageBasedInfo } from "../api/kamu.graphql.interface";
+import { mockSetVocab } from "../dataset-block/metadata-block/components/event-details/mock.events";
 import {
     DataBatchFormat,
     DataQueryResultErrorKind,

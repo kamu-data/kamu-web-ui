@@ -9,7 +9,7 @@ import { EditPollingSourceService } from "../../edit-polling-source.service";
 @Component({
     selector: "app-prepare-step",
     templateUrl: "./prepare-step.component.html",
-    styleUrls: ["./prepare-step.component.sass"],
+    styleUrls: ["./prepare-step.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
 })

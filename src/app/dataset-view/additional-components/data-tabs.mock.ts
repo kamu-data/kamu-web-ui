@@ -1,4 +1,4 @@
-import { mockDatasetBasicsFragment } from "./../../search/mock.data";
+import { mockDatasetBasicsFragment } from "../../search/mock.data";
 import { DatasetHistoryUpdate, DataSqlErrorUpdate, DataUpdate } from "../dataset.subscriptions.interface";
 import {
     CommitEventToDatasetMutation,

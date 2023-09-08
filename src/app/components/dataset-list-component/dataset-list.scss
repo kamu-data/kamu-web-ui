@@ -1,0 +1,39 @@
+@import 'var';
+
+.dataset-list-total-count {
+    margin: 0;
+}
+
+.select-block {
+    background: transparent;
+
+    > * {
+        background: transparent;
+    }
+
+    p {
+        z-index: 0;
+    }
+
+    &:hover {
+        background: $app-background-btn;
+    }
+
+    &.form-group {
+        * {
+            font-size: 16px;
+        }
+    }
+}
+
+#sortOptions {
+    color: $app-dark;
+    z-index: 1;
+    background: transparent;
+    padding-left: 50px;
+    transition: .2s cubic-bezier(0.3, 0, 0.5, 1);
+
+    &:focus-visible {
+        outline: none;
+    }
+}

@@ -5,7 +5,7 @@ import {
     DatasetSearchOverviewFragment,
     GetDatasetDataSqlRunQuery,
     GetMetadataBlockQuery,
-} from "./../kamu.graphql.interface";
+} from "../kamu.graphql.interface";
 import { DataSchemaFormat } from "../kamu.graphql.interface";
 import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 

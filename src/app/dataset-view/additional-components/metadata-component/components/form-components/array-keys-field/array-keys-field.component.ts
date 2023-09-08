@@ -5,7 +5,7 @@ import { BaseField } from "../base-field";
 @Component({
     selector: "app-array-keys-field",
     templateUrl: "./array-keys-field.component.html",
-    styleUrls: ["./array-keys-field.component.sass"],
+    styleUrls: ["./array-keys-field.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArrayKeysFieldComponent extends BaseField {

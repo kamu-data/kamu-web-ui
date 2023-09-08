@@ -5,7 +5,6 @@ import { TemporalTable } from "src/app/api/kamu.graphql.interface";
 @Component({
     selector: "app-temporal-tables-property",
     templateUrl: "./temporal-tables-property.component.html",
-    styleUrls: ["./temporal-tables-property.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TemporalTablesPropertyComponent extends BasePropertyComponent {

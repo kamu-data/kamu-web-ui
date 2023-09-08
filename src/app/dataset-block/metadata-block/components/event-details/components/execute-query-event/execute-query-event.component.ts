@@ -6,7 +6,6 @@ import { BaseDynamicEventComponent } from "../base-dynamic-event/base-dynamic-ev
 @Component({
     selector: "app-execute-query-event",
     templateUrl: "../base-dynamic-event/base-dynamic-event.component.html",
-    styleUrls: ["../base-dynamic-event/base-dynamic-event.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExecuteQueryEventComponent extends BaseDynamicEventComponent<ExecuteQuery> implements OnInit {

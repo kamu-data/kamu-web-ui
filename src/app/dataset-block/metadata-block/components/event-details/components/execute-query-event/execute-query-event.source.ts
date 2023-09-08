@@ -1,5 +1,5 @@
-import { DisplayTimeComponent } from "./../../../../../../components/display-time/display-time.component";
-import { SimplePropertyComponent } from "./../common/simple-property/simple-property.component";
+import { DisplayTimeComponent } from "../../../../../../components/display-time/display-time.component";
+import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
 import { SizePropertyComponent } from "../common/size-property/size-property.component";

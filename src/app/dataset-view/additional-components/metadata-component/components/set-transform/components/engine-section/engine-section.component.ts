@@ -15,7 +15,7 @@ import { EngineService } from "src/app/services/engine.service";
 @Component({
     selector: "app-engine-section",
     templateUrl: "./engine-section.component.html",
-    styleUrls: ["./engine-section.component.sass"],
+    styleUrls: ["./engine-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EngineSectionComponent extends BaseComponent implements OnInit {
@@ -66,8 +66,7 @@ export class EngineSectionComponent extends BaseComponent implements OnInit {
 
     private initCurrentEngine(): void {
         if (this.currentSetTransformEvent?.engine) {
-            const currentEngine: string = this.currentSetTransformEvent.engine;
-            this.selectedEngine = currentEngine;
+            this.selectedEngine = this.currentSetTransformEvent.engine;
             this.onSelectType(this.selectedEngine.toUpperCase().toLowerCase());
         }
     }

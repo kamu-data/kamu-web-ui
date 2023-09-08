@@ -1,4 +1,4 @@
-import { SharedTestModule } from "./../../../common/shared-test.module";
+import { SharedTestModule } from "../../../common/shared-test.module";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { SettingsTabComponent } from "./settings.component";
 import { ReactiveFormsModule } from "@angular/forms";

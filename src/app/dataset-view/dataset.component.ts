@@ -23,7 +23,7 @@ import { MaybeNull } from "../common/app.types";
 @Component({
     selector: "app-dataset",
     templateUrl: "./dataset.component.html",
-    styleUrls: ["./dataset-view.component.sass"],
+    styleUrls: ["./dataset.component.scss"],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

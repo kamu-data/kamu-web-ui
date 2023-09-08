@@ -1,4 +1,4 @@
-import { DatasetBasicsFragment, DatasetKind, TransformInput } from "./../../../../../api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetKind, TransformInput } from "../../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
@@ -16,7 +16,7 @@ import { BaseMainEventComponent } from "../base-main-event.component";
 @Component({
     selector: "app-set-transform",
     templateUrl: "./set-transform.component.html",
-    styleUrls: ["./set-transform.component.sass"],
+    styleUrls: ["./set-transform.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetTransformComponent extends BaseMainEventComponent implements OnInit {

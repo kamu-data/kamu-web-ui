@@ -1,0 +1,26 @@
+.tooltip-class {
+    z-index: 1000;
+
+    .tooltip-inner {
+        background-color: #f3f4f6;
+        position: relative;
+        font-size: 12px;
+        border: 1px solid #ced4da;
+        padding: 5px 10px;
+        color: black;
+        text-align: left;
+        width: 150px;
+    }
+}
+
+.bs-tooltip-top {
+    .tooltip-arrow {
+        &::before {
+            border-top-color: #ced4da !important;
+        }
+    }
+}
+
+.tooltip.show {
+    opacity: 1;
+}

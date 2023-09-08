@@ -10,7 +10,7 @@ import { Observable, shareReplay } from "rxjs";
 @Component({
     selector: "app-settings-tab",
     templateUrl: "./settings.component.html",
-    styleUrls: ["./settings.component.sass"],
+    styleUrls: ["./settings.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsTabComponent extends BaseComponent {

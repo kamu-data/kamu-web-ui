@@ -4,7 +4,7 @@ import { BaseField } from "../base-field";
 @Component({
     selector: "app-input-field",
     templateUrl: "./input-field.component.html",
-    styleUrls: ["./input-field.component.sass"],
+    styleUrls: ["./input-field.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputFieldComponent extends BaseField {

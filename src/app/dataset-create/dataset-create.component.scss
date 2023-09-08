@@ -1,0 +1,157 @@
+@import 'var';
+
+* {
+    font-size: 18px;
+}
+
+#dataset-create {
+    display: grid;
+}
+
+.dataset-create-content {
+    display: grid;
+    padding: 0 16px;
+    flex-direction: row;
+    width: 70%;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 24px;
+
+    > * {
+        display: grid;
+        justify-items: center;
+        overflow: initial;
+    }
+}
+
+.dataset-create-container {
+    height: min-content;
+    display: grid;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    align-self: center;
+    align-content: center;
+    width: 100%;
+}
+
+.dataset-create-tipText {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 18px;
+    text-align: center;
+    letter-spacing: 0.7px;
+    color: $app-emperor;
+}
+
+.dataset-create-content__image-container {
+    position: relative;
+
+    > :last-child {
+        position: absolute;
+        top: 0;
+        left: 28%;
+        height: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .dataset-create-content {
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+}
+
+hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.6);
+}
+
+.layout {
+    max-width: 768px;
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-bottom: 100px;
+
+    .divider {
+        margin-top: 30px;
+    }
+
+    .custom-form-control {
+        padding: 5px 12px;
+        font-size: 14px;
+    }
+
+    .title {
+        flex: 1 1 auto !important;
+        font-size: 20px !important;
+        font-weight: 400 !important;
+        margin: 0 !important;
+    }
+
+    .container-monaco {
+        min-width: 100%;
+    }
+
+    .btn-create {
+        background: #2c974b;
+        border-color: rgba(27, 31, 36, 0.15);
+        color: #ffffff;
+        position: relative;
+        display: inline-block;
+        padding: 5px 16px;
+        font-size: 14px;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        border-radius: 6px;
+
+        &:hover {
+            background: #34b358;
+        }
+
+        &:disabled {
+            background: #69e18b;
+        }
+    }
+
+    label {
+        span {
+            font-size: 16px;
+        }
+
+        .icon-size {
+            font-size: 28px;
+            height: 28px;
+            width: 28px;
+        }
+    }
+
+    .form-yaml-checkbox-label {
+        font-size: 16px;
+    }
+
+    .checkbox {
+        height: 16px;
+        width: 16px;
+    }
+
+    .upload-btn {
+        padding: 3px 12px;
+        font-size: 12px;
+        line-height: 20px;
+        border: 1px solid rgba(27, 31, 36, 0.25);
+        border-radius: 6px;
+
+        &:hover {
+            background: rgba(27, 31, 36, 0.16);
+        }
+    }
+
+    .fs-12 {
+        font-size: 12px !important;
+    }
+}

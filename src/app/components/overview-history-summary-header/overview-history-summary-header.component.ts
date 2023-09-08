@@ -1,4 +1,4 @@
-import { NavigationService } from "./../../services/navigation.service";
+import { NavigationService } from "../../services/navigation.service";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { Account, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
@@ -7,7 +7,7 @@ import { DataHelpers } from "src/app/common/data.helpers";
 @Component({
     selector: "app-overview-history-summary-header",
     templateUrl: "./overview-history-summary-header.component.html",
-    styleUrls: ["./overview-history-summary-header.component.sass"],
+    styleUrls: ["./overview-history-summary-header.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewHistorySummaryHeaderComponent {

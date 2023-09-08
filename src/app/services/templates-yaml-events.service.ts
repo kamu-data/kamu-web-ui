@@ -1,4 +1,4 @@
-import { SetLicense, SetPollingSource, SetTransform } from "./../api/kamu.graphql.interface";
+import { SetLicense, SetPollingSource, SetTransform } from "../api/kamu.graphql.interface";
 import { Injectable } from "@angular/core";
 import { MaybeNull } from "../common/app.types";
 import { stringify } from "yaml";

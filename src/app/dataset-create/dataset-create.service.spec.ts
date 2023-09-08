@@ -1,5 +1,5 @@
-import { CreateDatasetFromSnapshotMutation, CreateEmptyDatasetMutation } from "./../api/kamu.graphql.interface";
-import { mockDatasetBasicsFragment, mockDatasetInfo } from "./../search/mock.data";
+import { CreateDatasetFromSnapshotMutation, CreateEmptyDatasetMutation } from "../api/kamu.graphql.interface";
+import { mockDatasetBasicsFragment, mockDatasetInfo } from "../search/mock.data";
 import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { of } from "rxjs";
@@ -95,7 +95,7 @@ describe("AppDatasetCreateService", () => {
 
         expect(spyNavigateToDatasetView).toHaveBeenCalledWith({
             accountName: mockDatasetInfo.accountName,
-            datasetName: mockDatasetBasicsFragment.name ,
+            datasetName: mockDatasetBasicsFragment.name,
             tab: DatasetViewTypeEnum.Overview,
         });
     });
@@ -116,7 +116,7 @@ describe("AppDatasetCreateService", () => {
 
         expect(spyNavigateToDatasetView).not.toHaveBeenCalledWith({
             accountName: mockDatasetInfo.accountName,
-            datasetName: mockDatasetBasicsFragment.name ,
+            datasetName: mockDatasetBasicsFragment.name,
             tab: DatasetViewTypeEnum.Overview,
         });
         service.onErrorMessageChanges.subscribe((error) => {

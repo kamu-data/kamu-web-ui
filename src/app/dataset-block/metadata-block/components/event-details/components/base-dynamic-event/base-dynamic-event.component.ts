@@ -15,7 +15,6 @@ import { BasePropertyComponent } from "../common/base-property/base-property.com
 @Component({
     selector: "app-dynamic-base-event",
     templateUrl: "./base-dynamic-event.component.html",
-    styleUrls: ["./base-dynamic-event.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BaseDynamicEventComponent<TEvent extends object> implements AfterViewChecked {

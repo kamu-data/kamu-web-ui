@@ -1,4 +1,4 @@
-import { MaybeNullOrUndefined } from "./../../../../../common/app.types";
+import { MaybeNullOrUndefined } from "../../../../../common/app.types";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { OWL_DATE_TIME_FORMATS } from "@danielmoncada/angular-datetime-picker";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
@@ -12,7 +12,7 @@ import { DatasetCommitService } from "../../services/dataset-commit.service";
 @Component({
     selector: "app-edit-watermark-modal",
     templateUrl: "./edit-watermark-modal.component.html",
-    styleUrls: ["./edit-watermark-modal.component.sass"],
+    styleUrls: ["./edit-watermark-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS }],
 })

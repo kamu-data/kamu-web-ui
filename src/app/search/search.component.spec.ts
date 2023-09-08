@@ -1,7 +1,7 @@
 import { MatChipsModule } from "@angular/material/chips";
-import { DatasetInfo } from "./../interface/navigation.interface";
-import { AuthApi } from "./../api/auth.api";
-import { SearchApi } from "./../api/search.api";
+import { DatasetInfo } from "../interface/navigation.interface";
+import { AuthApi } from "../api/auth.api";
+import { SearchApi } from "../api/search.api";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { SearchComponent } from "./search.component";
 import { NavigationService } from "../services/navigation.service";

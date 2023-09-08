@@ -6,7 +6,7 @@ import {
     mockDatasetInfo,
     mockDatasetDataSqlRunInvalidSqlResponse,
     mockDatasetDataSqlRunInternalErrorResponse,
-} from "./../search/mock.data";
+} from "../search/mock.data";
 import { TestBed } from "@angular/core/testing";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { DatasetApi } from "../api/dataset.api";

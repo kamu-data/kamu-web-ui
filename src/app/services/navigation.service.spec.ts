@@ -1,6 +1,6 @@
-import { SettingsTabs } from "./../auth/settings/settings.constants";
-import { AccountTabs } from "./../auth/account/account.constants";
-import { routes } from "./../app-routing.module";
+import { SettingsTabs } from "../auth/settings/settings.constants";
+import { AccountTabs } from "../auth/account/account.constants";
+import { routes } from "../app-routing.module";
 import { RouterTestingModule } from "@angular/router/testing";
 import { TestBed } from "@angular/core/testing";
 import { NavigationService } from "./navigation.service";

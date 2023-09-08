@@ -1,5 +1,5 @@
 import { NavigationService } from "src/app/services/navigation.service";
-import { mockAccountDetails } from "./../../api/mock/auth.mock";
+import { mockAccountDetails } from "../../api/mock/auth.mock";
 import { AccountTabs } from "./account.constants";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatIconModule } from "@angular/material/icon";

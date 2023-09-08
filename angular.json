@@ -7,7 +7,7 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "sass"
+          "style": "scss"
         }
       },
       "root": "",
@@ -42,8 +42,13 @@
                 "output": "/assets/monaco/"
               }
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/assets/styles"
+              ]
+            },
             "styles": [
-              "src/styles.sass",
+              "src/styles.scss",
               "node_modules/prismjs/themes/prism-okaidia.css",
               "node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css",
               "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.css",
@@ -113,8 +118,13 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": ["src/favicon.ico", "src/assets"],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/assets/styles"
+              ]
+            },
             "styles": [
-              "src/styles.sass",
+              "src/styles.scss",
               "node_modules/prismjs/themes/prism-okaidia.css",
               "node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css",
               "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.css",

@@ -19,7 +19,6 @@ import { AccountService } from "src/app/services/account.service";
 @Component({
     selector: "app-lineage-graph",
     templateUrl: "./lineage-graph.component.html",
-    styleUrls: ["./lineage-graph.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineageGraphComponent implements OnChanges, OnInit {
@@ -43,7 +42,7 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public miniMapPosition: MiniMapPosition;
     public graphClusters: ClusterNode[];
     public graphNodes: Node[];
-    public defaultAvatarUrl = AppValues.DEFAULT_AVATAR_URL;
+    public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
     constructor(private accountService: AccountService) {}
 

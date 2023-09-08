@@ -107,7 +107,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
                     isRoot: dataset.kind === DatasetKind.Root,
                     isCurrent: dataset.id === currentDataset.id,
                     access: "private",
-                    account: dataset.owner.name,
+                    accountName: dataset.owner.name,
                 },
             });
         }

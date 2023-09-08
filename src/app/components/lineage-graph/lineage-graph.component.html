@@ -58,10 +58,10 @@
                 [attr.width]="18"
                 [attr.height]="18"
                 attr.data-test-id="account-avatar-{{ node.label }}"
-                [attr.xlink:href]="(getAccountUrl(node.data.account) | async)?.avatarUrl || DEFAULT_AVATAR_URL"
+                [attr.xlink:href]="(getAccountUrl(node.data.accountName) | async)?.avatarUrl || DEFAULT_AVATAR_URL"
             />
             <svg:text alignment-baseline="central" [attr.x]="35" [attr.y]="16" [attr.font-weight]="'normal'">
-                {{ node.data.account }}
+                {{ node.data.accountName }}
             </svg:text>
             <svg:g [attr.transform]="'translate(' + node.dimension.width / 2 + ', 0)'">
                 <!-- Temporary solution - in future icon will be choosen on explicit public/private attribute in the dataset -->

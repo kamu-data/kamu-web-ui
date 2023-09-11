@@ -29,7 +29,7 @@ export class LineageGraphComponent implements OnChanges, OnInit {
 
     @Output() public onClickNodeEvent = new EventEmitter<Node>();
 
-    public draggingEnabled = false;
+    public draggingEnabled = true;
     public panningEnabled = true;
     public zoomEnabled = true;
     public zoomSpeed = 0.03;

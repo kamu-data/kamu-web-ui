@@ -1,4 +1,4 @@
-import { MaybeNull } from "./../../../../../../common/app.types";
+import { MaybeNull } from "../../../../../../common/app.types";
 import { AfterViewInit, ChangeDetectionStrategy, Component, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { BaseField } from "../base-field";
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
@@ -17,7 +17,7 @@ export interface SchemaType {
 @Component({
     selector: "app-schema-field",
     templateUrl: "./schema-field.component.html",
-    styleUrls: ["./schema-field.component.sass"],
+    styleUrls: ["./schema-field.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SchemaFieldComponent extends BaseField implements AfterViewInit {

@@ -1,0 +1,146 @@
+@import 'var';
+
+.mat-button-toggle-group {
+    width: fit-content;
+
+    .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
+    .mat-button-toggle-group-appearance-standard {
+        border-radius: 0 !important;
+    }
+}
+
+#dataset-view-history {
+    overflow: visible;
+}
+
+.datatab-expanding-row {
+    background: #fff;
+    border-top: 1px solid rgba(0, 0, 0, .12);
+    box-shadow: 0 3px 3px rgb(0 0 0 / 12%);
+    transition: margin .2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: margin;
+
+    &-header {
+        color: #000;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 20px;
+        cursor: pointer;
+        display: flex;
+        padding: 4px 10px;
+
+        &-content {
+            flex-grow: 1;
+            max-width: calc(100% - 24px);
+        }
+
+        .datatab-activity-row-summary {
+            display: flex;
+        }
+
+        .datatab-activity-timestamp {
+            color: rgba(0, 0, 0, .66);
+            flex-shrink: 0;
+            text-align: right;
+            width: 62px;
+            margin-right: 10px;
+        }
+
+        .datatab-activity-icon {
+            &-size {
+                font-size: 15px;
+                height: 15px;
+                width: 15px;
+            }
+        }
+
+        .datatab-activity-info-container {
+            display: flex;
+            flex-grow: 1;
+            flex-wrap: wrap;
+            padding-left: 10px;
+            max-width: calc(100% - 86px);
+        }
+
+        .datatab-activity-title {
+            flex: 1 0 30%;
+        }
+    }
+}
+
+.sql-query-editor-header {
+
+    h2 {
+        width: max-content;
+        display: inline-block;
+    }
+
+    .btn-group-parent {
+        float: right;
+
+        .btn-group-item span {
+            font-size: 17px;
+            font-weight: 600;
+        }
+    }
+}
+
+.sql-run-button {
+    color: $app-success;
+    width: min-content;
+    padding: 5px;
+}
+
+mat-button-toggle-group {
+    box-shadow: none;
+    border-bottom: 1px solid;
+    border-radius: 0 !important;
+}
+
+mat-button-toggle {
+    border: 2px transparent solid !important;
+    margin-top: 5px !important;
+    padding: 0 5px !important;
+    z-index: 3 !important;
+    outline: none !important;
+
+    &:hover {
+        box-shadow: none !important;
+        border-bottom: 1px solid !important;
+        border-radius: 0 !important;
+
+        &.mat-button-toggle-checked {
+            border-bottom: 2px #000 solid !important;
+
+            &::ng-deep mat-button-toggle {
+                .mat-button-toggle-focus-overlay {
+                    background-color: transparent !important;
+                    opacity: 0 !important;
+                }
+            }
+        }
+    }
+}
+
+.mat-button-toggle-checked {
+    border-bottom-color: #000 !important;
+    border-radius: 0;
+    background-color: transparent !important;
+}
+
+.mat-button-toggle-input {
+    background-color: transparent !important;
+    padding-left: 32px !important;
+}
+
+.tab-icon {
+    position: absolute;
+    left: -14px;
+    top: 9px;
+    font-size: 18px;
+}
+
+[data-test-id='searchAdditionalButtons'] {
+    height: inherit;
+    border-radius: inherit;
+}

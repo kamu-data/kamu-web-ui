@@ -1,0 +1,16 @@
+.notification-indicator {
+    .mail-status {
+        position: absolute;
+        top: -13px;
+        left: 13px;
+        z-index: 2;
+        display: none;
+        width: 14px;
+        height: 14px;
+        color: #fff;
+        background-image: linear-gradient(#54a3ff, #006eed);
+        background-clip: padding-box;
+        border: 2px solid var(--color-header-bg);
+        border-radius: 50%;
+    }
+}

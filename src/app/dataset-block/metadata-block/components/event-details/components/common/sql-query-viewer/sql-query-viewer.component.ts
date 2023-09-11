@@ -5,7 +5,6 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
 @Component({
     selector: "app-sql-query-viewer",
     templateUrl: "./sql-query-viewer.component.html",
-    styleUrls: ["./sql-query-viewer.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SqlQueryViewerComponent extends BasePropertyComponent {

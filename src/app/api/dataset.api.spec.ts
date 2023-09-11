@@ -6,11 +6,7 @@ import {
     TEST_DATASET_NAME,
     TEST_USER_NAME,
 } from "./mock/dataset.mock";
-import {
-    mockCommitEventResponse,
-    mockDatasetHistoryResponse,
-    mockDatasetMainDataResponse,
-} from "./../search/mock.data";
+import { mockCommitEventResponse, mockDatasetHistoryResponse, mockDatasetMainDataResponse } from "../search/mock.data";
 import { TestBed } from "@angular/core/testing";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 import { DatasetApi } from "./dataset.api";

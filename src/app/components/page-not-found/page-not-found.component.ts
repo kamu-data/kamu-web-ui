@@ -5,7 +5,7 @@ import AppValues from "src/app/common/app.values";
 @Component({
     selector: "app-page-not-found",
     templateUrl: "./page-not-found.component.html",
-    styleUrls: ["./page-not-found.component.sass"],
+    styleUrls: ["./page-not-found.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageNotFoundComponent {

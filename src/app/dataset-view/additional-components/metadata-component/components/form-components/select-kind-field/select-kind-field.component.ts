@@ -1,5 +1,5 @@
 import { FormGroup } from "@angular/forms";
-import { RadioControlType } from "./../../add-polling-source/form-control.source";
+import { RadioControlType } from "../../add-polling-source/form-control.source";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { NgbTooltipConfig } from "@ng-bootstrap/ng-bootstrap";
 import AppValues from "src/app/common/app.values";
@@ -7,7 +7,7 @@ import AppValues from "src/app/common/app.values";
 @Component({
     selector: "app-select-kind-field",
     templateUrl: "./select-kind-field.component.html",
-    styleUrls: ["./select-kind-field.component.sass"],
+    styleUrls: ["./select-kind-field.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [NgbTooltipConfig],
 })

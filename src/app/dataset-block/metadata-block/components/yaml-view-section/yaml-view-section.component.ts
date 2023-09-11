@@ -7,7 +7,6 @@ import { Observable } from "rxjs";
 @Component({
     selector: "app-yaml-view-section",
     templateUrl: "./yaml-view-section.component.html",
-    styleUrls: ["./yaml-view-section.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class YamlViewSectionComponent {

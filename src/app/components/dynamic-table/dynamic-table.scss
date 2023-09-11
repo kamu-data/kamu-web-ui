@@ -1,0 +1,46 @@
+@import 'var';
+
+.clickable-row {
+    .mat-cell {
+        color: $app-navyBlue;
+
+        &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    }
+}
+
+table {
+    width: 100%;
+
+    .mat-cell {
+        border: 1px solid $app-color-border-default;
+        color: $app-color-fg-default;
+    }
+
+    .truncate-cell {
+        max-width: 535px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.mat-header-cell {
+    color: $app-color-fg-default;
+    border: 1px solid $app-color-border-default;
+    font-size: 15px;
+    text-align: left;
+    background: $app-aliceBlue;
+}
+
+.dynamic-table th.mat-header-cell,
+.dynamic-table td.mat-cell,
+.dynamic-table td.mat-footer-cell,
+.dynamic-table th.mat-header-cell:first-of-type,
+.dynamic-table td.mat-cell:first-of-type,
+.dynamic-table td.mat-footer-cell:first-of-type {
+    padding-left: 10px;
+    padding-right: 10px;
+}

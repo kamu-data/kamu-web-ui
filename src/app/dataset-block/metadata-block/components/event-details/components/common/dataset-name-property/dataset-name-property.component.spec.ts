@@ -1,4 +1,4 @@
-import { NavigationService } from "./../../../../../../../services/navigation.service";
+import { NavigationService } from "../../../../../../../services/navigation.service";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetNamePropertyComponent } from "./dataset-name-property.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";

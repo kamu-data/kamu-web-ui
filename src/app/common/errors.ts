@@ -1,5 +1,5 @@
-import { ModalService } from "./../components/modal/modal.service";
-import { NavigationService } from "./../services/navigation.service";
+import { ModalService } from "../components/modal/modal.service";
+import { NavigationService } from "../services/navigation.service";
 import { ApolloError } from "@apollo/client/core";
 import { ErrorTexts } from "./errors.text";
 import { logError, promiseWithCatch } from "./app.helpers";

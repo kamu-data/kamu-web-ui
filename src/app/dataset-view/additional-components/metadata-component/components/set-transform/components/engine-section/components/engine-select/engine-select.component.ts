@@ -17,7 +17,7 @@ import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/componen
 @Component({
     selector: "app-engine-select",
     templateUrl: "./engine-select.component.html",
-    styleUrls: ["./engine-select.component.sass"],
+    styleUrls: ["./engine-select.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EngineSelectComponent implements OnInit {

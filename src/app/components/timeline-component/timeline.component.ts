@@ -6,7 +6,7 @@ import { DataHelpers } from "src/app/common/data.helpers";
 @Component({
     selector: "app-timeline",
     templateUrl: "./timeline.component.html",
-    styleUrls: ["timeline.component.sass"],
+    styleUrls: ["timeline.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimelineComponent {

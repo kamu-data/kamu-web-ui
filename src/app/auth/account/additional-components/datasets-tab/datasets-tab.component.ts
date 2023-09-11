@@ -1,4 +1,4 @@
-import { NavigationService } from "./../../../../services/navigation.service";
+import { NavigationService } from "../../../../services/navigation.service";
 import { ChangeDetectionStrategy, Input } from "@angular/core";
 import { Component } from "@angular/core";
 import { DatasetSearchOverviewFragment, PageBasedInfo, User } from "src/app/api/kamu.graphql.interface";
@@ -7,7 +7,6 @@ import { AccountTabs } from "../../account.constants";
 @Component({
     selector: "app-datasets-tab",
     templateUrl: "./datasets-tab.component.html",
-    styleUrls: ["./datasets-tab.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetsTabComponent {
@@ -23,7 +22,7 @@ export class DatasetsTabComponent {
     public onSelectDataset(row: DatasetSearchOverviewFragment): void {
         this.navigationService.navigateToDatasetView({
             accountName: (row.owner as User).name,
-            datasetName: row.name ,
+            datasetName: row.name,
         });
     }
 

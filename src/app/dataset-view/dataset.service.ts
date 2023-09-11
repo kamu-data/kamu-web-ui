@@ -1,4 +1,4 @@
-import { SqlExecutionError } from "./../common/errors";
+import { SqlExecutionError } from "../common/errors";
 import {
     DataQueryResultErrorKind,
     DataQueryResultSuccessViewFragment,
@@ -7,8 +7,8 @@ import {
     DatasetPageInfoFragment,
     GetDatasetSchemaQuery,
     SetVocab,
-} from "./../api/kamu.graphql.interface";
-import { DatasetInfo } from "./../interface/navigation.interface";
+} from "../api/kamu.graphql.interface";
+import { DatasetInfo } from "../interface/navigation.interface";
 import { Injectable } from "@angular/core";
 import { Observable, Subject, throwError } from "rxjs";
 import { DataRow, DatasetLineageNode, DatasetRequestBySql, DatasetSchema } from "../interface/dataset.interface";

@@ -1,13 +1,11 @@
 import { DatasetInfo } from "../../interface/navigation.interface";
-import { NavigationService } from "../../services/navigation.service";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { ModalService } from "../modal/modal.service";
 import { DatasetBasicsFragment, DatasetSearchOverviewFragment } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset-list",
     templateUrl: "./dataset-list.component.html",
-    styleUrls: ["./dataset-list.sass"],
+    styleUrls: ["./dataset-list.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetListComponent {
@@ -22,8 +20,6 @@ export class DatasetListComponent {
         label: string;
         active: boolean;
     }[];
-
-    constructor(private modalService: ModalService, private navigationService: NavigationService) {}
 
     public onSelectDataset(row: DatasetSearchOverviewFragment): void {
         const datasetBasics: DatasetBasicsFragment = row as DatasetBasicsFragment;

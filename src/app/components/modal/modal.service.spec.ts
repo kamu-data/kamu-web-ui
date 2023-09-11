@@ -1,4 +1,4 @@
-import { ModalCommandInterface } from "./../../interface/modal.interface";
+import { ModalCommandInterface } from "../../interface/modal.interface";
 import { TestBed } from "@angular/core/testing";
 import { ModalService } from "./modal.service";
 import { first } from "rxjs/operators";

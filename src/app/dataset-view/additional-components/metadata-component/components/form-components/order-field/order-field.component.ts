@@ -7,7 +7,6 @@ import { SourceOrder } from "../../add-polling-source/process-form.service.types
 @Component({
     selector: "app-order-field",
     templateUrl: "./order-field.component.html",
-    styleUrls: ["./order-field.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderFieldComponent extends BaseField implements OnInit {

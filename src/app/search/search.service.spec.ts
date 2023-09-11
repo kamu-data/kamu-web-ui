@@ -1,5 +1,5 @@
 import { Apollo } from "apollo-angular";
-import { SearchApi } from "./../api/search.api";
+import { SearchApi } from "../api/search.api";
 import { TestBed } from "@angular/core/testing";
 import { SearchService } from "./search.service";
 import { DatasetAutocompleteItem, DatasetSearchResult } from "../interface/search.interface";

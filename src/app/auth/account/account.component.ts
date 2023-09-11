@@ -1,5 +1,5 @@
 import ProjectLinks from "src/app/project-links";
-import { ModalService } from "./../../components/modal/modal.service";
+import { ModalService } from "../../components/modal/modal.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
@@ -17,15 +17,13 @@ import { Observable } from "rxjs";
 @Component({
     selector: "app-account",
     templateUrl: "./account.component.html",
-    styleUrls: ["./account.component.sass"],
+    styleUrls: ["./account.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountComponent extends BaseComponent implements OnInit {
     public accountViewType = AccountTabs.overview;
     public user: AccountDetailsFragment;
-    public accountTabs = AccountTabs;
     public accountName: string;
-    public isDropdownMenu = false;
     public currentPage = 1;
     public avatarLink: string;
     public datasetsAccount$: Observable<DatasetsAccountResponse>;

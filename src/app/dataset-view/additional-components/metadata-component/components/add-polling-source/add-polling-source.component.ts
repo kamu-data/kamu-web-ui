@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { FetchKind, ReadKind, MergeKind, PreprocessStepValue } from "./add-polling-source-form.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
-import { DatasetKind, SetPollingSource } from "./../../../../../api/kamu.graphql.interface";
+import { DatasetKind, SetPollingSource } from "../../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -22,7 +22,7 @@ import { MaybeNullOrUndefined } from "src/app/common/app.types";
 @Component({
     selector: "app-add-polling-source",
     templateUrl: "./add-polling-source.component.html",
-    styleUrls: ["./add-polling-source.component.sass"],
+    styleUrls: ["./add-polling-source.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {

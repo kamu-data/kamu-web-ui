@@ -1,4 +1,4 @@
-import { mockSetWatermark } from "./../../mock.events";
+import { mockSetWatermark } from "../../mock.events";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SetWatermarkEventComponent } from "./set-watermark-event.component";

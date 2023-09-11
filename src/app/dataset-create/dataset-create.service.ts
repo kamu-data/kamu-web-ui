@@ -1,4 +1,4 @@
-import { CreateDatasetFromSnapshotMutation, CreateEmptyDatasetMutation } from "./../api/kamu.graphql.interface";
+import { CreateDatasetFromSnapshotMutation, CreateEmptyDatasetMutation } from "../api/kamu.graphql.interface";
 import { Observable, Subject } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { Injectable } from "@angular/core";

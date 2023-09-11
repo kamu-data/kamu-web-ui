@@ -14,7 +14,6 @@ import { MaybeNull } from "src/app/common/app.types";
 @Component({
     selector: "app-base-step",
     templateUrl: "./base-step.component.html",
-    styleUrls: ["./base-step.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
 })

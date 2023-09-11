@@ -4,7 +4,6 @@ import { DataHelpers } from "src/app/common/data.helpers";
 @Component({
     selector: "app-order-property",
     templateUrl: "./order-property.component.html",
-    styleUrls: ["./order-property.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderPropertyComponent extends BasePropertyComponent {

@@ -18,7 +18,6 @@ import { DatasetCommitService } from "../../services/dataset-commit.service";
 @Component({
     selector: "app-edit-license-modal",
     templateUrl: "./edit-license-modal.component.html",
-    styleUrls: ["./edit-license-modal.component.sass"],
 })
 export class EditLicenseModalComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics?: DatasetBasicsFragment;

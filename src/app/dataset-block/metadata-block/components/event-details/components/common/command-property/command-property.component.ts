@@ -4,7 +4,7 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
 @Component({
     selector: "app-command-property",
     templateUrl: "./command-property.component.html",
-    styleUrls: ["./command-property.component.sass"],
+    styleUrls: ["./command-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommandPropertyComponent extends BasePropertyComponent {

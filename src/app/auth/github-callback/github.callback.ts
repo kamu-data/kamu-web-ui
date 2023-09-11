@@ -1,4 +1,4 @@
-import { NavigationService } from "./../../services/navigation.service";
+import { NavigationService } from "../../services/navigation.service";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Params } from "@angular/router";
 import { AuthApi } from "../../api/auth.api";

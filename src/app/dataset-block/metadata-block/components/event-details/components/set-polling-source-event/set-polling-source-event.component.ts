@@ -6,7 +6,6 @@ import { SECTION_BUILDERS_BY_EVENT_TYPE } from "../../dynamic-events/builders/ev
 @Component({
     selector: "app-set-polling-source-event",
     templateUrl: "../base-dynamic-event/base-dynamic-event.component.html",
-    styleUrls: ["../base-dynamic-event/base-dynamic-event.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetPollingSourceEventComponent extends BaseDynamicEventComponent<SetPollingSource> implements OnInit {

@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrat
 @Component({
     selector: "app-custom-pagination",
     templateUrl: "custom-pagination.component.html",
-    styleUrls: ["custom-pagination.component.sass"],
+    styleUrls: ["custom-pagination.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomPaginationComponent implements OnChanges {

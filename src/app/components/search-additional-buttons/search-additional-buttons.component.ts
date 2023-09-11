@@ -15,7 +15,7 @@ import { isMobileView } from "src/app/common/app.helpers";
 @Component({
     selector: "app-search-additional-buttons",
     templateUrl: "./search-additional-buttons.component.html",
-    styleUrls: ["./search-additional-buttons.component.sass"],
+    styleUrls: ["./search-additional-buttons.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchAdditionalButtonsComponent implements OnInit {

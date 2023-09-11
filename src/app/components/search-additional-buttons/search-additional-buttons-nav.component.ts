@@ -4,7 +4,7 @@ import { SearchAdditionalHeaderButtonInterface } from "./search-additional-butto
 @Component({
     selector: "app-search-additional-buttons-nav",
     templateUrl: "./search-additional-buttons-nav.component.html",
-    styleUrls: ["./search-additional-buttons.component.sass"],
+    styleUrls: ["./search-additional-buttons.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchAdditionalButtonsNavComponent {

@@ -1,4 +1,4 @@
-import { LinkPropertyComponent } from "./../common/link-property/link-property.component";
+import { LinkPropertyComponent } from "../common/link-property/link-property.component";
 
 import { SeparatorPropertyComponent } from "../common/separator-property/separator-property.component";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";

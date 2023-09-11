@@ -5,7 +5,7 @@ import { SetPollingSourceSection } from "src/app/shared/shared.types";
 @Component({
     selector: "app-stepper-navigation",
     templateUrl: "./stepper-navigation.component.html",
-    styleUrls: ["./stepper-navigation.component.sass"],
+    styleUrls: ["./stepper-navigation.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepperNavigationComponent {

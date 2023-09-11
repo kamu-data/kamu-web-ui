@@ -1,0 +1,72 @@
+@import 'var';
+
+.fs-14 {
+    font-size: 14px !important;
+}
+
+#schema-field * {
+    height: 34px;
+}
+
+.add-button {
+    border: 1px solid grey;
+    border-radius: 6px;
+}
+
+table {
+    width: 100%;
+
+    th.mat-header-cell {
+        padding-left: 14px;
+    }
+
+    & .mat-cell {
+        border: 1px solid $app-color-border-default;
+        color: $app-color-fg-default;
+        padding: 0;
+
+        input {
+            outline: none;
+            border: 0;
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 100%;
+        }
+    }
+
+    .mat-header-cell {
+        color: $app-color-fg-default;
+        border: 1px solid $app-color-border-default;
+        font-size: 15px;
+        text-align: left;
+        background: $app-aliceBlue;
+    }
+
+    .custom-cell {
+        width: 100%;
+        text-align: center;
+        line-height: 155%;
+        padding: 5px;
+    }
+
+    .icon {
+        vertical-align: text-top;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    input.ng-invalid.ng-touched,
+    input.ng-invalid.ng-dirty {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .order {
+        border: 1px solid black;
+        height: 20px !important;
+        width: 20px !important;
+        border-radius: 50%;
+    }
+}

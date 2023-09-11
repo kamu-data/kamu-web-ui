@@ -7,7 +7,7 @@ import { BaseComponent } from "src/app/common/base.component";
 @Component({
     selector: "app-preprocess-step",
     templateUrl: "./preprocess-step.component.html",
-    styleUrls: ["./preprocess-step.component.sass"],
+    styleUrls: ["./preprocess-step.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreprocessStepComponent extends BaseComponent implements OnInit {

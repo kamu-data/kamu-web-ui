@@ -1,5 +1,5 @@
-import { TemporalTablesPropertyComponent } from "./../common/temporal-tables-property/temporal-tables-property.component";
-import { SimplePropertyComponent } from "./../common/simple-property/simple-property.component";
+import { TemporalTablesPropertyComponent } from "../common/temporal-tables-property/temporal-tables-property.component";
+import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
 import { OwnerPropertyComponent } from "../common/owner-property/owner-property.component";

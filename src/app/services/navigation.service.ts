@@ -1,5 +1,5 @@
-import { DatasetInfo } from "./../interface/navigation.interface";
-import { AccountTabs } from "./../auth/account/account.constants";
+import { DatasetInfo } from "../interface/navigation.interface";
+import { AccountTabs } from "../auth/account/account.constants";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";

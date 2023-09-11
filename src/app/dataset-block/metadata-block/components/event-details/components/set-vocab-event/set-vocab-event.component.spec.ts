@@ -1,4 +1,4 @@
-import { mockSetVocab } from "./../../mock.events";
+import { mockSetVocab } from "../../mock.events";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SetVocabEventComponent } from "./set-vocab-event.component";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";

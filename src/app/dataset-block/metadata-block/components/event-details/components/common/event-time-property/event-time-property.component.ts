@@ -5,7 +5,6 @@ import { EventTimeSource } from "src/app/api/kamu.graphql.interface";
 @Component({
     selector: "app-event-time-property",
     templateUrl: "./event-time-property.component.html",
-    styleUrls: ["./event-time-property.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventTimePropertyComponent extends BasePropertyComponent {

@@ -1,5 +1,5 @@
-import { mockDatasetMainDataResponse } from "./../../../../../../../search/mock.data";
-import { DatasetService } from "./../../../../../../../dataset-view/dataset.service";
+import { mockDatasetMainDataResponse } from "../../../../../../../search/mock.data";
+import { DatasetService } from "../../../../../../../dataset-view/dataset.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BlockIntervalPropertyComponent } from "./block-interval-property.component";

@@ -16,7 +16,6 @@ import { DatasetCommitService } from "../../services/dataset-commit.service";
 @Component({
     selector: "app-details-modal",
     templateUrl: "./edit-details-modal.component.html",
-    styleUrls: ["./edit-details-modal.component.sass"],
 })
 export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     @Input() public currentState?: {

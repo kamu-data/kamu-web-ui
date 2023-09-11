@@ -8,7 +8,6 @@ import { DatasetCommitService } from "../../../overview-component/services/datas
 @Component({
     selector: "app-final-yaml-modal",
     templateUrl: "./final-yaml-modal.component.html",
-    styleUrls: ["./final-yaml-modal.component.sass"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinalYamlModalComponent extends BaseComponent {

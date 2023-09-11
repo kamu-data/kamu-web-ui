@@ -6,7 +6,7 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
 @Component({
     selector: "app-merge-strategy-property",
     templateUrl: "./merge-strategy-property.component.html",
-    styleUrls: ["./merge-strategy-property.component.sass"],
+    styleUrls: ["./merge-strategy-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MergeStrategyPropertyComponent extends BasePropertyComponent {

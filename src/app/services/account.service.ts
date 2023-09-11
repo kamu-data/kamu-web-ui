@@ -1,7 +1,7 @@
-import { AccountDetailsFragment } from "./../api/kamu.graphql.interface";
-import { AccountApi } from "./../api/account.api";
+import { AccountDetailsFragment } from "../api/kamu.graphql.interface";
+import { AccountApi } from "../api/account.api";
 import { Observable, Subject } from "rxjs";
-import { DatasetApi } from "./../api/dataset.api";
+import { DatasetApi } from "../api/dataset.api";
 import { Injectable } from "@angular/core";
 import { DatasetsByAccountNameQuery } from "../api/kamu.graphql.interface";
 import { DatasetsAccountResponse } from "../interface/dataset.interface";

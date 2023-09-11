@@ -1,5 +1,5 @@
-import { DatasetInfo } from "./../../../../../../../interface/navigation.interface";
-import { NavigationService } from "./../../../../../../../services/navigation.service";
+import { DatasetInfo } from "../../../../../../../interface/navigation.interface";
+import { NavigationService } from "../../../../../../../services/navigation.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetNameByIdPropertyComponent } from "./dataset-name-by-id-property.component";

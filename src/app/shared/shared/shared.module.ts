@@ -1,4 +1,4 @@
-import { TooltipIconComponent } from "./../../dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
+import { TooltipIconComponent } from "../../dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { BlockRowDataComponent } from "src/app/dataset-block/metadata-block/components/block-row-data/block-row-data.component";

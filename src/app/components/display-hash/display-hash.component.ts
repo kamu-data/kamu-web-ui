@@ -1,5 +1,5 @@
-import { DatasetInfo } from "./../../interface/navigation.interface";
-import { NavigationService } from "./../../services/navigation.service";
+import { DatasetInfo } from "../../interface/navigation.interface";
+import { NavigationService } from "../../services/navigation.service";
 import { Component, Input } from "@angular/core";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { ToastrService } from "ngx-toastr";
@@ -7,7 +7,7 @@ import { ToastrService } from "ngx-toastr";
 @Component({
     selector: "app-display-hash",
     templateUrl: "./display-hash.component.html",
-    styleUrls: ["./display-hash.component.sass"],
+    styleUrls: ["./display-hash.component.scss"],
 })
 export class DisplayHashComponent {
     @Input() public value: string;

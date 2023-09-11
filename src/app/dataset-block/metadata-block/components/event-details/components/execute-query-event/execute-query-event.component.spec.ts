@@ -1,5 +1,5 @@
-import { ExecuteQuery } from "./../../../../../../api/kamu.graphql.interface";
-import { mockExecuteQuery } from "./../../mock.events";
+import { ExecuteQuery } from "../../../../../../api/kamu.graphql.interface";
+import { mockExecuteQuery } from "../../mock.events";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ExecuteQueryEventComponent } from "./execute-query-event.component";

@@ -10,10 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deleting and renaming a dataset on Settings tab
 - Added icons for dataset's tabs
 - Added more content for graph's node
+- Added Load More data functionality to dataset data tab
 ### Changed
 - Upgraded to Node.JS generation 16.x
 - Upgraded to Angular 14.3
 - Switched to different Angular wrapper for Monaco editor (ngx-monaco-editor-v2)
+- Switched from SASS to SCSS stylesheets
 - Selected library updates/downgrades to align with Angular 14.3 and Node.JS 16.x
 - GraphQL code generator tuned to produce string type by default for scalars
 - Fixed bug with disabled state for "Run" button after error
@@ -21,7 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed bug with updating the list of datasets after deletion
 - Refactored observable subscriptions to pipe async
 - Truncated fields in material table using a configurable length
-- Added Load More data functionality to dataset data tab
 
 
 ## [0.8.0] - 2023-08-04

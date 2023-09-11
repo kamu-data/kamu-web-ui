@@ -135,7 +135,6 @@ export class SearchComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        console.log("init");
         this.initTableData();
 
         this.changePageAndSearch();

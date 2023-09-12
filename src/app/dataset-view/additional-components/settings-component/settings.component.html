@@ -4,12 +4,7 @@
             <div>
                 <nav>
                     <ul role="list" class="action-list">
-                        <li
-                            [ngClass]="{
-                                'action-list-item--nav-active': true
-                            }"
-                            class="action-list-item"
-                        >
+                        <li [ngClass]="{ 'action-list-item--nav-active': true }" class="action-list-item">
                             <a routerLinkActive="active" data-view-component="true" class="action-list-content">
                                 <span class="text-muted mr-2">
                                     <svg-icon name="account"></svg-icon>

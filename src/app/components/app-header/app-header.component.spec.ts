@@ -7,7 +7,7 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 import { Apollo } from "apollo-angular";
 import {
     dispatchInputEvent,
-    emitClickOnElement,
+    emitClickOnElementByDataTestId,
     findElementByDataTestId,
     findNativeElement,
     routerMock,
@@ -109,7 +109,7 @@ describe("AppHeaderComponent", () => {
         it(`should ${isExpectation ? "close" : "open"} header menu`, () => {
             component.isCollapsedAppHeaderMenu = isExpectation;
             const headerMenu = findNativeElement(fixture, "#app-header");
-            emitClickOnElement(fixture, "#appHeaderMenuButton");
+            emitClickOnElementByDataTestId(fixture, "appHeaderMenuButton");
             isExpectation
                 ? expect(headerMenu.classList.contains("details--on")).toBeFalse()
                 : expect(headerMenu.classList.contains("details--on")).toBeTrue();
@@ -145,7 +145,7 @@ describe("AppHeaderComponent", () => {
 
         const emitterSubscription$ = component.clickSettingsEmitter.pipe(first()).subscribe();
 
-        emitClickOnElement(fixture, "#appHeaderMenuButton");
+        emitClickOnElementByDataTestId(fixture, "appHeaderMenuButton");
         fixture.detectChanges();
         const link = findElementByDataTestId(fixture, "openSettingsHeader");
         link.click();
@@ -161,7 +161,7 @@ describe("AppHeaderComponent", () => {
 
         const emitterSubscription$ = component.clickUserProfileEmitter.pipe(first()).subscribe();
 
-        emitClickOnElement(fixture, "#appHeaderMenuButton");
+        emitClickOnElementByDataTestId(fixture, "appHeaderMenuButton");
         fixture.detectChanges();
         const link = findElementByDataTestId(fixture, "openUserProfileHeader");
         link.click();
@@ -177,7 +177,7 @@ describe("AppHeaderComponent", () => {
 
         const emitterSubscription$ = component.clickAnalyticsEmitter.pipe(first()).subscribe();
 
-        emitClickOnElement(fixture, "#appHeaderMenuButton");
+        emitClickOnElementByDataTestId(fixture, "appHeaderMenuButton");
         fixture.detectChanges();
         const link = findElementByDataTestId(fixture, "openAnalyticsHeader");
         link.click();
@@ -193,7 +193,7 @@ describe("AppHeaderComponent", () => {
 
         const emitterSubscription$ = component.logOutEmitter.pipe(first()).subscribe();
 
-        emitClickOnElement(fixture, "#appHeaderMenuButton");
+        emitClickOnElementByDataTestId(fixture, "appHeaderMenuButton");
         fixture.detectChanges();
         const link = findElementByDataTestId(fixture, "openSignOutHeader");
         link.click();

@@ -1,5 +1,5 @@
-@import 'var';
-@import 'node_modules/bootstrap/dist/css/bootstrap.min';
+@import "var";
+@import "node_modules/bootstrap/dist/css/bootstrap.min";
 
 .timeline-block {
     &__item {
@@ -15,7 +15,7 @@
             left: 0;
             display: block;
             width: 2px;
-            content: '';
+            content: "";
             background-color: $app-color-border-muted;
         }
 

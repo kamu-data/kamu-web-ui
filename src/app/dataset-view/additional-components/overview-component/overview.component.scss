@@ -14,11 +14,11 @@
 }
 
 .no-data-container {
-    background-color: rgba(97, 144, 195, .15);
+    background-color: rgb(97 144 195 / 15%);
 }
 
 .edit-title {
-    border-bottom: 1px solid #DEDEDE;
+    border-bottom: 1px solid #dedede;
     padding: 10px;
 
     .left-part {
@@ -47,7 +47,7 @@
             }
 
             &:not(.active):hover {
-                background: #DEDEDE;
+                background: #dedede;
             }
         }
     }
@@ -57,19 +57,19 @@
             outline: none;
             border-radius: 6px;
             padding: 6px 9px;
-            border: 1px solid #DEDEDE;
+            border: 1px solid #dedede;
 
             &:hover:first-child {
                 background-color: #e8e3e3;
             }
 
             &:nth-child(2) {
-                background-color: rgb(26, 127, 55);
+                background-color: rgb(26 127 55);
                 color: #fff;
             }
 
             &:nth-child(2):disabled {
-                background-color: rgb(148, 211, 162);
+                background-color: rgb(148 211 162);
             }
         }
     }

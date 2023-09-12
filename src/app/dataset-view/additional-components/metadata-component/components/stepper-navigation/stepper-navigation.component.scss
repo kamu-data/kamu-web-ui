@@ -1,9 +1,9 @@
-@import 'bootstrap/scss/bootstrap';
+@import "bootstrap/scss/bootstrap";
 
 .button-save {
     background: #2c974b;
-    border-color: rgba(27, 31, 36, 0.15);
-    color: #ffffff;
+    border-color: rgb(27 31 36 / 15%);
+    color: #fff;
     position: relative;
     display: inline-block;
     padding: 5px 16px;
@@ -15,7 +15,7 @@
 
     &:hover {
         background: #3fbe63;
-        transition: .2s cubic-bezier(0.3, 0, 0.5, 1);
+        transition: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
     }
 
     &:disabled {

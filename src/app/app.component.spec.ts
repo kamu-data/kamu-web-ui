@@ -139,14 +139,14 @@ describe("AppComponent", () => {
         component.onSelectDataset(mockAutocompleteItems[0]);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: mockAutocompleteItems[0].dataset.owner.name,
-            datasetName: mockAutocompleteItems[0].dataset.name ,
+            datasetName: mockAutocompleteItems[0].dataset.name,
         });
     });
 
     it("should check call onSelectDataset method and navigate to search", () => {
         const navigateToSearchSpy = spyOn(navigationService, "navigateToSearch").and.returnValue();
         component.onSelectDataset(mockAutocompleteItems[1]);
-        expect(navigateToSearchSpy).toHaveBeenCalledWith(mockAutocompleteItems[1].dataset.id );
+        expect(navigateToSearchSpy).toHaveBeenCalledWith(mockAutocompleteItems[1].dataset.id);
     });
 
     it("should check call onUserProfile", () => {

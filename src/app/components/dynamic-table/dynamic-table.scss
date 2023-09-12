@@ -1,8 +1,8 @@
-@import 'var';
+@import "var";
 
 .clickable-row {
     .mat-cell {
-        color: $app-navyBlue;
+        color: $app-navy-blue;
 
         &:hover {
             cursor: pointer;
@@ -32,7 +32,7 @@ table {
     border: 1px solid $app-color-border-default;
     font-size: 15px;
     text-align: left;
-    background: $app-aliceBlue;
+    background: $app-alice-blue;
 }
 
 .dynamic-table th.mat-header-cell,

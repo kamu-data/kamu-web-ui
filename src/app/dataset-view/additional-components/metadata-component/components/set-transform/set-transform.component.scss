@@ -14,15 +14,14 @@
     align-items: center;
 }
 
-@media (max-width: 1335px) {
+@media (width <= 1335px) {
     .queries {
         margin-top: 30px;
     }
+
     .left-section {
         display: flex;
         flex-direction: column;
         align-items: center;
     }
-}
-
-;
+} ;

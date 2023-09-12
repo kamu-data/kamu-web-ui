@@ -1,10 +1,10 @@
-@import 'var';
+@import "var";
 
 :host {
     ::ng-deep {
         .mat-checkbox-checked {
             .mat-checkbox-background {
-                background-color: $app-navyBlue;
+                background-color: $app-navy-blue;
             }
         }
 
@@ -21,7 +21,6 @@ nav {
     }
 
     .search-result-container__navbar__title {
-        line-height: 32px;
-        font: 500 20px/32px Roboto, 'Helvetica Neue', sans-serif;
+        font: 500 20px/32px Roboto, "Helvetica Neue", sans-serif;
     }
 }

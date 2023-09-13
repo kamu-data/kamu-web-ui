@@ -11,7 +11,7 @@ import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { DatasetBasicsFragment, DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
-import { LineageUpdate } from "../../dataset.subscriptions.interface";
+import { GraphNodeType, LineageUpdate } from "../../dataset.subscriptions.interface";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 
 @Component({
@@ -81,7 +81,6 @@ export class LineageComponent extends BaseComponent implements OnInit {
                 return cluster;
             });
         });
-
         const edges = lineageUpdate.edges;
         const currentDataset = lineageUpdate.origin;
 
@@ -89,9 +88,9 @@ export class LineageComponent extends BaseComponent implements OnInit {
 
         this.isAvailableLineageGraph = edges.length !== 0;
 
-        const uniqueDatasets: Record<string, DatasetBasicsFragment> = {};
-        edges.forEach((edge: DatasetBasicsFragment[]) =>
-            edge.forEach((dataset: DatasetBasicsFragment) => {
+        const uniqueDatasets: Record<string, GraphNodeType> = {};
+        edges.forEach((edge: GraphNodeType[]) =>
+            edge.forEach((dataset: GraphNodeType) => {
                 uniqueDatasets[dataset.id] = dataset;
             }),
         );
@@ -108,9 +107,34 @@ export class LineageComponent extends BaseComponent implements OnInit {
                     isCurrent: dataset.id === currentDataset.id,
                     access: "private",
                     accountName: dataset.owner.name,
+                    sourceUrl:
+                        dataset.metadata.currentSource?.fetch.__typename === "FetchStepUrl"
+                            ? dataset.metadata.currentSource.fetch.url
+                            : "Other source",
                 },
             });
         }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        const extraNodes = this.lineageGraphNodes.filter((item: Node) => item.data.kind === DatasetKind.Root);
+        extraNodes.forEach((node) => {
+            this.lineageGraphNodes.push({
+                id: "extra-node-" + node.id,
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                label: this.getDomainFromUrl(node.data.sourceUrl as string),
+                data: {
+                    extraNode: true,
+                    name: node.label,
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                    accountName: node.data.accountName,
+                },
+            });
+
+            this.lineageGraphLink.push({
+                id: `extra-node-${node.id}__and__${node.id}`,
+                source: "extra-node-" + node.id,
+                target: node.id,
+            });
+        });
 
         edges.forEach((edge: DatasetBasicsFragment[]) => {
             const source: string = this.sanitizeID(edge[0].id);
@@ -126,5 +150,14 @@ export class LineageComponent extends BaseComponent implements OnInit {
 
     private sanitizeID(id: string): string {
         return id.replace(/:/g, "");
+    }
+
+    private contains(arr: Node[], obj: Node) {
+        const stringifiedObj = JSON.stringify(obj);
+        return arr.some((item) => JSON.stringify(item) === stringifiedObj);
+    }
+
+    private getDomainFromUrl(url: string): string {
+        return url.includes("http") ? url.split("//")[1].split("/")[0] : url;
     }
 }

@@ -14,6 +14,7 @@ import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { Observable } from "rxjs";
 import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { AccountService } from "src/app/services/account.service";
 
 @Component({
@@ -29,11 +30,11 @@ export class LineageGraphComponent implements OnChanges, OnInit {
 
     @Output() public onClickNodeEvent = new EventEmitter<Node>();
 
-    public draggingEnabled = true;
+    public draggingEnabled = false;
     public panningEnabled = true;
     public zoomEnabled = true;
     public zoomSpeed = 0.03;
-    public minZoomLevel = 0.1;
+    public minZoomLevel = 0.3;
     public maxZoomLevel = 4.0;
     public panOnZoom = true;
     public autoZoom = true;
@@ -44,7 +45,7 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public graphNodes: Node[];
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
-    constructor(private accountService: AccountService) {}
+    constructor(private accountService: AccountService, private datasetService: DatasetService) {}
 
     public ngOnInit(): void {
         this.graphNodes = this.nodes;

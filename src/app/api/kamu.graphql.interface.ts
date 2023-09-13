@@ -1504,6 +1504,17 @@ export type AccountDetailsFragment = {
     gravatarId?: string | null;
 };
 
+export type CurrentSourceFetchUrlFragment = {
+    __typename?: "DatasetMetadata";
+    currentSource?: {
+        __typename?: "SetPollingSource";
+        fetch:
+            | { __typename?: "FetchStepContainer" }
+            | { __typename?: "FetchStepFilesGlob" }
+            | { __typename?: "FetchStepUrl"; url: string };
+    } | null;
+};
+
 export type DataQueryResultSuccessViewFragment = {
     __typename?: "DataQueryResultSuccess";
     schema?: { __typename?: "DataSchema"; format: DataSchemaFormat; content: string } | null;
@@ -1603,16 +1614,16 @@ export type DatasetLineageFragment = {
                                                         currentUpstreamDependencies: Array<
                                                             { __typename?: "Dataset" } & DatasetBasicsFragment
                                                         >;
-                                                    };
+                                                    } & CurrentSourceFetchUrlFragment;
                                                 } & DatasetBasicsFragment
                                             >;
-                                        };
+                                        } & CurrentSourceFetchUrlFragment;
                                     } & DatasetBasicsFragment
                                 >;
-                            };
+                            } & CurrentSourceFetchUrlFragment;
                         } & DatasetBasicsFragment
                     >;
-                };
+                } & CurrentSourceFetchUrlFragment;
             } & DatasetBasicsFragment
         >;
         currentDownstreamDependencies: Array<
@@ -1638,19 +1649,19 @@ export type DatasetLineageFragment = {
                                                         currentDownstreamDependencies: Array<
                                                             { __typename?: "Dataset" } & DatasetBasicsFragment
                                                         >;
-                                                    };
+                                                    } & CurrentSourceFetchUrlFragment;
                                                 } & DatasetBasicsFragment
                                             >;
-                                        };
+                                        } & CurrentSourceFetchUrlFragment;
                                     } & DatasetBasicsFragment
                                 >;
-                            };
+                            } & CurrentSourceFetchUrlFragment;
                         } & DatasetBasicsFragment
                     >;
-                };
+                } & CurrentSourceFetchUrlFragment;
             } & DatasetBasicsFragment
         >;
-    };
+    } & CurrentSourceFetchUrlFragment;
 };
 
 export type DatasetMetadataSummaryFragment = {
@@ -1821,6 +1832,31 @@ export type RenameDatasetMutation = {
     };
 };
 
+export type SourceRootDatasetByAccountAndDatasetNameQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
+}>;
+
+export type SourceRootDatasetByAccountAndDatasetNameQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byOwnerAndName?: {
+            __typename?: "Dataset";
+            metadata: {
+                __typename?: "DatasetMetadata";
+                currentSource?: {
+                    __typename?: "SetPollingSource";
+                    fetch:
+                        | { __typename: "FetchStepContainer" }
+                        | { __typename: "FetchStepFilesGlob" }
+                        | { __typename: "FetchStepUrl"; url: string };
+                } | null;
+            };
+        } | null;
+    };
+};
+
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
     query: Scalars["String"];
     perPage?: InputMaybe<Scalars["Int"]>;
@@ -1904,6 +1940,17 @@ export const DatasetDataFragmentDoc = gql`
     ${DatasetDataSizeFragmentDoc}
     ${DataQueryResultSuccessViewFragmentDoc}
 `;
+export const CurrentSourceFetchUrlFragmentDoc = gql`
+    fragment currentSourceFetchUrl on DatasetMetadata {
+        currentSource {
+            fetch {
+                ... on FetchStepUrl {
+                    url
+                }
+            }
+        }
+    }
+`;
 export const DatasetBasicsFragmentDoc = gql`
     fragment DatasetBasics on Dataset {
         id
@@ -1918,18 +1965,23 @@ export const DatasetBasicsFragmentDoc = gql`
 export const DatasetLineageFragmentDoc = gql`
     fragment DatasetLineage on Dataset {
         metadata {
+            ...currentSourceFetchUrl
             currentUpstreamDependencies {
                 ...DatasetBasics
                 metadata {
+                    ...currentSourceFetchUrl
                     currentUpstreamDependencies {
                         ...DatasetBasics
                         metadata {
+                            ...currentSourceFetchUrl
                             currentUpstreamDependencies {
                                 ...DatasetBasics
                                 metadata {
+                                    ...currentSourceFetchUrl
                                     currentUpstreamDependencies {
                                         ...DatasetBasics
                                         metadata {
+                                            ...currentSourceFetchUrl
                                             currentUpstreamDependencies {
                                                 ...DatasetBasics
                                             }
@@ -1944,15 +1996,19 @@ export const DatasetLineageFragmentDoc = gql`
             currentDownstreamDependencies {
                 ...DatasetBasics
                 metadata {
+                    ...currentSourceFetchUrl
                     currentDownstreamDependencies {
                         ...DatasetBasics
                         metadata {
+                            ...currentSourceFetchUrl
                             currentDownstreamDependencies {
                                 ...DatasetBasics
                                 metadata {
+                                    ...currentSourceFetchUrl
                                     currentDownstreamDependencies {
                                         ...DatasetBasics
                                         metadata {
+                                            ...currentSourceFetchUrl
                                             currentDownstreamDependencies {
                                                 ...DatasetBasics
                                             }
@@ -1966,6 +2022,7 @@ export const DatasetLineageFragmentDoc = gql`
             }
         }
     }
+    ${CurrentSourceFetchUrlFragmentDoc}
     ${DatasetBasicsFragmentDoc}
 `;
 export const DatasetCurrentInfoFragmentDoc = gql`
@@ -2898,6 +2955,38 @@ export const RenameDatasetDocument = gql`
 })
 export class RenameDatasetGQL extends Apollo.Mutation<RenameDatasetMutation, RenameDatasetMutationVariables> {
     document = RenameDatasetDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SourceRootDatasetByAccountAndDatasetNameDocument = gql`
+    query sourceRootDatasetByAccountAndDatasetName($accountName: AccountName!, $datasetName: DatasetName!) {
+        datasets {
+            byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+                metadata {
+                    currentSource {
+                        fetch {
+                            __typename
+                            ... on FetchStepUrl {
+                                url
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SourceRootDatasetByAccountAndDatasetNameGQL extends Apollo.Query<
+    SourceRootDatasetByAccountAndDatasetNameQuery,
+    SourceRootDatasetByAccountAndDatasetNameQueryVariables
+> {
+    document = SourceRootDatasetByAccountAndDatasetNameDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

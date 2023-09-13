@@ -1,11 +1,11 @@
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
 
 @include mat.core();
-@import 'bootstrap-icons/font/bootstrap-icons.css';
+@import "bootstrap-icons/font/bootstrap-icons.css";
 /* Importing Bootstrap SCSS file. */
-@import 'bootstrap/scss/bootstrap';
-@import 'var';
-@import '@danielmoncada/angular-datetime-picker/assets/style/picker.min.css';
+@import "bootstrap/scss/bootstrap";
+@import "var";
+@import "@danielmoncada/angular-datetime-picker/assets/style/picker.min.css";
 
 // Use the desired palette
 $palette: mat.define-palette(mat.$indigo-palette);
@@ -188,7 +188,7 @@ a {
     }
 }
 
-[data-test-id='appLogo'] {
+[data-test-id="appLogo"] {
     background: none;
     border: none;
 }
@@ -299,7 +299,7 @@ a {
 
         .nav-item {
             width: 100%;
-            transition: all .5s linear;
+            transition: all 0.5s linear;
             line-height: 150px;
 
             .active-search-input {
@@ -390,7 +390,7 @@ a:visited {
 
 .header-search {
     max-width: 100%;
-    transition: all .5s linear;
+    transition: all 0.5s linear;
 }
 
 .header-search {
@@ -535,12 +535,12 @@ router-outlet {
     text-decoration: none;
     max-width: 100%;
     position: relative;
-    font-family: Roboto, 'Helvetica Neue', sans-serif;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
     font-size: 14px;
     font-weight: 400;
 
     * {
-        font-family: Roboto, 'Helvetica Neue', sans-serif;
+        font-family: Roboto, "Helvetica Neue", sans-serif;
         font-size: 14px;
         font-weight: 600;
     }
@@ -549,7 +549,7 @@ router-outlet {
 .img-container-round {
     width: 50px;
     height: 50px;
-    background: #C4C4C4;
+    background: #c4c4c4;
     border: 2px solid $app-white;
     box-sizing: border-box;
     border-radius: 35px;
@@ -729,7 +729,7 @@ router-outlet {
     box-shadow: 0 5px 4px $app-versatileBusinessDark;
     border-radius: 8px;
 
-    & [data-test-id='searchInput'] {
+    & [data-test-id="searchInput"] {
         height: 50px;
     }
 }
@@ -811,7 +811,7 @@ router-outlet {
 #searchInput {
     &.searchSidenav {
         .input-group {
-            & > [data-test-id='searchInput'].form-control {
+            & > [data-test-id="searchInput"].form-control {
                 background: $app-white;
                 color: $app-emperor;
                 box-shadow: 0 5px 4px $app-versatileBusinessDark;
@@ -821,7 +821,7 @@ router-outlet {
 }
 
 .input-group {
-    & > [data-test-id='searchInput'].form-control {
+    & > [data-test-id="searchInput"].form-control {
         border-radius: 0.25rem;
         border-color: transparent;
         background: $app-emperor;
@@ -840,10 +840,10 @@ router-outlet {
     font-size: 20px;
 }
 
-[data-test-id='searchInput'],
-[data-test-id='addNewBlock'],
-[data-test-id='openUserInfo'],
-[data-test-id='appLogo'] {
+[data-test-id="searchInput"],
+[data-test-id="addNewBlock"],
+[data-test-id="openUserInfo"],
+[data-test-id="appLogo"] {
     cursor: pointer;
 }
 
@@ -885,7 +885,8 @@ router-outlet {
     }
 
     .markdown-body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji",
+            "Segoe UI Emoji";
         font-size: 16px;
         line-height: 1.5;
         word-wrap: break-word;
@@ -1101,7 +1102,7 @@ router-outlet {
     &__container {
         text-align: left;
         font-size: 14pt;
-        font-family: 'Helvetica Neue', serif;
+        font-family: "Helvetica Neue", serif;
 
         a {
             color: #0087ff;
@@ -1307,7 +1308,7 @@ router-outlet {
 .button {
     height: 40px;
     cursor: pointer;
-    font-family: 'Avenir', sans-serif;
+    font-family: "Avenir", sans-serif;
 
     &:focus {
         outline: none;
@@ -1352,7 +1353,7 @@ app-account .dropdown-menu {
 .layout {
     &.layout--sidebar-position-start {
         .layout-main {
-            grid-column: 2/span 2;
+            grid-column: 2 / span 2;
         }
     }
 }
@@ -1370,7 +1371,7 @@ app-account .dropdown-menu {
     }
 }
 
-[role='menu'] {
+[role="menu"] {
     .underline-nav-item {
         display: flex;
         justify-content: flex-start;
@@ -1381,7 +1382,7 @@ app-account .dropdown-menu {
 details summary::-webkit-details-marker,
 details summary::marker {
     display: none;
-    content: '';
+    content: "";
 }
 
 .underline-nav-item {
@@ -1413,7 +1414,7 @@ details summary::marker {
         border-bottom-color: $app-color-neutral-muted;
         outline: 1px dotted transparent;
         outline-offset: -1px;
-        transition: border-bottom-color .12s ease-out;
+        transition: border-bottom-color 0.12s ease-out;
     }
 }
 
@@ -1428,7 +1429,7 @@ details summary::marker {
 
 %border-green {
     border-radius: 5px;
-    border: 1px solid #CEE794;
+    border: 1px solid #cee794;
 }
 
 %border-darkgreentea {
@@ -1510,7 +1511,7 @@ pre {
 
 .add-link {
     font-size: 16px;
-    color: #0969DA !important;
+    color: #0969da !important;
 }
 
 .radio-group {
@@ -1568,7 +1569,8 @@ pre {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+        0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
 .cdk-drag-placeholder {
@@ -1639,4 +1641,8 @@ input {
             border-color: #dc3545;
         }
     }
+}
+
+.ngx-charts {
+    height: calc(100vh - 350px) !important;
 }

@@ -1,4 +1,9 @@
-import { DatasetKind, DatasetPageInfoFragment, SetVocab } from "../api/kamu.graphql.interface";
+import {
+    CurrentSourceFetchUrlFragment,
+    DatasetKind,
+    DatasetPageInfoFragment,
+    SetVocab,
+} from "../api/kamu.graphql.interface";
 import {
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
@@ -38,8 +43,9 @@ export interface DatasetHistoryUpdate {
     kind?: DatasetKind;
 }
 
+export type GraphNodeType = DatasetBasicsFragment & { metadata: CurrentSourceFetchUrlFragment };
 export interface LineageUpdate {
-    nodes: DatasetBasicsFragment[];
-    edges: DatasetBasicsFragment[][];
-    origin: DatasetBasicsFragment;
+    nodes: GraphNodeType[];
+    edges: GraphNodeType[][];
+    origin: GraphNodeType;
 }

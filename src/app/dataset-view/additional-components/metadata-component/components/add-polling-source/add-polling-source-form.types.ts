@@ -1,6 +1,5 @@
 import { SqlQueryStep, Transform } from "src/app/api/kamu.graphql.interface";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface JsonFormValidators {
     required?: boolean;
     minLength?: number;
@@ -14,9 +13,10 @@ interface JsonFormControlOptions {
     innerTooltips?: Record<string, string>;
 }
 
-export interface JsonFormControls {
+export interface JsonFormControl {
     name: string;
     label: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any;
     type: ControlType;
     tooltip?: string;
@@ -31,7 +31,7 @@ export interface JsonFormControls {
 export type JsonFormData = Record<
     string,
     {
-        controls: JsonFormControls[];
+        controls: JsonFormControl[];
     }
 >;
 

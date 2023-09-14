@@ -1,5 +1,4 @@
 import { BaseComponent } from "src/app/common/base.component";
-/* eslint-disable @typescript-eslint/unbound-method */
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "../common/app.types";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";

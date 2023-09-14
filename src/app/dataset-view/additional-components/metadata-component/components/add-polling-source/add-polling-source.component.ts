@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { FetchKind, ReadKind, MergeKind, PreprocessStepValue } from "./add-polling-source-form.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { DatasetKind, SetPollingSource } from "../../../../../api/kamu.graphql.interface";

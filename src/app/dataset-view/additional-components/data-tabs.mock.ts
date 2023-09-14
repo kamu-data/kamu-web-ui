@@ -8,6 +8,7 @@ import {
 } from "../dataset.subscriptions.interface";
 import {
     CommitEventToDatasetMutation,
+    CurrentSourceFetchUrlFragment,
     DatasetKind,
     DeleteDatasetMutation,
     RenameDatasetMutation,
@@ -101,21 +102,25 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
     },
 };
 
-export const mockGraphNode: GraphNodeType = {
-    ...mockDatasetBasicsFragment,
-    metadata: {
-        currentSource: {
-            __typename: "SetPollingSource",
-            fetch: {
-                __typename: "FetchStepUrl",
-                url: "http://test.com",
-            },
+export const mockCurrentSourceFetchUrlFragment: CurrentSourceFetchUrlFragment = {
+    currentSource: {
+        __typename: "SetPollingSource",
+        fetch: {
+            __typename: "FetchStepUrl",
+            url: "http://test.com",
         },
     },
 };
 
+export const mockGraphNode: GraphNodeType = {
+    ...mockDatasetBasicsFragment,
+    metadata: {
+        ...mockCurrentSourceFetchUrlFragment,
+    },
+};
+
 export const mockLineageUpdate: LineageUpdate = {
-    nodes: [mockGraphNode, mockGraphNode],
+    nodes: [mockGraphNode],
     edges: [[mockGraphNode, mockGraphNode]],
     origin: mockGraphNode,
 };

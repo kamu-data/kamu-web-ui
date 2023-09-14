@@ -56,7 +56,7 @@ describe("DatasetApi", () => {
             .subscribe((res: GetDatasetMainDataQuery) => {
                 expect(res.datasets.byOwnerAndName?.name).toEqual("alberta.case-details");
                 expect(res.datasets.byOwnerAndName?.id).toEqual(
-                    "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+                    "did:odf:z4k88e8egJJeQEd4HHuL4BSwYTWm8qiWxzqhydvHQcX2TPCrMyP",
                 );
             });
 

@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { DatasetBasicsFragment, DatasetKind } from "src/app/api/kamu.graphql.interface";
+import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { GraphNodeType, LineageUpdate } from "../../dataset.subscriptions.interface";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
@@ -69,7 +69,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
     }
 
     private updateGraph(lineageUpdate: LineageUpdate): void {
-        lineageUpdate.nodes.forEach((dataset: DatasetBasicsFragment) => {
+        lineageUpdate.nodes.forEach((dataset: GraphNodeType) => {
             this.lineageGraphClusters = this.lineageGraphClusters.map((cluster: ClusterNode) => {
                 if (typeof cluster.childNodeIds === "undefined") {
                     cluster.childNodeIds = [];
@@ -136,7 +136,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
             });
         });
 
-        edges.forEach((edge: DatasetBasicsFragment[]) => {
+        edges.forEach((edge: GraphNodeType[]) => {
             const source: string = this.sanitizeID(edge[0].id);
             const target: string = this.sanitizeID(edge[1].id);
 
@@ -150,11 +150,6 @@ export class LineageComponent extends BaseComponent implements OnInit {
 
     private sanitizeID(id: string): string {
         return id.replace(/:/g, "");
-    }
-
-    private contains(arr: Node[], obj: Node) {
-        const stringifiedObj = JSON.stringify(obj);
-        return arr.some((item) => JSON.stringify(item) === stringifiedObj);
     }
 
     private getDomainFromUrl(url: string): string {

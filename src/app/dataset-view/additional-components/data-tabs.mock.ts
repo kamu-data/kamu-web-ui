@@ -1,5 +1,11 @@
 import { mockDatasetBasicsFragment } from "../../search/mock.data";
-import { DatasetHistoryUpdate, DataSqlErrorUpdate, DataUpdate } from "../dataset.subscriptions.interface";
+import {
+    DatasetHistoryUpdate,
+    DataSqlErrorUpdate,
+    DataUpdate,
+    GraphNodeType,
+    LineageUpdate,
+} from "../dataset.subscriptions.interface";
 import {
     CommitEventToDatasetMutation,
     DatasetKind,
@@ -95,10 +101,23 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
     },
 };
 
-export const mockLineageUpdate = {
-    nodes: [mockDatasetBasicsFragment],
-    edges: [[mockDatasetBasicsFragment, mockDatasetBasicsFragment]],
-    origin: mockDatasetBasicsFragment,
+export const mockGraphNode: GraphNodeType = {
+    ...mockDatasetBasicsFragment,
+    metadata: {
+        currentSource: {
+            __typename: "SetPollingSource",
+            fetch: {
+                __typename: "FetchStepUrl",
+                url: "http://test.com",
+            },
+        },
+    },
+};
+
+export const mockLineageUpdate: LineageUpdate = {
+    nodes: [mockGraphNode, mockGraphNode],
+    edges: [[mockGraphNode, mockGraphNode]],
+    origin: mockGraphNode,
 };
 
 export const mockOverviewDataUpdate = {

@@ -1,4 +1,4 @@
-@import 'var';
+@import "var";
 
 .dataset-list-container {
     width: 100%;
@@ -24,7 +24,7 @@
         display: flex;
         background: none;
         border: none;
-        color: $app-navyBlue;
+        color: $app-navy-blue;
         font-size: 16px;
 
         &:hover,

@@ -1,4 +1,4 @@
-@import 'var';
+@import "var";
 
 .fs-14 {
     font-size: 14px !important;
@@ -39,7 +39,7 @@ table {
         border: 1px solid $app-color-border-default;
         font-size: 15px;
         text-align: left;
-        background: $app-aliceBlue;
+        background: $app-alice-blue;
     }
 
     .custom-cell {

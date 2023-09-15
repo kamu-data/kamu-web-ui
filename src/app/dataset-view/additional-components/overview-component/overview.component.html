@@ -6,7 +6,11 @@
     >
         <div>
             <div
-                *ngIf="currentState.overview.metadata.currentInfo.description || currentState.overview.metadata.currentInfo.keywords?.length; else noDetails"
+                *ngIf="
+                    currentState.overview.metadata.currentInfo.description ||
+                        currentState.overview.metadata.currentInfo.keywords?.length;
+                    else noDetails
+                "
                 class="d-flex flex-row flex-justify-between mb-3"
             >
                 <div class="d-flex flex-column me-auto">
@@ -25,7 +29,10 @@
                     </div>
                 </div>
                 <div
-                    *ngIf="currentState.overview.metadata.currentInfo.description || currentState.overview.metadata.currentInfo.keywords?.length"
+                    *ngIf="
+                        currentState.overview.metadata.currentInfo.description ||
+                        currentState.overview.metadata.currentInfo.keywords?.length
+                    "
                 >
                     <button
                         class="btn-sm btn custom-edit"
@@ -42,7 +49,10 @@
             <ng-template #noDetails>
                 <div
                     class="my-4"
-                    *ngIf="!currentState.overview.metadata.currentInfo.description && !currentState.overview.metadata.currentInfo.keywords?.length"
+                    *ngIf="
+                        !currentState.overview.metadata.currentInfo.description &&
+                        !currentState.overview.metadata.currentInfo.keywords?.length
+                    "
                 >
                     <p>
                         You can
@@ -82,7 +92,7 @@
                 [datasetName]="datasetBasics.name"
             ></app-overview-history-summary-header>
             <app-dynamic-table
-                *ngIf="currentState && currentState.schema;else noData"
+                *ngIf="currentState && currentState.schema; else noData"
                 [hasTableHeader]="true"
                 [schemaFields]="currentState.schema.fields"
                 [dataRows]="currentState ? currentState.data : []"
@@ -100,7 +110,7 @@
                 [datasetBasics]="datasetBasics"
                 [currentReadme]="currentState.overview.metadata.currentReadme"
                 [editViewShow]="addReadme"
-                (editViewShowEmmiter)="addReadme=$event"
+                (editViewShowEmmiter)="addReadme = $event"
             ></app-readme-section>
         </div>
     </div>
@@ -175,8 +185,11 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ (currentState.size.estimatedSize ? (currentState.size.estimatedSize | displaySize) :
-                                "-") }}
+                                {{
+                                    currentState.size.estimatedSize
+                                        ? (currentState.size.estimatedSize | displaySize)
+                                        : "-"
+                                }}
                             </p>
                         </div>
                     </div>
@@ -220,13 +233,13 @@
                         </div>
                         <div
                             class="dataset-info--sub-block d-flex align-items-center ps-3"
-                            *ngIf="currentState && currentState.overview.metadata.currentWatermark;else noWatermark"
+                            *ngIf="currentState && currentState.overview.metadata.currentWatermark; else noWatermark"
                         >
                             <app-display-time
                                 [title]="currentState.overview.metadata.currentWatermark"
                                 [data]="currentState.overview.metadata.currentWatermark"
                             ></app-display-time>
-                            <div *ngIf="currentState.overview.kind==='ROOT'">
+                            <div *ngIf="currentState.overview.kind === 'ROOT'">
                                 <button
                                     class="btn-sm btn custom-edit ms-4"
                                     aria-label="Edit watermark details"

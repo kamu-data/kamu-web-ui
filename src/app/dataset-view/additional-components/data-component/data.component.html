@@ -13,7 +13,7 @@
             <h2 class="box-title align-items-center pb-3 pt-3 m-0">Saved Queries</h2>
             <cdk-accordion class="example-accordion">
                 <cdk-accordion-item
-                    *ngFor="let item of savedQueries; let index = index;"
+                    *ngFor="let item of savedQueries; let index = index"
                     #accordionItem="cdkAccordionItem"
                     class="example-accordion-item"
                     role="button"
@@ -27,7 +27,7 @@
                             <div class="datatab-expanding-row-header" (click)="accordionItem.toggle()">
                                 <div class="datatab-expanding-row-header-content">
                                     <div class="datatab-activity-row-summary">
-                                        <div class="datatab-activity-timestamp">{{item.time}}</div>
+                                        <div class="datatab-activity-timestamp">{{ item.time }}</div>
                                         <div class="datatab-activity-icon">
                                             <div
                                                 class="ace-icon ace-icon-size-small cfc-color-active ace-icon-configuration ng-star-inserted"
@@ -41,7 +41,7 @@
                                                 style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
                                                 title=""
                                             >
-                                                <span> {{item.title}} </span>
+                                                <span> {{ item.title }} </span>
                                             </div>
                                         </div>
                                     </div>
@@ -63,8 +63,8 @@
                         [attr.id]="'accordion-body-' + index"
                         [attr.aria-labelledby]="'accordion-header-' + index"
                     >
-                        {{item.title}} <br />
-                        <code style="display: block; white-space: pre-wrap">{{item.query}}</code>
+                        {{ item.title }} <br />
+                        <code style="display: block; white-space: pre-wrap">{{ item.query }}</code>
                         <div class="d-inline">
                             <div class="btn-group-parent float-none">
                                 <button
@@ -153,9 +153,10 @@
                 [dataRows]="currentData || []"
             ></app-dynamic-table>
 
-            <app-load-more [isAllDataLoaded]="isAllDataLoaded"
-                           (loadMoreEmit)="loadMore($event)"
-                           class="mt-4"
+            <app-load-more
+                [isAllDataLoaded]="isAllDataLoaded"
+                (loadMoreEmit)="loadMore($event)"
+                class="mt-4"
             ></app-load-more>
         </ng-container>
 

@@ -67,7 +67,7 @@ describe("TimelineComponent", () => {
         const params: MetadataBlockNavigationParams = {
             accountName: component.history[0].author.name,
             datasetName: component.datasetName,
-            blockHash: component.history[0].blockHash ,
+            blockHash: component.history[0].blockHash,
         };
 
         emitClickOnElementByDataTestId(fixture, "navigate-to-block");

@@ -1,9 +1,11 @@
 <div class="search-result-container__content" id="searchResultContainerContent">
     <ng-template
         [ngIf]="
-                            isAvailableLineageGraph && lineageGraphNodes &&
-                            lineageGraphLink.length !== 0 && lineageGraphNodes.length !== 0
-                        "
+            isAvailableLineageGraph &&
+            lineageGraphNodes &&
+            lineageGraphLink.length !== 0 &&
+            lineageGraphNodes.length !== 0
+        "
     >
         <app-lineage-graph
             [view]="lineageGraphView"
@@ -13,12 +15,7 @@
             (onClickNodeEvent)="onClickNode($event)"
         ></app-lineage-graph>
     </ng-template>
-    <ng-template
-        [ngIf]="
-                            !isAvailableLineageGraph &&
-                            lineageGraphLink.length === 0
-                        "
-    >
+    <ng-template [ngIf]="!isAvailableLineageGraph && lineageGraphLink.length === 0">
         <p>The current dataset is root. Not enough data to build the graph.</p>
     </ng-template>
 </div>

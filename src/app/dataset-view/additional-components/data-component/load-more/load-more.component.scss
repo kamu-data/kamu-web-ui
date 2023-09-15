@@ -11,17 +11,17 @@
 
 button {
     border: 1px solid transparent;
-    transition: background-color .3s ease-in-out;
+    transition: background-color 0.3s ease-in-out;
 
     &:hover:not([disabled]) {
-        background-color: #C4C4C4;
+        background-color: #c4c4c4;
     }
 }
 
 .btn-toggle {
     mat-icon {
         transform: rotate(00deg);
-        transition: transform .3s ease-in-out;
+        transition: transform 0.3s ease-in-out;
     }
 
     &.opened {
@@ -35,7 +35,7 @@ button {
 
 .holder {
     opacity: 1;
-    transition: opacity .3s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
 
     &.hidden {
         opacity: 0;

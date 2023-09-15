@@ -1,48 +1,48 @@
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
+@include mat.core;
 
-@include mat.core();
-
-$app-primary: #F1F1F1;
-$app-dark: #1C1C1C;
-$app-white: #FFFFFF;
+$app-primary: #f1f1f1;
+$app-dark: #1c1c1c;
+$app-white: #fff;
 $app-emperor: #535353;
-$app-veryLightGray: #DEDEDE;
-$app-darkSeaGreen: #86BA90;
-$app-navyBlue: #0969da;
-$app-aliceBlue: #f6f8fa;
-$app-lightGrayishBlue: #dee2e6;
+$app-very-light-gray: #dedede;
+$app-dark-sea-green: #86ba90;
+$app-navy-blue: #0969da;
+$app-alice-blue: #f6f8fa;
+$app-light-grayish-blue: #dee2e6;
 $app-cloudy: #57606a;
 $app-nero: #282828;
 $secondary: #57606a;
-$app-disabled: rgba(88, 87, 87, 0.42);
+$app-disabled: rgb(88 87 87 / 42%);
 $app-background-btn: #f3f4f6;
-$app-versatileBusinessDark: rgba(221, 221, 221, 0.25);
+$app-versatile-business-dark: rgb(221 221 221 / 25%);
 $app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
 // The "warn" palette is optional and defaults to red if not specified.
 $app-warn: mat.define-palette(mat.$red-palette);
 $my-theme: mat.define-light-theme($app-primary, $app-accent, $app-warn);
-$verylightgrey: #cccccc;
-$darkgreentea: rgb(142, 195, 79);
+$very-light-grey: #ccc;
+$dark-green-tea: rgb(142 195 79);
 $app-success: #1a7f37;
 $app-harmonies: #2da44e;
 $app-naples-yellow: #eac54f;
 $app-color-btn-counter-bg: #1b1f2414;
-$app-color-counter-border: #00000000;
+$app-color-counter-border: #0000;
 $app-color-neutral-muted: #afb8c133;
 $app-color-fg-default: #24292f;
 $app-color-btn-hover-bg: #f3f4f6;
 $app-color-btn-hover-border: #1b1f2426;
 $app-color-border-default: #d0d7de;
-$app-color-select-menu-backdrop-border: #00000000;
-$app-color-canvas-overlay: #ffffff;
+$app-color-select-menu-backdrop-border: #0000;
+$app-color-canvas-overlay: #fff;
 $app-color-canvas-subtle: #f6f8fa;
 $app-color-border-muted: #d8dee4;
-$app-color-shadow-large: 0 8px 24px rgba(140, 149, 159, 0.2);
+$app-color-shadow-large: 0 8px 24px rgb(140 149 159 / 20%);
 $app-color-fg-muted: #57606a;
 $app-color-btn-border: #ced4da;
 $app-color-timeline-badge-bg: #eaeef2;
-$app--color-overview-history-summary-bg: #ddf4ff;
-$app--color-table-header-bg: #f6f8fa;
+$app-color-overview-history-summary-bg: #ddf4ff;
+$app-color-table-header-bg: #f6f8fa;
 $app-color-primer-border-active: #fd8c73;
 $app-color-action-list-item-default-selected-bg: #d0d7de3d;
 $app-color-accent-fg: #0969da;
@@ -80,7 +80,7 @@ $app-color-action-list-item-inline-divider: #d0d7de7a;
     color: $app-color-fg-default !important;
 
     &:hover {
-        color: $app-navyBlue !important;
+        color: $app-navy-blue !important;
     }
 }
 
@@ -88,11 +88,48 @@ $app-color-action-list-item-inline-divider: #d0d7de7a;
     color: $secondary !important;
 
     &:hover {
-        color: $app-navyBlue !important;
+        color: $app-navy-blue !important;
     }
 }
 
 .box {
+    background-color: $app-color-canvas-overlay;
+    border-color: $app-color-border-default;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 6px;
+
+    &:focus,
+    &:hover {
+        background-color: $app-alice-blue;
+    }
+
+    &--condensed {
+        line-height: 1.25;
+
+        .box__row {
+            padding: 8px 16px;
+        }
+    }
+
+    &__row {
+        padding: 16px;
+        margin-top: -1px;
+        list-style-type: none;
+        border-top: 1px solid $app-color-border-muted;
+
+        &:first-of-type {
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            border-top-color: transparent;
+        }
+
+        &:last-of-type {
+            border-bottom-right-radius: 6px;
+            border-bottom-left-radius: 6px;
+        }
+    }
+
     &-title {
         font-size: 20px;
         line-height: 20px;
@@ -104,7 +141,7 @@ $app-color-action-list-item-inline-divider: #d0d7de7a;
         width: 100%;
         padding: 16px;
         margin: 0;
-        background-color: $app-aliceBlue;
+        background-color: $app-alice-blue;
         border-color: $app-color-border-default;
         border-style: solid;
         border-width: 1px;
@@ -150,7 +187,7 @@ $app-color-action-list-item-inline-divider: #d0d7de7a;
 }
 
 .color-bg-tertiary {
-    background-color: $app-aliceBlue;
+    background-color: $app-alice-blue;
 }
 
 .rounded-1 {
@@ -158,7 +195,7 @@ $app-color-action-list-item-inline-divider: #d0d7de7a;
 }
 
 .border-white-fade {
-    border-color: $app-versatileBusinessDark;
+    border-color: $app-versatile-business-dark;
 }
 
 .rounded-2 {
@@ -209,7 +246,7 @@ $app-color-action-list-item-inline-divider: #d0d7de7a;
         float: left;
         border-color: $app-color-border-default;
         height: inherit;
-        background: $app-aliceBlue;
+        background: $app-alice-blue;
 
         &:first-child {
             &:active,
@@ -253,6 +290,19 @@ $app-color-action-list-item-inline-divider: #d0d7de7a;
         &:hover {
             background-color: $app-color-btn-hover-border;
         }
+    }
+
+    .counter {
+        margin-left: 2px;
+        color: inherit;
+        text-shadow: none;
+        vertical-align: top;
+        background-color: $app-color-btn-counter-bg;
+    }
+
+    &:hover,
+    &.hover {
+        @extend %hover-effect;
     }
 }
 
@@ -344,7 +394,7 @@ $app-color-action-list-item-inline-divider: #d0d7de7a;
         border-right: 1px solid $app-color-canvas-overlay;
         border-radius: 4px;
         box-shadow: none;
-        transition: margin .1s ease-in-out;
+        transition: margin 0.1s ease-in-out;
 
         img {
             border-radius: 4px;
@@ -381,32 +431,15 @@ $app-color-action-list-item-inline-divider: #d0d7de7a;
     border-radius: 2em;
 }
 
-.btn {
-    .counter {
-        margin-left: 2px;
-        color: inherit;
-        text-shadow: none;
-        vertical-align: top;
-        background-color: $app-color-btn-counter-bg;
-    }
-}
-
-.hover-effect {
+%hover-effect {
     background-color: $app-color-btn-hover-bg;
     border-color: $app-color-btn-hover-border;
-    transition-duration: .1s;
-}
-
-.btn {
-    &:hover,
-    &.hover {
-        @extend .hover-effect;
-    }
+    transition-duration: 0.1s;
 }
 
 [open] {
     & > .btn {
-        @extend .hover-effect;
+        @extend %hover-effect;
     }
 }
 
@@ -448,7 +481,7 @@ $app-color-action-list-item-inline-divider: #d0d7de7a;
     background-color: $app-color-canvas-overlay;
     border: 1px solid $app-color-select-menu-backdrop-border;
     border-radius: 12px;
-    animation: select-menu-modal-animation .12s cubic-bezier(0, 0.1, 0.1, 1) backwards;
+    animation: select-menu-modal-animation 0.12s cubic-bezier(0, 0.1, 0.1, 1) backwards;
 }
 
 .select-menu-header {
@@ -508,15 +541,15 @@ $app-color-action-list-item-inline-divider: #d0d7de7a;
 
     &--check {
         visibility: hidden;
-        transition: transform .12s cubic-bezier(0.5, 0.1, 1, 0.5), visibility 0s .12s linear;
+        transition: transform 0.12s cubic-bezier(0.5, 0.1, 1, 0.5), visibility 0s 0.12s linear;
         transform: scale(0);
     }
 }
 
-.select-menu-item[aria-checked='true'] {
+.select-menu-item[aria-checked="true"] {
     .select-menu-icon--check {
         visibility: visible;
-        transition: transform .12s cubic-bezier(0, 0, 0.2, 1), visibility 0s linear;
+        transition: transform 0.12s cubic-bezier(0, 0, 0.2, 1), visibility 0s linear;
         transform: scale(1);
     }
 }
@@ -528,48 +561,53 @@ $app-color-action-list-item-inline-divider: #d0d7de7a;
     }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
     * {
         font-size: 15px;
     }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .border-sm-top {
         border-top: 1px solid #dee2e6 !important;
     }
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
     .border-md-0 {
         border-top: none !important;
     }
+
     .border-md-top-0 {
         border-top: 0 !important;
     }
+
     .flex-md-row {
         flex-direction: row !important;
     }
+
     .flex-md-self-auto {
         align-self: auto !important;
     }
-    //margin
+
     .mt-md-n3 {
         margin-top: -16px !important;
     }
+
     .mb-md-n3 {
         margin-bottom: -16px !important;
     }
+
     .mr-md-3 {
         margin-right: 16px !important;
     }
+
     .py-md-3 {
         padding-top: 16px !important;
         padding-bottom: 16px !important;
     }
 }
 
-;
 .file {
     position: relative;
     margin-top: 16px;
@@ -579,14 +617,14 @@ $app-color-action-list-item-inline-divider: #d0d7de7a;
 
     .file-header {
         padding: 5px 10px;
-        background-color: $app-aliceBlue;
+        background-color: $app-alice-blue;
         border-bottom: 1px solid $app-color-border-default;
         border-top-left-radius: 6px;
         border-top-right-radius: 6px;
     }
 
     .file-info {
-        font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+        font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
         font-size: 12px;
         line-height: 32px;
     }
@@ -619,9 +657,9 @@ markdown {
     }
 
     blockquote {
-        border-left: 3px solid rgba(0, 0, 0, 0.21);
+        border-left: 3px solid rgb(0 0 0 / 21%);
         padding-left: 12px;
-        color: rgba(0, 0, 0, 0.54);
+        color: rgb(0 0 0 / 54%);
     }
 }
 
@@ -638,8 +676,8 @@ markdown {
 }
 
 .mat-chip {
-    color: $app-navyBlue;
-    background: $app-aliceBlue;
+    color: $app-navy-blue;
+    background: $app-alice-blue;
     font-size: 12px;
 }
 
@@ -648,47 +686,6 @@ markdown {
     font-weight: 600;
     color: $app-color-fg-default;
     white-space: nowrap;
-}
-
-.box {
-    background-color: $app-color-canvas-overlay;
-    border-color: $app-color-border-default;
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 6px;
-
-    &:focus,
-    &:hover {
-        background-color: $app-aliceBlue;
-    }
-
-    &--condensed {
-        line-height: 1.25;
-
-        .box__row {
-            padding: 8px 16px;
-        }
-    }
-
-    &__row {
-        padding: 16px;
-        margin-top: -1px;
-        list-style-type: none;
-        border-top-color: $app-color-border-muted;
-        border-top-style: solid;
-        border-top-width: 1px;
-
-        &:first-of-type {
-            border-top-left-radius: 6px;
-            border-top-right-radius: 6px;
-            border-top-color: transparent;
-        }
-
-        &:last-of-type {
-            border-bottom-right-radius: 6px;
-            border-bottom-left-radius: 6px;
-        }
-    }
 }
 
 .signer-block-info {
@@ -735,7 +732,7 @@ markdown {
     user-select: none;
     background: none;
     vertical-align: middle;
-    border-color: $verylightgrey;
+    border-color: $very-light-grey;
 
     &.verified {
         color: $app-success;
@@ -751,7 +748,7 @@ markdown {
     display: inline-block;
     overflow: visible !important;
     vertical-align: text-bottom;
-    fill: currentColor;
+    fill: currentcolor;
 }
 
 .signed-commit-verified-label {
@@ -765,7 +762,7 @@ markdown {
     font-size: 12px;
     font-weight: 500;
     line-height: 18px;
-    border: 1px solid $verylightgrey;
+    border: 1px solid $very-light-grey;
     border-radius: 2em;
 }
 

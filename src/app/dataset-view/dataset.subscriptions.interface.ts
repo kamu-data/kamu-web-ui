@@ -54,7 +54,6 @@ export interface LineageUpdate {
 export interface LineageGraphNodeData {
     nodeKind: LineageGraphNodeType;
     nodeDataObject: LineageGraphDatasetNodeObject;
-    //| LineageGraphSourceNodeObject
 }
 
 export enum LineageGraphNodeType {

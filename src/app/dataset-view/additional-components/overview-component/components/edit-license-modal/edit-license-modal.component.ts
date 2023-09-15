@@ -1,6 +1,5 @@
 import { BaseComponent } from "src/app/common/base.component";
 import AppValues from "src/app/common/app.values";
-/* eslint-disable @typescript-eslint/unbound-method */
 import { Component, Input, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";

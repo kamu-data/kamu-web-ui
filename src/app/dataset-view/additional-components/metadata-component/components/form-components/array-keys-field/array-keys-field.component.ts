@@ -21,7 +21,6 @@ export class ArrayKeysFieldComponent extends BaseField {
     }
 
     public addPrimaryKey(): void {
-        // eslint-disable-next-line @typescript-eslint/unbound-method
         this.items.push(this.fb.control("", [Validators.required]));
     }
 

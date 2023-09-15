@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core
 import { LineageGraphComponent } from "./lineage-graph.component";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MOCK_CLUSTERS, MOCK_LINKS, MOCK_NODES } from "src/app/api/mock/dataset.mock";
+import { MOCK_LINKS, MOCK_NODES } from "src/app/api/mock/dataset.mock";
 import { SimpleChange } from "@angular/core";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
@@ -29,7 +29,6 @@ describe("LineageGraphComponent", () => {
         component.view = [500, 600];
         component.links = MOCK_LINKS;
         component.nodes = MOCK_NODES;
-        component.clusters = MOCK_CLUSTERS;
         fixture.detectChanges();
     });
 
@@ -46,7 +45,6 @@ describe("LineageGraphComponent", () => {
     it("should check ngOnChanges", () => {
         component.ngOnChanges({
             nodes: new SimpleChange(MOCK_NODES, [MOCK_NODES[0]], false),
-            clusters: new SimpleChange(MOCK_CLUSTERS, [MOCK_CLUSTERS[0]], false),
         });
         fixture.detectChanges();
         expect(component.graphNodes).toEqual([MOCK_NODES[0]]);

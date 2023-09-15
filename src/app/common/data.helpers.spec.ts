@@ -299,3 +299,13 @@ it("should check description for ExecuteQuery block", () => {
         "Transformation produced 22 new records",
     );
 });
+
+[
+    { engine: "spark", label: "Apache Spark" },
+    { engine: "flink", label: "Apache Flink" },
+    { engine: "datafusion", label: "DataFusion" },
+].forEach((item: { engine: string; label: string }) => {
+    it(`should check label for ${item.engine} engine`, () => {
+        expect(DataHelpers.descriptionForEngine(item.engine).label).toEqual(item.label);
+    });
+});

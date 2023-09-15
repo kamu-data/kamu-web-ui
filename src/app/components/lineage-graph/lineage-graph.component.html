@@ -32,24 +32,24 @@
         </ng-template>
 
         <ng-template #nodeTemplate let-node>
-            <svg:g class="node" *ngIf="!node.data.extraNode">
+            <svg:g class="node" *ngIf="node.data.nodeKind === nodeGraphType.Dataset">
                 <svg:rect
                     [attr.width]="node.dimension.width"
                     [attr.height]="70"
                     [attr.rx]="5"
-                    [attr.fill]="node.data.isRoot ? '#FFB6C1' : '#add8e6'"
+                    [attr.fill]="node.data.nodeDataObject.isRoot ? '#FFB6C1' : '#add8e6'"
                     [attr.cursor]="'pointer'"
-                    [attr.stroke]="node.data.isCurrent ? '#FF4500' : 'black'"
-                    [attr.stroke-width]="node.data.isCurrent ? 3 : 0"
-                    (click)="!node.data.isCurrent && onClickNode(node)"
+                    [attr.stroke]="node.data.nodeDataObject.isCurrent ? '#FF4500' : 'black'"
+                    [attr.stroke-width]="node.data.nodeDataObject.isCurrent ? 3 : 0"
+                    (click)="!node.data.nodeDataObject.isCurrent && onClickNode(node)"
                 />
                 <svg:text
                     alignment-baseline="central"
                     [attr.x]="10"
-                    [attr.y]="node.dimension.height * 0.55"
+                    [attr.y]="node.dimension.height / 2"
                     [attr.font-weight]="'600'"
                     [attr.cursor]="'pointer'"
-                    (click)="!node.data.isCurrent && onClickNode(node)"
+                    (click)="!node.data.nodeDataObject.isCurrent && onClickNode(node)"
                 >
                     {{ node.label }}
                 </svg:text>
@@ -59,10 +59,12 @@
                     [attr.width]="18"
                     [attr.height]="18"
                     attr.data-test-id="account-avatar-{{ node.label }}"
-                    [attr.xlink:href]="(getAccountUrl(node.data.accountName) | async)?.avatarUrl || DEFAULT_AVATAR_URL"
+                    [attr.xlink:href]="
+                        (getAccountUrl(node.data.nodeDataObject.accountName) | async)?.avatarUrl || DEFAULT_AVATAR_URL
+                    "
                 />
                 <svg:text alignment-baseline="central" [attr.x]="35" [attr.y]="18" [attr.font-weight]="'normal'">
-                    {{ node.data.accountName }}
+                    {{ node.data.nodeDataObject.accountName }}
                 </svg:text>
                 <svg:g [attr.transform]="'translate(' + node.dimension.width * 1.005 + ',0)'">
                     <!-- Temporary solution - in future icon will be choosen on explicit public/private attribute in the dataset -->
@@ -75,12 +77,12 @@
                     />
                 </svg:g>
             </svg:g>
-            <svg:g class="node" *ngIf="node.data.extraNode">
+            <svg:g class="node" *ngIf="node.data.nodeKind === nodeGraphType.Source">
                 <svg:rect
                     [attr.width]="node.dimension.width * 1.1"
                     [attr.height]="50"
                     [attr.rx]="5"
-                    [attr.fill]="'#32cd32'"
+                    [attr.fill]="'#FFF'"
                     [attr.cursor]="'pointer'"
                 />
                 <image

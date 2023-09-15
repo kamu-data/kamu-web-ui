@@ -14,7 +14,7 @@ import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { Observable } from "rxjs";
 import { AccountDetailsFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { LineageGraphNodeType } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { AccountService } from "src/app/services/account.service";
 
 @Component({
@@ -44,8 +44,9 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public graphClusters: ClusterNode[];
     public graphNodes: Node[];
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
+    public readonly nodeGraphType: typeof LineageGraphNodeType = LineageGraphNodeType;
 
-    constructor(private accountService: AccountService, private datasetService: DatasetService) {}
+    constructor(private accountService: AccountService) {}
 
     public ngOnInit(): void {
         this.graphNodes = this.nodes;

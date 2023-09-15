@@ -1,9 +1,9 @@
 import { mockDatasetBasicsFragment } from "../../search/mock.data";
 import {
     DatasetHistoryUpdate,
+    DatasetLineageBasicsFragment,
     DataSqlErrorUpdate,
     DataUpdate,
-    GraphNodeType,
     LineageUpdate,
 } from "../dataset.subscriptions.interface";
 import {
@@ -112,7 +112,7 @@ export const mockCurrentSourceFetchUrlFragment: CurrentSourceFetchUrlFragment = 
     },
 };
 
-export const mockGraphNode: GraphNodeType = {
+export const mockGraphNode: DatasetLineageBasicsFragment = {
     ...mockDatasetBasicsFragment,
     metadata: {
         ...mockCurrentSourceFetchUrlFragment,

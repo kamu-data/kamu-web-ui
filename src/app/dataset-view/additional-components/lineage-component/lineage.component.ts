@@ -11,7 +11,12 @@ import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
-import { GraphNodeType, LineageUpdate } from "../../dataset.subscriptions.interface";
+import {
+    DatasetLineageBasicsFragment,
+    LineageGraphNodeData,
+    LineageGraphNodeType,
+    LineageUpdate,
+} from "../../dataset.subscriptions.interface";
 import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 
 @Component({
@@ -69,7 +74,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
     }
 
     private updateGraph(lineageUpdate: LineageUpdate): void {
-        lineageUpdate.nodes.forEach((dataset: GraphNodeType) => {
+        lineageUpdate.nodes.forEach((dataset: DatasetLineageBasicsFragment) => {
             this.lineageGraphClusters = this.lineageGraphClusters.map((cluster: ClusterNode) => {
                 if (typeof cluster.childNodeIds === "undefined") {
                     cluster.childNodeIds = [];
@@ -83,69 +88,16 @@ export class LineageComponent extends BaseComponent implements OnInit {
         });
         const edges = lineageUpdate.edges;
         const currentDataset = lineageUpdate.origin;
-
         this.initLineageGraphProperty();
-
         this.isAvailableLineageGraph = edges.length !== 0;
-
-        const uniqueDatasets: Record<string, GraphNodeType> = {};
-        edges.forEach((edge: GraphNodeType[]) =>
-            edge.forEach((dataset: GraphNodeType) => {
+        const uniqueDatasets: Record<string, DatasetLineageBasicsFragment> = {};
+        edges.forEach((edge: DatasetLineageBasicsFragment[]) =>
+            edge.forEach((dataset: DatasetLineageBasicsFragment) => {
                 uniqueDatasets[dataset.id] = dataset;
             }),
         );
-
-        for (const [id, dataset] of Object.entries(uniqueDatasets)) {
-            this.lineageGraphNodes.push({
-                id: this.sanitizeID(id),
-                label: dataset.name,
-                data: {
-                    id: dataset.id,
-                    name: dataset.name,
-                    kind: dataset.kind,
-                    isRoot: dataset.kind === DatasetKind.Root,
-                    isCurrent: dataset.id === currentDataset.id,
-                    access: "private",
-                    accountName: dataset.owner.name,
-                    sourceUrl:
-                        dataset.metadata.currentSource?.fetch.__typename === "FetchStepUrl"
-                            ? dataset.metadata.currentSource.fetch.url
-                            : "Other source",
-                },
-            });
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        const extraNodes = this.lineageGraphNodes.filter((item: Node) => item.data.kind === DatasetKind.Root);
-        extraNodes.forEach((node) => {
-            this.lineageGraphNodes.push({
-                id: "extra-node-" + node.id,
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-                label: this.getDomainFromUrl(node.data.sourceUrl as string),
-                data: {
-                    extraNode: true,
-                    name: node.label,
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-                    accountName: node.data.accountName,
-                },
-            });
-
-            this.lineageGraphLink.push({
-                id: `extra-node-${node.id}__and__${node.id}`,
-                source: "extra-node-" + node.id,
-                target: node.id,
-            });
-        });
-
-        edges.forEach((edge: GraphNodeType[]) => {
-            const source: string = this.sanitizeID(edge[0].id);
-            const target: string = this.sanitizeID(edge[1].id);
-
-            this.lineageGraphLink.push({
-                id: `${source}__and__${target}`,
-                source,
-                target,
-            });
-        });
+        this.addSourceGraphNodes(Object.values(uniqueDatasets));
+        this.addDatasetGraphNodes(Object.values(uniqueDatasets), edges, currentDataset);
     }
 
     private sanitizeID(id: string): string {
@@ -153,6 +105,73 @@ export class LineageComponent extends BaseComponent implements OnInit {
     }
 
     private getDomainFromUrl(url: string): string {
-        return url.includes("http") ? url.split("//")[1].split("/")[0] : url;
+        const protocols = ["http", "https", "ftp"];
+        return protocols.some((protocol) => url.includes(protocol)) ? new URL(url).hostname : url;
+    }
+
+    private addSourceGraphNodes(data: DatasetLineageBasicsFragment[]): void {
+        const extraNodes = data.filter(
+            (item: DatasetLineageBasicsFragment) =>
+                item.kind === DatasetKind.Root && item.metadata.currentSource?.fetch.__typename === "FetchStepUrl",
+        );
+        extraNodes.forEach((node: DatasetLineageBasicsFragment) => {
+            const id = this.sanitizeID(node.id);
+            const label = this.getDomainFromUrl(
+                node.metadata.currentSource?.fetch.__typename === "FetchStepUrl"
+                    ? node.metadata.currentSource.fetch.url
+                    : "Other source",
+            );
+            const indexExistingSource = this.lineageGraphNodes.findIndex((node) => node.label === label);
+            if (indexExistingSource === -1) {
+                this.lineageGraphNodes.push({
+                    id: "extra-node-" + id,
+                    label,
+                    data: {
+                        nodeKind: LineageGraphNodeType.Source,
+                        nodeDataObject: {},
+                    } as LineageGraphNodeData,
+                });
+            }
+            const validId = indexExistingSource == -1 ? id : this.lineageGraphLink[indexExistingSource].target;
+            this.lineageGraphLink.push({
+                id: `extra-node-${validId}__and__${id}`,
+                source: "extra-node-" + validId,
+                target: id,
+            });
+        });
+    }
+
+    private addDatasetGraphNodes(
+        data: DatasetLineageBasicsFragment[],
+        edges: DatasetLineageBasicsFragment[][],
+        currentDataset: DatasetLineageBasicsFragment,
+    ): void {
+        data.forEach((dataset: DatasetLineageBasicsFragment) => {
+            this.lineageGraphNodes.push({
+                id: this.sanitizeID(dataset.id),
+                label: dataset.name,
+                data: {
+                    nodeKind: LineageGraphNodeType.Dataset,
+                    nodeDataObject: {
+                        id: dataset.id,
+                        name: dataset.name,
+                        kind: dataset.kind,
+                        isRoot: dataset.kind === DatasetKind.Root,
+                        isCurrent: dataset.id === currentDataset.id,
+                        access: "private",
+                        accountName: dataset.owner.name,
+                    },
+                } as LineageGraphNodeData,
+            });
+        });
+        edges.forEach((edge: DatasetLineageBasicsFragment[]) => {
+            const source: string = this.sanitizeID(edge[0].id);
+            const target: string = this.sanitizeID(edge[1].id);
+            this.lineageGraphLink.push({
+                id: `${source}__and__${target}`,
+                source,
+                target,
+            });
+        });
     }
 }

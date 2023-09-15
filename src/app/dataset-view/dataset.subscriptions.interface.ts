@@ -43,9 +43,31 @@ export interface DatasetHistoryUpdate {
     kind?: DatasetKind;
 }
 
-export type GraphNodeType = DatasetBasicsFragment & { metadata: CurrentSourceFetchUrlFragment };
+export type DatasetLineageBasicsFragment = DatasetBasicsFragment & { metadata: CurrentSourceFetchUrlFragment };
+
 export interface LineageUpdate {
-    nodes: GraphNodeType[];
-    edges: GraphNodeType[][];
-    origin: GraphNodeType;
+    nodes: DatasetLineageBasicsFragment[];
+    edges: DatasetLineageBasicsFragment[][];
+    origin: DatasetLineageBasicsFragment;
+}
+
+export interface LineageGraphNodeData {
+    nodeKind: LineageGraphNodeType;
+    nodeDataObject: LineageGraphDatasetNodeObject;
+    //| LineageGraphSourceNodeObject
+}
+
+export enum LineageGraphNodeType {
+    Dataset = "dataset",
+    Source = "source",
+}
+
+export interface LineageGraphDatasetNodeObject {
+    id?: string;
+    name?: string;
+    kind?: DatasetKind;
+    isRoot?: boolean;
+    isCurrent?: boolean;
+    access?: string;
+    accountName?: string;
 }

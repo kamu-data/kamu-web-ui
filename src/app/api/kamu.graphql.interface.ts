@@ -1832,31 +1832,6 @@ export type RenameDatasetMutation = {
     };
 };
 
-export type SourceRootDatasetByAccountAndDatasetNameQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
-}>;
-
-export type SourceRootDatasetByAccountAndDatasetNameQuery = {
-    __typename?: "Query";
-    datasets: {
-        __typename?: "Datasets";
-        byOwnerAndName?: {
-            __typename?: "Dataset";
-            metadata: {
-                __typename?: "DatasetMetadata";
-                currentSource?: {
-                    __typename?: "SetPollingSource";
-                    fetch:
-                        | { __typename: "FetchStepContainer" }
-                        | { __typename: "FetchStepFilesGlob" }
-                        | { __typename: "FetchStepUrl"; url: string };
-                } | null;
-            };
-        } | null;
-    };
-};
-
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
     query: Scalars["String"];
     perPage?: InputMaybe<Scalars["Int"]>;
@@ -2955,38 +2930,6 @@ export const RenameDatasetDocument = gql`
 })
 export class RenameDatasetGQL extends Apollo.Mutation<RenameDatasetMutation, RenameDatasetMutationVariables> {
     document = RenameDatasetDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const SourceRootDatasetByAccountAndDatasetNameDocument = gql`
-    query sourceRootDatasetByAccountAndDatasetName($accountName: AccountName!, $datasetName: DatasetName!) {
-        datasets {
-            byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
-                metadata {
-                    currentSource {
-                        fetch {
-                            __typename
-                            ... on FetchStepUrl {
-                                url
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class SourceRootDatasetByAccountAndDatasetNameGQL extends Apollo.Query<
-    SourceRootDatasetByAccountAndDatasetNameQuery,
-    SourceRootDatasetByAccountAndDatasetNameQueryVariables
-> {
-    document = SourceRootDatasetByAccountAndDatasetNameDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

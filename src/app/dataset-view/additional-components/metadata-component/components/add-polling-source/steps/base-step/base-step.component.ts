@@ -5,7 +5,7 @@ import { FormBuilder } from "@angular/forms";
 import { ControlContainer, FormGroupDirective } from "@angular/forms";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { JsonFormControls } from "../../add-polling-source-form.types";
+import { JsonFormControl } from "../../add-polling-source-form.types";
 import { DataHelpers, getValidators } from "src/app/common/data.helpers";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { EditPollingSourceService } from "../../edit-polling-source.service";
@@ -81,7 +81,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     }
 
     private initForm(kind: string): void {
-        this.sectionFormData[kind].controls.forEach((item: JsonFormControls) => {
+        this.sectionFormData[kind].controls.forEach((item: JsonFormControl) => {
             if (this.isArrayControl(item.type)) {
                 this.sectionForm.addControl(item.name, this.fb.array([]));
             } else if (item.type === this.controlType.EVENT_TIME) {

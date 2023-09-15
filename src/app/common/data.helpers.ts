@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/unbound-method */
 import { ValidatorFn, Validators } from "@angular/forms";
 import { DatasetKind, MetadataBlockFragment } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";

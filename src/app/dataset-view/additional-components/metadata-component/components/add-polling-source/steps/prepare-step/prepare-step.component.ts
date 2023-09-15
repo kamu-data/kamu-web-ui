@@ -42,11 +42,7 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
                 if (item.kind === PrepareKind.PIPE && Array.isArray(item.command)) {
                     group = this.fb.group({
                         kind: this.fb.control(PrepareKind.PIPE),
-                        command: this.fb.control(
-                            item.command.join(" "),
-                            // eslint-disable-next-line @typescript-eslint/unbound-method
-                            Validators.required,
-                        ),
+                        command: this.fb.control(item.command.join(" "), Validators.required),
                     });
                 } else if (item.kind === PrepareKind.DECOMPRESS) {
                     group = this.fb.group({
@@ -68,11 +64,7 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
         this.sectionForm.push(
             this.fb.group({
                 kind: this.fb.control(PrepareKind.PIPE),
-                command: this.fb.control(
-                    "",
-                    // eslint-disable-next-line @typescript-eslint/unbound-method
-                    Validators.required,
-                ),
+                command: this.fb.control("", Validators.required),
             }),
         );
     }

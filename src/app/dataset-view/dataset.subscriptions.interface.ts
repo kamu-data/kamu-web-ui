@@ -43,12 +43,12 @@ export interface DatasetHistoryUpdate {
     kind?: DatasetKind;
 }
 
-export type DatasetLineageBasicsFragment = DatasetBasicsFragment & { metadata: CurrentSourceFetchUrlFragment };
+export type DatasetLineageBasics = DatasetBasicsFragment & { metadata: CurrentSourceFetchUrlFragment };
 
 export interface LineageUpdate {
-    nodes: DatasetLineageBasicsFragment[];
-    edges: DatasetLineageBasicsFragment[][];
-    origin: DatasetLineageBasicsFragment;
+    nodes: DatasetLineageBasics[];
+    edges: DatasetLineageBasics[][];
+    origin: DatasetLineageBasics;
 }
 
 export interface LineageGraphNodeData {

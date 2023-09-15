@@ -12,7 +12,7 @@ import { ClusterNode, Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import {
-    DatasetLineageBasicsFragment,
+    DatasetLineageBasics,
     LineageGraphNodeData,
     LineageGraphNodeType,
     LineageUpdate,
@@ -74,7 +74,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
     }
 
     private updateGraph(lineageUpdate: LineageUpdate): void {
-        lineageUpdate.nodes.forEach((dataset: DatasetLineageBasicsFragment) => {
+        lineageUpdate.nodes.forEach((dataset: DatasetLineageBasics) => {
             this.lineageGraphClusters = this.lineageGraphClusters.map((cluster: ClusterNode) => {
                 if (typeof cluster.childNodeIds === "undefined") {
                     cluster.childNodeIds = [];
@@ -90,9 +90,9 @@ export class LineageComponent extends BaseComponent implements OnInit {
         const currentDataset = lineageUpdate.origin;
         this.initLineageGraphProperty();
         this.isAvailableLineageGraph = edges.length !== 0;
-        const uniqueDatasets: Record<string, DatasetLineageBasicsFragment> = {};
-        edges.forEach((edge: DatasetLineageBasicsFragment[]) =>
-            edge.forEach((dataset: DatasetLineageBasicsFragment) => {
+        const uniqueDatasets: Record<string, DatasetLineageBasics> = {};
+        edges.forEach((edge: DatasetLineageBasics[]) =>
+            edge.forEach((dataset: DatasetLineageBasics) => {
                 uniqueDatasets[dataset.id] = dataset;
             }),
         );
@@ -109,12 +109,12 @@ export class LineageComponent extends BaseComponent implements OnInit {
         return protocols.some((protocol) => url.includes(protocol)) ? new URL(url).hostname : url;
     }
 
-    private addSourceGraphNodes(data: DatasetLineageBasicsFragment[]): void {
+    private addSourceGraphNodes(data: DatasetLineageBasics[]): void {
         const extraNodes = data.filter(
-            (item: DatasetLineageBasicsFragment) =>
+            (item: DatasetLineageBasics) =>
                 item.kind === DatasetKind.Root && item.metadata.currentSource?.fetch.__typename === "FetchStepUrl",
         );
-        extraNodes.forEach((node: DatasetLineageBasicsFragment) => {
+        extraNodes.forEach((node: DatasetLineageBasics) => {
             const id = this.sanitizeID(node.id);
             const label = this.getDomainFromUrl(
                 node.metadata.currentSource?.fetch.__typename === "FetchStepUrl"
@@ -142,11 +142,11 @@ export class LineageComponent extends BaseComponent implements OnInit {
     }
 
     private addDatasetGraphNodes(
-        data: DatasetLineageBasicsFragment[],
-        edges: DatasetLineageBasicsFragment[][],
-        currentDataset: DatasetLineageBasicsFragment,
+        data: DatasetLineageBasics[],
+        edges: DatasetLineageBasics[][],
+        currentDataset: DatasetLineageBasics,
     ): void {
-        data.forEach((dataset: DatasetLineageBasicsFragment) => {
+        data.forEach((dataset: DatasetLineageBasics) => {
             this.lineageGraphNodes.push({
                 id: this.sanitizeID(dataset.id),
                 label: dataset.name,
@@ -164,7 +164,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
                 } as LineageGraphNodeData,
             });
         });
-        edges.forEach((edge: DatasetLineageBasicsFragment[]) => {
+        edges.forEach((edge: DatasetLineageBasics[]) => {
             const source: string = this.sanitizeID(edge[0].id);
             const target: string = this.sanitizeID(edge[1].id);
             this.lineageGraphLink.push({

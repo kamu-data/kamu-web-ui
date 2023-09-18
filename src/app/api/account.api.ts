@@ -17,11 +17,7 @@ export class AccountApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<AccountByNameQuery>) => {
-                    if (result.data.accounts.byName) {
-                        return result.data.accounts.byName;
-                    } else {
-                        return null;
-                    }
+                    return result.data.accounts.byName ?? null;
                 }),
             );
     }

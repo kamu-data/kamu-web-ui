@@ -9,12 +9,15 @@
                     data-hovercard-type="organization"
                     (click)="showOwnerPage()"
                     data-test-id="show-owner-link"
-                    >{{ datasetInfo.accountName}}</a
+                    >{{ datasetInfo.accountName }}</a
                 >
             </span>
             <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
             <strong itemprop="name" class="mr-2 flex-self-stretch author">
-                <a data-pjax="#repo-content-pjax-container" (click)="showDatasetView()" data-test-id="show-dataset-link"
+                <a
+                    data-pjax="#repo-content-pjax-container"
+                    (click)="showDatasetView()"
+                    data-test-id="show-dataset-link"
                     >{{ datasetInfo.datasetName }}</a
                 >
             </strong>
@@ -34,9 +37,7 @@
 
     <app-search-additional-buttons
         [searchAdditionalButtonsData]="searchAdditionalButtonsData"
-        (searchAdditionalButtonsMethod)="
-            onClickSearchAdditionalButton($event)
-        "
+        (searchAdditionalButtonsMethod)="onClickSearchAdditionalButton($event)"
     >
     </app-search-additional-buttons>
 </div>

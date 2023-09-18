@@ -28,7 +28,6 @@ export class SettingsTabComponent extends BaseComponent {
         this.renameDatasetForm = this.fb.group({
             datasetName: [
                 this.getDatasetInfoFromUrl().datasetName,
-                // eslint-disable-next-line @typescript-eslint/unbound-method
                 [Validators.required, Validators.pattern(/^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/)],
             ],
         });

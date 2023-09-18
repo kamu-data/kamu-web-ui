@@ -4,7 +4,7 @@
     id="app-header"
 >
     <div class="header-item mt-n1 mb-n1 d-none d-md-flex">
-        <div [classList]="'app-brand'" id="appHeaderLogo">
+        <div [classList]="'app-brand'" id="app-header-logo">
             <button (click)="onClickAppLogo()" data-test-id="appLogo">
                 <img [src]="appLogo" alt="Application logo" />
             </button>
@@ -13,14 +13,14 @@
     <div class="header-item d-md-none">
         <button
             #appHeaderMenuButton
-            id="appHeaderMenuButton"
+            id="app-header-menu-button"
             class="navbar-toggler"
             data-test-id="appHeaderMenuButton"
             type="button"
             data-toggle="collapse"
-            data-target="#navbarNavDropdown"
+            data-target="#navbar-nav-dropdown"
             (click)="toggleAppHeaderMenu()"
-            aria-controls="navbarNavDropdown"
+            aria-controls="navbar-nav-dropdown"
             [attr.aria-expanded]="isCollapsedAppHeaderMenu"
             aria-label="Toggle navigation"
         >
@@ -34,16 +34,12 @@
             class="header-search flex-auto position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3"
         >
             <div class="position-relative">
-                <div class="collapse show navbar-collapse" id="navbarNavDropdown">
+                <div class="collapse show navbar-collapse" id="navbar-nav-dropdown">
                     <ul class="navbar-nav">
-                        <li
-                            [classList]="
-                                'nav-item search-input-container ' + (isSearchActive ? 'active-search-input' : '')
-                            "
-                        >
+                        <li class="nav-item search-input-container" [class.active-search-input]="isSearchActive">
                             <div
                                 class="input-group flex-nowrap flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 js-jump-to"
-                                id="searchInput"
+                                id="search-input"
                             >
                                 <input
                                     type="text"
@@ -193,7 +189,7 @@
                     </button>
                 </ng-template>
             </div>
-            <div id="appHeaderAdditionalBlock" class="app-header__right-column">
+            <div id="app-header-additional-block" class="app-header__right-column">
                 <div
                     class="d-flex d-sm-none d-md-flex justify-content-center notification-indicator-container align-items-center m-0"
                 >

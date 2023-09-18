@@ -42,11 +42,11 @@
     list-style-type: none;
 }
 
-.tree .mat-nested-tree-node div[role=group] {
+.tree .mat-nested-tree-node div[role="group"] {
     padding-left: 40px;
 }
 
-.tree div[role=group] > .mat-tree-node {
+.tree div[role="group"] > .mat-tree-node {
     padding-left: 25px;
     padding-bottom: 5px;
 }

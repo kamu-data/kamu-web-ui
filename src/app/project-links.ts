@@ -10,8 +10,6 @@ export default class ProjectLinks {
     public static readonly URL_DATASET_CREATE: string = "v/new-dataset";
     public static readonly URL_PAGE_NOT_FOUND: string = "v/page-not-found";
     public static readonly URL_SETTINGS: string = "v/settings";
-    // public static readonly URL_ADD_POLLING_SOURCE: string =
-    //     "v/add-polling-source";
 
     public static readonly ALL_URLS: string[] = [
         ProjectLinks.URL_HOME,

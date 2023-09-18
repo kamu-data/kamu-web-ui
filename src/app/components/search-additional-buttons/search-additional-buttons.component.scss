@@ -1,14 +1,14 @@
-@import 'var';
+@import "var";
 
 * {
     color: $app-emperor;
 }
 
-[data-test-id='searchAdditionalButtons'] {
+[data-test-id="searchAdditionalButtons"] {
     background: $app-white;
-    border: 1px solid $app-veryLightGray;
+    border: 1px solid $app-very-light-gray;
     box-sizing: border-box;
-    box-shadow: 0 5px 4px $app-versatileBusinessDark;
+    box-shadow: 0 5px 4px $app-versatile-business-dark;
     border-radius: 8px;
     color: $app-emperor;
 }

@@ -4,13 +4,11 @@
   "printWidth": 120,
   "overrides": [
     {
-      "files": "*.test.ts",
-      "options": {
-        "semi": true
-      }
-    },
-    {
-      "files": ["*.html", "**/*.ts", "*.scss"],
+      "files": [
+        "*.html",
+        "*.ts",
+        "*.scss"
+      ],
       "options": {
         "tabWidth": 4
       }

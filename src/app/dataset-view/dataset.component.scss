@@ -1,4 +1,4 @@
-@import 'var';
+@import "var";
 
 .mat-button-toggle-group {
     width: fit-content;
@@ -15,9 +15,9 @@
 
 .datatab-expanding-row {
     background: #fff;
-    border-top: 1px solid rgba(0, 0, 0, .12);
+    border-top: 1px solid rgb(0 0 0 / 12%);
     box-shadow: 0 3px 3px rgb(0 0 0 / 12%);
-    transition: margin .2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: margin 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: margin;
 
     &-header {
@@ -39,7 +39,7 @@
         }
 
         .datatab-activity-timestamp {
-            color: rgba(0, 0, 0, .66);
+            color: rgb(0 0 0 / 66%);
             flex-shrink: 0;
             text-align: right;
             width: 62px;
@@ -69,7 +69,6 @@
 }
 
 .sql-query-editor-header {
-
     h2 {
         width: max-content;
         display: inline-block;
@@ -140,7 +139,7 @@ mat-button-toggle {
     font-size: 18px;
 }
 
-[data-test-id='searchAdditionalButtons'] {
+[data-test-id="searchAdditionalButtons"] {
     height: inherit;
     border-radius: inherit;
 }

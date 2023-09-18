@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added icons for dataset's tabs
 - Added more content for graph's node
 - Added Load More data functionality to dataset data tab
+- Started using `stylelint` CSS linting tool
 ### Changed
 - Upgraded to Node.JS generation 16.x
 - Upgraded to Angular 14.3

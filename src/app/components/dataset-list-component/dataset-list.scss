@@ -1,4 +1,4 @@
-@import 'var';
+@import "var";
 
 .dataset-list-total-count {
     margin: 0;
@@ -26,12 +26,12 @@
     }
 }
 
-#sortOptions {
+#sort-options {
     color: $app-dark;
     z-index: 1;
     background: transparent;
     padding-left: 50px;
-    transition: .2s cubic-bezier(0.3, 0, 0.5, 1);
+    transition: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
 
     &:focus-visible {
         outline: none;

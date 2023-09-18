@@ -62,11 +62,11 @@ export enum LineageGraphNodeType {
 }
 
 export interface LineageGraphDatasetNodeObject {
-    id?: string;
-    name?: string;
-    kind?: DatasetKind;
-    isRoot?: boolean;
-    isCurrent?: boolean;
-    access?: string;
-    accountName?: string;
+    id: string;
+    name: string;
+    kind: DatasetKind;
+    isRoot: boolean;
+    isCurrent: boolean;
+    access: string;
+    accountName: string;
 }

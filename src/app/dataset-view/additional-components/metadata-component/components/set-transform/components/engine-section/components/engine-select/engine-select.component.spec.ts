@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { EngineSelectComponent } from "./engine-select.component";
 import { mockEngines } from "../../../../mock.data";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { Engine } from "../../engine-section.types";
 
 describe("EngineSelectComponent", () => {
     let component: EngineSelectComponent;
@@ -15,7 +16,7 @@ describe("EngineSelectComponent", () => {
         fixture = TestBed.createComponent(EngineSelectComponent);
         component = fixture.componentInstance;
         component.data = mockEngines.data.knownEngines;
-        component.engine = "Spark";
+        component.engine = Engine.Spark;
         fixture.detectChanges();
     });
 

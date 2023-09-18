@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { DatasetKind } from "src/app/api/kamu.graphql.interface";
+import { DatasetKind, FetchStepUrl } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import {
     DatasetLineageBasics,
@@ -75,8 +75,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
     }
 
     private getDomainFromUrl(url: string): string {
-        const protocols = ["http", "https", "ftp"];
-        return protocols.some((protocol) => url.includes(protocol)) ? new URL(url).hostname : url;
+        return new URL(url).hostname;
     }
 
     private addSourceGraphNodes(data: DatasetLineageBasics[]): void {
@@ -84,17 +83,14 @@ export class LineageComponent extends BaseComponent implements OnInit {
             (item: DatasetLineageBasics) =>
                 item.kind === DatasetKind.Root && item.metadata.currentSource?.fetch.__typename === "FetchStepUrl",
         );
+        const uniqueSourceNodesMap = new Map<string, Node>();
         extraNodes.forEach((node: DatasetLineageBasics) => {
             const id = this.sanitizeID(node.id);
-            const label = this.getDomainFromUrl(
-                node.metadata.currentSource?.fetch.__typename === "FetchStepUrl"
-                    ? node.metadata.currentSource.fetch.url
-                    : "Other source",
-            );
-            const indexExistingSource = this.lineageGraphNodes.findIndex((node) => node.label === label);
-            if (indexExistingSource === -1) {
-                this.lineageGraphNodes.push({
-                    id: "extra-node-" + id,
+            const label = this.getDomainFromUrl((node.metadata.currentSource?.fetch as FetchStepUrl).url);
+
+            if (!uniqueSourceNodesMap.has(label)) {
+                uniqueSourceNodesMap.set(label, {
+                    id: `extra-node-${id}`,
                     label,
                     data: {
                         nodeKind: LineageGraphNodeType.Source,
@@ -102,13 +98,18 @@ export class LineageComponent extends BaseComponent implements OnInit {
                     } as LineageGraphNodeData,
                 });
             }
-            const validId = indexExistingSource == -1 ? id : this.lineageGraphLink[indexExistingSource].target;
-            this.lineageGraphLink.push({
-                id: `extra-node-${validId}__and__${id}`,
-                source: "extra-node-" + validId,
-                target: id,
-            });
+            const extraNodeId = uniqueSourceNodesMap.has(label)
+                ? uniqueSourceNodesMap.get(label)?.id
+                : `extra-node-${id}`;
+            if (extraNodeId) {
+                this.lineageGraphLink.push({
+                    id: `${extraNodeId}__and__${id}`,
+                    source: extraNodeId,
+                    target: id,
+                });
+            }
         });
+        this.lineageGraphNodes = this.lineageGraphNodes.concat([...uniqueSourceNodesMap.values()]);
     }
 
     private addDatasetGraphNodes(

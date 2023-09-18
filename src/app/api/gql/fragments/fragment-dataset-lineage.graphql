@@ -1,17 +1,22 @@
 fragment DatasetLineage on Dataset {
   metadata {
+    ...currentSourceFetchUrl
     currentUpstreamDependencies {
       ...DatasetBasics
       metadata {
+        ...currentSourceFetchUrl
         currentUpstreamDependencies {
           ...DatasetBasics
           metadata {
+            ...currentSourceFetchUrl
             currentUpstreamDependencies {
               ...DatasetBasics
               metadata {
+                ...currentSourceFetchUrl
                 currentUpstreamDependencies {
                   ...DatasetBasics
                   metadata {
+                    ...currentSourceFetchUrl
                     currentUpstreamDependencies {
                       ...DatasetBasics
                     }
@@ -26,15 +31,19 @@ fragment DatasetLineage on Dataset {
     currentDownstreamDependencies {
       ...DatasetBasics
       metadata {
+        ...currentSourceFetchUrl
         currentDownstreamDependencies {
           ...DatasetBasics
           metadata {
+            ...currentSourceFetchUrl
             currentDownstreamDependencies {
               ...DatasetBasics
               metadata {
+                ...currentSourceFetchUrl
                 currentDownstreamDependencies {
                   ...DatasetBasics
                   metadata {
+                    ...currentSourceFetchUrl
                     currentDownstreamDependencies {
                       ...DatasetBasics
                     }

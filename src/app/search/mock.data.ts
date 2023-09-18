@@ -1,5 +1,6 @@
+import { mockSetVocab } from "./../dataset-block/metadata-block/components/event-details/mock.events";
 import { CommitEventToDatasetMutation, PageBasedInfo } from "../api/kamu.graphql.interface";
-import { mockSetVocab } from "../dataset-block/metadata-block/components/event-details/mock.events";
+
 import {
     DataBatchFormat,
     DataQueryResultErrorKind,
@@ -155,52 +156,28 @@ export const mockDatasetResponseNotFound: GetDatasetMainDataQuery = {
     },
 };
 
-export const mockDatasetMainDataId = "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu";
+export const mockDatasetMainDataId = "did:odf:z4k88e8egJJeQEd4HHuL4BSwYTWm8qiWxzqhydvHQcX2TPCrMyP";
 
 export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
     datasets: {
         __typename: "Datasets",
         byOwnerAndName: {
             __typename: "Dataset",
-            id: mockDatasetMainDataId,
+            id: "did:odf:z4k88e8egJJeQEd4HHuL4BSwYTWm8qiWxzqhydvHQcX2TPCrMyP",
             kind: DatasetKind.Root,
             name: "alberta.case-details",
             owner: {
                 __typename: "User",
-                ...mockOwnerFields,
-            },
-            data: {
-                __typename: "DatasetData",
-                tail: {
-                    __typename: "DataQueryResultSuccess",
-                    schema: {
-                        __typename: "DataSchema",
-                        format: DataSchemaFormat.Parquet,
-                        content:
-                            "message arrow_schema {\n  OPTIONAL INT64 offset;\n  REQUIRED INT64 system_time (TIMESTAMP(NANOS,false));\n  OPTIONAL INT64 date_reported (TIMESTAMP(NANOS,false));\n  OPTIONAL INT64 id;\n  OPTIONAL BYTE_ARRAY zone (STRING);\n  OPTIONAL BYTE_ARRAY gender (STRING);\n  OPTIONAL BYTE_ARRAY age_group (STRING);\n  OPTIONAL BYTE_ARRAY case_status (STRING);\n  OPTIONAL BYTE_ARRAY case_type (STRING);\n}\n",
-                    },
-                    data: {
-                        __typename: "DataBatch",
-                        format: DataBatchFormat.Json,
-                        content:
-                            '[{"offset":596125,"system_time":"2022-08-05 21:19:28.817","date_reported":"2022-08-01 00:00:00","id":595254,"zone":"Calgary Zone","gender":"Female","age_group":"50-59 years","case_status":"NA","case_type":"Confirmed"},{"offset":596124,"system_time":"2022-08-05 21:19:28.817","date_reported":"2022-08-01 00:00:00","id":377821,"zone":"North Zone","gender":"Male","age_group":"30-39 years","case_status":"NA","case_type":"Confirmed"},{"offset":596123,"system_time":"2022-08-05 21:19:28.817","date_reported":"2022-08-01 00:00:00","id":595723,"zone":"South Zone","gender":"Female","age_group":"60-69 years","case_status":"NA","case_type":"Confirmed"},{"offset":596122,"system_time":"2022-08-05 21:19:28.817","date_reported":"2022-08-01 00:00:00","id":457371,"zone":"Calgary Zone","gender":"Male","age_group":"30-39 years","case_status":"NA","case_type":"Confirmed"},{"offset":596121,"system_time":"2022-08-05 21:19:28.817","date_reported":"2022-08-01 00:00:00","id":457368,"zone":"Edmonton Zone","gender":"Female","age_group":"20-29 years","case_status":"NA","case_type":"Confirmed"},{"offset":596120,"system_time":"2022-08-05 21:19:28.817","date_reported":"2022-08-01 00:00:00","id":351389,"zone":"Edmonton Zone","gender":"Female","age_group":"60-69 years","case_status":"NA","case_type":"Confirmed"},{"offset":596119,"system_time":"2022-08-05 21:19:28.817","date_reported":"2022-08-01 00:00:00","id":298274,"zone":"Calgary Zone","gender":"Female","age_group":"80+ years","case_status":"NA","case_type":"Confirmed"},{"offset":596118,"system_time":"2022-08-05 21:19:28.817","date_reported":"2022-08-01 00:00:00","id":324898,"zone":"Calgary Zone","gender":"Female","age_group":"30-39 years","case_status":"NA","case_type":"Confirmed"},{"offset":596117,"system_time":"2022-08-05 21:19:28.817","date_reported":"2022-08-01 00:00:00","id":484338,"zone":"Calgary Zone","gender":"Female","age_group":"70-79 years","case_status":"NA","case_type":"Confirmed"},{"offset":596116,"system_time":"2022-08-05 21:19:28.817","date_reported":"2022-08-01 00:00:00","id":351387,"zone":"Edmonton Zone","gender":"Female","age_group":"30-39 years","case_status":"NA","case_type":"Confirmed"}]',
-                    },
-                },
-                numRecordsTotal: 596126,
-                estimatedSize: 5993876,
+                id: "1",
+                name: "kamu",
             },
             metadata: {
                 __typename: "DatasetMetadata",
-                currentInfo: mockMetadataCurrentInfo,
-                currentLicense: mockMetadataCurrentLicense,
-                currentVocab: mockSetVocab,
-                currentWatermark: "2022-08-01T00:00:00+00:00",
-                currentTransform: null,
                 currentSource: {
                     __typename: "SetPollingSource",
                     fetch: {
                         __typename: "FetchStepUrl",
-                        url: "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=SPY&outputsize=full&datatype=csv&apikey=${{ env.ALPHA_VANTAGE_API_KEY }}",
+                        url: "https://s3.us-west-2.amazonaws.com/datasets.kamu.dev/demo/covid/covid-19-alberta-statistics-data.csv",
                         eventTime: null,
                         headers: null,
                         cache: null,
@@ -208,15 +185,13 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                     read: {
                         __typename: "ReadStepCsv",
                         schema: [
-                            "timestamp TIMESTAMP",
-                            "open FLOAT",
-                            "high FLOAT",
-                            "low FLOAT",
-                            "close FLOAT",
-                            "adjusted_close FLOAT",
-                            "volume FLOAT",
-                            "dividend_amount FLOAT",
-                            "split_coefficient FLOAT",
+                            "id BIGINT",
+                            "date_reported TIMESTAMP",
+                            "zone STRING",
+                            "gender STRING",
+                            "age_group STRING",
+                            "case_status STRING",
+                            "case_type STRING",
                         ],
                         separator: null,
                         encoding: null,
@@ -239,102 +214,56 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                     },
                     merge: {
                         __typename: "MergeStrategyLedger",
-                        primaryKey: ["event_time"],
+                        primaryKey: ["id"],
                     },
                     prepare: null,
                     preprocess: {
                         __typename: "TransformSql",
-                        engine: "spark",
+                        engine: "datafusion",
                         version: null,
                         queries: [
                             {
                                 __typename: "SqlQueryStep",
-                                query: 'select\n  timestamp as event_time,\n  "spy" as from_symbol,\n  "usd" as to_symbol,\n  open,\n  high,\n  low,\n  close\nfrom input\n',
+                                query: "select * from input",
                                 alias: null,
                             },
                         ],
                         temporalTables: null,
                     },
                 },
+                currentTransform: null,
+                currentInfo: {
+                    __typename: "SetInfo",
+                    description: "Confirmed positive cases of COVID-19 in Alberta.",
+                    keywords: [
+                        "Healthcare",
+                        "Epidemiology",
+                        "COVID-19",
+                        "SARS-CoV-2",
+                        "Disaggregated",
+                        "Anonymized",
+                        "Alberta",
+                        "Canada",
+                    ],
+                },
+                currentLicense: {
+                    __typename: "SetLicense",
+                    shortName: "OGL-Canada-2.0",
+                    name: "Open Government Licence - Canada",
+                    spdxId: "OGL-Canada-2.0",
+                    websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
+                },
+                currentWatermark: "2022-08-01T00:00:00+00:00",
                 currentSchema: {
                     __typename: "DataSchema",
                     format: DataSchemaFormat.ParquetJson,
                     content:
-                        '{"name": "spark_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT96"}, {"name": "date_reported", "repetition": "OPTIONAL", "type": "INT96"}, {"name": "id", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "zone", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "gender", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "age_group", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "case_status", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "case_type", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}]}',
+                        '{"name": "arrow_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "REQUIRED", "type": "INT64"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT64", "logicalType": "TIMESTAMP(MILLIS,true)"}, {"name": "date_reported", "repetition": "OPTIONAL", "type": "INT64", "logicalType": "TIMESTAMP(MILLIS,true)"}, {"name": "id", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "zone", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "gender", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "age_group", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "case_status", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "case_type", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}]}',
                 },
-                currentUpstreamDependencies: [
-                    {
-                        __typename: "Dataset",
-                        metadata: {
-                            __typename: "DatasetMetadata",
-                            currentUpstreamDependencies: [
-                                {
-                                    __typename: "Dataset",
-                                    metadata: {
-                                        __typename: "DatasetMetadata",
-                                        currentUpstreamDependencies: [
-                                            {
-                                                __typename: "Dataset",
-                                                metadata: {
-                                                    __typename: "DatasetMetadata",
-                                                    currentUpstreamDependencies: [
-                                                        {
-                                                            __typename: "Dataset",
-                                                            metadata: {
-                                                                __typename: "DatasetMetadata",
-                                                                currentUpstreamDependencies: [
-                                                                    {
-                                                                        __typename: "Dataset",
-
-                                                                        id: "did:odf:z4k66d7thqpab83a24iYbeXr5yDYBAxaB7hnzbhfmyUTLnWifwz6",
-                                                                        kind: DatasetKind.Derivative,
-                                                                        name: "fake.upstream-level-5",
-                                                                        owner: {
-                                                                            __typename: "User",
-                                                                            ...mockOwnerFields,
-                                                                        },
-                                                                    },
-                                                                ],
-                                                            },
-                                                            id: "did:odf:z4k55d7thqpab83a24iZbeXr5yDYBAxaB7hnzbhfmyUTLnWifwz6",
-                                                            kind: DatasetKind.Derivative,
-                                                            name: "fake.upstream-level-4",
-                                                            owner: {
-                                                                __typename: "User",
-                                                                ...mockOwnerFields,
-                                                            },
-                                                        },
-                                                    ],
-                                                },
-                                                id: "did:odf:z4k55e8thqpab83a24iZbeXr5yDYBAxaB7hmybhfmyUTLnWifwz6",
-                                                kind: DatasetKind.Derivative,
-                                                name: "fake.upstream-level-3",
-                                                owner: {
-                                                    __typename: "User",
-                                                    ...mockOwnerFields,
-                                                },
-                                            },
-                                        ],
-                                    },
-                                    id: "did:odf:z4k55e8thqpab83a24iZbeXr5yCVCDxaB7hmybhfmyUTLnWifwz6",
-                                    kind: DatasetKind.Derivative,
-                                    name: "fake.upstream-level-2",
-                                    owner: {
-                                        __typename: "User",
-                                        ...mockOwnerFields,
-                                    },
-                                },
-                            ],
-                        },
-                        id: "did:odf:z4k55e8thqpab83a24iZbeXr5WZVCxaB7hmybhfmyUTLnWifwz6",
-                        kind: DatasetKind.Derivative,
-                        name: "fake.upstream-level-1",
-                        owner: {
-                            __typename: "User",
-                            ...mockOwnerFields,
-                        },
-                    },
-                ],
+                currentVocab: {
+                    ...mockSetVocab,
+                },
+                currentUpstreamDependencies: [],
                 currentDownstreamDependencies: [
                     {
                         __typename: "Dataset",
@@ -350,61 +279,40 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                                 __typename: "Dataset",
                                                 metadata: {
                                                     __typename: "DatasetMetadata",
-                                                    currentDownstreamDependencies: [
-                                                        {
-                                                            __typename: "Dataset",
-                                                            metadata: {
-                                                                __typename: "DatasetMetadata",
-                                                                currentDownstreamDependencies: [
-                                                                    {
-                                                                        __typename: "Dataset",
-
-                                                                        id: "did:odf:z4k88e8thqpab83a24iFbeXr5WZVCxaB7hmybhfmyUTLnWifwz6",
-                                                                        kind: DatasetKind.Derivative,
-                                                                        name: "world.daily-cases",
-                                                                        owner: {
-                                                                            __typename: "User",
-                                                                            ...mockOwnerFields,
-                                                                        },
-                                                                    },
-                                                                ],
-                                                            },
-                                                            id: "did:odf:z4k88e8thqpab83aJCiFbeXr5WZVCor7hmybhfmyUTLnWifwz6",
-                                                            kind: DatasetKind.Derivative,
-                                                            name: "america.daily-cases",
-                                                            owner: {
-                                                                __typename: "User",
-                                                                ...mockOwnerFields,
-                                                            },
-                                                        },
-                                                    ],
+                                                    currentDownstreamDependencies: [],
+                                                    currentSource: null,
                                                 },
-                                                id: "did:odf:z4k88e8thqpQ7kupbJCiFbeXr5WZVCor7hmybhfmyUTLnWifwz6",
+                                                id: "did:odf:z4k88e8qAReYmLPFUyaKfk1UHCSY2Mkh6X1AHxuUGNhec76QsGq",
                                                 kind: DatasetKind.Derivative,
                                                 name: "canada.daily-cases",
                                                 owner: {
                                                     __typename: "User",
-                                                    ...mockOwnerFields,
+                                                    id: "1",
+                                                    name: "kamu",
                                                 },
                                             },
                                         ],
+                                        currentSource: null,
                                     },
-                                    id: "did:odf:z4k88e8epAntnrFDUiDYxSGkCRcTc6wNzcwbpubzLCPQLVLUMcF",
+                                    id: "did:odf:z4k88e8nN5SdNPxsc5oeqwdCLvjzcvJzoyEQ938E87A15nTrkAk",
                                     kind: DatasetKind.Derivative,
                                     name: "canada.case-details",
                                     owner: {
                                         __typename: "User",
-                                        ...mockOwnerFields,
+                                        id: "1",
+                                        name: "kamu",
                                     },
                                 },
                             ],
+                            currentSource: null,
                         },
-                        id: "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7",
+                        id: "did:odf:z4k88e8jmNqgCt5L84XPdaog32MttcHzGiXcktfuTuDY3QKwiyK",
                         kind: DatasetKind.Derivative,
                         name: "alberta.case-details.hm",
                         owner: {
                             __typename: "User",
-                            ...mockOwnerFields,
+                            id: "1",
+                            name: "kamu",
                         },
                     },
                 ],
@@ -417,34 +325,31 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                         nodes: [
                             {
                                 __typename: "MetadataBlockExtended",
-                                blockHash: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
-                                sequenceNumber: 12,
-                                prevBlockHash: "zW1ioX6fdsM4so8MPw7wqF1uKsDC7n6FEkhahZKXNcgF5E1",
-                                systemTime: "2022-08-05T21:19:28.817281255+00:00",
+                                blockHash: "zW1aBqdzZkZAYb6t6omkjWNP2ULPj4qyXPWyt7i1kbYLWpF",
+                                prevBlockHash: "zW1arvtcx4kTYFLi3iqNybLMxFwJj8Cf3XEMc4ByGPGRkWU",
+                                systemTime: "2023-09-03T01:09:31.587025138+00:00",
+                                sequenceNumber: 6,
                                 author: {
                                     __typename: "User",
-                                    ...mockOwnerFields,
+                                    id: "1",
+                                    name: "kamu",
                                 },
                                 event: {
                                     __typename: "AddData",
-                                    inputCheckpoint: "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
-                                    addDataWatermark: "2022-08-05T21:17:30.613911358+00:00",
+                                    addDataWatermark: "2022-08-01T00:00:00+00:00",
+                                    inputCheckpoint: null,
                                     outputData: {
                                         __typename: "DataSlice",
-
                                         interval: {
                                             __typename: "OffsetInterval",
                                             start: 0,
                                             end: 596125,
                                         },
-                                        logicalHash: "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
-                                        physicalHash: "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
-                                        size: 900,
+                                        logicalHash: "z63ZND5B5QeYpE5oKPS9Pg5zU97oCr4W4Q6ngjww8zVp4NyUquvR",
+                                        physicalHash: "zW1bSq3dDJvAfuHJbVzH3TLKuWWCvXBdNqMrNNeRXuYj8WJ",
+                                        size: 6585116,
                                     },
-                                    outputCheckpoint: {
-                                        physicalHash: "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
-                                        size: 11213,
-                                    },
+                                    outputCheckpoint: null,
                                 },
                             },
                         ],
@@ -459,8 +364,28 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                     },
                 },
             },
-            createdAt: "2022-08-05T21:17:30.613911358+00:00",
-            lastUpdatedAt: "2022-08-05T21:19:28.817281255+00:00",
+            data: {
+                __typename: "DatasetData",
+                tail: {
+                    __typename: "DataQueryResultSuccess",
+                    schema: {
+                        __typename: "DataSchema",
+                        format: DataSchemaFormat.Parquet,
+                        content:
+                            "message arrow_schema {\n  REQUIRED INT64 offset;\n  REQUIRED INT64 system_time (TIMESTAMP(NANOS,false));\n  OPTIONAL INT64 date_reported (TIMESTAMP(NANOS,false));\n  OPTIONAL INT64 id;\n  OPTIONAL BYTE_ARRAY zone (STRING);\n  OPTIONAL BYTE_ARRAY gender (STRING);\n  OPTIONAL BYTE_ARRAY age_group (STRING);\n  OPTIONAL BYTE_ARRAY case_status (STRING);\n  OPTIONAL BYTE_ARRAY case_type (STRING);\n}\n",
+                    },
+                    data: {
+                        __typename: "DataBatch",
+                        format: DataBatchFormat.Json,
+                        content:
+                            '[{"age_group":"50-59 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":595254,"offset":596125,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"30-39 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":377821,"offset":596124,"system_time":"2023-09-03T01:09:31.587","zone":"North Zone"},{"age_group":"60-69 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":595723,"offset":596123,"system_time":"2023-09-03T01:09:31.587","zone":"South Zone"},{"age_group":"30-39 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":457371,"offset":596122,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"20-29 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":457368,"offset":596121,"system_time":"2023-09-03T01:09:31.587","zone":"Edmonton Zone"},{"age_group":"60-69 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":351389,"offset":596120,"system_time":"2023-09-03T01:09:31.587","zone":"Edmonton Zone"},{"age_group":"80+ years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":298274,"offset":596119,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"30-39 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":324898,"offset":596118,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"70-79 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":484338,"offset":596117,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"30-39 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":351387,"offset":596116,"system_time":"2023-09-03T01:09:31.587","zone":"Edmonton Zone"},{"age_group":"20-29 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":594747,"offset":596115,"system_time":"2023-09-03T01:09:31.587","zone":"South Zone"},{"age_group":"60-69 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":484350,"offset":596114,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"30-39 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":595630,"offset":596113,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"80+ years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":404155,"offset":596112,"system_time":"2023-09-03T01:09:31.587","zone":"North Zone"},{"age_group":"80+ years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":43652,"offset":596111,"system_time":"2023-09-03T01:09:31.587","zone":"Edmonton Zone"},{"age_group":"20-29 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":484345,"offset":596110,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"50-59 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":404145,"offset":596109,"system_time":"2023-09-03T01:09:31.587","zone":"Edmonton Zone"},{"age_group":"30-39 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":377841,"offset":596108,"system_time":"2023-09-03T01:09:31.587","zone":"South Zone"},{"age_group":"30-39 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":594417,"offset":596107,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"40-49 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":484348,"offset":596106,"system_time":"2023-09-03T01:09:31.587","zone":"Edmonton Zone"},{"age_group":"80+ years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":377837,"offset":596105,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"50-59 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":351373,"offset":596104,"system_time":"2023-09-03T01:09:31.587","zone":"North Zone"},{"age_group":"80+ years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":484353,"offset":596103,"system_time":"2023-09-03T01:09:31.587","zone":"North Zone"},{"age_group":"70-79 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":298285,"offset":596102,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"20-29 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":484347,"offset":596101,"system_time":"2023-09-03T01:09:31.587","zone":"North Zone"},{"age_group":"70-79 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":457357,"offset":596100,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"50-59 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":430616,"offset":596099,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"60-69 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":351386,"offset":596098,"system_time":"2023-09-03T01:09:31.587","zone":"Edmonton Zone"},{"age_group":"80+ years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":430612,"offset":596097,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"50-59 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":377844,"offset":596096,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"80+ years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":377823,"offset":596095,"system_time":"2023-09-03T01:09:31.587","zone":"Edmonton Zone"},{"age_group":"70-79 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":430615,"offset":596094,"system_time":"2023-09-03T01:09:31.587","zone":"Edmonton Zone"},{"age_group":"Under 1 year","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":324896,"offset":596093,"system_time":"2023-09-03T01:09:31.587","zone":"North Zone"},{"age_group":"80+ years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":484337,"offset":596092,"system_time":"2023-09-03T01:09:31.587","zone":"Edmonton Zone"},{"age_group":"40-49 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":324879,"offset":596091,"system_time":"2023-09-03T01:09:31.587","zone":"North Zone"},{"age_group":"20-29 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":351384,"offset":596090,"system_time":"2023-09-03T01:09:31.587","zone":"Edmonton Zone"},{"age_group":"60-69 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":377827,"offset":596089,"system_time":"2023-09-03T01:09:31.587","zone":"North Zone"},{"age_group":"20-29 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":404157,"offset":596088,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"50-59 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":43659,"offset":596087,"system_time":"2023-09-03T01:09:31.587","zone":"Edmonton Zone"},{"age_group":"40-49 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":298278,"offset":596086,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"1-4 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":457353,"offset":596085,"system_time":"2023-09-03T01:09:31.587","zone":"Central Zone"},{"age_group":"70-79 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":595849,"offset":596084,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"50-59 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":351385,"offset":596083,"system_time":"2023-09-03T01:09:31.587","zone":"Edmonton Zone"},{"age_group":"60-69 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":377833,"offset":596082,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"80+ years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":404154,"offset":596081,"system_time":"2023-09-03T01:09:31.587","zone":"North Zone"},{"age_group":"30-39 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":324888,"offset":596080,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"70-79 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":298279,"offset":596079,"system_time":"2023-09-03T01:09:31.587","zone":"Central Zone"},{"age_group":"80+ years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":43644,"offset":596078,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"10-19 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Male","id":457374,"offset":596077,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"},{"age_group":"50-59 years","case_status":"NA","case_type":"Confirmed","date_reported":"2022-08-01T00:00:00","gender":"Female","id":430619,"offset":596076,"system_time":"2023-09-03T01:09:31.587","zone":"Calgary Zone"}]',
+                    },
+                },
+                numRecordsTotal: 596126,
+                estimatedSize: 6585116,
+            },
+            createdAt: "2023-09-03T01:08:55.104604199+00:00",
+            lastUpdatedAt: "2023-09-03T01:09:31.587025138+00:00",
         },
     },
 };

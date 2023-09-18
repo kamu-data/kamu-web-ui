@@ -1,9 +1,10 @@
-import { DatasetBasicsFragment, DatasetSearchOverviewFragment, PageBasedInfo } from "../api/kamu.graphql.interface";
+import { DatasetSearchOverviewFragment, PageBasedInfo } from "../api/kamu.graphql.interface";
+import { DatasetLineageBasics } from "../dataset-view/dataset.subscriptions.interface";
 
 export type DataRow = Record<string, string | number>;
 
 export interface DatasetLineageNode {
-    basics: DatasetBasicsFragment;
+    basics: DatasetLineageBasics;
     downstreamDependencies: DatasetLineageNode[];
     upstreamDependencies: DatasetLineageNode[];
 }

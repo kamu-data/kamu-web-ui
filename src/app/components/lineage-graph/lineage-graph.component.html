@@ -1,105 +1,114 @@
-<ngx-graph
-    class="chart-container"
-    [draggingEnabled]="draggingEnabled"
-    [panningEnabled]="panningEnabled"
-    [enableZoom]="zoomEnabled"
-    [zoomSpeed]="zoomSpeed"
-    [minZoomLevel]="minZoomLevel"
-    [maxZoomLevel]="maxZoomLevel"
-    [panOnZoom]="panOnZoom"
-    [autoCenter]="autoCenter"
-    [autoZoom]="autoZoom"
-    [showMiniMap]="showMiniMap"
-    [miniMapPosition]="miniMapPosition"
-    [links]="links"
-    [nodes]="graphNodes"
-    [view]="view"
-    layout="dagre"
->
-    <ng-template #defsTemplate>
-        <svg:marker
-            id="arrow"
-            viewBox="0 -5 10 10"
-            refX="8"
-            refY="0"
-            markerWidth="4"
-            markerHeight="4"
-            orient="auto-start-reverse"
-        >
-            <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
-        </svg:marker>
-    </ng-template>
-
-    <ng-template #nodeTemplate let-node>
-        <svg:g class="node">
-            <svg:rect
-                [attr.width]="node.dimension.width"
-                [attr.height]="node.dimension.height * 1.1"
-                [attr.rx]="5"
-                [attr.fill]="node.data.isRoot ? '#ffa500' : '#add8e6'"
-                [attr.cursor]="'pointer'"
-                [attr.stroke]="'black'"
-                [attr.stroke-width]="node.data.isCurrent ? 2 : 1"
-                (click)="!node.data.isCurrent && onClickNode(node)"
-            />
-            <svg:text
-                alignment-baseline="central"
-                [attr.x]="10"
-                [attr.y]="node.dimension.height * 0.65"
-                [attr.font-weight]="node.data.isCurrent ? '500' : 'normal'"
-                [attr.cursor]="'pointer'"
-                (click)="!node.data.isCurrent && onClickNode(node)"
+<div #containerRef>
+    <ngx-graph
+        class="chart-container"
+        [draggingEnabled]="draggingEnabled"
+        [panningEnabled]="panningEnabled"
+        [enableZoom]="zoomEnabled"
+        [zoomSpeed]="zoomSpeed"
+        [minZoomLevel]="minZoomLevel"
+        [maxZoomLevel]="maxZoomLevel"
+        [panOnZoom]="panOnZoom"
+        [autoCenter]="autoCenter"
+        [autoZoom]="autoZoom"
+        [showMiniMap]="showMiniMap"
+        [miniMapPosition]="miniMapPosition"
+        [links]="links"
+        [nodes]="graphNodes"
+        [view]="view"
+        layout="dagre"
+    >
+        <ng-template #defsTemplate>
+            <svg:marker
+                id="arrow"
+                viewBox="0 -5 10 10"
+                refX="12"
+                refY="0"
+                markerWidth="8"
+                markerHeight="4"
+                orient="auto-start-reverse"
             >
-                {{ node.label }}
-            </svg:text>
-            <image
-                [attr.x]="10"
-                [attr.y]="8"
-                [attr.width]="18"
-                [attr.height]="18"
-                attr.data-test-id="account-avatar-{{ node.label }}"
-                [attr.xlink:href]="(getAccountUrl(node.data.accountName) | async)?.avatarUrl || DEFAULT_AVATAR_URL"
-            />
-            <svg:text alignment-baseline="central" [attr.x]="35" [attr.y]="16" [attr.font-weight]="'normal'">
-                {{ node.data.accountName }}
-            </svg:text>
-            <svg:g [attr.transform]="'translate(' + node.dimension.width / 2 + ', 0)'">
-                <!-- Temporary solution - in future icon will be choosen on explicit public/private attribute in the dataset -->
-                <image
-                    [attr.x]="-12"
-                    [attr.y]="-12"
-                    [attr.width]="20"
-                    [attr.height]="20"
-                    [attr.href]="node.data.isRoot ? '../assets/images/public.png' : '../assets/images/private.png'"
-                />
-            </svg:g>
-            <svg:g [attr.transform]="'translate(' + node.dimension.width + ', 0)'">
+                <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+            </svg:marker>
+        </ng-template>
+
+        <ng-template #nodeTemplate let-node>
+            <svg:g class="node" *ngIf="node.data.nodeKind === nodeGraphType.Dataset">
                 <svg:rect
-                    [attr.x]="node.data.isRoot ? -20 : -40"
-                    y="-12"
-                    [attr.width]="node.data.isRoot ? 40 : 80"
-                    height="24"
-                    rx="10"
-                    [attr.stroke]="'#262626'"
-                    stroke-width="1"
-                    fill="white"
+                    [attr.width]="node.dimension.width"
+                    [attr.height]="70"
+                    [attr.rx]="5"
+                    [attr.fill]="node.data.nodeDataObject.isRoot ? '#FFB6C1' : '#add8e6'"
+                    [attr.cursor]="'pointer'"
+                    [attr.stroke]="node.data.nodeDataObject.isCurrent ? '#FF4500' : 'black'"
+                    [attr.stroke-width]="node.data.nodeDataObject.isCurrent ? 3 : 0"
+                    (click)="!node.data.nodeDataObject.isCurrent && onClickNode(node)"
                 />
                 <svg:text
-                    dominant-baseline="middle"
-                    text-anchor="middle"
-                    stroke="none"
-                    fill="black"
-                    style="font-size: 12px"
+                    alignment-baseline="central"
+                    [attr.x]="10"
+                    [attr.y]="node.dimension.height / 2"
+                    [attr.font-weight]="'600'"
+                    [attr.cursor]="'pointer'"
+                    (click)="!node.data.nodeDataObject.isCurrent && onClickNode(node)"
                 >
-                    {{ node.data.isRoot ? "Root" : "Derivative" }}
+                    {{ node.label }}
+                </svg:text>
+                <image
+                    [attr.x]="10"
+                    [attr.y]="10"
+                    [attr.width]="18"
+                    [attr.height]="18"
+                    attr.data-test-id="account-avatar-{{ node.label }}"
+                    [attr.xlink:href]="
+                        (getAccountUrl(node.data.nodeDataObject.accountName) | async)?.avatarUrl || DEFAULT_AVATAR_URL
+                    "
+                />
+                <svg:text alignment-baseline="central" [attr.x]="35" [attr.y]="18" [attr.font-weight]="'normal'">
+                    {{ node.data.nodeDataObject.accountName }}
+                </svg:text>
+                <svg:g [attr.transform]="'translate(' + node.dimension.width * 1.005 + ',0)'">
+                    <!-- Temporary solution - in future icon will be choosen on explicit public/private attribute in the dataset -->
+                    <image
+                        [attr.x]="-12"
+                        [attr.y]="-12"
+                        [attr.width]="20"
+                        [attr.height]="20"
+                        [attr.href]="'../assets/images/private.png'"
+                    />
+                </svg:g>
+            </svg:g>
+            <svg:g class="node" *ngIf="node.data.nodeKind === nodeGraphType.Source">
+                <svg:rect
+                    [attr.width]="node.dimension.width * 1.1"
+                    [attr.height]="50"
+                    [attr.rx]="5"
+                    [attr.fill]="'#FFF'"
+                    [attr.cursor]="'pointer'"
+                />
+                <image
+                    [attr.x]="2"
+                    [attr.y]="(node.dimension.height * 1.1) / 2 - 20"
+                    [attr.width]="30"
+                    [attr.height]="30"
+                    [attr.href]="'../assets/images/world.png'"
+                />
+
+                <svg:text
+                    alignment-baseline="central"
+                    [attr.x]="33"
+                    [attr.y]="node.dimension.height / 2"
+                    [attr.font-weight]="'normal'"
+                    [attr.cursor]="'pointer'"
+                >
+                    {{ node.label }}
                 </svg:text>
             </svg:g>
-        </svg:g>
-    </ng-template>
+        </ng-template>
 
-    <ng-template #linkTemplate let-link>
-        <svg:g class="edge">
-            <svg:path class="line" stroke-width="2" marker-end="url(#arrow)"></svg:path>
-        </svg:g>
-    </ng-template>
-</ngx-graph>
+        <ng-template #linkTemplate let-link>
+            <svg:g class="edge">
+                <svg:path class="line" stroke-width="2" marker-end="url(#arrow)"></svg:path>
+            </svg:g>
+        </ng-template>
+    </ngx-graph>
+</div>

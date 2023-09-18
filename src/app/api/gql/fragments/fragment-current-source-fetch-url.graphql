@@ -1,0 +1,9 @@
+fragment currentSourceFetchUrl on DatasetMetadata {
+  currentSource {
+    fetch {
+      ... on FetchStepUrl {
+        url
+      }
+    }
+  }
+}

@@ -25,6 +25,7 @@ import {
 import { AppDatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import {
     DatasetHistoryUpdate,
+    DatasetLineageBasics,
     DataUpdate,
     MetadataSchemaUpdate,
     OverviewDataUpdate,
@@ -217,13 +218,13 @@ export class DatasetService {
         }
     }
 
-    private lineageTabDataUpdate(originDatasetBasics: DatasetBasicsFragment, lineage: DatasetLineageFragment): void {
+    private lineageTabDataUpdate(originDatasetBasics: DatasetLineageBasics, lineage: DatasetLineageFragment): void {
         const lineageResponse: DatasetLineageNode = this.lineageResponseFromRawQuery(originDatasetBasics, lineage);
         this.updatelineageGraph(lineageResponse);
     }
 
     private lineageResponseFromRawQuery(
-        originDatasetBasics: DatasetBasicsFragment,
+        originDatasetBasics: DatasetLineageBasics,
         lineage: DatasetLineageFragment,
     ): DatasetLineageNode {
         const originMetadata = lineage.metadata;
@@ -231,25 +232,25 @@ export class DatasetService {
             basics: originDatasetBasics,
             downstreamDependencies: originMetadata.currentDownstreamDependencies.map((downDependency) => {
                 return {
-                    basics: downDependency as DatasetBasicsFragment,
+                    basics: downDependency as DatasetLineageBasics,
                     downstreamDependencies: downDependency.metadata.currentDownstreamDependencies.map(
                         (downDependency2) => {
                             return {
-                                basics: downDependency2 as DatasetBasicsFragment,
+                                basics: downDependency2 as DatasetLineageBasics,
                                 downstreamDependencies: downDependency2.metadata.currentDownstreamDependencies.map(
                                     (downDependency3) => {
                                         return {
-                                            basics: downDependency3 as DatasetBasicsFragment,
+                                            basics: downDependency3 as DatasetLineageBasics,
                                             downstreamDependencies:
                                                 downDependency3.metadata.currentDownstreamDependencies.map(
                                                     (downDependency4) => {
                                                         return {
-                                                            basics: downDependency4 as DatasetBasicsFragment,
+                                                            basics: downDependency4 as DatasetLineageBasics,
                                                             downstreamDependencies:
                                                                 downDependency4.metadata.currentDownstreamDependencies.map(
                                                                     (downDependency5) => {
                                                                         return {
-                                                                            basics: downDependency5 as DatasetBasicsFragment,
+                                                                            basics: downDependency5 as DatasetLineageBasics,
                                                                             downstreamDependencies: [],
                                                                             upstreamDependencies: [],
                                                                         };
@@ -272,27 +273,27 @@ export class DatasetService {
             }),
             upstreamDependencies: originMetadata.currentUpstreamDependencies.map((upDependency) => {
                 return {
-                    basics: upDependency as DatasetBasicsFragment,
+                    basics: upDependency as DatasetLineageBasics,
                     downstreamDependencies: [],
                     upstreamDependencies: upDependency.metadata.currentUpstreamDependencies.map((upDependency2) => {
                         return {
-                            basics: upDependency2 as DatasetBasicsFragment,
+                            basics: upDependency2 as DatasetLineageBasics,
                             downstreamDependencies: [],
                             upstreamDependencies: upDependency2.metadata.currentUpstreamDependencies.map(
                                 (upDependency3) => {
                                     return {
-                                        basics: upDependency3 as DatasetBasicsFragment,
+                                        basics: upDependency3 as DatasetLineageBasics,
                                         downstreamDependencies: [],
                                         upstreamDependencies: upDependency3.metadata.currentUpstreamDependencies.map(
                                             (upDependency4) => {
                                                 return {
-                                                    basics: upDependency4 as DatasetBasicsFragment,
+                                                    basics: upDependency4 as DatasetLineageBasics,
                                                     downstreamDependencies: [],
                                                     upstreamDependencies:
                                                         upDependency4.metadata.currentUpstreamDependencies.map(
                                                             (upDependency5) => {
                                                                 return {
-                                                                    basics: upDependency5 as DatasetBasicsFragment,
+                                                                    basics: upDependency5 as DatasetLineageBasics,
                                                                     downstreamDependencies: [],
                                                                     upstreamDependencies: [],
                                                                 };
@@ -312,8 +313,8 @@ export class DatasetService {
     }
 
     private updatelineageGraph(origin: DatasetLineageNode) {
-        const lineageGraphEdges: DatasetBasicsFragment[][] = [];
-        const lineageGraphNodes: DatasetBasicsFragment[] = [];
+        const lineageGraphEdges: DatasetLineageBasics[][] = [];
+        const lineageGraphNodes: DatasetLineageBasics[] = [];
 
         this.updateLineageGraphRecords(origin, lineageGraphNodes, lineageGraphEdges);
         this.appDatasetSubsService.changeLineageData({
@@ -325,8 +326,8 @@ export class DatasetService {
 
     private updateLineageGraphRecords(
         currentNode: DatasetLineageNode,
-        lineageGraphNodes: DatasetBasicsFragment[],
-        lineageGraphEdges: DatasetBasicsFragment[][],
+        lineageGraphNodes: DatasetLineageBasics[],
+        lineageGraphEdges: DatasetLineageBasics[][],
     ) {
         if (
             !lineageGraphNodes.some((existingNode: DatasetBasicsFragment) => existingNode.id === currentNode.basics.id)

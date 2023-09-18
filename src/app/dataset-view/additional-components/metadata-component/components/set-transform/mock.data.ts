@@ -7,6 +7,7 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { SetTransFormYamlType } from "./set-transform.types";
 import { PreprocessStepValue } from "../add-polling-source/add-polling-source-form.types";
+import { Engine } from "./components/engine-section/engine-section.types";
 
 export const mockEngines: EnginesQuery = {
     data: {
@@ -14,17 +15,17 @@ export const mockEngines: EnginesQuery = {
             {
                 dialect: QueryDialect.SqlSpark,
                 latestImage: "ghcr.io/kamu-data/engine-spark:0.1.2",
-                name: "Spark",
+                name: Engine.Spark,
             },
             {
                 dialect: QueryDialect.SqlDataFusion,
                 latestImage: "ghcr.io/kamu-data/engine-datafusion:0.1.2",
-                name: "DataFusion",
+                name: Engine.DataFusion,
             },
             {
                 dialect: QueryDialect.SqlFlink,
                 latestImage: "ghcr.io/kamu-data/engine-flink:0.1.2",
-                name: "Flink",
+                name: Engine.Flink,
             },
         ],
     },

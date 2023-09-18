@@ -4,6 +4,7 @@ import { EditSetTransformService } from "./edit-set-transform..service";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { SqlQueryStep, TransformInput } from "src/app/api/kamu.graphql.interface";
 import { mockParseSetTransFormYamlType, mockSetTransformEventYaml } from "./mock.data";
+import { Engine } from "./components/engine-section/engine-section.types";
 
 describe("EditSetTransformService", () => {
     let service: EditSetTransformService;
@@ -38,7 +39,7 @@ describe("EditSetTransformService", () => {
         const inputDatasets = new Set<string>([
             '{"id":"did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX","name":"account.tokens.portfolio.usd"}',
         ]);
-        const engine = "Spark";
+        const engine = Engine.Spark;
         const queries = [{ alias: "alias1", query: "query1" }] as Omit<SqlQueryStep, "__typename">[];
         const result = {
             inputs: service.parseInputDatasets(inputDatasets),

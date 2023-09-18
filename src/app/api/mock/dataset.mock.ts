@@ -1,3 +1,4 @@
+import { LineageGraphNodeType } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
     DataBatchFormat,
     DatasetKind,
@@ -225,13 +226,17 @@ export const MOCK_NODES = [
         id: "didodfz4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
         label: "com.naturalearthdata.admin0.countries.50m",
         data: {
-            id: "did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
-            name: "com.naturalearthdata.admin0.countries.50m",
-            kind: "ROOT",
-            isRoot: true,
-            isCurrent: true,
-            color: "#7aa3e5",
-            accountName: "kamu",
+            nodeKind: LineageGraphNodeType.Dataset,
+
+            nodeDataObject: {
+                id: "did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
+                name: "com.naturalearthdata.admin0.countries.50m",
+                kind: "ROOT",
+                isRoot: true,
+                isCurrent: true,
+                color: "#7aa3e5",
+                accountName: "kamu",
+            },
         },
         meta: {
             forceDimensions: false,
@@ -250,13 +255,16 @@ export const MOCK_NODES = [
         id: "didodfz4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
         label: "com.naturalearthdata.admin0.countries",
         data: {
-            id: "did:odf:z4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
-            name: "com.naturalearthdata.admin0.countries",
-            kind: "DERIVATIVE",
-            isRoot: false,
-            isCurrent: false,
-            color: "#a8385d",
-            accountName: "kamu",
+            nodeKind: LineageGraphNodeType.Dataset,
+            nodeDataObject: {
+                id: "did:odf:z4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
+                name: "com.naturalearthdata.admin0.countries",
+                kind: "DERIVATIVE",
+                isRoot: false,
+                isCurrent: false,
+                color: "#a8385d",
+                accountName: "kamu",
+            },
         },
         meta: {
             forceDimensions: false,

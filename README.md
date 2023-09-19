@@ -57,7 +57,10 @@ docker pull ghcr.io/kamu-data/kamu-base:latest-with-data
 docker run -it --rm -p 8080:8080  ghcr.io/kamu-data/kamu-base:latest-with-data kamu system api-server --http-port 8080 --address 0.0.0.0
 ```
 
-## GitHub Auth
+## Authentication
+
+Authentication requires a JWT secret variable:
+- `KAMU_JWT_SECRET` - random base64 string that is used to sign and verify JWT tokens
 
 To authenticate user via GitHub you will also need to pass the following environment variables when running the API server:
 

@@ -69,6 +69,7 @@
                 value="settings"
                 [checked]="isDatasetViewTypeSettings"
                 (click)="onNavigateToSettings()"
+                *ngIf="shouldAllowSettingsTab"
                 ><span class="d-flex"> <svg-icon name="account" class="mr-1"></svg-icon>Settings </span>
             </mat-button-toggle>
         </mat-button-toggle-group>

@@ -1,10 +1,13 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MetadataSchemaUpdate } from "../../dataset.subscriptions.interface";
-import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { mockMetadataSchemaUpdate } from "../data-tabs.mock";
+import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { mockMetadataDerivedUpdate, mockMetadataRootUpdate } from "../data-tabs.mock";
 import { MetadataComponent } from "./metadata.component";
 import { ChangeDetectionStrategy } from "@angular/core";
-import { mockDatasetBasicsFragment } from "src/app/search/mock.data";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockDatasetBasicsRootFragment,
+    mockFullPowerDatasetPermissionsFragment,
+} from "src/app/search/mock.data";
 import { BlockRowDataComponent } from "src/app/dataset-block/metadata-block/components/block-row-data/block-row-data.component";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
@@ -13,11 +16,13 @@ import { MetadataBlockModule } from "src/app/dataset-block/metadata-block/metada
 import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { NavigationService } from "src/app/services/navigation.service";
+import { DatasetKind } from "src/app/api/kamu.graphql.interface";
+import _ from "lodash";
 
 describe("MetadataComponent", () => {
     let component: MetadataComponent;
     let fixture: ComponentFixture<MetadataComponent>;
-    let appDatasetSubsService: AppDatasetSubscriptionsService;
+    let datasetSubsService: DatasetSubscriptionsService;
     let navigationService: NavigationService;
 
     beforeEach(async () => {
@@ -42,11 +47,15 @@ describe("MetadataComponent", () => {
             })
             .compileComponents();
 
-        fixture = TestBed.createComponent(MetadataComponent);
-        appDatasetSubsService = TestBed.inject(AppDatasetSubscriptionsService);
+        datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
+        datasetSubsService.metadataSchemaChanges(mockMetadataDerivedUpdate);
+
         navigationService = TestBed.inject(NavigationService);
+
+        fixture = TestBed.createComponent(MetadataComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsFragment;
+        component.datasetBasics = mockDatasetBasicsDerivedFragment;
+        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
         fixture.detectChanges();
     });
 
@@ -54,27 +63,44 @@ describe("MetadataComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check #ngOninit", () => {
-        expect(component.currentState).not.toBeDefined();
-
-        appDatasetSubsService.metadataSchemaChanges(mockMetadataSchemaUpdate as MetadataSchemaUpdate);
-        component.ngOnInit();
-        fixture.detectChanges();
+    it("should check #ngOnInit and associated properties for derived dataset", () => {
+        // Derived dataset mocked by default
+        expect(component.datasetBasics.kind).toEqual(DatasetKind.Derivative);
 
         expect(component.currentState).toBeDefined();
+
+        expect(component.currentLicense).toBeTruthy();
+        expect(component.currentTransform).toBeTruthy();
+        expect(component.currentWatermark).toBeTruthy();
+        expect(component.currentSource).toBeFalsy();
     });
 
-    it("should check select topic", () => {
-        const mockName = "testTopicName";
-        const selectTopicEmitSpy = spyOn(component.selectTopicEmit, "emit");
-        component.selectTopic(mockName);
-        expect(selectTopicEmitSpy).toHaveBeenCalledWith(mockName);
+    it("should check #ngOnInit and associated properties for root dataset", () => {
+        component.currentState = mockMetadataRootUpdate;
+        component.datasetBasics = mockDatasetBasicsRootFragment;
+        fixture.detectChanges();
+
+        expect(component.currentLicense).toBeTruthy();
+        expect(component.currentTransform).toBeFalsy();
+        expect(component.currentWatermark).toBeTruthy();
+        expect(component.currentSource).toBeTruthy();
     });
 
-    it("should check click on dataset topic", () => {
-        const clickDatasetEmitSpy = spyOn(component.clickDatasetEmit, "emit");
-        component.onClickDataset(mockDatasetBasicsFragment);
-        expect(clickDatasetEmitSpy).toHaveBeenCalledWith(mockDatasetBasicsFragment);
+    it("should check default values for properties and permissions when no state is defined yet", () => {
+        component.currentState = undefined;
+        fixture.detectChanges();
+
+        expect(component.currentPage).toEqual(1);
+        expect(component.totalPages).toEqual(1);
+        expect(component.latestBlockhash).toEqual("");
+        expect(component.latestBlockSystemTime).toEqual("");
+        expect(component.currentLicense).toBeUndefined();
+        expect(component.currentSource).toBeUndefined();
+        expect(component.currentTransform).toBeUndefined();
+        expect(component.currentWatermark).toBeUndefined();
+
+        expect(component.canEditSetPollingSource).toBeFalse();
+        expect(component.canEditSetTransform).toBeFalse();
     });
 
     it("should check page change", () => {
@@ -84,21 +110,95 @@ describe("MetadataComponent", () => {
         expect(pageChangeEmitSpy).toHaveBeenCalledWith(pageNumber);
     });
 
-    it("should check navigate to edit SetPollingSource event", () => {
-        const navigateToAddPollingSourceSpy = spyOn(navigationService, "navigateToAddPollingSource");
-        component.navigateToEditPollingSource();
-        expect(navigateToAddPollingSourceSpy).toHaveBeenCalledWith({
-            accountName: mockDatasetBasicsFragment.owner.name,
-            datasetName: mockDatasetBasicsFragment.name,
+    describe("SetPollingSource", () => {
+        it("should not be possible to edit SetPollingSource for derivative dataset", () => {
+            // Derivative dataset by default
+            expect(component.datasetBasics.kind).toEqual(DatasetKind.Derivative);
+            expect(component.canEditSetPollingSource).toEqual(false);
+        });
+
+        it("should be possible to edit SetPollingSource for root dataset with full permissions", () => {
+            // Full permissions by default
+            expect(component.datasetPermissions.permissions.canCommit).toEqual(true);
+            component.datasetBasics = mockDatasetBasicsRootFragment;
+            component.currentState = mockMetadataRootUpdate;
+            fixture.detectChanges();
+
+            expect(component.canEditSetPollingSource).toEqual(true);
+        });
+
+        it("should not be possible to edit SetPollingSource for root dataset without commit permissions", () => {
+            component.datasetPermissions.permissions.canCommit = false;
+            component.datasetBasics = mockDatasetBasicsRootFragment;
+            component.currentState = mockMetadataRootUpdate;
+            fixture.detectChanges();
+
+            expect(component.canEditSetPollingSource).toEqual(false);
+        });
+
+        it("should not be possible to edit SetPollingSource for root dataset if no source is defined yet", () => {
+            component.datasetBasics = mockDatasetBasicsRootFragment;
+            component.currentState = _.cloneDeep(mockMetadataRootUpdate);
+            component.currentState.metadataSummary.metadata.currentSource = undefined;
+            fixture.detectChanges();
+
+            expect(component.canEditSetPollingSource).toEqual(false);
+        });
+
+        it("should check navigate to edit SetPollingSource event", () => {
+            const navigateToAddPollingSourceSpy = spyOn(navigationService, "navigateToAddPollingSource");
+            component.datasetBasics = mockDatasetBasicsRootFragment;
+            component.currentState = mockMetadataRootUpdate;
+            fixture.detectChanges();
+
+            component.navigateToEditPollingSource();
+            expect(navigateToAddPollingSourceSpy).toHaveBeenCalledWith({
+                accountName: mockDatasetBasicsRootFragment.owner.accountName,
+                datasetName: mockDatasetBasicsRootFragment.name,
+            });
         });
     });
 
-    it("should check navigate to edit SetTransform event", () => {
-        const navigateToSetTransformSpy = spyOn(navigationService, "navigateToSetTransform");
-        component.navigateToEditSetTransform();
-        expect(navigateToSetTransformSpy).toHaveBeenCalledWith({
-            accountName: mockDatasetBasicsFragment.owner.name,
-            datasetName: mockDatasetBasicsFragment.name,
+    describe("SetTransform", () => {
+        it("should be possible to edit SetTransform for derivative dataset with full permissions", () => {
+            // Full permissions by default
+            // Derivative dataset by default
+            expect(component.datasetPermissions.permissions.canCommit).toEqual(true);
+            expect(component.datasetBasics.kind).toEqual(DatasetKind.Derivative);
+
+            expect(component.canEditSetTransform).toEqual(true);
+        });
+
+        it("should not be possible to edit SetTransform for root dataset", () => {
+            component.datasetBasics = mockDatasetBasicsRootFragment;
+            component.currentState = mockMetadataRootUpdate;
+            fixture.detectChanges();
+
+            expect(component.canEditSetTransform).toEqual(false);
+        });
+
+        it("should not be possible to edit SetTransform for derived dataset without commit permissions", () => {
+            component.datasetPermissions.permissions.canCommit = false;
+            fixture.detectChanges();
+
+            expect(component.canEditSetTransform).toEqual(false);
+        });
+
+        it("should not be possible to edit SetTransform for derived dataset if no trasnform is defined yet", () => {
+            component.currentState = _.cloneDeep(mockMetadataDerivedUpdate);
+            component.currentState.metadataSummary.metadata.currentTransform = undefined;
+            fixture.detectChanges();
+
+            expect(component.canEditSetTransform).toEqual(false);
+        });
+
+        it("should check navigate to edit SetTransform event", () => {
+            const navigateToSetTransformSpy = spyOn(navigationService, "navigateToSetTransform");
+            component.navigateToEditSetTransform();
+            expect(navigateToSetTransformSpy).toHaveBeenCalledWith({
+                accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
+                datasetName: mockDatasetBasicsDerivedFragment.name,
+            });
         });
     });
 });

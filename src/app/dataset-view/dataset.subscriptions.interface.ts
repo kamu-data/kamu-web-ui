@@ -1,11 +1,5 @@
+import { DatasetLineageBasicsFragment, DatasetPageInfoFragment, SetVocab } from "../api/kamu.graphql.interface";
 import {
-    CurrentSourceFetchUrlFragment,
-    DatasetKind,
-    DatasetPageInfoFragment,
-    SetVocab,
-} from "../api/kamu.graphql.interface";
-import {
-    DatasetBasicsFragment,
     DatasetDataSizeFragment,
     DatasetMetadataSummaryFragment,
     DatasetOverviewFragment,
@@ -33,40 +27,17 @@ export interface DataSqlErrorUpdate {
 
 export interface MetadataSchemaUpdate {
     schema: MaybeNull<DatasetSchema>;
-    metadata: DatasetMetadataSummaryFragment;
+    metadataSummary: DatasetMetadataSummaryFragment;
     pageInfo: DatasetPageInfoFragment;
 }
 
 export interface DatasetHistoryUpdate {
     history: MetadataBlockFragment[];
     pageInfo: DatasetPageInfoFragment;
-    kind?: DatasetKind;
 }
-
-export type DatasetLineageBasics = DatasetBasicsFragment & { metadata: CurrentSourceFetchUrlFragment };
 
 export interface LineageUpdate {
-    nodes: DatasetLineageBasics[];
-    edges: DatasetLineageBasics[][];
-    origin: DatasetLineageBasics;
-}
-
-export interface LineageGraphNodeData {
-    nodeKind: LineageGraphNodeType;
-    nodeDataObject: LineageGraphDatasetNodeObject;
-}
-
-export enum LineageGraphNodeType {
-    Dataset = "dataset",
-    Source = "source",
-}
-
-export interface LineageGraphDatasetNodeObject {
-    id: string;
-    name: string;
-    kind: DatasetKind;
-    isRoot: boolean;
-    isCurrent: boolean;
-    access: string;
-    accountName: string;
+    nodes: DatasetLineageBasicsFragment[];
+    edges: DatasetLineageBasicsFragment[][];
+    origin: DatasetLineageBasicsFragment;
 }

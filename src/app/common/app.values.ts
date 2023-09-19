@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 export default class AppValues {
     public static readonly APP_LOGO = "assets/icons/kamu_logo_icon.svg";
     public static readonly LOCAL_STORAGE_ACCESS_TOKEN = "access_token";
-    public static readonly DEFAULT_USERNAME = "anonymous";
+    public static readonly DEFAULT_USER_DISPLAY_NAME = "anonymous";
     public static readonly DEFAULT_AVATAR_URL = "https://avatars.githubusercontent.com/u/11951648?v=4";
     public static readonly URL_PATTERN = /^(http:\/\/)|(https:\/\/)/i;
     public static readonly SCHEMA_NAME_PATTERN = /^[a-zA-Z0-9]+[a-zA-Z0-9\s(_)]*$/i;
@@ -17,8 +17,6 @@ export default class AppValues {
     public static readonly SHORT_DELAY_MS = 200;
     public static readonly LONG_DELAY_MS = 2000;
     public static readonly DEFAULT_OFFSET_COLUMN_NAME = "offset";
-    public static readonly CLIBPOARD_KAMU_CLI = "kamu pull kamu.dev/anonymous/dataset";
-    public static readonly CLIPBOARD_KAFKA = "https://api.kamu.dev/kafka/anonymous/dataset";
     public static readonly MARKDOWN_CONTAIN = `## Markdown __rulez__!
 ---
 

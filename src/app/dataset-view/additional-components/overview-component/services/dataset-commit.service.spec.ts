@@ -5,24 +5,35 @@ import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { Observable, Subscription, of } from "rxjs";
-import { mockDatasetMainDataId, mockDatasetMainDataResponse } from "src/app/search/mock.data";
-import { DatasetByAccountAndDatasetNameQuery } from "src/app/api/kamu.graphql.interface";
-import { NavigationService } from "src/app/services/navigation.service";
 import {
+    mockCommitEventToDataseMetadataManifestMalformedError,
+    mockCommitEventToDataseMetadataManifestUnsupportedVersionError,
+    mockCommitEventToDatasetErrorMessage,
     mockCommitEventToDatasetMutation,
-    mockCommitEventToDatasetMutationError,
-    mockCommitEventToDatasetMutationErrorMessage,
-    mockUpdateReadmeMutation,
-} from "../../data-tabs.mock";
+    mockCommitEventToDatasetResultAppendError,
+    mockDatasetMainDataId,
+    mockDatasetMainDataResponse,
+    mockUpdateReadmeErrorMessage,
+    mockUpdateReadmeSuccessResponse,
+} from "src/app/search/mock.data";
+import {
+    CommitEventToDatasetMutation,
+    DatasetByAccountAndDatasetNameQuery,
+    UpdateReadmeMutation,
+} from "src/app/api/kamu.graphql.interface";
+import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { first } from "rxjs/operators";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/errors";
 
 describe("DatasetCommitService", () => {
     let commitService: DatasetCommitService;
     let datasetService: DatasetService;
     let datasetApi: DatasetApi;
     let navigationService: NavigationService;
+    let loggedUserService: LoggedUserService;
 
     let getDatasetInfoSpy: jasmine.Spy;
     let navigationServiceSpy: jasmine.Spy;
@@ -42,6 +53,7 @@ describe("DatasetCommitService", () => {
         navigationService = TestBed.inject(NavigationService);
         commitService = TestBed.inject(DatasetCommitService);
         datasetService = TestBed.inject(DatasetService);
+        loggedUserService = TestBed.inject(LoggedUserService);
 
         getDatasetInfoSpy = spyOn(datasetApi, "getDatasetInfoByAccountAndDatasetName").and.returnValue(
             of(mockDatasetMainDataResponse as DatasetByAccountAndDatasetNameQuery),
@@ -113,7 +125,21 @@ describe("DatasetCommitService", () => {
         expect(getDatasetInfoSpy).toHaveBeenCalledOnceWith(TEST_ACCOUNT_NAME, TEST_DATASET_NAME);
     }));
 
+    it("should check getIdByAccountNameAndDatasetName() method with not found error", fakeAsync(() => {
+        getDatasetInfoSpy = getDatasetInfoSpy.and.returnValue(of({ datasets: {} }));
+
+        const subscription$ = requestDatasetId().subscribe({
+            next: () => fail("unexpected success"),
+            error: (e: unknown) => {
+                expect(e instanceof DatasetNotFoundError).toBeTrue();
+            },
+        });
+
+        expect(subscription$.closed).toEqual(true);
+    }));
+
     it("should check commitEventToDataset() method", fakeAsync(() => {
+        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
         const commitEventSpy = spyOn(datasetApi, "commitEvent").and.returnValue(of(mockCommitEventToDatasetMutation));
 
         requestCommitEvent().subscribe(() => {
@@ -129,35 +155,77 @@ describe("DatasetCommitService", () => {
         expectRequestedDatasetMainData();
     }));
 
-    it("should check commitEventToDataset() method with error", fakeAsync(() => {
-        const commitEventSpy = spyOn(datasetApi, "commitEvent").and.returnValue(
-            of(mockCommitEventToDatasetMutationError),
+    [mockCommitEventToDatasetResultAppendError, mockCommitEventToDataseMetadataManifestMalformedError].forEach(
+        (errorResponse: CommitEventToDatasetMutation) => {
+            it("should check commitEventToDataset() method with soft error", fakeAsync(() => {
+                spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+                const commitEventSpy = spyOn(datasetApi, "commitEvent").and.returnValue(of(errorResponse));
+
+                const errorSubscription$: Subscription = commitService.onErrorCommitEventChanges
+                    .pipe(first())
+                    .subscribe((message) => {
+                        expect(message).toEqual(mockCommitEventToDatasetErrorMessage);
+                    });
+
+                requestCommitEvent().subscribe(() => {
+                    tick();
+                });
+                flush();
+
+                expect(commitEventSpy).toHaveBeenCalledOnceWith({
+                    datasetId: TEST_DATASET_ID,
+                    event: TEST_EVENT_CONTENT,
+                });
+                expect(navigationServiceSpy).not.toHaveBeenCalled();
+                expect(requestDatasetMainDataSpy).not.toHaveBeenCalled();
+
+                // If error triggered, our subscription will be closed
+                expect(errorSubscription$.closed).toBeTrue();
+            }));
+        },
+    );
+
+    it("should check commitEventToDataset() method with hard error", fakeAsync(() => {
+        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+        spyOn(datasetApi, "commitEvent").and.returnValue(
+            of(mockCommitEventToDataseMetadataManifestUnsupportedVersionError),
         );
 
-        const errorSubscription$: Subscription = commitService.onErrorCommitEventChanges
-            .pipe(first())
-            .subscribe((message) => {
-                expect(message).toEqual(mockCommitEventToDatasetMutationErrorMessage);
-            });
-
-        requestCommitEvent().subscribe(() => {
-            tick();
+        const subscription$ = requestCommitEvent().subscribe({
+            next: () => fail("unexpected success"),
+            error: (e: unknown) => {
+                expect(e instanceof DatasetOperationError).toBeTrue();
+            },
         });
-        flush();
 
-        expect(commitEventSpy).toHaveBeenCalledOnceWith({
-            datasetId: TEST_DATASET_ID,
-            event: TEST_EVENT_CONTENT,
-        });
-        expect(navigationServiceSpy).not.toHaveBeenCalled();
-        expect(requestDatasetMainDataSpy).not.toHaveBeenCalled();
-
-        // If error triggered, our subscription will be closed
-        expect(errorSubscription$.closed).toBeTrue();
+        expect(subscription$.closed).toEqual(true);
     }));
 
+    it("should check commit to dataset when not found", () => {
+        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+        spyOn(datasetApi, "commitEvent").and.returnValue(of({ datasets: {} } as CommitEventToDatasetMutation));
+
+        const subscription$ = requestCommitEvent().subscribe({
+            next: () => fail("unexpected success"),
+            error: (e: unknown) => {
+                expect(e instanceof DatasetNotFoundError).toBeTrue();
+            },
+        });
+
+        expect(subscription$.closed).toEqual(true);
+    });
+
+    it("commit to dataset without logged user results in exception", () => {
+        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
+
+        expect(() => requestCommitEvent()).toThrow(
+            new DatasetOperationError([new Error(DatasetCommitService.NOT_LOGGED_USER_ERROR)]),
+        );
+    });
+
     it("should check updateReadme() method ", fakeAsync(() => {
-        const updateReadmeSpy = spyOn(datasetApi, "updateReadme").and.returnValue(of(mockUpdateReadmeMutation));
+        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+        const updateReadmeSpy = spyOn(datasetApi, "updateReadme").and.returnValue(of(mockUpdateReadmeSuccessResponse));
         const README_CONTENT = "readme content";
 
         commitService.updateReadme(TEST_ACCOUNT_NAME, TEST_DATASET_NAME, README_CONTENT).subscribe(() => {
@@ -169,4 +237,47 @@ describe("DatasetCommitService", () => {
         expectNavigatedToDatasetOverview();
         expectRequestedDatasetMainData();
     }));
+
+    it("should check update readme for dataset when not found", () => {
+        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+        spyOn(datasetApi, "updateReadme").and.returnValue(of({ datasets: {} } as UpdateReadmeMutation));
+
+        const README_CONTENT = "readme content";
+        const subscription$ = commitService
+            .updateReadme(TEST_ACCOUNT_NAME, TEST_DATASET_NAME, README_CONTENT)
+            .subscribe({
+                next: () => fail("unexpected success"),
+                error: (e: unknown) => {
+                    expect(e instanceof DatasetNotFoundError).toBeTrue();
+                },
+            });
+
+        expect(subscription$.closed).toEqual(true);
+    });
+
+    it("should check updateReadme() method with hard error", fakeAsync(() => {
+        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+        spyOn(datasetApi, "updateReadme").and.returnValue(of(mockUpdateReadmeErrorMessage));
+
+        const README_CONTENT = "readme content";
+        const subscription$ = commitService
+            .updateReadme(TEST_ACCOUNT_NAME, TEST_DATASET_NAME, README_CONTENT)
+            .subscribe({
+                next: () => fail("unexpected success"),
+                error: (e: unknown) => {
+                    expect(e instanceof DatasetOperationError).toBeTrue();
+                },
+            });
+
+        expect(subscription$.closed).toEqual(true);
+    }));
+
+    it("updating readme for dataset without logged user results in exception", () => {
+        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
+
+        const README_CONTENT = "readme content";
+        expect(() => commitService.updateReadme(TEST_ACCOUNT_NAME, TEST_DATASET_NAME, README_CONTENT)).toThrow(
+            new DatasetOperationError([new Error(DatasetCommitService.NOT_LOGGED_USER_ERROR)]),
+        );
+    });
 });

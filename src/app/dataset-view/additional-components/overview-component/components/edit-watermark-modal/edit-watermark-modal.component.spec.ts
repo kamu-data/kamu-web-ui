@@ -8,7 +8,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angul
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { FormsModule } from "@angular/forms";
 import timekeeper from "timekeeper";
-import { mockDatasetBasicsFragment } from "src/app/search/mock.data";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { of } from "rxjs";
 import { SharedTestModule } from "src/app/common/shared-test.module";
@@ -38,7 +38,7 @@ describe("EditWatermarkModalComponent", () => {
         fixture = TestBed.createComponent(EditWatermarkModalComponent);
         component = fixture.componentInstance;
         datasetCommitService = TestBed.inject(DatasetCommitService);
-        component.datasetBasics = mockDatasetBasicsFragment;
+        component.datasetBasics = mockDatasetBasicsDerivedFragment;
     });
 
     it("should create", () => {

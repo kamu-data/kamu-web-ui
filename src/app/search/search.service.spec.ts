@@ -67,7 +67,7 @@ describe("SearchService", () => {
 
     it("should fire autocompleteSearchChanges$ with empty collection on autocomplete request failure", () => {
         const searchApiAutocompleteDatasetSearchSpy = spyOn(searchApi, "autocompleteDatasetSearch").and.returnValue(
-            throwError("some error"),
+            throwError(() => "some error"),
         );
 
         const subscription$ = service.onAutocompleteSearchChanges

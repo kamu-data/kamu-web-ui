@@ -22,14 +22,51 @@ export function emitClickOnElementByDataTestId<T>(fixture: ComponentFixture<T>, 
     (debugElement.nativeElement as HTMLElement).click();
 }
 
-export function findElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLElement {
+export function findElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLElement | undefined {
     const debugElement: MaybeNull<DebugElement> = fixture.debugElement.query(By.css(`[data-test-id="${id}"]`));
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (debugElement) {
         return debugElement.nativeElement as HTMLElement;
     } else {
-        throw new Error("Element " + id + " not found");
+        return undefined;
     }
+}
+
+export function getElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLElement {
+    const element: HTMLElement | undefined = findElementByDataTestId(fixture, id);
+    if (element) {
+        return element;
+    }
+    throw new Error("Element " + id + " not found");
+}
+
+export function checkVisible<T>(fixture: ComponentFixture<T>, dataTestId: string, visible: boolean): void {
+    const element: HTMLElement | undefined = findElementByDataTestId(fixture, dataTestId);
+    visible ? expect(element).toBeTruthy() : expect(element).toBeUndefined();
+}
+
+type SupportedInputElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+
+function setFieldElementValue(element: SupportedInputElement, value: string): void {
+    element.value = value;
+    element.dispatchEvent(new Event("input"));
+    // Dispatch an `input` or `change` fake event
+    // so Angular form bindings take notice of the change.
+    const isSelect = element instanceof HTMLSelectElement;
+    const event: Event = new Event(isSelect ? "change" : "input", { bubbles: !isSelect } as EventInit);
+    element.dispatchEvent(event);
+}
+
+export function setFieldValue<T>(fixture: ComponentFixture<T>, dataTestId: string, value: string): void {
+    const element: SupportedInputElement = getElementByDataTestId(fixture, dataTestId) as SupportedInputElement;
+    expect(element).not.toBeNull();
+    setFieldElementValue(element, value);
+}
+
+export function checkInputDisabled<T>(fixture: ComponentFixture<T>, dataTestId: string, isDisabled: boolean): void {
+    const element: HTMLInputElement | null = getElementByDataTestId(fixture, dataTestId) as HTMLInputElement;
+    expect(element).not.toBeNull();
+    expect(element.disabled).toEqual(isDisabled);
 }
 
 export const routerMockEventSubject = new ReplaySubject<RouterEvent>(1);
@@ -68,12 +105,12 @@ export const snapshotParamMapMock = {
     },
 };
 
-export function findInputElememtByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLInputElement {
-    return findElementByDataTestId(fixture, id) as HTMLInputElement;
+export function getInputElememtByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLInputElement {
+    return getElementByDataTestId(fixture, id) as HTMLInputElement;
 }
 
 export function dispatchInputEvent<T>(fixture: ComponentFixture<T>, id: string, value: string): void {
-    const element = findInputElememtByDataTestId(fixture, id);
+    const element = getInputElememtByDataTestId(fixture, id);
     element.value = value;
     element.dispatchEvent(new Event("input"));
     fixture.detectChanges();

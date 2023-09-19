@@ -7,8 +7,9 @@ import {
     DatasetByAccountAndDatasetNameQuery,
     UpdateReadmeMutation,
 } from "src/app/api/kamu.graphql.interface";
-import { MaybeNullOrUndefined, MaybeUndefined } from "src/app/common/app.types";
-import { DatasetNotFoundError } from "src/app/common/errors";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { MaybeUndefined } from "src/app/common/app.types";
+import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/errors";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -17,6 +18,8 @@ import { NavigationService } from "src/app/services/navigation.service";
     providedIn: "root",
 })
 export class DatasetCommitService {
+    public static readonly NOT_LOGGED_USER_ERROR = "User must be logged in to commit to a dataset";
+
     private errorCommitEventChanges$: Subject<string> = new Subject<string>();
 
     public errorCommitEventChanges(message: string): void {
@@ -33,27 +36,40 @@ export class DatasetCommitService {
         private datasetApi: DatasetApi,
         private navigationService: NavigationService,
         private datasetService: DatasetService,
+        private loggedUserService: LoggedUserService,
     ) {}
 
     public commitEventToDataset(accountName: string, datasetName: string, event: string): Observable<void> {
-        return this.getIdByAccountNameAndDatasetName(accountName, datasetName).pipe(
-            switchMap((id: string) =>
-                this.datasetApi.commitEvent({
-                    datasetId: id,
-                    event,
+        if (this.loggedUserService.isAuthenticated) {
+            return this.getIdByAccountNameAndDatasetName(accountName, datasetName).pipe(
+                switchMap((id: string) =>
+                    this.datasetApi.commitEvent({
+                        datasetId: id,
+                        event,
+                    }),
+                ),
+                map((data: CommitEventToDatasetMutation) => {
+                    if (data.datasets.byId) {
+                        if (data.datasets.byId.metadata.chain.commitEvent.__typename === "CommitResultSuccess") {
+                            this.updatePage(accountName, datasetName);
+                        } else if (
+                            data.datasets.byId.metadata.chain.commitEvent.__typename === "CommitResultAppendError" ||
+                            data.datasets.byId.metadata.chain.commitEvent.__typename === "MetadataManifestMalformed"
+                        ) {
+                            this.errorCommitEventChanges(data.datasets.byId.metadata.chain.commitEvent.message);
+                        } else {
+                            throw new DatasetOperationError([
+                                new Error(data.datasets.byId.metadata.chain.commitEvent.message),
+                            ]);
+                        }
+                    } else {
+                        throw new DatasetNotFoundError();
+                    }
                 }),
-            ),
-            map((data: MaybeNullOrUndefined<CommitEventToDatasetMutation>) => {
-                if (
-                    data?.datasets.byId?.metadata.chain.commitEvent.__typename === "CommitResultAppendError" ||
-                    data?.datasets.byId?.metadata.chain.commitEvent.__typename === "MetadataManifestMalformed"
-                ) {
-                    this.errorCommitEventChanges(data.datasets.byId.metadata.chain.commitEvent.message);
-                } else {
-                    this.updatePage(accountName, datasetName);
-                }
-            }),
-        );
+            );
+        } else {
+            throw new DatasetOperationError([new Error(DatasetCommitService.NOT_LOGGED_USER_ERROR)]);
+        }
     }
 
     public getIdByAccountNameAndDatasetName(accountName: string, datasetName: string): Observable<string> {
@@ -69,7 +85,7 @@ export class DatasetCommitService {
                         this.datasetIdsByAccountDatasetName.set(key, id);
                         return id;
                     } else {
-                        throw new DatasetNotFoundError(key);
+                        throw new DatasetNotFoundError();
                     }
                 }),
             );
@@ -77,14 +93,26 @@ export class DatasetCommitService {
     }
 
     public updateReadme(accountName: string, datasetName: string, content: string): Observable<void> {
-        return this.getIdByAccountNameAndDatasetName(accountName, datasetName).pipe(
-            switchMap((id: string) => this.datasetApi.updateReadme(id, content)),
-            map((data: MaybeNullOrUndefined<UpdateReadmeMutation>) => {
-                if (data?.datasets.byId?.metadata.updateReadme.__typename === "CommitResultSuccess") {
-                    this.updatePage(accountName, datasetName);
-                }
-            }),
-        );
+        if (this.loggedUserService.isAuthenticated) {
+            return this.getIdByAccountNameAndDatasetName(accountName, datasetName).pipe(
+                switchMap((id: string) => this.datasetApi.updateReadme(id, content)),
+                map((data: UpdateReadmeMutation) => {
+                    if (data.datasets.byId) {
+                        if (data.datasets.byId.metadata.updateReadme.__typename === "CommitResultSuccess") {
+                            this.updatePage(accountName, datasetName);
+                        } else {
+                            throw new DatasetOperationError([
+                                new Error(data.datasets.byId.metadata.updateReadme.message),
+                            ]);
+                        }
+                    } else {
+                        throw new DatasetNotFoundError();
+                    }
+                }),
+            );
+        } else {
+            throw new DatasetOperationError([new Error(DatasetCommitService.NOT_LOGGED_USER_ERROR)]);
+        }
     }
 
     private updatePage(accountName: string, datasetName: string): void {

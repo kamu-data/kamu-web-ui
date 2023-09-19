@@ -1,7 +1,7 @@
 import { AddPollingSourceComponent } from "./dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source.component";
 import { MetadataBlockComponent } from "./dataset-block/metadata-block/metadata-block.component";
-import { AuthenticationGuard } from "./auth/authentication.guard";
-import { SettingsComponent } from "./auth/settings/settings.component";
+import { AuthenticatedGuard } from "./auth/guards/authenticated.guard";
+import { AccountSettingsComponent } from "./auth/settings/account-settings.component";
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
@@ -11,14 +11,12 @@ import { DatasetComponent } from "./dataset-view/dataset.component";
 import { DatasetCreateComponent } from "./dataset-create/dataset-create.component";
 import { AccountComponent } from "./auth/account/account.component";
 import { GithubCallbackComponent } from "./auth/github-callback/github.callback";
-import { environment } from "../environments/environment";
 import ProjectLinks from "./project-links";
 import { SetTransformComponent } from "./dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component";
-
-const githubUrl = `https://github.com/login/oauth/authorize?scope=user:email&client_id=${environment.github_client_id}`;
+import { LoginGuard } from "./auth/guards/login.guard";
 
 export const routes: Routes = [
-    { path: "", redirectTo: ProjectLinks.URL_SEARCH, pathMatch: "full" },
+    { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
     {
         path: ProjectLinks.URL_GITHUB_CALLBACK,
         component: GithubCallbackComponent,
@@ -26,10 +24,7 @@ export const routes: Routes = [
     {
         path: ProjectLinks.URL_LOGIN,
         component: LoginComponent,
-        loadChildren: () =>
-            new Promise(() => {
-                window.location.href = githubUrl;
-            }),
+        canActivate: [LoginGuard],
     },
     {
         path: ProjectLinks.URL_SEARCH,
@@ -37,6 +32,7 @@ export const routes: Routes = [
         children: [{ path: ":id", component: SearchComponent }],
     },
     {
+        canActivate: [AuthenticatedGuard],
         path: ProjectLinks.URL_DATASET_CREATE,
         component: DatasetCreateComponent,
     },
@@ -52,11 +48,11 @@ export const routes: Routes = [
     },
     {
         path: ProjectLinks.URL_SETTINGS,
-        canActivate: [AuthenticationGuard],
+        canActivate: [AuthenticatedGuard],
         children: [
             {
                 path: `:${ProjectLinks.URL_PARAM_CATEGORY}`,
-                component: SettingsComponent,
+                component: AccountSettingsComponent,
             },
         ],
     },
@@ -74,12 +70,14 @@ export const routes: Routes = [
         ],
     },
     {
+        canActivate: [AuthenticatedGuard],
         path:
             `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
             `/${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
         component: AddPollingSourceComponent,
     },
     {
+        canActivate: [AuthenticatedGuard],
         path:
             `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
             `/${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,

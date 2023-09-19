@@ -1,10 +1,13 @@
-import { DatasetSearchOverviewFragment, PageBasedInfo } from "../api/kamu.graphql.interface";
-import { DatasetLineageBasics } from "../dataset-view/dataset.subscriptions.interface";
+import {
+    DatasetLineageBasicsFragment,
+    DatasetSearchOverviewFragment,
+    PageBasedInfo,
+} from "../api/kamu.graphql.interface";
 
 export type DataRow = Record<string, string | number>;
 
 export interface DatasetLineageNode {
-    basics: DatasetLineageBasics;
+    basics: DatasetLineageBasicsFragment;
     downstreamDependencies: DatasetLineageNode[];
     upstreamDependencies: DatasetLineageNode[];
 }
@@ -19,7 +22,7 @@ export interface DataSchemaField {
     name: string;
     repetition: string;
     type: string;
-    logical_type?: string;
+    logicalType?: string;
 }
 
 export interface DatasetsAccountResponse {

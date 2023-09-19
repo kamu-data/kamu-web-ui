@@ -12,30 +12,55 @@ import { StepperNavigationComponent } from "../stepper-navigation/stepper-naviga
 import { BaseStepComponent } from "./steps/base-step/base-step.component";
 import { PollingSourceFormComponentsModule } from "../form-components/polling-source-form-components.module";
 import { of, from } from "rxjs";
-import { mockDatasetHistoryResponse } from "src/app/search/mock.data";
-import { DatasetKind, DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockDatasetBasicsRootFragment,
+    mockDatasetHistoryResponse,
+    mockFullPowerDatasetPermissionsFragment,
+} from "src/app/search/mock.data";
+import { DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { EditPollingSourceService } from "./edit-polling-source.service";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
+import { PrepareStepComponent } from "./steps/prepare-step/prepare-step.component";
+import { MatStepperModule } from "@angular/material/stepper";
+import { PreprocessStepComponent } from "./steps/preprocess-step/preprocess-step.component";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { NavigationService } from "src/app/services/navigation.service";
+import { DatasetNavigationParams } from "src/app/interface/navigation.interface";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
     let fixture: ComponentFixture<AddPollingSourceComponent>;
     let modalService: NgbModal;
     let modalRef: NgbModalRef;
+
     let datasetCommitService: DatasetCommitService;
+    let datasetService: DatasetService;
+    let datasetSubsService: DatasetSubscriptionsService;
     let editService: EditPollingSourceService;
+    let navigationService: NavigationService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [AddPollingSourceComponent, StepperNavigationComponent, BaseStepComponent],
+            declarations: [
+                AddPollingSourceComponent,
+                StepperNavigationComponent,
+                BaseStepComponent,
+                PrepareStepComponent,
+                PreprocessStepComponent,
+            ],
             imports: [
                 ApolloTestingModule,
-                ReactiveFormsModule,
+                BrowserAnimationsModule,
                 FormsModule,
                 NgbModule,
+                MatStepperModule,
                 MonacoEditorModule.forRoot(),
                 PollingSourceFormComponentsModule,
+                ReactiveFormsModule,
                 SharedTestModule,
             ],
             providers: [FormBuilder, Apollo],
@@ -48,8 +73,11 @@ describe("AddPollingSourceComponent", () => {
         fixture = TestBed.createComponent(AddPollingSourceComponent);
         modalService = TestBed.inject(NgbModal);
         editService = TestBed.inject(EditPollingSourceService);
-
+        datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         datasetCommitService = TestBed.inject(DatasetCommitService);
+        datasetService = TestBed.inject(DatasetService);
+        navigationService = TestBed.inject(NavigationService);
+
         modalRef = modalService.open(FinalYamlModalComponent);
         component = fixture.componentInstance;
         component.showPreprocessStep = false;
@@ -83,6 +111,7 @@ describe("AddPollingSourceComponent", () => {
             merge: new FormGroup({
                 kind: new FormControl("append"),
             }),
+            prepare: new FormArray([]),
         });
         component.ngOnInit();
         fixture.detectChanges();
@@ -90,6 +119,44 @@ describe("AddPollingSourceComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("check dataset editability passes for root dataset with full permissions", () => {
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
+
+        datasetService.datasetChanges(mockDatasetBasicsRootFragment);
+        datasetSubsService.changePermissionsData(mockFullPowerDatasetPermissionsFragment);
+
+        expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
+    });
+
+    it("check dataset editability fails without commit permission", () => {
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
+
+        datasetService.datasetChanges(mockDatasetBasicsRootFragment);
+        datasetSubsService.changePermissionsData({
+            permissions: {
+                ...mockFullPowerDatasetPermissionsFragment.permissions,
+                canCommit: false,
+            },
+        });
+
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
+            accountName: mockDatasetBasicsRootFragment.owner.accountName,
+            datasetName: mockDatasetBasicsRootFragment.name,
+        } as DatasetNavigationParams);
+    });
+
+    it("check dataset editability fails upon derived dataset", () => {
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
+
+        datasetService.datasetChanges(mockDatasetBasicsDerivedFragment);
+        datasetSubsService.changePermissionsData(mockFullPowerDatasetPermissionsFragment);
+
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
+            accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
+            datasetName: mockDatasetBasicsDerivedFragment.name,
+        } as DatasetNavigationParams);
     });
 
     it("should check open edit modal", () => {
@@ -102,7 +169,7 @@ describe("AddPollingSourceComponent", () => {
     it("should check open edit modal after error", () => {
         const mockError = "Some error";
         expect(component.errorMessage).toBe("");
-        expect(component.changedEventYamlByHash).toBeUndefined();
+        expect(component.changedEventYamlByHash).toBeNull();
         datasetCommitService.errorCommitEventChanges(mockError);
         expect(component.errorMessage).toBe(mockError);
 
@@ -146,14 +213,6 @@ describe("AddPollingSourceComponent", () => {
 
         datasetCommitService.errorCommitEventChanges(errorMessage);
         expect(component.errorMessage).toBe(errorMessage);
-    });
-
-    it("should check init dataset kind", () => {
-        expect(component.datasetKind).toBeUndefined();
-        editService.changeKindChanges(DatasetKind.Root);
-        editService.onKindChanges.subscribe(() => {
-            expect(component.datasetKind).toEqual(DatasetKind.Root);
-        });
     });
 
     it("should check change showPreprocessStep property", () => {

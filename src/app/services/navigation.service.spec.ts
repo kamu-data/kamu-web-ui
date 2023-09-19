@@ -1,6 +1,5 @@
-import { SettingsTabs } from "../auth/settings/settings.constants";
+import { AccountSettingsTabs } from "../auth/settings/account-settings.constants";
 import { AccountTabs } from "../auth/account/account.constants";
-import { routes } from "../app-routing.module";
 import { RouterTestingModule } from "@angular/router/testing";
 import { TestBed } from "@angular/core/testing";
 import { NavigationService } from "./navigation.service";
@@ -18,7 +17,7 @@ describe("NavigationService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule.withRoutes(routes)],
+            imports: [RouterTestingModule],
         });
         service = TestBed.inject(NavigationService);
         router = TestBed.inject(Router);
@@ -29,7 +28,7 @@ describe("NavigationService", () => {
     });
 
     it("should test navigate to home", () => {
-        const routerSpy = spyOn(router, "navigate").and.callThrough();
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToHome();
         expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_HOME]);
     });
@@ -43,7 +42,7 @@ describe("NavigationService", () => {
     it("should test navigate to settings", () => {
         const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToSettings();
-        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_SETTINGS, SettingsTabs.PROFILE]);
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_SETTINGS, AccountSettingsTabs.PROFILE]);
     });
 
     it("should test navigate to metadata block", () => {
@@ -68,8 +67,8 @@ describe("NavigationService", () => {
 
     it("should test navigate to owner page and tab equal overview", () => {
         const mockOwnerName = "Mock name";
-        const routerSpy = spyOn(router, "navigate").and.callThrough();
-        service.navigateToOwnerView(mockOwnerName, AccountTabs.overview);
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        service.navigateToOwnerView(mockOwnerName, AccountTabs.OVERVIEW);
         expect(routerSpy).toHaveBeenCalledWith([mockOwnerName], {
             queryParams: {},
         });
@@ -78,10 +77,10 @@ describe("NavigationService", () => {
     it("should test navigate to owner page and tab not equal overview", () => {
         const mockOwnerName = "Mock name";
         const testPage = 2;
-        const routerSpy = spyOn(router, "navigate").and.callThrough();
-        service.navigateToOwnerView(mockOwnerName, AccountTabs.datasets, testPage);
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        service.navigateToOwnerView(mockOwnerName, AccountTabs.DATASETS, testPage);
         expect(routerSpy).toHaveBeenCalledWith([mockOwnerName], {
-            queryParams: { tab: AccountTabs.datasets, page: testPage },
+            queryParams: { tab: AccountTabs.DATASETS, page: testPage },
         });
     });
 
@@ -94,7 +93,7 @@ describe("NavigationService", () => {
     });
 
     it("should test navigate to search", () => {
-        const routerSpy = spyOn(router, "navigate").and.callThrough();
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToSearch();
         expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_SEARCH], {
             queryParams: {},
@@ -102,7 +101,7 @@ describe("NavigationService", () => {
     });
 
     it("should test navigate to search with query", () => {
-        const routerSpy = spyOn(router, "navigate").and.callThrough();
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         const testQuery = "test query";
         service.navigateToSearch(testQuery);
         expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_SEARCH], {
@@ -111,7 +110,7 @@ describe("NavigationService", () => {
     });
 
     it("should test navigate to search with page", () => {
-        const routerSpy = spyOn(router, "navigate").and.callThrough();
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         const testPage = 3;
         service.navigateToSearch(undefined /*query*/, testPage);
         expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_SEARCH], {
@@ -120,7 +119,7 @@ describe("NavigationService", () => {
     });
 
     it("should test navigate to search with query and page", () => {
-        const routerSpy = spyOn(router, "navigate").and.callThrough();
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         const testQuery = "test query";
         const testPage = 3;
         service.navigateToSearch(testQuery, testPage);
@@ -130,7 +129,7 @@ describe("NavigationService", () => {
     });
 
     it("should test navigate to dataset create", () => {
-        const routerSpy = spyOn(router, "navigate").and.callThrough();
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToDatasetCreate();
         expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_DATASET_CREATE]);
     });
@@ -142,7 +141,7 @@ describe("NavigationService", () => {
             tab: "overview",
             page: 1,
         };
-        const routerSpy = spyOn(router, "navigate").and.callThrough();
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToDatasetView(mockParams);
         expect(routerSpy).toHaveBeenCalledWith([mockParams.accountName, mockParams.datasetName], {
             queryParams: { tab: mockParams.tab },
@@ -157,7 +156,7 @@ describe("NavigationService", () => {
             tab: "history",
             page: 2,
         };
-        const routerSpy = spyOn(router, "navigate").and.callThrough();
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToDatasetView(mockParams);
         expect(routerSpy).toHaveBeenCalledWith([mockParams.accountName, mockParams.datasetName], {
             queryParams: { tab: mockParams.tab, page: mockParams.page },
@@ -166,7 +165,7 @@ describe("NavigationService", () => {
     });
 
     it("should test navigate to page not found view", () => {
-        const routerSpy = spyOn(router, "navigate").and.callThrough();
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToPageNotFound();
         expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_PAGE_NOT_FOUND], {
             skipLocationChange: true,

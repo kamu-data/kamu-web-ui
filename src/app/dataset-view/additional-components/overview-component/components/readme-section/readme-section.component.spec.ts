@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { ReadmeSectionComponent } from "./readme-section.component";
-import { mockDatasetBasicsFragment } from "src/app/search/mock.data";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { SharedTestModule } from "src/app/common/shared-test.module";
@@ -43,7 +43,7 @@ describe("ReadmeSectionComponent", () => {
         fixture = TestBed.createComponent(ReadmeSectionComponent);
         component = fixture.componentInstance;
         datasetCommitService = TestBed.inject(DatasetCommitService);
-        component.datasetBasics = mockDatasetBasicsFragment;
+        component.datasetBasics = mockDatasetBasicsDerivedFragment;
         component.currentReadme = mockReadmeContent;
 
         fixture.detectChanges();
@@ -54,10 +54,10 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check show select tab", () => {
-        expect(component.editViewShow).toEqual(false);
+        expect(component.editingInProgress).toEqual(false);
         emitClickOnElementByDataTestId(fixture, "show-edit-tabs");
         fixture.detectChanges();
-        expect(component.editViewShow).toEqual(true);
+        expect(component.editingInProgress).toEqual(true);
     });
 
     it("should check switch edit/preview mode", () => {
@@ -93,5 +93,6 @@ describe("ReadmeSectionComponent", () => {
         emitClickOnElementByDataTestId(fixture, "save-changes");
         tick();
         expect(updateReadmeSpy).toHaveBeenCalledTimes(1);
+        flush();
     }));
 });

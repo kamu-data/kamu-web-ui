@@ -1,39 +1,39 @@
-<div class="p-4 p-responsive clearfix" *ngIf="datasetsAccount$ | async as data">
-    <div class="custom-container">
+<div class="p-4 p-responsive clearfix" *ngIf="user$ | async as user">
+    <div class="custom-container" *ngIf="datasetsAccount$ | async as data">
         <div class="container-sidebar">
             <div class="d-flex mb-3 justify-content-center align-items-center">
-                <a *ngIf="isOwner; else notOwnerLink" routerLink="/v/settings/profile">
+                <a *ngIf="isLoggedUser; else notLoggedUserLink" routerLink="/v/settings/profile">
                     <img
                         alt="avatar"
                         width="260"
                         height="260"
                         class="avatar avatar-user border color-bg-default"
-                        [src]="avatarLink"
+                        [src]="avatarLink(user)"
                     />
                 </a>
-                <ng-template #notOwnerLink>
-                    <a [href]="avatarLink">
+                <ng-template #notLoggedUserLink>
+                    <a [href]="avatarLink(user)">
                         <img
                             alt="avatar"
                             width="260"
                             height="260"
                             class="avatar avatar-user border color-bg-default"
-                            [src]="avatarLink"
+                            [src]="avatarLink(user)"
                         />
                     </a>
                 </ng-template>
             </div>
             <span class="vcard-username d-block p-2" itemprop="additionalName">
-                {{ accountName }}
+                {{ user.displayName }}
             </span>
             <div class="my-3 text-center me-4">
                 <button
                     name="button"
                     type="button"
                     class="btn btn-outline-secondary w-100 btn-custom"
-                    (click)="isOwner ? onEditProfile() : onFollow()"
+                    (click)="isLoggedUser ? onEditProfile() : onFollow()"
                 >
-                    {{ isOwner ? "Edit profile" : "Follow" }}
+                    {{ isLoggedUser ? "Edit profile" : "Follow" }}
                 </button>
             </div>
             <div class="border-top mt-5 me-4">
@@ -63,16 +63,16 @@
         <div class="container-content px-4">
             <div class="border-bottom">
                 <mat-button-toggle-group
-                    name="accountViewType"
+                    name="activeTab"
                     aria-label="Account View Type"
                     class="toggle-group"
-                    [value]="accountViewType"
+                    [value]="activeTab"
                 >
                     <mat-button-toggle
                         data-test-id="account-overview-tab"
                         value="overview"
-                        [checked]="isAccountViewTypeOverview"
-                        (click)="onSelectOverviewTab()"
+                        [checked]="activeTab === AccountTabs.OVERVIEW"
+                        (click)="onSelectOverviewTab(user)"
                     >
                         <mat-icon class="text-muted fs-4">my_library_books</mat-icon>
                         <span class="mx-2"> Overview</span>
@@ -80,8 +80,8 @@
                     <mat-button-toggle
                         data-test-id="account-datasets-tab"
                         value="datasets"
-                        [checked]="isAccountViewTypeDatasets"
-                        (click)="onSelectDatasetsTab()"
+                        [checked]="activeTab === AccountTabs.DATASETS"
+                        (click)="onSelectDatasetsTab(user)"
                     >
                         <mat-icon class="text-muted fs-4">book</mat-icon>
                         <span class="mx-2">Datasets</span>
@@ -90,8 +90,8 @@
                     <mat-button-toggle
                         data-test-id="account-organizations-tab"
                         value="organizations"
-                        [checked]="isAccountViewTypeOrganizations"
-                        (click)="onSelectOrganizationsTab()"
+                        [checked]="activeTab === AccountTabs.ORGANIZATIONS"
+                        (click)="onSelectOrganizationsTab(user)"
                     >
                         <mat-icon class="text-muted fs-4">people</mat-icon>
                         <span class="mx-2">Organizations </span>
@@ -101,8 +101,8 @@
                     <mat-button-toggle
                         data-test-id="account-inbox-tab"
                         value="inbox"
-                        [checked]="isAccountViewTypeInbox"
-                        (click)="onSelectInboxTab()"
+                        [checked]="activeTab === AccountTabs.INBOX"
+                        (click)="onSelectInboxTab(user)"
                     >
                         <mat-icon class="text-muted fs-4">inbox</mat-icon>
                         <span class="mx-2">Inbox</span>
@@ -111,8 +111,8 @@
                     <mat-button-toggle
                         data-test-id="account-stars-tab"
                         value="Stars"
-                        [checked]="isAccountViewTypeStars"
-                        (click)="onSelectStarsTab()"
+                        [checked]="activeTab === AccountTabs.STARS"
+                        (click)="onSelectStarsTab(user)"
                     >
                         <mat-icon class="text-muted fs-4">star_border</mat-icon>
                         <span class="mx-2">Stars</span>
@@ -120,24 +120,23 @@
                     </mat-button-toggle>
                 </mat-button-toggle-group>
             </div>
-            <ng-container *ngIf="isAccountViewTypeOverview">
+            <ng-container *ngIf="activeTab === AccountTabs.OVERVIEW">
                 <div>Overview</div>
             </ng-container>
-            <ng-container *ngIf="isAccountViewTypeDatasets">
+            <ng-container *ngIf="activeTab === AccountTabs.DATASETS">
                 <app-datasets-tab
                     [datasets]="data.datasets"
-                    [accountName]="accountName"
-                    [accountViewType]="accountViewType"
+                    [accountName]="user.accountName"
                     [pageInfo]="data.pageInfo"
                 ></app-datasets-tab>
             </ng-container>
-            <ng-container *ngIf="isAccountViewTypeOrganizations">
+            <ng-container *ngIf="activeTab === AccountTabs.ORGANIZATIONS">
                 <div>Organizations</div>
             </ng-container>
-            <ng-container *ngIf="isAccountViewTypeInbox">
+            <ng-container *ngIf="activeTab === AccountTabs.INBOX">
                 <div>Inbox</div>
             </ng-container>
-            <ng-container *ngIf="isAccountViewTypeStars">
+            <ng-container *ngIf="activeTab === AccountTabs.STARS">
                 <div>Stars</div>
             </ng-container>
         </div>

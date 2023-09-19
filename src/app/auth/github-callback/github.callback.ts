@@ -1,8 +1,9 @@
 import { NavigationService } from "../../services/navigation.service";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Params } from "@angular/router";
-import { AuthApi } from "../../api/auth.api";
 import { BaseComponent } from "src/app/common/base.component";
+import { LoginService } from "../login/login.service";
+import { GithubLoginCredentials } from "src/app/api/auth.api.model";
 
 @Component({
     selector: "app-github-callback",
@@ -10,19 +11,21 @@ import { BaseComponent } from "src/app/common/base.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GithubCallbackComponent extends BaseComponent implements OnInit {
-    constructor(private route: ActivatedRoute, private navigationService: NavigationService, private authApi: AuthApi) {
+    public constructor(
+        private route: ActivatedRoute,
+        private navigationService: NavigationService,
+        private loginService: LoginService,
+    ) {
         super();
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         if (!this.searchString.includes("?code=")) {
             this.navigationService.navigateToHome();
         }
         this.trackSubscription(
             this.route.queryParams.subscribe((param: Params) => {
-                this.authApi
-                    .fetchUserInfoAndTokenFromGithubCallackCode(param.code as string)
-                    .subscribe(() => this.navigationService.navigateToHome());
+                this.loginService.githubLogin({ code: param.code as string } as GithubLoginCredentials);
             }),
         );
     }

@@ -1,10 +1,7 @@
-query getMetadataBlock(
-  $accountName: AccountName!
-  $datasetName: DatasetName!
-  $blockHash: Multihash!
-) {
+query getMetadataBlock($accountName: AccountName!, $datasetName: DatasetName!, $blockHash: Multihash!) {
   datasets {
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      ...DatasetBasics
       metadata {
         chain {
           blockByHashEncoded(hash: $blockHash, format: YAML)

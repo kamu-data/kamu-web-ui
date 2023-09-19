@@ -5,6 +5,8 @@ import { Clipboard } from "@angular/cdk/clipboard";
 import AppValues from "../../common/app.values";
 import { SideNavHelper } from "../../common/sidenav.helper";
 import { isMobileView, promiseWithCatch } from "src/app/common/app.helpers";
+import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetPermissionsService } from "../dataset.permissions.service";
 
 @Component({
     selector: "app-dataset-view-menu",
@@ -15,33 +17,25 @@ export class DatasetViewMenuComponent implements OnInit {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     @ViewChild("menuTrigger") trigger: ElementRef;
 
+    @Input() datasetBasics: DatasetBasicsFragment;
+    @Input() datasetPermissions: DatasetPermissionsFragment;
     @Input() datasetNavigation: DatasetNavigationInterface;
     @Input() datasetViewType: DatasetViewTypeEnum;
     @Input() isMinimizeSearchAdditionalButtons: boolean;
 
-    public clipboardKamuCli = AppValues.CLIBPOARD_KAMU_CLI;
-    public clipboardKafka = AppValues.CLIPBOARD_KAFKA;
+    public clipboardKamuCli = "";
+    public clipboardKafka = "";
+
     private sideNavHelper: SideNavHelper;
 
-    @HostListener("window:resize")
-    private checkWindowSize(): void {
-        this.isMinimizeSearchAdditionalButtons = isMobileView();
-        if (this.sidenav) {
-            if (isMobileView()) {
-                promiseWithCatch(this.sideNavHelper.close());
-            } else {
-                promiseWithCatch(this.sideNavHelper.open());
-            }
-        }
-    }
-
-    constructor(private clipboard: Clipboard) {}
+    constructor(private clipboard: Clipboard, private datasetPermissionsServices: DatasetPermissionsService) {}
 
     public ngOnInit(): void {
         if (this.sidenav) {
             this.sideNavHelper = new SideNavHelper(this.sidenav);
         }
         this.checkWindowSize();
+        this.initClipboardHints();
     }
 
     public copyToClipboard(event: MouseEvent, text: string): void {
@@ -91,6 +85,10 @@ export class DatasetViewMenuComponent implements OnInit {
         return this.datasetViewType === DatasetViewTypeEnum.Settings;
     }
 
+    public get shouldAllowSettingsTab(): boolean {
+        return this.datasetPermissionsServices.shouldAllowSettingsTab(this.datasetPermissions);
+    }
+
     public onNavigateToOverview(): void {
         this.datasetNavigation.navigateToOverview();
     }
@@ -116,6 +114,25 @@ export class DatasetViewMenuComponent implements OnInit {
     }
 
     public onNavigateToSettings(): void {
-        this.datasetNavigation.navigateToSettings();
+        if (this.shouldAllowSettingsTab) {
+            this.datasetNavigation.navigateToSettings();
+        }
+    }
+
+    @HostListener("window:resize")
+    private checkWindowSize(): void {
+        this.isMinimizeSearchAdditionalButtons = isMobileView();
+        if (this.sidenav) {
+            if (isMobileView()) {
+                promiseWithCatch(this.sideNavHelper.close());
+            } else {
+                promiseWithCatch(this.sideNavHelper.open());
+            }
+        }
+    }
+
+    private initClipboardHints(): void {
+        this.clipboardKamuCli = `kamu pull kamu.dev/${this.datasetBasics.alias}`;
+        this.clipboardKafka = `https://api.kamu.dev/kafka/${this.datasetBasics.alias}`;
     }
 }

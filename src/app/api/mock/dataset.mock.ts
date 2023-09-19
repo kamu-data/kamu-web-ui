@@ -1,16 +1,27 @@
-import { LineageGraphNodeType } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
     DataBatchFormat,
+    DatasetByAccountAndDatasetNameQuery,
+    DatasetByIdQuery,
     DatasetKind,
     DatasetsByAccountNameQuery,
     DatasetSearchOverviewFragment,
+    GetDatasetBasicsWithPermissionsQuery,
     GetDatasetDataSqlRunQuery,
     GetMetadataBlockQuery,
 } from "../kamu.graphql.interface";
 import { DataSchemaFormat } from "../kamu.graphql.interface";
 import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
+import { TEST_LOGIN } from "./auth.mock";
+import { mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import {
+    LineageGraphDatasetNodeObject,
+    LineageGraphNodeData,
+    LineageGraphNodeKind,
+    LineageNodeAccess,
+} from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
+import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 
-export const TEST_USER_NAME = "test-user";
+export const TEST_DATASET_ID = "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7";
 export const TEST_DATASET_NAME = "test-dataset";
 export const TEST_BLOCK_HASH = "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev";
 
@@ -68,6 +79,7 @@ export const mockDatasetListItem: DatasetSearchOverviewFragment = {
                 __typename: "Dataset",
                 id: "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7",
                 kind: DatasetKind.Derivative,
+                alias: "kamu/alberta.case-details.hm",
             },
         ],
     },
@@ -75,10 +87,11 @@ export const mockDatasetListItem: DatasetSearchOverviewFragment = {
     kind: DatasetKind.Root,
     name: "alberta.case-details",
     owner: {
-        __typename: "User",
+        __typename: "Account",
         id: "1",
-        name: "kamu",
+        accountName: "kamu",
     },
+    alias: "kamu/alberta.case-details",
 };
 
 export const mockDatasetsAccountResponse: DatasetsAccountResponse = {
@@ -91,6 +104,63 @@ export const mockDatasetsAccountResponse: DatasetsAccountResponse = {
         totalPages: 2,
     },
     datasetTotalCount: 1,
+};
+
+export const mockDatasetByAccountAndDatasetNameQuery: DatasetByAccountAndDatasetNameQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byOwnerAndName: {
+            __typename: "Dataset",
+            id: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+            kind: DatasetKind.Root,
+            name: TEST_DATASET_NAME,
+            owner: {
+                __typename: "Account",
+                id: "1",
+                accountName: TEST_LOGIN,
+            },
+            alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
+        },
+    },
+};
+
+export const mockDatassetByIdQuery: DatasetByIdQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byId: {
+            __typename: "Dataset",
+            id: TEST_DATASET_ID,
+            kind: DatasetKind.Root,
+            name: TEST_DATASET_NAME,
+            owner: {
+                __typename: "Account",
+                id: "1",
+                accountName: TEST_LOGIN,
+            },
+            alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
+        },
+    },
+};
+
+export const mockDatasetBasicsWithPermissionQuery: GetDatasetBasicsWithPermissionsQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byOwnerAndName: {
+            __typename: "Dataset",
+            id: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+            kind: DatasetKind.Root,
+            name: TEST_DATASET_NAME,
+            owner: {
+                __typename: "Account",
+                id: "1",
+                accountName: TEST_LOGIN,
+            },
+            alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
+            permissions: {
+                ...mockFullPowerDatasetPermissionsFragment.permissions,
+            },
+        },
+    },
 };
 
 export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
@@ -131,6 +201,7 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                                 __typename: "Dataset",
                                 id: "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7",
                                 kind: DatasetKind.Derivative,
+                                alias: "kamu/alberta.case-details.hm",
                             },
                         ],
                     },
@@ -138,10 +209,11 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                     kind: DatasetKind.Root,
                     name: "alberta.case-details",
                     owner: {
-                        __typename: "User",
+                        __typename: "Account",
                         id: "1",
-                        name: "kamu",
+                        accountName: "kamu",
                     },
+                    alias: "kamu/alberta.case-details",
                 },
             ],
             totalCount: 1,
@@ -174,9 +246,9 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                         systemTime: "2022-08-05T21:20:08.053635579+00:00",
                         sequenceNumber: 6,
                         author: {
-                            __typename: "User",
+                            __typename: "Account",
                             id: "1",
-                            name: "kamu",
+                            accountName: "kamu",
                         },
                         event: {
                             __typename: "ExecuteQuery",
@@ -217,27 +289,34 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                     },
                 },
             },
+            id: "did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
+            name: "com.naturalearthdata.admin0.countries.50m",
+            kind: DatasetKind.Root,
+            alias: "kamu/com.naturalearthdata.admin0.countries.50m",
+            owner: {
+                id: "",
+                accountName: "alias",
+            },
         },
     },
 };
 
-export const MOCK_NODES = [
+export const MOCK_NODES: Node[] = [
     {
         id: "didodfz4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
         label: "com.naturalearthdata.admin0.countries.50m",
         data: {
-            nodeKind: LineageGraphNodeType.Dataset,
-
-            nodeDataObject: {
+            kind: LineageGraphNodeKind.Dataset,
+            dataObject: {
                 id: "did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
                 name: "com.naturalearthdata.admin0.countries.50m",
-                kind: "ROOT",
-                isRoot: true,
+                kind: DatasetKind.Root,
                 isCurrent: true,
+                access: LineageNodeAccess.PRIVATE,
                 color: "#7aa3e5",
                 accountName: "kamu",
-            },
-        },
+            } as LineageGraphDatasetNodeObject,
+        } as LineageGraphNodeData,
         meta: {
             forceDimensions: false,
         },
@@ -255,17 +334,17 @@ export const MOCK_NODES = [
         id: "didodfz4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
         label: "com.naturalearthdata.admin0.countries",
         data: {
-            nodeKind: LineageGraphNodeType.Dataset,
-            nodeDataObject: {
+            kind: LineageGraphNodeKind.Dataset,
+            dataObject: {
                 id: "did:odf:z4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
                 name: "com.naturalearthdata.admin0.countries",
-                kind: "DERIVATIVE",
-                isRoot: false,
+                kind: DatasetKind.Derivative,
                 isCurrent: false,
                 color: "#a8385d",
                 accountName: "kamu",
-            },
-        },
+                access: LineageNodeAccess.PRIVATE,
+            } as LineageGraphDatasetNodeObject,
+        } as LineageGraphNodeData,
         meta: {
             forceDimensions: false,
         },

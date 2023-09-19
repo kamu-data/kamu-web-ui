@@ -1,5 +1,5 @@
 import { FetchStepUrl, PrepStepDecompress } from "../../../../../../api/kamu.graphql.interface";
-import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -54,40 +54,40 @@ describe("SetPollingSourceEventComponent", () => {
     });
 
     it("should check render event data", () => {
-        const url = findElementByDataTestId(fixture, "setPollingSource-fetchStepUrl-url");
+        const url = getElementByDataTestId(fixture, "setPollingSource-fetchStepUrl-url");
         expect(url.innerText).toEqual((mockSetPollingSourceEvent.fetch as FetchStepUrl).url);
 
-        const schema = findElementByDataTestId(fixture, "setPollingSource-readStepCsv-schema");
+        const schema = getElementByDataTestId(fixture, "setPollingSource-readStepCsv-schema");
         expect(schema).toBeDefined();
 
-        const header = findElementByDataTestId(fixture, "setPollingSource-readStepCsv-header");
+        const header = getElementByDataTestId(fixture, "setPollingSource-readStepCsv-header");
         expect(Boolean(header.innerText)).toEqual(true);
 
-        const mergeStrategyType = findElementByDataTestId(fixture, "setPollingSource-mergeStrategyLedger-__typename");
+        const mergeStrategyType = getElementByDataTestId(fixture, "setPollingSource-mergeStrategyLedger-__typename");
         expect(mergeStrategyType.textContent).toEqual("(Ledger strategy)");
 
-        const primaryKey = findElementByDataTestId(fixture, "setPollingSource-mergeStrategyLedger-primaryKey-0");
+        const primaryKey = getElementByDataTestId(fixture, "setPollingSource-mergeStrategyLedger-primaryKey-0");
         expect(primaryKey.textContent).toEqual("id ");
 
-        const engine = findElementByDataTestId(fixture, "setPollingSource-transformSql-engine");
+        const engine = getElementByDataTestId(fixture, "setPollingSource-transformSql-engine");
         expect(engine.textContent).toEqual("(Apache Spark)");
 
-        const queries = findElementByDataTestId(fixture, "setPollingSource-transformSql-queries");
+        const queries = getElementByDataTestId(fixture, "setPollingSource-transformSql-queries");
         expect(queries).toBeDefined();
 
-        const prepareFormat = findElementByDataTestId(fixture, "setPollingSource-prepStepDecompress-format");
+        const prepareFormat = getElementByDataTestId(fixture, "setPollingSource-prepStepDecompress-format");
         expect(prepareFormat.textContent).toEqual(
             (mockSetPollingSourceEvent.prepare as PrepStepDecompress[])[0].format,
         );
 
-        const prepareSubPath = findElementByDataTestId(fixture, "setPollingSource-prepStepDecompress-subPath");
+        const prepareSubPath = getElementByDataTestId(fixture, "setPollingSource-prepStepDecompress-subPath");
         expect(prepareSubPath.textContent).toEqual(
             (mockSetPollingSourceEvent.prepare as PrepStepDecompress[])[0].subPath ?? "",
         );
     });
 
     it("should check render unsupported section", () => {
-        const unsupportedSection = findElementByDataTestId(fixture, "unsupported-section");
+        const unsupportedSection = getElementByDataTestId(fixture, "unsupported-section");
         expect(unsupportedSection).toBeDefined();
     });
 });

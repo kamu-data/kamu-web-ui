@@ -16,6 +16,12 @@ mutation commitEventToDataset($datasetId: DatasetID!, $event: String!) {
             ... on CommitResultAppendError {
               message
             }
+            ... on MetadataManifestUnsupportedVersion {
+              message
+            }
+            ... on NoChanges {
+              message
+            }
           }
         }
       }

@@ -10,7 +10,7 @@ import { of } from "rxjs";
 import AppValues from "src/app/common/app.values";
 import { dispatchInputEvent, emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
-import { mockDatasetBasicsFragment, mockDatasetInfo } from "src/app/search/mock.data";
+import { mockDatasetBasicsDerivedFragment, mockDatasetInfo } from "src/app/search/mock.data";
 import { SearchApi } from "src/app/api/search.api";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -58,7 +58,8 @@ describe("SearchSectionComponent", () => {
     it("should activate search API and update view", fakeAsync(() => {
         const MOCK_AUTOCOMPLETE_ITEM: DatasetAutocompleteItem = {
             __typename: TypeNames.datasetType,
-            dataset: mockDatasetBasicsFragment,
+            dummy: false,
+            dataset: mockDatasetBasicsDerivedFragment,
         };
         const searchApiAutocompleteDatasetSearchSpy = spyOn(searchApi, "autocompleteDatasetSearch").and.callFake(() =>
             of([MOCK_AUTOCOMPLETE_ITEM]),
@@ -103,7 +104,7 @@ describe("SearchSectionComponent", () => {
     it("should check select input dataset", () => {
         const mockNgbTypeaheadSelectItemEvent = {
             item: {
-                dataset: mockDatasetBasicsFragment,
+                dataset: mockDatasetBasicsDerivedFragment,
                 __typename: TypeNames.datasetType,
             },
         } as NgbTypeaheadSelectItemEvent;

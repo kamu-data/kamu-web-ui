@@ -3,7 +3,7 @@ import { NavigationService } from "../services/navigation.service";
 import { ApolloError } from "@apollo/client/core";
 import { ErrorTexts } from "./errors.text";
 import { logError, promiseWithCatch } from "./app.helpers";
-import { AuthApi } from "../api/auth.api";
+import { LoggedUserService } from "../auth/logged-user.service";
 
 export abstract class KamuError extends Error {
     abstract accept(visitor: KamuErrorVisitor): void;
@@ -40,7 +40,13 @@ export class DatasetNotFoundError extends KamuError {
     }
 }
 
-export class AuthenticationError extends KamuError {
+export class AccountNotFoundError extends KamuError {
+    public accept(visitor: KamuErrorVisitor): void {
+        visitor.visitAccountNotFoundError(this);
+    }
+}
+
+export abstract class KamuMultiError extends KamuError {
     public readonly errors: readonly Error[];
 
     constructor(errors: readonly Error[]) {
@@ -48,6 +54,20 @@ export class AuthenticationError extends KamuError {
         this.errors = errors;
     }
 
+    public get compactMessage(): string {
+        return this.errors
+            .map((e) => e.message)
+            .reduce((previousValue, currentValue) => previousValue + ". " + currentValue);
+    }
+}
+
+export class DatasetOperationError extends KamuMultiError {
+    public accept(visitor: KamuErrorVisitor): void {
+        visitor.visitDatasetOperationError(this);
+    }
+}
+
+export class AuthenticationError extends KamuMultiError {
     public accept(visitor: KamuErrorVisitor): void {
         visitor.visitAuthenticationError(this);
     }
@@ -57,6 +77,8 @@ interface KamuErrorVisitor {
     visitSqlExecutionError(e: SqlExecutionError): void;
     visitInvalidSqlError(e: InvalidSqlError): void;
     visitDatasetNotFoundError(e: DatasetNotFoundError): void;
+    visitAccountNotFoundError(e: AccountNotFoundError): void;
+    visitDatasetOperationError(e: DatasetOperationError): void;
     visitApolloError(e: ApolloError): void;
     visitAuthenticationError(e: AuthenticationError): void;
 }
@@ -65,7 +87,7 @@ export class KamuErrorHandler implements KamuErrorVisitor {
     constructor(
         private navigationService: NavigationService,
         private modalService: ModalService,
-        private authApi: AuthApi,
+        private loggedUserService: LoggedUserService,
     ) {}
 
     public visitApolloError(e: ApolloError): void {
@@ -80,6 +102,20 @@ export class KamuErrorHandler implements KamuErrorVisitor {
 
     public visitDatasetNotFoundError(): void {
         this.navigationService.navigateToPageNotFound();
+    }
+
+    public visitAccountNotFoundError(): void {
+        this.navigationService.navigateToPageNotFound();
+    }
+
+    public visitDatasetOperationError(e: DatasetOperationError): void {
+        promiseWithCatch(
+            this.modalService.error({
+                title: ErrorTexts.ERROR_DATASET_OPERATION_FAILED,
+                message: e.compactMessage,
+                yesButtonText: "Close",
+            }),
+        );
     }
 
     public visitInvalidSqlError(e: InvalidSqlError): void {
@@ -110,6 +146,6 @@ export class KamuErrorHandler implements KamuErrorVisitor {
         } else {
             logError(ErrorTexts.ERROR_UNKNOWN_AUTHENTICATION);
         }
-        this.authApi.terminateSession();
+        this.loggedUserService.terminateSession();
     }
 }

@@ -59,7 +59,7 @@ import { AddPollingSourceComponent } from "./additional-components/metadata-comp
 import { MatStepperModule } from "@angular/material/stepper";
 import { EngineSelectComponent } from "./additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 import { ReadmeSectionComponent } from "./additional-components/overview-component/components/readme-section/readme-section.component";
-import { SettingsTabComponent } from "./additional-components/settings-component/settings.component";
+import { DatasetSettingsComponent } from "./additional-components/dataset-settings-component/dataset-settings.component";
 import { LoadMoreComponent } from "./additional-components/data-component/load-more/load-more.component";
 import { MatInputModule } from "@angular/material/input";
 
@@ -150,7 +150,7 @@ import { MatInputModule } from "@angular/material/input";
         AddPollingSourceComponent,
         EngineSelectComponent,
         ReadmeSectionComponent,
-        SettingsTabComponent,
+        DatasetSettingsComponent,
         LoadMoreComponent,
     ],
 })

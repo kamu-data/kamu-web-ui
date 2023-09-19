@@ -1,0 +1,102 @@
+@import 'var';
+
+a {
+    text-decoration: none;
+    color: $app-dark;
+}
+
+.login-container__buttons {
+    height: 100vh;
+    overflow: hidden;
+    margin-top: 200px;
+
+    .inner-container {
+        border: 1px solid $app-color-border-default;
+        padding: 40px 20px;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        gap: 40px;
+        border-radius: 6px;
+    }
+
+    .login__btn {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        border: 1px solid $app-color-border-default;
+        width: 200px;
+        padding: 5px 15px;
+        border-radius: 6px;
+        background-color: #ebeef1;
+
+        &:hover {
+            background: $app-background-btn;
+        }
+    }
+
+    .github-logo {
+        margin-left: 10px;
+    }
+}
+
+.container-form {
+    margin-top: 100px;
+
+    .logo {
+        width: 70px;
+        margin: 0 auto;
+    }
+
+    form {
+        width: 400px;
+        border: 1px solid $app-color-border-default;
+        margin: 0 auto;
+        border-radius: 6px;
+        padding: 20px;
+        background-color: #f6f8fa;
+
+        .button-sign-in {
+            color: $app-white;
+            background-color: #1f883d;
+            text-align: center;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 15px;
+            width: 100%;
+        }
+    }    
+}
+
+.error-block {
+    z-index: 10;
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 6px;
+    background: #ffebe9;
+    border-color: rgb(255 129 130 / 40%);
+    position: relative;
+
+    &::before {
+        content: "\A";
+        border-style: solid;
+        border-width: 5px 7px 5px 5px;
+        border-color: transparent rgb(255 129 130 / 40%) transparent transparent;
+        position: absolute;
+        left: 15px;
+        top: -10px;
+        transform: rotate(90deg);
+    }
+}
+
+.error-color {
+    color: #CF222E;
+}
+
+.error-border-color {
+    border-color: #dc3545;
+}

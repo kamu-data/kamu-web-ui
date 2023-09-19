@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatTableModule } from "@angular/material/table";
-import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { DynamicTableComponent } from "./dynamic-table.component";
 
 describe("DynamicTableComponent", () => {
@@ -36,7 +36,7 @@ describe("DynamicTableComponent", () => {
         fixture.detectChanges();
         component.ngOnChanges();
         Object.keys(mockSchemaFields[0]).forEach((item: string, index: number) => {
-            const el = findElementByDataTestId(fixture, `column-name-${index}`);
+            const el = getElementByDataTestId(fixture, `column-name-${index}`);
             expect(el.textContent).toEqual(` ${item} `);
         });
     });

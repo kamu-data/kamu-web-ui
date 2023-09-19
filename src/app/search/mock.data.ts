@@ -1,6 +1,15 @@
-import { mockSetVocab } from "./../dataset-block/metadata-block/components/event-details/mock.events";
-import { CommitEventToDatasetMutation, PageBasedInfo } from "../api/kamu.graphql.interface";
-
+import {
+    AccountBasicsFragment,
+    CommitEventToDatasetMutation,
+    CreateDatasetFromSnapshotMutation,
+    CreateEmptyDatasetMutation,
+    DatasetPermissionsFragment,
+    DeleteDatasetMutation,
+    PageBasedInfo,
+    RenameDatasetMutation,
+    UpdateReadmeMutation,
+} from "../api/kamu.graphql.interface";
+import { mockSetVocab } from "../dataset-block/metadata-block/components/event-details/mock.events";
 import {
     DataBatchFormat,
     DataQueryResultErrorKind,
@@ -24,6 +33,13 @@ import {
     MergeKind,
 } from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
 import { DatasetHistoryUpdate } from "../dataset-view/dataset.subscriptions.interface";
+import {
+    LineageGraphDatasetNodeObject,
+    LineageGraphNodeKind,
+    LineageNodeAccess,
+} from "../dataset-view/additional-components/lineage-component/lineage-model";
+import { GraphQLError } from "graphql";
+import { TEST_AVATAR_URL } from "../api/mock/auth.mock";
 
 export const mockPageBasedInfo: PageBasedInfo = {
     currentPage: 1,
@@ -37,14 +53,15 @@ export const mockDatasetInfo: DatasetInfo = {
     datasetName: "test name",
 };
 
-export const mockNode: Node = {
-    id: "testId",
-    label: "british-columbia.case-details.hm",
+export const mockOwnerFields: AccountBasicsFragment = {
+    id: "1",
+    accountName: "kamu",
 };
 
-export const mockOwnerFields = {
+export const mockOwnerFieldsWithAvatar: AccountBasicsFragment & { avatarUrl?: string } = {
     id: "1",
-    name: "kamu",
+    accountName: "kamu",
+    avatarUrl: TEST_AVATAR_URL,
 };
 
 export const mockAutocompleteItems: DatasetAutocompleteItem[] = [
@@ -54,7 +71,9 @@ export const mockAutocompleteItems: DatasetAutocompleteItem[] = [
             kind: DatasetKind.Root,
             name: "mockName1",
             owner: mockOwnerFields,
+            alias: mockOwnerFields.accountName + "/mockName1",
         },
+        dummy: false,
         __typename: TypeNames.datasetType,
     },
 
@@ -64,7 +83,9 @@ export const mockAutocompleteItems: DatasetAutocompleteItem[] = [
             kind: DatasetKind.Derivative,
             name: "mockName2",
             owner: mockOwnerFields,
+            alias: mockOwnerFields.accountName + "/mockName2",
         },
+        dummy: false,
         __typename: TypeNames.allDataType,
     },
 ];
@@ -100,9 +121,10 @@ export const mockDatasetSearchResult: DatasetSearchResult = {
             kind: DatasetKind.Root,
             name: "alberta.case-details",
             owner: {
-                __typename: "User",
+                __typename: "Account",
                 ...mockOwnerFields,
             },
+            alias: mockOwnerFields.accountName + "/alberta.case-details",
             createdAt: "2022-08-05T21:17:30.613911358+00:00",
             lastUpdatedAt: "2022-08-05T21:19:28.817281255+00:00",
             metadata: {
@@ -143,11 +165,38 @@ export const mockSearchDatasetOverviewQuery: SearchDatasetsOverviewQuery = {
     },
 };
 
-export const mockDatasetBasicsFragment: DatasetBasicsFragment = {
+export const mockDatasetBasicsRootFragment: DatasetBasicsFragment = {
+    id: "id",
+    kind: DatasetKind.Root,
+    name: "mockNameRoot",
+    owner: { __typename: "Account", ...mockOwnerFields },
+    alias: mockOwnerFields.accountName + "/mockNameRoot",
+};
+
+export const mockDatasetBasicsDerivedFragment: DatasetBasicsFragment = {
     id: "id",
     kind: DatasetKind.Derivative,
-    name: "mockName",
-    owner: { __typename: "User", ...mockOwnerFields },
+    name: "mockNameDerived",
+    owner: { __typename: "Account", ...mockOwnerFields },
+    alias: mockOwnerFields.accountName + "/mockNameDerived",
+};
+
+export const mockFullPowerDatasetPermissionsFragment: DatasetPermissionsFragment = {
+    permissions: {
+        canView: true,
+        canDelete: true,
+        canRename: true,
+        canCommit: true,
+    },
+};
+
+export const mockReadonlyDatasetPermissionsFragment: DatasetPermissionsFragment = {
+    permissions: {
+        canView: true,
+        canDelete: false,
+        canRename: false,
+        canCommit: false,
+    },
 };
 
 export const mockDatasetResponseNotFound: GetDatasetMainDataQuery = {
@@ -167,10 +216,10 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
             kind: DatasetKind.Root,
             name: "alberta.case-details",
             owner: {
-                __typename: "User",
-                id: "1",
-                name: "kamu",
+                __typename: "Account",
+                ...mockOwnerFieldsWithAvatar,
             },
+            alias: mockOwnerFields.accountName + "/alberta.case-details",
             metadata: {
                 __typename: "DatasetMetadata",
                 currentSource: {
@@ -263,6 +312,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                 currentVocab: {
                     ...mockSetVocab,
                 },
+
                 currentUpstreamDependencies: [],
                 currentDownstreamDependencies: [
                     {
@@ -286,10 +336,10 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                                 kind: DatasetKind.Derivative,
                                                 name: "canada.daily-cases",
                                                 owner: {
-                                                    __typename: "User",
-                                                    id: "1",
-                                                    name: "kamu",
+                                                    __typename: "Account",
+                                                    ...mockOwnerFieldsWithAvatar,
                                                 },
+                                                alias: mockOwnerFields.accountName + "/canada.daily-cases",
                                             },
                                         ],
                                         currentSource: null,
@@ -298,10 +348,10 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                     kind: DatasetKind.Derivative,
                                     name: "canada.case-details",
                                     owner: {
-                                        __typename: "User",
-                                        id: "1",
-                                        name: "kamu",
+                                        __typename: "Account",
+                                        ...mockOwnerFieldsWithAvatar,
                                     },
+                                    alias: mockOwnerFields.accountName + "/canada.case-details",
                                 },
                             ],
                             currentSource: null,
@@ -310,10 +360,10 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                         kind: DatasetKind.Derivative,
                         name: "alberta.case-details.hm",
                         owner: {
-                            __typename: "User",
-                            id: "1",
-                            name: "kamu",
+                            __typename: "Account",
+                            ...mockOwnerFieldsWithAvatar,
                         },
+                        alias: mockOwnerFields.accountName + "/alberta.case-details.hm",
                     },
                 ],
                 currentReadme:
@@ -330,9 +380,8 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                 systemTime: "2023-09-03T01:09:31.587025138+00:00",
                                 sequenceNumber: 6,
                                 author: {
-                                    __typename: "User",
-                                    id: "1",
-                                    name: "kamu",
+                                    __typename: "Account",
+                                    ...mockOwnerFields,
                                 },
                                 event: {
                                     __typename: "AddData",
@@ -386,6 +435,12 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
             },
             createdAt: "2023-09-03T01:08:55.104604199+00:00",
             lastUpdatedAt: "2023-09-03T01:09:31.587025138+00:00",
+            permissions: {
+                canCommit: true,
+                canDelete: true,
+                canRename: true,
+                canView: true,
+            },
         },
     },
 };
@@ -410,7 +465,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 sequenceNumber: 12,
                                 systemTime: "2022-08-05T21:19:28.817281255+00:00",
                                 author: {
-                                    __typename: "User",
+                                    __typename: "Account",
                                     ...mockOwnerFields,
                                 },
                                 event: {
@@ -442,7 +497,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 sequenceNumber: 12,
                                 systemTime: "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
-                                    __typename: "User",
+                                    __typename: "Account",
                                     ...mockOwnerFields,
                                 },
                                 event: {
@@ -460,7 +515,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 sequenceNumber: 12,
                                 systemTime: "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
-                                    __typename: "User",
+                                    __typename: "Account",
                                     ...mockOwnerFields,
                                 },
                                 event: {
@@ -485,7 +540,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 systemTime: "2022-08-05T21:17:30.613911358+00:00",
                                 sequenceNumber: 12,
                                 author: {
-                                    __typename: "User",
+                                    __typename: "Account",
                                     ...mockOwnerFields,
                                 },
                                 event: {
@@ -510,7 +565,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 sequenceNumber: 12,
                                 systemTime: "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
-                                    __typename: "User",
+                                    __typename: "Account",
                                     ...mockOwnerFields,
                                 },
                                 event: {
@@ -527,7 +582,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 sequenceNumber: 12,
                                 systemTime: "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
-                                    __typename: "User",
+                                    __typename: "Account",
                                     ...mockOwnerFields,
                                 },
                                 event: {
@@ -552,7 +607,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 systemTime: "2022-08-05T21:17:30.613911358+00:00",
                                 sequenceNumber: 12,
                                 author: {
-                                    __typename: "User",
+                                    __typename: "Account",
                                     ...mockOwnerFields,
                                 },
                                 event: {
@@ -576,9 +631,10 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
             kind: DatasetKind.Root,
             name: "alberta.case-details",
             owner: {
-                __typename: "User",
+                __typename: "Account",
                 ...mockOwnerFields,
             },
+            alias: mockOwnerFields.accountName + "/alberta.case-details",
         },
     },
 };
@@ -627,6 +683,43 @@ export const mockDatasetDataSqlRunInternalErrorResponse: GetDatasetDataSqlRunQue
     },
 };
 
+export const mockCreateEmptyDatasetResponse: CreateEmptyDatasetMutation = {
+    datasets: {
+        createEmpty: {
+            __typename: "CreateDatasetResultSuccess",
+            message: "Success",
+        },
+    },
+};
+
+export const mockCreateEmptyDatasetNameCollisionResponse: CreateEmptyDatasetMutation = {
+    datasets: {
+        createEmpty: {
+            __typename: "CreateDatasetResultNameCollision",
+            message: "Dataset with name 'my-test' already exists",
+        },
+    },
+};
+
+export const mockCreateDatasetFromSnapshotResponse: CreateDatasetFromSnapshotMutation = {
+    datasets: {
+        createFromSnapshot: {
+            __typename: "CreateDatasetResultSuccess",
+            message: "Success",
+            dataset: mockDatasetBasicsDerivedFragment,
+        },
+    },
+};
+
+export const mockCreateDatasetFromSnapshotMailformedResponse: CreateDatasetFromSnapshotMutation = {
+    datasets: {
+        createFromSnapshot: {
+            __typename: "MetadataManifestMalformed",
+            message: "Some manifest format error",
+        },
+    },
+};
+
 export const mockCommitEventResponse: CommitEventToDatasetMutation = {
     datasets: {
         byId: {
@@ -643,6 +736,196 @@ export const mockCommitEventResponse: CommitEventToDatasetMutation = {
         },
     },
 };
+
+export const mockCommitEventToDatasetErrorMessage = "Fail";
+
+export const mockCommitEventToDatasetResultAppendError: CommitEventToDatasetMutation = {
+    datasets: {
+        byId: {
+            metadata: {
+                chain: {
+                    commitEvent: {
+                        __typename: "CommitResultAppendError",
+                        message: mockCommitEventToDatasetErrorMessage,
+                    },
+                    __typename: "MetadataChainMut",
+                },
+                __typename: "DatasetMetadataMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockCommitEventToDataseMetadataManifestMalformedError: CommitEventToDatasetMutation = {
+    datasets: {
+        byId: {
+            metadata: {
+                chain: {
+                    commitEvent: {
+                        __typename: "MetadataManifestMalformed",
+                        message: mockCommitEventToDatasetErrorMessage,
+                    },
+                    __typename: "MetadataChainMut",
+                },
+                __typename: "DatasetMetadataMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockCommitEventToDataseMetadataManifestUnsupportedVersionError: CommitEventToDatasetMutation = {
+    datasets: {
+        byId: {
+            metadata: {
+                chain: {
+                    commitEvent: {
+                        __typename: "MetadataManifestUnsupportedVersion",
+                        message: mockCommitEventToDatasetErrorMessage,
+                    },
+                    __typename: "MetadataChainMut",
+                },
+                __typename: "DatasetMetadataMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockCommitEventToDatasetMutation: CommitEventToDatasetMutation = {
+    datasets: {
+        byId: {
+            metadata: {
+                chain: {
+                    commitEvent: {
+                        __typename: "CommitResultSuccess",
+                        message: "Success",
+                        oldHead: "zW1cMmaF6PdmJPM6LNyy2RyyWFWkF3EojZ54ezAvT2dVgKB",
+                        newHead: "zW1eXXAXqgtfNDFt7oXpMfLfDy5Tzg3dMDLWQTz2YJE6ooX",
+                    },
+                    __typename: "MetadataChainMut",
+                },
+                __typename: "DatasetMetadataMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockUpdateReadmeSuccessResponse: UpdateReadmeMutation = {
+    datasets: {
+        byId: {
+            metadata: {
+                updateReadme: {
+                    __typename: "CommitResultSuccess",
+                    message: "Success",
+                    oldHead: "zW1oSh19bxPZqLhY9awS7cnFrmQUueZ5MF21wVf8poHDnaX",
+                },
+                __typename: "DatasetMetadataMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockUpdateReadmeErrorMessage: UpdateReadmeMutation = {
+    datasets: {
+        byId: {
+            metadata: {
+                updateReadme: {
+                    __typename: "CommitResultAppendError",
+                    message: mockCommitEventToDatasetErrorMessage,
+                },
+                __typename: "DatasetMetadataMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockDeleteSuccessResponse: DeleteDatasetMutation = {
+    datasets: {
+        byId: {
+            delete: {
+                message: "Success",
+                deletedDataset: "account.tokens.portfolio",
+                __typename: "DeleteResultSuccess",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockDeleteDanglingReferenceError: DeleteDatasetMutation = {
+    datasets: {
+        byId: {
+            delete: {
+                message: "Dataset 'account.tokens.transfers' has 1 dangling reference(s)",
+                danglingChildRefs: ["account.tokens.portfolio"],
+                notDeletedDataset: "account.tokens.transfers",
+                __typename: "DeleteResultDanglingReference",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const MOCK_OLD_DATASET_NAME = "oldName";
+export const MOCK_NEW_DATASET_NAME = "newName";
+
+export const mockRenameSuccessResponse: RenameDatasetMutation = {
+    datasets: {
+        byId: {
+            rename: {
+                __typename: "RenameResultSuccess",
+                message: "Success",
+                oldName: MOCK_OLD_DATASET_NAME,
+                newName: MOCK_NEW_DATASET_NAME,
+            },
+        },
+    },
+};
+
+export const mockRenameResultNameCollision: RenameDatasetMutation = {
+    datasets: {
+        byId: {
+            rename: {
+                __typename: "RenameResultNameCollision",
+                message: "Dataset 'account.portfolio' already exists",
+                collidingAlias: MOCK_NEW_DATASET_NAME,
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockRenameResultNoChanges: RenameDatasetMutation = {
+    datasets: {
+        byId: {
+            rename: {
+                __typename: "RenameResultNoChanges",
+                preservedName: MOCK_OLD_DATASET_NAME,
+                message: "No changes",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockDataset403OperationError: GraphQLError = new GraphQLError("Dataset operation unauthorized", {
+    extensions: { alias: "someAccount/oldName" },
+});
 
 export const mockParseEventFromYamlToObject: EditFormType = {
     kind: "setPollingSource",
@@ -680,9 +963,9 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             systemTime: "2023-06-02T08:44:28.324101693+00:00",
             sequenceNumber: 0,
             author: {
-                __typename: "User",
+                __typename: "Account",
                 id: "1",
-                name: "kamu",
+                accountName: "kamu",
             },
             event: {
                 __typename: "Seed",
@@ -697,9 +980,9 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             systemTime: "2023-06-02T08:44:28.324101693+00:00",
             sequenceNumber: 0,
             author: {
-                __typename: "User",
+                __typename: "Account",
                 id: "1",
-                name: "kamu",
+                accountName: "kamu",
             },
             event: {
                 __typename: "Seed",
@@ -714,9 +997,9 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             systemTime: "2023-06-02T08:44:54.984731027+00:00",
             sequenceNumber: 1,
             author: {
-                __typename: "User",
+                __typename: "Account",
                 id: "1",
-                name: "kamu",
+                accountName: "kamu",
             },
             event: {
                 __typename: "SetPollingSource",
@@ -765,9 +1048,9 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             systemTime: "2023-06-02T08:44:28.324101693+00:00",
             sequenceNumber: 0,
             author: {
-                __typename: "User",
+                __typename: "Account",
                 id: "1",
-                name: "kamu",
+                accountName: "kamu",
             },
             event: {
                 __typename: "Seed",
@@ -782,5 +1065,21 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
         hasPreviousPage: false,
         currentPage: 0,
         totalPages: 4,
+    },
+};
+
+export const mockNode: Node = {
+    id: "testId",
+    label: "british-columbia.case-details.hm",
+    data: {
+        kind: LineageGraphNodeKind.Dataset,
+        dataObject: {
+            id: mockDatasetBasicsDerivedFragment.id,
+            name: mockDatasetBasicsDerivedFragment.name,
+            kind: mockDatasetBasicsDerivedFragment.kind,
+            isCurrent: false,
+            access: LineageNodeAccess.PUBLIC,
+            accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
+        } as LineageGraphDatasetNodeObject,
     },
 };

@@ -1,7 +1,7 @@
 import { NavigationService } from "../../../../services/navigation.service";
 import { ChangeDetectionStrategy, Input } from "@angular/core";
 import { Component } from "@angular/core";
-import { DatasetSearchOverviewFragment, PageBasedInfo, User } from "src/app/api/kamu.graphql.interface";
+import { DatasetSearchOverviewFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "../../account.constants";
 
 @Component({
@@ -12,7 +12,6 @@ import { AccountTabs } from "../../account.constants";
 export class DatasetsTabComponent {
     @Input() public datasets: DatasetSearchOverviewFragment[];
     @Input() public accountName: string;
-    @Input() public accountViewType: AccountTabs;
     @Input() public pageInfo: PageBasedInfo;
     public currentPage = 1;
     public isClickableRow = true;
@@ -21,7 +20,7 @@ export class DatasetsTabComponent {
 
     public onSelectDataset(row: DatasetSearchOverviewFragment): void {
         this.navigationService.navigateToDatasetView({
-            accountName: (row.owner as User).name,
+            accountName: row.owner.accountName,
             datasetName: row.name,
         });
     }
@@ -29,9 +28,9 @@ export class DatasetsTabComponent {
     public onPageChange(currentPage?: number): void {
         currentPage ? (this.currentPage = currentPage) : (this.currentPage = 1);
         if (this.currentPage === 1) {
-            this.navigationService.navigateToOwnerView(this.accountName, this.accountViewType);
+            this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.DATASETS);
             return;
         }
-        this.navigationService.navigateToOwnerView(this.accountName, this.accountViewType, currentPage);
+        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.DATASETS, currentPage);
     }
 }

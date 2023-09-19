@@ -31,7 +31,9 @@
                                 >
                                 <a
                                     class="link--primary font-weight-bold"
-                                    (click)="navigateToMetadataBlock(block.author.name, datasetName, block.blockHash)"
+                                    (click)="
+                                        navigateToMetadataBlock(block.author.accountName, datasetName, block.blockHash)
+                                    "
                                     data-test-id="navigate-to-block"
                                     >{{ descriptionForMetadataBlock(block) }}
                                 </a>
@@ -56,7 +58,7 @@
                                                 src="https://avatars.githubusercontent.com/u/50896974?s=48&v=4"
                                                 width="20"
                                                 height="20"
-                                                [alt]="'@' + block.author.name"
+                                                [alt]="'@' + block.author.accountName"
                                                 class="avatar-user"
                                             />
                                         </a>
@@ -66,9 +68,9 @@
                                 <div class="f6 color-fg-muted min-width-0">
                                     <a
                                         class="commit-author user-mention"
-                                        [title]="'View all commits by ' + block.author.name"
-                                        [routerLink]="['/', block.author.name]"
-                                        >{{ block.author.name }}</a
+                                        [title]="'View all commits by ' + block.author.accountName"
+                                        [routerLink]="['/', block.author.accountName]"
+                                        >{{ block.author.accountName }}</a
                                     >
 
                                     committed
@@ -97,7 +99,7 @@
                                 <app-display-hash
                                     [value]="block.blockHash"
                                     [navigationTargetDataset]="{
-                                        accountName: block.author.name,
+                                        accountName: block.author.accountName,
                                         datasetName: this.datasetName
                                     }"
                                     [showCopyButton]="true"
@@ -146,7 +148,7 @@
             <a class="signer" (click)="navigateToOwnerView('testName')" data-test-id="navigate-to-owner-link"
                 >owner.name</a
             >
-            row.owner.name
+            row.owner.accountName
         </span>
     </div>
     <div class="signed-commit-footer p-1">

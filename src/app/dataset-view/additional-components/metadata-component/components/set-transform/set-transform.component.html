@@ -1,4 +1,4 @@
-<div class="mb-4" *ngIf="queries && datasetKind === 'DERIVATIVE'; else errorBlock">
+<div class="mb-4" *ngIf="queries">
     <div class="text-center mt-4">
         <p class="fs-4">Set Transformation</p>
         <p class="text-muted">Defines a transformation that produces data in a derivative dataset.</p>
@@ -32,6 +32,3 @@
         ></app-stepper-navigation>
     </div>
 </div>
-<ng-template #errorBlock>
-    <app-page-not-found *ngIf="datasetKind"></app-page-not-found>
-</ng-template>

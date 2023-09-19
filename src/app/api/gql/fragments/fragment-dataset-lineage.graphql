@@ -1,24 +1,27 @@
 fragment DatasetLineage on Dataset {
+  owner {
+    avatarUrl
+  }
   metadata {
-    ...currentSourceFetchUrl
+    ...CurrentSourceFetchUrl
     currentUpstreamDependencies {
-      ...DatasetBasics
+      ...DatasetLineageBasics
       metadata {
-        ...currentSourceFetchUrl
+        ...CurrentSourceFetchUrl
         currentUpstreamDependencies {
-          ...DatasetBasics
+          ...DatasetLineageBasics
           metadata {
-            ...currentSourceFetchUrl
+            ...CurrentSourceFetchUrl
             currentUpstreamDependencies {
-              ...DatasetBasics
+              ...DatasetLineageBasics
               metadata {
-                ...currentSourceFetchUrl
+                ...CurrentSourceFetchUrl
                 currentUpstreamDependencies {
-                  ...DatasetBasics
+                  ...DatasetLineageBasics
                   metadata {
-                    ...currentSourceFetchUrl
+                    ...CurrentSourceFetchUrl
                     currentUpstreamDependencies {
-                      ...DatasetBasics
+                      ...DatasetLineageBasics
                     }
                   }
                 }
@@ -29,23 +32,23 @@ fragment DatasetLineage on Dataset {
       }
     }
     currentDownstreamDependencies {
-      ...DatasetBasics
+      ...DatasetLineageBasics
       metadata {
-        ...currentSourceFetchUrl
+        ...CurrentSourceFetchUrl
         currentDownstreamDependencies {
-          ...DatasetBasics
+          ...DatasetLineageBasics
           metadata {
-            ...currentSourceFetchUrl
+            ...CurrentSourceFetchUrl
             currentDownstreamDependencies {
-              ...DatasetBasics
+              ...DatasetLineageBasics
               metadata {
-                ...currentSourceFetchUrl
+                ...CurrentSourceFetchUrl
                 currentDownstreamDependencies {
-                  ...DatasetBasics
+                  ...DatasetLineageBasics
                   metadata {
-                    ...currentSourceFetchUrl
+                    ...CurrentSourceFetchUrl
                     currentDownstreamDependencies {
-                      ...DatasetBasics
+                      ...DatasetLineageBasics
                     }
                   }
                 }
@@ -55,5 +58,15 @@ fragment DatasetLineage on Dataset {
         }
       }
     }
+  }
+}
+
+fragment DatasetLineageBasics on Dataset {
+  ...DatasetBasics
+  metadata {
+    ...CurrentSourceFetchUrl
+  }
+  owner {
+    avatarUrl
   }
 }

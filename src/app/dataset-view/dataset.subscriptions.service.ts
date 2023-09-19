@@ -8,8 +8,10 @@ import {
     MetadataSchemaUpdate,
     OverviewDataUpdate,
 } from "./dataset.subscriptions.interface";
+import { DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
+
 @Injectable({ providedIn: "root" })
-export class AppDatasetSubscriptionsService {
+export class DatasetSubscriptionsService {
     private datasetOverviewDataChanges$: Subject<OverviewDataUpdate> = new ReplaySubject<OverviewDataUpdate>(
         1 /*bufferSize*/,
     );
@@ -24,6 +26,8 @@ export class AppDatasetSubscriptionsService {
         1 /*bufferSize*/,
     );
     private lineageChanges$: Subject<LineageUpdate> = new ReplaySubject<LineageUpdate>(1 /*bufferSize*/);
+    private datasetPermissionChanges$: Subject<DatasetPermissionsFragment> =
+        new ReplaySubject<DatasetPermissionsFragment>(1 /*bufferSize*/);
 
     public changeDatasetOverviewData(data: OverviewDataUpdate): void {
         this.datasetOverviewDataChanges$.next(data);
@@ -43,6 +47,10 @@ export class AppDatasetSubscriptionsService {
 
     public observeSqlErrorOccurred(dataSqlErrorUpdate: DataSqlErrorUpdate) {
         this.datasetDataSqlErrorOccurred$.next(dataSqlErrorUpdate);
+    }
+
+    public resetSqlError(): void {
+        this.observeSqlErrorOccurred({ error: "" });
     }
 
     public get onDatasetDataSqlErrorOccurred(): Observable<DataSqlErrorUpdate> {
@@ -73,7 +81,11 @@ export class AppDatasetSubscriptionsService {
         return this.lineageChanges$.asObservable();
     }
 
-    public resetSqlError(): void {
-        this.observeSqlErrorOccurred({ error: "" });
+    public changePermissionsData(permissions: DatasetPermissionsFragment): void {
+        this.datasetPermissionChanges$.next(permissions);
+    }
+
+    public get onPermissionsDataChanges(): Observable<DatasetPermissionsFragment> {
+        return this.datasetPermissionChanges$.asObservable();
     }
 }

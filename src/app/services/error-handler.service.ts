@@ -4,18 +4,18 @@ import { ErrorHandler, Injectable, NgZone } from "@angular/core";
 import { ModalService } from "../components/modal/modal.service";
 import { logError } from "../common/app.helpers";
 import { ApolloError } from "@apollo/client/core";
-import { AuthApi } from "../api/auth.api";
+import { LoggedUserService } from "../auth/logged-user.service";
 
 @Injectable({
     providedIn: "root",
 })
 export class ErrorHandlerService implements ErrorHandler {
-    private kamuHandlerError = new KamuErrorHandler(this.navigationService, this.modalService, this.authApi);
+    private kamuHandlerError = new KamuErrorHandler(this.navigationService, this.modalService, this.loggedUserService);
 
     constructor(
         private modalService: ModalService,
         private navigationService: NavigationService,
-        private authApi: AuthApi,
+        private loggedUserService: LoggedUserService,
         private ngZone: NgZone,
     ) {}
 

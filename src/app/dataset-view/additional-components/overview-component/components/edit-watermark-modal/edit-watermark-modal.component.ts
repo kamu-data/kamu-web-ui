@@ -18,7 +18,7 @@ import { DatasetCommitService } from "../../services/dataset-commit.service";
 })
 export class EditWatermarkModalComponent extends BaseComponent implements OnInit {
     @Input() public currentWatermark: MaybeNullOrUndefined<string>;
-    @Input() public datasetBasics?: DatasetBasicsFragment;
+    @Input() public datasetBasics: DatasetBasicsFragment;
     public date: Date;
     public timeZone = this.currentTimeZone;
 
@@ -59,16 +59,14 @@ export class EditWatermarkModalComponent extends BaseComponent implements OnInit
 
     public commitSetWatermarkEvent(): void {
         const date = moment.utc(this.date).tz(this.timeZone).format();
-        if (this.datasetBasics) {
-            this.trackSubscription(
-                this.datasetCommitService
-                    .commitEventToDataset(
-                        this.datasetBasics.owner.name,
-                        this.datasetBasics.name,
-                        this.yamlEventService.buildYamlSetWatermarkEvent(date),
-                    )
-                    .subscribe(),
-            );
-        }
+        this.trackSubscription(
+            this.datasetCommitService
+                .commitEventToDataset(
+                    this.datasetBasics.owner.accountName,
+                    this.datasetBasics.name,
+                    this.yamlEventService.buildYamlSetWatermarkEvent(date),
+                )
+                .subscribe(),
+        );
     }
 }

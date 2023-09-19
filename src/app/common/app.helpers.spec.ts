@@ -1,4 +1,4 @@
-import { fakeAsync, tick } from "@angular/core/testing";
+import { fakeAsync, flush, tick } from "@angular/core/testing";
 import moment from "moment";
 import {
     capitalizeFirstLetter,
@@ -42,6 +42,7 @@ describe("AppHelpers", () => {
         tick();
 
         expect(consoleErrorSpy).toHaveBeenCalledWith(testError);
+        flush();
     }));
 
     it("should the first letter be capitalized", () => {

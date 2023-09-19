@@ -17,7 +17,7 @@ import { SupportedEvents } from "src/app/dataset-block/metadata-block/components
 
 describe("EditPollingSourceService", () => {
     let service: EditPollingSourceService;
-    let appDatasetService: DatasetService;
+    let datasetService: DatasetService;
     let blockService: BlockService;
 
     beforeEach(() => {
@@ -25,7 +25,7 @@ describe("EditPollingSourceService", () => {
             providers: [Apollo, DatasetApi, FormBuilder],
         });
         service = TestBed.inject(EditPollingSourceService);
-        appDatasetService = TestBed.inject(DatasetService);
+        datasetService = TestBed.inject(DatasetService);
         blockService = TestBed.inject(BlockService);
     });
 
@@ -42,7 +42,7 @@ describe("EditPollingSourceService", () => {
 
     it("should check subscribe of getSetPollingSourceAsYaml", () => {
         const mockHistory = mockHistoryEditPollingSourceService;
-        spyOn(appDatasetService, "getDatasetHistory").and.returnValue(of(mockHistory));
+        spyOn(datasetService, "getDatasetHistory").and.returnValue(of(mockHistory));
         spyOn(blockService, "requestMetadataBlock").and.returnValue(of());
         blockService.metadataBlockAsYamlChanges("test yaml");
         service.getEventAsYaml(mockDatasetInfo, SupportedEvents.SetPollingSource).subscribe(

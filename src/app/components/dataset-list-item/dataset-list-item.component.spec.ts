@@ -51,7 +51,7 @@ describe("DatasetListItemComponent", () => {
         emitClickOnElementByDataTestId(fixture, "button-popover-verified");
         emitClickOnElementByDataTestId(fixture, "dataset-owner-name");
 
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(component.row.owner.name);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(component.row.owner.accountName);
     });
 
     it("should check click on dataset name", () => {

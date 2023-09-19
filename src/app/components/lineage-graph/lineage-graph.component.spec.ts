@@ -1,30 +1,33 @@
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { LineageGraphComponent } from "./lineage-graph.component";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MOCK_LINKS, MOCK_NODES } from "src/app/api/mock/dataset.mock";
-import { SimpleChange } from "@angular/core";
+import { ChangeDetectionStrategy, SimpleChange } from "@angular/core";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { AccountService } from "src/app/services/account.service";
-import { of } from "rxjs";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { LineageGraphNodeData } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
+import { TEST_AVATAR_URL } from "src/app/api/mock/auth.mock";
+import _ from "lodash";
+import AppValues from "src/app/common/app.values";
 
 describe("LineageGraphComponent", () => {
     let component: LineageGraphComponent;
     let fixture: ComponentFixture<LineageGraphComponent>;
-    let accountService: AccountService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [LineageGraphComponent],
             providers: [Apollo],
             imports: [NgxGraphModule, BrowserAnimationsModule, ApolloModule, ApolloTestingModule],
-        }).compileComponents();
+        })
+            .overrideComponent(LineageGraphComponent, {
+                set: { changeDetection: ChangeDetectionStrategy.Default },
+            })
+            .compileComponents();
 
         fixture = TestBed.createComponent(LineageGraphComponent);
-        accountService = TestBed.inject(AccountService);
         component = fixture.componentInstance;
         component.view = [500, 600];
         component.links = MOCK_LINKS;
@@ -50,12 +53,27 @@ describe("LineageGraphComponent", () => {
         expect(component.graphNodes).toEqual([MOCK_NODES[0]]);
     });
 
-    it("should check render account avatar", fakeAsync(() => {
-        spyOn(accountService, "getAccountInfoByName").and.returnValue(of(mockAccountDetails));
-        tick();
+    it("should check render default account avatar", () => {
+        const label: string = MOCK_NODES[0].label ?? "bad";
+        const avatarElement = findElementByDataTestId(fixture, `account-avatar-${label}`);
+
+        expect(avatarElement).toBeDefined();
+        expect(avatarElement?.getAttribute("xlink:href")).toEqual(AppValues.DEFAULT_AVATAR_URL);
+    });
+
+    it("should check render custom account avatar", () => {
+        const node = _.cloneDeep(MOCK_NODES[0]);
+        const label: string = MOCK_NODES[0].label ?? "bad";
+
+        (node.data as LineageGraphNodeData).dataObject.avatarUrl = TEST_AVATAR_URL;
+        component.ngOnChanges({
+            nodes: new SimpleChange(MOCK_NODES, [node], false),
+        });
+
         fixture.detectChanges();
-        const node = findElementByDataTestId(fixture, `account-avatar-${MOCK_NODES[0].label}`);
-        expect(node).toBeDefined();
-        flush();
-    }));
+
+        const avatarElement = findElementByDataTestId(fixture, `account-avatar-${label}`);
+        expect(avatarElement).toBeDefined();
+        expect(avatarElement?.getAttribute("xlink:href")).toEqual(TEST_AVATAR_URL);
+    });
 });

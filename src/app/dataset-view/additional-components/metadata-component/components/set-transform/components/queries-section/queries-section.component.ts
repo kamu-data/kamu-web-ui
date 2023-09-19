@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { SqlQueryStep } from "src/app/api/kamu.graphql.interface";
 import * as monaco from "monaco-editor";
 import { ViewportScroller } from "@angular/common";
-import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
+import { SQL_EDITOR_OPTIONS } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
 
 @Component({
     selector: "app-queries-section",
@@ -12,7 +12,7 @@ import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/component
 })
 export class QueriesSectionComponent {
     @Input() public queries: Omit<SqlQueryStep, "__typename">[];
-    public readonly sqlEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions = sqlEditorOptions;
+    public readonly SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = SQL_EDITOR_OPTIONS;
 
     constructor(private scroll: ViewportScroller) {}
 

@@ -65,7 +65,7 @@ export class NavigationService {
     public navigateToOwnerView(ownerName: string, tab?: string, page?: number): void {
         promiseWithCatch(
             this.router.navigate([ownerName], {
-                queryParams: tab !== AccountTabs.overview ? { tab, page } : {},
+                queryParams: tab !== AccountTabs.OVERVIEW ? { tab, page } : {},
             }),
         );
     }

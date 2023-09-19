@@ -7,18 +7,19 @@ import AppValues from "./common/app.values";
 import { filter, map } from "rxjs/operators";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { DatasetAutocompleteItem, TypeNames } from "./interface/search.interface";
-import { AuthApi } from "./api/auth.api";
 import { ModalService } from "./components/modal/modal.service";
 import { BaseComponent } from "./common/base.component";
 import ProjectLinks from "./project-links";
-import { AccountDetailsFragment } from "./api/kamu.graphql.interface";
+import { AccountFragment, AccountType } from "./api/kamu.graphql.interface";
 import { MaybeNull } from "./common/app.types";
 import _ from "lodash";
 import { isMobileView, promiseWithCatch } from "./common/app.helpers";
+import { AppConfigService } from "./app-config.service";
+import { LoggedUserService } from "./auth/logged-user.service";
+import { AppConfigFeatureFlags, LoginMethod } from "./app-config.model";
+import { LoginService } from "./auth/login/login.service";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
-
-export const ALL_URLS_WITHOUT_ACCESS_TOKEN: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
 
 @Component({
     selector: "app-root",
@@ -26,32 +27,45 @@ export const ALL_URLS_WITHOUT_ACCESS_TOKEN: string[] = [ProjectLinks.URL_LOGIN, 
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent extends BaseComponent implements OnInit {
-    public static readonly AnonymousAccountInfo: AccountDetailsFragment = {
-        login: "",
-        name: AppValues.DEFAULT_USERNAME,
+    public static readonly ANONYMOUS_ACCOUNT_INFO: AccountFragment = {
+        id: "",
+        accountName: "",
+        displayName: AppValues.DEFAULT_USER_DISPLAY_NAME,
+        accountType: AccountType.User,
+    };
+    public static readonly DEFAULT_FEATURE_FLAGS: AppConfigFeatureFlags = {
+        enableLogout: true,
     };
 
-    public appLogo = `/${AppValues.APP_LOGO}`;
+    public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
+
     public isMobileView = false;
     public isHeaderVisible = true;
-    public user: AccountDetailsFragment = AppComponent.AnonymousAccountInfo;
+
+    public featureFlags: AppConfigFeatureFlags = AppComponent.DEFAULT_FEATURE_FLAGS;
+    public loggedAccount: AccountFragment = AppComponent.ANONYMOUS_ACCOUNT_INFO;
+    public loginMethods: LoginMethod[] = [];
 
     @HostListener("window:resize")
-    checkWindowSize(): void {
+    public checkWindowSize(): void {
         this.checkView();
     }
 
     constructor(
         private router: Router,
-        private authApi: AuthApi,
+        private loginService: LoginService,
+        private loggedUserService: LoggedUserService,
         private modalService: ModalService,
         private navigationService: NavigationService,
+        private appConfigService: AppConfigService,
     ) {
         super();
     }
 
     public ngOnInit(): void {
+        this.readConfiguration();
         this.checkView();
+
         this.trackSubscriptions(
             this.router.events
                 .pipe(
@@ -62,23 +76,15 @@ export class AppComponent extends BaseComponent implements OnInit {
                     this.isHeaderVisible = this.shouldHeaderBeVisible(event.url);
                 }),
 
-            this.authApi.onUserChanges.subscribe((user: MaybeNull<AccountDetailsFragment>) => {
-                this.user = user ? _.cloneDeep(user) : AppComponent.AnonymousAccountInfo;
+            this.loggedUserService.onLoggedInUserChanges.subscribe((user: MaybeNull<AccountFragment>) => {
+                this.loggedAccount = user ? _.cloneDeep(user) : AppComponent.ANONYMOUS_ACCOUNT_INFO;
             }),
         );
-        this.authentification();
     }
 
-    authentification(): void {
-        if (ALL_URLS_WITHOUT_ACCESS_TOKEN.includes(this.router.url)) {
-            return;
-        } else {
-            const accessToken: string | null = localStorage.getItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
-            if (typeof accessToken === "string" && !this.authApi.isAuthenticated) {
-                this.trackSubscription(this.authApi.fetchUserInfoFromAccessToken(accessToken).subscribe());
-                return;
-            }
-        }
+    private readConfiguration(): void {
+        this.featureFlags = this.appConfigService.featureFlags;
+        this.loginMethods = this.loginService.loginMethods;
     }
 
     private checkView(): void {
@@ -89,17 +95,18 @@ export class AppComponent extends BaseComponent implements OnInit {
         return !ALL_URLS_WITHOUT_HEADER.some((item) => url.toLowerCase().includes(item));
     }
 
-    public onSelectDataset(item: DatasetAutocompleteItem): void {
+    public onSelectedDataset(item: DatasetAutocompleteItem): void {
         if (item.__typename === TypeNames.datasetType) {
             this.navigationService.navigateToDatasetView({
-                accountName: item.dataset.owner.name,
+                accountName: item.dataset.owner.accountName,
                 datasetName: item.dataset.name,
             });
         } else {
             this.navigationService.navigateToSearch(item.dataset.id);
         }
     }
-    public onClickAppLogo(): void {
+
+    public onAppLogo(): void {
         this.navigationService.navigateToSearch();
     }
 
@@ -115,23 +122,29 @@ export class AppComponent extends BaseComponent implements OnInit {
         this.navigationService.navigateToLogin();
     }
 
-    public onLogOut(): void {
-        this.authApi.logOut();
+    public onLogout(): void {
+        this.loggedUserService.logout();
     }
 
     public onUserProfile(): void {
-        if (this.authApi.currentUser?.login) {
-            this.navigationService.navigateToOwnerView(this.authApi.currentUser.login, AccountTabs.overview);
+        if (this.loggedUserService.currentlyLoggedInUser?.accountName) {
+            this.navigationService.navigateToOwnerView(
+                this.loggedUserService.currentlyLoggedInUser.accountName,
+                AccountTabs.OVERVIEW,
+            );
         } else {
-            throwError(new AuthenticationError([new Error("Login is undefined")]));
+            throwError(() => new AuthenticationError([new Error("Login is undefined")]));
         }
     }
 
     public onUserDatasets(): void {
-        if (this.authApi.currentUser?.login) {
-            this.navigationService.navigateToOwnerView(this.authApi.currentUser.login, AccountTabs.datasets);
+        if (this.loggedUserService.currentlyLoggedInUser?.accountName) {
+            this.navigationService.navigateToOwnerView(
+                this.loggedUserService.currentlyLoggedInUser.accountName,
+                AccountTabs.DATASETS,
+            );
         } else {
-            throwError(new AuthenticationError([new Error("Login is undefined")]));
+            throwError(() => new AuthenticationError([new Error("Login is undefined")]));
         }
     }
 
@@ -154,10 +167,10 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onSettings(): void {
-        if (this.authApi.currentUser?.login) {
+        if (this.loggedUserService.currentlyLoggedInUser?.accountName) {
             this.navigationService.navigateToSettings();
         } else {
-            throwError(new AuthenticationError([new Error("Login is undefined")]));
+            throwError(() => new AuthenticationError([new Error("Login is undefined")]));
         }
     }
 

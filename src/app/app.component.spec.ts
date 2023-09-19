@@ -6,8 +6,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatMenuModule } from "@angular/material/menu";
 import { RouterTestingModule } from "@angular/router/testing";
 import { SearchApi } from "./api/search.api";
-import { ALL_URLS_WITHOUT_ACCESS_TOKEN, ALL_URLS_WITHOUT_HEADER, AppComponent } from "./app.component";
-import AppValues from "./common/app.values";
+import { ALL_URLS_WITHOUT_HEADER, AppComponent } from "./app.component";
 import { isMobileView } from "./common/app.helpers";
 import { SearchService } from "./search/search.service";
 import { NavigationService } from "./services/navigation.service";
@@ -19,17 +18,19 @@ import { of } from "rxjs";
 import ProjectLinks from "./project-links";
 import { routerMock, routerMockEventSubject } from "./common/base-test.helpers.spec";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { mockAccountDetails, mockUserInfoFromAccessToken } from "./api/mock/auth.mock";
-import { FetchAccountInfoGQL } from "./api/kamu.graphql.interface";
+import { mockAccountDetails, mockAccountFromAccessToken } from "./api/mock/auth.mock";
+import { FetchAccountDetailsGQL } from "./api/kamu.graphql.interface";
 import { AppHeaderComponent } from "./components/app-header/app-header.component";
 import { SpinnerComponent } from "./components/spinner/spinner/spinner.component";
+import { LoggedUserService } from "./auth/logged-user.service";
 
 describe("AppComponent", () => {
     let component: AppComponent;
     let fixture: ComponentFixture<AppComponent>;
     let navigationService: NavigationService;
     let authApi: AuthApi;
-    let fetchAccountInfoGQL: FetchAccountInfoGQL;
+    let loggedUserService: LoggedUserService;
+    let fetchAccountDetailsGQL: FetchAccountDetailsGQL;
     const DEFAULT_SEARCH_QUERY = "defaultSearchQuery";
 
     beforeEach(async () => {
@@ -53,10 +54,13 @@ describe("AppComponent", () => {
         }).compileComponents();
 
         routerMock.url = ProjectLinks.URL_HOME;
+
         fixture = TestBed.createComponent(AppComponent);
         navigationService = TestBed.inject(NavigationService);
         authApi = TestBed.inject(AuthApi);
-        fetchAccountInfoGQL = TestBed.inject(FetchAccountInfoGQL);
+        loggedUserService = TestBed.inject(LoggedUserService);
+        fetchAccountDetailsGQL = TestBed.inject(FetchAccountDetailsGQL);
+
         component = fixture.componentInstance;
         routerMockEventSubject.next(new NavigationEnd(1, ProjectLinks.URL_LOGIN, ""));
         fixture.detectChanges();
@@ -66,43 +70,6 @@ describe("AppComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    ProjectLinks.ALL_URLS.filter((url) => !ALL_URLS_WITHOUT_ACCESS_TOKEN.includes(url)).forEach((url: string) => {
-        it(`should call authentification method in onInit for ${url} and trigger token restore`, () => {
-            const someToken = "someToken";
-            const authentificationSpy = spyOn(component, "authentification").and.callThrough();
-            const localStorageGetItemSpy = spyOn(localStorage, "getItem").and.returnValue(someToken);
-            const fetchUserInfoFromAccessTokenSpy = spyOn(authApi, "fetchUserInfoFromAccessToken").and.callFake(() =>
-                of(),
-            );
-            const isAuthenticatedSpy = spyOnProperty(authApi, "isAuthenticated", "get").and.returnValue(false);
-
-            routerMock.url = url;
-            component.ngOnInit();
-
-            expect(authentificationSpy).toHaveBeenCalledWith();
-            expect(localStorageGetItemSpy).toHaveBeenCalledWith(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
-            expect(fetchUserInfoFromAccessTokenSpy).toHaveBeenCalledWith(someToken);
-            expect(isAuthenticatedSpy).toHaveBeenCalledWith();
-        });
-    });
-
-    ALL_URLS_WITHOUT_ACCESS_TOKEN.forEach((url: string) => {
-        it(`should call authentification method in onInit on ${url} without token restore`, () => {
-            const authentificationSpy = spyOn(component, "authentification").and.callThrough();
-            const localStorageGetItemSpy = spyOn(localStorage, "getItem").and.stub();
-            const fetchUserInfoFromAccessTokenSpy = spyOn(authApi, "fetchUserInfoFromAccessToken").and.stub();
-            const isAuthenticatedSpy = spyOnProperty(authApi, "isAuthenticated", "get").and.stub();
-
-            routerMock.url = url;
-            component.ngOnInit();
-
-            expect(authentificationSpy).toHaveBeenCalledWith();
-            expect(localStorageGetItemSpy).not.toHaveBeenCalled();
-            expect(fetchUserInfoFromAccessTokenSpy).not.toHaveBeenCalled();
-            expect(isAuthenticatedSpy).not.toHaveBeenCalled();
-        });
-    });
-
     it("should check call checkWindowSize method", () => {
         const checkWindowSizeSpy = spyOn(component, "checkWindowSize").and.callThrough();
         window.dispatchEvent(new Event("resize"));
@@ -110,9 +77,9 @@ describe("AppComponent", () => {
         expect(component.isMobileView).toEqual(isMobileView());
     });
 
-    it("should check call onClickAppLogo method", () => {
+    it("should check call onAppLogo method", () => {
         const navigateToSearchSpy = spyOn(navigationService, "navigateToSearch").and.returnValue();
-        component.onClickAppLogo();
+        component.onAppLogo();
         expect(navigateToSearchSpy).toHaveBeenCalledWith();
     });
 
@@ -122,10 +89,10 @@ describe("AppComponent", () => {
         expect(navigateToDatasetCreateSpy).toHaveBeenCalledWith();
     });
 
-    it("should check call onLogOut method", () => {
-        const logOutSpy = spyOn(authApi, "logOut").and.returnValue();
-        component.onLogOut();
-        expect(logOutSpy).toHaveBeenCalledWith();
+    it("should check call onLogout method", () => {
+        const logoutSpy = spyOn(loggedUserService, "logout").and.returnValue();
+        component.onLogout();
+        expect(logoutSpy).toHaveBeenCalledWith();
     });
 
     it("should check call onLogin method", () => {
@@ -136,25 +103,27 @@ describe("AppComponent", () => {
 
     it("should check call onSelectDataset method and navigate to dataset", () => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.returnValue();
-        component.onSelectDataset(mockAutocompleteItems[0]);
+        component.onSelectedDataset(mockAutocompleteItems[0]);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
-            accountName: mockAutocompleteItems[0].dataset.owner.name,
+            accountName: mockAutocompleteItems[0].dataset.owner.accountName,
             datasetName: mockAutocompleteItems[0].dataset.name,
         });
     });
 
     it("should check call onSelectDataset method and navigate to search", () => {
         const navigateToSearchSpy = spyOn(navigationService, "navigateToSearch").and.returnValue();
-        component.onSelectDataset(mockAutocompleteItems[1]);
+        component.onSelectedDataset(mockAutocompleteItems[1]);
         expect(navigateToSearchSpy).toHaveBeenCalledWith(mockAutocompleteItems[1].dataset.id);
     });
 
     it("should check call onUserProfile", () => {
         const navigationServicelSpy = spyOn(navigationService, "navigateToOwnerView").and.returnValue();
-        const currentUserSpy = spyOnProperty(authApi, "currentUser", "get").and.returnValue(mockAccountDetails);
+        const currentUserSpy = spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(
+            mockAccountDetails,
+        );
         component.onUserProfile();
         expect(currentUserSpy).toHaveBeenCalledWith();
-        expect(navigationServicelSpy).toHaveBeenCalledWith(mockAccountDetails.login, AccountTabs.overview);
+        expect(navigationServicelSpy).toHaveBeenCalledWith(mockAccountDetails.accountName, AccountTabs.OVERVIEW);
     });
 
     ALL_URLS_WITHOUT_HEADER.forEach((url: string) => {
@@ -174,17 +143,17 @@ describe("AppComponent", () => {
     });
 
     it("should react on login/logout changes", () => {
-        spyOn(fetchAccountInfoGQL, "mutate").and.returnValue(
+        spyOn(fetchAccountDetailsGQL, "mutate").and.returnValue(
             of({
                 loading: false,
-                data: mockUserInfoFromAccessToken,
+                data: mockAccountFromAccessToken,
             }),
         );
-        authApi.fetchUserInfoFromAccessToken("someToken").subscribe();
+        authApi.fetchAccountFromAccessToken("someToken").subscribe();
 
-        expect(component.user).toEqual(mockUserInfoFromAccessToken.auth.accountInfo);
+        expect(component.loggedAccount).toEqual(mockAccountFromAccessToken.auth.accountDetails);
 
-        authApi.terminateSession();
-        expect(component.user).toEqual(AppComponent.AnonymousAccountInfo);
+        loggedUserService.terminateSession();
+        expect(component.loggedAccount).toEqual(AppComponent.ANONYMOUS_ACCOUNT_INFO);
     });
 });

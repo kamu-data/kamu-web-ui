@@ -1,7 +1,0 @@
-fragment AccountDetails on AccountInfo {
-  login
-  name
-  email
-  avatarUrl
-  gravatarId
-}

@@ -1,6 +1,12 @@
-import { mockDatasetBasicsFragment, mockDatasetInfo, mockNode } from "../search/mock.data";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockDatasetInfo,
+    mockFullPowerDatasetPermissionsFragment,
+    mockNode,
+    mockReadonlyDatasetPermissionsFragment,
+} from "../search/mock.data";
 import { DatasetService } from "./dataset.service";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Apollo, ApolloModule } from "apollo-angular";
@@ -14,22 +20,33 @@ import { routerMock, routerMockEventSubject } from "../common/base-test.helpers.
 import { OverviewComponent } from "./additional-components/overview-component/overview.component";
 import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu.component";
 import { MatMenuModule } from "@angular/material/menu";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { DatasetViewHeaderComponent } from "./dataset-view-header/dataset-view-header.component";
 import { SearchAdditionalButtonsComponent } from "../components/search-additional-buttons/search-additional-buttons.component";
 import { MatTabsModule } from "@angular/material/tabs";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { SearchAdditionalButtonsNavComponent } from "../components/search-additional-buttons/search-additional-buttons-nav.component";
-import { AngularSvgIconModule } from "angular-svg-icon";
+import { AngularSvgIconModule, SvgIconRegistryService } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatIconModule } from "@angular/material/icon";
 import AppValues from "../common/app.values";
+import { LineageGraphNodeData } from "./additional-components/lineage-component/lineage-model";
+import { ChangeDetectionStrategy } from "@angular/core";
+import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
+
+import { DatasetSettingsComponent } from "./additional-components/dataset-settings-component/dataset-settings.component";
+import { MatDividerModule } from "@angular/material/divider";
+import { DataComponent } from "./additional-components/data-component/data.component";
+import { MetadataComponent } from "./additional-components/metadata-component/metadata.component";
+import { HistoryComponent } from "./additional-components/history-component/history.component";
+import { LineageComponent } from "./additional-components/lineage-component/lineage.component";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
     let fixture: ComponentFixture<DatasetComponent>;
-    let appDatasetService: DatasetService;
+    let datasetService: DatasetService;
+    let datasetSubsServices: DatasetSubscriptionsService;
     let navigationService: NavigationService;
     let route: ActivatedRoute;
 
@@ -38,23 +55,30 @@ describe("DatasetComponent", () => {
             declarations: [
                 DatasetComponent,
                 OverviewComponent,
+                DataComponent,
+                MetadataComponent,
+                HistoryComponent,
+                LineageComponent,
+                DatasetSettingsComponent,
                 DatasetViewMenuComponent,
                 DatasetViewHeaderComponent,
                 SearchAdditionalButtonsComponent,
                 SearchAdditionalButtonsNavComponent,
             ],
             imports: [
+                AngularSvgIconModule.forRoot(),
                 ApolloModule,
                 ApolloTestingModule,
-                RouterTestingModule,
+                BrowserAnimationsModule,
+                HttpClientTestingModule,
+                MatDividerModule,
+                MatIconModule,
                 MatMenuModule,
+                MatTabsModule,
                 MatButtonToggleModule,
                 FormsModule,
-                MatTabsModule,
-                BrowserAnimationsModule,
-                AngularSvgIconModule.forRoot(),
-                HttpClientTestingModule,
-                MatIconModule,
+                ReactiveFormsModule,
+                RouterTestingModule,
             ],
             providers: [
                 DatasetApi,
@@ -91,20 +115,47 @@ describe("DatasetComponent", () => {
                     },
                 },
             ],
-        }).compileComponents();
+        })
+            .overrideComponent(DatasetComponent, {
+                set: { changeDetection: ChangeDetectionStrategy.Default },
+            })
+            .compileComponents();
+
+        // Note: for some reason this icon is not loaded when activating Settings tab, so stub it
+        const iconRegistryService: SvgIconRegistryService = TestBed.inject(SvgIconRegistryService);
+        iconRegistryService.addSvg("account", "");
+
+        datasetSubsServices = TestBed.inject(DatasetSubscriptionsService);
+        datasetSubsServices.changePermissionsData(mockFullPowerDatasetPermissionsFragment);
+
+        datasetService = TestBed.inject(DatasetService);
+        spyOnProperty(datasetService, "onDatasetChanges", "get").and.returnValue(of(mockDatasetBasicsDerivedFragment));
 
         fixture = TestBed.createComponent(DatasetComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsFragment;
-        appDatasetService = TestBed.inject(DatasetService);
+        fixture.detectChanges();
+
         route = TestBed.inject(ActivatedRoute);
         navigationService = TestBed.inject(NavigationService);
-        fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
     });
+
+    function routeToTab(tabAsString: string): void {
+        const spyRoute = spyOn(route.snapshot.queryParamMap, "get");
+        spyRoute.and.callFake((queryParam: "tab" | "page") => {
+            switch (queryParam) {
+                case "tab": {
+                    return tabAsString;
+                }
+                case "page": {
+                    return null;
+                }
+            }
+        });
+    }
 
     [
         DatasetViewTypeEnum.Overview,
@@ -113,24 +164,32 @@ describe("DatasetComponent", () => {
         DatasetViewTypeEnum.History,
         DatasetViewTypeEnum.Lineage,
         DatasetViewTypeEnum.Discussions,
-    ].forEach((tab: string) => {
+        DatasetViewTypeEnum.Settings,
+    ].forEach((tab: DatasetViewTypeEnum) => {
         it(`should check init ${tab} tab`, () => {
-            const spyRoute = spyOn(route.snapshot.queryParamMap, "get");
-            spyRoute.and.callFake((queryParam: "tab" | "page") => {
-                switch (queryParam) {
-                    case "tab": {
-                        return tab;
-                    }
-                    case "page": {
-                        return null;
-                    }
-                }
-            });
-            appDatasetService.datasetChanges(mockDatasetBasicsFragment);
+            routeToTab(tab);
             component.ngOnInit();
+            fixture.detectChanges();
 
-            expect(component.datasetBasics).toBe(mockDatasetBasicsFragment);
+            expect(component.datasetViewType).toEqual(tab);
         });
+    });
+
+    it("attempt navigating to non-existing tab lands on overview", () => {
+        routeToTab("wrong");
+        component.ngOnInit();
+        fixture.detectChanges();
+
+        expect(component.datasetViewType).toEqual(DatasetViewTypeEnum.Overview);
+    });
+
+    it("attempt navigating to settings without necessary permissions lands on overview", () => {
+        datasetSubsServices.changePermissionsData(mockReadonlyDatasetPermissionsFragment);
+        routeToTab(DatasetViewTypeEnum.Settings);
+        component.ngOnInit();
+        fixture.detectChanges();
+
+        expect(component.datasetViewType).toEqual(DatasetViewTypeEnum.Overview);
     });
 
     it("should check call getMainDataByLineageNode", () => {
@@ -139,6 +198,20 @@ describe("DatasetComponent", () => {
         expect(getMainDataByLineageNodeSpy).toHaveBeenCalledTimes(1);
     });
 
+    it("init lineage tab and wait for repositioning", fakeAsync(() => {
+        routeToTab(DatasetViewTypeEnum.Lineage);
+        component.ngOnInit();
+        fixture.detectChanges();
+
+        tick();
+
+        // TODO: horizontal logic is a bit more complicated, but needs to be tested too
+        // For now check only vertical logic
+        expect(component.lineageGraphView[1]).toEqual(DatasetComponent.LINEAGE_VIEW_VERTICAL_POSITION);
+
+        flush();
+    }));
+
     it("should check run SQL request", () => {
         const params = {
             query: "select * from test.table",
@@ -146,7 +219,7 @@ describe("DatasetComponent", () => {
             limit: AppValues.SQL_QUERY_LIMIT,
         };
 
-        const requestDatasetDataSqlRunSpy = spyOn(appDatasetService, "requestDatasetDataSqlRun").and.returnValue(of());
+        const requestDatasetDataSqlRunSpy = spyOn(datasetService, "requestDatasetDataSqlRun").and.returnValue(of());
         component.onRunSQLRequest(params);
         expect(requestDatasetDataSqlRunSpy).toHaveBeenCalledWith(params);
     });
@@ -158,21 +231,23 @@ describe("DatasetComponent", () => {
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(jasmine.objectContaining({ page: testPageNumber }));
     });
 
-    it("should check #selectDataset with dataset name()", () => {
+    it("should check #selectDataset with account and dataset name", () => {
+        const testAccountName = "john";
         const testDatasetName = "alberta.tcc";
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
-        component.onSelectDataset(testDatasetName);
+        component.onSelectDataset(testAccountName, testDatasetName);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({ datasetName: testDatasetName }),
+            jasmine.objectContaining({ accountName: testAccountName, datasetName: testDatasetName }),
         );
     });
 
-    it("should check #selectDataset without dataset name()", () => {
+    it("should check #selectDataset without names", () => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.onSelectDataset();
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
-                datasetName: mockDatasetBasicsFragment.name,
+                accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
+                datasetName: mockDatasetBasicsDerivedFragment.name,
             }),
         );
     });
@@ -180,13 +255,12 @@ describe("DatasetComponent", () => {
     it("should check click on lineage node ", () => {
         const selectDatasetSpy = spyOn(component, "onSelectDataset");
         component.onClickLineageNode(mockNode);
-        expect(selectDatasetSpy).toHaveBeenCalledWith(mockNode.label);
-    });
 
-    it("should check click on metadata node ", () => {
-        const selectDatasetSpy = spyOn(component, "onSelectDataset");
-        component.onClickMetadataNode(mockDatasetBasicsFragment);
-        expect(selectDatasetSpy).toHaveBeenCalledWith(mockDatasetBasicsFragment.name);
+        const mockNodeData: LineageGraphNodeData = mockNode.data as LineageGraphNodeData;
+        expect(selectDatasetSpy).toHaveBeenCalledWith(
+            mockNodeData.dataObject.accountName,
+            mockNodeData.dataObject.name,
+        );
     });
 
     it("should check navigate to overview tab", () => {
@@ -228,9 +302,15 @@ describe("DatasetComponent", () => {
         expect(selectDatasetSpy).not.toHaveBeenCalled(); // TODO: implement discussions
     });
 
+    it("should check navigate to settings tab", () => {
+        const selectDatasetSpy = spyOn(navigationService, "navigateToDatasetView");
+        component.getDatasetNavigation(mockDatasetInfo).navigateToSettings();
+        expect(selectDatasetSpy).toHaveBeenCalledWith(jasmine.objectContaining({ tab: DatasetViewTypeEnum.Settings }));
+    });
+
     it("should check navigate to owner view", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        component.showOwnerPage(mockDatasetBasicsFragment.owner.name);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(mockDatasetBasicsFragment.owner.name);
+        component.showOwnerPage(mockDatasetBasicsDerivedFragment.owner.accountName);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(mockDatasetBasicsDerivedFragment.owner.accountName);
     });
 });

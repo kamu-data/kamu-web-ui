@@ -1,9 +1,9 @@
-<div class="pt-4 container-xl p-responsive clearfix">
+<div class="pt-4 container-xl p-responsive clearfix" *ngIf="user$ | async as user">
     <div class="d-md-flex align-items-center justify-content-between mt-1 mb-4">
         <div class="d-flex align-items-center mb-2 mb-md-0">
             <img
-                [src]="user.avatarUrl"
-                [alt]="'@' + user.login"
+                [src]="user.avatarUrl ?? DEFAULT_AVATAR_URL"
+                [alt]="'@' + user.accountName"
                 size="48"
                 height="48"
                 width="48"
@@ -12,8 +12,12 @@
             />
             <div class="flex-auto mx-4 mt-3">
                 <div class="h3-custom lh-condensed">
-                    <a [routerLink]="['/', user.login]" class="color-fg-default fw-bold-custom fs-5">
-                        {{ user.login }}
+                    <a
+                        [routerLink]="['/', user.accountName]"
+                        class="color-fg-default fw-bold-custom fs-5"
+                        data-test-id="user-name-link"
+                    >
+                        {{ user.displayName }}
                     </a>
                     <span class="sr-only">settings</span>
                 </div>
@@ -35,13 +39,13 @@
                                 data-item-id="settings_user_profile"
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === settingsTabs.PROFILE
+                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.PROFILE
                                 }"
                                 class="action-list-item"
                             >
                                 <a
                                     routerLinkActive="active"
-                                    [routerLink]="getRouteLink(settingsTabs.PROFILE)"
+                                    [routerLink]="getRouteLink(AccountSettingsTabs.PROFILE)"
                                     aria-current="page"
                                     data-view-component="true"
                                     class="action-list-content"
@@ -58,13 +62,13 @@
                                 data-item-id=""
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === settingsTabs.ACCOUNT
+                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.ACCOUNT
                                 }"
                                 class="action-list-item"
                             >
                                 <a
                                     routerLinkActive="active"
-                                    [routerLink]="getRouteLink(settingsTabs.ACCOUNT)"
+                                    [routerLink]="getRouteLink(AccountSettingsTabs.ACCOUNT)"
                                     data-view-component="true"
                                     class="action-list-content"
                                 >
@@ -80,13 +84,13 @@
                                 data-item-id=""
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === settingsTabs.APPEARANCE
+                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.APPEARANCE
                                 }"
                                 class="action-list-item"
                             >
                                 <a
                                     routerLinkActive="active"
-                                    [routerLink]="getRouteLink(settingsTabs.APPEARANCE)"
+                                    [routerLink]="getRouteLink(AccountSettingsTabs.APPEARANCE)"
                                     data-view-component="true"
                                     class="action-list-content"
                                 >
@@ -102,13 +106,13 @@
                                 data-item-id=""
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === settingsTabs.ACCESSIBILITY
+                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.ACCESSIBILITY
                                 }"
                                 class="action-list-item"
                             >
                                 <a
                                     routerLinkActive="active"
-                                    [routerLink]="getRouteLink(settingsTabs.ACCESSIBILITY)"
+                                    [routerLink]="getRouteLink(AccountSettingsTabs.ACCESSIBILITY)"
                                     data-view-component="true"
                                     class="action-list-content"
                                 >
@@ -124,13 +128,13 @@
                                 data-item-id=""
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === settingsTabs.NOTIFICATIONS
+                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.NOTIFICATIONS
                                 }"
                                 class="action-list-item"
                             >
                                 <a
                                     routerLinkActive="active"
-                                    [routerLink]="getRouteLink(settingsTabs.NOTIFICATIONS)"
+                                    [routerLink]="getRouteLink(AccountSettingsTabs.NOTIFICATIONS)"
                                     data-view-component="true"
                                     class="action-list-content"
                                 >
@@ -168,12 +172,12 @@
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{
-                                            'action-list-item--nav__active': activeTab === settingsTabs.BILLING
+                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.BILLING
                                         }"
                                     >
                                         <a
                                             routerLinkActive="active"
-                                            [routerLink]="getRouteLink(settingsTabs.BILLING)"
+                                            [routerLink]="getRouteLink(AccountSettingsTabs.BILLING)"
                                             data-view-component="true"
                                             class="action-list-content"
                                         >
@@ -190,12 +194,12 @@
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{
-                                            'action-list-item--nav__active': activeTab === settingsTabs.EMAILS
+                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.EMAILS
                                         }"
                                     >
                                         <a
                                             routerLinkActive="active"
-                                            [routerLink]="getRouteLink(settingsTabs.EMAILS)"
+                                            [routerLink]="getRouteLink(AccountSettingsTabs.EMAILS)"
                                             data-view-component="true"
                                             class="action-list-content"
                                         >
@@ -212,12 +216,12 @@
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{
-                                            'action-list-item--nav__active': activeTab === settingsTabs.SECURITY
+                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.SECURITY
                                         }"
                                     >
                                         <a
                                             routerLinkActive="active"
-                                            [routerLink]="getRouteLink(settingsTabs.SECURITY)"
+                                            [routerLink]="getRouteLink(AccountSettingsTabs.SECURITY)"
                                             data-view-component="true"
                                             class="action-list-content"
                                         >
@@ -234,12 +238,13 @@
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{
-                                            'action-list-item--nav__active': activeTab === settingsTabs.ORGANIZATIONS
+                                            'action-list-item--nav__active':
+                                                activeTab === AccountSettingsTabs.ORGANIZATIONS
                                         }"
                                     >
                                         <a
                                             routerLinkActive="active"
-                                            [routerLink]="getRouteLink(settingsTabs.ORGANIZATIONS)"
+                                            [routerLink]="getRouteLink(AccountSettingsTabs.ORGANIZATIONS)"
                                             data-view-component="true"
                                             class="action-list-content"
                                         >

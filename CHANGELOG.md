@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.0] - 2023-09-18
+### Added
+- Implemented authentication and authorization components:
+  - runtime configuration allows disabling logout and setting predefined login instructions
+  - dynamic endpoint to find out on available login methods on the API server
+  - supporting Github and login/password login methods
+  - GraphQL: added Authorization Bearer header
+  - added routing guards related to authentication
+  - Settings tab is hidden if no permissions
+  - edits on Overview and Metadata tabs are disabled if missing permissions
+  - metadata event editors navigate home if missing permissions
+  - lineage graph nodes properly navigate over account boundaries
+  - data tab contains account name prefix in SQL queries
+- Implemented account resolution by name via API:
+  - profile page working normally without account mocks
+  - lineage graph shows user avatars (dataset owners)
+- Showing dataset owners in search autocompletes
+- Clipboard command line comands now include real dataset alias.
+### Changed:
+- Cleanup of heade menu content (depending on whether user is logged in or not)
+- Signifficant extension of unit test coverage
+- Specialized dataset fragment for Lineage - extracts avatarUrl additionally from the account
+- Query for account datasets only when it's necessary
+- Reworked error handling in dataset operations
+
 ## [0.9.0] - 2023-09-18
 ### Added
 - Deleting and renaming a dataset on Settings tab

@@ -3,7 +3,7 @@ fragment DatasetBasics on Dataset {
   kind
   name
   owner {
-    id
-    name
+    ...AccountBasics
   }
+  alias
 }

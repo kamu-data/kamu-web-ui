@@ -5,6 +5,6 @@ export const extractSchemaFieldsFromData = (data: DataRow): DataSchemaField[] =>
         name: item,
         repetition: "",
         type: "",
-        logical_type: "",
+        logicalType: "",
     }));
 };

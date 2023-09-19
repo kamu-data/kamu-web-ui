@@ -4,13 +4,14 @@ import { FormsModule } from "@angular/forms";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { MatMenuModule } from "@angular/material/menu";
 import { DatasetViewMenuComponent } from "./dataset-view-menu.component";
-import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatIconModule } from "@angular/material/icon";
+import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
 describe("DatasetViewMenuComponent", () => {
     let component: DatasetViewMenuComponent;
@@ -43,8 +44,10 @@ describe("DatasetViewMenuComponent", () => {
 
         fixture = TestBed.createComponent(DatasetViewMenuComponent);
         component = fixture.componentInstance;
+        component.datasetBasics = mockDatasetBasicsDerivedFragment;
         component.datasetNavigation = mockNavigationObject;
-        component.ngOnInit();
+        component.datasetPermissions = mockFullPowerDatasetPermissionsFragment;
+
         fixture.detectChanges();
     });
 
@@ -71,10 +74,10 @@ describe("DatasetViewMenuComponent", () => {
     it("should copy to clipboard", fakeAsync(() => {
         emitClickOnElementByDataTestId(fixture, "searchAdditionalButtons");
 
-        const menu = findElementByDataTestId(fixture, "menu");
+        const menu = getElementByDataTestId(fixture, "menu");
         expect(menu).toBeDefined();
 
-        const copyToClipboardButton = findElementByDataTestId(fixture, "copyToClipboard");
+        const copyToClipboardButton = getElementByDataTestId(fixture, "copyToClipboard");
         emitClickOnElementByDataTestId(fixture, "copyToClipboard");
         expect(copyToClipboardButton.classList.contains("clipboard-btn--success")).toEqual(true);
 

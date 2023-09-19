@@ -3,8 +3,11 @@ import {
     DataQueryResultErrorKind,
     DataQueryResultSuccessViewFragment,
     DatasetByIdQuery,
+    DatasetLineageBasicsFragment,
     DatasetLineageFragment,
     DatasetPageInfoFragment,
+    DatasetPermissionsFragment,
+    GetDatasetBasicsWithPermissionsQuery,
     GetDatasetSchemaQuery,
     SetVocab,
 } from "../api/kamu.graphql.interface";
@@ -22,10 +25,9 @@ import {
     GetDatasetMainDataQuery,
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
-import { AppDatasetSubscriptionsService } from "./dataset.subscriptions.service";
+import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import {
     DatasetHistoryUpdate,
-    DatasetLineageBasics,
     DataUpdate,
     MetadataSchemaUpdate,
     OverviewDataUpdate,
@@ -38,7 +40,7 @@ import { parseCurrentSchema } from "../common/app.helpers";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {
-    constructor(private datasetApi: DatasetApi, private appDatasetSubsService: AppDatasetSubscriptionsService) {}
+    constructor(private datasetApi: DatasetApi, private datasetSubsService: DatasetSubscriptionsService) {}
 
     private currentSetVocab: SetVocab;
 
@@ -48,8 +50,8 @@ export class DatasetService {
         return this.datasetChanges$.asObservable();
     }
 
-    public datasetChanges(searchDatasetInfo: DatasetBasicsFragment): void {
-        this.datasetChanges$.next(searchDatasetInfo);
+    public datasetChanges(datasetInfo: DatasetBasicsFragment): void {
+        this.datasetChanges$.next(datasetInfo);
     }
 
     public requestDatasetMainData(info: DatasetInfo): Observable<void> {
@@ -68,6 +70,7 @@ export class DatasetService {
                             schema,
                             dataTail,
                         );
+                        this.permissionsDataUpdate(data.datasets.byOwnerAndName);
                         this.currentSetVocab = data.datasets.byOwnerAndName.metadata.currentVocab as SetVocab;
                         this.dataTabDataUpdate(schema, dataTail, this.currentSetVocab);
                         this.metadataTabDataUpdate(data, schema);
@@ -75,6 +78,22 @@ export class DatasetService {
                     } else {
                         throw new SqlExecutionError(dataTail.errorMessage);
                     }
+                } else {
+                    throw new DatasetNotFoundError();
+                }
+            }),
+        );
+    }
+
+    public requestDatasetBasicDataWithPermissions(info: DatasetInfo): Observable<void> {
+        return this.datasetApi.getDatasetBasicsWithPermissions(info).pipe(
+            map((data: GetDatasetBasicsWithPermissionsQuery) => {
+                if (data.datasets.byOwnerAndName) {
+                    const datasetBasics: DatasetBasicsFragment = data.datasets.byOwnerAndName;
+                    this.datasetChanges(datasetBasics);
+
+                    const datasetPermissions: DatasetPermissionsFragment = data.datasets.byOwnerAndName;
+                    this.permissionsDataUpdate(datasetPermissions);
                 } else {
                     throw new DatasetNotFoundError();
                 }
@@ -97,7 +116,7 @@ export class DatasetService {
                         history: data.datasets.byOwnerAndName.metadata.chain.blocks.nodes as MetadataBlockFragment[],
                         pageInfo,
                     };
-                    this.appDatasetSubsService.changeDatasetHistory(historyUpdate);
+                    this.datasetSubsService.changeDatasetHistory(historyUpdate);
                 } else {
                     throw new DatasetNotFoundError();
                 }
@@ -119,7 +138,6 @@ export class DatasetService {
                     const historyUpdate: DatasetHistoryUpdate = {
                         history: data.datasets.byOwnerAndName.metadata.chain.blocks.nodes as MetadataBlockFragment[],
                         pageInfo,
-                        kind: data.datasets.byOwnerAndName.kind,
                     };
                     return historyUpdate;
                 } else {
@@ -131,7 +149,7 @@ export class DatasetService {
 
     public requestDatasetDataSqlRun(params: DatasetRequestBySql): Observable<void> {
         return this.datasetApi.getDatasetDataSqlRun(params).pipe(
-            catchError(() => throwError(new SqlExecutionError())),
+            catchError(() => throwError(() => new SqlExecutionError())),
             map((result: GetDatasetDataSqlRunQuery) => {
                 const queryResult = result.data.query;
                 if (queryResult.__typename === "DataQueryResultSuccess") {
@@ -145,12 +163,12 @@ export class DatasetService {
                         schema,
                         currentVocab: this.currentSetVocab,
                     };
-                    this.appDatasetSubsService.changeDatasetData(dataUpdate);
-                    this.appDatasetSubsService.observeSqlErrorOccurred({
+                    this.datasetSubsService.changeDatasetData(dataUpdate);
+                    this.datasetSubsService.observeSqlErrorOccurred({
                         error: "",
                     });
                 } else if (queryResult.errorKind === DataQueryResultErrorKind.InvalidSql) {
-                    this.appDatasetSubsService.observeSqlErrorOccurred({
+                    this.datasetSubsService.observeSqlErrorOccurred({
                         error: queryResult.errorMessage,
                     });
                 } else {
@@ -186,7 +204,11 @@ export class DatasetService {
             overview,
             size,
         };
-        this.appDatasetSubsService.changeDatasetOverviewData(overviewDataUpdate);
+        this.datasetSubsService.changeDatasetOverviewData(overviewDataUpdate);
+    }
+
+    private permissionsDataUpdate(permissions: DatasetPermissionsFragment): void {
+        this.datasetSubsService.changePermissionsData(permissions);
     }
 
     private dataTabDataUpdate(
@@ -196,7 +218,7 @@ export class DatasetService {
     ): void {
         const content: DataRow[] = DatasetService.parseDataRows(tail);
         const dataUpdate: DataUpdate = { content, schema, currentVocab };
-        this.appDatasetSubsService.changeDatasetData(dataUpdate);
+        this.datasetSubsService.changeDatasetData(dataUpdate);
     }
 
     private metadataTabDataUpdate(data: GetDatasetMainDataQuery, schema: MaybeNull<DatasetSchema>): void {
@@ -212,19 +234,22 @@ export class DatasetService {
             const metadataSchemaUpdate: MetadataSchemaUpdate = {
                 schema,
                 pageInfo,
-                metadata,
+                metadataSummary: metadata,
             };
-            this.appDatasetSubsService.metadataSchemaChanges(metadataSchemaUpdate);
+            this.datasetSubsService.metadataSchemaChanges(metadataSchemaUpdate);
         }
     }
 
-    private lineageTabDataUpdate(originDatasetBasics: DatasetLineageBasics, lineage: DatasetLineageFragment): void {
+    private lineageTabDataUpdate(
+        originDatasetBasics: DatasetLineageBasicsFragment,
+        lineage: DatasetLineageFragment,
+    ): void {
         const lineageResponse: DatasetLineageNode = this.lineageResponseFromRawQuery(originDatasetBasics, lineage);
         this.updatelineageGraph(lineageResponse);
     }
 
     private lineageResponseFromRawQuery(
-        originDatasetBasics: DatasetLineageBasics,
+        originDatasetBasics: DatasetLineageBasicsFragment,
         lineage: DatasetLineageFragment,
     ): DatasetLineageNode {
         const originMetadata = lineage.metadata;
@@ -232,25 +257,25 @@ export class DatasetService {
             basics: originDatasetBasics,
             downstreamDependencies: originMetadata.currentDownstreamDependencies.map((downDependency) => {
                 return {
-                    basics: downDependency as DatasetLineageBasics,
+                    basics: downDependency as DatasetLineageBasicsFragment,
                     downstreamDependencies: downDependency.metadata.currentDownstreamDependencies.map(
                         (downDependency2) => {
                             return {
-                                basics: downDependency2 as DatasetLineageBasics,
+                                basics: downDependency2 as DatasetLineageBasicsFragment,
                                 downstreamDependencies: downDependency2.metadata.currentDownstreamDependencies.map(
                                     (downDependency3) => {
                                         return {
-                                            basics: downDependency3 as DatasetLineageBasics,
+                                            basics: downDependency3 as DatasetLineageBasicsFragment,
                                             downstreamDependencies:
                                                 downDependency3.metadata.currentDownstreamDependencies.map(
                                                     (downDependency4) => {
                                                         return {
-                                                            basics: downDependency4 as DatasetLineageBasics,
+                                                            basics: downDependency4 as DatasetLineageBasicsFragment,
                                                             downstreamDependencies:
                                                                 downDependency4.metadata.currentDownstreamDependencies.map(
                                                                     (downDependency5) => {
                                                                         return {
-                                                                            basics: downDependency5 as DatasetLineageBasics,
+                                                                            basics: downDependency5 as DatasetLineageBasicsFragment,
                                                                             downstreamDependencies: [],
                                                                             upstreamDependencies: [],
                                                                         };
@@ -273,27 +298,27 @@ export class DatasetService {
             }),
             upstreamDependencies: originMetadata.currentUpstreamDependencies.map((upDependency) => {
                 return {
-                    basics: upDependency as DatasetLineageBasics,
+                    basics: upDependency as DatasetLineageBasicsFragment,
                     downstreamDependencies: [],
                     upstreamDependencies: upDependency.metadata.currentUpstreamDependencies.map((upDependency2) => {
                         return {
-                            basics: upDependency2 as DatasetLineageBasics,
+                            basics: upDependency2 as DatasetLineageBasicsFragment,
                             downstreamDependencies: [],
                             upstreamDependencies: upDependency2.metadata.currentUpstreamDependencies.map(
                                 (upDependency3) => {
                                     return {
-                                        basics: upDependency3 as DatasetLineageBasics,
+                                        basics: upDependency3 as DatasetLineageBasicsFragment,
                                         downstreamDependencies: [],
                                         upstreamDependencies: upDependency3.metadata.currentUpstreamDependencies.map(
                                             (upDependency4) => {
                                                 return {
-                                                    basics: upDependency4 as DatasetLineageBasics,
+                                                    basics: upDependency4 as DatasetLineageBasicsFragment,
                                                     downstreamDependencies: [],
                                                     upstreamDependencies:
                                                         upDependency4.metadata.currentUpstreamDependencies.map(
                                                             (upDependency5) => {
                                                                 return {
-                                                                    basics: upDependency5 as DatasetLineageBasics,
+                                                                    basics: upDependency5 as DatasetLineageBasicsFragment,
                                                                     downstreamDependencies: [],
                                                                     upstreamDependencies: [],
                                                                 };
@@ -313,11 +338,11 @@ export class DatasetService {
     }
 
     private updatelineageGraph(origin: DatasetLineageNode) {
-        const lineageGraphEdges: DatasetLineageBasics[][] = [];
-        const lineageGraphNodes: DatasetLineageBasics[] = [];
+        const lineageGraphEdges: DatasetLineageBasicsFragment[][] = [];
+        const lineageGraphNodes: DatasetLineageBasicsFragment[] = [];
 
         this.updateLineageGraphRecords(origin, lineageGraphNodes, lineageGraphEdges);
-        this.appDatasetSubsService.changeLineageData({
+        this.datasetSubsService.changeLineageData({
             origin: origin.basics,
             nodes: lineageGraphNodes,
             edges: lineageGraphEdges,
@@ -326,11 +351,13 @@ export class DatasetService {
 
     private updateLineageGraphRecords(
         currentNode: DatasetLineageNode,
-        lineageGraphNodes: DatasetLineageBasics[],
-        lineageGraphEdges: DatasetLineageBasics[][],
+        lineageGraphNodes: DatasetLineageBasicsFragment[],
+        lineageGraphEdges: DatasetLineageBasicsFragment[][],
     ) {
         if (
-            !lineageGraphNodes.some((existingNode: DatasetBasicsFragment) => existingNode.id === currentNode.basics.id)
+            !lineageGraphNodes.some(
+                (existingNode: DatasetLineageBasicsFragment) => existingNode.id === currentNode.basics.id,
+            )
         ) {
             lineageGraphNodes.push(currentNode.basics);
         }

@@ -3,7 +3,7 @@ import { SpinnerService } from "./components/spinner/spinner.service";
 import { SpinnerInterceptor } from "./components/spinner/spinner.interceptor";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
-import { ErrorHandler, NgModule } from "@angular/core";
+import { APP_INITIALIZER, ErrorHandler, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { AppRoutingModule } from "./app-routing.module";
@@ -16,10 +16,10 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { NgbModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS, HttpHeaders } from "@angular/common/http";
 import { MatTableModule } from "@angular/material/table";
 import { CdkTableModule } from "@angular/cdk/table";
-import { InMemoryCache } from "@apollo/client/core";
+import { ApolloLink, InMemoryCache, NextLink, Operation } from "@apollo/client/core";
 import { SearchApi } from "./api/search.api";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SearchService } from "./search/search.service";
@@ -47,12 +47,12 @@ import { NotificationIndicatorComponent } from "./components/notification-indica
 import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { AppConfigService } from "./app-config.service";
 import { NavigationService } from "./services/navigation.service";
-import { AppDatasetSubscriptionsService } from "./dataset-view/dataset.subscriptions.service";
+import { DatasetSubscriptionsService } from "./dataset-view/dataset.subscriptions.service";
 import { SpinnerModule } from "./components/spinner/spinner.module";
 import { DatasetApi } from "./api/dataset.api";
 import { ErrorHandlerService } from "./services/error-handler.service";
 
-import { SettingsComponent } from "./auth/settings/settings.component";
+import { AccountSettingsComponent } from "./auth/settings/account-settings.component";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { DatasetListModule } from "./components/dataset-list-component/dataset-list.module";
 import { PaginationModule } from "./components/pagination-component/pagination.module";
@@ -62,6 +62,12 @@ import { DatasetsTabComponent } from "./auth/account/additional-components/datas
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { ToastrModule } from "ngx-toastr";
+import { LoggedUserService } from "./auth/logged-user.service";
+import { firstValueFrom } from "rxjs";
+import { LoginService } from "./auth/login/login.service";
+import { logError } from "./common/app.helpers";
+import AppValues from "./common/app.values";
+import { DatasetPermissionsService } from "./dataset-view/dataset.permissions.service";
 
 const Services = [
     {
@@ -76,22 +82,51 @@ const Services = [
     },
     Apollo,
     AuthApi,
+    LoginService,
+    LoggedUserService,
     SearchApi,
     DatasetApi,
     HttpLink,
     SearchService,
     DatasetService,
     NavigationService,
-    AppDatasetSubscriptionsService,
+    DatasetSubscriptionsService,
+    DatasetPermissionsService,
 
     {
         provide: APOLLO_OPTIONS,
         useFactory: (httpLink: HttpLink, appConfig: AppConfigService) => {
+            const httpMainLink: ApolloLink = httpLink.create({ uri: appConfig.apiServerGqlUrl });
+
+            const authorizationMiddleware: ApolloLink = new ApolloLink((operation: Operation, forward: NextLink) => {
+                const accessToken: string | null = localStorage.getItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
+                if (accessToken) {
+                    operation.setContext({
+                        headers: new HttpHeaders().set("Authorization", `Bearer ${accessToken}`),
+                    });
+                }
+
+                return forward(operation);
+            });
+
             return {
-                cache: new InMemoryCache(),
-                link: httpLink.create({
-                    uri: appConfig.apiServerGqlUrl,
+                cache: new InMemoryCache({
+                    typePolicies: {
+                        Account: {
+                            // For now we are faking account IDs on the server, so they are a bad caching field
+                            keyFields: ["accountName"],
+                        },
+                        AccountRef: {
+                            // For now we are faking account IDs on the server, so they are a bad caching field
+                            keyFields: ["accountName"],
+                        },
+                        Dataset: {
+                            // Use alias, as ID might be the same between 2 accounts who synchronized
+                            keyFields: ["alias"],
+                        },
+                    },
                 }),
+                link: authorizationMiddleware.concat(httpMainLink),
             };
         },
         deps: [HttpLink, AppConfigService],
@@ -105,6 +140,26 @@ const Services = [
                 yaml: () => import("highlight.js/lib/languages/yaml"),
             },
         },
+    },
+    {
+        provide: APP_INITIALIZER,
+        useFactory: (loggedUserService: LoggedUserService) => {
+            return (): Promise<void> => {
+                return firstValueFrom(loggedUserService.initialize()).catch((e) => logError(e));
+            };
+        },
+        deps: [LoggedUserService],
+        multi: true,
+    },
+    {
+        provide: APP_INITIALIZER,
+        useFactory: (loginService: LoginService) => {
+            return (): Promise<void> => {
+                return firstValueFrom(loginService.initialize()).catch((e) => logError(e));
+            };
+        },
+        deps: [LoginService],
+        multi: true,
     },
 ];
 const MatModules = [
@@ -130,7 +185,7 @@ const MatModules = [
         GithubCallbackComponent,
         AccountComponent,
         NotificationIndicatorComponent,
-        SettingsComponent,
+        AccountSettingsComponent,
         DatasetsTabComponent,
     ],
     imports: [
@@ -156,7 +211,6 @@ const MatModules = [
         }),
         NgbModule,
         NgbTypeaheadModule,
-        //GraphQLModule,
         HttpClientModule,
         CdkTableModule,
         ...MatModules,

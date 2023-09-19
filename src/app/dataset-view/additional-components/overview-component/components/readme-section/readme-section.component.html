@@ -1,4 +1,4 @@
-<div id="file-readme-dataset-template-md" class="file my-4" *ngIf="currentReadme || editViewShow">
+<div id="file-readme-dataset-template-md" class="file my-4" *ngIf="currentReadme || editingInProgress">
     <div class="file-header d-flex align-items-center">
         <div class="file-info pr-4 d-flex flex-order-1 flex-auto align-items-center">
             <span class="mr-2">
@@ -13,11 +13,12 @@
             aria-label="Edit this file"
             data-test-id="show-edit-tabs"
             (click)="showEditTabs()"
+            *ngIf="editable"
         >
             <svg-icon name="pencil"></svg-icon>
         </button>
     </div>
-    <div *ngIf="editViewShow" class="edit-title d-flex align-items-center justify-content-between">
+    <div *ngIf="editingInProgress" class="edit-title d-flex align-items-center justify-content-between">
         <div class="left-part">
             <button
                 class="edit-button"
@@ -51,10 +52,10 @@
         </div>
     </div>
     <div class="file-content">
-        <ng-template [ngIf]="isEditView && editViewShow">
+        <ng-template [ngIf]="isEditView && editingInProgress">
             <textarea class="variable-textarea" [(ngModel)]="readmeState"></textarea>
         </ng-template>
-        <ng-template [ngIf]="!isEditView || !editViewShow">
+        <ng-template [ngIf]="!isEditView || !editingInProgress">
             <markdown class="variable-binding" [data]="readmeState"></markdown>
         </ng-template>
     </div>

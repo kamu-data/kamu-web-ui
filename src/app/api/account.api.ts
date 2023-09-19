@@ -1,12 +1,24 @@
-import { mockAccountDetails } from "./mock/auth.mock";
-import { Observable, of } from "rxjs";
+import { Observable, first, map } from "rxjs";
 
 import { Injectable } from "@angular/core";
-import { AccountDetailsFragment } from "./kamu.graphql.interface";
+import { AccountByNameGQL, AccountByNameQuery, AccountFragment } from "./kamu.graphql.interface";
+import { MaybeNull } from "../common/app.types";
+import { ApolloQueryResult } from "@apollo/client";
 
 @Injectable({ providedIn: "root" })
 export class AccountApi {
-    public getAccountInfoByName(name: string): Observable<AccountDetailsFragment> {
-        return of({ ...mockAccountDetails, login: name });
+    constructor(private accountByNameGql: AccountByNameGQL) {}
+
+    public fetchAccountByName(accountName: string): Observable<MaybeNull<AccountFragment>> {
+        return this.accountByNameGql
+            .watch({
+                accountName,
+            })
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<AccountByNameQuery>) => {
+                    return result.data.accounts.byName ?? null;
+                }),
+            );
     }
 }

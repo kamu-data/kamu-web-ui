@@ -1,4 +1,4 @@
-fragment currentSourceFetchUrl on DatasetMetadata {
+fragment CurrentSourceFetchUrl on DatasetMetadata {
   currentSource {
     fetch {
       ... on FetchStepUrl {

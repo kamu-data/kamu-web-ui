@@ -6,4 +6,5 @@ export class ErrorTexts {
     public static readonly ERROR_TECHNICAL_SUPPORT =
         "Operation failed. If this happens again, please contact Kamu technical support.";
     public static readonly ERROR_UNKNOWN_AUTHENTICATION = "Uknown authentication error";
+    public static readonly ERROR_DATASET_OPERATION_FAILED = "Dataset operation failed";
 }

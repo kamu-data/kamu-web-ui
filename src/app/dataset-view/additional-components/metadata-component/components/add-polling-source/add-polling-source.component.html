@@ -1,4 +1,4 @@
-<div class="layout" *ngIf="history && datasetKind === 'ROOT'; else errorBlock">
+<div class="layout" *ngIf="history">
     <div class="mt-4">
         <div class="border border-1 mt-4 px-2 py-4 rounded-3">
             <form [formGroup]="pollingSourceForm">
@@ -111,6 +111,3 @@
         </div>
     </div>
 </div>
-<ng-template #errorBlock>
-    <app-page-not-found *ngIf="datasetKind"></app-page-not-found>
-</ng-template>

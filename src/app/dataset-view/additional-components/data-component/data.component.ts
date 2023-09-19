@@ -5,12 +5,12 @@ import { DataSqlErrorUpdate, DataUpdate } from "src/app/dataset-view/dataset.sub
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DataRow, DatasetRequestBySql } from "../../../interface/dataset.interface";
 import DataTabValues from "./mock.data";
-import { AppDatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import * as monaco from "monaco-editor";
-import { MaybeUndefined } from "src/app/common/app.types";
-import { sqlEditorOptions } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
+import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
+import { SQL_EDITOR_OPTIONS } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
 import { Observable, map, tap } from "rxjs";
 
 @Component({
@@ -19,10 +19,11 @@ import { Observable, map, tap } from "rxjs";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent extends BaseComponent implements OnInit {
-    @Input() public datasetBasics?: DatasetBasicsFragment;
+    public readonly SQL_EDITOR_OPTIONS = SQL_EDITOR_OPTIONS;
+
+    @Input() public datasetBasics: DatasetBasicsFragment;
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
 
-    public sqlEditorOptions = sqlEditorOptions;
     public savedQueries = DataTabValues.savedQueries;
     public sqlRequestCode = `select\n  *\nfrom `;
     public currentData: DataRow[] = [];
@@ -34,7 +35,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     public sqlErrorMarker$: Observable<string>;
     public dataUpdate$: Observable<DataUpdate>;
 
-    constructor(private appDatasetSubsService: AppDatasetSubscriptionsService, private location: Location) {
+    constructor(private datasetSubsService: DatasetSubscriptionsService, private location: Location) {
         super();
     }
 
@@ -46,17 +47,17 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.sqlErrorMarker$ = this.appDatasetSubsService.onDatasetDataSqlErrorOccurred.pipe(
+        this.sqlErrorMarker$ = this.datasetSubsService.onDatasetDataSqlErrorOccurred.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
         );
-        this.dataUpdate$ = this.appDatasetSubsService.onDatasetDataChanges.pipe(
+        this.dataUpdate$ = this.datasetSubsService.onDatasetDataChanges.pipe(
             tap((dataUpdate: DataUpdate) => {
                 if (dataUpdate.currentVocab?.offsetColumn) {
                     this.offsetColumnName = dataUpdate.currentVocab.offsetColumn;
                 }
                 this.isAllDataLoaded = dataUpdate.content.length < this.rowsLimit;
                 this.currentData = this.skipRows ? [...this.currentData, ...dataUpdate.content] : dataUpdate.content;
-                this.appDatasetSubsService.resetSqlError();
+                this.datasetSubsService.resetSqlError();
             }),
         );
         this.buildSqlRequestCode();
@@ -99,12 +100,10 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     private buildSqlRequestCode(): void {
-        if (this.datasetBasics) {
-            this.sqlRequestCode += `'${this.datasetBasics.name}'`;
-            const offset = this.location.getState() as Partial<OffsetInterval>;
-            if (typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
-                this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
-            }
+        this.sqlRequestCode += `'${this.datasetBasics.alias}'`;
+        const offset = this.location.getState() as MaybeNull<Partial<OffsetInterval>>;
+        if (offset && typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
+            this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
         }
     }
 

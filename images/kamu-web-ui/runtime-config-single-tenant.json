@@ -1,0 +1,10 @@
+{
+    "apiServerGqlUrl": "http://localhost:8080/graphql",
+    "featureFlags": {
+        "enableLogout": false
+    },
+    "loginInstructions": {
+        "loginMethod": "password",
+        "loginCredentialsJson": "{\"login\": \"kamu\", \"password\": \"kamu\"}"
+    }
+}

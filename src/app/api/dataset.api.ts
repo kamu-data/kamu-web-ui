@@ -9,21 +9,13 @@ import {
     DatasetKind,
     DeleteDatasetGQL,
     DeleteDatasetMutation,
+    GetDatasetBasicsWithPermissionsGQL,
     GetDatasetSchemaGQL,
     GetDatasetSchemaQuery,
     RenameDatasetGQL,
     RenameDatasetMutation,
     UpdateReadmeGQL,
     UpdateReadmeMutation,
-} from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/app.values";
-import { ApolloQueryResult } from "@apollo/client/core";
-import { Injectable } from "@angular/core";
-
-import { map, first } from "rxjs/operators";
-import { Observable } from "rxjs";
-
-import {
     GetDatasetMainDataGQL,
     GetDatasetMainDataQuery,
     GetDatasetHistoryGQL,
@@ -37,15 +29,24 @@ import {
     DatasetByIdQuery,
     DatasetByIdGQL,
     CreateEmptyDatasetGQL,
-} from "./kamu.graphql.interface";
+    GetDatasetBasicsWithPermissionsQuery,
+} from "src/app/api/kamu.graphql.interface";
+import AppValues from "src/app/common/app.values";
+import { ApolloQueryResult } from "@apollo/client/core";
+import { Injectable } from "@angular/core";
+
+import { map, first, catchError } from "rxjs/operators";
+import { Observable, throwError } from "rxjs";
+
 import { MutationResult } from "apollo-angular";
-import { MaybeNullOrUndefined } from "../common/app.types";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
+import { DatasetOperationError } from "../common/errors";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
     constructor(
         private datasetMainDataGQL: GetDatasetMainDataGQL,
+        private datasetBasicsWithPermissionGQL: GetDatasetBasicsWithPermissionsGQL,
         private datasetDataSqlRunGQL: GetDatasetDataSqlRunGQL,
         private datasetHistoryGQL: GetDatasetHistoryGQL,
         private datasetsByAccountNameGQL: DatasetsByAccountNameGQL,
@@ -92,6 +93,23 @@ export class DatasetApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<GetDatasetDataSqlRunQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public getDatasetBasicsWithPermissions(params: {
+        accountName: string;
+        datasetName: string;
+    }): Observable<GetDatasetBasicsWithPermissionsQuery> {
+        return this.datasetBasicsWithPermissionGQL
+            .watch({
+                accountName: params.accountName,
+                datasetName: params.datasetName,
+            })
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<GetDatasetBasicsWithPermissionsQuery>) => {
                     return result.data;
                 }),
             );
@@ -193,35 +211,37 @@ export class DatasetApi {
             );
     }
 
-    public createDatasetFromSnapshot(
-        accountId: string,
-        snapshot: string,
-    ): Observable<MaybeNullOrUndefined<CreateDatasetFromSnapshotMutation>> {
-        return this.createDatasetFromSnapshotGQL.mutate({ accountId, snapshot }).pipe(
+    public createDatasetFromSnapshot(snapshot: string): Observable<CreateDatasetFromSnapshotMutation> {
+        return this.createDatasetFromSnapshotGQL.mutate({ snapshot }).pipe(
             first(),
             map((result: MutationResult<CreateDatasetFromSnapshotMutation>) => {
-                return result.data;
+                /* istanbul ignore else */
+                if (result.data) {
+                    return result.data;
+                } else {
+                    throw new DatasetOperationError(result.errors ?? []);
+                }
             }),
+            catchError((e: Error) => throwError(() => new DatasetOperationError([e]))),
         );
     }
 
-    public createEmptyDataset(
-        accountId: string,
-        datasetKind: DatasetKind,
-        datasetName: string,
-    ): Observable<MaybeNullOrUndefined<CreateEmptyDatasetMutation>> {
-        return this.createEmptyDatasetGQL.mutate({ accountId, datasetKind, datasetName }).pipe(
+    public createEmptyDataset(datasetKind: DatasetKind, datasetName: string): Observable<CreateEmptyDatasetMutation> {
+        return this.createEmptyDatasetGQL.mutate({ datasetKind, datasetName }).pipe(
             first(),
             map((result: MutationResult<CreateEmptyDatasetMutation>) => {
-                return result.data;
+                /* istanbul ignore else */
+                if (result.data) {
+                    return result.data;
+                } else {
+                    throw new DatasetOperationError(result.errors ?? []);
+                }
             }),
+            catchError((e: Error) => throwError(() => new DatasetOperationError([e]))),
         );
     }
 
-    public commitEvent(params: {
-        datasetId: string;
-        event: string;
-    }): Observable<MaybeNullOrUndefined<CommitEventToDatasetMutation>> {
+    public commitEvent(params: { datasetId: string; event: string }): Observable<CommitEventToDatasetMutation> {
         return this.commitEventToDatasetGQL
             .mutate({
                 datasetId: params.datasetId,
@@ -230,12 +250,18 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<CommitEventToDatasetMutation>) => {
-                    return result.data;
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
                 }),
+                catchError((e: Error) => throwError(() => new DatasetOperationError([e]))),
             );
     }
 
-    public updateReadme(datasetId: string, content: string): Observable<MaybeNullOrUndefined<UpdateReadmeMutation>> {
+    public updateReadme(datasetId: string, content: string): Observable<UpdateReadmeMutation> {
         return this.updateReadmeGQL
             .mutate({
                 datasetId,
@@ -244,12 +270,18 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<UpdateReadmeMutation>) => {
-                    return result.data;
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
                 }),
+                catchError((e: Error) => throwError(() => new DatasetOperationError([e]))),
             );
     }
 
-    public deleteDataset(datasetId: string): Observable<MaybeNullOrUndefined<DeleteDatasetMutation>> {
+    public deleteDataset(datasetId: string): Observable<DeleteDatasetMutation> {
         return this.deleteDatasetGQL
             .mutate({
                 datasetId,
@@ -257,12 +289,18 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<DeleteDatasetMutation>) => {
-                    return result.data;
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
                 }),
+                catchError((e: Error) => throwError(() => new DatasetOperationError([e]))),
             );
     }
 
-    public renameDataset(datasetId: string, newName: string): Observable<MaybeNullOrUndefined<RenameDatasetMutation>> {
+    public renameDataset(datasetId: string, newName: string): Observable<RenameDatasetMutation> {
         return this.renameDatasetGQL
             .mutate({
                 datasetId,
@@ -271,8 +309,14 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<RenameDatasetMutation>) => {
-                    return result.data;
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
                 }),
+                catchError((e: Error) => throwError(() => new DatasetOperationError([e]))),
             );
     }
 }

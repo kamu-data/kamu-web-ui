@@ -5,7 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BlockNavigationComponent } from "./block-navigation.component";
 import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
-import { dispatchInputEvent, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { dispatchInputEvent, getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { PaginationModule } from "src/app/components/pagination-component/pagination.module";
 import { MatIconModule } from "@angular/material/icon";
 import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
@@ -46,7 +46,7 @@ describe("BlockNavigationComponent", () => {
         dispatchInputEvent(fixture, "searchHash", testSearchHash);
         expect(component.searchHash).toEqual(testSearchHash);
 
-        const clearIcon = findElementByDataTestId(fixture, "clearSearchHash");
+        const clearIcon = getElementByDataTestId(fixture, "clearSearchHash");
         clearIcon.click();
 
         expect(component.searchHash).toBe("");

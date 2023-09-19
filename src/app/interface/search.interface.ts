@@ -10,6 +10,7 @@ export interface DatasetSearchResult {
 
 export interface DatasetAutocompleteItem {
     dataset: DatasetBasicsFragment;
+    dummy: boolean;
     __typename: TypeNames;
 }
 

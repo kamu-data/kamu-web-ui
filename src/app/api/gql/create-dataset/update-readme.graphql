@@ -8,6 +8,9 @@ mutation updateReadme($datasetId: DatasetID!, $content: String!) {
           ... on CommitResultSuccess {
             oldHead
           }
+          ... on CommitResultAppendError {
+            message
+          }
         }
       }
     }

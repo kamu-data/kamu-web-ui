@@ -1,5 +1,5 @@
 <div class="p-4 p-responsive clearfix" *ngIf="user$ | async as user">
-    <div class="custom-container" *ngIf="datasetsAccount$ | async as data">
+    <div class="custom-container" *ngIf="activeTab$ | async as activeTab">
         <div class="container-sidebar">
             <div class="d-flex mb-3 justify-content-center align-items-center">
                 <a *ngIf="isLoggedUser; else notLoggedUserLink" routerLink="/v/settings/profile">
@@ -60,7 +60,7 @@
                 </div>
             </div>
         </div>
-        <div class="container-content px-4">
+        <div class="container-content px-4" *ngIf="datasetsAccount$ | async as datasetsData">
             <div class="border-bottom">
                 <mat-button-toggle-group
                     name="activeTab"
@@ -85,7 +85,9 @@
                     >
                         <mat-icon class="text-muted fs-4">book</mat-icon>
                         <span class="mx-2">Datasets</span>
-                        <span title="1" data-view-component="true" class="counter">{{ data.datasetTotalCount }}</span>
+                        <span title="1" data-view-component="true" class="counter">{{
+                            datasetsData.datasetTotalCount
+                        }}</span>
                     </mat-button-toggle>
                     <mat-button-toggle
                         data-test-id="account-organizations-tab"
@@ -125,9 +127,9 @@
             </ng-container>
             <ng-container *ngIf="activeTab === AccountTabs.DATASETS">
                 <app-datasets-tab
-                    [datasets]="data.datasets"
+                    [datasets]="datasetsData.datasets"
                     [accountName]="user.accountName"
-                    [pageInfo]="data.pageInfo"
+                    [pageInfo]="datasetsData.pageInfo"
                 ></app-datasets-tab>
             </ng-container>
             <ng-container *ngIf="activeTab === AccountTabs.ORGANIZATIONS">

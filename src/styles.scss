@@ -1523,7 +1523,7 @@ input {
     right: 0;
     width: 270px;
     background-color: #f1f1f1;
-    border: 3px solid #dedede;
+    border: 1px solid #dedede;
     border-radius: 5px;
     font-size: 12px;
     padding: 10px;
@@ -1531,20 +1531,34 @@ input {
     margin: 0;
 
     &__title {
-        div {
+        .dataset-name {
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
 
             span {
                 font-size: 12px;
+
+                &:hover {
+                    text-decoration: none;
+                    cursor: pointer;
+                }
             }
         }
 
-        img {
-            width: 18px;
-            height: 18px;
-            margin-right: 5px;
+        .account-avatar {
+            margin-right: 10px;
+
+            img {
+                width: 18px;
+                height: 18px;
+            }
+        }
+    }
+
+    .info {
+        span {
+            font-size: 12px;
         }
     }
 

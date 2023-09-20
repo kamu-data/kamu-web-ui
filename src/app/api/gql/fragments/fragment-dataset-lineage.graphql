@@ -70,6 +70,9 @@ fragment DatasetLineageBasics on Dataset {
   }
   metadata {
     ...CurrentSourceFetchUrl
+    currentLicense {
+      ...License
+    }
   }
   owner {
     avatarUrl

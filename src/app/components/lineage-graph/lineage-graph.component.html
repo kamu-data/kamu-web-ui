@@ -127,25 +127,48 @@
             <span class="badge-verified">Verified</span>
         </div>
         <div class="mt-3 info d-flex align-items-center">
-            <mat-icon class="fs-4 mr-1">account_tree</mat-icon> <span> {{ datasetKind }} </span>
+            <mat-icon class="fs-4 mr-2">account_tree</mat-icon> <span> {{ datasetKind }} </span>
         </div>
         <div class="mt-1 info d-flex align-items-center">
-            <mat-icon class="fs-4 mr-1">star_border</mat-icon> <span> 4 stars </span>
-        </div>
-        <div class="info d-flex align-items-center">
-            <mat-icon class="fs-4 mr-1"> vertical_align_bottom </mat-icon><span> 4 downstream deps </span>
+            <mat-icon class="fs-4 mr-2">star_border</mat-icon> <span> 4 stars </span>
         </div>
         <div class="mt-1 info d-flex align-items-center">
-            <mat-icon class="fs-4 mr-1"> workspaces_outline </mat-icon>
-            <span> 36.8Kb estimated size </span>
+            <mat-icon class="fs-4 mr-2"> workspaces_outline </mat-icon>
+            <span>
+                {{ currentDataset.data.estimatedSize ? (currentDataset.data.estimatedSize | displaySize) : 0 }}
+                estimated size
+            </span>
         </div>
         <div class="mt-1 info d-flex align-items-center">
-            <mat-icon class="fs-4 mr-1"> format_line_spacing </mat-icon>
-            <span> 123 records </span>
+            <mat-icon class="fs-4 mr-3"> format_line_spacing </mat-icon>
+            <span> {{ currentDataset.data.numRecordsTotal || 0 | number: "1.0-0" }} records </span>
         </div>
-        <div class="mt-1 info d-flex align-items-start">
-            <mat-icon class="fs-4 mr-1"> receipt_long </mat-icon>
-            <span> OGL-Cxnada-2.0 license</span>
+        <div class="mt-1 info d-flex align-items-center">
+            <mat-icon class="fs-4 mr-3"> receipt_long </mat-icon>
+            <span>
+                {{ currentDataset.metadata.currentLicense?.shortName ?? "No " }}
+                license</span
+            >
+        </div>
+        <div class="mt-1 info d-flex align-items-center">
+            <mat-icon class="fs-4 mr-2">addchart</mat-icon>
+            <span class="d-flex align-items-center mb-2">
+                <app-display-time
+                    [title]="currentDataset.createdAt"
+                    [data]="currentDataset.createdAt"
+                ></app-display-time>
+                <span class="updated"> created </span>
+            </span>
+        </div>
+        <div class="mt-1 info d-flex align-items-center">
+            <mat-icon class="fs-4 mr-2">update</mat-icon>
+            <span class="d-flex align-items-center mb-2">
+                <app-display-time
+                    [title]="currentDataset.lastUpdatedAt"
+                    [data]="currentDataset.lastUpdatedAt"
+                ></app-display-time>
+                <span class="updated"> updated </span>
+            </span>
         </div>
     </div>
 </div>

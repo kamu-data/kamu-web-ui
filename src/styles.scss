@@ -1559,6 +1559,19 @@ input {
     .info {
         span {
             font-size: 12px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            width: 100%;
+
+            time {
+                font-size: 12px;
+            }
+
+            .updated {
+                margin-top: 1px;
+                padding-left: 3px;
+            }
         }
     }
 

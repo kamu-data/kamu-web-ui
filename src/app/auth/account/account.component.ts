@@ -10,11 +10,12 @@ import AppValues from "src/app/common/app.values";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { AccountService } from "src/app/services/account.service";
 import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
-import { map, shareReplay, switchMap } from "rxjs/operators";
-import { Observable } from "rxjs";
+import { distinctUntilChanged, map, shareReplay, switchMap } from "rxjs/operators";
+import { Observable, combineLatest } from "rxjs";
 import { LoggedUserService } from "../logged-user.service";
 import { MaybeNull } from "src/app/common/app.types";
 import { AccountNotFoundError } from "src/app/common/errors";
+import { AccountPageQueryParams } from "./account.component.model";
 
 @Component({
     selector: "app-account",
@@ -23,14 +24,13 @@ import { AccountNotFoundError } from "src/app/common/errors";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountComponent extends BaseComponent implements OnInit {
-    public activeTab = AccountTabs.OVERVIEW;
     public readonly AccountTabs = AccountTabs;
 
     public isDropdownMenu = false;
-    public currentPage = 1;
 
     public user$: Observable<AccountFragment>;
     public datasetsAccount$: Observable<DatasetsAccountResponse>;
+    public activeTab$: Observable<AccountTabs>;
 
     @ViewChild("containerMenu") containerMenu: ElementRef;
     @ViewChild("dropdownMenu") dropdownMenu: ElementRef;
@@ -49,15 +49,24 @@ export class AccountComponent extends BaseComponent implements OnInit {
         const accountName$ = this.route.params.pipe(
             map((params: Params) => params[ProjectLinks.URL_PARAM_ACCOUNT_NAME] as string),
         );
-        this.user$ = this.pipelineAccountByName(accountName$);
-        this.datasetsAccount$ = this.pipelineAccountDatasets(this.user$);
 
-        this.trackSubscriptions(
-            this.route.queryParams.subscribe((params: Params) => {
-                params.tab ? (this.activeTab = params.tab as AccountTabs) : (this.activeTab = AccountTabs.OVERVIEW);
-                params.page ? (this.currentPage = params.page as number) : (this.currentPage = 1);
+        const queryParams$ = this.route.queryParams.pipe(
+            map((queryParams: Params) => {
+                return {
+                    tab: queryParams.tab ? (queryParams.tab as AccountTabs) : undefined,
+                    page: queryParams.page ? (queryParams.page as number) : undefined,
+                } as AccountPageQueryParams;
             }),
+            shareReplay(),
         );
+
+        this.activeTab$ = queryParams$.pipe(
+            map((accountPageParams: AccountPageQueryParams) => accountPageParams.tab ?? AccountTabs.OVERVIEW),
+            distinctUntilChanged(),
+        );
+
+        this.user$ = this.pipelineAccountByName(accountName$);
+        this.datasetsAccount$ = this.pipelineAccountDatasets(this.user$, queryParams$);
     }
 
     public avatarLink(user: AccountFragment): string {
@@ -119,10 +128,16 @@ export class AccountComponent extends BaseComponent implements OnInit {
         );
     }
 
-    private pipelineAccountDatasets(account$: Observable<AccountFragment>): Observable<DatasetsAccountResponse> {
-        return account$.pipe(
-            switchMap((account: AccountFragment) => {
-                return this.accountService.getDatasetsByAccountName(account.accountName, this.currentPage - 1);
+    private pipelineAccountDatasets(
+        account$: Observable<AccountFragment>,
+        queryParams$: Observable<AccountPageQueryParams>,
+    ): Observable<DatasetsAccountResponse> {
+        const page$ = queryParams$.pipe(map((queryParams: AccountPageQueryParams) => queryParams.page ?? 1));
+
+        return combineLatest([account$, page$]).pipe(
+            distinctUntilChanged(),
+            switchMap(([account, page]: [AccountFragment, number]) => {
+                return this.accountService.getDatasetsByAccountName(account.accountName, page - 1);
             }),
         );
     }

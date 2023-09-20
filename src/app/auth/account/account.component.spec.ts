@@ -8,12 +8,12 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { emitClickOnElementByDataTestId, routerMock } from "src/app/common/base-test.helpers.spec";
 import { AccountComponent } from "./account.component";
-import { BehaviorSubject, of } from "rxjs";
+import { BehaviorSubject, delay, of } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { mockDatasetsAccountResponse } from "src/app/api/mock/dataset.mock";
 import { AccountService } from "src/app/services/account.service";
 import ProjectLinks from "src/app/project-links";
-import { AccountPageParams } from "./account.component.model";
+import { AccountPageQueryParams } from "./account.component.model";
 import { DatasetsTabComponent } from "./additional-components/datasets-tab/datasets-tab.component";
 import AppValues from "src/app/common/app.values";
 import { DatasetListItemComponent } from "src/app/components/dataset-list-item/dataset-list-item.component";
@@ -32,14 +32,16 @@ describe("AccountComponent", () => {
     let accountService: AccountService;
     let loggedUserService: LoggedUserService;
 
-    const mockQueryParams: BehaviorSubject<AccountPageParams> = new BehaviorSubject<AccountPageParams>({
-        tab: AccountTabs.OVERVIEW,
-        page: 2,
+    const mockQueryParams: BehaviorSubject<AccountPageQueryParams> = new BehaviorSubject<AccountPageQueryParams>({
+        tab: AccountTabs.INBOX,
     });
 
     const mockParams = new BehaviorSubject({
         [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: mockAccountDetails.accountName,
     });
+
+    let fetchAccountByNameSpy: jasmine.Spy;
+    let getDatasetsByAccountNameSpy: jasmine.Spy;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -76,6 +78,11 @@ describe("AccountComponent", () => {
         navigationService = TestBed.inject(NavigationService);
         accountService = TestBed.inject(AccountService);
 
+        fetchAccountByNameSpy = spyOn(accountService, "fetchAccountByName").and.returnValue(of(mockAccountDetails));
+        getDatasetsByAccountNameSpy = spyOn(accountService, "getDatasetsByAccountName").and.returnValue(
+            of(mockDatasetsAccountResponse),
+        );
+
         loggedUserService = TestBed.inject(LoggedUserService);
         spyOnProperty(loggedUserService, "onLoggedInUserChanges", "get").and.returnValue(of(null));
 
@@ -108,73 +115,78 @@ describe("AccountComponent", () => {
         expect(component.isLoggedUser(mockAccountDetails)).toEqual(true);
     });
 
-    it("should check API calls when account is found", fakeAsync(() => {
-        const fetchAccountByNameSpy = spyOn(accountService, "fetchAccountByName").and.returnValue(
-            of(mockAccountDetails),
-        );
-        const getDatasetsByAccountNameSpy = spyOn(accountService, "getDatasetsByAccountName").and.returnValue(
-            of(mockDatasetsAccountResponse),
-        );
+    it("should check API calls when account is found", () => {
+        fetchAccountByNameSpy.calls.reset();
+        getDatasetsByAccountNameSpy.calls.reset();
 
         mockParams.next({ [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: mockAccountDetails.accountName });
-        fixture.detectChanges();
-
-        tick();
 
         expect(fetchAccountByNameSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName);
         expect(getDatasetsByAccountNameSpy).toHaveBeenCalledOnceWith(
             mockAccountDetails.accountName,
             jasmine.any(Number),
         );
-
-        flush();
-    }));
+    });
 
     it("should check API calls when account is not found", fakeAsync(() => {
-        const fetchAccountByNameSpy = spyOn(accountService, "fetchAccountByName").and.returnValue(of(null));
-        const getDatasetsByAccountNameSpy = spyOn(accountService, "getDatasetsByAccountName").and.stub();
+        fetchAccountByNameSpy = fetchAccountByNameSpy.and.returnValue(of(null).pipe(delay(0)));
+        getDatasetsByAccountNameSpy = getDatasetsByAccountNameSpy.and.stub();
+        fetchAccountByNameSpy.calls.reset();
+        getDatasetsByAccountNameSpy.calls.reset();
 
         mockParams.next({ [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_LOGIN });
-        fixture.detectChanges();
-
-        expect(() => tick()).toThrow(new AccountNotFoundError());
 
         expect(fetchAccountByNameSpy).toHaveBeenCalledOnceWith(TEST_LOGIN);
         expect(getDatasetsByAccountNameSpy).not.toHaveBeenCalled();
 
-        flush();
+        expect(() => tick()).toThrow(new AccountNotFoundError());
+        expect(() => flush()).toThrow(new AccountNotFoundError());
     }));
 
     it("should check activeTab when URL not exist query param tab", () => {
-        mockQueryParams.next({ tab: "" as AccountTabs, page: 1 });
-        expect(component.activeTab).toEqual(AccountTabs.OVERVIEW);
+        mockQueryParams.next({ page: 1 });
+
+        let nCalls = 0;
+        component.activeTab$.subscribe((activeTab: AccountTabs) => {
+            // Ignore first call (default event)
+            if (nCalls == 1) {
+                expect(activeTab).toEqual(AccountTabs.OVERVIEW);
+            } else if (nCalls > 2) {
+                fail("Unexpected number of calls");
+            }
+            nCalls++;
+        });
+
+        expect(nCalls).toEqual(2);
     });
 
     Object.values(AccountTabs).forEach((tab: string) => {
-        it(`should check switch ${tab} tab`, fakeAsync(() => {
-            spyOn(accountService, "fetchAccountByName").and.returnValue(of(mockAccountDetails));
-            spyOn(accountService, "getDatasetsByAccountName").and.returnValue(of(mockDatasetsAccountResponse));
-
+        it(`should check switch ${tab} tab`, () => {
             const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
 
             mockParams.next({ [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_LOGIN });
 
-            tick();
-            fixture.detectChanges();
-
             emitClickOnElementByDataTestId(fixture, `account-${tab}-tab`);
 
             expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(mockAccountDetails.accountName, tab);
-            flush();
-        }));
+        });
     });
 
     // TODO: test wrong tab
 
-    it("should check page when not specified in the querty", () => {
+    it("should check page when not specified in the query", () => {
+        getDatasetsByAccountNameSpy.calls.reset();
+
         mockQueryParams.next({ tab: AccountTabs.DATASETS });
 
-        expect(component.activeTab).toEqual(AccountTabs.DATASETS);
-        expect(component.currentPage).toEqual(1);
+        expect(getDatasetsByAccountNameSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName, 0);
+    });
+
+    it("should check page when specified in the query", () => {
+        getDatasetsByAccountNameSpy.calls.reset();
+
+        mockQueryParams.next({ tab: AccountTabs.DATASETS, page: 3 });
+
+        expect(getDatasetsByAccountNameSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName, 2 /* 3 - 1 */);
     });
 });

@@ -1,4 +1,4 @@
-<div #containerRef>
+<div #containerRef class="position-relative">
     <ngx-graph
         class="chart-container"
         [draggingEnabled]="draggingEnabled"
@@ -109,4 +109,24 @@
             </svg:g>
         </ng-template>
     </ngx-graph>
+
+    <div class="side-panel">
+        <div class="side-panel__title d-flex fw-bold">
+            <div>
+                <img [src]="DEFAULT_AVATAR_URL" />
+            </div>
+            <div>
+                <span> {{ currentDataset.owner.accountName }} / {{ currentDataset.name }}</span>
+            </div>
+        </div>
+        <div class="side-panel__permissions mt-1">
+            <span class="badge-access">Public</span>
+            <span class="badge-verified">Verified</span>
+        </div>
+        <div class="mt-2"><span style="font-size: 12px"> 4 downstream deps </span></div>
+        <div class="mt-1"><span style="font-size: 12px"> Estimated size: 36.8Kb </span></div>
+        <div class="mt-1"><span style="font-size: 12px"> Records: 123 </span></div>
+        <div class="mt-1"><span style="font-size: 12px"> Stars: 4 </span></div>
+        <div class="mt-1"><span style="font-size: 12px"> License: OGL-Canada-2.0 </span></div>
+    </div>
 </div>

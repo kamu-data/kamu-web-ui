@@ -1517,6 +1517,54 @@ input {
     }
 }
 
-.ngx-charts {
-    height: calc(100vh - 350px) !important;
+.side-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 270px;
+    background-color: #f1f1f1;
+    border: 3px solid #dedede;
+    border-radius: 5px;
+    font-size: 12px;
+    padding: 10px;
+    white-space: break-spaces;
+    margin: 0;
+
+    &__title {
+        div {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+
+            span {
+                font-size: 12px;
+            }
+        }
+
+        img {
+            width: 18px;
+            height: 18px;
+            margin-right: 5px;
+        }
+    }
+
+    &__permissions {
+        margin-left: 15px;
+
+        span {
+            font-size: 10px;
+            padding: 1px 5px;
+            border-radius: 6px;
+        }
+
+        .badge-access {
+            background: #cdd2d9;
+        }
+
+        .badge-verified {
+            margin-left: 5px;
+            color: green;
+            background: #d9f8e2;
+        }
+    }
 }

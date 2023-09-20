@@ -32,14 +32,12 @@ import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-compone
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetComponent extends BaseProcessingComponent implements OnInit, OnDestroy {
-    public static readonly LINEAGE_VIEW_VERTICAL_POSITION = 400;
-
     public datasetBasics: MaybeUndefined<DatasetBasicsFragment>;
     public datasetPermissions$: Observable<DatasetPermissionsFragment>;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
 
-    public lineageGraphView: [number, number] = [500, 600];
+    public lineageGraphView: [number, number] = [window.innerWidth - 350, window.innerHeight - 350];
 
     @HostListener("window:resize")
     private checkWindowSize(): void {
@@ -89,8 +87,9 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
                     this.lineageGraphView[0] =
                         searchResultContainer.offsetWidth -
                         parseInt(styleElement.paddingLeft, 10) -
-                        parseInt(styleElement.paddingRight, 10);
-                    this.lineageGraphView[1] = DatasetComponent.LINEAGE_VIEW_VERTICAL_POSITION;
+                        parseInt(styleElement.paddingRight, 10) -
+                        300;
+                    this.lineageGraphView[1] = window.innerHeight - 350;
                 }
             });
         }

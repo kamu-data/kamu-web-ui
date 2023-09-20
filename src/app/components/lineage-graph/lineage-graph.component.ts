@@ -10,7 +10,7 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { Node, Edge, MiniMapPosition } from "@swimlane/ngx-graph";
-import { DatasetKind } from "src/app/api/kamu.graphql.interface";
+import { DatasetKind, DatasetLineageBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { LineageGraphNodeKind } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 
@@ -23,6 +23,7 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     @Input() public view: [number, number];
     @Input() public links: Edge[];
     @Input() public nodes: Node[];
+    @Input() public currentDataset: DatasetLineageBasicsFragment;
 
     @Output() public onClickNodeEvent = new EventEmitter<Node>();
 

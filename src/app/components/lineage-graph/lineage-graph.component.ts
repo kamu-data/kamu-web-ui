@@ -47,6 +47,7 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
 
     public ngOnInit(): void {
+        console.log("===>", this.currentDataset);
         this.graphNodes = this.nodes;
     }
 

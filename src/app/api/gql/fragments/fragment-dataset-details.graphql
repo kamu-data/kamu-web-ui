@@ -10,5 +10,8 @@ fragment DatasetDetails on Dataset {
       ...License
     }
     currentWatermark
+    currentDownstreamDependencies {
+      __typename
+    }
   }
 }

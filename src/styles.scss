@@ -1517,81 +1517,10 @@ input {
     }
 }
 
-.side-panel {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 270px;
-    background-color: #f1f1f1;
-    border: 1px solid #dedede;
-    border-radius: 5px;
-    font-size: 12px;
-    padding: 10px;
-    white-space: break-spaces;
-    margin: 0;
-
-    &__title {
-        .dataset-name {
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-
-            span {
-                font-size: 12px;
-
-                &:hover {
-                    text-decoration: none;
-                    cursor: pointer;
-                }
-            }
-        }
-
-        .account-avatar {
-            margin-right: 10px;
-
-            img {
-                width: 18px;
-                height: 18px;
-            }
-        }
-    }
-
-    .info {
-        span {
+.info {
+    span {
+        time {
             font-size: 12px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            width: 100%;
-
-            time {
-                font-size: 12px;
-            }
-
-            .updated {
-                margin-top: 1px;
-                padding-left: 3px;
-            }
-        }
-    }
-
-    &__permissions {
-        margin-left: 15px;
-
-        span {
-            font-size: 10px;
-            padding: 1px 5px;
-            border-radius: 6px;
-        }
-
-        .badge-access {
-            background: #cdd2d9;
-        }
-
-        .badge-verified {
-            margin-left: 5px;
-            color: green;
-            background: #d9f8e2;
         }
     }
 }

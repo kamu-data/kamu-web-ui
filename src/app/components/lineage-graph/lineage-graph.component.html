@@ -153,21 +153,21 @@
         <div class="mt-1 info d-flex align-items-center">
             <mat-icon class="fs-4 mr-2">addchart</mat-icon>
             <span class="d-flex align-items-center mb-2">
+                <span class="updated"> Created </span>
                 <app-display-time
                     [title]="currentDataset.createdAt"
                     [data]="currentDataset.createdAt"
                 ></app-display-time>
-                <span class="updated"> created </span>
             </span>
         </div>
         <div class="mt-1 info d-flex align-items-center">
             <mat-icon class="fs-4 mr-2">update</mat-icon>
             <span class="d-flex align-items-center mb-2">
+                <span class="updated"> Updated </span>
                 <app-display-time
                     [title]="currentDataset.lastUpdatedAt"
                     [data]="currentDataset.lastUpdatedAt"
                 ></app-display-time>
-                <span class="updated"> updated </span>
             </span>
         </div>
     </div>

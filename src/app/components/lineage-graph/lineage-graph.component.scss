@@ -1,0 +1,76 @@
+%text-overflow-ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.side-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 270px;
+    background-color: #f1f1f1;
+    border: 1px solid #dedede;
+    border-radius: 5px;
+    font-size: 12px;
+    padding: 10px;
+    white-space: break-spaces;
+    margin: 0;
+
+    &__title {
+        .dataset-name {
+            @extend %text-overflow-ellipsis;
+
+            span {
+                font-size: 12px;
+
+                &:hover {
+                    text-decoration: none;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .account-avatar {
+            margin-right: 10px;
+
+            img {
+                width: 18px;
+                height: 18px;
+            }
+        }
+    }
+
+    .info {
+        span {
+            @extend %text-overflow-ellipsis;
+
+            font-size: 12px;
+
+            .updated {
+                margin-top: 1px;
+                padding-right: 3px;
+            }
+        }
+    }
+
+    &__permissions {
+        margin-left: 15px;
+
+        span {
+            font-size: 10px;
+            padding: 1px 5px;
+            border-radius: 6px;
+        }
+
+        .badge-access {
+            background: #cdd2d9;
+        }
+
+        .badge-verified {
+            margin-left: 5px;
+            color: green;
+            background: #d9f8e2;
+        }
+    }
+}

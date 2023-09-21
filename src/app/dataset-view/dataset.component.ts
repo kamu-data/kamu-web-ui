@@ -37,7 +37,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
 
-    public lineageGraphView: [number, number] = [window.innerWidth - 350, screen.height - 380];
+    public lineageGraphView: [number, number] = [window.innerWidth - 340, screen.height - 380];
 
     @HostListener("window:resize")
     private checkWindowSize(): void {
@@ -88,7 +88,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
                         searchResultContainer.offsetWidth -
                         parseInt(styleElement.paddingLeft, 10) -
                         parseInt(styleElement.paddingRight, 10) -
-                        300;
+                        280;
                     this.lineageGraphView[1] = screen.height - 380;
                 }
             });

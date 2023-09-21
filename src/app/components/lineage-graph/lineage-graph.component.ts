@@ -18,6 +18,7 @@ import { LineageGraphNodeKind } from "src/app/dataset-view/additional-components
 @Component({
     selector: "app-lineage-graph",
     templateUrl: "./lineage-graph.component.html",
+    styleUrls: ["./lineage-graph.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineageGraphComponent implements OnChanges, OnInit {
@@ -47,7 +48,6 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
 
     public ngOnInit(): void {
-        console.log("===>", this.currentDataset);
         this.graphNodes = this.nodes;
     }
 

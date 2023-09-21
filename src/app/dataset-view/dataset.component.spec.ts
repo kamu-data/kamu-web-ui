@@ -207,7 +207,7 @@ describe("DatasetComponent", () => {
 
         // TODO: horizontal logic is a bit more complicated, but needs to be tested too
         // For now check only vertical logic
-        expect(component.lineageGraphView[1]).toEqual(DatasetComponent.LINEAGE_VIEW_VERTICAL_POSITION);
+        expect(component.lineageGraphView[1]).toEqual(DatasetComponent.INITIAL_GRAPH_VIEW_HEIGHT);
 
         flush();
     }));

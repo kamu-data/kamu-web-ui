@@ -112,8 +112,12 @@ export const mockCurrentSourceFetchUrlFragment: CurrentSourceFetchUrlFragment = 
 
 export const mockGraphNode: DatasetLineageBasicsFragment = {
     ...mockDatasetBasicsDerivedFragment,
+    createdAt: "2023-09-05T02:14:17.365614388+00:00",
+    lastUpdatedAt: "2023-09-05T02:24:48.840536329+00:00",
+    data: { __typename: "DatasetData", numRecordsTotal: 127, estimatedSize: 14515 },
     metadata: {
         ...mockCurrentSourceFetchUrlFragment,
+        currentLicense: null,
     },
 };
 

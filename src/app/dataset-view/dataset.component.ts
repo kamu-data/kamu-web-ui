@@ -36,8 +36,13 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
     public datasetPermissions$: Observable<DatasetPermissionsFragment>;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
+    public static readonly INITIAL_GRAPH_VIEW_HEIGHT: number = screen.height - 380;
+    public static readonly INITIAL_GRAPH_VIEW_WIDTH: number = window.innerWidth - 340;
 
-    public lineageGraphView: [number, number] = [window.innerWidth - 340, screen.height - 380];
+    public lineageGraphView: [number, number] = [
+        DatasetComponent.INITIAL_GRAPH_VIEW_WIDTH,
+        DatasetComponent.INITIAL_GRAPH_VIEW_HEIGHT,
+    ];
 
     @HostListener("window:resize")
     private checkWindowSize(): void {
@@ -89,7 +94,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
                         parseInt(styleElement.paddingLeft, 10) -
                         parseInt(styleElement.paddingRight, 10) -
                         280;
-                    this.lineageGraphView[1] = screen.height - 380;
+                    this.lineageGraphView[1] = DatasetComponent.INITIAL_GRAPH_VIEW_HEIGHT;
                 }
             });
         }

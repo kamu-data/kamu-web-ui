@@ -11,6 +11,11 @@ import { LineageGraphNodeData } from "src/app/dataset-view/additional-components
 import { TEST_AVATAR_URL } from "src/app/api/mock/auth.mock";
 import _ from "lodash";
 import AppValues from "src/app/common/app.values";
+import { MatIconModule } from "@angular/material/icon";
+import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
+import { DisplayTimeModule } from "../display-time/display-time.module";
+import { SharedTestModule } from "src/app/common/shared-test.module";
+import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
 
 describe("LineageGraphComponent", () => {
     let component: LineageGraphComponent;
@@ -20,7 +25,16 @@ describe("LineageGraphComponent", () => {
         await TestBed.configureTestingModule({
             declarations: [LineageGraphComponent],
             providers: [Apollo],
-            imports: [NgxGraphModule, BrowserAnimationsModule, ApolloModule, ApolloTestingModule],
+            imports: [
+                NgxGraphModule,
+                BrowserAnimationsModule,
+                ApolloModule,
+                ApolloTestingModule,
+                MatIconModule,
+                DisplaySizeModule,
+                DisplayTimeModule,
+                SharedTestModule,
+            ],
         })
             .overrideComponent(LineageGraphComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
@@ -32,6 +46,7 @@ describe("LineageGraphComponent", () => {
         component.view = [500, 600];
         component.links = MOCK_LINKS;
         component.nodes = MOCK_NODES;
+        component.currentDataset = mockGraphNode;
         fixture.detectChanges();
     });
 

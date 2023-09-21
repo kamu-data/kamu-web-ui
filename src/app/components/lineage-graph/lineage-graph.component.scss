@@ -4,9 +4,20 @@
     text-overflow: ellipsis;
 }
 
-.side-panel {
+.information-button {
     position: absolute;
     top: 0;
+    right: 0;
+
+    button {
+        border: none;
+        background-color: transparent;
+    }
+}
+
+.side-panel {
+    position: absolute;
+    top: 40px;
     right: 0;
     width: 270px;
     background-color: #f1f1f1;

@@ -110,7 +110,12 @@
         </ng-template>
     </ngx-graph>
 
-    <div class="side-panel">
+    <div class="information-button">
+        <button (click)="onClickInfo()">
+            <img src="assets/images/information.png" alt="" width="25" height="25" />
+        </button>
+    </div>
+    <div class="side-panel" *ngIf="showSidePanel">
         <div class="side-panel__title d-flex fw-bold">
             <div class="account-avatar">
                 <img [src]="currentDataset.owner.avatarUrl" />

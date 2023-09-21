@@ -1,12 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-} from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { DatasetKind, DatasetLineageBasicsFragment, FetchStepUrl } from "src/app/api/kamu.graphql.interface";
@@ -21,7 +13,6 @@ import { LineageGraphNodeKind, LineageGraphNodeData, LineageNodeAccess } from ".
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineageComponent extends BaseComponent implements OnInit {
-    @Input() public lineageGraphView: [number, number];
     @Output() onClickNodeEmit = new EventEmitter<Node>();
 
     public lineageGraphLink: Edge[] = [];

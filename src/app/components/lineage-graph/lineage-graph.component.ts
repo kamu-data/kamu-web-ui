@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     EventEmitter,
+    HostListener,
     Input,
     OnChanges,
     OnInit,
@@ -11,6 +12,7 @@ import {
 } from "@angular/core";
 import { Node, Edge, MiniMapPosition } from "@swimlane/ngx-graph";
 import { DatasetKind, DatasetLineageBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { MaybeNull } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
 import { LineageGraphNodeKind } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
@@ -22,7 +24,6 @@ import { LineageGraphNodeKind } from "src/app/dataset-view/additional-components
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineageGraphComponent implements OnChanges, OnInit {
-    @Input() public view: [number, number];
     @Input() public links: Edge[];
     @Input() public nodes: Node[];
     @Input() public currentDataset: DatasetLineageBasicsFragment;
@@ -46,9 +47,32 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly LineageGraphNodeKind: typeof LineageGraphNodeKind = LineageGraphNodeKind;
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
+    public INITIAL_GRAPH_VIEW_HEIGHT: number = screen.height - 470;
+    public INITIAL_GRAPH_VIEW_WIDTH: number = window.innerWidth - 100;
+    public view: [number, number] = [this.INITIAL_GRAPH_VIEW_WIDTH, this.INITIAL_GRAPH_VIEW_HEIGHT];
+    public showSidePanel = false;
+
+    @HostListener("window:resize")
+    private checkWindowSize(): void {
+        this.changeLineageGraphView();
+    }
 
     public ngOnInit(): void {
         this.graphNodes = this.nodes;
+    }
+
+    public changeLineageGraphView(): void {
+        const searchResultContainer: MaybeNull<HTMLElement> = document.getElementById("searchResultContainerContent");
+        if (searchResultContainer) {
+            const styleElement: CSSStyleDeclaration = getComputedStyle(searchResultContainer);
+
+            this.view[0] =
+                searchResultContainer.offsetWidth -
+                parseInt(styleElement.paddingLeft, 10) -
+                parseInt(styleElement.paddingRight, 10) +
+                (this.showSidePanel ? -270 : 0);
+            this.view[1] = this.INITIAL_GRAPH_VIEW_HEIGHT;
+        }
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
@@ -56,10 +80,16 @@ export class LineageGraphComponent implements OnChanges, OnInit {
         if (nodes.currentValue && nodes.currentValue !== nodes.previousValue) {
             this.graphNodes = nodes.currentValue as Node[];
         }
+
         this.datasetKind = DataHelpers.capitalizeFirstLetter(this.currentDataset.kind);
     }
 
     public onClickNode(node: Node): void {
         this.onClickNodeEvent.emit(node);
+    }
+
+    public onClickInfo(): void {
+        this.showSidePanel = !this.showSidePanel;
+        this.view = [this.INITIAL_GRAPH_VIEW_WIDTH + (this.showSidePanel ? -270 : 0), this.INITIAL_GRAPH_VIEW_HEIGHT];
     }
 }

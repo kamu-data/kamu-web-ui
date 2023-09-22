@@ -71,7 +71,7 @@
                         [attr.y]="-12"
                         [attr.width]="20"
                         [attr.height]="20"
-                        [attr.href]="'../assets/images/private.png'"
+                        [attr.href]="'../assets/images/public.png'"
                     />
                 </svg:g>
             </svg:g>
@@ -155,7 +155,7 @@
                 license</span
             >
         </div>
-        <div class="mt-1 info d-flex align-items-center">
+        <div class="mt-1 info d-flex align-items-start">
             <mat-icon class="fs-4 mr-2">addchart</mat-icon>
             <span class="d-flex align-items-center mb-2">
                 <span class="updated"> Created </span>
@@ -165,13 +165,23 @@
                 ></app-display-time>
             </span>
         </div>
-        <div class="mt-1 info d-flex align-items-center">
+        <div class="info d-flex align-items-start">
             <mat-icon class="fs-4 mr-2">update</mat-icon>
             <span class="d-flex align-items-center mb-2">
                 <span class="updated"> Updated </span>
                 <app-display-time
                     [title]="currentDataset.lastUpdatedAt"
                     [data]="currentDataset.lastUpdatedAt"
+                ></app-display-time>
+            </span>
+        </div>
+        <div class="info d-flex align-items-start">
+            <mat-icon class="fs-4 mr-2"> security </mat-icon>
+            <span class="d-flex align-items-center mb-2">
+                <span class="updated"> Watermark </span>
+                <app-display-time
+                    [title]="currentDataset.metadata.currentWatermark"
+                    [data]="currentDataset.metadata.currentWatermark!"
                 ></app-display-time>
             </span>
         </div>

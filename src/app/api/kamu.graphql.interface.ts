@@ -1597,7 +1597,6 @@ export type DatasetDetailsFragment = {
         __typename?: "DatasetMetadata";
         currentWatermark?: string | null;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
-        currentDownstreamDependencies: Array<{ __typename: "Dataset" }>;
     };
 };
 
@@ -1702,6 +1701,7 @@ export type DatasetLineageBasicsFragment = {
     data: { __typename?: "DatasetData" } & DatasetDataSizeFragment;
     metadata: {
         __typename?: "DatasetMetadata";
+        currentWatermark?: string | null;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
     } & CurrentSourceFetchUrlFragment;
     owner: { __typename?: "Account"; avatarUrl?: string | null };
@@ -2021,6 +2021,7 @@ export const DatasetLineageBasicsFragmentDoc = gql`
             currentLicense {
                 ...License
             }
+            currentWatermark
         }
         owner {
             avatarUrl
@@ -2482,9 +2483,6 @@ export const DatasetDetailsFragmentDoc = gql`
                 ...License
             }
             currentWatermark
-            currentDownstreamDependencies {
-                __typename
-            }
         }
     }
     ${LicenseFragmentDoc}

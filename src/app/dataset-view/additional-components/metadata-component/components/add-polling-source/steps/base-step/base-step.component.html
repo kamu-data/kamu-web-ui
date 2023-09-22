@@ -1,6 +1,6 @@
 <div [formGroupName]="sectionName" *ngIf="sectionForm">
     <h2 class="text-center">
-        {{ title }}
+        {{ sectionName | titlecase }}
     </h2>
     <p class="text-center mb-4">{{ description }}</p>
     <app-select-kind-field [form]="sectionForm" [data]="sectionStepRadioData"></app-select-kind-field>

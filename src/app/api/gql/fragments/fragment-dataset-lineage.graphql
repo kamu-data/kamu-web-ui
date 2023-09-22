@@ -73,6 +73,7 @@ fragment DatasetLineageBasics on Dataset {
     currentLicense {
       ...License
     }
+    currentWatermark
   }
   owner {
     avatarUrl

@@ -14,7 +14,6 @@ import { Node, Edge, MiniMapPosition } from "@swimlane/ngx-graph";
 import { DatasetKind, DatasetLineageBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
-import { DataHelpers } from "src/app/common/data.helpers";
 import { LineageGraphNodeKind } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 
 @Component({
@@ -42,7 +41,6 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public showMiniMap = true;
     public miniMapPosition: MiniMapPosition;
     public graphNodes: Node[];
-    public datasetKind: string;
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly LineageGraphNodeKind: typeof LineageGraphNodeKind = LineageGraphNodeKind;
@@ -80,8 +78,6 @@ export class LineageGraphComponent implements OnChanges, OnInit {
         if (nodes.currentValue && nodes.currentValue !== nodes.previousValue) {
             this.graphNodes = nodes.currentValue as Node[];
         }
-
-        this.datasetKind = DataHelpers.capitalizeFirstLetter(this.currentDataset.kind);
     }
 
     public onClickNode(node: Node): void {

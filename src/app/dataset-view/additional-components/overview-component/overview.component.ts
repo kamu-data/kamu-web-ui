@@ -15,7 +15,6 @@ import {
     ViewEncapsulation,
 } from "@angular/core";
 import { BaseComponent } from "src/app/common/base.component";
-import { DataHelpers } from "src/app/common/data.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 import {
     DatasetBasicsFragment,
@@ -79,10 +78,6 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public selectTopic(topicName: string): void {
         this.selectTopicEmit.emit(topicName);
-    }
-
-    public datasetKind(kind: DatasetKind): string {
-        return DataHelpers.capitalizeFirstLetter(kind);
     }
 
     public get metadataFragmentBlock(): MaybeUndefined<MetadataBlockFragment> {

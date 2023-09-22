@@ -1,8 +1,7 @@
 import { ValidatorFn, Validators } from "@angular/forms";
-import { DatasetKind, MetadataBlockFragment } from "../api/kamu.graphql.interface";
+import { MetadataBlockFragment } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
-import { SetPollingSourceSection } from "../shared/shared.types";
 import { MaybeUndefined } from "./app.types";
 
 export class DataHelpers {
@@ -14,10 +13,6 @@ export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SET_ATTACHMENTS = "Attachments updated";
     public static readonly BLOCK_DESCRIBE_SET_WATERMARK = "Watermark updated";
     private static readonly SHIFT_ATTACHMENTS_VIEW = "\u00A0".repeat(12);
-
-    public static capitalizeFirstLetter(kind: DatasetKind | SetPollingSourceSection): string {
-        return kind.charAt(0).toUpperCase() + kind.slice(1).toLowerCase();
-    }
 
     public static descriptionForEngine(name: string): EventPropertyLogo {
         switch (name) {

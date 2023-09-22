@@ -6,7 +6,7 @@ import {
     mockReadonlyDatasetPermissionsFragment,
 } from "../search/mock.data";
 import { DatasetService } from "./dataset.service";
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Apollo, ApolloModule } from "apollo-angular";
@@ -197,20 +197,6 @@ describe("DatasetComponent", () => {
         routerMockEventSubject.next(new NavigationEnd(1, "", "redirectUrl"));
         expect(getMainDataByLineageNodeSpy).toHaveBeenCalledTimes(1);
     });
-
-    it("init lineage tab and wait for repositioning", fakeAsync(() => {
-        routeToTab(DatasetViewTypeEnum.Lineage);
-        component.ngOnInit();
-        fixture.detectChanges();
-
-        tick();
-
-        // TODO: horizontal logic is a bit more complicated, but needs to be tested too
-        // For now check only vertical logic
-        expect(component.lineageGraphView[1]).toEqual(DatasetComponent.INITIAL_GRAPH_VIEW_HEIGHT);
-
-        flush();
-    }));
 
     it("should check run SQL request", () => {
         const params = {

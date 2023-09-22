@@ -176,7 +176,7 @@ export const mockDatasetBasicsDerivedFragment: DatasetBasicsFragment = {
     id: "id",
     kind: DatasetKind.Derivative,
     name: "mockNameDerived",
-    owner: { __typename: "Account", ...mockOwnerFields },
+    owner: { __typename: "Account", ...mockOwnerFieldsWithAvatar },
     alias: mockOwnerFields.accountName + "/mockNameDerived",
 };
 
@@ -342,6 +342,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                                         websiteUrl:
                                                             "https://www.ontario.ca/page/open-government-licence-ontario",
                                                     },
+                                                    currentWatermark: "2023-09-03T01:32:07.223403873+00:00",
                                                 },
                                                 createdAt: "2023-09-03T01:32:07.223403873+00:00",
                                                 lastUpdatedAt: "2023-09-03T01:34:22.293688531+00:00",
@@ -371,6 +372,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                             spdxId: "OGL-Canada-2.0",
                                             websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
                                         },
+                                        currentWatermark: "2023-09-03T01:32:07.223403873+00:00",
                                     },
                                     createdAt: "2023-09-03T01:32:07.215520327+00:00",
                                     lastUpdatedAt: "2023-09-03T01:32:15.469401365+00:00",
@@ -399,6 +401,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                 spdxId: "OGL-Canada-2.0",
                                 websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
                             },
+                            currentWatermark: "2023-09-03T01:32:07.223403873+00:00",
                         },
                         createdAt: "2023-09-03T01:08:55.125905488+00:00",
                         lastUpdatedAt: "2023-09-03T01:17:14.151423006+00:00",

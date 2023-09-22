@@ -118,6 +118,7 @@ export const mockGraphNode: DatasetLineageBasicsFragment = {
     metadata: {
         ...mockCurrentSourceFetchUrlFragment,
         currentLicense: null,
+        currentWatermark: "2023-09-05T02:14:17.365614388+00:00",
     },
 };
 

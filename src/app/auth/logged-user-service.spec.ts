@@ -21,6 +21,7 @@ import { MaybeNull } from "../common/app.types";
 import AppValues from "../common/app.values";
 import { AppConfigService } from "../app-config.service";
 import { GithubLoginCredentials, PasswordLoginCredentials } from "../api/auth.api.model";
+import { LoginService } from "./login/login.service";
 
 describe("LoggedUserService", () => {
     let service: LoggedUserService;
@@ -28,7 +29,7 @@ describe("LoggedUserService", () => {
 
     describe("Main Test Suite", () => {
         let navigationService: NavigationService;
-        let authApi: AuthApi;
+        let loginService: LoginService;
         let apollo: Apollo;
 
         beforeEach(() => {
@@ -39,7 +40,7 @@ describe("LoggedUserService", () => {
             service = TestBed.inject(LoggedUserService);
             apollo = TestBed.inject(Apollo);
             navigationService = TestBed.inject(NavigationService);
-            authApi = TestBed.inject(AuthApi);
+            loginService = TestBed.inject(LoginService);
             controller = TestBed.inject(ApolloTestingController);
         });
 
@@ -64,9 +65,7 @@ describe("LoggedUserService", () => {
         }
 
         function loginFullyViaGithub(): void {
-            authApi
-                .fetchAccountAndTokenFromGithubCallackCode({ code: TEST_GITHUB_CODE } as GithubLoginCredentials)
-                .subscribe();
+            loginService.githubLogin({ code: TEST_GITHUB_CODE } as GithubLoginCredentials);
 
             const op = controller.expectOne(LoginDocument);
             op.flush({
@@ -75,12 +74,10 @@ describe("LoggedUserService", () => {
         }
 
         function loginFullyViaPassword(): void {
-            authApi
-                .fetchAccountAndTokenFromPasswordLogin({
-                    login: TEST_LOGIN,
-                    password: TEST_PASSWORD,
-                } as PasswordLoginCredentials)
-                .subscribe();
+            loginService.passwordLogin({
+                login: TEST_LOGIN,
+                password: TEST_PASSWORD,
+            } as PasswordLoginCredentials);
 
             const op = controller.expectOne(LoginDocument);
             op.flush({

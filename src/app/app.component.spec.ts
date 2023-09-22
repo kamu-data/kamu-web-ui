@@ -23,13 +23,14 @@ import { FetchAccountDetailsGQL } from "./api/kamu.graphql.interface";
 import { AppHeaderComponent } from "./components/app-header/app-header.component";
 import { SpinnerComponent } from "./components/spinner/spinner/spinner.component";
 import { LoggedUserService } from "./auth/logged-user.service";
+import { LoginService } from "./auth/login/login.service";
 
 describe("AppComponent", () => {
     let component: AppComponent;
     let fixture: ComponentFixture<AppComponent>;
     let navigationService: NavigationService;
-    let authApi: AuthApi;
     let loggedUserService: LoggedUserService;
+    let loginService: LoginService;
     let fetchAccountDetailsGQL: FetchAccountDetailsGQL;
     const DEFAULT_SEARCH_QUERY = "defaultSearchQuery";
 
@@ -57,8 +58,8 @@ describe("AppComponent", () => {
 
         fixture = TestBed.createComponent(AppComponent);
         navigationService = TestBed.inject(NavigationService);
-        authApi = TestBed.inject(AuthApi);
         loggedUserService = TestBed.inject(LoggedUserService);
+        loginService = TestBed.inject(LoginService);
         fetchAccountDetailsGQL = TestBed.inject(FetchAccountDetailsGQL);
 
         component = fixture.componentInstance;
@@ -149,7 +150,7 @@ describe("AppComponent", () => {
                 data: mockAccountFromAccessToken,
             }),
         );
-        authApi.fetchAccountFromAccessToken("someToken").subscribe();
+        loginService.fetchAccountFromAccessToken("someToken").subscribe();
 
         expect(component.loggedAccount).toEqual(mockAccountFromAccessToken.auth.accountDetails);
 

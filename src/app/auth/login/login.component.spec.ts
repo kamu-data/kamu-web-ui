@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { AngularSvgIconModule } from "angular-svg-icon";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoginMethod } from "src/app/app-config.model";
 import { SpinnerComponent } from "src/app/components/spinner/spinner/spinner.component";
@@ -17,14 +17,20 @@ import {
     getElementByDataTestId,
     setFieldValue,
 } from "src/app/common/base-test.helpers.spec";
-import { TEST_LOGIN, TEST_PASSWORD } from "src/app/api/mock/auth.mock";
+import { TEST_LOGIN, TEST_PASSWORD, mockPasswordLoginResponse } from "src/app/api/mock/auth.mock";
 import { PasswordLoginCredentials } from "src/app/api/auth.api.model";
+import { BehaviorSubject, of } from "rxjs";
+import { LoginPageQueryParams } from "./login.component.model";
+import { ActivatedRoute } from "@angular/router";
+import { AuthApi } from "src/app/api/auth.api";
 
 describe("LoginComponent", () => {
     let component: LoginComponent;
     let fixture: ComponentFixture<LoginComponent>;
     let appConfigService: AppConfigService;
     let loginService: LoginService;
+    let authApi: AuthApi;
+    let httpController: HttpTestingController;
 
     enum Elements {
         METHOD_SELECTION_BLOCK = "method-selection-block",
@@ -43,10 +49,20 @@ describe("LoginComponent", () => {
         PASSWORD_METHOD_ERROR = "password-method-error",
     }
 
+    const mockQueryParams: BehaviorSubject<LoginPageQueryParams> = new BehaviorSubject<LoginPageQueryParams>({});
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [LoginComponent, SpinnerComponent],
-            providers: [Apollo],
+            providers: [
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        queryParams: mockQueryParams.asObservable(),
+                    },
+                },
+            ],
             imports: [
                 ApolloTestingModule,
                 ReactiveFormsModule,
@@ -56,6 +72,8 @@ describe("LoginComponent", () => {
         }).compileComponents();
 
         loginService = TestBed.inject(LoginService);
+        authApi = TestBed.inject(AuthApi);
+        httpController = TestBed.inject(HttpTestingController);
     });
 
     function createFixture() {
@@ -196,6 +214,37 @@ describe("LoginComponent", () => {
                     checkVisible(fixture, Elements.PASSWORD_METHOD_ERROR, false);
                 });
             });
+        });
+
+        it("custom login callback setup via query parameter", () => {
+            const setLoginCallbackSpy = spyOn(loginService, "setLoginCallback").and.callThrough();
+
+            const callbackUrl = "http://example.com/some-callback";
+            mockQueryParams.next({
+                callbackUrl,
+            } as LoginPageQueryParams);
+
+            expect(setLoginCallbackSpy).toHaveBeenCalledTimes(1);
+
+            const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin").and.returnValue(
+                of(mockPasswordLoginResponse.auth.login),
+            );
+
+            const windowCloseSpy = spyOn(window, "close").and.stub();
+
+            const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
+            loginService.passwordLogin(credentials);
+
+            expect(authApiSpy).toHaveBeenCalledOnceWith(credentials);
+
+            httpController
+                .expectOne({
+                    method: "POST",
+                    url: callbackUrl,
+                })
+                .flush({});
+
+            expect(windowCloseSpy).toHaveBeenCalledTimes(1);
         });
     });
 

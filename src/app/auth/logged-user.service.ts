@@ -6,12 +6,12 @@ import AppValues from "../common/app.values";
 import { MaybeNull } from "../common/app.types";
 import { isNull } from "lodash";
 import { AppConfigService } from "../app-config.service";
-import { AuthApi } from "../api/auth.api";
 import { AccountFragment } from "../api/kamu.graphql.interface";
 import { UnsubscribeOnDestroyAdapter } from "../common/unsubscribe.ondestroy.adapter";
 import { AppConfigLoginInstructions } from "../app-config.model";
 import { Apollo } from "apollo-angular";
 import { promiseWithCatch } from "../common/app.helpers";
+import { LoginService } from "./login/login.service";
 
 @Injectable({
     providedIn: "root",
@@ -24,7 +24,7 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
     );
 
     constructor(
-        private authApi: AuthApi,
+        private loginService: LoginService,
         private navigationService: NavigationService,
         private appConfigService: AppConfigService,
         private apollo: Apollo,
@@ -32,15 +32,15 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
         super();
 
         this.trackSubscriptions(
-            this.authApi.accessTokenObtained().subscribe((token: string) => this.saveAccessToken(token)),
-            this.authApi.accountChanged().subscribe((user: AccountFragment) => this.changeUser(user)),
+            this.loginService.accessTokenObtained().subscribe((token: string) => this.saveAccessToken(token)),
+            this.loginService.accountChanged().subscribe((user: AccountFragment) => this.changeUser(user)),
         );
     }
 
     public initialize(): Observable<void> {
         const loginInstructions: AppConfigLoginInstructions | null = this.appConfigService.loginInstructions;
         if (loginInstructions) {
-            return this.authApi.fetchAccountAndTokenFromLoginMethod(
+            return this.loginService.genericLogin(
                 loginInstructions.loginMethod,
                 loginInstructions.loginCredentialsJson,
             );
@@ -75,7 +75,7 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
     private attemptPreviousAuthentication(): Observable<void> {
         const accessToken: string | null = localStorage.getItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
         if (typeof accessToken === "string" && !this.isAuthenticated) {
-            return this.authApi.fetchAccountFromAccessToken(accessToken).pipe(first());
+            return this.loginService.fetchAccountFromAccessToken(accessToken).pipe(first());
         } else {
             return of(void {});
         }

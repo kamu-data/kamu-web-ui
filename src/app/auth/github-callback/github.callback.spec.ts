@@ -6,6 +6,7 @@ import { of } from "rxjs";
 import { AuthApi } from "src/app/api/auth.api";
 import { GithubCallbackComponent } from "./github.callback";
 import { GithubLoginCredentials } from "src/app/api/auth.api.model";
+import { mockGithubLoginResponse } from "src/app/api/mock/auth.mock";
 
 describe("GithubCallbackComponent", () => {
     let component: GithubCallbackComponent;
@@ -45,7 +46,7 @@ describe("GithubCallbackComponent", () => {
         const fetchAccountAndTokenSpy = spyOn(
             authApiService,
             "fetchAccountAndTokenFromGithubCallackCode",
-        ).and.returnValue(of(undefined));
+        ).and.returnValue(of(mockGithubLoginResponse.auth.login));
         component.ngOnInit();
 
         expect(fetchAccountAndTokenSpy).toHaveBeenCalledWith({ code: GITHUB_TEST_CODE } as GithubLoginCredentials);

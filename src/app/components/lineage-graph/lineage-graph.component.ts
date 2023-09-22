@@ -46,7 +46,7 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public readonly LineageGraphNodeKind: typeof LineageGraphNodeKind = LineageGraphNodeKind;
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
     public INITIAL_GRAPH_VIEW_HEIGHT: number = screen.height - 400;
-    public INITIAL_GRAPH_VIEW_WIDTH: number = window.innerWidth - 100;
+    public INITIAL_GRAPH_VIEW_WIDTH: number = window.innerWidth - 120;
     public view: [number, number] = [this.INITIAL_GRAPH_VIEW_WIDTH, this.INITIAL_GRAPH_VIEW_HEIGHT];
     public showSidePanel = false;
 
@@ -84,6 +84,5 @@ export class LineageGraphComponent implements OnChanges, OnInit {
 
     public onClickInfo(): void {
         this.showSidePanel = !this.showSidePanel;
-        this.view = [this.INITIAL_GRAPH_VIEW_WIDTH, this.INITIAL_GRAPH_VIEW_HEIGHT];
     }
 }

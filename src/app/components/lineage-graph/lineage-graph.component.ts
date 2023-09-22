@@ -63,12 +63,10 @@ export class LineageGraphComponent implements OnChanges, OnInit {
         const searchResultContainer: MaybeNull<HTMLElement> = document.getElementById("searchResultContainerContent");
         if (searchResultContainer) {
             const styleElement: CSSStyleDeclaration = getComputedStyle(searchResultContainer);
-
             this.view[0] =
                 searchResultContainer.offsetWidth -
                 parseInt(styleElement.paddingLeft, 10) -
-                parseInt(styleElement.paddingRight, 10) +
-                (this.showSidePanel ? -270 : 0);
+                parseInt(styleElement.paddingRight, 10);
             this.view[1] = this.INITIAL_GRAPH_VIEW_HEIGHT;
         }
     }
@@ -86,6 +84,6 @@ export class LineageGraphComponent implements OnChanges, OnInit {
 
     public onClickInfo(): void {
         this.showSidePanel = !this.showSidePanel;
-        this.view = [this.INITIAL_GRAPH_VIEW_WIDTH + (this.showSidePanel ? -270 : 0), this.INITIAL_GRAPH_VIEW_HEIGHT];
+        this.view = [this.INITIAL_GRAPH_VIEW_WIDTH, this.INITIAL_GRAPH_VIEW_HEIGHT];
     }
 }

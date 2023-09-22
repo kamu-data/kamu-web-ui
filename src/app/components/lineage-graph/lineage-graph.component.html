@@ -16,6 +16,7 @@
         [nodes]="graphNodes"
         [view]="view"
         layout="dagre"
+        [nodeHeight]="70"
     >
         <ng-template #defsTemplate>
             <svg:marker
@@ -35,7 +36,7 @@
             <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.Dataset">
                 <svg:rect
                     [attr.width]="node.dimension.width"
-                    [attr.height]="70"
+                    [attr.height]="node.dimension.height"
                     [attr.rx]="5"
                     [attr.fill]="node.data.dataObject.kind === DatasetKind.Root ? '#FFB6C1' : '#add8e6'"
                     [attr.cursor]="'pointer'"
@@ -46,7 +47,7 @@
                 <svg:text
                     alignment-baseline="central"
                     [attr.x]="10"
-                    [attr.y]="node.dimension.height / 2"
+                    [attr.y]="node.dimension.height * 0.6"
                     [attr.font-weight]="'600'"
                     [attr.cursor]="'pointer'"
                     (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
@@ -60,8 +61,15 @@
                     [attr.height]="18"
                     attr.data-test-id="account-avatar-{{ node.label }}"
                     [attr.xlink:href]="node.data.dataObject.avatarUrl || DEFAULT_AVATAR_URL"
+                    (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
                 />
-                <svg:text alignment-baseline="central" [attr.x]="35" [attr.y]="18" [attr.font-weight]="'normal'">
+                <svg:text
+                    alignment-baseline="central"
+                    (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
+                    [attr.x]="35"
+                    [attr.y]="18"
+                    [attr.font-weight]="'normal'"
+                >
                     {{ node.data.dataObject.accountName }}
                 </svg:text>
                 <svg:g [attr.transform]="'translate(' + node.dimension.width * 1.005 + ',0)'">
@@ -170,6 +178,7 @@
             <span class="d-flex align-items-center mb-2">
                 <span class="updated"> Updated </span>
                 <app-display-time
+                    class="time"
                     [title]="currentDataset.lastUpdatedAt"
                     [data]="currentDataset.lastUpdatedAt"
                 ></app-display-time>
@@ -180,6 +189,7 @@
             <span class="d-flex align-items-center mb-2">
                 <span class="updated"> Watermark </span>
                 <app-display-time
+                    class="time"
                     [title]="currentDataset.metadata.currentWatermark"
                     [data]="currentDataset.metadata.currentWatermark!"
                 ></app-display-time>

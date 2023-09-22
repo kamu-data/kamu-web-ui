@@ -45,7 +45,7 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly LineageGraphNodeKind: typeof LineageGraphNodeKind = LineageGraphNodeKind;
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
-    public INITIAL_GRAPH_VIEW_HEIGHT: number = screen.height - 470;
+    public INITIAL_GRAPH_VIEW_HEIGHT: number = screen.height - 400;
     public INITIAL_GRAPH_VIEW_WIDTH: number = window.innerWidth - 100;
     public view: [number, number] = [this.INITIAL_GRAPH_VIEW_WIDTH, this.INITIAL_GRAPH_VIEW_HEIGHT];
     public showSidePanel = false;

@@ -1,4 +1,3 @@
-import { DataHelpers } from "../../../common/data.helpers";
 import {
     DatasetKind,
     DatasetPermissionsFragment,
@@ -135,10 +134,6 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         } else {
             return false;
         }
-    }
-
-    public kindToCamelCase(kind: DatasetKind): string {
-        return DataHelpers.capitalizeFirstLetter(kind);
     }
 
     public navigateToEditPollingSource(): void {

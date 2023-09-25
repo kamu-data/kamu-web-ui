@@ -3,9 +3,12 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { LineageGraphComponent } from "./lineage-graph.component";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
+import { MatIconModule } from "@angular/material/icon";
+import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
+import { DisplayTimeModule } from "../display-time/display-time.module";
 
 @NgModule({
-    imports: [CommonModule, FormsModule, NgxGraphModule],
+    imports: [CommonModule, FormsModule, NgxGraphModule, MatIconModule, DisplaySizeModule, DisplayTimeModule],
     exports: [LineageGraphComponent],
     declarations: [LineageGraphComponent],
 })

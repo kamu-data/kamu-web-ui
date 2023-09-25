@@ -2,7 +2,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    HostListener,
     OnDestroy,
     OnInit,
     ViewEncapsulation,
@@ -32,19 +31,10 @@ import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-compone
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetComponent extends BaseProcessingComponent implements OnInit, OnDestroy {
-    public static readonly LINEAGE_VIEW_VERTICAL_POSITION = 400;
-
     public datasetBasics: MaybeUndefined<DatasetBasicsFragment>;
     public datasetPermissions$: Observable<DatasetPermissionsFragment>;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
-
-    public lineageGraphView: [number, number] = [500, 600];
-
-    @HostListener("window:resize")
-    private checkWindowSize(): void {
-        this.changeLineageGraphView();
-    }
 
     constructor(
         private datasetService: DatasetService,
@@ -57,7 +47,6 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
     }
 
     public ngOnInit(): void {
-        this.checkWindowSize();
         this.trackSubscriptions(
             this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
                 this.getMainDataByLineageNode();
@@ -76,23 +65,6 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
     public getMainDataByLineageNode(): void {
         if (this.datasetBasics?.name !== this.getDatasetInfoFromUrl().datasetName) {
             this.datasetService.requestDatasetMainData(this.getDatasetInfoFromUrl()).subscribe();
-        }
-    }
-
-    public changeLineageGraphView(): void {
-        if (this.datasetViewType === DatasetViewTypeEnum.Lineage) {
-            setTimeout(() => {
-                const searchResultContainer: MaybeNull<HTMLElement> =
-                    document.getElementById("searchResultContainerContent");
-                if (searchResultContainer) {
-                    const styleElement: CSSStyleDeclaration = getComputedStyle(searchResultContainer);
-                    this.lineageGraphView[0] =
-                        searchResultContainer.offsetWidth -
-                        parseInt(styleElement.paddingLeft, 10) -
-                        parseInt(styleElement.paddingRight, 10);
-                    this.lineageGraphView[1] = DatasetComponent.LINEAGE_VIEW_VERTICAL_POSITION;
-                }
-            });
         }
     }
 
@@ -133,7 +105,6 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
 
     private initLineageTab(): void {
         this.datasetViewType = DatasetViewTypeEnum.Lineage;
-        this.changeLineageGraphView();
     }
 
     public initDiscussionsTab(): void {

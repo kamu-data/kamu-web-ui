@@ -1,4 +1,4 @@
-<div #containerRef>
+<div #containerRef class="position-relative">
     <ngx-graph
         class="chart-container"
         [draggingEnabled]="draggingEnabled"
@@ -16,6 +16,7 @@
         [nodes]="graphNodes"
         [view]="view"
         layout="dagre"
+        [nodeHeight]="70"
     >
         <ng-template #defsTemplate>
             <svg:marker
@@ -34,8 +35,8 @@
         <ng-template #nodeTemplate let-node>
             <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.Dataset">
                 <svg:rect
-                    [attr.width]="node.dimension.width"
-                    [attr.height]="70"
+                    [attr.width]="node.dimension.width + 18"
+                    [attr.height]="node.dimension.height"
                     [attr.rx]="5"
                     [attr.fill]="node.data.dataObject.kind === DatasetKind.Root ? '#FFB6C1' : '#add8e6'"
                     [attr.cursor]="'pointer'"
@@ -46,7 +47,7 @@
                 <svg:text
                     alignment-baseline="central"
                     [attr.x]="10"
-                    [attr.y]="node.dimension.height / 2"
+                    [attr.y]="node.dimension.height * 0.6"
                     [attr.font-weight]="'600'"
                     [attr.cursor]="'pointer'"
                     (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
@@ -60,20 +61,17 @@
                     [attr.height]="18"
                     attr.data-test-id="account-avatar-{{ node.label }}"
                     [attr.xlink:href]="node.data.dataObject.avatarUrl || DEFAULT_AVATAR_URL"
+                    (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
                 />
-                <svg:text alignment-baseline="central" [attr.x]="35" [attr.y]="18" [attr.font-weight]="'normal'">
+                <svg:text
+                    alignment-baseline="central"
+                    (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
+                    [attr.x]="35"
+                    [attr.y]="18"
+                    [attr.font-weight]="'normal'"
+                >
                     {{ node.data.dataObject.accountName }}
                 </svg:text>
-                <svg:g [attr.transform]="'translate(' + node.dimension.width * 1.005 + ',0)'">
-                    <!-- Temporary solution - in future icon will be choosen on explicit public/private attribute in the dataset -->
-                    <image
-                        [attr.x]="-12"
-                        [attr.y]="-12"
-                        [attr.width]="20"
-                        [attr.height]="20"
-                        [attr.href]="'../assets/images/private.png'"
-                    />
-                </svg:g>
             </svg:g>
             <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.Source">
                 <svg:rect
@@ -109,4 +107,92 @@
             </svg:g>
         </ng-template>
     </ngx-graph>
+
+    <div class="information-button">
+        <button (click)="onClickInfo()" data-test-id="info-button">
+            <img src="assets/images/information.png" alt="" width="25" height="25" />
+        </button>
+    </div>
+    <div class="side-panel" *ngIf="showSidePanel">
+        <div class="side-panel__title d-flex fw-bold">
+            <div class="account-avatar">
+                <img [src]="currentDataset.owner.avatarUrl" data-test-id="side-panel-avatar" />
+            </div>
+            <div class="dataset-name">
+                <span
+                    [title]="currentDataset.owner.accountName + ' / ' + currentDataset.name"
+                    data-test-id="side-panel-dataset"
+                >
+                    {{ currentDataset.owner.accountName }}
+                    / {{ currentDataset.name }}
+                </span>
+            </div>
+        </div>
+        <div class="side-panel__permissions mt-1">
+            <span class="badge-access">Public</span>
+            <span class="badge-verified">Verified</span>
+        </div>
+        <div class="mt-3 info d-flex align-items-center">
+            <mat-icon class="fs-4 mr-2">account_tree</mat-icon>
+            <span data-test-id="side-panel-dataset-kind"> {{ currentDataset.kind | titlecase }} </span>
+        </div>
+        <div class="mt-1 info d-flex align-items-center">
+            <mat-icon class="fs-4 mr-2">star_border</mat-icon> <span> 4 stars </span>
+        </div>
+        <div class="mt-1 info d-flex align-items-center">
+            <mat-icon class="fs-4 mr-2"> workspaces_outline </mat-icon>
+            <span data-test-id="side-panel-dataset-size">
+                {{ currentDataset.data.estimatedSize ? (currentDataset.data.estimatedSize | displaySize) : 0 }}
+                estimated size
+            </span>
+        </div>
+        <div class="mt-1 info d-flex align-items-center">
+            <mat-icon class="fs-4 mr-3"> format_line_spacing </mat-icon>
+            <span data-test-id="side-panel-dataset-records">
+                {{ currentDataset.data.numRecordsTotal || 0 | number: "1.0-0" }} records
+            </span>
+        </div>
+        <div class="mt-1 info d-flex align-items-center">
+            <mat-icon class="fs-4 mr-3"> receipt_long </mat-icon>
+            <span data-test-id="side-panel-dataset-license">
+                {{ currentDataset.metadata.currentLicense?.shortName ?? "No " }}
+                license</span
+            >
+        </div>
+        <div class="mt-1 info d-flex align-items-start">
+            <mat-icon class="fs-4 mr-2">addchart</mat-icon>
+            <span class="d-flex align-items-center mb-2">
+                <span class="updated"> Created </span>
+                <app-display-time
+                    [title]="currentDataset.createdAt"
+                    [data]="currentDataset.createdAt"
+                    [dataTestId]="'side-panel-dataset-created'"
+                ></app-display-time>
+            </span>
+        </div>
+        <div class="info d-flex align-items-start">
+            <mat-icon class="fs-4 mr-2">update</mat-icon>
+            <span class="d-flex align-items-center mb-2">
+                <span class="updated"> Updated </span>
+                <app-display-time
+                    class="time"
+                    [title]="currentDataset.lastUpdatedAt"
+                    [data]="currentDataset.lastUpdatedAt"
+                    [dataTestId]="'side-panel-dataset-updated'"
+                ></app-display-time>
+            </span>
+        </div>
+        <div class="info d-flex align-items-start">
+            <mat-icon class="fs-4 mr-2"> security </mat-icon>
+            <span class="d-flex align-items-center mb-2">
+                <span class="updated"> Watermark </span>
+                <app-display-time
+                    class="time"
+                    [title]="currentDataset.metadata.currentWatermark"
+                    [data]="currentDataset.metadata.currentWatermark!"
+                    [dataTestId]="'side-panel-dataset-watermark'"
+                ></app-display-time>
+            </span>
+        </div>
+    </div>
 </div>

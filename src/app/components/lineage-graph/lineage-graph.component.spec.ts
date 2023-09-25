@@ -6,21 +6,37 @@ import { MOCK_LINKS, MOCK_NODES } from "src/app/api/mock/dataset.mock";
 import { ChangeDetectionStrategy, SimpleChange } from "@angular/core";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { LineageGraphNodeData } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 import { TEST_AVATAR_URL } from "src/app/api/mock/auth.mock";
 import _ from "lodash";
 import AppValues from "src/app/common/app.values";
+import { MatIconModule } from "@angular/material/icon";
+import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
+import { DisplayTimeModule } from "../display-time/display-time.module";
+import { SharedTestModule } from "src/app/common/shared-test.module";
+import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import timekeeper from "timekeeper";
 
 describe("LineageGraphComponent", () => {
     let component: LineageGraphComponent;
     let fixture: ComponentFixture<LineageGraphComponent>;
+    const FROZEN_TIME = new Date("2023-10-01 12:00:00");
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [LineageGraphComponent],
             providers: [Apollo],
-            imports: [NgxGraphModule, BrowserAnimationsModule, ApolloModule, ApolloTestingModule],
+            imports: [
+                NgxGraphModule,
+                BrowserAnimationsModule,
+                ApolloModule,
+                ApolloTestingModule,
+                MatIconModule,
+                DisplaySizeModule,
+                DisplayTimeModule,
+                SharedTestModule,
+            ],
         })
             .overrideComponent(LineageGraphComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
@@ -29,10 +45,14 @@ describe("LineageGraphComponent", () => {
 
         fixture = TestBed.createComponent(LineageGraphComponent);
         component = fixture.componentInstance;
-        component.view = [500, 600];
         component.links = MOCK_LINKS;
         component.nodes = MOCK_NODES;
+        component.currentDataset = mockGraphNode;
         fixture.detectChanges();
+    });
+
+    beforeAll(() => {
+        timekeeper.freeze(FROZEN_TIME);
     });
 
     it("should create", () => {
@@ -75,5 +95,43 @@ describe("LineageGraphComponent", () => {
         const avatarElement = findElementByDataTestId(fixture, `account-avatar-${label}`);
         expect(avatarElement).toBeDefined();
         expect(avatarElement?.getAttribute("xlink:href")).toEqual(TEST_AVATAR_URL);
+    });
+
+    it("should check switch the side panel", () => {
+        expect(component).toBeTruthy();
+        emitClickOnElementByDataTestId(fixture, "info-button");
+        expect(component.showSidePanel).toBeTrue();
+    });
+
+    it("should check side panel content", () => {
+        component.showSidePanel = true;
+        fixture.detectChanges();
+
+        const avatarUrl = findElementByDataTestId(fixture, "side-panel-avatar") as HTMLImageElement;
+        expect(avatarUrl.src).toEqual(mockGraphNode.owner.avatarUrl ?? AppValues.DEFAULT_AVATAR_URL);
+
+        const dataset = findElementByDataTestId(fixture, "side-panel-dataset");
+        expect(dataset?.textContent?.trim()).toEqual(`${mockGraphNode.owner.accountName} / ${mockGraphNode.name}`);
+
+        const kind = findElementByDataTestId(fixture, "side-panel-dataset-kind");
+        expect(kind?.textContent?.trim()).toEqual("Derivative");
+
+        const size = findElementByDataTestId(fixture, "side-panel-dataset-size");
+        expect(size?.textContent?.trim()).toEqual("14.2 KB estimated size");
+
+        const records = findElementByDataTestId(fixture, "side-panel-dataset-records");
+        expect(records?.textContent?.trim()).toEqual("127 records");
+
+        const license = findElementByDataTestId(fixture, "side-panel-dataset-license");
+        expect(license?.textContent?.trim()).toEqual("No  license");
+
+        const createdDate = findElementByDataTestId(fixture, "side-panel-dataset-created");
+        expect(createdDate?.textContent?.trim()).toEqual("a month ago");
+
+        const updatedDate = findElementByDataTestId(fixture, "side-panel-dataset-updated");
+        expect(updatedDate?.textContent?.trim()).toEqual("a month ago");
+
+        const watermark = findElementByDataTestId(fixture, "side-panel-dataset-watermark");
+        expect(watermark?.textContent?.trim()).toEqual("a month ago");
     });
 });

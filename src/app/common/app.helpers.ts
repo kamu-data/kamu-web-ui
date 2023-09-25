@@ -16,10 +16,6 @@ export function promiseWithCatch<T>(promise: Promise<T>): void {
     promise.catch((e) => logError(e));
 }
 
-export function capitalizeFirstLetter(text: string): string {
-    return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
 export function isMobileView(): boolean {
     return window.innerWidth < window.innerHeight;
 }

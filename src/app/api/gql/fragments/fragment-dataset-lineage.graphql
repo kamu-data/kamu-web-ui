@@ -62,9 +62,18 @@ fragment DatasetLineage on Dataset {
 }
 
 fragment DatasetLineageBasics on Dataset {
+  createdAt
+  lastUpdatedAt
   ...DatasetBasics
+  data {
+    ...DatasetDataSize
+  }
   metadata {
     ...CurrentSourceFetchUrl
+    currentLicense {
+      ...License
+    }
+    currentWatermark
   }
   owner {
     avatarUrl

@@ -18,7 +18,7 @@
             </button>
         </app-block-row-data>
         <app-block-row-data tooltip="Type of the dataset." label="Kind:">
-            <span>{{ datasetKind(event.datasetKind) }}</span>
+            <span>{{ event.datasetKind | titlecase }}</span>
         </app-block-row-data>
     </div>
 </div>

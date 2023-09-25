@@ -31,6 +31,7 @@ import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-
 import { ChangeDetectionStrategy, SecurityContext } from "@angular/core";
 import { MarkdownModule } from "ngx-markdown";
 import { HttpClient } from "@angular/common/http";
+import { MatIconModule } from "@angular/material/icon";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;
@@ -68,6 +69,7 @@ describe("OverviewComponent", () => {
                 RouterTestingModule,
                 SharedTestModule,
                 ToastrModule.forRoot(),
+                MatIconModule,
             ],
             providers: [Apollo],
         })
@@ -143,16 +145,6 @@ describe("OverviewComponent", () => {
         expect(component.canEditLicense).toBeFalse();
         expect(component.canEditReadme).toBeFalse();
         expect(component.canEditWatermark).toBeFalse();
-    });
-
-    [
-        { kind: DatasetKind.Derivative, result: "Derivative" },
-        { kind: DatasetKind.Root, result: "Root" },
-    ].forEach((item: { kind: DatasetKind; result: string }) => {
-        it(`should return dataset kind ${item.kind} to string ${item.result}`, () => {
-            const result = component.datasetKind(item.kind);
-            expect(result).toBe(item.result);
-        });
     });
 
     it("should check open website", () => {

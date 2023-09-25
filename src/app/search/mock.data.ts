@@ -9,7 +9,6 @@ import {
     RenameDatasetMutation,
     UpdateReadmeMutation,
 } from "../api/kamu.graphql.interface";
-import { mockSetVocab } from "../dataset-block/metadata-block/components/event-details/mock.events";
 import {
     DataBatchFormat,
     DataQueryResultErrorKind,
@@ -177,7 +176,7 @@ export const mockDatasetBasicsDerivedFragment: DatasetBasicsFragment = {
     id: "id",
     kind: DatasetKind.Derivative,
     name: "mockNameDerived",
-    owner: { __typename: "Account", ...mockOwnerFields },
+    owner: { __typename: "Account", ...mockOwnerFieldsWithAvatar },
     alias: mockOwnerFields.accountName + "/mockNameDerived",
 };
 
@@ -217,9 +216,11 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
             name: "alberta.case-details",
             owner: {
                 __typename: "Account",
-                ...mockOwnerFieldsWithAvatar,
+                id: "12345",
+                accountName: "kamu",
+                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
             },
-            alias: mockOwnerFields.accountName + "/alberta.case-details",
+            alias: "kamu/alberta.case-details",
             metadata: {
                 __typename: "DatasetMetadata",
                 currentSource: {
@@ -310,9 +311,11 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                         '{"name": "arrow_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "REQUIRED", "type": "INT64"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT64", "logicalType": "TIMESTAMP(MILLIS,true)"}, {"name": "date_reported", "repetition": "OPTIONAL", "type": "INT64", "logicalType": "TIMESTAMP(MILLIS,true)"}, {"name": "id", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "zone", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "gender", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "age_group", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "case_status", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "case_type", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}]}',
                 },
                 currentVocab: {
-                    ...mockSetVocab,
+                    __typename: "SetVocab",
+                    systemTimeColumn: null,
+                    eventTimeColumn: "date_reported",
+                    offsetColumn: null,
                 },
-
                 currentUpstreamDependencies: [],
                 currentDownstreamDependencies: [
                     {
@@ -331,39 +334,92 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                                     __typename: "DatasetMetadata",
                                                     currentDownstreamDependencies: [],
                                                     currentSource: null,
+                                                    currentLicense: {
+                                                        __typename: "SetLicense",
+                                                        shortName: "OGL-Ontario",
+                                                        name: "Open Government Licence - Ontario",
+                                                        spdxId: null,
+                                                        websiteUrl:
+                                                            "https://www.ontario.ca/page/open-government-licence-ontario",
+                                                    },
+                                                    currentWatermark: "2023-09-03T01:32:07.223403873+00:00",
+                                                },
+                                                createdAt: "2023-09-03T01:32:07.223403873+00:00",
+                                                lastUpdatedAt: "2023-09-03T01:34:22.293688531+00:00",
+                                                data: {
+                                                    __typename: "DatasetData",
+                                                    numRecordsTotal: 1870,
+                                                    estimatedSize: 21685,
+                                                },
+                                                owner: {
+                                                    __typename: "Account",
+                                                    avatarUrl:
+                                                        "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                                    id: "12345",
+                                                    accountName: "kamu",
                                                 },
                                                 id: "did:odf:z4k88e8qAReYmLPFUyaKfk1UHCSY2Mkh6X1AHxuUGNhec76QsGq",
                                                 kind: DatasetKind.Derivative,
                                                 name: "canada.daily-cases",
-                                                owner: {
-                                                    __typename: "Account",
-                                                    ...mockOwnerFieldsWithAvatar,
-                                                },
-                                                alias: mockOwnerFields.accountName + "/canada.daily-cases",
+                                                alias: "canada.daily-cases",
                                             },
                                         ],
                                         currentSource: null,
+                                        currentLicense: {
+                                            __typename: "SetLicense",
+                                            shortName: "OGL-Canada-2.0",
+                                            name: "Open Government Licence - Canada",
+                                            spdxId: "OGL-Canada-2.0",
+                                            websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
+                                        },
+                                        currentWatermark: "2023-09-03T01:32:07.223403873+00:00",
+                                    },
+                                    createdAt: "2023-09-03T01:32:07.215520327+00:00",
+                                    lastUpdatedAt: "2023-09-03T01:32:15.469401365+00:00",
+                                    data: {
+                                        __typename: "DatasetData",
+                                        numRecordsTotal: 4013015,
+                                        estimatedSize: 39905730,
+                                    },
+                                    owner: {
+                                        __typename: "Account",
+                                        avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                        id: "12345",
+                                        accountName: "kamu",
                                     },
                                     id: "did:odf:z4k88e8nN5SdNPxsc5oeqwdCLvjzcvJzoyEQ938E87A15nTrkAk",
                                     kind: DatasetKind.Derivative,
                                     name: "canada.case-details",
-                                    owner: {
-                                        __typename: "Account",
-                                        ...mockOwnerFieldsWithAvatar,
-                                    },
-                                    alias: mockOwnerFields.accountName + "/canada.case-details",
+                                    alias: "canada.case-details",
                                 },
                             ],
                             currentSource: null,
+                            currentLicense: {
+                                __typename: "SetLicense",
+                                shortName: "OGL-Canada-2.0",
+                                name: "Open Government Licence - Canada",
+                                spdxId: "OGL-Canada-2.0",
+                                websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
+                            },
+                            currentWatermark: "2023-09-03T01:32:07.223403873+00:00",
+                        },
+                        createdAt: "2023-09-03T01:08:55.125905488+00:00",
+                        lastUpdatedAt: "2023-09-03T01:17:14.151423006+00:00",
+                        data: {
+                            __typename: "DatasetData",
+                            numRecordsTotal: 596126,
+                            estimatedSize: 6562253,
+                        },
+                        owner: {
+                            __typename: "Account",
+                            avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                            id: "12345",
+                            accountName: "kamu",
                         },
                         id: "did:odf:z4k88e8jmNqgCt5L84XPdaog32MttcHzGiXcktfuTuDY3QKwiyK",
                         kind: DatasetKind.Derivative,
                         name: "alberta.case-details.hm",
-                        owner: {
-                            __typename: "Account",
-                            ...mockOwnerFieldsWithAvatar,
-                        },
-                        alias: mockOwnerFields.accountName + "/alberta.case-details.hm",
+                        alias: "alberta.case-details.hm",
                     },
                 ],
                 currentReadme:
@@ -381,7 +437,8 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                 sequenceNumber: 6,
                                 author: {
                                     __typename: "Account",
-                                    ...mockOwnerFields,
+                                    id: "12345",
+                                    accountName: "kamu",
                                 },
                                 event: {
                                     __typename: "AddData",
@@ -419,7 +476,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                     __typename: "DataQueryResultSuccess",
                     schema: {
                         __typename: "DataSchema",
-                        format: DataSchemaFormat.Parquet,
+                        format: DataSchemaFormat.ParquetJson,
                         content:
                             "message arrow_schema {\n  REQUIRED INT64 offset;\n  REQUIRED INT64 system_time (TIMESTAMP(NANOS,false));\n  OPTIONAL INT64 date_reported (TIMESTAMP(NANOS,false));\n  OPTIONAL INT64 id;\n  OPTIONAL BYTE_ARRAY zone (STRING);\n  OPTIONAL BYTE_ARRAY gender (STRING);\n  OPTIONAL BYTE_ARRAY age_group (STRING);\n  OPTIONAL BYTE_ARRAY case_status (STRING);\n  OPTIONAL BYTE_ARRAY case_type (STRING);\n}\n",
                     },
@@ -433,14 +490,15 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                 numRecordsTotal: 596126,
                 estimatedSize: 6585116,
             },
-            createdAt: "2023-09-03T01:08:55.104604199+00:00",
-            lastUpdatedAt: "2023-09-03T01:09:31.587025138+00:00",
             permissions: {
-                canCommit: true,
+                __typename: "DatasetPermissions",
+                canView: true,
                 canDelete: true,
                 canRename: true,
-                canView: true,
+                canCommit: true,
             },
+            createdAt: "2023-09-03T01:08:55.104604199+00:00",
+            lastUpdatedAt: "2023-09-03T01:09:31.587025138+00:00",
         },
     },
 };

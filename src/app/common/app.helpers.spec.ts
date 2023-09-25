@@ -1,11 +1,6 @@
 import { fakeAsync, flush, tick } from "@angular/core/testing";
 import moment from "moment";
-import {
-    capitalizeFirstLetter,
-    momentConvertDatetoLocalWithFormat,
-    promiseWithCatch,
-    requireValue,
-} from "./app.helpers";
+import { momentConvertDatetoLocalWithFormat, promiseWithCatch, requireValue } from "./app.helpers";
 import AppValues from "./app.values";
 
 describe("AppHelpers", () => {
@@ -44,11 +39,6 @@ describe("AppHelpers", () => {
         expect(consoleErrorSpy).toHaveBeenCalledWith(testError);
         flush();
     }));
-
-    it("should the first letter be capitalized", () => {
-        const result = capitalizeFirstLetter("test");
-        expect(result).toEqual("Test");
-    });
 
     it("should convert data to local ", () => {
         const baseDate = new Date(String("2022-08-05T21:19:28.817281255"));

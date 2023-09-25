@@ -6,7 +6,7 @@ import { ControlContainer, FormGroupDirective } from "@angular/forms";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { JsonFormControl } from "../../add-polling-source-form.types";
-import { DataHelpers, getValidators } from "src/app/common/data.helpers";
+import { getValidators } from "src/app/common/data.helpers";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { EditPollingSourceService } from "../../edit-polling-source.service";
 import { MaybeNull } from "src/app/common/app.types";
@@ -43,10 +43,6 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
 
     public get sectionForm(): FormGroup {
         return this.parentForm.get(this.sectionName) as FormGroup;
-    }
-
-    public get title(): string {
-        return DataHelpers.capitalizeFirstLetter(this.sectionName);
     }
 
     ngOnInit(): void {

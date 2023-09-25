@@ -1696,7 +1696,14 @@ export type DatasetLineageFragment = {
 
 export type DatasetLineageBasicsFragment = {
     __typename?: "Dataset";
-    metadata: { __typename?: "DatasetMetadata" } & CurrentSourceFetchUrlFragment;
+    createdAt: string;
+    lastUpdatedAt: string;
+    data: { __typename?: "DatasetData" } & DatasetDataSizeFragment;
+    metadata: {
+        __typename?: "DatasetMetadata";
+        currentWatermark?: string | null;
+        currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
+    } & CurrentSourceFetchUrlFragment;
     owner: { __typename?: "Account"; avatarUrl?: string | null };
 } & DatasetBasicsFragment;
 
@@ -1993,18 +2000,37 @@ export const DatasetBasicsFragmentDoc = gql`
     }
     ${AccountBasicsFragmentDoc}
 `;
+export const LicenseFragmentDoc = gql`
+    fragment License on SetLicense {
+        shortName
+        name
+        spdxId
+        websiteUrl
+    }
+`;
 export const DatasetLineageBasicsFragmentDoc = gql`
     fragment DatasetLineageBasics on Dataset {
+        createdAt
+        lastUpdatedAt
         ...DatasetBasics
+        data {
+            ...DatasetDataSize
+        }
         metadata {
             ...CurrentSourceFetchUrl
+            currentLicense {
+                ...License
+            }
+            currentWatermark
         }
         owner {
             avatarUrl
         }
     }
     ${DatasetBasicsFragmentDoc}
+    ${DatasetDataSizeFragmentDoc}
     ${CurrentSourceFetchUrlFragmentDoc}
+    ${LicenseFragmentDoc}
 `;
 export const DatasetLineageFragmentDoc = gql`
     fragment DatasetLineage on Dataset {
@@ -2076,14 +2102,6 @@ export const DatasetCurrentInfoFragmentDoc = gql`
     fragment DatasetCurrentInfo on SetInfo {
         description
         keywords
-    }
-`;
-export const LicenseFragmentDoc = gql`
-    fragment License on SetLicense {
-        shortName
-        name
-        spdxId
-        websiteUrl
     }
 `;
 export const SetPollingSourceEventFragmentDoc = gql`

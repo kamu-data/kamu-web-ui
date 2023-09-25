@@ -205,7 +205,7 @@
                         </div>
                         <div class="mx-4">
                             <app-block-row-data [tooltip]="'Type of the dataset.'" [label]="'Dataset type:'">
-                                <span>{{ kindToCamelCase(input.dataset.kind) }}</span>
+                                <span>{{ input.dataset.kind | titlecase }}</span>
                             </app-block-row-data>
                         </div>
                         <div class="mx-4">

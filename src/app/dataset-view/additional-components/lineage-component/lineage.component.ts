@@ -1,12 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-} from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { Edge } from "@swimlane/ngx-graph/lib/models/edge.model";
 import { DatasetKind, DatasetLineageBasicsFragment, FetchStepUrl } from "src/app/api/kamu.graphql.interface";
@@ -21,12 +13,12 @@ import { LineageGraphNodeKind, LineageGraphNodeData, LineageNodeAccess } from ".
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineageComponent extends BaseComponent implements OnInit {
-    @Input() public lineageGraphView: [number, number];
     @Output() onClickNodeEmit = new EventEmitter<Node>();
 
     public lineageGraphLink: Edge[] = [];
     public lineageGraphNodes: Node[] = [];
     public isAvailableLineageGraph = false;
+    public currentDataset: DatasetLineageBasicsFragment;
 
     constructor(private datasetSubsService: DatasetSubscriptionsService, private cdr: ChangeDetectorRef) {
         super();
@@ -53,7 +45,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
 
     private updateGraph(lineageUpdate: LineageUpdate): void {
         const edges = lineageUpdate.edges;
-        const currentDataset = lineageUpdate.origin;
+        this.currentDataset = lineageUpdate.origin;
         this.initLineageGraphProperty();
         this.isAvailableLineageGraph = edges.length !== 0;
         const uniqueDatasets: Record<string, DatasetLineageBasicsFragment> = {};
@@ -63,7 +55,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
             }),
         );
         this.addSourceGraphNodes(Object.values(uniqueDatasets));
-        this.addDatasetGraphNodes(Object.values(uniqueDatasets), edges, currentDataset);
+        this.addDatasetGraphNodes(Object.values(uniqueDatasets), edges, this.currentDataset);
     }
 
     private sanitizeID(id: string): string {

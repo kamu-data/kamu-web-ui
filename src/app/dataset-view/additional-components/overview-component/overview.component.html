@@ -115,15 +115,18 @@
             <div class="card--row dataset-info">
                 <ng-template [ngIf]="datasetBasics && currentState">
                     <div class="dataset-info--block">
-                        <div class="dataset-info--sub-block">
+                        <div class="dataset-info--sub-block d-flex align-items-center">
+                            <mat-icon class="fs-4 mr-2">account_tree</mat-icon>
                             <h2 class="dataset-info--subtitle">Kind:</h2>
                         </div>
+
                         <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">{{ datasetKind(datasetBasics.kind) }}</p>
+                            <p class="dataset-info--text">{{ datasetBasics.kind | titlecase }}</p>
                         </div>
                     </div>
                     <div class="dataset-info--block">
-                        <div class="dataset-info--sub-block">
+                        <div class="dataset-info--sub-block d-flex align-items-center">
+                            <mat-icon class="fs-4 mr-2">visibility</mat-icon>
                             <h2 class="dataset-info--subtitle">Visibility:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
@@ -135,7 +138,8 @@
                         *ngIf="currentState.overview.metadata.currentLicense"
                         data-test-id="license-block"
                     >
-                        <div class="dataset-info--sub-block">
+                        <div class="dataset-info--sub-block d-flex align-items-center">
+                            <mat-icon class="fs-4 mr-3"> receipt_long </mat-icon>
                             <h2 class="dataset-info--subtitle">License:</h2>
                         </div>
                         <div class="dataset-info--sub-block d-flex align-items-center">
@@ -167,7 +171,8 @@
                         </div>
                     </div>
                     <div class="dataset-info--block">
-                        <div class="dataset-info--sub-block">
+                        <div class="dataset-info--sub-block d-flex align-items-center">
+                            <mat-icon class="fs-4 mr-2"> workspaces_outline </mat-icon>
                             <h2 class="dataset-info--subtitle">Estimated Size:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
@@ -180,8 +185,9 @@
                             </p>
                         </div>
                     </div>
-                    <div class="dataset-info--block">
-                        <div class="dataset-info--sub-block">
+                    <div class="dataset-info--block mt-1">
+                        <div class="dataset-info--sub-block d-flex align-items-center">
+                            <mat-icon class="fs-4 mr-3"> format_line_spacing </mat-icon>
                             <h2 class="dataset-info--subtitle">Records:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
@@ -191,10 +197,11 @@
                         </div>
                     </div>
                     <div class="dataset-info--block" *ngIf="currentState">
-                        <div class="dataset-info--sub-block">
+                        <div class="dataset-info--sub-block d-flex align-items-center">
+                            <mat-icon class="fs-4 mr-3">addchart</mat-icon>
                             <h2 class="dataset-info--subtitle">Created At:</h2>
                         </div>
-                        <div class="dataset-info--sub-block">
+                        <div class="dataset-info--sub-block p-0">
                             <app-display-time
                                 class="dataset-info--text"
                                 [title]="currentState.overview.createdAt"
@@ -203,7 +210,8 @@
                         </div>
                     </div>
                     <div class="dataset-info--block" *ngIf="currentState">
-                        <div class="dataset-info--sub-block">
+                        <div class="dataset-info--sub-block d-flex align-items-center">
+                            <mat-icon class="fs-4 mr-2">update</mat-icon>
                             <h2 class="dataset-info--subtitle">Last Updated At:</h2>
                         </div>
                         <div class="dataset-info--sub-block">
@@ -215,11 +223,12 @@
                         </div>
                     </div>
                     <div class="dataset-info--block">
-                        <div class="dataset-info--sub-block">
+                        <div class="dataset-info--sub-block d-flex align-items-center">
+                            <mat-icon class="fs-4 mr-2"> security </mat-icon>
                             <h2 class="dataset-info--subtitle">Watermark:</h2>
                         </div>
                         <div
-                            class="dataset-info--sub-block d-flex align-items-center ps-3"
+                            class="dataset-info--sub-block d-flex align-items-center ps-2"
                             *ngIf="currentState && currentState.overview.metadata.currentWatermark; else noWatermark"
                             data-test-id="watermark-block"
                         >

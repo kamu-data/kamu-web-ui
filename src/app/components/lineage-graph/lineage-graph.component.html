@@ -38,9 +38,15 @@
                     [attr.width]="node.dimension.width + 18"
                     [attr.height]="node.dimension.height"
                     [attr.rx]="5"
-                    [attr.fill]="node.data.dataObject.kind === DatasetKind.Root ? '#FFB6C1' : '#add8e6'"
+                    [attr.fill]="node.data.dataObject.kind === DatasetKind.Root ? '#FFCBA6' : '#BDDEF1'"
                     [attr.cursor]="'pointer'"
-                    [attr.stroke]="node.data.dataObject.isCurrent ? '#FF4500' : 'black'"
+                    [attr.stroke]="
+                        node.data.dataObject.isCurrent
+                            ? node.data.dataObject.kind === DatasetKind.Root
+                                ? '#FF842B'
+                                : '#6095C6'
+                            : 'black'
+                    "
                     [attr.stroke-width]="node.data.dataObject.isCurrent ? 3 : 0"
                     (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
                 />
@@ -140,7 +146,7 @@
             <mat-icon class="fs-4 mr-2">star_border</mat-icon> <span> 4 stars </span>
         </div>
         <div class="mt-1 info d-flex align-items-center">
-            <mat-icon class="fs-4 mr-2"> workspaces_outline </mat-icon>
+            <mat-icon class="fs-4 mr-2">folder_open</mat-icon>
             <span data-test-id="side-panel-dataset-size">
                 {{ currentDataset.data.estimatedSize ? (currentDataset.data.estimatedSize | displaySize) : 0 }}
                 estimated size
@@ -160,7 +166,7 @@
             >
         </div>
         <div class="mt-1 info d-flex align-items-start">
-            <mat-icon class="fs-4 mr-2">addchart</mat-icon>
+            <mat-icon class="fs-4 mr-2">more_time</mat-icon>
             <span class="d-flex align-items-center mb-2">
                 <span class="updated"> Created </span>
                 <app-display-time
@@ -183,7 +189,7 @@
             </span>
         </div>
         <div class="info d-flex align-items-start">
-            <mat-icon class="fs-4 mr-2"> security </mat-icon>
+            <mat-icon class="fs-4 mr-2">timeline</mat-icon>
             <span class="d-flex align-items-center mb-2">
                 <span class="updated"> Watermark </span>
                 <app-display-time

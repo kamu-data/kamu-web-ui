@@ -1,6 +1,7 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    ElementRef,
     EventEmitter,
     HostListener,
     Input,
@@ -9,10 +10,10 @@ import {
     Output,
     SimpleChange,
     SimpleChanges,
+    ViewChild,
 } from "@angular/core";
 import { Node, Edge, MiniMapPosition } from "@swimlane/ngx-graph";
 import { DatasetKind, DatasetLineageBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
 import { LineageGraphNodeKind } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 
@@ -50,6 +51,7 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public view: [number, number] = [this.INITIAL_GRAPH_VIEW_WIDTH, this.INITIAL_GRAPH_VIEW_HEIGHT];
     public showSidePanel = false;
 
+    @ViewChild("containerRef", { static: true }) element: ElementRef;
     @HostListener("window:resize")
     private checkWindowSize(): void {
         this.changeLineageGraphView();
@@ -60,15 +62,13 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     }
 
     public changeLineageGraphView(): void {
-        const searchResultContainer: MaybeNull<HTMLElement> = document.getElementById("searchResultContainerContent");
-        if (searchResultContainer) {
-            const styleElement: CSSStyleDeclaration = getComputedStyle(searchResultContainer);
-            this.view[0] =
-                searchResultContainer.offsetWidth -
-                parseInt(styleElement.paddingLeft, 10) -
-                parseInt(styleElement.paddingRight, 10);
-            this.view[1] = this.INITIAL_GRAPH_VIEW_HEIGHT;
-        }
+        const containerGraph = this.element.nativeElement as HTMLDivElement;
+        const styleElement: CSSStyleDeclaration = getComputedStyle(containerGraph);
+        this.view[0] =
+            containerGraph.clientWidth -
+            parseInt(styleElement.paddingLeft, 10) -
+            parseInt(styleElement.paddingRight, 10);
+        this.view[1] = this.INITIAL_GRAPH_VIEW_HEIGHT;
     }
 
     public ngOnChanges(changes: SimpleChanges): void {

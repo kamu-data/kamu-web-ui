@@ -35,11 +35,7 @@
         <ng-template #nodeTemplate let-node>
             <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.Dataset">
                 <svg:rect
-                    [attr.width]="
-                        node.data.dataObject.accountName.length > node.label.length
-                            ? node.dimension.width + 15
-                            : node.dimension.width
-                    "
+                    [attr.width]="node.dimension.width + 18"
                     [attr.height]="node.dimension.height"
                     [attr.rx]="5"
                     [attr.fill]="node.data.dataObject.kind === DatasetKind.Root ? '#FFB6C1' : '#add8e6'"
@@ -76,16 +72,6 @@
                 >
                     {{ node.data.dataObject.accountName }}
                 </svg:text>
-                <svg:g [attr.transform]="'translate(' + node.dimension.width * 1.005 + ',0)'">
-                    <!-- Temporary solution - in future icon will be choosen on explicit public/private attribute in the dataset -->
-                    <!-- <image
-                        [attr.x]="-12"
-                        [attr.y]="-12"
-                        [attr.width]="20"
-                        [attr.height]="20"
-                        [attr.href]="'../assets/images/public.png'"
-                    /> -->
-                </svg:g>
             </svg:g>
             <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.Source">
                 <svg:rect

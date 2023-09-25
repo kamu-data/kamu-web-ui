@@ -16,10 +16,12 @@ import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { DisplayTimeModule } from "../display-time/display-time.module";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import timekeeper from "timekeeper";
 
 describe("LineageGraphComponent", () => {
     let component: LineageGraphComponent;
     let fixture: ComponentFixture<LineageGraphComponent>;
+    const FROZEN_TIME = new Date("2023-10-01 12:00:00");
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -47,6 +49,10 @@ describe("LineageGraphComponent", () => {
         component.nodes = MOCK_NODES;
         component.currentDataset = mockGraphNode;
         fixture.detectChanges();
+    });
+
+    beforeAll(() => {
+        timekeeper.freeze(FROZEN_TIME);
     });
 
     it("should create", () => {
@@ -120,12 +126,12 @@ describe("LineageGraphComponent", () => {
         expect(license?.textContent?.trim()).toEqual("No  license");
 
         const createdDate = findElementByDataTestId(fixture, "side-panel-dataset-created");
-        expect(createdDate?.textContent?.trim()).toEqual("18 days ago");
+        expect(createdDate?.textContent?.trim()).toEqual("a month ago");
 
         const updatedDate = findElementByDataTestId(fixture, "side-panel-dataset-updated");
-        expect(updatedDate?.textContent?.trim()).toEqual("18 days ago");
+        expect(updatedDate?.textContent?.trim()).toEqual("a month ago");
 
         const watermark = findElementByDataTestId(fixture, "side-panel-dataset-watermark");
-        expect(watermark?.textContent?.trim()).toEqual("18 days ago");
+        expect(watermark?.textContent?.trim()).toEqual("a month ago");
     });
 });

@@ -35,7 +35,11 @@
         <ng-template #nodeTemplate let-node>
             <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.Dataset">
                 <svg:rect
-                    [attr.width]="node.dimension.width"
+                    [attr.width]="
+                        node.data.dataObject.accountName.length > node.label.length
+                            ? node.dimension.width + 15
+                            : node.dimension.width
+                    "
                     [attr.height]="node.dimension.height"
                     [attr.rx]="5"
                     [attr.fill]="node.data.dataObject.kind === DatasetKind.Root ? '#FFB6C1' : '#add8e6'"

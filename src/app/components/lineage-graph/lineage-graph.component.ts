@@ -1,3 +1,4 @@
+import { MaybeNull } from "./../../common/app.types";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -5,11 +6,7 @@ import {
     EventEmitter,
     HostListener,
     Input,
-    OnChanges,
-    OnInit,
     Output,
-    SimpleChange,
-    SimpleChanges,
     ViewChild,
 } from "@angular/core";
 import { Node, Edge, MiniMapPosition } from "@swimlane/ngx-graph";
@@ -23,10 +20,10 @@ import { LineageGraphNodeKind } from "src/app/dataset-view/additional-components
     styleUrls: ["./lineage-graph.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LineageGraphComponent implements OnChanges, OnInit {
-    @Input() public links: Edge[];
-    @Input() public nodes: Node[];
-    @Input() public currentDataset: DatasetLineageBasicsFragment;
+export class LineageGraphComponent {
+    @Input() public links: MaybeNull<Edge[]>;
+    @Input() public nodes: MaybeNull<Node[]>;
+    @Input() public currentDataset: MaybeNull<DatasetLineageBasicsFragment>;
 
     @Output() public onClickNodeEvent = new EventEmitter<Node>();
 
@@ -41,7 +38,6 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public autoCenter = true;
     public showMiniMap = true;
     public miniMapPosition: MiniMapPosition;
-    public graphNodes: Node[];
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly LineageGraphNodeKind: typeof LineageGraphNodeKind = LineageGraphNodeKind;
@@ -51,14 +47,10 @@ export class LineageGraphComponent implements OnChanges, OnInit {
     public view: [number, number] = [this.INITIAL_GRAPH_VIEW_WIDTH, this.INITIAL_GRAPH_VIEW_HEIGHT];
     public showSidePanel = false;
 
-    @ViewChild("containerRef", { static: true }) element: ElementRef;
+    @ViewChild("containerRef", { static: false }) element: ElementRef;
     @HostListener("window:resize")
     private checkWindowSize(): void {
         this.changeLineageGraphView();
-    }
-
-    public ngOnInit(): void {
-        this.graphNodes = this.nodes;
     }
 
     public changeLineageGraphView(): void {
@@ -69,13 +61,6 @@ export class LineageGraphComponent implements OnChanges, OnInit {
             parseInt(styleElement.paddingLeft, 10) -
             parseInt(styleElement.paddingRight, 10);
         this.view[1] = this.INITIAL_GRAPH_VIEW_HEIGHT;
-    }
-
-    public ngOnChanges(changes: SimpleChanges): void {
-        const nodes: SimpleChange = changes.nodes;
-        if (nodes.currentValue && nodes.currentValue !== nodes.previousValue) {
-            this.graphNodes = nodes.currentValue as Node[];
-        }
     }
 
     public onClickNode(node: Node): void {

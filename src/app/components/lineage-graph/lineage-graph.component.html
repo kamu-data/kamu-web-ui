@@ -1,4 +1,4 @@
-<div #containerRef class="position-relative">
+<div #containerRef class="position-relative" *ngIf="links && nodes">
     <ngx-graph
         class="chart-container"
         [draggingEnabled]="draggingEnabled"
@@ -13,7 +13,7 @@
         [showMiniMap]="showMiniMap"
         [miniMapPosition]="miniMapPosition"
         [links]="links"
-        [nodes]="graphNodes"
+        [nodes]="nodes"
         [view]="view"
         layout="dagre"
         [nodeHeight]="70"
@@ -119,7 +119,7 @@
             <img src="assets/images/information.png" alt="" width="25" height="25" />
         </button>
     </div>
-    <div class="side-panel" *ngIf="showSidePanel">
+    <div class="side-panel" *ngIf="showSidePanel && currentDataset">
         <div class="side-panel__title d-flex fw-bold">
             <div class="account-avatar">
                 <img [src]="currentDataset.owner.avatarUrl" data-test-id="side-panel-avatar" />

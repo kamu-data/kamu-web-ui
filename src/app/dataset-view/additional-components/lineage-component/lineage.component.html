@@ -1,20 +1,17 @@
-<div class="search-result-container__content" id="searchResultContainerContent">
-    <ng-template
-        [ngIf]="
-            isAvailableLineageGraph &&
-            lineageGraphNodes &&
-            lineageGraphLink.length !== 0 &&
-            lineageGraphNodes.length !== 0
-        "
-    >
+<div
+    class="search-result-container__content"
+    id="searchResultContainerContent"
+    *ngIf="{ lineageGraphNodes: lineageGraphNodes$ | async, lineageGraphLinks: lineageGraphLinks$ | async } as data"
+>
+    <ng-template [ngIf]="data.lineageGraphLinks && data.lineageGraphLinks.length">
         <app-lineage-graph
-            [links]="lineageGraphLink"
-            [nodes]="lineageGraphNodes"
-            [currentDataset]="currentDataset"
+            [links]="data.lineageGraphLinks"
+            [nodes]="data.lineageGraphNodes"
+            [currentDataset]="currentDataset$ | async"
             (onClickNodeEvent)="onClickNode($event)"
         ></app-lineage-graph>
     </ng-template>
-    <ng-template [ngIf]="!isAvailableLineageGraph && lineageGraphLink.length === 0">
+    <ng-template [ngIf]="!(data.lineageGraphLinks && data.lineageGraphLinks.length)">
         <p>The current dataset is root. Not enough data to build the graph.</p>
     </ng-template>
 </div>

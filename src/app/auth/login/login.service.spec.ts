@@ -15,7 +15,7 @@ import {
 import { GithubLoginCredentials, PasswordLoginCredentials } from "src/app/api/auth.api.model";
 import { AuthenticationError } from "src/app/common/errors";
 import { LoginResponse } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
+import { MaybeUndefined } from "src/app/common/app.types";
 
 describe("LoginService", () => {
     let service: LoginService;

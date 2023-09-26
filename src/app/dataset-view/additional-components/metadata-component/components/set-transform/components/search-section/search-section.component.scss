@@ -1,3 +1,9 @@
+.search-result-item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 270px;
+}
+
 .inner-btn {
     position: absolute;
     width: 10px;

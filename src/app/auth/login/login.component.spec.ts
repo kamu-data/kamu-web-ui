@@ -17,10 +17,15 @@ import {
     getElementByDataTestId,
     setFieldValue,
 } from "src/app/common/base-test.helpers.spec";
-import { TEST_LOGIN, TEST_PASSWORD, mockPasswordLoginResponse } from "src/app/api/mock/auth.mock";
+import {
+    TEST_ACCESS_TOKEN_PASSWORD,
+    TEST_LOGIN,
+    TEST_PASSWORD,
+    mockPasswordLoginResponse,
+} from "src/app/api/mock/auth.mock";
 import { PasswordLoginCredentials } from "src/app/api/auth.api.model";
 import { BehaviorSubject, of } from "rxjs";
-import { LoginPageQueryParams } from "./login.component.model";
+import { LoginCallbackResponse, LoginPageQueryParams } from "./login.component.model";
 import { ActivatedRoute } from "@angular/router";
 import { AuthApi } from "src/app/api/auth.api";
 
@@ -237,12 +242,15 @@ describe("LoginComponent", () => {
 
             expect(authApiSpy).toHaveBeenCalledOnceWith(credentials);
 
-            httpController
-                .expectOne({
-                    method: "POST",
-                    url: callbackUrl,
-                })
-                .flush({});
+            const callbackUrlRequest = httpController.expectOne({
+                method: "POST",
+                url: callbackUrl,
+            });
+            expect(callbackUrlRequest.request.body).toEqual({
+                accessToken: TEST_ACCESS_TOKEN_PASSWORD,
+                backendUrl: "http://localhost:8080",
+            } as LoginCallbackResponse);
+            callbackUrlRequest.flush({});
 
             expect(windowCloseSpy).toHaveBeenCalledTimes(1);
         });

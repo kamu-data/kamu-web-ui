@@ -11,6 +11,8 @@ import { ActivatedRoute, Params } from "@angular/router";
 import { BaseComponent } from "src/app/common/base.component";
 import { LoginResponse } from "src/app/api/kamu.graphql.interface";
 import { HttpClient } from "@angular/common/http";
+import { LoginCallbackResponse } from "./login.component.model";
+import { AppConfigService } from "src/app/app-config.service";
 
 @Component({
     selector: "app-login",
@@ -34,6 +36,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
         private route: ActivatedRoute,
         private fb: FormBuilder,
         private loginService: LoginService,
+        private appConfigService: AppConfigService,
         private httpClient: HttpClient,
     ) {
         super();
@@ -60,7 +63,11 @@ export class LoginComponent extends BaseComponent implements OnInit {
 
                 if (callbackUrl) {
                     this.loginService.setLoginCallback((loginResponse: LoginResponse) => {
-                        this.httpClient.post(callbackUrl, loginResponse.accessToken).subscribe(() => {
+                        const response: LoginCallbackResponse = {
+                            accessToken: loginResponse.accessToken,
+                            backendUrl: this.appConfigService.apiServerUrl,
+                        };
+                        this.httpClient.post<LoginCallbackResponse>(callbackUrl, response).subscribe(() => {
                             window.close();
                         });
                     });

@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
-import { Edge, Node } from "@swimlane/ngx-graph";
-import { Observable, Subject, map } from "rxjs";
+import { Observable, Subject, combineLatest, map, of, switchMap } from "rxjs";
 import { DatasetLineageBasicsFragment, DatasetKind, FetchStepUrl } from "src/app/api/kamu.graphql.interface";
 import { LineageUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { LineageGraphNodeKind, LineageGraphNodeData, LineageNodeAccess } from "../lineage-model";
+import { LineageGraphNodeKind, LineageGraphNodeData, LineageNodeAccess, LineageGraph } from "../lineage-model";
+import { Node, Edge } from "@swimlane/ngx-graph";
 
 @Injectable({
     providedIn: "root",
@@ -26,7 +26,13 @@ export class LineageGraphBuilderService {
         return this.datasetSubsService.onLineageDataChanges.pipe(map((data: LineageUpdate) => data.origin));
     }
 
-    public buildSourceNodes(): Observable<Node[]> {
+    public buildGraph(): Observable<LineageGraph> {
+        return combineLatest([this.buildGraphNodes(), this.buildGraphLinks()]).pipe(
+            switchMap(([nodes, links]: [Node[], Edge[]]) => of({ nodes, links })),
+        );
+    }
+
+    private buildSourceNodes(): Observable<Node[]> {
         return this.datasetSubsService.onLineageDataChanges.pipe(
             map((data: LineageUpdate) => {
                 const uniqueDatasets: Record<string, DatasetLineageBasicsFragment> = {};
@@ -40,7 +46,7 @@ export class LineageGraphBuilderService {
         );
     }
 
-    public buildDatasetGraphNodes(): Observable<Node[]> {
+    private buildDatasetGraphNodes(): Observable<Node[]> {
         return this.datasetSubsService.onLineageDataChanges.pipe(
             map((data: LineageUpdate) => {
                 const uniqueDatasets: Record<string, DatasetLineageBasicsFragment> = {};
@@ -54,7 +60,19 @@ export class LineageGraphBuilderService {
         );
     }
 
-    public buildLinkNodes(): Observable<Edge[]> {
+    private buildGraphNodes(): Observable<Node[]> {
+        return combineLatest([this.buildSourceNodes(), this.buildDatasetGraphNodes()]).pipe(
+            switchMap(([sourceNodes, datasetNodes]: [Node[], Node[]]) => of(sourceNodes.concat(datasetNodes))),
+        );
+    }
+
+    private buildGraphLinks(): Observable<Edge[]> {
+        return combineLatest([this.onLineageSourceLinkChanges, this.buildLinkNodes(), this.buildGraphNodes()]).pipe(
+            switchMap(([sourceLinks, datasetLinks]: [Edge[], Edge[], Node[]]) => of(sourceLinks.concat(datasetLinks))),
+        );
+    }
+
+    private buildLinkNodes(): Observable<Edge[]> {
         return this.datasetSubsService.onLineageDataChanges.pipe(
             map((data: LineageUpdate) => {
                 const lineageGraphLink: Edge[] = [];

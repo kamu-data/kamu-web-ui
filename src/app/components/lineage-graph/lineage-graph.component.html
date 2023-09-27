@@ -1,4 +1,4 @@
-<div #containerRef class="position-relative" *ngIf="links && nodes">
+<div #containerRef class="position-relative" *ngIf="graph.links && graph.nodes">
     <ngx-graph
         class="chart-container"
         [draggingEnabled]="draggingEnabled"
@@ -12,8 +12,8 @@
         [autoZoom]="autoZoom"
         [showMiniMap]="showMiniMap"
         [miniMapPosition]="miniMapPosition"
-        [links]="links"
-        [nodes]="nodes"
+        [links]="graph.links"
+        [nodes]="graph.nodes"
         [view]="view"
         layout="dagre"
         [nodeHeight]="70"

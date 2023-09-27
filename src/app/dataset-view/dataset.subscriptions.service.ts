@@ -1,4 +1,4 @@
-import { Observable, ReplaySubject, Subject, shareReplay } from "rxjs";
+import { Observable, ReplaySubject, Subject } from "rxjs";
 import { Injectable } from "@angular/core";
 import {
     DataSqlErrorUpdate,
@@ -78,7 +78,7 @@ export class DatasetSubscriptionsService {
     }
 
     public get onLineageDataChanges(): Observable<LineageUpdate> {
-        return this.lineageChanges$.asObservable().pipe(shareReplay());
+        return this.lineageChanges$.asObservable();
     }
 
     public changePermissionsData(permissions: DatasetPermissionsFragment): void {

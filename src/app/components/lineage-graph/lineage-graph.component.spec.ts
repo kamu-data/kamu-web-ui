@@ -42,8 +42,8 @@ describe("LineageGraphComponent", () => {
 
         fixture = TestBed.createComponent(LineageGraphComponent);
         component = fixture.componentInstance;
-        component.links = MOCK_LINKS;
-        component.nodes = MOCK_NODES;
+        component.graph.links = MOCK_LINKS;
+        component.graph.nodes = MOCK_NODES;
         component.currentDataset = mockGraphNode;
         fixture.detectChanges();
     });

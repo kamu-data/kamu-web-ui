@@ -1,4 +1,3 @@
-import { MaybeNull } from "./../../common/app.types";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -9,10 +8,13 @@ import {
     Output,
     ViewChild,
 } from "@angular/core";
-import { Node, Edge, MiniMapPosition } from "@swimlane/ngx-graph";
+import { Node, MiniMapPosition } from "@swimlane/ngx-graph";
 import { DatasetKind, DatasetLineageBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
-import { LineageGraphNodeKind } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
+import {
+    LineageGraph,
+    LineageGraphNodeKind,
+} from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 
 @Component({
     selector: "app-lineage-graph",
@@ -21,9 +23,8 @@ import { LineageGraphNodeKind } from "src/app/dataset-view/additional-components
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineageGraphComponent {
-    @Input() public links: MaybeNull<Edge[]>;
-    @Input() public nodes: MaybeNull<Node[]>;
-    @Input() public currentDataset: MaybeNull<DatasetLineageBasicsFragment>;
+    @Input() public graph: LineageGraph;
+    @Input() public currentDataset: DatasetLineageBasicsFragment;
 
     @Output() public onClickNodeEvent = new EventEmitter<Node>();
 
@@ -42,8 +43,8 @@ export class LineageGraphComponent {
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly LineageGraphNodeKind: typeof LineageGraphNodeKind = LineageGraphNodeKind;
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
-    public INITIAL_GRAPH_VIEW_HEIGHT: number = screen.height - 400;
-    public INITIAL_GRAPH_VIEW_WIDTH: number = window.innerWidth - 120;
+    public readonly INITIAL_GRAPH_VIEW_HEIGHT: number = screen.height - 400;
+    public readonly INITIAL_GRAPH_VIEW_WIDTH: number = window.innerWidth - 120;
     public view: [number, number] = [this.INITIAL_GRAPH_VIEW_WIDTH, this.INITIAL_GRAPH_VIEW_HEIGHT];
     public showSidePanel = false;
 

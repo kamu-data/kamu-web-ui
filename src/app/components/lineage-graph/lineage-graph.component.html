@@ -1,4 +1,4 @@
-<div #containerRef class="position-relative" *ngIf="graph.links && graph.nodes">
+<div #containerRef class="position-relative" *ngIf="graph.links.length && graph.nodes.length">
     <ngx-graph
         class="chart-container"
         [draggingEnabled]="draggingEnabled"

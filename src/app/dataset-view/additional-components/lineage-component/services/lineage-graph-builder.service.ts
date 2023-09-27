@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable, Subject, combineLatest, map, of, switchMap } from "rxjs";
+import { Observable, Subject, combineLatest, concat, map, of, switchMap } from "rxjs";
 import { DatasetLineageBasicsFragment, DatasetKind, FetchStepUrl } from "src/app/api/kamu.graphql.interface";
 import { LineageUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
@@ -12,11 +12,11 @@ import { Node, Edge } from "@swimlane/ngx-graph";
 export class LineageGraphBuilderService {
     private lineageSourceLinkChanges: Subject<Edge[]> = new Subject<Edge[]>();
 
-    public changeSourceLink(links: Edge[]): void {
+    private changeSourceLink(links: Edge[]): void {
         this.lineageSourceLinkChanges.next(links);
     }
 
-    public get onLineageSourceLinkChanges(): Observable<Edge[]> {
+    private onLineageSourceLinkChanges(): Observable<Edge[]> {
         return this.lineageSourceLinkChanges.asObservable();
     }
 
@@ -32,47 +32,33 @@ export class LineageGraphBuilderService {
         );
     }
 
-    private buildSourceNodes(): Observable<Node[]> {
-        return this.datasetSubsService.onLineageDataChanges.pipe(
-            map((data: LineageUpdate) => {
-                const uniqueDatasets: Record<string, DatasetLineageBasicsFragment> = {};
-                data.edges.forEach((edge: DatasetLineageBasicsFragment[]) =>
-                    edge.forEach((dataset: DatasetLineageBasicsFragment) => {
-                        uniqueDatasets[dataset.id] = dataset;
-                    }),
-                );
-                return this.addSourceGraphNodes(Object.values(uniqueDatasets));
-            }),
-        );
-    }
-
-    private buildDatasetGraphNodes(): Observable<Node[]> {
-        return this.datasetSubsService.onLineageDataChanges.pipe(
-            map((data: LineageUpdate) => {
-                const uniqueDatasets: Record<string, DatasetLineageBasicsFragment> = {};
-                data.edges.forEach((edge: DatasetLineageBasicsFragment[]) =>
-                    edge.forEach((dataset: DatasetLineageBasicsFragment) => {
-                        uniqueDatasets[dataset.id] = dataset;
-                    }),
-                );
-                return this.addDatasetGraphNodes(Object.values(uniqueDatasets), data.origin);
-            }),
-        );
-    }
-
     private buildGraphNodes(): Observable<Node[]> {
-        return combineLatest([this.buildSourceNodes(), this.buildDatasetGraphNodes()]).pipe(
-            switchMap(([sourceNodes, datasetNodes]: [Node[], Node[]]) => of(sourceNodes.concat(datasetNodes))),
+        return this.datasetSubsService.onLineageDataChanges.pipe(
+            map((data: LineageUpdate) => {
+                const uniqueDatasets: Record<string, DatasetLineageBasicsFragment> = {};
+                data.edges.forEach((edge: DatasetLineageBasicsFragment[]) =>
+                    edge.forEach((dataset: DatasetLineageBasicsFragment) => {
+                        uniqueDatasets[dataset.id] = dataset;
+                    }),
+                );
+                const sourceNodes = this.addSourceGraphNodes(Object.values(uniqueDatasets));
+                const datasetNodes = this.addDatasetGraphNodes(Object.values(uniqueDatasets), data.origin);
+                return [...sourceNodes, ...datasetNodes];
+            }),
         );
     }
 
     private buildGraphLinks(): Observable<Edge[]> {
-        return combineLatest([this.onLineageSourceLinkChanges, this.buildLinkNodes(), this.buildGraphNodes()]).pipe(
+        return combineLatest([
+            this.onLineageSourceLinkChanges(),
+            this.buildDatasetLinks(),
+            this.buildGraphNodes(),
+        ]).pipe(
             switchMap(([sourceLinks, datasetLinks]: [Edge[], Edge[], Node[]]) => of(sourceLinks.concat(datasetLinks))),
         );
     }
 
-    private buildLinkNodes(): Observable<Edge[]> {
+    private buildDatasetLinks(): Observable<Edge[]> {
         return this.datasetSubsService.onLineageDataChanges.pipe(
             map((data: LineageUpdate) => {
                 const lineageGraphLink: Edge[] = [];

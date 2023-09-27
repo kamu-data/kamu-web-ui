@@ -50,7 +50,7 @@ export class LineageGraphComponent {
 
     @ViewChild("containerRef", { static: false }) element: ElementRef;
     @HostListener("window:resize")
-    private checkWindowSize(): void {
+    public checkWindowSize(): void {
         this.changeLineageGraphView();
     }
 

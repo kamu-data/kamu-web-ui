@@ -13,7 +13,7 @@ import {
 } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { Injectable } from "@angular/core";
-import { Observable, Subject, throwError } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { DataRow, DatasetLineageNode, DatasetRequestBySql, DatasetSchema } from "../interface/dataset.interface";
 import {
     DatasetBasicsFragment,
@@ -34,7 +34,7 @@ import {
 } from "./dataset.subscriptions.interface";
 import { DatasetApi } from "../api/dataset.api";
 import { DatasetNotFoundError } from "../common/errors";
-import { catchError, map } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import { MaybeNull } from "../common/app.types";
 import { parseCurrentSchema } from "../common/app.helpers";
 
@@ -149,7 +149,6 @@ export class DatasetService {
 
     public requestDatasetDataSqlRun(params: DatasetRequestBySql): Observable<void> {
         return this.datasetApi.getDatasetDataSqlRun(params).pipe(
-            catchError(() => throwError(() => new SqlExecutionError())),
             map((result: GetDatasetDataSqlRunQuery) => {
                 const queryResult = result.data.query;
                 if (queryResult.__typename === "DataQueryResultSuccess") {

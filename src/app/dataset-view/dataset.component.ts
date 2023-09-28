@@ -10,7 +10,7 @@ import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { DatasetService } from "./dataset.service";
 import { NavigationEnd, Router } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { filter } from "rxjs/operators";
+import { filter, first } from "rxjs/operators";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
@@ -112,14 +112,16 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
     }
 
     public initSettingsTab(): void {
-        this.datasetPermissions$.subscribe((datasetPermissions: DatasetPermissionsFragment) => {
-            if (this.datasetPermissionsServices.shouldAllowSettingsTab(datasetPermissions)) {
-                this.datasetViewType = DatasetViewTypeEnum.Settings;
-            } else {
-                this.datasetViewType = DatasetViewTypeEnum.Overview;
-            }
-            this.cdr.detectChanges();
-        });
+        this.trackSubscription(
+            this.datasetPermissions$.pipe(first()).subscribe((datasetPermissions: DatasetPermissionsFragment) => {
+                if (this.datasetPermissionsServices.shouldAllowSettingsTab(datasetPermissions)) {
+                    this.datasetViewType = DatasetViewTypeEnum.Settings;
+                } else {
+                    this.datasetViewType = DatasetViewTypeEnum.Overview;
+                }
+                this.cdr.detectChanges();
+            }),
+        );
     }
 
     public selectTopic(topicName: string): void {

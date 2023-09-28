@@ -8,13 +8,14 @@ import {
     Output,
     ViewChild,
 } from "@angular/core";
-import { Node, MiniMapPosition } from "@swimlane/ngx-graph";
+import { Node } from "@swimlane/ngx-graph";
 import { DatasetKind, DatasetLineageBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import {
     LineageGraph,
     LineageGraphNodeKind,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
+import { LineageGraphConfig, lineageConfig } from "./ligeage-graph.settings";
 
 @Component({
     selector: "app-lineage-graph",
@@ -28,18 +29,7 @@ export class LineageGraphComponent {
 
     @Output() public onClickNodeEvent = new EventEmitter<Node>();
 
-    public draggingEnabled = false;
-    public panningEnabled = true;
-    public zoomEnabled = true;
-    public zoomSpeed = 0.03;
-    public minZoomLevel = 0.3;
-    public maxZoomLevel = 4.0;
-    public panOnZoom = true;
-    public autoZoom = true;
-    public autoCenter = true;
-    public showMiniMap = true;
-    public miniMapPosition: MiniMapPosition;
-
+    public readonly LINEAGE_CONFIG: LineageGraphConfig = lineageConfig;
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly LineageGraphNodeKind: typeof LineageGraphNodeKind = LineageGraphNodeKind;
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;

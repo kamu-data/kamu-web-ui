@@ -3,6 +3,7 @@ import {
     mockDatasetInfo,
     mockFullPowerDatasetPermissionsFragment,
     mockNode,
+    mockNodesWithEqualNames,
     mockReadonlyDatasetPermissionsFragment,
 } from "../search/mock.data";
 import { DatasetService } from "./dataset.service";
@@ -34,7 +35,7 @@ import AppValues from "../common/app.values";
 import { LineageGraphNodeData } from "./additional-components/lineage-component/lineage-model";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
-
+import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { DatasetSettingsComponent } from "./additional-components/dataset-settings-component/dataset-settings.component";
 import { MatDividerModule } from "@angular/material/divider";
 import { DataComponent } from "./additional-components/data-component/data.component";
@@ -247,6 +248,19 @@ describe("DatasetComponent", () => {
             mockNodeData.dataObject.accountName,
             mockNodeData.dataObject.name,
         );
+    });
+
+    it("should check click on lineage nodes with equal dataset name, but different account name ", () => {
+        const navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
+        mockNodesWithEqualNames.forEach((node: Node) => {
+            component.onClickLineageNode(node);
+            const mockNodeData = node.data as LineageGraphNodeData;
+            expect(navigationServiceSpy).toHaveBeenCalledWith({
+                accountName: mockNodeData.dataObject.accountName,
+                datasetName: mockNodeData.dataObject.name,
+                tab: DatasetViewTypeEnum.Lineage,
+            });
+        });
     });
 
     it("should check navigate to overview tab", () => {

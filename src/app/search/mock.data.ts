@@ -1141,3 +1141,51 @@ export const mockNode: Node = {
         } as LineageGraphDatasetNodeObject,
     },
 };
+
+export const mockNodesWithEqualNames: Node[] = [
+    {
+        id: "testId1",
+        label: "british-columbia.case-details.hm",
+        data: {
+            kind: LineageGraphNodeKind.Dataset,
+            dataObject: {
+                id: "testId:1",
+                name: "british-columbia.case-details.hm",
+                kind: DatasetKind.Root,
+                isCurrent: false,
+                access: LineageNodeAccess.PUBLIC,
+                accountName: "accountName1",
+            } as LineageGraphDatasetNodeObject,
+        },
+    },
+    {
+        id: "testId2",
+        label: "british-columbia.case-details.hm",
+        data: {
+            kind: LineageGraphNodeKind.Dataset,
+            dataObject: {
+                id: "testId:2",
+                name: "british-columbia.case-details.hm",
+                kind: DatasetKind.Root,
+                isCurrent: false,
+                access: LineageNodeAccess.PUBLIC,
+                accountName: "accountName2",
+            } as LineageGraphDatasetNodeObject,
+        },
+    },
+    {
+        id: "testId3",
+        label: "british-columbia.case-details.hm",
+        data: {
+            kind: LineageGraphNodeKind.Dataset,
+            dataObject: {
+                id: "testId:3",
+                name: "british-columbia.case-details.hm",
+                kind: DatasetKind.Derivative,
+                isCurrent: false,
+                access: LineageNodeAccess.PUBLIC,
+                accountName: "accountName3",
+            } as LineageGraphDatasetNodeObject,
+        },
+    },
+];

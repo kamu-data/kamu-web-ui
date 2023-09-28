@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added side panel for lineage graph
 ### Changed
 - Tweaked color scheme and icons
+- Added a new service responsible for constructing a graph 
 
 ## [0.10.1] - 2023-09-20
 ### Fixed

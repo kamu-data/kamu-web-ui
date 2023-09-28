@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Fixed
 - GraphQL runtime errors are not wrapped into application-specific exceptions
+- Unexpected swithing to Settings tab while surfing over Lineage graph
 
 ## [0.11.0] - 2023-09-25
 ### Added

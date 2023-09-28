@@ -42,8 +42,7 @@ describe("LineageGraphComponent", () => {
 
         fixture = TestBed.createComponent(LineageGraphComponent);
         component = fixture.componentInstance;
-        component.graph.links = MOCK_LINKS;
-        component.graph.nodes = MOCK_NODES;
+        component.graph = { links: MOCK_LINKS, nodes: MOCK_NODES };
         component.currentDataset = mockGraphNode;
         fixture.detectChanges();
     });
@@ -54,6 +53,13 @@ describe("LineageGraphComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should trigger checkWindowSize method when window is resized", () => {
+        const spyOnResize = spyOn(component, "changeLineageGraphView");
+        window.dispatchEvent(new Event("resize"));
+        window.dispatchEvent(new Event("resize"));
+        expect(spyOnResize).toHaveBeenCalledTimes(2);
     });
 
     it("should check click on node", () => {

@@ -61,10 +61,10 @@ import {
 } from "./kamu.graphql.interface";
 import { TEST_LOGIN } from "./mock/auth.mock";
 import { first, Observable } from "rxjs";
-import { DatasetOperationError } from "../common/errors";
 import { DocumentNode } from "graphql";
 import { mockGetDatasetSchemaQuery } from "../dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import AppValues from "../common/app.values";
+import { ApolloError } from "@apollo/client/core";
 
 describe("DatasetApi", () => {
     let service: DatasetApi;
@@ -500,7 +500,7 @@ describe("DatasetApi", () => {
                 .subscribe({
                     next: () => fail("Unexpected success"),
                     error: (e: Error) => {
-                        expect(e).toEqual(new DatasetOperationError([mockDataset403OperationError]));
+                        expect(e).toEqual(new ApolloError({ graphQLErrors: [mockDataset403OperationError] }));
                     },
                 });
 

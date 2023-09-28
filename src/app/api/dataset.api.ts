@@ -35,8 +35,8 @@ import AppValues from "src/app/common/app.values";
 import { ApolloQueryResult } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 
-import { map, first, catchError } from "rxjs/operators";
-import { Observable, throwError } from "rxjs";
+import { map, first } from "rxjs/operators";
+import { Observable } from "rxjs";
 
 import { MutationResult } from "apollo-angular";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
@@ -222,7 +222,6 @@ export class DatasetApi {
                     throw new DatasetOperationError(result.errors ?? []);
                 }
             }),
-            catchError((e: Error) => throwError(() => new DatasetOperationError([e]))),
         );
     }
 
@@ -237,7 +236,6 @@ export class DatasetApi {
                     throw new DatasetOperationError(result.errors ?? []);
                 }
             }),
-            catchError((e: Error) => throwError(() => new DatasetOperationError([e]))),
         );
     }
 
@@ -257,7 +255,6 @@ export class DatasetApi {
                         throw new DatasetOperationError(result.errors ?? []);
                     }
                 }),
-                catchError((e: Error) => throwError(() => new DatasetOperationError([e]))),
             );
     }
 
@@ -277,7 +274,6 @@ export class DatasetApi {
                         throw new DatasetOperationError(result.errors ?? []);
                     }
                 }),
-                catchError((e: Error) => throwError(() => new DatasetOperationError([e]))),
             );
     }
 
@@ -296,7 +292,6 @@ export class DatasetApi {
                         throw new DatasetOperationError(result.errors ?? []);
                     }
                 }),
-                catchError((e: Error) => throwError(() => new DatasetOperationError([e]))),
             );
     }
 
@@ -316,7 +311,6 @@ export class DatasetApi {
                         throw new DatasetOperationError(result.errors ?? []);
                     }
                 }),
-                catchError((e: Error) => throwError(() => new DatasetOperationError([e]))),
             );
     }
 }

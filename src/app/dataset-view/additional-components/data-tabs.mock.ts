@@ -12,6 +12,7 @@ import {
     MetadataSchemaUpdate,
 } from "../dataset.subscriptions.interface";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+import { Node } from "@swimlane/ngx-graph";
 
 export const mockDataUpdate: DataUpdate = {
     schema: {
@@ -511,6 +512,81 @@ export const mockLineageGraphUpdate: LineageUpdate = {
         ],
     ],
 };
+
+export const mockBuildGraphNodesResult: Node[] = [
+    {
+        id: "extra-node-didodfz4k88e8egJJeQEd4HHuL4BSwYTWm8qiWxzqhydvHQcX2TPCrMyP",
+        label: "s3.us-west-2.amazonaws.com",
+        data: {
+            kind: "source",
+            dataObject: {},
+        },
+    },
+    {
+        id: "didodfz4k88e8egJJeQEd4HHuL4BSwYTWm8qiWxzqhydvHQcX2TPCrMyP",
+        label: "alberta.case-details",
+        data: {
+            kind: "dataset",
+            dataObject: {
+                id: "did:odf:z4k88e8egJJeQEd4HHuL4BSwYTWm8qiWxzqhydvHQcX2TPCrMyP",
+                name: "alberta.case-details",
+                kind: "ROOT",
+                isCurrent: true,
+                access: "private",
+                accountName: "kamu",
+                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+            },
+        },
+    },
+    {
+        id: "didodfz4k88e8jmNqgCt5L84XPdaog32MttcHzGiXcktfuTuDY3QKwiyK",
+        label: "alberta.case-details.hm",
+        data: {
+            kind: "dataset",
+            dataObject: {
+                id: "did:odf:z4k88e8jmNqgCt5L84XPdaog32MttcHzGiXcktfuTuDY3QKwiyK",
+                name: "alberta.case-details.hm",
+                kind: "DERIVATIVE",
+                isCurrent: false,
+                access: "private",
+                accountName: "kamu",
+                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+            },
+        },
+    },
+    {
+        id: "didodfz4k88e8nN5SdNPxsc5oeqwdCLvjzcvJzoyEQ938E87A15nTrkAk",
+        label: "canada.case-details",
+        data: {
+            kind: "dataset",
+            dataObject: {
+                id: "did:odf:z4k88e8nN5SdNPxsc5oeqwdCLvjzcvJzoyEQ938E87A15nTrkAk",
+                name: "canada.case-details",
+                kind: "DERIVATIVE",
+                isCurrent: false,
+                access: "private",
+                accountName: "kamu",
+                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+            },
+        },
+    },
+    {
+        id: "didodfz4k88e8qAReYmLPFUyaKfk1UHCSY2Mkh6X1AHxuUGNhec76QsGq",
+        label: "canada.daily-cases",
+        data: {
+            kind: "dataset",
+            dataObject: {
+                id: "did:odf:z4k88e8qAReYmLPFUyaKfk1UHCSY2Mkh6X1AHxuUGNhec76QsGq",
+                name: "canada.daily-cases",
+                kind: "DERIVATIVE",
+                isCurrent: false,
+                access: "private",
+                accountName: "kamu",
+                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+            },
+        },
+    },
+];
 
 export const mockOverviewDataUpdate = {
     content: [

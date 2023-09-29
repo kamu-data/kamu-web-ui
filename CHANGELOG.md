@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+- Added a new service responsible for constructing a graph 
 ### Fixed
 - GraphQL runtime errors are not wrapped into application-specific exceptions
 - Unexpected swithing to Settings tab while surfing over Lineage graph
@@ -15,7 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added side panel for lineage graph
 ### Changed
 - Tweaked color scheme and icons
-- Added a new service responsible for constructing a graph 
 
 ## [0.10.1] - 2023-09-20
 ### Fixed

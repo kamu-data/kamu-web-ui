@@ -5,6 +5,7 @@ import { LineageUpdate } from "src/app/dataset-view/dataset.subscriptions.interf
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { LineageGraphNodeKind, LineageGraphNodeData, LineageNodeAccess, LineageGraph } from "../lineage-model";
 import { Node, Edge } from "@swimlane/ngx-graph";
+import { mockLineageGraphUpdate } from "../../data-tabs.mock";
 
 @Injectable({
     providedIn: "root",
@@ -35,6 +36,7 @@ export class LineageGraphBuilderService {
     private buildGraphNodes(): Observable<Node[]> {
         return this.datasetSubsService.onLineageDataChanges.pipe(
             map((data: LineageUpdate) => {
+                data = mockLineageGraphUpdate;
                 const uniqueDatasets: Record<string, DatasetLineageBasicsFragment> = {};
                 data.edges.forEach((edge: DatasetLineageBasicsFragment[]) =>
                     edge.forEach((dataset: DatasetLineageBasicsFragment) => {
@@ -61,6 +63,7 @@ export class LineageGraphBuilderService {
     private buildDatasetLinks(): Observable<Edge[]> {
         return this.datasetSubsService.onLineageDataChanges.pipe(
             map((data: LineageUpdate) => {
+                data = mockLineageGraphUpdate;
                 const lineageGraphLink: Edge[] = [];
                 data.edges.forEach((edge: DatasetLineageBasicsFragment[]) => {
                     const source: string = this.sanitizeID(edge[0].id);

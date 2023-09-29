@@ -15,8 +15,8 @@
         [links]="graph.links"
         [nodes]="graph.nodes"
         [view]="view"
-        layout="dagre"
-        [nodeHeight]="70"
+        [layout]="LINEAGE_CONFIG.layout"
+        [nodeHeight]="LINEAGE_CONFIG.nodeHeight"
     >
         <ng-template #defsTemplate>
             <svg:marker

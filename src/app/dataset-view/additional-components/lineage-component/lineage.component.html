@@ -5,6 +5,9 @@
         currentDataset: currentDataset$ | async
     } as data"
 >
+    <pre>
+    {{ data.lineageGraph | json }}
+    </pre>
     <ng-container *ngIf="data.lineageGraph?.links?.length">
         <app-lineage-graph
             [graph]="data.lineageGraph!"

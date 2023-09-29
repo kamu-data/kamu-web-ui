@@ -1,22 +1,22 @@
-<div #containerRef class="position-relative">
+<div #containerRef class="position-relative" *ngIf="graph.links.length && graph.nodes.length">
     <ngx-graph
         class="chart-container"
-        [draggingEnabled]="draggingEnabled"
-        [panningEnabled]="panningEnabled"
-        [enableZoom]="zoomEnabled"
-        [zoomSpeed]="zoomSpeed"
-        [minZoomLevel]="minZoomLevel"
-        [maxZoomLevel]="maxZoomLevel"
-        [panOnZoom]="panOnZoom"
-        [autoCenter]="autoCenter"
-        [autoZoom]="autoZoom"
-        [showMiniMap]="showMiniMap"
-        [miniMapPosition]="miniMapPosition"
-        [links]="links"
-        [nodes]="graphNodes"
+        [draggingEnabled]="LINEAGE_CONFIG.draggingEnabled"
+        [panningEnabled]="LINEAGE_CONFIG.panningEnabled"
+        [enableZoom]="LINEAGE_CONFIG.zoomEnabled"
+        [zoomSpeed]="LINEAGE_CONFIG.zoomSpeed"
+        [minZoomLevel]="LINEAGE_CONFIG.minZoomLevel"
+        [maxZoomLevel]="LINEAGE_CONFIG.maxZoomLevel"
+        [panOnZoom]="LINEAGE_CONFIG.panOnZoom"
+        [autoCenter]="LINEAGE_CONFIG.autoCenter"
+        [autoZoom]="LINEAGE_CONFIG.autoZoom"
+        [showMiniMap]="LINEAGE_CONFIG.showMiniMap"
+        [miniMapPosition]="LINEAGE_CONFIG.miniMapPosition"
+        [links]="graph.links"
+        [nodes]="graph.nodes"
         [view]="view"
-        layout="dagre"
-        [nodeHeight]="70"
+        [layout]="LINEAGE_CONFIG.layout"
+        [nodeHeight]="LINEAGE_CONFIG.nodeHeight"
     >
         <ng-template #defsTemplate>
             <svg:marker
@@ -119,7 +119,7 @@
             <img src="assets/images/information.png" alt="" width="25" height="25" />
         </button>
     </div>
-    <div class="side-panel" *ngIf="showSidePanel">
+    <div class="side-panel" *ngIf="showSidePanel && currentDataset">
         <div class="side-panel__title d-flex fw-bold">
             <div class="account-avatar">
                 <img [src]="currentDataset.owner.avatarUrl" data-test-id="side-panel-avatar" />

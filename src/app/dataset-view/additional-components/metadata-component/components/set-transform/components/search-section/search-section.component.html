@@ -21,7 +21,7 @@
 </div>
 <ng-template #rt let-r="result" let-t="term">
     <div class="d-flex flex-row justify-content-between" [style.width.px]="searchDatasets.clientWidth - 28">
-        <div>
+        <div class="search-result-item">
             <i class="bi bi-journal-album mr-2"></i>
             <ng-container *ngIf="!r.dummy">{{ r.dataset.owner.accountName }}/</ng-container>
             <ngb-highlight [result]="r.dataset.name" [term]="t"></ngb-highlight>

@@ -100,13 +100,12 @@ export class LineageGraphBuilderService {
         const sourceNodesByLabel = new Map<string, Node>();
         qualifyingDatasets.forEach((dataset: DatasetLineageBasicsFragment) => {
             const datasetId = this.sanitizeID(dataset.id);
-            const sourceNodeId = `source-node-${datasetId}`;
             const sourceNodeLabel = this.getDomainFromUrl((dataset.metadata.currentSource?.fetch as FetchStepUrl).url);
 
             let sourceNode: Node | undefined = sourceNodesByLabel.get(sourceNodeLabel);
             if (_.isNil(sourceNode)) {
                 sourceNode = {
-                    id: sourceNodeId,
+                    id: `source-node-${datasetId}`,
                     label: sourceNodeLabel,
                     data: {
                         kind: LineageGraphNodeKind.Source,
@@ -117,8 +116,8 @@ export class LineageGraphBuilderService {
             }
 
             source2DatasetLinks.push({
-                id: `${sourceNodeId}__and__${datasetId}`,
-                source: sourceNodeId,
+                id: `${sourceNode.id}__and__${datasetId}`,
+                source: sourceNode.id,
                 target: datasetId,
             } as Edge);
         });

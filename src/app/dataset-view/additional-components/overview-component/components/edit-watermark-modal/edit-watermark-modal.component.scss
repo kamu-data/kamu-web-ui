@@ -5,3 +5,11 @@
 .w-65 {
     width: 67% !important;
 }
+
+.btn {
+    &.btn-success {
+        &:hover {
+            background-color: #23b06e;
+        }
+    }
+}

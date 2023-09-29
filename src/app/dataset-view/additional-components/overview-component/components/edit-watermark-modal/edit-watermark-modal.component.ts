@@ -45,12 +45,8 @@ export class EditWatermarkModalComponent extends BaseComponent implements OnInit
         return value < 10 ? "0" + value.toString() : value.toString();
     }
 
-    public createOffset(date: Date): string {
-        const sign = date.getTimezoneOffset() > 0 ? "-" : "+";
-        const offset = Math.abs(date.getTimezoneOffset());
-        const hours = this.pad(Math.floor(offset / 60));
-        const minutes = this.pad(offset % 60);
-        return sign.toString() + hours.toString() + ":" + minutes.toString();
+    public createOffset(): string {
+        return moment().format("Z");
     }
 
     public get minLocalWatermark(): string {

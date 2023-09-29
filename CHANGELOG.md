@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GraphQL runtime errors are not wrapped into application-specific exceptions
 - Unexpected swithing to Settings tab while surfing over Lineage graph
 - Datasets are not switching in the lineage graph, when names are identical, only accounts are different
+- Adding a watermark prints crash log in console
 
 ## [0.11.0] - 2023-09-25
 ### Added

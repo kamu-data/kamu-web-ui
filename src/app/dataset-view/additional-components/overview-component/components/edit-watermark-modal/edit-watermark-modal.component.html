@@ -29,7 +29,7 @@
     <div class="d-flex align-items-center pb-4 ms-4 ps-4">
         <span class="me-4">Time zone:</span>
         <select class="form-select w-75" [(ngModel)]="timeZone">
-            <option [ngValue]="timeZone">(UTC{{ createOffset(this.date) }}) {{ timeZone }}</option>
+            <option [ngValue]="timeZone">(UTC{{ createOffset() }}) {{ timeZone }}</option>
         </select>
     </div>
     <div class="d-flex align-items-center ms-4 ps-4">

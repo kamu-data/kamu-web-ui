@@ -8,10 +8,8 @@
 
 .btn {
     &.btn-success {
-        &.btn-save {
-            &:hover {
-                background-color: #23b06e;
-            }
+        &:hover {
+            background-color: #23b06e;
         }
     }
 }

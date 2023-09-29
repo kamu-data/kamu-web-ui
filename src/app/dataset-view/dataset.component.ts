@@ -22,6 +22,7 @@ import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import { DatasetPermissionsService } from "./dataset.permissions.service";
 import { Observable } from "rxjs";
 import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-components/lineage-component/lineage-model";
+import _ from "lodash";
 
 @Component({
     selector: "app-dataset",
@@ -63,8 +64,13 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
     }
 
     public getMainDataByLineageNode(): void {
-        if (this.datasetBasics?.name !== this.getDatasetInfoFromUrl().datasetName) {
-            this.datasetService.requestDatasetMainData(this.getDatasetInfoFromUrl()).subscribe();
+        const urlDatasetInfo = this.getDatasetInfoFromUrl();
+        if (
+            _.isNil(this.datasetBasics) ||
+            this.datasetBasics.name !== urlDatasetInfo.datasetName ||
+            this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName
+        ) {
+            this.datasetService.requestDatasetMainData(urlDatasetInfo).subscribe();
         }
     }
 

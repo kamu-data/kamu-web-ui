@@ -515,7 +515,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
 
 export const mockBuildGraphNodesResult: Node[] = [
     {
-        id: "extra-node-didodfz4k88e8egJJeQEd4HHuL4BSwYTWm8qiWxzqhydvHQcX2TPCrMyP",
+        id: "source-node-didodfz4k88e8egJJeQEd4HHuL4BSwYTWm8qiWxzqhydvHQcX2TPCrMyP",
         label: "s3.us-west-2.amazonaws.com",
         data: {
             kind: "source",

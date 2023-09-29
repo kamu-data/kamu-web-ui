@@ -56,7 +56,7 @@ describe("LineageGraphComponent", () => {
     });
 
     it("should trigger checkWindowSize method when window is resized", () => {
-        const spyOnResize = spyOn(component, "changeLineageGraphView");
+        const spyOnResize = spyOn(component, "changeLineageGraphView").and.callThrough();
         window.dispatchEvent(new Event("resize"));
         window.dispatchEvent(new Event("resize"));
         expect(spyOnResize).toHaveBeenCalledTimes(2);

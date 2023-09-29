@@ -46,7 +46,7 @@ describe("LineageGraphBuilderService", () => {
         });
     });
 
-    it("should check nodes was built correctly", () => {
+    it("should check nodes were built correctly", () => {
         service.buildGraph().subscribe((data: LineageGraph) => {
             expect(data.nodes).toEqual(mockBuildGraphNodesResult);
         });

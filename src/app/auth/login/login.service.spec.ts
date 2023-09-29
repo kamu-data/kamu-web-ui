@@ -16,6 +16,8 @@ import { GithubLoginCredentials, PasswordLoginCredentials } from "src/app/api/au
 import { AuthenticationError } from "src/app/common/errors";
 import { LoginResponse } from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/common/app.types";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import AppValues from "src/app/common/app.values";
 
 describe("LoginService", () => {
     let service: LoginService;
@@ -25,7 +27,7 @@ describe("LoginService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [AuthApi, Apollo],
-            imports: [ApolloTestingModule],
+            imports: [ApolloTestingModule, HttpClientTestingModule],
         });
         service = TestBed.inject(LoginService);
         navigationService = TestBed.inject(NavigationService);
@@ -49,8 +51,8 @@ describe("LoginService", () => {
         service.githubLogin(credentials);
 
         expect(authApiSpy).toHaveBeenCalledOnceWith(credentials);
-        expect(navigateSpy).toHaveBeenCalledTimes(1);
 
+        expect(navigateSpy).toHaveBeenCalledTimes(1);
         expect(tokenSubscription$.closed).toBeTrue();
         expect(accountSubscription$.closed).toBeTrue();
     });
@@ -95,6 +97,7 @@ describe("LoginService", () => {
         service.passwordLogin(credentials);
 
         expect(authApiSpy).toHaveBeenCalledOnceWith(credentials);
+
         expect(navigateSpy).toHaveBeenCalledTimes(1);
 
         expect(tokenSubscription$.closed).toBeTrue();

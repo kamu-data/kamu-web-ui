@@ -15,6 +15,7 @@ import {
     mockRenameSuccessResponse,
 } from "src/app/search/mock.data";
 import { DeleteDatasetMutation, RenameDatasetMutation } from "src/app/api/kamu.graphql.interface";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("DatasetSettingsService", () => {
     let service: DatasetSettingsService;
@@ -29,7 +30,7 @@ describe("DatasetSettingsService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo],
-            imports: [ApolloModule, ApolloTestingModule],
+            imports: [ApolloModule, ApolloTestingModule, HttpClientTestingModule],
         });
         service = TestBed.inject(DatasetSettingsService);
         navigationService = TestBed.inject(NavigationService);

@@ -68,6 +68,7 @@ import { LoginService } from "./auth/login/login.service";
 import { logError } from "./common/app.helpers";
 import AppValues from "./common/app.values";
 import { DatasetPermissionsService } from "./dataset-view/dataset.permissions.service";
+import { LocalStorageService } from "./services/local-storage.service";
 
 const Services = [
     {
@@ -95,11 +96,11 @@ const Services = [
 
     {
         provide: APOLLO_OPTIONS,
-        useFactory: (httpLink: HttpLink, appConfig: AppConfigService) => {
+        useFactory: (httpLink: HttpLink, appConfig: AppConfigService, localStorageService: LocalStorageService) => {
             const httpMainLink: ApolloLink = httpLink.create({ uri: appConfig.apiServerGqlUrl });
 
             const authorizationMiddleware: ApolloLink = new ApolloLink((operation: Operation, forward: NextLink) => {
-                const accessToken: string | null = localStorage.getItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
+                const accessToken: string | null = localStorageService.accessToken;
                 if (accessToken) {
                     operation.setContext({
                         headers: new HttpHeaders().set("Authorization", `Bearer ${accessToken}`),
@@ -129,7 +130,7 @@ const Services = [
                 link: authorizationMiddleware.concat(httpMainLink),
             };
         },
-        deps: [HttpLink, AppConfigService],
+        deps: [HttpLink, AppConfigService, LocalStorageService],
     },
     {
         provide: HIGHLIGHT_OPTIONS,

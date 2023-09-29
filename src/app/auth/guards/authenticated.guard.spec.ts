@@ -3,13 +3,14 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 
 import { AuthenticatedGuard } from "./authenticated.guard";
 import { LoggedUserService } from "../logged-user.service";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("AuthenticatedGuard", () => {
     let guard: AuthenticatedGuard;
     let loggedUserService: LoggedUserService;
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ApolloTestingModule],
+            imports: [ApolloTestingModule, HttpClientTestingModule],
         });
         guard = TestBed.inject(AuthenticatedGuard);
         loggedUserService = TestBed.inject(LoggedUserService);

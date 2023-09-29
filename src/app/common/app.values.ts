@@ -4,6 +4,7 @@ import { Injectable } from "@angular/core";
 export default class AppValues {
     public static readonly APP_LOGO = "assets/icons/kamu_logo_icon.svg";
     public static readonly LOCAL_STORAGE_ACCESS_TOKEN = "access_token";
+    public static readonly LOCAL_STORAGE_LOGIN_CALLBACK_URL = "login_callback_url";
     public static readonly DEFAULT_USER_DISPLAY_NAME = "anonymous";
     public static readonly DEFAULT_AVATAR_URL = "https://avatars.githubusercontent.com/u/11951648?v=4";
     public static readonly URL_PATTERN = /^(http:\/\/)|(https:\/\/)/i;

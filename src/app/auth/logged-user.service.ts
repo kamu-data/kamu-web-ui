@@ -12,6 +12,7 @@ import { AppConfigLoginInstructions } from "../app-config.model";
 import { Apollo } from "apollo-angular";
 import { promiseWithCatch } from "../common/app.helpers";
 import { LoginService } from "./login/login.service";
+import { LocalStorageService } from "../services/local-storage.service";
 
 @Injectable({
     providedIn: "root",
@@ -27,6 +28,7 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
         private loginService: LoginService,
         private navigationService: NavigationService,
         private appConfigService: AppConfigService,
+        private localStorageService: LocalStorageService,
         private apollo: Apollo,
     ) {
         super();
@@ -73,7 +75,7 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
     }
 
     private attemptPreviousAuthentication(): Observable<void> {
-        const accessToken: string | null = localStorage.getItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
+        const accessToken: string | null = this.localStorageService.accessToken;
         if (typeof accessToken === "string" && !this.isAuthenticated) {
             return this.loginService.fetchAccountFromAccessToken(accessToken).pipe(first());
         } else {
@@ -91,10 +93,10 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
     }
 
     private resetAccessToken(): void {
-        localStorage.removeItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
+        this.localStorageService.setAccessToken(null);
     }
 
     private saveAccessToken(token: string): void {
-        localStorage.setItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN, token);
+        this.localStorageService.setAccessToken(token);
     }
 }

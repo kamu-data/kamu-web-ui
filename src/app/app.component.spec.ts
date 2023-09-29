@@ -24,6 +24,7 @@ import { AppHeaderComponent } from "./components/app-header/app-header.component
 import { SpinnerComponent } from "./components/spinner/spinner/spinner.component";
 import { LoggedUserService } from "./auth/logged-user.service";
 import { LoginService } from "./auth/login/login.service";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("AppComponent", () => {
     let component: AppComponent;
@@ -36,7 +37,14 @@ describe("AppComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [RouterTestingModule, ApolloTestingModule, MatMenuModule, NgbTypeaheadModule, FormsModule],
+            imports: [
+                RouterTestingModule,
+                ApolloTestingModule,
+                MatMenuModule,
+                NgbTypeaheadModule,
+                FormsModule,
+                HttpClientTestingModule,
+            ],
             declarations: [AppComponent, ModalComponent, AppHeaderComponent, SpinnerComponent],
             providers: [
                 SearchService,

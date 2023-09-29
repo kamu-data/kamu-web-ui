@@ -28,12 +28,16 @@ import { BehaviorSubject, of } from "rxjs";
 import { LoginCallbackResponse, LoginPageQueryParams } from "./login.component.model";
 import { ActivatedRoute } from "@angular/router";
 import { AuthApi } from "src/app/api/auth.api";
+import { NavigationService } from "src/app/services/navigation.service";
+import { LocalStorageService } from "src/app/services/local-storage.service";
 
 describe("LoginComponent", () => {
     let component: LoginComponent;
     let fixture: ComponentFixture<LoginComponent>;
     let appConfigService: AppConfigService;
     let loginService: LoginService;
+    let navigationService: NavigationService;
+    let localStorageService: LocalStorageService;
     let authApi: AuthApi;
     let httpController: HttpTestingController;
 
@@ -77,6 +81,8 @@ describe("LoginComponent", () => {
         }).compileComponents();
 
         loginService = TestBed.inject(LoginService);
+        navigationService = TestBed.inject(NavigationService);
+        localStorageService = TestBed.inject(LocalStorageService);
         authApi = TestBed.inject(AuthApi);
         httpController = TestBed.inject(HttpTestingController);
     });
@@ -221,21 +227,15 @@ describe("LoginComponent", () => {
             });
         });
 
-        it("custom login callback setup via query parameter", () => {
-            const setLoginCallbackSpy = spyOn(loginService, "setLoginCallback").and.callThrough();
-
-            const callbackUrl = "http://example.com/some-callback";
-            mockQueryParams.next({
-                callbackUrl,
-            } as LoginPageQueryParams);
-
-            expect(setLoginCallbackSpy).toHaveBeenCalledTimes(1);
+        it("login callback setup in localStorage via query parameter", () => {
+            const SOME_CALLBACK_URL = "http://example.com/some-callback";
+            mockQueryParams.next({ callbackUrl: SOME_CALLBACK_URL } as LoginPageQueryParams);
+            fixture.detectChanges();
 
             const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin").and.returnValue(
                 of(mockPasswordLoginResponse.auth.login),
             );
-
-            const windowCloseSpy = spyOn(window, "close").and.stub();
+            const navigationSpy = spyOn(navigationService, "navigateToReturnToCli").and.stub();
 
             const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
             loginService.passwordLogin(credentials);
@@ -244,7 +244,7 @@ describe("LoginComponent", () => {
 
             const callbackUrlRequest = httpController.expectOne({
                 method: "POST",
-                url: callbackUrl,
+                url: SOME_CALLBACK_URL,
             });
             expect(callbackUrlRequest.request.body).toEqual({
                 accessToken: TEST_ACCESS_TOKEN_PASSWORD,
@@ -252,7 +252,7 @@ describe("LoginComponent", () => {
             } as LoginCallbackResponse);
             callbackUrlRequest.flush({});
 
-            expect(windowCloseSpy).toHaveBeenCalledTimes(1);
+            expect(navigationSpy).toHaveBeenCalledTimes(1);
         });
     });
 

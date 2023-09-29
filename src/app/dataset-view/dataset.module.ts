@@ -62,6 +62,7 @@ import { ReadmeSectionComponent } from "./additional-components/overview-compone
 import { DatasetSettingsComponent } from "./additional-components/dataset-settings-component/dataset-settings.component";
 import { LoadMoreComponent } from "./additional-components/data-component/load-more/load-more.component";
 import { MatInputModule } from "@angular/material/input";
+import { ReturnToCliComponent } from "../components/return-to-cli/return-to-cli.component";
 
 @NgModule({
     imports: [
@@ -147,6 +148,7 @@ import { MatInputModule } from "@angular/material/input";
         EngineSectionComponent,
         QueriesSectionComponent,
         PageNotFoundComponent,
+        ReturnToCliComponent,
         AddPollingSourceComponent,
         EngineSelectComponent,
         ReadmeSectionComponent,

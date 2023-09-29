@@ -18,10 +18,11 @@ import {
 import { AccountFragment, FetchAccountDetailsDocument, LoginDocument } from "../api/kamu.graphql.interface";
 import { first } from "rxjs/operators";
 import { MaybeNull } from "../common/app.types";
-import AppValues from "../common/app.values";
 import { AppConfigService } from "../app-config.service";
 import { GithubLoginCredentials, PasswordLoginCredentials } from "../api/auth.api.model";
 import { LoginService } from "./login/login.service";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { LocalStorageService } from "../services/local-storage.service";
 
 describe("LoggedUserService", () => {
     let service: LoggedUserService;
@@ -29,15 +30,17 @@ describe("LoggedUserService", () => {
 
     describe("Main Test Suite", () => {
         let navigationService: NavigationService;
+        let localStorageService: LocalStorageService;
         let loginService: LoginService;
         let apollo: Apollo;
 
         beforeEach(() => {
             TestBed.configureTestingModule({
                 providers: [AuthApi, Apollo],
-                imports: [ApolloTestingModule],
+                imports: [ApolloTestingModule, HttpClientTestingModule],
             });
             service = TestBed.inject(LoggedUserService);
+            localStorageService = TestBed.inject(LocalStorageService);
             apollo = TestBed.inject(Apollo);
             navigationService = TestBed.inject(NavigationService);
             loginService = TestBed.inject(LoginService);
@@ -50,7 +53,9 @@ describe("LoggedUserService", () => {
         }
 
         function attemptSuccessfulLoginViaAccessToken(): void {
-            const localStorageGetItemSpy = spyOn(localStorage, "getItem").and.returnValue(TEST_ACCESS_TOKEN_GITHUB);
+            const localStorageAccessTokenSpy = spyOnProperty(localStorageService, "accessToken", "get").and.returnValue(
+                TEST_ACCESS_TOKEN_GITHUB,
+            );
 
             service.initialize().subscribe();
 
@@ -61,7 +66,7 @@ describe("LoggedUserService", () => {
                 data: mockAccountFromAccessToken,
             });
 
-            expect(localStorageGetItemSpy).toHaveBeenCalledOnceWith(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
+            expect(localStorageAccessTokenSpy).toHaveBeenCalledTimes(1);
         }
 
         function loginFullyViaGithub(): void {
@@ -95,13 +100,14 @@ describe("LoggedUserService", () => {
         });
 
         it("should check user is non-authenticated if no access token exists", () => {
-            const localStorageGetItemSpy = spyOn(localStorage, "getItem").and.returnValue(null);
-
+            const localStorageAccessTokenSpy = spyOnProperty(localStorageService, "accessToken", "get").and.returnValue(
+                null,
+            );
             service.initialize().subscribe();
 
             controller.expectNone(FetchAccountDetailsDocument);
             expect(service.isAuthenticated).toBeFalse();
-            expect(localStorageGetItemSpy).toHaveBeenCalledOnceWith(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
+            expect(localStorageAccessTokenSpy).toHaveBeenCalledTimes(1);
         });
 
         it("should check user changes via login with alive access token", fakeAsync(() => {
@@ -118,7 +124,7 @@ describe("LoggedUserService", () => {
         }));
 
         it("should check user changes via full login Github", fakeAsync(() => {
-            const localStorageSetItemSpy = spyOn(localStorage, "setItem");
+            const accessTokenSetSpy = spyOn(localStorageService, "setAccessToken");
 
             loginFullyViaGithub();
             tick();
@@ -129,17 +135,14 @@ describe("LoggedUserService", () => {
                     user ? checkUserIsLogged(user) : fail("User must not be null");
                 });
 
-            expect(localStorageSetItemSpy).toHaveBeenCalledWith(
-                AppValues.LOCAL_STORAGE_ACCESS_TOKEN,
-                mockGithubLoginResponse.auth.login.accessToken,
-            );
+            expect(accessTokenSetSpy).toHaveBeenCalledWith(mockGithubLoginResponse.auth.login.accessToken);
 
             expect(userChanges$.closed).toBeTrue();
             flush();
         }));
 
         it("should check user changes via full login password", fakeAsync(() => {
-            const localStorageSetItemSpy = spyOn(localStorage, "setItem");
+            const accessTokenSetSpy = spyOn(localStorageService, "setAccessToken");
 
             loginFullyViaPassword();
             tick();
@@ -150,10 +153,7 @@ describe("LoggedUserService", () => {
                     user ? checkUserIsLogged(user) : fail("User must not be null");
                 });
 
-            expect(localStorageSetItemSpy).toHaveBeenCalledWith(
-                AppValues.LOCAL_STORAGE_ACCESS_TOKEN,
-                mockPasswordLoginResponse.auth.login.accessToken,
-            );
+            expect(accessTokenSetSpy).toHaveBeenCalledWith(mockPasswordLoginResponse.auth.login.accessToken);
 
             expect(userChanges$.closed).toBeTrue();
             flush();
@@ -205,7 +205,7 @@ describe("LoggedUserService", () => {
                         },
                     },
                 ],
-                imports: [ApolloTestingModule],
+                imports: [ApolloTestingModule, HttpClientTestingModule],
             });
             service = TestBed.inject(LoggedUserService);
             controller = TestBed.inject(ApolloTestingController);

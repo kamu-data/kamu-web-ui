@@ -12,6 +12,7 @@ import { PageNotFoundComponent } from "./components/page-not-found/page-not-foun
 import { LoginComponent } from "./auth/login/login.component";
 import { LoginService } from "./auth/login/login.service";
 import { LoginMethod } from "./app-config.model";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("Router", () => {
     let router: Router;
@@ -22,7 +23,7 @@ describe("Router", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [RouterTestingModule.withRoutes(routes), ApolloTestingModule],
+            imports: [RouterTestingModule.withRoutes(routes), ApolloTestingModule, HttpClientTestingModule],
             declarations: [PageNotFoundComponent, LoginComponent],
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();

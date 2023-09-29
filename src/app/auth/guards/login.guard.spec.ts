@@ -6,13 +6,14 @@ import ProjectLinks from "src/app/project-links";
 import { LoginMethod } from "src/app/app-config.model";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { LoginService } from "../login/login.service";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("LoginGuard", () => {
     let guard: LoginGuard;
     let loginService: LoginService;
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ApolloTestingModule],
+            imports: [ApolloTestingModule, HttpClientTestingModule],
         });
         guard = TestBed.inject(LoginGuard);
         loginService = TestBed.inject(LoginService);

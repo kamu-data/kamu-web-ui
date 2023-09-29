@@ -10,6 +10,7 @@ export default class ProjectLinks {
     public static readonly URL_SEARCH: string = "v/search";
     public static readonly URL_DATASET_CREATE: string = "v/new-dataset";
     public static readonly URL_PAGE_NOT_FOUND: string = "v/page-not-found";
+    public static readonly URL_RETURN_TO_CLI: string = "v/return-to-cli";
     public static readonly URL_SETTINGS: string = "v/settings";
 
     public static readonly ALL_URLS: string[] = [
@@ -20,6 +21,7 @@ export default class ProjectLinks {
         ProjectLinks.URL_SEARCH,
         ProjectLinks.URL_DATASET_CREATE,
         ProjectLinks.URL_PAGE_NOT_FOUND,
+        ProjectLinks.URL_RETURN_TO_CLI,
         ProjectLinks.URL_SETTINGS,
     ];
 

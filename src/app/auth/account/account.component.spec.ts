@@ -24,6 +24,7 @@ import { DisplayTimeComponent } from "src/app/components/display-time/display-ti
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { AccountNotFoundError } from "src/app/common/errors";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("AccountComponent", () => {
     let component: AccountComponent;
@@ -61,6 +62,7 @@ describe("AccountComponent", () => {
                 NgbPaginationModule,
                 NgbPopoverModule,
                 NgbRatingModule,
+                HttpClientTestingModule,
             ],
             providers: [
                 DatasetApi,

@@ -31,6 +31,7 @@ import {
     mockFullPowerDatasetPermissionsFragment,
     mockDatasetBasicsDerivedFragment,
 } from "src/app/search/mock.data";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("SetTransformComponent", () => {
     let component: SetTransformComponent;
@@ -59,6 +60,7 @@ describe("SetTransformComponent", () => {
                 MatIconModule,
                 NgbTypeaheadModule,
                 FormsModule,
+                HttpClientTestingModule,
                 ReactiveFormsModule,
             ],
             providers: [

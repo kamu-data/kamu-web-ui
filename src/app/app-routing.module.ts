@@ -14,6 +14,7 @@ import { GithubCallbackComponent } from "./auth/github-callback/github.callback"
 import ProjectLinks from "./project-links";
 import { SetTransformComponent } from "./dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component";
 import { LoginGuard } from "./auth/guards/login.guard";
+import { ReturnToCliComponent } from "./components/return-to-cli/return-to-cli.component";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -45,6 +46,10 @@ export const routes: Routes = [
     {
         path: ProjectLinks.URL_PAGE_NOT_FOUND,
         component: PageNotFoundComponent,
+    },
+    {
+        path: ProjectLinks.URL_RETURN_TO_CLI,
+        component: ReturnToCliComponent,
     },
     {
         path: ProjectLinks.URL_SETTINGS,

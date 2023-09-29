@@ -7,12 +7,24 @@ import { LoginMethod } from "src/app/app-config.model";
 import { AuthenticationError } from "src/app/common/errors";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
+import { LoginCallbackResponse } from "./login.component.model";
+import { HttpClient } from "@angular/common/http";
+import { AppConfigService } from "src/app/app-config.service";
+import AppValues from "src/app/common/app.values";
+import { MaybeNull } from "src/app/common/app.types";
+import { LocalStorageService } from "src/app/services/local-storage.service";
 
 @Injectable({
     providedIn: "root",
 })
 export class LoginService {
-    public constructor(private authApi: AuthApi, private navigationService: NavigationService) {}
+    public constructor(
+        private authApi: AuthApi,
+        private navigationService: NavigationService,
+        private appConfigService: AppConfigService,
+        private localStorageService: LocalStorageService,
+        private httpClient: HttpClient,
+    ) {}
 
     private accessTokenObtained$: Subject<string> = new ReplaySubject<string>(1);
     private accountChanged$: Subject<AccountFragment> = new ReplaySubject<AccountFragment>(1);
@@ -20,7 +32,7 @@ export class LoginService {
     private errorPasswordLogin$: Subject<string> = new Subject<string>();
     private enabledLoginMethods: LoginMethod[] = [];
 
-    private loginCallback: (loginResponse: LoginResponse) => void = this.defaultLoginCallback.bind(this);
+    private loginCallback: (loginResponse: LoginResponse) => void = this.redirectUrlLoginCallback.bind(this);
 
     public accessTokenObtained(): Observable<string> {
         return this.accessTokenObtained$.asObservable();
@@ -103,5 +115,22 @@ export class LoginService {
         this.accessTokenObtained$.next(loginResponse.accessToken);
         this.accountChanged$.next(loginResponse.account);
         this.navigationService.navigateToHome();
+    }
+
+    private redirectUrlLoginCallback(loginResponse: LoginResponse): void {
+        const callbackUrl: MaybeNull<string> = this.localStorageService.loginCallbackUrl;
+        if (callbackUrl) {
+            this.localStorageService.setLoginCallbackUrl(null);
+
+            const response: LoginCallbackResponse = {
+                accessToken: loginResponse.accessToken,
+                backendUrl: this.appConfigService.apiServerUrl,
+            };
+            this.httpClient.post<LoginCallbackResponse>(callbackUrl, response).subscribe(() => {
+                this.navigationService.navigateToReturnToCli();
+            });
+        } else {
+            this.defaultLoginCallback(loginResponse);
+        }
     }
 }

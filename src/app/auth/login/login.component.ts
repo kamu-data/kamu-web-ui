@@ -9,10 +9,7 @@ import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { Observable, shareReplay } from "rxjs";
 import { ActivatedRoute, Params } from "@angular/router";
 import { BaseComponent } from "src/app/common/base.component";
-import { LoginResponse } from "src/app/api/kamu.graphql.interface";
-import { HttpClient } from "@angular/common/http";
-import { LoginCallbackResponse } from "./login.component.model";
-import { AppConfigService } from "src/app/app-config.service";
+import { LocalStorageService } from "src/app/services/local-storage.service";
 
 @Component({
     selector: "app-login",
@@ -36,8 +33,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
         private route: ActivatedRoute,
         private fb: FormBuilder,
         private loginService: LoginService,
-        private appConfigService: AppConfigService,
-        private httpClient: HttpClient,
+        private localStorageService: LocalStorageService,
     ) {
         super();
 
@@ -61,17 +57,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
                     ProjectLinks.URL_QUERY_PARAM_CALLBACK_URL
                 ] as MaybeUndefined<string>;
 
-                if (callbackUrl) {
-                    this.loginService.setLoginCallback((loginResponse: LoginResponse) => {
-                        const response: LoginCallbackResponse = {
-                            accessToken: loginResponse.accessToken,
-                            backendUrl: this.appConfigService.apiServerUrl,
-                        };
-                        this.httpClient.post<LoginCallbackResponse>(callbackUrl, response).subscribe(() => {
-                            window.close();
-                        });
-                    });
-                }
+                this.localStorageService.setLoginCallbackUrl(callbackUrl ?? null);
             }),
         );
     }

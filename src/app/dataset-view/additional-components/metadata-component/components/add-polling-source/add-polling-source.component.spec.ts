@@ -30,6 +30,7 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetNavigationParams } from "src/app/interface/navigation.interface";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
@@ -62,6 +63,7 @@ describe("AddPollingSourceComponent", () => {
                 PollingSourceFormComponentsModule,
                 ReactiveFormsModule,
                 SharedTestModule,
+                HttpClientTestingModule,
             ],
             providers: [FormBuilder, Apollo],
         })

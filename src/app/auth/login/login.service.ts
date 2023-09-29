@@ -10,7 +10,6 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { LoginCallbackResponse } from "./login.component.model";
 import { HttpClient } from "@angular/common/http";
 import { AppConfigService } from "src/app/app-config.service";
-import AppValues from "src/app/common/app.values";
 import { MaybeNull } from "src/app/common/app.types";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 

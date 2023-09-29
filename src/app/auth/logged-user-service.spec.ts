@@ -23,15 +23,14 @@ import { GithubLoginCredentials, PasswordLoginCredentials } from "../api/auth.ap
 import { LoginService } from "./login/login.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LocalStorageService } from "../services/local-storage.service";
-import AppValues from "../common/app.values";
 
 describe("LoggedUserService", () => {
     let service: LoggedUserService;
+    let localStorageService: LocalStorageService;
     let controller: ApolloTestingController;
 
     describe("Main Test Suite", () => {
         let navigationService: NavigationService;
-        let localStorageService: LocalStorageService;
         let loginService: LoginService;
         let apollo: Apollo;
 
@@ -213,6 +212,9 @@ describe("LoggedUserService", () => {
             });
             service = TestBed.inject(LoggedUserService);
             controller = TestBed.inject(ApolloTestingController);
+
+            localStorageService = TestBed.inject(LocalStorageService);
+            localStorageService.reset();
         });
 
         it("should use custom configuration's initial user", fakeAsync(() => {

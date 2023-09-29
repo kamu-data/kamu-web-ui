@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { first } from "rxjs/operators";
 import { Observable, ReplaySubject, Subject, of } from "rxjs";
 import { NavigationService } from "../services/navigation.service";
-import AppValues from "../common/app.values";
 import { MaybeNull } from "../common/app.types";
 import { isNull } from "lodash";
 import { AppConfigService } from "../app-config.service";

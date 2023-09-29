@@ -66,7 +66,6 @@ import { LoggedUserService } from "./auth/logged-user.service";
 import { firstValueFrom } from "rxjs";
 import { LoginService } from "./auth/login/login.service";
 import { logError } from "./common/app.helpers";
-import AppValues from "./common/app.values";
 import { DatasetPermissionsService } from "./dataset-view/dataset.permissions.service";
 import { LocalStorageService } from "./services/local-storage.service";
 

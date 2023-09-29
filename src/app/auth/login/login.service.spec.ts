@@ -17,7 +17,6 @@ import { AuthenticationError } from "src/app/common/errors";
 import { LoginResponse } from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/common/app.types";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import AppValues from "src/app/common/app.values";
 
 describe("LoginService", () => {
     let service: LoginService;

@@ -5,3 +5,13 @@
 .w-65 {
     width: 67% !important;
 }
+
+.btn {
+    &.btn-success {
+        &.btn-save {
+            &:hover {
+                background-color: #23b06e;
+            }
+        }
+    }
+}

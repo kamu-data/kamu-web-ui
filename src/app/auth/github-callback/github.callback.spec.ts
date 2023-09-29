@@ -8,7 +8,6 @@ import { GithubCallbackComponent } from "./github.callback";
 import { GithubLoginCredentials } from "src/app/api/auth.api.model";
 import { TEST_ACCESS_TOKEN_GITHUB, mockGithubLoginResponse } from "src/app/api/mock/auth.mock";
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
-import AppValues from "src/app/common/app.values";
 import { LoginCallbackResponse } from "../login/login.component.model";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 
@@ -44,6 +43,7 @@ describe("GithubCallbackComponent", () => {
         navigateToHomeSpy = spyOn(navigationService, "navigateToHome").and.stub();
 
         localStorageService = TestBed.inject(LocalStorageService);
+        localStorageService.reset();
 
         fixture = TestBed.createComponent(GithubCallbackComponent);
         component = fixture.componentInstance;

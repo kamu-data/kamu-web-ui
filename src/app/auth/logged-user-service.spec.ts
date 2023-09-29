@@ -23,6 +23,7 @@ import { GithubLoginCredentials, PasswordLoginCredentials } from "../api/auth.ap
 import { LoginService } from "./login/login.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LocalStorageService } from "../services/local-storage.service";
+import AppValues from "../common/app.values";
 
 describe("LoggedUserService", () => {
     let service: LoggedUserService;
@@ -39,8 +40,11 @@ describe("LoggedUserService", () => {
                 providers: [AuthApi, Apollo],
                 imports: [ApolloTestingModule, HttpClientTestingModule],
             });
-            service = TestBed.inject(LoggedUserService);
+
             localStorageService = TestBed.inject(LocalStorageService);
+            localStorageService.reset();
+
+            service = TestBed.inject(LoggedUserService);
             apollo = TestBed.inject(Apollo);
             navigationService = TestBed.inject(NavigationService);
             loginService = TestBed.inject(LoginService);

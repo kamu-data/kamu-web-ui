@@ -26,4 +26,9 @@ export class LocalStorageService {
             localStorage.removeItem(AppValues.LOCAL_STORAGE_LOGIN_CALLBACK_URL);
         }
     }
+
+    public reset() {
+        this.setAccessToken(null);
+        this.setLoginCallbackUrl(null);
+    }
 }

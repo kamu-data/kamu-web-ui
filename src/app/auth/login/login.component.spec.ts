@@ -80,9 +80,12 @@ describe("LoginComponent", () => {
             ],
         }).compileComponents();
 
+        localStorageService = TestBed.inject(LocalStorageService);
+        localStorageService.reset();
+
         loginService = TestBed.inject(LoginService);
         navigationService = TestBed.inject(NavigationService);
-        localStorageService = TestBed.inject(LocalStorageService);
+
         authApi = TestBed.inject(AuthApi);
         httpController = TestBed.inject(HttpTestingController);
     });

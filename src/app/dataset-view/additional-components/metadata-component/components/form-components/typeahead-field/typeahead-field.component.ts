@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild, ViewEncapsulation } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
 import { BaseField } from "../base-field";
 import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, OperatorFunction, Subject, merge } from "rxjs";
@@ -7,7 +7,6 @@ import { debounceTime, distinctUntilChanged, map, filter } from "rxjs/operators"
     selector: "app-typeahead-field",
     templateUrl: "./typeahead-field.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
 })
 export class TypeaheadFieldComponent extends BaseField {
     @Input() public data: string[];

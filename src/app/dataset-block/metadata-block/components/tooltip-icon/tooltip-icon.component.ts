@@ -1,11 +1,9 @@
 import AppValues from "src/app/common/app.values";
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 @Component({
     selector: "app-tooltip-icon",
     templateUrl: "./tooltip-icon.component.html",
-    styleUrls: ["./tooltip-icon.component.scss"],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TooltipIconComponent {

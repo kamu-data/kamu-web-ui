@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    ViewEncapsulation,
+} from "@angular/core";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { DatasetService } from "./dataset.service";
 import { NavigationEnd, Router } from "@angular/router";
@@ -21,6 +28,7 @@ import _ from "lodash";
     selector: "app-dataset",
     templateUrl: "./dataset.component.html",
     styleUrls: ["./dataset.component.scss"],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetComponent extends BaseProcessingComponent implements OnInit, OnDestroy {

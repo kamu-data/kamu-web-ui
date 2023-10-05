@@ -6,7 +6,7 @@
     background-color: #f3f4f6;
     position: relative;
     font-size: 12px;
-    border: 1px solid #ced4da;
+    border: 1px solid $app-color-tooltip-border;
     padding: 5px 10px;
     color: black;
     text-align: left;
@@ -18,9 +18,9 @@
 .bs-tooltip-bottom {
     .tooltip-arrow {
         &::before {
-            border-top-color: #ced4da !important;
-            border-bottom-color: #ced4da !important;
-            top: -5px !important;
+            border-top-color: $app-color-tooltip-border;
+            border-bottom-color: $app-color-tooltip-border;
+            top: -5px;
         }
     }
 }

@@ -4,7 +4,7 @@ import { Observable, Subscription, combineLatest } from "rxjs";
 import ProjectLinks from "src/app/project-links";
 import { BaseProcessingComponent } from "../../common/base.processing.component";
 import { DatasetViewTypeEnum } from "../../dataset-view/dataset-view.interface";
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { map } from "rxjs/operators";
 import { Params } from "@angular/router";
@@ -16,6 +16,7 @@ import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/k
     selector: "app-metadata-block",
     templateUrl: "./metadata-block.component.html",
     styleUrls: ["./metadata-block.component.scss"],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataBlockComponent extends BaseProcessingComponent implements OnInit {

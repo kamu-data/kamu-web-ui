@@ -1478,7 +1478,7 @@ export type SetPollingSourceEventFragment = {
               eventTime?:
                   | { __typename: "EventTimeSourceFromMetadata" }
                   | { __typename?: "EventTimeSourceFromPath"; pattern: string; timestampFormat?: string | null }
-                  | { __typename?: "EventTimeSourceFromSystemTime" }
+                  | { __typename: "EventTimeSourceFromSystemTime" }
                   | null;
               cache?: { __typename: "SourceCachingForever" } | null;
           }
@@ -1488,7 +1488,7 @@ export type SetPollingSourceEventFragment = {
               eventTime?:
                   | { __typename: "EventTimeSourceFromMetadata" }
                   | { __typename?: "EventTimeSourceFromPath"; pattern: string; timestampFormat?: string | null }
-                  | { __typename?: "EventTimeSourceFromSystemTime" }
+                  | { __typename: "EventTimeSourceFromSystemTime" }
                   | null;
               headers?: Array<{ __typename?: "RequestHeader"; name: string; value: string }> | null;
               cache?: { __typename: "SourceCachingForever" } | null;
@@ -1518,7 +1518,14 @@ export type SetPollingSourceEventFragment = {
           }
         | { __typename?: "ReadStepEsriShapefile"; schema?: Array<string> | null; subPath?: string | null }
         | { __typename?: "ReadStepGeoJson"; schema?: Array<string> | null }
-        | { __typename?: "ReadStepJson" }
+        | {
+              __typename?: "ReadStepJson";
+              subPath?: string | null;
+              schema?: Array<string> | null;
+              dateFormat?: string | null;
+              encoding?: string | null;
+              timestampFormat?: string | null;
+          }
         | {
               __typename?: "ReadStepJsonLines";
               schema?: Array<string> | null;
@@ -1528,8 +1535,14 @@ export type SetPollingSourceEventFragment = {
               primitivesAsString?: boolean | null;
               timestampFormat?: string | null;
           }
-        | { __typename?: "ReadStepNdGeoJson" }
-        | { __typename?: "ReadStepNdJson" }
+        | { __typename?: "ReadStepNdGeoJson"; schema?: Array<string> | null }
+        | {
+              __typename?: "ReadStepNdJson";
+              dateFormat?: string | null;
+              encoding?: string | null;
+              schema?: Array<string> | null;
+              timestampFormat?: string | null;
+          }
         | { __typename?: "ReadStepParquet"; schema?: Array<string> | null };
     merge:
         | { __typename: "MergeStrategyAppend" }
@@ -2158,6 +2171,9 @@ export const SetPollingSourceEventFragmentDoc = gql`
                     ... on EventTimeSourceFromMetadata {
                         __typename
                     }
+                    ... on EventTimeSourceFromSystemTime {
+                        __typename
+                    }
                 }
                 headers {
                     name
@@ -2175,6 +2191,9 @@ export const SetPollingSourceEventFragmentDoc = gql`
                         timestampFormat
                     }
                     ... on EventTimeSourceFromMetadata {
+                        __typename
+                    }
+                    ... on EventTimeSourceFromSystemTime {
                         __typename
                     }
                 }
@@ -2232,6 +2251,22 @@ export const SetPollingSourceEventFragmentDoc = gql`
             ... on ReadStepEsriShapefile {
                 schema
                 subPath
+            }
+            ... on ReadStepJson {
+                subPath
+                schema
+                dateFormat
+                encoding
+                timestampFormat
+            }
+            ... on ReadStepNdGeoJson {
+                schema
+            }
+            ... on ReadStepNdJson {
+                dateFormat
+                encoding
+                schema
+                timestampFormat
             }
         }
         merge {

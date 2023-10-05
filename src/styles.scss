@@ -3,6 +3,7 @@
 @import "bootstrap-icons/font/bootstrap-icons.css";
 @import "bootstrap/scss/bootstrap";
 @import "@danielmoncada/angular-datetime-picker/assets/style/picker.min.css";
+@import "components/index";
 @include mat.core;
 
 /* Importing Bootstrap SCSS file. */

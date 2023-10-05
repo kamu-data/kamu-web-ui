@@ -11,6 +11,7 @@ import { DatasetPermissionsService } from "../dataset.permissions.service";
 @Component({
     selector: "app-dataset-view-menu",
     templateUrl: "./dataset-view-menu.component.html",
+    styleUrls: ["./dataset-view-menu.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetViewMenuComponent implements OnInit {

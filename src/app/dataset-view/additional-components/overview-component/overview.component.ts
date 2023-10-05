@@ -5,15 +5,7 @@ import {
     DatasetKind,
     DatasetPermissionsFragment,
 } from "../../../api/kamu.graphql.interface";
-import {
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-    ViewEncapsulation,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import {
@@ -34,7 +26,6 @@ import _ from "lodash";
     selector: "app-overview",
     templateUrl: "overview.component.html",
     styleUrls: ["./overview.component.scss"],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewComponent extends BaseComponent implements OnInit {

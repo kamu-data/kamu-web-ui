@@ -17,6 +17,18 @@
                 <label class="form-check-label" for=""> From metadata </label>
                 <app-tooltip-icon [tooltip]="innerTooltips.fromMetadata"></app-tooltip-icon>
             </div>
+            <div class="form-check d-flex gap-2">
+                <input
+                    class="form-check-input"
+                    type="radio"
+                    formControlName="kind"
+                    [name]="KIND_NAME_CONTROL"
+                    type="radio"
+                    [value]="eventTimeSourceKind.FROM_SYSTEM_TIME"
+                />
+                <label class="form-check-label" for=""> From system time </label>
+                <app-tooltip-icon [tooltip]="innerTooltips.fromSystemTime"></app-tooltip-icon>
+            </div>
             <div class="form-check mt-1 d-flex gap-2">
                 <input
                     class="form-check-input"

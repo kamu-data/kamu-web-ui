@@ -4,6 +4,7 @@ export class SetPollingSourceToolipsTexts {
     public static readonly EVENT_TIME = "Describes how event time is extracted from the source metadata.";
     public static readonly EVENT_TIME_FROM_METADATA = "Extracts event time from the source's metadata.";
     public static readonly EVENT_TIME_FROM_PATH = "Extracts event time from the path component of the source.";
+    public static readonly EVENT_TIME_SYSTEM_TIME = "Assigns event time from the system time source.";
     public static readonly HEADERS = "Headers to pass during the request (e.g. HTTP Authorization)";
     public static readonly CACHE = "After source was processed once it will never be ingested again.";
     public static readonly PATH = "Path with a glob pattern.";

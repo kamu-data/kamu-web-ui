@@ -27,6 +27,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                     innerTooltips: {
                         fromMetadata: SetPollingSourceToolipsTexts.EVENT_TIME_FROM_METADATA,
                         fromPath: SetPollingSourceToolipsTexts.EVENT_TIME_FROM_PATH,
+                        fromSystemTime: SetPollingSourceToolipsTexts.EVENT_TIME_SYSTEM_TIME,
                     },
                 },
                 validators: {},

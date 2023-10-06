@@ -48,6 +48,10 @@ export class SelectDateFormatFieldComponent extends BaseField implements OnInit 
                     this.currentSource = EventTimeSourceKind.FROM_METADATA;
                     this.eventTimeGroup.removeControl(this.PATTERN_NAME_CONTROL);
                     this.eventTimeGroup.removeControl(this.TIMESTAMP_FORMAT_NAME_CONTROL);
+                } else if (kind === this.eventTimeSourceKind.FROM_SYSTEM_TIME) {
+                    this.currentSource = EventTimeSourceKind.FROM_SYSTEM_TIME;
+                    this.eventTimeGroup.removeControl(this.PATTERN_NAME_CONTROL);
+                    this.eventTimeGroup.removeControl(this.TIMESTAMP_FORMAT_NAME_CONTROL);
                 } else {
                     this.currentSource = EventTimeSourceKind.FROM_PATH;
                     this.eventTimeGroup.addControl(

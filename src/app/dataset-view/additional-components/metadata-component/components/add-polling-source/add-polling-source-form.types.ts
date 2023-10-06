@@ -84,6 +84,7 @@ export enum PreprocessKind {
 export enum EventTimeSourceKind {
     FROM_METADATA = "fromMetadata",
     FROM_PATH = "fromPath",
+    FROM_SYSTEM_TIME = "fromSystemTime",
 }
 
 export interface EditFormType {

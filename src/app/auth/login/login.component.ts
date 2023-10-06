@@ -27,7 +27,9 @@ export class LoginComponent extends BaseComponent implements OnInit {
 
     public selectedLoginMethod?: LoginMethod = undefined;
     public passwordLoginForm: FormGroup;
-    public passwordLoginError$: Observable<string> = this.loginService.errorPasswordLogin.pipe(shareReplay());
+    public passwordLoginError$: Observable<string> = this.loginService.passwordLoginErrorOccurrences.pipe(
+        shareReplay(),
+    );
 
     public constructor(
         private route: ActivatedRoute,

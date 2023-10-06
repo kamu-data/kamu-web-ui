@@ -203,7 +203,7 @@ describe("LoginComponent", () => {
                 checkVisible(fixture, Elements.PASSWORD_METHOD_ERROR, false);
 
                 const errorMessage = "Bad credentials";
-                loginService.emitPasswordLoginError(errorMessage);
+                loginService.emitPasswordLoginErrorOccurred(errorMessage);
                 fixture.detectChanges();
 
                 checkVisible(fixture, Elements.PASSWORD_METHOD_ERROR, true);
@@ -212,7 +212,7 @@ describe("LoginComponent", () => {
             [Elements.INPUT_LOGIN, Elements.INPUT_PASSWORD].forEach((inputElemenName: Elements) => {
                 it(`Error is cleared after touching input ${inputElemenName}`, () => {
                     const errorMessage = "Bad credentials";
-                    loginService.emitPasswordLoginError(errorMessage);
+                    loginService.emitPasswordLoginErrorOccurred(errorMessage);
                     fixture.detectChanges();
 
                     checkVisible(fixture, Elements.PASSWORD_METHOD_ERROR, true);

@@ -86,7 +86,7 @@ describe("AccountComponent", () => {
         );
 
         loggedUserService = TestBed.inject(LoggedUserService);
-        spyOnProperty(loggedUserService, "onLoggedInUserChanges", "get").and.returnValue(of(null));
+        spyOnProperty(loggedUserService, "loggedInUserChanges", "get").and.returnValue(of(null));
 
         fixture = TestBed.createComponent(AccountComponent);
         component = fixture.componentInstance;

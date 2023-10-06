@@ -76,7 +76,7 @@ export class AppComponent extends BaseComponent implements OnInit {
                     this.isHeaderVisible = this.shouldHeaderBeVisible(event.url);
                 }),
 
-            this.loggedUserService.onLoggedInUserChanges.subscribe((user: MaybeNull<AccountFragment>) => {
+            this.loggedUserService.loggedInUserChanges.subscribe((user: MaybeNull<AccountFragment>) => {
                 this.loggedAccount = user ? _.cloneDeep(user) : AppComponent.ANONYMOUS_ACCOUNT_INFO;
             }),
         );

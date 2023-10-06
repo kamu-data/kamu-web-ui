@@ -46,12 +46,12 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
                 this.initDatasetViewByType(this.getDatasetInfoFromUrl(), this.getCurrentPageFromUrl());
             }),
             this.datasetService.requestDatasetMainData(this.getDatasetInfoFromUrl()).subscribe(),
-            this.datasetService.onDatasetChanges.subscribe((basics: DatasetBasicsFragment) => {
+            this.datasetService.datasetChanges.subscribe((basics: DatasetBasicsFragment) => {
                 this.datasetBasics = basics;
                 this.cdr.markForCheck();
             }),
         );
-        this.datasetPermissions$ = this.datasetSubsServices.onPermissionsDataChanges;
+        this.datasetPermissions$ = this.datasetSubsServices.permissionsChanges;
         this.initDatasetViewByType(this.getDatasetInfoFromUrl(), this.getCurrentPageFromUrl());
     }
 

@@ -145,7 +145,7 @@ const Services = [
         provide: APP_INITIALIZER,
         useFactory: (loggedUserService: LoggedUserService) => {
             return (): Promise<void> => {
-                return firstValueFrom(loggedUserService.initialize()).catch((e) => logError(e));
+                return firstValueFrom(loggedUserService.initializeCompletes()).catch((e) => logError(e));
             };
         },
         deps: [LoggedUserService],

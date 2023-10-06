@@ -49,7 +49,7 @@ export class DatasetCreateComponent extends BaseComponent {
         private loggedUserService: LoggedUserService,
     ) {
         super();
-        this.errorMessage$ = this.datasetCreateService.onErrorMessageChanges;
+        this.errorMessage$ = this.datasetCreateService.errorMessageChanges;
     }
 
     public ngOnInit(): void {
@@ -120,7 +120,7 @@ export class DatasetCreateComponent extends BaseComponent {
             this.createDatasetForm.controls.owner.enable();
             this.createDatasetForm.controls.kind.enable();
             this.yamlTemplate = "";
-            this.datasetCreateService.errorMessageChanges("");
+            this.datasetCreateService.emitErrorMessageChanged("");
         }
     }
 }

@@ -16,21 +16,21 @@ export class BlockService {
 
     private metadataBlockChanges$: Subject<MetadataBlockFragment> = new Subject<MetadataBlockFragment>();
 
-    public get onMetadataBlockChanges(): Observable<MetadataBlockFragment> {
+    public get metadataBlockChanges(): Observable<MetadataBlockFragment> {
         return this.metadataBlockChanges$.asObservable();
     }
 
-    public metadataBlockChanges(block: MetadataBlockFragment): void {
+    public emitMetadataBlockChanged(block: MetadataBlockFragment): void {
         this.metadataBlockChanges$.next(block);
     }
 
     private metadataBlockAsYamlChanges$: Subject<string> = new Subject<string>();
 
-    public get onMetadataBlockAsYamlChanges(): Observable<string> {
+    public get metadataBlockAsYamlChanges(): Observable<string> {
         return this.metadataBlockAsYamlChanges$.asObservable();
     }
 
-    public metadataBlockAsYamlChanges(block: string): void {
+    public emitMetadataBlockAsYamlChanged(block: string): void {
         this.metadataBlockAsYamlChanges$.next(block);
     }
 
@@ -42,9 +42,9 @@ export class BlockService {
                         .blockByHash as MetadataBlockFragment;
                     const blockAsYaml = data.datasets.byOwnerAndName.metadata.chain
                         .blockByHashEncoded as MaybeUndefined<string>;
-                    this.metadataBlockChanges(this.currentBlock);
+                    this.emitMetadataBlockChanged(this.currentBlock);
                     if (blockAsYaml) {
-                        this.metadataBlockAsYamlChanges(blockAsYaml);
+                        this.emitMetadataBlockAsYamlChanged(blockAsYaml);
                     }
                 }
             }),

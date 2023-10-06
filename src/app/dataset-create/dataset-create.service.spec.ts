@@ -83,7 +83,7 @@ describe("DatasetCreateService", () => {
         service.createEmptyDataset(DatasetKind.Root, datasetName).subscribe();
 
         expect(spyNavigateToDatasetView).not.toHaveBeenCalled();
-        service.onErrorMessageChanges.subscribe((error) => {
+        service.errorMessageChanges.subscribe((error) => {
             expect(error).toBe("Fail");
         });
     });
@@ -137,7 +137,7 @@ describe("DatasetCreateService", () => {
         service.createDatasetFromSnapshot("mockSnapshot").subscribe();
 
         expect(spyNavigateToDatasetView).not.toHaveBeenCalled();
-        service.onErrorMessageChanges.subscribe((error) => {
+        service.errorMessageChanges.subscribe((error) => {
             expect(error).toBe("Fail");
         });
     });

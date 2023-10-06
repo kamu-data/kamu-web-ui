@@ -19,7 +19,7 @@ import { LocalStorageService } from "../services/local-storage.service";
 export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
     private loggedInUser: MaybeNull<AccountFragment> = null;
 
-    private loggedInUserChanges$: Subject<MaybeNull<AccountFragment>> = new ReplaySubject<MaybeNull<AccountFragment>>(
+    private loggedInUser$: Subject<MaybeNull<AccountFragment>> = new ReplaySubject<MaybeNull<AccountFragment>>(
         1,
     );
 
@@ -33,12 +33,12 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
         super();
 
         this.trackSubscriptions(
-            this.loginService.accessTokenObtained().subscribe((token: string) => this.saveAccessToken(token)),
-            this.loginService.accountChanged().subscribe((user: AccountFragment) => this.changeUser(user)),
+            this.loginService.accessTokenChanges.subscribe((token: string) => this.saveAccessToken(token)),
+            this.loginService.accountChanges.subscribe((user: AccountFragment) => this.changeUser(user)),
         );
     }
 
-    public initialize(): Observable<void> {
+    public initializeCompletes(): Observable<void> {
         const loginInstructions: AppConfigLoginInstructions | null = this.appConfigService.loginInstructions;
         if (loginInstructions) {
             return this.loginService.genericLogin(
@@ -46,12 +46,12 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
                 loginInstructions.loginCredentialsJson,
             );
         } else {
-            return this.attemptPreviousAuthentication();
+            return this.attemptPreviousAuthenticationCompletes();
         }
     }
 
-    public get onLoggedInUserChanges(): Observable<MaybeNull<AccountFragment>> {
-        return this.loggedInUserChanges$.asObservable();
+    public get loggedInUserChanges(): Observable<MaybeNull<AccountFragment>> {
+        return this.loggedInUser$.asObservable();
     }
 
     public get currentlyLoggedInUser(): MaybeNull<AccountFragment> {
@@ -73,7 +73,7 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
         this.clearGraphQLCache();
     }
 
-    private attemptPreviousAuthentication(): Observable<void> {
+    private attemptPreviousAuthenticationCompletes(): Observable<void> {
         const accessToken: string | null = this.localStorageService.accessToken;
         if (typeof accessToken === "string" && !this.isAuthenticated) {
             return this.loginService.fetchAccountFromAccessToken(accessToken).pipe(first());
@@ -84,7 +84,7 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
 
     private changeUser(user: MaybeNull<AccountFragment>) {
         this.loggedInUser = user;
-        this.loggedInUserChanges$.next(user);
+        this.loggedInUser$.next(user);
     }
 
     private clearGraphQLCache(): void {

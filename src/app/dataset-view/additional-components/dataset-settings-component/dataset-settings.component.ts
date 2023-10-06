@@ -25,7 +25,7 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
         private modalService: ModalService,
     ) {
         super();
-        this.renameError$ = this.datasetSettingsService.onErrorRenameDatasetChanges.pipe(shareReplay());
+        this.renameError$ = this.datasetSettingsService.renameDatasetErrorOccurrences.pipe(shareReplay());
         this.renameDatasetForm = this.fb.group({
             datasetName: [
                 this.getDatasetInfoFromUrl().datasetName,

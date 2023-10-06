@@ -162,7 +162,7 @@ describe("DatasetCommitService", () => {
                 spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
                 const commitEventSpy = spyOn(datasetApi, "commitEvent").and.returnValue(of(errorResponse));
 
-                const errorSubscription$: Subscription = commitService.onErrorCommitEventChanges
+                const errorSubscription$: Subscription = commitService.commitEventErrorOccurrences
                     .pipe(first())
                     .subscribe((message) => {
                         expect(message).toEqual(mockCommitEventToDatasetErrorMessage);

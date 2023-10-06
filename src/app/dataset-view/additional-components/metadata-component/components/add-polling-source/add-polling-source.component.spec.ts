@@ -126,8 +126,8 @@ describe("AddPollingSourceComponent", () => {
     it("check dataset editability passes for root dataset with full permissions", () => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
 
-        datasetService.datasetChanges(mockDatasetBasicsRootFragment);
-        datasetSubsService.changePermissionsData(mockFullPowerDatasetPermissionsFragment);
+        datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
+        datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
 
         expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
     });
@@ -135,8 +135,8 @@ describe("AddPollingSourceComponent", () => {
     it("check dataset editability fails without commit permission", () => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
 
-        datasetService.datasetChanges(mockDatasetBasicsRootFragment);
-        datasetSubsService.changePermissionsData({
+        datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
+        datasetSubsService.emitPermissionsChanged({
             permissions: {
                 ...mockFullPowerDatasetPermissionsFragment.permissions,
                 canCommit: false,
@@ -152,8 +152,8 @@ describe("AddPollingSourceComponent", () => {
     it("check dataset editability fails upon derived dataset", () => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
 
-        datasetService.datasetChanges(mockDatasetBasicsDerivedFragment);
-        datasetSubsService.changePermissionsData(mockFullPowerDatasetPermissionsFragment);
+        datasetService.emitDatasetChanged(mockDatasetBasicsDerivedFragment);
+        datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
 
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
@@ -172,7 +172,7 @@ describe("AddPollingSourceComponent", () => {
         const mockError = "Some error";
         expect(component.errorMessage).toBe("");
         expect(component.changedEventYamlByHash).toBeNull();
-        datasetCommitService.errorCommitEventChanges(mockError);
+        datasetCommitService.emitCommitEventErrorOccurred(mockError);
         expect(component.errorMessage).toBe(mockError);
 
         component.onEditYaml();
@@ -213,7 +213,7 @@ describe("AddPollingSourceComponent", () => {
         const errorMessage = "test error message";
         expect(component.errorMessage).toBe("");
 
-        datasetCommitService.errorCommitEventChanges(errorMessage);
+        datasetCommitService.emitCommitEventErrorOccurred(errorMessage);
         expect(component.errorMessage).toBe(errorMessage);
     });
 

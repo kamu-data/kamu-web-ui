@@ -60,7 +60,7 @@ describe("LoggedUserService", () => {
                 TEST_ACCESS_TOKEN_GITHUB,
             );
 
-            service.initialize().subscribe();
+            service.initializeCompletes().subscribe();
 
             const op = controller.expectOne(FetchAccountDetailsDocument);
             expect(op.operation.variables.accessToken).toEqual(TEST_ACCESS_TOKEN_GITHUB);
@@ -106,7 +106,7 @@ describe("LoggedUserService", () => {
             const localStorageAccessTokenSpy = spyOnProperty(localStorageService, "accessToken", "get").and.returnValue(
                 null,
             );
-            service.initialize().subscribe();
+            service.initializeCompletes().subscribe();
 
             controller.expectNone(FetchAccountDetailsDocument);
             expect(service.isAuthenticated).toBeFalse();
@@ -117,7 +117,7 @@ describe("LoggedUserService", () => {
             attemptSuccessfulLoginViaAccessToken();
             tick();
 
-            const userChanges$ = service.onLoggedInUserChanges
+            const userChanges$ = service.loggedInUserChanges
                 .pipe(first())
                 .subscribe((user: MaybeNull<AccountFragment>) => {
                     user ? checkUserIsLogged(user) : fail("User must not be null");
@@ -132,7 +132,7 @@ describe("LoggedUserService", () => {
             loginFullyViaGithub();
             tick();
 
-            const userChanges$ = service.onLoggedInUserChanges
+            const userChanges$ = service.loggedInUserChanges
                 .pipe(first())
                 .subscribe((user: MaybeNull<AccountFragment>) => {
                     user ? checkUserIsLogged(user) : fail("User must not be null");
@@ -150,7 +150,7 @@ describe("LoggedUserService", () => {
             loginFullyViaPassword();
             tick();
 
-            const userChanges$ = service.onLoggedInUserChanges
+            const userChanges$ = service.loggedInUserChanges
                 .pipe(first())
                 .subscribe((user: MaybeNull<AccountFragment>) => {
                     user ? checkUserIsLogged(user) : fail("User must not be null");
@@ -218,7 +218,7 @@ describe("LoggedUserService", () => {
         });
 
         it("should use custom configuration's initial user", fakeAsync(() => {
-            service.initialize().subscribe();
+            service.initializeCompletes().subscribe();
 
             const op = controller.expectOne(LoginDocument);
             op.flush({

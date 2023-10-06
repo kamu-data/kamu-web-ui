@@ -43,8 +43,8 @@ describe("LoginService", () => {
         );
         const navigateSpy = spyOn(navigationService, "navigateToHome");
 
-        const tokenSubscription$ = service.accessTokenObtained().pipe(first()).subscribe();
-        const accountSubscription$ = service.accountChanged().pipe(first()).subscribe();
+        const tokenSubscription$ = service.accessTokenChanges.pipe(first()).subscribe();
+        const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
 
         const credentials: GithubLoginCredentials = { code: TEST_GITHUB_CODE };
         service.githubLogin(credentials);
@@ -65,8 +65,8 @@ describe("LoginService", () => {
         );
         const navigateSpy = spyOn(navigationService, "navigateToHome");
 
-        const tokenSubscription$ = service.accessTokenObtained().pipe(first()).subscribe();
-        const accountSubscription$ = service.accountChanged().pipe(first()).subscribe();
+        const tokenSubscription$ = service.accessTokenChanges.pipe(first()).subscribe();
+        const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
 
         const credentials: GithubLoginCredentials = { code: TEST_GITHUB_CODE };
         expect(() => {
@@ -89,8 +89,8 @@ describe("LoginService", () => {
         );
         const navigateSpy = spyOn(navigationService, "navigateToHome");
 
-        const tokenSubscription$ = service.accessTokenObtained().pipe(first()).subscribe();
-        const accountSubscription$ = service.accountChanged().pipe(first()).subscribe();
+        const tokenSubscription$ = service.accessTokenChanges.pipe(first()).subscribe();
+        const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
 
         const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
         service.passwordLogin(credentials);
@@ -109,12 +109,14 @@ describe("LoginService", () => {
             throwError(() => new AuthenticationError([new Error(errorText)])),
         );
 
-        const errorSubscription$: Subscription = service.errorPasswordLogin.pipe(first()).subscribe((e: string) => {
-            expect(e).toEqual(errorText);
-        });
+        const errorSubscription$: Subscription = service.passwordLoginErrorOccurrences
+            .pipe(first())
+            .subscribe((e: string) => {
+                expect(e).toEqual(errorText);
+            });
 
-        const tokenSubscription$ = service.accessTokenObtained().pipe(first()).subscribe();
-        const accountSubscription$ = service.accountChanged().pipe(first()).subscribe();
+        const tokenSubscription$ = service.accessTokenChanges.pipe(first()).subscribe();
+        const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
 
         const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
         service.passwordLogin(credentials);
@@ -129,9 +131,11 @@ describe("LoginService", () => {
     });
 
     it("reseting password login error emits empty error", () => {
-        const errorSubscription$: Subscription = service.errorPasswordLogin.pipe(first()).subscribe((e: string) => {
-            expect(e).toEqual("");
-        });
+        const errorSubscription$: Subscription = service.passwordLoginErrorOccurrences
+            .pipe(first())
+            .subscribe((e: string) => {
+                expect(e).toEqual("");
+            });
 
         service.resetPasswordLoginError();
 
@@ -150,8 +154,8 @@ describe("LoginService", () => {
         );
         const navigateSpy = spyOn(navigationService, "navigateToHome");
 
-        const tokenSubscription$ = service.accessTokenObtained().pipe(first()).subscribe();
-        const accountSubscription$ = service.accountChanged().pipe(first()).subscribe();
+        const tokenSubscription$ = service.accessTokenChanges.pipe(first()).subscribe();
+        const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
 
         const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
         service.passwordLogin(credentials);

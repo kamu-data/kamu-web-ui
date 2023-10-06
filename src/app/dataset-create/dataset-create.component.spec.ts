@@ -47,7 +47,7 @@ describe("DatasetCreateComponent", () => {
 
     it("should check error message is exist", fakeAsync(() => {
         const errorMessage = "testMessage";
-        datasetCreateService.errorMessageChanges(errorMessage);
+        datasetCreateService.emitErrorMessageChanged(errorMessage);
         tick();
         fixture.detectChanges();
         const element = getInputElememtByDataTestId(fixture, "create-error-message");

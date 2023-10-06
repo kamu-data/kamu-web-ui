@@ -109,8 +109,8 @@ describe("SetTransformComponent", () => {
     it("check dataset editability passes for derived dataset with full permissions", () => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
 
-        datasetService.datasetChanges(mockDatasetBasicsDerivedFragment);
-        datasetSubsService.changePermissionsData(mockFullPowerDatasetPermissionsFragment);
+        datasetService.emitDatasetChanged(mockDatasetBasicsDerivedFragment);
+        datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
 
         expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
     });
@@ -118,8 +118,8 @@ describe("SetTransformComponent", () => {
     it("check dataset editability fails without commit permission", () => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
 
-        datasetService.datasetChanges(mockDatasetBasicsDerivedFragment);
-        datasetSubsService.changePermissionsData({
+        datasetService.emitDatasetChanged(mockDatasetBasicsDerivedFragment);
+        datasetSubsService.emitPermissionsChanged({
             permissions: {
                 ...mockFullPowerDatasetPermissionsFragment.permissions,
                 canCommit: false,
@@ -135,8 +135,8 @@ describe("SetTransformComponent", () => {
     it("check dataset editability fails upon root dataset", () => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
 
-        datasetService.datasetChanges(mockDatasetBasicsRootFragment);
-        datasetSubsService.changePermissionsData(mockFullPowerDatasetPermissionsFragment);
+        datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
+        datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
 
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: mockDatasetBasicsRootFragment.owner.accountName,

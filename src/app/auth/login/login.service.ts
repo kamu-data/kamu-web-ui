@@ -25,28 +25,28 @@ export class LoginService {
         private httpClient: HttpClient,
     ) {}
 
-    private accessTokenObtained$: Subject<string> = new ReplaySubject<string>(1);
-    private accountChanged$: Subject<AccountFragment> = new ReplaySubject<AccountFragment>(1);
+    private accessToken$: Subject<string> = new ReplaySubject<string>(1);
+    private account$: Subject<AccountFragment> = new ReplaySubject<AccountFragment>(1);
+    private passwordLoginError$: Subject<string> = new Subject<string>();
 
-    private errorPasswordLogin$: Subject<string> = new Subject<string>();
     private enabledLoginMethods: LoginMethod[] = [];
 
     private loginCallback: (loginResponse: LoginResponse) => void = this.redirectUrlLoginCallback.bind(this);
 
-    public accessTokenObtained(): Observable<string> {
-        return this.accessTokenObtained$.asObservable();
+    public get accessTokenChanges(): Observable<string> {
+        return this.accessToken$.asObservable();
     }
 
-    public accountChanged(): Observable<AccountFragment> {
-        return this.accountChanged$.asObservable();
+    public get accountChanges(): Observable<AccountFragment> {
+        return this.account$.asObservable();
     }
 
-    public get errorPasswordLogin(): Observable<string> {
-        return this.errorPasswordLogin$.asObservable();
+    public get passwordLoginErrorOccurrences(): Observable<string> {
+        return this.passwordLoginError$.asObservable();
     }
 
-    public emitPasswordLoginError(errorText: string): void {
-        this.errorPasswordLogin$.next(errorText);
+    public emitPasswordLoginErrorOccurred(errorText: string): void {
+        this.passwordLoginError$.next(errorText);
     }
 
     public static gotoGithub(): void {
@@ -84,7 +84,7 @@ export class LoginService {
             next: this.loginCallback,
             error: (e) => {
                 if (e instanceof AuthenticationError) {
-                    this.emitPasswordLoginError(e.compactMessage);
+                    this.emitPasswordLoginErrorOccurred(e.compactMessage);
                 } else {
                     throw e;
                 }
@@ -103,16 +103,16 @@ export class LoginService {
     public fetchAccountFromAccessToken(accessToken: string): Observable<void> {
         return this.authApi
             .fetchAccountFromAccessToken(accessToken)
-            .pipe(map((accountDetails: AccountFragment): void => this.accountChanged$.next(accountDetails)));
+            .pipe(map((accountDetails: AccountFragment): void => this.account$.next(accountDetails)));
     }
 
     public resetPasswordLoginError(): void {
-        this.errorPasswordLogin$.next("");
+        this.passwordLoginError$.next("");
     }
 
     private defaultLoginCallback(loginResponse: LoginResponse): void {
-        this.accessTokenObtained$.next(loginResponse.accessToken);
-        this.accountChanged$.next(loginResponse.account);
+        this.accessToken$.next(loginResponse.accessToken);
+        this.account$.next(loginResponse.account);
         this.navigationService.navigateToHome();
     }
 

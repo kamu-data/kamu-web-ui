@@ -36,7 +36,7 @@ describe("AccountSettingsComponent", () => {
         router = TestBed.inject(Router);
 
         loginService = TestBed.inject(LoginService);
-        spyOn(loginService, "accountChanged").and.returnValue(of(mockAccountDetails));
+        spyOnProperty(loginService, "accountChanges", "get").and.returnValue(of(mockAccountDetails));
         loggedUserService = TestBed.inject(LoggedUserService);
 
         fixture = TestBed.createComponent(AccountSettingsComponent);

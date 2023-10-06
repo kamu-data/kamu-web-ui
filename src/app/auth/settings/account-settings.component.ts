@@ -34,7 +34,7 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
             }),
         );
         this.extractActiveTabFromRoute();
-        this.user$ = this.loggedUserService.onLoggedInUserChanges;
+        this.user$ = this.loggedUserService.loggedInUserChanges;
     }
 
     public getRouteLink(tab: AccountSettingsTabs): string {

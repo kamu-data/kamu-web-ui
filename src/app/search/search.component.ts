@@ -19,7 +19,7 @@ import { Observable } from "rxjs";
 export class SearchComponent extends BaseComponent implements OnInit {
     public searchValue = "";
     public currentPage = 1; // TODO: Should be zero-based and only offset for display
-    public tableData$: Observable<DatasetSearchResult> = this.searchService.onOverviewSearchChanges;
+    public tableData$: Observable<DatasetSearchResult> = this.searchService.searchOverviewChanges;
 
     private sortOptions: { value: string; label: string; active: boolean }[] = [
         { value: "best", label: "Best match", active: true },

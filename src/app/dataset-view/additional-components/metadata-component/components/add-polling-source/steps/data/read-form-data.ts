@@ -24,7 +24,7 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "encoding",
                 label: "Encoding",
-                value: "UTF-8",
+                value: "utf8",
                 type: ControlType.TEXT,
                 tooltip: SetPollingSourceToolipsTexts.ENCODING,
                 placeholder: "Enter encoding type...",
@@ -127,21 +127,21 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "dateFormat",
                 label: "Date format",
-                value: "yyyy-MM-dd",
+                value: "rfc3339",
                 type: ControlType.TYPEAHEAD,
                 tooltip: SetPollingSourceToolipsTexts.DATE_FORMAT,
                 placeholder: "--Select format--",
-                list: ["yyyy-MM-dd:mm:ss.sss", "yyyy-MM-dd:mm:ss", "yyyy-MM-dd"],
+                list: ["rfc3339"],
                 validators: {},
             },
             {
                 name: "timestampFormat",
                 label: "Timestamp format",
-                value: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
+                value: "rfc3339",
                 type: ControlType.TYPEAHEAD,
                 placeholder: "--Select format--",
                 tooltip: SetPollingSourceToolipsTexts.TIMESTAMP_FORMAT,
-                list: ["yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd"],
+                list: ["rfc3339"],
                 validators: {},
             },
             {
@@ -182,7 +182,7 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "multiLine",
-                label: "Multi line",
+                label: "Мultiple line",
                 value: false,
                 type: ControlType.CHECKBOX,
                 tooltip: SetPollingSourceToolipsTexts.MULTI_LINE,

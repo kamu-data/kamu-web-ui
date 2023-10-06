@@ -6,8 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- Login page accepts a callback URL, and emits a POST request if it is defined, 
+  instead of normal login functionality - to be used by CLI application for remote logins
 ### Changed
-- Added a new service responsible for constructing a graph 
+- Added a new service responsible for constructing a graph
+- Established a naming convention for service event subjects, public observables, and emit methods 
 ### Fixed
 - GraphQL runtime errors are not wrapped into application-specific exceptions
 - Unexpected swithing to Settings tab while surfing over Lineage graph

@@ -30,8 +30,10 @@ export class SetPollingSourceToolipsTexts {
     public static readonly NAN_VALUE = "Sets the string representation of a non-number value.";
     public static readonly POSITIVE_INFINITY = "Sets the string representation of a positive infinity value.";
     public static readonly NEGATIVE_INFINITY = "Sets the string representation of a negative infinity value.";
-    public static readonly DATE_FORMAT = "Sets the string that indicates a date format.";
-    public static readonly TIMESTAMP_FORMAT = "Sets the string that indicates a timestamp format.";
+    public static readonly DATE_FORMAT =
+        "Sets the string that indicates a date format. The `rfc3339` is the only required format, the other format strings are implementation-specific.";
+    public static readonly TIMESTAMP_FORMAT =
+        "Sets the string that indicates a timestamp format. The `rfc3339` is the only required format, the other format strings are implementation-specific.";
     public static readonly ENFORCE_SCHEMA =
         "If it is set to true, the specified or inferred schema will be forcibly applied to datasource files, and headers in CSV files will be ignored. If the option is set to false, the schema will be validated against all headers in CSV files in the case when the header option is set to true.";
     public static readonly INFER_SCHEMA =

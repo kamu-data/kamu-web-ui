@@ -18,14 +18,14 @@ import { DatasetOperationError } from "../common/errors";
 export class DatasetCreateService {
     public static readonly NOT_LOGGED_USER_ERROR = "User must be logged in to create a dataset";
 
-    private errorMessageChanges$: Subject<string> = new Subject<string>();
+    private errorMessage$: Subject<string> = new Subject<string>();
 
-    public errorMessageChanges(message: string): void {
-        this.errorMessageChanges$.next(message);
+    public emitErrorMessageChanged(message: string): void {
+        this.errorMessage$.next(message);
     }
 
-    public get onErrorMessageChanges(): Observable<string> {
-        return this.errorMessageChanges$.asObservable();
+    public get errorMessageChanges(): Observable<string> {
+        return this.errorMessage$.asObservable();
     }
 
     public constructor(
@@ -46,7 +46,7 @@ export class DatasetCreateService {
                             tab: DatasetViewTypeEnum.Overview,
                         });
                     } else {
-                        this.errorMessageChanges(data.datasets.createEmpty.message);
+                        this.emitErrorMessageChanged(data.datasets.createEmpty.message);
                     }
                 }),
             );
@@ -68,7 +68,7 @@ export class DatasetCreateService {
                             tab: DatasetViewTypeEnum.Overview,
                         });
                     } else {
-                        this.errorMessageChanges(data.datasets.createFromSnapshot.message);
+                        this.emitErrorMessageChanged(data.datasets.createFromSnapshot.message);
                     }
                 }),
             );

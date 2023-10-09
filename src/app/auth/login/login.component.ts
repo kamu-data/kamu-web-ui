@@ -5,8 +5,11 @@ import { LoginMethod } from "src/app/app-config.model";
 import { LoginService } from "./login.service";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { PasswordLoginCredentials } from "src/app/api/auth.api.model";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { Observable, shareReplay } from "rxjs";
+import { ActivatedRoute, Params } from "@angular/router";
+import { BaseComponent } from "src/app/common/base.component";
+import { LocalStorageService } from "src/app/services/local-storage.service";
 
 @Component({
     selector: "app-login",
@@ -14,7 +17,7 @@ import { Observable, shareReplay } from "rxjs";
     styleUrls: ["./login.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent extends BaseComponent implements OnInit {
     public static readonly ERROR_ZERO_METHODS_IN_CONFIG =
         "LoginComponent requires at least 1 login method in configuration";
 
@@ -24,18 +27,21 @@ export class LoginComponent implements OnInit {
 
     public selectedLoginMethod?: LoginMethod = undefined;
     public passwordLoginForm: FormGroup;
-    public passwordLoginError$: Observable<string> = this.loginService.errorPasswordLogin.pipe(shareReplay());
+    public passwordLoginError$: Observable<string> = this.loginService.passwordLoginErrorOccurrences.pipe(
+        shareReplay(),
+    );
 
-    public constructor(private fb: FormBuilder, private loginService: LoginService) {
+    public constructor(
+        private route: ActivatedRoute,
+        private fb: FormBuilder,
+        private loginService: LoginService,
+        private localStorageService: LocalStorageService,
+    ) {
+        super();
+
         this.passwordLoginForm = this.fb.group({
-            login: [
-                "",
-                [Validators.required],
-            ],
-            password: [
-                "",
-                [Validators.required],
-            ],
+            login: ["", [Validators.required]],
+            password: ["", [Validators.required]],
         });
     }
 
@@ -46,6 +52,16 @@ export class LoginComponent implements OnInit {
         } else if (loginMethods.length === 0) {
             throw new Error(LoginComponent.ERROR_ZERO_METHODS_IN_CONFIG);
         }
+
+        this.trackSubscription(
+            this.route.queryParams.subscribe((queryParams: Params) => {
+                const callbackUrl: MaybeUndefined<string> = queryParams[
+                    ProjectLinks.URL_QUERY_PARAM_CALLBACK_URL
+                ] as MaybeUndefined<string>;
+
+                this.localStorageService.setLoginCallbackUrl(callbackUrl ?? null);
+            }),
+        );
     }
 
     public get loginControl(): MaybeNull<AbstractControl> {

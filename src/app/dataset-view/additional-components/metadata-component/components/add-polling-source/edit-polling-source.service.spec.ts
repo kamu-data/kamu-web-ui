@@ -44,7 +44,7 @@ describe("EditPollingSourceService", () => {
         const mockHistory = mockHistoryEditPollingSourceService;
         spyOn(datasetService, "getDatasetHistory").and.returnValue(of(mockHistory));
         spyOn(blockService, "requestMetadataBlock").and.returnValue(of());
-        blockService.metadataBlockAsYamlChanges("test yaml");
+        blockService.emitMetadataBlockAsYamlChanged("test yaml");
         service.getEventAsYaml(mockDatasetInfo, SupportedEvents.SetPollingSource).subscribe(
             () => null,
             () => {

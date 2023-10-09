@@ -13,7 +13,7 @@ describe("LineageGraphBuilderService", () => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(LineageGraphBuilderService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        datasetSubsService.changeLineageData(mockLineageGraphUpdate);
+        datasetSubsService.emitLineageChanged(mockLineageGraphUpdate);
     });
 
     it("should be created", () => {
@@ -21,7 +21,7 @@ describe("LineageGraphBuilderService", () => {
     });
 
     it("should check get current dataset", () => {
-        service.getCurrentDataset().subscribe((data: DatasetLineageBasicsFragment) => {
+        service.currentDatasetChanges().subscribe((data: DatasetLineageBasicsFragment) => {
             expect(data).toEqual(mockLineageGraphUpdate.origin);
         });
     });

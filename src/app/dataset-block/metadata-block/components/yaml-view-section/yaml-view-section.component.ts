@@ -13,7 +13,7 @@ export class YamlViewSectionComponent {
     public yamlEventText$: Observable<string>;
 
     constructor(private blockService: BlockService) {
-        this.yamlEventText$ = this.blockService.onMetadataBlockAsYamlChanges;
+        this.yamlEventText$ = this.blockService.metadataBlockAsYamlChanges;
     }
 
     public get currentBlock(): MetadataBlockFragment {

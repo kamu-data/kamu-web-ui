@@ -28,7 +28,7 @@ describe("SearchService", () => {
             of(mockSearchDatasetOverviewQuery),
         );
 
-        const subscription$ = service.onOverviewSearchChanges
+        const subscription$ = service.searchOverviewChanges
             .pipe(first())
             .subscribe((searchResult: DatasetSearchResult) => {
                 const expectedSearchData: DatasetSearchResult = {
@@ -52,7 +52,7 @@ describe("SearchService", () => {
             of(mockAutocompleteItems),
         );
 
-        const subscription$ = service.onAutocompleteSearchChanges
+        const subscription$ = service.searchAutocompleteChanges
             .pipe(first())
             .subscribe((autocompleteItems: DatasetAutocompleteItem[]) => {
                 expect(autocompleteItems).toEqual(mockAutocompleteItems);
@@ -70,7 +70,7 @@ describe("SearchService", () => {
             throwError(() => "some error"),
         );
 
-        const subscription$ = service.onAutocompleteSearchChanges
+        const subscription$ = service.searchAutocompleteChanges
             .pipe(first())
             .subscribe((autocompleteItems: DatasetAutocompleteItem[]) => {
                 expect(autocompleteItems).toEqual([]);

@@ -8,16 +8,16 @@ import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LoggedUserService } from "../logged-user.service";
 import { findElementByDataTestId, getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
-import { AuthApi } from "src/app/api/auth.api";
 import { AccountSettingsTabs } from "./account-settings.constants";
 import { Subject, of } from "rxjs";
 import ProjectLinks from "src/app/project-links";
+import { LoginService } from "../login/login.service";
 
 describe("AccountSettingsComponent", () => {
     let component: AccountSettingsComponent;
     let fixture: ComponentFixture<AccountSettingsComponent>;
     let loggedUserService: LoggedUserService;
-    let authApi: AuthApi;
+    let loginService: LoginService;
     let activatedRoute: ActivatedRoute;
     let router: Router;
 
@@ -35,8 +35,8 @@ describe("AccountSettingsComponent", () => {
         activatedRoute = TestBed.inject(ActivatedRoute);
         router = TestBed.inject(Router);
 
-        authApi = TestBed.inject(AuthApi);
-        spyOn(authApi, "accountChanged").and.returnValue(of(mockAccountDetails));
+        loginService = TestBed.inject(LoginService);
+        spyOnProperty(loginService, "accountChanges", "get").and.returnValue(of(mockAccountDetails));
         loggedUserService = TestBed.inject(LoggedUserService);
 
         fixture = TestBed.createComponent(AccountSettingsComponent);

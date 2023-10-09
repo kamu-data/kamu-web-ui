@@ -13,6 +13,7 @@ import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers
 import { of } from "rxjs";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("EditWatermarkModalComponent", () => {
     let component: EditWatermarkModalComponent;
@@ -32,6 +33,7 @@ describe("EditWatermarkModalComponent", () => {
                 OwlMomentDateTimeModule,
                 FormsModule,
                 SharedTestModule,
+                HttpClientTestingModule,
             ],
         }).compileComponents();
 

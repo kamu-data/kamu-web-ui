@@ -14,6 +14,7 @@ import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewWithSetL
 import { EditLicenseModalComponent } from "./edit-license-modal.component";
 import { MatDividerModule } from "@angular/material/divider";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("EditLicenseModalComponent", () => {
     let component: EditLicenseModalComponent;
@@ -22,7 +23,14 @@ describe("EditLicenseModalComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [EditLicenseModalComponent],
-            imports: [ApolloTestingModule, FormsModule, ReactiveFormsModule, MatDividerModule, SharedTestModule],
+            imports: [
+                ApolloTestingModule,
+                FormsModule,
+                ReactiveFormsModule,
+                MatDividerModule,
+                SharedTestModule,
+                HttpClientTestingModule,
+            ],
             providers: [Apollo, NgbActiveModal],
         }).compileComponents();
 

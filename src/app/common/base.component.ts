@@ -22,7 +22,7 @@ export abstract class BaseComponent extends UnsubscribeOnDestroyAdapter {
         };
     }
 
-    public get datasetInfoFromUrl(): Observable<DatasetInfo> {
+    public get datasetInfoFromUrlChanges(): Observable<DatasetInfo> {
         return this.activatedRoute.params.pipe(
             map((params: Params) => {
                 return {

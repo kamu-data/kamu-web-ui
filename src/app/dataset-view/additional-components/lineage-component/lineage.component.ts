@@ -26,7 +26,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.currentDataset$ = this.lineageGraphBuilderService.getCurrentDataset();
+        this.currentDataset$ = this.lineageGraphBuilderService.currentDatasetChanges();
         this.lineageGraph$ = this.lineageGraphBuilderService.buildGraph();
     }
 }

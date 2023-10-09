@@ -48,7 +48,7 @@ describe("MetadataComponent", () => {
             .compileComponents();
 
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        datasetSubsService.metadataSchemaChanges(mockMetadataDerivedUpdate);
+        datasetSubsService.emitMetadataSchemaChanged(mockMetadataDerivedUpdate);
 
         navigationService = TestBed.inject(NavigationService);
 

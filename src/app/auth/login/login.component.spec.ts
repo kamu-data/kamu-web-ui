@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { AngularSvgIconModule } from "angular-svg-icon";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoginMethod } from "src/app/app-config.model";
 import { SpinnerComponent } from "src/app/components/spinner/spinner/spinner.component";
@@ -17,14 +17,29 @@ import {
     getElementByDataTestId,
     setFieldValue,
 } from "src/app/common/base-test.helpers.spec";
-import { TEST_LOGIN, TEST_PASSWORD } from "src/app/api/mock/auth.mock";
+import {
+    TEST_ACCESS_TOKEN_PASSWORD,
+    TEST_LOGIN,
+    TEST_PASSWORD,
+    mockPasswordLoginResponse,
+} from "src/app/api/mock/auth.mock";
 import { PasswordLoginCredentials } from "src/app/api/auth.api.model";
+import { BehaviorSubject, of } from "rxjs";
+import { LoginCallbackResponse, LoginPageQueryParams } from "./login.component.model";
+import { ActivatedRoute } from "@angular/router";
+import { AuthApi } from "src/app/api/auth.api";
+import { NavigationService } from "src/app/services/navigation.service";
+import { LocalStorageService } from "src/app/services/local-storage.service";
 
 describe("LoginComponent", () => {
     let component: LoginComponent;
     let fixture: ComponentFixture<LoginComponent>;
     let appConfigService: AppConfigService;
     let loginService: LoginService;
+    let navigationService: NavigationService;
+    let localStorageService: LocalStorageService;
+    let authApi: AuthApi;
+    let httpController: HttpTestingController;
 
     enum Elements {
         METHOD_SELECTION_BLOCK = "method-selection-block",
@@ -43,10 +58,20 @@ describe("LoginComponent", () => {
         PASSWORD_METHOD_ERROR = "password-method-error",
     }
 
+    const mockQueryParams: BehaviorSubject<LoginPageQueryParams> = new BehaviorSubject<LoginPageQueryParams>({});
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [LoginComponent, SpinnerComponent],
-            providers: [Apollo],
+            providers: [
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        queryParams: mockQueryParams.asObservable(),
+                    },
+                },
+            ],
             imports: [
                 ApolloTestingModule,
                 ReactiveFormsModule,
@@ -55,7 +80,14 @@ describe("LoginComponent", () => {
             ],
         }).compileComponents();
 
+        localStorageService = TestBed.inject(LocalStorageService);
+        localStorageService.reset();
+
         loginService = TestBed.inject(LoginService);
+        navigationService = TestBed.inject(NavigationService);
+
+        authApi = TestBed.inject(AuthApi);
+        httpController = TestBed.inject(HttpTestingController);
     });
 
     function createFixture() {
@@ -171,7 +203,7 @@ describe("LoginComponent", () => {
                 checkVisible(fixture, Elements.PASSWORD_METHOD_ERROR, false);
 
                 const errorMessage = "Bad credentials";
-                loginService.emitPasswordLoginError(errorMessage);
+                loginService.emitPasswordLoginErrorOccurred(errorMessage);
                 fixture.detectChanges();
 
                 checkVisible(fixture, Elements.PASSWORD_METHOD_ERROR, true);
@@ -180,7 +212,7 @@ describe("LoginComponent", () => {
             [Elements.INPUT_LOGIN, Elements.INPUT_PASSWORD].forEach((inputElemenName: Elements) => {
                 it(`Error is cleared after touching input ${inputElemenName}`, () => {
                     const errorMessage = "Bad credentials";
-                    loginService.emitPasswordLoginError(errorMessage);
+                    loginService.emitPasswordLoginErrorOccurred(errorMessage);
                     fixture.detectChanges();
 
                     checkVisible(fixture, Elements.PASSWORD_METHOD_ERROR, true);
@@ -196,6 +228,34 @@ describe("LoginComponent", () => {
                     checkVisible(fixture, Elements.PASSWORD_METHOD_ERROR, false);
                 });
             });
+        });
+
+        it("login callback setup in localStorage via query parameter", () => {
+            const SOME_CALLBACK_URL = "http://example.com/some-callback";
+            mockQueryParams.next({ callbackUrl: SOME_CALLBACK_URL } as LoginPageQueryParams);
+            fixture.detectChanges();
+
+            const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin").and.returnValue(
+                of(mockPasswordLoginResponse.auth.login),
+            );
+            const navigationSpy = spyOn(navigationService, "navigateToReturnToCli").and.stub();
+
+            const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
+            loginService.passwordLogin(credentials);
+
+            expect(authApiSpy).toHaveBeenCalledOnceWith(credentials);
+
+            const callbackUrlRequest = httpController.expectOne({
+                method: "POST",
+                url: SOME_CALLBACK_URL,
+            });
+            expect(callbackUrlRequest.request.body).toEqual({
+                accessToken: TEST_ACCESS_TOKEN_PASSWORD,
+                backendUrl: "http://localhost:8080",
+            } as LoginCallbackResponse);
+            callbackUrlRequest.flush({});
+
+            expect(navigationSpy).toHaveBeenCalledTimes(1);
         });
     });
 

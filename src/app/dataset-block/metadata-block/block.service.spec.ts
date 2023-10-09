@@ -27,7 +27,7 @@ describe("BlockService", () => {
 
     it("should check get block from api", () => {
         spyOn(datasetApi, "getBlockByHash").and.returnValue(of(mockGetMetadataBlockQuery));
-        const metadataBlockChanges$ = service.onMetadataBlockChanges
+        const metadataBlockChanges$ = service.metadataBlockChanges
             .pipe(first())
             .subscribe((block: MetadataBlockFragment) => {
                 const expectedBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain

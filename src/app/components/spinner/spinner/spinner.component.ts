@@ -9,5 +9,5 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 })
 export class SpinnerComponent {
     constructor(private spinnerService: SpinnerService) {}
-    isLoading$ = this.spinnerService.isLoading;
+    isLoading$ = this.spinnerService.isLoadingChanges;
 }

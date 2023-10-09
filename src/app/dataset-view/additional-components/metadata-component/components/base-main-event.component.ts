@@ -28,7 +28,7 @@ export abstract class BaseMainEventComponent extends BaseComponent {
 
     protected subsribeErrorMessage(): void {
         this.trackSubscription(
-            this.datasetCommitService.onErrorCommitEventChanges.subscribe((message: string) => {
+            this.datasetCommitService.commitEventErrorOccurrences.subscribe((message: string) => {
                 this.errorMessage = message;
                 this.cdr.detectChanges();
             }),
@@ -40,17 +40,16 @@ export abstract class BaseMainEventComponent extends BaseComponent {
 
         this.datasetService.requestDatasetBasicDataWithPermissions(datasetInfo).subscribe();
         this.trackSubscription(
-            combineLatest([
-                this.datasetSubsService.onPermissionsDataChanges,
-                this.datasetService.onDatasetChanges,
-            ]).subscribe(([datasetPermissions, datasetBasics]: [DatasetPermissionsFragment, DatasetBasicsFragment]) => {
-                if (!datasetPermissions.permissions.canCommit || datasetBasics.kind !== expectedKind) {
-                    this.navigationServices.navigateToDatasetView({
-                        accountName: datasetBasics.owner.accountName,
-                        datasetName: datasetBasics.name,
-                    });
-                }
-            }),
+            combineLatest([this.datasetSubsService.permissionsChanges, this.datasetService.datasetChanges]).subscribe(
+                ([datasetPermissions, datasetBasics]: [DatasetPermissionsFragment, DatasetBasicsFragment]) => {
+                    if (!datasetPermissions.permissions.canCommit || datasetBasics.kind !== expectedKind) {
+                        this.navigationServices.navigateToDatasetView({
+                            accountName: datasetBasics.owner.accountName,
+                            datasetName: datasetBasics.name,
+                        });
+                    }
+                },
+            ),
         );
     }
 

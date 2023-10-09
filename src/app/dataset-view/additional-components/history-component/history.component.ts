@@ -12,7 +12,7 @@ import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service
 export class HistoryComponent extends BaseComponent {
     @Input() public datasetName: string;
     @Output() onPageChangeEmit = new EventEmitter<number>();
-    public historyUpdate$: Observable<DatasetHistoryUpdate> = this.datasetSubsService.onDatasetHistoryChanges;
+    public historyUpdate$: Observable<DatasetHistoryUpdate> = this.datasetSubsService.historyChanges;
 
     constructor(private datasetSubsService: DatasetSubscriptionsService) {
         super();

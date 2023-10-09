@@ -42,7 +42,7 @@ export abstract class BaseYamlEventService {
                         () => !filteredHistory.length,
                         of(null),
                         zip(
-                            this.blockService.onMetadataBlockAsYamlChanges,
+                            this.blockService.metadataBlockAsYamlChanges,
                             this.blockService.requestMetadataBlock(info, filteredHistory[0]?.blockHash),
                         ),
                     ),

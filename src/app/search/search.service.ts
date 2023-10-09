@@ -6,25 +6,25 @@ import { DatasetSearchOverviewFragment, SearchDatasetsOverviewQuery } from "../a
 
 @Injectable({ providedIn: "root" })
 export class SearchService {
-    private overviewSearchChanges$: Subject<DatasetSearchResult> = new Subject<DatasetSearchResult>();
-    private autocompleteSearchChanges$: Subject<DatasetAutocompleteItem[]> = new Subject<DatasetAutocompleteItem[]>();
+    private searchOverview$: Subject<DatasetSearchResult> = new Subject<DatasetSearchResult>();
+    private searchAutocomplete$: Subject<DatasetAutocompleteItem[]> = new Subject<DatasetAutocompleteItem[]>();
 
     constructor(private searchApi: SearchApi) {}
 
-    private overviewSearchChanges(searchData: DatasetSearchResult): void {
-        this.overviewSearchChanges$.next(searchData);
+    private emitSearchOverviewChanged(searchData: DatasetSearchResult): void {
+        this.searchOverview$.next(searchData);
     }
 
-    public get onOverviewSearchChanges(): Observable<DatasetSearchResult> {
-        return this.overviewSearchChanges$.asObservable();
+    public get searchOverviewChanges(): Observable<DatasetSearchResult> {
+        return this.searchOverview$.asObservable();
     }
 
-    private autocompleteSearchChanges(autocompleteData: DatasetAutocompleteItem[]) {
-        this.autocompleteSearchChanges$.next(autocompleteData);
+    private emitSearchAutocompleteChanged(autocompleteData: DatasetAutocompleteItem[]) {
+        this.searchAutocomplete$.next(autocompleteData);
     }
 
-    public get onAutocompleteSearchChanges(): Observable<DatasetAutocompleteItem[]> {
-        return this.autocompleteSearchChanges$.asObservable();
+    public get searchAutocompleteChanges(): Observable<DatasetAutocompleteItem[]> {
+        return this.searchAutocomplete$.asObservable();
     }
 
     public searchDatasets(searchQuery: string, page = 0): void {
@@ -33,7 +33,7 @@ export class SearchService {
             const pageInfo = data.search.query.pageInfo;
             const totalCount: number = data.search.query.totalCount;
 
-            this.overviewSearchChanges({
+            this.emitSearchOverviewChanged({
                 datasets,
                 pageInfo,
                 totalCount,
@@ -45,10 +45,10 @@ export class SearchService {
     public autocompleteDatasetSearch(searchQuery: string): void {
         this.searchApi.autocompleteDatasetSearch(searchQuery).subscribe(
             (data: DatasetAutocompleteItem[]) => {
-                this.autocompleteSearchChanges(data);
+                this.emitSearchAutocompleteChanged(data);
             },
             () => {
-                this.autocompleteSearchChanges([]);
+                this.emitSearchAutocompleteChanged([]);
             },
         );
     }

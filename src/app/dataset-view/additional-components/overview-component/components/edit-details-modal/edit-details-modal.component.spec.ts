@@ -12,6 +12,7 @@ import { DatasetDataSizeFragment, DatasetOverviewFragment } from "src/app/api/ka
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("EditDetailsModalComponent", () => {
     let component: EditDetailsModalComponent;
@@ -27,6 +28,7 @@ describe("EditDetailsModalComponent", () => {
                 MatChipsModule,
                 MatDividerModule,
                 MatIconModule,
+                HttpClientTestingModule,
                 SharedTestModule,
             ],
             providers: [Apollo, NgbActiveModal],

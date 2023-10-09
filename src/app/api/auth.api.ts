@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { catchError, first, map } from "rxjs/operators";
-import { Observable, ReplaySubject, Subject, throwError } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import {
     AccountFragment,
     FetchAccountDetailsGQL,
@@ -9,6 +9,7 @@ import {
     GetEnabledLoginMethodsQuery,
     LoginGQL,
     LoginMutation,
+    LoginResponse,
 } from "./kamu.graphql.interface";
 import { MutationResult } from "apollo-angular";
 import { AuthenticationError } from "../common/errors";
@@ -26,17 +27,6 @@ export class AuthApi {
         private fetchAccountDetailsGQL: FetchAccountDetailsGQL,
     ) {}
 
-    private accessTokenObtained$: Subject<string> = new ReplaySubject<string>(1);
-    private accountChanged$: Subject<AccountFragment> = new ReplaySubject<AccountFragment>(1);
-
-    public accessTokenObtained(): Observable<string> {
-        return this.accessTokenObtained$.asObservable();
-    }
-
-    public accountChanged(): Observable<AccountFragment> {
-        return this.accountChanged$.asObservable();
-    }
-
     public readEnabledLoginMethods(): Observable<LoginMethod[]> {
         return this.getEnabledLoginMethodsGQL.watch().valueChanges.pipe(
             first(),
@@ -46,22 +36,23 @@ export class AuthApi {
         );
     }
 
-    public fetchAccountAndTokenFromPasswordLogin(credentials: PasswordLoginCredentials): Observable<void> {
+    public fetchAccountAndTokenFromPasswordLogin(credentials: PasswordLoginCredentials): Observable<LoginResponse> {
         return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.PASSWORD, JSON.stringify(credentials));
     }
 
-    public fetchAccountAndTokenFromGithubCallackCode(credentials: GithubLoginCredentials): Observable<void> {
+    public fetchAccountAndTokenFromGithubCallackCode(credentials: GithubLoginCredentials): Observable<LoginResponse> {
         return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.GITHUB, JSON.stringify(credentials));
     }
 
-    public fetchAccountAndTokenFromLoginMethod(loginMethod: string, loginCredentialsJson: string): Observable<void> {
+    public fetchAccountAndTokenFromLoginMethod(
+        loginMethod: string,
+        loginCredentialsJson: string,
+    ): Observable<LoginResponse> {
         return this.loginGQL.mutate({ login_method: loginMethod, login_credentials_json: loginCredentialsJson }).pipe(
             map((result: MutationResult<LoginMutation>) => {
                 /* istanbul ignore else */
                 if (result.data) {
-                    const data: LoginMutation = result.data;
-                    this.accessTokenObtained$.next(data.auth.login.accessToken);
-                    this.accountChanged$.next(data.auth.login.account);
+                    return result.data.auth.login;
                 } else {
                     // Normally, this code should not be reachable
                     throw new AuthenticationError(result.errors ?? []);
@@ -71,13 +62,12 @@ export class AuthApi {
         );
     }
 
-    public fetchAccountFromAccessToken(accessToken: string): Observable<void> {
+    public fetchAccountFromAccessToken(accessToken: string): Observable<AccountFragment> {
         return this.fetchAccountDetailsGQL.mutate({ accessToken }).pipe(
             map((result: MutationResult<FetchAccountDetailsMutation>) => {
                 /* istanbul ignore else */
                 if (result.data) {
-                    const data: FetchAccountDetailsMutation = result.data;
-                    this.accountChanged$.next(data.auth.accountDetails);
+                    return result.data.auth.accountDetails;
                 } else {
                     // Normally, this code should not be reachable
                     throw new AuthenticationError(result.errors ?? []);

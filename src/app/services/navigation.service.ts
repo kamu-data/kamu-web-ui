@@ -77,4 +77,12 @@ export class NavigationService {
             }),
         );
     }
+
+    public navigateToReturnToCli(): void {
+        promiseWithCatch(
+            this.router.navigate([ProjectLinks.URL_RETURN_TO_CLI], {
+                skipLocationChange: true,
+            }),
+        );
+    }
 }

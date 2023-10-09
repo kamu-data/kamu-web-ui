@@ -20,6 +20,7 @@ import * as monaco from "monaco-editor";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { SQL_EDITOR_OPTIONS } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
 import { Observable, map, tap } from "rxjs";
+import { MonacoService } from "../../../services/monaco.service";
 
 @Component({
     selector: "app-data",
@@ -47,6 +48,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     public overviewUpdate$: Observable<OverviewUpdate>;
 
     constructor(
+        private monacoService: MonacoService,
         private datasetSubsService: DatasetSubscriptionsService,
         private location: Location,
         private cdr: ChangeDetectorRef,

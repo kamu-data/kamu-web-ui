@@ -1,17 +1,12 @@
 import { Injectable } from "@angular/core";
+import * as monaco from "monaco-editor";
+import { getMonacoNamespace } from "./monaco-namespace.helper";
 
-/* eslint-disable */
 @Injectable({
     providedIn: "root",
 })
 export class MonacoService {
-    public setErrorMarker(model: any, data: any): void {
-        const monaco = (window as any).monaco;
-        const markerOptions = {
-            ...data,
-            severity: (<any>window).monaco.MarkerSeverity.Error,
-        };
-
-        monaco.editor.setModelMarkers(model, "", [markerOptions]);
+    public setErrorMarker(model: monaco.editor.ITextModel, markerData: monaco.editor.IMarkerData): void {
+        getMonacoNamespace().editor.setModelMarkers(model, "", [markerData]);
     }
 }

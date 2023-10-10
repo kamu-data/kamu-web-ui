@@ -20,7 +20,7 @@ import * as monaco from "monaco-editor";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { SQL_EDITOR_OPTIONS } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
 import { Observable, map, tap } from "rxjs";
-import { MonacoService } from "../../../services/monaco.service";
+import { getMonacoNamespace } from "src/app/services/monaco-namespace.helper";
 
 @Component({
     selector: "app-data",
@@ -48,7 +48,6 @@ export class DataComponent extends BaseComponent implements OnInit {
     public overviewUpdate$: Observable<OverviewUpdate>;
 
     constructor(
-        private monacoService: MonacoService,
         private datasetSubsService: DatasetSubscriptionsService,
         private location: Location,
         private cdr: ChangeDetectorRef,
@@ -99,14 +98,14 @@ export class DataComponent extends BaseComponent implements OnInit {
         const runQueryFn = () => {
             this.runSQLRequest({ query: this.sqlRequestCode });
         };
+        const monacoNamespace = getMonacoNamespace();
         editor.addAction({
             // An unique identifier of the contributed action.
             id: "run-sql",
             // A label of the action that will be presented to the user.
             label: "Run SQL",
             // An optional array of keybindings for the action.
-            //keybindings: [KeyMod.CtrlCmd | KeyCode.Enter],
-            keybindings: [2048 | 3],
+            keybindings: [monacoNamespace.KeyMod.CtrlCmd | monacoNamespace.KeyCode.Enter],
             contextMenuGroupId: "navigation",
             contextMenuOrder: 1.5,
             // Method that will be executed when the action is triggered.

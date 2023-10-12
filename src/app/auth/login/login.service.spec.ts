@@ -17,17 +17,23 @@ import { AuthenticationError } from "src/app/common/errors";
 import { LoginResponse } from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/common/app.types";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { LocalStorageService } from "src/app/services/local-storage.service";
 
 describe("LoginService", () => {
     let service: LoginService;
     let navigationService: NavigationService;
     let authApi: AuthApi;
+    let localStorageService: LocalStorageService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [AuthApi, Apollo],
             imports: [ApolloTestingModule, HttpClientTestingModule],
         });
+
+        localStorageService = TestBed.inject(LocalStorageService);
+        localStorageService.reset();
+
         service = TestBed.inject(LoginService);
         navigationService = TestBed.inject(NavigationService);
         authApi = TestBed.inject(AuthApi);

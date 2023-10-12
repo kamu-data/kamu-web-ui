@@ -27,7 +27,7 @@ export interface JsonFormControl {
     validators: JsonFormValidators;
     dataTestId?: string;
     list?: string[];
-    data?: RadioControlType[];
+    readFormatDescriptors?: Pick<RadioControlType, "label" | "value">[];
 }
 
 export type JsonFormData = Record<
@@ -94,7 +94,7 @@ export enum EventTimeSourceKind {
     FROM_SYSTEM_TIME = "fromSystemTime",
 }
 
-export interface EditFormType {
+export interface AddPollingSourceEditFormType {
     kind?: string;
     fetch: {
         kind: FetchKind;
@@ -144,7 +144,7 @@ export interface EditFormType {
 
 export interface EditFormParseType {
     content: {
-        event: EditFormType;
+        event: AddPollingSourceEditFormType;
     };
 }
 

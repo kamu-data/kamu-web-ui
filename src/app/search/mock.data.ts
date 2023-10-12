@@ -26,10 +26,10 @@ import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { DatasetAutocompleteItem, DatasetSearchResult, TypeNames } from "../interface/search.interface";
 import {
-    EditFormType,
     FetchKind,
     ReadKind,
     MergeKind,
+    AddPollingSourceEditFormType,
 } from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
 import { DatasetHistoryUpdate } from "../dataset-view/dataset.subscriptions.interface";
 import {
@@ -985,7 +985,7 @@ export const mockDataset403OperationError: GraphQLError = new GraphQLError("Data
     extensions: { alias: "someAccount/oldName" },
 });
 
-export const mockParseEventFromYamlToObject: EditFormType = {
+export const mockParseEventFromYamlToObject: AddPollingSourceEditFormType = {
     kind: "setPollingSource",
     fetch: {
         kind: FetchKind.FILES_GLOB,

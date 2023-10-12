@@ -12,7 +12,7 @@ import { RxwebValidators } from "@rxweb/reactive-form-validators";
 export class SelectDateFormatFieldComponent extends BaseField implements OnInit {
     @Input() public innerTooltips: Record<string, string>;
     public currentSource: EventTimeSourceKind;
-    public eventTimeSourceKind: typeof EventTimeSourceKind = EventTimeSourceKind;
+    public timeSourceKind: typeof EventTimeSourceKind = EventTimeSourceKind;
     public readonly KIND_NAME_CONTROL = "kind";
     public readonly PATTERN_NAME_CONTROL = "pattern";
     public readonly PATTERN_TOOLTIP = "Regular expression where first group contains the timestamp string.";
@@ -44,14 +44,14 @@ export class SelectDateFormatFieldComponent extends BaseField implements OnInit 
         const subscription = this.eventTimeGroup
             .get(this.KIND_NAME_CONTROL)
             ?.valueChanges.subscribe((kind: EventTimeSourceKind) => {
-                if (kind === this.eventTimeSourceKind.FROM_METADATA) {
+                if (kind !== EventTimeSourceKind.FROM_PATH) {
+                    this.eventTimeGroup.removeControl(this.PATTERN_NAME_CONTROL);
+                    this.eventTimeGroup.removeControl(this.TIMESTAMP_FORMAT_NAME_CONTROL);
+                }
+                if (kind === EventTimeSourceKind.FROM_METADATA) {
                     this.currentSource = EventTimeSourceKind.FROM_METADATA;
-                    this.eventTimeGroup.removeControl(this.PATTERN_NAME_CONTROL);
-                    this.eventTimeGroup.removeControl(this.TIMESTAMP_FORMAT_NAME_CONTROL);
-                } else if (kind === this.eventTimeSourceKind.FROM_SYSTEM_TIME) {
+                } else if (kind === EventTimeSourceKind.FROM_SYSTEM_TIME) {
                     this.currentSource = EventTimeSourceKind.FROM_SYSTEM_TIME;
-                    this.eventTimeGroup.removeControl(this.PATTERN_NAME_CONTROL);
-                    this.eventTimeGroup.removeControl(this.TIMESTAMP_FORMAT_NAME_CONTROL);
                 } else {
                     this.currentSource = EventTimeSourceKind.FROM_PATH;
                     this.eventTimeGroup.addControl(

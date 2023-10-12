@@ -11,20 +11,19 @@ import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.t
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JsonKindFieldComponent extends BaseField implements OnInit {
-    @Input() public data: RadioControlType[];
-    public currentJsonKind: ReadKind;
-    public readKind: typeof ReadKind = ReadKind;
+    @Input() public controlDescriptors: Pick<RadioControlType, "label" | "value">[];
+    public readJsonFormat: typeof ReadKind = ReadKind;
     public readonly TOOLTIP_SUB_PATH = SetPollingSourceToolipsTexts.SUB_PATH;
     public readonly READ_SUB_PATH_CONTROL = "subPath";
     public readonly READ_SUB_PATH_TOOLTIP = "Path";
     public readonly READ_SUB_PATH_PLACEHOLDER = "Enter path to data file...";
+    public readonly READ_JSON_KIND_CONTROL = "jsonKind";
 
     ngOnInit(): void {
-        this.currentJsonKind = this.form.get("jsonKind")?.value as ReadKind;
-        this.form.addControl("subPath", new FormControl(""));
-        const subscription = this.form.get("jsonKind")?.valueChanges.subscribe((kind: ReadKind) => {
-            this.currentJsonKind = kind;
-        });
-        if (subscription) this.trackSubscription(subscription);
+        this.form.addControl(this.READ_SUB_PATH_CONTROL, new FormControl(""));
+    }
+
+    public get currentJsonKind(): ReadKind {
+        return this.form.get(this.READ_JSON_KIND_CONTROL)?.value as ReadKind;
     }
 }

@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { MaybeNull } from "../common/app.types";
 import { stringify } from "yaml";
 import {
-    EditFormType,
+    AddPollingSourceEditFormType,
     PreprocessKind,
     PreprocessStepValue,
     ReadKind,
@@ -43,7 +43,7 @@ export class TemplatesYamlEventsService {
     }
 
     public buildYamlSetPollingSourceEvent(
-        params: EditFormType,
+        params: AddPollingSourceEditFormType,
         preprocessStepValue: MaybeNull<PreprocessStepValue>,
     ): string {
         if (params.read.jsonKind === ReadKind.ND_JSON) {

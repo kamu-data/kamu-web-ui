@@ -3,29 +3,26 @@
         <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
         <label class="form-label">{{ label }} </label>
     </div>
-    <div class="ms-4" *ngFor="let control of data">
+    <div class="ms-4" *ngFor="let control of controlDescriptors">
         <div class="form-check">
             <input
+                [id]="controlName"
                 class="form-check-input"
                 type="radio"
                 [formControlName]="controlName"
                 [name]="controlName"
-                type="radio"
                 [value]="control.value"
             />
-            <label class="form-check-label" for=""> {{ control.label }} </label>
+            <label class="form-check-label" [for]="controlName"> {{ control.label }} </label>
         </div>
     </div>
-    <ng-container *ngIf="currentJsonKind === readKind.JSON">
-        <div class="mt-3">
-            <app-input-field
-                [form]="form"
-                [controlName]="READ_SUB_PATH_CONTROL"
-                [label]="READ_SUB_PATH_TOOLTIP"
-                [value]="''"
-                [placeholder]="READ_SUB_PATH_PLACEHOLDER"
-                [tooltip]="TOOLTIP_SUB_PATH"
-            ></app-input-field>
-        </div>
-    </ng-container>
+    <div class="mt-3" *ngIf="currentJsonKind === readJsonFormat.JSON">
+        <app-input-field
+            [form]="form"
+            [controlName]="READ_SUB_PATH_CONTROL"
+            [label]="READ_SUB_PATH_TOOLTIP"
+            [placeholder]="READ_SUB_PATH_PLACEHOLDER"
+            [tooltip]="TOOLTIP_SUB_PATH"
+        ></app-input-field>
+    </div>
 </div>

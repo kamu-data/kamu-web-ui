@@ -1,4 +1,10 @@
-import { FetchKind, ReadKind, MergeKind, PreprocessStepValue, EditFormType } from "./add-polling-source-form.types";
+import {
+    FetchKind,
+    ReadKind,
+    MergeKind,
+    PreprocessStepValue,
+    AddPollingSourceEditFormType,
+} from "./add-polling-source-form.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { DatasetKind } from "../../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
@@ -115,7 +121,7 @@ export class AddPollingSourceComponent extends BaseMainEventComponent implements
                     this.getDatasetInfoFromUrl().accountName,
                     this.getDatasetInfoFromUrl().datasetName,
                     this.yamlEventService.buildYamlSetPollingSourceEvent(
-                        this.pollingSourceForm.value as EditFormType,
+                        this.pollingSourceForm.value as AddPollingSourceEditFormType,
                         this.showPreprocessStep ? this.preprocessStepValue : null,
                     ),
                 )
@@ -132,7 +138,7 @@ export class AddPollingSourceComponent extends BaseMainEventComponent implements
             this.errorMessage && this.changedEventYamlByHash
                 ? this.changedEventYamlByHash
                 : this.yamlEventService.buildYamlSetPollingSourceEvent(
-                      this.pollingSourceForm.value as EditFormType,
+                      this.pollingSourceForm.value as AddPollingSourceEditFormType,
                       this.showPreprocessStep ? this.preprocessStepValue : null,
                   );
         instance.datasetInfo = this.getDatasetInfoFromUrl();

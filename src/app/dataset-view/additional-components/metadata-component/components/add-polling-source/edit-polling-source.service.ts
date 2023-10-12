@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { parse } from "yaml";
 import {
     EditFormParseType,
-    EditFormType,
+    AddPollingSourceEditFormType,
     FetchKind,
     MergeKind,
     NameValue,
@@ -25,14 +25,14 @@ export class EditPollingSourceService extends BaseYamlEventService {
         super();
     }
 
-    public parseEventFromYaml(event: string): EditFormType {
+    public parseEventFromYaml(event: string): AddPollingSourceEditFormType {
         const editFormParseValue = parse(event) as EditFormParseType;
         return editFormParseValue.content.event;
     }
 
     public patchFormValues(
         sectionForm: FormGroup,
-        editFormValue: EditFormType,
+        editFormValue: AddPollingSourceEditFormType,
         groupName: SetPollingSourceSection,
     ): void {
         switch (groupName) {
@@ -51,7 +51,7 @@ export class EditPollingSourceService extends BaseYamlEventService {
         }
     }
 
-    private patchFetchStep(sectionForm: FormGroup, editFormValue: EditFormType): void {
+    private patchFetchStep(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
         this.initFetchCommonControls(sectionForm, editFormValue);
         if (editFormValue.fetch.kind === FetchKind.URL) {
             this.initFetchUrlControls(sectionForm, editFormValue);
@@ -60,7 +60,7 @@ export class EditPollingSourceService extends BaseYamlEventService {
         }
     }
 
-    private patchReadStep(sectionForm: FormGroup, editFormValue: EditFormType): void {
+    private patchReadStep(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
         if ([ReadKind.JSON, ReadKind.ND_JSON].includes(editFormValue.read.kind)) {
             sectionForm.patchValue({
                 ...editFormValue.read,
@@ -91,7 +91,7 @@ export class EditPollingSourceService extends BaseYamlEventService {
         }
     }
 
-    private patchMergeStep(sectionForm: FormGroup, editFormValue: EditFormType): void {
+    private patchMergeStep(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
         sectionForm.patchValue(editFormValue.merge);
         if (editFormValue.merge.kind !== MergeKind.APPEND) {
             const primaryKey = sectionForm.controls.primaryKey as FormArray;
@@ -107,7 +107,7 @@ export class EditPollingSourceService extends BaseYamlEventService {
         }
     }
 
-    private initFetchCommonControls(sectionForm: FormGroup, editFormValue: EditFormType): void {
+    private initFetchCommonControls(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
         sectionForm.patchValue(editFormValue.fetch);
         const eventTimeGroup = sectionForm.controls.eventTime as FormGroup;
         const pattern = editFormValue.fetch.eventTime?.pattern;
@@ -116,14 +116,14 @@ export class EditPollingSourceService extends BaseYamlEventService {
         eventTimeGroup.addControl(this.TIMESTAMP_FORMAT_CONTROL, this.fb.control(timestampFormat));
     }
 
-    private initFetchUrlControls(sectionForm: FormGroup, editFormValue: EditFormType): void {
+    private initFetchUrlControls(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
         const headers = sectionForm.controls.headers as FormArray;
         if ((headers.value as NameValue[]).length == 0 && editFormValue.fetch.headers) {
             this.initNameValueControl(editFormValue.fetch.headers, headers);
         }
     }
 
-    private initFetchContainerControls(sectionForm: FormGroup, editFormValue: EditFormType): void {
+    private initFetchContainerControls(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
         const env = sectionForm.controls.env as FormArray;
         if (editFormValue.fetch.env) {
             this.initNameValueControl(editFormValue.fetch.env, env);

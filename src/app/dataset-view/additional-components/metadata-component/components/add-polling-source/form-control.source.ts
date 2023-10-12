@@ -2,9 +2,9 @@ import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.t
 import { FetchKind, MergeKind, ReadKind } from "./add-polling-source-form.types";
 
 export interface RadioControlType {
-    id?: string;
+    id: string;
     value: string;
-    icon?: string;
+    icon: string;
     label: string;
     tooltip?: string;
 }

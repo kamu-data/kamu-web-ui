@@ -208,7 +208,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 type: ControlType.JSON_KIND,
                 tooltip: SetPollingSourceToolipsTexts.READ_JSON,
                 validators: {},
-                data: [
+                readFormatDescriptors: [
                     { label: "Geo JSON", value: ReadKind.GEO_JSON },
                     { label: "Newline-delimited Geo JSON", value: ReadKind.ND_GEO_JSON },
                 ],
@@ -265,7 +265,7 @@ export const READ_FORM_DATA: JsonFormData = {
                 type: ControlType.JSON_KIND,
                 tooltip: SetPollingSourceToolipsTexts.READ_JSON,
                 validators: {},
-                data: [
+                readFormatDescriptors: [
                     { label: "JSON", value: ReadKind.JSON },
                     { label: "Newline-delimited JSON", value: ReadKind.ND_JSON },
                 ],

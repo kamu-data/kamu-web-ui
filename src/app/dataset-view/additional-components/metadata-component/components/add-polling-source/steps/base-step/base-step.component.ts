@@ -31,6 +31,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     public readonly SCHEMA_NAME_CONTROL = "schema";
     private readonly DEFAULT_EVENT_TIME_SOURCE = EventTimeSourceKind.FROM_METADATA;
     private readonly EVENT_TIME_CONTROL = "eventTime";
+    private readonly JSON_KIND_CONTROL = "jsonKind";
 
     constructor(
         private rootFormGroupDirective: FormGroupDirective,
@@ -67,6 +68,9 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                 .forEach((item: string) => {
                     if (item !== this.EVENT_TIME_CONTROL) this.sectionForm.removeControl(item);
                 });
+            if (this.sectionForm.contains(this.JSON_KIND_CONTROL)) {
+                this.sectionForm.removeControl(this.JSON_KIND_CONTROL);
+            }
             this.initForm(kind);
         });
         if (subscription) this.trackSubscription(subscription);

@@ -75,6 +75,14 @@ export class SetPollingSourceToolipsTexts {
     public static readonly READ_GEO_JSON = "Reader for GeoJSON files.";
     public static readonly READ_ESRI_SHAPE_FILE = "Reader for ESRI Shapefile format.";
     public static readonly READ_PARQUET = "Reader for Apache Parquet format.";
+    public static readonly READ_JSON = "Reader for JSON files that contain an array of objects within them.";
+    public static readonly READ_ND_JSON =
+        "Reader for files containing multiple newline-delimited JSON objects with the same schema.";
+    public static readonly READ_ND_GEO_JSON =
+        "Reader for Newline-delimited GeoJSON files. It is similar to `GeoJson` format but instead of `FeatureCollection` object in the root it expects every individual feature object to appear on its own line.";
+    public static readonly READ_JSON_SUB_PATH =
+        "Path in the form of a.b.c to a sub-element of the root JSON object that is an array or objects. If not specified it is assumed that the root element is an array.";
+    public static readonly READ_JSON_ENCODING = "Allows to forcibly set one of standard basic or extended encodings.";
     public static readonly APPEND_STRATEGY =
         "Under this strategy polled data will be appended in its original form to the already ingested data without modifications.";
     public static readonly LEDGER_STRATEGY =

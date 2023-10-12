@@ -1,8 +1,15 @@
 import { Injectable } from "@angular/core";
 import { parse } from "yaml";
-import { EditFormParseType, EditFormType, FetchKind, MergeKind, NameValue } from "./add-polling-source-form.types";
+import {
+    EditFormParseType,
+    EditFormType,
+    FetchKind,
+    MergeKind,
+    NameValue,
+    ReadKind,
+} from "./add-polling-source-form.types";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
+import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { BaseYamlEventService } from "src/app/common/base-yaml-event.service";
 
@@ -12,6 +19,7 @@ import { BaseYamlEventService } from "src/app/common/base-yaml-event.service";
 export class EditPollingSourceService extends BaseYamlEventService {
     private readonly PATTERN_CONTROL = "pattern";
     private readonly TIMESTAMP_FORMAT_CONTROL = "timestampFormat";
+    private readonly READ_JSON_SUB_PATH_CONTROL = "subPath";
 
     constructor(private fb: FormBuilder) {
         super();
@@ -53,7 +61,22 @@ export class EditPollingSourceService extends BaseYamlEventService {
     }
 
     private patchReadStep(sectionForm: FormGroup, editFormValue: EditFormType): void {
-        sectionForm.patchValue(editFormValue.read);
+        if ([ReadKind.JSON, ReadKind.ND_JSON].includes(editFormValue.read.kind)) {
+            sectionForm.patchValue({
+                ...editFormValue.read,
+                jsonKind: editFormValue.read.kind,
+                kind: ReadKind.All_JSON,
+            });
+        }
+        if (editFormValue.read.kind === ReadKind.JSON) {
+            sectionForm.addControl(this.READ_JSON_SUB_PATH_CONTROL, new FormControl(editFormValue.read.subPath));
+        }
+        if ([ReadKind.GEO_JSON, ReadKind.ND_GEO_JSON].includes(editFormValue.read.kind)) {
+            sectionForm.patchValue({
+                kind: ReadKind.ALL_GEO,
+                jsonKind: editFormValue.read.kind,
+            });
+        }
         const schema = sectionForm.controls.schema as FormArray;
         if (!(schema.value as string[]).length && editFormValue.read.schema && editFormValue.read.schema.length) {
             editFormValue.read.schema.forEach((item) => {

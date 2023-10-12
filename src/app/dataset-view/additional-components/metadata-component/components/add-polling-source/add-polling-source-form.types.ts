@@ -1,4 +1,5 @@
 import { SqlQueryStep, Transform } from "src/app/api/kamu.graphql.interface";
+import { RadioControlType } from "./form-control.source";
 
 export interface JsonFormValidators {
     required?: boolean;
@@ -26,6 +27,7 @@ export interface JsonFormControl {
     validators: JsonFormValidators;
     dataTestId?: string;
     list?: string[];
+    data?: RadioControlType[];
 }
 
 export type JsonFormData = Record<
@@ -45,6 +47,7 @@ export enum ControlType {
     CACHE = "cache",
     ORDER = "order",
     TYPEAHEAD = "typeahead",
+    JSON_KIND = "json-kind",
 }
 
 export enum FetchKind {
@@ -55,10 +58,14 @@ export enum FetchKind {
 
 export enum ReadKind {
     CSV = "csv",
-    JSON_LINES = "jsonLines",
+    ALL_GEO = "allGeo",
     GEO_JSON = "geoJson",
+    ND_GEO_JSON = "ndGeoJson",
     ESRI_SHAPEFILE = "esriShapefile",
     PARQUET = "parquet",
+    All_JSON = "allJson",
+    JSON = "json",
+    ND_JSON = "ndJson",
 }
 
 export enum MergeKind {
@@ -104,6 +111,8 @@ export interface EditFormType {
     };
     read: {
         kind: ReadKind;
+        jsonKind?: ReadKind;
+        subPath?: string;
         schema?: string[];
         separator?: string;
         encoding?: string;

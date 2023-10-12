@@ -1,5 +1,5 @@
 import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
-import { ControlType, JsonFormData } from "../../add-polling-source-form.types";
+import { ControlType, JsonFormData, ReadKind } from "../../add-polling-source-form.types";
 
 export const READ_FORM_DATA: JsonFormData = {
     csv: {
@@ -191,7 +191,7 @@ export const READ_FORM_DATA: JsonFormData = {
             },
         ],
     },
-    jsonLines: {
+    allGeo: {
         controls: [
             {
                 name: "schema",
@@ -202,63 +202,16 @@ export const READ_FORM_DATA: JsonFormData = {
                 validators: {},
             },
             {
-                name: "encoding",
-                label: "Encoding",
-                value: "UTF-8",
-                type: ControlType.TEXT,
-                tooltip: SetPollingSourceToolipsTexts.ENCODING,
-                placeholder: "Enter encoding...",
+                name: "jsonKind",
+                label: "Select JSON",
+                value: "geoJson",
+                type: ControlType.JSON_KIND,
+                tooltip: SetPollingSourceToolipsTexts.READ_JSON,
                 validators: {},
-            },
-            {
-                name: "dateFormat",
-                label: "Date format",
-                value: "yyyy-MM-dd",
-                type: ControlType.TYPEAHEAD,
-                tooltip: SetPollingSourceToolipsTexts.DATE_FORMAT,
-                placeholder: "--Select format--",
-                list: ["yyyy-MM-dd:mm:ss.sss", "yyyy-MM-dd:mm:ss", "yyyy-MM-dd"],
-                validators: {},
-            },
-            {
-                name: "timestampFormat",
-                label: "Timestamp format",
-                value: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
-                type: ControlType.TYPEAHEAD,
-                placeholder: "--Select format--",
-                tooltip: SetPollingSourceToolipsTexts.TIMESTAMP_FORMAT,
-                list: ["yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd"],
-                validators: {},
-            },
-            {
-                name: "multiLine",
-                label: "MultiLine",
-                value: false,
-                type: ControlType.CHECKBOX,
-                tooltip: SetPollingSourceToolipsTexts.MULTI_LINE,
-                validators: {},
-                dataTestId: "multiLine",
-            },
-            {
-                name: "primitivesAsString",
-                label: "Primitives as string",
-                value: false,
-                type: ControlType.CHECKBOX,
-                tooltip: SetPollingSourceToolipsTexts.PRIMITIVE_AS_STRING,
-                validators: {},
-                dataTestId: "primitivesAsString",
-            },
-        ],
-    },
-    geoJson: {
-        controls: [
-            {
-                name: "schema",
-                label: "Schema",
-                value: "",
-                type: ControlType.SCHEMA,
-                tooltip: SetPollingSourceToolipsTexts.SCHEMA,
-                validators: {},
+                data: [
+                    { label: "Geo JSON", value: ReadKind.GEO_JSON },
+                    { label: "Newline-delimited Geo JSON", value: ReadKind.ND_GEO_JSON },
+                ],
             },
         ],
     },
@@ -294,5 +247,70 @@ export const READ_FORM_DATA: JsonFormData = {
                 validators: {},
             },
         ],
+    },
+    allJson: {
+        controls: [
+            {
+                name: "schema",
+                label: "Schema",
+                value: "",
+                type: ControlType.SCHEMA,
+                tooltip: SetPollingSourceToolipsTexts.SCHEMA,
+                validators: {},
+            },
+            {
+                name: "jsonKind",
+                label: "Select JSON",
+                value: ReadKind.JSON,
+                type: ControlType.JSON_KIND,
+                tooltip: SetPollingSourceToolipsTexts.READ_JSON,
+                validators: {},
+                data: [
+                    { label: "JSON", value: ReadKind.JSON },
+                    { label: "Newline-delimited JSON", value: ReadKind.ND_JSON },
+                ],
+            },
+            {
+                name: "encoding",
+                label: "Encoding",
+                value: "utf8",
+                type: ControlType.TEXT,
+                tooltip: SetPollingSourceToolipsTexts.ENCODING,
+                placeholder: "Enter encoding...",
+                validators: {},
+            },
+            {
+                name: "dateFormat",
+                label: "Date format",
+                value: "rfc3339",
+                type: ControlType.TYPEAHEAD,
+                tooltip: SetPollingSourceToolipsTexts.DATE_FORMAT,
+                placeholder: "--Select format--",
+                list: ["rfc3339"],
+                validators: {},
+            },
+            {
+                name: "timestampFormat",
+                label: "Timestamp format",
+                value: "rfc3339",
+                type: ControlType.TYPEAHEAD,
+                placeholder: "--Select format--",
+                tooltip: SetPollingSourceToolipsTexts.TIMESTAMP_FORMAT,
+                list: ["rfc3339"],
+                validators: {},
+            },
+        ],
+    },
+    ndGeoJson: {
+        controls: [],
+    },
+    geoJson: {
+        controls: [],
+    },
+    ndJson: {
+        controls: [],
+    },
+    json: {
+        controls: [],
     },
 };

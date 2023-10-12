@@ -1,10 +1,12 @@
-import { SetLicense, SetPollingSource, SetTransform } from "../api/kamu.graphql.interface";
+import { SetLicense, SetTransform } from "../api/kamu.graphql.interface";
 import { Injectable } from "@angular/core";
 import { MaybeNull } from "../common/app.types";
 import { stringify } from "yaml";
 import {
+    EditFormType,
     PreprocessKind,
     PreprocessStepValue,
+    ReadKind,
 } from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
 
 @Injectable({
@@ -41,9 +43,16 @@ export class TemplatesYamlEventsService {
     }
 
     public buildYamlSetPollingSourceEvent(
-        params: Omit<SetPollingSource, "__typename">,
+        params: EditFormType,
         preprocessStepValue: MaybeNull<PreprocessStepValue>,
     ): string {
+        if (params.read.jsonKind === ReadKind.ND_JSON) {
+            delete params.read.subPath;
+        }
+        if (params.read.jsonKind) {
+            params.read.kind = params.read.jsonKind;
+            delete params.read.jsonKind;
+        }
         this.initialTemplate.content = {
             kind: "setPollingSource",
             ...params,
@@ -58,6 +67,7 @@ export class TemplatesYamlEventsService {
                 },
             };
         }
+
         return stringify(this.initialTemplate);
     }
 

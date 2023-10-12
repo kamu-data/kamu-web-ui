@@ -95,6 +95,15 @@
                         [maxLength]="control.validators.maxLength"
                     ></app-typeahead-field>
                 </ng-container>
+                <ng-container *ngIf="control.type === controlType.JSON_KIND">
+                    <app-json-kind-field
+                        [form]="sectionForm"
+                        [controlName]="control.name"
+                        [label]="control.label"
+                        [tooltip]="control.tooltip!"
+                        [data]="control.data!"
+                    ></app-json-kind-field>
+                </ng-container>
             </div>
         </ng-container>
         <ng-content></ng-content>

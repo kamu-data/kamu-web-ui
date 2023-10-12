@@ -2,11 +2,11 @@ import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.t
 import { FetchKind, MergeKind, ReadKind } from "./add-polling-source-form.types";
 
 export interface RadioControlType {
-    id: string;
+    id?: string;
     value: string;
-    icon: string;
+    icon?: string;
     label: string;
-    tooltip: string;
+    tooltip?: string;
 }
 
 export const FETCH_STEP_RADIO_CONTROLS: RadioControlType[] = [
@@ -41,18 +41,20 @@ export const READ_STEP_RADIO_CONTROLS: RadioControlType[] = [
         label: "CSV",
         tooltip: SetPollingSourceToolipsTexts.READ_CSV,
     },
+
     {
-        id: "jsonLines",
-        value: ReadKind.JSON_LINES,
-        icon: "document_scanner",
-        label: "Json Lines",
-        tooltip: SetPollingSourceToolipsTexts.READ_JSON_LINES,
+        id: "all_json",
+        value: ReadKind.All_JSON,
+        icon: "data_object",
+        label: "Json",
+        tooltip: SetPollingSourceToolipsTexts.READ_JSON,
     },
+
     {
-        id: "geoJson",
-        value: ReadKind.GEO_JSON,
+        id: "all_geo",
+        value: ReadKind.ALL_GEO,
         icon: "public",
-        label: "Geo Json",
+        label: "Geo",
         tooltip: SetPollingSourceToolipsTexts.READ_GEO_JSON,
     },
     {

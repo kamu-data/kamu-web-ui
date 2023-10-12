@@ -1,6 +1,14 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { JsonKindFieldComponent } from "./json-kind-field.component";
+import { SharedTestModule } from "src/app/common/shared-test.module";
+import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { ReadKind } from "../../add-polling-source/add-polling-source-form.types";
+import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTableModule } from "@angular/material/table";
+import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { InputFieldComponent } from "../input-field/input-field.component";
 
 describe("JsonKindFieldComponent", () => {
     let component: JsonKindFieldComponent;
@@ -8,11 +16,15 @@ describe("JsonKindFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [JsonKindFieldComponent],
+            declarations: [JsonKindFieldComponent, TooltipIconComponent, InputFieldComponent],
+            imports: [SharedTestModule, ReactiveFormsModule, MatIconModule, MatTableModule, NgbTooltipModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(JsonKindFieldComponent);
         component = fixture.componentInstance;
+        component.form = new FormGroup({
+            jsonKind: new FormControl(ReadKind.JSON),
+        });
         fixture.detectChanges();
     });
 

@@ -90,6 +90,15 @@ export class DataHelpers {
             case "ReadStepGeoJson": {
                 return "Geo Json";
             }
+            case "ReadStepJson": {
+                return "Json";
+            }
+            case "ReadStepNdJson": {
+                return "Newline-delimited Json";
+            }
+            case "ReadStepNdGeoJson": {
+                return "Newline-delimited Geo Json ";
+            }
             case "ReadStepJsonLines": {
                 return "Json Lines";
             }

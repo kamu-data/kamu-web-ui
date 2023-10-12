@@ -44,6 +44,9 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         ReadStepGeoJson: "Geo json",
         ReadStepEsriShapefile: "Esri shapefile",
         ReadStepParquet: "Parquet",
+        ReadStepJson: "Json",
+        ReadStepNdJson: "Newline-delimited json",
+        ReadStepNdGeoJson: "Newline-delimited geo json",
     };
 
     public currentState?: {

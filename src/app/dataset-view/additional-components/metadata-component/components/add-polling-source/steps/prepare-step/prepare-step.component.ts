@@ -3,7 +3,7 @@ import { ControlContainer, FormArray, FormBuilder, FormGroup, FormGroupDirective
 import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { DecompressFormat, EditFormType, PrepareKind } from "../../add-polling-source-form.types";
+import { DecompressFormat, AddPollingSourceEditFormType, PrepareKind } from "../../add-polling-source-form.types";
 import { EditPollingSourceService } from "../../edit-polling-source.service";
 
 @Component({
@@ -17,7 +17,7 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
     @Input() public eventYamlByHash: MaybeNull<string> = null;
     @Input() public sectionName: SetPollingSourceSection;
     public parentForm: FormGroup;
-    public setPollingSourceEvent: MaybeNull<EditFormType> = null;
+    public setPollingSourceEvent: MaybeNull<AddPollingSourceEditFormType> = null;
 
     constructor(
         private rootFormGroupDirective: FormGroupDirective,
@@ -35,7 +35,7 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
         }
     }
 
-    private initExistingPrepareStep(event: EditFormType): void {
+    private initExistingPrepareStep(event: AddPollingSourceEditFormType): void {
         let group: FormGroup;
         if (event.prepare && this.sectionForm.length === 0) {
             event.prepare.forEach((item) => {

@@ -1,0 +1,28 @@
+<div [formGroup]="form">
+    <div class="d-flex">
+        <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
+        <label class="form-label">{{ label }} </label>
+    </div>
+    <div class="ms-4" *ngFor="let control of controlDescriptors">
+        <div class="form-check">
+            <input
+                [id]="controlName"
+                class="form-check-input"
+                type="radio"
+                [formControlName]="controlName"
+                [name]="controlName"
+                [value]="control.value"
+            />
+            <label class="form-check-label" [for]="controlName"> {{ control.label }} </label>
+        </div>
+    </div>
+    <div class="mt-3" *ngIf="currentJsonKind === ReadKind.JSON">
+        <app-input-field
+            [form]="form"
+            [controlName]="READ_SUB_PATH_CONTROL"
+            [label]="READ_SUB_PATH_TOOLTIP"
+            [placeholder]="READ_SUB_PATH_PLACEHOLDER"
+            [tooltip]="TOOLTIP_SUB_PATH"
+        ></app-input-field>
+    </div>
+</div>

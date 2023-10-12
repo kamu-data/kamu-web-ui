@@ -13,6 +13,11 @@ interface JsonFormControlOptions {
     innerTooltips?: Record<string, string>;
 }
 
+export interface ReadFormatControlType {
+    label: string;
+    value: string;
+}
+
 export interface JsonFormControl {
     name: string;
     label: string;
@@ -26,6 +31,7 @@ export interface JsonFormControl {
     validators: JsonFormValidators;
     dataTestId?: string;
     list?: string[];
+    readFormatDescriptors?: ReadFormatControlType[];
 }
 
 export type JsonFormData = Record<
@@ -45,6 +51,7 @@ export enum ControlType {
     CACHE = "cache",
     ORDER = "order",
     TYPEAHEAD = "typeahead",
+    JSON_KIND = "json-kind",
 }
 
 export enum FetchKind {
@@ -55,10 +62,14 @@ export enum FetchKind {
 
 export enum ReadKind {
     CSV = "csv",
-    JSON_LINES = "jsonLines",
+    ALL_GEO = "allGeo",
     GEO_JSON = "geoJson",
+    ND_GEO_JSON = "ndGeoJson",
     ESRI_SHAPEFILE = "esriShapefile",
     PARQUET = "parquet",
+    All_JSON = "allJson",
+    JSON = "json",
+    ND_JSON = "ndJson",
 }
 
 export enum MergeKind {
@@ -84,9 +95,10 @@ export enum PreprocessKind {
 export enum EventTimeSourceKind {
     FROM_METADATA = "fromMetadata",
     FROM_PATH = "fromPath",
+    FROM_SYSTEM_TIME = "fromSystemTime",
 }
 
-export interface EditFormType {
+export interface AddPollingSourceEditFormType {
     kind?: string;
     fetch: {
         kind: FetchKind;
@@ -100,9 +112,12 @@ export interface EditFormType {
         command?: string[];
         args?: string[];
         path?: string;
+        url?: string;
     };
     read: {
         kind: ReadKind;
+        jsonKind?: ReadKind;
+        subPath?: string;
         schema?: string[];
         separator?: string;
         encoding?: string;
@@ -134,7 +149,7 @@ export interface EditFormType {
 
 export interface EditFormParseType {
     content: {
-        event: EditFormType;
+        event: AddPollingSourceEditFormType;
     };
 }
 

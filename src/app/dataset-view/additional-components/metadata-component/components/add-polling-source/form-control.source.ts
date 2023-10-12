@@ -41,18 +41,20 @@ export const READ_STEP_RADIO_CONTROLS: RadioControlType[] = [
         label: "CSV",
         tooltip: SetPollingSourceToolipsTexts.READ_CSV,
     },
+
     {
-        id: "jsonLines",
-        value: ReadKind.JSON_LINES,
-        icon: "document_scanner",
-        label: "Json Lines",
-        tooltip: SetPollingSourceToolipsTexts.READ_JSON_LINES,
+        id: "all_json",
+        value: ReadKind.All_JSON,
+        icon: "data_object",
+        label: "Json",
+        tooltip: SetPollingSourceToolipsTexts.READ_JSON,
     },
+
     {
-        id: "geoJson",
-        value: ReadKind.GEO_JSON,
+        id: "all_geo",
+        value: ReadKind.ALL_GEO,
         icon: "public",
-        label: "Geo Json",
+        label: "Geo",
         tooltip: SetPollingSourceToolipsTexts.READ_GEO_JSON,
     },
     {

@@ -4,7 +4,7 @@ import { SchemaType } from "../form-components/schema-field/schema-field.compone
 import { SchemaControlType, OrderControlType, SourceOrder } from "./process-form.service.types";
 import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { EditFormType, FetchKind, PrepareKind } from "./add-polling-source-form.types";
+import { AddPollingSourceEditFormType, FetchKind, PrepareKind } from "./add-polling-source-form.types";
 import AppValues from "src/app/common/app.values";
 
 @Injectable({
@@ -30,7 +30,7 @@ export class ProcessFormService {
     }
 
     private processPipeCommandControl(formGroup: FormGroup): void {
-        const form = formGroup.value as EditFormType;
+        const form = formGroup.value as AddPollingSourceEditFormType;
         if (form.prepare && form.prepare.length > 0) {
             form.prepare.map((item) => {
                 if (item.kind === PrepareKind.PIPE && typeof item.command === "string") {
@@ -44,7 +44,7 @@ export class ProcessFormService {
     }
 
     private processEmptyPrepareStep(formGroup: FormGroup): void {
-        const form = formGroup.value as EditFormType;
+        const form = formGroup.value as AddPollingSourceEditFormType;
         if (form.prepare && !form.prepare.length) {
             delete form.prepare;
         }

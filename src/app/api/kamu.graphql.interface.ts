@@ -38,6 +38,7 @@ export type Account = {
     accountName: Scalars["AccountName"];
     /** Account type */
     accountType: AccountType;
+    /** Avatar URL */
     avatarUrl?: Maybe<Scalars["String"]>;
     /** Account name to display */
     displayName: Scalars["AccountDisplayName"];
@@ -494,7 +495,7 @@ export type EnvVar = {
     value?: Maybe<Scalars["String"]>;
 };
 
-export type EventTimeSource = EventTimeSourceFromMetadata | EventTimeSourceFromPath;
+export type EventTimeSource = EventTimeSourceFromMetadata | EventTimeSourceFromPath | EventTimeSourceFromSystemTime;
 
 export type EventTimeSourceFromMetadata = {
     __typename?: "EventTimeSourceFromMetadata";
@@ -505,6 +506,11 @@ export type EventTimeSourceFromPath = {
     __typename?: "EventTimeSourceFromPath";
     pattern: Scalars["String"];
     timestampFormat?: Maybe<Scalars["String"]>;
+};
+
+export type EventTimeSourceFromSystemTime = {
+    __typename?: "EventTimeSourceFromSystemTime";
+    dummy?: Maybe<Scalars["String"]>;
 };
 
 export type ExecuteQuery = {
@@ -771,7 +777,15 @@ export enum QueryDialect {
     SqlSpark = "SQL_SPARK",
 }
 
-export type ReadStep = ReadStepCsv | ReadStepEsriShapefile | ReadStepGeoJson | ReadStepJsonLines | ReadStepParquet;
+export type ReadStep =
+    | ReadStepCsv
+    | ReadStepEsriShapefile
+    | ReadStepGeoJson
+    | ReadStepJson
+    | ReadStepJsonLines
+    | ReadStepNdGeoJson
+    | ReadStepNdJson
+    | ReadStepParquet;
 
 export type ReadStepCsv = {
     __typename?: "ReadStepCsv";
@@ -807,12 +821,34 @@ export type ReadStepGeoJson = {
     schema?: Maybe<Array<Scalars["String"]>>;
 };
 
+export type ReadStepJson = {
+    __typename?: "ReadStepJson";
+    dateFormat?: Maybe<Scalars["String"]>;
+    encoding?: Maybe<Scalars["String"]>;
+    schema?: Maybe<Array<Scalars["String"]>>;
+    subPath?: Maybe<Scalars["String"]>;
+    timestampFormat?: Maybe<Scalars["String"]>;
+};
+
 export type ReadStepJsonLines = {
     __typename?: "ReadStepJsonLines";
     dateFormat?: Maybe<Scalars["String"]>;
     encoding?: Maybe<Scalars["String"]>;
     multiLine?: Maybe<Scalars["Boolean"]>;
     primitivesAsString?: Maybe<Scalars["Boolean"]>;
+    schema?: Maybe<Array<Scalars["String"]>>;
+    timestampFormat?: Maybe<Scalars["String"]>;
+};
+
+export type ReadStepNdGeoJson = {
+    __typename?: "ReadStepNdGeoJson";
+    schema?: Maybe<Array<Scalars["String"]>>;
+};
+
+export type ReadStepNdJson = {
+    __typename?: "ReadStepNdJson";
+    dateFormat?: Maybe<Scalars["String"]>;
+    encoding?: Maybe<Scalars["String"]>;
     schema?: Maybe<Array<Scalars["String"]>>;
     timestampFormat?: Maybe<Scalars["String"]>;
 };
@@ -1442,6 +1478,7 @@ export type SetPollingSourceEventFragment = {
               eventTime?:
                   | { __typename: "EventTimeSourceFromMetadata" }
                   | { __typename?: "EventTimeSourceFromPath"; pattern: string; timestampFormat?: string | null }
+                  | { __typename: "EventTimeSourceFromSystemTime" }
                   | null;
               cache?: { __typename: "SourceCachingForever" } | null;
           }
@@ -1451,6 +1488,7 @@ export type SetPollingSourceEventFragment = {
               eventTime?:
                   | { __typename: "EventTimeSourceFromMetadata" }
                   | { __typename?: "EventTimeSourceFromPath"; pattern: string; timestampFormat?: string | null }
+                  | { __typename: "EventTimeSourceFromSystemTime" }
                   | null;
               headers?: Array<{ __typename?: "RequestHeader"; name: string; value: string }> | null;
               cache?: { __typename: "SourceCachingForever" } | null;
@@ -1481,12 +1519,28 @@ export type SetPollingSourceEventFragment = {
         | { __typename?: "ReadStepEsriShapefile"; schema?: Array<string> | null; subPath?: string | null }
         | { __typename?: "ReadStepGeoJson"; schema?: Array<string> | null }
         | {
+              __typename?: "ReadStepJson";
+              subPath?: string | null;
+              schema?: Array<string> | null;
+              dateFormat?: string | null;
+              encoding?: string | null;
+              timestampFormat?: string | null;
+          }
+        | {
               __typename?: "ReadStepJsonLines";
               schema?: Array<string> | null;
               dateFormat?: string | null;
               encoding?: string | null;
               multiLine?: boolean | null;
               primitivesAsString?: boolean | null;
+              timestampFormat?: string | null;
+          }
+        | { __typename?: "ReadStepNdGeoJson"; schema?: Array<string> | null }
+        | {
+              __typename?: "ReadStepNdJson";
+              dateFormat?: string | null;
+              encoding?: string | null;
+              schema?: Array<string> | null;
               timestampFormat?: string | null;
           }
         | { __typename?: "ReadStepParquet"; schema?: Array<string> | null };
@@ -2117,6 +2171,9 @@ export const SetPollingSourceEventFragmentDoc = gql`
                     ... on EventTimeSourceFromMetadata {
                         __typename
                     }
+                    ... on EventTimeSourceFromSystemTime {
+                        __typename
+                    }
                 }
                 headers {
                     name
@@ -2134,6 +2191,9 @@ export const SetPollingSourceEventFragmentDoc = gql`
                         timestampFormat
                     }
                     ... on EventTimeSourceFromMetadata {
+                        __typename
+                    }
+                    ... on EventTimeSourceFromSystemTime {
                         __typename
                     }
                 }
@@ -2191,6 +2251,22 @@ export const SetPollingSourceEventFragmentDoc = gql`
             ... on ReadStepEsriShapefile {
                 schema
                 subPath
+            }
+            ... on ReadStepJson {
+                subPath
+                schema
+                dateFormat
+                encoding
+                timestampFormat
+            }
+            ... on ReadStepNdGeoJson {
+                schema
+            }
+            ... on ReadStepNdJson {
+                dateFormat
+                encoding
+                schema
+                timestampFormat
             }
         }
         merge {

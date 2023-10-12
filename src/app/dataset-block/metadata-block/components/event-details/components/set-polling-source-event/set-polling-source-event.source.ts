@@ -353,6 +353,94 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "setPollingSource-ReadStepGeoJson-__typename",
     },
 
+    "SetPollingSource.ReadStepNdGeoJson.__typename": {
+        label: "Type:",
+        tooltip: SetPollingSourceToolipsTexts.READ_ND_GEO_JSON,
+        presentationComponent: StepTypePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepNdGeoJson-__typename",
+    },
+
+    "SetPollingSource.ReadStepNdGeoJson.schema": {
+        label: "Schema:",
+        tooltip: SetPollingSourceToolipsTexts.SCHEMA,
+        presentationComponent: SchemaPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepNdGeoJson-schema",
+    },
+
+    "SetPollingSource.ReadStepJson.__typename": {
+        label: "Type:",
+        tooltip: SetPollingSourceToolipsTexts.READ_JSON,
+        presentationComponent: StepTypePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepJson-__typename",
+    },
+
+    "SetPollingSource.ReadStepJson.encoding": {
+        label: "Encoding:",
+        tooltip: SetPollingSourceToolipsTexts.READ_JSON_ENCODING,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepJson-encoding",
+    },
+
+    "SetPollingSource.ReadStepJson.dateFormat": {
+        label: "Date format:",
+        tooltip: SetPollingSourceToolipsTexts.DATE_FORMAT,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepJson-dateFormat",
+    },
+
+    "SetPollingSource.ReadStepJson.timestampFormat": {
+        label: "Timestamp format:",
+        tooltip: SetPollingSourceToolipsTexts.TIMESTAMP_FORMAT,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepJson-timestampFormat",
+    },
+
+    "SetPollingSource.ReadStepJson.subPath": {
+        label: "SubPath:",
+        tooltip: SetPollingSourceToolipsTexts.READ_JSON_SUB_PATH,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepJson-subPath",
+    },
+
+    "SetPollingSource.ReadStepNdJson.__typename": {
+        label: "Type:",
+        tooltip: SetPollingSourceToolipsTexts.READ_ND_JSON,
+        presentationComponent: StepTypePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepNdJson-__typename",
+    },
+
+    "SetPollingSource.ReadStepNdJson.dateFormat": {
+        label: "Date format:",
+        tooltip: SetPollingSourceToolipsTexts.DATE_FORMAT,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepNdJson-dateFormat",
+    },
+
+    "SetPollingSource.ReadStepNdJson.encoding": {
+        label: "Encoding:",
+        tooltip: SetPollingSourceToolipsTexts.READ_JSON_ENCODING,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepNdJson-encoding",
+    },
+
+    "SetPollingSource.ReadStepNdJson.timestampFormat": {
+        label: "Timestamp format:",
+        tooltip: SetPollingSourceToolipsTexts.TIMESTAMP_FORMAT,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepNdJson-timestampFormat",
+    },
+
     "SetPollingSource.ReadStepGeoJson.schema": {
         label: "Schema:",
         tooltip: SetPollingSourceToolipsTexts.SCHEMA,

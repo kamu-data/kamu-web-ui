@@ -1,5 +1,10 @@
 import { BaseComponent } from "src/app/common/base.component";
-import { ControlType, EditFormType, EventTimeSourceKind, JsonFormData } from "../../add-polling-source-form.types";
+import {
+    ControlType,
+    AddPollingSourceEditFormType,
+    EventTimeSourceKind,
+    JsonFormData,
+} from "../../add-polling-source-form.types";
 import { RadioControlType } from "../../form-control.source";
 import { FormBuilder } from "@angular/forms";
 import { ControlContainer, FormGroupDirective } from "@angular/forms";
@@ -25,12 +30,13 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     @Input() public description: string;
     @Input() public sectionName: SetPollingSourceSection;
     @Input() public eventYamlByHash: MaybeNull<string> = null;
-    private editFormValue: EditFormType;
+    private editFormValue: AddPollingSourceEditFormType;
     public controlType: typeof ControlType = ControlType;
     public readonly KIND_NAME_CONTROL = "kind";
     public readonly SCHEMA_NAME_CONTROL = "schema";
     private readonly DEFAULT_EVENT_TIME_SOURCE = EventTimeSourceKind.FROM_METADATA;
     private readonly EVENT_TIME_CONTROL = "eventTime";
+    private readonly JSON_KIND_CONTROL = "jsonKind";
 
     constructor(
         private rootFormGroupDirective: FormGroupDirective,
@@ -67,6 +73,9 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                 .forEach((item: string) => {
                     if (item !== this.EVENT_TIME_CONTROL) this.sectionForm.removeControl(item);
                 });
+            if (this.sectionForm.contains(this.JSON_KIND_CONTROL)) {
+                this.sectionForm.removeControl(this.JSON_KIND_CONTROL);
+            }
             this.initForm(kind);
         });
         if (subscription) this.trackSubscription(subscription);

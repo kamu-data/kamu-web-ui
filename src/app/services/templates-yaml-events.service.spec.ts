@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
-
 import { TemplatesYamlEventsService } from "./templates-yaml-events.service";
+import { mockPreprocessStepValue, mockSetPollingSourceEditFormWithReadNdJsonFormat } from "../search/mock.data";
 
 describe("TemplatesYamlEventsService", () => {
     let service: TemplatesYamlEventsService;
@@ -22,5 +22,14 @@ describe("TemplatesYamlEventsService", () => {
                 `  keywords:\n` +
                 `    - mock-keyword\n`,
         );
+    });
+
+    it("should check yaml SetPollingSource event normalize", () => {
+        const result = service.buildYamlSetPollingSourceEvent(
+            mockSetPollingSourceEditFormWithReadNdJsonFormat,
+            mockPreprocessStepValue,
+        );
+        expect(result).not.toContain("subPath");
+        expect(result).not.toContain("jsonKind");
     });
 });

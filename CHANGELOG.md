@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Added
+- Add UI support for ODF protocol changes of v0.32.0
+  - support new kind of EventTimeSource: FromSystemTime (Fetch section of SetPollingSource wizard)
+  - JSON, NdJSON, NdGeoJSON are the new supported read formats
+
 ## [0.12.0] - 2023-10-09
 ### Added
 - Login page accepts a callback URL, and emits a POST request if it is defined, 

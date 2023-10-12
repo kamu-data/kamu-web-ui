@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { EditFormType, PreprocessStepValue } from "../../add-polling-source-form.types";
+import { AddPollingSourceEditFormType, PreprocessStepValue } from "../../add-polling-source-form.types";
 import { MaybeNull } from "src/app/common/app.types";
 import { EditPollingSourceService } from "../../edit-polling-source.service";
 import { BaseComponent } from "src/app/common/base.component";
@@ -15,7 +15,7 @@ export class PreprocessStepComponent extends BaseComponent implements OnInit {
     @Input() public eventYamlByHash: MaybeNull<string> = null;
     @Input() public preprocessValue: PreprocessStepValue;
     @Output() public showPreprocessStepEmitter = new EventEmitter<boolean>();
-    public setPollingSourceEvent: MaybeNull<EditFormType> = null;
+    public setPollingSourceEvent: MaybeNull<AddPollingSourceEditFormType> = null;
 
     constructor(private editService: EditPollingSourceService) {
         super();

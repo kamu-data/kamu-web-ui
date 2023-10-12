@@ -17,6 +17,7 @@ import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 import { TypeaheadFieldComponent } from "./typeahead-field/typeahead-field.component";
 import { SharedModule } from "src/app/shared/shared/shared.module";
 import { SelectDateFormatFieldComponent } from "./select-date-format-field/select-date-format-field.component";
+import { JsonKindFieldComponent } from "./json-kind-field/json-kind-field.component";
 @NgModule({
     declarations: [
         InputFieldComponent,
@@ -29,6 +30,7 @@ import { SelectDateFormatFieldComponent } from "./select-date-format-field/selec
         CacheFieldComponent,
         OrderFieldComponent,
         TypeaheadFieldComponent,
+        JsonKindFieldComponent,
     ],
     exports: [
         InputFieldComponent,
@@ -41,6 +43,7 @@ import { SelectDateFormatFieldComponent } from "./select-date-format-field/selec
         CacheFieldComponent,
         OrderFieldComponent,
         TypeaheadFieldComponent,
+        JsonKindFieldComponent,
     ],
     imports: [
         CommonModule,

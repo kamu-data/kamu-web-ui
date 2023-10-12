@@ -4,6 +4,7 @@ export class SetPollingSourceToolipsTexts {
     public static readonly EVENT_TIME = "Describes how event time is extracted from the source metadata.";
     public static readonly EVENT_TIME_FROM_METADATA = "Extracts event time from the source's metadata.";
     public static readonly EVENT_TIME_FROM_PATH = "Extracts event time from the path component of the source.";
+    public static readonly EVENT_TIME_SYSTEM_TIME = "Assigns event time from the system time source.";
     public static readonly HEADERS = "Headers to pass during the request (e.g. HTTP Authorization)";
     public static readonly CACHE = "After source was processed once it will never be ingested again.";
     public static readonly PATH = "Path with a glob pattern.";
@@ -29,8 +30,10 @@ export class SetPollingSourceToolipsTexts {
     public static readonly NAN_VALUE = "Sets the string representation of a non-number value.";
     public static readonly POSITIVE_INFINITY = "Sets the string representation of a positive infinity value.";
     public static readonly NEGATIVE_INFINITY = "Sets the string representation of a negative infinity value.";
-    public static readonly DATE_FORMAT = "Sets the string that indicates a date format.";
-    public static readonly TIMESTAMP_FORMAT = "Sets the string that indicates a timestamp format.";
+    public static readonly DATE_FORMAT =
+        "Sets the string that indicates a date format. The `rfc3339` is the only required format, the other format strings are implementation-specific.";
+    public static readonly TIMESTAMP_FORMAT =
+        "Sets the string that indicates a timestamp format. The `rfc3339` is the only required format, the other format strings are implementation-specific.";
     public static readonly ENFORCE_SCHEMA =
         "If it is set to true, the specified or inferred schema will be forcibly applied to datasource files, and headers in CSV files will be ignored. If the option is set to false, the schema will be validated against all headers in CSV files in the case when the header option is set to true.";
     public static readonly INFER_SCHEMA =
@@ -72,6 +75,14 @@ export class SetPollingSourceToolipsTexts {
     public static readonly READ_GEO_JSON = "Reader for GeoJSON files.";
     public static readonly READ_ESRI_SHAPE_FILE = "Reader for ESRI Shapefile format.";
     public static readonly READ_PARQUET = "Reader for Apache Parquet format.";
+    public static readonly READ_JSON = "Reader for JSON files that contain an array of objects within them.";
+    public static readonly READ_ND_JSON =
+        "Reader for files containing multiple newline-delimited JSON objects with the same schema.";
+    public static readonly READ_ND_GEO_JSON =
+        "Reader for Newline-delimited GeoJSON files. It is similar to `GeoJson` format but instead of `FeatureCollection` object in the root it expects every individual feature object to appear on its own line.";
+    public static readonly READ_JSON_SUB_PATH =
+        "Path in the form of a.b.c to a sub-element of the root JSON object that is an array or objects. If not specified it is assumed that the root element is an array.";
+    public static readonly READ_JSON_ENCODING = "Allows to forcibly set one of standard basic or extended encodings.";
     public static readonly APPEND_STRATEGY =
         "Under this strategy polled data will be appended in its original form to the already ingested data without modifications.";
     public static readonly LEDGER_STRATEGY =

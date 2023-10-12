@@ -30,6 +30,8 @@ import {
     ReadKind,
     MergeKind,
     AddPollingSourceEditFormType,
+    PrepareKind,
+    PreprocessStepValue,
 } from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
 import { DatasetHistoryUpdate } from "../dataset-view/dataset.subscriptions.interface";
 import {
@@ -1189,3 +1191,40 @@ export const mockNodesWithEqualNames: Node[] = [
         },
     },
 ];
+
+export const mockSetPollingSourceEditFormWithReadNdJsonFormat: AddPollingSourceEditFormType = {
+    fetch: {
+        kind: FetchKind.URL,
+        eventTime: {
+            kind: "fromMetadata",
+        },
+        url: "https://opendata.vancouver.ca/explore/dataset/block-outlines/download/?format=geojson&timezone=America/Los_Angeles&lang=en",
+    },
+    prepare: [
+        {
+            kind: PrepareKind.PIPE,
+            command: ["jq", "-c", ".features[]", "|", "select(.geometry", "!=", "null)", "|", "."],
+        },
+    ],
+    read: {
+        kind: ReadKind.All_JSON,
+        jsonKind: ReadKind.ND_JSON,
+        encoding: "utf8",
+        dateFormat: "rfc3339",
+        timestampFormat: "rfc3339",
+        subPath: "/test",
+    },
+    merge: {
+        kind: MergeKind.APPEND,
+    },
+};
+
+export const mockPreprocessStepValue: PreprocessStepValue = {
+    engine: "spark",
+    queries: [
+        {
+            query: 'SELECT\n  CAST(UNIX_TIMESTAMP(Reported_Date, "yyyy-MM-dd") as TIMESTAMP) as reported_date,\n  Classification_Reported as classification,\n  ROW_NUMBER() OVER (ORDER BY (Reported_Date, HA)) as id,\n  ha,\n  sex,\n  age_group\nFROM input\n',
+            alias: null,
+        },
+    ],
+};

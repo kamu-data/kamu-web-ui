@@ -108,6 +108,7 @@ export interface AddPollingSourceEditFormType {
         command?: string[];
         args?: string[];
         path?: string;
+        url?: string;
     };
     read: {
         kind: ReadKind;

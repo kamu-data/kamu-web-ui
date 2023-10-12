@@ -127,10 +127,10 @@ describe("DatasetComponent", () => {
         iconRegistryService.addSvg("account", "");
 
         datasetSubsServices = TestBed.inject(DatasetSubscriptionsService);
-        datasetSubsServices.changePermissionsData(mockFullPowerDatasetPermissionsFragment);
+        datasetSubsServices.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
 
         datasetService = TestBed.inject(DatasetService);
-        spyOnProperty(datasetService, "onDatasetChanges", "get").and.returnValue(of(mockDatasetBasicsDerivedFragment));
+        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsDerivedFragment));
 
         fixture = TestBed.createComponent(DatasetComponent);
         component = fixture.componentInstance;
@@ -185,7 +185,7 @@ describe("DatasetComponent", () => {
     });
 
     it("attempt navigating to settings without necessary permissions lands on overview", () => {
-        datasetSubsServices.changePermissionsData(mockReadonlyDatasetPermissionsFragment);
+        datasetSubsServices.emitPermissionsChanged(mockReadonlyDatasetPermissionsFragment);
         routeToTab(DatasetViewTypeEnum.Settings);
         component.ngOnInit();
         fixture.detectChanges();

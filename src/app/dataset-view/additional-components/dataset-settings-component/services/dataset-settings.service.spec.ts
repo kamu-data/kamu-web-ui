@@ -15,6 +15,7 @@ import {
     mockRenameSuccessResponse,
 } from "src/app/search/mock.data";
 import { DeleteDatasetMutation, RenameDatasetMutation } from "src/app/api/kamu.graphql.interface";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("DatasetSettingsService", () => {
     let service: DatasetSettingsService;
@@ -29,7 +30,7 @@ describe("DatasetSettingsService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo],
-            imports: [ApolloModule, ApolloTestingModule],
+            imports: [ApolloModule, ApolloTestingModule, HttpClientTestingModule],
         });
         service = TestBed.inject(DatasetSettingsService);
         navigationService = TestBed.inject(NavigationService);
@@ -104,21 +105,21 @@ describe("DatasetSettingsService", () => {
 
     it("should check rename dataset with name collision", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        const errorRenameDatasetChangesSpy = spyOn(service, "errorRenameDatasetChanges").and.callThrough();
+        const emitRenameDatasetErrorOccurredSpy = spyOn(service, "emitRenameDatasetErrorOccurred").and.callThrough();
         const deleteDatasetSpy = spyOn(datasetApi, "renameDataset").and.returnValue(of(mockRenameResultNameCollision));
         service.renameDataset(ACCOUNT_NAME, DATASET_ID, NEW_NAME).subscribe(() => {
             expect(deleteDatasetSpy).toHaveBeenCalledTimes(1);
-            expect(errorRenameDatasetChangesSpy).toHaveBeenCalledTimes(1);
+            expect(emitRenameDatasetErrorOccurredSpy).toHaveBeenCalledTimes(1);
         });
     });
 
     it("should check rename dataset with no changes", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        const errorRenameDatasetChangesSpy = spyOn(service, "errorRenameDatasetChanges").and.callThrough();
+        const emitRenameDatasetErrorOccurredSpy = spyOn(service, "emitRenameDatasetErrorOccurred").and.callThrough();
         const deleteDatasetSpy = spyOn(datasetApi, "renameDataset").and.returnValue(of(mockRenameResultNoChanges));
         service.renameDataset(ACCOUNT_NAME, DATASET_ID, NEW_NAME).subscribe(() => {
             expect(deleteDatasetSpy).toHaveBeenCalledTimes(1);
-            expect(errorRenameDatasetChangesSpy).toHaveBeenCalledTimes(1);
+            expect(emitRenameDatasetErrorOccurredSpy).toHaveBeenCalledTimes(1);
         });
     });
 

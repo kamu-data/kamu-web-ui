@@ -8,6 +8,14 @@ import { environment } from "src/environments/environment";
 export class AppConfigService {
     private appConfig?: AppConfig;
 
+    get apiServerUrl(): string {
+        if (!this.appConfig) {
+            this.appConfig = AppConfigService.loadAppConfig();
+        }
+
+        return new URL(this.apiServerGqlUrl).origin;
+    }
+
     get apiServerGqlUrl(): string {
         if (!this.appConfig) {
             this.appConfig = AppConfigService.loadAppConfig();

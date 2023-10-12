@@ -27,6 +27,7 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { first } from "rxjs/operators";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/errors";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("DatasetCommitService", () => {
     let commitService: DatasetCommitService;
@@ -47,7 +48,7 @@ describe("DatasetCommitService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo],
-            imports: [ApolloModule, ApolloTestingModule],
+            imports: [ApolloModule, ApolloTestingModule, HttpClientTestingModule],
         });
         datasetApi = TestBed.inject(DatasetApi);
         navigationService = TestBed.inject(NavigationService);
@@ -161,7 +162,7 @@ describe("DatasetCommitService", () => {
                 spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
                 const commitEventSpy = spyOn(datasetApi, "commitEvent").and.returnValue(of(errorResponse));
 
-                const errorSubscription$: Subscription = commitService.onErrorCommitEventChanges
+                const errorSubscription$: Subscription = commitService.commitEventErrorOccurrences
                     .pipe(first())
                     .subscribe((message) => {
                         expect(message).toEqual(mockCommitEventToDatasetErrorMessage);

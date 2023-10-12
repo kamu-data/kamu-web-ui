@@ -5,9 +5,18 @@ import { LoginService } from "./login.service";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { Subscription, first, of, throwError } from "rxjs";
-import { TEST_GITHUB_CODE, TEST_LOGIN, TEST_PASSWORD } from "src/app/api/mock/auth.mock";
+import {
+    TEST_GITHUB_CODE,
+    TEST_LOGIN,
+    TEST_PASSWORD,
+    mockGithubLoginResponse,
+    mockPasswordLoginResponse,
+} from "src/app/api/mock/auth.mock";
 import { GithubLoginCredentials, PasswordLoginCredentials } from "src/app/api/auth.api.model";
 import { AuthenticationError } from "src/app/common/errors";
+import { LoginResponse } from "src/app/api/kamu.graphql.interface";
+import { MaybeUndefined } from "src/app/common/app.types";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("LoginService", () => {
     let service: LoginService;
@@ -17,7 +26,7 @@ describe("LoginService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [AuthApi, Apollo],
-            imports: [ApolloTestingModule],
+            imports: [ApolloTestingModule, HttpClientTestingModule],
         });
         service = TestBed.inject(LoginService);
         navigationService = TestBed.inject(NavigationService);
@@ -29,14 +38,22 @@ describe("LoginService", () => {
     });
 
     it("succesful Github login navigates to home", () => {
-        const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromGithubCallackCode").and.returnValue(of(void {}));
+        const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromGithubCallackCode").and.returnValue(
+            of(mockGithubLoginResponse.auth.login),
+        );
         const navigateSpy = spyOn(navigationService, "navigateToHome");
+
+        const tokenSubscription$ = service.accessTokenChanges.pipe(first()).subscribe();
+        const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
 
         const credentials: GithubLoginCredentials = { code: TEST_GITHUB_CODE };
         service.githubLogin(credentials);
 
         expect(authApiSpy).toHaveBeenCalledOnceWith(credentials);
+
         expect(navigateSpy).toHaveBeenCalledTimes(1);
+        expect(tokenSubscription$.closed).toBeTrue();
+        expect(accountSubscription$.closed).toBeTrue();
     });
 
     it("failed Github login navigates to home, but throws an error", fakeAsync(() => {
@@ -48,28 +65,42 @@ describe("LoginService", () => {
         );
         const navigateSpy = spyOn(navigationService, "navigateToHome");
 
+        const tokenSubscription$ = service.accessTokenChanges.pipe(first()).subscribe();
+        const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
+
         const credentials: GithubLoginCredentials = { code: TEST_GITHUB_CODE };
-        try {
+        expect(() => {
             service.githubLogin(credentials);
             tick();
-            fail("unexpected success");
-        } catch (e) {
-            expect(e).toEqual(exception);
-        }
+        }).toThrow(exception);
 
         expect(authApiSpy).toHaveBeenCalledOnceWith(credentials);
         expect(navigateSpy).toHaveBeenCalledTimes(1);
+
+        expect(tokenSubscription$.closed).toBeFalse();
+        expect(accountSubscription$.closed).toBeFalse();
+        tokenSubscription$.unsubscribe();
+        accountSubscription$.unsubscribe();
     }));
 
     it("succesful password login navigates to home", () => {
-        const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin").and.returnValue(of(void {}));
+        const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin").and.returnValue(
+            of(mockPasswordLoginResponse.auth.login),
+        );
         const navigateSpy = spyOn(navigationService, "navigateToHome");
+
+        const tokenSubscription$ = service.accessTokenChanges.pipe(first()).subscribe();
+        const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
 
         const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
         service.passwordLogin(credentials);
 
         expect(authApiSpy).toHaveBeenCalledOnceWith(credentials);
+
         expect(navigateSpy).toHaveBeenCalledTimes(1);
+
+        expect(tokenSubscription$.closed).toBeTrue();
+        expect(accountSubscription$.closed).toBeTrue();
     });
 
     it("failed password login emits an error", () => {
@@ -78,24 +109,65 @@ describe("LoginService", () => {
             throwError(() => new AuthenticationError([new Error(errorText)])),
         );
 
-        const errorSubscription$: Subscription = service.errorPasswordLogin.pipe(first()).subscribe((e: string) => {
-            expect(e).toEqual(errorText);
-        });
+        const errorSubscription$: Subscription = service.passwordLoginErrorOccurrences
+            .pipe(first())
+            .subscribe((e: string) => {
+                expect(e).toEqual(errorText);
+            });
+
+        const tokenSubscription$ = service.accessTokenChanges.pipe(first()).subscribe();
+        const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
 
         const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
         service.passwordLogin(credentials);
 
         expect(authApiSpy).toHaveBeenCalledOnceWith(credentials);
         expect(errorSubscription$.closed).toBeTrue();
+
+        expect(tokenSubscription$.closed).toBeFalse();
+        expect(accountSubscription$.closed).toBeFalse();
+        tokenSubscription$.unsubscribe();
+        accountSubscription$.unsubscribe();
     });
 
     it("reseting password login error emits empty error", () => {
-        const errorSubscription$: Subscription = service.errorPasswordLogin.pipe(first()).subscribe((e: string) => {
-            expect(e).toEqual("");
-        });
+        const errorSubscription$: Subscription = service.passwordLoginErrorOccurrences
+            .pipe(first())
+            .subscribe((e: string) => {
+                expect(e).toEqual("");
+            });
 
         service.resetPasswordLoginError();
 
         expect(errorSubscription$.closed).toBeTrue();
+    });
+
+    it("custom login callback", () => {
+        let callbackLoginResponse: MaybeUndefined<LoginResponse>;
+
+        service.setLoginCallback((loginResponse: LoginResponse) => {
+            callbackLoginResponse = loginResponse;
+        });
+
+        const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin").and.returnValue(
+            of(mockPasswordLoginResponse.auth.login),
+        );
+        const navigateSpy = spyOn(navigationService, "navigateToHome");
+
+        const tokenSubscription$ = service.accessTokenChanges.pipe(first()).subscribe();
+        const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
+
+        const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
+        service.passwordLogin(credentials);
+
+        expect(callbackLoginResponse).toEqual(mockPasswordLoginResponse.auth.login);
+
+        expect(authApiSpy).toHaveBeenCalledOnceWith(credentials);
+        expect(navigateSpy).not.toHaveBeenCalled();
+
+        expect(tokenSubscription$.closed).toBeFalse();
+        expect(accountSubscription$.closed).toBeFalse();
+        tokenSubscription$.unsubscribe();
+        accountSubscription$.unsubscribe();
     });
 });

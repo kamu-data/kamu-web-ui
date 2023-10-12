@@ -36,7 +36,7 @@ describe("EventDetailsComponent", () => {
     it("should check #OnInit", () => {
         const blockFragment = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
             .blockByHash as MetadataBlockFragment;
-        blockService.metadataBlockChanges(blockFragment);
+        blockService.emitMetadataBlockChanged(blockFragment);
         spyOnProperty(component, "addDataEvent", "get").and.returnValue(blockFragment.event as AddDataEventFragment);
         expect(component.addDataEvent).toBe(blockFragment.event as AddDataEventFragment);
     });

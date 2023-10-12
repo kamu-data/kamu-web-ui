@@ -11,6 +11,7 @@ import { DatasetCreateService } from "./dataset-create.service";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails } from "../api/mock/auth.mock";
 import { DatasetOperationError } from "../common/errors";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("DatasetCreateService", () => {
     let service: DatasetCreateService;
@@ -20,6 +21,7 @@ describe("DatasetCreateService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule],
             providers: [Apollo],
         });
         service = TestBed.inject(DatasetCreateService);
@@ -81,7 +83,7 @@ describe("DatasetCreateService", () => {
         service.createEmptyDataset(DatasetKind.Root, datasetName).subscribe();
 
         expect(spyNavigateToDatasetView).not.toHaveBeenCalled();
-        service.onErrorMessageChanges.subscribe((error) => {
+        service.errorMessageChanges.subscribe((error) => {
             expect(error).toBe("Fail");
         });
     });
@@ -135,7 +137,7 @@ describe("DatasetCreateService", () => {
         service.createDatasetFromSnapshot("mockSnapshot").subscribe();
 
         expect(spyNavigateToDatasetView).not.toHaveBeenCalled();
-        service.onErrorMessageChanges.subscribe((error) => {
+        service.errorMessageChanges.subscribe((error) => {
             expect(error).toBe("Fail");
         });
     });

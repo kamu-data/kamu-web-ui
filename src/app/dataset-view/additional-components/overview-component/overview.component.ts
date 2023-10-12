@@ -52,7 +52,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         this.trackSubscription(
-            this.datasetSubsService.onDatasetOverviewDataChanges.subscribe((overviewUpdate: OverviewDataUpdate) => {
+            this.datasetSubsService.overviewDataChanges.subscribe((overviewUpdate: OverviewDataUpdate) => {
                 this.currentState = {
                     schema: overviewUpdate.schema,
                     data: overviewUpdate.content,

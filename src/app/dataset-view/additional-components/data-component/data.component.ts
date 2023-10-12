@@ -48,10 +48,10 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.sqlErrorMarker$ = this.datasetSubsService.onDatasetDataSqlErrorOccurred.pipe(
+        this.sqlErrorMarker$ = this.datasetSubsService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
         );
-        this.dataUpdate$ = this.datasetSubsService.onDatasetDataChanges.pipe(
+        this.dataUpdate$ = this.datasetSubsService.queryDataChanges.pipe(
             tap((dataUpdate: DataUpdate) => {
                 if (dataUpdate.currentVocab?.offsetColumn) {
                     this.offsetColumnName = dataUpdate.currentVocab.offsetColumn;

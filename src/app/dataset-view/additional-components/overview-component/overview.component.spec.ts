@@ -79,7 +79,7 @@ describe("OverviewComponent", () => {
             .compileComponents();
 
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        datasetSubsService.changeDatasetOverviewData({
+        datasetSubsService.emitOverviewDataChanged({
             schema: mockMetadataDerivedUpdate.schema,
             content: mockOverviewDataUpdate.content,
             overview: _.cloneDeep(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests

@@ -13,12 +13,12 @@ import _ from "lodash";
 export class LineageGraphBuilderService {
     constructor(private datasetSubsService: DatasetSubscriptionsService) {}
 
-    public getCurrentDataset(): Observable<DatasetLineageBasicsFragment> {
-        return this.datasetSubsService.onLineageDataChanges.pipe(map((data: LineageUpdate) => data.origin));
+    public currentDatasetChanges(): Observable<DatasetLineageBasicsFragment> {
+        return this.datasetSubsService.lineageChanges.pipe(map((data: LineageUpdate) => data.origin));
     }
 
     public buildGraph(): Observable<LineageGraph> {
-        return this.datasetSubsService.onLineageDataChanges.pipe(
+        return this.datasetSubsService.lineageChanges.pipe(
             map((lineageUpdate: LineageUpdate) => {
                 const uniqueDatasets: DatasetLineageBasicsFragment[] = this.collectUniqueDatasets(lineageUpdate);
 

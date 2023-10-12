@@ -37,10 +37,10 @@ export class MetadataBlockComponent extends BaseProcessingComponent implements O
     }
 
     public ngOnInit(): void {
-        this.datasetBasics$ = this.datasetService.onDatasetChanges;
-        this.datasetPermissions$ = this.datasetSubsService.onPermissionsDataChanges;
-        this.datasetHistoryUpdate$ = this.datasetSubsService.onDatasetHistoryChanges;
-        this.datasetInfo$ = this.datasetInfoFromUrl;
+        this.datasetBasics$ = this.datasetService.datasetChanges;
+        this.datasetPermissions$ = this.datasetSubsService.permissionsChanges;
+        this.datasetHistoryUpdate$ = this.datasetSubsService.historyChanges;
+        this.datasetInfo$ = this.datasetInfoFromUrlChanges;
         this.blockHash$ = this.activatedRoute.params.pipe(
             map((params: Params) => params[ProjectLinks.URL_PARAM_BLOCK_HASH] as string),
         );

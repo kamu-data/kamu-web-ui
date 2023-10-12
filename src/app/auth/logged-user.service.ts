@@ -2,16 +2,16 @@ import { Injectable } from "@angular/core";
 import { first } from "rxjs/operators";
 import { Observable, ReplaySubject, Subject, of } from "rxjs";
 import { NavigationService } from "../services/navigation.service";
-import AppValues from "../common/app.values";
 import { MaybeNull } from "../common/app.types";
 import { isNull } from "lodash";
 import { AppConfigService } from "../app-config.service";
-import { AuthApi } from "../api/auth.api";
 import { AccountFragment } from "../api/kamu.graphql.interface";
 import { UnsubscribeOnDestroyAdapter } from "../common/unsubscribe.ondestroy.adapter";
 import { AppConfigLoginInstructions } from "../app-config.model";
 import { Apollo } from "apollo-angular";
 import { promiseWithCatch } from "../common/app.helpers";
+import { LoginService } from "./login/login.service";
+import { LocalStorageService } from "../services/local-storage.service";
 
 @Injectable({
     providedIn: "root",
@@ -19,38 +19,39 @@ import { promiseWithCatch } from "../common/app.helpers";
 export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
     private loggedInUser: MaybeNull<AccountFragment> = null;
 
-    private loggedInUserChanges$: Subject<MaybeNull<AccountFragment>> = new ReplaySubject<MaybeNull<AccountFragment>>(
+    private loggedInUser$: Subject<MaybeNull<AccountFragment>> = new ReplaySubject<MaybeNull<AccountFragment>>(
         1,
     );
 
     constructor(
-        private authApi: AuthApi,
+        private loginService: LoginService,
         private navigationService: NavigationService,
         private appConfigService: AppConfigService,
+        private localStorageService: LocalStorageService,
         private apollo: Apollo,
     ) {
         super();
 
         this.trackSubscriptions(
-            this.authApi.accessTokenObtained().subscribe((token: string) => this.saveAccessToken(token)),
-            this.authApi.accountChanged().subscribe((user: AccountFragment) => this.changeUser(user)),
+            this.loginService.accessTokenChanges.subscribe((token: string) => this.saveAccessToken(token)),
+            this.loginService.accountChanges.subscribe((user: AccountFragment) => this.changeUser(user)),
         );
     }
 
-    public initialize(): Observable<void> {
+    public initializeCompletes(): Observable<void> {
         const loginInstructions: AppConfigLoginInstructions | null = this.appConfigService.loginInstructions;
         if (loginInstructions) {
-            return this.authApi.fetchAccountAndTokenFromLoginMethod(
+            return this.loginService.genericLogin(
                 loginInstructions.loginMethod,
                 loginInstructions.loginCredentialsJson,
             );
         } else {
-            return this.attemptPreviousAuthentication();
+            return this.attemptPreviousAuthenticationCompletes();
         }
     }
 
-    public get onLoggedInUserChanges(): Observable<MaybeNull<AccountFragment>> {
-        return this.loggedInUserChanges$.asObservable();
+    public get loggedInUserChanges(): Observable<MaybeNull<AccountFragment>> {
+        return this.loggedInUser$.asObservable();
     }
 
     public get currentlyLoggedInUser(): MaybeNull<AccountFragment> {
@@ -72,10 +73,10 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
         this.clearGraphQLCache();
     }
 
-    private attemptPreviousAuthentication(): Observable<void> {
-        const accessToken: string | null = localStorage.getItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
+    private attemptPreviousAuthenticationCompletes(): Observable<void> {
+        const accessToken: string | null = this.localStorageService.accessToken;
         if (typeof accessToken === "string" && !this.isAuthenticated) {
-            return this.authApi.fetchAccountFromAccessToken(accessToken).pipe(first());
+            return this.loginService.fetchAccountFromAccessToken(accessToken).pipe(first());
         } else {
             return of(void {});
         }
@@ -83,7 +84,7 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
 
     private changeUser(user: MaybeNull<AccountFragment>) {
         this.loggedInUser = user;
-        this.loggedInUserChanges$.next(user);
+        this.loggedInUser$.next(user);
     }
 
     private clearGraphQLCache(): void {
@@ -91,10 +92,10 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
     }
 
     private resetAccessToken(): void {
-        localStorage.removeItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
+        this.localStorageService.setAccessToken(null);
     }
 
     private saveAccessToken(token: string): void {
-        localStorage.setItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN, token);
+        this.localStorageService.setAccessToken(token);
     }
 }

@@ -44,7 +44,7 @@ describe("HistoryComponent", () => {
         fixture = TestBed.createComponent(HistoryComponent);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         component = fixture.componentInstance;
-        datasetSubsService.changeDatasetHistory(mockHistoryUpdate);
+        datasetSubsService.emitHistoryChanged(mockHistoryUpdate);
         fixture.detectChanges();
     });
 

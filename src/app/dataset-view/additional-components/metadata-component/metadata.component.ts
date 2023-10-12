@@ -61,7 +61,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
 
     public ngOnInit() {
         this.trackSubscription(
-            this.datasetSubsService.onMetadataSchemaChanges.subscribe((schemaUpdate: MetadataSchemaUpdate) => {
+            this.datasetSubsService.metadataSchemaChanges.subscribe((schemaUpdate: MetadataSchemaUpdate) => {
                 this.currentState = {
                     schema: schemaUpdate.schema,
                     metadataSummary: schemaUpdate.metadataSummary,

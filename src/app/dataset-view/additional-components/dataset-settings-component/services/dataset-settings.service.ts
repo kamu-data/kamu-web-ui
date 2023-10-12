@@ -15,14 +15,14 @@ import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/erro
 export class DatasetSettingsService {
     public static readonly NOT_LOGGED_USER_ERROR = "User must be logged in to configure dataset";
 
-    private errorRenameDatasetChanges$: Subject<string> = new Subject<string>();
+    private renameDatasetError$: Subject<string> = new Subject<string>();
 
-    public errorRenameDatasetChanges(message: string): void {
-        this.errorRenameDatasetChanges$.next(message);
+    public emitRenameDatasetErrorOccurred(message: string): void {
+        this.renameDatasetError$.next(message);
     }
 
-    public get onErrorRenameDatasetChanges(): Observable<string> {
-        return this.errorRenameDatasetChanges$.asObservable();
+    public get renameDatasetErrorOccurrences(): Observable<string> {
+        return this.renameDatasetError$.asObservable();
     }
 
     constructor(
@@ -73,7 +73,7 @@ export class DatasetSettingsService {
                         } else {
                             // RenameResultNameCollision
                             // RenameResultNoChanges
-                            this.errorRenameDatasetChanges(data.datasets.byId.rename.message);
+                            this.emitRenameDatasetErrorOccurred(data.datasets.byId.rename.message);
                         }
                     } else {
                         throw new DatasetNotFoundError();
@@ -86,6 +86,6 @@ export class DatasetSettingsService {
     }
 
     public resetRenameError(): void {
-        this.errorRenameDatasetChanges("");
+        this.emitRenameDatasetErrorOccurred("");
     }
 }

@@ -79,6 +79,15 @@
                     {{ node.data.dataObject.accountName }}
                 </svg:text>
             </svg:g>
+            <svg:g [attr.transform]="'translate(' + node.dimension.width + ', 0)'" *ngIf="false">
+                <image
+                    [attr.x]="5"
+                    [attr.y]="-12"
+                    [attr.width]="20"
+                    [attr.height]="20"
+                    [attr.href]="'../assets/images/private.png'"
+                />
+            </svg:g>
             <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.Source">
                 <svg:rect
                     [attr.width]="node.dimension.width * 1.1"

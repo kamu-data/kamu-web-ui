@@ -44,14 +44,14 @@ export class DatasetService {
 
     private currentSetVocab: SetVocab;
 
-    private datasetChanges$: Subject<DatasetBasicsFragment> = new Subject<DatasetBasicsFragment>();
+    private dataset$: Subject<DatasetBasicsFragment> = new Subject<DatasetBasicsFragment>();
 
-    public get onDatasetChanges(): Observable<DatasetBasicsFragment> {
-        return this.datasetChanges$.asObservable();
+    public get datasetChanges(): Observable<DatasetBasicsFragment> {
+        return this.dataset$.asObservable();
     }
 
-    public datasetChanges(datasetInfo: DatasetBasicsFragment): void {
-        this.datasetChanges$.next(datasetInfo);
+    public emitDatasetChanged(datasetInfo: DatasetBasicsFragment): void {
+        this.dataset$.next(datasetInfo);
     }
 
     public requestDatasetMainData(info: DatasetInfo): Observable<void> {
@@ -90,7 +90,7 @@ export class DatasetService {
             map((data: GetDatasetBasicsWithPermissionsQuery) => {
                 if (data.datasets.byOwnerAndName) {
                     const datasetBasics: DatasetBasicsFragment = data.datasets.byOwnerAndName;
-                    this.datasetChanges(datasetBasics);
+                    this.emitDatasetChanged(datasetBasics);
 
                     const datasetPermissions: DatasetPermissionsFragment = data.datasets.byOwnerAndName;
                     this.permissionsDataUpdate(datasetPermissions);
@@ -106,7 +106,7 @@ export class DatasetService {
             map((data: GetDatasetHistoryQuery) => {
                 if (data.datasets.byOwnerAndName) {
                     const dataset: DatasetBasicsFragment = data.datasets.byOwnerAndName;
-                    this.datasetChanges(dataset);
+                    this.emitDatasetChanged(dataset);
                     const pageInfo: DatasetPageInfoFragment = Object.assign(
                         {},
                         data.datasets.byOwnerAndName.metadata.chain.blocks.pageInfo,
@@ -116,7 +116,7 @@ export class DatasetService {
                         history: data.datasets.byOwnerAndName.metadata.chain.blocks.nodes as MetadataBlockFragment[],
                         pageInfo,
                     };
-                    this.datasetSubsService.changeDatasetHistory(historyUpdate);
+                    this.datasetSubsService.emitHistoryChanged(historyUpdate);
                 } else {
                     throw new DatasetNotFoundError();
                 }
@@ -129,7 +129,7 @@ export class DatasetService {
             map((data: GetDatasetHistoryQuery) => {
                 if (data.datasets.byOwnerAndName) {
                     const dataset: DatasetBasicsFragment = data.datasets.byOwnerAndName;
-                    this.datasetChanges(dataset);
+                    this.emitDatasetChanged(dataset);
                     const pageInfo: DatasetPageInfoFragment = Object.assign(
                         {},
                         data.datasets.byOwnerAndName.metadata.chain.blocks.pageInfo,
@@ -162,12 +162,12 @@ export class DatasetService {
                         schema,
                         currentVocab: this.currentSetVocab,
                     };
-                    this.datasetSubsService.changeDatasetData(dataUpdate);
-                    this.datasetSubsService.observeSqlErrorOccurred({
+                    this.datasetSubsService.emitQueryDataChanged(dataUpdate);
+                    this.datasetSubsService.emitSqlErrorOccurred({
                         error: "",
                     });
                 } else if (queryResult.errorKind === DataQueryResultErrorKind.InvalidSql) {
-                    this.datasetSubsService.observeSqlErrorOccurred({
+                    this.datasetSubsService.emitSqlErrorOccurred({
                         error: queryResult.errorMessage,
                     });
                 } else {
@@ -186,7 +186,7 @@ export class DatasetService {
     }
 
     private datasetUpdate(data: DatasetBasicsFragment): void {
-        this.datasetChanges(data);
+        this.emitDatasetChanged(data);
     }
 
     private overviewTabDataUpdate(
@@ -203,11 +203,11 @@ export class DatasetService {
             overview,
             size,
         };
-        this.datasetSubsService.changeDatasetOverviewData(overviewDataUpdate);
+        this.datasetSubsService.emitOverviewDataChanged(overviewDataUpdate);
     }
 
     private permissionsDataUpdate(permissions: DatasetPermissionsFragment): void {
-        this.datasetSubsService.changePermissionsData(permissions);
+        this.datasetSubsService.emitPermissionsChanged(permissions);
     }
 
     private dataTabDataUpdate(
@@ -217,7 +217,7 @@ export class DatasetService {
     ): void {
         const content: DataRow[] = DatasetService.parseDataRows(tail);
         const dataUpdate: DataUpdate = { content, schema, currentVocab };
-        this.datasetSubsService.changeDatasetData(dataUpdate);
+        this.datasetSubsService.emitQueryDataChanged(dataUpdate);
     }
 
     private metadataTabDataUpdate(data: GetDatasetMainDataQuery, schema: MaybeNull<DatasetSchema>): void {
@@ -235,7 +235,7 @@ export class DatasetService {
                 pageInfo,
                 metadataSummary: metadata,
             };
-            this.datasetSubsService.metadataSchemaChanges(metadataSchemaUpdate);
+            this.datasetSubsService.emitMetadataSchemaChanged(metadataSchemaUpdate);
         }
     }
 
@@ -341,7 +341,7 @@ export class DatasetService {
         const lineageGraphNodes: DatasetLineageBasicsFragment[] = [];
 
         this.updateLineageGraphRecords(origin, lineageGraphNodes, lineageGraphEdges);
-        this.datasetSubsService.changeLineageData({
+        this.datasetSubsService.emitLineageChanged({
             origin: origin.basics,
             nodes: lineageGraphNodes,
             edges: lineageGraphEdges,

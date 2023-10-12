@@ -46,7 +46,7 @@ describe("DataComponent", () => {
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         spyOn(location, "getState").and.returnValue({ start: 0, end: 100 });
-        datasetSubsService.changeDatasetData(mockDataUpdate);
+        datasetSubsService.emitQueryDataChanged(mockDataUpdate);
     });
 
     it("should create", () => {
@@ -80,7 +80,7 @@ describe("DataComponent", () => {
     it("should check invalid SQL result update", fakeAsync(() => {
         tick();
         fixture.detectChanges();
-        datasetSubsService.observeSqlErrorOccurred(mockSqlErrorUpdate);
+        datasetSubsService.emitSqlErrorOccurred(mockSqlErrorUpdate);
         tick();
         fixture.detectChanges();
         const runSqlButton = findElementByDataTestId(fixture, "runSqlQueryButton") as HTMLButtonElement;
@@ -91,7 +91,7 @@ describe("DataComponent", () => {
     }));
 
     it("should calculate sql request params", () => {
-        datasetSubsService.changeDatasetData(mockDataUpdate);
+        datasetSubsService.emitQueryDataChanged(mockDataUpdate);
         fixture.detectChanges();
 
         const sqlReq = spyOn(component.runSQLRequestEmit, "emit");
@@ -103,7 +103,7 @@ describe("DataComponent", () => {
         };
 
         component.loadMore(limit);
-        datasetSubsService.changeDatasetData(mockDataUpdate);
+        datasetSubsService.emitQueryDataChanged(mockDataUpdate);
         expect(sqlReq).toHaveBeenCalledWith(params);
 
         component.loadMore(limit);

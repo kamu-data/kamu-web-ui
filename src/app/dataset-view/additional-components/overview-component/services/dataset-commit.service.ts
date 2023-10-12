@@ -20,14 +20,14 @@ import { NavigationService } from "src/app/services/navigation.service";
 export class DatasetCommitService {
     public static readonly NOT_LOGGED_USER_ERROR = "User must be logged in to commit to a dataset";
 
-    private errorCommitEventChanges$: Subject<string> = new Subject<string>();
+    private commitEventError$: Subject<string> = new Subject<string>();
 
-    public errorCommitEventChanges(message: string): void {
-        this.errorCommitEventChanges$.next(message);
+    public emitCommitEventErrorOccurred(message: string): void {
+        this.commitEventError$.next(message);
     }
 
-    public get onErrorCommitEventChanges(): Observable<string> {
-        return this.errorCommitEventChanges$.asObservable();
+    public get commitEventErrorOccurrences(): Observable<string> {
+        return this.commitEventError$.asObservable();
     }
 
     private datasetIdsByAccountDatasetName = new Map<string, string>();
@@ -56,7 +56,7 @@ export class DatasetCommitService {
                             data.datasets.byId.metadata.chain.commitEvent.__typename === "CommitResultAppendError" ||
                             data.datasets.byId.metadata.chain.commitEvent.__typename === "MetadataManifestMalformed"
                         ) {
-                            this.errorCommitEventChanges(data.datasets.byId.metadata.chain.commitEvent.message);
+                            this.emitCommitEventErrorOccurred(data.datasets.byId.metadata.chain.commitEvent.message);
                         } else {
                             throw new DatasetOperationError([
                                 new Error(data.datasets.byId.metadata.chain.commitEvent.message),

@@ -23,7 +23,7 @@ import { Observable } from "rxjs";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventDetailsComponent {
-    public block$: Observable<MetadataBlockFragment> = this.blockService.onMetadataBlockChanges;
+    public block$: Observable<MetadataBlockFragment> = this.blockService.metadataBlockChanges;
     @Input() public datasetInfo: DatasetInfo;
 
     constructor(private blockService: BlockService) {}

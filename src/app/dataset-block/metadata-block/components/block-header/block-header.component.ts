@@ -21,6 +21,6 @@ export class BlockHeaderComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.block$ = this.blockService.onMetadataBlockChanges;
+        this.block$ = this.blockService.metadataBlockChanges;
     }
 }

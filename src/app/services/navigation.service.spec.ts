@@ -171,4 +171,12 @@ describe("NavigationService", () => {
             skipLocationChange: true,
         });
     });
+
+    it("should test navigate to return to CLI view", () => {
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        service.navigateToReturnToCli();
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_RETURN_TO_CLI], {
+            skipLocationChange: true,
+        });
+    });
 });

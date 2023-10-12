@@ -2,7 +2,6 @@ import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { AuthApi } from "./auth.api";
 import {
-    AccountFragment,
     FetchAccountDetailsDocument,
     GetEnabledLoginMethodsDocument,
     GetEnabledLoginMethodsQuery,
@@ -10,7 +9,6 @@ import {
 } from "./kamu.graphql.interface";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 import {
-    mockAccountDetails,
     mockGithubLoginResponse,
     mockLogin401Error,
     mockPasswordLoginResponse,
@@ -42,52 +40,6 @@ describe("AuthApi", () => {
         controller.verify();
     });
 
-    function loginViaAccessToken(): void {
-        service.fetchAccountFromAccessToken(TEST_ACCESS_TOKEN_GITHUB).subscribe();
-
-        const op = controller.expectOne(FetchAccountDetailsDocument);
-        expect(op.operation.variables.accessToken).toEqual(TEST_ACCESS_TOKEN_GITHUB);
-
-        op.flush({
-            data: mockAccountFromAccessToken,
-        });
-    }
-
-    function loginFullyViaGithub(): void {
-        service
-            .fetchAccountAndTokenFromGithubCallackCode({ code: TEST_GITHUB_CODE } as GithubLoginCredentials)
-            .subscribe();
-
-        const expectedCredentials: GithubLoginCredentials = { code: TEST_GITHUB_CODE };
-
-        const op = controller.expectOne(LoginDocument);
-        expect(op.operation.variables.login_method).toEqual(LoginMethod.GITHUB);
-        expect(op.operation.variables.login_credentials_json).toEqual(JSON.stringify(expectedCredentials));
-
-        op.flush({
-            data: mockGithubLoginResponse,
-        });
-    }
-
-    function loginFullyViaPassword(): void {
-        service
-            .fetchAccountAndTokenFromPasswordLogin({
-                login: TEST_LOGIN,
-                password: TEST_PASSWORD,
-            } as PasswordLoginCredentials)
-            .subscribe();
-
-        const expectedCredentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
-
-        const op = controller.expectOne(LoginDocument);
-        expect(op.operation.variables.login_method).toEqual(LoginMethod.PASSWORD);
-        expect(op.operation.variables.login_credentials_json).toEqual(JSON.stringify(expectedCredentials));
-
-        op.flush({
-            data: mockPasswordLoginResponse,
-        });
-    }
-
     it("should be created", () => {
         expect(service).toBeTruthy();
     });
@@ -117,28 +69,24 @@ describe("AuthApi", () => {
         flush();
     }));
 
-    it("should check full login password  success", fakeAsync(() => {
-        const accessTokenObtained$ = service
-            .accessTokenObtained()
-            .pipe(first())
-            .subscribe((token: string) => {
-                expect(token).toEqual(mockPasswordLoginResponse.auth.login.accessToken);
-            });
+    it("should check full login password  success", () => {
+        service
+            .fetchAccountAndTokenFromPasswordLogin({
+                login: TEST_LOGIN,
+                password: TEST_PASSWORD,
+            } as PasswordLoginCredentials)
+            .subscribe();
 
-        const accountChanged$ = service
-            .accountChanged()
-            .pipe(first())
-            .subscribe((user: AccountFragment) => {
-                expect(user).toEqual(mockAccountDetails);
-            });
+        const expectedCredentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
 
-        loginFullyViaPassword();
-        tick();
+        const op = controller.expectOne(LoginDocument);
+        expect(op.operation.variables.login_method).toEqual(LoginMethod.PASSWORD);
+        expect(op.operation.variables.login_credentials_json).toEqual(JSON.stringify(expectedCredentials));
 
-        expect(accessTokenObtained$.closed).toBeTrue();
-        expect(accountChanged$.closed).toBeTrue();
-        flush();
-    }));
+        op.flush({
+            data: mockPasswordLoginResponse,
+        });
+    });
 
     it("should check full login password failure", fakeAsync(() => {
         const subscription$ = service
@@ -162,28 +110,21 @@ describe("AuthApi", () => {
         flush();
     }));
 
-    it("should check full login Github success", fakeAsync(() => {
-        const accessTokenObtained$ = service
-            .accessTokenObtained()
-            .pipe(first())
-            .subscribe((token: string) => {
-                expect(token).toEqual(mockGithubLoginResponse.auth.login.accessToken);
-            });
+    it("should check full login Github success", () => {
+        service
+            .fetchAccountAndTokenFromGithubCallackCode({ code: TEST_GITHUB_CODE } as GithubLoginCredentials)
+            .subscribe();
 
-        const accountChanged$ = service
-            .accountChanged()
-            .pipe(first())
-            .subscribe((user: AccountFragment) => {
-                expect(user).toEqual(mockAccountDetails);
-            });
+        const expectedCredentials: GithubLoginCredentials = { code: TEST_GITHUB_CODE };
 
-        loginFullyViaGithub();
-        tick();
+        const op = controller.expectOne(LoginDocument);
+        expect(op.operation.variables.login_method).toEqual(LoginMethod.GITHUB);
+        expect(op.operation.variables.login_credentials_json).toEqual(JSON.stringify(expectedCredentials));
 
-        expect(accessTokenObtained$.closed).toBeTrue();
-        expect(accountChanged$.closed).toBeTrue();
-        flush();
-    }));
+        op.flush({
+            data: mockGithubLoginResponse,
+        });
+    });
 
     it("should check full login Github failure", fakeAsync(() => {
         const subscription$ = service
@@ -204,30 +145,16 @@ describe("AuthApi", () => {
         flush();
     }));
 
-    it("should check login via access token success", fakeAsync(() => {
-        const accessTokenObtained$ = service
-            .accessTokenObtained()
-            .pipe(first())
-            .subscribe(() => {
-                fail("Unexpected call of access token update");
-            });
+    it("should check login via access token success", () => {
+        service.fetchAccountFromAccessToken(TEST_ACCESS_TOKEN_GITHUB).subscribe();
 
-        const accountChanged$ = service
-            .accountChanged()
-            .pipe(first())
-            .subscribe((user: AccountFragment) => {
-                expect(user).toEqual(mockAccountDetails);
-            });
+        const op = controller.expectOne(FetchAccountDetailsDocument);
+        expect(op.operation.variables.accessToken).toEqual(TEST_ACCESS_TOKEN_GITHUB);
 
-        loginViaAccessToken();
-        tick();
-
-        expect(accessTokenObtained$.closed).toBeFalse();
-        accessTokenObtained$.unsubscribe();
-
-        expect(accountChanged$.closed).toBeTrue();
-        flush();
-    }));
+        op.flush({
+            data: mockAccountFromAccessToken,
+        });
+    });
 
     it("should check login via access token failure", fakeAsync(() => {
         const subscription$ = service

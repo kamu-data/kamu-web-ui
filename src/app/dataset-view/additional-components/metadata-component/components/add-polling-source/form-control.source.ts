@@ -6,7 +6,7 @@ export interface RadioControlType {
     value: string;
     icon: string;
     label: string;
-    tooltip?: string;
+    tooltip: string;
 }
 
 export const FETCH_STEP_RADIO_CONTROLS: RadioControlType[] = [

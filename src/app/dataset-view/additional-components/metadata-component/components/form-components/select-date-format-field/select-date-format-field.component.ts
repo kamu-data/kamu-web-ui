@@ -12,7 +12,7 @@ import { RxwebValidators } from "@rxweb/reactive-form-validators";
 export class SelectDateFormatFieldComponent extends BaseField implements OnInit {
     @Input() public innerTooltips: Record<string, string>;
     public currentSource: EventTimeSourceKind;
-    public timeSourceKind: typeof EventTimeSourceKind = EventTimeSourceKind;
+    public EventTimeSourceKind: typeof EventTimeSourceKind = EventTimeSourceKind;
     public readonly KIND_NAME_CONTROL = "kind";
     public readonly PATTERN_NAME_CONTROL = "pattern";
     public readonly PATTERN_TOOLTIP = "Regular expression where first group contains the timestamp string.";
@@ -53,7 +53,7 @@ export class SelectDateFormatFieldComponent extends BaseField implements OnInit 
                 } else if (kind === EventTimeSourceKind.FROM_SYSTEM_TIME) {
                     this.currentSource = EventTimeSourceKind.FROM_SYSTEM_TIME;
                 } else {
-                    this.currentSource = EventTimeSourceKind.FROM_PATH;
+                    this.currentSource = kind;
                     this.eventTimeGroup.addControl(
                         this.PATTERN_NAME_CONTROL,
                         this.fb.control("", RxwebValidators.required()),

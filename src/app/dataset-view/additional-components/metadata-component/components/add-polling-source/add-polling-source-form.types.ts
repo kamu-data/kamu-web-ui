@@ -1,5 +1,4 @@
 import { SqlQueryStep, Transform } from "src/app/api/kamu.graphql.interface";
-import { RadioControlType } from "./form-control.source";
 
 export interface JsonFormValidators {
     required?: boolean;
@@ -12,6 +11,11 @@ interface JsonFormControlOptions {
     buttonText?: string;
     formArrayName?: string;
     innerTooltips?: Record<string, string>;
+}
+
+export interface ReadFormatControlType {
+    label: string;
+    value: string;
 }
 
 export interface JsonFormControl {
@@ -27,7 +31,7 @@ export interface JsonFormControl {
     validators: JsonFormValidators;
     dataTestId?: string;
     list?: string[];
-    readFormatDescriptors?: Pick<RadioControlType, "label" | "value">[];
+    readFormatDescriptors?: ReadFormatControlType[];
 }
 
 export type JsonFormData = Record<

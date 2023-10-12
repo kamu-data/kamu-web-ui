@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { BaseField } from "../base-field";
 import { FormControl } from "@angular/forms";
-import { ReadKind } from "../../add-polling-source/add-polling-source-form.types";
-import { RadioControlType } from "../../add-polling-source/form-control.source";
+import { ReadFormatControlType, ReadKind } from "../../add-polling-source/add-polling-source-form.types";
 import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
 
 @Component({
@@ -11,8 +10,8 @@ import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.t
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JsonKindFieldComponent extends BaseField implements OnInit {
-    @Input() public controlDescriptors: Pick<RadioControlType, "label" | "value">[];
-    public readJsonFormat: typeof ReadKind = ReadKind;
+    @Input() public controlDescriptors: ReadFormatControlType[];
+    public ReadKind: typeof ReadKind = ReadKind;
     public readonly TOOLTIP_SUB_PATH = SetPollingSourceToolipsTexts.SUB_PATH;
     public readonly READ_SUB_PATH_CONTROL = "subPath";
     public readonly READ_SUB_PATH_TOOLTIP = "Path";

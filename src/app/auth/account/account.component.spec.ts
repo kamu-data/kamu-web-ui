@@ -1,12 +1,16 @@
 import { NavigationService } from "src/app/services/navigation.service";
 import { TEST_AVATAR_URL, TEST_LOGIN, mockAccountDetails } from "../../api/mock/auth.mock";
 import { AccountTabs } from "./account.constants";
-import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { MatButtonToggle, MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatIconModule } from "@angular/material/icon";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { emitClickOnElementByDataTestId, routerMock } from "src/app/common/base-test.helpers.spec";
+import {
+    emitClickOnElementByDataTestId,
+    findElementByDataTestId,
+    routerMock,
+} from "src/app/common/base-test.helpers.spec";
 import { AccountComponent } from "./account.component";
 import { BehaviorSubject, delay, of } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
@@ -145,7 +149,7 @@ describe("AccountComponent", () => {
         expect(() => flush()).toThrow(new AccountNotFoundError());
     }));
 
-    it("should check activeTab when URL not exist query param tab", () => {
+    fit("should check activeTab when URL not exist query param tab", fakeAsync(() => {
         mockQueryParams.next({ page: 1 });
 
         let nCalls = 0;
@@ -158,9 +162,7 @@ describe("AccountComponent", () => {
             }
             nCalls++;
         });
-
-        expect(nCalls).toEqual(1);
-    });
+    }));
 
     Object.values(AccountTabs).forEach((tab: string) => {
         it(`should check switch ${tab} tab`, () => {

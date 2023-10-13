@@ -1,5 +1,6 @@
 export interface AppConfig {
     apiServerGqlUrl: string;
+    githubClientId?: string;
     featureFlags: AppConfigFeatureFlags;
     loginInstructions?: AppConfigLoginInstructions;
 }

@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AppConfig, AppConfigFeatureFlags, AppConfigLoginInstructions } from "./app-config.model";
 import { environment } from "src/environments/environment";
+import { MaybeUndefined } from "./common/app.types";
 
 @Injectable({
     providedIn: "root",
@@ -22,6 +23,14 @@ export class AppConfigService {
         }
 
         return this.appConfig.apiServerGqlUrl;
+    }
+
+    get githubClientId(): MaybeUndefined<string> {
+        if (!this.appConfig) {
+            this.appConfig = AppConfigService.loadAppConfig();
+        }
+
+        return this.appConfig.githubClientId;
     }
 
     get featureFlags(): AppConfigFeatureFlags {

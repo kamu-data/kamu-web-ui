@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { environment } from "src/environments/environment";
 
 @Injectable()
 export default class ProjectLinks {
@@ -38,10 +37,4 @@ export default class ProjectLinks {
     public static readonly URL_QUERY_PARAM_PAGE: string = "page";
     public static readonly URL_QUERY_PARAM_QUERY: string = "query";
     public static readonly URL_QUERY_PARAM_CALLBACK_URL: string = "callbackUrl";
-
-    public static readonly GITHUB_URL = `https://github.com/login/oauth/authorize?scope=user:email&client_id=${environment.github_client_id}`;
-
-    // TODO
-    // public static readonly URL_DATASET_CREATE_SELECT_TYPE = "select-type";
-    // public static readonly URL_DATASET_CREATE_ROOT = "root";
 }

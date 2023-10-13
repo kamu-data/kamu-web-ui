@@ -2,29 +2,20 @@
     <div class="box-header position-relative" *ngIf="metadataBlockFragment">
         <div class="d-flex rounded-top-1 border-bottom-0 align-items-center flex-wrap">
             <div class="flex-shrink-0 ml-n1 mr-n1 mt-n1 mb-n1 hx_avatar_stack_commit">
-                <div class="avatar-stack align-self-start">
-                    <div class="avatar-stack__body" aria-label="sergiimk">
-                        <a
-                            class="avatar avatar-user"
-                            style="width: 24px; height: 24px"
-                            data-skip-pjax="true"
-                            data-test-selector="commits-avatar-stack-avatar-link"
-                            data-hovercard-type="user"
-                            data-hovercard-url="/users/sergiimk/hovercard"
-                            data-octo-click="hovercard-link-click"
-                            data-octo-dimensions="link_type:self"
-                        >
+                <div class="align-self-start">
+                    <div aria-label="sergiimk">
+                        <a>
                             <img
                                 data-test-selector="commits-avatar-stack-avatar-image"
                                 [src]="APP_LOGO"
                                 alt="@sergiimk"
-                                class="avatar-user"
+                                class="avatar-image"
                             />
                         </a>
                     </div>
                 </div>
             </div>
-            <div class="flex-grow-1 d-flex align-items-center ml-3 min-width-0">
+            <div class="flex-grow-1 d-flex align-items-center ms-3 min-width-0">
                 <div class="css-truncate css-truncate-overflow color-fg-muted">
                     <a
                         class="commit-author user-mention"

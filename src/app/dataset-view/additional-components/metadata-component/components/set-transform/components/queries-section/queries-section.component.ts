@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { SqlQueryStep } from "src/app/api/kamu.graphql.interface";
 import * as monaco from "monaco-editor";
 import { ViewportScroller } from "@angular/common";
-import { SQL_EDITOR_OPTIONS } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
+import { SQL_EDITOR_OPTIONS } from "src/app/shared/editor/components/sql-editor/config-editor.events";
 
 @Component({
     selector: "app-queries-section",

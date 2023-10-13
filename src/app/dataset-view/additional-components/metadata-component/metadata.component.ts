@@ -19,7 +19,7 @@ import {
 import { momentConvertDatetoLocalWithFormat } from "src/app/common/app.helpers";
 import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/common/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
-import { SQL_EDITOR_OPTIONS } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
+import { SQL_EDITOR_OPTIONS } from "../../../shared/editor/components/sql-editor/config-editor.events";
 import _ from "lodash";
 
 @Component({

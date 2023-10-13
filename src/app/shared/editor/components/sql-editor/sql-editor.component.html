@@ -1,0 +1,6 @@
+<ngx-monaco-editor
+    (onInit)="onInitEditor($event)"
+    [options]="EDITOR_OPTIONS"
+    [(ngModel)]="sqlTemplate"
+    (ngModelChange)="modelChange()"
+></ngx-monaco-editor>

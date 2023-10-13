@@ -1,26 +1,17 @@
-import AppValues from "src/app/common/app.values";
-import { OffsetInterval } from "../../../api/kamu.graphql.interface";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Location } from "@angular/common";
-import { DataSqlErrorUpdate, DataUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-} from "@angular/core";
-import { DataRow, DatasetRequestBySql } from "../../../interface/dataset.interface";
+import { Observable, map, tap } from "rxjs";
+
+import AppValues from "src/app/common/app.values";
 import DataTabValues from "./mock.data";
+
+import { OffsetInterval } from "../../../api/kamu.graphql.interface";
+import { DataSqlErrorUpdate, DataUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DataRow, DatasetRequestBySql } from "../../../interface/dataset.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import * as monaco from "monaco-editor";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
-import { SQL_EDITOR_OPTIONS } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
-import { Observable, map, tap } from "rxjs";
-import { getMonacoNamespace } from "src/app/services/monaco-namespace.helper";
 
 @Component({
     selector: "app-data",
@@ -29,8 +20,6 @@ import { getMonacoNamespace } from "src/app/services/monaco-namespace.helper";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent extends BaseComponent implements OnInit {
-    public readonly SQL_EDITOR_OPTIONS = SQL_EDITOR_OPTIONS;
-
     @Input() public datasetBasics: DatasetBasicsFragment;
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
 
@@ -47,11 +36,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     public dataUpdate$: Observable<DataUpdate>;
     public overviewUpdate$: Observable<OverviewUpdate>;
 
-    constructor(
-        private datasetSubsService: DatasetSubscriptionsService,
-        private location: Location,
-        private cdr: ChangeDetectorRef,
-    ) {
+    constructor(private datasetSubsService: DatasetSubscriptionsService, private location: Location) {
         super();
     }
 
@@ -94,27 +79,12 @@ export class DataComponent extends BaseComponent implements OnInit {
         this.runSQLRequest(params);
     }
 
-    public onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
-        const runQueryFn = () => {
-            this.runSQLRequest({ query: this.sqlRequestCode });
-        };
-        const monacoNamespace = getMonacoNamespace();
-        editor.addAction({
-            // An unique identifier of the contributed action.
-            id: "run-sql",
-            // A label of the action that will be presented to the user.
-            label: "Run SQL",
-            // An optional array of keybindings for the action.
-            keybindings: [monacoNamespace.KeyMod.CtrlCmd | monacoNamespace.KeyCode.Enter],
-            contextMenuGroupId: "navigation",
-            contextMenuOrder: 1.5,
-            // Method that will be executed when the action is triggered.
-            // @param editor The editor instance is passed in as a convenience
-            run: runQueryFn,
-        });
+    public updateSqlRequestCode(code: string): void {
+        this.sqlRequestCode = code;
+    }
 
-        this.editorLoaded = true;
-        this.cdr.detectChanges();
+    public runSql(): void {
+        this.runSQLRequest({ query: this.sqlRequestCode }, true);
     }
 
     private buildSqlRequestCode(): void {

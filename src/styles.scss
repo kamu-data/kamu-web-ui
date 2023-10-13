@@ -465,7 +465,6 @@ a:visited {
 
 .app-content {
     display: grid;
-    margin: 33px auto;
     padding: 0 16px;
     flex-direction: row;
     width: 100%;
@@ -605,7 +604,7 @@ router-outlet {
 }
 
 .search-header-container-block {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 #search {

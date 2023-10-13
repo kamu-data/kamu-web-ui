@@ -123,7 +123,7 @@ describe("LoginComponent", () => {
         });
 
         it("select Github method should redirect to Github endpoint and show spinner", () => {
-            const spyGotoGithub = spyOn(LoginService, "gotoGithub").and.stub();
+            const spyGotoGithub = spyOn(loginService, "gotoGithub").and.stub();
 
             emitClickOnElementByDataTestId(fixture, Elements.SELECT_METHOD_GITHUB);
             fixture.detectChanges();
@@ -270,7 +270,7 @@ describe("LoginComponent", () => {
                 });
                 spyOnProperty(loginService, "loginMethods", "get").and.returnValue([loginMethod]);
 
-                spyGotoGithub = spyOn(LoginService, "gotoGithub").and.stub();
+                spyGotoGithub = spyOn(loginService, "gotoGithub").and.stub();
 
                 createFixture();
             });

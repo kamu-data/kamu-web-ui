@@ -5,12 +5,11 @@ import { GithubLoginCredentials, PasswordLoginCredentials } from "src/app/api/au
 import { AccountFragment, LoginResponse } from "src/app/api/kamu.graphql.interface";
 import { LoginMethod } from "src/app/app-config.model";
 import { AuthenticationError } from "src/app/common/errors";
-import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 import { LoginCallbackResponse } from "./login.component.model";
 import { HttpClient } from "@angular/common/http";
 import { AppConfigService } from "src/app/app-config.service";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 
 @Injectable({
@@ -45,12 +44,21 @@ export class LoginService {
         return this.passwordLoginError$.asObservable();
     }
 
+    public githubLoginLink(): string {
+        const githubClientId: MaybeUndefined<string> = this.appConfigService.githubClientId;
+        if (githubClientId) {
+            return `https://github.com/login/oauth/authorize?scope=user:email&client_id=${githubClientId}`;
+        } else {
+            throw new Error("GitHub Client ID undefined in configuration");
+        }
+    }
+
     public emitPasswordLoginErrorOccurred(errorText: string): void {
         this.passwordLoginError$.next(errorText);
     }
 
-    public static gotoGithub(): void {
-        window.location.href = ProjectLinks.GITHUB_URL;
+    public gotoGithub(): void {
+        window.location.href = this.githubLoginLink();
     }
 
     public initialize(): Observable<void> {

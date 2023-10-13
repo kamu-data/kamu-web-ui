@@ -21,7 +21,6 @@ export class LoginComponent extends BaseComponent implements OnInit {
     public static readonly ERROR_ZERO_METHODS_IN_CONFIG =
         "LoginComponent requires at least 1 login method in configuration";
 
-    readonly GITHUB_URL = ProjectLinks.GITHUB_URL;
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
     public readonly LoginMethod = LoginMethod;
 
@@ -75,7 +74,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
     public onSelectedLoginMethod(loginMethod: LoginMethod): void {
         this.selectedLoginMethod = loginMethod;
         if (loginMethod === LoginMethod.GITHUB) {
-            LoginService.gotoGithub();
+            this.loginService.gotoGithub();
         }
     }
 

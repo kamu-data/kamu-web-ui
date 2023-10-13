@@ -74,6 +74,7 @@
                 [hasTableHeader]="true"
                 [schemaFields]="currentState.schema.fields"
                 [dataRows]="currentState ? currentState.data : []"
+                [idTable]="'overview-data-table'"
             ></app-dynamic-table>
             <ng-template #noData>
                 <div class="mt-4 p-3 text-center no-data-container border border-2" data-test-id="no-data-tail-block">

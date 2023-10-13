@@ -203,7 +203,7 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "jsonKind",
-                label: "Select JSON",
+                label: "Select reader format",
                 value: "geoJson",
                 type: ControlType.JSON_KIND,
                 tooltip: SetPollingSourceToolipsTexts.READ_JSON,
@@ -260,7 +260,7 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "jsonKind",
-                label: "Select JSON",
+                label: "Select reader format",
                 value: ReadKind.JSON,
                 type: ControlType.JSON_KIND,
                 tooltip: SetPollingSourceToolipsTexts.READ_JSON,

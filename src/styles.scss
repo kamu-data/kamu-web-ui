@@ -630,7 +630,9 @@ router-outlet {
 
 #schema-block-table,
 #set-polling-source-schema,
-#set-polling-source-env-variables {
+#set-polling-source-env-variables,
+#result-query-table,
+#overview-data-table {
     * {
         padding: 0 8px;
         font-size: 12px;

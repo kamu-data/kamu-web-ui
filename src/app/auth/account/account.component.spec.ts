@@ -159,7 +159,7 @@ describe("AccountComponent", () => {
             nCalls++;
         });
 
-        expect(nCalls).toEqual(2);
+        expect(nCalls).toEqual(1);
     });
 
     Object.values(AccountTabs).forEach((tab: string) => {

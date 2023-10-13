@@ -254,7 +254,7 @@ a {
 #app-header {
     z-index: 32;
     display: flex;
-    padding: 16px;
+    padding: 5px 16px;
     font-size: 14px;
     line-height: 1.5;
     align-items: center;
@@ -584,7 +584,7 @@ router-outlet {
 
 #search-input {
     width: 100%;
-    min-height: 43px;
+    min-height: 35px;
     line-height: 20px;
     max-width: 100%;
     padding: 0;

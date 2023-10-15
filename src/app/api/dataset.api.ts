@@ -72,7 +72,7 @@ export class DatasetApi {
                 {
                     accountName: params.accountName,
                     datasetName: params.datasetName,
-                    limit: params.numRecords ?? AppValues.SQL_QUERY_LIMIT,
+                    limit: params.numRecords ?? AppValues.SAMPLE_DATA_LIMIT,
                 },
                 {
                     fetchPolicy: "network-only",

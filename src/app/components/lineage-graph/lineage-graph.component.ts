@@ -17,6 +17,7 @@ import {
     LineageGraphNodeKind,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 import { LineageGraphConfig, LINEAGE_CONFIG } from "./ligeage-graph.settings";
+import { SessionStorageService } from "src/app/services/session-storage.service";
 
 @Component({
     selector: "app-lineage-graph",
@@ -42,8 +43,11 @@ export class LineageGraphComponent implements OnInit {
         this.changeLineageGraphView();
     }
 
-    ngOnInit(): void {
+    constructor(private sessionStorageService: SessionStorageService) {}
+
+    public ngOnInit(): void {
         this.view = [this.INITIAL_GRAPH_VIEW_WIDTH, this.lineageGraphHeight()];
+        this.checkVisibilitySidePanel();
     }
 
     public changeLineageGraphView(): void {
@@ -62,6 +66,14 @@ export class LineageGraphComponent implements OnInit {
 
     public onClickInfo(): void {
         this.showSidePanel = !this.showSidePanel;
+        this.sessionStorageService.setSidePanelVisibility(this.showSidePanel.toString());
+    }
+
+    private checkVisibilitySidePanel(): void {
+        const visiblePanel = this.sessionStorageService.sidePanelVisibility;
+        if (visiblePanel) {
+            this.showSidePanel = JSON.parse(visiblePanel) as boolean;
+        }
     }
 
     private lineageGraphHeight(): number {

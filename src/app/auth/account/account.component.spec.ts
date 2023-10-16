@@ -145,7 +145,7 @@ describe("AccountComponent", () => {
         expect(() => flush()).toThrow(new AccountNotFoundError());
     }));
 
-    it("should check activeTab when URL not exist query param tab", fakeAsync(() => {
+    it("should check activeTab when URL not exist query param tab", () => {
         mockQueryParams.next({ page: 1 });
 
         let nCalls = 0;
@@ -158,7 +158,7 @@ describe("AccountComponent", () => {
             }
             nCalls++;
         });
-    }));
+    });
 
     Object.values(AccountTabs).forEach((tab: string) => {
         it(`should check switch ${tab} tab`, () => {

@@ -103,6 +103,7 @@ describe("DatasetApi", () => {
         const op = controller.expectOne(GetDatasetMainDataDocument);
         expect(op.operation.variables.accountName).toEqual(TEST_LOGIN);
         expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
+        expect(op.operation.variables.limit).toEqual(AppValues.SAMPLE_DATA_LIMIT);
 
         op.flush({
             data: mockDatasetMainDataResponse,

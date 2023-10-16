@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Fixed
 - Changed sample query limit on overview tab
+- Improved UI reaction on situation when GraphQL server refuses to accept access token
 
 ## [0.12.1] - 2023-10-13
 ### Added

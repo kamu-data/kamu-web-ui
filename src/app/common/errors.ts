@@ -4,6 +4,8 @@ import { ApolloError } from "@apollo/client/core";
 import { ErrorTexts } from "./errors.text";
 import { logError, promiseWithCatch } from "./app.helpers";
 import { LoggedUserService } from "../auth/logged-user.service";
+import { Injector } from "@angular/core";
+import { ToastrService } from "ngx-toastr";
 
 export abstract class KamuError extends Error {
     abstract accept(visitor: KamuErrorVisitor): void;
@@ -55,9 +57,11 @@ export abstract class KamuMultiError extends KamuError {
     }
 
     public get compactMessage(): string {
-        return this.errors
-            .map((e) => e.message)
-            .reduce((previousValue, currentValue) => previousValue + ". " + currentValue);
+        return this.errors.length > 0
+            ? this.errors
+                  .map((e) => e.message)
+                  .reduce((previousValue, currentValue) => previousValue + ". " + currentValue)
+            : "";
     }
 }
 
@@ -85,10 +89,16 @@ interface KamuErrorVisitor {
 
 export class KamuErrorHandler implements KamuErrorVisitor {
     constructor(
+        private injector: Injector,
         private navigationService: NavigationService,
         private modalService: ModalService,
         private loggedUserService: LoggedUserService,
     ) {}
+
+    // Need to get ToastrService from injector rather than constructor injection to avoid cyclic dependency error
+    private get toastrService(): ToastrService {
+        return this.injector.get(ToastrService);
+    }
 
     public visitApolloError(e: ApolloError): void {
         promiseWithCatch(
@@ -141,11 +151,14 @@ export class KamuErrorHandler implements KamuErrorVisitor {
     }
 
     public visitAuthenticationError(authenticationError: AuthenticationError): void {
+        this.loggedUserService.terminateSession();
+
         if (authenticationError.errors.length > 0) {
             authenticationError.errors.forEach((e) => logError(e));
+            this.toastrService.error(authenticationError.compactMessage);
         } else {
             logError(ErrorTexts.ERROR_UNKNOWN_AUTHENTICATION);
+            this.toastrService.error(ErrorTexts.ERROR_UNKNOWN_AUTHENTICATION);
         }
-        this.loggedUserService.terminateSession();
     }
 }

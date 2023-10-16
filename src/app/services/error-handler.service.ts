@@ -1,6 +1,6 @@
-import { CustomApolloError, KamuError, KamuErrorHandler } from "../common/errors";
+import { AuthenticationError, CustomApolloError, KamuError, KamuErrorHandler } from "../common/errors";
 import { NavigationService } from "src/app/services/navigation.service";
-import { ErrorHandler, Injectable, NgZone } from "@angular/core";
+import { ErrorHandler, Inject, Injectable, Injector, NgZone } from "@angular/core";
 import { ModalService } from "../components/modal/modal.service";
 import { logError } from "../common/app.helpers";
 import { ApolloError } from "@apollo/client/core";
@@ -10,9 +10,18 @@ import { LoggedUserService } from "../auth/logged-user.service";
     providedIn: "root",
 })
 export class ErrorHandlerService implements ErrorHandler {
-    private kamuHandlerError = new KamuErrorHandler(this.navigationService, this.modalService, this.loggedUserService);
+    public static readonly APOLLO_ERROR_INVALID_TOKEN = "Invalid access token";
+    public static readonly APOLLO_ERROR_EXPIRED_TOKEN = "Expired access token";
+
+    private kamuHandlerError = new KamuErrorHandler(
+        this.injector,
+        this.navigationService,
+        this.modalService,
+        this.loggedUserService,
+    );
 
     constructor(
+        @Inject(Injector) private injector: Injector,
         private modalService: ModalService,
         private navigationService: NavigationService,
         private loggedUserService: LoggedUserService,
@@ -23,7 +32,7 @@ export class ErrorHandlerService implements ErrorHandler {
         if (error instanceof KamuError) {
             this.processKamuError(error);
         } else if (error instanceof ApolloError) {
-            this.processKamuError(new CustomApolloError(error));
+            this.processApolloError(error);
         } else {
             logError(error);
         }
@@ -31,5 +40,16 @@ export class ErrorHandlerService implements ErrorHandler {
 
     private processKamuError(error: KamuError): void {
         this.ngZone.run(() => error.accept(this.kamuHandlerError));
+    }
+
+    private processApolloError(apolloError: ApolloError) {
+        if (
+            apolloError.message === ErrorHandlerService.APOLLO_ERROR_EXPIRED_TOKEN ||
+            apolloError.message == ErrorHandlerService.APOLLO_ERROR_INVALID_TOKEN
+        ) {
+            this.processKamuError(new AuthenticationError([apolloError]));
+        } else {
+            this.processKamuError(new CustomApolloError(apolloError));
+        }
     }
 }

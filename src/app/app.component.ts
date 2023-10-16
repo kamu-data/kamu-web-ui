@@ -2,7 +2,7 @@ import { AuthenticationError } from "./common/errors";
 import { throwError } from "rxjs";
 import { AccountTabs } from "./auth/account/account.constants";
 import { NavigationService } from "./services/navigation.service";
-import { ChangeDetectionStrategy, Component, HostListener, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, OnInit } from "@angular/core";
 import AppValues from "./common/app.values";
 import { filter, map } from "rxjs/operators";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
@@ -58,6 +58,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         private modalService: ModalService,
         private navigationService: NavigationService,
         private appConfigService: AppConfigService,
+        private cdr: ChangeDetectorRef,
     ) {
         super();
     }
@@ -78,6 +79,7 @@ export class AppComponent extends BaseComponent implements OnInit {
 
             this.loggedUserService.loggedInUserChanges.subscribe((user: MaybeNull<AccountFragment>) => {
                 this.loggedAccount = user ? _.cloneDeep(user) : AppComponent.ANONYMOUS_ACCOUNT_INFO;
+                this.cdr.detectChanges();
             }),
         );
     }

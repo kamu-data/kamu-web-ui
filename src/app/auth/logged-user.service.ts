@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { first } from "rxjs/operators";
+import { catchError, first } from "rxjs/operators";
 import { Observable, ReplaySubject, Subject, of } from "rxjs";
 import { NavigationService } from "../services/navigation.service";
 import { MaybeNull } from "../common/app.types";
@@ -19,9 +19,7 @@ import { LocalStorageService } from "../services/local-storage.service";
 export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
     private loggedInUser: MaybeNull<AccountFragment> = null;
 
-    private loggedInUser$: Subject<MaybeNull<AccountFragment>> = new ReplaySubject<MaybeNull<AccountFragment>>(
-        1,
-    );
+    private loggedInUser$: Subject<MaybeNull<AccountFragment>> = new ReplaySubject<MaybeNull<AccountFragment>>(1);
 
     constructor(
         private loginService: LoginService,
@@ -76,7 +74,13 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
     private attemptPreviousAuthenticationCompletes(): Observable<void> {
         const accessToken: string | null = this.localStorageService.accessToken;
         if (typeof accessToken === "string" && !this.isAuthenticated) {
-            return this.loginService.fetchAccountFromAccessToken(accessToken).pipe(first());
+            return this.loginService.fetchAccountFromAccessToken(accessToken).pipe(
+                first(),
+                catchError(() => {
+                    this.terminateSession();
+                    return of();
+                }),
+            );
         } else {
             return of(void {});
         }

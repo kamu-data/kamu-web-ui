@@ -1,6 +1,6 @@
 import { NavigationService } from "../../services/navigation.service";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { AccountBasicsFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+import { AccountExtendedFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
 
@@ -15,7 +15,7 @@ export class OverviewHistorySummaryHeaderComponent {
     @Input() public numBlocksTotal: number;
     @Input() public datasetName: string;
 
-    public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
+    public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
     constructor(private navigationService: NavigationService) {}
 
@@ -23,10 +23,14 @@ export class OverviewHistorySummaryHeaderComponent {
         return this.metadataBlockFragment ? this.metadataBlockFragment.systemTime : "";
     }
 
-    get authorInfo(): AccountBasicsFragment {
-        return this.metadataBlockFragment
+    get authorInfo(): AccountExtendedFragment {
+        return this.metadataBlockFragment?.author
             ? this.metadataBlockFragment.author
-            : { id: "", accountName: AppValues.DEFAULT_USER_DISPLAY_NAME };
+            : {
+                  id: "",
+                  accountName: AppValues.DEFAULT_USER_DISPLAY_NAME,
+                  avatarUrl: AppValues.DEFAULT_AVATAR_URL,
+              };
     }
 
     get descriptionForMetadataBlock(): string {

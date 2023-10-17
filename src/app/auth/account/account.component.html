@@ -73,7 +73,7 @@
                         value="overview"
                         [checked]="activeTab === AccountTabs.OVERVIEW"
                         (click)="onSelectOverviewTab(user)"
-                        disabled="true"
+                        [disabled]="true"
                     >
                         <mat-icon class="text-muted fs-4">my_library_books</mat-icon>
                         <span class="mx-2"> Overview</span>
@@ -95,7 +95,7 @@
                         value="organizations"
                         [checked]="activeTab === AccountTabs.ORGANIZATIONS"
                         (click)="onSelectOrganizationsTab(user)"
-                        disabled="true"
+                        [disabled]="true"
                     >
                         <mat-icon class="text-muted fs-4">people</mat-icon>
                         <span class="mx-2">Organizations </span>
@@ -107,7 +107,7 @@
                         value="inbox"
                         [checked]="activeTab === AccountTabs.INBOX"
                         (click)="onSelectInboxTab(user)"
-                        disabled="true"
+                        [disabled]="true"
                     >
                         <mat-icon class="text-muted fs-4">inbox</mat-icon>
                         <span class="mx-2">Inbox</span>
@@ -118,7 +118,7 @@
                         value="Stars"
                         [checked]="activeTab === AccountTabs.STARS"
                         (click)="onSelectStarsTab(user)"
-                        disabled="true"
+                        [disabled]="true"
                     >
                         <mat-icon class="text-muted fs-4">star_border</mat-icon>
                         <span class="mx-2">Stars</span>

@@ -3,12 +3,11 @@
         <div class="d-flex rounded-top-1 border-bottom-0 align-items-center flex-wrap">
             <div class="flex-shrink-0 ml-n1 mr-n1 mt-n1 mb-n1 hx_avatar_stack_commit">
                 <div class="align-self-start">
-                    <div aria-label="sergiimk">
+                    <div>
                         <a>
                             <img
                                 data-test-selector="commits-avatar-stack-avatar-image"
-                                [src]="APP_LOGO"
-                                alt="@sergiimk"
+                                [src]="authorInfo.avatarUrl || DEFAULT_AVATAR_URL"
                                 class="avatar-image"
                             />
                         </a>

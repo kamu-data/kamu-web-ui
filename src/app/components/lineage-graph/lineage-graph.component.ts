@@ -34,7 +34,7 @@ export class LineageGraphComponent {
 
     public readonly LINEAGE_CONFIG: LineageGraphConfig = LINEAGE_CONFIG;
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
-    public readonly INITIAL_GRAPH_VIEW_HEIGHT: number = screen.height - 420;
+    public readonly INITIAL_GRAPH_VIEW_HEIGHT: number = screen.height - 390;
     public readonly INITIAL_GRAPH_VIEW_WIDTH: number = window.innerWidth - 120;
 
     public view: [number, number] = [this.INITIAL_GRAPH_VIEW_WIDTH, this.INITIAL_GRAPH_VIEW_HEIGHT];

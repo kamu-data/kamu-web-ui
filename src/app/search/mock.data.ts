@@ -441,6 +441,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                     __typename: "Account",
                                     id: "12345",
                                     accountName: "kamu",
+                                    avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                                 },
                                 event: {
                                     __typename: "AddData",
@@ -526,7 +527,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 systemTime: "2022-08-05T21:19:28.817281255+00:00",
                                 author: {
                                     __typename: "Account",
-                                    ...mockOwnerFields,
+                                    ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
                                     __typename: "AddData",
@@ -558,7 +559,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 systemTime: "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
                                     __typename: "Account",
-                                    ...mockOwnerFields,
+                                    ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
                                     __typename: "SetLicense",
@@ -576,7 +577,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 systemTime: "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
                                     __typename: "Account",
-                                    ...mockOwnerFields,
+                                    ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
                                     __typename: "SetAttachments",
@@ -601,7 +602,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 sequenceNumber: 12,
                                 author: {
                                     __typename: "Account",
-                                    ...mockOwnerFields,
+                                    ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
                                     __typename: "SetInfo",
@@ -626,7 +627,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 systemTime: "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
                                     __typename: "Account",
-                                    ...mockOwnerFields,
+                                    ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
                                     __typename: "SetVocab",
@@ -643,7 +644,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 systemTime: "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
                                     __typename: "Account",
-                                    ...mockOwnerFields,
+                                    ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
                                     __typename: "SetInfo",
@@ -668,7 +669,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 sequenceNumber: 12,
                                 author: {
                                     __typename: "Account",
-                                    ...mockOwnerFields,
+                                    ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
                                     __typename: "Seed",

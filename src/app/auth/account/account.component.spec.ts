@@ -158,6 +158,7 @@ describe("AccountComponent", () => {
             }
             nCalls++;
         });
+        expect(nCalls).toBeLessThan(3);
     });
 
     Object.values(AccountTabs).forEach((tab: string) => {

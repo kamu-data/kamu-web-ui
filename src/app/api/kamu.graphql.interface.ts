@@ -1580,6 +1580,13 @@ export type SetWatermarkEventFragment = { __typename?: "SetWatermark"; outputWat
 
 export type AccountBasicsFragment = { __typename?: "Account"; id: string; accountName: string };
 
+export type AccountExtendedFragment = {
+    __typename?: "Account";
+    id: string;
+    accountName: string;
+    avatarUrl?: string | null;
+};
+
 export type AccountFragment = {
     __typename?: "Account";
     id: string;
@@ -1857,7 +1864,7 @@ export type MetadataBlockFragment = {
     prevBlockHash?: string | null;
     systemTime: string;
     sequenceNumber: number;
-    author: { __typename?: "Account" } & AccountBasicsFragment;
+    author: { __typename?: "Account" } & AccountExtendedFragment;
     event:
         | ({ __typename: "AddData" } & AddDataEventFragment)
         | ({ __typename: "ExecuteQuery" } & ExecuteQueryEventFragment)
@@ -2354,6 +2361,13 @@ export const DatasetReadmeFragmentDoc = gql`
         }
     }
 `;
+export const AccountExtendedFragmentDoc = gql`
+    fragment AccountExtended on Account {
+        id
+        accountName
+        avatarUrl
+    }
+`;
 export const SeedEventFragmentDoc = gql`
     fragment SeedEvent on Seed {
         datasetId
@@ -2440,7 +2454,7 @@ export const MetadataBlockFragmentDoc = gql`
         systemTime
         sequenceNumber
         author {
-            ...AccountBasics
+            ...AccountExtended
         }
         event {
             __typename
@@ -2456,7 +2470,7 @@ export const MetadataBlockFragmentDoc = gql`
             ...SetPollingSourceEvent
         }
     }
-    ${AccountBasicsFragmentDoc}
+    ${AccountExtendedFragmentDoc}
     ${SeedEventFragmentDoc}
     ${SetWatermarkEventFragmentDoc}
     ${SetVocabEventFragmentDoc}

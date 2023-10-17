@@ -13,10 +13,13 @@ import { TestBed } from "@angular/core/testing";
 import { ErrorHandlerService } from "./error-handler.service";
 import { NavigationService } from "./navigation.service";
 import { LoggedUserService } from "../auth/logged-user.service";
+import { ToastrModule, ToastrService } from "ngx-toastr";
+import { GraphQLError } from "graphql";
 
 describe("ErrorHandlerService", () => {
     let service: ErrorHandlerService;
     let modalService: ModalService;
+    let toastrService: ToastrService;
     let navigationService: NavigationService;
 
     const loggedUserServiceMock = {
@@ -32,9 +35,11 @@ describe("ErrorHandlerService", () => {
                 NavigationService,
                 { provide: LoggedUserService, useValue: loggedUserServiceMock },
             ],
+            imports: [ToastrModule.forRoot()],
         });
         service = TestBed.inject(ErrorHandlerService);
         modalService = TestBed.inject(ModalService);
+        toastrService = TestBed.inject(ToastrService);
         navigationService = TestBed.inject(NavigationService);
     });
 
@@ -118,19 +123,59 @@ describe("ErrorHandlerService", () => {
         expect(modalServiceSpy).toHaveBeenCalledTimes(2);
     });
 
-    it("should log authentication errors and terminate session", () => {
+    it("should log authentication errors, terminate session, and show Toastr", () => {
         const consoleErrorSpy: jasmine.Spy = spyOn(console, "error").and.stub();
         const authApiTerminateSessionSpy: jasmine.Spy = spyOn(loggedUserServiceMock, "terminateSession").and.stub();
+        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.stub();
+
         service.handleError(new AuthenticationError([]));
+
         expect(consoleErrorSpy).toHaveBeenCalledWith(ErrorTexts.ERROR_UNKNOWN_AUTHENTICATION);
         expect(authApiTerminateSessionSpy).toHaveBeenCalledWith();
+        expect(toastrServiceSpy).toHaveBeenCalledWith(ErrorTexts.ERROR_UNKNOWN_AUTHENTICATION);
+
+        consoleErrorSpy.calls.reset();
+        authApiTerminateSessionSpy.calls.reset();
+        toastrServiceSpy.calls.reset();
+
+        const ERROR_TEXT = "some authentication error";
+        const ERROR = new Error(ERROR_TEXT);
+        service.handleError(new AuthenticationError([ERROR]));
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith(ERROR);
+        expect(authApiTerminateSessionSpy).toHaveBeenCalledWith();
+        expect(toastrServiceSpy).toHaveBeenCalledWith(ERROR_TEXT);
     });
+
+    [ErrorHandlerService.APOLLO_ERROR_EXPIRED_TOKEN, ErrorHandlerService.APOLLO_ERROR_INVALID_TOKEN].forEach(
+        (errorMessage: string) => {
+            it(`should convert Apollo error "${errorMessage}" into Authentication errors`, () => {
+                const consoleErrorSpy: jasmine.Spy = spyOn(console, "error").and.stub();
+                const authApiTerminateSessionSpy: jasmine.Spy = spyOn(
+                    loggedUserServiceMock,
+                    "terminateSession",
+                ).and.stub();
+                const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.stub();
+
+                const apolloError = new ApolloError({
+                    graphQLErrors: [new GraphQLError(errorMessage)],
+                });
+                service.handleError(apolloError);
+
+                expect(consoleErrorSpy).toHaveBeenCalledWith(apolloError.graphQLErrors[0]);
+                expect(authApiTerminateSessionSpy).toHaveBeenCalledWith();
+                expect(toastrServiceSpy).toHaveBeenCalledWith(errorMessage);
+            });
+        },
+    );
 
     it("should log unknown errors", () => {
         const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.callThrough();
         const consoleErrorSpy: jasmine.Spy = spyOn(console, "error").and.stub();
         const unknownError = new Error("Some Unknown Error");
+
         service.handleError(unknownError);
+
         expect(modalServiceSpy).not.toHaveBeenCalled();
         expect(consoleErrorSpy).toHaveBeenCalledWith(unknownError);
     });

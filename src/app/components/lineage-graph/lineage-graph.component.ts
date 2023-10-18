@@ -65,18 +65,20 @@ export class LineageGraphComponent implements OnInit {
     }
 
     private lineageGraphHeight(): number {
-        const headerViewMenuElement = document.getElementById("app-dataset-view-header");
-        const datasetTabsElement = document.getElementById("container-dataset-tabs");
-        const headerElement = document.getElementById("app-header");
-        if (headerViewMenuElement && datasetTabsElement && headerElement) {
-            const headerHeight = headerElement.getBoundingClientRect().height;
-            const headerViewHeight = headerViewMenuElement.getBoundingClientRect().height;
-            const headerMarginTop = +getComputedStyle(headerViewMenuElement).marginTop.split("px")[0];
-            const datasetTabsElementHeight = datasetTabsElement.getBoundingClientRect().height;
-            return (
-                window.innerHeight - (headerHeight + headerViewHeight + headerMarginTop + 2 * datasetTabsElementHeight)
-            );
-        }
+        // TODO: Calculate the size of the graph taking the size of the components
+
+        // const headerViewMenuElement = document.getElementById("app-dataset-view-header");
+        // const datasetTabsElement = document.getElementById("container-dataset-tabs");
+        // const headerElement = document.getElementById("app-header");
+        // if (headerViewMenuElement && datasetTabsElement && headerElement) {
+        //     const headerHeight = headerElement.getBoundingClientRect().height;
+        //     const headerViewHeight = headerViewMenuElement.getBoundingClientRect().height;
+        //     const headerMarginTop = +getComputedStyle(headerViewMenuElement).marginTop.split("px")[0];
+        //     const datasetTabsElementHeight = datasetTabsElement.getBoundingClientRect().height;
+        //     return (
+        //         window.innerHeight - (headerHeight + headerViewHeight + headerMarginTop + 2 * datasetTabsElementHeight)
+        //     );
+        // }
         return screen.height - 390;
     }
 }

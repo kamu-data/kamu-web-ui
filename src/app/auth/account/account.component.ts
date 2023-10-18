@@ -61,7 +61,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
         );
 
         this.activeTab$ = queryParams$.pipe(
-            map((accountPageParams: AccountPageQueryParams) => accountPageParams.tab ?? AccountTabs.OVERVIEW),
+            map((accountPageParams: AccountPageQueryParams) => accountPageParams.tab ?? AccountTabs.DATASETS),
             distinctUntilChanged(),
         );
 

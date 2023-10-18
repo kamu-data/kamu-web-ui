@@ -254,7 +254,7 @@ a {
 #app-header {
     z-index: 32;
     display: flex;
-    padding: 16px;
+    padding: 5px 16px;
     font-size: 14px;
     line-height: 1.5;
     align-items: center;
@@ -465,7 +465,6 @@ a:visited {
 
 .app-content {
     display: grid;
-    margin: 33px auto;
     padding: 0 16px;
     flex-direction: row;
     width: 100%;
@@ -584,7 +583,7 @@ router-outlet {
 
 #search-input {
     width: 100%;
-    min-height: 43px;
+    min-height: 35px;
     line-height: 20px;
     max-width: 100%;
     padding: 0;
@@ -605,7 +604,7 @@ router-outlet {
 }
 
 .search-header-container-block {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 #search {
@@ -631,7 +630,9 @@ router-outlet {
 
 #schema-block-table,
 #set-polling-source-schema,
-#set-polling-source-env-variables {
+#set-polling-source-env-variables,
+#result-query-table,
+#overview-data-table {
     * {
         padding: 0 8px;
         font-size: 12px;

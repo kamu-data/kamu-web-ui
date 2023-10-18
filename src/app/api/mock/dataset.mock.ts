@@ -249,6 +249,7 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                             __typename: "Account",
                             id: "1",
                             accountName: "kamu",
+                            avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                         },
                         event: {
                             __typename: "ExecuteQuery",

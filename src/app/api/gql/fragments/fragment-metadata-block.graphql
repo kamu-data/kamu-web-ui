@@ -4,7 +4,7 @@ fragment MetadataBlock on MetadataBlockExtended {
   systemTime
   sequenceNumber
   author {
-    ...AccountBasics
+    ...AccountExtended
   }
   event {
     __typename

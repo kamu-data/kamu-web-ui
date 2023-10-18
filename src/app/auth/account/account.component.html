@@ -31,9 +31,9 @@
                     name="button"
                     type="button"
                     class="btn btn-outline-secondary w-100 btn-custom"
-                    (click)="isLoggedUser ? onEditProfile() : onFollow()"
+                    (click)="isLoggedUser(user) ? onEditProfile() : onFollow()"
                 >
-                    {{ isLoggedUser ? "Edit profile" : "Follow" }}
+                    {{ isLoggedUser(user) ? "Edit profile" : "Follow" }}
                 </button>
             </div>
             <div class="border-top mt-5 me-4">
@@ -73,6 +73,7 @@
                         value="overview"
                         [checked]="activeTab === AccountTabs.OVERVIEW"
                         (click)="onSelectOverviewTab(user)"
+                        [disabled]="true"
                     >
                         <mat-icon class="text-muted fs-4">my_library_books</mat-icon>
                         <span class="mx-2"> Overview</span>
@@ -94,6 +95,7 @@
                         value="organizations"
                         [checked]="activeTab === AccountTabs.ORGANIZATIONS"
                         (click)="onSelectOrganizationsTab(user)"
+                        [disabled]="true"
                     >
                         <mat-icon class="text-muted fs-4">people</mat-icon>
                         <span class="mx-2">Organizations </span>
@@ -105,6 +107,7 @@
                         value="inbox"
                         [checked]="activeTab === AccountTabs.INBOX"
                         (click)="onSelectInboxTab(user)"
+                        [disabled]="true"
                     >
                         <mat-icon class="text-muted fs-4">inbox</mat-icon>
                         <span class="mx-2">Inbox</span>
@@ -115,6 +118,7 @@
                         value="Stars"
                         [checked]="activeTab === AccountTabs.STARS"
                         (click)="onSelectStarsTab(user)"
+                        [disabled]="true"
                     >
                         <mat-icon class="text-muted fs-4">star_border</mat-icon>
                         <span class="mx-2">Stars</span>

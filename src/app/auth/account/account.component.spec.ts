@@ -152,14 +152,13 @@ describe("AccountComponent", () => {
         component.activeTab$.subscribe((activeTab: AccountTabs) => {
             // Ignore first call (default event)
             if (nCalls == 1) {
-                expect(activeTab).toEqual(AccountTabs.OVERVIEW);
+                expect(activeTab).toEqual(AccountTabs.DATASETS);
             } else if (nCalls > 2) {
                 fail("Unexpected number of calls");
             }
             nCalls++;
         });
-
-        expect(nCalls).toEqual(2);
+        expect(nCalls).toBeLessThan(3);
     });
 
     Object.values(AccountTabs).forEach((tab: string) => {

@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+- Style improvements
+  - Made header more compact to maximize the useful space
+  - Used correct account avatar in data preview
+  - Improved the style of tables
+  - The lineage graph made fit without a scroll
+  - In account view opened the "Datasets" tab by default 
 ### Fixed
 - Changed sample query limit on overview tab
 - Improved UI reaction on situation when GraphQL server refuses to accept access token

@@ -5,7 +5,7 @@
     id="metada-block-view"
     *ngIf="datasetInfo$ | async as datasetInfo"
 >
-    <div class="app-content">
+    <div class="app-content mt-4">
         <app-dataset-view-header
             [datasetInfo]="datasetInfo"
             (showOwnerPageEmit)="showOwnerPage(datasetInfo.accountName)"

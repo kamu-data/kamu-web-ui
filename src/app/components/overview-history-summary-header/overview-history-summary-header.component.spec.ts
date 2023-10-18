@@ -53,7 +53,7 @@ describe("OverviewHistorySummaryHeaderComponent", () => {
 
         const navigateToMetadataBlockSpy = spyOn(navigationService, "navigateToMetadataBlock");
         const params: MetadataBlockNavigationParams = {
-            accountName: component.authorInfo.accountName,
+            accountName: component.metadataBlockFragment.author.accountName,
             datasetName: component.datasetName,
             blockHash: component.metadataBlockFragment.blockHash,
         };
@@ -73,6 +73,7 @@ describe("OverviewHistorySummaryHeaderComponent", () => {
         expect(component.authorInfo).toEqual({
             id: "",
             accountName: AppValues.DEFAULT_USER_DISPLAY_NAME,
+            avatarUrl: AppValues.DEFAULT_AVATAR_URL,
         });
         expect(component.systemTime).toBe("");
     });

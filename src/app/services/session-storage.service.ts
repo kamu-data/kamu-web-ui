@@ -13,4 +13,8 @@ export class SessionStorageService {
     public setSidePanelVisible(value: boolean): void {
         sessionStorage.setItem(AppValues.SESSION_STORAGE_SIDE_PANEL_VISIBLE, JSON.stringify(value));
     }
+
+    public reset() {
+        sessionStorage.clear();
+    }
 }

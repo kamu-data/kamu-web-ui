@@ -12,4 +12,11 @@ describe("SessionStorageService", () => {
     it("should be created", () => {
         expect(service).toBeTruthy();
     });
+
+    it("should be check set state for side panel", () => {
+        service.setSidePanelVisible(true);
+        expect(service.isSidePanelVisible).toBeTrue();
+        service.setSidePanelVisible(false);
+        expect(service.isSidePanelVisible).toBeFalse();
+    });
 });

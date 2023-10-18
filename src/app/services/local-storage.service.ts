@@ -28,7 +28,6 @@ export class LocalStorageService {
     }
 
     public reset() {
-        this.setAccessToken(null);
-        this.setLoginCallbackUrl(null);
+        localStorage.clear();
     }
 }

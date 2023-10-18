@@ -70,10 +70,7 @@ export class LineageGraphComponent implements OnInit {
     }
 
     private checkVisibilitySidePanel(): void {
-        const visiblePanel = this.sessionStorageService.isSidePanelVisible;
-        if (visiblePanel) {
-            this.showSidePanel = visiblePanel;
-        }
+        this.showSidePanel = this.sessionStorageService.isSidePanelVisible;
     }
 
     private lineageGraphHeight(): number {

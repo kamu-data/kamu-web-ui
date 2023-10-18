@@ -5,9 +5,9 @@ import AppValues from "../common/app.values";
     providedIn: "root",
 })
 export class SessionStorageService {
-    public get isSidePanelVisible(): boolean | null {
+    public get isSidePanelVisible(): boolean {
         const value = sessionStorage.getItem(AppValues.SESSION_STORAGE_SIDE_PANEL_VISIBLE);
-        return value ? (JSON.parse(value) as boolean) : null;
+        return value ? (JSON.parse(value) as boolean) : false;
     }
 
     public setSidePanelVisible(value: boolean): void {

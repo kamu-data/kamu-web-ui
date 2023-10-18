@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { QueriesSectionComponent } from "./queries-section.component";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { FormsModule } from "@angular/forms";
-import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { MatIconModule } from "@angular/material/icon";
 
 describe("QueriesSectionComponent", () => {
@@ -12,7 +11,7 @@ describe("QueriesSectionComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [QueriesSectionComponent],
-            imports: [FormsModule, MonacoEditorModule.forRoot(), MatIconModule],
+            imports: [FormsModule, MatIconModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(QueriesSectionComponent);

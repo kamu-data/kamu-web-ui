@@ -7,7 +7,6 @@ import { AddPollingSourceComponent } from "./add-polling-source.component";
 import { NgbModal, NgbModalRef, NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { StepperNavigationComponent } from "../stepper-navigation/stepper-navigation.component";
 import { BaseStepComponent } from "./steps/base-step/base-step.component";
 import { PollingSourceFormComponentsModule } from "../form-components/polling-source-form-components.module";
@@ -31,6 +30,7 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetNavigationParams } from "src/app/interface/navigation.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { EditorModule } from "src/app/shared/editor/editor.module";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
@@ -59,11 +59,11 @@ describe("AddPollingSourceComponent", () => {
                 FormsModule,
                 NgbModule,
                 MatStepperModule,
-                MonacoEditorModule.forRoot(),
                 PollingSourceFormComponentsModule,
                 ReactiveFormsModule,
                 SharedTestModule,
                 HttpClientTestingModule,
+                EditorModule,
             ],
             providers: [FormBuilder, Apollo],
         })

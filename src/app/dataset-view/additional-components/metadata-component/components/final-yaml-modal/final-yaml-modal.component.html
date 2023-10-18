@@ -10,13 +10,7 @@
 
     <div class="modal-body">
         <div class="border border-1 mt-4 px-2 py-4 rounded-3">
-            <ngx-monaco-editor
-                style="height: 400px"
-                [options]="YAML_EDITOR_OPTIONS"
-                [(ngModel)]="yamlTemplate"
-                ngDefaultControl
-                data-test-id="monaco-editor-modal"
-            ></ngx-monaco-editor>
+            <app-yaml-editor [(yamlTemplate)]="yamlTemplate" data-test-id="monaco-editor-modal"></app-yaml-editor>
         </div>
     </div>
     <div class="modal-footer">

@@ -25,13 +25,24 @@ export class MonacoService {
     }
 
     private prepareMarkerData(error: string): monaco.editor.IMarkerData {
+        const { line, col } = this.getErrorPos(error);
+
         return {
-            startLineNumber: 1,
-            startColumn: 1,
-            endLineNumber: 9999,
+            startLineNumber: line || 1,
+            startColumn: col || 1,
+            endLineNumber: line || 9999,
             endColumn: 9999,
             message: error,
             severity: getMonacoNamespace().MarkerSeverity.Error,
         };
+    }
+
+    private getErrorPos(error: string): { line: number | undefined; col: number | undefined } {
+        const lineMatch = error.match(/Line: (\d+)/);
+        const colMathc = error.match(/Column (\d+)/);
+        const line = lineMatch ? Number(lineMatch[1]) : undefined;
+        const col = colMathc ? Number(colMathc[1]) : undefined;
+
+        return { line, col };
     }
 }

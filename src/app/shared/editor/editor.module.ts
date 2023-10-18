@@ -8,7 +8,7 @@ import { FormsModule } from "@angular/forms";
 
 @NgModule({
     declarations: [SqlEditorComponent, YamlEditorComponent],
-    imports: [CommonModule, FormsModule, MonacoEditorModule, MonacoEditorModule],
-    exports: [SqlEditorComponent],
+    imports: [CommonModule, FormsModule, MonacoEditorModule, MonacoEditorModule.forRoot()],
+    exports: [SqlEditorComponent, YamlEditorComponent],
 })
 export class EditorModule {}

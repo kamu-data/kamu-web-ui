@@ -16,7 +16,6 @@ import { MaybeNull } from "src/app/common/app.types";
 @Component({
     selector: "app-sql-editor",
     templateUrl: "./sql-editor.component.html",
-    styleUrls: ["./sql-editor.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SqlEditorComponent implements OnChanges {
@@ -24,7 +23,7 @@ export class SqlEditorComponent implements OnChanges {
     @Input() public sqlTemplate = "";
     @Input() public sqlError: MaybeNull<string>;
 
-    @Output() public onCodeChange = new EventEmitter<string>();
+    @Output() public sqlTemplateChange = new EventEmitter<string>();
     @Output() public onRunSql = new EventEmitter<null>();
 
     private editorModel: monaco.editor.ITextModel;
@@ -32,7 +31,7 @@ export class SqlEditorComponent implements OnChanges {
     constructor(private monacoService: MonacoService) {}
 
     public ngOnChanges(changes: SimpleChanges) {
-        if (changes.sqlError) {
+        if (changes.sqlError?.currentValue) {
             this.monacoService.setErrorMarker(this.editorModel, this.sqlError);
         }
     }
@@ -59,6 +58,6 @@ export class SqlEditorComponent implements OnChanges {
     }
 
     public modelChange(): void {
-        this.onCodeChange.emit(this.sqlTemplate);
+        this.sqlTemplateChange.emit(this.sqlTemplate);
     }
 }

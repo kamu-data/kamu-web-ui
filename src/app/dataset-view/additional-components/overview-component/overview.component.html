@@ -49,13 +49,13 @@
                     </p>
                 </div>
             </ng-template>
-            <div class="my-4" data-test-id="add-set-polling-source-block">
+            <div class="my-4" *ngIf="canAddSetPollingSource" data-test-id="add-set-polling-source-block">
                 <p>
                     You can
                     <a class="text-decoration-none" (click)="navigateToAddPollingSource()"> Add data source</a>
                 </p>
             </div>
-            <div class="my-4" data-test-id="add-set-transform-block">
+            <div class="my-4" *ngIf="canAddSetTransform" data-test-id="add-set-transform-block">
                 <p>
                     You can
                     <a class="text-decoration-none" (click)="navigateToSetTransform()"> Add transformation</a>

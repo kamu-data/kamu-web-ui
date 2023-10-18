@@ -51,13 +51,7 @@
                 </div>
             </div>
             <div class="mt-4 container-monaco py-4">
-                <ngx-monaco-editor
-                    style="height: 300px"
-                    [options]="SQL_EDITOR_OPTIONS"
-                    [(ngModel)]="queries[i].query"
-                    ngDefaultControl
-                    data-test-id="monaco-editor-modal"
-                ></ngx-monaco-editor>
+                <app-sql-editor [(sqlTemplate)]="queries[i].query" data-test-id="monaco-editor-modal"> </app-sql-editor>
             </div>
         </div>
     </div>

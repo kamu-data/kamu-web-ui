@@ -5,11 +5,12 @@ import AppValues from "../common/app.values";
     providedIn: "root",
 })
 export class SessionStorageService {
-    public get sidePanelVisibility(): string | null {
-        return sessionStorage.getItem(AppValues.SESSION_STORAGE_SIDE_PANEL_VISIBLE);
+    public get isSidePanelVisible(): boolean | null {
+        const value = sessionStorage.getItem(AppValues.SESSION_STORAGE_SIDE_PANEL_VISIBLE);
+        return value ? (JSON.parse(value) as boolean) : null;
     }
 
-    public setSidePanelVisibility(value: string): void {
-        sessionStorage.setItem(AppValues.SESSION_STORAGE_SIDE_PANEL_VISIBLE, value);
+    public setSidePanelVisible(value: boolean): void {
+        sessionStorage.setItem(AppValues.SESSION_STORAGE_SIDE_PANEL_VISIBLE, JSON.stringify(value));
     }
 }

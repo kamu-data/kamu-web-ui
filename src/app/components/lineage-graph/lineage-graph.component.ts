@@ -66,13 +66,13 @@ export class LineageGraphComponent implements OnInit {
 
     public onClickInfo(): void {
         this.showSidePanel = !this.showSidePanel;
-        this.sessionStorageService.setSidePanelVisibility(this.showSidePanel.toString());
+        this.sessionStorageService.setSidePanelVisible(this.showSidePanel);
     }
 
     private checkVisibilitySidePanel(): void {
-        const visiblePanel = this.sessionStorageService.sidePanelVisibility;
+        const visiblePanel = this.sessionStorageService.isSidePanelVisible;
         if (visiblePanel) {
-            this.showSidePanel = JSON.parse(visiblePanel) as boolean;
+            this.showSidePanel = visiblePanel;
         }
     }
 

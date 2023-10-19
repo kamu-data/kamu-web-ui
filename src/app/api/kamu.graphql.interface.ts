@@ -1311,6 +1311,19 @@ export type GetDatasetHistoryQuery = {
     };
 };
 
+export type GetDatasetLineageQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
+}>;
+
+export type GetDatasetLineageQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byOwnerAndName?: ({ __typename?: "Dataset" } & DatasetBasicsFragment & DatasetLineageFragment) | null;
+    };
+};
+
 export type GetDatasetMainDataQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
@@ -1326,7 +1339,6 @@ export type GetDatasetMainDataQuery = {
                   DatasetOverviewFragment &
                   DatasetDataFragment &
                   DatasetMetadataSummaryFragment &
-                  DatasetLineageFragment &
                   DatasetPermissionsFragment)
             | null;
     };
@@ -1679,7 +1691,6 @@ export type DatasetLastUpdateFragment = {
 
 export type DatasetLineageFragment = {
     __typename?: "Dataset";
-    owner: { __typename?: "Account"; avatarUrl?: string | null };
     metadata: {
         __typename?: "DatasetMetadata";
         currentUpstreamDependencies: Array<
@@ -1753,7 +1764,7 @@ export type DatasetLineageFragment = {
             } & DatasetLineageBasicsFragment
         >;
     } & CurrentSourceFetchUrlFragment;
-};
+} & DatasetLineageBasicsFragment;
 
 export type DatasetLineageBasicsFragment = {
     __typename?: "Dataset";
@@ -2032,17 +2043,6 @@ export const DatasetDataFragmentDoc = gql`
     ${DatasetDataSizeFragmentDoc}
     ${DataQueryResultSuccessViewFragmentDoc}
 `;
-export const CurrentSourceFetchUrlFragmentDoc = gql`
-    fragment CurrentSourceFetchUrl on DatasetMetadata {
-        currentSource {
-            fetch {
-                ... on FetchStepUrl {
-                    url
-                }
-            }
-        }
-    }
-`;
 export const AccountBasicsFragmentDoc = gql`
     fragment AccountBasics on Account {
         id
@@ -2060,6 +2060,17 @@ export const DatasetBasicsFragmentDoc = gql`
         alias
     }
     ${AccountBasicsFragmentDoc}
+`;
+export const CurrentSourceFetchUrlFragmentDoc = gql`
+    fragment CurrentSourceFetchUrl on DatasetMetadata {
+        currentSource {
+            fetch {
+                ... on FetchStepUrl {
+                    url
+                }
+            }
+        }
+    }
 `;
 export const LicenseFragmentDoc = gql`
     fragment License on SetLicense {
@@ -2095,9 +2106,7 @@ export const DatasetLineageBasicsFragmentDoc = gql`
 `;
 export const DatasetLineageFragmentDoc = gql`
     fragment DatasetLineage on Dataset {
-        owner {
-            avatarUrl
-        }
+        ...DatasetLineageBasics
         metadata {
             ...CurrentSourceFetchUrl
             currentUpstreamDependencies {
@@ -2156,8 +2165,8 @@ export const DatasetLineageFragmentDoc = gql`
             }
         }
     }
-    ${CurrentSourceFetchUrlFragmentDoc}
     ${DatasetLineageBasicsFragmentDoc}
+    ${CurrentSourceFetchUrlFragmentDoc}
 `;
 export const DatasetCurrentInfoFragmentDoc = gql`
     fragment DatasetCurrentInfo on SetInfo {
@@ -2926,6 +2935,29 @@ export class GetDatasetHistoryGQL extends Apollo.Query<GetDatasetHistoryQuery, G
         super(apollo);
     }
 }
+export const GetDatasetLineageDocument = gql`
+    query getDatasetLineage($accountName: AccountName!, $datasetName: DatasetName!) {
+        datasets {
+            byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+                ...DatasetBasics
+                ...DatasetLineage
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${DatasetLineageFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetDatasetLineageGQL extends Apollo.Query<GetDatasetLineageQuery, GetDatasetLineageQueryVariables> {
+    document = GetDatasetLineageDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const GetDatasetMainDataDocument = gql`
     query getDatasetMainData($accountName: AccountName!, $datasetName: DatasetName!, $limit: Int) {
         datasets {
@@ -2934,7 +2966,6 @@ export const GetDatasetMainDataDocument = gql`
                 ...DatasetOverview
                 ...DatasetData
                 ...DatasetMetadataSummary
-                ...DatasetLineage
                 ...DatasetPermissions
             }
         }
@@ -2943,7 +2974,6 @@ export const GetDatasetMainDataDocument = gql`
     ${DatasetOverviewFragmentDoc}
     ${DatasetDataFragmentDoc}
     ${DatasetMetadataSummaryFragmentDoc}
-    ${DatasetLineageFragmentDoc}
     ${DatasetPermissionsFragmentDoc}
 `;
 

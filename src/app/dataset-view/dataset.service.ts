@@ -8,6 +8,7 @@ import {
     DatasetPageInfoFragment,
     DatasetPermissionsFragment,
     GetDatasetBasicsWithPermissionsQuery,
+    GetDatasetLineageQuery,
     GetDatasetSchemaQuery,
     SetVocab,
 } from "../api/kamu.graphql.interface";
@@ -74,7 +75,6 @@ export class DatasetService {
                         this.currentSetVocab = data.datasets.byOwnerAndName.metadata.currentVocab as SetVocab;
                         this.dataTabDataUpdate(schema, dataTail, this.currentSetVocab);
                         this.metadataTabDataUpdate(data, schema);
-                        this.lineageTabDataUpdate(data.datasets.byOwnerAndName, data.datasets.byOwnerAndName);
                     } else {
                         throw new SqlExecutionError(dataTail.errorMessage);
                     }
@@ -140,6 +140,20 @@ export class DatasetService {
                         pageInfo,
                     };
                     return historyUpdate;
+                } else {
+                    throw new DatasetNotFoundError();
+                }
+            }),
+        );
+    }
+
+    public requestDatasetLineage(info: DatasetInfo): Observable<void> {
+        return this.datasetApi.getDatasetLineage({ ...info }).pipe(
+            map((data: GetDatasetLineageQuery) => {
+                if (data.datasets.byOwnerAndName) {
+                    const dataset: DatasetBasicsFragment = data.datasets.byOwnerAndName;
+                    this.emitDatasetChanged(dataset);
+                    this.lineageTabDataUpdate(data.datasets.byOwnerAndName, data.datasets.byOwnerAndName);
                 } else {
                     throw new DatasetNotFoundError();
                 }

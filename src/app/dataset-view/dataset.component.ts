@@ -98,11 +98,12 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
 
     private initHistoryTab(datasetInfo: DatasetInfo, currentPage: number): void {
         this.datasetViewType = DatasetViewTypeEnum.History;
-        this.datasetService.requestDatasetHistory(datasetInfo, 20, currentPage - 1).subscribe();
+        this.trackSubscription(this.datasetService.requestDatasetHistory(datasetInfo, 20, currentPage - 1).subscribe());
     }
 
-    private initLineageTab(): void {
+    private initLineageTab(datasetInfo: DatasetInfo): void {
         this.datasetViewType = DatasetViewTypeEnum.Lineage;
+        this.trackSubscription(this.datasetService.requestDatasetLineage(datasetInfo).subscribe());
     }
 
     public initDiscussionsTab(): void {
@@ -147,7 +148,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
             [DatasetViewTypeEnum.Data]: () => this.initDataTab(),
             [DatasetViewTypeEnum.Metadata]: () => this.initMetadataTab(),
             [DatasetViewTypeEnum.History]: () => this.initHistoryTab(datasetInfo, currentPage),
-            [DatasetViewTypeEnum.Lineage]: () => this.initLineageTab(),
+            [DatasetViewTypeEnum.Lineage]: () => this.initLineageTab(datasetInfo),
             [DatasetViewTypeEnum.Discussions]: () => this.initDiscussionsTab(),
             [DatasetViewTypeEnum.Settings]: () => this.initSettingsTab(),
         };

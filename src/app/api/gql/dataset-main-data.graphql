@@ -5,7 +5,6 @@ query getDatasetMainData($accountName: AccountName!, $datasetName: DatasetName!,
       ...DatasetOverview
       ...DatasetData
       ...DatasetMetadataSummary
-      ...DatasetLineage
       ...DatasetPermissions
     }
   }

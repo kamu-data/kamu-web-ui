@@ -1,7 +1,5 @@
 fragment DatasetLineage on Dataset {
-  owner {
-    avatarUrl
-  }
+  ...DatasetLineageBasics
   metadata {
     ...CurrentSourceFetchUrl
     currentUpstreamDependencies {

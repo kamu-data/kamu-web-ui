@@ -16,6 +16,7 @@ import {
     mockCreateEmptyDatasetResponse,
     mockDataset403OperationError,
     mockDatasetHistoryResponse,
+    mockDatasetLineageResponse,
     mockDatasetMainDataResponse,
     mockDeleteSuccessResponse,
     mockFullPowerDatasetPermissionsFragment,
@@ -48,6 +49,8 @@ import {
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryDocument,
     GetDatasetHistoryQuery,
+    GetDatasetLineageDocument,
+    GetDatasetLineageQuery,
     GetDatasetMainDataDocument,
     GetDatasetMainDataQuery,
     GetDatasetSchemaDocument,
@@ -195,6 +198,33 @@ describe("DatasetApi", () => {
 
         op.flush({
             data: mockDatasetHistoryResponse,
+        });
+
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
+
+        flush();
+    }));
+
+    it("should extract dataset lineage", fakeAsync(() => {
+        const subscription$ = service
+            .getDatasetLineage({
+                accountName: TEST_LOGIN,
+                datasetName: TEST_DATASET_NAME,
+            })
+            .subscribe((res: GetDatasetLineageQuery) => {
+                expect(res.datasets.byOwnerAndName?.name).toEqual(
+                    mockDatasetLineageResponse.datasets.byOwnerAndName?.name,
+                );
+            });
+
+        const op = controller.expectOne(GetDatasetLineageDocument);
+        expect(op.operation.variables.accountName).toEqual(TEST_LOGIN);
+        expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
+
+        op.flush({
+            data: mockDatasetLineageResponse,
         });
 
         tick();

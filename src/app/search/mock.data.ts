@@ -5,6 +5,7 @@ import {
     CreateEmptyDatasetMutation,
     DatasetPermissionsFragment,
     DeleteDatasetMutation,
+    GetDatasetLineageQuery,
     PageBasedInfo,
     RenameDatasetMutation,
     UpdateReadmeMutation,
@@ -220,7 +221,6 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                 __typename: "Account",
                 id: "12345",
                 accountName: "kamu",
-                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
             },
             alias: "kamu/alberta.case-details",
             metadata: {
@@ -318,112 +318,6 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                     eventTimeColumn: "date_reported",
                     offsetColumn: null,
                 },
-                currentUpstreamDependencies: [],
-                currentDownstreamDependencies: [
-                    {
-                        __typename: "Dataset",
-                        metadata: {
-                            __typename: "DatasetMetadata",
-                            currentDownstreamDependencies: [
-                                {
-                                    __typename: "Dataset",
-                                    metadata: {
-                                        __typename: "DatasetMetadata",
-                                        currentDownstreamDependencies: [
-                                            {
-                                                __typename: "Dataset",
-                                                metadata: {
-                                                    __typename: "DatasetMetadata",
-                                                    currentDownstreamDependencies: [],
-                                                    currentSource: null,
-                                                    currentLicense: {
-                                                        __typename: "SetLicense",
-                                                        shortName: "OGL-Ontario",
-                                                        name: "Open Government Licence - Ontario",
-                                                        spdxId: null,
-                                                        websiteUrl:
-                                                            "https://www.ontario.ca/page/open-government-licence-ontario",
-                                                    },
-                                                    currentWatermark: "2023-09-03T01:32:07.223403873+00:00",
-                                                },
-                                                createdAt: "2023-09-03T01:32:07.223403873+00:00",
-                                                lastUpdatedAt: "2023-09-03T01:34:22.293688531+00:00",
-                                                data: {
-                                                    __typename: "DatasetData",
-                                                    numRecordsTotal: 1870,
-                                                    estimatedSize: 21685,
-                                                },
-                                                owner: {
-                                                    __typename: "Account",
-                                                    avatarUrl:
-                                                        "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                                    id: "12345",
-                                                    accountName: "kamu",
-                                                },
-                                                id: "did:odf:z4k88e8qAReYmLPFUyaKfk1UHCSY2Mkh6X1AHxuUGNhec76QsGq",
-                                                kind: DatasetKind.Derivative,
-                                                name: "canada.daily-cases",
-                                                alias: "canada.daily-cases",
-                                            },
-                                        ],
-                                        currentSource: null,
-                                        currentLicense: {
-                                            __typename: "SetLicense",
-                                            shortName: "OGL-Canada-2.0",
-                                            name: "Open Government Licence - Canada",
-                                            spdxId: "OGL-Canada-2.0",
-                                            websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
-                                        },
-                                        currentWatermark: "2023-09-03T01:32:07.223403873+00:00",
-                                    },
-                                    createdAt: "2023-09-03T01:32:07.215520327+00:00",
-                                    lastUpdatedAt: "2023-09-03T01:32:15.469401365+00:00",
-                                    data: {
-                                        __typename: "DatasetData",
-                                        numRecordsTotal: 4013015,
-                                        estimatedSize: 39905730,
-                                    },
-                                    owner: {
-                                        __typename: "Account",
-                                        avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                        id: "12345",
-                                        accountName: "kamu",
-                                    },
-                                    id: "did:odf:z4k88e8nN5SdNPxsc5oeqwdCLvjzcvJzoyEQ938E87A15nTrkAk",
-                                    kind: DatasetKind.Derivative,
-                                    name: "canada.case-details",
-                                    alias: "canada.case-details",
-                                },
-                            ],
-                            currentSource: null,
-                            currentLicense: {
-                                __typename: "SetLicense",
-                                shortName: "OGL-Canada-2.0",
-                                name: "Open Government Licence - Canada",
-                                spdxId: "OGL-Canada-2.0",
-                                websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
-                            },
-                            currentWatermark: "2023-09-03T01:32:07.223403873+00:00",
-                        },
-                        createdAt: "2023-09-03T01:08:55.125905488+00:00",
-                        lastUpdatedAt: "2023-09-03T01:17:14.151423006+00:00",
-                        data: {
-                            __typename: "DatasetData",
-                            numRecordsTotal: 596126,
-                            estimatedSize: 6562253,
-                        },
-                        owner: {
-                            __typename: "Account",
-                            avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                            id: "12345",
-                            accountName: "kamu",
-                        },
-                        id: "did:odf:z4k88e8jmNqgCt5L84XPdaog32MttcHzGiXcktfuTuDY3QKwiyK",
-                        kind: DatasetKind.Derivative,
-                        name: "alberta.case-details.hm",
-                        alias: "alberta.case-details.hm",
-                    },
-                ],
                 currentReadme:
                     "# Confirmed positive cases of COVID-19 in Alberta\n\nThis dataset compiles daily snapshots of publicly reported data on 2019 Novel Coronavirus (COVID-19) testing in Alberta.\n\nData includes:\n- approximation of onset date\n- age group\n- patient gender\n- case acquisition information\n- patient outcome\n- reporting Public Health Unit (PHU)\n- postal code, website, longitude, and latitude of PHU\n\nThis dataset is subject to change. Please review the daily epidemiologic summaries for information on variables, methodology, and technical considerations.\n\n**Related dataset(s)**:\n- [Daily aggregate count of confirmed positive cases of COVID-19 in Alberta](#todo)\n",
                 chain: {
@@ -502,6 +396,188 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
             },
             createdAt: "2023-09-03T01:08:55.104604199+00:00",
             lastUpdatedAt: "2023-09-03T01:09:31.587025138+00:00",
+        },
+    },
+};
+
+export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byOwnerAndName: {
+            __typename: "Dataset",
+            id: "did:odf:z4k88e8rjrvsAsD3E95ThuEwcv5YgA3rNTFK3CYKkM3XzejkTua",
+            kind: DatasetKind.Root,
+            name: "account.transactions",
+            owner: {
+                __typename: "Account",
+                id: "12345",
+                accountName: "kamu",
+                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+            },
+            alias: "kamu/account.transactions",
+            metadata: {
+                __typename: "DatasetMetadata",
+                currentUpstreamDependencies: [],
+                currentDownstreamDependencies: [
+                    {
+                        __typename: "Dataset",
+                        metadata: {
+                            __typename: "DatasetMetadata",
+                            currentDownstreamDependencies: [
+                                {
+                                    __typename: "Dataset",
+                                    metadata: {
+                                        __typename: "DatasetMetadata",
+                                        currentDownstreamDependencies: [
+                                            {
+                                                __typename: "Dataset",
+                                                metadata: {
+                                                    __typename: "DatasetMetadata",
+                                                    currentDownstreamDependencies: [],
+                                                    currentSource: null,
+                                                    currentLicense: null,
+                                                    currentWatermark: "2023-08-06T18:57:59+00:00",
+                                                },
+                                                createdAt: "2023-09-05T02:14:17.375838448+00:00",
+                                                lastUpdatedAt: "2023-09-07T01:39:02.143781596+00:00",
+                                                data: {
+                                                    __typename: "DatasetData",
+                                                    numRecordsTotal: 31292,
+                                                    estimatedSize: 486985,
+                                                },
+                                                owner: {
+                                                    __typename: "Account",
+                                                    avatarUrl:
+                                                        "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                                    id: "12345",
+                                                    accountName: "kamu",
+                                                },
+                                                id: "did:odf:z4k88e8e4Zxc7gWaPoi1U62QuPqk5TeDJWw9HrwCBdcbvwjL4zy",
+                                                kind: DatasetKind.Derivative,
+                                                name: "account.tokens.portfolio.market-value",
+                                                alias: "account.tokens.portfolio.market-value",
+                                            },
+                                            {
+                                                __typename: "Dataset",
+                                                metadata: {
+                                                    __typename: "DatasetMetadata",
+                                                    currentDownstreamDependencies: [
+                                                        {
+                                                            __typename: "Dataset",
+                                                            metadata: {
+                                                                __typename: "DatasetMetadata",
+                                                                currentDownstreamDependencies: [],
+                                                                currentSource: null,
+                                                                currentLicense: null,
+                                                                currentWatermark: "2023-08-06T18:57:59+00:00",
+                                                            },
+                                                            createdAt: "2023-09-05T02:14:17.378963613+00:00",
+                                                            lastUpdatedAt: "2023-09-07T01:39:55.364415863+00:00",
+                                                            data: {
+                                                                __typename: "DatasetData",
+                                                                numRecordsTotal: 417,
+                                                                estimatedSize: 10136,
+                                                            },
+                                                            owner: {
+                                                                __typename: "Account",
+                                                                avatarUrl:
+                                                                    "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                                                id: "12345",
+                                                                accountName: "kamu",
+                                                            },
+                                                            id: "did:odf:z4k88e8oTx4k79T3hff88ArDf7pJ1nbxSnackQva5c2dwWPBngW",
+                                                            kind: DatasetKind.Derivative,
+                                                            name: "account.whatif.reth-vs-snp500.market-value",
+                                                            alias: "account.whatif.reth-vs-snp500.market-value",
+                                                        },
+                                                    ],
+                                                    currentSource: null,
+                                                    currentLicense: null,
+                                                    currentWatermark: "2023-08-06T18:57:59+00:00",
+                                                },
+                                                createdAt: "2023-09-05T02:14:17.372865885+00:00",
+                                                lastUpdatedAt: "2023-09-07T01:39:02.144063797+00:00",
+                                                data: {
+                                                    __typename: "DatasetData",
+                                                    numRecordsTotal: 46,
+                                                    estimatedSize: 10032,
+                                                },
+                                                owner: {
+                                                    __typename: "Account",
+                                                    avatarUrl:
+                                                        "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                                    id: "12345",
+                                                    accountName: "kamu",
+                                                },
+                                                id: "did:odf:z4k88e8gayUCbQ92pUcnSghtZamfoyPHrbMudTw8Fn2SJSdYwSS",
+                                                kind: DatasetKind.Derivative,
+                                                name: "account.whatif.reth-vs-snp500.portfolio",
+                                                alias: "account.whatif.reth-vs-snp500.portfolio",
+                                            },
+                                        ],
+                                        currentSource: null,
+                                        currentLicense: null,
+                                        currentWatermark: "2023-08-06T18:57:59+00:00",
+                                    },
+                                    createdAt: "2023-09-05T02:14:17.369209162+00:00",
+                                    lastUpdatedAt: "2023-09-07T01:38:15.023678417+00:00",
+                                    data: {
+                                        __typename: "DatasetData",
+                                        numRecordsTotal: 86,
+                                        estimatedSize: 12021,
+                                    },
+                                    owner: {
+                                        __typename: "Account",
+                                        avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                        id: "12345",
+                                        accountName: "kamu",
+                                    },
+                                    id: "did:odf:z4k88e8jSFz98biMiuj5YftgbMQm6WZ9C48An4bBFH6jdZpBgsf",
+                                    kind: DatasetKind.Derivative,
+                                    name: "account.tokens.portfolio.usd",
+                                    alias: "account.tokens.portfolio.usd",
+                                },
+                            ],
+                            currentSource: null,
+                            currentLicense: null,
+                            currentWatermark: "2023-08-06T18:57:59+00:00",
+                        },
+                        createdAt: "2023-09-05T02:14:17.365614388+00:00",
+                        lastUpdatedAt: "2023-09-05T02:24:48.840536329+00:00",
+                        data: {
+                            __typename: "DatasetData",
+                            numRecordsTotal: 127,
+                            estimatedSize: 14515,
+                        },
+                        owner: {
+                            __typename: "Account",
+                            avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                            id: "12345",
+                            accountName: "kamu",
+                        },
+                        id: "did:odf:z4k88e8pkrnwUSr3ZYjfWbwWPPbEmbSW2DJ4qJ6zjRwFkpDKwdy",
+                        kind: DatasetKind.Derivative,
+                        name: "account.tokens.portfolio",
+                        alias: "account.tokens.portfolio",
+                    },
+                ],
+                currentSource: {
+                    __typename: "SetPollingSource",
+                    fetch: {
+                        __typename: "FetchStepUrl",
+                        url: "https://api.etherscan.io/api?module=account&action=txlist&address=0xeadb3840596cabf312f2bc88a4bb0b93a4e1ff5f&page=1&offset=1000&startblock=0&endblock=99999999&apikey=${{ env.ETHERSCAN_API_KEY }}",
+                    },
+                },
+                currentLicense: null,
+                currentWatermark: "2023-08-06T18:57:59+00:00",
+            },
+            createdAt: "2023-09-03T01:08:55.268034366+00:00",
+            lastUpdatedAt: "2023-09-03T01:09:31.576478695+00:00",
+            data: {
+                __typename: "DatasetData",
+                numRecordsTotal: 123,
+                estimatedSize: 39817,
+            },
         },
     },
 };

@@ -7,6 +7,7 @@ import {
     mockDatasetDataSqlRunInvalidSqlResponse,
     mockDatasetDataSqlRunInternalErrorResponse,
     mockFullPowerDatasetPermissionsFragment,
+    mockDatasetLineageResponse,
 } from "../search/mock.data";
 import { TestBed } from "@angular/core/testing";
 import { Apollo, ApolloModule } from "apollo-angular";
@@ -27,7 +28,12 @@ import {
 } from "../api/kamu.graphql.interface";
 import { of, throwError } from "rxjs";
 import { DatasetNotFoundError, SqlExecutionError } from "../common/errors";
-import { DatasetHistoryUpdate, DataSqlErrorUpdate, OverviewDataUpdate } from "./dataset.subscriptions.interface";
+import {
+    DatasetHistoryUpdate,
+    DataSqlErrorUpdate,
+    LineageUpdate,
+    OverviewDataUpdate,
+} from "./dataset.subscriptions.interface";
 import { first } from "rxjs/operators";
 import _ from "lodash";
 import { mockDatasetBasicsWithPermissionQuery } from "../api/mock/dataset.mock";
@@ -75,7 +81,6 @@ describe("AppDatasetService", () => {
 
         const datasetDataSubscription$ = datasetSubsService.queryDataChanges.pipe(first()).subscribe();
         const metadataSchemaSubscription$ = datasetSubsService.metadataSchemaChanges.pipe(first()).subscribe();
-        const lineageDataSubscription$ = datasetSubsService.lineageChanges.pipe(first()).subscribe();
 
         service.requestDatasetMainData(mockDatasetInfo).subscribe();
 
@@ -83,7 +88,6 @@ describe("AppDatasetService", () => {
         expect(datasetOverviewSubscription$.closed).toBeTrue();
         expect(datasetDataSubscription$.closed).toBeTrue();
         expect(metadataSchemaSubscription$.closed).toBeTrue();
-        expect(lineageDataSubscription$.closed).toBeTrue();
     });
 
     it("should check get main data from api when dataset not found", () => {
@@ -93,7 +97,6 @@ describe("AppDatasetService", () => {
         datasetSubsService.overviewDataChanges.subscribe(() => fail("Unexpected overview update"));
         datasetSubsService.queryDataChanges.subscribe(() => fail("Unexpected data update"));
         datasetSubsService.metadataSchemaChanges.subscribe(() => fail("Unexpected metadata update"));
-        datasetSubsService.lineageChanges.subscribe(() => fail("Unexpected lineage update"));
 
         const subscription$ = service
             .requestDatasetMainData(mockDatasetInfo)
@@ -125,7 +128,6 @@ describe("AppDatasetService", () => {
         datasetSubsService.overviewDataChanges.subscribe(() => fail("Unexpected overview update"));
         datasetSubsService.queryDataChanges.subscribe(() => fail("Unexpected data update"));
         datasetSubsService.metadataSchemaChanges.subscribe(() => fail("Unexpected metadata update"));
-        datasetSubsService.lineageChanges.subscribe(() => fail("Unexpected lineage update"));
 
         const subscription$ = service
             .requestDatasetMainData(mockDatasetInfo)
@@ -162,6 +164,25 @@ describe("AppDatasetService", () => {
             });
 
         service.requestDatasetHistory(mockDatasetInfo, numRecords, numPage).subscribe();
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check get lineage data from api", () => {
+        spyOn(datasetApi, "getDatasetLineage").and.returnValue(of(mockDatasetLineageResponse));
+
+        const subscription$ = datasetSubsService.lineageChanges
+            .pipe(first())
+            .subscribe((lineageUpdate: LineageUpdate) => {
+                if (mockDatasetLineageResponse.datasets.byOwnerAndName) {
+                    const expectedId = mockDatasetLineageResponse.datasets.byOwnerAndName.id;
+                    const expectedName = mockDatasetLineageResponse.datasets.byOwnerAndName.name;
+                    expect(lineageUpdate.origin.id).toBe(expectedId);
+                    expect(lineageUpdate.origin.name).toBe(expectedName);
+                }
+            });
+
+        service.requestDatasetLineage(mockDatasetInfo).subscribe();
 
         expect(subscription$.closed).toBeTrue();
     });

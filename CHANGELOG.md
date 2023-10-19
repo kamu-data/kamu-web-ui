@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - The lineage graph made fit without a scroll
   - In account view opened the "Datasets" tab by default 
 - Changed sample query limit on overview tab
+- Separated main data query and lineage data query
 ### Fixed
 - Improved UI reaction on situation when GraphQL server refuses to accept access token
 - Used correct account avatar in data preview

@@ -1,39 +1,43 @@
 import { Injectable } from "@angular/core";
 import * as monaco from "monaco-editor";
-import { MaybeNull } from "../../../common/app.types";
-/* eslint-disable */
-export function getMonacoNamespace(): typeof monaco {
+import { MaybeNull, MaybeUndefined } from "../../../common/app.types";
+
+export function getMonacoNamespace(): MaybeUndefined<typeof monaco> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-    return (window as any).monaco as typeof monaco;
+    return (window as any).monaco as MaybeUndefined<typeof monaco>;
 }
 
 @Injectable({
     providedIn: "root",
 })
 export class MonacoService {
-    public setErrorMarker(model: monaco.editor.ITextModel, error: MaybeNull<string>): void {
+    public setErrorMarker(model: monaco.editor.ITextModel, error: string): void {
         const monaco = getMonacoNamespace();
 
         if (!monaco) return;
 
-        if (error) {
-            const markerData = this.prepareMarkerData(error);
-            monaco.editor.setModelMarkers(model, "", [markerData]);
-        } else {
-            monaco.editor.setModelMarkers(model, "", []);
-        }
+        const markerData = this.prepareMarkerData(error, monaco);
+        monaco.editor.setModelMarkers(model, "", [markerData]);
     }
 
-    private prepareMarkerData(error: string): monaco.editor.IMarkerData {
+    clearErrorMarker(model: monaco.editor.ITextModel): void {
+        const monaco = getMonacoNamespace();
+
+        if (!monaco) return;
+
+        monaco.editor.setModelMarkers(model, "", []);
+    }
+
+    private prepareMarkerData(error: string, monacoNamespace: typeof monaco): monaco.editor.IMarkerData {
         const { line, col } = this.getErrorPos(error);
 
         return {
-            startLineNumber: line || 1,
-            startColumn: col || 1,
-            endLineNumber: line || 9999,
+            startLineNumber: line ?? 1,
+            startColumn: col ?? 1,
+            endLineNumber: line ?? 9999,
             endColumn: 9999,
             message: error,
-            severity: getMonacoNamespace().MarkerSeverity.Error,
+            severity: monacoNamespace.MarkerSeverity.Error,
         };
     }
 

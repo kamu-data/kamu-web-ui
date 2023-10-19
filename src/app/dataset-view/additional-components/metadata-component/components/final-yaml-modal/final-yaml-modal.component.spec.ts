@@ -9,6 +9,7 @@ import { FormsModule } from "@angular/forms";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { EditorModule } from "src/app/shared/editor/editor.module";
 
 const testDatasetInfo: DatasetInfo = {
     accountName: "testAccountName",
@@ -25,7 +26,7 @@ describe("FinalYamlModalComponent", () => {
         await TestBed.configureTestingModule({
             declarations: [FinalYamlModalComponent],
             providers: [NgbActiveModal],
-            imports: [ApolloModule, FormsModule, HttpClientTestingModule, SharedTestModule],
+            imports: [ApolloModule, FormsModule, HttpClientTestingModule, SharedTestModule, EditorModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FinalYamlModalComponent);

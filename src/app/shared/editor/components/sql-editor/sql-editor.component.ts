@@ -19,7 +19,7 @@ import { MaybeNull } from "src/app/common/app.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SqlEditorComponent implements OnChanges {
-    @Input() protected readonly EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = SQL_EDITOR_OPTIONS;
+    @Input() public readonly EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = SQL_EDITOR_OPTIONS;
     @Input() public sqlTemplate = "";
     @Input() public sqlError: MaybeNull<string>;
 
@@ -31,8 +31,15 @@ export class SqlEditorComponent implements OnChanges {
     constructor(private monacoService: MonacoService) {}
 
     public ngOnChanges(changes: SimpleChanges) {
-        if (changes.sqlError?.currentValue) {
-            this.monacoService.setErrorMarker(this.editorModel, this.sqlError);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (changes.sqlError) {
+            if (this.sqlError) {
+                this.monacoService.setErrorMarker(this.editorModel, this.sqlError);
+            }
+
+            if (!this.sqlError) {
+                this.monacoService.clearErrorMarker(this.editorModel);
+            }
         }
     }
 
@@ -40,15 +47,19 @@ export class SqlEditorComponent implements OnChanges {
         const runQueryFn = () => {
             this.onRunSql.emit();
         };
-        const monacoNamespace = getMonacoNamespace();
+        const monaco = getMonacoNamespace();
+        if (!monaco) return;
+
+        // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
         this.editorModel = editor.getModel() as monaco.editor.ITextModel;
+
         editor.addAction({
             // An unique identifier of the contributed action.
             id: "run-sql",
             // A label of the action that will be presented to the user.
             label: "Run SQL",
             // An optional array of keybindings for the action.
-            keybindings: [monacoNamespace.KeyMod.CtrlCmd | monacoNamespace.KeyCode.Enter],
+            keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
             contextMenuGroupId: "navigation",
             contextMenuOrder: 1.5,
             // Method that will be executed when the action is triggered.

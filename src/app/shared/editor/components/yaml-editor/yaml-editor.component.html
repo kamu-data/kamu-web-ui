@@ -1,4 +1,5 @@
 <ngx-monaco-editor
+    (onInit)="onInitEditor($event)"
     [options]="YAML_EDITOR_OPTIONS"
     [(ngModel)]="yamlTemplate"
     (ngModelChange)="modelChange()"

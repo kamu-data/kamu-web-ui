@@ -3,6 +3,7 @@ import { QueriesSectionComponent } from "./queries-section.component";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
+import { EditorModule } from "src/app/shared/editor/editor.module";
 
 describe("QueriesSectionComponent", () => {
     let component: QueriesSectionComponent;
@@ -11,7 +12,7 @@ describe("QueriesSectionComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [QueriesSectionComponent],
-            imports: [FormsModule, MatIconModule],
+            imports: [FormsModule, MatIconModule, EditorModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(QueriesSectionComponent);

@@ -37,6 +37,7 @@ jobs:
       - if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
+      - run: npm run prettier-check
       - run: npm run lint
       - run: npm run stylelint
       - run: npm run test

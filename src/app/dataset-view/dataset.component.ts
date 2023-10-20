@@ -28,6 +28,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
     public datasetPermissions$: Observable<DatasetPermissionsFragment>;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
+    private unCaсhedTabs: DatasetViewTypeEnum[] = [];
 
     constructor(
         private datasetService: DatasetService,
@@ -98,12 +99,20 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
 
     private initHistoryTab(datasetInfo: DatasetInfo, currentPage: number): void {
         this.datasetViewType = DatasetViewTypeEnum.History;
-        this.trackSubscription(this.datasetService.requestDatasetHistory(datasetInfo, 20, currentPage - 1).subscribe());
+        if (!this.unCaсhedTabs.includes(this.datasetViewType)) {
+            this.trackSubscription(
+                this.datasetService.requestDatasetHistory(datasetInfo, 20, currentPage - 1).subscribe(),
+            );
+            this.unCaсhedTabs.push(this.datasetViewType);
+        }
     }
 
     private initLineageTab(datasetInfo: DatasetInfo): void {
         this.datasetViewType = DatasetViewTypeEnum.Lineage;
-        this.trackSubscription(this.datasetService.requestDatasetLineage(datasetInfo).subscribe());
+        if (!this.unCaсhedTabs.includes(this.datasetViewType)) {
+            this.trackSubscription(this.datasetService.requestDatasetLineage(datasetInfo).subscribe());
+            this.unCaсhedTabs.push(this.datasetViewType);
+        }
     }
 
     public initDiscussionsTab(): void {

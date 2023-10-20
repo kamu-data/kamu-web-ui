@@ -28,6 +28,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
     public datasetPermissions$: Observable<DatasetPermissionsFragment>;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
+    private unCaсhedTabs: DatasetViewTypeEnum[] = [];
 
     constructor(
         private datasetService: DatasetService,
@@ -98,11 +99,20 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
 
     private initHistoryTab(datasetInfo: DatasetInfo, currentPage: number): void {
         this.datasetViewType = DatasetViewTypeEnum.History;
-        this.datasetService.requestDatasetHistory(datasetInfo, 20, currentPage - 1).subscribe();
+        if (!this.unCaсhedTabs.includes(this.datasetViewType)) {
+            this.trackSubscription(
+                this.datasetService.requestDatasetHistory(datasetInfo, 20, currentPage - 1).subscribe(),
+            );
+            this.unCaсhedTabs.push(this.datasetViewType);
+        }
     }
 
-    private initLineageTab(): void {
+    private initLineageTab(datasetInfo: DatasetInfo): void {
         this.datasetViewType = DatasetViewTypeEnum.Lineage;
+        if (!this.unCaсhedTabs.includes(this.datasetViewType)) {
+            this.trackSubscription(this.datasetService.requestDatasetLineage(datasetInfo).subscribe());
+            this.unCaсhedTabs.push(this.datasetViewType);
+        }
     }
 
     public initDiscussionsTab(): void {
@@ -147,7 +157,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
             [DatasetViewTypeEnum.Data]: () => this.initDataTab(),
             [DatasetViewTypeEnum.Metadata]: () => this.initMetadataTab(),
             [DatasetViewTypeEnum.History]: () => this.initHistoryTab(datasetInfo, currentPage),
-            [DatasetViewTypeEnum.Lineage]: () => this.initLineageTab(),
+            [DatasetViewTypeEnum.Lineage]: () => this.initLineageTab(datasetInfo),
             [DatasetViewTypeEnum.Discussions]: () => this.initDiscussionsTab(),
             [DatasetViewTypeEnum.Settings]: () => this.initSettingsTab(),
         };

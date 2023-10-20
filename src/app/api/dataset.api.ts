@@ -30,6 +30,8 @@ import {
     DatasetByIdGQL,
     CreateEmptyDatasetGQL,
     GetDatasetBasicsWithPermissionsQuery,
+    GetDatasetLineageQuery,
+    GetDatasetLineageGQL,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { ApolloQueryResult } from "@apollo/client/core";
@@ -60,6 +62,7 @@ export class DatasetApi {
         private updateReadmeGQL: UpdateReadmeGQL,
         private deleteDatasetGQL: DeleteDatasetGQL,
         private renameDatasetGQL: RenameDatasetGQL,
+        private datasetLineageGQL: GetDatasetLineageGQL,
     ) {}
 
     public getDatasetMainData(params: {
@@ -131,6 +134,20 @@ export class DatasetApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<GetDatasetHistoryQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public getDatasetLineage(params: { accountName: string; datasetName: string }): Observable<GetDatasetLineageQuery> {
+        return this.datasetLineageGQL
+            .watch({
+                accountName: params.accountName,
+                datasetName: params.datasetName,
+            })
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<GetDatasetLineageQuery>) => {
                     return result.data;
                 }),
             );

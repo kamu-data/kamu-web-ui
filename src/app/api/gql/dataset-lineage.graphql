@@ -1,0 +1,8 @@
+query getDatasetLineage($accountName: AccountName!, $datasetName: DatasetName!) {
+  datasets {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      ...DatasetBasics
+      ...DatasetLineage
+    }
+  }
+}

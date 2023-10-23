@@ -109,7 +109,12 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
 
     private initLineageTab(datasetInfo: DatasetInfo): void {
         this.datasetViewType = DatasetViewTypeEnum.Lineage;
-        if (!this.unCaсhedTabs.includes(this.datasetViewType)) {
+        const urlDatasetInfo = this.getDatasetInfoFromUrl();
+        if (
+            !this.unCaсhedTabs.includes(this.datasetViewType) ||
+            this.datasetBasics?.name !== urlDatasetInfo.datasetName ||
+            this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName
+        ) {
             this.trackSubscription(this.datasetService.requestDatasetLineage(datasetInfo).subscribe());
             this.unCaсhedTabs.push(this.datasetViewType);
         }

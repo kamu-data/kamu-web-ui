@@ -29,7 +29,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
 
-    private mainDatasetQueryComplete$: Subject<void> = new ReplaySubject<void>(1 /* bufferSize */);
+    private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
 
     constructor(
         private datasetService: DatasetService,
@@ -43,13 +43,13 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
 
     public ngOnInit(): void {
         const urlDatasetInfo = this.getDatasetInfoFromUrl();
-        this.requestMainData(urlDatasetInfo);
         this.initDatasetViewByType(urlDatasetInfo, this.getCurrentPageFromUrl());
+        this.requestMainData(urlDatasetInfo);
 
         this.trackSubscriptions(
             this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
-                this.requestMainDataIfChanged();
                 this.initDatasetViewByType(this.getDatasetInfoFromUrl(), this.getCurrentPageFromUrl());
+                this.requestMainDataIfChanged();
             }),
             this.datasetService.datasetChanges.subscribe((basics: DatasetBasicsFragment) => {
                 this.datasetBasics = basics;
@@ -77,7 +77,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
                 .requestDatasetMainData(datasetInfo)
                 .pipe(
                     tap(() => {
-                        this.mainDatasetQueryComplete$.next();
+                        this.mainDatasetQueryComplete$.next(datasetInfo);
                     }),
                 )
                 .subscribe(),
@@ -120,10 +120,15 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         this.trackSubscription(
             this.mainDatasetQueryComplete$
                 .pipe(
+                    filter(
+                        (info: DatasetInfo) =>
+                            info.accountName === datasetInfo.accountName &&
+                            info.datasetName === datasetInfo.datasetName,
+                    ),
                     first(),
-                    switchMap(() => {
+                    switchMap((info: DatasetInfo) => {
                         if (this.datasetViewType === DatasetViewTypeEnum.History) {
-                            return this.datasetService.requestDatasetHistory(datasetInfo, 20, currentPage - 1);
+                            return this.datasetService.requestDatasetHistory(info, 20, currentPage - 1);
                         } else {
                             return of();
                         }
@@ -139,10 +144,15 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         this.trackSubscription(
             this.mainDatasetQueryComplete$
                 .pipe(
+                    filter(
+                        (info: DatasetInfo) =>
+                            info.accountName === datasetInfo.accountName &&
+                            info.datasetName === datasetInfo.datasetName,
+                    ),
                     first(),
-                    switchMap(() => {
+                    switchMap((info) => {
                         if (this.datasetViewType === DatasetViewTypeEnum.Lineage) {
-                            return this.datasetService.requestDatasetLineage(datasetInfo);
+                            return this.datasetService.requestDatasetLineage(info);
                         } else {
                             return of();
                         }
@@ -156,10 +166,15 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         console.log("initDiscussionsTab");
     }
 
-    public initSettingsTab(): void {
+    public initSettingsTab(datasetInfo: DatasetInfo): void {
         this.trackSubscription(
             this.mainDatasetQueryComplete$
                 .pipe(
+                    filter(
+                        (info: DatasetInfo) =>
+                            info.accountName === datasetInfo.accountName &&
+                            info.datasetName === datasetInfo.datasetName,
+                    ),
                     first(),
                     switchMap(() => this.datasetPermissions$.pipe(first())),
                 )
@@ -201,7 +216,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
             [DatasetViewTypeEnum.History]: () => this.initHistoryTab(datasetInfo, currentPage),
             [DatasetViewTypeEnum.Lineage]: () => this.initLineageTab(datasetInfo),
             [DatasetViewTypeEnum.Discussions]: () => this.initDiscussionsTab(),
-            [DatasetViewTypeEnum.Settings]: () => this.initSettingsTab(),
+            [DatasetViewTypeEnum.Settings]: () => this.initSettingsTab(datasetInfo),
         };
 
         this.datasetViewType = this.getDatasetViewTypeFromUrl();

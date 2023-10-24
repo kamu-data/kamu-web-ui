@@ -127,12 +127,13 @@ const Services = [
                             keyFields: ["alias"],
                             fields: {
                                 metadata: {
-                                    merge(existing: MaybeUndefined<DatasetMetadata>, incoming: DatasetMetadata) {
+                                    merge(
+                                        existing: MaybeUndefined<DatasetMetadata>,
+                                        incoming: DatasetMetadata,
+                                        { mergeObjects },
+                                    ) {
                                         if (existing) {
-                                            return {
-                                                ...existing,
-                                                ...incoming,
-                                            };
+                                            return mergeObjects(existing, incoming);
                                         } else {
                                             return incoming;
                                         }

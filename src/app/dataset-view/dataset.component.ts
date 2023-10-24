@@ -120,6 +120,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         this.trackSubscription(
             this.mainDatasetQueryComplete$
                 .pipe(
+                    first(),
                     switchMap(() => {
                         if (this.datasetViewType === DatasetViewTypeEnum.History) {
                             return this.datasetService.requestDatasetHistory(datasetInfo, 20, currentPage - 1);
@@ -138,6 +139,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         this.trackSubscription(
             this.mainDatasetQueryComplete$
                 .pipe(
+                    first(),
                     switchMap(() => {
                         if (this.datasetViewType === DatasetViewTypeEnum.Lineage) {
                             return this.datasetService.requestDatasetLineage(datasetInfo);
@@ -157,7 +159,10 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
     public initSettingsTab(): void {
         this.trackSubscription(
             this.mainDatasetQueryComplete$
-                .pipe(switchMap(() => this.datasetPermissions$.pipe(first())))
+                .pipe(
+                    first(),
+                    switchMap(() => this.datasetPermissions$.pipe(first())),
+                )
                 .subscribe((datasetPermissions: DatasetPermissionsFragment) => {
                     if (this.datasetPermissionsServices.shouldAllowSettingsTab(datasetPermissions)) {
                         this.datasetViewType = DatasetViewTypeEnum.Settings;

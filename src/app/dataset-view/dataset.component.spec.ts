@@ -106,9 +106,9 @@ describe("DatasetComponent", () => {
                                 get: (key: string) => {
                                     switch (key) {
                                         case "accountName":
-                                            return "accountName";
+                                            return mockDatasetBasicsDerivedFragment.owner.accountName;
                                         case "datasetName":
-                                            return "datasetName";
+                                            return mockDatasetBasicsDerivedFragment.name;
                                     }
                                 },
                             },
@@ -131,6 +131,7 @@ describe("DatasetComponent", () => {
 
         datasetService = TestBed.inject(DatasetService);
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsDerivedFragment));
+        spyOn(datasetService, "requestDatasetMainData").and.returnValue(of(void {}));
 
         fixture = TestBed.createComponent(DatasetComponent);
         component = fixture.componentInstance;
@@ -156,6 +157,7 @@ describe("DatasetComponent", () => {
                 }
             }
         });
+        routerMockEventSubject.next(new NavigationEnd(1, "", "redirectUrl"));
     }
 
     [
@@ -169,7 +171,6 @@ describe("DatasetComponent", () => {
     ].forEach((tab: DatasetViewTypeEnum) => {
         it(`should check init ${tab} tab`, () => {
             routeToTab(tab);
-            component.ngOnInit();
             fixture.detectChanges();
 
             expect(component.datasetViewType).toEqual(tab);
@@ -178,7 +179,6 @@ describe("DatasetComponent", () => {
 
     it("attempt navigating to non-existing tab lands on overview", () => {
         routeToTab("wrong");
-        component.ngOnInit();
         fixture.detectChanges();
 
         expect(component.datasetViewType).toEqual(DatasetViewTypeEnum.Overview);
@@ -187,16 +187,9 @@ describe("DatasetComponent", () => {
     it("attempt navigating to settings without necessary permissions lands on overview", () => {
         datasetSubsServices.emitPermissionsChanged(mockReadonlyDatasetPermissionsFragment);
         routeToTab(DatasetViewTypeEnum.Settings);
-        component.ngOnInit();
         fixture.detectChanges();
 
         expect(component.datasetViewType).toEqual(DatasetViewTypeEnum.Overview);
-    });
-
-    it("should check call getMainDataByLineageNode", () => {
-        const getMainDataByLineageNodeSpy = spyOn(component, "getMainDataByLineageNode");
-        routerMockEventSubject.next(new NavigationEnd(1, "", "redirectUrl"));
-        expect(getMainDataByLineageNodeSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check run SQL request", () => {

@@ -37,6 +37,7 @@ import {
 import { first } from "rxjs/operators";
 import _ from "lodash";
 import { mockDatasetBasicsWithPermissionQuery } from "../api/mock/dataset.mock";
+import { MaybeNull } from "../common/app.types";
 
 describe("AppDatasetService", () => {
     let service: DatasetService;
@@ -88,6 +89,27 @@ describe("AppDatasetService", () => {
         expect(datasetOverviewSubscription$.closed).toBeTrue();
         expect(datasetDataSubscription$.closed).toBeTrue();
         expect(metadataSchemaSubscription$.closed).toBeTrue();
+    });
+
+    it("should check get main data from api nullifies history and lineage", () => {
+        spyOn(datasetApi, "getDatasetMainData").and.returnValue(of(mockDatasetMainDataResponse));
+
+        const historyChangesSubscription$ = datasetSubsService.historyChanges
+            .pipe(first())
+            .subscribe((historyUpdate: MaybeNull<DatasetHistoryUpdate>) => {
+                expect(historyUpdate).toBeNull();
+            });
+
+        const lineageChangesSubscription$ = datasetSubsService.lineageChanges
+            .pipe(first())
+            .subscribe((lineageUpdate: MaybeNull<LineageUpdate>) => {
+                expect(lineageUpdate).toBeNull();
+            });
+
+        service.requestDatasetMainData(mockDatasetInfo).subscribe();
+
+        expect(historyChangesSubscription$.closed).toBeTrue();
+        expect(lineageChangesSubscription$.closed).toBeTrue();
     });
 
     it("should check get main data from api when dataset not found", () => {
@@ -150,17 +172,21 @@ describe("AppDatasetService", () => {
 
         const subscription$ = datasetSubsService.historyChanges
             .pipe(first())
-            .subscribe((historyUpdate: DatasetHistoryUpdate) => {
-                const expectedNodes = mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks
-                    .nodes as MetadataBlockFragment[];
-                expect(historyUpdate.history).toBe(expectedNodes);
-                expect(historyUpdate.pageInfo).toEqual({
-                    __typename: "PageBasedInfo",
-                    hasNextPage: false,
-                    hasPreviousPage: false,
-                    currentPage: 1,
-                    totalPages: 1,
-                });
+            .subscribe((historyUpdate: MaybeNull<DatasetHistoryUpdate>) => {
+                if (historyUpdate) {
+                    const expectedNodes = mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks
+                        .nodes as MetadataBlockFragment[];
+                    expect(historyUpdate.history).toBe(expectedNodes);
+                    expect(historyUpdate.pageInfo).toEqual({
+                        __typename: "PageBasedInfo",
+                        hasNextPage: false,
+                        hasPreviousPage: false,
+                        currentPage: 1,
+                        totalPages: 1,
+                    });
+                } else {
+                    fail("History reset instead of update");
+                }
             });
 
         service.requestDatasetHistory(mockDatasetInfo, numRecords, numPage).subscribe();
@@ -173,12 +199,16 @@ describe("AppDatasetService", () => {
 
         const subscription$ = datasetSubsService.lineageChanges
             .pipe(first())
-            .subscribe((lineageUpdate: LineageUpdate) => {
-                if (mockDatasetLineageResponse.datasets.byOwnerAndName) {
-                    const expectedId = mockDatasetLineageResponse.datasets.byOwnerAndName.id;
-                    const expectedName = mockDatasetLineageResponse.datasets.byOwnerAndName.name;
-                    expect(lineageUpdate.origin.id).toBe(expectedId);
-                    expect(lineageUpdate.origin.name).toBe(expectedName);
+            .subscribe((lineageUpdate: MaybeNull<LineageUpdate>) => {
+                if (lineageUpdate) {
+                    if (mockDatasetLineageResponse.datasets.byOwnerAndName) {
+                        const expectedId = mockDatasetLineageResponse.datasets.byOwnerAndName.id;
+                        const expectedName = mockDatasetLineageResponse.datasets.byOwnerAndName.name;
+                        expect(lineageUpdate.origin.id).toBe(expectedId);
+                        expect(lineageUpdate.origin.name).toBe(expectedName);
+                    }
+                } else {
+                    fail("lineage reset instead of update");
                 }
             });
 

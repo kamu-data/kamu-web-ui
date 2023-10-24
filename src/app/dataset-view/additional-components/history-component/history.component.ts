@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetHistoryUpdate } from "../../dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { MaybeNull } from "src/app/common/app.types";
 
 @Component({
     selector: "app-history",
@@ -12,7 +13,7 @@ import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service
 export class HistoryComponent extends BaseComponent {
     @Input() public datasetName: string;
     @Output() onPageChangeEmit = new EventEmitter<number>();
-    public historyUpdate$: Observable<DatasetHistoryUpdate> = this.datasetSubsService.historyChanges;
+    public historyUpdate$: Observable<MaybeNull<DatasetHistoryUpdate>> = this.datasetSubsService.historyChanges;
 
     constructor(private datasetSubsService: DatasetSubscriptionsService) {
         super();

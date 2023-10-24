@@ -2,10 +2,10 @@ import { Observable } from "rxjs";
 import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { Node } from "@swimlane/ngx-graph";
 
-import { DatasetLineageBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { LineageGraphBuilderService } from "./services/lineage-graph-builder.service";
-import { LineageGraph } from "./lineage-model";
+import { LineageGraphUpdate } from "./lineage-model";
+import { MaybeNull } from "src/app/common/app.types";
 
 @Component({
     selector: "app-lineage",
@@ -14,8 +14,7 @@ import { LineageGraph } from "./lineage-model";
 })
 export class LineageComponent extends BaseComponent implements OnInit {
     @Output() onClickNodeEmit = new EventEmitter<Node>();
-    public lineageGraph$: Observable<LineageGraph>;
-    public currentDataset$: Observable<DatasetLineageBasicsFragment>;
+    public lineageGraphUpdate$: Observable<MaybeNull<LineageGraphUpdate>>;
 
     constructor(private lineageGraphBuilderService: LineageGraphBuilderService) {
         super();
@@ -26,7 +25,6 @@ export class LineageComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.currentDataset$ = this.lineageGraphBuilderService.currentDatasetChanges();
-        this.lineageGraph$ = this.lineageGraphBuilderService.buildGraph();
+        this.lineageGraphUpdate$ = this.lineageGraphBuilderService.buildGraph();
     }
 }

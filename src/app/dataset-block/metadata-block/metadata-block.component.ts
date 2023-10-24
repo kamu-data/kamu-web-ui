@@ -11,6 +11,7 @@ import { Params } from "@angular/router";
 import { BlockService } from "./block.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
+import { MaybeNull } from "src/app/common/app.types";
 
 @Component({
     selector: "app-metadata-block",
@@ -24,7 +25,7 @@ export class MetadataBlockComponent extends BaseProcessingComponent implements O
 
     public datasetInfo$: Observable<DatasetInfo>;
     public blockHash$: Observable<string>;
-    public datasetHistoryUpdate$: Observable<DatasetHistoryUpdate>;
+    public datasetHistoryUpdate$: Observable<MaybeNull<DatasetHistoryUpdate>>;
     public datasetBasics$: Observable<DatasetBasicsFragment>;
     public datasetPermissions$: Observable<DatasetPermissionsFragment>;
 

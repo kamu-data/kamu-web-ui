@@ -3,9 +3,16 @@ import { Observable, map } from "rxjs";
 import { DatasetLineageBasicsFragment, DatasetKind, FetchStepUrl } from "src/app/api/kamu.graphql.interface";
 import { LineageUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { LineageGraphNodeKind, LineageGraphNodeData, LineageNodeAccess, LineageGraph } from "../lineage-model";
+import {
+    LineageGraphNodeKind,
+    LineageGraphNodeData,
+    LineageNodeAccess,
+    LineageGraph,
+    LineageGraphUpdate,
+} from "../lineage-model";
 import { Node, Edge } from "@swimlane/ngx-graph";
 import _ from "lodash";
+import { MaybeNull } from "src/app/common/app.types";
 
 @Injectable({
     providedIn: "root",
@@ -13,21 +20,26 @@ import _ from "lodash";
 export class LineageGraphBuilderService {
     constructor(private datasetSubsService: DatasetSubscriptionsService) {}
 
-    public currentDatasetChanges(): Observable<DatasetLineageBasicsFragment> {
-        return this.datasetSubsService.lineageChanges.pipe(map((data: LineageUpdate) => data.origin));
-    }
-
-    public buildGraph(): Observable<LineageGraph> {
+    public buildGraph(): Observable<MaybeNull<LineageGraphUpdate>> {
         return this.datasetSubsService.lineageChanges.pipe(
-            map((lineageUpdate: LineageUpdate) => {
-                const uniqueDatasets: DatasetLineageBasicsFragment[] = this.collectUniqueDatasets(lineageUpdate);
+            map((lineageUpdate: MaybeNull<LineageUpdate>) => {
+                if (lineageUpdate) {
+                    const uniqueDatasets: DatasetLineageBasicsFragment[] = this.collectUniqueDatasets(lineageUpdate);
 
-                const datasetSubgraph: LineageGraph = this.buildDatasetSubgraph(lineageUpdate, uniqueDatasets);
-                const sourceSubgraph: LineageGraph = this.buildSourceSubgraph(uniqueDatasets);
-                return {
-                    nodes: [...sourceSubgraph.nodes, ...datasetSubgraph.nodes],
-                    links: [...sourceSubgraph.links, ...datasetSubgraph.links],
-                } as LineageGraph;
+                    const datasetSubgraph: LineageGraph = this.buildDatasetSubgraph(lineageUpdate, uniqueDatasets);
+                    const sourceSubgraph: LineageGraph = this.buildSourceSubgraph(uniqueDatasets);
+
+                    const graph: LineageGraph = {
+                        nodes: [...sourceSubgraph.nodes, ...datasetSubgraph.nodes],
+                        links: [...sourceSubgraph.links, ...datasetSubgraph.links],
+                    };
+                    return {
+                        graph,
+                        originDataset: lineageUpdate.origin,
+                    } as LineageGraphUpdate;
+                } else {
+                    return null;
+                }
             }),
         );
     }

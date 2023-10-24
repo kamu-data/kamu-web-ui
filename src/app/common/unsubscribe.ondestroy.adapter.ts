@@ -5,7 +5,7 @@ import { SubSink } from "subsink";
 export class UnsubscribeOnDestroyAdapter implements OnDestroy {
     private subs: SubSink = new SubSink();
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.subs.unsubscribe();
     }
 

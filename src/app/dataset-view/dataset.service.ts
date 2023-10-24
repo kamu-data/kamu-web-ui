@@ -75,6 +75,8 @@ export class DatasetService {
                         this.currentSetVocab = data.datasets.byOwnerAndName.metadata.currentVocab as SetVocab;
                         this.dataTabDataUpdate(schema, dataTail, this.currentSetVocab);
                         this.metadataTabDataUpdate(data, schema);
+                        this.lineageDataReset();
+                        this.historyDataReset();
                     } else {
                         throw new SqlExecutionError(dataTail.errorMessage);
                     }
@@ -122,6 +124,10 @@ export class DatasetService {
                 }
             }),
         );
+    }
+
+    private historyDataReset() {
+        this.datasetSubsService.emitHistoryChanged(null);
     }
 
     public getDatasetHistory(info: DatasetInfo, numRecords: number, numPage: number): Observable<DatasetHistoryUpdate> {
@@ -360,6 +366,10 @@ export class DatasetService {
             nodes: lineageGraphNodes,
             edges: lineageGraphEdges,
         });
+    }
+
+    private lineageDataReset() {
+        this.datasetSubsService.emitLineageChanged(null);
     }
 
     private updateLineageGraphRecords(

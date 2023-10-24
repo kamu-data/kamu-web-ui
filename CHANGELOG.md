@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Changed
+- Separated main data query and lineage data query
+### Fixed
+- GraphQL caching issuess when switcching between History and Lineage tabs
+
 ## [0.13.0] - 2023-10-18
 ### Added
 - Save the toggle state of the lineage graph info panel
@@ -15,7 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - The lineage graph made fit without a scroll
   - In account view opened the "Datasets" tab by default 
 - Changed sample query limit on overview tab
-- Separated main data query and lineage data query
 ### Fixed
 - Improved UI reaction on situation when GraphQL server refuses to accept access token
 - Used correct account avatar in data preview

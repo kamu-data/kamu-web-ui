@@ -1,5 +1,5 @@
 import { Edge, Node } from "@swimlane/ngx-graph";
-import { DatasetKind } from "src/app/api/kamu.graphql.interface";
+import { DatasetKind, DatasetLineageBasicsFragment } from "src/app/api/kamu.graphql.interface";
 
 export interface LineageGraphNodeData {
     kind: LineageGraphNodeKind;
@@ -29,4 +29,9 @@ export interface LineageGraphDatasetNodeObject {
 export interface LineageGraph {
     nodes: Node[];
     links: Edge[];
+}
+
+export interface LineageGraphUpdate {
+    graph: LineageGraph;
+    originDataset: DatasetLineageBasicsFragment;
 }

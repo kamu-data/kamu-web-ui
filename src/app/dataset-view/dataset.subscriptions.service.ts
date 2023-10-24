@@ -9,15 +9,18 @@ import {
     OverviewDataUpdate,
 } from "./dataset.subscriptions.interface";
 import { DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
+import { MaybeNull } from "../common/app.types";
 
 @Injectable({ providedIn: "root" })
 export class DatasetSubscriptionsService {
     private overviewData$: Subject<OverviewDataUpdate> = new ReplaySubject<OverviewDataUpdate>(1 /*bufferSize*/);
     private queryData$: Subject<DataUpdate> = new ReplaySubject<DataUpdate>(1 /*bufferSize*/);
     private sqlError$: Subject<DataSqlErrorUpdate> = new ReplaySubject<DataSqlErrorUpdate>(1 /*bufferSize*/);
-    private history$: Subject<DatasetHistoryUpdate> = new ReplaySubject<DatasetHistoryUpdate>(1 /*bufferSize*/);
+    private history$: Subject<MaybeNull<DatasetHistoryUpdate>> = new ReplaySubject<MaybeNull<DatasetHistoryUpdate>>(
+        1 /*bufferSize*/,
+    );
     private metadataSchema$: Subject<MetadataSchemaUpdate> = new ReplaySubject<MetadataSchemaUpdate>(1 /*bufferSize*/);
-    private lineage$: Subject<LineageUpdate> = new ReplaySubject<LineageUpdate>(1 /*bufferSize*/);
+    private lineage$: Subject<MaybeNull<LineageUpdate>> = new ReplaySubject<MaybeNull<LineageUpdate>>(1 /*bufferSize*/);
     private permissions$: Subject<DatasetPermissionsFragment> = new ReplaySubject<DatasetPermissionsFragment>(
         1 /*bufferSize*/,
     );
@@ -50,11 +53,11 @@ export class DatasetSubscriptionsService {
         return this.sqlError$.asObservable();
     }
 
-    public emitHistoryChanged(historyUpdate: DatasetHistoryUpdate): void {
+    public emitHistoryChanged(historyUpdate: MaybeNull<DatasetHistoryUpdate>): void {
         this.history$.next(historyUpdate);
     }
 
-    public get historyChanges(): Observable<DatasetHistoryUpdate> {
+    public get historyChanges(): Observable<MaybeNull<DatasetHistoryUpdate>> {
         return this.history$.asObservable();
     }
 
@@ -66,11 +69,11 @@ export class DatasetSubscriptionsService {
         return this.metadataSchema$.asObservable();
     }
 
-    public emitLineageChanged(data: LineageUpdate): void {
+    public emitLineageChanged(data: MaybeNull<LineageUpdate>): void {
         this.lineage$.next(data);
     }
 
-    public get lineageChanges(): Observable<LineageUpdate> {
+    public get lineageChanges(): Observable<MaybeNull<LineageUpdate>> {
         return this.lineage$.asObservable();
     }
 

@@ -60,11 +60,12 @@ export class LineageGraphComponent implements OnInit, OnChanges {
         if (this.element?.nativeElement) {
             const containerGraph = this.element.nativeElement as HTMLDivElement;
             const styleElement: CSSStyleDeclaration = getComputedStyle(containerGraph);
-            this.view[0] =
+            this.view = [
                 containerGraph.clientWidth -
-                parseInt(styleElement.paddingLeft, 10) -
-                parseInt(styleElement.paddingRight, 10);
-            this.view[1] = this.lineageGraphHeight();
+                    parseInt(styleElement.paddingLeft, 10) -
+                    parseInt(styleElement.paddingRight, 10),
+                this.lineageGraphHeight(),
+            ];
         }
     }
 

@@ -37,9 +37,9 @@
             </div>
         </div>
         <div class="col-md-5">
-            <div class="container-content">
+            <div class="container-content" *ngIf="datasetHistoryUpdate$ | async as datasetHistory">
                 <app-block-navigation
-                    [datasetHistory]="datasetHistoryUpdate$ | async"
+                    [datasetHistory]="datasetHistory"
                     [currentBlockHash]="blockHash"
                     [datasetInfo]="datasetInfo"
                     (onPageChangeEmit)="onPageChange($event)"

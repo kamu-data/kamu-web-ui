@@ -5,6 +5,7 @@ import {
     EventEmitter,
     HostListener,
     Input,
+    OnChanges,
     OnInit,
     Output,
     ViewChild,
@@ -18,6 +19,7 @@ import {
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 import { LineageGraphConfig, LINEAGE_CONFIG } from "./ligeage-graph.settings";
 import { SessionStorageService } from "src/app/services/session-storage.service";
+import { MaybeUndefined } from "src/app/common/app.types";
 
 @Component({
     selector: "app-lineage-graph",
@@ -25,7 +27,7 @@ import { SessionStorageService } from "src/app/services/session-storage.service"
     styleUrls: ["./lineage-graph.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LineageGraphComponent implements OnInit {
+export class LineageGraphComponent implements OnInit, OnChanges {
     @Input() public graph: LineageGraph;
     @Input() public currentDataset: DatasetLineageBasicsFragment;
     @Output() public onClickNodeEvent = new EventEmitter<Node>();
@@ -37,7 +39,7 @@ export class LineageGraphComponent implements OnInit {
     public view: [number, number];
     public showSidePanel = false;
 
-    @ViewChild("containerRef", { static: false }) element: ElementRef;
+    @ViewChild("containerRef", { static: false }) element: MaybeUndefined<ElementRef>;
     @HostListener("window:resize")
     public checkWindowSize(): void {
         this.changeLineageGraphView();
@@ -50,14 +52,20 @@ export class LineageGraphComponent implements OnInit {
         this.checkVisibilitySidePanel();
     }
 
+    public ngOnChanges(): void {
+        this.changeLineageGraphView();
+    }
+
     public changeLineageGraphView(): void {
-        const containerGraph = this.element.nativeElement as HTMLDivElement;
-        const styleElement: CSSStyleDeclaration = getComputedStyle(containerGraph);
-        this.view[0] =
-            containerGraph.clientWidth -
-            parseInt(styleElement.paddingLeft, 10) -
-            parseInt(styleElement.paddingRight, 10);
-        this.view[1] = this.lineageGraphHeight();
+        if (this.element?.nativeElement) {
+            const containerGraph = this.element.nativeElement as HTMLDivElement;
+            const styleElement: CSSStyleDeclaration = getComputedStyle(containerGraph);
+            this.view[0] =
+                containerGraph.clientWidth -
+                parseInt(styleElement.paddingLeft, 10) -
+                parseInt(styleElement.paddingRight, 10);
+            this.view[1] = this.lineageGraphHeight();
+        }
     }
 
     public onClickNode(node: Node): void {

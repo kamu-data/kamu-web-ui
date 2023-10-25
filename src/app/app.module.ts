@@ -124,6 +124,9 @@ const Services = [
                                 },
                             },
                         },
+                        DataQueries: {
+                            merge: false,
+                        },
                         Dataset: {
                             // Use alias, as ID might be the same between 2 accounts who synchronized
                             keyFields: ["alias"],

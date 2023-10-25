@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Separated main data query and lineage data query
 ### Fixed
-- GraphQL caching issuess when switcching between History and Lineage tabs
+- GraphQL caching issues when switching between History and Lineage tabs
+- Correct author avatars on history tab
 
 ## [0.13.0] - 2023-10-18
 ### Added

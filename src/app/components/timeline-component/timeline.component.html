@@ -1,5 +1,5 @@
 <div class="timeline-block">
-    <div *ngFor="let block of history">
+    <div *ngFor="let block of history; let i = index">
         <div class="timeline-block__item timeline-block__item--condensed pt-0 pb-2">
             <div class="timeline-block__item-badge">
                 <svg-icon name="git-commit"></svg-icon>
@@ -41,27 +41,14 @@
 
                             <div class="d-flex align-items-center mt-1">
                                 <div class="avatar-stack flex-self-start">
-                                    <div class="avatar-stack__body" aria-label="">
-                                        <a
-                                            class="avatar avatar-user"
-                                            style="width: 20px; height: 20px"
-                                            data-skip-pjax="true"
-                                            data-test-selector="commits-avatar-stack-avatar-link"
-                                            data-hovercard-type="user"
-                                            data-hovercard-url="/users/_/hovercard"
-                                            data-octo-click="hovercard-link-click"
-                                            data-octo-dimensions="link_type:self"
-                                            href="/#todo-navigate-to-user"
-                                        >
-                                            <img
-                                                data-test-selector="commits-avatar-stack-avatar-image"
-                                                src="https://avatars.githubusercontent.com/u/50896974?s=48&v=4"
-                                                width="20"
-                                                height="20"
-                                                [alt]="'@' + block.author.accountName"
-                                                class="avatar-user"
-                                            />
-                                        </a>
+                                    <div>
+                                        <img
+                                            [src]="block.author.avatarUrl || DEFAULT_AVATAR_URL"
+                                            width="20"
+                                            height="20"
+                                            [alt]="'@' + block.author.accountName"
+                                            [attr.data-test-id]="'timeline-avatarUrl-' + i"
+                                        />
                                     </div>
                                 </div>
 

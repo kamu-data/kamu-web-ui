@@ -5,7 +5,11 @@ import { TimelineComponent } from "./timeline.component";
 import { TEST_DATASET_NAME, mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { mockPageBasedInfo } from "src/app/search/mock.data";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import { emitClickOnElementByDataTestId, getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import {
+    emitClickOnElementByDataTestId,
+    findElementByDataTestId,
+    getElementByDataTestId,
+} from "src/app/common/base-test.helpers.spec";
 import { DisplayHashModule } from "../display-hash/dispaly-hash.module";
 import { ToastrModule } from "ngx-toastr";
 import { DisplayTimeModule } from "../display-time/display-time.module";
@@ -14,6 +18,7 @@ import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import { MetadataBlockNavigationParams } from "src/app/interface/navigation.interface";
+import AppValues from "src/app/common/app.values";
 
 describe("TimelineComponent", () => {
     let component: TimelineComponent;
@@ -60,6 +65,13 @@ describe("TimelineComponent", () => {
         navigateLink.click();
 
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith("testName");
+    });
+
+    it("should check avatar url", () => {
+        const imageElement = findElementByDataTestId(fixture, "timeline-avatarUrl-0") as HTMLImageElement;
+        const src = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHash?.author.avatarUrl;
+        const result = src ? src : AppValues.DEFAULT_AVATAR_URL;
+        expect(imageElement.src).toEqual(result);
     });
 
     it("should navigate to metadata block", () => {

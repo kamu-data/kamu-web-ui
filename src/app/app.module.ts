@@ -65,7 +65,7 @@ import { LoginService } from "./auth/login/login.service";
 import { logError } from "./common/app.helpers";
 import { DatasetPermissionsService } from "./dataset-view/dataset.permissions.service";
 import { LocalStorageService } from "./services/local-storage.service";
-import { DatasetMetadata } from "./api/kamu.graphql.interface";
+import { DatasetData, DatasetMetadata } from "./api/kamu.graphql.interface";
 import { MaybeUndefined } from "./common/app.types";
 
 const Services = [
@@ -119,6 +119,9 @@ const Services = [
                             // For now we are faking account IDs on the server, so they are a bad caching field
                             keyFields: ["accountName"],
                         },
+                        Datasets: {
+                            merge: true,
+                        },
                         Dataset: {
                             // Use alias, as ID might be the same between 2 accounts who synchronized
                             keyFields: ["alias"],
@@ -127,6 +130,19 @@ const Services = [
                                     merge(
                                         existing: MaybeUndefined<DatasetMetadata>,
                                         incoming: DatasetMetadata,
+                                        { mergeObjects },
+                                    ) {
+                                        if (existing) {
+                                            return mergeObjects(existing, incoming);
+                                        } else {
+                                            return incoming;
+                                        }
+                                    },
+                                },
+                                data: {
+                                    merge(
+                                        existing: MaybeUndefined<DatasetData>,
+                                        incoming: DatasetData,
                                         { mergeObjects },
                                     ) {
                                         if (existing) {

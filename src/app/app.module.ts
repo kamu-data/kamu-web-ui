@@ -16,7 +16,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS, HttpHeaders } from "@angular/common/http";
 import { MatTableModule } from "@angular/material/table";
 import { CdkTableModule } from "@angular/cdk/table";
-import { ApolloLink, InMemoryCache, NextLink, Operation } from "@apollo/client/core";
+import { ApolloLink, NextLink, Operation } from "@apollo/client/core";
 import { SearchApi } from "./api/search.api";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SearchService } from "./search/search.service";
@@ -65,6 +65,7 @@ import { LoginService } from "./auth/login/login.service";
 import { logError } from "./common/app.helpers";
 import { DatasetPermissionsService } from "./dataset-view/dataset.permissions.service";
 import { LocalStorageService } from "./services/local-storage.service";
+import { apolloCache } from "./apollo-cache.helper";
 
 const Services = [
     {
@@ -107,40 +108,7 @@ const Services = [
             });
 
             return {
-                cache: new InMemoryCache({
-                    typePolicies: {
-                        Account: {
-                            // For now we are faking account IDs on the server, so they are a bad caching field
-                            keyFields: ["accountName"],
-                        },
-                        AccountRef: {
-                            // For now we are faking account IDs on the server, so they are a bad caching field
-                            keyFields: ["accountName"],
-                        },
-                        Query: {
-                            fields: {
-                                datasets: {
-                                    merge: true,
-                                },
-                            },
-                        },
-                        DataQueries: {
-                            merge: false,
-                        },
-                        Dataset: {
-                            // Use alias, as ID might be the same between 2 accounts who synchronized
-                            keyFields: ["alias"],
-                            fields: {
-                                metadata: {
-                                    merge: true,
-                                },
-                                data: {
-                                    merge: true,
-                                },
-                            },
-                        },
-                    },
-                }),
+                cache: apolloCache(),
                 link: authorizationMiddleware.concat(httpMainLink),
             };
         },

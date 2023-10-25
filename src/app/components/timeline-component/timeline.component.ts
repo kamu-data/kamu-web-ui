@@ -14,7 +14,7 @@ export class TimelineComponent {
     @Input() public history: MetadataBlockFragment[];
     @Input() public pageInfo: PageBasedInfo;
     @Input() public datasetName: string;
-    public defaultAvatar = AppValues.DEFAULT_AVATAR_URL;
+    public DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
     constructor(private navigationService: NavigationService) {}
 

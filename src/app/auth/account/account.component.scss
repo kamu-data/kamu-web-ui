@@ -1,25 +1,5 @@
 @import "var";
 
-.toggle-group {
-    box-shadow: none;
-    border-radius: 0 !important;
-    width: fit-content;
-}
-
-.mat-button-toggle-checked {
-    border-left: none;
-    border-top: none;
-    border-right: none;
-    border-bottom: 2px solid !important;
-    border-radius: 0;
-    background-color: transparent !important;
-}
-
-.mat-button-toggle-input {
-    background-color: transparent !important;
-    padding-left: 32px !important;
-}
-
 .custom-container {
     display: grid;
     grid-template-columns: 300px 1fr;

@@ -57,3 +57,11 @@
     padding-left: 25px;
     padding-bottom: 5px;
 }
+
+mat-tree {
+    background: inherit;
+
+    .mat-tree-node {
+        min-height: 30px;
+    }
+}

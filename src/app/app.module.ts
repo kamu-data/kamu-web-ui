@@ -5,13 +5,10 @@ import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
 import { APP_INITIALIZER, ErrorHandler, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { LoginComponent } from "./auth/login/login.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { ServiceWorkerModule } from "@angular/service-worker";
-import { environment } from "../environments/environment";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { NgbModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -19,7 +16,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS, HttpHeaders } from "@angular/common/http";
 import { MatTableModule } from "@angular/material/table";
 import { CdkTableModule } from "@angular/cdk/table";
-import { ApolloLink, InMemoryCache, NextLink, Operation } from "@apollo/client/core";
+import { ApolloLink, NextLink, Operation } from "@apollo/client/core";
 import { SearchApi } from "./api/search.api";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SearchService } from "./search/search.service";
@@ -34,7 +31,7 @@ import { DatasetModule } from "./dataset-view/dataset.module";
 import { DatasetService } from "./dataset-view/dataset.service";
 import { DatasetCreateModule } from "./dataset-create/dataset-create.module";
 import { AppHeaderComponent } from "./components/app-header/app-header.component";
-import { MatOptionModule } from "@angular/material/core";
+import { MAT_RIPPLE_GLOBAL_OPTIONS, MatOptionModule } from "@angular/material/core";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { GithubCallbackComponent } from "./auth/github-callback/github.callback";
@@ -68,8 +65,7 @@ import { LoginService } from "./auth/login/login.service";
 import { logError } from "./common/app.helpers";
 import { DatasetPermissionsService } from "./dataset-view/dataset.permissions.service";
 import { LocalStorageService } from "./services/local-storage.service";
-import { DatasetMetadata } from "./api/kamu.graphql.interface";
-import { MaybeUndefined } from "./common/app.types";
+import { apolloCache } from "./apollo-cache.helper";
 
 const Services = [
     {
@@ -112,37 +108,7 @@ const Services = [
             });
 
             return {
-                cache: new InMemoryCache({
-                    typePolicies: {
-                        Account: {
-                            // For now we are faking account IDs on the server, so they are a bad caching field
-                            keyFields: ["accountName"],
-                        },
-                        AccountRef: {
-                            // For now we are faking account IDs on the server, so they are a bad caching field
-                            keyFields: ["accountName"],
-                        },
-                        Dataset: {
-                            // Use alias, as ID might be the same between 2 accounts who synchronized
-                            keyFields: ["alias"],
-                            fields: {
-                                metadata: {
-                                    merge(
-                                        existing: MaybeUndefined<DatasetMetadata>,
-                                        incoming: DatasetMetadata,
-                                        { mergeObjects },
-                                    ) {
-                                        if (existing) {
-                                            return mergeObjects(existing, incoming);
-                                        } else {
-                                            return incoming;
-                                        }
-                                    },
-                                },
-                            },
-                        },
-                    },
-                }),
+                cache: apolloCache(),
                 link: authorizationMiddleware.concat(httpMainLink),
             };
         },
@@ -177,6 +143,12 @@ const Services = [
         },
         deps: [LoginService],
         multi: true,
+    },
+    {
+        provide: MAT_RIPPLE_GLOBAL_OPTIONS,
+        useValue: {
+            disabled: true,
+        },
     },
 ];
 const MatModules = [
@@ -220,12 +192,6 @@ const MatModules = [
 
         BrowserModule,
         BrowserAnimationsModule,
-        ServiceWorkerModule.register("ngsw-worker.js", {
-            enabled: environment.production,
-            // Register the ServiceWorker as soon as the app is stable
-            // or after 30 seconds (whichever comes first).
-            registrationStrategy: "registerWhenStable:30000",
-        }),
         NgbModule,
         NgbTypeaheadModule,
         HttpClientModule,

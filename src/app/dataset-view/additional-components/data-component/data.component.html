@@ -133,18 +133,23 @@
             </div>
         </div>
 
-        <div class="border border-1 rounded-2 px-2 py-4">
-            <ngx-monaco-editor
-                (onInit)="onInitEditor($event)"
-                [options]="SQL_EDITOR_OPTIONS"
-                [(ngModel)]="sqlRequestCode"
-            ></ngx-monaco-editor>
+        <div class="position-relative">
+            <ng-container *ngIf="!editorLoaded">
+                <mat-progress-bar class="position-absolute" mode="indeterminate"></mat-progress-bar>
+            </ng-container>
+            <div class="border border-1 rounded-2 px-2 py-4 position-relative">
+                <ngx-monaco-editor
+                    (onInit)="onInitEditor($event)"
+                    [options]="SQL_EDITOR_OPTIONS"
+                    [(ngModel)]="sqlRequestCode"
+                ></ngx-monaco-editor>
+            </div>
         </div>
         <ng-container *ngIf="sqlErrorMarker$ | async as sqlErrorMarker">
             <h2 class="box-title align-items-center pb-3 pt-3 m-0">Error:</h2>
             <p class="sql-error-message" data-test-id="sql-error-message">{{ sqlErrorMarker }}</p>
         </ng-container>
-        <ng-container *ngIf="!(sqlErrorMarker$ | async) && dataUpdate.schema && currentData">
+        <ng-container *ngIf="!(sqlErrorMarker$ | async) && dataUpdate.schema && currentData && editorLoaded">
             <h2 class="box-title align-items-center py-3 m-0">Result:</h2>
 
             <app-dynamic-table

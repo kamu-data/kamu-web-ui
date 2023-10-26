@@ -29,6 +29,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     public sqlRequestCode = `select\n  *\nfrom `;
     public currentData: DataRow[] = [];
     public isAllDataLoaded = false;
+    public editorLoaded = false;
 
     private skipRows: MaybeUndefined<number>;
     private rowsLimit: number = AppValues.SQL_QUERY_LIMIT;
@@ -98,6 +99,7 @@ export class DataComponent extends BaseComponent implements OnInit {
         if (this.currentData.length > 0) {
             this.runSQLRequest({ query: this.sqlRequestCode });
         }
+        this.editorLoaded = true;
     }
 
     private buildSqlRequestCode(): void {

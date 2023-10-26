@@ -41,7 +41,6 @@ describe("DataComponent", () => {
             ],
             declarations: [DataComponent, LoadMoreComponent],
         }).compileComponents();
-
         fixture = TestBed.createComponent(DataComponent);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         location = TestBed.inject(Location);
@@ -54,6 +53,22 @@ describe("DataComponent", () => {
     it("should create", () => {
         expect(component).toBeTruthy();
     });
+
+    it("should check that the progress bar for the editor disappears", fakeAsync(() => {
+        fixture.detectChanges();
+
+        expect(component.editorLoaded).toBeFalse();
+        const progressBarElementBefore = findElementByDataTestId(fixture, "editor-progress-bar");
+        expect(progressBarElementBefore).toBeDefined();
+
+        component.editorLoaded = true;
+        tick();
+        fixture.detectChanges();
+
+        const progressBarElementAfter = findElementByDataTestId(fixture, "editor-progress-bar");
+        expect(progressBarElementAfter).toBeUndefined();
+        flush();
+    }));
 
     it("should check run sql button", fakeAsync(() => {
         const runSQLRequestEmitSpy = spyOn(component.runSQLRequestEmit, "emit");

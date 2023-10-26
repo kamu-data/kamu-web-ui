@@ -135,7 +135,11 @@
 
         <div class="position-relative">
             <ng-container *ngIf="!editorLoaded">
-                <mat-progress-bar class="position-absolute" mode="indeterminate"></mat-progress-bar>
+                <mat-progress-bar
+                    data-test-id="editor-progress-bar"
+                    class="position-absolute"
+                    mode="indeterminate"
+                ></mat-progress-bar>
             </ng-container>
             <div class="border border-1 rounded-2 px-2 py-4 position-relative">
                 <ngx-monaco-editor

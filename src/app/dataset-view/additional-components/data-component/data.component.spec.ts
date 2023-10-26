@@ -19,6 +19,7 @@ import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { MatDividerModule } from "@angular/material/divider";
 import { LoadMoreComponent } from "./load-more/load-more.component";
 import { DynamicTableModule } from "../../../components/dynamic-table/dynamic-table.module";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 describe("DataComponent", () => {
     let component: DataComponent;
@@ -36,6 +37,7 @@ describe("DataComponent", () => {
                 MonacoEditorModule.forRoot(),
                 MatDividerModule,
                 DynamicTableModule,
+                MatProgressBarModule,
             ],
             declarations: [DataComponent, LoadMoreComponent],
         }).compileComponents();

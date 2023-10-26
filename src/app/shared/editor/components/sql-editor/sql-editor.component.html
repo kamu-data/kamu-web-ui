@@ -1,6 +1,7 @@
 <ngx-monaco-editor
+    [ngStyle]="{ height: height, width: width }"
     (onInit)="onInitEditor($event)"
     [options]="EDITOR_OPTIONS"
-    [(ngModel)]="sqlTemplate"
+    [(ngModel)]="template"
     (ngModelChange)="modelChange()"
 ></ngx-monaco-editor>

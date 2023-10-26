@@ -1,13 +1,5 @@
 @import "var";
 
-:host {
-    ::ng-deep {
-        ngx-monaco-editor {
-            height: 400px;
-        }
-    }
-}
-
 * {
     font-size: 18px;
 }

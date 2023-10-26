@@ -144,8 +144,8 @@
             </ng-container>
             <div class="border border-1 rounded-2 px-2 py-4 position-relative">
                 <app-sql-editor
-                    [(sqlTemplate)]="sqlRequestCode"
-                    [sqlError]="sqlErrorMarker$ | async"
+                    [(template)]="sqlRequestCode"
+                    [error]="sqlErrorMarker$ | async"
                     (onRunSql)="runSql()"
                 ></app-sql-editor>
             </div>

@@ -31,6 +31,7 @@ import {
     mockDatasetBasicsDerivedFragment,
 } from "src/app/search/mock.data";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { EditorModule } from "../../../../../shared/editor/editor.module";
 
 describe("SetTransformComponent", () => {
     let component: SetTransformComponent;
@@ -60,6 +61,7 @@ describe("SetTransformComponent", () => {
                 FormsModule,
                 HttpClientTestingModule,
                 ReactiveFormsModule,
+                EditorModule,
             ],
             providers: [
                 Apollo,

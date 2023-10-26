@@ -51,7 +51,8 @@
                 </div>
             </div>
             <div class="mt-4 container-monaco py-4">
-                <app-sql-editor [(sqlTemplate)]="queries[i].query" data-test-id="monaco-editor-modal"> </app-sql-editor>
+                <app-sql-editor [(template)]="queries[i].query" height="300px" data-test-id="monaco-editor-modal">
+                </app-sql-editor>
             </div>
         </div>
     </div>

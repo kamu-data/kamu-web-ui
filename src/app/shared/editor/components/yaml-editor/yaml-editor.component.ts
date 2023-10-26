@@ -1,43 +1,41 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    Output,
-    SimpleChanges,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, OnChanges, Output, SimpleChanges } from "@angular/core";
 
 import * as monaco from "monaco-editor";
-import { MaybeNull } from "../../../../common/app.types";
 import { MonacoService } from "../../services/monaco.service";
-import { YAML_EDITOR_OPTIONS } from "./config-editor.events";
+import { BaseEditorComponent } from "../base-editor/base-editor.componet";
+
+const YAML_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
+    theme: "vs",
+    language: "yaml",
+    renderLineHighlight: "none",
+    minimap: {
+        enabled: false,
+    },
+    scrollBeyondLastLine: false,
+};
 
 @Component({
     selector: "app-yaml-editor",
     templateUrl: "./yaml-editor.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class YamlEditorComponent implements OnChanges {
-    @Input() public readonly YAML_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions =
-        YAML_EDITOR_OPTIONS;
-    @Input() public yamlTemplate = "";
-    @Input() public yamlError: MaybeNull<string>;
+export class YamlEditorComponent extends BaseEditorComponent implements OnChanges {
+    public readonly YAML_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = YAML_EDITOR_OPTIONS;
 
     @Output() public yamlTemplateChange = new EventEmitter<string>();
 
-    private editorModel: monaco.editor.ITextModel;
-
-    constructor(private monacoService: MonacoService) {}
+    constructor(private monacoService: MonacoService) {
+        super();
+    }
 
     public ngOnChanges(changes: SimpleChanges) {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (changes.yamlError) {
-            if (this.yamlError) {
-                this.monacoService.setErrorMarker(this.editorModel, this.yamlError);
+        if (changes.error) {
+            if (this.error) {
+                this.monacoService.setErrorMarker(this.editorModel, this.error);
             }
 
-            if (!this.yamlError) {
+            if (!this.error) {
                 this.monacoService.clearErrorMarker(this.editorModel);
             }
         }
@@ -49,6 +47,6 @@ export class YamlEditorComponent implements OnChanges {
     }
 
     public modelChange(): void {
-        this.yamlTemplateChange.emit(this.yamlTemplate);
+        this.yamlTemplateChange.emit(this.template);
     }
 }

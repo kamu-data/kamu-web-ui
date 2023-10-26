@@ -1,43 +1,41 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    Output,
-    SimpleChanges,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, OnChanges, Output, SimpleChanges } from "@angular/core";
 import * as monaco from "monaco-editor";
 
 import { getMonacoNamespace, MonacoService } from "../../services/monaco.service";
-import { SQL_EDITOR_OPTIONS } from "./config-editor.events";
-import { MaybeNull } from "src/app/common/app.types";
+import { BaseEditorComponent } from "../base-editor/base-editor.componet";
+
+const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
+    theme: "vs",
+    language: "sql",
+    renderLineHighlight: "none",
+    minimap: {
+        enabled: false,
+    },
+    scrollBeyondLastLine: false,
+};
 
 @Component({
     selector: "app-sql-editor",
     templateUrl: "./sql-editor.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SqlEditorComponent implements OnChanges {
-    @Input() public readonly EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = SQL_EDITOR_OPTIONS;
-    @Input() public sqlTemplate = "";
-    @Input() public sqlError: MaybeNull<string>;
+export class SqlEditorComponent extends BaseEditorComponent implements OnChanges {
+    public readonly EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = SQL_EDITOR_OPTIONS;
 
-    @Output() public sqlTemplateChange = new EventEmitter<string>();
     @Output() public onRunSql = new EventEmitter<null>();
 
-    private editorModel: monaco.editor.ITextModel;
-
-    constructor(private monacoService: MonacoService) {}
+    constructor(private monacoService: MonacoService) {
+        super();
+    }
 
     public ngOnChanges(changes: SimpleChanges) {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (changes.sqlError) {
-            if (this.sqlError) {
-                this.monacoService.setErrorMarker(this.editorModel, this.sqlError);
+        if (changes.error) {
+            if (this.error) {
+                this.monacoService.setErrorMarker(this.editorModel, this.error);
             }
 
-            if (!this.sqlError) {
+            if (!this.error) {
                 this.monacoService.clearErrorMarker(this.editorModel);
             }
         }
@@ -52,6 +50,8 @@ export class SqlEditorComponent implements OnChanges {
 
         // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
         this.editorModel = editor.getModel() as monaco.editor.ITextModel;
+
+        console.log(this.editorModel.getLineCount());
 
         editor.addAction({
             // An unique identifier of the contributed action.
@@ -69,6 +69,6 @@ export class SqlEditorComponent implements OnChanges {
     }
 
     public modelChange(): void {
-        this.sqlTemplateChange.emit(this.sqlTemplate);
+        this.templateChange.emit(this.template);
     }
 }

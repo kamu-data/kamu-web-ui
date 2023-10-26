@@ -16,6 +16,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { EditorModule } from "../../../../../../../shared/editor/editor.module";
 
 describe("PreprocessStepComponent", () => {
     let component: PreprocessStepComponent;
@@ -31,6 +32,7 @@ describe("PreprocessStepComponent", () => {
                 FormsModule,
                 MatIconModule,
                 SharedTestModule,
+                EditorModule,
             ],
             providers: [Apollo],
         })

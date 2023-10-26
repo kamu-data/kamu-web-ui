@@ -32,7 +32,7 @@ import {
     DatasetHistoryUpdate,
     DataSqlErrorUpdate,
     LineageUpdate,
-    OverviewDataUpdate,
+    OverviewUpdate,
 } from "./dataset.subscriptions.interface";
 import { first } from "rxjs/operators";
 import _ from "lodash";
@@ -69,9 +69,9 @@ describe("AppDatasetService", () => {
                 expect(dataset).toBe(expectedDatasetBasics);
             });
 
-        const datasetOverviewSubscription$ = datasetSubsService.overviewDataChanges
+        const datasetOverviewSubscription$ = datasetSubsService.overviewChanges
             .pipe(first())
-            .subscribe((overviewDataUpdate: OverviewDataUpdate) => {
+            .subscribe((overviewDataUpdate: OverviewUpdate) => {
                 const expectedOverview = mockDatasetMainDataResponse.datasets.byOwnerAndName as DatasetOverviewFragment;
                 expect(overviewDataUpdate.overview).toEqual(expectedOverview);
 
@@ -80,14 +80,14 @@ describe("AppDatasetService", () => {
                 expect(overviewDataUpdate.size).toEqual(expectedSize);
             });
 
-        const datasetDataSubscription$ = datasetSubsService.queryDataChanges.pipe(first()).subscribe();
         const metadataSchemaSubscription$ = datasetSubsService.metadataSchemaChanges.pipe(first()).subscribe();
+
+        datasetSubsService.sqlQueryDataChanges.subscribe(() => fail("Unexpected data update"));
 
         service.requestDatasetMainData(mockDatasetInfo).subscribe();
 
         expect(datasetChangesSubscription$.closed).toBeTrue();
         expect(datasetOverviewSubscription$.closed).toBeTrue();
-        expect(datasetDataSubscription$.closed).toBeTrue();
         expect(metadataSchemaSubscription$.closed).toBeTrue();
     });
 
@@ -116,8 +116,8 @@ describe("AppDatasetService", () => {
         spyOn(datasetApi, "getDatasetMainData").and.returnValue(of(mockDatasetResponseNotFound));
 
         service.datasetChanges.subscribe(() => fail("Unexpected onDatasetChanges update"));
-        datasetSubsService.overviewDataChanges.subscribe(() => fail("Unexpected overview update"));
-        datasetSubsService.queryDataChanges.subscribe(() => fail("Unexpected data update"));
+        datasetSubsService.overviewChanges.subscribe(() => fail("Unexpected overview update"));
+        datasetSubsService.sqlQueryDataChanges.subscribe(() => fail("Unexpected data update"));
         datasetSubsService.metadataSchemaChanges.subscribe(() => fail("Unexpected metadata update"));
 
         const subscription$ = service
@@ -147,8 +147,8 @@ describe("AppDatasetService", () => {
         spyOn(datasetApi, "getDatasetMainData").and.returnValue(of(sqlFailureResponse));
 
         service.datasetChanges.subscribe(() => fail("Unexpected onDatasetChanges update"));
-        datasetSubsService.overviewDataChanges.subscribe(() => fail("Unexpected overview update"));
-        datasetSubsService.queryDataChanges.subscribe(() => fail("Unexpected data update"));
+        datasetSubsService.overviewChanges.subscribe(() => fail("Unexpected overview update"));
+        datasetSubsService.sqlQueryDataChanges.subscribe(() => fail("Unexpected data update"));
         datasetSubsService.metadataSchemaChanges.subscribe(() => fail("Unexpected metadata update"));
 
         const subscription$ = service
@@ -240,7 +240,7 @@ describe("AppDatasetService", () => {
         const limit = 20;
         spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(of(mockDatasetDataSqlRunResponse));
 
-        const subscriptionDataChanges$ = datasetSubsService.queryDataChanges.pipe(first()).subscribe();
+        const subscriptionDataChanges$ = datasetSubsService.sqlQueryDataChanges.pipe(first()).subscribe();
 
         const emitSqlErrorOccurredSpy = spyOn(datasetSubsService, "emitSqlErrorOccurred");
 
@@ -255,7 +255,7 @@ describe("AppDatasetService", () => {
         const limit = 20;
         spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(of(mockDatasetDataSqlRunInvalidSqlResponse));
 
-        const subscriptionDataChanges$ = datasetSubsService.queryDataChanges.pipe(first()).subscribe();
+        const subscriptionDataChanges$ = datasetSubsService.sqlQueryDataChanges.pipe(first()).subscribe();
 
         const subscriptionErrorChanges$ = datasetSubsService.sqlErrorOccurrences
             .pipe(first())
@@ -275,7 +275,7 @@ describe("AppDatasetService", () => {
         const limit = 20;
         spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(of(mockDatasetDataSqlRunInternalErrorResponse));
 
-        datasetSubsService.queryDataChanges.subscribe(() => fail("Unexpected data update"));
+        datasetSubsService.sqlQueryDataChanges.subscribe(() => fail("Unexpected data update"));
         datasetSubsService.sqlErrorOccurrences.subscribe(() => fail("Unexpected SQL error update"));
 
         const subscription$ = service
@@ -296,7 +296,7 @@ describe("AppDatasetService", () => {
         const limit = 20;
         spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(throwError(() => new SqlExecutionError()));
 
-        datasetSubsService.queryDataChanges.subscribe(() => fail("Unexpected data update"));
+        datasetSubsService.sqlQueryDataChanges.subscribe(() => fail("Unexpected data update"));
         datasetSubsService.sqlErrorOccurrences.subscribe(() => fail("Unexpected SQL error update"));
 
         const subscription$ = service

@@ -1,5 +1,5 @@
 import { EditLicenseModalComponent } from "./components/edit-license-modal/edit-license-modal.component";
-import { OverviewDataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
     DatasetCurrentInfoFragment,
     DatasetKind,
@@ -52,7 +52,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         this.trackSubscription(
-            this.datasetSubsService.overviewDataChanges.subscribe((overviewUpdate: OverviewDataUpdate) => {
+            this.datasetSubsService.overviewChanges.subscribe((overviewUpdate: OverviewUpdate) => {
                 this.currentState = {
                     schema: overviewUpdate.schema,
                     data: overviewUpdate.content,

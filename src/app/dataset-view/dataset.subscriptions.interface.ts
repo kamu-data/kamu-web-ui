@@ -8,7 +8,7 @@ import {
 import { DataRow, DatasetSchema } from "../interface/dataset.interface";
 import { MaybeNull } from "../common/app.types";
 
-export interface OverviewDataUpdate {
+export interface OverviewUpdate {
     schema: MaybeNull<DatasetSchema>;
     content: DataRow[];
     overview: DatasetOverviewFragment;

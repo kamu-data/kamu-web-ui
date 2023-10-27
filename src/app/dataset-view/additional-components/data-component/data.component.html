@@ -1,10 +1,11 @@
 <div class="dataset-view-data-result-container" *ngIf="dataUpdate$ | async as dataUpdate">
     <div class="search-result-container__content">
-        <ng-container *ngIf="dataUpdate.schema">
+        <ng-container *ngIf="overviewUpdate$ | async as overviewUpdate">
             <h2 class="box-title align-items-center pb-3 m-0">Schema:</h2>
             <app-dynamic-table
+                *ngIf="overviewUpdate.schema"
                 [hasTableHeader]="true"
-                [schemaFields]="dataUpdate.schema.fields"
+                [schemaFields]="overviewUpdate.schema.fields"
                 [idTable]="'schema-block-table'"
             ></app-dynamic-table>
         </ng-container>

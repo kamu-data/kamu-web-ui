@@ -133,12 +133,21 @@
             </div>
         </div>
 
-        <div class="border border-1 rounded-2 px-2 py-4">
-            <ngx-monaco-editor
-                (onInit)="onInitEditor($event)"
-                [options]="SQL_EDITOR_OPTIONS"
-                [(ngModel)]="sqlRequestCode"
-            ></ngx-monaco-editor>
+        <div class="position-relative">
+            <ng-container *ngIf="!editorLoaded">
+                <mat-progress-bar
+                    data-test-id="editor-progress-bar"
+                    class="position-absolute"
+                    mode="indeterminate"
+                ></mat-progress-bar>
+            </ng-container>
+            <div class="border border-1 rounded-2 px-2 py-4 position-relative">
+                <ngx-monaco-editor
+                    (onInit)="onInitEditor($event)"
+                    [options]="SQL_EDITOR_OPTIONS"
+                    [(ngModel)]="sqlRequestCode"
+                ></ngx-monaco-editor>
+            </div>
         </div>
         <ng-container *ngIf="sqlErrorMarker$ | async as sqlErrorMarker">
             <h2 class="box-title align-items-center pb-3 pt-3 m-0">Error:</h2>
@@ -164,7 +173,7 @@
         <ng-container *ngIf="!(sqlErrorMarker$ | async) && !dataUpdate.schema">
             <mat-divider></mat-divider>
             <h3 class="box-title text-center pt-4 author" *ngIf="!currentData.length">
-                Need
+                Need to
                 <a class="add-link"> add data</a>
                 .
             </h3>

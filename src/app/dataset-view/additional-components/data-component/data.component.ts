@@ -2,7 +2,15 @@ import AppValues from "src/app/common/app.values";
 import { OffsetInterval } from "../../../api/kamu.graphql.interface";
 import { Location } from "@angular/common";
 import { DataSqlErrorUpdate, DataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+} from "@angular/core";
 import { DataRow, DatasetRequestBySql } from "../../../interface/dataset.interface";
 import DataTabValues from "./mock.data";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
@@ -29,6 +37,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     public sqlRequestCode = `select\n  *\nfrom `;
     public currentData: DataRow[] = [];
     public isAllDataLoaded = false;
+    public editorLoaded = false;
 
     private skipRows: MaybeUndefined<number>;
     private rowsLimit: number = AppValues.SQL_QUERY_LIMIT;
@@ -36,22 +45,19 @@ export class DataComponent extends BaseComponent implements OnInit {
     public sqlErrorMarker$: Observable<string>;
     public dataUpdate$: Observable<DataUpdate>;
 
-    constructor(private datasetSubsService: DatasetSubscriptionsService, private location: Location) {
+    constructor(
+        private datasetSubsService: DatasetSubscriptionsService,
+        private location: Location,
+        private cdr: ChangeDetectorRef,
+    ) {
         super();
-    }
-
-    public runSQLRequest(params: DatasetRequestBySql, initialSqlRun = false): void {
-        if (initialSqlRun) {
-            this.resetRowsLimits();
-        }
-        this.runSQLRequestEmit.emit(params);
     }
 
     public ngOnInit(): void {
         this.sqlErrorMarker$ = this.datasetSubsService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
         );
-        this.dataUpdate$ = this.datasetSubsService.queryDataChanges.pipe(
+        this.dataUpdate$ = this.datasetSubsService.sqlQueryDataChanges.pipe(
             tap((dataUpdate: DataUpdate) => {
                 if (dataUpdate.currentVocab?.offsetColumn) {
                     this.offsetColumnName = dataUpdate.currentVocab.offsetColumn;
@@ -62,6 +68,14 @@ export class DataComponent extends BaseComponent implements OnInit {
             }),
         );
         this.buildSqlRequestCode();
+        this.runSQLRequest({ query: this.sqlRequestCode }, true);
+    }
+
+    public runSQLRequest(params: DatasetRequestBySql, initialSqlRun = false): void {
+        if (initialSqlRun) {
+            this.resetRowsLimits();
+        }
+        this.runSQLRequestEmit.emit(params);
     }
 
     public loadMore(limit: number): void {
@@ -95,9 +109,9 @@ export class DataComponent extends BaseComponent implements OnInit {
             // @param editor The editor instance is passed in as a convenience
             run: runQueryFn,
         });
-        if (this.currentData.length > 0) {
-            this.runSQLRequest({ query: this.sqlRequestCode });
-        }
+
+        this.editorLoaded = true;
+        this.cdr.detectChanges();
     }
 
     private buildSqlRequestCode(): void {

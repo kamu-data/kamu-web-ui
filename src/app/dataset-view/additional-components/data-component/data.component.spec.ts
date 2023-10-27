@@ -19,6 +19,7 @@ import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { MatDividerModule } from "@angular/material/divider";
 import { LoadMoreComponent } from "./load-more/load-more.component";
 import { DynamicTableModule } from "../../../components/dynamic-table/dynamic-table.module";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 describe("DataComponent", () => {
     let component: DataComponent;
@@ -36,28 +37,47 @@ describe("DataComponent", () => {
                 MonacoEditorModule.forRoot(),
                 MatDividerModule,
                 DynamicTableModule,
+                MatProgressBarModule,
             ],
             declarations: [DataComponent, LoadMoreComponent],
         }).compileComponents();
-
         fixture = TestBed.createComponent(DataComponent);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         location = TestBed.inject(Location);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         spyOn(location, "getState").and.returnValue({ start: 0, end: 100 });
-        datasetSubsService.emitQueryDataChanged(mockDataUpdate);
+        datasetSubsService.emitSqlQueryDataChanged(mockDataUpdate);
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
     });
 
+    it("should check that the progress bar for the editor disappears", fakeAsync(() => {
+        fixture.detectChanges();
+
+        expect(component.editorLoaded).toBeFalse();
+        const progressBarElementBefore = findElementByDataTestId(fixture, "editor-progress-bar");
+        expect(progressBarElementBefore).toBeDefined();
+
+        component.editorLoaded = true;
+        tick();
+        fixture.detectChanges();
+
+        const progressBarElementAfter = findElementByDataTestId(fixture, "editor-progress-bar");
+        expect(progressBarElementAfter).toBeUndefined();
+        flush();
+    }));
+
     it("should check run sql button", fakeAsync(() => {
         const runSQLRequestEmitSpy = spyOn(component.runSQLRequestEmit, "emit");
         tick();
         fixture.detectChanges();
+        runSQLRequestEmitSpy.calls.reset();
+
         emitClickOnElementByDataTestId(fixture, "runSqlQueryButton");
+
         expect(runSQLRequestEmitSpy).toHaveBeenCalledTimes(1);
         flush();
     }));
@@ -91,7 +111,7 @@ describe("DataComponent", () => {
     }));
 
     it("should calculate sql request params", () => {
-        datasetSubsService.emitQueryDataChanged(mockDataUpdate);
+        datasetSubsService.emitSqlQueryDataChanged(mockDataUpdate);
         fixture.detectChanges();
 
         const sqlReq = spyOn(component.runSQLRequestEmit, "emit");
@@ -103,7 +123,7 @@ describe("DataComponent", () => {
         };
 
         component.loadMore(limit);
-        datasetSubsService.emitQueryDataChanged(mockDataUpdate);
+        datasetSubsService.emitSqlQueryDataChanged(mockDataUpdate);
         expect(sqlReq).toHaveBeenCalledWith(params);
 
         component.loadMore(limit);

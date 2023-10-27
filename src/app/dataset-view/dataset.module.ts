@@ -63,6 +63,7 @@ import { DatasetSettingsComponent } from "./additional-components/dataset-settin
 import { LoadMoreComponent } from "./additional-components/data-component/load-more/load-more.component";
 import { MatInputModule } from "@angular/material/input";
 import { ReturnToCliComponent } from "../components/return-to-cli/return-to-cli.component";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 @NgModule({
     imports: [
@@ -106,6 +107,7 @@ import { ReturnToCliComponent } from "../components/return-to-cli/return-to-cli.
         MatTreeModule,
         MatStepperModule,
         MatInputModule,
+        MatProgressBarModule,
     ],
     exports: [
         DatasetViewHeaderComponent,

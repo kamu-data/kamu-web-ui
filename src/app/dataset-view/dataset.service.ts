@@ -31,7 +31,7 @@ import {
     DatasetHistoryUpdate,
     DataUpdate,
     MetadataSchemaUpdate,
-    OverviewDataUpdate,
+    OverviewUpdate,
 } from "./dataset.subscriptions.interface";
 import { DatasetApi } from "../api/dataset.api";
 import { DatasetNotFoundError } from "../common/errors";
@@ -73,7 +73,6 @@ export class DatasetService {
                         );
                         this.permissionsDataUpdate(data.datasets.byOwnerAndName);
                         this.currentSetVocab = data.datasets.byOwnerAndName.metadata.currentVocab as SetVocab;
-                        this.dataTabDataUpdate(schema, dataTail, this.currentSetVocab);
                         this.metadataTabDataUpdate(data, schema);
                         this.lineageDataReset();
                         this.historyDataReset();
@@ -182,10 +181,8 @@ export class DatasetService {
                         schema,
                         currentVocab: this.currentSetVocab,
                     };
-                    this.datasetSubsService.emitQueryDataChanged(dataUpdate);
-                    this.datasetSubsService.emitSqlErrorOccurred({
-                        error: "",
-                    });
+                    this.datasetSubsService.emitSqlQueryDataChanged(dataUpdate);
+                    this.datasetSubsService.resetSqlError();
                 } else if (queryResult.errorKind === DataQueryResultErrorKind.InvalidSql) {
                     this.datasetSubsService.emitSqlErrorOccurred({
                         error: queryResult.errorMessage,
@@ -217,27 +214,17 @@ export class DatasetService {
     ): void {
         const content: DataRow[] = DatasetService.parseDataRows(tail);
 
-        const overviewDataUpdate: OverviewDataUpdate = {
+        const overviewDataUpdate: OverviewUpdate = {
             schema,
             content,
             overview,
             size,
         };
-        this.datasetSubsService.emitOverviewDataChanged(overviewDataUpdate);
+        this.datasetSubsService.emitOverviewChanged(overviewDataUpdate);
     }
 
     private permissionsDataUpdate(permissions: DatasetPermissionsFragment): void {
         this.datasetSubsService.emitPermissionsChanged(permissions);
-    }
-
-    private dataTabDataUpdate(
-        schema: MaybeNull<DatasetSchema>,
-        tail: DataQueryResultSuccessViewFragment,
-        currentVocab?: SetVocab,
-    ): void {
-        const content: DataRow[] = DatasetService.parseDataRows(tail);
-        const dataUpdate: DataUpdate = { content, schema, currentVocab };
-        this.datasetSubsService.emitQueryDataChanged(dataUpdate);
     }
 
     private metadataTabDataUpdate(data: GetDatasetMainDataQuery, schema: MaybeNull<DatasetSchema>): void {

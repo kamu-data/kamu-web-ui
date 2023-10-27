@@ -6,15 +6,15 @@ import {
     DataUpdate,
     LineageUpdate,
     MetadataSchemaUpdate,
-    OverviewDataUpdate,
+    OverviewUpdate,
 } from "./dataset.subscriptions.interface";
 import { DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
 import { MaybeNull } from "../common/app.types";
 
 @Injectable({ providedIn: "root" })
 export class DatasetSubscriptionsService {
-    private overviewData$: Subject<OverviewDataUpdate> = new ReplaySubject<OverviewDataUpdate>(1 /*bufferSize*/);
-    private queryData$: Subject<DataUpdate> = new ReplaySubject<DataUpdate>(1 /*bufferSize*/);
+    private overview$: Subject<OverviewUpdate> = new ReplaySubject<OverviewUpdate>(1 /*bufferSize*/);
+    private sqlQueryData$: Subject<DataUpdate> = new ReplaySubject<DataUpdate>(1 /*bufferSize*/);
     private sqlError$: Subject<DataSqlErrorUpdate> = new ReplaySubject<DataSqlErrorUpdate>(1 /*bufferSize*/);
     private history$: Subject<MaybeNull<DatasetHistoryUpdate>> = new ReplaySubject<MaybeNull<DatasetHistoryUpdate>>(
         1 /*bufferSize*/,
@@ -25,20 +25,22 @@ export class DatasetSubscriptionsService {
         1 /*bufferSize*/,
     );
 
-    public emitOverviewDataChanged(data: OverviewDataUpdate): void {
-        this.overviewData$.next(data);
+    public emitOverviewChanged(data: OverviewUpdate): void {
+        this.overview$.next(data);
     }
 
-    public get overviewDataChanges(): Observable<OverviewDataUpdate> {
-        return this.overviewData$.asObservable();
+    public get overviewChanges(): Observable<OverviewUpdate> {
+        return this.overview$.asObservable();
     }
 
-    public emitQueryDataChanged(dataUpdate: DataUpdate): void {
-        this.queryData$.next(dataUpdate);
+    // SQL queries
+
+    public emitSqlQueryDataChanged(dataUpdate: DataUpdate): void {
+        this.sqlQueryData$.next(dataUpdate);
     }
 
-    public get queryDataChanges(): Observable<DataUpdate> {
-        return this.queryData$.asObservable();
+    public get sqlQueryDataChanges(): Observable<DataUpdate> {
+        return this.sqlQueryData$.asObservable();
     }
 
     public emitSqlErrorOccurred(dataSqlErrorUpdate: DataSqlErrorUpdate) {
@@ -53,6 +55,8 @@ export class DatasetSubscriptionsService {
         return this.sqlError$.asObservable();
     }
 
+    // history
+
     public emitHistoryChanged(historyUpdate: MaybeNull<DatasetHistoryUpdate>): void {
         this.history$.next(historyUpdate);
     }
@@ -60,6 +64,8 @@ export class DatasetSubscriptionsService {
     public get historyChanges(): Observable<MaybeNull<DatasetHistoryUpdate>> {
         return this.history$.asObservable();
     }
+
+    // metadata
 
     public emitMetadataSchemaChanged(schema: MetadataSchemaUpdate): void {
         this.metadataSchema$.next(schema);
@@ -69,6 +75,8 @@ export class DatasetSubscriptionsService {
         return this.metadataSchema$.asObservable();
     }
 
+    // lineage
+
     public emitLineageChanged(data: MaybeNull<LineageUpdate>): void {
         this.lineage$.next(data);
     }
@@ -76,6 +84,8 @@ export class DatasetSubscriptionsService {
     public get lineageChanges(): Observable<MaybeNull<LineageUpdate>> {
         return this.lineage$.asObservable();
     }
+
+    // permissions
 
     public emitPermissionsChanged(permissions: DatasetPermissionsFragment): void {
         this.permissions$.next(permissions);

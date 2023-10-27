@@ -6,7 +6,7 @@ import { mockMetadataDerivedUpdate, mockOverviewDataUpdate } from "../data-tabs.
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewComponent } from "./overview.component";
-import { OverviewDataUpdate } from "../../dataset.subscriptions.interface";
+import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { DatasetCurrentInfoFragment, DatasetKind, DatasetOverviewFragment } from "src/app/api/kamu.graphql.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import { first } from "rxjs/operators";
@@ -79,12 +79,12 @@ describe("OverviewComponent", () => {
             .compileComponents();
 
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        datasetSubsService.emitOverviewDataChanged({
+        datasetSubsService.emitOverviewChanged({
             schema: mockMetadataDerivedUpdate.schema,
             content: mockOverviewDataUpdate.content,
             overview: _.cloneDeep(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
             size: mockOverviewDataUpdate.size,
-        } as OverviewDataUpdate);
+        } as OverviewUpdate);
 
         navigationService = TestBed.inject(NavigationService);
         modalService = TestBed.inject(NgbModal);

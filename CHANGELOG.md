@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Added initial loading screen for app
+- Added a progress bar when initializing the editor on the Data tab
 ### Changed
 - Separated main data query and lineage data query
 ### Fixed

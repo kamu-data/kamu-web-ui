@@ -87,6 +87,10 @@ export class DataComponent extends BaseComponent implements OnInit {
         this.runSQLRequest({ query: this.sqlRequestCode }, true);
     }
 
+    public hideProgressBar(): void {
+        this.editorLoaded = true;
+    }
+
     private buildSqlRequestCode(): void {
         this.sqlRequestCode += `'${this.datasetBasics.alias}'`;
         const offset = this.location.getState() as MaybeNull<Partial<OffsetInterval>>;

@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import * as monaco from "monaco-editor";
 import { MaybeUndefined } from "../../../common/app.types";
+import { EditorError } from "../models/error.model";
 
 export function getMonacoNamespace(): MaybeUndefined<typeof monaco> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
@@ -11,7 +12,7 @@ export function getMonacoNamespace(): MaybeUndefined<typeof monaco> {
     providedIn: "root",
 })
 export class MonacoService {
-    public setErrorMarker(model: monaco.editor.ITextModel, error: string): void {
+    public setErrorMarker(model: monaco.editor.ITextModel, error: EditorError): void {
         const monaco = getMonacoNamespace();
 
         if (!monaco) return;
@@ -30,29 +31,19 @@ export class MonacoService {
 
     private prepareMarkerData(
         model: monaco.editor.ITextModel,
-        error: string,
+        error: EditorError,
         monacoNamespace: typeof monaco,
     ): monaco.editor.IMarkerData {
-        const { line, col } = this.getErrorPos(error);
         const maxLines = model.getLineCount();
         const maxLastLineColumns = model.getLineMaxColumn(maxLines);
 
         return {
-            startLineNumber: line ?? 1,
-            startColumn: col ?? 1,
-            endLineNumber: line ?? maxLines,
+            startLineNumber: error.line ?? 1,
+            startColumn: error.col ?? 1,
+            endLineNumber: error.line ?? maxLines,
             endColumn: maxLastLineColumns,
-            message: error,
+            message: error.message,
             severity: monacoNamespace.MarkerSeverity.Error,
         };
-    }
-
-    private getErrorPos(error: string): { line: number | undefined; col: number | undefined } {
-        const lineMatch = error.match(/Line: (\d+)/);
-        const colMath = error.match(/Column (\d+)/);
-        const line = lineMatch ? Number(lineMatch[1]) : undefined;
-        const col = colMath ? Number(colMath[1]) : undefined;
-
-        return { line, col };
     }
 }

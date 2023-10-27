@@ -11,6 +11,7 @@ export abstract class BaseEditorComponent {
     @Input() public width: MaybeUndefined<string>;
 
     @Output() public templateChange = new EventEmitter<string>();
+    @Output() public onEditorLoaded = new EventEmitter<null>();
 
     public editorModel: monaco.editor.ITextModel;
 }

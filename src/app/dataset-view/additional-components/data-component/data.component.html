@@ -147,6 +147,7 @@
                     [(template)]="sqlRequestCode"
                     [error]="sqlErrorMarker$ | async"
                     (onRunSql)="runSql()"
+                    (onEditorLoaded)="hideProgressBar()"
                 ></app-sql-editor>
             </div>
         </div>

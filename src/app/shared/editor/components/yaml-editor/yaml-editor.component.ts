@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, OnChanges, Output, Si
 import * as monaco from "monaco-editor";
 import { MonacoService } from "../../services/monaco.service";
 import { BaseEditorComponent } from "../base-editor/base-editor.componet";
+import { getError } from "../../helpers/editor-error-formatter";
 
 const YAML_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     theme: "vs",
@@ -32,7 +33,7 @@ export class YamlEditorComponent extends BaseEditorComponent implements OnChange
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (changes.error) {
             if (this.error) {
-                this.monacoService.setErrorMarker(this.editorModel, this.error);
+                this.monacoService.setErrorMarker(this.editorModel, getError(this.error));
             }
 
             if (!this.error) {
@@ -42,6 +43,7 @@ export class YamlEditorComponent extends BaseEditorComponent implements OnChange
     }
 
     public onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
+        this.onEditorLoaded.emit();
         // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
         this.editorModel = editor.getModel() as monaco.editor.ITextModel;
     }

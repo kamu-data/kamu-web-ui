@@ -3,6 +3,7 @@ import * as monaco from "monaco-editor";
 
 import { getMonacoNamespace, MonacoService } from "../../services/monaco.service";
 import { BaseEditorComponent } from "../base-editor/base-editor.componet";
+import { getSqlError } from "../../helpers/editor-error-formatter";
 
 const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     theme: "vs",
@@ -32,7 +33,7 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnChanges
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (changes.error) {
             if (this.error) {
-                this.monacoService.setErrorMarker(this.editorModel, this.error);
+                this.monacoService.setErrorMarker(this.editorModel, getSqlError(this.error));
             }
 
             if (!this.error) {
@@ -42,6 +43,8 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnChanges
     }
 
     public onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
+        this.onEditorLoaded.emit();
+
         const runQueryFn = () => {
             this.onRunSql.emit();
         };
@@ -50,8 +53,6 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnChanges
 
         // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
         this.editorModel = editor.getModel() as monaco.editor.ITextModel;
-
-        console.log(this.editorModel.getLineCount());
 
         editor.addAction({
             // An unique identifier of the contributed action.

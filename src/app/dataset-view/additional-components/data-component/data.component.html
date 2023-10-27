@@ -1,4 +1,4 @@
-<div class="dataset-view-data-result-container" *ngIf="dataUpdate$ | async as dataUpdate">
+<div class="dataset-view-data-result-container" *ngIf="dataUpdate$ | async as dataUpdate; else noData">
     <div class="search-result-container__content">
         <ng-container *ngIf="overviewUpdate$ | async as overviewUpdate">
             <h2 class="box-title align-items-center pb-3 m-0">Schema:</h2>
@@ -181,3 +181,6 @@
         </ng-container>
     </div>
 </div>
+<ng-template #noData>
+    <p class="search-result-container__content">The current dataset does not contain any data</p>
+</ng-template>

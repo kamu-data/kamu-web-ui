@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GraphQL caching issues when switching between History and Lineage tabs
 - Correct author avatars on history tab
 - Eliminated console warnings on application load
+- Schema panel on Data tab always show dataset schema
 
 ## [0.13.0] - 2023-10-18
 ### Added

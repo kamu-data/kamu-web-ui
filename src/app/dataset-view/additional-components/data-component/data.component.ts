@@ -1,7 +1,7 @@
 import AppValues from "src/app/common/app.values";
 import { OffsetInterval } from "../../../api/kamu.graphql.interface";
 import { Location } from "@angular/common";
-import { DataSqlErrorUpdate, DataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DataSqlErrorUpdate, DataUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -44,6 +44,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
     public sqlErrorMarker$: Observable<string>;
     public dataUpdate$: Observable<DataUpdate>;
+    public overviewUpdate$: Observable<OverviewUpdate>;
 
     constructor(
         private datasetSubsService: DatasetSubscriptionsService,
@@ -54,6 +55,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.overviewUpdate$ = this.datasetSubsService.overviewChanges;
         this.sqlErrorMarker$ = this.datasetSubsService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
         );

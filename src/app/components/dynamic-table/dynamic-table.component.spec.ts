@@ -36,7 +36,7 @@ describe("DynamicTableComponent", () => {
         fixture.detectChanges();
         component.ngOnChanges();
         Object.keys(mockSchemaFields[0]).forEach((item: string, index: number) => {
-            const el = getElementByDataTestId(fixture, `column-name-${index}`);
+            const el = getElementByDataTestId(fixture, `column-header-name-${index}`);
             expect(el.textContent).toEqual(` ${item} `);
         });
     });

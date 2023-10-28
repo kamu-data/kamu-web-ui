@@ -11,7 +11,12 @@ import {
     getElementByDataTestId,
 } from "src/app/common/base-test.helpers.spec";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { mockDataUpdate, mockSqlErrorUpdate } from "../data-tabs.mock";
+import {
+    mockDataUpdate,
+    mockMetadataDerivedUpdate,
+    mockOverviewDataUpdate,
+    mockSqlErrorUpdate,
+} from "../data-tabs.mock";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Location } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -20,6 +25,8 @@ import { MatDividerModule } from "@angular/material/divider";
 import { LoadMoreComponent } from "./load-more/load-more.component";
 import { DynamicTableModule } from "../../../components/dynamic-table/dynamic-table.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { OverviewUpdate } from "../../dataset.subscriptions.interface";
+import _ from "lodash";
 
 describe("DataComponent", () => {
     let component: DataComponent;
@@ -132,4 +139,22 @@ describe("DataComponent", () => {
         const secondCallParams = sqlReq.calls.allArgs()[1];
         expect(secondCallParams).toEqual([params]);
     });
+
+    it("should check schema column names", fakeAsync(() => {
+        datasetSubsService.emitOverviewChanged({
+            schema: mockMetadataDerivedUpdate.schema,
+            content: mockOverviewDataUpdate.content,
+            overview: _.cloneDeep(mockOverviewDataUpdate.overview),
+            size: mockOverviewDataUpdate.size,
+        } as OverviewUpdate);
+        tick();
+        fixture.detectChanges();
+        const columnSchemaNames = mockMetadataDerivedUpdate.schema?.fields.map((item) => item.name);
+        columnSchemaNames?.forEach((columnName) => {
+            expect(findElementByDataTestId(fixture, `column-name-${columnName}`)?.textContent?.trim()).toEqual(
+                columnName,
+            );
+        });
+        flush();
+    }));
 });

@@ -10,7 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added initial loading screen for app
 - Added a progress bar when initializing the editor on the Data tab
 ### Changed
-- Separated main data query and lineage data query
+- Separated main data query and lineage data 
+- Improve reporting of fatal errors from modal window to toaster window
 ### Fixed
 - GraphQL caching issues when switching between History and Lineage tabs
 - Correct author avatars on history tab

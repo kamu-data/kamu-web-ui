@@ -1,8 +1,7 @@
-import { ModalService } from "../components/modal/modal.service";
 import { NavigationService } from "../services/navigation.service";
 import { ApolloError } from "@apollo/client/core";
 import { ErrorTexts } from "./errors.text";
-import { logError, promiseWithCatch } from "./app.helpers";
+import { logError } from "./app.helpers";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { Injector } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
@@ -91,7 +90,6 @@ export class KamuErrorHandler implements KamuErrorVisitor {
     constructor(
         private injector: Injector,
         private navigationService: NavigationService,
-        private modalService: ModalService,
         private loggedUserService: LoggedUserService,
     ) {}
 
@@ -101,12 +99,12 @@ export class KamuErrorHandler implements KamuErrorVisitor {
     }
 
     public visitApolloError(e: ApolloError): void {
-        promiseWithCatch(
-            this.modalService.error({
-                title: ErrorTexts.ERROR_TITLE_REQUEST_FAILED,
-                message: e.networkError ? ErrorTexts.ERROR_NETWORK_DESCRIPTION : ErrorTexts.ERROR_TECHNICAL_SUPPORT,
-                yesButtonText: "Close",
-            }),
+        this.toastrService.error(
+            "",
+            e.networkError ? ErrorTexts.ERROR_NETWORK_DESCRIPTION : ErrorTexts.ERROR_TECHNICAL_SUPPORT,
+            {
+                disableTimeOut: "timeOut",
+            },
         );
     }
 
@@ -119,35 +117,17 @@ export class KamuErrorHandler implements KamuErrorVisitor {
     }
 
     public visitDatasetOperationError(e: DatasetOperationError): void {
-        promiseWithCatch(
-            this.modalService.error({
-                title: ErrorTexts.ERROR_DATASET_OPERATION_FAILED,
-                message: e.compactMessage,
-                yesButtonText: "Close",
-            }),
-        );
+        this.toastrService.error(e.compactMessage);
     }
 
     public visitInvalidSqlError(e: InvalidSqlError): void {
-        promiseWithCatch(
-            this.modalService.error({
-                title: ErrorTexts.ERROR_TITLE_REQUEST_FAILED,
-                message: `${ErrorTexts.ERROR_INVALID_SQL_QUERY}: ${e.message}`,
-                yesButtonText: "Close",
-            }),
-        );
+        this.toastrService.error("", e.message, { timeOut: 5000 });
     }
 
     public visitSqlExecutionError(e: SqlExecutionError): void {
-        promiseWithCatch(
-            this.modalService.error({
-                title: ErrorTexts.ERROR_TITLE_REQUEST_FAILED,
-                message: e.message
-                    ? `${ErrorTexts.ERROR_EXECUTING_SQL_QUERY}: ${e.message}`
-                    : ErrorTexts.ERROR_EXECUTING_SQL_QUERY,
-                yesButtonText: "Close",
-            }),
-        );
+        this.toastrService.error("", e.message, {
+            timeOut: 5000,
+        });
     }
 
     public visitAuthenticationError(authenticationError: AuthenticationError): void {

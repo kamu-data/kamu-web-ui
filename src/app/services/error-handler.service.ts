@@ -1,7 +1,6 @@
 import { AuthenticationError, CustomApolloError, KamuError, KamuErrorHandler } from "../common/errors";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ErrorHandler, Inject, Injectable, Injector, NgZone } from "@angular/core";
-import { ModalService } from "../components/modal/modal.service";
 import { logError } from "../common/app.helpers";
 import { ApolloError } from "@apollo/client/core";
 import { LoggedUserService } from "../auth/logged-user.service";
@@ -13,16 +12,11 @@ export class ErrorHandlerService implements ErrorHandler {
     public static readonly APOLLO_ERROR_INVALID_TOKEN = "Invalid access token";
     public static readonly APOLLO_ERROR_EXPIRED_TOKEN = "Expired access token";
 
-    private kamuHandlerError = new KamuErrorHandler(
-        this.injector,
-        this.navigationService,
-        this.modalService,
-        this.loggedUserService,
-    );
+    private kamuHandlerError = new KamuErrorHandler(this.injector, this.navigationService, this.loggedUserService);
 
     constructor(
         @Inject(Injector) private injector: Injector,
-        private modalService: ModalService,
+
         private navigationService: NavigationService,
         private loggedUserService: LoggedUserService,
         private ngZone: NgZone,

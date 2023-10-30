@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+} from "@angular/core";
 import { Location } from "@angular/common";
 import { Observable, map, tap } from "rxjs";
 
@@ -36,7 +44,11 @@ export class DataComponent extends BaseComponent implements OnInit {
     public dataUpdate$: Observable<DataUpdate>;
     public overviewUpdate$: Observable<OverviewUpdate>;
 
-    constructor(private datasetSubsService: DatasetSubscriptionsService, private location: Location) {
+    constructor(
+        private datasetSubsService: DatasetSubscriptionsService,
+        private location: Location,
+        private cdr: ChangeDetectorRef,
+    ) {
         super();
     }
 
@@ -79,16 +91,13 @@ export class DataComponent extends BaseComponent implements OnInit {
         this.runSQLRequest(params);
     }
 
-    public updateSqlRequestCode(code: string): void {
-        this.sqlRequestCode = code;
-    }
-
     public runSql(): void {
         this.runSQLRequest({ query: this.sqlRequestCode }, true);
     }
 
     public hideProgressBar(): void {
         this.editorLoaded = true;
+        this.cdr.detectChanges();
     }
 
     private buildSqlRequestCode(): void {

@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, OnChanges, Output, SimpleChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Output } from "@angular/core";
 import * as monaco from "monaco-editor";
 
-import { getMonacoNamespace, MonacoService } from "../../services/monaco.service";
+import { getMonacoNamespace } from "../../services/monaco.service";
 import { BaseEditorComponent } from "../base-editor/base-editor.componet";
-import { getSqlError } from "../../helpers/editor-error-formatter";
 
 const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     theme: "vs",
@@ -20,27 +19,10 @@ const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     templateUrl: "./sql-editor.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SqlEditorComponent extends BaseEditorComponent implements OnChanges {
+export class SqlEditorComponent extends BaseEditorComponent {
     public readonly EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = SQL_EDITOR_OPTIONS;
 
     @Output() public onRunSql = new EventEmitter<null>();
-
-    constructor(private monacoService: MonacoService) {
-        super();
-    }
-
-    public ngOnChanges(changes: SimpleChanges) {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (changes.error) {
-            if (this.error) {
-                this.monacoService.setErrorMarker(this.editorModel, getSqlError(this.error));
-            }
-
-            if (!this.error) {
-                this.monacoService.clearErrorMarker(this.editorModel);
-            }
-        }
-    }
 
     public onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
         this.onEditorLoaded.emit();
@@ -67,9 +49,5 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnChanges
             // @param editor The editor instance is passed in as a convenience
             run: runQueryFn,
         });
-    }
-
-    public modelChange(): void {
-        this.templateChange.emit(this.template);
     }
 }

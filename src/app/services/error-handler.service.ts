@@ -16,7 +16,6 @@ export class ErrorHandlerService implements ErrorHandler {
 
     constructor(
         @Inject(Injector) private injector: Injector,
-
         private navigationService: NavigationService,
         private loggedUserService: LoggedUserService,
         private ngZone: NgZone,

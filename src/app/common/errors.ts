@@ -121,12 +121,12 @@ export class KamuErrorHandler implements KamuErrorVisitor {
     }
 
     public visitInvalidSqlError(e: InvalidSqlError): void {
-        this.toastrService.error("", e.message, { timeOut: 5000 });
+        this.toastrService.error("", e.message, { timeOut: 3000 });
     }
 
     public visitSqlExecutionError(e: SqlExecutionError): void {
         this.toastrService.error("", e.message, {
-            timeOut: 5000,
+            timeOut: 3000,
         });
     }
 

@@ -15,10 +15,10 @@ import { NavigationService } from "./navigation.service";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { ToastrModule, ToastrService } from "ngx-toastr";
 import { GraphQLError } from "graphql";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 describe("ErrorHandlerService", () => {
     let service: ErrorHandlerService;
-    let modalService: ModalService;
     let toastrService: ToastrService;
     let navigationService: NavigationService;
 
@@ -35,10 +35,9 @@ describe("ErrorHandlerService", () => {
                 NavigationService,
                 { provide: LoggedUserService, useValue: loggedUserServiceMock },
             ],
-            imports: [ToastrModule.forRoot()],
+            imports: [ToastrModule.forRoot(), BrowserAnimationsModule],
         });
         service = TestBed.inject(ErrorHandlerService);
-        modalService = TestBed.inject(ModalService);
         toastrService = TestBed.inject(ToastrService);
         navigationService = TestBed.inject(NavigationService);
     });
@@ -48,67 +47,55 @@ describe("ErrorHandlerService", () => {
     });
 
     it("should show modal window when SQL query execution fails", () => {
-        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.callThrough();
+        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.callThrough();
         service.handleError(new SqlExecutionError());
-        expect(modalServiceSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
-                message: ErrorTexts.ERROR_EXECUTING_SQL_QUERY,
-            }),
-        );
+        expect(toastrServiceSpy).toHaveBeenCalledWith("", "", { timeOut: 3000 });
     });
 
     it("should show modal window when SQL query execution fails with extra error message", () => {
-        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.callThrough();
+        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.callThrough();
         const errorText = "executing SQL failed";
         service.handleError(new SqlExecutionError(errorText));
-        expect(modalServiceSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
-                message: `${ErrorTexts.ERROR_EXECUTING_SQL_QUERY}: ${errorText}`,
-            }),
-        );
+        expect(toastrServiceSpy).toHaveBeenCalledWith("", errorText, { timeOut: 3000 });
     });
 
     it("should show modal window when SQL query is invalid", () => {
-        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.callThrough();
+        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.callThrough();
         const errorText = "bad SQL";
         service.handleError(new InvalidSqlError(errorText));
-        expect(modalServiceSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
-                message: `${ErrorTexts.ERROR_INVALID_SQL_QUERY}: ${errorText}`,
-            }),
-        );
+        expect(toastrServiceSpy).toHaveBeenCalledWith("", errorText, { timeOut: 3000 });
     });
 
     it("should show redirect to 404 page on dataset not found", () => {
-        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.stub();
+        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.stub();
         const navigationServiceSpy: jasmine.Spy = spyOn(navigationService, "navigateToPageNotFound").and.stub();
 
         service.handleError(new DatasetNotFoundError());
 
-        expect(modalServiceSpy).not.toHaveBeenCalled();
+        expect(toastrServiceSpy).not.toHaveBeenCalled();
         expect(navigationServiceSpy).toHaveBeenCalledWith();
     });
 
     it("should show redirect to 404 page on account not found", () => {
-        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.stub();
+        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.stub();
         const navigationServiceSpy: jasmine.Spy = spyOn(navigationService, "navigateToPageNotFound").and.stub();
 
         service.handleError(new AccountNotFoundError());
 
-        expect(modalServiceSpy).not.toHaveBeenCalled();
+        expect(toastrServiceSpy).not.toHaveBeenCalled();
         expect(navigationServiceSpy).toHaveBeenCalledWith();
     });
 
     it("should show modal window when dataset operation fails", () => {
         const errorText = "Some dataset error";
-        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.callThrough();
+        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.callThrough();
         service.handleError(new DatasetOperationError([new Error(errorText)]));
-        expect(modalServiceSpy).toHaveBeenCalledTimes(1);
+        expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should show modal window when connection was lost", () => {
         const mockErrorMessage = "Mock apollo error message";
-        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.callThrough();
+        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.callThrough();
         service.handleError(
             new ApolloError({
                 errorMessage: mockErrorMessage,
@@ -120,7 +107,7 @@ describe("ErrorHandlerService", () => {
                 errorMessage: mockErrorMessage,
             }),
         );
-        expect(modalServiceSpy).toHaveBeenCalledTimes(2);
+        expect(toastrServiceSpy).toHaveBeenCalledTimes(2);
     });
 
     it("should log authentication errors, terminate session, and show Toastr", () => {
@@ -170,13 +157,13 @@ describe("ErrorHandlerService", () => {
     );
 
     it("should log unknown errors", () => {
-        const modalServiceSpy: jasmine.Spy = spyOn(modalService, "error").and.callThrough();
+        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.callThrough();
         const consoleErrorSpy: jasmine.Spy = spyOn(console, "error").and.stub();
         const unknownError = new Error("Some Unknown Error");
 
         service.handleError(unknownError);
 
-        expect(modalServiceSpy).not.toHaveBeenCalled();
+        expect(toastrServiceSpy).not.toHaveBeenCalled();
         expect(consoleErrorSpy).toHaveBeenCalledWith(unknownError);
     });
 });

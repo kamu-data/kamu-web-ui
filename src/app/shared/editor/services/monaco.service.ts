@@ -17,11 +17,11 @@ export class MonacoService {
 
         if (!monaco) return;
 
-        const markerData = this.prepareMarkerData(model, error, monaco);
+        const markerData = this.prepareMarkerData(model, error);
         monaco.editor.setModelMarkers(model, "", [markerData]);
     }
 
-    clearErrorMarker(model: monaco.editor.ITextModel): void {
+    public clearErrorMarker(model: monaco.editor.ITextModel): void {
         const monaco = getMonacoNamespace();
 
         if (!monaco) return;
@@ -29,11 +29,7 @@ export class MonacoService {
         monaco.editor.setModelMarkers(model, "", []);
     }
 
-    private prepareMarkerData(
-        model: monaco.editor.ITextModel,
-        error: EditorError,
-        monacoNamespace: typeof monaco,
-    ): monaco.editor.IMarkerData {
+    private prepareMarkerData(model: monaco.editor.ITextModel, error: EditorError): monaco.editor.IMarkerData {
         const maxLines = model.getLineCount();
         const maxLastLineColumns = model.getLineMaxColumn(maxLines);
 
@@ -43,7 +39,7 @@ export class MonacoService {
             endLineNumber: error.line ?? maxLines,
             endColumn: maxLastLineColumns,
             message: error.message,
-            severity: monacoNamespace.MarkerSeverity.Error,
+            severity: error.severity,
         };
     }
 }

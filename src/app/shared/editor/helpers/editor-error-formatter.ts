@@ -18,7 +18,7 @@ export function getSqlError(error: string): EditorError {
     };
 }
 
-export function getError(error: string): EditorError {
+export function getDefaultError(error: string): EditorError {
     return {
         message: error,
         severity: monacoNamespace?.MarkerSeverity.Error ?? defaultSeverity,

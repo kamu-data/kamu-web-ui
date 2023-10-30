@@ -3,6 +3,7 @@ import * as monaco from "monaco-editor";
 
 import { getMonacoNamespace } from "../../services/monaco.service";
 import { BaseEditorComponent } from "../base-editor/base-editor.componet";
+import { getSqlError } from "../../helpers/editor-error-formatter";
 
 const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     theme: "vs",
@@ -21,20 +22,20 @@ const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
 })
 export class SqlEditorComponent extends BaseEditorComponent {
     public readonly EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = SQL_EDITOR_OPTIONS;
+    public getErrorDetails = getSqlError;
 
     @Output() public onRunSql = new EventEmitter<null>();
 
     public onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
         this.onEditorLoaded.emit();
+        // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
+        this.editorModel = editor.getModel() as monaco.editor.ITextModel;
 
         const runQueryFn = () => {
             this.onRunSql.emit();
         };
         const monaco = getMonacoNamespace();
         if (!monaco) return;
-
-        // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
-        this.editorModel = editor.getModel() as monaco.editor.ITextModel;
 
         editor.addAction({
             // An unique identifier of the contributed action.

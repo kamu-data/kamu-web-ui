@@ -2,8 +2,9 @@ import { Directive, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 
 import * as monaco from "monaco-editor";
-import { getSqlError } from "../../helpers/editor-error-formatter";
+import { getDefaultError } from "../../helpers/editor-error-formatter";
 import { MonacoService } from "../../services/monaco.service";
+import { EditorError } from "../../models/error.model";
 
 @Directive()
 export abstract class BaseEditorComponent implements OnChanges {
@@ -16,6 +17,7 @@ export abstract class BaseEditorComponent implements OnChanges {
     @Output() public onEditorLoaded = new EventEmitter<null>();
 
     public editorModel: monaco.editor.ITextModel;
+    public getErrorDetails: (error: string) => EditorError = getDefaultError;
 
     constructor(private monacoService: MonacoService) {}
 
@@ -23,7 +25,7 @@ export abstract class BaseEditorComponent implements OnChanges {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (changes.error) {
             if (this.error) {
-                this.monacoService.setErrorMarker(this.editorModel, getSqlError(this.error));
+                this.monacoService.setErrorMarker(this.editorModel, this.getErrorDetails(this.error));
             }
 
             if (!this.error) {

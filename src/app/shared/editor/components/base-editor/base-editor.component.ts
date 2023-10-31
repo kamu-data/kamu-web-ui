@@ -26,9 +26,7 @@ export abstract class BaseEditorComponent implements OnChanges {
         if (changes.error && this.editorModel) {
             if (this.error) {
                 this.monacoService.setErrorMarker(this.editorModel, this.getErrorDetails(this.error));
-            }
-
-            if (!this.error) {
+            } else {
                 this.monacoService.clearErrorMarker(this.editorModel);
             }
         }

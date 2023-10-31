@@ -2,7 +2,7 @@ import { SimpleChange } from "@angular/core";
 import { BaseEditorComponent } from "./base-editor.component";
 import { MonacoService } from "../../services/monaco.service";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { editorMock } from "../../mock/editor.mock";
+import { editorMock, editorModelMock } from "../../mock/editor.mock";
 
 export interface BaseEditorComponentTestEnvironment {
     fixture: ComponentFixture<BaseEditorComponent>;
@@ -18,6 +18,7 @@ export function sharedBasedEditorComponentTest(environmentFactory: () => BaseEdi
         fixture = testEnvironment.fixture;
         component = fixture.componentInstance;
         monacoService = TestBed.inject(MonacoService);
+        component.editorModel = editorModelMock;
     });
 
     it("should create", () => {

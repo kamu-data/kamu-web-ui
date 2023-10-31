@@ -5,7 +5,6 @@ import { ActivatedRoute } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { EditSetTransformService } from "./edit-set-transform..service";
 import { of } from "rxjs";
-import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import {
     mockGetDatasetSchemaQuery,
     mockParseSetTransFormYamlType,
@@ -32,6 +31,7 @@ import {
     mockDatasetBasicsDerivedFragment,
 } from "src/app/search/mock.data";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { EditorModule } from "../../../../../shared/editor/editor.module";
 
 describe("SetTransformComponent", () => {
     let component: SetTransformComponent;
@@ -55,13 +55,13 @@ describe("SetTransformComponent", () => {
             imports: [
                 ApolloModule,
                 ApolloTestingModule,
-                MonacoEditorModule.forRoot(),
                 MatTreeModule,
                 MatIconModule,
                 NgbTypeaheadModule,
                 FormsModule,
                 HttpClientTestingModule,
                 ReactiveFormsModule,
+                EditorModule,
             ],
             providers: [
                 Apollo,

@@ -1,7 +1,6 @@
 import { BaseComponent } from "src/app/common/base.component";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import * as monaco from "monaco-editor";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
 
@@ -14,15 +13,6 @@ export class FinalYamlModalComponent extends BaseComponent {
     @Input() public yamlTemplate: string;
     @Input() public datasetInfo: DatasetInfo;
     @Input() public enabledSaveBtn = true;
-    public readonly YAML_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
-        theme: "vs",
-        language: "yaml",
-        renderLineHighlight: "none",
-        minimap: {
-            enabled: false,
-        },
-        scrollBeyondLastLine: false,
-    };
 
     constructor(public activeModal: NgbActiveModal, private datasetCommitService: DatasetCommitService) {
         super();

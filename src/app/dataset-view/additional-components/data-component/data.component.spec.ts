@@ -20,10 +20,10 @@ import {
 import { RouterTestingModule } from "@angular/router/testing";
 import { Location } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { MatDividerModule } from "@angular/material/divider";
 import { LoadMoreComponent } from "./load-more/load-more.component";
 import { DynamicTableModule } from "../../../components/dynamic-table/dynamic-table.module";
+import { EditorModule } from "src/app/shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import _ from "lodash";
@@ -41,9 +41,9 @@ describe("DataComponent", () => {
                 MatMenuModule,
                 RouterTestingModule,
                 FormsModule,
-                MonacoEditorModule.forRoot(),
                 MatDividerModule,
                 DynamicTableModule,
+                EditorModule,
                 MatProgressBarModule,
             ],
             declarations: [DataComponent, LoadMoreComponent],

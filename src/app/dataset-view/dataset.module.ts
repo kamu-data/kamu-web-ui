@@ -22,7 +22,6 @@ import { MatChipsModule } from "@angular/material/chips";
 import { MetadataComponent } from "./additional-components/metadata-component/metadata.component";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { MatTabsModule } from "@angular/material/tabs";
-import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { DataComponent } from "./additional-components/data-component/data.component";
 import { OverviewComponent } from "./additional-components/overview-component/overview.component";
 import { LineageComponent as LineageComponent } from "./additional-components/lineage-component/lineage.component";
@@ -63,6 +62,7 @@ import { DatasetSettingsComponent } from "./additional-components/dataset-settin
 import { LoadMoreComponent } from "./additional-components/data-component/load-more/load-more.component";
 import { MatInputModule } from "@angular/material/input";
 import { ReturnToCliComponent } from "../components/return-to-cli/return-to-cli.component";
+import { EditorModule } from "../shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 @NgModule({
@@ -87,7 +87,6 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
         MatChipsModule,
         ClipboardModule,
         MatTabsModule,
-        MonacoEditorModule,
         CdkAccordionModule,
         CustomPaginationModule,
         SideNavModule,
@@ -107,6 +106,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
         MatTreeModule,
         MatStepperModule,
         MatInputModule,
+        EditorModule,
         MatProgressBarModule,
     ],
     exports: [
@@ -123,7 +123,6 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
         OverviewComponent,
         LineageComponent,
         HistoryComponent,
-        MonacoEditorModule,
         DisplayHashModule,
         MatTreeModule,
     ],

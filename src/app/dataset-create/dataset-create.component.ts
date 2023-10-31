@@ -2,7 +2,6 @@ import { BaseComponent } from "src/app/common/base.component";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "../common/app.types";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
-import * as monaco from "monaco-editor";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DatasetCreateService } from "./dataset-create.service";
 import { Observable } from "rxjs";
@@ -20,14 +19,6 @@ export class DatasetCreateComponent extends BaseComponent {
         derivative: DatasetKind.Derivative,
     };
     private static readonly INITIAL_YAML_HINT = "# You can edit this file\n";
-    public readonly YAML_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
-        theme: "vs",
-        language: "yaml",
-        renderLineHighlight: "none",
-        minimap: {
-            enabled: false,
-        },
-    };
 
     public yamlTemplate = "";
     public showMonacoEditor = false;

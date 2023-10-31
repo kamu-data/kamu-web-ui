@@ -19,7 +19,6 @@ import {
 import { momentConvertDatetoLocalWithFormat } from "src/app/common/app.helpers";
 import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/common/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
-import { SQL_EDITOR_OPTIONS } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
 import _ from "lodash";
 
 @Component({
@@ -31,12 +30,6 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
     @Input() public datasetPermissions: DatasetPermissionsFragment;
     @Output() pageChangeEmit = new EventEmitter<number>();
-
-    public readonly SQL_EDITOR_OPTIONS = {
-        ...SQL_EDITOR_OPTIONS,
-        readOnly: true,
-        automaticLayout: true,
-    };
 
     public readonly ReadSectionMapping: Record<string, string> = {
         ReadStepCsv: "Csv",

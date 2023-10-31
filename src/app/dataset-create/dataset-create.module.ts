@@ -8,9 +8,9 @@ import { SearchAdditionalButtonsModule } from "../components/search-additional-b
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { MatDividerModule } from "@angular/material/divider";
 import { AngularSvgIconModule } from "angular-svg-icon";
+import { EditorModule } from "../shared/editor/editor.module";
 
 @NgModule({
     imports: [
@@ -22,10 +22,10 @@ import { AngularSvgIconModule } from "angular-svg-icon";
         CommonModule,
         SearchAdditionalButtonsModule,
         FormsModule,
-        MonacoEditorModule,
         MatDividerModule,
         AngularSvgIconModule,
         ReactiveFormsModule,
+        EditorModule,
     ],
     exports: [DatasetCreateComponent],
     declarations: [DatasetCreateComponent],

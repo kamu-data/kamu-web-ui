@@ -1,7 +1,3 @@
-import AppValues from "src/app/common/app.values";
-import { OffsetInterval } from "../../../api/kamu.graphql.interface";
-import { Location } from "@angular/common";
-import { DataSqlErrorUpdate, DataUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -11,15 +7,19 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import { DataRow, DatasetRequestBySql } from "../../../interface/dataset.interface";
+import { Location } from "@angular/common";
+import { Observable, map, tap } from "rxjs";
+
+import AppValues from "src/app/common/app.values";
 import DataTabValues from "./mock.data";
+
+import { OffsetInterval } from "../../../api/kamu.graphql.interface";
+import { DataSqlErrorUpdate, DataUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DataRow, DatasetRequestBySql } from "../../../interface/dataset.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import * as monaco from "monaco-editor";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
-import { SQL_EDITOR_OPTIONS } from "src/app/dataset-block/metadata-block/components/event-details/config-editor.events";
-import { Observable, map, tap } from "rxjs";
 
 @Component({
     selector: "app-data",
@@ -28,8 +28,6 @@ import { Observable, map, tap } from "rxjs";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent extends BaseComponent implements OnInit {
-    public readonly SQL_EDITOR_OPTIONS = SQL_EDITOR_OPTIONS;
-
     @Input() public datasetBasics: DatasetBasicsFragment;
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
 
@@ -93,25 +91,11 @@ export class DataComponent extends BaseComponent implements OnInit {
         this.runSQLRequest(params);
     }
 
-    public onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
-        const runQueryFn = () => {
-            this.runSQLRequest({ query: this.sqlRequestCode });
-        };
-        editor.addAction({
-            // An unique identifier of the contributed action.
-            id: "run-sql",
-            // A label of the action that will be presented to the user.
-            label: "Run SQL",
-            // An optional array of keybindings for the action.
-            //keybindings: [KeyMod.CtrlCmd | KeyCode.Enter],
-            keybindings: [2048 | 3],
-            contextMenuGroupId: "navigation",
-            contextMenuOrder: 1.5,
-            // Method that will be executed when the action is triggered.
-            // @param editor The editor instance is passed in as a convenience
-            run: runQueryFn,
-        });
+    public runSql(): void {
+        this.runSQLRequest({ query: this.sqlRequestCode }, true);
+    }
 
+    public hideProgressBar(): void {
         this.editorLoaded = true;
         this.cdr.detectChanges();
     }

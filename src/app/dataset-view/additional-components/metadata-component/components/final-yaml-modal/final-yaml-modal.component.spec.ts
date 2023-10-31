@@ -6,10 +6,10 @@ import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { of } from "rxjs";
 import { FormsModule } from "@angular/forms";
-import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { EditorModule } from "src/app/shared/editor/editor.module";
 
 const testDatasetInfo: DatasetInfo = {
     accountName: "testAccountName",
@@ -26,13 +26,7 @@ describe("FinalYamlModalComponent", () => {
         await TestBed.configureTestingModule({
             declarations: [FinalYamlModalComponent],
             providers: [NgbActiveModal],
-            imports: [
-                ApolloModule,
-                FormsModule,
-                HttpClientTestingModule,
-                MonacoEditorModule.forRoot(),
-                SharedTestModule,
-            ],
+            imports: [ApolloModule, FormsModule, HttpClientTestingModule, SharedTestModule, EditorModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FinalYamlModalComponent);

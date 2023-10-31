@@ -143,11 +143,12 @@
                 ></mat-progress-bar>
             </ng-container>
             <div class="border border-1 rounded-2 px-2 py-4 position-relative">
-                <ngx-monaco-editor
-                    (onInit)="onInitEditor($event)"
-                    [options]="SQL_EDITOR_OPTIONS"
-                    [(ngModel)]="sqlRequestCode"
-                ></ngx-monaco-editor>
+                <app-sql-editor
+                    [(template)]="sqlRequestCode"
+                    [error]="sqlErrorMarker$ | async"
+                    (onRunSql)="runSql()"
+                    (onEditorLoaded)="hideProgressBar()"
+                ></app-sql-editor>
             </div>
         </div>
         <ng-container *ngIf="sqlErrorMarker$ | async as sqlErrorMarker">

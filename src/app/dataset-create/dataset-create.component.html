@@ -81,13 +81,7 @@
     </div>
     <ng-container *ngIf="showMonacoEditor">
         <div class="container-monaco border border-1 mt-4 ps-2 pe-2 pt-4 rounded-3">
-            <ngx-monaco-editor
-                style="height: 400px"
-                [options]="YAML_EDITOR_OPTIONS"
-                [(ngModel)]="yamlTemplate"
-                ngDefaultControl
-                data-test-id="monaco-editor"
-            ></ngx-monaco-editor>
+            <app-yaml-editor [(template)]="yamlTemplate" height="400px" data-test-id="monaco-editor"></app-yaml-editor>
         </div>
         <input
             type="file"

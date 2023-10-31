@@ -1,0 +1,8 @@
+<ngx-monaco-editor
+    [ngStyle]="{ height: height, width: width }"
+    (onInit)="onInitEditor($event)"
+    [options]="YAML_EDITOR_OPTIONS"
+    [(ngModel)]="template"
+    (ngModelChange)="modelChange()"
+    ngDefaultControl
+></ngx-monaco-editor>

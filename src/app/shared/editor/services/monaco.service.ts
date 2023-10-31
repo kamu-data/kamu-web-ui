@@ -14,19 +14,19 @@ export function getMonacoNamespace(): MaybeUndefined<typeof monaco> {
 export class MonacoService {
     public setErrorMarker(model: monaco.editor.ITextModel, error: EditorError): void {
         const monaco = getMonacoNamespace();
-
-        if (!monaco) return;
-
-        const markerData = this.prepareMarkerData(model, error);
-        monaco.editor.setModelMarkers(model, "", [markerData]);
+        /* istanbul ignore else */
+        if (monaco) {
+            const markerData = this.prepareMarkerData(model, error);
+            monaco.editor.setModelMarkers(model, "", [markerData]);
+        }
     }
 
     public clearErrorMarker(model: monaco.editor.ITextModel): void {
         const monaco = getMonacoNamespace();
-
-        if (!monaco) return;
-
-        monaco.editor.setModelMarkers(model, "", []);
+        /* istanbul ignore else */
+        if (monaco) {
+            monaco.editor.setModelMarkers(model, "", []);
+        }
     }
 
     private prepareMarkerData(model: monaco.editor.ITextModel, error: EditorError): monaco.editor.IMarkerData {

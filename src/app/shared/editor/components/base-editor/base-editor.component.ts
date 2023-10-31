@@ -23,7 +23,7 @@ export abstract class BaseEditorComponent implements OnChanges {
 
     public ngOnChanges(changes: SimpleChanges) {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (changes.error) {
+        if (changes.error && this.editorModel) {
             if (this.error) {
                 this.monacoService.setErrorMarker(this.editorModel, this.getErrorDetails(this.error));
             }

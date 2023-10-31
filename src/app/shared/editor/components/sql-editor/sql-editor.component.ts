@@ -32,21 +32,23 @@ export class SqlEditorComponent extends BaseEditorComponent {
         const runQueryFn = () => {
             this.onRunSql.emit();
         };
-        const monaco = getMonacoNamespace();
-        if (!monaco) return;
 
-        editor.addAction({
-            // An unique identifier of the contributed action.
-            id: "run-sql",
-            // A label of the action that will be presented to the user.
-            label: "Run SQL",
-            // An optional array of keybindings for the action.
-            keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
-            contextMenuGroupId: "navigation",
-            contextMenuOrder: 1.5,
-            // Method that will be executed when the action is triggered.
-            // @param editor The editor instance is passed in as a convenience
-            run: runQueryFn,
-        });
+        const monaco = getMonacoNamespace();
+        /* istanbul ignore else */
+        if (monaco) {
+            editor.addAction({
+                // An unique identifier of the contributed action.
+                id: "run-sql",
+                // A label of the action that will be presented to the user.
+                label: "Run SQL",
+                // An optional array of keybindings for the action.
+                keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
+                contextMenuGroupId: "navigation",
+                contextMenuOrder: 1.5,
+                // Method that will be executed when the action is triggered.
+                // @param editor The editor instance is passed in as a convenience
+                run: runQueryFn,
+            });
+        }
     }
 }

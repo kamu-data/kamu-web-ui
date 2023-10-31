@@ -46,6 +46,10 @@ export class LineageGraphBuilderService {
 
     private collectUniqueDatasets(lineageUpdate: LineageUpdate): DatasetLineageBasicsFragment[] {
         const datasetsById: Map<string, DatasetLineageBasicsFragment> = new Map<string, DatasetLineageBasicsFragment>();
+        // Added one unique dataset, if lineage has only ROOT dataset
+        if (lineageUpdate.nodes.length === 1 && lineageUpdate.origin.kind === DatasetKind.Root) {
+            datasetsById.set(lineageUpdate.origin.id, lineageUpdate.origin);
+        }
         lineageUpdate.edges.forEach((edge: DatasetLineageBasicsFragment[]) =>
             edge.forEach((dataset: DatasetLineageBasicsFragment) => {
                 datasetsById.set(dataset.id, dataset);

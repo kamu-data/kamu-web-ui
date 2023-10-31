@@ -1,4 +1,4 @@
-<div #containerRef class="position-relative" *ngIf="graph.links.length && graph.nodes.length">
+<div #containerRef class="position-relative" *ngIf="graph.nodes.length">
     <ngx-graph
         class="chart-container"
         [draggingEnabled]="LINEAGE_CONFIG.draggingEnabled"
@@ -200,13 +200,18 @@
         <div class="info d-flex align-items-start">
             <mat-icon class="fs-4 mr-2">timeline</mat-icon>
             <span class="d-flex align-items-center mb-2">
-                <span class="updated"> Watermark </span>
-                <app-display-time
-                    class="time"
-                    [title]="currentDataset.metadata.currentWatermark"
-                    [data]="currentDataset.metadata.currentWatermark!"
-                    [dataTestId]="'side-panel-dataset-watermark'"
-                ></app-display-time>
+                <ng-container *ngIf="currentDataset.metadata.currentWatermark; else noWatermark">
+                    <span class="updated"> Watermark </span>
+                    <app-display-time
+                        class="time"
+                        [title]="currentDataset.metadata.currentWatermark"
+                        [data]="currentDataset.metadata.currentWatermark"
+                        [dataTestId]="'side-panel-dataset-watermark'"
+                    ></app-display-time>
+                </ng-container>
+                <ng-template #noWatermark>
+                    <span> No watermark</span>
+                </ng-template>
             </span>
         </div>
     </div>

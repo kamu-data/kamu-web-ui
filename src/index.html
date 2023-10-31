@@ -17,13 +17,33 @@
     </head>
     <body class="mat-typography mat-app-background">
         <app-root>
-            <div class="screen-background">
-                <div class="initial-loading">
-                    <div class="d-flex justify-content-center">
-                        <img src="assets/icons/kamu_logo_icon.svg" alt="" />
-                    </div>
-                    <h1 class="mt-4 ps-4 text-muted text-center">Loading...</h1>
-                </div>
+            <style>
+                h1 {
+                    position: absolute;
+                    top: 55%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+                #splash {
+                    animation: spin 3s infinite linear;
+                    margin: auto;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                }
+                @keyframes spin {
+                    from {
+                        transform: rotateY(0deg);
+                    }
+                    to {
+                        transform: rotateY(359deg);
+                    }
+                }
+            </style>
+            <div class="initial-loading">
+                <img id="splash" src="assets/icons/kamu_logo_icon.svg" alt="" />
             </div>
         </app-root>
         <noscript>Please enable JavaScript to continue using this application.</noscript>

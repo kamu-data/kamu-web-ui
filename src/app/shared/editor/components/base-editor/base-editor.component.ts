@@ -37,4 +37,10 @@ export abstract class BaseEditorComponent implements OnChanges {
     public modelChange(): void {
         this.templateChange.emit(this.template);
     }
+
+    public onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
+        this.onEditorLoaded.emit();
+        // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
+        this.editorModel = editor.getModel() as monaco.editor.ITextModel;
+    }
 }

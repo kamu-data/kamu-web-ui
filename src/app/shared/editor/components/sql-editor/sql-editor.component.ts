@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output } from "@angul
 import * as monaco from "monaco-editor";
 
 import { getMonacoNamespace } from "../../services/monaco.service";
-import { BaseEditorComponent } from "../base-editor/base-editor.componet";
+import { BaseEditorComponent } from "../base-editor/base-editor.component";
 import { getSqlError } from "../../helpers/editor-error-formatter";
 
 const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
@@ -27,9 +27,7 @@ export class SqlEditorComponent extends BaseEditorComponent {
     @Output() public onRunSql = new EventEmitter<null>();
 
     public onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
-        this.onEditorLoaded.emit();
-        // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
-        this.editorModel = editor.getModel() as monaco.editor.ITextModel;
+        super.onInitEditor(editor);
 
         const runQueryFn = () => {
             this.onRunSql.emit();

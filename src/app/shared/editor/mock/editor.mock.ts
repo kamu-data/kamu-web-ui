@@ -13,3 +13,5 @@ export const editorMock: monaco.editor.IStandaloneCodeEditor = {
         };
     },
 } as monaco.editor.IStandaloneCodeEditor;
+
+export const editorModelMock: monaco.editor.ITextModel = {} as monaco.editor.ITextModel;

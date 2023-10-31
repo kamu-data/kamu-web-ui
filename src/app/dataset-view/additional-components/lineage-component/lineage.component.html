@@ -1,12 +1,12 @@
 <div class="search-result-container__content" *ngIf="lineageGraphUpdate$ | async as lineageGraphUpdate">
-    <ng-container *ngIf="lineageGraphUpdate.graph.links.length">
+    <ng-container *ngIf="lineageGraphUpdate.graph.nodes.length">
         <app-lineage-graph
             [graph]="lineageGraphUpdate.graph"
             [currentDataset]="lineageGraphUpdate.originDataset"
             (onClickNodeEvent)="onClickNode($event)"
         ></app-lineage-graph>
     </ng-container>
-    <ng-container *ngIf="!lineageGraphUpdate.graph.links.length">
-        <p>The current dataset is root. Not enough data to build the graph.</p>
+    <ng-container *ngIf="!lineageGraphUpdate.graph.nodes.length">
+        <p>The current dataset is derivative. Not enough data to build the graph.</p>
     </ng-container>
 </div>

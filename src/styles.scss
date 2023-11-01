@@ -29,14 +29,6 @@ body {
     font-size: 14px;
 }
 
-.h3-custom {
-    font-size: 20px !important;
-}
-
-.lh-condensed {
-    line-height: 1.25 !important;
-}
-
 a {
     text-decoration: none;
 
@@ -216,12 +208,6 @@ a {
     border: none;
 }
 
-.mat-progress-spinner {
-    circle {
-        stroke: $app-dark-sea-green !important;
-    }
-}
-
 .mat-menu-panel {
     &.app-header__user-menu {
         background-color: white;
@@ -313,7 +299,7 @@ a {
 
 .octicon {
     display: inline-block;
-    overflow: visible !important;
+    overflow: visible;
     vertical-align: text-bottom;
     fill: currentcolor;
 }
@@ -475,14 +461,6 @@ a:visited {
     &--header {
         grid-template-columns: 1fr 1fr;
         display: grid;
-    }
-}
-
-#dataset-view {
-    a {
-        &:visited {
-            color: inherit;
-        }
     }
 }
 
@@ -733,7 +711,7 @@ router-outlet {
 
 .starred {
     .starred-button-icon {
-        color: $app-naples-yellow !important;
+        color: $app-naples-yellow;
     }
 }
 
@@ -752,8 +730,8 @@ router-outlet {
 
         .nav-item {
             width: 100%;
-            margin: 0 !important;
-            padding: 0 !important;
+            margin: 0;
+            padding: 0;
         }
     }
 
@@ -766,12 +744,12 @@ router-outlet {
     }
 
     li {
-        border-radius: 0 !important;
+        border-radius: 0;
         border: none;
-        border-bottom: 1px solid #d0d7de !important;
+        border-bottom: 1px solid #d0d7de;
 
         &:last-child {
-            border-bottom: none !important;
+            border-bottom: none;
         }
 
         .btn-group-item {
@@ -779,9 +757,9 @@ router-outlet {
         }
 
         .additional-options-btn {
-            border-top: none !important;
-            border-right: none !important;
-            border-bottom: none !important;
+            border-top: none;
+            border-right: none;
+            border-bottom: none;
         }
     }
 }
@@ -1026,7 +1004,7 @@ router-outlet {
 }
 
 .avatar-user {
-    border-radius: 50% !important;
+    border-radius: 50%;
 }
 
 // MODAL MODULE
@@ -1237,11 +1215,6 @@ router-outlet {
     color: $app-emperor;
 }
 
-.account-container {
-    grid-template-columns: 0.5fr 0.5fr;
-    display: grid !important;
-}
-
 app-account .dropdown-menu {
     right: 0;
 }
@@ -1328,13 +1301,6 @@ details summary::marker {
     color: red;
 }
 
-.author {
-    a {
-        text-decoration: underline !important;
-        color: $app-navy-blue !important;
-    }
-}
-
 .group-box-label {
     top: -10px;
     left: 10px;
@@ -1361,13 +1327,6 @@ details summary::marker {
     font-size: 12px;
 }
 
-.multiselect-dropdown {
-    .dropdown-btn {
-        color: #6c757d !important;
-        padding-left: 36px !important;
-    }
-}
-
 pre {
     display: flex;
     margin-top: 0;
@@ -1379,12 +1338,6 @@ pre {
         min-height: 100%;
         padding: 1em 1.2em;
     }
-
-    .hljs {
-        font-size: 15px !important;
-        font-weight: 500 !important;
-        background-color: honeydew !important;
-    }
 }
 
 #toast-container {
@@ -1395,7 +1348,7 @@ pre {
 
 .add-link {
     font-size: 16px;
-    color: #0969da !important;
+    color: #0969da;
 }
 
 .radio-group {
@@ -1476,16 +1429,8 @@ pre {
     overflow: hidden !important;
 }
 
-.mat-tree {
-    .mat-tree-node {
-        .mat-icon-button {
-            background-color: transparent !important;
-        }
-    }
-}
-
 .w-350 {
-    width: 350px !important;
+    width: 350px;
 }
 
 .button-custom {
@@ -1529,5 +1474,16 @@ input {
         time {
             font-size: 12px;
         }
+    }
+}
+
+.custom-edit {
+    border: 1px solid grey;
+    border-radius: 6px;
+
+    &:hover {
+        background: #f3f4f6;
+        border: 1px solid grey;
+        border-radius: 6px;
     }
 }

@@ -1,3 +1,11 @@
+.mat-tree {
+    .mat-tree-node {
+        .mat-icon-button {
+            background-color: transparent;
+        }
+    }
+}
+
 .search-result-item {
     overflow: hidden;
     text-overflow: ellipsis;

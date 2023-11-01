@@ -78,18 +78,19 @@ $app-color-tooltip-border: #ced4da;
 }
 
 .link--primary {
-    color: $app-color-fg-default !important;
+    color: $app-color-fg-default;
+    text-decoration: underline;
 
     &:hover {
-        color: $app-navy-blue !important;
+        color: $app-navy-blue;
     }
 }
 
 .link--secondary {
-    color: $secondary !important;
+    color: $secondary;
 
     &:hover {
-        color: $app-navy-blue !important;
+        color: $app-navy-blue;
     }
 }
 
@@ -146,8 +147,6 @@ $app-color-tooltip-border: #ced4da;
         border-color: $app-color-border-default;
         border-style: solid;
         border-width: 1px;
-        border-top-left-radius: 6px;
-        border-top-right-radius: 6px;
     }
 }
 
@@ -157,10 +156,6 @@ $app-color-tooltip-border: #ced4da;
 
 .d-none {
     display: none;
-}
-
-.position-relative {
-    position: relative !important;
 }
 
 .width-full {
@@ -201,16 +196,6 @@ $app-color-tooltip-border: #ced4da;
 
 .rounded-2 {
     border-radius: 6px !important;
-}
-
-.rounded-top-1 {
-    border-top-left-radius: 6px !important;
-    border-top-right-radius: 6px !important;
-}
-
-.rounded-left-2 {
-    border-bottom-left-radius: 6px !important;
-    border-top-left-radius: 6px !important;
 }
 
 .border-right-0 {

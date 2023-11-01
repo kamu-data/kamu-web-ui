@@ -16,7 +16,6 @@ import { MaybeNull } from "src/app/common/app.types";
 @Component({
     selector: "app-metadata-block",
     templateUrl: "./metadata-block.component.html",
-    styleUrls: ["./metadata-block.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataBlockComponent extends BaseProcessingComponent implements OnInit {

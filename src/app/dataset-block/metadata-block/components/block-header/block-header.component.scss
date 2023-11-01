@@ -6,16 +6,12 @@
     }
 
     button {
-        background-color: #ffff !important;
+        background-color: #ffff;
 
         &:hover {
-            background-color: #f3f4f6 !important;
-            border-color: rgb(27 31 36 / 14.9%) !important;
-            transition-duration: 0.1s !important;
+            background-color: #f3f4f6;
+            border-color: rgb(27 31 36 / 14.9%);
+            transition-duration: 0.1s;
         }
     }
-}
-
-button.mat-menu-item {
-    background-color: #ffff !important;
 }

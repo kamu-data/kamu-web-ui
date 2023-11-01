@@ -1,11 +1,22 @@
 @import "var";
 
+:host {
+    ::ng-deep {
+        .multiselect-dropdown {
+            .dropdown-btn {
+                color: #6c757d;
+                padding-left: 36px !important;
+            }
+        }
+    }
+}
+
 .container-section {
     min-height: 420px;
 }
 
 .placeholder-padding-left {
-    padding: 8px 8px 8px 35px !important;
+    padding: 8px 8px 8px 35px;
 }
 
 .outline-none {

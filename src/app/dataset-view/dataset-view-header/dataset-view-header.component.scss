@@ -1,9 +1,8 @@
 @import "var";
 
-.owner-link {
-    color: $app-navy-blue;
-
-    &:hover {
+.author {
+    a {
         text-decoration: underline;
+        color: $app-navy-blue;
     }
 }

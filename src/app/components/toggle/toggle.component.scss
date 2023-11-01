@@ -1,3 +1,5 @@
+@import "var";
+
 .toggle-btn {
     display: inline-block;
     outline: 0;
@@ -25,7 +27,7 @@
     }
 
     &.toggle-btn-on {
-        background: #0d6efd;
+        background: $app-navy-blue;
 
         &::after {
             left: 50%;

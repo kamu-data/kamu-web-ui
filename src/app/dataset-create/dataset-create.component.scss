@@ -86,10 +86,10 @@ hr {
     }
 
     .title {
-        flex: 1 1 auto !important;
-        font-size: 20px !important;
-        font-weight: 400 !important;
-        margin: 0 !important;
+        flex: 1 1 auto;
+        font-size: 20px;
+        font-weight: 400;
+        margin: 0;
     }
 
     .container-monaco {
@@ -151,7 +151,13 @@ hr {
         }
     }
 
+    .switch-kind-container {
+        .description {
+            font-size: 12px;
+        }
+    }
+
     .fs-12 {
-        font-size: 12px !important;
+        font-size: 12px;
     }
 }

@@ -6,6 +6,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { of } from "rxjs";
 import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 
 describe("OffsetIntervalPropertyComponent", () => {
     let component: OffsetIntervalPropertyComponent;
@@ -23,11 +24,10 @@ describe("OffsetIntervalPropertyComponent", () => {
         component = fixture.componentInstance;
         datasetSevice = TestBed.inject(DatasetService);
         navigationService = TestBed.inject(NavigationService);
-        (component.data = {
+        component.data = {
             block: { __typename: "OffsetInterval", start: 0, end: 596125 },
             datasetId: "dddfdf",
-        }),
-            fixture.detectChanges();
+        };
     });
 
     it("should create", () => {
@@ -58,5 +58,15 @@ describe("OffsetIntervalPropertyComponent", () => {
         const navigateToQuerySpy = spyOn(navigationService, "navigateToDatasetView");
         component.navigateToQuery();
         expect(navigateToQuerySpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check block is null", () => {
+        component.data = {
+            block: null,
+            datasetId: "dddfdf",
+        };
+        fixture.detectChanges();
+        const emptyBlockElement = findElementByDataTestId(fixture, "empty-block");
+        expect(emptyBlockElement?.textContent).toEqual("-");
     });
 });

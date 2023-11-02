@@ -16,7 +16,7 @@ import { MaybeNull } from "src/app/common/app.types";
 })
 export class OffsetIntervalPropertyComponent extends BasePropertyComponent implements OnInit {
     @Input() public data: {
-        block: OffsetInterval;
+        block: MaybeNull<OffsetInterval>;
         datasetId: MaybeNull<string>;
     };
     private datasetInfo: DatasetInfo = { accountName: "", datasetName: "" };
@@ -42,13 +42,15 @@ export class OffsetIntervalPropertyComponent extends BasePropertyComponent imple
         if (!this.data.datasetId) {
             this.datasetInfo = this.getDatasetInfoFromUrl();
         }
-        this.navigationService.navigateToDatasetView({
-            ...this.datasetInfo,
-            tab: DatasetViewTypeEnum.Data,
-            state: {
-                start: this.data.block.start,
-                end: this.data.block.end,
-            },
-        });
+        if (this.data.block) {
+            this.navigationService.navigateToDatasetView({
+                ...this.datasetInfo,
+                tab: DatasetViewTypeEnum.Data,
+                state: {
+                    start: this.data.block.start,
+                    end: this.data.block.end,
+                },
+            });
+        }
     }
 }

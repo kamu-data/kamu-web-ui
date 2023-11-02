@@ -1,4 +1,4 @@
-<div class="d-flex flex-row align-items-center" *ngIf="data">
+<div class="d-flex flex-row align-items-center" *ngIf="data.block; else noBlock">
     <div class="me-4">
         <span class="bg-value">
             start:
@@ -21,3 +21,6 @@
         </button>
     </div>
 </div>
+<ng-template #noBlock>
+    <p>-</p>
+</ng-template>

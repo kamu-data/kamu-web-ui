@@ -1,5 +1,7 @@
+@import "var";
+
 .name {
-    color: #0d6efd;
+    color: $app-navy-blue;
 
     &:hover {
         text-decoration: underline;

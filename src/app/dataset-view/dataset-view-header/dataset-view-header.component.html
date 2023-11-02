@@ -2,25 +2,17 @@
     <div class="flex-auto min-width-0 width-fit mr-3">
         <h1 class="d-flex flex-wrap flex-items-center wb-break-word f3 text-normal align-items-center">
             <svg-icon name="repository"></svg-icon>
-            <span class="author flex-self-stretch" itemprop="author">
-                <a
-                    class="url fn"
-                    rel="author"
-                    data-hovercard-type="organization"
-                    (click)="showOwnerPage()"
-                    data-test-id="show-owner-link"
-                    >{{ datasetInfo.accountName }}</a
-                >
+            <span class="author flex-self-stretch">
+                <a class="fw-bold" (click)="showOwnerPage()" data-test-id="show-owner-link">{{
+                    datasetInfo.accountName
+                }}</a>
             </span>
             <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
-            <strong itemprop="name" class="mr-2 flex-self-stretch author">
-                <a
-                    data-pjax="#repo-content-pjax-container"
-                    (click)="showDatasetView()"
-                    data-test-id="show-dataset-link"
-                    >{{ datasetInfo.datasetName }}</a
-                >
-            </strong>
+            <span class="mr-2 flex-self-stretch author">
+                <a class="fw-bold" (click)="showDatasetView()" data-test-id="show-dataset-link">{{
+                    datasetInfo.datasetName
+                }}</a>
+            </span>
 
             <span></span><span class="label label--secondary v-align-middle mr-1">Public</span>
 

@@ -7,6 +7,7 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 @Component({
     selector: "app-dataset-view-header",
     templateUrl: "./dataset-view-header.component.html",
+    styleUrls: ["./dataset-view-header.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetViewHeaderComponent {

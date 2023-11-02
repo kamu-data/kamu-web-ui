@@ -1,3 +1,15 @@
+@import "var";
+
+:host {
+    ::ng-deep {
+        .mat-progress-spinner {
+            circle {
+                stroke: $app-dark-sea-green;
+            }
+        }
+    }
+}
+
 .overlay {
     position: fixed;
     width: 100%;

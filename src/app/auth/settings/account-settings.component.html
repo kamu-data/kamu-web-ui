@@ -11,16 +11,13 @@
                 class="avatar rounded-circle mr-3"
             />
             <div class="flex-auto mx-4 mt-3">
-                <div class="h3-custom lh-condensed">
-                    <a
-                        [routerLink]="['/', user.accountName]"
-                        class="color-fg-default fw-bold-custom fs-5"
-                        data-test-id="user-name-link"
-                    >
-                        {{ user.displayName }}
-                    </a>
-                    <span class="sr-only">settings</span>
-                </div>
+                <a
+                    [routerLink]="['/', user.accountName]"
+                    class="color-fg-default fw-bold-custom fs-5"
+                    data-test-id="user-name-link"
+                >
+                    {{ user.displayName }}
+                </a>
                 <div class="d-flex align-items-center flex-wrap">
                     <p class="color-fg-muted">Your personal account</p>
                 </div>
@@ -34,7 +31,7 @@
             <div class="pr-md-4 pr-0">
                 <div data-catalyst="">
                     <nav>
-                        <ul role="list" nav_classes="org-sub-menu" data-view-component="true" class="action-list">
+                        <ul role="list" class="action-list">
                             <li
                                 data-item-id="settings_user_profile"
                                 data-view-component="true"

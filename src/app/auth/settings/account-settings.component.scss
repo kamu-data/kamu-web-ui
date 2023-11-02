@@ -1,11 +1,5 @@
 @import "var";
 
-ul {
-    li {
-        padding: 3px 0;
-    }
-}
-
 .p-responsive {
     padding-left: 16px;
 
@@ -22,6 +16,7 @@ ul {
     padding: 0;
 
     &-item {
+        padding: 3px 0;
         position: relative;
         list-style: none;
         border-radius: 6px;

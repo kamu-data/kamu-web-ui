@@ -5,7 +5,6 @@ import { BaseComponent } from "src/app/common/base.component";
 import { LineageGraphBuilderService } from "./services/lineage-graph-builder.service";
 import { LineageGraphUpdate } from "./lineage-model";
 import { MaybeNull } from "src/app/common/app.types";
-
 @Component({
     selector: "app-lineage",
     templateUrl: "./lineage.component.html",
@@ -14,6 +13,7 @@ import { MaybeNull } from "src/app/common/app.types";
 export class LineageComponent extends BaseComponent implements OnInit {
     @Output() onClickNodeEmit = new EventEmitter<Node>();
     public lineageGraphUpdate$: Observable<MaybeNull<LineageGraphUpdate>>;
+
     constructor(private lineageGraphBuilderService: LineageGraphBuilderService) {
         super();
     }

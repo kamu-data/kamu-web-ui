@@ -1,3 +1,4 @@
+import { WidgetHeightService } from "./../../services/widget-heigth.service";
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -16,7 +17,6 @@ import { SideNavHelper } from "../../common/sidenav.helper";
 import { isMobileView, promiseWithCatch } from "src/app/common/app.helpers";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetPermissionsService } from "../dataset.permissions.service";
-import { LineageGraphHeigthService } from "src/app/components/lineage-graph/lineage-graph-heigth.service";
 
 @Component({
     selector: "app-dataset-view-menu",
@@ -43,11 +43,13 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     constructor(
         private clipboard: Clipboard,
         private datasetPermissionsServices: DatasetPermissionsService,
-        private lineageGraphHeigthService: LineageGraphHeigthService,
+        private widgetHeightService: WidgetHeightService,
     ) {}
-    ngAfterViewInit(): void {
-        this.lineageGraphHeigthService.setDatasetViewMenuHeight(
-            this.datasetViewMenuComponent.nativeElement.offsetHeight,
+
+    public ngAfterViewInit(): void {
+        this.widgetHeightService.setWidgetOffsetTop(
+            this.datasetViewMenuComponent.nativeElement.clientHeight +
+                this.datasetViewMenuComponent.nativeElement.offsetTop,
         );
     }
 
@@ -55,7 +57,6 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
         if (this.sidenav) {
             this.sideNavHelper = new SideNavHelper(this.sidenav);
         }
-        this.checkWindowSize();
         this.initClipboardHints();
     }
 
@@ -150,6 +151,11 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
                 promiseWithCatch(this.sideNavHelper.open());
             }
         }
+        if (this.datasetViewMenuComponent.nativeElement.offsetHeight)
+            this.widgetHeightService.setWidgetOffsetTop(
+                this.datasetViewMenuComponent.nativeElement.offsetHeight +
+                    this.datasetViewMenuComponent.nativeElement.offsetTop,
+            );
     }
 
     private initClipboardHints(): void {

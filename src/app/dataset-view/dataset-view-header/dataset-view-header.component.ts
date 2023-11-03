@@ -1,18 +1,8 @@
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    EventEmitter,
-    Input,
-    Output,
-    ViewChild,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { SearchAdditionalHeaderButtonInterface } from "../../components/search-additional-buttons/search-additional-buttons.interface";
 import { searchAdditionalButtonsEnum } from "../../search/search.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { LineageGraphHeigthService } from "src/app/components/lineage-graph/lineage-graph-heigth.service";
 
 @Component({
     selector: "app-dataset-view-header",
@@ -20,22 +10,12 @@ import { LineageGraphHeigthService } from "src/app/components/lineage-graph/line
     styleUrls: ["./dataset-view-header.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetViewHeaderComponent implements AfterViewInit {
+export class DatasetViewHeaderComponent {
     @Input() datasetInfo: DatasetInfo;
     @Output() public showOwnerPageEmit = new EventEmitter<null>();
     @Output() public onClickSearchAdditionalButtonEmit = new EventEmitter<string>();
-    @ViewChild("datasetViewHeader") datasetViewHeaderComponent: ElementRef<HTMLDivElement>;
 
-    constructor(
-        private navigationService: NavigationService,
-        private lineageGraphHeigthService: LineageGraphHeigthService,
-    ) {}
-
-    ngAfterViewInit(): void {
-        this.lineageGraphHeigthService.setDatasetViewHeaderHeight(
-            this.datasetViewHeaderComponent.nativeElement.offsetHeight,
-        );
-    }
+    constructor(private navigationService: NavigationService) {}
 
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[] = [
         {

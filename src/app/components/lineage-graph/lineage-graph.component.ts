@@ -1,3 +1,4 @@
+import { WidgetHeightService } from "./../../services/widget-heigth.service";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -20,7 +21,6 @@ import {
 import { LineageGraphConfig, LINEAGE_CONFIG } from "./ligeage-graph.settings";
 import { SessionStorageService } from "src/app/services/session-storage.service";
 import { MaybeUndefined } from "src/app/common/app.types";
-import { LineageGraphHeigthService } from "./lineage-graph-heigth.service";
 
 @Component({
     selector: "app-lineage-graph",
@@ -48,7 +48,7 @@ export class LineageGraphComponent implements OnInit, OnChanges {
 
     constructor(
         private sessionStorageService: SessionStorageService,
-        private lineageGraphHeigthService: LineageGraphHeigthService,
+        private widgetHeightService: WidgetHeightService,
     ) {}
 
     public ngOnInit(): void {
@@ -87,6 +87,6 @@ export class LineageGraphComponent implements OnInit, OnChanges {
     }
 
     private lineageGraphHeight(): number {
-        return this.lineageGraphHeigthService.lineageGraphHeigth;
+        return this.widgetHeightService.widgetHeigth;
     }
 }

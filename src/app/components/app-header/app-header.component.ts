@@ -1,6 +1,7 @@
 import { MaybeNull } from "../../common/app.types";
 import { ActivatedRoute, NavigationEnd, Params, Router, RouterEvent } from "@angular/router";
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -22,13 +23,14 @@ import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AppConfigFeatureFlags, LoginMethod } from "src/app/app-config.model";
+import { LineageGraphHeigthService } from "../lineage-graph/lineage-graph-heigth.service";
 
 @Component({
     selector: "app-header",
     templateUrl: "./app-header.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppHeaderComponent extends BaseComponent implements OnInit {
+export class AppHeaderComponent extends BaseComponent implements OnInit, AfterViewInit {
     public readonly APP_LOGO = AppValues.APP_LOGO;
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
@@ -54,6 +56,8 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     @ViewChild("appHeaderMenuButton")
     private appHeaderMenuButton: ElementRef<HTMLElement>;
 
+    @ViewChild("appHeader") appHeaderComponent: ElementRef<HTMLDivElement>;
+
     public readonly DEFAULT_USER_DISPLAY_NAME: string = AppValues.DEFAULT_USER_DISPLAY_NAME;
 
     public isSearchActive = false;
@@ -66,8 +70,12 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
         private router: Router,
         private cdr: ChangeDetectorRef,
         private navigationService: NavigationService,
+        private lineageGraphHeigthService: LineageGraphHeigthService,
     ) {
         super();
+    }
+    ngAfterViewInit(): void {
+        this.lineageGraphHeigthService.setAppHeaderHeight(this.appHeaderComponent.nativeElement.offsetHeight);
     }
 
     public ngOnInit(): void {

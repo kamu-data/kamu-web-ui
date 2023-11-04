@@ -14,10 +14,12 @@ import { DisplayTimeModule } from "../display-time/display-time.module";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import timekeeper from "timekeeper";
+import { WidgetHeightService } from "src/app/services/widget-heigth.service";
 
 describe("LineageGraphComponent", () => {
     let component: LineageGraphComponent;
     let fixture: ComponentFixture<LineageGraphComponent>;
+    let widgetHeightService: WidgetHeightService;
     const FROZEN_TIME = new Date("2023-10-01 12:00:00");
 
     beforeEach(async () => {
@@ -42,6 +44,7 @@ describe("LineageGraphComponent", () => {
 
         fixture = TestBed.createComponent(LineageGraphComponent);
         component = fixture.componentInstance;
+        widgetHeightService = TestBed.inject(WidgetHeightService);
         component.graph = { links: MOCK_LINKS, nodes: MOCK_NODES };
         component.currentDataset = mockGraphNode;
         fixture.detectChanges();
@@ -112,5 +115,13 @@ describe("LineageGraphComponent", () => {
 
         const watermark = findElementByDataTestId(fixture, "side-panel-dataset-watermark");
         expect(watermark?.textContent?.trim()).toEqual("a month ago");
+    });
+
+    it("should check heigth for the lineage graph", () => {
+        const mockHeigth = 1000;
+        const widgetHeigthSpy = spyOnProperty(widgetHeightService, "widgetHeigth").and.returnValue(mockHeigth);
+        component.ngOnInit();
+        expect(component.view[1]).toEqual(mockHeigth);
+        expect(widgetHeigthSpy).toHaveBeenCalledWith();
     });
 });

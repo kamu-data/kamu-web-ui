@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit, ViewChild } from "@angular/core";
+import { WidgetHeightService } from "./../../services/widget-heigth.service";
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    HostListener,
+    Input,
+    OnInit,
+    ViewChild,
+} from "@angular/core";
 import { MatSidenav } from "@angular/material/sidenav";
 import { DatasetNavigationInterface, DatasetViewTypeEnum } from "../dataset-view.interface";
 import { Clipboard } from "@angular/cdk/clipboard";
@@ -14,9 +24,10 @@ import { DatasetPermissionsService } from "../dataset.permissions.service";
     styleUrls: ["./dataset-view-menu.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetViewMenuComponent implements OnInit {
+export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     @ViewChild("menuTrigger") trigger: ElementRef;
+    @ViewChild("datasetViewMenu") datasetViewMenuComponent: ElementRef<HTMLDivElement>;
 
     @Input() datasetBasics: DatasetBasicsFragment;
     @Input() datasetPermissions: DatasetPermissionsFragment;
@@ -29,13 +40,23 @@ export class DatasetViewMenuComponent implements OnInit {
 
     private sideNavHelper: SideNavHelper;
 
-    constructor(private clipboard: Clipboard, private datasetPermissionsServices: DatasetPermissionsService) {}
+    constructor(
+        private clipboard: Clipboard,
+        private datasetPermissionsServices: DatasetPermissionsService,
+        private widgetHeightService: WidgetHeightService,
+    ) {}
+
+    public ngAfterViewInit(): void {
+        this.widgetHeightService.setWidgetOffsetTop(
+            this.datasetViewMenuComponent.nativeElement.clientHeight +
+                this.datasetViewMenuComponent.nativeElement.offsetTop,
+        );
+    }
 
     public ngOnInit(): void {
         if (this.sidenav) {
             this.sideNavHelper = new SideNavHelper(this.sidenav);
         }
-        this.checkWindowSize();
         this.initClipboardHints();
     }
 
@@ -130,6 +151,11 @@ export class DatasetViewMenuComponent implements OnInit {
                 promiseWithCatch(this.sideNavHelper.open());
             }
         }
+        if (this.datasetViewMenuComponent.nativeElement.offsetHeight)
+            this.widgetHeightService.setWidgetOffsetTop(
+                this.datasetViewMenuComponent.nativeElement.offsetHeight +
+                    this.datasetViewMenuComponent.nativeElement.offsetTop,
+            );
     }
 
     private initClipboardHints(): void {

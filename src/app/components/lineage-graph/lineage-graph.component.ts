@@ -1,3 +1,4 @@
+import { WidgetHeightService } from "./../../services/widget-heigth.service";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -45,7 +46,10 @@ export class LineageGraphComponent implements OnInit, OnChanges {
         this.changeLineageGraphView();
     }
 
-    constructor(private sessionStorageService: SessionStorageService) {}
+    constructor(
+        private sessionStorageService: SessionStorageService,
+        private widgetHeightService: WidgetHeightService,
+    ) {}
 
     public ngOnInit(): void {
         this.view = [this.INITIAL_GRAPH_VIEW_WIDTH, this.lineageGraphHeight()];
@@ -83,20 +87,6 @@ export class LineageGraphComponent implements OnInit, OnChanges {
     }
 
     private lineageGraphHeight(): number {
-        // TODO: Calculate the size of the graph taking the size of the components
-
-        // const headerViewMenuElement = document.getElementById("app-dataset-view-header");
-        // const datasetTabsElement = document.getElementById("container-dataset-tabs");
-        // const headerElement = document.getElementById("app-header");
-        // if (headerViewMenuElement && datasetTabsElement && headerElement) {
-        //     const headerHeight = headerElement.getBoundingClientRect().height;
-        //     const headerViewHeight = headerViewMenuElement.getBoundingClientRect().height;
-        //     const headerMarginTop = +getComputedStyle(headerViewMenuElement).marginTop.split("px")[0];
-        //     const datasetTabsElementHeight = datasetTabsElement.getBoundingClientRect().height;
-        //     return (
-        //         window.innerHeight - (headerHeight + headerViewHeight + headerMarginTop + 2 * datasetTabsElementHeight)
-        //     );
-        // }
-        return screen.height - 390;
+        return this.widgetHeightService.widgetHeigth;
     }
 }

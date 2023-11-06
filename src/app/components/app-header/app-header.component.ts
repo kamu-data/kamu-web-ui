@@ -54,8 +54,6 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     @ViewChild("appHeaderMenuButton")
     private appHeaderMenuButton: ElementRef<HTMLElement>;
 
-    @ViewChild("appHeader") appHeaderComponent: ElementRef<HTMLDivElement>;
-
     public readonly DEFAULT_USER_DISPLAY_NAME: string = AppValues.DEFAULT_USER_DISPLAY_NAME;
 
     public isSearchActive = false;

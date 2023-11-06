@@ -78,7 +78,7 @@ export class DatasetApi {
                     limit: params.numRecords ?? AppValues.SAMPLE_DATA_LIMIT,
                 },
                 {
-                    fetchPolicy: "network-only",
+                    fetchPolicy: "cache-first",
                     errorPolicy: "all",
                 },
             )
@@ -258,10 +258,17 @@ export class DatasetApi {
 
     public commitEvent(params: { datasetId: string; event: string }): Observable<CommitEventToDatasetMutation> {
         return this.commitEventToDatasetGQL
-            .mutate({
-                datasetId: params.datasetId,
-                event: params.event,
-            })
+            .mutate(
+                {
+                    datasetId: params.datasetId,
+                    event: params.event,
+                },
+                {
+                    update: (cache) => {
+                        cache.evict({});
+                    },
+                },
+            )
             .pipe(
                 first(),
                 map((result: MutationResult<CommitEventToDatasetMutation>) => {
@@ -277,10 +284,17 @@ export class DatasetApi {
 
     public updateReadme(datasetId: string, content: string): Observable<UpdateReadmeMutation> {
         return this.updateReadmeGQL
-            .mutate({
-                datasetId,
-                content,
-            })
+            .mutate(
+                {
+                    datasetId,
+                    content,
+                },
+                {
+                    update: (cache) => {
+                        cache.evict({});
+                    },
+                },
+            )
             .pipe(
                 first(),
                 map((result: MutationResult<UpdateReadmeMutation>) => {
@@ -296,9 +310,16 @@ export class DatasetApi {
 
     public deleteDataset(datasetId: string): Observable<DeleteDatasetMutation> {
         return this.deleteDatasetGQL
-            .mutate({
-                datasetId,
-            })
+            .mutate(
+                {
+                    datasetId,
+                },
+                {
+                    update: (cache) => {
+                        cache.evict({});
+                    },
+                },
+            )
             .pipe(
                 first(),
                 map((result: MutationResult<DeleteDatasetMutation>) => {
@@ -314,10 +335,17 @@ export class DatasetApi {
 
     public renameDataset(datasetId: string, newName: string): Observable<RenameDatasetMutation> {
         return this.renameDatasetGQL
-            .mutate({
-                datasetId,
-                newName,
-            })
+            .mutate(
+                {
+                    datasetId,
+                    newName,
+                },
+                {
+                    update: (cache) => {
+                        cache.evict({});
+                    },
+                },
+            )
             .pipe(
                 first(),
                 map((result: MutationResult<RenameDatasetMutation>) => {

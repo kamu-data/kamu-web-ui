@@ -80,6 +80,10 @@ export const mockDatasetListItem: DatasetSearchOverviewFragment = {
                 id: "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7",
                 kind: DatasetKind.Derivative,
                 alias: "kamu/alberta.case-details.hm",
+                owner: {
+                    id: "1",
+                    accountName: "kamu",
+                },
             },
         ],
     },
@@ -202,6 +206,10 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                                 id: "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7",
                                 kind: DatasetKind.Derivative,
                                 alias: "kamu/alberta.case-details.hm",
+                                owner: {
+                                    id: "1",
+                                    accountName: "kamu",
+                                },
                             },
                         ],
                     },

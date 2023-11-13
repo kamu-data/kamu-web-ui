@@ -422,7 +422,7 @@ describe("DatasetApi", () => {
         flush();
     }));
 
-    it("should succesfully commit event", () => {
+    it("should successfully commit event", () => {
         const mockEvent = "mock event";
         service
             .commitEvent({
@@ -441,7 +441,7 @@ describe("DatasetApi", () => {
         });
     });
 
-    it("should succesfully update dataset's readme", () => {
+    it("should successfully update dataset's readme", () => {
         const mockReadmeContent = "someReadme";
         service.updateReadme(TEST_DATASET_ID, mockReadmeContent).subscribe((res: UpdateReadmeMutation) => {
             expect(res.datasets.byId?.metadata.updateReadme.__typename).toEqual("CommitResultSuccess");
@@ -455,9 +455,9 @@ describe("DatasetApi", () => {
         });
     });
 
-    it("should succesfully delete dataset", () => {
+    it("should successfully delete dataset", () => {
         service.deleteDataset(TEST_DATASET_ID).subscribe((res: DeleteDatasetMutation) => {
-            expect(res.datasets.byId?.delete.__typename).toEqual("DeleteResultSuccess");
+            expect(res.datasets.byId?.delete.message).toEqual("Success");
         });
 
         const op = controller.expectOne(DeleteDatasetDocument);
@@ -467,7 +467,7 @@ describe("DatasetApi", () => {
         });
     });
 
-    it("should succesfully rename dataset", () => {
+    it("should successfully rename dataset", () => {
         service.renameDataset(TEST_DATASET_ID, MOCK_NEW_DATASET_NAME).subscribe((res: RenameDatasetMutation) => {
             expect(res.datasets.byId?.rename.__typename).toEqual("RenameResultSuccess");
         });

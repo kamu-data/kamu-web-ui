@@ -85,6 +85,7 @@ export class DatasetApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<GetDatasetMainDataQuery>) => {
+                    console.log(result);
                     return result.data;
                 }),
             );
@@ -96,6 +97,7 @@ export class DatasetApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<GetDatasetDataSqlRunQuery>) => {
+                    console.log(result);
                     return result.data;
                 }),
             );
@@ -265,7 +267,9 @@ export class DatasetApi {
                 },
                 {
                     update: (cache) => {
-                        cache.evict({});
+                        cache.evict({
+                            id: `Dataset:{"id":"${params.datasetId}"}`,
+                        });
                     },
                 },
             )
@@ -291,7 +295,9 @@ export class DatasetApi {
                 },
                 {
                     update: (cache) => {
-                        cache.evict({});
+                        cache.evict({
+                            id: `Dataset:{"id":"${datasetId}"}`,
+                        });
                     },
                 },
             )
@@ -316,7 +322,9 @@ export class DatasetApi {
                 },
                 {
                     update: (cache) => {
-                        cache.evict({});
+                        cache.evict({
+                            id: `Dataset:{"id":"${datasetId}"}`,
+                        });
                     },
                 },
             )
@@ -342,7 +350,9 @@ export class DatasetApi {
                 },
                 {
                     update: (cache) => {
-                        cache.evict({});
+                        cache.evict({
+                            id: `Dataset:{"id":"${datasetId}"}`,
+                        });
                     },
                 },
             )

@@ -23,7 +23,7 @@ export function apolloCache(): InMemoryCache {
             },
             Dataset: {
                 // Use alias, as ID might be the same between 2 accounts who synchronized
-                keyFields: ["alias"],
+                keyFields: ["id"],
                 fields: {
                     metadata: {
                         merge: true,

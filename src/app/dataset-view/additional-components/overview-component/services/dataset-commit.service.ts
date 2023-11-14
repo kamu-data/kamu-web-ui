@@ -46,6 +46,7 @@ export class DatasetCommitService {
                     this.datasetApi.commitEvent({
                         datasetId: id,
                         event,
+                        accountName,
                     }),
                 ),
                 map((data: CommitEventToDatasetMutation) => {
@@ -95,7 +96,7 @@ export class DatasetCommitService {
     public updateReadme(accountName: string, datasetName: string, content: string): Observable<void> {
         if (this.loggedUserService.isAuthenticated) {
             return this.getIdByAccountNameAndDatasetName(accountName, datasetName).pipe(
-                switchMap((id: string) => this.datasetApi.updateReadme(id, content)),
+                switchMap((id: string) => this.datasetApi.updateReadme(id, content, accountName)),
                 map((data: UpdateReadmeMutation) => {
                     if (data.datasets.byId) {
                         if (data.datasets.byId.metadata.updateReadme.__typename === "CommitResultSuccess") {

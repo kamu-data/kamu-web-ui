@@ -23,6 +23,7 @@ import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 
 export const TEST_DATASET_ID = "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7";
 export const TEST_DATASET_NAME = "test-dataset";
+export const TEST_ACCOUNT_NAME = "test-account-name";
 export const TEST_BLOCK_HASH = "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev";
 
 export const mockDatasetDataSqlRunResponse: GetDatasetDataSqlRunQuery = {

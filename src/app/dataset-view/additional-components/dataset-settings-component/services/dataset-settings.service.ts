@@ -32,9 +32,9 @@ export class DatasetSettingsService {
         private datasetService: DatasetService,
     ) {}
 
-    public deleteDataset(datasetId: string): Observable<void> {
+    public deleteDataset(datasetId: string, accountName: string): Observable<void> {
         if (this.loggedUserService.isAuthenticated) {
-            return this.datasetApi.deleteDataset(datasetId).pipe(
+            return this.datasetApi.deleteDataset(datasetId, accountName).pipe(
                 map((data: DeleteDatasetMutation) => {
                     if (data.datasets.byId) {
                         if (data.datasets.byId.delete.__typename === "DeleteResultSuccess") {
@@ -54,7 +54,7 @@ export class DatasetSettingsService {
 
     public renameDataset(accountName: string, datasetId: string, newName: string): Observable<void> {
         if (this.loggedUserService.isAuthenticated) {
-            return this.datasetApi.renameDataset(datasetId, newName).pipe(
+            return this.datasetApi.renameDataset(datasetId, newName, accountName).pipe(
                 map((data: RenameDatasetMutation) => {
                     if (data.datasets.byId) {
                         const renameType = data.datasets.byId.rename.__typename;

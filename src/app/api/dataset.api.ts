@@ -44,6 +44,13 @@ import { MutationResult } from "apollo-angular";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { DatasetOperationError } from "../common/errors";
 
+const createDatasetSelector = (datasetId: string, accountName: string): string => {
+    const owner = `{"owner":{"__ref":"Account:{\\"accountName\\":\\"${accountName}\\"}"}`;
+    const id = `"id":"${datasetId}"}`;
+
+    return `Dataset:${owner},${id}`;
+};
+
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
     constructor(
@@ -85,7 +92,6 @@ export class DatasetApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<GetDatasetMainDataQuery>) => {
-                    console.log(result);
                     return result.data;
                 }),
             );
@@ -97,7 +103,6 @@ export class DatasetApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<GetDatasetDataSqlRunQuery>) => {
-                    console.log(result);
                     return result.data;
                 }),
             );
@@ -258,7 +263,11 @@ export class DatasetApi {
         );
     }
 
-    public commitEvent(params: { datasetId: string; event: string }): Observable<CommitEventToDatasetMutation> {
+    public commitEvent(params: {
+        datasetId: string;
+        event: string;
+        accountName: string;
+    }): Observable<CommitEventToDatasetMutation> {
         return this.commitEventToDatasetGQL
             .mutate(
                 {
@@ -268,7 +277,7 @@ export class DatasetApi {
                 {
                     update: (cache) => {
                         cache.evict({
-                            id: `Dataset:{"id":"${params.datasetId}"}`,
+                            id: createDatasetSelector(params.datasetId, params.accountName),
                         });
                     },
                 },
@@ -286,7 +295,7 @@ export class DatasetApi {
             );
     }
 
-    public updateReadme(datasetId: string, content: string): Observable<UpdateReadmeMutation> {
+    public updateReadme(datasetId: string, content: string, accountName: string): Observable<UpdateReadmeMutation> {
         return this.updateReadmeGQL
             .mutate(
                 {
@@ -296,7 +305,7 @@ export class DatasetApi {
                 {
                     update: (cache) => {
                         cache.evict({
-                            id: `Dataset:{"id":"${datasetId}"}`,
+                            id: createDatasetSelector(datasetId, accountName),
                         });
                     },
                 },
@@ -314,7 +323,7 @@ export class DatasetApi {
             );
     }
 
-    public deleteDataset(datasetId: string): Observable<DeleteDatasetMutation> {
+    public deleteDataset(datasetId: string, accountName: string): Observable<DeleteDatasetMutation> {
         return this.deleteDatasetGQL
             .mutate(
                 {
@@ -323,7 +332,7 @@ export class DatasetApi {
                 {
                     update: (cache) => {
                         cache.evict({
-                            id: `Dataset:{"id":"${datasetId}"}`,
+                            id: createDatasetSelector(datasetId, accountName),
                         });
                     },
                 },
@@ -341,7 +350,7 @@ export class DatasetApi {
             );
     }
 
-    public renameDataset(datasetId: string, newName: string): Observable<RenameDatasetMutation> {
+    public renameDataset(datasetId: string, newName: string, accountName: string): Observable<RenameDatasetMutation> {
         return this.renameDatasetGQL
             .mutate(
                 {
@@ -351,7 +360,7 @@ export class DatasetApi {
                 {
                     update: (cache) => {
                         cache.evict({
-                            id: `Dataset:{"id":"${datasetId}"}`,
+                            id: createDatasetSelector(datasetId, accountName),
                         });
                     },
                 },

@@ -1,4 +1,4 @@
-FROM nginx:1.23.3
+FROM docker.io/library/nginx:1.23.3
 ARG KAMU_WEB_UI_VERSION
 
 COPY rootfs/ /

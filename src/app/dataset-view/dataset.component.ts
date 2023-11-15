@@ -165,6 +165,10 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         console.log("initDiscussionsTab");
     }
 
+    public initTasksTab(): void {
+        //console.log("init");
+    }
+
     public initSettingsTab(datasetInfo: DatasetInfo): void {
         this.trackSubscription(
             this.mainDatasetQueryComplete$
@@ -215,6 +219,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
             [DatasetViewTypeEnum.History]: () => this.initHistoryTab(datasetInfo, currentPage),
             [DatasetViewTypeEnum.Lineage]: () => this.initLineageTab(datasetInfo),
             [DatasetViewTypeEnum.Discussions]: () => this.initDiscussionsTab(),
+            [DatasetViewTypeEnum.Tasks]: () => this.initTasksTab(),
             [DatasetViewTypeEnum.Settings]: () => this.initSettingsTab(datasetInfo),
         };
 

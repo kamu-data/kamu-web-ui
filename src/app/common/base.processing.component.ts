@@ -61,6 +61,13 @@ export class BaseProcessingComponent extends BaseComponent {
                     tab: DatasetViewTypeEnum.Settings,
                 });
             },
+            navigateToTasks: () => {
+                this.navigationService.navigateToDatasetView({
+                    accountName: datasetInfo.accountName,
+                    datasetName: datasetInfo.datasetName,
+                    tab: DatasetViewTypeEnum.Tasks,
+                });
+            },
         };
     }
 

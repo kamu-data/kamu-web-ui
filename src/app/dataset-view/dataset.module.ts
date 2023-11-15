@@ -64,6 +64,7 @@ import { MatInputModule } from "@angular/material/input";
 import { ReturnToCliComponent } from "../components/return-to-cli/return-to-cli.component";
 import { EditorModule } from "../shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { TasksComponent } from "./additional-components/tasks-component/tasks.component";
 
 @NgModule({
     imports: [
@@ -155,6 +156,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
         ReadmeSectionComponent,
         DatasetSettingsComponent,
         LoadMoreComponent,
+        TasksComponent,
     ],
 })
 export class DatasetModule {

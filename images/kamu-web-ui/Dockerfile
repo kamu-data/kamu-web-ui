@@ -1,7 +1,10 @@
-FROM nginx:1.23.3
+FROM docker.io/nginxinc/nginx-unprivileged:1.23.3
+
 ARG KAMU_WEB_UI_VERSION
 
 COPY rootfs/ /
+
+USER 0
 
 RUN cd /usr/share/nginx/html && \
     rm * && \
@@ -15,3 +18,5 @@ RUN cd /usr/share/nginx/html && \
 
 COPY runtime-config.json /usr/share/nginx/html/assets/runtime-config.json
 COPY runtime-config-single-tenant.json /usr/share/nginx/html/assets/runtime-config-single-tenant.json
+
+USER nginx

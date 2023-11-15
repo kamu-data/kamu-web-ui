@@ -11,7 +11,12 @@ RUN cd /usr/share/nginx/html && \
     "https://github.com/kamu-data/kamu-web-ui/releases/download/v${KAMU_WEB_UI_VERSION}/kamu-web-ui-any.tar.gz" && \
     tar -xf kamu-web-ui-any.tar.gz && \
     mv kamu-web-ui-any/* . && \
-    rm -r kamu-web-ui-any.tar.gz kamu-web-ui-any
+    rm -r kamu-web-ui-any.tar.gz kamu-web-ui-any && \
+    chown -R nginx:0 /var/cache/nginx /var/log/nginx && \
+    chmod -R g+w /var/cache/nginx /var/log/nginx
 
 COPY runtime-config.json /usr/share/nginx/html/assets/runtime-config.json
 COPY runtime-config-single-tenant.json /usr/share/nginx/html/assets/runtime-config-single-tenant.json
+
+USER nginx
+EXPOSE 8080

@@ -273,7 +273,7 @@ export class DatasetApi {
                         // New events affect metadata chain in unpredictable manner
                         // Open question: future impact on "data" field, if new event brings schema evolution
                         const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
-                            params.accountName,
+                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountName)),
                             params.datasetId,
                         );
                         cache.evict({
@@ -313,7 +313,7 @@ export class DatasetApi {
                         // but any change to readme affects the state of the metadata chain nodes,
                         // so dropping metadata field completely is a valid and safe option
                         const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
-                            params.accountName,
+                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountName)),
                             params.datasetId,
                         );
                         cache.evict({
@@ -346,7 +346,7 @@ export class DatasetApi {
                     update: (cache) => {
                         // Drop entire dataset object
                         const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
-                            params.accountName,
+                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountName)),
                             params.datasetId,
                         );
                         cache.evict({
@@ -382,7 +382,10 @@ export class DatasetApi {
                 {
                     update: (cache) => {
                         const datasetCacheId = cache.identify(
-                            DatasetApi.generateDatasetKeyFragment(params.accountName, params.datasetId),
+                            DatasetApi.generateDatasetKeyFragment(
+                                cache.identify(DatasetApi.generateAccountKeyFragment(params.accountName)),
+                                params.datasetId,
+                            ),
                         );
                         cache.evict({
                             id: datasetCacheId,
@@ -408,13 +411,20 @@ export class DatasetApi {
             );
     }
 
-    private static generateDatasetKeyFragment(accountName: string, datasetId: string): StoreObject {
+    private static generateDatasetKeyFragment(ownerRef: string | undefined, datasetId: string): StoreObject {
         return {
             __typename: "Dataset",
             owner: {
-                accountName: accountName,
+                __ref: ownerRef,
             },
             id: datasetId,
+        };
+    }
+
+    private static generateAccountKeyFragment(accountName: string): StoreObject {
+        return {
+            __typename: "Account",
+            accountName,
         };
     }
 }

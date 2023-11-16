@@ -43,6 +43,7 @@ import { Observable } from "rxjs";
 import { MutationResult } from "apollo-angular";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { DatasetOperationError } from "../common/errors";
+import { StoreObject } from "@apollo/client/cache";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
@@ -269,8 +270,15 @@ export class DatasetApi {
                 },
                 {
                     update: (cache) => {
+                        // New events affect metadata chain in unpredictable manner
+                        // Open question: future impact on "data" field, if new event brings schema evolution
+                        const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
+                            params.accountName,
+                            params.datasetId,
+                        );
                         cache.evict({
-                            id: DatasetApi.CREATE_DATASET_SELETOR(params.datasetId, params.accountName),
+                            id: cache.identify(datasetKeyFragment),
+                            fieldName: "metadata",
                         });
                     },
                 },
@@ -301,8 +309,16 @@ export class DatasetApi {
                 },
                 {
                     update: (cache) => {
+                        // Note: dropping readme on it's own via `cache.modify` could have been an option,
+                        // but any change to readme affects the state of the metadata chain nodes,
+                        // so dropping metadata field completely is a valid and safe option
+                        const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
+                            params.accountName,
+                            params.datasetId,
+                        );
                         cache.evict({
-                            id: DatasetApi.CREATE_DATASET_SELETOR(params.datasetId, params.accountName),
+                            id: cache.identify(datasetKeyFragment),
+                            fieldName: "metadata",
                         });
                     },
                 },
@@ -328,8 +344,13 @@ export class DatasetApi {
                 },
                 {
                     update: (cache) => {
+                        // Drop entire dataset object
+                        const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
+                            params.accountName,
+                            params.datasetId,
+                        );
                         cache.evict({
-                            id: DatasetApi.CREATE_DATASET_SELETOR(params.datasetId, params.accountName),
+                            id: cache.identify(datasetKeyFragment),
                         });
                     },
                 },
@@ -360,8 +381,16 @@ export class DatasetApi {
                 },
                 {
                     update: (cache) => {
+                        const datasetCacheId = cache.identify(
+                            DatasetApi.generateDatasetKeyFragment(params.accountName, params.datasetId),
+                        );
                         cache.evict({
-                            id: DatasetApi.CREATE_DATASET_SELETOR(params.datasetId, params.accountName),
+                            id: datasetCacheId,
+                            fieldName: "alias",
+                        });
+                        cache.evict({
+                            id: datasetCacheId,
+                            fieldName: "name",
                         });
                     },
                 },
@@ -379,10 +408,13 @@ export class DatasetApi {
             );
     }
 
-    private static readonly CREATE_DATASET_SELETOR = (datasetId: string, accountName: string): string => {
-        const owner = `{"owner":{"__ref":"Account:{\\"accountName\\":\\"${accountName}\\"}"}`;
-        const id = `"id":"${datasetId}"}`;
-
-        return `Dataset:${owner},${id}`;
-    };
+    private static generateDatasetKeyFragment(accountName: string, datasetId: string): StoreObject {
+        return {
+            __typename: "Dataset",
+            owner: {
+                accountName: accountName,
+            },
+            id: datasetId,
+        };
+    }
 }

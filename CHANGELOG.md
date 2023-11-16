@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve reporting of fatal errors from modal window to toaster window
 - Monaco-based editors isolated in `EditorModule`
 - Changed splash screen
+- Evicting dataset objects from Apollo GraphQL cache after signifficant mutations
 ### Fixed
 - GraphQL caching issues when switching between History and Lineage tabs
 - Correct author avatars on history tab

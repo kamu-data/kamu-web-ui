@@ -43,6 +43,7 @@ import { Observable } from "rxjs";
 import { MutationResult } from "apollo-angular";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { DatasetOperationError } from "../common/errors";
+import { StoreObject } from "@apollo/client/cache";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
@@ -78,7 +79,7 @@ export class DatasetApi {
                     limit: params.numRecords ?? AppValues.SAMPLE_DATA_LIMIT,
                 },
                 {
-                    fetchPolicy: "network-only",
+                    fetchPolicy: "cache-first",
                     errorPolicy: "all",
                 },
             )
@@ -256,12 +257,32 @@ export class DatasetApi {
         );
     }
 
-    public commitEvent(params: { datasetId: string; event: string }): Observable<CommitEventToDatasetMutation> {
+    public commitEvent(params: {
+        accountName: string;
+        datasetId: string;
+        event: string;
+    }): Observable<CommitEventToDatasetMutation> {
         return this.commitEventToDatasetGQL
-            .mutate({
-                datasetId: params.datasetId,
-                event: params.event,
-            })
+            .mutate(
+                {
+                    datasetId: params.datasetId,
+                    event: params.event,
+                },
+                {
+                    update: (cache) => {
+                        // New events affect metadata chain in unpredictable manner
+                        // Open question: future impact on "data" field, if new event brings schema evolution
+                        const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
+                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountName)),
+                            params.datasetId,
+                        );
+                        cache.evict({
+                            id: cache.identify(datasetKeyFragment),
+                            fieldName: "metadata",
+                        });
+                    },
+                },
+            )
             .pipe(
                 first(),
                 map((result: MutationResult<CommitEventToDatasetMutation>) => {
@@ -275,12 +296,33 @@ export class DatasetApi {
             );
     }
 
-    public updateReadme(datasetId: string, content: string): Observable<UpdateReadmeMutation> {
+    public updateReadme(params: {
+        accountName: string;
+        datasetId: string;
+        content: string;
+    }): Observable<UpdateReadmeMutation> {
         return this.updateReadmeGQL
-            .mutate({
-                datasetId,
-                content,
-            })
+            .mutate(
+                {
+                    datasetId: params.datasetId,
+                    content: params.content,
+                },
+                {
+                    update: (cache) => {
+                        // Note: dropping readme on it's own via `cache.modify` could have been an option,
+                        // but any change to readme affects the state of the metadata chain nodes,
+                        // so dropping metadata field completely is a valid and safe option
+                        const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
+                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountName)),
+                            params.datasetId,
+                        );
+                        cache.evict({
+                            id: cache.identify(datasetKeyFragment),
+                            fieldName: "metadata",
+                        });
+                    },
+                },
+            )
             .pipe(
                 first(),
                 map((result: MutationResult<UpdateReadmeMutation>) => {
@@ -294,11 +336,25 @@ export class DatasetApi {
             );
     }
 
-    public deleteDataset(datasetId: string): Observable<DeleteDatasetMutation> {
+    public deleteDataset(params: { accountName: string; datasetId: string }): Observable<DeleteDatasetMutation> {
         return this.deleteDatasetGQL
-            .mutate({
-                datasetId,
-            })
+            .mutate(
+                {
+                    datasetId: params.datasetId,
+                },
+                {
+                    update: (cache) => {
+                        // Drop entire dataset object
+                        const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
+                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountName)),
+                            params.datasetId,
+                        );
+                        cache.evict({
+                            id: cache.identify(datasetKeyFragment),
+                        });
+                    },
+                },
+            )
             .pipe(
                 first(),
                 map((result: MutationResult<DeleteDatasetMutation>) => {
@@ -312,12 +368,36 @@ export class DatasetApi {
             );
     }
 
-    public renameDataset(datasetId: string, newName: string): Observable<RenameDatasetMutation> {
+    public renameDataset(params: {
+        accountName: string;
+        datasetId: string;
+        newName: string;
+    }): Observable<RenameDatasetMutation> {
         return this.renameDatasetGQL
-            .mutate({
-                datasetId,
-                newName,
-            })
+            .mutate(
+                {
+                    datasetId: params.datasetId,
+                    newName: params.newName,
+                },
+                {
+                    update: (cache) => {
+                        const datasetCacheId = cache.identify(
+                            DatasetApi.generateDatasetKeyFragment(
+                                cache.identify(DatasetApi.generateAccountKeyFragment(params.accountName)),
+                                params.datasetId,
+                            ),
+                        );
+                        cache.evict({
+                            id: datasetCacheId,
+                            fieldName: "alias",
+                        });
+                        cache.evict({
+                            id: datasetCacheId,
+                            fieldName: "name",
+                        });
+                    },
+                },
+            )
             .pipe(
                 first(),
                 map((result: MutationResult<RenameDatasetMutation>) => {
@@ -329,5 +409,22 @@ export class DatasetApi {
                     }
                 }),
             );
+    }
+
+    private static generateDatasetKeyFragment(ownerRef: string | undefined, datasetId: string): StoreObject {
+        return {
+            __typename: "Dataset",
+            owner: {
+                __ref: ownerRef,
+            },
+            id: datasetId,
+        };
+    }
+
+    private static generateAccountKeyFragment(accountName: string): StoreObject {
+        return {
+            __typename: "Account",
+            accountName,
+        };
     }
 }

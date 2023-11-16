@@ -176,8 +176,8 @@ describe("DatasetSettingsComponent", () => {
         tick();
 
         expect(deleteDatasetSpy).toHaveBeenCalledOnceWith(
-            component.datasetBasics.id,
             component.datasetBasics.owner.accountName,
+            component.datasetBasics.id,
         );
 
         flush();

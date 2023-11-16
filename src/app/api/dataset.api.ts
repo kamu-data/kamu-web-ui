@@ -44,13 +44,6 @@ import { MutationResult } from "apollo-angular";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { DatasetOperationError } from "../common/errors";
 
-const createDatasetSelector = (datasetId: string, accountName: string): string => {
-    const owner = `{"owner":{"__ref":"Account:{\\"accountName\\":\\"${accountName}\\"}"}`;
-    const id = `"id":"${datasetId}"}`;
-
-    return `Dataset:${owner},${id}`;
-};
-
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
     constructor(
@@ -264,9 +257,9 @@ export class DatasetApi {
     }
 
     public commitEvent(params: {
+        accountName: string;
         datasetId: string;
         event: string;
-        accountName: string;
     }): Observable<CommitEventToDatasetMutation> {
         return this.commitEventToDatasetGQL
             .mutate(
@@ -277,7 +270,7 @@ export class DatasetApi {
                 {
                     update: (cache) => {
                         cache.evict({
-                            id: createDatasetSelector(params.datasetId, params.accountName),
+                            id: DatasetApi.CREATE_DATASET_SELETOR(params.datasetId, params.accountName),
                         });
                     },
                 },
@@ -295,17 +288,21 @@ export class DatasetApi {
             );
     }
 
-    public updateReadme(datasetId: string, content: string, accountName: string): Observable<UpdateReadmeMutation> {
+    public updateReadme(params: {
+        accountName: string;
+        datasetId: string;
+        content: string;
+    }): Observable<UpdateReadmeMutation> {
         return this.updateReadmeGQL
             .mutate(
                 {
-                    datasetId,
-                    content,
+                    datasetId: params.datasetId,
+                    content: params.content,
                 },
                 {
                     update: (cache) => {
                         cache.evict({
-                            id: createDatasetSelector(datasetId, accountName),
+                            id: DatasetApi.CREATE_DATASET_SELETOR(params.datasetId, params.accountName),
                         });
                     },
                 },
@@ -323,16 +320,16 @@ export class DatasetApi {
             );
     }
 
-    public deleteDataset(datasetId: string, accountName: string): Observable<DeleteDatasetMutation> {
+    public deleteDataset(params: { accountName: string; datasetId: string }): Observable<DeleteDatasetMutation> {
         return this.deleteDatasetGQL
             .mutate(
                 {
-                    datasetId,
+                    datasetId: params.datasetId,
                 },
                 {
                     update: (cache) => {
                         cache.evict({
-                            id: createDatasetSelector(datasetId, accountName),
+                            id: DatasetApi.CREATE_DATASET_SELETOR(params.datasetId, params.accountName),
                         });
                     },
                 },
@@ -350,17 +347,21 @@ export class DatasetApi {
             );
     }
 
-    public renameDataset(datasetId: string, newName: string, accountName: string): Observable<RenameDatasetMutation> {
+    public renameDataset(params: {
+        accountName: string;
+        datasetId: string;
+        newName: string;
+    }): Observable<RenameDatasetMutation> {
         return this.renameDatasetGQL
             .mutate(
                 {
-                    datasetId,
-                    newName,
+                    datasetId: params.datasetId,
+                    newName: params.newName,
                 },
                 {
                     update: (cache) => {
                         cache.evict({
-                            id: createDatasetSelector(datasetId, accountName),
+                            id: DatasetApi.CREATE_DATASET_SELETOR(params.datasetId, params.accountName),
                         });
                     },
                 },
@@ -377,4 +378,11 @@ export class DatasetApi {
                 }),
             );
     }
+
+    private static readonly CREATE_DATASET_SELETOR = (datasetId: string, accountName: string): string => {
+        const owner = `{"owner":{"__ref":"Account:{\\"accountName\\":\\"${accountName}\\"}"}`;
+        const id = `"id":"${datasetId}"}`;
+
+        return `Dataset:${owner},${id}`;
+    };
 }

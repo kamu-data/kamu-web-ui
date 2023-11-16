@@ -5,6 +5,7 @@ import {
     mockDatasetsByAccountNameQuery,
     mockDatassetByIdQuery,
     mockGetMetadataBlockQuery,
+    TEST_ACCOUNT_NAME,
     TEST_BLOCK_HASH,
     TEST_DATASET_ID,
     TEST_DATASET_NAME,
@@ -426,9 +427,9 @@ describe("DatasetApi", () => {
         const mockEvent = "mock event";
         service
             .commitEvent({
+                accountName: TEST_DATASET_NAME,
                 datasetId: TEST_DATASET_ID,
                 event: mockEvent,
-                accountName: TEST_DATASET_NAME,
             })
             .subscribe((res: CommitEventToDatasetMutation) => {
                 expect(res.datasets.byId?.metadata.chain.commitEvent.__typename).toEqual("CommitResultSuccess");
@@ -445,7 +446,7 @@ describe("DatasetApi", () => {
     it("should successfully update dataset's readme", () => {
         const mockReadmeContent = "someReadme";
         service
-            .updateReadme(TEST_DATASET_ID, mockReadmeContent, TEST_DATASET_NAME)
+            .updateReadme({ accountName: TEST_ACCOUNT_NAME, datasetId: TEST_DATASET_ID, content: mockReadmeContent })
             .subscribe((res: UpdateReadmeMutation) => {
                 expect(res.datasets.byId?.metadata.updateReadme.__typename).toEqual("CommitResultSuccess");
             });
@@ -459,9 +460,11 @@ describe("DatasetApi", () => {
     });
 
     it("should successfully delete dataset", () => {
-        service.deleteDataset(TEST_DATASET_ID, TEST_DATASET_NAME).subscribe((res: DeleteDatasetMutation) => {
-            expect(res.datasets.byId?.delete.message).toEqual("Success");
-        });
+        service
+            .deleteDataset({ accountName: TEST_ACCOUNT_NAME, datasetId: TEST_DATASET_ID })
+            .subscribe((res: DeleteDatasetMutation) => {
+                expect(res.datasets.byId?.delete.message).toEqual("Success");
+            });
 
         const op = controller.expectOne(DeleteDatasetDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
@@ -472,7 +475,11 @@ describe("DatasetApi", () => {
 
     it("should successfully rename dataset", () => {
         service
-            .renameDataset(TEST_DATASET_ID, MOCK_NEW_DATASET_NAME, TEST_DATASET_NAME)
+            .renameDataset({
+                accountName: TEST_ACCOUNT_NAME,
+                datasetId: TEST_DATASET_ID,
+                newName: MOCK_NEW_DATASET_NAME,
+            })
             .subscribe((res: RenameDatasetMutation) => {
                 expect(res.datasets.byId?.rename.__typename).toEqual("RenameResultSuccess");
             });
@@ -510,25 +517,34 @@ describe("DatasetApi", () => {
             operationName: "rename",
             expectedGqlQuery: RenameDatasetDocument,
             action: (): Observable<unknown> => {
-                return service.renameDataset(TEST_DATASET_ID, MOCK_NEW_DATASET_NAME, TEST_DATASET_NAME);
+                return service.renameDataset({
+                    accountName: TEST_ACCOUNT_NAME,
+                    datasetId: TEST_DATASET_ID,
+                    newName: MOCK_NEW_DATASET_NAME,
+                });
             },
         },
         {
             operationName: "delete",
             expectedGqlQuery: DeleteDatasetDocument,
-            action: (): Observable<unknown> => service.deleteDataset(TEST_DATASET_ID, TEST_DATASET_NAME),
+            action: (): Observable<unknown> =>
+                service.deleteDataset({ accountName: TEST_ACCOUNT_NAME, datasetId: TEST_DATASET_ID }),
         },
         {
             operationName: "updateReadme",
             expectedGqlQuery: UpdateReadmeDocument,
             action: (): Observable<unknown> =>
-                service.updateReadme(TEST_DATASET_ID, "someReadmeCntent", TEST_DATASET_NAME),
+                service.updateReadme({
+                    accountName: TEST_ACCOUNT_NAME,
+                    datasetId: TEST_DATASET_ID,
+                    content: "someReadmeCntent",
+                }),
         },
         {
             operationName: "commitEvent",
             expectedGqlQuery: CommitEventToDatasetDocument,
             action: (): Observable<unknown> =>
-                service.commitEvent({ datasetId: TEST_DATASET_ID, event: "someEvent", accountName: TEST_DATASET_NAME }),
+                service.commitEvent({ accountName: TEST_DATASET_NAME, datasetId: TEST_DATASET_ID, event: "someEvent" }),
         },
     ].forEach((testCase: RuntimeFailureTestCase) => {
         it(`should check how operation #${testCase.operationName} is handling runtime error`, fakeAsync(() => {

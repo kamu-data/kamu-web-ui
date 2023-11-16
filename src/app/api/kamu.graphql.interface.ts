@@ -1838,13 +1838,7 @@ export type DatasetSearchOverviewFragment = {
         __typename?: "DatasetMetadata";
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
-        currentDownstreamDependencies: Array<{
-            __typename?: "Dataset";
-            id: string;
-            kind: DatasetKind;
-            owner: { __typename?: "Account" } & AccountBasicsFragment;
-            alias: string;
-        }>;
+        currentDownstreamDependencies: Array<{ __typename?: "Dataset"; id: string; kind: DatasetKind; alias: string }>;
     };
 } & DatasetBasicsFragment;
 
@@ -2638,9 +2632,6 @@ export const DatasetSearchOverviewFragmentDoc = gql`
                 id
                 kind
                 alias
-                owner {
-                    accountName
-                }
             }
         }
     }

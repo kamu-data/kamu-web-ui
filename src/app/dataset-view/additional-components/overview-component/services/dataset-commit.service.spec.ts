@@ -236,7 +236,11 @@ describe("DatasetCommitService", () => {
         });
         flush();
 
-        expect(updateReadmeSpy).toHaveBeenCalledOnceWith(TEST_DATASET_ID, README_CONTENT, TEST_ACCOUNT_NAME);
+        expect(updateReadmeSpy).toHaveBeenCalledOnceWith({
+            accountName: TEST_ACCOUNT_NAME,
+            datasetId: TEST_DATASET_ID,
+            content: README_CONTENT,
+        });
         expectNavigatedToDatasetOverview();
         expectRequestedDatasetMainData();
     }));

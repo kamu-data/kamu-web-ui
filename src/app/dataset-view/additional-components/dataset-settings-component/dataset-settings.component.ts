@@ -70,7 +70,7 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
                 handler: (ok) => {
                     if (ok) {
                         this.trackSubscription(
-                            this.datasetSettingsService.deleteDataset(datasetId, accountName).subscribe(),
+                            this.datasetSettingsService.deleteDataset(accountName, datasetId).subscribe(),
                         );
                     }
                 },

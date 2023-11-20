@@ -1,0 +1,45 @@
+@import "var";
+
+.mt-100 {
+    margin-top: 70px;
+}
+
+table {
+    width: 100%;
+    border: 1px solid $app-very-light-gray;
+
+    .options-cell {
+        max-width: 100px;
+    }
+
+    .mat-column-options {
+        text-align: end;
+    }
+}
+
+.mat-menu-item {
+    line-height: 35px;
+    height: 35px;
+}
+
+.img-creator {
+    width: 20px;
+    height: 20px;
+    object-fit: cover;
+}
+
+.icon-status {
+    transform: scale(0.8);
+}
+
+.completed-status {
+    color: #239a59;
+}
+
+.running-status {
+    color: #d3c22a;
+}
+
+.failed-status {
+    color: #d13124;
+}

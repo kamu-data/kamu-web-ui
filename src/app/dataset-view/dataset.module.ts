@@ -65,6 +65,10 @@ import { ReturnToCliComponent } from "../components/return-to-cli/return-to-cli.
 import { EditorModule } from "../shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { TasksComponent } from "./additional-components/tasks-component/tasks.component";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TileBaseWidgetComponent } from "./additional-components/tasks-component/components/tile-base-widget/tile-base-widget.component";
+import { TasksTableComponent } from "./additional-components/tasks-component/components/tasks-table/tasks-table.component";
+import { MatTableModule } from "@angular/material/table";
 
 @NgModule({
     imports: [
@@ -109,6 +113,9 @@ import { TasksComponent } from "./additional-components/tasks-component/tasks.co
         MatInputModule,
         EditorModule,
         MatProgressBarModule,
+        MatTooltipModule,
+        MatTableModule,
+        MatIconModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -126,6 +133,7 @@ import { TasksComponent } from "./additional-components/tasks-component/tasks.co
         HistoryComponent,
         DisplayHashModule,
         MatTreeModule,
+        MatTooltipModule,
     ],
     declarations: [
         DatasetViewHeaderComponent,
@@ -157,6 +165,8 @@ import { TasksComponent } from "./additional-components/tasks-component/tasks.co
         DatasetSettingsComponent,
         LoadMoreComponent,
         TasksComponent,
+        TileBaseWidgetComponent,
+        TasksTableComponent,
     ],
 })
 export class DatasetModule {

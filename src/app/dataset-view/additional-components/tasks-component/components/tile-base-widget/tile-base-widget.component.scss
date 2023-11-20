@@ -1,0 +1,24 @@
+// tile-based widget
+.content {
+    display: flex;
+    gap: 5px;
+    flex-flow: row wrap;
+
+    .tile-item {
+        width: 13px;
+        height: 13px;
+        border-radius: 2px;
+    }
+}
+
+.completed {
+    background: #239a59;
+}
+
+.running {
+    background: #d3c22a;
+}
+
+.failed {
+    background: #d13124;
+}

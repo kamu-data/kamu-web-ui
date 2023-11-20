@@ -6,8 +6,10 @@ import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
     styleUrls: ["./tasks.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TasksComponent implements OnInit {
-    ngOnInit(): void {
-        // console.log("ww");
+export class TasksComponent {
+    public searchFilter = "";
+
+    public refreshFilter(): void {
+        this.searchFilter = "";
     }
 }

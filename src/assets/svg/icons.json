@@ -111,6 +111,10 @@
     {
       "iconName": "github-logo",
       "iconPath": "/assets/svg/git-hub.svg"
+    },
+    {
+      "iconName": "show-options",
+      "iconPath": "/assets/svg/show-options.svg"
     }
   ],
   "customIcons": []

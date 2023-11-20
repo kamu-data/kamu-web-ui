@@ -1,0 +1,11 @@
+<div class="content">
+    <div
+        *ngFor="let tile of arrTiles | slice: 0:lastRunsCount"
+        class="tile-item completed"
+        [matTooltip]="'Info about the action ' + tile"
+        [matTooltipPosition]="'above'"
+    ></div>
+</div>
+<div class="mt-2">
+    <span class="fs-12 text-muted"> Show last runs</span>
+</div>

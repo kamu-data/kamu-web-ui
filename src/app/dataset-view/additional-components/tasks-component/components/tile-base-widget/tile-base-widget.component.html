@@ -1,9 +1,13 @@
 <div class="content">
     <div
-        *ngFor="let tile of arrTiles | slice: 0:lastRunsCount"
-        class="tile-item completed"
-        [matTooltip]="'Info about the action ' + tile"
+        *ngFor="let tile of tasks | slice: 0:lastRunsCount"
+        class="tile-item"
+        [matTooltip]="'Info about the action ' + tile.taskId"
         [matTooltipPosition]="'above'"
+        [ngClass]="{
+            completed: tile.status === TaskStatus.Finished,
+            running: tile.status === TaskStatus.Running
+        }"
     ></div>
 </div>
 <div class="mt-2">

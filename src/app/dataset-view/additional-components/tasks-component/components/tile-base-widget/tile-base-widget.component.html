@@ -5,8 +5,9 @@
         [matTooltip]="'Info about the action ' + tile.taskId"
         [matTooltipPosition]="'above'"
         [ngClass]="{
-            completed: tile.status === TaskStatus.Finished,
-            running: tile.status === TaskStatus.Running
+            completed: tile.status === TaskStatus.Finished && tile.outcome === TaskOutcome.Success,
+            running: tile.status === TaskStatus.Running,
+            failed: tile.status === TaskStatus.Finished && tile.outcome === TaskOutcome.Failed
         }"
     ></div>
 </div>

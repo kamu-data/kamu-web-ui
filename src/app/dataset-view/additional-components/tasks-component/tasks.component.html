@@ -48,8 +48,8 @@
         </div>
     </div>
 
-    <div class="search-result-container__content my-4" *ngIf="datasetTasks$ | async as tasks">
-        <app-tile-base-widget [tasks]="tasks!"></app-tile-base-widget>
+    <div class="search-result-container__content my-4" *ngIf="tasks">
+        <app-tile-base-widget [tasks]="tasks"></app-tile-base-widget>
     </div>
 
     <div class="tasks-table-header d-flex flex-justify-between align-items-center flex-row">
@@ -73,7 +73,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="datasetTasks$ | async as tasks">
-        <app-tasks-table [tasks]="tasks!"></app-tasks-table>
+    <div *ngIf="tasks">
+        <app-tasks-table [tasks]="tasks"></app-tasks-table>
     </div>
 </div>

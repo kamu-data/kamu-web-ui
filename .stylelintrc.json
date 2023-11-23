@@ -5,6 +5,10 @@
     "scss/percent-placeholder-pattern": null,
     "selector-class-pattern": null,
     "no-descending-specificity": null,
+    "property-no-vendor-prefix": [
+      true,
+      { "ignoreProperties": ["appearance"] }
+    ],
     "declaration-block-no-redundant-longhand-properties": [
       true,
       { "ignoreShorthands": ["grid-template"] }
@@ -16,9 +20,7 @@
     "number-max-precision": 3,
     "selector-type-no-unknown": [
       true,
-      {
-        "ignore": ["default-namespace"]
-      }
+      { "ignore": ["default-namespace"] }
     ]
   }
 }

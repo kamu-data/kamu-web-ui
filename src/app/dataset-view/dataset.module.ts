@@ -64,6 +64,10 @@ import { MatInputModule } from "@angular/material/input";
 import { ReturnToCliComponent } from "../components/return-to-cli/return-to-cli.component";
 import { EditorModule } from "../shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { SchedulingComponent } from "./additional-components/dataset-settings-component/components/scheduling/scheduling.component";
+import { GeneralComponent } from "./additional-components/dataset-settings-component/components/general/general.component";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatRadioModule } from "@angular/material/radio";
 
 @NgModule({
     imports: [
@@ -108,6 +112,8 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
         MatInputModule,
         EditorModule,
         MatProgressBarModule,
+        MatSlideToggleModule,
+        MatRadioModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -155,6 +161,8 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
         ReadmeSectionComponent,
         DatasetSettingsComponent,
         LoadMoreComponent,
+        SchedulingComponent,
+        GeneralComponent,
     ],
 })
 export class DatasetModule {

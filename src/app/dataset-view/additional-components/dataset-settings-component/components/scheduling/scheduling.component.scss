@@ -1,0 +1,77 @@
+:host {
+    ::ng-deep {
+        .mat-slide-toggle-thumb {
+            background-color: #616161;
+        }
+
+        .mat-slide-toggle.mat-checked {
+            .mat-slide-toggle-bar {
+                background-color: #86ba90;
+            }
+
+            .mat-slide-toggle-thumb {
+                background-color: #2da44e;
+            }
+        }
+
+        .mat-radio-button.mat-accent {
+            &.mat-radio-checked {
+                .mat-radio-outer-circle {
+                    border-color: #0075ff;
+                }
+
+                .mat-radio-inner-circle {
+                    background-color: #0075ff;
+                }
+
+                .mat-radio-persistent-ripple {
+                    background-color: #0075ff;
+                }
+            }
+
+            &:active {
+                .mat-radio-persistent-ripple {
+                    background-color: #0075ff;
+                }
+            }
+        }
+    }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.time-delta {
+    .form-select {
+        width: 130px;
+    }
+}
+
+.cron-expression {
+    .form-control {
+        width: 120px;
+        color: #1a7f37;
+    }
+}
+
+button[type="submit"] {
+    background-color: #f0f0f0;
+    border: 1px solid #babbbc;
+    transition: background-color 0.3s linear;
+    min-width: 100px;
+
+    &:hover(:not[disabled]) {
+        background-color: #dbdbdc;
+    }
+}
+
+.w-60px {
+    width: 60px;
+}

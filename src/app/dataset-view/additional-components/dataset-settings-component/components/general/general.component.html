@@ -1,0 +1,64 @@
+<h2>General</h2>
+<mat-divider class="mt-1 w-75 mb-2"></mat-divider>
+<form [formGroup]="renameDatasetForm">
+    <dl class="form-group d-inline-block mt-3">
+        <dt class="input-label mb-2">
+            <label for="rename-field" [class.error-color]="renameError$ | async">Dataset name</label>
+        </dt>
+        <dd>
+            <input
+                formControlName="datasetName"
+                type="text"
+                name="new_name"
+                class="form-control"
+                id="rename-field"
+                data-test-id="rename-dataset-input"
+                (keyup)="changeName()"
+                [class.error-border-color]="renameError$ | async"
+            />
+        </dd>
+    </dl>
+    <button
+        class="ms-4 rename-btn"
+        type="button"
+        (click)="renameDataset()"
+        [disabled]="!renameDatasetForm.valid"
+        data-test-id="rename-dataset-button"
+    >
+        Rename
+    </button>
+    <div *ngIf="datasetNameControl.invalid && (datasetNameControl.touched || datasetNameControl.dirty)">
+        <span
+            *ngIf="datasetNameControl.errors?.required"
+            class="text-danger fs-12"
+            data-test-id="rename-dataset-error-name-required"
+            >Name is required</span
+        >
+        <span
+            *ngIf="datasetNameControl.errors?.pattern"
+            class="text-danger fs-12"
+            data-test-id="rename-dataset-error-name-pattern"
+            >Invalid dataset name</span
+        >
+    </div>
+    <div *ngIf="renameError$ | async as renameError">
+        <div class="error-block" data-test-id="rename-dataset-error-custom">{{ renameError }}</div>
+    </div>
+</form>
+<div class="mt-4">
+    <h2>Danger Zone</h2>
+    <div class="danger-zone__content d-flex justify-content-between align-items-center w-75 mt-2">
+        <div class="danger-zone__description">
+            <p class="description">Delete this dataset</p>
+            <p class="hint mt-2">Once you delete a dataset, there is no going back. Please be certain.</p>
+        </div>
+        <button
+            type="button"
+            [disabled]="isDeleteDatasetDisabled"
+            (click)="deleteDataset()"
+            data-test-id="delete-dataset-button"
+        >
+            Delete this dataset
+        </button>
+    </div>
+</div>

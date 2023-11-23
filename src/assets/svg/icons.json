@@ -111,6 +111,10 @@
     {
       "iconName": "github-logo",
       "iconPath": "/assets/svg/git-hub.svg"
+    },
+    {
+      "iconName": "clock",
+      "iconPath": "/assets/svg/clock.svg"
     }
   ],
   "customIcons": []

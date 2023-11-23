@@ -22,6 +22,7 @@ kamu-web-ui:
 .PHONY: kamu-web-ui-push
 kamu-web-ui-push:
 	docker push $(KAMU_WEB_UI_IMAGE):$(KAMU_WEB_UI_VERSION)
+	docker push $(KAMU_WEB_UI_IMAGE):$(KAMU_WEB_UI_MAJOR_VERSION).$(KAMU_WEB_UI_MINOR_VERSION)
 	docker tag $(KAMU_WEB_UI_IMAGE):$(KAMU_WEB_UI_VERSION) $(KAMU_WEB_UI_IMAGE):latest
 	docker push $(KAMU_WEB_UI_IMAGE):latest
 

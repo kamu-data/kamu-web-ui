@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { TaskStatus, Task, TaskOutcome } from "src/app/api/kamu.graphql.interface";
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
+import { TaskStatus, TaskOutcome } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { TaskElement } from "../tasks-table/tasks-table.types";
 
@@ -9,14 +9,33 @@ import { TaskElement } from "../tasks-table/tasks-table.types";
     styleUrls: ["./tile-base-widget.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TileBaseWidgetComponent {
+export class TileBaseWidgetComponent implements OnInit, OnChanges {
     public lastRunsCount = 150;
     public readonly TaskStatus = TaskStatus;
     public readonly TaskOutcome = TaskOutcome;
 
     @Input() tasks: MaybeNull<TaskElement[]>;
-    // public arrTiles = Array(1000)
-    //     .fill(0)
-    //     .map((_, index) => index)
-    //     .reverse();
+    public arrTiles = Array<TaskElement | null>(this.lastRunsCount).fill(null);
+
+    ngOnInit(): void {
+        this.fillTileBaseWidget(this.tasks);
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        const taskChanges = changes.tasks;
+        if (
+            taskChanges.previousValue &&
+            (taskChanges.previousValue as TaskElement[]).length !== taskChanges.currentValue &&
+            (taskChanges.currentValue as TaskElement[]).length
+        ) {
+            this.fillTileBaseWidget(taskChanges.currentValue as TaskElement[]);
+        }
+    }
+
+    private fillTileBaseWidget(tasks: MaybeNull<TaskElement[]>): void {
+        if (tasks?.length) {
+            this.arrTiles.splice(0, tasks.length);
+            this.arrTiles = [...tasks, ...this.arrTiles];
+        }
+    }
 }

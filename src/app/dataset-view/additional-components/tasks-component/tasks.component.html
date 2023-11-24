@@ -1,4 +1,4 @@
-<div class="search-result-container__content">
+<div class="search-result-container__content mb-20">
     <div class="d-flex justify-content-between">
         <div class="mt-4">
             <h2 class="title">Dataset tasks</h2>
@@ -48,31 +48,10 @@
         </div>
     </div>
 
-    <div class="search-result-container__content my-4" *ngIf="tasks">
+    <div class="my-4" *ngIf="tasks">
         <app-tile-base-widget [tasks]="tasks"></app-tile-base-widget>
     </div>
 
-    <div class="tasks-table-header d-flex flex-justify-between align-items-center flex-row">
-        <div class="flex-auto no-wrap"><span class="fw-500">10 tasks runs</span></div>
-        <div class="d-flex flex-justify-end">
-            <div class="d-inline-block ps-3 text-muted">
-                <button mat-button [matMenuTriggerFor]="statusMenu">Status <span class="carpet"></span></button>
-                <mat-menu #statusMenu="matMenu" xPosition="before" [hasBackdrop]="true">
-                    <button mat-menu-item>Item 1</button>
-                    <mat-divider></mat-divider>
-                    <button mat-menu-item>Item 2</button>
-                </mat-menu>
-            </div>
-            <div class="d-inline-block ps-3 text-muted">
-                <button mat-button [matMenuTriggerFor]="creatorMenu">Created By <span class="carpet"></span></button>
-                <mat-menu #creatorMenu="matMenu" xPosition="before" [hasBackdrop]="true">
-                    <button mat-menu-item>Item 1</button>
-                    <mat-divider></mat-divider>
-                    <button mat-menu-item>Item 2</button>
-                </mat-menu>
-            </div>
-        </div>
-    </div>
     <div *ngIf="tasks">
         <app-tasks-table [tasks]="tasks"></app-tasks-table>
     </div>

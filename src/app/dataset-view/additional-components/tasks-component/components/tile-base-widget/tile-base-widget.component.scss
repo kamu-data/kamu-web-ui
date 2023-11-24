@@ -1,18 +1,32 @@
-// tile-based widget
-.content {
-    display: flex;
-    gap: 5px;
-    flex-flow: row wrap;
+.container-widget {
+    background: #fff;
+    border: 1px solid #dedede;
+    border-radius: 8px;
+    max-width: fit-content;
 
-    .tile-item {
-        width: 13px;
-        height: 13px;
-        border-radius: 2px;
+    .container-grid {
+        padding: 20px 20px 5px;
+        overflow: auto;
+        display: grid;
+        grid-template-rows: repeat(3, 15px);
+        grid-template-columns: repeat(50, 15px);
+        height: 100%;
+        gap: 7px;
+
+        .tile-item {
+            width: 15px;
+            height: 15px;
+        }
+    }
+
+    .widget-hint {
+        padding-left: 20px;
+        padding-bottom: 15px;
     }
 }
 
 .completed {
-    background: #239a59;
+    background: #0db28d;
 }
 
 .running {
@@ -21,4 +35,8 @@
 
 .failed {
     background: #d13124;
+}
+
+.simple {
+    background: lightgrey;
 }

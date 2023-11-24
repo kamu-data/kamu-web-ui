@@ -29,42 +29,42 @@ export class TasksComponent implements OnInit, OnDestroy {
                 this.tasks = data;
             });
 
-        this.t = setInterval(() => {
-            if (this.tasks.length) {
-                this.tasks[0].status = TaskStatus.Finished;
-                this.tasks[0].outcome = TaskOutcome.Success;
-                this.tasks[0].description = "Scheduled polling source updated";
-                this.tasks[0].information = "Ingested 123 new records";
+        // this.t = setInterval(() => {
+        //     if (this.tasks.length) {
+        //         this.tasks[0].status = TaskStatus.Finished;
+        //         this.tasks[0].outcome = TaskOutcome.Success;
+        //         this.tasks[0].description = "Scheduled polling source updated";
+        //         this.tasks[0].information = "Ingested 123 new records";
 
-                this.tasks[1].status = TaskStatus.Running;
-                this.tasks[1].outcome = undefined;
-                this.tasks[1].description = "Manual polling source updating...";
-                this.tasks[1].information = "Polling data from http://example.com";
-                this.tasks = [...this.tasks];
-                this.cdr.detectChanges();
-            }
-        }, 2000);
-        this.x = setInterval(() => {
-            if (this.tasks.length) {
-                this.tasks[0].status = TaskStatus.Running;
-                this.tasks[0].outcome = undefined;
-                this.tasks[0].description = "Manual polling source updating...";
-                this.tasks[0].information = "Polling data from http://example.com";
+        //         this.tasks[1].status = TaskStatus.Running;
+        //         this.tasks[1].outcome = undefined;
+        //         this.tasks[1].description = "Manual polling source updating...";
+        //         this.tasks[1].information = "Polling data from http://example.com";
+        //         this.tasks = [...this.tasks];
+        //         this.cdr.detectChanges();
+        //     }
+        // }, 2000);
+        // this.x = setInterval(() => {
+        //     if (this.tasks.length) {
+        //         this.tasks[0].status = TaskStatus.Running;
+        //         this.tasks[0].outcome = undefined;
+        //         this.tasks[0].description = "Manual polling source updating...";
+        //         this.tasks[0].information = "Polling data from http://example.com";
 
-                this.tasks[1].status = TaskStatus.Finished;
-                this.tasks[1].outcome = TaskOutcome.Success;
-                this.tasks[1].description = "Scheduled polling source updated";
-                this.tasks[1].information = "Ingested 123 new records";
-                this.tasks = [...this.tasks];
-                this.cdr.detectChanges();
-            }
-        }, 6000);
-        this.z = setInterval(() => {
-            if (this.tasks.length) {
-                this.tasks = [...this.tasks, updatedFinishedTaskElement];
-                this.cdr.detectChanges();
-            }
-        }, 8000);
+        //         this.tasks[1].status = TaskStatus.Finished;
+        //         this.tasks[1].outcome = TaskOutcome.Success;
+        //         this.tasks[1].description = "Scheduled polling source updated";
+        //         this.tasks[1].information = "Ingested 123 new records";
+        //         this.tasks = [...this.tasks];
+        //         this.cdr.detectChanges();
+        //     }
+        // }, 6000);
+        // this.z = setInterval(() => {
+        //     if (this.tasks.length) {
+        //         this.tasks = [...this.tasks, updatedFinishedTaskElement];
+        //         this.cdr.detectChanges();
+        //     }
+        // }, 8000);
     }
 
     public refreshFilter(): void {

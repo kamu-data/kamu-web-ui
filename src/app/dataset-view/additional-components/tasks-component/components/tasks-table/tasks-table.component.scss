@@ -1,5 +1,15 @@
 @import "var";
 
+:host {
+    ::ng-deep {
+        .mat-progress-spinner {
+            circle {
+                stroke: #d3c22a;
+            }
+        }
+    }
+}
+
 .margin-top-5 {
     margin-top: 5px;
 }

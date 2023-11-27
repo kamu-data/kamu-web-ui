@@ -44,9 +44,14 @@
         <td mat-cell *matCellDef="let element" style="width: 20%">
             <div class="d-flex flex-column">
                 <div class="d-flex align-items-center">
-                    <mat-icon *ngIf="element.status === TaskStatus.Running" class="icon-status running-status"
+                    <mat-spinner
+                        [diameter]="15"
+                        *ngIf="element.status === TaskStatus.Running"
+                        class="me-2"
+                    ></mat-spinner>
+                    <!-- <mat-icon *ngIf="element.status === TaskStatus.Running" class="icon-status running-status"
                         >download</mat-icon
-                    >
+                    > -->
                     <mat-icon
                         *ngIf="element.status === TaskStatus.Finished && element.outcome === TaskOutcome.Success"
                         class="icon-status completed-status"
@@ -57,18 +62,22 @@
                         class="icon-status failed-status"
                         >report</mat-icon
                     >
-                    <span class="ms-1 text-small"> {{ element.status }}</span>
+                    <span class="ms-1 text-small">
+                        {{ element.status | titlecase }}
+                        <span class="text-small" *ngIf="element.status !== TaskStatus.Running">
+                            {{ durationTask(element.createdAt, element.finishedAt) }}
+                        </span>
+                    </span>
                 </div>
                 <!-- <div class="d-flex align-items-center">
                     <mat-icon class="icon-status">event_available</mat-icon>
                     <span class="ms-1 text-small"> yesterday</span>
                 </div> -->
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center" *ngIf="element.status !== TaskStatus.Running">
                     <mat-icon class="icon-status">alarm_on</mat-icon>
                     <span class="ms-1 text-small">
-                        <span class="text-small" *ngIf="element.status !== TaskStatus.Running"> yesterday;</span> for 20
-                        seconds</span
-                    >
+                        <app-display-time [data]="element.finishedAt" class="text-small no-wrap"></app-display-time
+                    ></span>
                 </div>
             </div>
         </td>

@@ -30,7 +30,7 @@ export interface TaskElement {
 export const mockTasks: TaskElement[] = [
     {
         cancellationRequested: false,
-        createdAt: "2022-10-01 12:00:00",
+        createdAt: "2023-11-23 12:00:00",
         taskId: "1",
         status: TaskStatus.Running,
         description: "Manual polling source updating...",
@@ -45,12 +45,13 @@ export const mockTasks: TaskElement[] = [
     },
     {
         cancellationRequested: false,
-        createdAt: "2022-10-01 12:00:00",
+        createdAt: "2023-11-23 12:00:00",
         taskId: "2",
         status: TaskStatus.Finished,
         outcome: TaskOutcome.Success,
         description: "Scheduled pollins source updated",
         information: "Ingested 123 new records",
+        finishedAt: "2023-11-23 12:35:00",
         creator: {
             accountName: "kamu-test",
             accountType: AccountType.Organization,
@@ -61,12 +62,13 @@ export const mockTasks: TaskElement[] = [
     },
     {
         cancellationRequested: false,
-        createdAt: "2022-10-01 12:00:00",
+        createdAt: "2023-11-23 12:00:00",
         taskId: "3",
         status: TaskStatus.Finished,
         outcome: TaskOutcome.Failed,
         description: "Manual polling source updated",
         information: "An error occured, see more details",
+        finishedAt: "2023-11-23 12:00:10",
         creator: {
             accountName: "kamu-test",
             accountType: AccountType.Organization,

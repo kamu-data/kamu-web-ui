@@ -69,6 +69,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { TileBaseWidgetComponent } from "./additional-components/tasks-component/components/tile-base-widget/tile-base-widget.component";
 import { TasksTableComponent } from "./additional-components/tasks-component/components/tasks-table/tasks-table.component";
 import { MatTableModule } from "@angular/material/table";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @NgModule({
     imports: [
@@ -116,6 +117,7 @@ import { MatTableModule } from "@angular/material/table";
         MatTooltipModule,
         MatTableModule,
         MatIconModule,
+        MatProgressSpinnerModule,
     ],
     exports: [
         DatasetViewHeaderComponent,

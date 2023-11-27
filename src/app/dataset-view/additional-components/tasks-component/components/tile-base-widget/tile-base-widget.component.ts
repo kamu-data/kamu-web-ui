@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleCha
 import { TaskStatus, TaskOutcome } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { TaskElement } from "../tasks-table/tasks-table.types";
+import moment from "moment-timezone";
 
 @Component({
     selector: "app-tile-base-widget",

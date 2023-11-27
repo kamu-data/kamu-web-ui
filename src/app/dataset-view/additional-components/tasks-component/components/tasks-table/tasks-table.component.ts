@@ -9,9 +9,10 @@ import {
     OnInit,
     SimpleChanges,
 } from "@angular/core";
-import { PageBasedInfo, Task, TaskOutcome, TaskStatus } from "src/app/api/kamu.graphql.interface";
+import { PageBasedInfo, Scalars, Task, TaskOutcome, TaskStatus } from "src/app/api/kamu.graphql.interface";
 import { mockPageBasedInfo } from "src/app/search/mock.data";
 import { TaskElement } from "./tasks-table.types";
+import moment from "moment";
 
 // const ELEMENT_DATA: TaskElement[] = [
 //     { description: "Manual polling source update", information: "Running", creator: "kamu" },
@@ -32,4 +33,11 @@ export class TasksTableComponent {
     public currentPage = 1;
     public readonly TaskStatus = TaskStatus;
     public readonly TaskOutcome = TaskOutcome;
+
+    public durationTask(d1: Scalars["DateTime"], d2: Scalars["DateTime"]) {
+        const startDate = moment(d1);
+        const endDate = moment(d2);
+        const result = "for " + startDate.from(endDate).substring(0, startDate.from(endDate).lastIndexOf(" "));
+        return result;
+    }
 }

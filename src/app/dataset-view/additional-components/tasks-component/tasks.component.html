@@ -1,7 +1,7 @@
 <div class="search-result-container__content mb-20">
     <div class="d-flex justify-content-between">
         <div class="mt-4">
-            <h2 class="title">Dataset tasks</h2>
+            <h2 class="title">{{ tasks.length }} Dataset tasks</h2>
             <div>
                 <span class="text-muted"> Compute work associated with this dataset </span>
             </div>
@@ -35,6 +35,7 @@
                     autocomplete="off"
                     placeholder="Search"
                     data-test-id="searchHash"
+                    [disabled]="true"
                 />
                 <svg-icon name="search"></svg-icon>
                 <mat-icon
@@ -48,7 +49,7 @@
         </div>
     </div>
 
-    <div class="my-4" *ngIf="tasks">
+    <div class="search-result-container__content my-4" *ngIf="tasks">
         <app-tile-base-widget [tasks]="tasks"></app-tile-base-widget>
     </div>
 

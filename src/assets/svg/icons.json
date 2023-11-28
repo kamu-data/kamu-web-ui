@@ -115,6 +115,10 @@
     {
       "iconName": "show-options",
       "iconPath": "/assets/svg/show-options.svg"
+    },
+    {
+      "iconName": "timer",
+      "iconPath": "/assets/svg/timer.svg"
     }
   ],
   "customIcons": []

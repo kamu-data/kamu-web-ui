@@ -111,3 +111,10 @@ export const updatedFinishedTaskElement: TaskElement = {
         id: "2",
     },
 };
+
+export function generateTasks(): TaskElement[] {
+    for (let index = 0; index < 150; index++) {
+        mockTasks.push(mockTasks[1]);
+    }
+    return mockTasks.slice(0, 150);
+}

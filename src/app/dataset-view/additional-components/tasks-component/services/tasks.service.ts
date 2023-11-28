@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
-import { TaskElement, mockTasks } from "../components/tasks-table/tasks-table.types";
+import { TaskElement, generateTasks } from "../components/tasks-table/tasks-table.types";
 
 @Injectable({
     providedIn: "root",
 })
 export class TasksService {
     public datasetAllTasks(): Observable<TaskElement[]> {
-        return of(mockTasks);
+        return of(generateTasks());
     }
 }

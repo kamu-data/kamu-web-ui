@@ -1,23 +1,9 @@
 import { MaybeNull } from "./../../../../../common/app.types";
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    SimpleChanges,
-} from "@angular/core";
-import { PageBasedInfo, Scalars, Task, TaskOutcome, TaskStatus } from "src/app/api/kamu.graphql.interface";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { PageBasedInfo, Scalars, TaskOutcome, TaskStatus } from "src/app/api/kamu.graphql.interface";
 import { mockPageBasedInfo } from "src/app/search/mock.data";
 import { TaskElement } from "./tasks-table.types";
 import moment from "moment";
-
-// const ELEMENT_DATA: TaskElement[] = [
-//     { description: "Manual polling source update", information: "Running", creator: "kamu" },
-//     { description: "Scheduled polling source update", information: "Scheduled", creator: "canada-co" },
-// ];
 
 @Component({
     selector: "app-tasks-table",
@@ -38,6 +24,7 @@ export class TasksTableComponent {
         const startDate = moment(d1);
         const endDate = moment(d2);
         const result = "for " + startDate.from(endDate).substring(0, startDate.from(endDate).lastIndexOf(" "));
+        //  const result = startDate.from(endDate);
         return result;
     }
 }

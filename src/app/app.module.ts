@@ -65,6 +65,7 @@ import { logError } from "./common/app.helpers";
 import { DatasetPermissionsService } from "./dataset-view/dataset.permissions.service";
 import { LocalStorageService } from "./services/local-storage.service";
 import { apolloCache } from "./apollo-cache.helper";
+import { TaskDetailsComponent } from "./task-details/task-details/task-details.component";
 
 const Services = [
     {
@@ -175,6 +176,7 @@ const MatModules = [
         NotificationIndicatorComponent,
         AccountSettingsComponent,
         DatasetsTabComponent,
+        TaskDetailsComponent,
     ],
     imports: [
         AppRoutingModule,

@@ -1,10 +1,11 @@
-import { DatasetInfo } from "../interface/navigation.interface";
+import { DatasetInfo, TaskDetailsNavigationParams } from "../interface/navigation.interface";
 import { AccountTabs } from "../auth/account/account.constants";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { DatasetNavigationParams, MetadataBlockNavigationParams } from "../interface/navigation.interface";
 import ProjectLinks from "../project-links";
+import { TaskDetailsTabs } from "../task-details/task-details/task-details.constants";
 
 @Injectable({ providedIn: "root" })
 export class NavigationService {
@@ -46,6 +47,18 @@ export class NavigationService {
     public navigateToSetTransform(params: DatasetInfo): void {
         promiseWithCatch(
             this.router.navigate([params.accountName, params.datasetName, ProjectLinks.URL_PARAM_SET_TRANSFORM]),
+        );
+    }
+
+    public navigateToTaskDetail(params: TaskDetailsNavigationParams): void {
+        promiseWithCatch(
+            this.router.navigate([
+                params.accountName,
+                params.datasetName,
+                ProjectLinks.URL_TASK_DETAILS,
+                params.taskId,
+                TaskDetailsTabs.SUMMARY,
+            ]),
         );
     }
 

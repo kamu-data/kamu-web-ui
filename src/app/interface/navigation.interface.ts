@@ -15,3 +15,9 @@ export interface MetadataBlockNavigationParams {
     datasetName: string;
     blockHash: string;
 }
+
+export interface TaskDetailsNavigationParams {
+    accountName: string;
+    datasetName: string;
+    taskId: string;
+}

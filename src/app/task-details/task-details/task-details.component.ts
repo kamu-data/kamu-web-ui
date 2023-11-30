@@ -1,10 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { TaskDetailsTabs } from "./task-details.constants";
-import { BaseComponent } from "src/app/common/base.component";
 import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 import { MaybeUndefined } from "src/app/common/app.types";
 import ProjectLinks from "src/app/project-links";
-import { filter } from "rxjs";
+import { Observable, Subscription, combineLatest, filter, map } from "rxjs";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { BaseProcessingComponent } from "src/app/common/base.processing.component";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 
 @Component({
     selector: "app-task-details",
@@ -12,12 +17,26 @@ import { filter } from "rxjs";
     styleUrls: ["./task-details.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskDetailsComponent extends BaseComponent implements OnInit {
+export class TaskDetailsComponent extends BaseProcessingComponent implements OnInit {
     public readonly TaskDetailsTabs: typeof TaskDetailsTabs = TaskDetailsTabs;
+    public readonly TASKS_TYPE = DatasetViewTypeEnum.Tasks;
     public activeTab: TaskDetailsTabs = TaskDetailsTabs.SUMMARY;
     private taskId = 1;
 
-    constructor(private router: Router, private route: ActivatedRoute) {
+    public datasetInfo$: Observable<DatasetInfo>;
+    public datasetBasics$: Observable<DatasetBasicsFragment>;
+    public datasetPermissions$: Observable<DatasetPermissionsFragment>;
+    public datasetViewMenuData$: Observable<{
+        datasetBasics: DatasetBasicsFragment;
+        datasetPermissions: DatasetPermissionsFragment;
+    }>;
+
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+        private datasetService: DatasetService,
+        private datasetSubsService: DatasetSubscriptionsService,
+    ) {
         super();
     }
 
@@ -30,12 +49,21 @@ export class TaskDetailsComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.datasetBasics$ = this.datasetService.datasetChanges;
+        this.datasetPermissions$ = this.datasetSubsService.permissionsChanges;
+        this.datasetViewMenuData$ = combineLatest([this.datasetBasics$, this.datasetPermissions$]).pipe(
+            map(([datasetBasics, datasetPermissions]) => {
+                return { datasetBasics, datasetPermissions };
+            }),
+        );
+        this.datasetInfo$ = this.datasetInfoFromUrlChanges;
         this.trackSubscription(
             this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
                 this.extractActiveTabFromRoute();
             }),
         );
         this.extractActiveTabFromRoute();
+        this.trackSubscriptions(this.loadDatasetBasicDataWithPermissions());
     }
 
     public getRouteLink(tab: TaskDetailsTabs): string {
@@ -56,5 +84,9 @@ export class TaskDetailsComponent extends BaseComponent implements OnInit {
         }
 
         this.activeTab = TaskDetailsTabs.SUMMARY;
+    }
+
+    private loadDatasetBasicDataWithPermissions(): Subscription {
+        return this.datasetService.requestDatasetBasicDataWithPermissions(this.getDatasetInfoFromUrl()).subscribe();
     }
 }

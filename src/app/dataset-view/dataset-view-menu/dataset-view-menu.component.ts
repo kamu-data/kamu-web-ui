@@ -140,7 +140,9 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     }
 
     public onNavigateToTasks(): void {
-        this.datasetNavigation.navigateToTasks();
+        if (this.shouldAllowSettingsTab) {
+            this.datasetNavigation.navigateToTasks();
+        }
     }
 
     public onNavigateToSettings(): void {

@@ -1,153 +1,187 @@
-<div class="task-details-container m-4">
-    <div class="d-flex justify-content-between px-4">
-        <div class="d-flex py-1 align-items-start">
-            <mat-icon class="icon-status mt-2 completed-status">check_circle</mat-icon>
-            <!-- <mat-icon *ngIf="element.status === TaskStatus.Running" class="icon-status margin-top-5 running-status"
-                    >radio_button_checked</mat-icon
-                >
-                <mat-icon
-                    *ngIf="element.status === TaskStatus.Finished && element.outcome === TaskOutcome.Failed"
-                    class="icon-status margin-top-5 failed-status"
-                    >dangerous</mat-icon
-                > -->
-            <div class="ms-1 py-2">
-                <span class="fw-500"> Task # 123</span> &nbsp;
-                <span class="text-muted">( {{ accountName }}/{{ datasetName }} )</span>
-                <span class="d-block fw-bold"> Cascading derivative transformation</span>
-            </div>
-        </div>
+<div
+    class="app-main-container"
+    role="main"
+    data-test-id="task-details-view"
+    id="task-details-view"
+    *ngIf="datasetInfo$ | async as datasetInfo"
+>
+    <div class="app-content mt-4">
+        <app-dataset-view-header
+            [datasetInfo]="datasetInfo"
+            (showOwnerPageEmit)="showOwnerPage(datasetInfo.accountName)"
+            (onClickSearchAdditionalButtonEmit)="onClickSearchAdditionalButton($event)"
+        ></app-dataset-view-header>
+    </div>
 
-        <div>
-            <button
-                class="btn-sm btn custom-edit"
-                aria-label="Show tasks options"
-                data-test-id="show-tasks-options"
-                title="Show options"
-                #menuTrigger="matMenuTrigger"
-                [matMenuTriggerFor]="menu"
-            >
-                <svg-icon name="show-options"></svg-icon>
-            </button>
-            <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="true">
-                <button mat-menu-item>Pause task</button>
-                <mat-divider></mat-divider>
-                <button mat-menu-item>Cancel task</button>
-            </mat-menu>
+    <div class="app-content" *ngIf="datasetViewMenuData$ | async as values">
+        <div id="dataset-viewer">
+            <app-dataset-view-menu
+                [datasetViewType]="TASKS_TYPE"
+                [datasetBasics]="values.datasetBasics"
+                [datasetPermissions]="values.datasetPermissions"
+                [datasetNavigation]="getDatasetNavigation(datasetInfo)"
+            ></app-dataset-view-menu>
         </div>
     </div>
-    <div class="container-details px-4">
-        <div class="sidebar my-4">
-            <ul class="action-list">
-                <li
-                    class="action-list-item"
-                    [ngClass]="{
-                        'action-list-item__nav-active': activeTab === TaskDetailsTabs.SUMMARY
-                    }"
-                >
-                    <a routerLinkActive="active" [routerLink]="getRouteLink(TaskDetailsTabs.SUMMARY)">
-                        <span class="action-list-item__label d-flex align-items-center">
-                            <mat-icon class="text-muted me-2">info_outline</mat-icon>
 
-                            Summary</span
-                        ></a
+    <div class="task-details-container mx-4 mb-4">
+        <div class="d-flex justify-content-between px-4">
+            <div class="d-flex py-1 align-items-start">
+                <mat-icon class="icon-status mt-2 completed-status">check_circle</mat-icon>
+                <!-- <mat-icon *ngIf="element.status === TaskStatus.Running" class="icon-status margin-top-5 running-status"
+                        >radio_button_checked</mat-icon
                     >
-                </li>
-                <li
-                    class="action-list-item"
-                    [ngClass]="{
-                        'action-list-item__nav-active': activeTab === TaskDetailsTabs.HISTORY
-                    }"
+                    <mat-icon
+                        *ngIf="element.status === TaskStatus.Finished && element.outcome === TaskOutcome.Failed"
+                        class="icon-status margin-top-5 failed-status"
+                        >dangerous</mat-icon
+                    > -->
+                <div class="ms-1 py-2">
+                    <span class="fw-500"> Task # 123</span>
+                    <span class="d-block fw-bold"> Cascading derivative transformation</span>
+                </div>
+            </div>
+
+            <div>
+                <button
+                    class="btn-sm btn custom-edit"
+                    aria-label="Show tasks options"
+                    data-test-id="show-tasks-options"
+                    title="Show options"
+                    #menuTrigger="matMenuTrigger"
+                    [matMenuTriggerFor]="menu"
                 >
-                    <a routerLinkActive="active" [routerLink]="getRouteLink(TaskDetailsTabs.HISTORY)">
-                        <span class="action-list-item__label d-flex align-items-center">
-                            <mat-icon class="text-muted me-2">timeline</mat-icon> History</span
-                        ></a
-                    >
-                </li>
-                <li
-                    class="action-list-item"
-                    [ngClass]="{
-                        'action-list-item__nav-active': activeTab === TaskDetailsTabs.LOGS
-                    }"
-                >
-                    <a routerLinkActive="active" [routerLink]="getRouteLink(TaskDetailsTabs.LOGS)">
-                        <span class="action-list-item__label d-flex align-items-center">
-                            <mat-icon class="text-muted me-2">description</mat-icon>
-                            Logs</span
-                        ></a
-                    >
-                </li>
-                <li
-                    class="action-list-item"
-                    [ngClass]="{
-                        'action-list-item__nav-active': activeTab === TaskDetailsTabs.USAGE
-                    }"
-                >
-                    <a routerLinkActive="active" [routerLink]="getRouteLink(TaskDetailsTabs.USAGE)">
-                        <span class="action-list-item__label d-flex align-items-center">
-                            <mat-icon class="text-muted me-2">attach_money</mat-icon>Usage</span
-                        ></a
-                    >
-                </li>
-                <li
-                    class="action-list-item"
-                    [ngClass]="{
-                        'action-list-item__nav-active': activeTab === TaskDetailsTabs.ADMIN
-                    }"
-                >
-                    <a routerLinkActive="active" [routerLink]="getRouteLink(TaskDetailsTabs.ADMIN)">
-                        <span class="action-list-item__label d-flex align-items-center">
-                            <mat-icon class="text-muted me-2">admin_panel_settings</mat-icon>Admin</span
-                        ></a
-                    >
-                </li>
-            </ul>
+                    <svg-icon name="show-options"></svg-icon>
+                </button>
+                <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="true">
+                    <button mat-menu-item>Pause task</button>
+                    <mat-divider></mat-divider>
+                    <button mat-menu-item>Cancel task</button>
+                </mat-menu>
+            </div>
         </div>
-        <div class="content sidebar my-4">
-            <div class="container">
-                <div class="row mt-4">
-                    <div class="col">
-                        <div class="row mb-3">
-                            <div class="col-md-6 d-flex justify-content-end"><span class="fw-bold">Status</span></div>
-                            <div class="col-md-6">Completed</div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6 d-flex justify-content-end">
-                                <span class="fw-bold">Cancellation requested</span>
+        <div class="container-details px-4">
+            <div class="sidebar my-4">
+                <ul class="action-list">
+                    <li
+                        class="action-list-item"
+                        [ngClass]="{
+                            'action-list-item__nav-active': activeTab === TaskDetailsTabs.SUMMARY
+                        }"
+                    >
+                        <a routerLinkActive="active" [routerLink]="getRouteLink(TaskDetailsTabs.SUMMARY)">
+                            <span class="action-list-item__label d-flex align-items-center">
+                                <mat-icon class="text-muted me-2">info_outline</mat-icon>
+
+                                Summary</span
+                            ></a
+                        >
+                    </li>
+                    <li
+                        class="action-list-item"
+                        [ngClass]="{
+                            'action-list-item__nav-active': activeTab === TaskDetailsTabs.HISTORY
+                        }"
+                    >
+                        <a routerLinkActive="active" [routerLink]="getRouteLink(TaskDetailsTabs.HISTORY)">
+                            <span class="action-list-item__label d-flex align-items-center">
+                                <mat-icon class="text-muted me-2">manage_history</mat-icon> History</span
+                            ></a
+                        >
+                    </li>
+                    <li
+                        class="action-list-item"
+                        [ngClass]="{
+                            'action-list-item__nav-active': activeTab === TaskDetailsTabs.LOGS
+                        }"
+                    >
+                        <a routerLinkActive="active" [routerLink]="getRouteLink(TaskDetailsTabs.LOGS)">
+                            <span class="action-list-item__label d-flex align-items-center">
+                                <mat-icon class="text-muted me-2">description</mat-icon>
+                                Logs</span
+                            ></a
+                        >
+                    </li>
+                    <li
+                        class="action-list-item"
+                        [ngClass]="{
+                            'action-list-item__nav-active': activeTab === TaskDetailsTabs.USAGE
+                        }"
+                    >
+                        <a routerLinkActive="active" [routerLink]="getRouteLink(TaskDetailsTabs.USAGE)">
+                            <span class="action-list-item__label d-flex align-items-center">
+                                <mat-icon class="text-muted me-2">bar_chart</mat-icon>Usage</span
+                            ></a
+                        >
+                    </li>
+                    <li
+                        class="action-list-item"
+                        [ngClass]="{
+                            'action-list-item__nav-active': activeTab === TaskDetailsTabs.ADMIN
+                        }"
+                    >
+                        <a routerLinkActive="active" [routerLink]="getRouteLink(TaskDetailsTabs.ADMIN)">
+                            <span class="action-list-item__label d-flex align-items-center">
+                                <mat-icon class="text-muted me-2">admin_panel_settings</mat-icon>Admin</span
+                            ></a
+                        >
+                    </li>
+                </ul>
+            </div>
+            <div class="content sidebar my-4">
+                <div class="mt-3">
+                    <ng-container *ngIf="activeTab === TaskDetailsTabs.SUMMARY">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="row mb-3">
+                                        <div class="col-md-3 pl-40"><span class="fw-bold">Status</span></div>
+                                        <div class="col-md-9">Completed</div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3 pl-40">
+                                            <span class="fw-bold">Cancellation requested</span>
+                                        </div>
+                                        <div class="col-md-9">True</div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3 pl-40">
+                                            <span class="fw-bold">Outcome</span>
+                                        </div>
+                                        <div class="col-md-9"><span class="completed-status">SUCCESS</span></div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3 pl-40">
+                                            <span class="fw-bold">Created at</span>
+                                        </div>
+                                        <div class="col-md-9">2023-10-21 21:00:00</div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3 pl-40">
+                                            <span class="fw-bold">Ran at</span>
+                                        </div>
+                                        <div class="col-md-9">2023-10-21 21:00:00</div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3 pl-40">
+                                            <span class="fw-bold">Cancellation requested at</span>
+                                        </div>
+                                        <div class="col-md-9">2023-10-21 21:00:00</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3 pl-40">
+                                            <span class="fw-bold">Finished at</span>
+                                        </div>
+                                        <div class="col-md-9">2023-10-21 21:00:00</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-6">True</div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6 d-flex justify-content-end">
-                                <span class="fw-bold">Outcome</span>
-                            </div>
-                            <div class="col-md-6"><span class="completed-status">SUCCESS</span></div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6 d-flex justify-content-end">
-                                <span class="fw-bold">Created at</span>
-                            </div>
-                            <div class="col-md-6">2023-10-21 21:00:00</div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6 d-flex justify-content-end">
-                                <span class="fw-bold">Ran at</span>
-                            </div>
-                            <div class="col-md-6">2023-10-21 21:00:00</div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6 d-flex justify-content-end">
-                                <span class="fw-bold">Cancellation requested at</span>
-                            </div>
-                            <div class="col-md-6">2023-10-21 21:00:00</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 d-flex justify-content-end">
-                                <span class="fw-bold">Finished at</span>
-                            </div>
-                            <div class="col-md-6">2023-10-21 21:00:00</div>
-                        </div>
-                    </div>
+                    </ng-container>
+                    <div *ngIf="activeTab === TaskDetailsTabs.HISTORY">History tab coming soon</div>
+                    <div *ngIf="activeTab === TaskDetailsTabs.LOGS">Logs tab coming soon</div>
+                    <div *ngIf="activeTab === TaskDetailsTabs.USAGE">Usage tab coming soon</div>
+                    <div *ngIf="activeTab === TaskDetailsTabs.ADMIN">Admin tab coming soon</div>
                 </div>
             </div>
         </div>

@@ -129,56 +129,13 @@
                 </ul>
             </div>
             <div class="content sidebar my-4">
-                <div class="mt-3">
+                <div class="my-3 pl-40">
                     <ng-container *ngIf="activeTab === TaskDetailsTabs.SUMMARY">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="row mb-3">
-                                        <div class="col-md-3 pl-40"><span class="fw-bold">Status</span></div>
-                                        <div class="col-md-9">Completed</div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-3 pl-40">
-                                            <span class="fw-bold">Cancellation requested</span>
-                                        </div>
-                                        <div class="col-md-9">True</div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-3 pl-40">
-                                            <span class="fw-bold">Outcome</span>
-                                        </div>
-                                        <div class="col-md-9"><span class="completed-status">SUCCESS</span></div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-3 pl-40">
-                                            <span class="fw-bold">Created at</span>
-                                        </div>
-                                        <div class="col-md-9">2023-10-21 21:00:00</div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-3 pl-40">
-                                            <span class="fw-bold">Ran at</span>
-                                        </div>
-                                        <div class="col-md-9">2023-10-21 21:00:00</div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-3 pl-40">
-                                            <span class="fw-bold">Cancellation requested at</span>
-                                        </div>
-                                        <div class="col-md-9">2023-10-21 21:00:00</div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-3 pl-40">
-                                            <span class="fw-bold">Finished at</span>
-                                        </div>
-                                        <div class="col-md-9">2023-10-21 21:00:00</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <app-task-details-summary-tab></app-task-details-summary-tab>
                     </ng-container>
-                    <div *ngIf="activeTab === TaskDetailsTabs.HISTORY">History tab coming soon</div>
+                    <ng-container *ngIf="activeTab === TaskDetailsTabs.HISTORY">
+                        <app-task-details-history-tab></app-task-details-history-tab>
+                    </ng-container>
                     <div *ngIf="activeTab === TaskDetailsTabs.LOGS">Logs tab coming soon</div>
                     <div *ngIf="activeTab === TaskDetailsTabs.USAGE">Usage tab coming soon</div>
                     <div *ngIf="activeTab === TaskDetailsTabs.ADMIN">Admin tab coming soon</div>

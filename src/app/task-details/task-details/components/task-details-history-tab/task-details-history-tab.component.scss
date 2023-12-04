@@ -1,0 +1,38 @@
+@import "var";
+
+.icon-status {
+    transform: scale(0.7);
+}
+
+.completed-status {
+    color: #239a59;
+}
+
+.running-status {
+    color: #d3c22a;
+}
+
+.failed-status {
+    color: #d13124;
+}
+
+.scheduled-status {
+    color: $app-color-accent-fg;
+}
+
+.updated-icon {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #0abee5;
+}
+
+.queued-icon {
+    width: 10px;
+    height: 10px;
+    background-color: #6970ae;
+}
+
+.container-icon {
+    padding: 10px 7px 10px 8px;
+}

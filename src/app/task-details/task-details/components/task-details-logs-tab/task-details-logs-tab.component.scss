@@ -1,0 +1,48 @@
+@import "var";
+
+.info-filter-button {
+    background: transparent;
+    height: 32px;
+}
+
+.log-item {
+    background-color: #ffe4c4;
+    padding: 5px 25px 5px 5px;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    arrow-right {
+        transition: all 2s ease-out !important;
+        transform: rotate(00deg);
+    }
+
+    .badge-container {
+        padding: 1px 5px;
+        background-color: rgb(208 222 252);
+        border-radius: 6px;
+    }
+}
+
+.opened {
+    transform: rotate(90deg);
+}
+
+.mat-menu-item {
+    line-height: 32px;
+    height: 32px;
+}
+
+.p-top-2 {
+    padding-top: 2px;
+}
+
+.icon-direction-down {
+    width: 15px;
+    margin-top: 2px;
+}
+
+.icon-info {
+    color: rgb(26 96 165);
+}

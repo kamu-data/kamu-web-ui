@@ -9,9 +9,10 @@ import { AngularSvgIconModule } from "angular-svg-icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { TaskDetailsSummaryTabComponent } from './components/task-details-summary-tab/task-details-summary-tab.component';
 import { TaskDetailsHistoryTabComponent } from './components/task-details-history-tab/task-details-history-tab.component';
+import { TaskDetailsLogsTabComponent } from './components/task-details-logs-tab/task-details-logs-tab.component';
 
 @NgModule({
-    declarations: [TaskDetailsComponent, TaskDetailsSummaryTabComponent, TaskDetailsHistoryTabComponent],
+    declarations: [TaskDetailsComponent, TaskDetailsSummaryTabComponent, TaskDetailsHistoryTabComponent, TaskDetailsLogsTabComponent],
     imports: [
         CommonModule,
         MatIconModule,

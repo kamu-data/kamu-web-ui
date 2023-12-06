@@ -1,0 +1,130 @@
+<div class="container">
+    <div class="row">
+        <div class="col d-flex">
+            <button
+                #menuTrigger="matMenuTrigger"
+                [matMenuTriggerFor]="menuDesription"
+                class="info-filter-button d-flex justify-content-center align-items-center border border-1"
+            >
+                <span class="d-inline-block ms-1 mr-2 text-small">GAE Application, Default Service...</span>
+                <mat-icon class="fs-4 d-inline-block p-top-2">arrow_drop_down</mat-icon>
+            </button>
+            <mat-menu #menuDesription="matMenu" xPosition="before" [hasBackdrop]="true">
+                <button mat-menu-item class="text-small">GAE Application, Default Service 2033333time</button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item class="text-small">Item 2</button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item class="text-small">Item 3</button>
+            </mat-menu>
+
+            <button
+                #menuTrigger="matMenuTrigger"
+                [matMenuTriggerFor]="menuRequest"
+                class="info-filter-button ms-4 d-flex justify-content-center align-items-center border border-1"
+            >
+                <span class="d-inline-block ms-1 mr-2 text-small">request_log</span>
+                <mat-icon class="fs-4 d-inline-block p-top-2">arrow_drop_down</mat-icon>
+            </button>
+            <mat-menu #menuRequest="matMenu" xPosition="before" [hasBackdrop]="true">
+                <button mat-menu-item class="text-small">request_log</button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item class="text-small">Item 2</button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item class="text-small">Item 3</button>
+            </mat-menu>
+
+            <button
+                #menuTrigger="matMenuTrigger"
+                [matMenuTriggerFor]="menuLogLevel"
+                class="info-filter-button ms-4 d-flex justify-content-center align-items-center border border-1"
+            >
+                <span class="d-inline-block ms-1 mr-2 text-small">Any log level</span>
+                <mat-icon class="fs-4 d-inline-block p-top-2">arrow_drop_down</mat-icon>
+            </button>
+            <mat-menu #menuLogLevel="matMenu" xPosition="before" [hasBackdrop]="true">
+                <button mat-menu-item class="text-small">Any log level</button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item class="text-small">Trace level</button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item class="text-small">Info level</button>
+            </mat-menu>
+
+            <button
+                #menuTrigger="matMenuTrigger"
+                [matMenuTriggerFor]="menuInterval"
+                class="info-filter-button ms-4 d-flex justify-content-center align-items-center border border-1"
+            >
+                <mat-icon class="fs-5 d-inline-block mt-2 me-1 text-muted">schedule</mat-icon>
+                <span class="d-inline-block mr-2 text-small">Last hour</span>
+                <mat-icon class="fs-4 d-inline-block p-top-2">arrow_drop_down</mat-icon>
+            </button>
+            <mat-menu #menuInterval="matMenu" xPosition="before" [hasBackdrop]="true">
+                <button mat-menu-item class="text-small">Last hour</button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item class="text-small">Trace level</button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item class="text-small">Info level</button>
+            </mat-menu>
+
+            <button
+                #menuTrigger="matMenuTrigger"
+                [matMenuTriggerFor]="menuJump"
+                class="info-filter-button ms-4 d-flex justify-content-center align-items-center border"
+            >
+                <span class="d-inline-block ms-1 mr-2 text-small">Jump to now</span>
+                <mat-icon class="fs-4 d-inline-block p-top-2">arrow_drop_down</mat-icon>
+            </button>
+
+            <mat-menu #menuJump="matMenu" xPosition="before" [hasBackdrop]="true">
+                <button mat-menu-item class="text-small">Jump to now</button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item class="text-small">Jump to hour ago</button>
+            </mat-menu>
+        </div>
+        <div class="d-flex fs-12 mt-3 mb-1">
+            <mat-icon class="fs-6 icon-direction-down d-inline-block text-muted">south</mat-icon>
+            Showing logs from the last hour ending at <span class="fw-500 ms-1 fs-12">2:42 PM</span>
+        </div>
+        <div class="log-item" (click)="clickLogItem()">
+            <div class="d-flex align-items-center">
+                <mat-icon class="fs-4 d-inline-block arrow-right text-muted" [class.opened]="isCollapsed1"
+                    >arrow_right</mat-icon
+                >
+                <mat-icon class="fs-5 icon-info d-inline-block pt-1">info</mat-icon>
+                <span class="fs-12">2018-09-25 14:41:25 PDT</span>
+                <span class="badge-container ms-4 fs-12">POST</span>
+                <span class="badge-container ms-4 fs-12">200</span>
+                <span class="badge-container ms-4 ps-4 fs-12">483 B</span>
+                <span class="badge-container ms-4 ps-4 fs-12 text-primary">8.2 s</span>
+                <span class="ms-3 fs-12">/traces</span>
+            </div>
+            <div class="ps-4 fs-12" *ngIf="isCollapsed1">Test content</div>
+        </div>
+        <div class="log-item mt-1">
+            <div class="d-flex align-items-center">
+                <mat-icon class="fs-4 d-inline-block arrow-right text-muted">arrow_right</mat-icon>
+                <mat-icon class="fs-5 icon-info d-inline-block pt-1">info</mat-icon>
+                <span class="fs-12">2018-09-25 14:41:25 PDT</span>
+                <span class="badge-container ms-4 fs-12">POST</span>
+                <span class="badge-container ms-4 fs-12">200</span>
+                <span class="badge-container ms-4 ps-4 fs-12">483 B</span>
+                <span class="badge-container ms-4 ps-4 fs-12 text-primary">8.2 s</span>
+                <span class="ms-3 fs-12">/traces</span>
+            </div>
+            <!-- <div class="ps-4 fs-12" *ngIf="!isCollapsed1">Test content</div> -->
+        </div>
+        <div class="log-item mt-1">
+            <div class="d-flex align-items-center">
+                <mat-icon class="fs-4 d-inline-block arrow-right text-muted">arrow_right</mat-icon>
+                <mat-icon class="fs-5 icon-info d-inline-block pt-1">info</mat-icon>
+                <span class="fs-12">2018-09-25 14:41:25 PDT</span>
+                <span class="badge-container ms-4 fs-12">POST</span>
+                <span class="badge-container ms-4 fs-12">200</span>
+                <span class="badge-container ms-4 ps-4 fs-12">483 B</span>
+                <span class="badge-container ms-4 ps-4 fs-12 text-primary">8.2 s</span>
+                <span class="ms-3 fs-12">/traces</span>
+            </div>
+            <!-- <div class="ps-4 fs-12" *ngIf="!isCollapsed1">Test content</div> -->
+        </div>
+    </div>
+</div>

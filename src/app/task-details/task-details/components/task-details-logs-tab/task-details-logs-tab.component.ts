@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { logs } from "./logs.mock";
 
 @Component({
     selector: "app-task-details-logs-tab",
@@ -9,6 +10,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 export class TaskDetailsLogsTabComponent {
     public isCollapsed1 = false;
     public logsViewMode = "table";
+    public logs = logs;
 
     public clickLogItem(): void {
         this.isCollapsed1 = !this.isCollapsed1;

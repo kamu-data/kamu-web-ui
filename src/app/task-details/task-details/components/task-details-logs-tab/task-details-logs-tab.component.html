@@ -2,7 +2,7 @@
     <div class="row">
         <div class="container-logs">
             <div class="ps-4"><span class="fw-bold">Time</span></div>
-            <div><span class="fw-bold"> Source</span></div>
+            <div><span class="fw-bold"> Record</span></div>
             <!-- <button
                 #menuTrigger="matMenuTrigger"
                 [matMenuTriggerFor]="menuDesription"
@@ -126,73 +126,93 @@
                 <span class="ms-3 fs-12">/traces</span>
             </div>-->
         </div>
-        <div class="border-top my-2">
-            <div class="container-logs py-2">
-                <div class="d-flex align-items-center">
-                    <mat-icon (click)="clickLogItem()" class="icon-next text-muted" [class.opened]="isCollapsed1"
-                        >navigate_next</mat-icon
-                    >
-                    <span class="d-inline-block">2018-09-25 14:41:25 </span>
-                </div>
-                <div>
-                    <div>
-                        <span class="badge-log">operation_id:</span> NassxLLwwew &nbsp;
-                        <span class="badge-log">dataset_handle:</span> british-columbia.case-details &nbsp;
-                        <span class="badge-log">dataset_refs:</span>
-                        [Handle(Datasethandle(DatasetId("22121asHHasasPPsnnmXssLLEyEEvbmm"), DatasetAlias(account_name:
-                        "kamu", dataset_name:"british-columbia.case-details")))] &nbsp;
-                    </div>
-                </div>
-            </div>
-            <div *ngIf="isCollapsed1">
-                <div class="dataset-view-type-toggle-group position-relative">
-                    <mat-button-toggle-group
-                        name="datasetViewType"
-                        class="mat-button-toggle-group border-bottom w-100"
-                        aria-label="Dataset View Type"
-                        [(ngModel)]="logsViewMode"
-                    >
-                        <mat-button-toggle value="table"> Table </mat-button-toggle>
-                        <mat-button-toggle value="json"> JSON </mat-button-toggle>
-                    </mat-button-toggle-group>
-                    <mat-divider class="position-absolute mt-4"></mat-divider>
 
-                    <div class="p-2 mt-2" *ngIf="logsViewMode === 'table'">
-                        <div class="container-table-view pl-100 m mb-2">
-                            <div class="fw-bold">timestamp</div>
-                            <div>2018-09-25 14:41:25</div>
-                        </div>
-                        <div class="container-table-view pl-100 mb-2">
-                            <div class="fw-bold">operation_id</div>
-                            <div>NassxLLwwew</div>
-                        </div>
-                        <div class="container-table-view pl-100">
-                            <div class="fw-bold">dataset_refs</div>
-                            <div>
-                                [Handle(Datasethandle(DatasetId("22121asHHasasPPsnnmXssLLEyEEvbmm"),
-                                DatasetAlias(account_name: "kamu", dataset_name:"british-columbia.case-details")))]
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-2" *ngIf="logsViewMode === 'json'">Json</div>
-                </div>
-            </div>
-        </div>
-
-        <ng-container *ngFor="let i of [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]">
+        <ng-container *ngFor="let log of logs; let i = index">
             <div class="border-top my-2">
                 <div class="container-logs py-2">
                     <div class="d-flex align-items-center">
-                        <mat-icon class="d-inline-block mt-1 text-muted">navigate_next</mat-icon>
-                        <span class="d-inline-block">2018-09-25 14:41:25 </span>
+                        <mat-icon
+                            (click)="clickLogItem()"
+                            class="icon-next text-muted"
+                            [class.opened]="isCollapsed1 && i == 0"
+                            >navigate_next</mat-icon
+                        >
+                        <span class="d-inline-block">{{ log.time | date: "yyyy-MM-dd h:mm:ss a" }} </span>
                     </div>
                     <div>
-                        <div>
-                            <span class="badge-log">operation_id:</span> NassxLLwwew &nbsp;
-                            <span class="badge-log">dataset_handle:</span> british-columbia.case-details &nbsp;
-                            <span class="badge-log">dataset_refs:</span>
-                            [Handle(Datasethandle(DatasetId("22121asHHasasPPsnnmXssLLEyEEvbmm"),
-                            DatasetAlias(account_name: "kamu", dataset_name:"british-columbia.case-details")))] &nbsp;
+                        <div class="container-record">
+                            <span class="badge-log">message:</span>&nbsp; {{ log.msg }} &nbsp;
+                            <span class="badge-log">name:</span>&nbsp; {{ log.name }} &nbsp;
+                            <span class="badge-log">level:</span>&nbsp;{{ log.level }} &nbsp;
+                            <span class="badge-log">hostname:</span>&nbsp;{{ log.hostname }}
+                            &nbsp;
+                            <span class="badge-log">target:</span>&nbsp;{{ log.target }} &nbsp;
+                            <span class="badge-log">line:</span>&nbsp;{{ log.line }} &nbsp;
+                            <span class="badge-log">file:</span>&nbsp;{{ log.file }} &nbsp;
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="isCollapsed1 && i == 0">
+                    <div class="dataset-view-type-toggle-group position-relative">
+                        <mat-button-toggle-group
+                            name="datasetViewType"
+                            class="mat-button-toggle-group border-bottom w-100"
+                            aria-label="Dataset View Type"
+                            [(ngModel)]="logsViewMode"
+                        >
+                            <mat-button-toggle value="table"> Table </mat-button-toggle>
+                            <mat-button-toggle value="json"> JSON </mat-button-toggle>
+                        </mat-button-toggle-group>
+                        <mat-divider class="position-absolute mt-4"></mat-divider>
+
+                        <div class="p-2 mt-2" *ngIf="logsViewMode === 'table'">
+                            <div class="container-table-view pl-100 m mb-2">
+                                <div class="fw-bold">time</div>
+                                <div>{{ log.time | date: "yyyy-MM-dd h:mm:ss a" }}</div>
+                            </div>
+                            <div class="container-table-view pl-100 mb-2">
+                                <div class="fw-bold">message</div>
+                                <div>{{ log.msg }}</div>
+                            </div>
+                            <div class="container-table-view pl-100 mb-2">
+                                <div class="fw-bold">name</div>
+                                <div>
+                                    {{ log.name }}
+                                </div>
+                            </div>
+                            <div class="container-table-view pl-100 mb-2">
+                                <div class="fw-bold">level</div>
+                                <div>
+                                    {{ log.level }}
+                                </div>
+                            </div>
+                            <div class="container-table-view pl-100 mb-2">
+                                <div class="fw-bold">hostname</div>
+                                <div>
+                                    {{ log.hostname }}
+                                </div>
+                            </div>
+                            <div class="container-table-view pl-100 mb-2">
+                                <div class="fw-bold">target</div>
+                                <div>
+                                    {{ log.target }}
+                                </div>
+                            </div>
+                            <div class="container-table-view pl-100 mb-2">
+                                <div class="fw-bold">line</div>
+                                <div>
+                                    {{ log.line }}
+                                </div>
+                            </div>
+                            <div class="container-table-view pl-100 mb-2">
+                                <div class="fw-bold">file</div>
+                                <div>
+                                    {{ log.file }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-2" *ngIf="logsViewMode === 'json'">
+                            <pre>{{ log | json }}</pre>
                         </div>
                     </div>
                 </div>

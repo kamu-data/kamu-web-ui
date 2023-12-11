@@ -8,6 +8,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 })
 export class TaskDetailsLogsTabComponent {
     public isCollapsed1 = false;
+    public logsViewMode = "table";
 
     public clickLogItem(): void {
         this.isCollapsed1 = !this.isCollapsed1;

@@ -7,12 +7,19 @@ import { DatasetModule } from "src/app/dataset-view/dataset.module";
 import { RouterModule } from "@angular/router";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { MatMenuModule } from "@angular/material/menu";
-import { TaskDetailsSummaryTabComponent } from './components/task-details-summary-tab/task-details-summary-tab.component';
-import { TaskDetailsHistoryTabComponent } from './components/task-details-history-tab/task-details-history-tab.component';
-import { TaskDetailsLogsTabComponent } from './components/task-details-logs-tab/task-details-logs-tab.component';
+import { TaskDetailsSummaryTabComponent } from "./components/task-details-summary-tab/task-details-summary-tab.component";
+import { TaskDetailsHistoryTabComponent } from "./components/task-details-history-tab/task-details-history-tab.component";
+import { TaskDetailsLogsTabComponent } from "./components/task-details-logs-tab/task-details-logs-tab.component";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
-    declarations: [TaskDetailsComponent, TaskDetailsSummaryTabComponent, TaskDetailsHistoryTabComponent, TaskDetailsLogsTabComponent],
+    declarations: [
+        TaskDetailsComponent,
+        TaskDetailsSummaryTabComponent,
+        TaskDetailsHistoryTabComponent,
+        TaskDetailsLogsTabComponent,
+    ],
     imports: [
         CommonModule,
         MatIconModule,
@@ -21,6 +28,8 @@ import { TaskDetailsLogsTabComponent } from './components/task-details-logs-tab/
         RouterModule,
         AngularSvgIconModule,
         MatMenuModule,
+        MatButtonToggleModule,
+        FormsModule,
     ],
 })
 export class TaskDetailsModule {}

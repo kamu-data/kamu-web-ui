@@ -76,6 +76,14 @@ export type AddData = {
     sourceState?: Maybe<SourceState>;
 };
 
+export type AddPushSource = {
+    __typename?: "AddPushSource";
+    merge: MergeStrategy;
+    preprocess?: Maybe<Transform>;
+    read: ReadStep;
+    sourceName?: Maybe<Scalars["String"]>;
+};
+
 export type AttachmentEmbedded = {
     __typename?: "AttachmentEmbedded";
     content: Scalars["String"];
@@ -392,6 +400,7 @@ export type DatasetPermissions = {
     canCommit: Scalars["Boolean"];
     canDelete: Scalars["Boolean"];
     canRename: Scalars["Boolean"];
+    canSchedule: Scalars["Boolean"];
     canView: Scalars["Boolean"];
 };
 
@@ -467,6 +476,16 @@ export type DeleteResultSuccess = DeleteResult & {
     __typename?: "DeleteResultSuccess";
     deletedDataset: Scalars["DatasetAlias"];
     message: Scalars["String"];
+};
+
+export type DisablePollingSource = {
+    __typename?: "DisablePollingSource";
+    dummy?: Maybe<Scalars["String"]>;
+};
+
+export type DisablePushSource = {
+    __typename?: "DisablePushSource";
+    sourceName?: Maybe<Scalars["String"]>;
 };
 
 /** Describes */
@@ -651,9 +670,13 @@ export type MetadataChainMutCommitEventArgs = {
 
 export type MetadataEvent =
     | AddData
+    | AddPushSource
+    | DisablePollingSource
+    | DisablePushSource
     | ExecuteQuery
     | Seed
     | SetAttachments
+    | SetDataSchema
     | SetInfo
     | SetLicense
     | SetPollingSource
@@ -926,6 +949,11 @@ export type Seed = {
 export type SetAttachments = {
     __typename?: "SetAttachments";
     attachments: Attachments;
+};
+
+export type SetDataSchema = {
+    __typename?: "SetDataSchema";
+    schema: DataSchema;
 };
 
 export type SetInfo = {
@@ -1436,6 +1464,81 @@ export type AddDataEventFragment = {
     outputCheckpoint?: { __typename?: "Checkpoint"; physicalHash: string; size: number } | null;
 };
 
+export type AddPushSourceEventFragment = {
+    __typename?: "AddPushSource";
+    sourceName?: string | null;
+    read:
+        | {
+              __typename?: "ReadStepCsv";
+              schema?: Array<string> | null;
+              separator?: string | null;
+              encoding?: string | null;
+              quote?: string | null;
+              escape?: string | null;
+              comment?: string | null;
+              header?: boolean | null;
+              enforceSchema?: boolean | null;
+              inferSchema?: boolean | null;
+              ignoreLeadingWhiteSpace?: boolean | null;
+              ignoreTrailingWhiteSpace?: boolean | null;
+              nullValue?: string | null;
+              emptyValue?: string | null;
+              nanValue?: string | null;
+              positiveInf?: string | null;
+              negativeInf?: string | null;
+              dateFormat?: string | null;
+              timestampFormat?: string | null;
+              multiLine?: boolean | null;
+          }
+        | { __typename?: "ReadStepEsriShapefile"; schema?: Array<string> | null; subPath?: string | null }
+        | { __typename?: "ReadStepGeoJson"; schema?: Array<string> | null }
+        | {
+              __typename?: "ReadStepJson";
+              subPath?: string | null;
+              schema?: Array<string> | null;
+              dateFormat?: string | null;
+              encoding?: string | null;
+              timestampFormat?: string | null;
+          }
+        | {
+              __typename?: "ReadStepJsonLines";
+              schema?: Array<string> | null;
+              dateFormat?: string | null;
+              encoding?: string | null;
+              multiLine?: boolean | null;
+              primitivesAsString?: boolean | null;
+              timestampFormat?: string | null;
+          }
+        | { __typename?: "ReadStepNdGeoJson"; schema?: Array<string> | null }
+        | {
+              __typename?: "ReadStepNdJson";
+              dateFormat?: string | null;
+              encoding?: string | null;
+              schema?: Array<string> | null;
+              timestampFormat?: string | null;
+          }
+        | { __typename?: "ReadStepParquet"; schema?: Array<string> | null };
+    merge:
+        | { __typename: "MergeStrategyAppend" }
+        | { __typename?: "MergeStrategyLedger"; primaryKey: Array<string> }
+        | {
+              __typename?: "MergeStrategySnapshot";
+              primaryKey: Array<string>;
+              compareColumns?: Array<string> | null;
+              observationColumn?: string | null;
+              obsvAdded?: string | null;
+              obsvChanged?: string | null;
+              obsvRemoved?: string | null;
+          };
+    preprocess?: {
+        __typename?: "TransformSql";
+        engine: string;
+        version?: string | null;
+        queries: Array<{ __typename?: "SqlQueryStep"; query: string; alias?: string | null }>;
+        temporalTables?: Array<{ __typename?: "TemporalTable"; name: string; primaryKey: Array<string> }> | null;
+    } | null;
+};
+
 export type ExecuteQueryEventFragment = {
     __typename?: "ExecuteQuery";
     inputCheckpoint?: string | null;
@@ -1878,9 +1981,13 @@ export type MetadataBlockFragment = {
     author: { __typename?: "Account" } & AccountExtendedFragment;
     event:
         | ({ __typename: "AddData" } & AddDataEventFragment)
+        | ({ __typename: "AddPushSource" } & AddPushSourceEventFragment)
+        | { __typename: "DisablePollingSource" }
+        | { __typename: "DisablePushSource" }
         | ({ __typename: "ExecuteQuery" } & ExecuteQueryEventFragment)
         | ({ __typename: "Seed" } & SeedEventFragment)
         | ({ __typename: "SetAttachments" } & SetAttachmentsEventFragment)
+        | { __typename: "SetDataSchema" }
         | ({ __typename: "SetInfo" } & DatasetCurrentInfoFragment)
         | ({ __typename: "SetLicense" } & SetLicenseEventFragment)
         | ({ __typename: "SetPollingSource" } & SetPollingSourceEventFragment)
@@ -2456,6 +2563,98 @@ export const SetLicenseEventFragmentDoc = gql`
         websiteUrl
     }
 `;
+export const AddPushSourceEventFragmentDoc = gql`
+    fragment AddPushSourceEvent on AddPushSource {
+        sourceName
+        read {
+            ... on ReadStepCsv {
+                schema
+                separator
+                encoding
+                quote
+                escape
+                comment
+                header
+                enforceSchema
+                inferSchema
+                ignoreLeadingWhiteSpace
+                ignoreTrailingWhiteSpace
+                nullValue
+                emptyValue
+                nanValue
+                positiveInf
+                negativeInf
+                dateFormat
+                timestampFormat
+                multiLine
+            }
+            ... on ReadStepGeoJson {
+                schema
+            }
+            ... on ReadStepParquet {
+                schema
+            }
+            ... on ReadStepJsonLines {
+                schema
+                dateFormat
+                encoding
+                multiLine
+                primitivesAsString
+                timestampFormat
+            }
+            ... on ReadStepEsriShapefile {
+                schema
+                subPath
+            }
+            ... on ReadStepJson {
+                subPath
+                schema
+                dateFormat
+                encoding
+                timestampFormat
+            }
+            ... on ReadStepNdGeoJson {
+                schema
+            }
+            ... on ReadStepNdJson {
+                dateFormat
+                encoding
+                schema
+                timestampFormat
+            }
+        }
+        merge {
+            ... on MergeStrategySnapshot {
+                primaryKey
+                compareColumns
+                observationColumn
+                obsvAdded
+                obsvChanged
+                obsvRemoved
+            }
+            ... on MergeStrategyLedger {
+                primaryKey
+            }
+            ... on MergeStrategyAppend {
+                __typename
+            }
+        }
+        preprocess {
+            ... on TransformSql {
+                engine
+                version
+                queries {
+                    query
+                    alias
+                }
+                temporalTables {
+                    name
+                    primaryKey
+                }
+            }
+        }
+    }
+`;
 export const MetadataBlockFragmentDoc = gql`
     fragment MetadataBlock on MetadataBlockExtended {
         blockHash
@@ -2477,6 +2676,7 @@ export const MetadataBlockFragmentDoc = gql`
             ...DatasetCurrentInfo
             ...SetLicenseEvent
             ...SetPollingSourceEvent
+            ...AddPushSourceEvent
         }
     }
     ${AccountExtendedFragmentDoc}
@@ -2490,6 +2690,7 @@ export const MetadataBlockFragmentDoc = gql`
     ${DatasetCurrentInfoFragmentDoc}
     ${SetLicenseEventFragmentDoc}
     ${SetPollingSourceEventFragmentDoc}
+    ${AddPushSourceEventFragmentDoc}
 `;
 export const DatasetPageInfoFragmentDoc = gql`
     fragment DatasetPageInfo on PageBasedInfo {

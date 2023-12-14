@@ -6,6 +6,7 @@ import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { AddPollingSourceEditFormType, FetchKind, PrepareKind } from "./add-polling-source-form.types";
 import AppValues from "src/app/common/app.values";
+import { has } from "lodash";
 
 @Injectable({
     providedIn: "root",
@@ -13,11 +14,13 @@ import AppValues from "src/app/common/app.values";
 export class ProcessFormService {
     public transformForm(formGroup: FormGroup): void {
         this.transformSchema(formGroup);
-        this.processFetchOrderControl(formGroup);
-        this.removeEmptyControls(formGroup);
-        this.processEventTimeControl(formGroup);
+        if (has(formGroup.value, "fetch")) {
+            this.processFetchOrderControl(formGroup);
+            this.removeEmptyControls(formGroup);
+            this.processEventTimeControl(formGroup);
+            this.processPipeCommandControl(formGroup);
+        }
         this.processEmptyPrepareStep(formGroup);
-        this.processPipeCommandControl(formGroup);
     }
 
     private transformSchema(formGroup: FormGroup): void {

@@ -201,6 +201,13 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         });
     }
 
+    public navigateToAddPushSource(): void {
+        this.navigationService.navigateToAddPushSource({
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
+        });
+    }
+
     public navigateToSetTransform(): void {
         this.navigationService.navigateToSetTransform({
             accountName: this.datasetBasics.owner.accountName,

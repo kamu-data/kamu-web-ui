@@ -12,7 +12,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } 
 import { FormGroup } from "@angular/forms";
 import { JsonFormControl } from "../../add-polling-source-form.types";
 import { getValidators } from "src/app/common/data.helpers";
-import { SetPollingSourceSection } from "src/app/shared/shared.types";
+import { AddPushSourceSection, SetPollingSourceSection } from "src/app/shared/shared.types";
 import { EditPollingSourceService } from "../../edit-polling-source.service";
 import { MaybeNull } from "src/app/common/app.types";
 
@@ -28,7 +28,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     @Input() public sectionFormData: JsonFormData;
     @Input() public defaultKind: string;
     @Input() public description: string;
-    @Input() public sectionName: SetPollingSourceSection;
+    @Input() public sectionName: SetPollingSourceSection | AddPushSourceSection;
     @Input() public eventYamlByHash: MaybeNull<string> = null;
     private editFormValue: AddPollingSourceEditFormType;
     public controlType: typeof ControlType = ControlType;

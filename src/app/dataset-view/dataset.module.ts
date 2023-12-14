@@ -64,6 +64,8 @@ import { MatInputModule } from "@angular/material/input";
 import { ReturnToCliComponent } from "../components/return-to-cli/return-to-cli.component";
 import { EditorModule } from "../shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { AddPushSourceComponent } from './additional-components/metadata-component/components/add-push-source/add-push-source.component';
+import { SourceNameStepComponent } from './additional-components/metadata-component/components/add-push-source/steps/source-name-step/source-name-step.component';
 
 @NgModule({
     imports: [
@@ -155,6 +157,8 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
         ReadmeSectionComponent,
         DatasetSettingsComponent,
         LoadMoreComponent,
+        AddPushSourceComponent,
+        SourceNameStepComponent,
     ],
 })
 export class DatasetModule {

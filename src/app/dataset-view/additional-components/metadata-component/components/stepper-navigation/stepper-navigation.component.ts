@@ -1,6 +1,6 @@
 import { MaybeNull } from "src/app/common/app.types";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { SetPollingSourceSection } from "src/app/shared/shared.types";
+import { AddPushSourceSection, SetPollingSourceSection } from "src/app/shared/shared.types";
 
 @Component({
     selector: "app-stepper-navigation",
@@ -9,14 +9,14 @@ import { SetPollingSourceSection } from "src/app/shared/shared.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepperNavigationComponent {
-    @Input() public nextStep: MaybeNull<SetPollingSourceSection> = null;
-    @Input() public prevStep: MaybeNull<SetPollingSourceSection> = null;
+    @Input() public nextStep: MaybeNull<SetPollingSourceSection | AddPushSourceSection> = null;
+    @Input() public prevStep: MaybeNull<SetPollingSourceSection | AddPushSourceSection> = null;
     @Input() public validStep?: boolean;
-    @Output() public changeStepEmitter = new EventEmitter<SetPollingSourceSection>();
+    @Output() public changeStepEmitter = new EventEmitter<SetPollingSourceSection | AddPushSourceSection>();
     @Output() public saveEventEmitter = new EventEmitter<null>();
     @Output() public editYamlEmitter = new EventEmitter<null>();
 
-    public changeStep(step: SetPollingSourceSection): void {
+    public changeStep(step: SetPollingSourceSection | AddPushSourceSection): void {
         this.changeStepEmitter.emit(step);
     }
 

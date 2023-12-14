@@ -8,6 +8,7 @@ import {
     PreprocessStepValue,
     ReadKind,
 } from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
+import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/add-push-source/add-push-source-form.types";
 
 @Injectable({
     providedIn: "root",
@@ -55,6 +56,35 @@ export class TemplatesYamlEventsService {
         }
         this.initialTemplate.content = {
             kind: "setPollingSource",
+            ...params,
+        };
+        if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
+            this.initialTemplate.content = {
+                ...this.initialTemplate.content,
+                preprocess: {
+                    kind: PreprocessKind.SQL,
+                    engine: preprocessStepValue.engine.toLowerCase(),
+                    queries: preprocessStepValue.queries,
+                },
+            };
+        }
+
+        return stringify(this.initialTemplate);
+    }
+
+    public buildYamlAddPushSourceEvent(
+        params: AddPushSourceEditFormType,
+        preprocessStepValue: MaybeNull<PreprocessStepValue>,
+    ): string {
+        if (params.read.jsonKind === ReadKind.ND_JSON) {
+            delete params.read.subPath;
+        }
+        if (params.read.jsonKind) {
+            params.read.kind = params.read.jsonKind;
+            delete params.read.jsonKind;
+        }
+        this.initialTemplate.content = {
+            kind: "addPushSource",
             ...params,
         };
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {

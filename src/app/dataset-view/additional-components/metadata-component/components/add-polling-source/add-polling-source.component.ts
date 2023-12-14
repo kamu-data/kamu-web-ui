@@ -10,7 +10,7 @@ import { DatasetKind } from "../../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { SetPollingSourceSection } from "src/app/shared/shared.types";
+import { AddPushSourceSection, SetPollingSourceSection } from "src/app/shared/shared.types";
 import { FETCH_STEP_RADIO_CONTROLS, MERGE_STEP_RADIO_CONTROLS, READ_STEP_RADIO_CONTROLS } from "./form-control.source";
 import { FETCH_FORM_DATA } from "./steps/data/fetch-form-data";
 import { READ_FORM_DATA } from "./steps/data/read-form-data";
@@ -109,8 +109,8 @@ export class AddPollingSourceComponent extends BaseMainEventComponent implements
         this.subsribeErrorMessage();
     }
 
-    public changeStep(step: SetPollingSourceSection): void {
-        this.currentStep = step;
+    public changeStep(step: SetPollingSourceSection | AddPushSourceSection): void {
+        this.currentStep = step as SetPollingSourceSection;
     }
 
     public onSaveEvent(): void {

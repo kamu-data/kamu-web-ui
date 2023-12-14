@@ -5,3 +5,10 @@ export enum SetPollingSourceSection {
     PREPROCESS = "preprocess",
     PREPARE = "prepare",
 }
+
+export enum AddPushSourceSection {
+    SOURCE_NAME = "sourceName",
+    READ = "read",
+    MERGE = "merge",
+    PREPROCESS = "preprocess",
+}

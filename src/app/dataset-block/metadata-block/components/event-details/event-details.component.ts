@@ -9,6 +9,7 @@ import {
     SetInfo,
     SetVocab,
     SetWatermark,
+    AddPushSource,
 } from "../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "./supported.events";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
@@ -114,5 +115,13 @@ export class EventDetailsComponent {
 
     public get setWatermarkEvent(): SetWatermark {
         return this.currentBlock.event as SetWatermark;
+    }
+
+    public get isAddPushSourceEvent(): boolean {
+        return this.currentBlock.event.__typename === SupportedEvents.AddPushSource;
+    }
+
+    public get addPushSourceEvent(): AddPushSource {
+        return this.currentBlock.event as AddPushSource;
     }
 }

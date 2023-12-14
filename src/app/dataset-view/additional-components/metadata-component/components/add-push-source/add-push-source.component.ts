@@ -31,10 +31,6 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
         queries: [],
     };
 
-    protected onSaveEvent(): void {
-        throw new Error("Method not implemented.");
-    }
-
     // ---------------------------------
     public readonly READ_STEP_RADIO_DATA = READ_STEP_RADIO_CONTROLS;
     public readonly READ_FORM_DATA = READ_FORM_DATA;
@@ -121,6 +117,22 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
             from(modalRef.result).subscribe((eventYaml: string) => {
                 this.changedEventYamlByHash = eventYaml;
             }),
+        );
+    }
+
+    protected onSaveEvent(): void {
+        this.processFormService.transformForm(this.addPushSourceForm);
+        this.trackSubscription(
+            this.datasetCommitService
+                .commitEventToDataset(
+                    this.getDatasetInfoFromUrl().accountName,
+                    this.getDatasetInfoFromUrl().datasetName,
+                    this.yamlEventService.buildYamlAddPushSourceEvent(
+                        this.addPushSourceForm.value as AddPushSourceEditFormType,
+                        this.showPreprocessStep ? this.preprocessStepValue : null,
+                    ),
+                )
+                .subscribe(),
         );
     }
 }

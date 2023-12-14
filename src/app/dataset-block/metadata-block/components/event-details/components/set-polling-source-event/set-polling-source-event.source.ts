@@ -377,6 +377,14 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "setPollingSource-ReadStepJson-__typename",
     },
 
+    "SetPollingSource.ReadStepJson.schema": {
+        label: "Schema:",
+        tooltip: SetPollingSourceToolipsTexts.SCHEMA,
+        presentationComponent: SchemaPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-ReadStepJson-schema",
+    },
+
     "SetPollingSource.ReadStepJson.encoding": {
         label: "Encoding:",
         tooltip: SetPollingSourceToolipsTexts.READ_JSON_ENCODING,

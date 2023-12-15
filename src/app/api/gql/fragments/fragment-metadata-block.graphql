@@ -19,5 +19,6 @@ fragment MetadataBlock on MetadataBlockExtended {
     ...SetLicenseEvent
     ...SetPollingSourceEvent
     ...AddPushSourceEvent
+    ...SetDataSchemaEvent
   }
 }

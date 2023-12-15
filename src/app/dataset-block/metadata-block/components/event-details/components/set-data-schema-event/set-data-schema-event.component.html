@@ -1,0 +1,16 @@
+<div class="position-relative border border-1 p-2 rounded-3">
+    <span class="position-absolute text-muted group-box-label text-uppercase">Schema info</span>
+    <div class="mx-4">
+        <app-block-row-data
+            tooltip="A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types."
+            label="Schema:"
+        >
+            <app-dynamic-table
+                *ngIf="datasetSchema"
+                [hasTableHeader]="true"
+                [schemaFields]="datasetSchema.fields"
+                [idTable]="'set-data-schema-event'"
+            ></app-dynamic-table>
+        </app-block-row-data>
+    </div>
+</div>

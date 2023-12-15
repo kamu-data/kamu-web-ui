@@ -10,6 +10,7 @@ export enum SupportedEvents {
     SetVocab = "SetVocab",
     SetWatermark = "SetWatermark",
     AddPushSource = "AddPushSource",
+    SetDataSchema = "SetDataSchema",
 }
 
 export interface EventPropertyLogo {

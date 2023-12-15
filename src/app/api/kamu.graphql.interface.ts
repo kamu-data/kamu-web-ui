@@ -1568,6 +1568,11 @@ export type SetAttachmentsEventFragment = {
     };
 };
 
+export type SetDataSchemaEventFragment = {
+    __typename?: "SetDataSchema";
+    schema: { __typename?: "DataSchema"; format: DataSchemaFormat; content: string };
+};
+
 export type SetLicenseEventFragment = {
     __typename?: "SetLicense";
     shortName: string;
@@ -1987,7 +1992,7 @@ export type MetadataBlockFragment = {
         | ({ __typename: "ExecuteQuery" } & ExecuteQueryEventFragment)
         | ({ __typename: "Seed" } & SeedEventFragment)
         | ({ __typename: "SetAttachments" } & SetAttachmentsEventFragment)
-        | { __typename: "SetDataSchema" }
+        | ({ __typename: "SetDataSchema" } & SetDataSchemaEventFragment)
         | ({ __typename: "SetInfo" } & DatasetCurrentInfoFragment)
         | ({ __typename: "SetLicense" } & SetLicenseEventFragment)
         | ({ __typename: "SetPollingSource" } & SetPollingSourceEventFragment)
@@ -2655,6 +2660,14 @@ export const AddPushSourceEventFragmentDoc = gql`
         }
     }
 `;
+export const SetDataSchemaEventFragmentDoc = gql`
+    fragment SetDataSchemaEvent on SetDataSchema {
+        schema {
+            format
+            content
+        }
+    }
+`;
 export const MetadataBlockFragmentDoc = gql`
     fragment MetadataBlock on MetadataBlockExtended {
         blockHash
@@ -2677,6 +2690,7 @@ export const MetadataBlockFragmentDoc = gql`
             ...SetLicenseEvent
             ...SetPollingSourceEvent
             ...AddPushSourceEvent
+            ...SetDataSchemaEvent
         }
     }
     ${AccountExtendedFragmentDoc}
@@ -2691,6 +2705,7 @@ export const MetadataBlockFragmentDoc = gql`
     ${SetLicenseEventFragmentDoc}
     ${SetPollingSourceEventFragmentDoc}
     ${AddPushSourceEventFragmentDoc}
+    ${SetDataSchemaEventFragmentDoc}
 `;
 export const DatasetPageInfoFragmentDoc = gql`
     fragment DatasetPageInfo on PageBasedInfo {

@@ -1539,6 +1539,8 @@ export type AddPushSourceEventFragment = {
     } | null;
 };
 
+export type DisablePollingSourceEventFragment = { __typename?: "DisablePollingSource"; dummy?: string | null };
+
 export type ExecuteQueryEventFragment = {
     __typename?: "ExecuteQuery";
     inputCheckpoint?: string | null;
@@ -1987,7 +1989,7 @@ export type MetadataBlockFragment = {
     event:
         | ({ __typename: "AddData" } & AddDataEventFragment)
         | ({ __typename: "AddPushSource" } & AddPushSourceEventFragment)
-        | { __typename: "DisablePollingSource" }
+        | ({ __typename: "DisablePollingSource" } & DisablePollingSourceEventFragment)
         | { __typename: "DisablePushSource" }
         | ({ __typename: "ExecuteQuery" } & ExecuteQueryEventFragment)
         | ({ __typename: "Seed" } & SeedEventFragment)
@@ -2668,6 +2670,11 @@ export const SetDataSchemaEventFragmentDoc = gql`
         }
     }
 `;
+export const DisablePollingSourceEventFragmentDoc = gql`
+    fragment DisablePollingSourceEvent on DisablePollingSource {
+        dummy
+    }
+`;
 export const MetadataBlockFragmentDoc = gql`
     fragment MetadataBlock on MetadataBlockExtended {
         blockHash
@@ -2691,6 +2698,7 @@ export const MetadataBlockFragmentDoc = gql`
             ...SetPollingSourceEvent
             ...AddPushSourceEvent
             ...SetDataSchemaEvent
+            ...DisablePollingSourceEvent
         }
     }
     ${AccountExtendedFragmentDoc}
@@ -2706,6 +2714,7 @@ export const MetadataBlockFragmentDoc = gql`
     ${SetPollingSourceEventFragmentDoc}
     ${AddPushSourceEventFragmentDoc}
     ${SetDataSchemaEventFragmentDoc}
+    ${DisablePollingSourceEventFragmentDoc}
 `;
 export const DatasetPageInfoFragmentDoc = gql`
     fragment DatasetPageInfo on PageBasedInfo {

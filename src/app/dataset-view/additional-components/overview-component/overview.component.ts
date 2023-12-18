@@ -110,6 +110,18 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         }
     }
 
+    public get canAddPushSource(): boolean {
+        if (this.currentState && this.datasetPermissions.permissions.canCommit) {
+            return (
+                !this.currentState.overview.metadata.chain.blocks.nodes.filter(
+                    (item) => item.event.__typename === "AddPushSource",
+                ).length && this.datasetBasics.kind === DatasetKind.Root
+            );
+        } else {
+            return false;
+        }
+    }
+
     public get canAddSetTransform(): boolean {
         if (this.currentState && this.datasetPermissions.permissions.canCommit) {
             return (

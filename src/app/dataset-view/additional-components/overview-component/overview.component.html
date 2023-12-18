@@ -49,7 +49,11 @@
                     </p>
                 </div>
             </ng-template>
-            <div class="my-4" *ngIf="canAddSetPollingSource" data-test-id="add-set-polling-source-block">
+            <div
+                class="my-4"
+                *ngIf="canAddSetPollingSource && canAddPushSource"
+                data-test-id="add-set-polling-source-block"
+            >
                 <p>
                     You can
                     <a class="text-decoration-none" (click)="navigateToAddPollingSource()"> Add data polling source</a>

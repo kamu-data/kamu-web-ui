@@ -16,10 +16,11 @@ import {
     DatasetMetadataSummaryFragment,
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
-import { momentConvertDatetoLocalWithFormat } from "src/app/common/app.helpers";
+import { momentConvertDatetoLocalWithFormat, promiseWithCatch } from "src/app/common/app.helpers";
 import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/common/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
 import _ from "lodash";
+import { ModalService } from "src/app/components/modal/modal.service";
 
 @Component({
     selector: "app-metadata",
@@ -48,7 +49,14 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         pageInfo: PageBasedInfo;
     };
 
-    constructor(private datasetSubsService: DatasetSubscriptionsService, private navigationService: NavigationService) {
+    constructor(
+        private datasetSubsService: DatasetSubscriptionsService,
+        private navigationService: NavigationService,
+        private modalService: ModalService, //TODO: uncomment when will add support for Disabled* events
+    ) // private datasetCommitService: DatasetCommitService,
+    // private yamlEventService: TemplatesYamlEventsService,
+
+    {
         super();
     }
 
@@ -144,5 +152,23 @@ export class MetadataComponent extends BaseComponent implements OnInit {
             accountName: this.datasetBasics.owner.accountName,
             datasetName: this.datasetBasics.name,
         });
+    }
+
+    public onDeletePollingSource(): void {
+        promiseWithCatch(
+            this.modalService.warning({
+                message: "Feature coming soon",
+                yesButtonText: "Ok",
+            }),
+        );
+        // this.trackSubscription(
+        //     this.datasetCommitService
+        //         .commitEventToDataset(
+        //             this.getDatasetInfoFromUrl().accountName,
+        //             this.getDatasetInfoFromUrl().datasetName,
+        //             this.yamlEventService.buildYamlDisablePollingSourceEvent(),
+        //         )
+        //         .subscribe(),
+        // );
     }
 }

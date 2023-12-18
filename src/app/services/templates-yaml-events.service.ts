@@ -17,6 +17,8 @@ export class TemplatesYamlEventsService {
     private readonly initialSetInfoTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setInfo\n";
     private readonly initialSetLicenseTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setLicense\n";
     private readonly initialSetWatermarkTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setWatermark\n";
+    private readonly initialDisablePollingSourceTemplate =
+        "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: disablePollingSource\n";
 
     private readonly initialTemplate = {
         kind: "MetadataEvent",
@@ -112,6 +114,12 @@ export class TemplatesYamlEventsService {
     public buildYamlSetWatermarkEvent(dateTime: string): string {
         let result = this.initialSetWatermarkTemplate;
         result += `  outputWatermark: ${dateTime}`;
+        return result;
+    }
+
+    public buildYamlDisablePollingSourceEvent(): string {
+        let result = this.initialDisablePollingSourceTemplate;
+        result += `  dummy: test`;
         return result;
     }
 }

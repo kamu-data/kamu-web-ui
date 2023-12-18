@@ -20,5 +20,6 @@ fragment MetadataBlock on MetadataBlockExtended {
     ...SetPollingSourceEvent
     ...AddPushSourceEvent
     ...SetDataSchemaEvent
+    ...DisablePollingSourceEvent
   }
 }

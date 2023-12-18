@@ -169,6 +169,8 @@ export class DataHelpers {
                 return DataHelpers.BLOCK_DESCRIBE_DISABLE_POLLING_SOURCE;
             case "DisablePushSource":
                 return DataHelpers.BLOCK_DESCRIBE_DISABLE_ADD_PUSH_SOURCE;
+            default:
+                return "Unsupported event type";
         }
     }
 

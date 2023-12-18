@@ -15,6 +15,7 @@ import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { from } from "rxjs";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { AddPushSourceEditFormType } from "./add-push-source-form.types";
+import { RxwebValidators } from "@rxweb/reactive-form-validators";
 
 @Component({
     selector: "app-add-push-source",
@@ -65,7 +66,7 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
     }
 
     public addPushSourceForm: FormGroup = this.fb.group({
-        sourceName: this.fb.control(""),
+        sourceName: this.fb.control("", RxwebValidators.noneOf({ matchValues: ["test1", "test2"] })),
         read: this.fb.group({
             kind: [this.READ_DEFAULT_KIND],
         }),

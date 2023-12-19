@@ -46,8 +46,8 @@ import { EventTimePropertyComponent } from "./components/event-details/component
 import { OrderPropertyComponent } from "./components/event-details/components/common/order-property/order-property.component";
 import { CommandPropertyComponent } from "./components/event-details/components/common/command-property/command-property.component";
 import { StepTypePropertyComponent } from "./components/event-details/components/common/step-type-property/step-type-property.component";
-import { AddPushSourceEventComponent } from './components/event-details/components/add-push-source-event/add-push-source-event.component';
-import { SetDataSchemaEventComponent } from './components/event-details/components/set-data-schema-event/set-data-schema-event.component';
+import { AddPushSourceEventComponent } from "./components/event-details/components/add-push-source-event/add-push-source-event.component";
+import { SetDataSchemaEventComponent } from "./components/event-details/components/set-data-schema-event/set-data-schema-event.component";
 
 @NgModule({
     declarations: [

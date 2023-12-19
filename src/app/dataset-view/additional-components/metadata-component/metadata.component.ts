@@ -52,9 +52,8 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     constructor(
         private datasetSubsService: DatasetSubscriptionsService,
         private navigationService: NavigationService,
-        private modalService: ModalService, //TODO: uncomment when will add support for Disabled* events
-    ) // private datasetCommitService: DatasetCommitService,
-    // private yamlEventService: TemplatesYamlEventsService,
+        private modalService: ModalService, //TODO: uncomment when will add support for Disabled* events // private datasetCommitService: DatasetCommitService,
+    ) // private yamlEventService: TemplatesYamlEventsService,
 
     {
         super();

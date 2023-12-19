@@ -1,4 +1,3 @@
-import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 import { AddPushSourceToolipsTexts } from "src/app/common/tooltips/add-push-source.text";
@@ -9,6 +8,7 @@ import { MergeStrategyPropertyComponent } from "../common/merge-strategy-propert
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
+import { SourcesToolipsTexts } from "src/app/common/tooltips/sources.text";
 
 export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "AddPushSource.string.sourceName": {
@@ -21,7 +21,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.__typename": {
         label: "Type:",
-        tooltip: SetPollingSourceToolipsTexts.READ_CSV,
+        tooltip: SourcesToolipsTexts.READ_CSV,
         presentationComponent: StepTypePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-ReadStepCsv-__typename",
@@ -29,7 +29,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.schema": {
         label: "Schema:",
-        tooltip: SetPollingSourceToolipsTexts.SCHEMA,
+        tooltip: SourcesToolipsTexts.SCHEMA,
         presentationComponent: SchemaPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-schema",
@@ -37,7 +37,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.separator": {
         label: "Separator:",
-        tooltip: SetPollingSourceToolipsTexts.SEPARATOR,
+        tooltip: SourcesToolipsTexts.SEPARATOR,
         presentationComponent: SeparatorPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-separator",
@@ -45,7 +45,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.encoding": {
         label: "Encoding:",
-        tooltip: SetPollingSourceToolipsTexts.ENCODING,
+        tooltip: SourcesToolipsTexts.ENCODING,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-encoding",
@@ -53,7 +53,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.quote": {
         label: "Quote character:",
-        tooltip: SetPollingSourceToolipsTexts.QUOTE,
+        tooltip: SourcesToolipsTexts.QUOTE,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-quote",
@@ -61,7 +61,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.escape": {
         label: "Escape character:",
-        tooltip: SetPollingSourceToolipsTexts.ESCAPE,
+        tooltip: SourcesToolipsTexts.ESCAPE,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-escape",
@@ -69,7 +69,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.comment": {
         label: "Comment character:",
-        tooltip: SetPollingSourceToolipsTexts.COMMENT,
+        tooltip: SourcesToolipsTexts.COMMENT,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-comment",
@@ -77,7 +77,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.enforceSchema": {
         label: "Enforce schema:",
-        tooltip: SetPollingSourceToolipsTexts.ENFORCE_SCHEMA,
+        tooltip: SourcesToolipsTexts.ENFORCE_SCHEMA,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-enforceSchema",
@@ -85,7 +85,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.inferSchema": {
         label: "Infer schema:",
-        tooltip: SetPollingSourceToolipsTexts.INFER_SCHEMA,
+        tooltip: SourcesToolipsTexts.INFER_SCHEMA,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-inferSchema",
@@ -93,7 +93,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.ignoreLeadingWhiteSpace": {
         label: "Ignore leading whitespace:",
-        tooltip: SetPollingSourceToolipsTexts.IGNORE_LEADING_WHITESPACE,
+        tooltip: SourcesToolipsTexts.IGNORE_LEADING_WHITESPACE,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-ignoreLeadingWhiteSpace",
@@ -101,7 +101,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.ignoreTrailingWhiteSpace": {
         label: "Ignore trailing whitespace:",
-        tooltip: SetPollingSourceToolipsTexts.QUIGNORE_TRAILING_WHITESPACEOTE,
+        tooltip: SourcesToolipsTexts.QUIGNORE_TRAILING_WHITESPACEOTE,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-ignoreTrailingWhiteSpace",
@@ -109,7 +109,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.nullValue": {
         label: "Null value:",
-        tooltip: SetPollingSourceToolipsTexts.NULL_VALUE,
+        tooltip: SourcesToolipsTexts.NULL_VALUE,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-nullValue",
@@ -117,7 +117,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.emptyValue": {
         label: "Empty value:",
-        tooltip: SetPollingSourceToolipsTexts.EMPTY_VALUE,
+        tooltip: SourcesToolipsTexts.EMPTY_VALUE,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-emptyValue",
@@ -125,7 +125,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.nanValue": {
         label: "Nan value:",
-        tooltip: SetPollingSourceToolipsTexts.NAN_VALUE,
+        tooltip: SourcesToolipsTexts.NAN_VALUE,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-nanValue",
@@ -133,7 +133,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.positiveInf": {
         label: "Possitive infinity:",
-        tooltip: SetPollingSourceToolipsTexts.POSITIVE_INFINITY,
+        tooltip: SourcesToolipsTexts.POSITIVE_INFINITY,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-positiveInf",
@@ -141,7 +141,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.negativeInf": {
         label: "Negative infinity:",
-        tooltip: SetPollingSourceToolipsTexts.NEGATIVE_INFINITY,
+        tooltip: SourcesToolipsTexts.NEGATIVE_INFINITY,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-negativeInf",
@@ -149,7 +149,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.dateFormat": {
         label: "Date format:",
-        tooltip: SetPollingSourceToolipsTexts.DATE_FORMAT,
+        tooltip: SourcesToolipsTexts.DATE_FORMAT,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-dateFormat",
@@ -157,7 +157,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.multiLine": {
         label: "Multi line:",
-        tooltip: SetPollingSourceToolipsTexts.MULTI_LINE,
+        tooltip: SourcesToolipsTexts.MULTI_LINE,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-multiLine",
@@ -165,7 +165,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.timestampFormat": {
         label: "Timestamp format:",
-        tooltip: SetPollingSourceToolipsTexts.TIMESTAMP_FORMAT,
+        tooltip: SourcesToolipsTexts.TIMESTAMP_FORMAT,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-readStepCsv-timestampFormat",
@@ -173,7 +173,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.MergeStrategyAppend.__typename": {
         label: "Strategy:",
-        tooltip: SetPollingSourceToolipsTexts.MERGE_STRATEGY_APPEND,
+        tooltip: SourcesToolipsTexts.MERGE_STRATEGY_APPEND,
         presentationComponent: MergeStrategyPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-mergeStrategyAppend-__typename",
@@ -181,7 +181,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.TransformSql.engine": {
         label: "Engine:",
-        tooltip: SetPollingSourceToolipsTexts.ENGINE,
+        tooltip: SourcesToolipsTexts.ENGINE,
         presentationComponent: EnginePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-transformSql-engine",
@@ -189,7 +189,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.TransformSql.queries": {
         label: "Queries:",
-        tooltip: SetPollingSourceToolipsTexts.QUERIES,
+        tooltip: SourcesToolipsTexts.QUERIES,
         presentationComponent: SqlQueryViewerComponent,
         separateRowForValue: true,
         dataTestId: "add-push-source-transformSql-queries",
@@ -197,7 +197,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.MergeStrategyLedger.__typename": {
         label: "Strategy:",
-        tooltip: SetPollingSourceToolipsTexts.MERGE_STRATEGY_LEDGER,
+        tooltip: SourcesToolipsTexts.MERGE_STRATEGY_LEDGER,
         presentationComponent: MergeStrategyPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-mergeStrategyLedger-__typename",
@@ -205,7 +205,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.MergeStrategyLedger.primaryKey": {
         label: "Primary key:",
-        tooltip: SetPollingSourceToolipsTexts.PRIMARY_KEYS,
+        tooltip: SourcesToolipsTexts.PRIMARY_KEYS,
         presentationComponent: CardsPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-mergeStrategyLedger-primaryKey",
@@ -213,7 +213,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepJson.__typename": {
         label: "Type:",
-        tooltip: SetPollingSourceToolipsTexts.READ_JSON,
+        tooltip: SourcesToolipsTexts.READ_JSON,
         presentationComponent: StepTypePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-ReadStepJson-__typename",
@@ -221,7 +221,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepJson.schema": {
         label: "Schema:",
-        tooltip: SetPollingSourceToolipsTexts.SCHEMA,
+        tooltip: SourcesToolipsTexts.SCHEMA,
         presentationComponent: SchemaPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-ReadStepJson-schema",
@@ -229,7 +229,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepJson.encoding": {
         label: "Encoding:",
-        tooltip: SetPollingSourceToolipsTexts.READ_JSON_ENCODING,
+        tooltip: SourcesToolipsTexts.READ_JSON_ENCODING,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-ReadStepJson-encoding",
@@ -237,15 +237,23 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepJson.dateFormat": {
         label: "Date format:",
-        tooltip: SetPollingSourceToolipsTexts.DATE_FORMAT,
+        tooltip: SourcesToolipsTexts.DATE_FORMAT,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-ReadStepJson-dateFormat",
     },
 
+    "AddPushSource.ReadStepNdGeoJson.__typename": {
+        label: "Type:",
+        tooltip: SourcesToolipsTexts.READ_ND_GEO_JSON,
+        presentationComponent: StepTypePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "add-push-source-ReadStepNdGeoJson-__typename",
+    },
+
     "AddPushSource.ReadStepJson.timestampFormat": {
         label: "Timestamp format:",
-        tooltip: SetPollingSourceToolipsTexts.TIMESTAMP_FORMAT,
+        tooltip: SourcesToolipsTexts.TIMESTAMP_FORMAT,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-ReadStepJson-timestampFormat",
@@ -253,7 +261,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepJson.subPath": {
         label: "SubPath:",
-        tooltip: SetPollingSourceToolipsTexts.READ_JSON_SUB_PATH,
+        tooltip: SourcesToolipsTexts.READ_JSON_SUB_PATH,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-ReadStepJson-subPath",
@@ -261,7 +269,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.MergeStrategySnapshot.__typename": {
         label: "Strategy:",
-        tooltip: SetPollingSourceToolipsTexts.SNAPSHOT_STRATEGY,
+        tooltip: SourcesToolipsTexts.SNAPSHOT_STRATEGY,
         presentationComponent: MergeStrategyPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-MergeStrategySnapshot-__typename",
@@ -269,7 +277,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.MergeStrategySnapshot.primaryKey": {
         label: "Primary key:",
-        tooltip: SetPollingSourceToolipsTexts.PRIMARY_KEYS,
+        tooltip: SourcesToolipsTexts.PRIMARY_KEYS,
         presentationComponent: CardsPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-MergeStrategySnapshot-__primaryKey",
@@ -277,7 +285,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.MergeStrategySnapshot.compareColumns": {
         label: "Compare columns:",
-        tooltip: SetPollingSourceToolipsTexts.COMPARE_COLUMNS,
+        tooltip: SourcesToolipsTexts.COMPARE_COLUMNS,
         presentationComponent: CardsPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-MergeStrategySnapshot-compareColumns",
@@ -285,7 +293,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.MergeStrategySnapshot.observationColumn": {
         label: "Observation column:",
-        tooltip: SetPollingSourceToolipsTexts.OBSERVATION_COLUMN,
+        tooltip: SourcesToolipsTexts.OBSERVATION_COLUMN,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-MergeStrategySnapshot-observationColumn",
@@ -293,7 +301,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.MergeStrategySnapshot.obsvAdded": {
         label: "Observation added:",
-        tooltip: SetPollingSourceToolipsTexts.OBSERVATION_ADDED,
+        tooltip: SourcesToolipsTexts.OBSERVATION_ADDED,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-MergeStrategySnapshot-obsvAdded",
@@ -301,7 +309,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.MergeStrategySnapshot.obsvChanged": {
         label: "Observation changed:",
-        tooltip: SetPollingSourceToolipsTexts.OBSERVATION_CHANGED,
+        tooltip: SourcesToolipsTexts.OBSERVATION_CHANGED,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-MergeStrategySnapshot-obsvChanged",
@@ -309,7 +317,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.MergeStrategySnapshot.obsvRemoved": {
         label: "Observation removed:",
-        tooltip: SetPollingSourceToolipsTexts.OBSERVATION_REMOVED,
+        tooltip: SourcesToolipsTexts.OBSERVATION_REMOVED,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-MergeStrategySnapshot-obsvRemoved",
@@ -317,7 +325,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepGeoJson.__typename": {
         label: "Type:",
-        tooltip: SetPollingSourceToolipsTexts.READ_GEO_JSON,
+        tooltip: SourcesToolipsTexts.READ_GEO_JSON,
         presentationComponent: StepTypePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-ReadStepGeoJson-__typename",
@@ -325,7 +333,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepGeoJson.schema": {
         label: "Schema:",
-        tooltip: SetPollingSourceToolipsTexts.SCHEMA,
+        tooltip: SourcesToolipsTexts.SCHEMA,
         presentationComponent: SchemaPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-ReadStepGeoJson-schema",
@@ -333,7 +341,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepEsriShapefile.__typename": {
         label: "Type:",
-        tooltip: SetPollingSourceToolipsTexts.READ_ESRI_SHAPE_FILE,
+        tooltip: SourcesToolipsTexts.READ_ESRI_SHAPE_FILE,
         presentationComponent: StepTypePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-ReadStepEsriShapefile-__typename",
@@ -341,7 +349,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepEsriShapefile.schema": {
         label: "Schema:",
-        tooltip: SetPollingSourceToolipsTexts.SCHEMA,
+        tooltip: SourcesToolipsTexts.SCHEMA,
         presentationComponent: SchemaPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-ReadStepEsriShapefile-schema",
@@ -349,7 +357,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepEsriShapefile.subPath": {
         label: "Sub path:",
-        tooltip: SetPollingSourceToolipsTexts.SUB_PATH,
+        tooltip: SourcesToolipsTexts.SUB_PATH,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-ReadStepEsriShapefile-subPath",
@@ -357,7 +365,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepParquet.__typename": {
         label: "Type:",
-        tooltip: SetPollingSourceToolipsTexts.READ_PARQUET,
+        tooltip: SourcesToolipsTexts.READ_PARQUET,
         presentationComponent: StepTypePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-ReadStepParquet-__typename",
@@ -365,9 +373,33 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepParquet.schema": {
         label: "Schema:",
-        tooltip: SetPollingSourceToolipsTexts.SCHEMA,
+        tooltip: SourcesToolipsTexts.SCHEMA,
         presentationComponent: SchemaPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-push-source-ReadStepParquet-schema",
+    },
+
+    "AddPushSource.ReadStepJsonLines.__typename": {
+        label: "Type:",
+        tooltip: SourcesToolipsTexts.READ_JSON_LINES,
+        presentationComponent: StepTypePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "add-push-source-ReadStepJsonLines-__typename",
+    },
+
+    "AddPushSource.ReadStepNdJson.__typename": {
+        label: "Type:",
+        tooltip: SourcesToolipsTexts.READ_ND_JSON,
+        presentationComponent: StepTypePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "add-push-source-ReadStepNdJson-__typename",
+    },
+
+    "AddPushSource.ReadStepJsonLines.primitivesAsString": {
+        label: "Primitive as string:",
+        tooltip: SourcesToolipsTexts.PRIMITIVE_AS_STRING,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "add-push-source-readStepJsonLines-primitivesAsString",
     },
 };

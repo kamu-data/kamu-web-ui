@@ -4,12 +4,11 @@ import { HashPropertyComponent } from "../common/hash-property/hash-property.com
 import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
 import { SizePropertyComponent } from "../common/size-property/size-property.component";
 import { AddDataToolipsTexts } from "src/app/common/tooltips/add-data.text";
-import { AddPushSourceToolipsTexts } from "src/app/common/tooltips/add-push-source.text";
 
 export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "AddData.string.addDataWatermark": {
         label: "Watermark:",
-        tooltip: AddPushSourceToolipsTexts.SOURCE_NAME,
+        tooltip: AddDataToolipsTexts.WATERMARK,
         presentationComponent: DisplayTimeComponent,
         separateRowForValue: false,
         dataTestId: "add-data-watermark",

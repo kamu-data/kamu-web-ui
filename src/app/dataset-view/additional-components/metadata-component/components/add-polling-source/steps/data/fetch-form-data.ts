@@ -1,6 +1,7 @@
 import AppValues from "src/app/common/app.values";
 import { ControlType, JsonFormData } from "../../add-polling-source-form.types";
 import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
+import { SourcesToolipsTexts } from "src/app/common/tooltips/sources.text";
 
 export const FETCH_FORM_DATA: JsonFormData = {
     url: {
@@ -37,7 +38,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 value: "",
                 label: "Headers",
                 type: ControlType.ARRAY_KEY_VALUE,
-                tooltip: SetPollingSourceToolipsTexts.HEADERS,
+                tooltip: SourcesToolipsTexts.HEADERS,
                 options: {
                     formArrayName: "headers",
                     buttonText: "+ Add headers",

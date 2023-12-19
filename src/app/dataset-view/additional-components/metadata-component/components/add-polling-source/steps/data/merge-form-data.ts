@@ -1,5 +1,5 @@
-import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
 import { ControlType, JsonFormData } from "../../add-polling-source-form.types";
+import { SourcesToolipsTexts } from "src/app/common/tooltips/sources.text";
 
 export const MERGE_FORM_DATA: JsonFormData = {
     append: {
@@ -13,7 +13,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
                 value: "",
                 type: ControlType.ARRAY_KEY,
                 placeholder: "Enter primary key...",
-                tooltip: SetPollingSourceToolipsTexts.PRIMARY_KEYS,
+                tooltip: SourcesToolipsTexts.PRIMARY_KEYS,
                 options: {
                     formArrayName: "primaryKey",
                     buttonText: "+ Add primary key",
@@ -29,7 +29,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
                 label: "Primary keys",
                 placeholder: "Enter primary key...",
                 value: "",
-                tooltip: SetPollingSourceToolipsTexts.PRIMARY_KEYS,
+                tooltip: SourcesToolipsTexts.PRIMARY_KEYS,
                 type: ControlType.ARRAY_KEY,
                 options: {
                     formArrayName: "primaryKey",
@@ -43,7 +43,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
                 placeholder: "Enter column name...",
                 value: "",
                 type: ControlType.ARRAY_KEY,
-                tooltip: SetPollingSourceToolipsTexts.COMPARE_COLUMNS,
+                tooltip: SourcesToolipsTexts.COMPARE_COLUMNS,
                 options: {
                     formArrayName: "compareColumns",
                     buttonText: "+ Add column name",
@@ -55,7 +55,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
                 label: "Observation column",
                 value: "",
                 type: ControlType.TEXT,
-                tooltip: SetPollingSourceToolipsTexts.OBSERVATION_COLUMN,
+                tooltip: SourcesToolipsTexts.OBSERVATION_COLUMN,
                 placeholder: "Enter column name...",
                 validators: {},
             },
@@ -64,7 +64,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
                 label: "Observation added",
                 value: "",
                 type: ControlType.TEXT,
-                tooltip: SetPollingSourceToolipsTexts.OBSERVATION_ADDED,
+                tooltip: SourcesToolipsTexts.OBSERVATION_ADDED,
                 placeholder: "Enter name...",
                 validators: {},
             },
@@ -73,7 +73,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
                 label: "Observation changed",
                 value: "",
                 type: ControlType.TEXT,
-                tooltip: SetPollingSourceToolipsTexts.OBSERVATION_CHANGED,
+                tooltip: SourcesToolipsTexts.OBSERVATION_CHANGED,
                 placeholder: "Enter name...",
                 validators: {},
             },
@@ -82,7 +82,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
                 label: "Observation removed",
                 value: "",
                 type: ControlType.TEXT,
-                tooltip: SetPollingSourceToolipsTexts.OBSERVATION_REMOVED,
+                tooltip: SourcesToolipsTexts.OBSERVATION_REMOVED,
                 placeholder: "Enter name...",
                 validators: {},
             },

@@ -10,7 +10,6 @@ export class AddPushSourceSectionBuilder extends EventSectionBuilder<AddPushSour
     };
 
     public buildEventSections(event: AddPushSource): EventSection[] {
-        console.log("work", event);
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {

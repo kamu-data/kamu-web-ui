@@ -7,7 +7,6 @@ import { DatasetSchema } from "src/app/interface/dataset.interface";
 @Component({
     selector: "app-set-data-schema-event",
     templateUrl: "./set-data-schema-event.component.html",
-    styleUrls: ["./set-data-schema-event.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetDataSchemaEventComponent {

@@ -1,0 +1,3 @@
+fragment PrepStepPipeData on PrepStepPipe {
+  command
+}

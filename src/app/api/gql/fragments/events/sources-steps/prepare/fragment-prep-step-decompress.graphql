@@ -1,0 +1,4 @@
+fragment PrepStepDecompressData on PrepStepDecompress {
+  format
+  subPath
+}

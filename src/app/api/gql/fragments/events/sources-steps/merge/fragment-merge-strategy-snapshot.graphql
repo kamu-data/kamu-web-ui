@@ -1,0 +1,8 @@
+fragment MergeStrategySnapshotData on MergeStrategySnapshot {
+  primaryKey
+  compareColumns
+  observationColumn
+  obsvAdded
+  obsvChanged
+  obsvRemoved
+}

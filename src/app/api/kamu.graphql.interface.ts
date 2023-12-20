@@ -1468,75 +1468,19 @@ export type AddPushSourceEventFragment = {
     __typename?: "AddPushSource";
     sourceName?: string | null;
     read:
-        | {
-              __typename?: "ReadStepCsv";
-              schema?: Array<string> | null;
-              separator?: string | null;
-              encoding?: string | null;
-              quote?: string | null;
-              escape?: string | null;
-              comment?: string | null;
-              header?: boolean | null;
-              enforceSchema?: boolean | null;
-              inferSchema?: boolean | null;
-              ignoreLeadingWhiteSpace?: boolean | null;
-              ignoreTrailingWhiteSpace?: boolean | null;
-              nullValue?: string | null;
-              emptyValue?: string | null;
-              nanValue?: string | null;
-              positiveInf?: string | null;
-              negativeInf?: string | null;
-              dateFormat?: string | null;
-              timestampFormat?: string | null;
-              multiLine?: boolean | null;
-          }
-        | { __typename?: "ReadStepEsriShapefile"; schema?: Array<string> | null; subPath?: string | null }
-        | { __typename?: "ReadStepGeoJson"; schema?: Array<string> | null }
-        | {
-              __typename?: "ReadStepJson";
-              subPath?: string | null;
-              schema?: Array<string> | null;
-              dateFormat?: string | null;
-              encoding?: string | null;
-              timestampFormat?: string | null;
-          }
-        | {
-              __typename?: "ReadStepJsonLines";
-              schema?: Array<string> | null;
-              dateFormat?: string | null;
-              encoding?: string | null;
-              multiLine?: boolean | null;
-              primitivesAsString?: boolean | null;
-              timestampFormat?: string | null;
-          }
-        | { __typename?: "ReadStepNdGeoJson"; schema?: Array<string> | null }
-        | {
-              __typename?: "ReadStepNdJson";
-              dateFormat?: string | null;
-              encoding?: string | null;
-              schema?: Array<string> | null;
-              timestampFormat?: string | null;
-          }
-        | { __typename?: "ReadStepParquet"; schema?: Array<string> | null };
+        | ({ __typename?: "ReadStepCsv" } & ReadStepCsvDataFragment)
+        | ({ __typename?: "ReadStepEsriShapefile" } & ReadStepEsriShapefileDataFragment)
+        | ({ __typename?: "ReadStepGeoJson" } & ReadStepGeoJsonDataFragment)
+        | ({ __typename?: "ReadStepJson" } & ReadStepJsonDataFragment)
+        | ({ __typename?: "ReadStepJsonLines" } & ReadStepJsonLinesDataFragment)
+        | ({ __typename?: "ReadStepNdGeoJson" } & ReadStepNdGeoJsonDataFragment)
+        | ({ __typename?: "ReadStepNdJson" } & ReadStepNdJsonDataFragment)
+        | ({ __typename?: "ReadStepParquet" } & ReadStepParquetDataFragment);
     merge:
-        | { __typename: "MergeStrategyAppend" }
-        | { __typename?: "MergeStrategyLedger"; primaryKey: Array<string> }
-        | {
-              __typename?: "MergeStrategySnapshot";
-              primaryKey: Array<string>;
-              compareColumns?: Array<string> | null;
-              observationColumn?: string | null;
-              obsvAdded?: string | null;
-              obsvChanged?: string | null;
-              obsvRemoved?: string | null;
-          };
-    preprocess?: {
-        __typename?: "TransformSql";
-        engine: string;
-        version?: string | null;
-        queries: Array<{ __typename?: "SqlQueryStep"; query: string; alias?: string | null }>;
-        temporalTables?: Array<{ __typename?: "TemporalTable"; name: string; primaryKey: Array<string> }> | null;
-    } | null;
+        | ({ __typename?: "MergeStrategyAppend" } & MergeStrategyAppendDataFragment)
+        | ({ __typename?: "MergeStrategyLedger" } & MergeStrategyLedgerDataFragment)
+        | ({ __typename?: "MergeStrategySnapshot" } & MergeStrategySnapshotDataFragment);
+    preprocess?: ({ __typename?: "TransformSql" } & PreprocessStepDataFragment) | null;
 };
 
 export type DisablePollingSourceEventFragment = { __typename?: "DisablePollingSource"; dummy?: string | null };
@@ -1586,109 +1530,27 @@ export type SetLicenseEventFragment = {
 export type SetPollingSourceEventFragment = {
     __typename?: "SetPollingSource";
     fetch:
-        | {
-              __typename?: "FetchStepContainer";
-              image: string;
-              command?: Array<string> | null;
-              args?: Array<string> | null;
-              env?: Array<{ __typename?: "EnvVar"; name: string; value?: string | null }> | null;
-          }
-        | {
-              __typename?: "FetchStepFilesGlob";
-              path: string;
-              order?: SourceOrdering | null;
-              eventTime?:
-                  | { __typename: "EventTimeSourceFromMetadata" }
-                  | { __typename?: "EventTimeSourceFromPath"; pattern: string; timestampFormat?: string | null }
-                  | { __typename: "EventTimeSourceFromSystemTime" }
-                  | null;
-              cache?: { __typename: "SourceCachingForever" } | null;
-          }
-        | {
-              __typename?: "FetchStepUrl";
-              url: string;
-              eventTime?:
-                  | { __typename: "EventTimeSourceFromMetadata" }
-                  | { __typename?: "EventTimeSourceFromPath"; pattern: string; timestampFormat?: string | null }
-                  | { __typename: "EventTimeSourceFromSystemTime" }
-                  | null;
-              headers?: Array<{ __typename?: "RequestHeader"; name: string; value: string }> | null;
-              cache?: { __typename: "SourceCachingForever" } | null;
-          };
+        | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
+        | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
+        | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
     read:
-        | {
-              __typename?: "ReadStepCsv";
-              schema?: Array<string> | null;
-              separator?: string | null;
-              encoding?: string | null;
-              quote?: string | null;
-              escape?: string | null;
-              comment?: string | null;
-              header?: boolean | null;
-              enforceSchema?: boolean | null;
-              inferSchema?: boolean | null;
-              ignoreLeadingWhiteSpace?: boolean | null;
-              ignoreTrailingWhiteSpace?: boolean | null;
-              nullValue?: string | null;
-              emptyValue?: string | null;
-              nanValue?: string | null;
-              positiveInf?: string | null;
-              negativeInf?: string | null;
-              dateFormat?: string | null;
-              timestampFormat?: string | null;
-              multiLine?: boolean | null;
-          }
-        | { __typename?: "ReadStepEsriShapefile"; schema?: Array<string> | null; subPath?: string | null }
-        | { __typename?: "ReadStepGeoJson"; schema?: Array<string> | null }
-        | {
-              __typename?: "ReadStepJson";
-              subPath?: string | null;
-              schema?: Array<string> | null;
-              dateFormat?: string | null;
-              encoding?: string | null;
-              timestampFormat?: string | null;
-          }
-        | {
-              __typename?: "ReadStepJsonLines";
-              schema?: Array<string> | null;
-              dateFormat?: string | null;
-              encoding?: string | null;
-              multiLine?: boolean | null;
-              primitivesAsString?: boolean | null;
-              timestampFormat?: string | null;
-          }
-        | { __typename?: "ReadStepNdGeoJson"; schema?: Array<string> | null }
-        | {
-              __typename?: "ReadStepNdJson";
-              dateFormat?: string | null;
-              encoding?: string | null;
-              schema?: Array<string> | null;
-              timestampFormat?: string | null;
-          }
-        | { __typename?: "ReadStepParquet"; schema?: Array<string> | null };
+        | ({ __typename?: "ReadStepCsv" } & ReadStepCsvDataFragment)
+        | ({ __typename?: "ReadStepEsriShapefile" } & ReadStepEsriShapefileDataFragment)
+        | ({ __typename?: "ReadStepGeoJson" } & ReadStepGeoJsonDataFragment)
+        | ({ __typename?: "ReadStepJson" } & ReadStepJsonDataFragment)
+        | ({ __typename?: "ReadStepJsonLines" } & ReadStepJsonLinesDataFragment)
+        | ({ __typename?: "ReadStepNdGeoJson" } & ReadStepNdGeoJsonDataFragment)
+        | ({ __typename?: "ReadStepNdJson" } & ReadStepNdJsonDataFragment)
+        | ({ __typename?: "ReadStepParquet" } & ReadStepParquetDataFragment);
     merge:
-        | { __typename: "MergeStrategyAppend" }
-        | { __typename?: "MergeStrategyLedger"; primaryKey: Array<string> }
-        | {
-              __typename?: "MergeStrategySnapshot";
-              primaryKey: Array<string>;
-              compareColumns?: Array<string> | null;
-              observationColumn?: string | null;
-              obsvAdded?: string | null;
-              obsvChanged?: string | null;
-              obsvRemoved?: string | null;
-          };
+        | ({ __typename?: "MergeStrategyAppend" } & MergeStrategyAppendDataFragment)
+        | ({ __typename?: "MergeStrategyLedger" } & MergeStrategyLedgerDataFragment)
+        | ({ __typename?: "MergeStrategySnapshot" } & MergeStrategySnapshotDataFragment);
     prepare?: Array<
-        | { __typename?: "PrepStepDecompress"; format: CompressionFormat; subPath?: string | null }
-        | { __typename?: "PrepStepPipe"; command: Array<string> }
+        | ({ __typename?: "PrepStepDecompress" } & PrepStepDecompressDataFragment)
+        | ({ __typename?: "PrepStepPipe" } & PrepStepPipeDataFragment)
     > | null;
-    preprocess?: {
-        __typename?: "TransformSql";
-        engine: string;
-        version?: string | null;
-        queries: Array<{ __typename?: "SqlQueryStep"; query: string; alias?: string | null }>;
-        temporalTables?: Array<{ __typename?: "TemporalTable"; name: string; primaryKey: Array<string> }> | null;
-    } | null;
+    preprocess?: ({ __typename?: "TransformSql" } & PreprocessStepDataFragment) | null;
 };
 
 export type SetVocabEventFragment = {
@@ -1699,6 +1561,130 @@ export type SetVocabEventFragment = {
 };
 
 export type SetWatermarkEventFragment = { __typename?: "SetWatermark"; outputWatermark: string };
+
+export type FetchStepContainerDataFragment = {
+    __typename?: "FetchStepContainer";
+    image: string;
+    command?: Array<string> | null;
+    args?: Array<string> | null;
+    env?: Array<{ __typename?: "EnvVar"; name: string; value?: string | null }> | null;
+};
+
+export type FetchStepFilesGlobDataFragment = {
+    __typename?: "FetchStepFilesGlob";
+    path: string;
+    order?: SourceOrdering | null;
+    eventTime?:
+        | { __typename: "EventTimeSourceFromMetadata" }
+        | { __typename?: "EventTimeSourceFromPath"; pattern: string; timestampFormat?: string | null }
+        | { __typename: "EventTimeSourceFromSystemTime" }
+        | null;
+    cache?: { __typename: "SourceCachingForever" } | null;
+};
+
+export type FetchStepUrlDataFragment = {
+    __typename?: "FetchStepUrl";
+    url: string;
+    eventTime?:
+        | { __typename: "EventTimeSourceFromMetadata" }
+        | { __typename?: "EventTimeSourceFromPath"; pattern: string; timestampFormat?: string | null }
+        | { __typename: "EventTimeSourceFromSystemTime" }
+        | null;
+    headers?: Array<{ __typename?: "RequestHeader"; name: string; value: string }> | null;
+    cache?: { __typename: "SourceCachingForever" } | null;
+};
+
+export type MergeStrategyAppendDataFragment = { __typename: "MergeStrategyAppend" };
+
+export type MergeStrategyLedgerDataFragment = { __typename?: "MergeStrategyLedger"; primaryKey: Array<string> };
+
+export type MergeStrategySnapshotDataFragment = {
+    __typename?: "MergeStrategySnapshot";
+    primaryKey: Array<string>;
+    compareColumns?: Array<string> | null;
+    observationColumn?: string | null;
+    obsvAdded?: string | null;
+    obsvChanged?: string | null;
+    obsvRemoved?: string | null;
+};
+
+export type PrepStepDecompressDataFragment = {
+    __typename?: "PrepStepDecompress";
+    format: CompressionFormat;
+    subPath?: string | null;
+};
+
+export type PrepStepPipeDataFragment = { __typename?: "PrepStepPipe"; command: Array<string> };
+
+export type PreprocessStepDataFragment = {
+    __typename?: "TransformSql";
+    engine: string;
+    version?: string | null;
+    queries: Array<{ __typename?: "SqlQueryStep"; query: string; alias?: string | null }>;
+    temporalTables?: Array<{ __typename?: "TemporalTable"; name: string; primaryKey: Array<string> }> | null;
+};
+
+export type ReadStepCsvDataFragment = {
+    __typename?: "ReadStepCsv";
+    schema?: Array<string> | null;
+    separator?: string | null;
+    encoding?: string | null;
+    quote?: string | null;
+    escape?: string | null;
+    comment?: string | null;
+    header?: boolean | null;
+    enforceSchema?: boolean | null;
+    inferSchema?: boolean | null;
+    ignoreLeadingWhiteSpace?: boolean | null;
+    ignoreTrailingWhiteSpace?: boolean | null;
+    nullValue?: string | null;
+    emptyValue?: string | null;
+    nanValue?: string | null;
+    positiveInf?: string | null;
+    negativeInf?: string | null;
+    dateFormat?: string | null;
+    timestampFormat?: string | null;
+    multiLine?: boolean | null;
+};
+
+export type ReadStepEsriShapefileDataFragment = {
+    __typename?: "ReadStepEsriShapefile";
+    schema?: Array<string> | null;
+    subPath?: string | null;
+};
+
+export type ReadStepGeoJsonDataFragment = { __typename?: "ReadStepGeoJson"; schema?: Array<string> | null };
+
+export type ReadStepJsonLinesDataFragment = {
+    __typename?: "ReadStepJsonLines";
+    schema?: Array<string> | null;
+    dateFormat?: string | null;
+    encoding?: string | null;
+    multiLine?: boolean | null;
+    primitivesAsString?: boolean | null;
+    timestampFormat?: string | null;
+};
+
+export type ReadStepJsonDataFragment = {
+    __typename?: "ReadStepJson";
+    subPath?: string | null;
+    schema?: Array<string> | null;
+    dateFormat?: string | null;
+    encoding?: string | null;
+    timestampFormat?: string | null;
+};
+
+export type ReadStepNdGeoJsonDataFragment = { __typename?: "ReadStepNdGeoJson"; schema?: Array<string> | null };
+
+export type ReadStepNdJsonDataFragment = {
+    __typename?: "ReadStepNdJson";
+    dateFormat?: string | null;
+    encoding?: string | null;
+    schema?: Array<string> | null;
+    timestampFormat?: string | null;
+};
+
+export type ReadStepParquetDataFragment = { __typename?: "ReadStepParquet"; schema?: Array<string> | null };
 
 export type AccountBasicsFragment = { __typename?: "Account"; id: string; accountName: string };
 
@@ -2288,157 +2274,225 @@ export const DatasetCurrentInfoFragmentDoc = gql`
         keywords
     }
 `;
-export const SetPollingSourceEventFragmentDoc = gql`
-    fragment SetPollingSourceEvent on SetPollingSource {
-        fetch {
-            ... on FetchStepUrl {
-                url
-                eventTime {
-                    ... on EventTimeSourceFromPath {
-                        pattern
-                        timestampFormat
-                    }
-                    ... on EventTimeSourceFromMetadata {
-                        __typename
-                    }
-                    ... on EventTimeSourceFromSystemTime {
-                        __typename
-                    }
-                }
-                headers {
-                    name
-                    value
-                }
-                cache {
-                    __typename
-                }
-            }
-            ... on FetchStepFilesGlob {
-                path
-                eventTime {
-                    ... on EventTimeSourceFromPath {
-                        pattern
-                        timestampFormat
-                    }
-                    ... on EventTimeSourceFromMetadata {
-                        __typename
-                    }
-                    ... on EventTimeSourceFromSystemTime {
-                        __typename
-                    }
-                }
-                cache {
-                    __typename
-                }
-                order
-            }
-            ... on FetchStepContainer {
-                image
-                command
-                args
-                env {
-                    name
-                    value
-                }
-            }
-        }
-        read {
-            ... on ReadStepCsv {
-                schema
-                separator
-                encoding
-                quote
-                escape
-                comment
-                header
-                enforceSchema
-                inferSchema
-                ignoreLeadingWhiteSpace
-                ignoreTrailingWhiteSpace
-                nullValue
-                emptyValue
-                nanValue
-                positiveInf
-                negativeInf
-                dateFormat
-                timestampFormat
-                multiLine
-            }
-            ... on ReadStepGeoJson {
-                schema
-            }
-            ... on ReadStepParquet {
-                schema
-            }
-            ... on ReadStepJsonLines {
-                schema
-                dateFormat
-                encoding
-                multiLine
-                primitivesAsString
+export const FetchStepUrlDataFragmentDoc = gql`
+    fragment FetchStepUrlData on FetchStepUrl {
+        url
+        eventTime {
+            ... on EventTimeSourceFromPath {
+                pattern
                 timestampFormat
             }
-            ... on ReadStepEsriShapefile {
-                schema
-                subPath
+            ... on EventTimeSourceFromMetadata {
+                __typename
             }
-            ... on ReadStepJson {
-                subPath
-                schema
-                dateFormat
-                encoding
-                timestampFormat
-            }
-            ... on ReadStepNdGeoJson {
-                schema
-            }
-            ... on ReadStepNdJson {
-                dateFormat
-                encoding
-                schema
-                timestampFormat
-            }
-        }
-        merge {
-            ... on MergeStrategySnapshot {
-                primaryKey
-                compareColumns
-                observationColumn
-                obsvAdded
-                obsvChanged
-                obsvRemoved
-            }
-            ... on MergeStrategyLedger {
-                primaryKey
-            }
-            ... on MergeStrategyAppend {
+            ... on EventTimeSourceFromSystemTime {
                 __typename
             }
         }
-        prepare {
-            ... on PrepStepDecompress {
-                format
-                subPath
-            }
-            ... on PrepStepPipe {
-                command
-            }
+        headers {
+            name
+            value
         }
-        preprocess {
-            ... on TransformSql {
-                engine
-                version
-                queries {
-                    query
-                    alias
-                }
-                temporalTables {
-                    name
-                    primaryKey
-                }
-            }
+        cache {
+            __typename
         }
     }
+`;
+export const FetchStepFilesGlobDataFragmentDoc = gql`
+    fragment FetchStepFilesGlobData on FetchStepFilesGlob {
+        path
+        eventTime {
+            ... on EventTimeSourceFromPath {
+                pattern
+                timestampFormat
+            }
+            ... on EventTimeSourceFromMetadata {
+                __typename
+            }
+            ... on EventTimeSourceFromSystemTime {
+                __typename
+            }
+        }
+        cache {
+            __typename
+        }
+        order
+    }
+`;
+export const FetchStepContainerDataFragmentDoc = gql`
+    fragment FetchStepContainerData on FetchStepContainer {
+        image
+        command
+        args
+        env {
+            name
+            value
+        }
+    }
+`;
+export const ReadStepCsvDataFragmentDoc = gql`
+    fragment ReadStepCsvData on ReadStepCsv {
+        schema
+        separator
+        encoding
+        quote
+        escape
+        comment
+        header
+        enforceSchema
+        inferSchema
+        ignoreLeadingWhiteSpace
+        ignoreTrailingWhiteSpace
+        nullValue
+        emptyValue
+        nanValue
+        positiveInf
+        negativeInf
+        dateFormat
+        timestampFormat
+        multiLine
+    }
+`;
+export const ReadStepGeoJsonDataFragmentDoc = gql`
+    fragment ReadStepGeoJsonData on ReadStepGeoJson {
+        schema
+    }
+`;
+export const ReadStepParquetDataFragmentDoc = gql`
+    fragment ReadStepParquetData on ReadStepParquet {
+        schema
+    }
+`;
+export const ReadStepJsonLinesDataFragmentDoc = gql`
+    fragment ReadStepJsonLinesData on ReadStepJsonLines {
+        schema
+        dateFormat
+        encoding
+        multiLine
+        primitivesAsString
+        timestampFormat
+    }
+`;
+export const ReadStepEsriShapefileDataFragmentDoc = gql`
+    fragment ReadStepEsriShapefileData on ReadStepEsriShapefile {
+        schema
+        subPath
+    }
+`;
+export const ReadStepJsonDataFragmentDoc = gql`
+    fragment ReadStepJsonData on ReadStepJson {
+        subPath
+        schema
+        dateFormat
+        encoding
+        timestampFormat
+    }
+`;
+export const ReadStepNdGeoJsonDataFragmentDoc = gql`
+    fragment ReadStepNdGeoJsonData on ReadStepNdGeoJson {
+        schema
+    }
+`;
+export const ReadStepNdJsonDataFragmentDoc = gql`
+    fragment ReadStepNdJsonData on ReadStepNdJson {
+        dateFormat
+        encoding
+        schema
+        timestampFormat
+    }
+`;
+export const MergeStrategySnapshotDataFragmentDoc = gql`
+    fragment MergeStrategySnapshotData on MergeStrategySnapshot {
+        primaryKey
+        compareColumns
+        observationColumn
+        obsvAdded
+        obsvChanged
+        obsvRemoved
+    }
+`;
+export const MergeStrategyLedgerDataFragmentDoc = gql`
+    fragment MergeStrategyLedgerData on MergeStrategyLedger {
+        primaryKey
+    }
+`;
+export const MergeStrategyAppendDataFragmentDoc = gql`
+    fragment MergeStrategyAppendData on MergeStrategyAppend {
+        __typename
+    }
+`;
+export const PrepStepDecompressDataFragmentDoc = gql`
+    fragment PrepStepDecompressData on PrepStepDecompress {
+        format
+        subPath
+    }
+`;
+export const PrepStepPipeDataFragmentDoc = gql`
+    fragment PrepStepPipeData on PrepStepPipe {
+        command
+    }
+`;
+export const PreprocessStepDataFragmentDoc = gql`
+    fragment PreprocessStepData on TransformSql {
+        engine
+        version
+        queries {
+            query
+            alias
+        }
+        temporalTables {
+            name
+            primaryKey
+        }
+    }
+`;
+export const SetPollingSourceEventFragmentDoc = gql`
+    fragment SetPollingSourceEvent on SetPollingSource {
+        fetch {
+            ...FetchStepUrlData
+            ...FetchStepFilesGlobData
+            ...FetchStepContainerData
+        }
+        read {
+            ...ReadStepCsvData
+            ...ReadStepGeoJsonData
+            ...ReadStepParquetData
+            ...ReadStepJsonLinesData
+            ...ReadStepEsriShapefileData
+            ...ReadStepJsonData
+            ...ReadStepNdGeoJsonData
+            ...ReadStepNdJsonData
+        }
+        merge {
+            ...MergeStrategySnapshotData
+            ...MergeStrategyLedgerData
+            ...MergeStrategyAppendData
+        }
+        prepare {
+            ...PrepStepDecompressData
+            ...PrepStepPipeData
+        }
+        preprocess {
+            ...PreprocessStepData
+        }
+    }
+    ${FetchStepUrlDataFragmentDoc}
+    ${FetchStepFilesGlobDataFragmentDoc}
+    ${FetchStepContainerDataFragmentDoc}
+    ${ReadStepCsvDataFragmentDoc}
+    ${ReadStepGeoJsonDataFragmentDoc}
+    ${ReadStepParquetDataFragmentDoc}
+    ${ReadStepJsonLinesDataFragmentDoc}
+    ${ReadStepEsriShapefileDataFragmentDoc}
+    ${ReadStepJsonDataFragmentDoc}
+    ${ReadStepNdGeoJsonDataFragmentDoc}
+    ${ReadStepNdJsonDataFragmentDoc}
+    ${MergeStrategySnapshotDataFragmentDoc}
+    ${MergeStrategyLedgerDataFragmentDoc}
+    ${MergeStrategyAppendDataFragmentDoc}
+    ${PrepStepDecompressDataFragmentDoc}
+    ${PrepStepPipeDataFragmentDoc}
+    ${PreprocessStepDataFragmentDoc}
 `;
 export const DatasetTransformContentFragmentDoc = gql`
     fragment DatasetTransformContent on TransformSql {
@@ -2574,93 +2628,36 @@ export const AddPushSourceEventFragmentDoc = gql`
     fragment AddPushSourceEvent on AddPushSource {
         sourceName
         read {
-            ... on ReadStepCsv {
-                schema
-                separator
-                encoding
-                quote
-                escape
-                comment
-                header
-                enforceSchema
-                inferSchema
-                ignoreLeadingWhiteSpace
-                ignoreTrailingWhiteSpace
-                nullValue
-                emptyValue
-                nanValue
-                positiveInf
-                negativeInf
-                dateFormat
-                timestampFormat
-                multiLine
-            }
-            ... on ReadStepGeoJson {
-                schema
-            }
-            ... on ReadStepParquet {
-                schema
-            }
-            ... on ReadStepJsonLines {
-                schema
-                dateFormat
-                encoding
-                multiLine
-                primitivesAsString
-                timestampFormat
-            }
-            ... on ReadStepEsriShapefile {
-                schema
-                subPath
-            }
-            ... on ReadStepJson {
-                subPath
-                schema
-                dateFormat
-                encoding
-                timestampFormat
-            }
-            ... on ReadStepNdGeoJson {
-                schema
-            }
-            ... on ReadStepNdJson {
-                dateFormat
-                encoding
-                schema
-                timestampFormat
-            }
+            ...ReadStepCsvData
+            ...ReadStepGeoJsonData
+            ...ReadStepParquetData
+            ...ReadStepJsonLinesData
+            ...ReadStepEsriShapefileData
+            ...ReadStepJsonData
+            ...ReadStepNdGeoJsonData
+            ...ReadStepNdJsonData
         }
         merge {
-            ... on MergeStrategySnapshot {
-                primaryKey
-                compareColumns
-                observationColumn
-                obsvAdded
-                obsvChanged
-                obsvRemoved
-            }
-            ... on MergeStrategyLedger {
-                primaryKey
-            }
-            ... on MergeStrategyAppend {
-                __typename
-            }
+            ...MergeStrategySnapshotData
+            ...MergeStrategyLedgerData
+            ...MergeStrategyAppendData
         }
         preprocess {
-            ... on TransformSql {
-                engine
-                version
-                queries {
-                    query
-                    alias
-                }
-                temporalTables {
-                    name
-                    primaryKey
-                }
-            }
+            ...PreprocessStepData
         }
     }
+    ${ReadStepCsvDataFragmentDoc}
+    ${ReadStepGeoJsonDataFragmentDoc}
+    ${ReadStepParquetDataFragmentDoc}
+    ${ReadStepJsonLinesDataFragmentDoc}
+    ${ReadStepEsriShapefileDataFragmentDoc}
+    ${ReadStepJsonDataFragmentDoc}
+    ${ReadStepNdGeoJsonDataFragmentDoc}
+    ${ReadStepNdJsonDataFragmentDoc}
+    ${MergeStrategySnapshotDataFragmentDoc}
+    ${MergeStrategyLedgerDataFragmentDoc}
+    ${MergeStrategyAppendDataFragmentDoc}
+    ${PreprocessStepDataFragmentDoc}
 `;
 export const SetDataSchemaEventFragmentDoc = gql`
     fragment SetDataSchemaEvent on SetDataSchema {

@@ -1,0 +1,6 @@
+fragment ReadStepNdJsonData on ReadStepNdJson {
+  dateFormat
+  encoding
+  schema
+  timestampFormat
+}

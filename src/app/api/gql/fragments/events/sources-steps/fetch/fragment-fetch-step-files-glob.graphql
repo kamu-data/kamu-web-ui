@@ -1,0 +1,19 @@
+fragment FetchStepFilesGlobData on FetchStepFilesGlob {
+  path
+  eventTime {
+    ... on EventTimeSourceFromPath {
+      pattern
+      timestampFormat
+    }
+    ... on EventTimeSourceFromMetadata {
+      __typename
+    }
+    ... on EventTimeSourceFromSystemTime {
+      __typename
+    }
+  }
+  cache {
+    __typename
+  }
+  order
+}

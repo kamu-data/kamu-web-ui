@@ -8,10 +8,11 @@ import {
     NameValue,
     ReadKind,
 } from "./add-polling-source-form.types";
-import { AddPushSourceSection, SetPollingSourceSection } from "src/app/shared/shared.types";
+import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { BaseYamlEventService } from "src/app/common/base-yaml-event.service";
+import { SourcesSection } from "./process-form.service.types";
 
 @Injectable({
     providedIn: "root",
@@ -33,7 +34,7 @@ export class EditPollingSourceService extends BaseYamlEventService {
     public patchFormValues(
         sectionForm: FormGroup,
         editFormValue: AddPollingSourceEditFormType,
-        groupName: SetPollingSourceSection | AddPushSourceSection,
+        groupName: SourcesSection,
     ): void {
         switch (groupName) {
             case SetPollingSourceSection.FETCH: {

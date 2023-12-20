@@ -7,7 +7,7 @@ import { BaseMainEventComponent } from "../base-main-event.component";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { EditPollingSourceService } from "../add-polling-source/edit-polling-source.service";
 import { ProcessFormService } from "../add-polling-source/process-form.service";
-import { AddPushSourceSection, SetPollingSourceSection } from "src/app/shared/shared.types";
+import { AddPushSourceSection } from "src/app/shared/shared.types";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "src/app/common/app.types";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
@@ -16,6 +16,7 @@ import { from } from "rxjs";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { AddPushSourceEditFormType } from "./add-push-source-form.types";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
+import { SourcesSection } from "../add-polling-source/process-form.service.types";
 
 @Component({
     selector: "app-add-push-source",
@@ -93,7 +94,7 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
         });
     }
 
-    public changeStep(step: SetPollingSourceSection | AddPushSourceSection): void {
+    public changeStep(step: SourcesSection): void {
         this.currentStep = step as AddPushSourceSection;
     }
 

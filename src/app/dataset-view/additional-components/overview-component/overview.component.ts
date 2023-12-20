@@ -110,6 +110,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         }
     }
 
+    // TODO: To replace it to faster API
     public get canAddPushSource(): boolean {
         if (this.currentState && this.datasetPermissions.permissions.canCommit) {
             return (

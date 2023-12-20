@@ -1,8 +1,8 @@
 import { TestBed } from "@angular/core/testing";
 import { ProcessFormService } from "./process-form.service";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
-import { SchemaControlType } from "./process-form.service.types";
-import { PrepareKind } from "./add-polling-source-form.types";
+import { SchemaControlType } from "../components/add-polling-source/process-form.service.types";
+import { PrepareKind } from "../components/add-polling-source/add-polling-source-form.types";
 
 describe("ProcessFormService", () => {
     let service: ProcessFormService;

@@ -6,7 +6,7 @@ import { READ_FORM_DATA } from "../add-polling-source/steps/data/read-form-data"
 import { BaseMainEventComponent } from "../base-main-event.component";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { EditPollingSourceService } from "../add-polling-source/edit-polling-source.service";
-import { ProcessFormService } from "../add-polling-source/process-form.service";
+import { ProcessFormService } from "../../services/process-form.service";
 import { AddPushSourceSection } from "src/app/shared/shared.types";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "src/app/common/app.types";

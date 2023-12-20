@@ -1,10 +1,18 @@
 import { Injectable } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { SchemaType } from "../form-components/schema-field/schema-field.component";
-import { SchemaControlType, OrderControlType, SourceOrder } from "./process-form.service.types";
+import { SchemaType } from "../components/form-components/schema-field/schema-field.component";
+import {
+    SchemaControlType,
+    OrderControlType,
+    SourceOrder,
+} from "../components/add-polling-source/process-form.service.types";
 import { AddPushSource, SetPollingSource } from "src/app/api/kamu.graphql.interface";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { AddPollingSourceEditFormType, FetchKind, PrepareKind } from "./add-polling-source-form.types";
+import {
+    AddPollingSourceEditFormType,
+    FetchKind,
+    PrepareKind,
+} from "../components/add-polling-source/add-polling-source-form.types";
 import AppValues from "src/app/common/app.values";
 import { has } from "lodash";
 

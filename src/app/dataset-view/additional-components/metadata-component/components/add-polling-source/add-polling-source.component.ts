@@ -15,7 +15,7 @@ import { FETCH_STEP_RADIO_CONTROLS, MERGE_STEP_RADIO_CONTROLS, READ_STEP_RADIO_C
 import { FETCH_FORM_DATA } from "./steps/data/fetch-form-data";
 import { READ_FORM_DATA } from "./steps/data/read-form-data";
 import { MERGE_FORM_DATA } from "./steps/data/merge-form-data";
-import { ProcessFormService } from "./process-form.service";
+import { ProcessFormService } from "../../services/process-form.service";
 import { EditPollingSourceService } from "./edit-polling-source.service";
 import { from } from "rxjs";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";

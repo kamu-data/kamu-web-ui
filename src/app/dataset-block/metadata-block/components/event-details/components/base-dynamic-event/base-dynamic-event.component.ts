@@ -11,19 +11,22 @@ import {
 } from "@angular/core";
 import { EventRow, EventSection } from "../../dynamic-events/dynamic-events.model";
 import { BasePropertyComponent } from "../common/base-property/base-property.component";
+import { BaseComponent } from "src/app/common/base.component";
 
 @Component({
     selector: "app-dynamic-base-event",
     templateUrl: "./base-dynamic-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BaseDynamicEventComponent<TEvent extends object> implements AfterViewChecked {
+export class BaseDynamicEventComponent<TEvent extends object> extends BaseComponent implements AfterViewChecked {
     @Input() public event: TEvent;
     @ViewChildren("container", { read: ViewContainerRef })
     container: QueryList<ViewContainerRef>;
     public eventSections: EventSection[];
 
-    public constructor(protected cdr: ChangeDetectorRef) {}
+    public constructor(protected cdr: ChangeDetectorRef) {
+        super();
+    }
 
     ngAfterViewChecked(): void {
         let componentRef: ComponentRef<BasePropertyComponent>;

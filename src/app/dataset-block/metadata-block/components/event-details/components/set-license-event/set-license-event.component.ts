@@ -1,3 +1,4 @@
+import { BaseComponent } from "src/app/common/base.component";
 import { SetLicense } from "../../../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
@@ -6,6 +7,6 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
     templateUrl: "./set-license-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SetLicenseEventComponent {
+export class SetLicenseEventComponent extends BaseComponent {
     @Input() public event: SetLicense;
 }

@@ -10,6 +10,7 @@ import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.compone
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("SeedEventComponent", () => {
     let component: SeedEventComponent;
@@ -25,6 +26,7 @@ describe("SeedEventComponent", () => {
                 NgbTooltipModule,
                 AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
+                SharedTestModule,
             ],
         }).compileComponents();
 

@@ -122,7 +122,7 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
         );
     }
 
-    protected onSaveEvent(): void {
+    public onSaveEvent(): void {
         this.processFormService.transformForm(this.addPushSourceForm);
         this.trackSubscription(
             this.datasetCommitService

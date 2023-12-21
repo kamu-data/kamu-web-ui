@@ -421,8 +421,9 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
 export function getSourcesDescriptors(key: string): EventRowDescriptor {
     const data = key.split(".");
     const dataTestId = SOURCES_EVENT_DESCRIPTORS[`${data[1]}.${data[2]}`].dataTestId;
+    const prefix = data[0][0].toLowerCase() + data[0].slice(1);
     return {
         ...SOURCES_EVENT_DESCRIPTORS[`${data[1]}.${data[2]}`],
-        dataTestId: `${data[0].toLowerCase() + data[0].slice(1)}-${dataTestId ? dataTestId : "unknown-key"}`,
+        dataTestId: `${prefix}-${dataTestId ? dataTestId : "unknown-key"}`,
     };
 }

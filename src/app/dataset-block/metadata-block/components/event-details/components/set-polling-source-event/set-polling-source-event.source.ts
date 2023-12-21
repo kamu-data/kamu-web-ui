@@ -16,6 +16,7 @@ import { OrderPropertyComponent } from "../common/order-property/order-property.
 import { CommandPropertyComponent } from "../common/command-property/command-property.component";
 import { StepTypePropertyComponent } from "../common/step-type-property/step-type-property.component";
 import { SourcesToolipsTexts } from "src/app/common/tooltips/sources.text";
+import { getSourcesDescriptors } from "../common-sources/sources-event.source";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepUrl.__typename": {
@@ -138,333 +139,107 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "setPollingSource-fetchStepContainer-env",
     },
 
-    "SetPollingSource.MergeStrategyLedger.__typename": {
-        label: "Strategy:",
-        tooltip: SourcesToolipsTexts.MERGE_STRATEGY_LEDGER,
-        presentationComponent: MergeStrategyPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-mergeStrategyLedger-__typename",
-    },
+    "SetPollingSource.MergeStrategyLedger.__typename": getSourcesDescriptors(
+        "SetPollingSource.MergeStrategyLedger.__typename",
+    ),
 
-    "SetPollingSource.MergeStrategyAppend.__typename": {
-        label: "Strategy:",
-        tooltip: SourcesToolipsTexts.MERGE_STRATEGY_APPEND,
-        presentationComponent: MergeStrategyPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-mergeStrategyAppend-__typename",
-    },
+    "SetPollingSource.MergeStrategyAppend.__typename": getSourcesDescriptors(
+        "SetPollingSource.MergeStrategyAppend.__typename",
+    ),
 
-    "SetPollingSource.MergeStrategyLedger.primaryKey": {
-        label: "Primary key:",
-        tooltip: SourcesToolipsTexts.PRIMARY_KEYS,
-        presentationComponent: CardsPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-mergeStrategyLedger-primaryKey",
-    },
+    "SetPollingSource.MergeStrategyLedger.primaryKey": getSourcesDescriptors(
+        "SetPollingSource.MergeStrategyLedger.primaryKey",
+    ),
 
-    "SetPollingSource.TransformSql.engine": {
-        label: "Engine:",
-        tooltip: SourcesToolipsTexts.ENGINE,
-        presentationComponent: EnginePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-transformSql-engine",
-    },
+    "SetPollingSource.TransformSql.engine": getSourcesDescriptors("SetPollingSource.TransformSql.engine"),
 
-    "SetPollingSource.TransformSql.queries": {
-        label: "Queries:",
-        tooltip: SourcesToolipsTexts.QUERIES,
-        presentationComponent: SqlQueryViewerComponent,
-        separateRowForValue: true,
-        dataTestId: "setPollingSource-transformSql-queries",
-    },
+    "SetPollingSource.TransformSql.queries": getSourcesDescriptors("SetPollingSource.TransformSql.queries"),
 
-    "SetPollingSource.ReadStepJsonLines.__typename": {
-        label: "Type:",
-        tooltip: SourcesToolipsTexts.READ_JSON_LINES,
-        presentationComponent: StepTypePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepJsonLines-__typename",
-    },
+    "SetPollingSource.ReadStepJsonLines.__typename": getSourcesDescriptors(
+        "SetPollingSource.ReadStepJsonLines.__typename",
+    ),
 
-    "SetPollingSource.ReadStepJsonLines.schema": {
-        label: "Schema:",
-        tooltip: SourcesToolipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepJsonLines-schema",
-    },
+    "SetPollingSource.ReadStepJsonLines.schema": getSourcesDescriptors("SetPollingSource.ReadStepJsonLines.schema"),
 
-    "SetPollingSource.ReadStepCsv.__typename": {
-        label: "Type:",
-        tooltip: SourcesToolipsTexts.READ_CSV,
-        presentationComponent: StepTypePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepCsv-__typename",
-    },
+    "SetPollingSource.ReadStepCsv.__typename": getSourcesDescriptors("SetPollingSource.ReadStepCsv.__typename"),
 
-    "SetPollingSource.ReadStepCsv.separator": {
-        label: "Separator:",
-        tooltip: SourcesToolipsTexts.SEPARATOR,
-        presentationComponent: SeparatorPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-separator",
-    },
+    "SetPollingSource.ReadStepCsv.separator": getSourcesDescriptors("SetPollingSource.ReadStepCsv.separator"),
 
-    "SetPollingSource.ReadStepCsv.schema": {
-        label: "Schema:",
-        tooltip: SourcesToolipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-schema",
-    },
+    "SetPollingSource.ReadStepCsv.schema": getSourcesDescriptors("SetPollingSource.ReadStepCsv.schema"),
 
-    "SetPollingSource.ReadStepCsv.encoding": {
-        label: "Encoding:",
-        tooltip: SourcesToolipsTexts.ENCODING,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-encoding",
-    },
+    "SetPollingSource.ReadStepCsv.encoding": getSourcesDescriptors("SetPollingSource.ReadStepCsv.encoding"),
 
-    "SetPollingSource.ReadStepCsv.quote": {
-        label: "Quote character:",
-        tooltip: SourcesToolipsTexts.QUOTE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-quote",
-    },
+    "SetPollingSource.ReadStepCsv.quote": getSourcesDescriptors("SetPollingSource.ReadStepCsv.quote"),
 
-    "SetPollingSource.ReadStepCsv.escape": {
-        label: "Escape character:",
-        tooltip: SourcesToolipsTexts.ESCAPE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-escape",
-    },
+    "SetPollingSource.ReadStepCsv.escape": getSourcesDescriptors("SetPollingSource.ReadStepCsv.escape"),
 
-    "SetPollingSource.ReadStepCsv.comment": {
-        label: "Comment character:",
-        tooltip: SourcesToolipsTexts.COMMENT,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-comment",
-    },
+    "SetPollingSource.ReadStepCsv.comment": getSourcesDescriptors("SetPollingSource.ReadStepCsv.comment"),
 
-    "SetPollingSource.ReadStepCsv.header": {
-        label: "Header:",
-        tooltip: SourcesToolipsTexts.HEADER,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-header",
-    },
+    "SetPollingSource.ReadStepCsv.header": getSourcesDescriptors("SetPollingSource.ReadStepCsv.header"),
 
-    "SetPollingSource.ReadStepCsv.enforceSchema": {
-        label: "Enforce schema:",
-        tooltip: SourcesToolipsTexts.ENFORCE_SCHEMA,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-enforceSchema",
-    },
+    "SetPollingSource.ReadStepCsv.enforceSchema": getSourcesDescriptors("SetPollingSource.ReadStepCsv.enforceSchema"),
 
-    "SetPollingSource.ReadStepCsv.inferSchema": {
-        label: "Infer schema:",
-        tooltip: SourcesToolipsTexts.INFER_SCHEMA,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-inferSchema",
-    },
+    "SetPollingSource.ReadStepCsv.inferSchema": getSourcesDescriptors("SetPollingSource.ReadStepCsv.inferSchema"),
 
-    "SetPollingSource.ReadStepCsv.ignoreLeadingWhiteSpace": {
-        label: "Ignore leading whitespace:",
-        tooltip: SourcesToolipsTexts.IGNORE_LEADING_WHITESPACE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-ignoreLeadingWhiteSpace",
-    },
+    "SetPollingSource.ReadStepCsv.ignoreLeadingWhiteSpace": getSourcesDescriptors(
+        "SetPollingSource.ReadStepCsv.ignoreLeadingWhiteSpace",
+    ),
 
-    "SetPollingSource.ReadStepCsv.ignoreTrailingWhiteSpace": {
-        label: "Ignore trailing whitespace:",
-        tooltip: SourcesToolipsTexts.QUIGNORE_TRAILING_WHITESPACEOTE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-ignoreTrailingWhiteSpace",
-    },
+    "SetPollingSource.ReadStepCsv.ignoreTrailingWhiteSpace": getSourcesDescriptors(
+        "SetPollingSource.ReadStepCsv.ignoreTrailingWhiteSpace",
+    ),
 
-    "SetPollingSource.ReadStepCsv.nullValue": {
-        label: "Null value:",
-        tooltip: SourcesToolipsTexts.NULL_VALUE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-nullValue",
-    },
+    "SetPollingSource.ReadStepCsv.nullValue": getSourcesDescriptors("SetPollingSource.ReadStepCsv.nullValue"),
 
-    "SetPollingSource.ReadStepCsv.emptyValue": {
-        label: "Empty value:",
-        tooltip: SourcesToolipsTexts.EMPTY_VALUE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-emptyValue",
-    },
+    "SetPollingSource.ReadStepCsv.emptyValue": getSourcesDescriptors("SetPollingSource.ReadStepCsv.emptyValue"),
 
-    "SetPollingSource.ReadStepCsv.nanValue": {
-        label: "Nan value:",
-        tooltip: SourcesToolipsTexts.NAN_VALUE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-nanValue",
-    },
+    "SetPollingSource.ReadStepCsv.nanValue": getSourcesDescriptors("SetPollingSource.ReadStepCsv.nanValue"),
 
-    "SetPollingSource.ReadStepCsv.positiveInf": {
-        label: "Possitive infinity:",
-        tooltip: SourcesToolipsTexts.POSITIVE_INFINITY,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-positiveInf",
-    },
+    "SetPollingSource.ReadStepCsv.positiveInf": getSourcesDescriptors("SetPollingSource.ReadStepCsv.positiveInf"),
 
-    "SetPollingSource.ReadStepCsv.negativeInf": {
-        label: "Negative infinity:",
-        tooltip: SourcesToolipsTexts.NEGATIVE_INFINITY,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-negativeInf",
-    },
+    "SetPollingSource.ReadStepCsv.negativeInf": getSourcesDescriptors("SetPollingSource.ReadStepCsv.negativeInf"),
 
-    "SetPollingSource.ReadStepCsv.dateFormat": {
-        label: "Date format:",
-        tooltip: SourcesToolipsTexts.DATE_FORMAT,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-dateFormat",
-    },
+    "SetPollingSource.ReadStepCsv.dateFormat": getSourcesDescriptors("SetPollingSource.ReadStepCsv.dateFormat"),
 
-    "SetPollingSource.ReadStepCsv.multiLine": {
-        label: "Multi line:",
-        tooltip: SourcesToolipsTexts.MULTI_LINE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-multiLine",
-    },
+    "SetPollingSource.ReadStepCsv.multiLine": getSourcesDescriptors("SetPollingSource.ReadStepCsv.multiLine"),
 
-    "SetPollingSource.ReadStepGeoJson.__typename": {
-        label: "Type:",
-        tooltip: SourcesToolipsTexts.READ_GEO_JSON,
-        presentationComponent: StepTypePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepGeoJson-__typename",
-    },
+    "SetPollingSource.ReadStepGeoJson.__typename": getSourcesDescriptors("SetPollingSource.ReadStepGeoJson.__typename"),
 
-    "SetPollingSource.ReadStepNdGeoJson.__typename": {
-        label: "Type:",
-        tooltip: SourcesToolipsTexts.READ_ND_GEO_JSON,
-        presentationComponent: StepTypePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepNdGeoJson-__typename",
-    },
+    "SetPollingSource.ReadStepNdGeoJson.__typename": getSourcesDescriptors(
+        "SetPollingSource.ReadStepNdGeoJson.__typename",
+    ),
 
-    "SetPollingSource.ReadStepNdGeoJson.schema": {
-        label: "Schema:",
-        tooltip: SourcesToolipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepNdGeoJson-schema",
-    },
+    "SetPollingSource.ReadStepNdGeoJson.schema": getSourcesDescriptors("SetPollingSource.ReadStepNdGeoJson.schema"),
 
-    "SetPollingSource.ReadStepJson.__typename": {
-        label: "Type:",
-        tooltip: SourcesToolipsTexts.READ_JSON,
-        presentationComponent: StepTypePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepJson-__typename",
-    },
+    "SetPollingSource.ReadStepJson.__typename": getSourcesDescriptors("SetPollingSource.ReadStepJson.__typename"),
 
-    "SetPollingSource.ReadStepJson.schema": {
-        label: "Schema:",
-        tooltip: SourcesToolipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepJson-schema",
-    },
+    "SetPollingSource.ReadStepJson.schema": getSourcesDescriptors("SetPollingSource.ReadStepJson.schema"),
 
-    "SetPollingSource.ReadStepJson.encoding": {
-        label: "Encoding:",
-        tooltip: SourcesToolipsTexts.READ_JSON_ENCODING,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepJson-encoding",
-    },
+    "SetPollingSource.ReadStepJson.encoding": getSourcesDescriptors("SetPollingSource.ReadStepJson.encoding"),
 
-    "SetPollingSource.ReadStepJson.dateFormat": {
-        label: "Date format:",
-        tooltip: SourcesToolipsTexts.DATE_FORMAT,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepJson-dateFormat",
-    },
+    "SetPollingSource.ReadStepJson.dateFormat": getSourcesDescriptors("SetPollingSource.ReadStepJson.dateFormat"),
 
-    "SetPollingSource.ReadStepJson.timestampFormat": {
-        label: "Timestamp format:",
-        tooltip: SourcesToolipsTexts.TIMESTAMP_FORMAT,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepJson-timestampFormat",
-    },
+    "SetPollingSource.ReadStepJson.timestampFormat": getSourcesDescriptors(
+        "SetPollingSource.ReadStepJson.timestampFormat",
+    ),
 
-    "SetPollingSource.ReadStepJson.subPath": {
-        label: "SubPath:",
-        tooltip: SourcesToolipsTexts.READ_JSON_SUB_PATH,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepJson-subPath",
-    },
+    "SetPollingSource.ReadStepJson.subPath": getSourcesDescriptors("SetPollingSource.ReadStepJson.subPath"),
 
-    "SetPollingSource.ReadStepNdJson.__typename": {
-        label: "Type:",
-        tooltip: SourcesToolipsTexts.READ_ND_JSON,
-        presentationComponent: StepTypePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepNdJson-__typename",
-    },
+    "SetPollingSource.ReadStepNdJson.__typename": getSourcesDescriptors("SetPollingSource.ReadStepNdJson.__typename"),
 
-    "SetPollingSource.ReadStepNdJson.dateFormat": {
-        label: "Date format:",
-        tooltip: SourcesToolipsTexts.DATE_FORMAT,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepNdJson-dateFormat",
-    },
+    "SetPollingSource.ReadStepNdJson.dateFormat": getSourcesDescriptors("SetPollingSource.ReadStepNdJson.dateFormat"),
 
-    "SetPollingSource.ReadStepNdJson.encoding": {
-        label: "Encoding:",
-        tooltip: SourcesToolipsTexts.READ_JSON_ENCODING,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepNdJson-encoding",
-    },
+    "SetPollingSource.ReadStepNdJson.encoding": getSourcesDescriptors("SetPollingSource.ReadStepNdJson.encoding"),
 
-    "SetPollingSource.ReadStepNdJson.timestampFormat": {
-        label: "Timestamp format:",
-        tooltip: SourcesToolipsTexts.TIMESTAMP_FORMAT,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepNdJson-timestampFormat",
-    },
+    "SetPollingSource.ReadStepNdJson.timestampFormat": getSourcesDescriptors(
+        "SetPollingSource.ReadStepNdJson.timestampFormat",
+    ),
 
-    "SetPollingSource.ReadStepGeoJson.schema": {
-        label: "Schema:",
-        tooltip: SourcesToolipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepGeoJson-schema",
-    },
+    "SetPollingSource.ReadStepGeoJson.schema": getSourcesDescriptors("SetPollingSource.ReadStepGeoJson.schema"),
 
-    "SetPollingSource.ReadStepCsv.timestampFormat": {
-        label: "Timestamp format:",
-        tooltip: SourcesToolipsTexts.TIMESTAMP_FORMAT,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepCsv-timestampFormat",
-    },
+    "SetPollingSource.ReadStepCsv.timestampFormat": getSourcesDescriptors(
+        "SetPollingSource.ReadStepCsv.timestampFormat",
+    ),
 
     "SetPollingSource.PrepStepDecompress.format": {
         label: "Format:",
@@ -490,139 +265,65 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "setPollingSource-prepStepPipe-command",
     },
 
-    "SetPollingSource.MergeStrategySnapshot.__typename": {
-        label: "Strategy:",
-        tooltip: SourcesToolipsTexts.SNAPSHOT_STRATEGY,
-        presentationComponent: MergeStrategyPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-MergeStrategySnapshot-__typename",
-    },
+    "SetPollingSource.MergeStrategySnapshot.__typename": getSourcesDescriptors(
+        "SetPollingSource.MergeStrategySnapshot.__typename",
+    ),
 
-    "SetPollingSource.MergeStrategySnapshot.primaryKey": {
-        label: "Primary key:",
-        tooltip: SourcesToolipsTexts.PRIMARY_KEYS,
-        presentationComponent: CardsPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-MergeStrategySnapshot-__primaryKey",
-    },
+    "SetPollingSource.MergeStrategySnapshot.primaryKey": getSourcesDescriptors(
+        "SetPollingSource.MergeStrategySnapshot.primaryKey",
+    ),
 
-    "SetPollingSource.MergeStrategySnapshot.compareColumns": {
-        label: "Compare columns:",
-        tooltip: SourcesToolipsTexts.COMPARE_COLUMNS,
-        presentationComponent: CardsPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-MergeStrategySnapshot-compareColumns",
-    },
+    "SetPollingSource.MergeStrategySnapshot.compareColumns": getSourcesDescriptors(
+        "SetPollingSource.MergeStrategySnapshot.compareColumns",
+    ),
 
-    "SetPollingSource.MergeStrategySnapshot.observationColumn": {
-        label: "Observation column:",
-        tooltip: SourcesToolipsTexts.OBSERVATION_COLUMN,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-MergeStrategySnapshot-observationColumn",
-    },
+    "SetPollingSource.MergeStrategySnapshot.observationColumn": getSourcesDescriptors(
+        "SetPollingSource.MergeStrategySnapshot.observationColumn",
+    ),
 
-    "SetPollingSource.MergeStrategySnapshot.obsvAdded": {
-        label: "Observation added:",
-        tooltip: SourcesToolipsTexts.OBSERVATION_ADDED,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-MergeStrategySnapshot-obsvAdded",
-    },
+    "SetPollingSource.MergeStrategySnapshot.obsvAdded": getSourcesDescriptors(
+        "SetPollingSource.MergeStrategySnapshot.obsvAdded",
+    ),
 
-    "SetPollingSource.MergeStrategySnapshot.obsvChanged": {
-        label: "Observation changed:",
-        tooltip: SourcesToolipsTexts.OBSERVATION_CHANGED,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-MergeStrategySnapshot-obsvChanged",
-    },
+    "SetPollingSource.MergeStrategySnapshot.obsvChanged": getSourcesDescriptors(
+        "SetPollingSource.MergeStrategySnapshot.obsvChanged",
+    ),
 
-    "SetPollingSource.MergeStrategySnapshot.obsvRemoved": {
-        label: "Observation removed:",
-        tooltip: SourcesToolipsTexts.OBSERVATION_REMOVED,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-MergeStrategySnapshot-obsvRemoved",
-    },
+    "SetPollingSource.MergeStrategySnapshot.obsvRemoved": getSourcesDescriptors(
+        "SetPollingSource.MergeStrategySnapshot.obsvRemoved",
+    ),
 
-    "SetPollingSource.ReadStepEsriShapefile.__typename": {
-        label: "Type:",
-        tooltip: SourcesToolipsTexts.READ_ESRI_SHAPE_FILE,
-        presentationComponent: StepTypePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepEsriShapefile-__typename",
-    },
+    "SetPollingSource.ReadStepEsriShapefile.__typename": getSourcesDescriptors(
+        "SetPollingSource.ReadStepEsriShapefile.__typename",
+    ),
 
-    "SetPollingSource.ReadStepEsriShapefile.schema": {
-        label: "Schema:",
-        tooltip: SourcesToolipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepEsriShapefile-schema",
-    },
+    "SetPollingSource.ReadStepEsriShapefile.schema": getSourcesDescriptors(
+        "SetPollingSource.ReadStepEsriShapefile.schema",
+    ),
 
-    "SetPollingSource.ReadStepEsriShapefile.subPath": {
-        label: "Sub path:",
-        tooltip: SourcesToolipsTexts.SUB_PATH,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepEsriShapefile-subPath",
-    },
+    "SetPollingSource.ReadStepEsriShapefile.subPath": getSourcesDescriptors(
+        "SetPollingSource.ReadStepEsriShapefile.subPath",
+    ),
 
-    "SetPollingSource.ReadStepJsonLines.dateFormat": {
-        label: "Date format:",
-        tooltip: SourcesToolipsTexts.DATE_FORMAT,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepJsonLines-dateFormat",
-    },
+    "SetPollingSource.ReadStepJsonLines.dateFormat": getSourcesDescriptors(
+        "SetPollingSource.ReadStepJsonLines.dateFormat",
+    ),
 
-    "SetPollingSource.ReadStepJsonLines.encoding": {
-        label: "Encoding:",
-        tooltip: SourcesToolipsTexts.ENCODING,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepJsonLines-encoding",
-    },
+    "SetPollingSource.ReadStepJsonLines.encoding": getSourcesDescriptors("SetPollingSource.ReadStepJsonLines.encoding"),
 
-    "SetPollingSource.ReadStepJsonLines.multiLine": {
-        label: "Multi line:",
-        tooltip: SourcesToolipsTexts.MULTI_LINE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepJsonLines-multiLine",
-    },
+    "SetPollingSource.ReadStepJsonLines.multiLine": getSourcesDescriptors(
+        "SetPollingSource.ReadStepJsonLines.multiLine",
+    ),
 
-    "SetPollingSource.ReadStepJsonLines.primitivesAsString": {
-        label: "Primitive as string:",
-        tooltip: SourcesToolipsTexts.PRIMITIVE_AS_STRING,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepJsonLines-primitivesAsString",
-    },
+    "SetPollingSource.ReadStepJsonLines.primitivesAsString": getSourcesDescriptors(
+        "SetPollingSource.ReadStepJsonLines.primitivesAsString",
+    ),
 
-    "SetPollingSource.ReadStepJsonLines.timestampFormat": {
-        label: "Timestamp format:",
-        tooltip: SourcesToolipsTexts.TIMESTAMP_FORMAT,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-readStepJsonLines-timestampFormat",
-    },
+    "SetPollingSource.ReadStepJsonLines.timestampFormat": getSourcesDescriptors(
+        "SetPollingSource.ReadStepJsonLines.timestampFormat",
+    ),
 
-    "SetPollingSource.ReadStepParquet.__typename": {
-        label: "Type:",
-        tooltip: SourcesToolipsTexts.READ_PARQUET,
-        presentationComponent: StepTypePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepParquet-__typename",
-    },
+    "SetPollingSource.ReadStepParquet.__typename": getSourcesDescriptors("SetPollingSource.ReadStepParquet.__typename"),
 
-    "SetPollingSource.ReadStepParquet.schema": {
-        label: "Schema:",
-        tooltip: SourcesToolipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "setPollingSource-ReadStepParquet-schema",
-    },
+    "SetPollingSource.ReadStepParquet.schema": getSourcesDescriptors("SetPollingSource.ReadStepParquet.schema"),
 };

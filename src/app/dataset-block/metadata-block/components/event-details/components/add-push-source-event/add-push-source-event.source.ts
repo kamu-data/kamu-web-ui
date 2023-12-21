@@ -1,14 +1,7 @@
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 import { AddPushSourceToolipsTexts } from "src/app/common/tooltips/add-push-source.text";
-import { StepTypePropertyComponent } from "../common/step-type-property/step-type-property.component";
-import { SchemaPropertyComponent } from "../common/schema-property/schema-property.component";
-import { SeparatorPropertyComponent } from "../common/separator-property/separator-property.component";
-import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
-import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
-import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
-import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
-import { SourcesToolipsTexts } from "src/app/common/tooltips/sources.text";
+import { getSourcesDescriptors } from "../common-sources/sources-event.source";
 
 export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "AddPushSource.string.sourceName": {
@@ -16,390 +9,152 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         tooltip: AddPushSourceToolipsTexts.SOURCE_NAME,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
-        dataTestId: "add-push-source-name",
+        dataTestId: "addPushSource-source-name",
     },
 
-    "AddPushSource.ReadStepCsv.__typename": {
-        label: "Type:",
-        tooltip: SourcesToolipsTexts.READ_CSV,
-        presentationComponent: StepTypePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepCsv-__typename",
-    },
+    "AddPushSource.ReadStepCsv.__typename": getSourcesDescriptors("AddPushSource.ReadStepCsv.__typename"),
 
-    "AddPushSource.ReadStepCsv.schema": {
-        label: "Schema:",
-        tooltip: SourcesToolipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-schema",
-    },
+    "AddPushSource.ReadStepCsv.schema": getSourcesDescriptors("AddPushSource.ReadStepCsv.schema"),
 
-    "AddPushSource.ReadStepCsv.separator": {
-        label: "Separator:",
-        tooltip: SourcesToolipsTexts.SEPARATOR,
-        presentationComponent: SeparatorPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-separator",
-    },
+    "AddPushSource.ReadStepCsv.separator": getSourcesDescriptors("AddPushSource.ReadStepCsv.separator"),
 
-    "AddPushSource.ReadStepCsv.encoding": {
-        label: "Encoding:",
-        tooltip: SourcesToolipsTexts.ENCODING,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-encoding",
-    },
+    "AddPushSource.ReadStepCsv.encoding": getSourcesDescriptors("AddPushSource.ReadStepCsv.separator"),
 
-    "AddPushSource.ReadStepCsv.quote": {
-        label: "Quote character:",
-        tooltip: SourcesToolipsTexts.QUOTE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-quote",
-    },
+    "AddPushSource.ReadStepCsv.quote": getSourcesDescriptors("AddPushSource.ReadStepCsv.quote"),
 
-    "AddPushSource.ReadStepCsv.escape": {
-        label: "Escape character:",
-        tooltip: SourcesToolipsTexts.ESCAPE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-escape",
-    },
+    "AddPushSource.ReadStepCsv.escape": getSourcesDescriptors("AddPushSource.ReadStepCsv.escape"),
 
-    "AddPushSource.ReadStepCsv.comment": {
-        label: "Comment character:",
-        tooltip: SourcesToolipsTexts.COMMENT,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-comment",
-    },
+    "AddPushSource.ReadStepCsv.comment": getSourcesDescriptors("AddPushSource.ReadStepCsv.comment"),
 
-    "AddPushSource.ReadStepCsv.enforceSchema": {
-        label: "Enforce schema:",
-        tooltip: SourcesToolipsTexts.ENFORCE_SCHEMA,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-enforceSchema",
-    },
+    "AddPushSource.ReadStepCsv.enforceSchema": getSourcesDescriptors("AddPushSource.ReadStepCsv.enforceSchema"),
 
-    "AddPushSource.ReadStepCsv.inferSchema": {
-        label: "Infer schema:",
-        tooltip: SourcesToolipsTexts.INFER_SCHEMA,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-inferSchema",
-    },
+    "AddPushSource.ReadStepCsv.inferSchema": getSourcesDescriptors("AddPushSource.ReadStepCsv.inferSchema"),
 
-    "AddPushSource.ReadStepCsv.ignoreLeadingWhiteSpace": {
-        label: "Ignore leading whitespace:",
-        tooltip: SourcesToolipsTexts.IGNORE_LEADING_WHITESPACE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-ignoreLeadingWhiteSpace",
-    },
+    "AddPushSource.ReadStepCsv.header": getSourcesDescriptors("AddPushSource.ReadStepCsv.header"),
 
-    "AddPushSource.ReadStepCsv.ignoreTrailingWhiteSpace": {
-        label: "Ignore trailing whitespace:",
-        tooltip: SourcesToolipsTexts.QUIGNORE_TRAILING_WHITESPACEOTE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-ignoreTrailingWhiteSpace",
-    },
+    "AddPushSource.ReadStepCsv.ignoreLeadingWhiteSpace": getSourcesDescriptors(
+        "AddPushSource.ReadStepCsv.ignoreLeadingWhiteSpace",
+    ),
 
-    "AddPushSource.ReadStepCsv.nullValue": {
-        label: "Null value:",
-        tooltip: SourcesToolipsTexts.NULL_VALUE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-nullValue",
-    },
+    "AddPushSource.ReadStepCsv.ignoreTrailingWhiteSpace": getSourcesDescriptors(
+        "AddPushSource.ReadStepCsv.ignoreTrailingWhiteSpace",
+    ),
 
-    "AddPushSource.ReadStepCsv.emptyValue": {
-        label: "Empty value:",
-        tooltip: SourcesToolipsTexts.EMPTY_VALUE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-emptyValue",
-    },
+    "AddPushSource.ReadStepCsv.nullValue": getSourcesDescriptors("AddPushSource.ReadStepCsv.nullValue"),
 
-    "AddPushSource.ReadStepCsv.nanValue": {
-        label: "Nan value:",
-        tooltip: SourcesToolipsTexts.NAN_VALUE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-nanValue",
-    },
+    "AddPushSource.ReadStepCsv.emptyValue": getSourcesDescriptors("AddPushSource.ReadStepCsv.emptyValue"),
 
-    "AddPushSource.ReadStepCsv.positiveInf": {
-        label: "Possitive infinity:",
-        tooltip: SourcesToolipsTexts.POSITIVE_INFINITY,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-positiveInf",
-    },
+    "AddPushSource.ReadStepCsv.nanValue": getSourcesDescriptors("AddPushSource.ReadStepCsv.nanValue"),
 
-    "AddPushSource.ReadStepCsv.negativeInf": {
-        label: "Negative infinity:",
-        tooltip: SourcesToolipsTexts.NEGATIVE_INFINITY,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-negativeInf",
-    },
+    "AddPushSource.ReadStepCsv.positiveInf": getSourcesDescriptors("AddPushSource.ReadStepCsv.positiveInf"),
 
-    "AddPushSource.ReadStepCsv.dateFormat": {
-        label: "Date format:",
-        tooltip: SourcesToolipsTexts.DATE_FORMAT,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-dateFormat",
-    },
+    "AddPushSource.ReadStepCsv.negativeInf": getSourcesDescriptors("AddPushSource.ReadStepCsv.negativeInf"),
 
-    "AddPushSource.ReadStepCsv.multiLine": {
-        label: "Multi line:",
-        tooltip: SourcesToolipsTexts.MULTI_LINE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-multiLine",
-    },
+    "AddPushSource.ReadStepCsv.dateFormat": getSourcesDescriptors("AddPushSource.ReadStepCsv.dateFormat"),
 
-    "AddPushSource.ReadStepCsv.timestampFormat": {
-        label: "Timestamp format:",
-        tooltip: SourcesToolipsTexts.TIMESTAMP_FORMAT,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepCsv-timestampFormat",
-    },
+    "AddPushSource.ReadStepCsv.multiLine": getSourcesDescriptors("AddPushSource.ReadStepCsv.multiLine"),
 
-    "AddPushSource.MergeStrategyAppend.__typename": {
-        label: "Strategy:",
-        tooltip: SourcesToolipsTexts.MERGE_STRATEGY_APPEND,
-        presentationComponent: MergeStrategyPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-mergeStrategyAppend-__typename",
-    },
+    "AddPushSource.ReadStepCsv.timestampFormat": getSourcesDescriptors("AddPushSource.ReadStepCsv.timestampFormat"),
 
-    "AddPushSource.TransformSql.engine": {
-        label: "Engine:",
-        tooltip: SourcesToolipsTexts.ENGINE,
-        presentationComponent: EnginePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-transformSql-engine",
-    },
+    "AddPushSource.MergeStrategyAppend.__typename": getSourcesDescriptors(
+        "AddPushSource.MergeStrategyAppend.__typename",
+    ),
 
-    "AddPushSource.TransformSql.queries": {
-        label: "Queries:",
-        tooltip: SourcesToolipsTexts.QUERIES,
-        presentationComponent: SqlQueryViewerComponent,
-        separateRowForValue: true,
-        dataTestId: "add-push-source-transformSql-queries",
-    },
+    "AddPushSource.TransformSql.engine": getSourcesDescriptors("AddPushSource.TransformSql.engine"),
 
-    "AddPushSource.MergeStrategyLedger.__typename": {
-        label: "Strategy:",
-        tooltip: SourcesToolipsTexts.MERGE_STRATEGY_LEDGER,
-        presentationComponent: MergeStrategyPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-mergeStrategyLedger-__typename",
-    },
+    "AddPushSource.TransformSql.queries": getSourcesDescriptors("AddPushSource.TransformSql.queries"),
 
-    "AddPushSource.MergeStrategyLedger.primaryKey": {
-        label: "Primary key:",
-        tooltip: SourcesToolipsTexts.PRIMARY_KEYS,
-        presentationComponent: CardsPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-mergeStrategyLedger-primaryKey",
-    },
+    "AddPushSource.MergeStrategyLedger.__typename": getSourcesDescriptors(
+        "AddPushSource.MergeStrategyLedger.__typename",
+    ),
 
-    "AddPushSource.ReadStepJson.__typename": {
-        label: "Type:",
-        tooltip: SourcesToolipsTexts.READ_JSON,
-        presentationComponent: StepTypePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepJson-__typename",
-    },
+    "AddPushSource.MergeStrategyLedger.primaryKey": getSourcesDescriptors(
+        "AddPushSource.MergeStrategyLedger.primaryKey",
+    ),
 
-    "AddPushSource.ReadStepJson.schema": {
-        label: "Schema:",
-        tooltip: SourcesToolipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepJson-schema",
-    },
+    "AddPushSource.ReadStepJson.__typename": getSourcesDescriptors("AddPushSource.ReadStepJson.__typename"),
 
-    "AddPushSource.ReadStepJson.encoding": {
-        label: "Encoding:",
-        tooltip: SourcesToolipsTexts.READ_JSON_ENCODING,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepJson-encoding",
-    },
+    "AddPushSource.ReadStepJson.schema": getSourcesDescriptors("AddPushSource.ReadStepJson.schema"),
 
-    "AddPushSource.ReadStepJson.dateFormat": {
-        label: "Date format:",
-        tooltip: SourcesToolipsTexts.DATE_FORMAT,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepJson-dateFormat",
-    },
+    "AddPushSource.ReadStepJson.encoding": getSourcesDescriptors("AddPushSource.ReadStepJson.encoding"),
 
-    "AddPushSource.ReadStepNdGeoJson.__typename": {
-        label: "Type:",
-        tooltip: SourcesToolipsTexts.READ_ND_GEO_JSON,
-        presentationComponent: StepTypePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepNdGeoJson-__typename",
-    },
+    "AddPushSource.ReadStepJson.dateFormat": getSourcesDescriptors("AddPushSource.ReadStepJson.dateFormat"),
 
-    "AddPushSource.ReadStepJson.timestampFormat": {
-        label: "Timestamp format:",
-        tooltip: SourcesToolipsTexts.TIMESTAMP_FORMAT,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepJson-timestampFormat",
-    },
+    "AddPushSource.ReadStepNdGeoJson.__typename": getSourcesDescriptors("AddPushSource.ReadStepNdGeoJson.__typename"),
 
-    "AddPushSource.ReadStepJson.subPath": {
-        label: "SubPath:",
-        tooltip: SourcesToolipsTexts.READ_JSON_SUB_PATH,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepJson-subPath",
-    },
+    "AddPushSource.ReadStepJson.timestampFormat": getSourcesDescriptors("AddPushSource.ReadStepJson.timestampFormat"),
 
-    "AddPushSource.MergeStrategySnapshot.__typename": {
-        label: "Strategy:",
-        tooltip: SourcesToolipsTexts.SNAPSHOT_STRATEGY,
-        presentationComponent: MergeStrategyPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-MergeStrategySnapshot-__typename",
-    },
+    "AddPushSource.ReadStepJson.subPath": getSourcesDescriptors("AddPushSource.ReadStepJson.subPath"),
 
-    "AddPushSource.MergeStrategySnapshot.primaryKey": {
-        label: "Primary key:",
-        tooltip: SourcesToolipsTexts.PRIMARY_KEYS,
-        presentationComponent: CardsPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-MergeStrategySnapshot-__primaryKey",
-    },
+    "AddPushSource.MergeStrategySnapshot.__typename": getSourcesDescriptors(
+        "AddPushSource.MergeStrategySnapshot.__typename",
+    ),
 
-    "AddPushSource.MergeStrategySnapshot.compareColumns": {
-        label: "Compare columns:",
-        tooltip: SourcesToolipsTexts.COMPARE_COLUMNS,
-        presentationComponent: CardsPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-MergeStrategySnapshot-compareColumns",
-    },
+    "AddPushSource.MergeStrategySnapshot.primaryKey": getSourcesDescriptors(
+        "AddPushSource.MergeStrategySnapshot.primaryKey",
+    ),
 
-    "AddPushSource.MergeStrategySnapshot.observationColumn": {
-        label: "Observation column:",
-        tooltip: SourcesToolipsTexts.OBSERVATION_COLUMN,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-MergeStrategySnapshot-observationColumn",
-    },
+    "AddPushSource.MergeStrategySnapshot.compareColumns": getSourcesDescriptors(
+        "AddPushSource.MergeStrategySnapshot.compareColumns",
+    ),
 
-    "AddPushSource.MergeStrategySnapshot.obsvAdded": {
-        label: "Observation added:",
-        tooltip: SourcesToolipsTexts.OBSERVATION_ADDED,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-MergeStrategySnapshot-obsvAdded",
-    },
+    "AddPushSource.MergeStrategySnapshot.observationColumn": getSourcesDescriptors(
+        "AddPushSource.MergeStrategySnapshot.observationColumn",
+    ),
 
-    "AddPushSource.MergeStrategySnapshot.obsvChanged": {
-        label: "Observation changed:",
-        tooltip: SourcesToolipsTexts.OBSERVATION_CHANGED,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-MergeStrategySnapshot-obsvChanged",
-    },
+    "AddPushSource.MergeStrategySnapshot.obsvAdded": getSourcesDescriptors(
+        "AddPushSource.MergeStrategySnapshot.obsvAdded",
+    ),
 
-    "AddPushSource.MergeStrategySnapshot.obsvRemoved": {
-        label: "Observation removed:",
-        tooltip: SourcesToolipsTexts.OBSERVATION_REMOVED,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-MergeStrategySnapshot-obsvRemoved",
-    },
+    "AddPushSource.MergeStrategySnapshot.obsvChanged": getSourcesDescriptors(
+        "AddPushSource.MergeStrategySnapshot.obsvChanged",
+    ),
 
-    "AddPushSource.ReadStepGeoJson.__typename": {
-        label: "Type:",
-        tooltip: SourcesToolipsTexts.READ_GEO_JSON,
-        presentationComponent: StepTypePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepGeoJson-__typename",
-    },
+    "AddPushSource.MergeStrategySnapshot.obsvRemoved": getSourcesDescriptors(
+        "AddPushSource.MergeStrategySnapshot.obsvRemoved",
+    ),
 
-    "AddPushSource.ReadStepGeoJson.schema": {
-        label: "Schema:",
-        tooltip: SourcesToolipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepGeoJson-schema",
-    },
+    "AddPushSource.ReadStepGeoJson.__typename": getSourcesDescriptors("AddPushSource.ReadStepGeoJson.__typename"),
 
-    "AddPushSource.ReadStepEsriShapefile.__typename": {
-        label: "Type:",
-        tooltip: SourcesToolipsTexts.READ_ESRI_SHAPE_FILE,
-        presentationComponent: StepTypePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepEsriShapefile-__typename",
-    },
+    "AddPushSource.ReadStepGeoJson.schema": getSourcesDescriptors("AddPushSource.ReadStepGeoJson.schema"),
 
-    "AddPushSource.ReadStepEsriShapefile.schema": {
-        label: "Schema:",
-        tooltip: SourcesToolipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepEsriShapefile-schema",
-    },
+    "AddPushSource.ReadStepEsriShapefile.__typename": getSourcesDescriptors(
+        "AddPushSource.ReadStepEsriShapefile.__typename",
+    ),
 
-    "AddPushSource.ReadStepEsriShapefile.subPath": {
-        label: "Sub path:",
-        tooltip: SourcesToolipsTexts.SUB_PATH,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepEsriShapefile-subPath",
-    },
+    "AddPushSource.ReadStepEsriShapefile.schema": getSourcesDescriptors("AddPushSource.ReadStepEsriShapefile.schema"),
 
-    "AddPushSource.ReadStepParquet.__typename": {
-        label: "Type:",
-        tooltip: SourcesToolipsTexts.READ_PARQUET,
-        presentationComponent: StepTypePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepParquet-__typename",
-    },
+    "AddPushSource.ReadStepEsriShapefile.subPath": getSourcesDescriptors("AddPushSource.ReadStepEsriShapefile.subPath"),
 
-    "AddPushSource.ReadStepParquet.schema": {
-        label: "Schema:",
-        tooltip: SourcesToolipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepParquet-schema",
-    },
+    "AddPushSource.ReadStepParquet.__typename": getSourcesDescriptors("AddPushSource.ReadStepParquet.__typename"),
 
-    "AddPushSource.ReadStepJsonLines.__typename": {
-        label: "Type:",
-        tooltip: SourcesToolipsTexts.READ_JSON_LINES,
-        presentationComponent: StepTypePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepJsonLines-__typename",
-    },
+    "AddPushSource.ReadStepParquet.schema": getSourcesDescriptors("AddPushSource.ReadStepParquet.schema"),
 
-    "AddPushSource.ReadStepNdJson.__typename": {
-        label: "Type:",
-        tooltip: SourcesToolipsTexts.READ_ND_JSON,
-        presentationComponent: StepTypePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-ReadStepNdJson-__typename",
-    },
+    "AddPushSource.ReadStepJsonLines.__typename": getSourcesDescriptors("AddPushSource.ReadStepJsonLines.__typename"),
 
-    "AddPushSource.ReadStepJsonLines.primitivesAsString": {
-        label: "Primitive as string:",
-        tooltip: SourcesToolipsTexts.PRIMITIVE_AS_STRING,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "add-push-source-readStepJsonLines-primitivesAsString",
-    },
+    "AddPushSource.ReadStepNdJson.__typename": getSourcesDescriptors("AddPushSource.ReadStepNdJson.__typename"),
+
+    "AddPushSource.ReadStepJsonLines.primitivesAsString": getSourcesDescriptors(
+        "AddPushSource.ReadStepJsonLines.primitivesAsString",
+    ),
+
+    "AddPushSource.ReadStepJsonLines.schema": getSourcesDescriptors("AddPushSource.ReadStepJsonLines.schema"),
+
+    "AddPushSource.ReadStepNdGeoJson.schema": getSourcesDescriptors("AddPushSource.ReadStepNdGeoJson.schema"),
+
+    "AddPushSource.ReadStepNdJson.dateFormat": getSourcesDescriptors("AddPushSource.ReadStepNdJson.dateFormat"),
+
+    "AddPushSource.ReadStepNdJson.encoding": getSourcesDescriptors("AddPushSource.ReadStepNdJson.encoding"),
+
+    "AddPushSource.ReadStepNdJson.timestampFormat": getSourcesDescriptors(
+        "AddPushSource.ReadStepNdJson.timestampFormat",
+    ),
+
+    "AddPushSource.ReadStepJsonLines.dateFormat": getSourcesDescriptors("AddPushSource.ReadStepJsonLines.dateFormat"),
+
+    "AddPushSource.ReadStepJsonLines.encoding": getSourcesDescriptors("AddPushSource.ReadStepJsonLines.encoding"),
+
+    "AddPushSource.ReadStepJsonLines.timestampFormat": getSourcesDescriptors(
+        "AddPushSource.ReadStepJsonLines.timestampFormat",
+    ),
 };

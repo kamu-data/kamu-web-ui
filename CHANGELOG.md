@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Showing editor markers on SQL query errors
 - Displayed lineage graph for a single dataset
 - Added calculation of graph height on different screens
+- Added the ability to add AddPushSource event
+- Added support for the SetDataSchema,AddPushSource events on the metadata block page
 ### Changed
 - Separated main data query and lineage data 
 - Improve reporting of fatal errors from modal window to toaster window

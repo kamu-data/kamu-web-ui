@@ -1,4 +1,4 @@
-import { MaybeNull } from "./../../../../common/app.types";
+import { MaybeNull, MaybeUndefined } from "./../../../../common/app.types";
 import { SetVocabEventComponent } from "./components/set-vocab-event/set-vocab-event.component";
 import { SupportedEvents } from "./supported.events";
 import {
@@ -46,69 +46,28 @@ export class EventDetailsComponent implements AfterViewChecked {
         if (this.dynamicContainer) {
             this.dynamicContainer.clear();
             const componentRef = this.dynamicContainer.createComponent<BaseComponent>(
-                this.componentEventTypeFactory(this.currentBlock.event.__typename as SupportedEvents),
+                this.componentEventTypeFactory[this.currentBlock.event.__typename as SupportedEvents] ??
+                    UnsupportedEventComponent,
             );
             componentRef.setInput("event", this.currentBlock.event);
             componentRef.changeDetectorRef.detectChanges();
         }
     }
 
-    private componentEventTypeFactory(type: SupportedEvents): Type<BaseComponent> {
-        let component: Type<BaseComponent>;
-        switch (type) {
-            case SupportedEvents.SetPollingSource: {
-                component = SetPollingSourceEventComponent;
-                break;
-            }
-            case SupportedEvents.SetDataSchema: {
-                component = SetDataSchemaEventComponent;
-                break;
-            }
-            case SupportedEvents.AddPushSource: {
-                component = AddPushSourceEventComponent;
-                break;
-            }
-            case SupportedEvents.SetWatermark: {
-                component = SetWatermarkEventComponent;
-                break;
-            }
-            case SupportedEvents.SetVocab: {
-                component = SetVocabEventComponent;
-                break;
-            }
-            case SupportedEvents.SetInfo: {
-                component = SetInfoEventComponent;
-                break;
-            }
-            case SupportedEvents.SetAttachments: {
-                component = SetAttachmentsEventComponent;
-                break;
-            }
-            case SupportedEvents.ExecuteQuery: {
-                component = ExecuteQueryEventComponent;
-                break;
-            }
-            case SupportedEvents.SetTransform: {
-                component = SetTransformEventComponent;
-                break;
-            }
-            case SupportedEvents.Seed: {
-                component = SeedEventComponent;
-                break;
-            }
-            case SupportedEvents.AddData: {
-                component = AddDataEventComponent;
-                break;
-            }
-            case SupportedEvents.SetLicense: {
-                component = SetLicenseEventComponent;
-                break;
-            }
-            default:
-                component = UnsupportedEventComponent;
-        }
-        return component;
-    }
+    private componentEventTypeFactory: { [key in SupportedEvents]: MaybeUndefined<Type<BaseComponent>> } = {
+        [SupportedEvents.SetPollingSource]: SetPollingSourceEventComponent,
+        [SupportedEvents.SetDataSchema]: SetDataSchemaEventComponent,
+        [SupportedEvents.AddPushSource]: AddPushSourceEventComponent,
+        [SupportedEvents.SetWatermark]: SetWatermarkEventComponent,
+        [SupportedEvents.SetVocab]: SetVocabEventComponent,
+        [SupportedEvents.SetInfo]: SetInfoEventComponent,
+        [SupportedEvents.SetAttachments]: SetAttachmentsEventComponent,
+        [SupportedEvents.ExecuteQuery]: ExecuteQueryEventComponent,
+        [SupportedEvents.SetTransform]: SetTransformEventComponent,
+        [SupportedEvents.Seed]: SeedEventComponent,
+        [SupportedEvents.AddData]: AddDataEventComponent,
+        [SupportedEvents.SetLicense]: SetLicenseEventComponent,
+    };
 
     public get currentBlock(): MetadataBlockFragment {
         return this.blockService.currentBlock;

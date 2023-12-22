@@ -1,13 +1,7 @@
 import { LinkPropertyComponent } from "../common/link-property/link-property.component";
-
-import { SeparatorPropertyComponent } from "../common/separator-property/separator-property.component";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
-import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
-import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
-import { SchemaPropertyComponent } from "../common/schema-property/schema-property.component";
 import { EnvVariablesPropertyComponent } from "../common/env-variables-property/env-variables-property.component";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
-import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
 import { EventTimePropertyComponent } from "../common/event-time-property/event-time-property.component";

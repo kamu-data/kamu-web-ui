@@ -18,5 +18,8 @@ fragment MetadataBlock on MetadataBlockExtended {
     ...DatasetCurrentInfo
     ...SetLicenseEvent
     ...SetPollingSourceEvent
+    ...AddPushSourceEvent
+    ...SetDataSchemaEvent
+    ...DisablePollingSourceEvent
   }
 }

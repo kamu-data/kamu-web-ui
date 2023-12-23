@@ -110,6 +110,19 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         }
     }
 
+    // TODO: To replace it to faster API
+    public get canAddPushSource(): boolean {
+        if (this.currentState && this.datasetPermissions.permissions.canCommit) {
+            return (
+                !this.currentState.overview.metadata.chain.blocks.nodes.filter(
+                    (item) => item.event.__typename === "AddPushSource",
+                ).length && this.datasetBasics.kind === DatasetKind.Root
+            );
+        } else {
+            return false;
+        }
+    }
+
     public get canAddSetTransform(): boolean {
         if (this.currentState && this.datasetPermissions.permissions.canCommit) {
             return (
@@ -196,6 +209,13 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public navigateToAddPollingSource(): void {
         this.navigationService.navigateToAddPollingSource({
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
+        });
+    }
+
+    public navigateToAddPushSource(): void {
+        this.navigationService.navigateToAddPushSource({
             accountName: this.datasetBasics.owner.accountName,
             datasetName: this.datasetBasics.name,
         });

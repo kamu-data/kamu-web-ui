@@ -1,7 +1,14 @@
 import { mockSetAttachments } from "../../mock.events";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { SecurityContext } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SetAttachmentsEventComponent } from "./set-attachments-event.component";
+import { SharedTestModule } from "src/app/common/shared-test.module";
+import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.component";
+import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
+import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { MarkdownModule } from "ngx-markdown";
+import { HttpClient } from "@angular/common/http";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("SetAttachmentsEventComponent", () => {
     let component: SetAttachmentsEventComponent;
@@ -9,8 +16,16 @@ describe("SetAttachmentsEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SetAttachmentsEventComponent],
-            schemas: [NO_ERRORS_SCHEMA],
+            declarations: [SetAttachmentsEventComponent, BlockRowDataComponent, TooltipIconComponent],
+            imports: [
+                SharedTestModule,
+                NgbTooltipModule,
+                HttpClientTestingModule,
+                MarkdownModule.forRoot({
+                    loader: HttpClient,
+                    sanitize: SecurityContext.NONE,
+                }),
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SetAttachmentsEventComponent);

@@ -1,5 +1,6 @@
 import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
 import { FetchKind, MergeKind, ReadKind } from "./add-polling-source-form.types";
+import { SourcesToolipsTexts } from "src/app/common/tooltips/sources.text";
 
 export interface RadioControlType {
     id: string;
@@ -39,7 +40,7 @@ export const READ_STEP_RADIO_CONTROLS: RadioControlType[] = [
         value: ReadKind.CSV,
         icon: "format_quote",
         label: "CSV",
-        tooltip: SetPollingSourceToolipsTexts.READ_CSV,
+        tooltip: SourcesToolipsTexts.READ_CSV,
     },
 
     {
@@ -47,7 +48,7 @@ export const READ_STEP_RADIO_CONTROLS: RadioControlType[] = [
         value: ReadKind.All_JSON,
         icon: "data_object",
         label: "Json",
-        tooltip: SetPollingSourceToolipsTexts.READ_JSON,
+        tooltip: SourcesToolipsTexts.READ_JSON,
     },
 
     {
@@ -55,21 +56,21 @@ export const READ_STEP_RADIO_CONTROLS: RadioControlType[] = [
         value: ReadKind.ALL_GEO,
         icon: "public",
         label: "Geo",
-        tooltip: SetPollingSourceToolipsTexts.READ_GEO_JSON,
+        tooltip: SourcesToolipsTexts.READ_GEO_JSON,
     },
     {
         id: "esriShapefile",
         value: ReadKind.ESRI_SHAPEFILE,
         icon: "rounded_corner",
         label: "ESRI Shapefile",
-        tooltip: SetPollingSourceToolipsTexts.READ_ESRI_SHAPE_FILE,
+        tooltip: SourcesToolipsTexts.READ_ESRI_SHAPE_FILE,
     },
     {
         id: "parquet",
         value: ReadKind.PARQUET,
         icon: "view_array",
         label: "Parquet",
-        tooltip: SetPollingSourceToolipsTexts.READ_PARQUET,
+        tooltip: SourcesToolipsTexts.READ_PARQUET,
     },
 ];
 
@@ -79,20 +80,20 @@ export const MERGE_STEP_RADIO_CONTROLS: RadioControlType[] = [
         value: MergeKind.APPEND,
         icon: "post_add",
         label: "Append strategy",
-        tooltip: SetPollingSourceToolipsTexts.APPEND_STRATEGY,
+        tooltip: SourcesToolipsTexts.APPEND_STRATEGY,
     },
     {
         id: "ledger",
         value: MergeKind.LEDGER,
         icon: "account_tree",
         label: "Ledger strategy",
-        tooltip: SetPollingSourceToolipsTexts.LEDGER_STRATEGY,
+        tooltip: SourcesToolipsTexts.LEDGER_STRATEGY,
     },
     {
         id: "snapshot",
         value: MergeKind.SNAPSHOT,
         icon: "filter_center_focus",
         label: "Snapshot strategy",
-        tooltip: SetPollingSourceToolipsTexts.SNAPSHOT_STRATEGY,
+        tooltip: SourcesToolipsTexts.SNAPSHOT_STRATEGY,
     },
 ];

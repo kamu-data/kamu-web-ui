@@ -1,0 +1,3 @@
+fragment ReadStepGeoJsonData on ReadStepGeoJson {
+  schema
+}

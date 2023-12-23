@@ -8,6 +8,7 @@ import {
     PreprocessStepValue,
     ReadKind,
 } from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
+import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/add-push-source/add-push-source-form.types";
 
 @Injectable({
     providedIn: "root",
@@ -16,6 +17,8 @@ export class TemplatesYamlEventsService {
     private readonly initialSetInfoTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setInfo\n";
     private readonly initialSetLicenseTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setLicense\n";
     private readonly initialSetWatermarkTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setWatermark\n";
+    private readonly initialDisablePollingSourceTemplate =
+        "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: disablePollingSource\n";
 
     private readonly initialTemplate = {
         kind: "MetadataEvent",
@@ -71,6 +74,35 @@ export class TemplatesYamlEventsService {
         return stringify(this.initialTemplate);
     }
 
+    public buildYamlAddPushSourceEvent(
+        params: AddPushSourceEditFormType,
+        preprocessStepValue: MaybeNull<PreprocessStepValue>,
+    ): string {
+        if (params.read.jsonKind === ReadKind.ND_JSON) {
+            delete params.read.subPath;
+        }
+        if (params.read.jsonKind) {
+            params.read.kind = params.read.jsonKind;
+            delete params.read.jsonKind;
+        }
+        this.initialTemplate.content = {
+            kind: "addPushSource",
+            ...params,
+        };
+        if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
+            this.initialTemplate.content = {
+                ...this.initialTemplate.content,
+                preprocess: {
+                    kind: PreprocessKind.SQL,
+                    engine: preprocessStepValue.engine.toLowerCase(),
+                    queries: preprocessStepValue.queries,
+                },
+            };
+        }
+
+        return stringify(this.initialTemplate);
+    }
+
     public buildYamlSetTransformEvent(params: Omit<SetTransform, "__typename">): string {
         this.initialTemplate.content = {
             kind: "setTransform",
@@ -82,6 +114,12 @@ export class TemplatesYamlEventsService {
     public buildYamlSetWatermarkEvent(dateTime: string): string {
         let result = this.initialSetWatermarkTemplate;
         result += `  outputWatermark: ${dateTime}`;
+        return result;
+    }
+
+    public buildYamlDisablePollingSourceEvent(): string {
+        let result = this.initialDisablePollingSourceTemplate;
+        result += `  dummy: test`;
         return result;
     }
 }

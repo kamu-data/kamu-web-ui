@@ -1,8 +1,11 @@
 import {
+    AddPushSource,
     CompressionFormat,
+    DataSchemaFormat,
     DatasetTransformFragment,
     ExecuteQueryEventFragment,
     SetAttachments,
+    SetDataSchema,
     SetInfo,
     SetLicense,
     SetPollingSource,
@@ -232,4 +235,53 @@ export const mockSetVocab: SetVocab = {
 export const mockSetWatermark: SetWatermark = {
     __typename: "SetWatermark",
     outputWatermark: "2022-08-05T21:17:30.639588217+00:00",
+};
+
+export const mockSetDataSchema: SetDataSchema = {
+    __typename: "SetDataSchema",
+    schema: {
+        __typename: "DataSchema",
+        format: DataSchemaFormat.ParquetJson,
+        content:
+            '{"name": "arrow_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT64", "logicalType": "TIMESTAMP(MILLIS,true)"}, {"name": "block_time", "repetition": "OPTIONAL", "type": "INT64", "logicalType": "TIMESTAMP(MILLIS,true)"}, {"name": "token_symbol", "repetition": "REQUIRED", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "event_name", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "amount", "repetition": "OPTIONAL", "type": "DOUBLE"}, {"name": "eth_amount", "repetition": "OPTIONAL", "type": "DOUBLE"}, {"name": "block_number", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "block_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "transaction_index", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "transaction_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "log_index", "repetition": "OPTIONAL", "type": "INT64"}]}',
+    },
+};
+
+export const mockAddPushSource: AddPushSource = {
+    __typename: "AddPushSource",
+    sourceName: "mock1",
+    read: {
+        __typename: "ReadStepCsv",
+        schema: [
+            "id BIGINT",
+            "date_reported TIMESTAMP",
+            "zone STRING",
+            "gender STRING",
+            "age_group STRING",
+            "case_status STRING",
+            "case_type STRING",
+        ],
+        separator: ",",
+        encoding: null,
+        quote: null,
+        escape: null,
+        comment: null,
+        header: true,
+        enforceSchema: true,
+        inferSchema: false,
+        ignoreLeadingWhiteSpace: null,
+        ignoreTrailingWhiteSpace: null,
+        nullValue: null,
+        emptyValue: null,
+        nanValue: null,
+        positiveInf: null,
+        negativeInf: null,
+        dateFormat: null,
+        timestampFormat: null,
+        multiLine: null,
+    },
+    merge: {
+        __typename: "MergeStrategyLedger",
+        primaryKey: ["id"],
+    },
 };

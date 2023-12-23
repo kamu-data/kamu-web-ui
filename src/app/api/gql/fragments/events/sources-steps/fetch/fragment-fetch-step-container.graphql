@@ -1,0 +1,9 @@
+fragment FetchStepContainerData on FetchStepContainer {
+  image
+  command
+  args
+  env {
+    name
+    value
+  }
+}

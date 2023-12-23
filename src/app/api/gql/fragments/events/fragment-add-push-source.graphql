@@ -1,0 +1,21 @@
+fragment AddPushSourceEvent on AddPushSource {
+  sourceName
+  read {
+    ...ReadStepCsvData
+    ...ReadStepGeoJsonData
+    ...ReadStepParquetData
+    ...ReadStepJsonLinesData
+    ...ReadStepEsriShapefileData
+    ...ReadStepJsonData
+    ...ReadStepNdGeoJsonData
+    ...ReadStepNdJsonData
+  }
+  merge {
+    ...MergeStrategySnapshotData
+    ...MergeStrategyLedgerData
+    ...MergeStrategyAppendData
+  }
+  preprocess {
+    ...PreprocessStepData
+  }
+}

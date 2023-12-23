@@ -15,13 +15,14 @@ import { FETCH_STEP_RADIO_CONTROLS, MERGE_STEP_RADIO_CONTROLS, READ_STEP_RADIO_C
 import { FETCH_FORM_DATA } from "./steps/data/fetch-form-data";
 import { READ_FORM_DATA } from "./steps/data/read-form-data";
 import { MERGE_FORM_DATA } from "./steps/data/merge-form-data";
-import { ProcessFormService } from "./process-form.service";
+import { ProcessFormService } from "../../services/process-form.service";
 import { EditPollingSourceService } from "./edit-polling-source.service";
 import { from } from "rxjs";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
 import { BaseMainEventComponent } from "../base-main-event.component";
 import { MaybeNullOrUndefined } from "src/app/common/app.types";
+import { SourcesSection } from "./process-form.service.types";
 
 @Component({
     selector: "app-add-polling-source",
@@ -109,8 +110,8 @@ export class AddPollingSourceComponent extends BaseMainEventComponent implements
         this.subsribeErrorMessage();
     }
 
-    public changeStep(step: SetPollingSourceSection): void {
-        this.currentStep = step;
+    public changeStep(step: SourcesSection): void {
+        this.currentStep = step as SetPollingSourceSection;
     }
 
     public onSaveEvent(): void {

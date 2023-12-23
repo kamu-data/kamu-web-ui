@@ -607,7 +607,8 @@ router-outlet {
 #set-polling-source-schema,
 #set-polling-source-env-variables,
 #result-query-table,
-#overview-data-table {
+#overview-data-table,
+#set-data-schema-event {
     * {
         padding: 0 8px;
         font-size: 12px;

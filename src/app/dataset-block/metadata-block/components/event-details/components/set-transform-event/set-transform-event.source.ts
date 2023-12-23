@@ -1,28 +1,15 @@
 import { TemporalTablesPropertyComponent } from "../common/temporal-tables-property/temporal-tables-property.component";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
-import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
-import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
 import { OwnerPropertyComponent } from "../common/owner-property/owner-property.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { DatasetNameByIdPropertyComponent } from "../common/dataset-name-by-id-property/dataset-name-by-id-property.component";
 import { SetTransformToolipsTexts } from "src/app/common/tooltips/set-transform.text";
+import { getSourcesDescriptors } from "../common-sources/sources-event.source";
 
 export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
-    "SetTransform.TransformSql.engine": {
-        label: "Engine:",
-        tooltip: SetTransformToolipsTexts.ENGINE,
-        presentationComponent: EnginePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "set-transform-transformSql-engine",
-    },
+    "SetTransform.TransformSql.engine": getSourcesDescriptors("SetTransform.TransformSql.engine"),
 
-    "SetTransform.TransformSql.queries": {
-        label: "Queries:",
-        tooltip: SetTransformToolipsTexts.QUERIES,
-        presentationComponent: SqlQueryViewerComponent,
-        separateRowForValue: true,
-        dataTestId: "set-transform-transformSql-queries",
-    },
+    "SetTransform.TransformSql.queries": getSourcesDescriptors("SetTransform.TransformSql.queries"),
 
     "SetTransform.TransformSql.temporalTables": {
         label: "Temporal tables:",

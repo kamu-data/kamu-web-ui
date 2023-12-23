@@ -51,6 +51,13 @@ type AddData {
   sourceState: SourceState
 }
 
+type AddPushSource {
+  sourceName: String
+  read: ReadStep!
+  preprocess: Transform
+  merge: MergeStrategy!
+}
+
 type AttachmentEmbedded {
   path: String!
   content: String!
@@ -373,6 +380,7 @@ type DatasetPermissions {
   canDelete: Boolean!
   canRename: Boolean!
   canCommit: Boolean!
+  canSchedule: Boolean!
 }
 
 scalar DatasetRef
@@ -433,6 +441,14 @@ type DeleteResultDanglingReference implements DeleteResult {
 type DeleteResultSuccess implements DeleteResult {
   deletedDataset: DatasetAlias!
   message: String!
+}
+
+type DisablePollingSource {
+  dummy: String
+}
+
+type DisablePushSource {
+  sourceName: String
 }
 
 """
@@ -604,6 +620,10 @@ union MetadataEvent =
   | SetAttachments
   | SetInfo
   | SetLicense
+  | SetDataSchema
+  | AddPushSource
+  | DisablePushSource
+  | DisablePollingSource
 
 enum MetadataManifestFormat {
   YAML
@@ -861,6 +881,10 @@ type Seed {
 
 type SetAttachments {
   attachments: Attachments!
+}
+
+type SetDataSchema {
+  schema: DataSchema!
 }
 
 type SetInfo {

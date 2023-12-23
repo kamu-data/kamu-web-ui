@@ -18,6 +18,8 @@ import { SharedTestModule } from "src/app/common/shared-test.module";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import _ from "lodash";
+import { AngularSvgIconModule } from "angular-svg-icon";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("MetadataComponent", () => {
     let component: MetadataComponent;
@@ -28,7 +30,14 @@ describe("MetadataComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [MetadataComponent, BlockRowDataComponent, TooltipIconComponent],
-            imports: [NgbTooltipModule, MatIconModule, MetadataBlockModule, SharedTestModule],
+            imports: [
+                NgbTooltipModule,
+                MatIconModule,
+                MetadataBlockModule,
+                SharedTestModule,
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
+            ],
             providers: [
                 {
                     provide: HIGHLIGHT_OPTIONS,

@@ -6,6 +6,7 @@ export enum DynamicEventTypes {
     SetTransform = "SetTransform",
     ExecuteQuery = "ExecuteQuery",
     AddData = "AddData",
+    AddPushSource = "AddPushSource",
 }
 
 export type DynamicEventTypesScalar = `${DynamicEventTypes}`;

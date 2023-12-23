@@ -9,6 +9,10 @@ export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SET_TRANSFORM = "Query changed";
     public static readonly BLOCK_DESCRIBE_SET_VOCAB = "Vocabulary changed";
     public static readonly BLOCK_DESCRIBE_SET_POLLING_SOURCE = "Polling source changed";
+    public static readonly BLOCK_DESCRIBE_ADD_PUSH_SOURCE = "Push source updated";
+    public static readonly BLOCK_DESCRIBE_SET_DATA_SCHEMA = "Data schema updated";
+    public static readonly BLOCK_DESCRIBE_DISABLE_POLLING_SOURCE = "Polling source disabled";
+    public static readonly BLOCK_DESCRIBE_DISABLE_ADD_PUSH_SOURCE = "Push source disabled";
     public static readonly BLOCK_DESCRIBE_SET_INFO = "Basic information updated";
     public static readonly BLOCK_DESCRIBE_SET_ATTACHMENTS = "Attachments updated";
     public static readonly BLOCK_DESCRIBE_SET_WATERMARK = "Watermark updated";
@@ -157,6 +161,16 @@ export class DataHelpers {
                 return `License updated: ${event.name}`;
             case "SetAttachments":
                 return DataHelpers.BLOCK_DESCRIBE_SET_ATTACHMENTS;
+            case "AddPushSource":
+                return DataHelpers.BLOCK_DESCRIBE_ADD_PUSH_SOURCE;
+            case "SetDataSchema":
+                return DataHelpers.BLOCK_DESCRIBE_SET_DATA_SCHEMA;
+            case "DisablePollingSource":
+                return DataHelpers.BLOCK_DESCRIBE_DISABLE_POLLING_SOURCE;
+            case "DisablePushSource":
+                return DataHelpers.BLOCK_DESCRIBE_DISABLE_ADD_PUSH_SOURCE;
+            default:
+                return "Unsupported event type";
         }
     }
 

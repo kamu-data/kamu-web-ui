@@ -43,6 +43,12 @@ export class NavigationService {
         );
     }
 
+    public navigateToAddPushSource(params: DatasetInfo): void {
+        promiseWithCatch(
+            this.router.navigate([params.accountName, params.datasetName, ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE]),
+        );
+    }
+
     public navigateToSetTransform(params: DatasetInfo): void {
         promiseWithCatch(
             this.router.navigate([params.accountName, params.datasetName, ProjectLinks.URL_PARAM_SET_TRANSFORM]),

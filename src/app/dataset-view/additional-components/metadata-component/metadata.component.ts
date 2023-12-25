@@ -94,7 +94,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     }
 
     public get currentSource(): MaybeNullOrUndefined<SetPollingSourceEventFragment> {
-        return this.currentState?.metadataSummary.metadata.currentSource;
+        return this.currentState?.metadataSummary.metadata.currentPollingSource;
     }
 
     public get currentTransform(): MaybeNullOrUndefined<DatasetTransformFragment> {
@@ -117,7 +117,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         if (this.currentState) {
             return (
                 this.datasetBasics.kind === DatasetKind.Root &&
-                !_.isNil(this.currentState.metadataSummary.metadata.currentSource) &&
+                !_.isNil(this.currentState.metadataSummary.metadata.currentPollingSource) &&
                 this.datasetPermissions.permissions.canCommit
             );
         } else {

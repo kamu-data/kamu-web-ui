@@ -346,6 +346,10 @@ export type DatasetMetadata = {
     currentInfo: SetInfo;
     /** Current license associated with the dataset */
     currentLicense?: Maybe<SetLicense>;
+    /** Current polling source used by the root dataset */
+    currentPollingSource?: Maybe<SetPollingSource>;
+    /** Current push sources used by the root dataset */
+    currentPushSources: Array<AddPushSource>;
     /**
      * Current readme file as discovered from attachments associated with the
      * dataset
@@ -353,7 +357,7 @@ export type DatasetMetadata = {
     currentReadme?: Maybe<Scalars["String"]>;
     /** Latest data schema */
     currentSchema?: Maybe<DataSchema>;
-    /** Current source used by the root dataset */
+    /** Deprecated - use `current_polling_source` instead */
     currentSource?: Maybe<SetPollingSource>;
     /** Current transformation used by the derivative dataset */
     currentTransform?: Maybe<SetTransform>;
@@ -1706,7 +1710,7 @@ export type AccountFragment = {
 
 export type CurrentSourceFetchUrlFragment = {
     __typename?: "DatasetMetadata";
-    currentSource?: {
+    currentPollingSource?: {
         __typename?: "SetPollingSource";
         fetch:
             | { __typename?: "FetchStepContainer" }
@@ -1882,7 +1886,7 @@ export type DatasetMetadataSummaryFragment = {
         currentWatermark?: string | null;
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
-        currentSource?: ({ __typename?: "SetPollingSource" } & SetPollingSourceEventFragment) | null;
+        currentPollingSource?: ({ __typename?: "SetPollingSource" } & SetPollingSourceEventFragment) | null;
         currentTransform?: ({ __typename?: "SetTransform" } & DatasetTransformFragment) | null;
         currentSchema?: { __typename: "DataSchema"; format: DataSchemaFormat; content: string } | null;
         currentVocab?: ({ __typename?: "SetVocab" } & SetVocabEventFragment) | null;
@@ -1894,7 +1898,7 @@ export type DatasetOverviewFragment = {
     __typename?: "Dataset";
     metadata: {
         __typename?: "DatasetMetadata";
-        currentSource?: { __typename: "SetPollingSource" } | null;
+        currentPollingSource?: { __typename: "SetPollingSource" } | null;
         currentTransform?: { __typename: "SetTransform" } | null;
     };
 } & DatasetDescriptionFragment &
@@ -2163,7 +2167,7 @@ export const DatasetBasicsFragmentDoc = gql`
 `;
 export const CurrentSourceFetchUrlFragmentDoc = gql`
     fragment CurrentSourceFetchUrl on DatasetMetadata {
-        currentSource {
+        currentPollingSource {
             fetch {
                 ... on FetchStepUrl {
                     url
@@ -2749,7 +2753,7 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
             currentLicense {
                 ...License
             }
-            currentSource {
+            currentPollingSource {
                 ...SetPollingSourceEvent
             }
             currentWatermark
@@ -2815,7 +2819,7 @@ export const DatasetOverviewFragmentDoc = gql`
         ...DatasetReadme
         ...DatasetLastUpdate
         metadata {
-            currentSource {
+            currentPollingSource {
                 __typename
             }
             currentTransform {

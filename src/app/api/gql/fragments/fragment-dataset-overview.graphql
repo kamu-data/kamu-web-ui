@@ -4,7 +4,7 @@ fragment DatasetOverview on Dataset {
   ...DatasetReadme
   ...DatasetLastUpdate
   metadata {
-    currentSource {
+    currentPollingSource {
       __typename
     }
     currentTransform {

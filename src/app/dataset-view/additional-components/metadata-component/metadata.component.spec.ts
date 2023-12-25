@@ -148,7 +148,7 @@ describe("MetadataComponent", () => {
         it("should not be possible to edit SetPollingSource for root dataset if no source is defined yet", () => {
             component.datasetBasics = mockDatasetBasicsRootFragment;
             component.currentState = _.cloneDeep(mockMetadataRootUpdate);
-            component.currentState.metadataSummary.metadata.currentSource = undefined;
+            component.currentState.metadataSummary.metadata.currentPollingSource = undefined;
             fixture.detectChanges();
 
             expect(component.canEditSetPollingSource).toEqual(false);

@@ -225,7 +225,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
             alias: "kamu/alberta.case-details",
             metadata: {
                 __typename: "DatasetMetadata",
-                currentSource: {
+                currentPollingSource: {
                     __typename: "SetPollingSource",
                     fetch: {
                         __typename: "FetchStepUrl",
@@ -434,7 +434,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                 metadata: {
                                                     __typename: "DatasetMetadata",
                                                     currentDownstreamDependencies: [],
-                                                    currentSource: null,
+                                                    currentPollingSource: null,
                                                     currentLicense: null,
                                                     currentWatermark: "2023-08-06T18:57:59+00:00",
                                                 },
@@ -467,7 +467,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                             metadata: {
                                                                 __typename: "DatasetMetadata",
                                                                 currentDownstreamDependencies: [],
-                                                                currentSource: null,
+                                                                currentPollingSource: null,
                                                                 currentLicense: null,
                                                                 currentWatermark: "2023-08-06T18:57:59+00:00",
                                                             },
@@ -491,7 +491,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                             alias: "account.whatif.reth-vs-snp500.market-value",
                                                         },
                                                     ],
-                                                    currentSource: null,
+                                                    currentPollingSource: null,
                                                     currentLicense: null,
                                                     currentWatermark: "2023-08-06T18:57:59+00:00",
                                                 },
@@ -515,7 +515,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                 alias: "account.whatif.reth-vs-snp500.portfolio",
                                             },
                                         ],
-                                        currentSource: null,
+                                        currentPollingSource: null,
                                         currentLicense: null,
                                         currentWatermark: "2023-08-06T18:57:59+00:00",
                                     },
@@ -538,7 +538,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                     alias: "account.tokens.portfolio.usd",
                                 },
                             ],
-                            currentSource: null,
+                            currentPollingSource: null,
                             currentLicense: null,
                             currentWatermark: "2023-08-06T18:57:59+00:00",
                         },
@@ -561,7 +561,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                         alias: "account.tokens.portfolio",
                     },
                 ],
-                currentSource: {
+                currentPollingSource: {
                     __typename: "SetPollingSource",
                     fetch: {
                         __typename: "FetchStepUrl",

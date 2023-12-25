@@ -102,7 +102,7 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
 };
 
 export const mockCurrentSourceFetchUrlFragment: CurrentSourceFetchUrlFragment = {
-    currentSource: {
+    currentPollingSource: {
         __typename: "SetPollingSource",
         fetch: {
             __typename: "FetchStepUrl",
@@ -144,7 +144,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
         alias: "kamu/alberta.case-details",
         metadata: {
             __typename: "DatasetMetadata",
-            currentSource: {
+            currentPollingSource: {
                 __typename: "SetPollingSource",
                 fetch: {
                     __typename: "FetchStepUrl",
@@ -184,7 +184,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             alias: "kamu/alberta.case-details",
             metadata: {
                 __typename: "DatasetMetadata",
-                currentSource: {
+                currentPollingSource: {
                     __typename: "SetPollingSource",
                     fetch: {
                         __typename: "FetchStepUrl",
@@ -212,7 +212,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             __typename: "Dataset",
             metadata: {
                 __typename: "DatasetMetadata",
-                currentSource: null,
+                currentPollingSource: null,
                 currentLicense: {
                     __typename: "SetLicense",
                     shortName: "OGL-Canada-2.0",
@@ -244,7 +244,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             __typename: "Dataset",
             metadata: {
                 __typename: "DatasetMetadata",
-                currentSource: null,
+                currentPollingSource: null,
                 currentLicense: {
                     __typename: "SetLicense",
                     shortName: "OGL-Canada-2.0",
@@ -276,7 +276,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             __typename: "Dataset",
             metadata: {
                 __typename: "DatasetMetadata",
-                currentSource: null,
+                currentPollingSource: null,
                 currentLicense: {
                     __typename: "SetLicense",
                     shortName: "OGL-Ontario",
@@ -321,7 +321,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 alias: "kamu/alberta.case-details",
                 metadata: {
                     __typename: "DatasetMetadata",
-                    currentSource: {
+                    currentPollingSource: {
                         __typename: "SetPollingSource",
                         fetch: {
                             __typename: "FetchStepUrl",
@@ -349,7 +349,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 __typename: "Dataset",
                 metadata: {
                     __typename: "DatasetMetadata",
-                    currentSource: null,
+                    currentPollingSource: null,
                     currentLicense: {
                         __typename: "SetLicense",
                         shortName: "OGL-Canada-2.0",
@@ -383,7 +383,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 __typename: "Dataset",
                 metadata: {
                     __typename: "DatasetMetadata",
-                    currentSource: null,
+                    currentPollingSource: null,
                     currentLicense: {
                         __typename: "SetLicense",
                         shortName: "OGL-Canada-2.0",
@@ -415,7 +415,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 __typename: "Dataset",
                 metadata: {
                     __typename: "DatasetMetadata",
-                    currentSource: null,
+                    currentPollingSource: null,
                     currentLicense: {
                         __typename: "SetLicense",
                         shortName: "OGL-Canada-2.0",
@@ -449,7 +449,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 __typename: "Dataset",
                 metadata: {
                     __typename: "DatasetMetadata",
-                    currentSource: null,
+                    currentPollingSource: null,
                     currentLicense: {
                         __typename: "SetLicense",
                         shortName: "OGL-Canada-2.0",
@@ -481,7 +481,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 __typename: "Dataset",
                 metadata: {
                     __typename: "DatasetMetadata",
-                    currentSource: null,
+                    currentPollingSource: null,
                     currentLicense: {
                         __typename: "SetLicense",
                         shortName: "OGL-Ontario",
@@ -631,7 +631,7 @@ export const mockOverviewDataUpdate = {
             currentLicense: null,
             currentWatermark: "2022-08-05T20:24:55+00:00",
             currentTransform: null,
-            currentSource: {
+            currentPollingSource: {
                 __typename: "SetPollingSource",
                 fetch: {
                     __typename: "FetchStepUrl",
@@ -821,7 +821,7 @@ export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
         __typename: "Dataset",
         metadata: {
             __typename: "DatasetMetadata",
-            currentSource: {
+            currentPollingSource: {
                 __typename: "SetPollingSource",
                 fetch: {
                     __typename: "FetchStepUrl",
@@ -1143,7 +1143,7 @@ export const mockOverviewWithSetInfo = {
         currentLicense: null,
         currentWatermark: "2022-08-05T20:24:55+00:00",
         currentTransform: null,
-        currentSource: {
+        currentPollingSource: {
             __typename: "SetPollingSource",
             fetch: {
                 __typename: "FetchStepUrl",
@@ -1290,7 +1290,7 @@ export const mockOverviewWithSetLicense = {
         },
         currentWatermark: "2022-08-05T20:24:55+00:00",
         currentTransform: null,
-        currentSource: {
+        currentPollingSource: {
             __typename: "SetPollingSource",
             fetch: {
                 __typename: "FetchStepUrl",

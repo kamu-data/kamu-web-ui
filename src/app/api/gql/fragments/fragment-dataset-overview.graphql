@@ -10,5 +10,8 @@ fragment DatasetOverview on Dataset {
     currentTransform {
       __typename
     }
+    currentPushSources {
+      __typename
+    }
   }
 }

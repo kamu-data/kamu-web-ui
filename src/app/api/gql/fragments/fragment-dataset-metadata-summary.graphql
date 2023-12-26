@@ -16,12 +16,13 @@ fragment DatasetMetadataSummary on Dataset {
     currentSchema(format: PARQUET_JSON) {
       format
       content
-      __typename
     }
     currentVocab {
       ...SetVocabEvent
     }
-    __typename
+    currentPushSources {
+      ...AddPushSourceEvent
+    }
   }
   ...DatasetReadme
   ...DatasetLastUpdate

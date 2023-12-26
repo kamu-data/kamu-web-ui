@@ -1,4 +1,5 @@
 import {
+    AddPushSourceEventFragment,
     DatasetKind,
     DatasetPermissionsFragment,
     DatasetTransformFragment,
@@ -93,8 +94,12 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         return this.currentState?.metadataSummary.metadata.currentWatermark;
     }
 
-    public get currentSource(): MaybeNullOrUndefined<SetPollingSourceEventFragment> {
+    public get currentPollingSource(): MaybeNullOrUndefined<SetPollingSourceEventFragment> {
         return this.currentState?.metadataSummary.metadata.currentPollingSource;
+    }
+
+    public get currentPushSource(): MaybeNullOrUndefined<AddPushSourceEventFragment[]> {
+        return this.currentState?.metadataSummary.metadata.currentPushSources;
     }
 
     public get currentTransform(): MaybeNullOrUndefined<DatasetTransformFragment> {
@@ -125,6 +130,18 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         }
     }
 
+    public get canEditAddPushSource(): boolean {
+        if (this.currentState) {
+            return (
+                this.datasetBasics.kind === DatasetKind.Root &&
+                !!this.currentState.metadataSummary.metadata.currentPushSources.length &&
+                this.datasetPermissions.permissions.canCommit
+            );
+        } else {
+            return false;
+        }
+    }
+
     public get canEditSetTransform(): boolean {
         if (this.currentState) {
             return (
@@ -142,6 +159,16 @@ export class MetadataComponent extends BaseComponent implements OnInit {
             accountName: this.datasetBasics.owner.accountName,
             datasetName: this.datasetBasics.name,
         });
+    }
+
+    public navigateToEditAddPushSource(sourceName: string): void {
+        this.navigationService.navigateToAddPushSource(
+            {
+                accountName: this.datasetBasics.owner.accountName,
+                datasetName: this.datasetBasics.name,
+            },
+            sourceName,
+        );
     }
 
     public navigateToEditSetTransform(): void {
@@ -167,5 +194,14 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         //         )
         //         .subscribe(),
         // );
+    }
+
+    public onDeletePushSource(): void {
+        promiseWithCatch(
+            this.modalService.warning({
+                message: "Feature coming soon",
+                yesButtonText: "Ok",
+            }),
+        );
     }
 }

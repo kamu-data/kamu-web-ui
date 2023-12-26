@@ -8,15 +8,14 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { EditPollingSourceService } from "../add-polling-source/edit-polling-source.service";
 import { ProcessFormService } from "../../services/process-form.service";
 import { AddPushSourceSection } from "src/app/shared/shared.types";
-import { DatasetKind } from "src/app/api/kamu.graphql.interface";
-import { MaybeNullOrUndefined } from "src/app/common/app.types";
-import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
+import { DatasetKind, DatasetMetadataSummaryFragment } from "src/app/api/kamu.graphql.interface";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { from } from "rxjs";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { AddPushSourceEditFormType } from "./add-push-source-form.types";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { SourcesSection } from "../add-polling-source/process-form.service.types";
+import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 
 @Component({
     selector: "app-add-push-source",
@@ -32,6 +31,7 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
         engine: "",
         queries: [],
     };
+    public metadataSummary: DatasetMetadataSummaryFragment;
 
     // ---------------------------------
     public readonly READ_STEP_RADIO_DATA = READ_STEP_RADIO_CONTROLS;
@@ -52,17 +52,9 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
 
     public ngOnInit(): void {
         this.checkDatasetEditability(DatasetKind.Root);
-        this.trackSubscriptions(
-            this.editService
-                .getEventAsYaml(this.getDatasetInfoFromUrl(), SupportedEvents.AddPushSource)
-                .subscribe((result: MaybeNullOrUndefined<string>) => {
-                    if (result) {
-                        this.eventYamlByHash = result;
-                    }
-                    this.history = this.editService.history;
-                    this.cdr.detectChanges();
-                }),
-        );
+
+        // this.initEditForm();
+
         this.subsribeErrorMessage();
     }
 
@@ -75,6 +67,15 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
             kind: [this.MERGE_DEFAULT_KIND],
         }),
     });
+
+    public initEditForm(): void {
+        this.trackSubscription(
+            this.datasetSubsService.metadataSchemaChanges.subscribe(({ metadataSummary }: MetadataSchemaUpdate) => {
+                console.log(">>>", metadataSummary);
+                this.metadataSummary = metadataSummary;
+            }),
+        );
+    }
 
     public get readForm(): FormGroup {
         return this.addPushSourceForm.get(AddPushSourceSection.READ) as FormGroup;

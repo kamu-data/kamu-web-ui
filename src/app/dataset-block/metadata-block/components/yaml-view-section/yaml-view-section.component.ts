@@ -52,6 +52,10 @@ export class YamlViewSectionComponent {
         return this.currentBlock.event.__typename === SupportedEvents.Seed;
     }
 
+    public get isAddPushSourceEvent(): boolean {
+        return this.currentBlock.event.__typename === SupportedEvents.AddPushSource;
+    }
+
     public get isEventWithYamlView(): boolean {
         return (
             this.isSetPollingSourceEvent ||
@@ -61,7 +65,8 @@ export class YamlViewSectionComponent {
             this.isSetInfoEvent ||
             this.isSetVocabEvent ||
             this.isSetWatermarkEvent ||
-            this.isSeedEvent
+            this.isSeedEvent ||
+            this.isAddPushSourceEvent
         );
     }
 }

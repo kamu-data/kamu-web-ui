@@ -62,9 +62,9 @@ export class EditPollingSourceService extends BaseYamlEventService {
     }
 
     private patchReadStep(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
+        sectionForm.patchValue({ ...editFormValue.read });
         if ([ReadKind.JSON, ReadKind.ND_JSON].includes(editFormValue.read.kind)) {
             sectionForm.patchValue({
-                ...editFormValue.read,
                 jsonKind: editFormValue.read.kind,
                 kind: ReadKind.All_JSON,
             });

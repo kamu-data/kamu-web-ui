@@ -38,4 +38,5 @@ export default class ProjectLinks {
     public static readonly URL_QUERY_PARAM_PAGE: string = "page";
     public static readonly URL_QUERY_PARAM_QUERY: string = "query";
     public static readonly URL_QUERY_PARAM_CALLBACK_URL: string = "callbackUrl";
+    public static readonly URL_QUERY_PARAM_PUSH_SOURCE_NAME: string = "name";
 }

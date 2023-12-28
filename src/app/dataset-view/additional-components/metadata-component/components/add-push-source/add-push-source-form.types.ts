@@ -16,6 +16,7 @@ export interface AddPushSourceEditFormType {
         schema?: string[];
         separator?: string;
         encoding?: string;
+        comment?: string;
         quote?: string;
         escape?: string;
         enforceSchema?: boolean;

@@ -8,6 +8,7 @@
             [label]="'Source name'"
             [value]="''"
             [placeholder]="'Enter name'"
+            [requiredField]="true"
             [tooltip]="'Source name'"
         ></app-input-field>
         <div class="mt-1" *ngIf="form?.get('sourceName')?.errors?.noneOf">

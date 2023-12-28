@@ -1,3 +1,7 @@
+import { AddPushSource, MetadataBlockFragment } from "./../../../../../api/kamu.graphql.interface";
+import { SupportedEvents } from "./../../../../../dataset-block/metadata-block/components/event-details/supported.events";
+import ProjectLinks from "src/app/project-links";
+import { MaybeNull } from "./../../../../../common/app.types";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ReadKind, MergeKind, PreprocessStepValue } from "../add-polling-source/add-polling-source-form.types";
 import { READ_STEP_RADIO_CONTROLS, MERGE_STEP_RADIO_CONTROLS } from "../add-polling-source/form-control.source";
@@ -5,17 +9,18 @@ import { MERGE_FORM_DATA } from "../add-polling-source/steps/data/merge-form-dat
 import { READ_FORM_DATA } from "../add-polling-source/steps/data/read-form-data";
 import { BaseMainEventComponent } from "../base-main-event.component";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { EditPollingSourceService } from "../add-polling-source/edit-polling-source.service";
 import { ProcessFormService } from "../../services/process-form.service";
 import { AddPushSourceSection } from "src/app/shared/shared.types";
-import { DatasetKind, DatasetMetadataSummaryFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { from } from "rxjs";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { AddPushSourceEditFormType } from "./add-push-source-form.types";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { SourcesSection } from "../add-polling-source/process-form.service.types";
-import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { ParamMap } from "@angular/router";
+import { EditAddPushSourceService } from "./edit-add-push-source.service";
+import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 
 @Component({
     selector: "app-add-push-source",
@@ -31,7 +36,6 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
         engine: "",
         queries: [],
     };
-    public metadataSummary: DatasetMetadataSummaryFragment;
 
     // ---------------------------------
     public readonly READ_STEP_RADIO_DATA = READ_STEP_RADIO_CONTROLS;
@@ -45,21 +49,19 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
     constructor(
         private fb: FormBuilder,
         private processFormService: ProcessFormService,
-        private editService: EditPollingSourceService,
+        private editService: EditAddPushSourceService,
     ) {
         super();
     }
 
     public ngOnInit(): void {
         this.checkDatasetEditability(DatasetKind.Root);
-
-        // this.initEditForm();
-
+        this.initEditForm();
         this.subsribeErrorMessage();
     }
 
     public addPushSourceForm: FormGroup = this.fb.group({
-        sourceName: this.fb.control("", RxwebValidators.noneOf({ matchValues: ["test1", "test2"] })),
+        sourceName: this.fb.control("", [RxwebValidators.required()]),
         read: this.fb.group({
             kind: [this.READ_DEFAULT_KIND],
         }),
@@ -70,18 +72,57 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
 
     public initEditForm(): void {
         this.trackSubscription(
-            this.datasetSubsService.metadataSchemaChanges.subscribe(({ metadataSummary }: MetadataSchemaUpdate) => {
-                console.log(">>>", metadataSummary);
-                this.metadataSummary = metadataSummary;
-            }),
+            this.editService
+                .getEventAsYaml(this.getDatasetInfoFromUrl(), this.queryParamName ?? "")
+                .subscribe((result) => {
+                    this.history = this.editService.history;
+                    if (this.sourceNameNotExist()) {
+                        this.navigationServices.navigateToPageNotFound();
+                    }
+                    if (result) {
+                        this.eventYamlByHash = result;
+                        const currentPushSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
+                        this.addPushSourceForm.patchValue({ sourceName: currentPushSourceEvent.sourceName });
+                    }
+                    if (!this.queryParamName) {
+                        this.addPushSourceForm.controls.sourceName.addValidators(
+                            RxwebValidators.noneOf({
+                                matchValues: [...this.getAllSourceNames(this.history), "default"],
+                            }),
+                        );
+                    }
+                    this.cdr.detectChanges();
+                }),
         );
     }
 
-    public get readForm(): FormGroup {
+    private getAllSourceNames(historyUpdate: MaybeNull<DatasetHistoryUpdate>): string[] {
+        if (!historyUpdate) {
+            return [];
+        } else {
+            const data = historyUpdate.history
+                .filter((item: MetadataBlockFragment) => item.event.__typename === SupportedEvents.AddPushSource)
+                .map((data: MetadataBlockFragment) => data.event as AddPushSource);
+            return data.map((event) => event.sourceName ?? "");
+        }
+    }
+
+    private sourceNameNotExist(): boolean {
+        return (
+            !!this.queryParamName &&
+            !this.history?.history.filter(
+                (item) =>
+                    item.event.__typename === SupportedEvents.AddPushSource &&
+                    item.event.sourceName === this.queryParamName,
+            ).length
+        );
+    }
+
+    public get readPushForm(): FormGroup {
         return this.addPushSourceForm.get(AddPushSourceSection.READ) as FormGroup;
     }
 
-    public get mergeForm(): FormGroup {
+    public get mergePushForm(): FormGroup {
         return this.addPushSourceForm.get(AddPushSourceSection.MERGE) as FormGroup;
     }
 
@@ -137,5 +178,10 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
                 )
                 .subscribe(),
         );
+    }
+
+    public get queryParamName(): MaybeNull<string> {
+        const paramMap: ParamMap = this.activatedRoute.snapshot.queryParamMap;
+        return paramMap.get(ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME);
     }
 }

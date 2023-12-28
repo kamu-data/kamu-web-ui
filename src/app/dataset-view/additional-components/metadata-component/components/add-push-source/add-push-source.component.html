@@ -1,4 +1,4 @@
-<div class="layout">
+<div class="layout" *ngIf="history">
     <div class="mt-4">
         <div class="border border-1 mt-4 px-2 py-4 rounded-3">
             <form [formGroup]="addPushSourceForm">
@@ -16,7 +16,7 @@
                         </div>
                     </mat-step>
 
-                    <mat-step [stepControl]="readForm" errorMessage="Field is required">
+                    <mat-step [stepControl]="readPushForm" errorMessage="Field is required">
                         <ng-template matStepLabel>
                             <div class="stepper-header-overlay" (click)="onShowErrors()"></div>
                             Read</ng-template
@@ -33,12 +33,12 @@
                             <app-stepper-navigation
                                 [prevStep]="steps.SOURCE_NAME"
                                 [nextStep]="steps.PREPROCESS"
-                                [validStep]="readForm.valid"
+                                [validStep]="readPushForm.valid"
                                 (changeStepEmitter)="changeStep($event)"
                             ></app-stepper-navigation>
                         </div>
                     </mat-step>
-                    <mat-step [stepControl]="readForm">
+                    <mat-step [stepControl]="readPushForm">
                         <ng-template matStepLabel>Preprocess</ng-template>
                         <div class="container-step">
                             <app-preprocess-step
@@ -50,12 +50,12 @@
                             <app-stepper-navigation
                                 [prevStep]="steps.READ"
                                 [nextStep]="steps.MERGE"
-                                [validStep]="readForm.valid"
+                                [validStep]="readPushForm.valid"
                                 (changeStepEmitter)="changeStep($event)"
                             ></app-stepper-navigation>
                         </div>
                     </mat-step>
-                    <mat-step [stepControl]="mergeForm">
+                    <mat-step [stepControl]="mergePushForm">
                         <ng-template matStepLabel>Merge</ng-template>
                         <div class="container-step">
                             <app-base-step

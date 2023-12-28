@@ -81,7 +81,7 @@ describe("MetadataComponent", () => {
         expect(component.currentLicense).toBeTruthy();
         expect(component.currentTransform).toBeTruthy();
         expect(component.currentWatermark).toBeTruthy();
-        expect(component.currentSource).toBeFalsy();
+        expect(component.currentPollingSource).toBeFalsy();
     });
 
     it("should check #ngOnInit and associated properties for root dataset", () => {
@@ -92,7 +92,7 @@ describe("MetadataComponent", () => {
         expect(component.currentLicense).toBeTruthy();
         expect(component.currentTransform).toBeFalsy();
         expect(component.currentWatermark).toBeTruthy();
-        expect(component.currentSource).toBeTruthy();
+        expect(component.currentPollingSource).toBeTruthy();
     });
 
     it("should check default values for properties and permissions when no state is defined yet", () => {
@@ -104,7 +104,7 @@ describe("MetadataComponent", () => {
         expect(component.latestBlockhash).toEqual("");
         expect(component.latestBlockSystemTime).toEqual("");
         expect(component.currentLicense).toBeUndefined();
-        expect(component.currentSource).toBeUndefined();
+        expect(component.currentPollingSource).toBeUndefined();
         expect(component.currentTransform).toBeUndefined();
         expect(component.currentWatermark).toBeUndefined();
 

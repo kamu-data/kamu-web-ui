@@ -19,7 +19,7 @@ export abstract class BaseMainEventComponent extends BaseComponent {
     protected yamlEventService = inject(TemplatesYamlEventsService);
     protected datasetService = inject(DatasetService);
     protected datasetSubsService = inject(DatasetSubscriptionsService);
-    private navigationServices = inject(NavigationService);
+    protected navigationServices = inject(NavigationService);
 
     public eventYamlByHash: MaybeNull<string> = null;
     public history: MaybeNull<DatasetHistoryUpdate> = null;

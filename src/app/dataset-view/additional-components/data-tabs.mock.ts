@@ -631,6 +631,7 @@ export const mockOverviewDataUpdate = {
             currentLicense: null,
             currentWatermark: "2022-08-05T20:24:55+00:00",
             currentTransform: null,
+            currentPushSources: [],
             currentPollingSource: {
                 __typename: "SetPollingSource",
                 fetch: {
@@ -868,6 +869,7 @@ export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
                 preprocess: null,
             },
             currentTransform: null,
+            currentPushSources: [],
             currentInfo: {
                 __typename: "SetInfo",
                 description: "Confirmed positive cases of COVID-19 in Alberta",
@@ -1015,6 +1017,7 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                     "Harmonized",
                 ],
             },
+            currentPushSources: [],
             currentLicense: {
                 __typename: "SetLicense",
                 shortName: "OGL-Canada-2.0",
@@ -1143,6 +1146,7 @@ export const mockOverviewWithSetInfo = {
         currentLicense: null,
         currentWatermark: "2022-08-05T20:24:55+00:00",
         currentTransform: null,
+        currentPushSources: [],
         currentPollingSource: {
             __typename: "SetPollingSource",
             fetch: {
@@ -1290,6 +1294,7 @@ export const mockOverviewWithSetLicense = {
         },
         currentWatermark: "2022-08-05T20:24:55+00:00",
         currentTransform: null,
+        currentPushSources: [],
         currentPollingSource: {
             __typename: "SetPollingSource",
             fetch: {

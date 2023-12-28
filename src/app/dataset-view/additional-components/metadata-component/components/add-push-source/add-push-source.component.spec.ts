@@ -4,41 +4,81 @@ import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from "@angular
 import { ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { SharedTestModule } from "src/app/common/shared-test.module";
 import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
 import { from, of } from "rxjs";
-import { EditPollingSourceService } from "../add-polling-source/edit-polling-source.service";
 import { AddPushSourceSection } from "src/app/shared/shared.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { EditorModule } from "src/app/shared/editor/editor.module";
+import { ActivatedRoute, Router } from "@angular/router";
+import { EditAddPushSourceService } from "./edit-add-push-source.service";
+import { RouterTestingModule } from "@angular/router/testing";
+import { PageNotFoundComponent } from "src/app/components/page-not-found/page-not-found.component";
+import ProjectLinks from "src/app/project-links";
 
 describe("AddPushSourceComponent", () => {
     let component: AddPushSourceComponent;
     let fixture: ComponentFixture<AddPushSourceComponent>;
     let datasetCommitService: DatasetCommitService;
-    let editService: EditPollingSourceService;
+    let editService: EditAddPushSourceService;
     let modalService: NgbModal;
     let modalRef: NgbModalRef;
+    let router: Router;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [AddPushSourceComponent],
+            providers: [
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "name":
+                                            return "mockName";
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            ],
             imports: [
                 ReactiveFormsModule,
                 ApolloModule,
                 ApolloTestingModule,
                 HttpClientTestingModule,
-                SharedTestModule,
                 EditorModule,
+                RouterTestingModule.withRoutes([
+                    {
+                        path: ProjectLinks.URL_PAGE_NOT_FOUND,
+                        component: PageNotFoundComponent,
+                    },
+                ]),
             ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AddPushSourceComponent);
+        router = TestBed.inject(Router);
         modalService = TestBed.inject(NgbModal);
         modalRef = modalService.open(FinalYamlModalComponent);
         datasetCommitService = TestBed.inject(DatasetCommitService);
-        editService = TestBed.inject(EditPollingSourceService);
+        editService = TestBed.inject(EditAddPushSourceService);
+        fixture.ngZone?.run(() => {
+            router.initialNavigation();
+        });
         component = fixture.componentInstance;
         component.addPushSourceForm = new FormGroup({
             read: new FormGroup({
@@ -69,7 +109,8 @@ describe("AddPushSourceComponent", () => {
     });
 
     it("should check eventYamlByHash is not null", () => {
-        const mockEventYamlByHash = "test_tyaml";
+        const mockEventYamlByHash =
+            "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-12-28T09:41:56.469218218Z\n  prevBlockHash: zW1jaUXuf1HLoKvdQhYNq1e3x6KCFrY7UCqXsgVMfJBJF77\n  sequenceNumber: 1\n  event:\n    kind: addPushSource\n    sourceName: mockSource\n    read:\n      kind: csv\n      schema:\n      - id INT\n      separator: ','\n      encoding: utf8\n      quote: '\"'\n      escape: \\\n      enforceSchema: true\n      nanValue: NaN\n      positiveInf: Inf\n      negativeInf: -Inf\n      dateFormat: rfc3339\n      timestampFormat: rfc3339\n    merge:\n      kind: append\n";
         spyOn(editService, "getEventAsYaml").and.returnValue(of(mockEventYamlByHash));
         component.ngOnInit();
         expect(component.eventYamlByHash).toEqual(mockEventYamlByHash);

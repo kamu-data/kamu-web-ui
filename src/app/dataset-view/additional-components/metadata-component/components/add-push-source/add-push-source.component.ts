@@ -2,7 +2,7 @@ import { AddPushSource, MetadataBlockFragment } from "./../../../../../api/kamu.
 import { SupportedEvents } from "./../../../../../dataset-block/metadata-block/components/event-details/supported.events";
 import ProjectLinks from "src/app/project-links";
 import { MaybeNull } from "./../../../../../common/app.types";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, NgZone } from "@angular/core";
 import { ReadKind, MergeKind, PreprocessStepValue } from "../add-polling-source/add-polling-source-form.types";
 import { READ_STEP_RADIO_CONTROLS, MERGE_STEP_RADIO_CONTROLS } from "../add-polling-source/form-control.source";
 import { MERGE_FORM_DATA } from "../add-polling-source/steps/data/merge-form-data";
@@ -50,6 +50,7 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
         private fb: FormBuilder,
         private processFormService: ProcessFormService,
         private editService: EditAddPushSourceService,
+        private zone: NgZone,
     ) {
         super();
     }
@@ -77,7 +78,9 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
                 .subscribe((result) => {
                     this.history = this.editService.history;
                     if (this.sourceNameNotExist()) {
-                        this.navigationServices.navigateToPageNotFound();
+                        this.zone.run(() => {
+                            this.navigationServices.navigateToPageNotFound();
+                        });
                     }
                     if (result) {
                         this.eventYamlByHash = result;

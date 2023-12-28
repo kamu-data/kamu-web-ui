@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AddPushSourceComponent } from "./add-push-source.component";
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
@@ -15,6 +15,15 @@ import { EditAddPushSourceService } from "./edit-add-push-source.service";
 import { RouterTestingModule } from "@angular/router/testing";
 import { PageNotFoundComponent } from "src/app/components/page-not-found/page-not-found.component";
 import ProjectLinks from "src/app/project-links";
+import { mockDatasetHistoryResponse } from "src/app/search/mock.data";
+import { DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+import { StepperNavigationComponent } from "../stepper-navigation/stepper-navigation.component";
+import { BaseStepComponent } from "../add-polling-source/steps/base-step/base-step.component";
+import { MatStepperModule } from "@angular/material/stepper";
+import { PollingSourceFormComponentsModule } from "../form-components/polling-source-form-components.module";
+import { SourceNameStepComponent } from "./steps/source-name-step/source-name-step.component";
+import { PreprocessStepComponent } from "../add-polling-source/steps/preprocess-step/preprocess-step.component";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 describe("AddPushSourceComponent", () => {
     let component: AddPushSourceComponent;
@@ -27,7 +36,13 @@ describe("AddPushSourceComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [AddPushSourceComponent],
+            declarations: [
+                AddPushSourceComponent,
+                SourceNameStepComponent,
+                StepperNavigationComponent,
+                BaseStepComponent,
+                PreprocessStepComponent,
+            ],
             providers: [
                 {
                     provide: ActivatedRoute,
@@ -61,6 +76,10 @@ describe("AddPushSourceComponent", () => {
                 ApolloTestingModule,
                 HttpClientTestingModule,
                 EditorModule,
+                FormsModule,
+                BrowserAnimationsModule,
+                MatStepperModule,
+                PollingSourceFormComponentsModule,
                 RouterTestingModule.withRoutes([
                     {
                         path: ProjectLinks.URL_PAGE_NOT_FOUND,
@@ -80,7 +99,14 @@ describe("AddPushSourceComponent", () => {
             router.initialNavigation();
         });
         component = fixture.componentInstance;
+        component.history = {
+            history: mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks
+                .nodes as MetadataBlockFragment[],
+            pageInfo: mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks
+                .pageInfo as DatasetPageInfoFragment,
+        };
         component.addPushSourceForm = new FormGroup({
+            sourceName: new FormControl(""),
             read: new FormGroup({
                 kind: new FormControl("csv"),
                 schema: new FormArray([

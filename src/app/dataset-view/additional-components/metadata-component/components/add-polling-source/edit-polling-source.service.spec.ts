@@ -7,7 +7,7 @@ import { AddPollingSourceEditFormType, FetchKind, MergeKind, ReadKind } from "./
 import {
     mockDatasetInfo,
     mockHistoryEditPollingSourceService,
-    mockParseEventFromYamlToObject,
+    mockParseSetPollingSourceEventFromYamlToObject,
 } from "src/app/search/mock.data";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { of } from "rxjs";
@@ -36,7 +36,7 @@ describe("EditPollingSourceService", () => {
     it("should check parse event from yaml to json", () => {
         const mockEventYaml =
             "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-06-02T08:44:54.984731027Z\n  prevBlockHash: zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u\n  sequenceNumber: 1\n  event:\n    kind: setPollingSource\n    fetch:\n      kind: filesGlob\n      path: path\n      eventTime:\n        kind: fromMetadata\n    read:\n      kind: csv\n      separator: ','\n      encoding: UTF-8\n      quote: '\"'\n      escape: \\\n      enforceSchema: true\n      nanValue: NaN\n      positiveInf: Inf\n      negativeInf: -Inf\n      dateFormat: yyyy-MM-dd\n      timestampFormat: yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]\n    merge:\n      kind: append\n";
-        const result: AddPollingSourceEditFormType = mockParseEventFromYamlToObject;
+        const result: AddPollingSourceEditFormType = mockParseSetPollingSourceEventFromYamlToObject;
         expect(service.parseEventFromYaml(mockEventYaml)).toEqual(result);
     });
 

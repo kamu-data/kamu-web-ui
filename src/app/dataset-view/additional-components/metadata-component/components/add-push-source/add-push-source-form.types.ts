@@ -8,6 +8,7 @@ export interface EditAddPushSourceParseType {
 }
 
 export interface AddPushSourceEditFormType {
+    kind?: string;
     sourceName: string;
     read: {
         kind: ReadKind;

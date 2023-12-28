@@ -77,7 +77,7 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
                 .getEventAsYaml(this.getDatasetInfoFromUrl(), this.queryParamName ?? "")
                 .subscribe((result) => {
                     this.history = this.editService.history;
-                    if (this.sourceNameNotExist()) {
+                    if (this.unsupportedSourceName()) {
                         this.zone.run(() => {
                             this.navigationServices.navigateToPageNotFound();
                         });
@@ -110,9 +110,9 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
         }
     }
 
-    private sourceNameNotExist(): boolean {
+    private unsupportedSourceName(): boolean {
         return (
-            !!this.queryParamName &&
+            Boolean(this.queryParamName) &&
             !this.history?.history.filter(
                 (item) =>
                     item.event.__typename === SupportedEvents.AddPushSource &&

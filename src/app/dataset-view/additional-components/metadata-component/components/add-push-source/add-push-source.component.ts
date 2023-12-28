@@ -85,7 +85,6 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
                     if (result) {
                         this.eventYamlByHash = result;
                         const currentPushSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
-                        console.log("==>", currentPushSourceEvent);
                         this.addPushSourceForm.patchValue({ sourceName: currentPushSourceEvent.sourceName });
                     }
                     if (!this.queryParamName) {

@@ -10,11 +10,9 @@ import { AddPushSourceSection } from "src/app/shared/shared.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { EditorModule } from "src/app/shared/editor/editor.module";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { EditAddPushSourceService } from "./edit-add-push-source.service";
-import { RouterTestingModule } from "@angular/router/testing";
-import { PageNotFoundComponent } from "src/app/components/page-not-found/page-not-found.component";
-import ProjectLinks from "src/app/project-links";
+
 import { mockDatasetHistoryResponse } from "src/app/search/mock.data";
 import { DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { StepperNavigationComponent } from "../stepper-navigation/stepper-navigation.component";
@@ -24,15 +22,47 @@ import { PollingSourceFormComponentsModule } from "../form-components/polling-so
 import { SourceNameStepComponent } from "./steps/source-name-step/source-name-step.component";
 import { PreprocessStepComponent } from "../add-polling-source/steps/preprocess-step/preprocess-step.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NavigationService } from "src/app/services/navigation.service";
 
-describe("AddPushSourceComponent", () => {
+const providersSection = (name: string) => {
+    return [
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    queryParamMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "name":
+                                    return name;
+                            }
+                        },
+                    },
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return "accountName";
+                                case "datasetName":
+                                    return "datasetName";
+                            }
+                        },
+                    },
+                },
+            },
+        },
+    ];
+};
+
+describe("AddPushSourceComponent with query parameter name", () => {
     let component: AddPushSourceComponent;
     let fixture: ComponentFixture<AddPushSourceComponent>;
     let datasetCommitService: DatasetCommitService;
     let editService: EditAddPushSourceService;
+    let navigationService: NavigationService;
     let modalService: NgbModal;
     let modalRef: NgbModalRef;
-    let router: Router;
+    const datasetHistoryResponse = mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -43,33 +73,7 @@ describe("AddPushSourceComponent", () => {
                 BaseStepComponent,
                 PreprocessStepComponent,
             ],
-            providers: [
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "name":
-                                            return "mockName";
-                                    }
-                                },
-                            },
-                        },
-                    },
-                },
-            ],
+            providers: providersSection("mockSourceName"),
             imports: [
                 ReactiveFormsModule,
                 ApolloModule,
@@ -80,30 +84,19 @@ describe("AddPushSourceComponent", () => {
                 BrowserAnimationsModule,
                 MatStepperModule,
                 PollingSourceFormComponentsModule,
-                RouterTestingModule.withRoutes([
-                    {
-                        path: ProjectLinks.URL_PAGE_NOT_FOUND,
-                        component: PageNotFoundComponent,
-                    },
-                ]),
             ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AddPushSourceComponent);
-        router = TestBed.inject(Router);
         modalService = TestBed.inject(NgbModal);
         modalRef = modalService.open(FinalYamlModalComponent);
         datasetCommitService = TestBed.inject(DatasetCommitService);
         editService = TestBed.inject(EditAddPushSourceService);
-        fixture.ngZone?.run(() => {
-            router.initialNavigation();
-        });
+        navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        component.history = {
-            history: mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks
-                .nodes as MetadataBlockFragment[],
-            pageInfo: mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks
-                .pageInfo as DatasetPageInfoFragment,
+        editService.history = {
+            history: datasetHistoryResponse?.nodes as MetadataBlockFragment[],
+            pageInfo: datasetHistoryResponse?.pageInfo as DatasetPageInfoFragment,
         };
         component.addPushSourceForm = new FormGroup({
             sourceName: new FormControl(""),
@@ -140,6 +133,20 @@ describe("AddPushSourceComponent", () => {
         spyOn(editService, "getEventAsYaml").and.returnValue(of(mockEventYamlByHash));
         component.ngOnInit();
         expect(component.eventYamlByHash).toEqual(mockEventYamlByHash);
+    });
+
+    it("should check navigate to PageNotFoundComponent ", () => {
+        editService.history = {
+            // Deleted "AddPushSource" event from history
+            history: (datasetHistoryResponse?.nodes as MetadataBlockFragment[]).splice(5, 1),
+            pageInfo: datasetHistoryResponse?.pageInfo as DatasetPageInfoFragment,
+        };
+        const navigateToPageNotFoundSpy = spyOn(navigationService, "navigateToPageNotFound");
+        const mockEventYamlByHash =
+            "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-12-28T09:41:56.469218218Z\n  prevBlockHash: zW1jaUXuf1HLoKvdQhYNq1e3x6KCFrY7UCqXsgVMfJBJF77\n  sequenceNumber: 1\n  event:\n    kind: addPushSource\n    sourceName: mockSource\n    read:\n      kind: csv\n      schema:\n      - id INT\n      separator: ','\n      encoding: utf8\n      quote: '\"'\n      escape: \\\n      enforceSchema: true\n      nanValue: NaN\n      positiveInf: Inf\n      negativeInf: -Inf\n      dateFormat: rfc3339\n      timestampFormat: rfc3339\n    merge:\n      kind: append\n";
+        spyOn(editService, "getEventAsYaml").and.returnValue(of(mockEventYamlByHash));
+        component.ngOnInit();
+        expect(navigateToPageNotFoundSpy).toHaveBeenCalledWith();
     });
 
     it("should check change step", () => {
@@ -180,5 +187,70 @@ describe("AddPushSourceComponent", () => {
         from(modal.result).subscribe(() => {
             expect(component.changedEventYamlByHash).toBeDefined();
         });
+    });
+});
+
+describe("AddPushSourceComponent without query parameter name", () => {
+    let component: AddPushSourceComponent;
+    let fixture: ComponentFixture<AddPushSourceComponent>;
+    let editService: EditAddPushSourceService;
+    const datasetHistoryResponse = mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [
+                AddPushSourceComponent,
+                SourceNameStepComponent,
+                StepperNavigationComponent,
+                BaseStepComponent,
+                PreprocessStepComponent,
+            ],
+            providers: providersSection(""),
+            imports: [
+                ReactiveFormsModule,
+                ApolloModule,
+                ApolloTestingModule,
+                HttpClientTestingModule,
+                EditorModule,
+                FormsModule,
+                BrowserAnimationsModule,
+                MatStepperModule,
+                PollingSourceFormComponentsModule,
+            ],
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(AddPushSourceComponent);
+        editService = TestBed.inject(EditAddPushSourceService);
+        component = fixture.componentInstance;
+        component.addPushSourceForm = new FormGroup({
+            sourceName: new FormControl(""),
+            read: new FormGroup({
+                kind: new FormControl("csv"),
+                schema: new FormArray([
+                    new FormGroup({
+                        name: new FormControl("id"),
+                        type: new FormControl("BIGINT"),
+                    }),
+                ]),
+            }),
+            merge: new FormGroup({
+                kind: new FormControl("append"),
+            }),
+            prepare: new FormArray([]),
+        });
+        fixture.detectChanges();
+    });
+
+    it("should check add validator when query parameter name equal null", () => {
+        editService.history = {
+            history: datasetHistoryResponse?.nodes as MetadataBlockFragment[],
+            pageInfo: datasetHistoryResponse?.pageInfo as DatasetPageInfoFragment,
+        };
+        const addValidatorSpy = spyOn(component.addPushSourceForm.controls.sourceName, "addValidators");
+        const mockEventYamlByHash =
+            "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-12-28T09:41:56.469218218Z\n  prevBlockHash: zW1jaUXuf1HLoKvdQhYNq1e3x6KCFrY7UCqXsgVMfJBJF77\n  sequenceNumber: 1\n  event:\n    kind: addPushSource\n    sourceName: mockSource\n    read:\n      kind: csv\n      schema:\n      - id INT\n      separator: ','\n      encoding: utf8\n      quote: '\"'\n      escape: \\\n      enforceSchema: true\n      nanValue: NaN\n      positiveInf: Inf\n      negativeInf: -Inf\n      dateFormat: rfc3339\n      timestampFormat: rfc3339\n    merge:\n      kind: append\n";
+        spyOn(editService, "getEventAsYaml").and.returnValue(of(mockEventYamlByHash));
+        component.ngOnInit();
+        expect(addValidatorSpy).toHaveBeenCalledTimes(1);
     });
 });

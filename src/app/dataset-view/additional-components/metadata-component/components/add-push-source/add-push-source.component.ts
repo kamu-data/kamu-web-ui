@@ -1,8 +1,8 @@
 import { AddPushSource, MetadataBlockFragment } from "./../../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "./../../../../../dataset-block/metadata-block/components/event-details/supported.events";
 import ProjectLinks from "src/app/project-links";
-import { MaybeNull } from "./../../../../../common/app.types";
-import { ChangeDetectionStrategy, Component, NgZone } from "@angular/core";
+import { MaybeNull, MaybeNullOrUndefined } from "./../../../../../common/app.types";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ReadKind, MergeKind, PreprocessStepValue } from "../add-polling-source/add-polling-source-form.types";
 import { READ_STEP_RADIO_CONTROLS, MERGE_STEP_RADIO_CONTROLS } from "../add-polling-source/form-control.source";
 import { MERGE_FORM_DATA } from "../add-polling-source/steps/data/merge-form-data";
@@ -50,7 +50,6 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
         private fb: FormBuilder,
         private processFormService: ProcessFormService,
         private editService: EditAddPushSourceService,
-        private zone: NgZone,
     ) {
         super();
     }
@@ -74,13 +73,11 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
     public initEditForm(): void {
         this.trackSubscription(
             this.editService
-                .getEventAsYaml(this.getDatasetInfoFromUrl(), this.queryParamName ?? "")
-                .subscribe((result) => {
+                .getEventAsYaml(this.getDatasetInfoFromUrl(), this.queryParamName)
+                .subscribe((result: MaybeNullOrUndefined<string>) => {
                     this.history = this.editService.history;
                     if (this.unsupportedSourceName()) {
-                        this.zone.run(() => {
-                            this.navigationServices.navigateToPageNotFound();
-                        });
+                        this.navigationServices.navigateToPageNotFound();
                     }
                     if (result) {
                         this.eventYamlByHash = result;
@@ -90,7 +87,7 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
                     if (!this.queryParamName) {
                         this.addPushSourceForm.controls.sourceName.addValidators(
                             RxwebValidators.noneOf({
-                                matchValues: [...this.getAllSourceNames(this.history), "default"],
+                                matchValues: [...this.getAllSourceNames(this.history)],
                             }),
                         );
                     }
@@ -99,21 +96,17 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
         );
     }
 
-    private getAllSourceNames(historyUpdate: MaybeNull<DatasetHistoryUpdate>): string[] {
-        if (!historyUpdate) {
-            return [];
-        } else {
-            const data = historyUpdate.history
-                .filter((item: MetadataBlockFragment) => item.event.__typename === SupportedEvents.AddPushSource)
-                .map((data: MetadataBlockFragment) => data.event as AddPushSource);
-            return data.map((event) => event.sourceName ?? "");
-        }
+    private getAllSourceNames(historyUpdate: DatasetHistoryUpdate): string[] {
+        const data = historyUpdate.history
+            .filter((item: MetadataBlockFragment) => item.event.__typename === SupportedEvents.AddPushSource)
+            .map((data: MetadataBlockFragment) => data.event as AddPushSource);
+        return data.map((event) => event.sourceName ?? "");
     }
 
     private unsupportedSourceName(): boolean {
         return (
             Boolean(this.queryParamName) &&
-            !this.history?.history.filter(
+            !this.history.history.filter(
                 (item) =>
                     item.event.__typename === SupportedEvents.AddPushSource &&
                     item.event.sourceName === this.queryParamName,

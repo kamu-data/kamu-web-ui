@@ -22,7 +22,7 @@ export abstract class BaseMainEventComponent extends BaseComponent {
     protected navigationServices = inject(NavigationService);
 
     public eventYamlByHash: MaybeNull<string> = null;
-    public history: MaybeNull<DatasetHistoryUpdate> = null;
+    public history: DatasetHistoryUpdate;
     public errorMessage = "";
     public changedEventYamlByHash: MaybeNull<string> = null;
 

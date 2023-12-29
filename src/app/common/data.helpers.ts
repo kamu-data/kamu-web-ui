@@ -41,9 +41,9 @@ export class DataHelpers {
                     url_logo: "assets/images/datafusion-logo.png",
                 };
             default:
-                console.log("Engine is not defined");
                 return {
                     name: "Engine is not defined",
+                    label: "Unknown engine",
                 };
         }
     }
@@ -165,10 +165,10 @@ export class DataHelpers {
                 return DataHelpers.BLOCK_DESCRIBE_ADD_PUSH_SOURCE;
             case "SetDataSchema":
                 return DataHelpers.BLOCK_DESCRIBE_SET_DATA_SCHEMA;
-            case "DisablePollingSource":
-                return DataHelpers.BLOCK_DESCRIBE_DISABLE_POLLING_SOURCE;
-            case "DisablePushSource":
-                return DataHelpers.BLOCK_DESCRIBE_DISABLE_ADD_PUSH_SOURCE;
+            // case "DisablePollingSource":
+            //     return DataHelpers.BLOCK_DESCRIBE_DISABLE_POLLING_SOURCE;
+            // case "DisablePushSource":
+            //     return DataHelpers.BLOCK_DESCRIBE_DISABLE_ADD_PUSH_SOURCE;
             default:
                 return "Unsupported event type";
         }

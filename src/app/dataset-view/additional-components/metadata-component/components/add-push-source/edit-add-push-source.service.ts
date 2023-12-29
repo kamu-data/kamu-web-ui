@@ -18,13 +18,13 @@ export class EditAddPushSourceService {
     private blockService = inject(BlockService);
     private currentPage = 0;
     private readonly HISTORY_PAGE_SIZE = 100;
-    public history: MaybeNull<DatasetHistoryUpdate> = null;
+    public history: DatasetHistoryUpdate;
 
     public parseEventFromYaml(event: string): AddPushSourceEditFormType {
         const editFormParseValue = parse(event) as EditAddPushSourceParseType;
         return editFormParseValue.content.event;
     }
-    public getEventAsYaml(info: DatasetInfo, sourceName: string): Observable<MaybeNullOrUndefined<string>> {
+    public getEventAsYaml(info: DatasetInfo, sourceName: MaybeNull<string>): Observable<MaybeNullOrUndefined<string>> {
         return this.datasetService.getDatasetHistory(info, this.HISTORY_PAGE_SIZE, this.currentPage).pipe(
             expand((h: DatasetHistoryUpdate) => {
                 const filteredHistory = this.filterHistoryByType(h.history, sourceName);
@@ -55,7 +55,10 @@ export class EditAddPushSourceService {
         );
     }
 
-    private filterHistoryByType(history: MetadataBlockFragment[], sourceName: string): MetadataBlockFragment[] {
+    private filterHistoryByType(
+        history: MetadataBlockFragment[],
+        sourceName: MaybeNull<string>,
+    ): MetadataBlockFragment[] {
         return history.filter(
             (item: MetadataBlockFragment) =>
                 item.event.__typename === SupportedEvents.AddPushSource && item.event.sourceName === sourceName,

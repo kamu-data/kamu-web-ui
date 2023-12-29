@@ -16,7 +16,7 @@ export abstract class BaseYamlEventService {
     private blockService = inject(BlockService);
 
     private currentPage = 0;
-    public history: MaybeNull<DatasetHistoryUpdate> = null;
+    public history: DatasetHistoryUpdate;
 
     public getEventAsYaml(info: DatasetInfo, typename: SupportedEvents): Observable<MaybeNullOrUndefined<string>> {
         return this.datasetService

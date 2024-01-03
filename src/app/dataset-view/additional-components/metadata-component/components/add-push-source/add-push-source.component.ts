@@ -73,7 +73,7 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
     public initEditForm(): void {
         this.trackSubscription(
             this.editService
-                .getEventAsYaml(this.getDatasetInfoFromUrl(), this.queryParamName)
+                .getEventAsYaml(this.getDatasetInfoFromUrl(), SupportedEvents.AddPushSource, this.queryParamName)
                 .subscribe((result: MaybeNullOrUndefined<string>) => {
                     this.history = this.editService.history;
                     if (this.unsupportedSourceName()) {
@@ -97,19 +97,18 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
     }
 
     private getAllSourceNames(historyUpdate: DatasetHistoryUpdate): string[] {
-        const data = historyUpdate.history
+        return historyUpdate.history
             .filter((item: MetadataBlockFragment) => item.event.__typename === SupportedEvents.AddPushSource)
-            .map((data: MetadataBlockFragment) => data.event as AddPushSource);
-        return data.map((event) => event.sourceName ?? "");
+            .map((data: MetadataBlockFragment) => (data.event as AddPushSource).sourceName ?? "");
     }
 
     private unsupportedSourceName(): boolean {
         return (
             Boolean(this.queryParamName) &&
-            !this.history.history.filter(
-                (item) =>
-                    item.event.__typename === SupportedEvents.AddPushSource &&
-                    item.event.sourceName === this.queryParamName,
+            !this.editService.filterHistoryByType(
+                this.history.history,
+                SupportedEvents.AddPushSource,
+                this.queryParamName,
             ).length
         );
     }

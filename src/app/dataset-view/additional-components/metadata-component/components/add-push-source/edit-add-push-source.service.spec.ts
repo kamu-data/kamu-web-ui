@@ -13,6 +13,7 @@ import { of } from "rxjs";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { AddPushSourceEditFormType } from "./add-push-source-form.types";
+import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 
 describe("EditAddPushSourceService", () => {
     let service: EditAddPushSourceService;
@@ -45,7 +46,7 @@ describe("EditAddPushSourceService", () => {
         spyOn(datasetService, "getDatasetHistory").and.returnValue(of(mockHistory));
         spyOn(blockService, "requestMetadataBlock").and.returnValue(of());
         blockService.emitMetadataBlockAsYamlChanged("test yaml");
-        service.getEventAsYaml(mockDatasetInfo, "mockSourceName").subscribe(
+        service.getEventAsYaml(mockDatasetInfo, SupportedEvents.AddPushSource, "mockSourceName").subscribe(
             () => null,
             () => {
                 expect(service.history).toBeDefined();

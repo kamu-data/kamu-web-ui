@@ -162,7 +162,12 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
     }
 
     public initDiscussionsTab(): void {
-        console.log("initDiscussionsTab");
+        promiseWithCatch(
+            this.modalService.warning({
+                message: "Feature coming soon",
+                yesButtonText: "Ok",
+            }),
+        );
     }
 
     public initSettingsTab(datasetInfo: DatasetInfo): void {

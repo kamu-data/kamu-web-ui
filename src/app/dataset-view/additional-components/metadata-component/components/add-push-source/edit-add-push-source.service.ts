@@ -24,6 +24,7 @@ export class EditAddPushSourceService {
         const editFormParseValue = parse(event) as EditAddPushSourceParseType;
         return editFormParseValue.content.event;
     }
+
     public getEventAsYaml(info: DatasetInfo, sourceName: MaybeNull<string>): Observable<MaybeNullOrUndefined<string>> {
         return this.datasetService.getDatasetHistory(info, this.HISTORY_PAGE_SIZE, this.currentPage).pipe(
             expand((h: DatasetHistoryUpdate) => {

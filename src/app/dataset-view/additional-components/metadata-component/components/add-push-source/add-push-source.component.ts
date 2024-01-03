@@ -135,7 +135,7 @@ export class AddPushSourceComponent extends BaseMainEventComponent {
         this.currentStep = step as AddPushSourceSection;
     }
 
-    public onShowPreprcessStep(showPreprocessStep: boolean): void {
+    public onShowPreprocessStep(showPreprocessStep: boolean): void {
         this.showPreprocessStep = showPreprocessStep;
     }
 

@@ -203,10 +203,10 @@
                     </div>
                 </ng-container>
 
-                <ng-container *ngIf="currentPushSource?.length">
+                <ng-container *ngIf="currentPushSources?.length">
                     <div
                         class="position-relative border border-1 p-4 rounded-3"
-                        *ngFor="let source of currentPushSource; let i = index"
+                        *ngFor="let source of currentPushSources; let i = index"
                     >
                         <span class="position-absolute text-muted group-box-label text-uppercase"
                             >#{{ i + 1 }} Push source &lt;

@@ -150,7 +150,7 @@ export class AddPollingSourceComponent extends BaseMainEventComponent implements
         );
     }
 
-    public onShowPreprcessStep(showPreprocessStep: boolean): void {
+    public onShowPreprocessStep(showPreprocessStep: boolean): void {
         this.showPreprocessStep = showPreprocessStep;
     }
 

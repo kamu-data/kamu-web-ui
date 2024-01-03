@@ -161,7 +161,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
 
     it("should check change showPreprocessStep property", () => {
         expect(component.showPreprocessStep).toEqual(false);
-        component.onShowPreprcessStep(true);
+        component.onShowPreprocessStep(true);
         expect(component.showPreprocessStep).toEqual(true);
     });
 

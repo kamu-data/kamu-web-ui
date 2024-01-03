@@ -98,7 +98,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         return this.currentState?.metadataSummary.metadata.currentPollingSource;
     }
 
-    public get currentPushSource(): MaybeNullOrUndefined<AddPushSourceEventFragment[]> {
+    public get currentPushSources(): MaybeNullOrUndefined<AddPushSourceEventFragment[]> {
         return this.currentState?.metadataSummary.metadata.currentPushSources;
     }
 
@@ -206,6 +206,6 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     }
 
     public hasAnySource(): boolean {
-        return !this.currentPollingSource && !this.currentPushSource?.length;
+        return !this.currentPollingSource && !this.currentPushSources?.length;
     }
 }

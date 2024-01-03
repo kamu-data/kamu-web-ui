@@ -12,7 +12,7 @@ export interface OrderControlType {
         kind: string;
         order?: SourceOrder;
         cache?: { kind: string };
-        eventTime?: { kind: string };
+        eventTime?: { kind: string; pattern?: string; timestampFormat?: string };
     };
 }
 export interface SchemaControlType {

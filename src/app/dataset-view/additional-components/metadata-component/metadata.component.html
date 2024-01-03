@@ -113,84 +113,10 @@
                         </div>
                     </div>
 
-                    <div class="position-relative border border-1 p-2 rounded-3">
-                        <span class="position-absolute text-muted group-box-label text-uppercase">Read</span>
-                        <div class="mx-4" *ngIf="currentPollingSource.read.__typename">
-                            <app-block-row-data [tooltip]="'Determines where data is sourced from.'" [label]="'Type:'">
-                                <span>{{ ReadSectionMapping[currentPollingSource.read.__typename] }}</span>
-                            </app-block-row-data>
-                        </div>
-                        <div
-                            class="mx-4"
-                            *ngIf="currentPollingSource.read.schema && currentPollingSource.read.schema.length > 0"
-                        >
-                            <app-block-row-data
-                                [tooltip]="
-                                    'A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.'
-                                "
-                                [label]="'Schema:'"
-                            >
-                                <app-schema-property [data]="currentPollingSource.read.schema"></app-schema-property>
-                            </app-block-row-data>
-                        </div>
-                    </div>
-
-                    <div class="position-relative border border-1 p-2 rounded-3">
-                        <span class="position-absolute text-muted group-box-label text-uppercase">Merge</span>
-                        <div class="mx-4" *ngIf="currentPollingSource.merge.__typename">
-                            <app-block-row-data
-                                [tooltip]="
-                                    'Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset.'
-                                "
-                                [label]="'Strategy:'"
-                            >
-                                <app-merge-strategy-property
-                                    [data]="currentPollingSource.merge.__typename"
-                                ></app-merge-strategy-property>
-                            </app-block-row-data>
-                        </div>
-
-                        <div class="mx-4" *ngIf="currentPollingSource.merge.__typename === 'MergeStrategyLedger'">
-                            <app-block-row-data
-                                [tooltip]="
-                                    'Names of the columns that uniquely identify the record throughout its lifetime.'
-                                "
-                                [label]="'Primary key:'"
-                            >
-                                <app-cards-property [data]="currentPollingSource.merge.primaryKey"></app-cards-property>
-                            </app-block-row-data>
-                        </div>
-                    </div>
-
-                    <div
-                        *ngIf="currentPollingSource.preprocess"
-                        class="position-relative border border-1 p-2 rounded-3"
-                    >
-                        <span class="position-absolute text-muted group-box-label text-uppercase">Preprocess</span>
-                        <div class="mx-4">
-                            <app-block-row-data
-                                [tooltip]="'Identifier of the engine used for this transformation.'"
-                                [label]="'Engine:'"
-                            >
-                                <app-engine-property
-                                    [data]="currentPollingSource.preprocess.engine"
-                                ></app-engine-property>
-                            </app-block-row-data>
-                        </div>
-
-                        <div class="mx-4">
-                            <app-block-row-data
-                                [tooltip]="'Queries use for specifying multi-step SQL transformations.'"
-                                [label]="'Queries:'"
-                            >
-                            </app-block-row-data>
-                            <div class="row my-4">
-                                <app-sql-query-viewer
-                                    [data]="currentPollingSource.preprocess.queries"
-                                ></app-sql-query-viewer>
-                            </div>
-                        </div>
-                    </div>
+                    <ng-container
+                        [ngTemplateOutlet]="sourceTemplate"
+                        [ngTemplateOutletContext]="{ $implicit: currentPollingSource }"
+                    ></ng-container>
                 </ng-container>
 
                 <div class="position-relative border border-1 p-2 rounded-3" *ngIf="currentWatermark">
@@ -307,83 +233,17 @@
                                 <span class="fs-12 me-2 d-block"> Delete push source</span>
                             </button>
                         </div>
-
-                        <div class="position-relative border border-1 p-2 rounded-3 mt-4">
-                            <span class="position-absolute text-muted group-box-label text-uppercase">Read</span>
-                            <div class="mx-4" *ngIf="source.read.__typename">
-                                <app-block-row-data
-                                    [tooltip]="'Determines where data is sourced from.'"
-                                    [label]="'Type:'"
-                                >
-                                    <span>{{ ReadSectionMapping[source.read.__typename] }}</span>
-                                </app-block-row-data>
-                            </div>
-                            <div class="mx-4" *ngIf="source.read.schema && source.read.schema.length > 0">
-                                <app-block-row-data
-                                    [tooltip]="
-                                        'A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.'
-                                    "
-                                    [label]="'Schema:'"
-                                >
-                                    <app-schema-property [data]="source.read.schema"></app-schema-property>
-                                </app-block-row-data>
-                            </div>
-                        </div>
-
-                        <div *ngIf="source.preprocess" class="position-relative border border-1 mt-4 p-2 rounded-3">
-                            <span class="position-absolute text-muted group-box-label text-uppercase">Preprocess</span>
-                            <div class="mx-4">
-                                <app-block-row-data
-                                    [tooltip]="'Identifier of the engine used for this transformation.'"
-                                    [label]="'Engine:'"
-                                >
-                                    <app-engine-property [data]="source.preprocess.engine"></app-engine-property>
-                                </app-block-row-data>
-                            </div>
-
-                            <div class="mx-4">
-                                <app-block-row-data
-                                    [tooltip]="'Queries use for specifying multi-step SQL transformations.'"
-                                    [label]="'Queries:'"
-                                >
-                                </app-block-row-data>
-                                <div class="row my-4">
-                                    <app-sql-query-viewer [data]="source.preprocess.queries"></app-sql-query-viewer>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="position-relative border border-1 p-2 rounded-3 mt-4">
-                            <span class="position-absolute text-muted group-box-label text-uppercase">Merge</span>
-                            <div class="mx-4" *ngIf="source.merge.__typename">
-                                <app-block-row-data
-                                    [tooltip]="
-                                        'Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset.'
-                                    "
-                                    [label]="'Strategy:'"
-                                >
-                                    <app-merge-strategy-property
-                                        [data]="source.merge.__typename"
-                                    ></app-merge-strategy-property>
-                                </app-block-row-data>
-                            </div>
-
-                            <div class="mx-4" *ngIf="source.merge.__typename === 'MergeStrategyLedger'">
-                                <app-block-row-data
-                                    [tooltip]="
-                                        'Names of the columns that uniquely identify the record throughout its lifetime.'
-                                    "
-                                    [label]="'Primary key:'"
-                                >
-                                    <app-cards-property [data]="source.merge.primaryKey"></app-cards-property>
-                                </app-block-row-data>
-                            </div>
+                        <div class="mt-4">
+                            <ng-container
+                                [ngTemplateOutlet]="sourceTemplate"
+                                [ngTemplateOutletContext]="{ $implicit: source }"
+                            ></ng-container>
                         </div>
                     </div>
                 </ng-container>
             </div>
         </ng-container>
-        <ng-container *ngIf="!currentPollingSource && !currentPushSource?.length && datasetBasics.kind === 'ROOT'">
+        <ng-container *ngIf="hasAnySource() && datasetBasics.kind === 'ROOT'">
             <h3 class="box-title text-center mt-4">There is no metadata.</h3>
         </ng-container>
         <ng-container *ngIf="!currentTransform && datasetBasics.kind === 'DERIVATIVE'">
@@ -394,3 +254,70 @@
         </ng-container>
     </div>
 </div>
+
+<ng-template #sourceTemplate let-sourceEvent>
+    <div class="d-flex flex-column gap-4">
+        <div class="position-relative border border-1 p-2 rounded-3">
+            <span class="position-absolute text-muted group-box-label text-uppercase">Read</span>
+            <div class="mx-4" *ngIf="sourceEvent.read.__typename">
+                <app-block-row-data [tooltip]="'Determines where data is sourced from.'" [label]="'Type:'">
+                    <span>{{ ReadSectionMapping[sourceEvent.read.__typename] }}</span>
+                </app-block-row-data>
+            </div>
+            <div class="mx-4" *ngIf="sourceEvent.read.schema && sourceEvent.read.schema.length > 0">
+                <app-block-row-data
+                    [tooltip]="
+                        'A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.'
+                    "
+                    [label]="'Schema:'"
+                >
+                    <app-schema-property [data]="sourceEvent.read.schema"></app-schema-property>
+                </app-block-row-data>
+            </div>
+        </div>
+        <div class="position-relative border border-1 p-2 rounded-3">
+            <span class="position-absolute text-muted group-box-label text-uppercase">Merge</span>
+            <div class="mx-4" *ngIf="sourceEvent.merge.__typename">
+                <app-block-row-data
+                    [tooltip]="
+                        'Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset.'
+                    "
+                    [label]="'Strategy:'"
+                >
+                    <app-merge-strategy-property [data]="sourceEvent.merge.__typename"></app-merge-strategy-property>
+                </app-block-row-data>
+            </div>
+
+            <div class="mx-4" *ngIf="sourceEvent.merge.__typename === 'MergeStrategyLedger'">
+                <app-block-row-data
+                    [tooltip]="'Names of the columns that uniquely identify the record throughout its lifetime.'"
+                    [label]="'Primary key:'"
+                >
+                    <app-cards-property [data]="sourceEvent.merge.primaryKey"></app-cards-property>
+                </app-block-row-data>
+            </div>
+        </div>
+        <div *ngIf="sourceEvent.preprocess" class="position-relative border border-1 p-2 rounded-3">
+            <span class="position-absolute text-muted group-box-label text-uppercase">Preprocess</span>
+            <div class="mx-4">
+                <app-block-row-data
+                    [tooltip]="'Identifier of the engine used for this transformation.'"
+                    [label]="'Engine:'"
+                >
+                    <app-engine-property [data]="sourceEvent.preprocess.engine"></app-engine-property>
+                </app-block-row-data>
+            </div>
+
+            <div class="mx-4">
+                <app-block-row-data
+                    [tooltip]="'Queries use for specifying multi-step SQL transformations.'"
+                    [label]="'Queries:'"
+                >
+                </app-block-row-data>
+                <div class="row my-4">
+                    <app-sql-query-viewer [data]="sourceEvent.preprocess.queries"></app-sql-query-viewer>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

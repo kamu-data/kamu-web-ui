@@ -134,7 +134,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         if (this.currentState) {
             return (
                 this.datasetBasics.kind === DatasetKind.Root &&
-                !!this.currentState.metadataSummary.metadata.currentPushSources.length &&
+                this.currentState.metadataSummary.metadata.currentPushSources.length > 0 &&
                 this.datasetPermissions.permissions.canCommit
             );
         } else {
@@ -203,5 +203,9 @@ export class MetadataComponent extends BaseComponent implements OnInit {
                 yesButtonText: "Ok",
             }),
         );
+    }
+
+    public hasAnySource(): boolean {
+        return !this.currentPollingSource && !this.currentPushSource?.length;
     }
 }

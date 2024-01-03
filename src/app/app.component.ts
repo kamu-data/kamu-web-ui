@@ -113,12 +113,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onOpenUserInfo(): void {
-        promiseWithCatch(
-            this.modalService.warning({
-                message: "Feature coming soon",
-                yesButtonText: "Ok",
-            }),
-        );
+        // Not implemented yet
     }
 
     public onAddNew(): void {

@@ -3,8 +3,12 @@ import { ControlContainer, FormArray, FormBuilder, FormGroup, FormGroupDirective
 import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { DecompressFormat, AddPollingSourceEditFormType, PrepareKind } from "../../add-polling-source-form.types";
-import { EditPollingSourceService } from "../../edit-polling-source.service";
+import {
+    DecompressFormat,
+    AddPollingSourceEditFormType,
+    PrepareKind,
+} from "../../add-polling-source/add-polling-source-form.types";
+import { EditPollingSourceService } from "../../add-polling-source/edit-polling-source.service";
 
 @Component({
     selector: "app-prepare-step",

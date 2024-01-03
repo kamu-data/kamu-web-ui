@@ -4,17 +4,17 @@ import {
     AddPollingSourceEditFormType,
     EventTimeSourceKind,
     JsonFormData,
-} from "../../add-polling-source-form.types";
-import { RadioControlType } from "../../form-control.source";
+} from "../../add-polling-source/add-polling-source-form.types";
+import { RadioControlType } from "../../add-polling-source/form-control.source";
 import { FormBuilder } from "@angular/forms";
 import { ControlContainer, FormGroupDirective } from "@angular/forms";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { JsonFormControl } from "../../add-polling-source-form.types";
+import { JsonFormControl } from "../../add-polling-source/add-polling-source-form.types";
 import { getValidators } from "src/app/common/data.helpers";
-import { EditPollingSourceService } from "../../edit-polling-source.service";
+import { EditPollingSourceService } from "../../add-polling-source/edit-polling-source.service";
 import { MaybeNull } from "src/app/common/app.types";
-import { SourcesSection } from "../../process-form.service.types";
+import { SourcesSection } from "../../add-polling-source/process-form.service.types";
 
 @Component({
     selector: "app-base-step",

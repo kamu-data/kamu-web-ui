@@ -1,4 +1,4 @@
-import { InputFieldComponent } from "./../../../form-components/input-field/input-field.component";
+import { InputFieldComponent } from "../../../form-components/input-field/input-field.component";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SourceNameStepComponent } from "./source-name-step.component";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";

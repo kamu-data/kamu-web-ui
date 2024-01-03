@@ -1,7 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { AddPollingSourceEditFormType, PreprocessStepValue } from "../../add-polling-source-form.types";
+import {
+    AddPollingSourceEditFormType,
+    PreprocessStepValue,
+} from "../../add-polling-source/add-polling-source-form.types";
 import { MaybeNull } from "src/app/common/app.types";
-import { EditPollingSourceService } from "../../edit-polling-source.service";
+import { EditPollingSourceService } from "../../add-polling-source/edit-polling-source.service";
 import { BaseComponent } from "src/app/common/base.component";
 
 @Component({

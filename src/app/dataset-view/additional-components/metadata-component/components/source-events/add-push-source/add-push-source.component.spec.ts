@@ -4,23 +4,23 @@ import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } f
 import { ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
+import { DatasetCommitService } from "../../../../overview-component/services/dataset-commit.service";
 import { from, of } from "rxjs";
 import { AddPushSourceSection } from "src/app/shared/shared.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
+import { FinalYamlModalComponent } from "../../final-yaml-modal/final-yaml-modal.component";
 import { EditorModule } from "src/app/shared/editor/editor.module";
 import { ActivatedRoute } from "@angular/router";
 import { EditAddPushSourceService } from "./edit-add-push-source.service";
 
 import { mockDatasetHistoryResponse } from "src/app/search/mock.data";
 import { DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import { StepperNavigationComponent } from "../stepper-navigation/stepper-navigation.component";
-import { BaseStepComponent } from "../add-polling-source/steps/base-step/base-step.component";
+import { StepperNavigationComponent } from "../../stepper-navigation/stepper-navigation.component";
+import { BaseStepComponent } from "../steps/base-step/base-step.component";
 import { MatStepperModule } from "@angular/material/stepper";
-import { PollingSourceFormComponentsModule } from "../form-components/polling-source-form-components.module";
-import { SourceNameStepComponent } from "./steps/source-name-step/source-name-step.component";
-import { PreprocessStepComponent } from "../add-polling-source/steps/preprocess-step/preprocess-step.component";
+import { PollingSourceFormComponentsModule } from "../../form-components/polling-source-form-components.module";
+import { SourceNameStepComponent } from "../steps/source-name-step/source-name-step.component";
+import { PreprocessStepComponent } from "../steps/preprocess-step/preprocess-step.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NavigationService } from "src/app/services/navigation.service";
 

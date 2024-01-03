@@ -4,10 +4,13 @@ import {
     MergeKind,
     PreprocessStepValue,
     AddPollingSourceEditFormType,
-} from "./add-polling-source/add-polling-source-form.types";
-import { READ_STEP_RADIO_CONTROLS, MERGE_STEP_RADIO_CONTROLS } from "./add-polling-source/form-control.source";
-import { MERGE_FORM_DATA } from "./add-polling-source/steps/data/merge-form-data";
-import { READ_FORM_DATA } from "./add-polling-source/steps/data/read-form-data";
+} from "./source-events/add-polling-source/add-polling-source-form.types";
+import {
+    READ_STEP_RADIO_CONTROLS,
+    MERGE_STEP_RADIO_CONTROLS,
+} from "./source-events/add-polling-source/form-control.source";
+import { MERGE_FORM_DATA } from "./source-events/steps/data/merge-form-data";
+import { READ_FORM_DATA } from "./source-events/steps/data/read-form-data";
 import { BaseMainEventComponent } from "./base-main-event.component";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { ProcessFormService } from "../services/process-form.service";
@@ -15,7 +18,7 @@ import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { from } from "rxjs";
 import { FinalYamlModalComponent } from "./final-yaml-modal/final-yaml-modal.component";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
-import { AddPushSourceEditFormType } from "./add-push-source/add-push-source-form.types";
+import { AddPushSourceEditFormType } from "./source-events/add-push-source/add-push-source-form.types";
 import {
     SourcesEvents,
     SupportedEvents,

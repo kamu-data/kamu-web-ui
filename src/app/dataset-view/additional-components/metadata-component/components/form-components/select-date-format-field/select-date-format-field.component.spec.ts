@@ -5,7 +5,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from "@angul
 import { MatTableModule } from "@angular/material/table";
 import { NgbTooltipModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
-import { EventTimeSourceKind } from "../../add-polling-source/add-polling-source-form.types";
+import { EventTimeSourceKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
 import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { ActivatedRoute } from "@angular/router";

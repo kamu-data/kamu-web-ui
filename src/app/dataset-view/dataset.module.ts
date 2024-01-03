@@ -40,10 +40,10 @@ import { SharedModule } from "../shared/shared/shared.module";
 import { EditDetailsModalComponent } from "./additional-components/overview-component/components/edit-details-modal/edit-details-modal.component";
 import { EditLicenseModalComponent } from "./additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
 import { FinalYamlModalComponent } from "./additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
-import { BaseStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/base-step/base-step.component";
+import { BaseStepComponent } from "./additional-components/metadata-component/components/source-events/steps/base-step/base-step.component";
 import { StepperNavigationComponent } from "./additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
-import { PrepareStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/prepare-step/prepare-step.component";
-import { PreprocessStepComponent } from "./additional-components/metadata-component/components/add-polling-source/steps/preprocess-step/preprocess-step.component";
+import { PrepareStepComponent } from "./additional-components/metadata-component/components/source-events/steps/prepare-step/prepare-step.component";
+import { PreprocessStepComponent } from "./additional-components/metadata-component/components/source-events/steps/preprocess-step/preprocess-step.component";
 import { PollingSourceFormComponentsModule } from "./additional-components/metadata-component/components/form-components/polling-source-form-components.module";
 import { EditWatermarkModalComponent } from "./additional-components/overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
@@ -54,7 +54,7 @@ import { SearchSectionComponent } from "./additional-components/metadata-compone
 import { EngineSectionComponent } from "./additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.component";
 import { QueriesSectionComponent } from "./additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
 import { PageNotFoundComponent } from "../components/page-not-found/page-not-found.component";
-import { AddPollingSourceComponent } from "./additional-components/metadata-component/components/add-polling-source/add-polling-source.component";
+import { AddPollingSourceComponent } from "./additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source.component";
 import { MatStepperModule } from "@angular/material/stepper";
 import { EngineSelectComponent } from "./additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 import { ReadmeSectionComponent } from "./additional-components/overview-component/components/readme-section/readme-section.component";
@@ -64,8 +64,8 @@ import { MatInputModule } from "@angular/material/input";
 import { ReturnToCliComponent } from "../components/return-to-cli/return-to-cli.component";
 import { EditorModule } from "../shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { AddPushSourceComponent } from "./additional-components/metadata-component/components/add-push-source/add-push-source.component";
-import { SourceNameStepComponent } from "./additional-components/metadata-component/components/add-push-source/steps/source-name-step/source-name-step.component";
+import { AddPushSourceComponent } from "./additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
+import { SourceNameStepComponent } from "./additional-components/metadata-component/components/source-events/steps/source-name-step/source-name-step.component";
 
 @NgModule({
     imports: [

@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormBuilder, FormControl, FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
 import { BaseStepComponent } from "./base-step.component";
-import { FetchKind } from "../../add-polling-source-form.types";
+import { FetchKind } from "../../add-polling-source/add-polling-source-form.types";
 import { FETCH_FORM_DATA } from "../data/fetch-form-data";
-import { FETCH_STEP_RADIO_CONTROLS } from "../../form-control.source";
+import { FETCH_STEP_RADIO_CONTROLS } from "../../add-polling-source/form-control.source";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";

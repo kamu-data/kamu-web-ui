@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { BaseField } from "../base-field";
 import { FormControl } from "@angular/forms";
 import { ORDER_RADIO_CONTROL } from "./order-field.types";
-import { SourceOrder } from "../../add-polling-source/process-form.service.types";
+import { SourceOrder } from "../../source-events/add-polling-source/process-form.service.types";
 
 @Component({
     selector: "app-order-field",

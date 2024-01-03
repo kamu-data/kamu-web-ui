@@ -33,7 +33,7 @@ import {
     AddPollingSourceEditFormType,
     PrepareKind,
     PreprocessStepValue,
-} from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
+} from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { DatasetHistoryUpdate } from "../dataset-view/dataset.subscriptions.interface";
 import {
     LineageGraphDatasetNodeObject,
@@ -42,7 +42,7 @@ import {
 } from "../dataset-view/additional-components/lineage-component/lineage-model";
 import { GraphQLError } from "graphql";
 import { TEST_AVATAR_URL } from "../api/mock/auth.mock";
-import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/add-push-source/add-push-source-form.types";
+import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 
 export const mockPageBasedInfo: PageBasedInfo = {
     currentPage: 1,

@@ -5,14 +5,14 @@ import {
     SchemaControlType,
     OrderControlType,
     SourceOrder,
-} from "../components/add-polling-source/process-form.service.types";
+} from "../components/source-events/add-polling-source/process-form.service.types";
 import { AddPushSource, SetPollingSource } from "src/app/api/kamu.graphql.interface";
 import { AddPushSourceSection, SetPollingSourceSection } from "src/app/shared/shared.types";
 import {
     AddPollingSourceEditFormType,
     FetchKind,
     PrepareKind,
-} from "../components/add-polling-source/add-polling-source-form.types";
+} from "../components/source-events/add-polling-source/add-polling-source-form.types";
 import AppValues from "src/app/common/app.values";
 import { has } from "lodash";
 

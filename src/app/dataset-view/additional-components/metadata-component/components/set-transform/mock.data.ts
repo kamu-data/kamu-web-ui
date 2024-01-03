@@ -6,7 +6,7 @@ import {
     QueryDialect,
 } from "src/app/api/kamu.graphql.interface";
 import { SetTransFormYamlType } from "./set-transform.types";
-import { PreprocessStepValue } from "../add-polling-source/add-polling-source-form.types";
+import { PreprocessStepValue } from "../source-events/add-polling-source/add-polling-source-form.types";
 import { Engine } from "./components/engine-section/engine-section.types";
 
 export const mockEngines: EnginesQuery = {

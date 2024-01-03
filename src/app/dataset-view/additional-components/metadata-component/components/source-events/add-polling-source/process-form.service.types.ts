@@ -1,5 +1,5 @@
 import { AddPushSourceSection, SetPollingSourceSection } from "src/app/shared/shared.types";
-import { SchemaType } from "../form-components/schema-field/schema-field.component";
+import { SchemaType } from "../../form-components/schema-field/schema-field.component";
 
 export enum SourceOrder {
     NONE = "NONE",

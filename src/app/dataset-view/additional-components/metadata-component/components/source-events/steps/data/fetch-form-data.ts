@@ -1,5 +1,5 @@
 import AppValues from "src/app/common/app.values";
-import { ControlType, JsonFormData } from "../../add-polling-source-form.types";
+import { ControlType, JsonFormData } from "../../add-polling-source/add-polling-source-form.types";
 import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
 import { SourcesToolipsTexts } from "src/app/common/tooltips/sources.text";
 

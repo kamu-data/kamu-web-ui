@@ -1,7 +1,7 @@
 import { ValidatorFn, Validators } from "@angular/forms";
 import { MetadataBlockFragment } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
-import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
+import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { MaybeUndefined } from "./app.types";
 
 export class DataHelpers {

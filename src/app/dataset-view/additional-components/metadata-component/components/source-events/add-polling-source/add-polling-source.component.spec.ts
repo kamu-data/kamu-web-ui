@@ -5,11 +5,11 @@ import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFo
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AddPollingSourceComponent } from "./add-polling-source.component";
 import { NgbModal, NgbModalRef, NgbModule } from "@ng-bootstrap/ng-bootstrap";
-import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
+import { FinalYamlModalComponent } from "../../final-yaml-modal/final-yaml-modal.component";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { StepperNavigationComponent } from "../stepper-navigation/stepper-navigation.component";
-import { BaseStepComponent } from "./steps/base-step/base-step.component";
-import { PollingSourceFormComponentsModule } from "../form-components/polling-source-form-components.module";
+import { StepperNavigationComponent } from "../../stepper-navigation/stepper-navigation.component";
+import { BaseStepComponent } from "../steps/base-step/base-step.component";
+import { PollingSourceFormComponentsModule } from "../../form-components/polling-source-form-components.module";
 import { of, from } from "rxjs";
 import {
     mockDatasetBasicsDerivedFragment,
@@ -20,10 +20,10 @@ import {
 import { DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { EditPollingSourceService } from "./edit-polling-source.service";
 import { SharedTestModule } from "src/app/common/shared-test.module";
-import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
-import { PrepareStepComponent } from "./steps/prepare-step/prepare-step.component";
+import { DatasetCommitService } from "../../../../overview-component/services/dataset-commit.service";
+import { PrepareStepComponent } from "../steps/prepare-step/prepare-step.component";
 import { MatStepperModule } from "@angular/material/stepper";
-import { PreprocessStepComponent } from "./steps/preprocess-step/preprocess-step.component";
+import { PreprocessStepComponent } from "../steps/preprocess-step/preprocess-step.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";

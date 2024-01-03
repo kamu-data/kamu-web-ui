@@ -1,4 +1,4 @@
-import { AddPollingSourceComponent } from "./dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source.component";
+import { AddPollingSourceComponent } from "./dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source.component";
 import { MetadataBlockComponent } from "./dataset-block/metadata-block/metadata-block.component";
 import { AuthenticatedGuard } from "./auth/guards/authenticated.guard";
 import { AccountSettingsComponent } from "./auth/settings/account-settings.component";
@@ -15,7 +15,7 @@ import ProjectLinks from "./project-links";
 import { SetTransformComponent } from "./dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component";
 import { LoginGuard } from "./auth/guards/login.guard";
 import { ReturnToCliComponent } from "./components/return-to-cli/return-to-cli.component";
-import { AddPushSourceComponent } from "./dataset-view/additional-components/metadata-component/components/add-push-source/add-push-source.component";
+import { AddPushSourceComponent } from "./dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },

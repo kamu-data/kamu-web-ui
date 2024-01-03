@@ -4,7 +4,7 @@ import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/compo
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
-import { SourceOrder } from "../../add-polling-source/process-form.service.types";
+import { SourceOrder } from "../../source-events/add-polling-source/process-form.service.types";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("OrderFieldComponent", () => {

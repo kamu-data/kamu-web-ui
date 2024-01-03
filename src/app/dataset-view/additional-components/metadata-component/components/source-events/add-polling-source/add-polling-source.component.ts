@@ -3,13 +3,13 @@ import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormArray, FormGroup } from "@angular/forms";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { FETCH_STEP_RADIO_CONTROLS } from "./form-control.source";
-import { FETCH_FORM_DATA } from "./steps/data/fetch-form-data";
+import { FETCH_FORM_DATA } from "../steps/data/fetch-form-data";
 import { EditPollingSourceService } from "./edit-polling-source.service";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
 import { MaybeNullOrUndefined } from "src/app/common/app.types";
 import { SourcesSection } from "./process-form.service.types";
-import { BaseSourceEventComponent } from "../base-source-event.component";
+import { BaseSourceEventComponent } from "../../base-source-event.component";
 
 @Component({
     selector: "app-add-polling-source",

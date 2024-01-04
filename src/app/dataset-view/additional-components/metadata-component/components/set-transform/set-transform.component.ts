@@ -11,7 +11,7 @@ import { DatasetNode, SetTransFormYamlType } from "./set-transform.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { from } from "rxjs";
-import { BaseMainEventComponent } from "../base-main-event.component";
+import { BaseMainEventComponent } from "../source-events/base-main-event.component";
 
 @Component({
     selector: "app-set-transform",

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { BaseField } from "../base-field";
 import { FormControl } from "@angular/forms";
-import { ReadFormatControlType, ReadKind } from "../../add-polling-source/add-polling-source-form.types";
+import { ReadFormatControlType, ReadKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
 import { SourcesToolipsTexts } from "src/app/common/tooltips/sources.text";
 
 @Component({

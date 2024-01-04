@@ -185,7 +185,7 @@ describe("OverviewComponent", () => {
     describe("SetPollingSource", () => {
         it("should be possible to add polling source for root dataset and commit permissions", () => {
             // By default we have a root dataset and commit permissions, and a ready polling source, swe reset it here
-            currentOverview().metadata.currentSource = undefined;
+            currentOverview().metadata.currentPollingSource = undefined;
             expect(component.datasetPermissions.permissions.canCommit).toBeTrue();
 
             expect(component.canAddSetPollingSource).toBeTrue();
@@ -206,7 +206,7 @@ describe("OverviewComponent", () => {
         });
 
         it("cannot add set polling source if polling source already exists", () => {
-            currentOverview().metadata.currentSource = { __typename: "SetPollingSource" };
+            currentOverview().metadata.currentPollingSource = { __typename: "SetPollingSource" };
             fixture.detectChanges();
 
             expect(component.canAddSetPollingSource).toBeFalse();
@@ -225,7 +225,7 @@ describe("OverviewComponent", () => {
     describe("SetTransform", () => {
         beforeEach(() => {
             component.datasetBasics.kind = DatasetKind.Derivative;
-            currentOverview().metadata.currentSource = undefined;
+            currentOverview().metadata.currentPollingSource = undefined;
             fixture.detectChanges();
         });
 

@@ -18,7 +18,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.separator": getSourcesDescriptors("AddPushSource.ReadStepCsv.separator"),
 
-    "AddPushSource.ReadStepCsv.encoding": getSourcesDescriptors("AddPushSource.ReadStepCsv.separator"),
+    "AddPushSource.ReadStepCsv.encoding": getSourcesDescriptors("AddPushSource.ReadStepCsv.encoding"),
 
     "AddPushSource.ReadStepCsv.quote": getSourcesDescriptors("AddPushSource.ReadStepCsv.quote"),
 

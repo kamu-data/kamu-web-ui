@@ -1,7 +1,7 @@
 import { ValidatorFn, Validators } from "@angular/forms";
 import { MetadataBlockFragment } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
-import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
+import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { MaybeUndefined } from "./app.types";
 
 export class DataHelpers {
@@ -41,9 +41,9 @@ export class DataHelpers {
                     url_logo: "assets/images/datafusion-logo.png",
                 };
             default:
-                console.log("Engine is not defined");
                 return {
                     name: "Engine is not defined",
+                    label: "Unknown engine",
                 };
         }
     }
@@ -165,10 +165,10 @@ export class DataHelpers {
                 return DataHelpers.BLOCK_DESCRIBE_ADD_PUSH_SOURCE;
             case "SetDataSchema":
                 return DataHelpers.BLOCK_DESCRIBE_SET_DATA_SCHEMA;
-            case "DisablePollingSource":
-                return DataHelpers.BLOCK_DESCRIBE_DISABLE_POLLING_SOURCE;
-            case "DisablePushSource":
-                return DataHelpers.BLOCK_DESCRIBE_DISABLE_ADD_PUSH_SOURCE;
+            // case "DisablePollingSource":
+            //     return DataHelpers.BLOCK_DESCRIBE_DISABLE_POLLING_SOURCE;
+            // case "DisablePushSource":
+            //     return DataHelpers.BLOCK_DESCRIBE_DISABLE_ADD_PUSH_SOURCE;
             default:
                 return "Unsupported event type";
         }

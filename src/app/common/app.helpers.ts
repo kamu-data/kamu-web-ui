@@ -9,6 +9,7 @@ export function requireValue<T>(input: MaybeNull<T>) {
 }
 
 export function logError<T>(input: T) {
+    // eslint-disable-next-line no-console
     console.error(input);
 }
 

@@ -113,7 +113,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onOpenUserInfo(): void {
-        console.info("click onOpenUserInfo");
+        // Not implemented yet
     }
 
     public onAddNew(): void {

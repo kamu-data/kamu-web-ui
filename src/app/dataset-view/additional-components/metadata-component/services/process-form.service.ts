@@ -5,14 +5,14 @@ import {
     SchemaControlType,
     OrderControlType,
     SourceOrder,
-} from "../components/add-polling-source/process-form.service.types";
+} from "../components/source-events/add-polling-source/process-form.service.types";
 import { AddPushSource, SetPollingSource } from "src/app/api/kamu.graphql.interface";
-import { SetPollingSourceSection } from "src/app/shared/shared.types";
+import { AddPushSourceSection, SetPollingSourceSection } from "src/app/shared/shared.types";
 import {
     AddPollingSourceEditFormType,
     FetchKind,
     PrepareKind,
-} from "../components/add-polling-source/add-polling-source-form.types";
+} from "../components/source-events/add-polling-source/add-polling-source-form.types";
 import AppValues from "src/app/common/app.values";
 import { has } from "lodash";
 
@@ -68,6 +68,10 @@ export class ProcessFormService {
         if (form.fetch.eventTime && form.fetch.kind === "container") {
             delete form.fetch.eventTime;
         }
+        if (form.fetch.eventTime?.kind !== "fromPath") {
+            delete form.fetch.eventTime?.pattern;
+            delete form.fetch.eventTime?.timestampFormat;
+        }
     }
 
     private processFetchOrderControl(formGroup: FormGroup): void {
@@ -79,8 +83,8 @@ export class ProcessFormService {
 
     private removePushSourceEmptyControls(formGroup: FormGroup): void {
         const form = formGroup.value as AddPushSource;
-        type FormKeys = SetPollingSourceSection.READ | SetPollingSourceSection.MERGE;
-        const formKeys: FormKeys[] = [SetPollingSourceSection.READ, SetPollingSourceSection.MERGE];
+        type FormKeys = AddPushSourceSection.READ | AddPushSourceSection.MERGE;
+        const formKeys: FormKeys[] = [AddPushSourceSection.READ, AddPushSourceSection.MERGE];
         formKeys.forEach((formKey: FormKeys) => {
             Object.entries(form[formKey]).forEach(([key, value]) => {
                 if (!value || (Array.isArray(value) && !value.length)) {

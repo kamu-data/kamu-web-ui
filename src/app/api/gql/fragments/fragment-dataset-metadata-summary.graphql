@@ -6,7 +6,7 @@ fragment DatasetMetadataSummary on Dataset {
     currentLicense {
       ...License
     }
-    currentSource {
+    currentPollingSource {
       ...SetPollingSourceEvent
     }
     currentWatermark
@@ -16,12 +16,13 @@ fragment DatasetMetadataSummary on Dataset {
     currentSchema(format: PARQUET_JSON) {
       format
       content
-      __typename
     }
     currentVocab {
       ...SetVocabEvent
     }
-    __typename
+    currentPushSources {
+      ...AddPushSourceEvent
+    }
   }
   ...DatasetReadme
   ...DatasetLastUpdate

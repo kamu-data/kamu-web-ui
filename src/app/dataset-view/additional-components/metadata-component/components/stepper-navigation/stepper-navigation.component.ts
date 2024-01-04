@@ -1,6 +1,6 @@
 import { MaybeNull } from "src/app/common/app.types";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { SourcesSection } from "../add-polling-source/process-form.service.types";
+import { SourcesSection } from "../source-events/add-polling-source/process-form.service.types";
 
 @Component({
     selector: "app-stepper-navigation",

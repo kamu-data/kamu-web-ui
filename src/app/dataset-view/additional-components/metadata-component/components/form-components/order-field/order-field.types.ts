@@ -1,4 +1,4 @@
-import { SourceOrder } from "../../add-polling-source/process-form.service.types";
+import { SourceOrder } from "../../source-events/add-polling-source/process-form.service.types";
 
 export interface OrderControlType {
     label: string;

@@ -91,96 +91,32 @@
                     </div>
                 </div>
 
-                <ng-container *ngIf="currentSource">
+                <ng-container *ngIf="currentPollingSource">
                     <div class="position-relative border border-1 p-2 rounded-3">
                         <span class="position-absolute text-muted group-box-label text-uppercase">Fetch</span>
-                        <div class="mx-4" *ngIf="currentSource.fetch.__typename === 'FetchStepUrl'">
+                        <div class="mx-4" *ngIf="currentPollingSource.fetch.__typename === 'FetchStepUrl'">
                             <app-block-row-data [tooltip]="'URL of the data source.'" [label]="'Url:'">
-                                <app-link-property [data]="currentSource.fetch.url"></app-link-property>
+                                <app-link-property [data]="currentPollingSource.fetch.url"></app-link-property>
                             </app-block-row-data>
                         </div>
 
-                        <div class="mx-4" *ngIf="currentSource.fetch.__typename === 'FetchStepContainer'">
+                        <div class="mx-4" *ngIf="currentPollingSource.fetch.__typename === 'FetchStepContainer'">
                             <app-block-row-data [tooltip]="'Image name and and an optional tag.'" [label]="'Image:'">
-                                <span>{{ currentSource.fetch.image }}</span>
+                                <span>{{ currentPollingSource.fetch.image }}</span>
                             </app-block-row-data>
                         </div>
 
-                        <div class="mx-4" *ngIf="currentSource.fetch.__typename === 'FetchStepFilesGlob'">
+                        <div class="mx-4" *ngIf="currentPollingSource.fetch.__typename === 'FetchStepFilesGlob'">
                             <app-block-row-data [tooltip]="'Path with a glob pattern.'" [label]="'Path:'">
-                                <span>{{ currentSource.fetch.path }}</span>
+                                <span>{{ currentPollingSource.fetch.path }}</span>
                             </app-block-row-data>
                         </div>
                     </div>
 
-                    <div class="position-relative border border-1 p-2 rounded-3">
-                        <span class="position-absolute text-muted group-box-label text-uppercase">Read</span>
-                        <div class="mx-4" *ngIf="currentSource.read.__typename">
-                            <app-block-row-data [tooltip]="'Determines where data is sourced from.'" [label]="'Type:'">
-                                <span>{{ ReadSectionMapping[currentSource.read.__typename] }}</span>
-                            </app-block-row-data>
-                        </div>
-                        <div class="mx-4" *ngIf="currentSource.read.schema && currentSource.read.schema.length > 0">
-                            <app-block-row-data
-                                [tooltip]="
-                                    'A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.'
-                                "
-                                [label]="'Schema:'"
-                            >
-                                <app-schema-property [data]="currentSource.read.schema"></app-schema-property>
-                            </app-block-row-data>
-                        </div>
-                    </div>
-
-                    <div class="position-relative border border-1 p-2 rounded-3">
-                        <span class="position-absolute text-muted group-box-label text-uppercase">Merge</span>
-                        <div class="mx-4" *ngIf="currentSource.merge.__typename">
-                            <app-block-row-data
-                                [tooltip]="
-                                    'Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset.'
-                                "
-                                [label]="'Strategy:'"
-                            >
-                                <app-merge-strategy-property
-                                    [data]="currentSource.merge.__typename"
-                                ></app-merge-strategy-property>
-                            </app-block-row-data>
-                        </div>
-
-                        <div class="mx-4" *ngIf="currentSource.merge.__typename === 'MergeStrategyLedger'">
-                            <app-block-row-data
-                                [tooltip]="
-                                    'Names of the columns that uniquely identify the record throughout its lifetime.'
-                                "
-                                [label]="'Primary key:'"
-                            >
-                                <app-cards-property [data]="currentSource.merge.primaryKey"></app-cards-property>
-                            </app-block-row-data>
-                        </div>
-                    </div>
-
-                    <div *ngIf="currentSource.preprocess" class="position-relative border border-1 p-2 rounded-3">
-                        <span class="position-absolute text-muted group-box-label text-uppercase">Preprocess</span>
-                        <div class="mx-4">
-                            <app-block-row-data
-                                [tooltip]="'Identifier of the engine used for this transformation.'"
-                                [label]="'Engine:'"
-                            >
-                                <app-engine-property [data]="currentSource.preprocess.engine"></app-engine-property>
-                            </app-block-row-data>
-                        </div>
-
-                        <div class="mx-4">
-                            <app-block-row-data
-                                [tooltip]="'Queries use for specifying multi-step SQL transformations.'"
-                                [label]="'Queries:'"
-                            >
-                            </app-block-row-data>
-                            <div class="row my-4">
-                                <app-sql-query-viewer [data]="currentSource.preprocess.queries"></app-sql-query-viewer>
-                            </div>
-                        </div>
-                    </div>
+                    <ng-container
+                        [ngTemplateOutlet]="sourceTemplate"
+                        [ngTemplateOutletContext]="{ $implicit: currentPollingSource }"
+                    ></ng-container>
                 </ng-container>
 
                 <div class="position-relative border border-1 p-2 rounded-3" *ngIf="currentWatermark">
@@ -266,9 +202,48 @@
                         </div>
                     </div>
                 </ng-container>
+
+                <ng-container *ngIf="currentPushSources?.length">
+                    <div
+                        class="position-relative border border-1 p-4 rounded-3"
+                        *ngFor="let source of currentPushSources; let i = index"
+                    >
+                        <span class="position-absolute text-muted group-box-label text-uppercase"
+                            >#{{ i + 1 }} Push source &lt;
+                            <span class="text-normal text-muted fs-10">
+                                {{ !source.sourceName ? "default" : source.sourceName }}</span
+                            >
+                            &gt;</span
+                        >
+                        <div class="d-flex justify-content-end" *ngIf="canEditAddPushSource">
+                            <button
+                                class="border-1 bg-light border rounded-2 me-3 btn btn-sm d-flex justify-content-between align-items-center"
+                                data-test-id="'edit-source-link'"
+                                (click)="navigateToEditAddPushSource(source.sourceName!)"
+                            >
+                                <svg-icon name="pencil" class="me-2 text-muted"></svg-icon>
+                                <span class="fs-12 me-2">Edit push source</span>
+                            </button>
+                            <button
+                                class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+                                data-test-id="'edit-source-link'"
+                                (click)="onDeletePushSource()"
+                            >
+                                <mat-icon class="text-muted fs-4 d-block">delete</mat-icon>
+                                <span class="fs-12 me-2 d-block"> Delete push source</span>
+                            </button>
+                        </div>
+                        <div class="mt-4">
+                            <ng-container
+                                [ngTemplateOutlet]="sourceTemplate"
+                                [ngTemplateOutletContext]="{ $implicit: source }"
+                            ></ng-container>
+                        </div>
+                    </div>
+                </ng-container>
             </div>
         </ng-container>
-        <ng-container *ngIf="!currentSource && datasetBasics.kind === 'ROOT'">
+        <ng-container *ngIf="hasAnySource() && datasetBasics.kind === 'ROOT'">
             <h3 class="box-title text-center mt-4">There is no metadata.</h3>
         </ng-container>
         <ng-container *ngIf="!currentTransform && datasetBasics.kind === 'DERIVATIVE'">
@@ -279,3 +254,70 @@
         </ng-container>
     </div>
 </div>
+
+<ng-template #sourceTemplate let-sourceEvent>
+    <div class="d-flex flex-column gap-4">
+        <div class="position-relative border border-1 p-2 rounded-3">
+            <span class="position-absolute text-muted group-box-label text-uppercase">Read</span>
+            <div class="mx-4" *ngIf="sourceEvent.read.__typename">
+                <app-block-row-data [tooltip]="'Determines where data is sourced from.'" [label]="'Type:'">
+                    <span>{{ ReadSectionMapping[sourceEvent.read.__typename] }}</span>
+                </app-block-row-data>
+            </div>
+            <div class="mx-4" *ngIf="sourceEvent.read.schema && sourceEvent.read.schema.length > 0">
+                <app-block-row-data
+                    [tooltip]="
+                        'A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.'
+                    "
+                    [label]="'Schema:'"
+                >
+                    <app-schema-property [data]="sourceEvent.read.schema"></app-schema-property>
+                </app-block-row-data>
+            </div>
+        </div>
+        <div class="position-relative border border-1 p-2 rounded-3">
+            <span class="position-absolute text-muted group-box-label text-uppercase">Merge</span>
+            <div class="mx-4" *ngIf="sourceEvent.merge.__typename">
+                <app-block-row-data
+                    [tooltip]="
+                        'Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset.'
+                    "
+                    [label]="'Strategy:'"
+                >
+                    <app-merge-strategy-property [data]="sourceEvent.merge.__typename"></app-merge-strategy-property>
+                </app-block-row-data>
+            </div>
+
+            <div class="mx-4" *ngIf="sourceEvent.merge.__typename === 'MergeStrategyLedger'">
+                <app-block-row-data
+                    [tooltip]="'Names of the columns that uniquely identify the record throughout its lifetime.'"
+                    [label]="'Primary key:'"
+                >
+                    <app-cards-property [data]="sourceEvent.merge.primaryKey"></app-cards-property>
+                </app-block-row-data>
+            </div>
+        </div>
+        <div *ngIf="sourceEvent.preprocess" class="position-relative border border-1 p-2 rounded-3">
+            <span class="position-absolute text-muted group-box-label text-uppercase">Preprocess</span>
+            <div class="mx-4">
+                <app-block-row-data
+                    [tooltip]="'Identifier of the engine used for this transformation.'"
+                    [label]="'Engine:'"
+                >
+                    <app-engine-property [data]="sourceEvent.preprocess.engine"></app-engine-property>
+                </app-block-row-data>
+            </div>
+
+            <div class="mx-4">
+                <app-block-row-data
+                    [tooltip]="'Queries use for specifying multi-step SQL transformations.'"
+                    [label]="'Queries:'"
+                >
+                </app-block-row-data>
+                <div class="row my-4">
+                    <app-sql-query-viewer [data]="sourceEvent.preprocess.queries"></app-sql-query-viewer>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

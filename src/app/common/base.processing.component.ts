@@ -52,7 +52,12 @@ export class BaseProcessingComponent extends BaseComponent {
                 });
             },
             navigateToDiscussions: () => {
-                console.log("Navigate to discussions");
+                promiseWithCatch(
+                    this.modalService.warning({
+                        message: "Feature coming soon",
+                        yesButtonText: "Ok",
+                    }),
+                );
             },
             navigateToSettings: () => {
                 this.navigationService.navigateToDatasetView({
@@ -84,6 +89,11 @@ export class BaseProcessingComponent extends BaseComponent {
     }
 
     private onClickDeriveFrom(): void {
-        console.log("onClickDeriveFrom");
+        promiseWithCatch(
+            this.modalService.warning({
+                message: "Feature coming soon",
+                yesButtonText: "Ok",
+            }),
+        );
     }
 }

@@ -346,6 +346,10 @@ export type DatasetMetadata = {
     currentInfo: SetInfo;
     /** Current license associated with the dataset */
     currentLicense?: Maybe<SetLicense>;
+    /** Current polling source used by the root dataset */
+    currentPollingSource?: Maybe<SetPollingSource>;
+    /** Current push sources used by the root dataset */
+    currentPushSources: Array<AddPushSource>;
     /**
      * Current readme file as discovered from attachments associated with the
      * dataset
@@ -353,7 +357,7 @@ export type DatasetMetadata = {
     currentReadme?: Maybe<Scalars["String"]>;
     /** Latest data schema */
     currentSchema?: Maybe<DataSchema>;
-    /** Current source used by the root dataset */
+    /** Deprecated - use `current_polling_source` instead */
     currentSource?: Maybe<SetPollingSource>;
     /** Current transformation used by the derivative dataset */
     currentTransform?: Maybe<SetTransform>;
@@ -1706,7 +1710,7 @@ export type AccountFragment = {
 
 export type CurrentSourceFetchUrlFragment = {
     __typename?: "DatasetMetadata";
-    currentSource?: {
+    currentPollingSource?: {
         __typename?: "SetPollingSource";
         fetch:
             | { __typename?: "FetchStepContainer" }
@@ -1878,14 +1882,15 @@ export type DatasetLineageBasicsFragment = {
 export type DatasetMetadataSummaryFragment = {
     __typename?: "Dataset";
     metadata: {
-        __typename: "DatasetMetadata";
+        __typename?: "DatasetMetadata";
         currentWatermark?: string | null;
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
-        currentSource?: ({ __typename?: "SetPollingSource" } & SetPollingSourceEventFragment) | null;
+        currentPollingSource?: ({ __typename?: "SetPollingSource" } & SetPollingSourceEventFragment) | null;
         currentTransform?: ({ __typename?: "SetTransform" } & DatasetTransformFragment) | null;
-        currentSchema?: { __typename: "DataSchema"; format: DataSchemaFormat; content: string } | null;
+        currentSchema?: { __typename?: "DataSchema"; format: DataSchemaFormat; content: string } | null;
         currentVocab?: ({ __typename?: "SetVocab" } & SetVocabEventFragment) | null;
+        currentPushSources: Array<{ __typename?: "AddPushSource" } & AddPushSourceEventFragment>;
     };
 } & DatasetReadmeFragment &
     DatasetLastUpdateFragment;
@@ -1894,8 +1899,9 @@ export type DatasetOverviewFragment = {
     __typename?: "Dataset";
     metadata: {
         __typename?: "DatasetMetadata";
-        currentSource?: { __typename: "SetPollingSource" } | null;
+        currentPollingSource?: { __typename: "SetPollingSource" } | null;
         currentTransform?: { __typename: "SetTransform" } | null;
+        currentPushSources: Array<{ __typename: "AddPushSource" }>;
     };
 } & DatasetDescriptionFragment &
     DatasetDetailsFragment &
@@ -2163,7 +2169,7 @@ export const DatasetBasicsFragmentDoc = gql`
 `;
 export const CurrentSourceFetchUrlFragmentDoc = gql`
     fragment CurrentSourceFetchUrl on DatasetMetadata {
-        currentSource {
+        currentPollingSource {
             fetch {
                 ... on FetchStepUrl {
                     url
@@ -2531,6 +2537,41 @@ export const SetVocabEventFragmentDoc = gql`
         offsetColumn
     }
 `;
+export const AddPushSourceEventFragmentDoc = gql`
+    fragment AddPushSourceEvent on AddPushSource {
+        sourceName
+        read {
+            ...ReadStepCsvData
+            ...ReadStepGeoJsonData
+            ...ReadStepParquetData
+            ...ReadStepJsonLinesData
+            ...ReadStepEsriShapefileData
+            ...ReadStepJsonData
+            ...ReadStepNdGeoJsonData
+            ...ReadStepNdJsonData
+        }
+        merge {
+            ...MergeStrategySnapshotData
+            ...MergeStrategyLedgerData
+            ...MergeStrategyAppendData
+        }
+        preprocess {
+            ...PreprocessStepData
+        }
+    }
+    ${ReadStepCsvDataFragmentDoc}
+    ${ReadStepGeoJsonDataFragmentDoc}
+    ${ReadStepParquetDataFragmentDoc}
+    ${ReadStepJsonLinesDataFragmentDoc}
+    ${ReadStepEsriShapefileDataFragmentDoc}
+    ${ReadStepJsonDataFragmentDoc}
+    ${ReadStepNdGeoJsonDataFragmentDoc}
+    ${ReadStepNdJsonDataFragmentDoc}
+    ${MergeStrategySnapshotDataFragmentDoc}
+    ${MergeStrategyLedgerDataFragmentDoc}
+    ${MergeStrategyAppendDataFragmentDoc}
+    ${PreprocessStepDataFragmentDoc}
+`;
 export const DatasetReadmeFragmentDoc = gql`
     fragment DatasetReadme on Dataset {
         metadata {
@@ -2624,41 +2665,6 @@ export const SetLicenseEventFragmentDoc = gql`
         websiteUrl
     }
 `;
-export const AddPushSourceEventFragmentDoc = gql`
-    fragment AddPushSourceEvent on AddPushSource {
-        sourceName
-        read {
-            ...ReadStepCsvData
-            ...ReadStepGeoJsonData
-            ...ReadStepParquetData
-            ...ReadStepJsonLinesData
-            ...ReadStepEsriShapefileData
-            ...ReadStepJsonData
-            ...ReadStepNdGeoJsonData
-            ...ReadStepNdJsonData
-        }
-        merge {
-            ...MergeStrategySnapshotData
-            ...MergeStrategyLedgerData
-            ...MergeStrategyAppendData
-        }
-        preprocess {
-            ...PreprocessStepData
-        }
-    }
-    ${ReadStepCsvDataFragmentDoc}
-    ${ReadStepGeoJsonDataFragmentDoc}
-    ${ReadStepParquetDataFragmentDoc}
-    ${ReadStepJsonLinesDataFragmentDoc}
-    ${ReadStepEsriShapefileDataFragmentDoc}
-    ${ReadStepJsonDataFragmentDoc}
-    ${ReadStepNdGeoJsonDataFragmentDoc}
-    ${ReadStepNdJsonDataFragmentDoc}
-    ${MergeStrategySnapshotDataFragmentDoc}
-    ${MergeStrategyLedgerDataFragmentDoc}
-    ${MergeStrategyAppendDataFragmentDoc}
-    ${PreprocessStepDataFragmentDoc}
-`;
 export const SetDataSchemaEventFragmentDoc = gql`
     fragment SetDataSchemaEvent on SetDataSchema {
         schema {
@@ -2749,7 +2755,7 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
             currentLicense {
                 ...License
             }
-            currentSource {
+            currentPollingSource {
                 ...SetPollingSourceEvent
             }
             currentWatermark
@@ -2759,12 +2765,13 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
             currentSchema(format: PARQUET_JSON) {
                 format
                 content
-                __typename
             }
             currentVocab {
                 ...SetVocabEvent
             }
-            __typename
+            currentPushSources {
+                ...AddPushSourceEvent
+            }
         }
         ...DatasetReadme
         ...DatasetLastUpdate
@@ -2774,6 +2781,7 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
     ${SetPollingSourceEventFragmentDoc}
     ${DatasetTransformFragmentDoc}
     ${SetVocabEventFragmentDoc}
+    ${AddPushSourceEventFragmentDoc}
     ${DatasetReadmeFragmentDoc}
     ${DatasetLastUpdateFragmentDoc}
 `;
@@ -2815,10 +2823,13 @@ export const DatasetOverviewFragmentDoc = gql`
         ...DatasetReadme
         ...DatasetLastUpdate
         metadata {
-            currentSource {
+            currentPollingSource {
                 __typename
             }
             currentTransform {
+                __typename
+            }
+            currentPushSources {
                 __typename
             }
         }

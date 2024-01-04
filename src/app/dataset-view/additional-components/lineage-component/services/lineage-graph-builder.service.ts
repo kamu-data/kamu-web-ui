@@ -108,7 +108,7 @@ export class LineageGraphBuilderService {
         const qualifyingDatasets = uniqueDatasets.filter(
             (dataset: DatasetLineageBasicsFragment) =>
                 dataset.kind === DatasetKind.Root &&
-                dataset.metadata.currentSource?.fetch.__typename === "FetchStepUrl",
+                dataset.metadata.currentPollingSource?.fetch.__typename === "FetchStepUrl",
         );
 
         const source2DatasetLinks: Edge[] = [];
@@ -116,7 +116,9 @@ export class LineageGraphBuilderService {
         const sourceNodesByLabel = new Map<string, Node>();
         qualifyingDatasets.forEach((dataset: DatasetLineageBasicsFragment) => {
             const datasetId = this.sanitizeID(dataset.id);
-            const sourceNodeLabel = this.getDomainFromUrl((dataset.metadata.currentSource?.fetch as FetchStepUrl).url);
+            const sourceNodeLabel = this.getDomainFromUrl(
+                (dataset.metadata.currentPollingSource?.fetch as FetchStepUrl).url,
+            );
 
             let sourceNode: Node | undefined = sourceNodesByLabel.get(sourceNodeLabel);
             if (_.isNil(sourceNode)) {

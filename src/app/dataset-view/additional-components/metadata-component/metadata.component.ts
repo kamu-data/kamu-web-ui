@@ -1,4 +1,5 @@
 import {
+    AddPushSourceEventFragment,
     DatasetKind,
     DatasetPermissionsFragment,
     DatasetTransformFragment,
@@ -93,8 +94,12 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         return this.currentState?.metadataSummary.metadata.currentWatermark;
     }
 
-    public get currentSource(): MaybeNullOrUndefined<SetPollingSourceEventFragment> {
-        return this.currentState?.metadataSummary.metadata.currentSource;
+    public get currentPollingSource(): MaybeNullOrUndefined<SetPollingSourceEventFragment> {
+        return this.currentState?.metadataSummary.metadata.currentPollingSource;
+    }
+
+    public get currentPushSources(): MaybeNullOrUndefined<AddPushSourceEventFragment[]> {
+        return this.currentState?.metadataSummary.metadata.currentPushSources;
     }
 
     public get currentTransform(): MaybeNullOrUndefined<DatasetTransformFragment> {
@@ -117,7 +122,19 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         if (this.currentState) {
             return (
                 this.datasetBasics.kind === DatasetKind.Root &&
-                !_.isNil(this.currentState.metadataSummary.metadata.currentSource) &&
+                !_.isNil(this.currentState.metadataSummary.metadata.currentPollingSource) &&
+                this.datasetPermissions.permissions.canCommit
+            );
+        } else {
+            return false;
+        }
+    }
+
+    public get canEditAddPushSource(): boolean {
+        if (this.currentState) {
+            return (
+                this.datasetBasics.kind === DatasetKind.Root &&
+                this.currentState.metadataSummary.metadata.currentPushSources.length > 0 &&
                 this.datasetPermissions.permissions.canCommit
             );
         } else {
@@ -144,6 +161,16 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         });
     }
 
+    public navigateToEditAddPushSource(sourceName: string): void {
+        this.navigationService.navigateToAddPushSource(
+            {
+                accountName: this.datasetBasics.owner.accountName,
+                datasetName: this.datasetBasics.name,
+            },
+            sourceName,
+        );
+    }
+
     public navigateToEditSetTransform(): void {
         this.navigationService.navigateToSetTransform({
             accountName: this.datasetBasics.owner.accountName,
@@ -167,5 +194,18 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         //         )
         //         .subscribe(),
         // );
+    }
+
+    public onDeletePushSource(): void {
+        promiseWithCatch(
+            this.modalService.warning({
+                message: "Feature coming soon",
+                yesButtonText: "Ok",
+            }),
+        );
+    }
+
+    public hasAnySource(): boolean {
+        return !this.currentPollingSource && !this.currentPushSources?.length;
     }
 }

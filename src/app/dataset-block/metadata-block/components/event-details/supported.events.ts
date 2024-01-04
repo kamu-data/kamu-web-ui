@@ -18,3 +18,5 @@ export interface EventPropertyLogo {
     label?: string;
     url_logo?: string;
 }
+
+export type SourcesEvents = SupportedEvents.AddPushSource | SupportedEvents.SetPollingSource;

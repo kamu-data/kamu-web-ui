@@ -104,13 +104,15 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public get canAddSetPollingSource(): boolean {
         if (this.currentState && this.datasetPermissions.permissions.canCommit) {
-            return !this.currentState.overview.metadata.currentSource && this.datasetBasics.kind === DatasetKind.Root;
+            return (
+                !this.currentState.overview.metadata.currentPollingSource &&
+                this.datasetBasics.kind === DatasetKind.Root
+            );
         } else {
             return false;
         }
     }
 
-    // TODO: To replace it to faster API
     public get canAddPushSource(): boolean {
         if (this.currentState && this.datasetPermissions.permissions.canCommit) {
             return (

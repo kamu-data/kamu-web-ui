@@ -51,7 +51,7 @@ describe("LineageGraphBuilderService", () => {
             expect(update).toBeDefined();
             if (update) {
                 const dataSource = mockLineageGraphUpdate.nodes.filter(
-                    (node) => node.metadata.currentSource?.fetch.__typename === "FetchStepUrl",
+                    (node) => node.metadata.currentPollingSource?.fetch.__typename === "FetchStepUrl",
                 );
                 const graphSourceNodes = update.graph.nodes.filter(
                     (node) => (node.data as LineageGraphNodeData).kind === LineageGraphNodeKind.Source,

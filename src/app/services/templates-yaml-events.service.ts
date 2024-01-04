@@ -7,8 +7,8 @@ import {
     PreprocessKind,
     PreprocessStepValue,
     ReadKind,
-} from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
-import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/add-push-source/add-push-source-form.types";
+} from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 
 @Injectable({
     providedIn: "root",

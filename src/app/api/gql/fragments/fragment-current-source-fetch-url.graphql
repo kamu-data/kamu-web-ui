@@ -1,5 +1,5 @@
 fragment CurrentSourceFetchUrl on DatasetMetadata {
-  currentSource {
+  currentPollingSource {
     fetch {
       ... on FetchStepUrl {
         url

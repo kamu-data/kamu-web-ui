@@ -5,7 +5,7 @@ import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
-import { DatasetCommitService } from "../../overview-component/services/dataset-commit.service";
+import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";

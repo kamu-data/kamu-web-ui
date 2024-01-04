@@ -11,7 +11,7 @@ import {
 } from "./source-events/add-polling-source/form-control.source";
 import { MERGE_FORM_DATA } from "./source-events/steps/data/merge-form-data";
 import { READ_FORM_DATA } from "./source-events/steps/data/read-form-data";
-import { BaseMainEventComponent } from "./base-main-event.component";
+import { BaseMainEventComponent } from "./source-events/base-main-event.component";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { ProcessFormService } from "../services/process-form.service";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";

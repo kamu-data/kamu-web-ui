@@ -66,7 +66,10 @@ import { EditorModule } from "../shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { AddPushSourceComponent } from "./additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
 import { SourceNameStepComponent } from "./additional-components/metadata-component/components/source-events/steps/source-name-step/source-name-step.component";
-
+import { GeneralComponent } from "./additional-components/dataset-settings-component/tabs/general/general.component";
+import { SchedulingComponent } from "./additional-components/dataset-settings-component/tabs/scheduling/scheduling.component";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatRadioModule } from "@angular/material/radio";
 @NgModule({
     imports: [
         CommonModule,
@@ -110,6 +113,8 @@ import { SourceNameStepComponent } from "./additional-components/metadata-compon
         MatInputModule,
         EditorModule,
         MatProgressBarModule,
+        MatSlideToggleModule,
+        MatRadioModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -159,6 +164,8 @@ import { SourceNameStepComponent } from "./additional-components/metadata-compon
         LoadMoreComponent,
         AddPushSourceComponent,
         SourceNameStepComponent,
+        GeneralComponent,
+        SchedulingComponent,
     ],
 })
 export class DatasetModule {

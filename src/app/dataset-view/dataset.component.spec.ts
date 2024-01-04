@@ -125,6 +125,7 @@ describe("DatasetComponent", () => {
         // Note: for some reason this icon is not loaded when activating Settings tab, so stub it
         const iconRegistryService: SvgIconRegistryService = TestBed.inject(SvgIconRegistryService);
         iconRegistryService.addSvg("account", "");
+        iconRegistryService.addSvg("clock", "");
 
         datasetSubsServices = TestBed.inject(DatasetSubscriptionsService);
         datasetSubsServices.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);

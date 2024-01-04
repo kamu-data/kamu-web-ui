@@ -1,0 +1,19 @@
+:host {
+    ::ng-deep {
+        .mat-slide-toggle {
+            .mat-slide-toggle-ripple {
+                position: relative;
+            }
+        }
+
+        .mat-radio-button {
+            .mat-radio-ripple {
+                position: relative;
+            }
+        }
+    }
+}
+
+h4 {
+    font-weight: 500;
+}

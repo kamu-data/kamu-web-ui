@@ -1,4 +1,4 @@
-<div class="w-75">
+<div class="w-75 mb-4">
     <h2>Schedule</h2>
     <mat-divider class="mt-1 mb-2"></mat-divider>
     <form [formGroup]="schedulingForm" (ngSubmit)="onSubmit()">
@@ -21,7 +21,7 @@
                 <mat-radio-button [value]="pollingGroupEnum.TIME_DELTA">
                     <div class="d-flex align-items-center column-gap-3 time-delta">
                         <span>Update every:</span>
-                        <input type="number" formControlName="timeDelta" class="form-control w-60px" />
+                        <input type="number" min="0" formControlName="timeDelta" class="form-control w-60px" />
                         <select formControlName="timeSegment" class="form-select">
                             <option value="seconds">Seconds</option>
                             <option value="minutes">Minutes</option>
@@ -51,7 +51,7 @@
                 <mat-radio-button [value]="throttlingGroupEnum.AWAIT_FOR">
                     <div class="d-flex align-items-center column-gap-3">
                         <span>Await for</span>
-                        <input type="number" formControlName="awaitFor" class="form-control w-60px" />
+                        <input type="number" min="0" formControlName="awaitFor" class="form-control w-60px" />
                         <span>minutes after input update</span>
                     </div>
                 </mat-radio-button>
@@ -64,7 +64,9 @@
                 </mat-radio-button>
             </mat-radio-group>
         </div>
-
-        <button type="submit" class="mt-5" mat-button [disabled]="schedulingForm.invalid">Save</button>
+        <div class="my-4 d-flex justify-content-end">
+            <!-- <button type="submit" class="btn btn-success" [disabled]="schedulingForm.invalid">Save</button> -->
+            <button type="submit" [disabled]="!updateState.value" class="btn btn-success">Save</button>
+        </div>
     </form>
 </div>

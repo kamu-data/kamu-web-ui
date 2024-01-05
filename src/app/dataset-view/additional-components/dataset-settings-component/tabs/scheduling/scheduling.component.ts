@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/forms";
 import { BaseComponent } from "../../../../../common/base.component";
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
 import { PollingGroupEnum, ThrottlingGroupEnum, SchedulingSettings } from "../../dataset-settings.model";
+import { DatasetBasicsFragment, DatasetKind, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-scheduling",
@@ -11,22 +12,21 @@ import { PollingGroupEnum, ThrottlingGroupEnum, SchedulingSettings } from "../..
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SchedulingComponent extends BaseComponent implements OnInit {
-    // ToDo: waiting on canSchedule permission
-    // @Input() public datasetPermissions: DatasetPermissionsFragment;
-
-    public pollingGroupEnum = PollingGroupEnum;
-    public throttlingGroupEnum = ThrottlingGroupEnum;
+    @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input() public datasetPermissions: DatasetPermissionsFragment;
+    public readonly pollingGroupEnum: typeof PollingGroupEnum = PollingGroupEnum;
+    public readonly throttlingGroupEnum: typeof ThrottlingGroupEnum = ThrottlingGroupEnum;
 
     public schedulingForm = new FormGroup({
         updatesState: new FormControl(false),
         pollingGroup: new FormGroup({
-            pollingSource: new FormControl(null, [Validators.required]),
+            pollingSource: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
             timeDelta: new FormControl({ value: null, disabled: true }, [Validators.required]),
             timeSegment: new FormControl({ value: "", disabled: true }, [Validators.required]),
             cronExpression: new FormControl({ value: "0 0 * * *", disabled: true }, [Validators.required]),
         }),
         throttlingGroup: new FormGroup({
-            throttlingParameters: new FormControl(null, [Validators.required]),
+            throttlingParameters: new FormControl(ThrottlingGroupEnum.AWAIT_FOR, [Validators.required]),
             awaitFor: new FormControl<number | null>({ value: null, disabled: true }, [Validators.required]),
             awaitUntil: new FormControl<number | null>({ value: null, disabled: true }, [Validators.required]),
         }),
@@ -36,12 +36,23 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
         super();
     }
 
-    public ngOnInit() {
-        // ToDo: waiting on canSchedule permission
-        // if (!this.datasetPermissions.permissions.canSchedule) {
-        //     this.schedulingForm.disable();
-        // }
+    public get pollingGroup(): FormGroup {
+        return this.schedulingForm.get("pollingGroup") as FormGroup;
+    }
 
+    public get updateState(): AbstractControl {
+        return this.schedulingForm.controls.updatesState;
+    }
+
+    public get throttlingGroup(): FormGroup {
+        return this.schedulingForm.get("throttlingGroup") as FormGroup;
+    }
+
+    public ngOnInit() {
+        if (!this.datasetPermissions.permissions.canSchedule) {
+            this.schedulingForm.disable();
+        }
+        this.checkStatusSection();
         const pollingSource = this.schedulingForm.get("pollingGroup.pollingSource") as AbstractControl;
         const timeDelta = this.schedulingForm.get("pollingGroup.timeDelta") as AbstractControl;
         const timeSegment = this.schedulingForm.get("pollingGroup.timeSegment") as AbstractControl;
@@ -51,7 +62,7 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
         const awaitUntil = this.schedulingForm.get("throttlingGroup.awaitUntil") as AbstractControl;
 
         this.trackSubscriptions(
-            pollingSource.valueChanges.subscribe((value) => {
+            pollingSource.valueChanges.subscribe((value: PollingGroupEnum) => {
                 if (value === PollingGroupEnum.TIME_DELTA) {
                     timeDelta.enable();
                     timeSegment.enable();
@@ -66,7 +77,7 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
                 }
             }),
 
-            throttlingParameters.valueChanges.subscribe((value) => {
+            throttlingParameters.valueChanges.subscribe((value: ThrottlingGroupEnum) => {
                 if (value === ThrottlingGroupEnum.AWAIT_FOR) {
                     awaitFor.enable();
 
@@ -85,6 +96,16 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
         control.disable();
         control.markAsUntouched();
         control.markAsPristine();
+    }
+
+    private checkStatusSection(): void {
+        if (this.datasetBasics.kind === DatasetKind.Root) {
+            this.throttlingGroup.disable();
+            this.pollingGroup.enable();
+        } else {
+            this.pollingGroup.disable();
+            this.throttlingGroup.enable();
+        }
     }
 
     public onSubmit(): void {

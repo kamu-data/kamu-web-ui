@@ -44,7 +44,7 @@
             <app-general [datasetBasics]="datasetBasics" [datasetPermissions]="datasetPermissions"></app-general>
         </ng-container>
         <ng-container *ngIf="isSchedulingAvailable && activeTab === settingsTabsEnum.SCHEDULING">
-            <app-scheduling></app-scheduling>
+            <app-scheduling [datasetBasics]="datasetBasics" [datasetPermissions]="datasetPermissions"></app-scheduling>
         </ng-container>
     </div>
 </div>

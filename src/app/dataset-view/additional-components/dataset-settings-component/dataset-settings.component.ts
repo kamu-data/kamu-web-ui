@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { SettingsTabsEnum } from "./dataset-settings.model";
@@ -21,6 +21,6 @@ export class DatasetSettingsComponent extends BaseComponent {
     }
 
     public get isSchedulingAvailable(): boolean {
-        return this.appConfigService.featureFlags.enableScheduling && this.datasetPermissions.permissions.canSchedule;
+        return this.appConfigService.featureFlags.enableScheduling;
     }
 }

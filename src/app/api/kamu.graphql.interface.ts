@@ -192,6 +192,11 @@ export type CreateDatasetResultSuccess = CreateDatasetFromSnapshotResult &
         message: Scalars["String"];
     };
 
+export type CronExpression = {
+    __typename?: "CronExpression";
+    cronExpression: Scalars["String"];
+};
+
 export type DataBatch = {
     __typename?: "DataBatch";
     content: Scalars["String"];
@@ -271,6 +276,8 @@ export type Dataset = {
     createdAt: Scalars["DateTime"];
     /** Access to the data of the dataset */
     data: DatasetData;
+    /** Access to the flow configurations of this dataset */
+    flows: DatasetFlows;
     /** Unique identifier of the dataset */
     id: Scalars["DatasetID"];
     /** Returns the kind of a dataset (Root or Derivative) */
@@ -331,6 +338,52 @@ export type DatasetEdge = {
     node: Dataset;
 };
 
+export type DatasetFlowConfigs = {
+    __typename?: "DatasetFlowConfigs";
+    /** Returns defined configuration for a flow of specified type */
+    byType?: Maybe<FlowConfiguration>;
+};
+
+export type DatasetFlowConfigsByTypeArgs = {
+    datasetFlowType: DatasetFlowType;
+};
+
+export type DatasetFlowConfigsMut = {
+    __typename?: "DatasetFlowConfigsMut";
+    setConfigBatching: SetFlowConfigResult;
+    setConfigSchedule: SetFlowConfigResult;
+};
+
+export type DatasetFlowConfigsMutSetConfigBatchingArgs = {
+    datasetFlowType: DatasetFlowType;
+    minimalDataBatch?: InputMaybe<Scalars["Int"]>;
+    paused: Scalars["Boolean"];
+    throttlingPeriod?: InputMaybe<TimeDeltaInput>;
+};
+
+export type DatasetFlowConfigsMutSetConfigScheduleArgs = {
+    datasetFlowType: DatasetFlowType;
+    paused: Scalars["Boolean"];
+    schedule: ScheduleInput;
+};
+
+export enum DatasetFlowType {
+    Compaction = "COMPACTION",
+    ExecuteQuery = "EXECUTE_QUERY",
+    Ingest = "INGEST",
+}
+
+export type DatasetFlows = {
+    __typename?: "DatasetFlows";
+    /** Returns interface for flow configurations queries */
+    configs: DatasetFlowConfigs;
+};
+
+export type DatasetFlowsMut = {
+    __typename?: "DatasetFlowsMut";
+    configs: DatasetFlowConfigsMut;
+};
+
 export enum DatasetKind {
     Derivative = "DERIVATIVE",
     Root = "ROOT",
@@ -389,6 +442,8 @@ export type DatasetMut = {
     __typename?: "DatasetMut";
     /** Delete the dataset */
     delete: DeleteResult;
+    /** Access to the mutable flow configurations of this dataset */
+    flows: DatasetFlowsMut;
     /** Access to the mutable metadata of the dataset */
     metadata: DatasetMetadataMut;
     /** Rename the dataset */
@@ -570,6 +625,21 @@ export type FetchStepUrl = {
     headers?: Maybe<Array<RequestHeader>>;
     url: Scalars["String"];
 };
+
+export type FlowConfiguration = {
+    __typename?: "FlowConfiguration";
+    batching?: Maybe<FlowConfigurationBatching>;
+    paused: Scalars["Boolean"];
+    schedule?: Maybe<FlowConfigurationSchedule>;
+};
+
+export type FlowConfigurationBatching = {
+    __typename?: "FlowConfigurationBatching";
+    minimalDataBatch?: Maybe<Scalars["Int"]>;
+    throttlingPeriod?: Maybe<TimeDelta>;
+};
+
+export type FlowConfigurationSchedule = CronExpression | TimeDelta;
 
 export type InputSlice = {
     __typename?: "InputSlice";
@@ -914,6 +984,10 @@ export type RequestHeader = {
     value: Scalars["String"];
 };
 
+export type ScheduleInput =
+    | { cronExpression: Scalars["String"]; timeDelta?: never }
+    | { cronExpression?: never; timeDelta: TimeDeltaInput };
+
 export type Search = {
     __typename?: "Search";
     /** Perform search across all resources */
@@ -958,6 +1032,23 @@ export type SetAttachments = {
 export type SetDataSchema = {
     __typename?: "SetDataSchema";
     schema: DataSchema;
+};
+
+export type SetFlowConfigIncompatibleDatasetKind = SetFlowConfigResult & {
+    __typename?: "SetFlowConfigIncompatibleDatasetKind";
+    actualDatasetKind: DatasetKind;
+    expectedDatasetKind: DatasetKind;
+    message: Scalars["String"];
+};
+
+export type SetFlowConfigResult = {
+    message: Scalars["String"];
+};
+
+export type SetFlowConfigSuccess = SetFlowConfigResult & {
+    __typename?: "SetFlowConfigSuccess";
+    config: FlowConfiguration;
+    message: Scalars["String"];
 };
 
 export type SetInfo = {
@@ -1141,6 +1232,24 @@ export type TemporalTable = {
     name: Scalars["String"];
     primaryKey: Array<Scalars["String"]>;
 };
+
+export type TimeDelta = {
+    __typename?: "TimeDelta";
+    every: Scalars["Int"];
+    unit: TimeUnit;
+};
+
+export type TimeDeltaInput = {
+    every: Scalars["Int"];
+    unit: TimeUnit;
+};
+
+export enum TimeUnit {
+    Days = "DAYS",
+    Hours = "HOURS",
+    Minutes = "MINUTES",
+    Weeks = "WEEKS",
+}
 
 export type Transform = TransformSql;
 
@@ -1924,6 +2033,7 @@ export type DatasetPermissionsFragment = {
         canDelete: boolean;
         canRename: boolean;
         canCommit: boolean;
+        canSchedule: boolean;
     };
 };
 
@@ -2846,6 +2956,7 @@ export const DatasetPermissionsFragmentDoc = gql`
             canDelete
             canRename
             canCommit
+            canSchedule
         }
     }
 `;

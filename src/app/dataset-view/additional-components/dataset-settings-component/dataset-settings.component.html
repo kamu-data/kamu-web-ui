@@ -22,7 +22,7 @@
                         <li
                             [class.action-list-item--nav-active]="activeTab === settingsTabsEnum.SCHEDULING"
                             class="action-list-item"
-                            *ngIf="isSchedulingAvailable()"
+                            *ngIf="isSchedulingAvailable"
                         >
                             <a
                                 class="action-list-content align-items-center"
@@ -43,7 +43,7 @@
         <ng-container *ngIf="activeTab === settingsTabsEnum.GENERAL">
             <app-general [datasetBasics]="datasetBasics" [datasetPermissions]="datasetPermissions"></app-general>
         </ng-container>
-        <ng-container *ngIf="isSchedulingAvailable() && activeTab === settingsTabsEnum.SCHEDULING">
+        <ng-container *ngIf="isSchedulingAvailable && activeTab === settingsTabsEnum.SCHEDULING">
             <app-scheduling></app-scheduling>
         </ng-container>
     </div>

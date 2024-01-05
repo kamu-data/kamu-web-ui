@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { SettingsTabsEnum } from "./dataset-settings.model";
-import { DatasetPermissionsService } from "../../dataset.permissions.service";
+import { AppConfigService } from "src/app/app-config.service";
 
 @Component({
     selector: "app-dataset-settings",
@@ -10,22 +10,17 @@ import { DatasetPermissionsService } from "../../dataset.permissions.service";
     styleUrls: ["./dataset-settings.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetSettingsComponent extends BaseComponent implements OnInit {
+export class DatasetSettingsComponent extends BaseComponent {
     @Input() public datasetBasics: DatasetBasicsFragment;
     @Input() public datasetPermissions: DatasetPermissionsFragment;
     public readonly settingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
     public activeTab = SettingsTabsEnum.SCHEDULING;
 
-    constructor(private datasetPermissionsService: DatasetPermissionsService) {
+    constructor(private appConfigService: AppConfigService) {
         super();
     }
 
-    public ngOnInit(): void {
-        //
-    }
-
-    public isSchedulingAvailable(): boolean {
-        // ToDo: should be changed to a new permission "canSchedule"
-        return this.datasetPermissionsService.shouldAllowSettingsTab(this.datasetPermissions);
+    public get isSchedulingAvailable(): boolean {
+        return this.appConfigService.featureFlags.enableScheduling && this.datasetPermissions.permissions.canSchedule;
     }
 }

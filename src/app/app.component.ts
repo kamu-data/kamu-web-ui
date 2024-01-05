@@ -35,6 +35,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     };
     public static readonly DEFAULT_FEATURE_FLAGS: AppConfigFeatureFlags = {
         enableLogout: true,
+        enableScheduling: true,
     };
 
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;

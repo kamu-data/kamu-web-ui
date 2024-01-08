@@ -1,0 +1,42 @@
+mutation setConfigBatching(
+  $datasetId: DatasetID!
+  $paused: Boolean!
+  $throttlingPeriod: TimeDeltaInput
+  $minimalDataBatch: Int
+) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        configs {
+          setConfigBatching(
+            datasetFlowType: EXECUTE_QUERY
+            paused: $paused
+            throttlingPeriod: $throttlingPeriod
+            minimalDataBatch: $minimalDataBatch
+          ) {
+            __typename
+            ... on SetFlowConfigSuccess {
+              message
+              config {
+                schedule {
+                  ... on TimeDelta {
+                    ...TimeDeltaData
+                  }
+                  ... on CronExpression {
+                    cronExpression
+                  }
+                }
+              }
+            }
+
+            ... on FlowIncompatibleDatasetKind {
+              message
+              expectedDatasetKind
+              actualDatasetKind
+            }
+          }
+        }
+      }
+    }
+  }
+}

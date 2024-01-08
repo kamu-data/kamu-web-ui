@@ -7,7 +7,6 @@ query getDatasetIngestSchedule($datasetId: DatasetID!) {
           byType(datasetFlowType: INGEST) {
             paused
             schedule {
-              __typename
               ... on TimeDelta {
                 ...TimeDeltaData
               }

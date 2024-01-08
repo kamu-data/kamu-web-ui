@@ -28,6 +28,7 @@ export type Scalars = {
      * The input/output is a string in RFC3339 format.
      */
     DateTime: string;
+    FlowID: string;
     Multihash: string;
     TaskID: string;
 };
@@ -127,6 +128,16 @@ export type BlockRef = {
     __typename?: "BlockRef";
     blockHash: Scalars["Multihash"];
     name: Scalars["String"];
+};
+
+export type CancelScheduledTasksResult = {
+    message: Scalars["String"];
+};
+
+export type CancelScheduledTasksSuccess = CancelScheduledTasksResult & {
+    __typename?: "CancelScheduledTasksSuccess";
+    flow: Flow;
+    message: Scalars["String"];
 };
 
 export type Checkpoint = {
@@ -369,7 +380,12 @@ export type DatasetFlowConfigsMutSetConfigScheduleArgs = {
 
 export type DatasetFlowRunsMut = {
     __typename?: "DatasetFlowRunsMut";
+    cancelScheduledTasks: CancelScheduledTasksResult;
     triggerFlow: TriggerFlowResult;
+};
+
+export type DatasetFlowRunsMutCancelScheduledTasksArgs = {
+    flowId: Scalars["FlowID"];
 };
 
 export type DatasetFlowRunsMutTriggerFlowArgs = {
@@ -638,7 +654,9 @@ export type FetchStepUrl = {
 
 export type Flow = {
     __typename?: "Flow";
-    flowId: Scalars["Int"];
+    flowId: Scalars["FlowID"];
+    outcome?: Maybe<FlowOutcome>;
+    status: FlowStatus;
 };
 
 export type FlowConfiguration = {
@@ -663,6 +681,32 @@ export type FlowIncompatibleDatasetKind = SetFlowConfigResult &
         expectedDatasetKind: DatasetKind;
         message: Scalars["String"];
     };
+
+export type FlowNotFound = CancelScheduledTasksResult & {
+    __typename?: "FlowNotFound";
+    flowId: Scalars["FlowID"];
+    message: Scalars["String"];
+};
+
+export type FlowNotScheduled = CancelScheduledTasksResult & {
+    __typename?: "FlowNotScheduled";
+    flowId: Scalars["FlowID"];
+    message: Scalars["String"];
+};
+
+export enum FlowOutcome {
+    Aborted = "ABORTED",
+    Cancelled = "CANCELLED",
+    Failed = "FAILED",
+    Success = "SUCCESS",
+}
+
+export enum FlowStatus {
+    Draft = "DRAFT",
+    Finished = "FINISHED",
+    Queued = "QUEUED",
+    Scheduled = "SCHEDULED",
+}
 
 export type InputSlice = {
     __typename?: "InputSlice";
@@ -2251,10 +2295,91 @@ export type GetDatasetIngestScheduleQuery = {
                         __typename?: "FlowConfiguration";
                         paused: boolean;
                         schedule?:
-                            | { __typename: "CronExpression"; cronExpression: string }
-                            | ({ __typename: "TimeDelta" } & TimeDeltaDataFragment)
+                            | { __typename?: "CronExpression"; cronExpression: string }
+                            | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
                             | null;
                     } | null;
+                };
+            };
+        } | null;
+    };
+};
+
+export type SetConfigBatchingMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    paused: Scalars["Boolean"];
+    throttlingPeriod?: InputMaybe<TimeDeltaInput>;
+    minimalDataBatch?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type SetConfigBatchingMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                configs: {
+                    __typename?: "DatasetFlowConfigsMut";
+                    setConfigBatching:
+                        | {
+                              __typename: "FlowIncompatibleDatasetKind";
+                              message: string;
+                              expectedDatasetKind: DatasetKind;
+                              actualDatasetKind: DatasetKind;
+                          }
+                        | {
+                              __typename: "SetFlowConfigSuccess";
+                              message: string;
+                              config: {
+                                  __typename?: "FlowConfiguration";
+                                  schedule?:
+                                      | { __typename?: "CronExpression"; cronExpression: string }
+                                      | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
+                                      | null;
+                              };
+                          };
+                };
+            };
+        } | null;
+    };
+};
+
+export type SetConfigScheduleMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    paused: Scalars["Boolean"];
+    schedule: ScheduleInput;
+}>;
+
+export type SetConfigScheduleMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                configs: {
+                    __typename?: "DatasetFlowConfigsMut";
+                    setConfigSchedule:
+                        | {
+                              __typename: "FlowIncompatibleDatasetKind";
+                              message: string;
+                              expectedDatasetKind: DatasetKind;
+                              actualDatasetKind: DatasetKind;
+                          }
+                        | {
+                              __typename: "SetFlowConfigSuccess";
+                              message: string;
+                              config: {
+                                  __typename?: "FlowConfiguration";
+                                  schedule?:
+                                      | { __typename?: "CronExpression"; cronExpression: string }
+                                      | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
+                                      | null;
+                              };
+                          };
                 };
             };
         } | null;
@@ -3709,7 +3834,6 @@ export const GetDatasetIngestScheduleDocument = gql`
                         byType(datasetFlowType: INGEST) {
                             paused
                             schedule {
-                                __typename
                                 ... on TimeDelta {
                                     ...TimeDeltaData
                                 }
@@ -3734,6 +3858,112 @@ export class GetDatasetIngestScheduleGQL extends Apollo.Query<
     GetDatasetIngestScheduleQueryVariables
 > {
     document = GetDatasetIngestScheduleDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SetConfigBatchingDocument = gql`
+    mutation setConfigBatching(
+        $datasetId: DatasetID!
+        $paused: Boolean!
+        $throttlingPeriod: TimeDeltaInput
+        $minimalDataBatch: Int
+    ) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    configs {
+                        setConfigBatching(
+                            datasetFlowType: EXECUTE_QUERY
+                            paused: $paused
+                            throttlingPeriod: $throttlingPeriod
+                            minimalDataBatch: $minimalDataBatch
+                        ) {
+                            __typename
+                            ... on SetFlowConfigSuccess {
+                                message
+                                config {
+                                    schedule {
+                                        ... on TimeDelta {
+                                            ...TimeDeltaData
+                                        }
+                                        ... on CronExpression {
+                                            cronExpression
+                                        }
+                                    }
+                                }
+                            }
+                            ... on FlowIncompatibleDatasetKind {
+                                message
+                                expectedDatasetKind
+                                actualDatasetKind
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${TimeDeltaDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SetConfigBatchingGQL extends Apollo.Mutation<
+    SetConfigBatchingMutation,
+    SetConfigBatchingMutationVariables
+> {
+    document = SetConfigBatchingDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SetConfigScheduleDocument = gql`
+    mutation setConfigSchedule($datasetId: DatasetID!, $paused: Boolean!, $schedule: ScheduleInput!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    configs {
+                        setConfigSchedule(datasetFlowType: INGEST, paused: $paused, schedule: $schedule) {
+                            __typename
+                            ... on SetFlowConfigSuccess {
+                                message
+                                config {
+                                    schedule {
+                                        ... on TimeDelta {
+                                            ...TimeDeltaData
+                                        }
+                                        ... on CronExpression {
+                                            cronExpression
+                                        }
+                                    }
+                                }
+                            }
+                            ... on FlowIncompatibleDatasetKind {
+                                message
+                                expectedDatasetKind
+                                actualDatasetKind
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${TimeDeltaDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SetConfigScheduleGQL extends Apollo.Mutation<
+    SetConfigScheduleMutation,
+    SetConfigScheduleMutationVariables
+> {
+    document = SetConfigScheduleDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

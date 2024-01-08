@@ -1,0 +1,20 @@
+query getDatasetBatching($datasetId: DatasetID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        configs {
+          __typename
+          byType(datasetFlowType: EXECUTE_QUERY) {
+            paused
+            batching {
+              throttlingPeriod {
+                ...TimeDeltaData
+              }
+              minimalDataBatch
+            }
+          }
+        }
+      }
+    }
+  }
+}

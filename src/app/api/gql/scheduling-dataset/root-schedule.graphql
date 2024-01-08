@@ -1,0 +1,23 @@
+query getDatasetIngestSchedule($datasetId: DatasetID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        configs {
+          __typename
+          byType(datasetFlowType: INGEST) {
+            paused
+            schedule {
+              __typename
+              ... on TimeDelta {
+                ...TimeDeltaData
+              }
+              ... on CronExpression {
+                cronExpression
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

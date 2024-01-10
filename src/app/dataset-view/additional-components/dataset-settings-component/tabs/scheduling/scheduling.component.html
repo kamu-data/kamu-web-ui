@@ -23,10 +23,10 @@
                         <span>Update every:</span>
                         <input type="number" min="0" formControlName="timeDelta" class="form-control w-60px" />
                         <select formControlName="timeSegment" class="form-select">
-                            <option value="seconds">Seconds</option>
-                            <option value="minutes">Minutes</option>
-                            <option value="hours">Hours</option>
-                            <option value="days">Days</option>
+                            <option [value]="timeUnit.Minutes">Minutes</option>
+                            <option [value]="timeUnit.Hours">Hours</option>
+                            <option [value]="timeUnit.Days">Days</option>
+                            <option [value]="timeUnit.Weeks">Weeks</option>
                         </select>
                     </div>
                 </mat-radio-button>
@@ -40,7 +40,7 @@
         </div>
 
         <div formGroupName="throttlingGroup" class="box p-3 mt-3">
-            <h4>Future - Derived (throttling parameters)</h4>
+            <h4>Derived (throttling parameters)</h4>
 
             <mat-radio-group
                 class="d-flex flex-column row-gap-4"
@@ -65,7 +65,9 @@
             </mat-radio-group>
         </div>
         <div class="my-4 d-flex justify-content-end">
-            <button type="submit" class="btn btn-success">Save</button>
+            <button type="button" class="btn btn-success" [disabled]="schedulingForm.invalid" (click)="onSubmit()">
+                Save
+            </button>
         </div>
     </form>
 </div>

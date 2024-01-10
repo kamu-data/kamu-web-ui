@@ -36,7 +36,7 @@ export class DatasetSchedulingService {
                 const message = data.datasets.byId?.flows.configs.setConfigSchedule.message;
                 if (typename === "SetFlowConfigSuccess") {
                     this.toastrService.success(message);
-                } else {
+                } else if (typename === "FlowIncompatibleDatasetKind") {
                     this.toastrService.error(message);
                 }
             }),
@@ -55,7 +55,7 @@ export class DatasetSchedulingService {
                 const message = data.datasets.byId?.flows.configs.setConfigBatching.message;
                 if (typename === "SetFlowConfigSuccess") {
                     this.toastrService.success(message);
-                } else {
+                } else if (typename === "FlowIncompatibleDatasetKind") {
                     this.toastrService.error(message);
                 }
             }),

@@ -1,4 +1,4 @@
-import { Observable, Subject, of } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
 import { Injectable } from "@angular/core";
 import { DatasetApi } from "src/app/api/dataset.api";
@@ -8,7 +8,6 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/errors";
-import { SchedulingSettings } from "../dataset-settings.model";
 
 @Injectable({
     providedIn: "root",
@@ -88,9 +87,5 @@ export class DatasetSettingsService {
 
     public resetRenameError(): void {
         this.emitRenameDatasetErrorOccurred("");
-    }
-
-    public updateSchedulingSettings(settings: Partial<SchedulingSettings>): Observable<boolean> {
-        return of(true);
     }
 }

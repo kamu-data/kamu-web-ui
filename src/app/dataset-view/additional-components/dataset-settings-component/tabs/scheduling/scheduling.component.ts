@@ -1,9 +1,15 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/forms";
 import { BaseComponent } from "../../../../../common/base.component";
-import { DatasetSettingsService } from "../../services/dataset-settings.service";
-import { PollingGroupEnum, ThrottlingGroupEnum, SchedulingSettings } from "../../dataset-settings.model";
-import { DatasetBasicsFragment, DatasetKind, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
+import { PollingGroupEnum, ThrottlingGroupEnum } from "../../dataset-settings.model";
+import {
+    DatasetBasicsFragment,
+    DatasetKind,
+    DatasetPermissionsFragment,
+    ScheduleInput,
+    TimeUnit,
+} from "src/app/api/kamu.graphql.interface";
+import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 
 @Component({
     selector: "app-scheduling",
@@ -16,23 +22,25 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
     @Input() public datasetPermissions: DatasetPermissionsFragment;
     public readonly pollingGroupEnum: typeof PollingGroupEnum = PollingGroupEnum;
     public readonly throttlingGroupEnum: typeof ThrottlingGroupEnum = ThrottlingGroupEnum;
+    public readonly timeUnit: typeof TimeUnit = TimeUnit;
+    private scheduleOptions: ScheduleInput;
 
     public schedulingForm = new FormGroup({
         updatesState: new FormControl(false),
         pollingGroup: new FormGroup({
-            pollingSource: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
+            pollingSource: new FormControl(null, [Validators.required]),
             timeDelta: new FormControl({ value: null, disabled: true }, [Validators.required]),
             timeSegment: new FormControl({ value: "", disabled: true }, [Validators.required]),
-            cronExpression: new FormControl({ value: "0 0 * * *", disabled: true }, [Validators.required]),
+            cronExpression: new FormControl({ value: "0 0 * * * *", disabled: true }, [Validators.required]),
         }),
         throttlingGroup: new FormGroup({
-            throttlingParameters: new FormControl(ThrottlingGroupEnum.AWAIT_FOR, [Validators.required]),
+            throttlingParameters: new FormControl(null, [Validators.required]),
             awaitFor: new FormControl<number | null>({ value: null, disabled: true }, [Validators.required]),
             awaitUntil: new FormControl<number | null>({ value: null, disabled: true }, [Validators.required]),
         }),
     });
 
-    constructor(private datasetSettingsService: DatasetSettingsService) {
+    constructor(private datasetSchedulingService: DatasetSchedulingService) {
         super();
     }
 
@@ -109,10 +117,31 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
     }
 
     public onSubmit(): void {
-        const settings = this.schedulingForm.value.updatesState
-            ? (this.schedulingForm.value as Partial<SchedulingSettings>)
-            : { updatesState: false };
+        this.setScheduleOptions();
+        this.trackSubscription(
+            this.datasetSchedulingService
+                .setConfigSchedule({
+                    datasetId: this.datasetBasics.id,
+                    paused: this.updateState.value as boolean,
+                    schedule: this.scheduleOptions,
+                })
+                .subscribe(),
+        );
+    }
 
-        this.datasetSettingsService.updateSchedulingSettings(settings);
+    private setScheduleOptions(): void {
+        if (this.pollingGroup.controls.pollingSource.value === PollingGroupEnum.TIME_DELTA) {
+            this.scheduleOptions = {
+                timeDelta: {
+                    every: this.pollingGroup.controls.timeDelta.value as number,
+                    unit: this.pollingGroup.controls.timeSegment.value as TimeUnit,
+                },
+            };
+        }
+        if (this.pollingGroup.controls.pollingSource.value === PollingGroupEnum.CRON_EXPRESSION) {
+            this.scheduleOptions = {
+                cronExpression: this.pollingGroup.controls.cronExpression.value as string,
+            };
+        }
     }
 }

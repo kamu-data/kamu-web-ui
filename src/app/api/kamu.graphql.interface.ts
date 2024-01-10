@@ -2334,10 +2334,11 @@ export type SetConfigBatchingMutation = {
                               message: string;
                               config: {
                                   __typename?: "FlowConfiguration";
-                                  schedule?:
-                                      | { __typename?: "CronExpression"; cronExpression: string }
-                                      | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
-                                      | null;
+                                  batching?: {
+                                      __typename?: "FlowConfigurationBatching";
+                                      minimalDataBatch?: number | null;
+                                      throttlingPeriod?: ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment) | null;
+                                  } | null;
                               };
                           };
                 };
@@ -3884,13 +3885,11 @@ export const SetConfigBatchingDocument = gql`
                             ... on SetFlowConfigSuccess {
                                 message
                                 config {
-                                    schedule {
-                                        ... on TimeDelta {
+                                    batching {
+                                        throttlingPeriod {
                                             ...TimeDeltaData
                                         }
-                                        ... on CronExpression {
-                                            cronExpression
-                                        }
+                                        minimalDataBatch
                                     }
                                 }
                             }

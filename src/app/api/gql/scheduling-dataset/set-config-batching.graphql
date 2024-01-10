@@ -18,13 +18,11 @@ mutation setConfigBatching(
             ... on SetFlowConfigSuccess {
               message
               config {
-                schedule {
-                  ... on TimeDelta {
+                batching {
+                  throttlingPeriod {
                     ...TimeDeltaData
                   }
-                  ... on CronExpression {
-                    cronExpression
-                  }
+                  minimalDataBatch
                 }
               }
             }

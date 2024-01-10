@@ -1,15 +1,15 @@
 <div class="w-75 mb-4">
     <h2>Schedule</h2>
     <mat-divider class="mt-1 mb-2"></mat-divider>
-    <form [formGroup]="schedulingForm" (ngSubmit)="onSubmit()">
-        <div class="box p-3 mt-3">
+    <form [formGroup]="pollingForm">
+        <div class="box p-4 mt-3">
             <h4>Enable/Disable updates</h4>
             <mat-slide-toggle color="primary" class="mat-elevation-z0" formControlName="updatesState">
-                {{ schedulingForm.controls.updatesState.value ? "enabled" : "disabled" }}
+                {{ pollingForm.controls.updatesState.value ? "enabled" : "disabled" }}
             </mat-slide-toggle>
         </div>
 
-        <div formGroupName="pollingGroup" class="box p-3 mt-3">
+        <div formGroupName="pollingGroup" class="box p-4 mt-3">
             <h4>Root polling source</h4>
 
             <mat-radio-group
@@ -19,10 +19,15 @@
                 color="primary"
             >
                 <mat-radio-button [value]="pollingGroupEnum.TIME_DELTA">
-                    <div class="d-flex align-items-center column-gap-3 time-delta">
-                        <span>Update every:</span>
-                        <input type="number" min="0" formControlName="timeDelta" class="form-control w-60px" />
-                        <select formControlName="timeSegment" class="form-select">
+                    <div class="d-flex align-items-center">
+                        <span class="form-control-label">Update every:</span>
+                        <input
+                            type="number"
+                            min="1"
+                            formControlName="timeDelta"
+                            class="form-control form-control-width me-3"
+                        />
+                        <select formControlName="timeSegment" class="form-select form-control-width">
                             <option [value]="timeUnit.Minutes">Minutes</option>
                             <option [value]="timeUnit.Hours">Hours</option>
                             <option [value]="timeUnit.Days">Days</option>
@@ -31,43 +36,48 @@
                     </div>
                 </mat-radio-button>
                 <mat-radio-button [value]="pollingGroupEnum.CRON_EXPRESSION">
-                    <div class="d-flex align-items-center column-gap-3 cron-expression">
-                        Cron expression:
-                        <input type="text" formControlName="cronExpression" class="form-control custom-form-control" />
+                    <div class="d-flex align-items-center">
+                        <span class="form-control-label"> Cron expression: </span>
+                        <input type="text" formControlName="cronExpression" class="form-control" />
                     </div>
                 </mat-radio-button>
             </mat-radio-group>
-        </div>
-
-        <div formGroupName="throttlingGroup" class="box p-3 mt-3">
-            <h4>Derived (throttling parameters)</h4>
-
-            <mat-radio-group
-                class="d-flex flex-column row-gap-4"
-                formControlName="throttlingParameters"
-                aria-label="Select an option"
-                color="primary"
-            >
-                <mat-radio-button [value]="throttlingGroupEnum.AWAIT_FOR">
-                    <div class="d-flex align-items-center column-gap-3">
-                        <span>Await for</span>
-                        <input type="number" min="0" formControlName="awaitFor" class="form-control w-60px" />
-                        <span>minutes after input update</span>
-                    </div>
-                </mat-radio-button>
-                <mat-radio-button [value]="throttlingGroupEnum.AWAIT_UNTIL">
-                    <div class="d-flex align-items-center column-gap-3">
-                        <span>Await until</span>
-                        <input type="number" formControlName="awaitUntil" class="form-control w-60px" />
-                        <span>input records accumulate in each input</span>
-                    </div>
-                </mat-radio-button>
-            </mat-radio-group>
-        </div>
-        <div class="my-4 d-flex justify-content-end">
-            <button type="button" class="btn btn-success" [disabled]="schedulingForm.invalid" (click)="onSubmit()">
-                Save
-            </button>
         </div>
     </form>
+    <form [formGroup]="throttlingForm">
+        <div class="box p-4 mt-3">
+            <h4>Derived (throttling parameters)</h4>
+            <div class="d-flex flex-column gap-4">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="form-control-label">Throttling period:</span>
+                    <input type="number" min="1" formControlName="timeDelta" class="form-control form-control-width" />
+                    <select formControlName="timeSegment" class="form-select form-control-width">
+                        <option [value]="timeUnit.Minutes">Minutes</option>
+                        <option [value]="timeUnit.Hours">Hours</option>
+                        <option [value]="timeUnit.Days">Days</option>
+                        <option [value]="timeUnit.Weeks">Weeks</option>
+                    </select>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="form-control-label">Numder of records:</span>
+                    <input
+                        type="number"
+                        min="0"
+                        formControlName="numberRecords"
+                        class="form-control form-control-width"
+                    />
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="my-4 d-flex justify-content-end">
+        <button
+            type="button"
+            class="btn btn-success"
+            [disabled]="pollingForm.invalid || throttlingForm.invalid"
+            (click)="onSubmit()"
+        >
+            Save
+        </button>
+    </div>
 </div>

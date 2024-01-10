@@ -25,7 +25,7 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
     private scheduleOptions: ScheduleInput;
 
-    public schedulingForm = new FormGroup({
+    public pollingForm = new FormGroup({
         updatesState: new FormControl(false),
         pollingGroup: new FormGroup({
             pollingSource: new FormControl(null, [Validators.required]),
@@ -33,11 +33,14 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
             timeSegment: new FormControl({ value: "", disabled: true }, [Validators.required]),
             cronExpression: new FormControl({ value: "0 0 * * * *", disabled: true }, [Validators.required]),
         }),
-        throttlingGroup: new FormGroup({
-            throttlingParameters: new FormControl(null, [Validators.required]),
-            awaitFor: new FormControl<number | null>({ value: null, disabled: true }, [Validators.required]),
-            awaitUntil: new FormControl<number | null>({ value: null, disabled: true }, [Validators.required]),
-        }),
+    });
+
+    public throttlingForm = new FormGroup({
+        timeDelta: new FormControl<number | null>({ value: 1, disabled: true }, [Validators.required]),
+        timeSegment: new FormControl<TimeUnit | null>({ value: TimeUnit.Minutes, disabled: true }, [
+            Validators.required,
+        ]),
+        numberRecords: new FormControl<number | null>({ value: null, disabled: true }),
     });
 
     constructor(private datasetSchedulingService: DatasetSchedulingService) {
@@ -45,56 +48,57 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
     }
 
     public get pollingGroup(): FormGroup {
-        return this.schedulingForm.get("pollingGroup") as FormGroup;
+        return this.pollingForm.get("pollingGroup") as FormGroup;
     }
 
     public get updateState(): AbstractControl {
-        return this.schedulingForm.controls.updatesState;
+        return this.pollingForm.controls.updatesState;
     }
 
-    public get throttlingGroup(): FormGroup {
-        return this.schedulingForm.get("throttlingGroup") as FormGroup;
+    public get pollingSource(): AbstractControl {
+        return this.pollingGroup.controls.pollingSource;
+    }
+
+    public get batchingTimeDelta(): AbstractControl {
+        return this.throttlingForm.controls.timeDelta;
+    }
+
+    public get batchingTimeSegment(): AbstractControl {
+        return this.throttlingForm.controls.timeSegment;
+    }
+
+    public get batchingNumberRecords(): AbstractControl {
+        return this.throttlingForm.controls.numberRecords;
+    }
+
+    public get pollingTimeDelta(): AbstractControl {
+        return this.pollingGroup.controls.timeDelta;
+    }
+
+    public get pollingTimeSegment(): AbstractControl {
+        return this.pollingGroup.controls.timeSegment;
+    }
+
+    public get cronExpression(): AbstractControl {
+        return this.pollingGroup.controls.cronExpression;
     }
 
     public ngOnInit() {
         if (!this.datasetPermissions.permissions.canSchedule) {
-            this.schedulingForm.disable();
+            this.pollingForm.disable();
         }
         this.checkStatusSection();
-        const pollingSource = this.schedulingForm.get("pollingGroup.pollingSource") as AbstractControl;
-        const timeDelta = this.schedulingForm.get("pollingGroup.timeDelta") as AbstractControl;
-        const timeSegment = this.schedulingForm.get("pollingGroup.timeSegment") as AbstractControl;
-        const cronExpression = this.schedulingForm.get("pollingGroup.cronExpression") as AbstractControl;
-        const throttlingParameters = this.schedulingForm.get("throttlingGroup.throttlingParameters") as AbstractControl;
-        const awaitFor = this.schedulingForm.get("throttlingGroup.awaitFor") as AbstractControl;
-        const awaitUntil = this.schedulingForm.get("throttlingGroup.awaitUntil") as AbstractControl;
-
         this.trackSubscriptions(
-            pollingSource.valueChanges.subscribe((value: PollingGroupEnum) => {
+            this.pollingSource.valueChanges.subscribe((value: PollingGroupEnum) => {
                 if (value === PollingGroupEnum.TIME_DELTA) {
-                    timeDelta.enable();
-                    timeSegment.enable();
-
-                    this.disableAndClearControl(cronExpression);
+                    this.pollingTimeDelta.enable();
+                    this.pollingTimeSegment.enable();
+                    this.disableAndClearControl(this.cronExpression);
                 }
                 if (value === PollingGroupEnum.CRON_EXPRESSION) {
-                    cronExpression.enable();
-
-                    this.disableAndClearControl(timeDelta);
-                    this.disableAndClearControl(timeSegment);
-                }
-            }),
-
-            throttlingParameters.valueChanges.subscribe((value: ThrottlingGroupEnum) => {
-                if (value === ThrottlingGroupEnum.AWAIT_FOR) {
-                    awaitFor.enable();
-
-                    this.disableAndClearControl(awaitUntil);
-                }
-                if (value === ThrottlingGroupEnum.AWAIT_UNTIL) {
-                    awaitUntil.enable();
-
-                    this.disableAndClearControl(awaitFor);
+                    this.cronExpression.enable();
+                    this.disableAndClearControl(this.pollingTimeDelta);
+                    this.disableAndClearControl(this.pollingTimeSegment);
                 }
             }),
         );
@@ -108,39 +112,56 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
 
     private checkStatusSection(): void {
         if (this.datasetBasics.kind === DatasetKind.Root) {
-            this.throttlingGroup.disable();
+            this.throttlingForm.disable();
             this.pollingGroup.enable();
         } else {
             this.pollingGroup.disable();
-            this.throttlingGroup.enable();
+            this.throttlingForm.enable();
         }
     }
 
     public onSubmit(): void {
-        this.setScheduleOptions();
-        this.trackSubscription(
-            this.datasetSchedulingService
-                .setConfigSchedule({
-                    datasetId: this.datasetBasics.id,
-                    paused: this.updateState.value as boolean,
-                    schedule: this.scheduleOptions,
-                })
-                .subscribe(),
-        );
+        if (this.datasetBasics.kind === DatasetKind.Root) {
+            this.setScheduleOptions();
+            this.trackSubscription(
+                this.datasetSchedulingService
+                    .setConfigSchedule({
+                        datasetId: this.datasetBasics.id,
+                        paused: this.updateState.value as boolean,
+                        schedule: this.scheduleOptions,
+                    })
+                    .subscribe(),
+            );
+        } else {
+            this.trackSubscription(
+                this.datasetSchedulingService
+                    .setConfigBatching({
+                        datasetId: this.datasetBasics.id,
+                        paused: this.updateState.value as boolean,
+                        throttlingPeriod: {
+                            every: this.batchingTimeDelta.value as number,
+                            unit: this.batchingTimeSegment.value as TimeUnit,
+                        },
+
+                        minimalDataBatch: this.batchingNumberRecords.value as number,
+                    })
+                    .subscribe(),
+            );
+        }
     }
 
     private setScheduleOptions(): void {
         if (this.pollingGroup.controls.pollingSource.value === PollingGroupEnum.TIME_DELTA) {
             this.scheduleOptions = {
                 timeDelta: {
-                    every: this.pollingGroup.controls.timeDelta.value as number,
-                    unit: this.pollingGroup.controls.timeSegment.value as TimeUnit,
+                    every: this.pollingTimeDelta.value as number,
+                    unit: this.pollingTimeSegment.value as TimeUnit,
                 },
             };
         }
         if (this.pollingGroup.controls.pollingSource.value === PollingGroupEnum.CRON_EXPRESSION) {
             this.scheduleOptions = {
-                cronExpression: this.pollingGroup.controls.cronExpression.value as string,
+                cronExpression: this.cronExpression.value as string,
             };
         }
     }

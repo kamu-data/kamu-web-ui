@@ -10,6 +10,7 @@ import {
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
+import { cronExpressionValidator } from "src/app/common/data.helpers";
 
 @Component({
     selector: "app-scheduling",
@@ -28,19 +29,20 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
     public pollingForm = new FormGroup({
         updatesState: new FormControl(false),
         pollingGroup: new FormGroup({
-            pollingSource: new FormControl(null, [Validators.required]),
+            pollingSource: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
             timeDelta: new FormControl({ value: null, disabled: true }, [Validators.required]),
             timeSegment: new FormControl({ value: "", disabled: true }, [Validators.required]),
-            cronExpression: new FormControl({ value: "0 0 * * * *", disabled: true }, [Validators.required]),
+            cronExpression: new FormControl({ value: "", disabled: true }, [
+                Validators.required,
+                cronExpressionValidator(),
+            ]),
         }),
     });
 
     public throttlingForm = new FormGroup({
-        timeDelta: new FormControl<number | null>({ value: 1, disabled: true }, [Validators.required]),
-        timeSegment: new FormControl<TimeUnit | null>({ value: TimeUnit.Minutes, disabled: true }, [
-            Validators.required,
-        ]),
-        numberRecords: new FormControl<number | null>({ value: null, disabled: true }),
+        timeDelta: new FormControl({ value: 1, disabled: true }, [Validators.required]),
+        timeSegment: new FormControl({ value: TimeUnit.Minutes, disabled: true }, [Validators.required]),
+        numberRecords: new FormControl({ value: null, disabled: true }),
     });
 
     constructor(private datasetSchedulingService: DatasetSchedulingService) {
@@ -114,6 +116,7 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
         if (this.datasetBasics.kind === DatasetKind.Root) {
             this.throttlingForm.disable();
             this.pollingGroup.enable();
+            this.cronExpression.disable();
         } else {
             this.pollingGroup.disable();
             this.throttlingForm.enable();

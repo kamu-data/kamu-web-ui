@@ -25,7 +25,8 @@
               "webcola",
               "fast-json-stable-stringify",
               "marked",
-              "moment"
+              "moment",
+              "cron-expression-validator"
             ],
             "outputPath": "dist/kamu-platform",
             "index": "src/index.html",
@@ -43,9 +44,7 @@
               }
             ],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "src/assets/styles"
-              ]
+              "includePaths": ["src/assets/styles"]
             },
             "styles": [
               "src/styles.scss",
@@ -128,9 +127,7 @@
               }
             ],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "src/assets/styles"
-              ]
+              "includePaths": ["src/assets/styles"]
             },
             "styles": [
               "src/styles.scss",
@@ -151,7 +148,7 @@
               "node_modules/prismjs/plugins/command-line/prism-command-line.js",
               "node_modules/emoji-toolkit/lib/js/joypixels.min.js",
               "node_modules/katex/dist/katex.min.js"
-            ],
+            ]
           }
         }
       }

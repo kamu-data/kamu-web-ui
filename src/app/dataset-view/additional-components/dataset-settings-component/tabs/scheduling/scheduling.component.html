@@ -1,4 +1,4 @@
-<div class="w-75 mb-4">
+<div class="w-75 custom-container">
     <h2>Schedule</h2>
     <mat-divider class="mt-1 mb-2"></mat-divider>
     <form [formGroup]="pollingForm">
@@ -38,10 +38,37 @@
                 <mat-radio-button [value]="pollingGroupEnum.CRON_EXPRESSION">
                     <div class="d-flex align-items-center">
                         <span class="form-control-label"> Cron expression: </span>
-                        <input type="text" formControlName="cronExpression" class="form-control" />
+                        <input
+                            type="text"
+                            formControlName="cronExpression"
+                            placeholder="Example: * * * * * ? *"
+                            class="form-control form-control-expression"
+                        />
+
+                        <ng-container
+                            *ngIf="
+                                pollingGroup?.get('cronExpression')?.errors?.invalidCronExpession &&
+                                (pollingGroup.get('cronExpression')?.touched ||
+                                    pollingGroup.get('cronExpression')?.dirty)
+                            "
+                        >
+                            <div class="text-danger fs-12 ms-2 text-break" data-test-id="cronExpression-error">
+                                Invalid expression
+                            </div>
+                        </ng-container>
                     </div>
                 </mat-radio-button>
             </mat-radio-group>
+            <div class="text-muted box fs-12 px-4 py-2 mt-4">
+                Cron exression accepted values
+                <div class="fs-12">1. seconds: 0-59 * , -</div>
+                <div class="fs-12">2. minutes: 0-59 * , -</div>
+                <div class="fs-12">3. hours: 0-23 * , -</div>
+                <div class="fs-12">4. day of month: 1-31 * , - ? L LW</div>
+                <div class="fs-12">5. months: (JAN-DEC or 1-12) * , -</div>
+                <div class="fs-12">6. day of week: (SUN-SAT or 1-7) * , L - ? #</div>
+                <div class="fs-12">7. year: 1970-2099 * , -</div>
+            </div>
         </div>
     </form>
     <form [formGroup]="throttlingForm">
@@ -71,12 +98,7 @@
         </div>
     </form>
     <div class="my-4 d-flex justify-content-end">
-        <button
-            type="button"
-            class="btn btn-success"
-            [disabled]="pollingForm.invalid || throttlingForm.invalid"
-            (click)="onSubmit()"
-        >
+        <button type="button" class="btn btn-success" [disabled]="pollingForm.invalid" (click)="onSubmit()">
             Save
         </button>
     </div>

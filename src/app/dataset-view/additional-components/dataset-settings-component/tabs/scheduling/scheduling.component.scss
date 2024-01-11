@@ -11,17 +11,33 @@
                 position: relative;
             }
         }
+
+        .mat-radio-label {
+            white-space: normal;
+        }
     }
 }
 
-h4 {
-    font-weight: 500;
-}
+.custom-container {
+    padding-bottom: 100px;
 
-.form-control-width {
-    width: 132px;
-}
+    h4 {
+        font-weight: 500;
+    }
 
-.form-control-label {
-    min-width: 120px;
+    .form-control-width {
+        width: 132px;
+    }
+
+    .form-control-expression {
+        width: 280px;
+    }
+
+    .form-control-label {
+        min-width: 120px;
+    }
+
+    .cron-expression-hint {
+        padding-left: 150px;
+    }
 }

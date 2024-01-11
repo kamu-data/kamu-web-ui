@@ -1,8 +1,10 @@
-import { ValidatorFn, Validators } from "@angular/forms";
+import { MaybeNull } from "src/app/common/app.types";
+import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { MetadataBlockFragment } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { MaybeUndefined } from "./app.types";
+import { isValidCronExpression } from "cron-expression-validator";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -224,3 +226,9 @@ export const MY_MOMENT_FORMATS = {
     dateA11yLabel: "LL",
     monthYearA11yLabel: "MMMM YYYY",
 };
+
+export function cronExpressionValidator(): ValidatorFn {
+    return (control: AbstractControl): MaybeNull<ValidationErrors> => {
+        return !isValidCronExpression(control.value as string) ? { invalidCronExpession: true } : null;
+    };
+}

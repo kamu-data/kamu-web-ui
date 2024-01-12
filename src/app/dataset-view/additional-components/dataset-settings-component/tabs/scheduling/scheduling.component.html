@@ -37,7 +37,9 @@
                 </mat-radio-button>
                 <mat-radio-button [value]="pollingGroupEnum.CRON_EXPRESSION">
                     <div class="d-flex align-items-center">
-                        <span class="form-control-label"> Cron expression: </span>
+                        <div class="d-flex align-middle">
+                            <span class="form-control-label d-block"> Cron expression : </span>
+                        </div>
                         <input
                             type="text"
                             formControlName="cronExpression"
@@ -48,14 +50,20 @@
                         <ng-container
                             *ngIf="
                                 pollingGroup?.get('cronExpression')?.errors?.invalidCronExpession &&
-                                (pollingGroup.get('cronExpression')?.touched ||
-                                    pollingGroup.get('cronExpression')?.dirty)
+                                    (pollingGroup.get('cronExpression')?.touched ||
+                                        pollingGroup.get('cronExpression')?.dirty);
+                                else nextTimeTemplate
                             "
                         >
-                            <div class="text-danger fs-12 ms-2 text-break" data-test-id="cronExpression-error">
+                            <div class="text-danger fs-12 ms-4 text-break" data-test-id="cronExpression-error">
                                 Invalid expression
                             </div>
                         </ng-container>
+                        <ng-template #nextTimeTemplate>
+                            <span *ngIf="pollingGroup?.get('cronExpression')?.valid" class="fs-12 ms-4"
+                                >Next time: {{ nextTime }}</span
+                            >
+                        </ng-template>
                     </div>
                 </mat-radio-button>
             </mat-radio-group>
@@ -67,7 +75,6 @@
                 <div class="fs-12">4. day of month: 1-31 * , - ? L LW</div>
                 <div class="fs-12">5. months: (JAN-DEC or 1-12) * , -</div>
                 <div class="fs-12">6. day of week: (SUN-SAT or 1-7) * , L - ? #</div>
-                <div class="fs-12">7. year: 1970-2099 * , -</div>
             </div>
         </div>
     </form>

@@ -11,6 +11,9 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { cronExpressionValidator } from "src/app/common/data.helpers";
+import cronParser from "cron-parser";
+import moment from "moment-timezone";
+import AppValues from "src/app/common/app.values";
 
 @Component({
     selector: "app-scheduling",
@@ -44,6 +47,9 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
         timeSegment: new FormControl({ value: TimeUnit.Minutes, disabled: true }, [Validators.required]),
         numberRecords: new FormControl({ value: null, disabled: true }),
     });
+
+    public tooltip =
+        "Cron exression accepted values\n 1. seconds: 0-59 * , -\n 2. minutes: 0-59 * , -\n3. hours: 0-23 * , -\n4. day of month: 1-31 * , - ? L LW\n5. months: (JAN-DEC or 1-12) * , -\n6. day of week: (SUN-SAT or 1-7) * , L - ? #\n";
 
     constructor(private datasetSchedulingService: DatasetSchedulingService) {
         super();
@@ -83,6 +89,14 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
 
     public get cronExpression(): AbstractControl {
         return this.pollingGroup.controls.cronExpression;
+    }
+
+    public get nextTime(): string {
+        const date = cronParser
+            .parseExpression(this.cronExpression.value as string)
+            .next()
+            .toDate();
+        return moment(date).format(AppValues.CRON_EXPRESSION_DATE_FORMAT);
     }
 
     public ngOnInit() {

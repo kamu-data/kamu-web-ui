@@ -96,7 +96,10 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
             this.pollingForm.disable();
         }
         this.checkStatusSection();
+        this.pollingTypeChanges();
+    }
 
+    private pollingTypeChanges(): void {
         this.trackSubscriptions(
             this.pollingType.valueChanges.subscribe((value: PollingGroupEnum) => {
                 if (value === PollingGroupEnum.TIME_DELTA) {

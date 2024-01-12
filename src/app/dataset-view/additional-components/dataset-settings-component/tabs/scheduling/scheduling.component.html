@@ -105,7 +105,12 @@
         </div>
     </form>
     <div class="my-4 d-flex justify-content-end">
-        <button type="button" class="btn btn-success" [disabled]="pollingForm.invalid" (click)="onSubmit()">
+        <button
+            type="button"
+            class="btn btn-success"
+            [disabled]="pollingForm.invalid || throttlingForm.invalid"
+            (click)="onSubmit()"
+        >
             Save
         </button>
     </div>

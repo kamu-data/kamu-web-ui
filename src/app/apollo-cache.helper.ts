@@ -22,16 +22,20 @@ export function apolloCache(): InMemoryCache {
                 merge: false,
             },
             Dataset: {
-                // Use owner, as ID might be the same between 2 accounts who synchronized
-                keyFields: ["owner", "id"],
                 fields: {
-                    metadata: {
-                        merge: true,
-                    },
                     data: {
                         merge: true,
                     },
                 },
+            },
+            Datasets: {
+                merge: true,
+            },
+            DatasetMetadata: {
+                merge: true,
+            },
+            Search: {
+                merge: true,
             },
         },
     });

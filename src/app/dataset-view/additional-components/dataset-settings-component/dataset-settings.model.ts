@@ -4,8 +4,8 @@ export enum SettingsTabsEnum {
 }
 
 export enum PollingGroupEnum {
-    TIME_DELTA = "timeDelta",
-    CRON_EXPRESSION = "cronExpression",
+    TIME_DELTA = "TimeDelta",
+    CRON_EXPRESSION = "CronExpression",
 }
 
 export enum ThrottlingGroupEnum {

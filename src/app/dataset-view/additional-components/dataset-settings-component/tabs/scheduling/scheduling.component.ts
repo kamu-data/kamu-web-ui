@@ -1,3 +1,4 @@
+import { MaybeNull } from "./../../../../../common/app.types";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/forms";
 import { BaseComponent } from "../../../../../common/base.component";
@@ -11,9 +12,7 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { cronExpressionValidator } from "src/app/common/data.helpers";
-import cronParser from "cron-parser";
-import moment from "moment-timezone";
-import AppValues from "src/app/common/app.values";
+import { nextTime } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-scheduling",
@@ -32,9 +31,9 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
     public pollingForm = new FormGroup({
         updatesState: new FormControl(false),
         pollingGroup: new FormGroup({
-            pollingSource: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
-            timeDelta: new FormControl({ value: null, disabled: true }, [Validators.required]),
-            timeSegment: new FormControl({ value: "", disabled: true }, [Validators.required]),
+            __typename: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
+            every: new FormControl({ value: null, disabled: true }, [Validators.required]),
+            unit: new FormControl({ value: "", disabled: true }, [Validators.required]),
             cronExpression: new FormControl({ value: "", disabled: true }, [
                 Validators.required,
                 cronExpressionValidator(),
@@ -43,13 +42,10 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
     });
 
     public throttlingForm = new FormGroup({
-        timeDelta: new FormControl({ value: 1, disabled: true }, [Validators.required]),
-        timeSegment: new FormControl({ value: TimeUnit.Minutes, disabled: true }, [Validators.required]),
-        numberRecords: new FormControl({ value: null, disabled: true }),
+        every: new FormControl({ value: 1, disabled: true }, [Validators.required]),
+        unit: new FormControl({ value: TimeUnit.Minutes, disabled: true }, [Validators.required]),
+        minimalDataBatch: new FormControl<MaybeNull<number>>({ value: null, disabled: true }),
     });
-
-    public tooltip =
-        "Cron exression accepted values\n 1. seconds: 0-59 * , -\n 2. minutes: 0-59 * , -\n3. hours: 0-23 * , -\n4. day of month: 1-31 * , - ? L LW\n5. months: (JAN-DEC or 1-12) * , -\n6. day of week: (SUN-SAT or 1-7) * , L - ? #\n";
 
     constructor(private datasetSchedulingService: DatasetSchedulingService) {
         super();
@@ -63,28 +59,28 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
         return this.pollingForm.controls.updatesState;
     }
 
-    public get pollingSource(): AbstractControl {
-        return this.pollingGroup.controls.pollingSource;
+    public get pollingType(): AbstractControl {
+        return this.pollingGroup.controls.__typename;
     }
 
-    public get batchingTimeDelta(): AbstractControl {
-        return this.throttlingForm.controls.timeDelta;
+    public get batchingEveryTime(): AbstractControl {
+        return this.throttlingForm.controls.every;
     }
 
-    public get batchingTimeSegment(): AbstractControl {
-        return this.throttlingForm.controls.timeSegment;
+    public get batchingUnitTime(): AbstractControl {
+        return this.throttlingForm.controls.unit;
     }
 
-    public get batchingNumberRecords(): AbstractControl {
-        return this.throttlingForm.controls.numberRecords;
+    public get batchingMinimalDataBatch(): AbstractControl {
+        return this.throttlingForm.controls.minimalDataBatch;
     }
 
-    public get pollingTimeDelta(): AbstractControl {
-        return this.pollingGroup.controls.timeDelta;
+    public get pollingEveryTime(): AbstractControl {
+        return this.pollingGroup.controls.every;
     }
 
-    public get pollingTimeSegment(): AbstractControl {
-        return this.pollingGroup.controls.timeSegment;
+    public get pollingUnitTime(): AbstractControl {
+        return this.pollingGroup.controls.unit;
     }
 
     public get cronExpression(): AbstractControl {
@@ -92,11 +88,7 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
     }
 
     public get nextTime(): string {
-        const date = cronParser
-            .parseExpression(this.cronExpression.value as string)
-            .next()
-            .toDate();
-        return moment(date).format(AppValues.CRON_EXPRESSION_DATE_FORMAT);
+        return nextTime(this.cronExpression.value as string);
     }
 
     public ngOnInit() {
@@ -104,17 +96,18 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
             this.pollingForm.disable();
         }
         this.checkStatusSection();
+
         this.trackSubscriptions(
-            this.pollingSource.valueChanges.subscribe((value: PollingGroupEnum) => {
+            this.pollingType.valueChanges.subscribe((value: PollingGroupEnum) => {
                 if (value === PollingGroupEnum.TIME_DELTA) {
-                    this.pollingTimeDelta.enable();
-                    this.pollingTimeSegment.enable();
+                    this.pollingEveryTime.enable();
+                    this.pollingUnitTime.enable();
                     this.disableAndClearControl(this.cronExpression);
                 }
                 if (value === PollingGroupEnum.CRON_EXPRESSION) {
                     this.cronExpression.enable();
-                    this.disableAndClearControl(this.pollingTimeDelta);
-                    this.disableAndClearControl(this.pollingTimeSegment);
+                    this.disableAndClearControl(this.pollingEveryTime);
+                    this.disableAndClearControl(this.pollingUnitTime);
                 }
             }),
         );
@@ -130,10 +123,33 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
         if (this.datasetBasics.kind === DatasetKind.Root) {
             this.throttlingForm.disable();
             this.pollingGroup.enable();
-            this.cronExpression.disable();
+            this.trackSubscription(
+                this.datasetSchedulingService.fetchDatasetIngestSchedule(this.datasetBasics.id).subscribe((data) => {
+                    const flowConfiguration = data.datasets.byId?.flows.configs.byType;
+                    if (flowConfiguration) {
+                        this.pollingForm.patchValue({ updatesState: flowConfiguration.paused });
+                        this.pollingGroup.patchValue({
+                            ...flowConfiguration.schedule,
+                        });
+                    }
+                }),
+            );
         } else {
             this.pollingGroup.disable();
             this.throttlingForm.enable();
+            this.trackSubscription(
+                this.datasetSchedulingService.fetchDatasetBatching(this.datasetBasics.id).subscribe((data) => {
+                    const flowConfiguration = data.datasets.byId?.flows.configs.byType;
+                    if (flowConfiguration) {
+                        const batchingConfig = flowConfiguration.batching;
+                        this.pollingForm.patchValue({ updatesState: flowConfiguration.paused });
+                        this.throttlingForm.patchValue({
+                            ...batchingConfig?.throttlingPeriod,
+                            minimalDataBatch: batchingConfig?.minimalDataBatch,
+                        });
+                    }
+                }),
+            );
         }
     }
 
@@ -156,11 +172,11 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
                         datasetId: this.datasetBasics.id,
                         paused: this.updateState.value as boolean,
                         throttlingPeriod: {
-                            every: this.batchingTimeDelta.value as number,
-                            unit: this.batchingTimeSegment.value as TimeUnit,
+                            every: this.batchingEveryTime.value as number,
+                            unit: this.batchingUnitTime.value as TimeUnit,
                         },
 
-                        minimalDataBatch: this.batchingNumberRecords.value as number,
+                        minimalDataBatch: this.batchingMinimalDataBatch.value as number,
                     })
                     .subscribe(),
             );
@@ -168,15 +184,15 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
     }
 
     private setScheduleOptions(): void {
-        if (this.pollingGroup.controls.pollingSource.value === PollingGroupEnum.TIME_DELTA) {
+        if (this.pollingGroup.controls.__typename.value === PollingGroupEnum.TIME_DELTA) {
             this.scheduleOptions = {
                 timeDelta: {
-                    every: this.pollingTimeDelta.value as number,
-                    unit: this.pollingTimeSegment.value as TimeUnit,
+                    every: this.pollingEveryTime.value as number,
+                    unit: this.pollingUnitTime.value as TimeUnit,
                 },
             };
         }
-        if (this.pollingGroup.controls.pollingSource.value === PollingGroupEnum.CRON_EXPRESSION) {
+        if (this.pollingGroup.controls.__typename.value === PollingGroupEnum.CRON_EXPRESSION) {
             this.scheduleOptions = {
                 cronExpression: this.cronExpression.value as string,
             };

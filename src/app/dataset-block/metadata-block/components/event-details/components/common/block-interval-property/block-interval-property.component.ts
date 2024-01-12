@@ -3,6 +3,7 @@ import { BlockInterval, DatasetByIdQuery } from "../../../../../../../api/kamu.g
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { MaybeNull } from "src/app/common/app.types";
 
 @Component({
     selector: "app-block-interval-property",
@@ -11,7 +12,7 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlockIntervalPropertyComponent extends BasePropertyComponent implements OnInit {
-    @Input() public data: { block: BlockInterval; datasetId: string };
+    @Input() public data: { block: MaybeNull<BlockInterval>; datasetId: string };
     public datasetInfo: DatasetInfo = { accountName: "", datasetName: "" };
 
     constructor(private datasetSevice: DatasetService) {

@@ -31,7 +31,6 @@ export class SchedulingApi {
                 datasetId,
             })
             .valueChanges.pipe(
-                first(),
                 map((result: ApolloQueryResult<GetDatasetIngestScheduleQuery>) => {
                     return result.data;
                 }),

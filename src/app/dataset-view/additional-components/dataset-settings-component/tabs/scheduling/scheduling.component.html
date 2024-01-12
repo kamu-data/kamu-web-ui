@@ -14,7 +14,7 @@
 
             <mat-radio-group
                 class="d-flex flex-column row-gap-4"
-                formControlName="pollingSource"
+                formControlName="__typename"
                 aria-label="Select an option"
                 color="primary"
             >
@@ -24,10 +24,10 @@
                         <input
                             type="number"
                             min="1"
-                            formControlName="timeDelta"
+                            formControlName="every"
                             class="form-control form-control-width me-3"
                         />
-                        <select formControlName="timeSegment" class="form-select form-control-width">
+                        <select formControlName="unit" class="form-select form-control-width">
                             <option [value]="timeUnit.Minutes">Minutes</option>
                             <option [value]="timeUnit.Hours">Hours</option>
                             <option [value]="timeUnit.Days">Days</option>
@@ -84,8 +84,8 @@
             <div class="d-flex flex-column gap-4">
                 <div class="d-flex align-items-center gap-3">
                     <span class="form-control-label">Throttling period:</span>
-                    <input type="number" min="1" formControlName="timeDelta" class="form-control form-control-width" />
-                    <select formControlName="timeSegment" class="form-select form-control-width">
+                    <input type="number" min="1" formControlName="every" class="form-control form-control-width" />
+                    <select formControlName="unit" class="form-select form-control-width">
                         <option [value]="timeUnit.Minutes">Minutes</option>
                         <option [value]="timeUnit.Hours">Hours</option>
                         <option [value]="timeUnit.Days">Days</option>
@@ -97,7 +97,7 @@
                     <input
                         type="number"
                         min="0"
-                        formControlName="numberRecords"
+                        formControlName="minimalDataBatch"
                         class="form-control form-control-width"
                     />
                 </div>

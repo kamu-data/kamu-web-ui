@@ -1,6 +1,6 @@
 export enum SettingsTabsEnum {
-    GENERAL = "General",
-    SCHEDULING = "Scheduling",
+    GENERAL = "general",
+    SCHEDULING = "scheduling",
 }
 
 export enum PollingGroupEnum {

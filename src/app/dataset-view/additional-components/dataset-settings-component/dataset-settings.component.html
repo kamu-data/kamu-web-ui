@@ -10,7 +10,7 @@
                         >
                             <a
                                 class="action-list-content align-items-center"
-                                (click)="activeTab = settingsTabsEnum.GENERAL"
+                                (click)="navigateToSection(settingsTabsEnum.GENERAL)"
                             >
                                 <span class="text-muted mr-2">
                                     <svg-icon name="account"></svg-icon>
@@ -26,7 +26,7 @@
                         >
                             <a
                                 class="action-list-content align-items-center"
-                                (click)="activeTab = settingsTabsEnum.SCHEDULING"
+                                (click)="navigateToSection(settingsTabsEnum.SCHEDULING)"
                             >
                                 <span class="text-muted mr-1">
                                     <svg-icon class="text-muted" name="clock"></svg-icon>

@@ -5,7 +5,7 @@ import {
     GetDatasetSchemaQuery,
     QueryDialect,
 } from "src/app/api/kamu.graphql.interface";
-import { SetTransFormYamlType } from "./set-transform.types";
+import { SetTransformYamlType } from "./set-transform.types";
 import { PreprocessStepValue } from "../source-events/add-polling-source/add-polling-source-form.types";
 import { Engine } from "./components/engine-section/engine-section.types";
 
@@ -31,7 +31,7 @@ export const mockEngines: EnginesQuery = {
     },
 };
 
-export const mockCurrentSetTransform: SetTransFormYamlType = {
+export const mockCurrentSetTransform: SetTransformYamlType = {
     kind: "setTransform",
     inputs: [],
     transform: {
@@ -69,16 +69,16 @@ export const mockGetDatasetSchemaQuery: GetDatasetSchemaQuery = {
     },
 };
 
-export const mockParseSetTransFormYamlType = {
+export const mockParseSetTransformYamlType = {
     kind: "setTransform",
     inputs: [
         {
-            id: "did:odf:z4k88e8uh4Cg8p7pXqxDRHhUKNEkq8KhMQgZyqQg7VhsErRJmht",
-            name: "account.tokens.transfers",
+            datasetRef: "did:odf:z4k88e8uh4Cg8p7pXqxDRHhUKNEkq8KhMQgZyqQg7VhsErRJmht",
+            alias: "account.tokens.transfers",
         },
         {
-            id: "did:odf:z4k88e8pg152zufm67hBW43xwHq2bvyPa62SFNMJusgK3hgWAfC",
-            name: "account.transactions",
+            datasetRef: "did:odf:z4k88e8pg152zufm67hBW43xwHq2bvyPa62SFNMJusgK3hgWAfC",
+            alias: "account.transactions",
         },
     ],
     transform: {
@@ -103,7 +103,7 @@ export const mockParseSetTransFormYamlType = {
             },
         ],
     },
-} as SetTransFormYamlType;
+} as SetTransformYamlType;
 
 export const mockPreprocessStepValue: PreprocessStepValue = {
     engine: "SPARK",

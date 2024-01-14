@@ -7,7 +7,7 @@ import { EditSetTransformService } from "./edit-set-transform..service";
 import { of } from "rxjs";
 import {
     mockGetDatasetSchemaQuery,
-    mockParseSetTransFormYamlType,
+    mockParseSetTransformYamlType,
     mockSetTransformEventYaml,
     mockSetTransformEventYamlWithQuery,
 } from "./mock.data";
@@ -162,7 +162,7 @@ describe("SetTransformComponent", () => {
         spyOn(datasetService, "requestDatasetSchema").and.callFake(() => of(mockGetDatasetSchemaQuery));
         component.ngOnInit();
 
-        expect(component.currentSetTransformEvent).toEqual(mockParseSetTransFormYamlType);
+        expect(component.currentSetTransformEvent).toEqual(mockParseSetTransformYamlType);
         expect(component.TREE_DATA.length).toBe(2);
     });
 

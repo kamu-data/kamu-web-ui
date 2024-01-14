@@ -1,4 +1,4 @@
-export class ExecuteQueryToolipsTexts {
+export class ExecuteTransformTooltipsTexts {
     public static readonly DATA_SLICE_LOGICAL_HASH = "Logical hash sum of the data in this slice.";
     public static readonly DATA_SLICE_PHYSICAL_HASH = "Hash sum of the data part file.";
     public static readonly DATA_SLICE_INTERVAL = "Data slice produced by the transaction.";

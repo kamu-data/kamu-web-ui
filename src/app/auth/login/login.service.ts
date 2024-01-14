@@ -78,7 +78,7 @@ export class LoginService {
     }
 
     public githubLogin(credentials: GithubLoginCredentials): void {
-        this.authApi.fetchAccountAndTokenFromGithubCallackCode(credentials).subscribe({
+        this.authApi.fetchAccountAndTokenFromGithubCallbackCode(credentials).subscribe({
             next: this.loginCallback,
             error: (e) => {
                 this.navigationService.navigateToHome();

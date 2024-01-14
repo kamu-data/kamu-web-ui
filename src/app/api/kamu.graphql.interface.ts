@@ -502,10 +502,16 @@ export type DatasetMut = {
     metadata: DatasetMetadataMut;
     /** Rename the dataset */
     rename: RenameResult;
+    /** Manually advances the watermark of a root dataset */
+    setWatermark: SetWatermarkResult;
 };
 
 export type DatasetMutRenameArgs = {
     newName: Scalars["DatasetName"];
+};
+
+export type DatasetMutSetWatermarkArgs = {
+    watermark: Scalars["DateTime"];
 };
 
 export type DatasetPermissions = {
@@ -1337,6 +1343,27 @@ export type SetVocab = {
     systemTimeColumn?: Maybe<Scalars["String"]>;
 };
 
+export type SetWatermarkIsDerivative = SetWatermarkResult & {
+    __typename?: "SetWatermarkIsDerivative";
+    message: Scalars["String"];
+};
+
+export type SetWatermarkResult = {
+    message: Scalars["String"];
+};
+
+export type SetWatermarkUpToDate = SetWatermarkResult & {
+    __typename?: "SetWatermarkUpToDate";
+    dummy: Scalars["String"];
+    message: Scalars["String"];
+};
+
+export type SetWatermarkUpdated = SetWatermarkResult & {
+    __typename?: "SetWatermarkUpdated";
+    message: Scalars["String"];
+    newHead: Scalars["Multihash"];
+};
+
 export type SourceCaching = SourceCachingForever;
 
 export type SourceCachingForever = {
@@ -2048,6 +2075,7 @@ export type AccountFragment = {
     displayName: string;
     accountType: AccountType;
     avatarUrl?: string | null;
+    isAdmin: boolean;
 };
 
 export type CurrentSourceFetchUrlFragment = {
@@ -2450,6 +2478,7 @@ export const AccountFragmentDoc = gql`
         displayName
         accountType
         avatarUrl
+        isAdmin
     }
 `;
 export const DatasetDataSizeFragmentDoc = gql`

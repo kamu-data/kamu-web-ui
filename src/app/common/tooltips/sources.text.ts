@@ -1,4 +1,4 @@
-export class SourcesToolipsTexts {
+export class SourcesTooltipsTexts {
     public static readonly READ_CSV = "Reader for comma-separated files.";
     public static readonly SCHEMA =
         "A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.";
@@ -7,26 +7,14 @@ export class SourcesToolipsTexts {
     public static readonly QUOTE =
         "Sets a single character used for escaping quoted values where the separator can be part of the value. Set an empty string to turn off quotations.";
     public static readonly ESCAPE = "Sets a single character used for escaping quotes inside an already quoted value.";
-    public static readonly COMMENT = "Sets a single character used for skipping lines beginning with this character.";
-    public static readonly ENFORCE_SCHEMA =
-        "If it is set to true, the specified or inferred schema will be forcibly applied to datasource files, and headers in CSV files will be ignored. If the option is set to false, the schema will be validated against all headers in CSV files in the case when the header option is set to true.";
     public static readonly INFER_SCHEMA =
         "Infers the input schema automatically from data. It requires one extra pass over the data.";
-    public static readonly IGNORE_LEADING_WHITESPACE =
-        "A flag indicating whether or not leading whitespaces from values being read should be skipped.";
-    public static readonly QUIGNORE_TRAILING_WHITESPACEOTE =
-        "A flag indicating whether or not trailing whitespaces from values being read should be skipped.";
     public static readonly NULL_VALUE = "Sets the string representation of a null value.";
     public static readonly HEADERS = "Headers to pass during the request (e.g. HTTP Authorization)";
-    public static readonly EMPTY_VALUE = "Sets the string representation of an empty value.";
     public static readonly HEADER = "Use the first line as names of columns.";
     public static readonly QUERIES = "Queries use for specifying multi-step SQL transformations.";
-    public static readonly NAN_VALUE = "Sets the string representation of a non-number value.";
-    public static readonly POSITIVE_INFINITY = "Sets the string representation of a positive infinity value.";
-    public static readonly NEGATIVE_INFINITY = "Sets the string representation of a negative infinity value.";
     public static readonly DATE_FORMAT =
         "Sets the string that indicates a date format. The `rfc3339` is the only required format, the other format strings are implementation-specific.";
-    public static readonly MULTI_LINE = "Parse one record, which may span multiple lines.";
     public static readonly TIMESTAMP_FORMAT =
         "Sets the string that indicates a timestamp format. The `rfc3339` is the only required format, the other format strings are implementation-specific.";
     public static readonly MERGE_STRATEGY_APPEND =
@@ -47,18 +35,9 @@ export class SourcesToolipsTexts {
         "This strategy can be used for data dumps that are taken periodical and contain only the latest state of the observed entity or system.";
     public static readonly COMPARE_COLUMNS =
         "Names of the columns to compared to determine if a row has changed between two snapshots.";
-    public static readonly OBSERVATION_COLUMN = "Name of the observation type column that will be added to the data.";
-    public static readonly OBSERVATION_ADDED =
-        "Name of the observation type when the data with certain primary key is seen for the first time.";
-    public static readonly OBSERVATION_CHANGED =
-        "Name of the observation type when the data with certain primary key has changed compared to the last time it was seen.";
-    public static readonly OBSERVATION_REMOVED =
-        "Name of the observation type when the data with certain primary key has been seen before but now is missing from the snapshot.";
     public static readonly READ_ESRI_SHAPE_FILE = "Reader for ESRI Shapefile format.";
     public static readonly SUB_PATH = "Path to a data file within a multi-file archive. Can contain glob patterns.";
     public static readonly READ_PARQUET = "Reader for Apache Parquet format.";
-    public static readonly READ_JSON_LINES =
-        "Reader for files containing concatenation of multiple JSON records with the same schema.";
     public static readonly READ_ND_JSON =
         "Reader for files containing multiple newline-delimited JSON objects with the same schema.";
     public static readonly PRIMITIVE_AS_STRING = "Infers all primitive values as a string type.";

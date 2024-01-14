@@ -1,4 +1,4 @@
-export class AddDataToolipsTexts {
+export class AddDataTooltipsTexts {
     public static readonly WATERMARK = "Last watermark of the output data stream.";
     public static readonly INPUT_HASH = "Hash of the checkpoint file used to restore ingestion state.";
     public static readonly LOGICAL_HASH = "Logical hash sum of the data in this slice.";

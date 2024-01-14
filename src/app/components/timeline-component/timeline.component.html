@@ -14,7 +14,7 @@
                             <div class="d-flex align-items-center mt-1" style="gap: 5px">
                                 <mat-icon *ngIf="block.event.__typename === 'Seed'">add_circle_outline</mat-icon>
                                 <mat-icon *ngIf="block.event.__typename === 'AddData'">input</mat-icon>
-                                <mat-icon *ngIf="block.event.__typename === 'ExecuteQuery'">call_merge</mat-icon>
+                                <mat-icon *ngIf="block.event.__typename === 'ExecuteTransform'">call_merge</mat-icon>
                                 <mat-icon
                                     *ngIf="
                                         [
@@ -24,7 +24,6 @@
                                             'SetVocab',
                                             'SetTransform',
                                             'SetPollingSource',
-                                            'SetWatermark',
                                             'SetDataSchema',
                                             'AddPushSource',
                                             'DisablePushSource',

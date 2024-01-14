@@ -21,7 +21,7 @@ describe("EventTypeFilterPipe", () => {
     });
 
     [
-        { eventFilter: "ExecuteQuery", match: true },
+        { eventFilter: "ExecuteTransform", match: true },
         { enventFilter: "SetLicense", match: false },
     ].forEach(({ eventFilter, match }) => {
         it(`should check pipe when event filter is ${match ? "" : "not"}matches type of event`, () => {

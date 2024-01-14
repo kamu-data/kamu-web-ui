@@ -250,20 +250,11 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                         encoding: null,
                         quote: null,
                         escape: null,
-                        comment: null,
                         header: true,
-                        enforceSchema: null,
                         inferSchema: null,
-                        ignoreLeadingWhiteSpace: null,
-                        ignoreTrailingWhiteSpace: null,
                         nullValue: null,
-                        emptyValue: null,
-                        nanValue: null,
-                        positiveInf: null,
-                        negativeInf: null,
                         dateFormat: null,
                         timestampFormat: null,
-                        multiLine: null,
                     },
                     merge: {
                         __typename: "MergeStrategyLedger",
@@ -319,6 +310,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                     systemTimeColumn: null,
                     eventTimeColumn: "date_reported",
                     offsetColumn: null,
+                    operationTypeColumn: null,
                 },
                 currentReadme:
                     "# Confirmed positive cases of COVID-19 in Alberta\n\nThis dataset compiles daily snapshots of publicly reported data on 2019 Novel Coronavirus (COVID-19) testing in Alberta.\n\nData includes:\n- approximation of onset date\n- age group\n- patient gender\n- case acquisition information\n- patient outcome\n- reporting Public Health Unit (PHU)\n- postal code, website, longitude, and latitude of PHU\n\nThis dataset is subject to change. Please review the daily epidemiologic summaries for information on variables, methodology, and technical considerations.\n\n**Related dataset(s)**:\n- [Daily aggregate count of confirmed positive cases of COVID-19 in Alberta](#todo)\n",
@@ -342,10 +334,10 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                 event: {
                                     __typename: "AddData",
                                     addDataWatermark: "2022-08-01T00:00:00+00:00",
-                                    inputCheckpoint: null,
-                                    outputData: {
+                                    prevCheckpoint: null,
+                                    newData: {
                                         __typename: "DataSlice",
-                                        interval: {
+                                        offsetInterval: {
                                             __typename: "OffsetInterval",
                                             start: 0,
                                             end: 596125,
@@ -354,7 +346,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                         physicalHash: "zW1bSq3dDJvAfuHJbVzH3TLKuWWCvXBdNqMrNNeRXuYj8WJ",
                                         size: 6585116,
                                     },
-                                    outputCheckpoint: null,
+                                    newCheckpoint: null,
                                 },
                             },
                         ],
@@ -609,12 +601,11 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 },
                                 event: {
                                     __typename: "AddData",
-                                    inputCheckpoint: "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
+                                    prevCheckpoint: "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
                                     addDataWatermark: "2022-08-05T21:17:30.613911358+00:00",
-                                    outputData: {
+                                    newData: {
                                         __typename: "DataSlice",
-
-                                        interval: {
+                                        offsetInterval: {
                                             __typename: "OffsetInterval",
                                             start: 0,
                                             end: 596125,
@@ -623,7 +614,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                         physicalHash: "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
                                         size: 300,
                                     },
-                                    outputCheckpoint: {
+                                    newCheckpoint: {
                                         physicalHash: "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
                                         size: 11213,
                                     },
@@ -712,6 +703,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     systemTimeColumn: null,
                                     eventTimeColumn: "case_reported_date",
                                     offsetColumn: null,
+                                    operationTypeColumn: null,
                                 },
                             },
                             {
@@ -759,20 +751,11 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                         encoding: "UTF-8",
                                         quote: '"',
                                         escape: "\\",
-                                        comment: null,
                                         header: null,
-                                        enforceSchema: true,
                                         inferSchema: null,
-                                        ignoreLeadingWhiteSpace: null,
-                                        ignoreTrailingWhiteSpace: null,
                                         nullValue: null,
-                                        emptyValue: null,
-                                        nanValue: "NaN",
-                                        positiveInf: "Inf",
-                                        negativeInf: "-Inf",
                                         dateFormat: "yyyy-MM-dd",
                                         timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
-                                        multiLine: null,
                                     },
                                     merge: {
                                         __typename: "MergeStrategyAppend",
@@ -1222,20 +1205,11 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
                     encoding: "UTF-8",
                     quote: '"',
                     escape: "\\",
-                    comment: null,
                     header: null,
-                    enforceSchema: true,
                     inferSchema: null,
-                    ignoreLeadingWhiteSpace: null,
-                    ignoreTrailingWhiteSpace: null,
                     nullValue: null,
-                    emptyValue: null,
-                    nanValue: "NaN",
-                    positiveInf: "Inf",
-                    negativeInf: "-Inf",
                     dateFormat: "yyyy-MM-dd",
                     timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
-                    multiLine: null,
                 },
                 merge: {
                     __typename: "MergeStrategyAppend",
@@ -1328,20 +1302,11 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
                     encoding: "UTF-8",
                     quote: '"',
                     escape: "\\",
-                    comment: null,
                     header: null,
-                    enforceSchema: true,
                     inferSchema: null,
-                    ignoreLeadingWhiteSpace: null,
-                    ignoreTrailingWhiteSpace: null,
                     nullValue: null,
-                    emptyValue: null,
-                    nanValue: "NaN",
-                    positiveInf: "Inf",
-                    negativeInf: "-Inf",
                     dateFormat: "yyyy-MM-dd",
                     timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
-                    multiLine: null,
                 },
                 merge: {
                     __typename: "MergeStrategyAppend",

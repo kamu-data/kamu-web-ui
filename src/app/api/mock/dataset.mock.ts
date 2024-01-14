@@ -265,10 +265,10 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                             avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                         },
                         event: {
-                            __typename: "ExecuteQuery",
+                            __typename: "ExecuteTransform",
                             queryOutputData: {
                                 __typename: "DataSlice",
-                                interval: {
+                                offsetInterval: {
                                     __typename: "OffsetInterval",
                                     start: 0,
                                     end: 596125,
@@ -276,25 +276,19 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                                 logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
                                 physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
                             },
-                            inputCheckpoint: null,
+                            prevCheckpoint: null,
                             watermark: "2022-08-01T00:00:00+00:00",
-                            inputSlices: [
+                            queryInputs: [
                                 {
-                                    __typename: "InputSlice",
+                                    __typename: "ExecuteTransformInput",
                                     datasetId: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
-                                    blockInterval: {
-                                        __typename: "BlockInterval",
-                                        start: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
-                                        end: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
-                                    },
-                                    dataInterval: {
-                                        __typename: "OffsetInterval",
-                                        start: 0,
-                                        end: 596125,
-                                    },
+                                    prevBlockHash: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
+                                    newBlockHash: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
+                                    prevOffset: null,
+                                    newOffset: 596125,
                                 },
                             ],
-                            outputCheckpoint: {
+                            newCheckpoint: {
                                 __typename: "Checkpoint",
                                 physicalHash: "zW1otipGpjScUH8C2RfaF4s8RshReBbQVPDf2fPrp2R8Ft2",
                                 size: 2560,

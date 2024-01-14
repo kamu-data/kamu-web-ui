@@ -1,7 +1,7 @@
 <p>
     start:&nbsp;
     <app-display-hash
-        [value]="data.block.start"
+        [value]="data.prevBlockHash"
         [navigationTargetDataset]="datasetInfo"
         [showCopyButton]="true"
     ></app-display-hash>
@@ -10,7 +10,7 @@
 <p>
     end:&nbsp;
     <app-display-hash
-        [value]="data.block.end"
+        [value]="data.newBlockHash"
         [navigationTargetDataset]="datasetInfo"
         [showCopyButton]="true"
     ></app-display-hash>

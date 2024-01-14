@@ -82,7 +82,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         return this.currentState?.pageInfo.totalPages ?? 1;
     }
 
-    public get latestBlockhash(): string {
+    public get latestBlockHash(): string {
         return this.currentState ? this.currentState.metadataSummary.metadata.chain.blocks.nodes[0].blockHash : "";
     }
 

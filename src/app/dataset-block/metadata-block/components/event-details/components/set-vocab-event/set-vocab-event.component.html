@@ -1,5 +1,15 @@
 <div *ngIf="event" class="position-relative border border-1 p-2 rounded-3">
     <span class="position-absolute text-muted group-box-label text-uppercase">Information</span>
+    <div class="mx-4" *ngIf="event.offsetColumn">
+        <app-block-row-data [tooltip]="'Name of the offset column.'" [label]="'Offset column:'">
+            <app-cards-property [data]="[event.offsetColumn]"></app-cards-property>
+        </app-block-row-data>
+    </div>
+    <div class="mx-4" *ngIf="event.operationTypeColumn">
+        <app-block-row-data [tooltip]="'Name of the operation type column.'" [label]="'Operation type column:'">
+            <app-cards-property [data]="[event.operationTypeColumn]"></app-cards-property>
+        </app-block-row-data>
+    </div>
     <div class="mx-4" *ngIf="event.systemTimeColumn">
         <app-block-row-data [tooltip]="'Name of the system time column.'" [label]="'System time column:'">
             <app-cards-property [data]="[event.systemTimeColumn]"></app-cards-property>
@@ -8,11 +18,6 @@
     <div class="mx-4" *ngIf="event.eventTimeColumn">
         <app-block-row-data [tooltip]="'Name of the event time column.'" [label]="'Event time column:'">
             <app-cards-property [data]="[event.eventTimeColumn]"></app-cards-property>
-        </app-block-row-data>
-    </div>
-    <div class="mx-4" *ngIf="event.offsetColumn">
-        <app-block-row-data [tooltip]="'Name of the offset column.'" [label]="'Offset column:'">
-            <app-cards-property [data]="[event.offsetColumn]"></app-cards-property>
         </app-block-row-data>
     </div>
 </div>

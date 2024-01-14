@@ -243,8 +243,8 @@ export class DatasetApi {
         );
     }
 
-    public createEmptyDataset(datasetKind: DatasetKind, datasetName: string): Observable<CreateEmptyDatasetMutation> {
-        return this.createEmptyDatasetGQL.mutate({ datasetKind, datasetName }).pipe(
+    public createEmptyDataset(datasetKind: DatasetKind, datasetAlias: string): Observable<CreateEmptyDatasetMutation> {
+        return this.createEmptyDatasetGQL.mutate({ datasetKind, datasetAlias }).pipe(
             first(),
             map((result: MutationResult<CreateEmptyDatasetMutation>) => {
                 /* istanbul ignore else */

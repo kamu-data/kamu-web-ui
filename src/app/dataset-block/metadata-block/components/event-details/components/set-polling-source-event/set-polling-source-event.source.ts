@@ -3,19 +3,19 @@ import { SimplePropertyComponent } from "../common/simple-property/simple-proper
 import { EnvVariablesPropertyComponent } from "../common/env-variables-property/env-variables-property.component";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
-import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
+import { SetPollingSourceTooltipsTexts } from "src/app/common/tooltips/tooltips.text";
 import { EventTimePropertyComponent } from "../common/event-time-property/event-time-property.component";
 import { CachePropertyComponent } from "../common/cache-property/cache-property.component";
 import { OrderPropertyComponent } from "../common/order-property/order-property.component";
 import { CommandPropertyComponent } from "../common/command-property/command-property.component";
 import { StepTypePropertyComponent } from "../common/step-type-property/step-type-property.component";
-import { SourcesToolipsTexts } from "src/app/common/tooltips/sources.text";
+import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
 import { getSourcesDescriptors } from "../common-sources/sources-event.source";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepUrl.__typename": {
         label: "Type:",
-        tooltip: SetPollingSourceToolipsTexts.FROM_URL,
+        tooltip: SetPollingSourceTooltipsTexts.FROM_URL,
         presentationComponent: StepTypePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-FetchStepUrl-__typename",
@@ -23,7 +23,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.FetchStepUrl.url": {
         label: "Url:",
-        tooltip: SetPollingSourceToolipsTexts.URL,
+        tooltip: SetPollingSourceTooltipsTexts.URL,
         presentationComponent: LinkPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-fetchStepUrl-url",
@@ -31,7 +31,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.FetchStepUrl.eventTime": {
         label: "Event time:",
-        tooltip: SetPollingSourceToolipsTexts.EVENT_TIME,
+        tooltip: SetPollingSourceTooltipsTexts.EVENT_TIME,
         presentationComponent: EventTimePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-fetchStepUrl-eventTime",
@@ -39,7 +39,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.FetchStepUrl.headers": {
         label: "Headers:",
-        tooltip: SourcesToolipsTexts.HEADERS,
+        tooltip: SourcesTooltipsTexts.HEADERS,
         presentationComponent: EnvVariablesPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-fetchStepUrl-headers",
@@ -47,7 +47,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.FetchStepUrl.cache": {
         label: "Cache:",
-        tooltip: SetPollingSourceToolipsTexts.CACHE,
+        tooltip: SetPollingSourceTooltipsTexts.CACHE,
         presentationComponent: CachePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-fetchStepUrl-cache",
@@ -55,7 +55,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.FetchStepFilesGlob.__typename": {
         label: "Type:",
-        tooltip: SetPollingSourceToolipsTexts.FROM_FILES_GLOB,
+        tooltip: SetPollingSourceTooltipsTexts.FROM_FILES_GLOB,
         presentationComponent: StepTypePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-FetchStepFilesGlob-__typename",
@@ -63,7 +63,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.FetchStepFilesGlob.path": {
         label: "Path:",
-        tooltip: SetPollingSourceToolipsTexts.PATH,
+        tooltip: SetPollingSourceTooltipsTexts.PATH,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-FetchStepFilesGlob-path",
@@ -71,7 +71,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.FetchStepFilesGlob.eventTime": {
         label: "Event time:",
-        tooltip: SetPollingSourceToolipsTexts.EVENT_TIME,
+        tooltip: SetPollingSourceTooltipsTexts.EVENT_TIME,
         presentationComponent: EventTimePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-FetchStepFilesGlob-eventTime",
@@ -79,7 +79,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.FetchStepFilesGlob.cache": {
         label: "Cache:",
-        tooltip: SetPollingSourceToolipsTexts.CACHE,
+        tooltip: SetPollingSourceTooltipsTexts.CACHE,
         presentationComponent: CachePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-FetchStepFilesGlob-cache",
@@ -87,7 +87,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.FetchStepFilesGlob.order": {
         label: "Order:",
-        tooltip: SetPollingSourceToolipsTexts.ORDER,
+        tooltip: SetPollingSourceTooltipsTexts.ORDER,
         presentationComponent: OrderPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-FetchStepFilesGlob-order",
@@ -95,7 +95,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.FetchStepContainer.__typename": {
         label: "Type:",
-        tooltip: SetPollingSourceToolipsTexts.FROM_CONTAINER,
+        tooltip: SetPollingSourceTooltipsTexts.FROM_CONTAINER,
         presentationComponent: StepTypePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-FetchStepContainer-__typename",
@@ -103,7 +103,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.FetchStepContainer.image": {
         label: "Image:",
-        tooltip: SetPollingSourceToolipsTexts.IMAGE,
+        tooltip: SetPollingSourceTooltipsTexts.IMAGE,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-fetchStepContainer-image",
@@ -111,7 +111,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.FetchStepContainer.command": {
         label: "Commands:",
-        tooltip: SetPollingSourceToolipsTexts.ENVIROMENT_VARIABLES,
+        tooltip: SetPollingSourceTooltipsTexts.ENVIRONMENT_VARIABLES,
         presentationComponent: CardsPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-fetchStepContainer-command",
@@ -119,7 +119,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.FetchStepContainer.args": {
         label: "Arguments:",
-        tooltip: SetPollingSourceToolipsTexts.ARGUMENTS,
+        tooltip: SetPollingSourceTooltipsTexts.ARGUMENTS,
         presentationComponent: CardsPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-fetchStepContainer-args",
@@ -127,7 +127,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.FetchStepContainer.env": {
         label: "Environment variables:",
-        tooltip: SetPollingSourceToolipsTexts.ENVIROMENT_VARIABLES,
+        tooltip: SetPollingSourceTooltipsTexts.ENVIRONMENT_VARIABLES,
         presentationComponent: EnvVariablesPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-fetchStepContainer-env",
@@ -149,12 +149,6 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.TransformSql.queries": getSourcesDescriptors("SetPollingSource.TransformSql.queries"),
 
-    "SetPollingSource.ReadStepJsonLines.__typename": getSourcesDescriptors(
-        "SetPollingSource.ReadStepJsonLines.__typename",
-    ),
-
-    "SetPollingSource.ReadStepJsonLines.schema": getSourcesDescriptors("SetPollingSource.ReadStepJsonLines.schema"),
-
     "SetPollingSource.ReadStepCsv.__typename": getSourcesDescriptors("SetPollingSource.ReadStepCsv.__typename"),
 
     "SetPollingSource.ReadStepCsv.separator": getSourcesDescriptors("SetPollingSource.ReadStepCsv.separator"),
@@ -167,35 +161,13 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.ReadStepCsv.escape": getSourcesDescriptors("SetPollingSource.ReadStepCsv.escape"),
 
-    "SetPollingSource.ReadStepCsv.comment": getSourcesDescriptors("SetPollingSource.ReadStepCsv.comment"),
-
     "SetPollingSource.ReadStepCsv.header": getSourcesDescriptors("SetPollingSource.ReadStepCsv.header"),
-
-    "SetPollingSource.ReadStepCsv.enforceSchema": getSourcesDescriptors("SetPollingSource.ReadStepCsv.enforceSchema"),
 
     "SetPollingSource.ReadStepCsv.inferSchema": getSourcesDescriptors("SetPollingSource.ReadStepCsv.inferSchema"),
 
-    "SetPollingSource.ReadStepCsv.ignoreLeadingWhiteSpace": getSourcesDescriptors(
-        "SetPollingSource.ReadStepCsv.ignoreLeadingWhiteSpace",
-    ),
-
-    "SetPollingSource.ReadStepCsv.ignoreTrailingWhiteSpace": getSourcesDescriptors(
-        "SetPollingSource.ReadStepCsv.ignoreTrailingWhiteSpace",
-    ),
-
     "SetPollingSource.ReadStepCsv.nullValue": getSourcesDescriptors("SetPollingSource.ReadStepCsv.nullValue"),
 
-    "SetPollingSource.ReadStepCsv.emptyValue": getSourcesDescriptors("SetPollingSource.ReadStepCsv.emptyValue"),
-
-    "SetPollingSource.ReadStepCsv.nanValue": getSourcesDescriptors("SetPollingSource.ReadStepCsv.nanValue"),
-
-    "SetPollingSource.ReadStepCsv.positiveInf": getSourcesDescriptors("SetPollingSource.ReadStepCsv.positiveInf"),
-
-    "SetPollingSource.ReadStepCsv.negativeInf": getSourcesDescriptors("SetPollingSource.ReadStepCsv.negativeInf"),
-
     "SetPollingSource.ReadStepCsv.dateFormat": getSourcesDescriptors("SetPollingSource.ReadStepCsv.dateFormat"),
-
-    "SetPollingSource.ReadStepCsv.multiLine": getSourcesDescriptors("SetPollingSource.ReadStepCsv.multiLine"),
 
     "SetPollingSource.ReadStepGeoJson.__typename": getSourcesDescriptors("SetPollingSource.ReadStepGeoJson.__typename"),
 
@@ -237,7 +209,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.PrepStepDecompress.format": {
         label: "Format:",
-        tooltip: SetPollingSourceToolipsTexts.DECOMPRESS_FORMAT,
+        tooltip: SetPollingSourceTooltipsTexts.DECOMPRESS_FORMAT,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-prepStepDecompress-format",
@@ -245,7 +217,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.PrepStepDecompress.subPath": {
         label: "SubPath:",
-        tooltip: SetPollingSourceToolipsTexts.DECOMPRESS_SUB_PATH,
+        tooltip: SetPollingSourceTooltipsTexts.DECOMPRESS_SUB_PATH,
         presentationComponent: LinkPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-prepStepDecompress-subPath",
@@ -253,7 +225,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.PrepStepPipe.command": {
         label: "Command:",
-        tooltip: SetPollingSourceToolipsTexts.COMMAND,
+        tooltip: SetPollingSourceTooltipsTexts.COMMAND,
         presentationComponent: CommandPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-prepStepPipe-command",
@@ -271,22 +243,6 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         "SetPollingSource.MergeStrategySnapshot.compareColumns",
     ),
 
-    "SetPollingSource.MergeStrategySnapshot.observationColumn": getSourcesDescriptors(
-        "SetPollingSource.MergeStrategySnapshot.observationColumn",
-    ),
-
-    "SetPollingSource.MergeStrategySnapshot.obsvAdded": getSourcesDescriptors(
-        "SetPollingSource.MergeStrategySnapshot.obsvAdded",
-    ),
-
-    "SetPollingSource.MergeStrategySnapshot.obsvChanged": getSourcesDescriptors(
-        "SetPollingSource.MergeStrategySnapshot.obsvChanged",
-    ),
-
-    "SetPollingSource.MergeStrategySnapshot.obsvRemoved": getSourcesDescriptors(
-        "SetPollingSource.MergeStrategySnapshot.obsvRemoved",
-    ),
-
     "SetPollingSource.ReadStepEsriShapefile.__typename": getSourcesDescriptors(
         "SetPollingSource.ReadStepEsriShapefile.__typename",
     ),
@@ -297,24 +253,6 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.ReadStepEsriShapefile.subPath": getSourcesDescriptors(
         "SetPollingSource.ReadStepEsriShapefile.subPath",
-    ),
-
-    "SetPollingSource.ReadStepJsonLines.dateFormat": getSourcesDescriptors(
-        "SetPollingSource.ReadStepJsonLines.dateFormat",
-    ),
-
-    "SetPollingSource.ReadStepJsonLines.encoding": getSourcesDescriptors("SetPollingSource.ReadStepJsonLines.encoding"),
-
-    "SetPollingSource.ReadStepJsonLines.multiLine": getSourcesDescriptors(
-        "SetPollingSource.ReadStepJsonLines.multiLine",
-    ),
-
-    "SetPollingSource.ReadStepJsonLines.primitivesAsString": getSourcesDescriptors(
-        "SetPollingSource.ReadStepJsonLines.primitivesAsString",
-    ),
-
-    "SetPollingSource.ReadStepJsonLines.timestampFormat": getSourcesDescriptors(
-        "SetPollingSource.ReadStepJsonLines.timestampFormat",
     ),
 
     "SetPollingSource.ReadStepParquet.__typename": getSourcesDescriptors("SetPollingSource.ReadStepParquet.__typename"),

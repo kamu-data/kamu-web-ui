@@ -2,7 +2,7 @@
     <div id="metadata-block">
         <div id="pagination-block" *ngIf="currentState">
             <app-custom-pagination
-                [hash]="latestBlockhash"
+                [hash]="latestBlockHash"
                 [date]="latestBlockSystemTime"
                 [pageIndex]="currentPage"
                 [limit]="5"
@@ -173,7 +173,7 @@
                         </div>
                         <div class="mx-4">
                             <app-block-row-data [tooltip]="'Query alias of the dataset.'" [label]="'Query alias:'">
-                                <span>{{ input.name }}</span>
+                                <span>{{ input.alias }}</span>
                             </app-block-row-data>
                         </div>
                     </div>

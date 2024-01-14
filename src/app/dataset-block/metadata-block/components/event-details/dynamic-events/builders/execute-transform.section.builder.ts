@@ -1,42 +1,42 @@
-import { DataSlice, ExecuteQuery, InputSlice } from "src/app/api/kamu.graphql.interface";
-import { EXECUTE_QUERY_SOURCE_DESCRIPTORS } from "../../components/execute-query-event/execute-query-event.source";
+import { DataSlice, ExecuteTransform, ExecuteTransformInput } from "src/app/api/kamu.graphql.interface";
+import { EXECUTE_QUERY_SOURCE_DESCRIPTORS } from "../../components/execute-transform-event/execute-transform-event.source";
 import { EventRow, EventSection } from "../dynamic-events.model";
 import { EventSectionBuilder } from "./event-section.builder";
 
-export enum ExecuteQuerySection {
-    QUERY_OUTPUT_DATA = "queryOutputData",
-    INPUT_SLICES = "inputSlices",
-    INPUT_CHECKPOINT = "inputCheckpoint",
-    OUTPUT_CHECKPOINT = "outputCheckpoint",
-    OUTPUT_WATERMARK = "watermark",
+export enum ExecuteTransformSection {
+    QUERY_INPUTS = "queryInputs",
+    PREV_CHECKPOINT = "prevCheckpoint",
+    NEW_DATA = "queryOutputData",
+    NEW_CHECKPOINT = "newCheckpoint",
+    NEW_WATERMARK = "watermark",
 }
 
-export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery> {
+export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteTransform> {
     private sectionTitleMapper: Record<string, string> = {
-        queryOutputData: "Output data",
-        inputSlices: "Input slices",
-        inputCheckpoint: "Input checkpoint",
-        outputCheckpoint: "Output checkpoint",
-        watermark: "Output watermark",
+        queryInputs: "Query inputs",
+        prevCheckpoint: "Previous checkpoint",
+        queryOutputData: "New data",
+        newCheckpoint: "New checkpoint",
+        watermark: "New watermark",
     };
-    public buildEventSections(event: ExecuteQuery): EventSection[] {
+    public buildEventSections(event: ExecuteTransform): EventSection[] {
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {
                 switch (section) {
-                    case ExecuteQuerySection.OUTPUT_CHECKPOINT: {
+                    case ExecuteTransformSection.NEW_CHECKPOINT: {
                         result.push({
                             title: this.sectionTitleMapper[section],
                             rows: this.buildEventRows(
                                 event,
                                 EXECUTE_QUERY_SOURCE_DESCRIPTORS,
-                                section as keyof ExecuteQuery,
+                                section as keyof ExecuteTransform,
                                 false,
                             ),
                         });
                         break;
                     }
-                    case ExecuteQuerySection.QUERY_OUTPUT_DATA: {
+                    case ExecuteTransformSection.NEW_DATA: {
                         const rows: EventRow[] = [];
                         Object.entries(data as DataSlice).forEach(([key, value]) => {
                             if (event.__typename && key !== "__typename") {
@@ -58,8 +58,8 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
 
                         break;
                     }
-                    case ExecuteQuerySection.INPUT_CHECKPOINT:
-                    case ExecuteQuerySection.OUTPUT_WATERMARK: {
+                    case ExecuteTransformSection.PREV_CHECKPOINT:
+                    case ExecuteTransformSection.NEW_WATERMARK: {
                         if (event.__typename) {
                             result.push({
                                 title: this.sectionTitleMapper[section],
@@ -77,9 +77,9 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
                         break;
                     }
 
-                    case ExecuteQuerySection.INPUT_SLICES: {
-                        const numInputSlicesParts = event.inputSlices.length;
-                        (data as InputSlice[]).forEach((item, index) => {
+                    case ExecuteTransformSection.QUERY_INPUTS: {
+                        const numQueryInputs = event.queryInputs.length;
+                        (data as ExecuteTransformInput[]).forEach((item, index) => {
                             let rows: EventRow[] = [];
                             Object.entries({
                                 id: item.datasetId,
@@ -92,14 +92,13 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
                                             EXECUTE_QUERY_SOURCE_DESCRIPTORS,
                                             item.__typename,
                                             key,
-                                            this.valueTransformMapper(key as keyof InputSlice, value, item),
+                                            this.valueTransformMapper(key as keyof ExecuteTransformInput, value, item),
                                         ),
                                     );
                                 }
                             });
                             result.push({
-                                title:
-                                    this.sectionTitleMapper[section] + (numInputSlicesParts > 1 ? `#${index + 1}` : ""),
+                                title: this.sectionTitleMapper[section] + (numQueryInputs > 1 ? `#${index + 1}` : ""),
                                 rows,
                             });
                             rows = [];
@@ -120,24 +119,25 @@ export class ExecuteQuerySectionBuilder extends EventSectionBuilder<ExecuteQuery
     }
 
     private valueTransformMapper(
-        key: keyof InputSlice | keyof DataSlice,
+        key: keyof ExecuteTransformInput | keyof DataSlice,
         value: unknown,
-        inputItem?: InputSlice,
+        inputItem?: ExecuteTransformInput,
     ): unknown {
-        switch (key) {
+        return value;
+        /*switch (key) {
             case "blockInterval":
             case "dataInterval":
                 return {
                     block: value,
                     datasetId: inputItem?.datasetId ?? null,
                 };
-            case "interval":
+            case "offsetInterval":
                 return {
                     block: value,
                     datasetId: null,
                 };
             default:
                 return value;
-        }
+        }*/
     }
 }

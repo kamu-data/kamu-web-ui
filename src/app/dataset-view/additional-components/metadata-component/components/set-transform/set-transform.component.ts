@@ -7,7 +7,7 @@ import { DatasetSchema } from "src/app/interface/dataset.interface";
 import { GetDatasetSchemaQuery, SqlQueryStep } from "src/app/api/kamu.graphql.interface";
 import { EditSetTransformService } from "./edit-set-transform..service";
 import { parseCurrentSchema } from "src/app/common/app.helpers";
-import { DatasetNode, SetTransFormYamlType } from "./set-transform.types";
+import { DatasetNode, SetTransformYamlType } from "./set-transform.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { from } from "rxjs";
@@ -22,7 +22,7 @@ import { BaseMainEventComponent } from "../source-events/base-main-event.compone
 export class SetTransformComponent extends BaseMainEventComponent implements OnInit {
     public inputDatasets = new Set<string>();
     public selectedEngine: string;
-    public currentSetTransformEvent: MaybeNull<SetTransFormYamlType>;
+    public currentSetTransformEvent: MaybeNull<SetTransformYamlType>;
     public queries: Omit<SqlQueryStep, "__typename">[] = [];
     public dataSource = new MatTreeNestedDataSource<DatasetNode>();
     public TREE_DATA: DatasetNode[] = [];
@@ -74,23 +74,25 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
 
     private getInputDatasetsInfo(): void {
         this.currentSetTransformEvent?.inputs.forEach((item: TransformInput) => {
-            if (item.id) {
+            if (item.datasetRef) {
                 this.inputDatasets.add(JSON.stringify(item));
                 this.trackSubscription(
-                    this.datasetService.requestDatasetSchema(item.id).subscribe((data: GetDatasetSchemaQuery) => {
-                        if (data.datasets.byId) {
-                            const owner = (data.datasets.byId as DatasetBasicsFragment).owner.accountName;
-                            const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
-                                data.datasets.byId.metadata.currentSchema,
-                            );
-                            this.TREE_DATA.push({
-                                name: item.name,
-                                children: schema?.fields,
-                                owner,
-                            });
-                            this.dataSource.data = this.TREE_DATA;
-                        }
-                    }),
+                    this.datasetService
+                        .requestDatasetSchema(item.datasetRef)
+                        .subscribe((data: GetDatasetSchemaQuery) => {
+                            if (data.datasets.byId) {
+                                const owner = (data.datasets.byId as DatasetBasicsFragment).owner.accountName;
+                                const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
+                                    data.datasets.byId.metadata.currentSchema,
+                                );
+                                this.TREE_DATA.push({
+                                    name: item.alias,
+                                    children: schema?.fields,
+                                    owner,
+                                });
+                                this.dataSource.data = this.TREE_DATA;
+                            }
+                        }),
                 );
             } else {
                 throw new Error("TransformInput without an 'id' is unexpected");

@@ -57,13 +57,13 @@ describe("GithubCallbackComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should call fetchAccountAndTokenFromGithubCallackCode method in normal mode", () => {
+    it("should call fetchAccountAndTokenFromGithubCallbackCode method in normal mode", () => {
         navigateToHomeSpy.calls.reset();
         const callbackUrlSpy = spyOnProperty(localStorageService, "loginCallbackUrl", "get").and.returnValue(null);
 
         const fetchAccountAndTokenSpy = spyOn(
             authApiService,
-            "fetchAccountAndTokenFromGithubCallackCode",
+            "fetchAccountAndTokenFromGithubCallbackCode",
         ).and.returnValue(of(mockGithubLoginResponse.auth.login));
 
         component.ngOnInit();
@@ -73,7 +73,7 @@ describe("GithubCallbackComponent", () => {
         expect(callbackUrlSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should call fetchAccountAndTokenFromGithubCallackCode method with callback URL", () => {
+    it("should call fetchAccountAndTokenFromGithubCallbackCode method with callback URL", () => {
         const SOME_CALLBACK_URL = "http://www.example.com";
         const callbackUrlSpy = spyOnProperty(localStorageService, "loginCallbackUrl", "get").and.returnValue(
             SOME_CALLBACK_URL,
@@ -83,7 +83,7 @@ describe("GithubCallbackComponent", () => {
         const navigateToReturnToCliSpy = spyOn(navigationService, "navigateToReturnToCli").and.stub();
         const fetchAccountAndTokenSpy = spyOn(
             authApiService,
-            "fetchAccountAndTokenFromGithubCallackCode",
+            "fetchAccountAndTokenFromGithubCallbackCode",
         ).and.returnValue(of(mockGithubLoginResponse.auth.login));
 
         component.ngOnInit();

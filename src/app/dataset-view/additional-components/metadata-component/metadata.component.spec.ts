@@ -101,7 +101,7 @@ describe("MetadataComponent", () => {
 
         expect(component.currentPage).toEqual(1);
         expect(component.totalPages).toEqual(1);
-        expect(component.latestBlockhash).toEqual("");
+        expect(component.latestBlockHash).toEqual("");
         expect(component.latestBlockSystemTime).toEqual("");
         expect(component.currentLicense).toBeUndefined();
         expect(component.currentPollingSource).toBeUndefined();

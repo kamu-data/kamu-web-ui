@@ -1,4 +1,4 @@
-export class SetPollingSourceToolipsTexts {
+export class SetPollingSourceTooltipsTexts {
     public static readonly URL = "URL of the data source.";
     public static readonly EVENT_TIME = "Describes how event time is extracted from the source metadata.";
     public static readonly EVENT_TIME_FROM_METADATA = "Extracts event time from the source's metadata.";
@@ -13,7 +13,7 @@ export class SetPollingSourceToolipsTexts {
         "Specifies the entrypoint. Not executed within a shell. The default OCI image's ENTRYPOINT is used if this is not provided.";
     public static readonly ARGUMENTS =
         "Arguments to the entrypoint. The OCI image's CMD is used if this is not provided.";
-    public static readonly ENVIROMENT_VARIABLES = "Environment variables to propagate into or set in the container.";
+    public static readonly ENVIRONMENT_VARIABLES = "Environment variables to propagate into or set in the container.";
     public static readonly DECOMPRESS_FORMAT = "Name of a compression algorithm used on data.";
     public static readonly DECOMPRESS_SUB_PATH =
         "Path to a data file within a multi-file archive. Can contain glob patterns.";

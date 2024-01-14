@@ -1,8 +1,8 @@
-import { ExecuteQuery } from "../../../../../../api/kamu.graphql.interface";
-import { mockExecuteQuery } from "../../mock.events";
+import { ExecuteTransform } from "../../../../../../api/kamu.graphql.interface";
+import { mockExecuteTransform } from "../../mock.events";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { ExecuteQueryEventComponent } from "./execute-query-event.component";
+import { ExecuteTransformEventComponent } from "./execute-transform-event.component";
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { SizePropertyComponent } from "../common/size-property/size-property.component";
 import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
@@ -15,14 +15,14 @@ import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 
-describe("ExecuteQueryEventComponent", () => {
-    let component: ExecuteQueryEventComponent;
-    let fixture: ComponentFixture<ExecuteQueryEventComponent>;
+describe("ExecuteTransformEventComponent", () => {
+    let component: ExecuteTransformEventComponent;
+    let fixture: ComponentFixture<ExecuteTransformEventComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [
-                ExecuteQueryEventComponent,
+                ExecuteTransformEventComponent,
                 SizePropertyComponent,
                 OffsetIntervalPropertyComponent,
                 BlockRowDataComponent,
@@ -40,9 +40,9 @@ describe("ExecuteQueryEventComponent", () => {
             ],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(ExecuteQueryEventComponent);
+        fixture = TestBed.createComponent(ExecuteTransformEventComponent);
         component = fixture.componentInstance;
-        component.event = mockExecuteQuery as ExecuteQuery;
+        component.event = mockExecuteTransform as ExecuteTransform;
         fixture.detectChanges();
     });
 

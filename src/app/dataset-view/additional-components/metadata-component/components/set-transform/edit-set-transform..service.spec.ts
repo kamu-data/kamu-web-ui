@@ -3,7 +3,7 @@ import { TestBed } from "@angular/core/testing";
 import { EditSetTransformService } from "./edit-set-transform..service";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { SqlQueryStep, TransformInput } from "src/app/api/kamu.graphql.interface";
-import { mockParseSetTransFormYamlType, mockSetTransformEventYaml } from "./mock.data";
+import { mockParseSetTransformYamlType, mockSetTransformEventYaml } from "./mock.data";
 import { Engine } from "./components/engine-section/engine-section.types";
 
 describe("EditSetTransformService", () => {
@@ -27,8 +27,8 @@ describe("EditSetTransformService", () => {
         ]);
         const result = [
             {
-                id: "did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX",
-                name: "account.tokens.portfolio.usd",
+                datasetRef: "did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX",
+                alias: "account.tokens.portfolio.usd",
             },
         ] as TransformInput[];
 
@@ -54,7 +54,7 @@ describe("EditSetTransformService", () => {
 
     it("should check #parseEventFromYaml() method", () => {
         const event = mockSetTransformEventYaml;
-        const result = mockParseSetTransFormYamlType;
+        const result = mockParseSetTransformYamlType;
         expect(service.parseEventFromYaml(event)).toEqual(result);
     });
 });

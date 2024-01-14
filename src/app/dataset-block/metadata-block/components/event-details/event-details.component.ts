@@ -19,10 +19,9 @@ import { BaseComponent } from "src/app/common/base.component";
 import { AddPushSourceEventComponent } from "./components/add-push-source-event/add-push-source-event.component";
 import { UnsupportedEventComponent } from "./components/unsupported-event/unsupported-event.component";
 import { SetDataSchemaEventComponent } from "./components/set-data-schema-event/set-data-schema-event.component";
-import { SetWatermarkEventComponent } from "./components/set-watermark-event/set-watermark-event.component";
 import { SetInfoEventComponent } from "./components/set-info-event/set-info-event.component";
 import { SetAttachmentsEventComponent } from "./components/set-attachments-event/set-attachments-event.component";
-import { ExecuteQueryEventComponent } from "./components/execute-query-event/execute-query-event.component";
+import { ExecuteTransformEventComponent } from "./components/execute-transform-event/execute-transform-event.component";
 import { SetTransformEventComponent } from "./components/set-transform-event/set-transform-event.component";
 import { SeedEventComponent } from "./components/seed-event/seed-event.component";
 import { AddDataEventComponent } from "./components/add-data-event/add-data-event.component";
@@ -58,11 +57,10 @@ export class EventDetailsComponent implements AfterViewChecked {
         [SupportedEvents.SetPollingSource]: SetPollingSourceEventComponent,
         [SupportedEvents.SetDataSchema]: SetDataSchemaEventComponent,
         [SupportedEvents.AddPushSource]: AddPushSourceEventComponent,
-        [SupportedEvents.SetWatermark]: SetWatermarkEventComponent,
         [SupportedEvents.SetVocab]: SetVocabEventComponent,
         [SupportedEvents.SetInfo]: SetInfoEventComponent,
         [SupportedEvents.SetAttachments]: SetAttachmentsEventComponent,
-        [SupportedEvents.ExecuteQuery]: ExecuteQueryEventComponent,
+        [SupportedEvents.ExecuteTransform]: ExecuteTransformEventComponent,
         [SupportedEvents.SetTransform]: SetTransformEventComponent,
         [SupportedEvents.Seed]: SeedEventComponent,
         [SupportedEvents.AddData]: AddDataEventComponent,

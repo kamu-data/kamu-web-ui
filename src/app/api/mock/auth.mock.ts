@@ -29,6 +29,7 @@ export const mockAccountDetails: AccountFragment = {
     displayName: TEST_USER_NAME,
     accountType: AccountType.User,
     avatarUrl: TEST_AVATAR_URL,
+    isAdmin: false,
 };
 
 export const mockAccountFromAccessToken: FetchAccountDetailsMutation = {

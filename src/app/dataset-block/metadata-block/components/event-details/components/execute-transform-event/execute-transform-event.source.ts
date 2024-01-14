@@ -6,93 +6,93 @@ import { SizePropertyComponent } from "../common/size-property/size-property.com
 import { HashPropertyComponent } from "../common/hash-property/hash-property.component";
 import { BlockIntervalPropertyComponent } from "../common/block-interval-property/block-interval-property.component";
 import { DatasetNameByIdPropertyComponent } from "../common/dataset-name-by-id-property/dataset-name-by-id-property.component";
-import { ExecuteQueryToolipsTexts } from "src/app/common/tooltips/execute-query.text";
+import { ExecuteTransformTooltipsTexts } from "src/app/common/tooltips/execute-transform.text";
 
 export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
-    "ExecuteQuery.DataSlice.logicalHash": {
+    "ExecuteTransform.DataSlice.logicalHash": {
         label: "Logical hash:",
-        tooltip: ExecuteQueryToolipsTexts.DATA_SLICE_LOGICAL_HASH,
+        tooltip: ExecuteTransformTooltipsTexts.DATA_SLICE_LOGICAL_HASH,
         presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "execute-query-data-slice-engine",
+        dataTestId: "execute-transform-data-slice-engine",
     },
-    "ExecuteQuery.DataSlice.physicalHash": {
+    "ExecuteTransform.DataSlice.physicalHash": {
         label: "Physical hash:",
-        tooltip: ExecuteQueryToolipsTexts.DATA_SLICE_PHYSICAL_HASH,
+        tooltip: ExecuteTransformTooltipsTexts.DATA_SLICE_PHYSICAL_HASH,
         presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "execute-query-data-slice-physical-hash",
+        dataTestId: "execute-transform-data-slice-physical-hash",
     },
 
-    "ExecuteQuery.DataSlice.interval": {
+    "ExecuteTransform.DataSlice.interval": {
         label: "Interval:",
-        tooltip: ExecuteQueryToolipsTexts.DATA_SLICE_INTERVAL,
+        tooltip: ExecuteTransformTooltipsTexts.DATA_SLICE_INTERVAL,
         presentationComponent: OffsetIntervalPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "execute-query-data-slice-interval",
+        dataTestId: "execute-transform-data-slice-interval",
     },
 
-    "ExecuteQuery.string.inputCheckpoint": {
+    "ExecuteTransform.string.inputCheckpoint": {
         label: "Checkpoint:",
-        tooltip: ExecuteQueryToolipsTexts.INPUT_CHECKPOINT,
+        tooltip: ExecuteTransformTooltipsTexts.INPUT_CHECKPOINT,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
-        dataTestId: "execute-query-inputCheckpoint",
+        dataTestId: "execute-transform-inputCheckpoint",
     },
 
-    "ExecuteQuery.string.watermark": {
+    "ExecuteTransform.string.watermark": {
         label: "Watermark:",
-        tooltip: ExecuteQueryToolipsTexts.WATERMARK,
+        tooltip: ExecuteTransformTooltipsTexts.WATERMARK,
         presentationComponent: DisplayTimeComponent,
         separateRowForValue: false,
-        dataTestId: "execute-query-watermark",
+        dataTestId: "execute-transform-watermark",
     },
 
-    "ExecuteQuery.Checkpoint.physicalHash": {
+    "ExecuteTransform.Checkpoint.physicalHash": {
         label: "Physical hash:",
-        tooltip: ExecuteQueryToolipsTexts.CHECKPOINT_PHYSICAL_HASH,
+        tooltip: ExecuteTransformTooltipsTexts.CHECKPOINT_PHYSICAL_HASH,
         presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "execute-query-checkpoint-physical-hash",
+        dataTestId: "execute-transform-checkpoint-physical-hash",
     },
 
-    "ExecuteQuery.Checkpoint.size": {
+    "ExecuteTransform.Checkpoint.size": {
         label: "Size:",
-        tooltip: ExecuteQueryToolipsTexts.CHECKPOINT_SIZE,
+        tooltip: ExecuteTransformTooltipsTexts.CHECKPOINT_SIZE,
         presentationComponent: SizePropertyComponent,
         separateRowForValue: false,
-        dataTestId: "execute-query-checkpoint-size",
+        dataTestId: "execute-transform-checkpoint-size",
     },
 
-    "ExecuteQuery.InputSlice.datasetId": {
+    "ExecuteTransform.InputSlice.datasetId": {
         label: "Name:",
-        tooltip: ExecuteQueryToolipsTexts.INPUT_SLICE_DATASET_ID,
+        tooltip: ExecuteTransformTooltipsTexts.INPUT_SLICE_DATASET_ID,
         presentationComponent: DatasetNameByIdPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "execute-query-input-slice-name",
+        dataTestId: "execute-transform-input-slice-name",
     },
 
-    "ExecuteQuery.InputSlice.id": {
+    "ExecuteTransform.InputSlice.id": {
         label: "Id:",
-        tooltip: ExecuteQueryToolipsTexts.INPUT_SLICE_ID,
+        tooltip: ExecuteTransformTooltipsTexts.INPUT_SLICE_ID,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
-        dataTestId: "execute-query-input-slice-id",
+        dataTestId: "execute-transform-input-slice-id",
     },
 
-    "ExecuteQuery.InputSlice.blockInterval": {
+    "ExecuteTransform.InputSlice.blockInterval": {
         label: "Block interval:",
-        tooltip: ExecuteQueryToolipsTexts.INPUT_SLICE_BLOCK_INTERVAL,
+        tooltip: ExecuteTransformTooltipsTexts.INPUT_SLICE_BLOCK_INTERVAL,
         presentationComponent: BlockIntervalPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "execute-query-input-slice-block-interval",
+        dataTestId: "execute-transform-input-slice-block-interval",
     },
 
-    "ExecuteQuery.InputSlice.dataInterval": {
+    "ExecuteTransform.InputSlice.dataInterval": {
         label: "Data interval:",
-        tooltip: ExecuteQueryToolipsTexts.INPUT_SLICE_DATA_INTERVAL,
+        tooltip: ExecuteTransformTooltipsTexts.INPUT_SLICE_DATA_INTERVAL,
         presentationComponent: OffsetIntervalPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "execute-query-input-slice-data-interval",
+        dataTestId: "execute-transform-input-slice-data-interval",
     },
 };

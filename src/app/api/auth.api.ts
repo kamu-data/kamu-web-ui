@@ -40,7 +40,7 @@ export class AuthApi {
         return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.PASSWORD, JSON.stringify(credentials));
     }
 
-    public fetchAccountAndTokenFromGithubCallackCode(credentials: GithubLoginCredentials): Observable<LoginResponse> {
+    public fetchAccountAndTokenFromGithubCallbackCode(credentials: GithubLoginCredentials): Observable<LoginResponse> {
         return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.GITHUB, JSON.stringify(credentials));
     }
 

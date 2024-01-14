@@ -1,7 +1,7 @@
 import AppValues from "src/app/common/app.values";
 import { ControlType, JsonFormData } from "../../add-polling-source/add-polling-source-form.types";
-import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
-import { SourcesToolipsTexts } from "src/app/common/tooltips/sources.text";
+import { SetPollingSourceTooltipsTexts } from "src/app/common/tooltips/tooltips.text";
+import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
 
 export const FETCH_FORM_DATA: JsonFormData = {
     url: {
@@ -12,7 +12,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 value: "",
                 type: ControlType.TEXT,
                 placeholder: "Enter url",
-                tooltip: SetPollingSourceToolipsTexts.URL,
+                tooltip: SetPollingSourceTooltipsTexts.URL,
                 validators: {
                     required: true,
                     pattern: AppValues.URL_PATTERN,
@@ -23,12 +23,12 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 label: "Event time",
                 value: "",
                 type: ControlType.EVENT_TIME,
-                tooltip: SetPollingSourceToolipsTexts.EVENT_TIME,
+                tooltip: SetPollingSourceTooltipsTexts.EVENT_TIME,
                 options: {
                     innerTooltips: {
-                        fromMetadata: SetPollingSourceToolipsTexts.EVENT_TIME_FROM_METADATA,
-                        fromPath: SetPollingSourceToolipsTexts.EVENT_TIME_FROM_PATH,
-                        fromSystemTime: SetPollingSourceToolipsTexts.EVENT_TIME_SYSTEM_TIME,
+                        fromMetadata: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_METADATA,
+                        fromPath: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_PATH,
+                        fromSystemTime: SetPollingSourceTooltipsTexts.EVENT_TIME_SYSTEM_TIME,
                     },
                 },
                 validators: {},
@@ -38,7 +38,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 value: "",
                 label: "Headers",
                 type: ControlType.ARRAY_KEY_VALUE,
-                tooltip: SourcesToolipsTexts.HEADERS,
+                tooltip: SourcesTooltipsTexts.HEADERS,
                 options: {
                     formArrayName: "headers",
                     buttonText: "+ Add headers",
@@ -49,7 +49,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 name: "cache",
                 label: "Use cache",
                 value: "",
-                tooltip: SetPollingSourceToolipsTexts.CACHE,
+                tooltip: SetPollingSourceTooltipsTexts.CACHE,
                 type: ControlType.CACHE,
                 validators: {},
             },
@@ -63,7 +63,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 value: "",
                 type: ControlType.TEXT,
                 placeholder: "Enter path",
-                tooltip: SetPollingSourceToolipsTexts.PATH,
+                tooltip: SetPollingSourceTooltipsTexts.PATH,
                 validators: {
                     required: true,
                 },
@@ -74,7 +74,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 label: "Order",
                 value: "NONE",
                 type: ControlType.ORDER,
-                tooltip: SetPollingSourceToolipsTexts.PATH,
+                tooltip: SetPollingSourceTooltipsTexts.PATH,
                 validators: {},
             },
             {
@@ -82,12 +82,12 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 label: "Event time",
                 value: "",
                 type: ControlType.EVENT_TIME,
-                tooltip: SetPollingSourceToolipsTexts.EVENT_TIME,
+                tooltip: SetPollingSourceTooltipsTexts.EVENT_TIME,
                 validators: {},
                 options: {
                     innerTooltips: {
-                        fromMetadata: SetPollingSourceToolipsTexts.EVENT_TIME_FROM_METADATA,
-                        fromPath: SetPollingSourceToolipsTexts.EVENT_TIME_FROM_PATH,
+                        fromMetadata: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_METADATA,
+                        fromPath: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_PATH,
                     },
                 },
             },
@@ -96,7 +96,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 label: "Use cache",
                 value: "",
                 type: ControlType.CACHE,
-                tooltip: SetPollingSourceToolipsTexts.CACHE,
+                tooltip: SetPollingSourceTooltipsTexts.CACHE,
                 validators: {},
             },
         ],
@@ -109,7 +109,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 value: "",
                 type: ControlType.TEXT,
                 placeholder: "Enter image..",
-                tooltip: SetPollingSourceToolipsTexts.IMAGE,
+                tooltip: SetPollingSourceTooltipsTexts.IMAGE,
                 validators: {
                     required: true,
                 },
@@ -120,7 +120,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 placeholder: "Enter command...",
                 value: "",
                 type: ControlType.ARRAY_KEY,
-                tooltip: SetPollingSourceToolipsTexts.COMMANDS,
+                tooltip: SetPollingSourceTooltipsTexts.COMMANDS,
                 options: {
                     formArrayName: "command",
                     buttonText: "+ Add command",
@@ -133,7 +133,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 placeholder: "Enter argument...",
                 value: "",
                 type: ControlType.ARRAY_KEY,
-                tooltip: SetPollingSourceToolipsTexts.ARGUMENTS,
+                tooltip: SetPollingSourceTooltipsTexts.ARGUMENTS,
                 options: {
                     formArrayName: "args",
                     buttonText: "+ Add argument",
@@ -151,7 +151,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 ],
                 label: "Environment variables",
                 type: ControlType.ARRAY_KEY_VALUE,
-                tooltip: SetPollingSourceToolipsTexts.ENVIROMENT_VARIABLES,
+                tooltip: SetPollingSourceTooltipsTexts.ENVIRONMENT_VARIABLES,
                 options: {
                     formArrayName: "env",
                     buttonText: "+ Add variable",

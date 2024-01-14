@@ -1,7 +1,7 @@
 import { MatIconModule } from "@angular/material/icon";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
-import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
+import { DisplayHashModule } from "src/app/components/display-hash/display-hash.module";
 import { DisplayTimeModule } from "../components/display-time/display-time.module";
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";

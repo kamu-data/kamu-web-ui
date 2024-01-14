@@ -1,0 +1,25 @@
+fragment ExecuteTransformEvent on ExecuteTransform {
+  queryInputs {
+    datasetId
+    prevBlockHash
+    newBlockHash
+    prevOffset
+    newOffset
+  }
+  prevCheckpoint
+  prevOffset
+  # TODO
+  queryOutputData: newData {
+    offsetInterval {
+      start
+      end
+    }
+    logicalHash
+    physicalHash
+  }
+  newCheckpoint {
+    physicalHash
+    size
+  }
+  watermark: newWatermark # TODO
+}

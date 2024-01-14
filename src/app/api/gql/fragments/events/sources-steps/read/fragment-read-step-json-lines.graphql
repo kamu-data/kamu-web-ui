@@ -1,8 +1,0 @@
-fragment ReadStepJsonLinesData on ReadStepJsonLines {
-  schema
-  dateFormat
-  encoding
-  multiLine
-  primitivesAsString
-  timestampFormat
-}

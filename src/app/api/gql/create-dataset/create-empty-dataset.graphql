@@ -1,6 +1,6 @@
-mutation createEmptyDataset($datasetKind: DatasetKind!, $datasetName: DatasetName!) {
+mutation createEmptyDataset($datasetKind: DatasetKind!, $datasetAlias: DatasetAlias!) {
   datasets {
-    createEmpty(datasetKind: $datasetKind, datasetName: $datasetName) {
+    createEmpty(datasetKind: $datasetKind, datasetAlias: $datasetAlias) {
       message
     }
   }

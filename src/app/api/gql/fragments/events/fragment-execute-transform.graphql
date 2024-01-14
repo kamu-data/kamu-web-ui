@@ -8,8 +8,7 @@ fragment ExecuteTransformEvent on ExecuteTransform {
   }
   prevCheckpoint
   prevOffset
-  # TODO
-  queryOutputData: newData {
+  newData {
     offsetInterval {
       start
       end
@@ -21,5 +20,5 @@ fragment ExecuteTransformEvent on ExecuteTransform {
     physicalHash
     size
   }
-  watermark: newWatermark # TODO
+  newWatermark
 }

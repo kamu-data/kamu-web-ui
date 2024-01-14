@@ -1257,7 +1257,7 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                             },
                             event: {
                                 __typename: "ExecuteTransform",
-                                queryOutputData: {
+                                newData: {
                                     __typename: "DataSlice",
                                     offsetInterval: {
                                         __typename: "OffsetInterval",

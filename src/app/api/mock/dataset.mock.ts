@@ -266,7 +266,7 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                         },
                         event: {
                             __typename: "ExecuteTransform",
-                            queryOutputData: {
+                            newData: {
                                 __typename: "DataSlice",
                                 offsetInterval: {
                                     __typename: "OffsetInterval",
@@ -277,7 +277,7 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                                 physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
                             },
                             prevCheckpoint: null,
-                            watermark: "2022-08-01T00:00:00+00:00",
+                            newWatermark: "2022-08-01T00:00:00+00:00",
                             queryInputs: [
                                 {
                                     __typename: "ExecuteTransformInput",

@@ -14,7 +14,7 @@ import {
 import { AddDataEventFragment, DatasetKind, Seed } from "src/app/api/kamu.graphql.interface";
 export const mockAddData: AddDataEventFragment = {
     __typename: "AddData",
-    addDataWatermark: "2022-08-01T00:00:00+00:00",
+    newWatermark: "2022-08-01T00:00:00+00:00",
     prevCheckpoint: null,
     newData: {
         __typename: "DataSlice",
@@ -143,7 +143,7 @@ export const mockSetTransform: DatasetTransformFragment = {
 
 export const mockExecuteTransform: ExecuteTransformEventFragment = {
     __typename: "ExecuteTransform",
-    queryOutputData: {
+    newData: {
         __typename: "DataSlice",
         offsetInterval: {
             __typename: "OffsetInterval",
@@ -154,7 +154,7 @@ export const mockExecuteTransform: ExecuteTransformEventFragment = {
         physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
     },
     prevCheckpoint: null,
-    watermark: "2022-08-01T00:00:00+00:00",
+    newWatermark: "2022-08-01T00:00:00+00:00",
     queryInputs: [
         {
             __typename: "ExecuteTransformInput",

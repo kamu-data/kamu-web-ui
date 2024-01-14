@@ -6,18 +6,18 @@ import { EventSectionBuilder } from "./event-section.builder";
 export enum ExecuteTransformSection {
     QUERY_INPUTS = "queryInputs",
     PREV_CHECKPOINT = "prevCheckpoint",
-    NEW_DATA = "queryOutputData",
+    NEW_DATA = "newData",
     NEW_CHECKPOINT = "newCheckpoint",
-    NEW_WATERMARK = "watermark",
+    NEW_WATERMARK = "newWatermark",
 }
 
 export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteTransform> {
     private sectionTitleMapper: Record<string, string> = {
         queryInputs: "Query inputs",
         prevCheckpoint: "Previous checkpoint",
-        queryOutputData: "New data",
+        newData: "New data",
         newCheckpoint: "New checkpoint",
-        watermark: "New watermark",
+        newWatermark: "New watermark",
     };
     public buildEventSections(event: ExecuteTransform): EventSection[] {
         const result: EventSection[] = [];

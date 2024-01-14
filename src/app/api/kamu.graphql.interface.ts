@@ -1848,7 +1848,7 @@ export type AddDataEventFragment = {
     __typename?: "AddData";
     prevCheckpoint?: string | null;
     prevOffset?: number | null;
-    addDataWatermark?: string | null;
+    newWatermark?: string | null;
     newData?: {
         __typename?: "DataSlice";
         logicalHash: string;
@@ -1884,7 +1884,7 @@ export type ExecuteTransformEventFragment = {
     __typename?: "ExecuteTransform";
     prevCheckpoint?: string | null;
     prevOffset?: number | null;
-    watermark?: string | null;
+    newWatermark?: string | null;
     queryInputs: Array<{
         __typename?: "ExecuteTransformInput";
         datasetId: string;
@@ -1893,7 +1893,7 @@ export type ExecuteTransformEventFragment = {
         prevOffset?: number | null;
         newOffset?: number | null;
     }>;
-    queryOutputData?: {
+    newData?: {
         __typename?: "DataSlice";
         logicalHash: string;
         physicalHash: string;
@@ -2947,7 +2947,7 @@ export const ExecuteTransformEventFragmentDoc = gql`
         }
         prevCheckpoint
         prevOffset
-        queryOutputData: newData {
+        newData {
             offsetInterval {
                 start
                 end
@@ -2959,7 +2959,7 @@ export const ExecuteTransformEventFragmentDoc = gql`
             physicalHash
             size
         }
-        watermark: newWatermark
+        newWatermark
     }
 `;
 export const AddDataEventFragmentDoc = gql`
@@ -2979,7 +2979,7 @@ export const AddDataEventFragmentDoc = gql`
             physicalHash
             size
         }
-        addDataWatermark: newWatermark
+        newWatermark
         newSourceState {
             sourceName
             kind

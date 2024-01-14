@@ -259,7 +259,7 @@ it("should check description for AddData block (watermark only)", () => {
         event: {
             __typename: "AddData",
             newData: null,
-            addDataWatermark: watermarkTime.toString(),
+            newWatermark: watermarkTime.toString(),
             newSourceState: {
                 __typename: "SourceState",
                 sourceName: "src",
@@ -276,7 +276,7 @@ it("should check description for ExecuteTransform block", () => {
         ...metadataBlockSetVocab,
         event: {
             __typename: "ExecuteTransform",
-            queryOutputData: {
+            newData: {
                 __typename: "DataSlice",
                 offsetInterval: {
                     __typename: "OffsetInterval",
@@ -287,7 +287,7 @@ it("should check description for ExecuteTransform block", () => {
                 physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
             },
             prevCheckpoint: null,
-            watermark: "2022-08-01T00:00:00+00:00",
+            newWatermark: "2022-08-01T00:00:00+00:00",
             queryInputs: [
                 {
                     __typename: "ExecuteTransformInput",
@@ -314,9 +314,9 @@ it("should check description for ExecuteTransform block (no data)", () => {
         ...metadataBlockSetVocab,
         event: {
             __typename: "ExecuteTransform",
-            queryOutputData: null,
+            newData: null,
             prevCheckpoint: null,
-            watermark: "2022-08-01T00:00:00+00:00",
+            newWatermark: "2022-08-01T00:00:00+00:00",
             queryInputs: [
                 {
                     __typename: "ExecuteTransformInput",

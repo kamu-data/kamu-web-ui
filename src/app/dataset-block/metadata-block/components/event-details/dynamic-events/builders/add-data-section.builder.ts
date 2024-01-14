@@ -4,10 +4,10 @@ import { EventRow, EventSection } from "../dynamic-events.model";
 import { EventSectionBuilder } from "./event-section.builder";
 
 export enum AddDataSection {
-    ADD_DATA_WATERMARK = "addDataWatermark",
     PREV_CHECKPOINT = "prevCheckpoint",
     NEW_DATA = "newData",
     NEW_CHECKPOINT = "newCheckpoint",
+    NEW_WATERMARK = "newWatermark",
 }
 
 export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
@@ -15,7 +15,7 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
         prevCheckpoint: "Previous checkpoint",
         newData: "New data",
         newCheckpoint: "New checkpoint",
-        addDataWatermark: "New watermark",
+        newWatermark: "New watermark",
     };
     public buildEventSections(event: AddData): EventSection[] {
         const result: EventSection[] = [];
@@ -54,7 +54,7 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
                     }
 
                     case AddDataSection.PREV_CHECKPOINT:
-                    case AddDataSection.ADD_DATA_WATERMARK: {
+                    case AddDataSection.NEW_WATERMARK: {
                         if (event.__typename) {
                             result.push({
                                 title: this.sectionTitleMapper[section],

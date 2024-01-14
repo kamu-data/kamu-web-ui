@@ -139,8 +139,8 @@ export class DataHelpers {
                     return `Watermark updated`;
                 }
             case "ExecuteTransform":
-                if (event.queryOutputData) {
-                    const iv = event.queryOutputData.offsetInterval;
+                if (event.newData) {
+                    const iv = event.newData.offsetInterval;
                     return `Transformation produced ${iv.end - iv.start + 1} new records`;
                 } else {
                     return `Transformation advanced`;

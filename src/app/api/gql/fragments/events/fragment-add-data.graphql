@@ -14,7 +14,7 @@ fragment AddDataEvent on AddData {
     physicalHash
     size
   }
-  addDataWatermark: newWatermark # TODO
+  newWatermark
   newSourceState {
     sourceName
     kind

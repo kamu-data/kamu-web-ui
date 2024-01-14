@@ -6,7 +6,7 @@ import { SizePropertyComponent } from "../common/size-property/size-property.com
 import { AddDataTooltipsTexts } from "src/app/common/tooltips/add-data.text";
 
 export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
-    "AddData.string.addDataWatermark": {
+    "AddData.string.newWatermark": {
         label: "Watermark:",
         tooltip: AddDataTooltipsTexts.WATERMARK,
         presentationComponent: DisplayTimeComponent,

@@ -333,7 +333,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                 },
                                 event: {
                                     __typename: "AddData",
-                                    addDataWatermark: "2022-08-01T00:00:00+00:00",
+                                    newWatermark: "2022-08-01T00:00:00+00:00",
                                     prevCheckpoint: null,
                                     newData: {
                                         __typename: "DataSlice",
@@ -602,7 +602,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 event: {
                                     __typename: "AddData",
                                     prevCheckpoint: "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
-                                    addDataWatermark: "2022-08-05T21:17:30.613911358+00:00",
+                                    newWatermark: "2022-08-05T21:17:30.613911358+00:00",
                                     newData: {
                                         __typename: "DataSlice",
                                         offsetInterval: {

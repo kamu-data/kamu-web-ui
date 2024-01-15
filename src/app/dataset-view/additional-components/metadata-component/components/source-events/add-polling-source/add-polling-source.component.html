@@ -1,6 +1,7 @@
 <div class="layout" *ngIf="history">
     <div class="mt-4">
         <div class="border border-1 mt-4 px-2 py-4 rounded-3">
+            <pre>{{ pollingSourceForm.value | json }}</pre>
             <form [formGroup]="pollingSourceForm">
                 <mat-stepper #stepper>
                     <mat-step [stepControl]="fetchForm" errorMessage="Field is required">

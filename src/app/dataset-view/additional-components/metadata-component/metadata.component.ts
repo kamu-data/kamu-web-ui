@@ -35,7 +35,6 @@ export class MetadataComponent extends BaseComponent implements OnInit {
 
     public readonly ReadSectionMapping: Record<string, string> = {
         ReadStepCsv: "Csv",
-        ReadStepJsonLines: "Json lines",
         ReadStepGeoJson: "Geo json",
         ReadStepEsriShapefile: "Esri shapefile",
         ReadStepParquet: "Parquet",

@@ -65,8 +65,9 @@ export class EditPollingSourceService extends BaseYamlEventService {
         sectionForm.patchValue({ ...editFormValue.read });
         if ([ReadKind.JSON, ReadKind.ND_JSON].includes(editFormValue.read.kind)) {
             sectionForm.patchValue({
-                jsonKind: editFormValue.read.kind,
+                ...editFormValue.read,
                 kind: ReadKind.All_JSON,
+                jsonKind: editFormValue.read.kind,
             });
         }
         if (editFormValue.read.kind === ReadKind.JSON) {
@@ -74,6 +75,7 @@ export class EditPollingSourceService extends BaseYamlEventService {
         }
         if ([ReadKind.GEO_JSON, ReadKind.ND_GEO_JSON].includes(editFormValue.read.kind)) {
             sectionForm.patchValue({
+                ...editFormValue.read,
                 kind: ReadKind.ALL_GEO,
                 jsonKind: editFormValue.read.kind,
             });

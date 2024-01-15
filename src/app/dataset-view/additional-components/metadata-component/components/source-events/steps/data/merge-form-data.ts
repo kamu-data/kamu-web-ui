@@ -2,10 +2,10 @@ import { ControlType, JsonFormData } from "../../add-polling-source/add-polling-
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
 
 export const MERGE_FORM_DATA: JsonFormData = {
-    append: {
+    Append: {
         controls: [],
     },
-    ledger: {
+    Ledger: {
         controls: [
             {
                 name: "primaryKey",
@@ -22,7 +22,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
             },
         ],
     },
-    snapshot: {
+    Snapshot: {
         controls: [
             {
                 name: "primaryKey",

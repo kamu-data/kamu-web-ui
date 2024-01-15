@@ -10,6 +10,7 @@ import { AddPushSource, SetPollingSource } from "src/app/api/kamu.graphql.interf
 import { AddPushSourceSection, SetPollingSourceSection } from "src/app/shared/shared.types";
 import {
     AddPollingSourceEditFormType,
+    EventTimeSourceKind,
     FetchKind,
     PrepareKind,
 } from "../components/source-events/add-polling-source/add-polling-source-form.types";
@@ -65,10 +66,10 @@ export class ProcessFormService {
 
     private processEventTimeControl(formGroup: FormGroup): void {
         const form = formGroup.value as OrderControlType;
-        if (form.fetch.eventTime && form.fetch.kind === "container") {
+        if (form.fetch.eventTime && form.fetch.kind === FetchKind.CONTAINER) {
             delete form.fetch.eventTime;
         }
-        if (form.fetch.eventTime?.kind !== "fromPath") {
+        if (form.fetch.eventTime?.kind !== EventTimeSourceKind.FROM_PATH) {
             delete form.fetch.eventTime?.pattern;
             delete form.fetch.eventTime?.timestampFormat;
         }

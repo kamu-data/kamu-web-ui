@@ -4,7 +4,7 @@ import { SetPollingSourceTooltipsTexts } from "src/app/common/tooltips/tooltips.
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
 
 export const FETCH_FORM_DATA: JsonFormData = {
-    url: {
+    Url: {
         controls: [
             {
                 name: "url",
@@ -55,7 +55,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
         ],
     },
-    filesGlob: {
+    FilesGlob: {
         controls: [
             {
                 name: "path",
@@ -101,7 +101,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
         ],
     },
-    container: {
+    Container: {
         controls: [
             {
                 name: "image",

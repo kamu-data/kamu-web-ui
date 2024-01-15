@@ -2,7 +2,7 @@ import { ControlType, JsonFormData, ReadKind } from "../../add-polling-source/ad
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
 
 export const READ_FORM_DATA: JsonFormData = {
-    csv: {
+    Csv: {
         controls: [
             {
                 name: "schema",
@@ -107,7 +107,7 @@ export const READ_FORM_DATA: JsonFormData = {
             },
         ],
     },
-    allGeo: {
+    AllGeo: {
         controls: [
             {
                 name: "schema",
@@ -120,7 +120,7 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "jsonKind",
                 label: "Select reader format",
-                value: "geoJson",
+                value: ReadKind.GEO_JSON,
                 type: ControlType.JSON_KIND,
                 tooltip: SourcesTooltipsTexts.READ_JSON,
                 validators: {},
@@ -131,7 +131,7 @@ export const READ_FORM_DATA: JsonFormData = {
             },
         ],
     },
-    esriShapefile: {
+    EsriShapefile: {
         controls: [
             {
                 name: "schema",
@@ -152,7 +152,7 @@ export const READ_FORM_DATA: JsonFormData = {
             },
         ],
     },
-    parquet: {
+    Parquet: {
         controls: [
             {
                 name: "schema",
@@ -164,7 +164,7 @@ export const READ_FORM_DATA: JsonFormData = {
             },
         ],
     },
-    allJson: {
+    AllJson: {
         controls: [
             {
                 name: "schema",
@@ -217,16 +217,16 @@ export const READ_FORM_DATA: JsonFormData = {
             },
         ],
     },
-    ndGeoJson: {
+    NdGeoJson: {
         controls: [],
     },
-    geoJson: {
+    GeoJson: {
         controls: [],
     },
-    ndJson: {
+    NdJson: {
         controls: [],
     },
-    json: {
+    Json: {
         controls: [],
     },
 };

@@ -1897,6 +1897,7 @@ export type ExecuteTransformEventFragment = {
         __typename?: "DataSlice";
         logicalHash: string;
         physicalHash: string;
+        size: number;
         offsetInterval: { __typename?: "OffsetInterval"; start: number; end: number };
     } | null;
     newCheckpoint?: { __typename?: "Checkpoint"; physicalHash: string; size: number } | null;
@@ -2954,6 +2955,7 @@ export const ExecuteTransformEventFragmentDoc = gql`
             }
             logicalHash
             physicalHash
+            size
         }
         newCheckpoint {
             physicalHash

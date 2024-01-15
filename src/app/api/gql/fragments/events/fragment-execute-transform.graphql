@@ -15,6 +15,7 @@ fragment ExecuteTransformEvent on ExecuteTransform {
     }
     logicalHash
     physicalHash
+    size
   }
   newCheckpoint {
     physicalHash

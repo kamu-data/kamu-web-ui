@@ -16,9 +16,4 @@ export class ExecuteTransformTooltipsTexts {
         "Last data record offset in the input dataset that was previously incorporated into the derivative transformation.";
     public static readonly INPUT_NEW_OFFSET =
         "Offset of the last data record that will be incorporated into the derivative transformation.";
-
-    // public static readonly INPUT_SLICE_DATASET_ID = "Name of the dataset.";
-    // public static readonly INPUT_SLICE_ID = "Unique dataset identifier.";
-    // public static readonly INPUT_SLICE_BLOCK_INTERVAL = "Blocks that went into this transaction.";
-    // public static readonly INPUT_SLICE_DATA_INTERVAL = "Data that went into this transaction.";
 }

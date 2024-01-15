@@ -1,6 +1,5 @@
 <ng-container>
     <div class="d-flex flex-column gap-4 mt-4">
-        <pre>{{ eventSections | json }}</pre>
         <div class="position-relative border border-1 p-2 rounded-3" *ngFor="let section of eventSections">
             <span class="position-absolute text-muted group-box-label text-uppercase">{{ section.title }}</span>
             <div class="mx-4">

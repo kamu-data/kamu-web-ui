@@ -10,4 +10,5 @@ export const eventsWithYamlView: SupportedEvents[] = [
     SupportedEvents.Seed,
     SupportedEvents.AddPushSource,
     SupportedEvents.ExecuteTransform,
+    SupportedEvents.AddData,
 ];

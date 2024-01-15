@@ -8,6 +8,8 @@ export enum AddDataSection {
     NEW_DATA = "newData",
     NEW_CHECKPOINT = "newCheckpoint",
     NEW_WATERMARK = "newWatermark",
+    PREV_OFFSET = "prevOffset",
+    NEW_SOURCE_STATE = "newSourceState",
 }
 
 export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
@@ -16,12 +18,15 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
         newData: "New data",
         newCheckpoint: "New checkpoint",
         newWatermark: "New watermark",
+        prevOffset: "Previous offset",
+        newSourceState: "New source state",
     };
     public buildEventSections(event: AddData): EventSection[] {
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {
                 switch (section) {
+                    case AddDataSection.NEW_SOURCE_STATE:
                     case AddDataSection.NEW_CHECKPOINT: {
                         result.push({
                             title: this.sectionTitleMapper[section],
@@ -53,6 +58,23 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
                         break;
                     }
 
+                    case AddDataSection.PREV_OFFSET: {
+                        if (event.__typename) {
+                            result.push({
+                                title: this.sectionTitleMapper[section],
+                                rows: [
+                                    this.buildSupportedRow(
+                                        event.__typename,
+                                        ADD_DATA_SOURCE_DESCRIPTORS,
+                                        "number",
+                                        section,
+                                        data,
+                                    ),
+                                ],
+                            });
+                        }
+                        break;
+                    }
                     case AddDataSection.PREV_CHECKPOINT:
                     case AddDataSection.NEW_WATERMARK: {
                         if (event.__typename) {

@@ -1,5 +1,5 @@
 import { DataSlice, ExecuteTransform, ExecuteTransformInput } from "src/app/api/kamu.graphql.interface";
-import { EXECUTE_QUERY_SOURCE_DESCRIPTORS } from "../../components/execute-transform-event/execute-transform-event.source";
+import { EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS } from "../../components/execute-transform-event/execute-transform-event.source";
 import { EventRow, EventSection } from "../dynamic-events.model";
 import { EventSectionBuilder } from "./event-section.builder";
 
@@ -29,7 +29,7 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
                             title: this.sectionTitleMapper[section],
                             rows: this.buildEventRows(
                                 event,
-                                EXECUTE_QUERY_SOURCE_DESCRIPTORS,
+                                EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS,
                                 section as keyof ExecuteTransform,
                                 false,
                             ),
@@ -43,7 +43,7 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
                                 rows.push(
                                     this.buildSupportedRow(
                                         event.__typename,
-                                        EXECUTE_QUERY_SOURCE_DESCRIPTORS,
+                                        EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS,
                                         "DataSlice",
                                         key,
                                         this.valueTransformMapper(key as keyof DataSlice, value),
@@ -66,7 +66,7 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
                                 rows: [
                                     this.buildSupportedRow(
                                         event.__typename,
-                                        EXECUTE_QUERY_SOURCE_DESCRIPTORS,
+                                        EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS,
                                         "string",
                                         section,
                                         data,
@@ -82,17 +82,16 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
                         (data as ExecuteTransformInput[]).forEach((item, index) => {
                             let rows: EventRow[] = [];
                             Object.entries({
-                                id: item.datasetId,
                                 ...item,
                             }).forEach(([key, value]) => {
                                 if (event.__typename && item.__typename && key !== "__typename") {
                                     rows.push(
                                         this.buildSupportedRow(
                                             event.__typename,
-                                            EXECUTE_QUERY_SOURCE_DESCRIPTORS,
+                                            EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS,
                                             item.__typename,
                                             key,
-                                            this.valueTransformMapper(key as keyof ExecuteTransformInput, value, item),
+                                            value,
                                         ),
                                     );
                                 }
@@ -118,19 +117,8 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
         return result;
     }
 
-    private valueTransformMapper(
-        key: keyof ExecuteTransformInput | keyof DataSlice,
-        value: unknown,
-        inputItem?: ExecuteTransformInput,
-    ): unknown {
-        return value;
-        /*switch (key) {
-            case "blockInterval":
-            case "dataInterval":
-                return {
-                    block: value,
-                    datasetId: inputItem?.datasetId ?? null,
-                };
+    private valueTransformMapper(key: keyof ExecuteTransformInput | keyof DataSlice, value: unknown): unknown {
+        switch (key) {
             case "offsetInterval":
                 return {
                     block: value,
@@ -138,6 +126,6 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
                 };
             default:
                 return value;
-        }*/
+        }
     }
 }

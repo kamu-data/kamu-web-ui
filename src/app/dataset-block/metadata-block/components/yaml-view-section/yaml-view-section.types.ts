@@ -9,4 +9,5 @@ export const eventsWithYamlView: SupportedEvents[] = [
     SupportedEvents.SetVocab,
     SupportedEvents.Seed,
     SupportedEvents.AddPushSource,
+    SupportedEvents.ExecuteTransform,
 ];

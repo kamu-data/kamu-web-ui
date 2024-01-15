@@ -4,11 +4,9 @@ import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.
 import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
 import { SizePropertyComponent } from "../common/size-property/size-property.component";
 import { HashPropertyComponent } from "../common/hash-property/hash-property.component";
-import { BlockIntervalPropertyComponent } from "../common/block-interval-property/block-interval-property.component";
-import { DatasetNameByIdPropertyComponent } from "../common/dataset-name-by-id-property/dataset-name-by-id-property.component";
 import { ExecuteTransformTooltipsTexts } from "src/app/common/tooltips/execute-transform.text";
 
-export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
+export const EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "ExecuteTransform.DataSlice.logicalHash": {
         label: "Logical hash:",
         tooltip: ExecuteTransformTooltipsTexts.DATA_SLICE_LOGICAL_HASH,
@@ -24,28 +22,52 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "execute-transform-data-slice-physical-hash",
     },
 
-    "ExecuteTransform.DataSlice.interval": {
-        label: "Interval:",
+    "ExecuteTransform.DataSlice.offsetInterval": {
+        label: "Offset interval:",
         tooltip: ExecuteTransformTooltipsTexts.DATA_SLICE_INTERVAL,
         presentationComponent: OffsetIntervalPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "execute-transform-data-slice-interval",
+        dataTestId: "execute-transform-data-slice-offset-interval",
     },
 
-    "ExecuteTransform.string.inputCheckpoint": {
-        label: "Checkpoint:",
-        tooltip: ExecuteTransformTooltipsTexts.INPUT_CHECKPOINT,
-        presentationComponent: SimplePropertyComponent,
+    "ExecuteTransform.DataSlice.size": {
+        label: "Size:",
+        tooltip: ExecuteTransformTooltipsTexts.CHECKPOINT_SIZE,
+        presentationComponent: SizePropertyComponent,
         separateRowForValue: false,
-        dataTestId: "execute-transform-inputCheckpoint",
+        dataTestId: "execute-transform-data-slice-size",
     },
 
-    "ExecuteTransform.string.watermark": {
-        label: "Watermark:",
+    // "ExecuteTransform.string.inputCheckpoint": {
+    //     label: "Checkpoint:",
+    //     tooltip: ExecuteTransformTooltipsTexts.INPUT_CHECKPOINT,
+    //     presentationComponent: SimplePropertyComponent,
+    //     separateRowForValue: false,
+    //     dataTestId: "execute-transform-inputCheckpoint",
+    // },
+
+    "ExecuteTransform.string.newWatermark": {
+        label: "New watermark:",
         tooltip: ExecuteTransformTooltipsTexts.WATERMARK,
         presentationComponent: DisplayTimeComponent,
         separateRowForValue: false,
         dataTestId: "execute-transform-watermark",
+    },
+
+    "ExecuteTransform.string.prevCheckpoint": {
+        label: "Previous checkpoint:",
+        tooltip: ExecuteTransformTooltipsTexts.PREVIOUS_CHECKPOINT,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "execute-transform-prev-checkpoint",
+    },
+
+    "ExecuteTransform.number.prevOffset": {
+        label: "Previous offset:",
+        tooltip: ExecuteTransformTooltipsTexts.PREVIOUS_CHECKPOINT,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "execute-transform-prev-offset",
     },
 
     "ExecuteTransform.Checkpoint.physicalHash": {
@@ -64,35 +86,51 @@ export const EXECUTE_QUERY_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "execute-transform-checkpoint-size",
     },
 
-    "ExecuteTransform.InputSlice.datasetId": {
-        label: "Name:",
-        tooltip: ExecuteTransformTooltipsTexts.INPUT_SLICE_DATASET_ID,
-        presentationComponent: DatasetNameByIdPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "execute-transform-input-slice-name",
-    },
-
-    "ExecuteTransform.InputSlice.id": {
-        label: "Id:",
-        tooltip: ExecuteTransformTooltipsTexts.INPUT_SLICE_ID,
+    "ExecuteTransform.ExecuteTransformInput.datasetId": {
+        label: "Datset ID:",
+        tooltip: ExecuteTransformTooltipsTexts.INPUT_DATASET_ID,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
-        dataTestId: "execute-transform-input-slice-id",
+        dataTestId: "execute-transform-input-dataset-id",
     },
 
-    "ExecuteTransform.InputSlice.blockInterval": {
-        label: "Block interval:",
-        tooltip: ExecuteTransformTooltipsTexts.INPUT_SLICE_BLOCK_INTERVAL,
-        presentationComponent: BlockIntervalPropertyComponent,
+    "ExecuteTransform.ExecuteTransformInput.prevBlockHash": {
+        label: "Previous block hash:",
+        tooltip: ExecuteTransformTooltipsTexts.INPUT_PREVIOUS_BLOCK_HASH,
+        presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "execute-transform-input-slice-block-interval",
+        dataTestId: "execute-transform-input-slice-prev-block-hash",
     },
 
-    "ExecuteTransform.InputSlice.dataInterval": {
-        label: "Data interval:",
-        tooltip: ExecuteTransformTooltipsTexts.INPUT_SLICE_DATA_INTERVAL,
-        presentationComponent: OffsetIntervalPropertyComponent,
+    "ExecuteTransform.ExecuteTransformInput.newBlockHash": {
+        label: "New block hash:",
+        tooltip: ExecuteTransformTooltipsTexts.INPUT_PREVIOUS_BLOCK_HASH,
+        presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "execute-transform-input-slice-data-interval",
+        dataTestId: "execute-transform-input-slice-new-block-hash",
     },
+
+    "ExecuteTransform.ExecuteTransformInput.prevOffset": {
+        label: "Previous offset:",
+        tooltip: ExecuteTransformTooltipsTexts.INPUT_PREV_OFFSET,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "execute-transform-input-slice-prev-offset",
+    },
+
+    "ExecuteTransform.ExecuteTransformInput.newOffset": {
+        label: "New offset:",
+        tooltip: ExecuteTransformTooltipsTexts.INPUT_NEW_OFFSET,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "execute-transform-input-slice-new-offset",
+    },
+
+    // "ExecuteTransform.InputSlice.dataInterval": {
+    //     label: "Data interval:",
+    //     tooltip: ExecuteTransformTooltipsTexts.INPUT_SLICE_DATA_INTERVAL,
+    //     presentationComponent: OffsetIntervalPropertyComponent,
+    //     separateRowForValue: false,
+    //     dataTestId: "execute-transform-input-slice-data-interval",
+    // },
 };

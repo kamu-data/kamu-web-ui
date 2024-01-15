@@ -30,13 +30,13 @@
     </div>
 
     <div class="row px-4" *ngIf="blockHash$ | async as blockHash">
-        <div class="col-md-7">
+        <div class="col-md-6">
             <div class="container-content mb-4">
                 <app-block-header [datasetInfo]="datasetInfo" [blockHash]="blockHash"></app-block-header>
                 <app-event-details [datasetInfo]="datasetInfo"></app-event-details>
             </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-6">
             <div class="container-content" *ngIf="datasetHistoryUpdate$ | async as datasetHistory">
                 <app-block-navigation
                     [datasetHistory]="datasetHistory"

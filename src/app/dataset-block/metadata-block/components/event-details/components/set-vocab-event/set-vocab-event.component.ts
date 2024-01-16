@@ -9,4 +9,10 @@ import { BaseComponent } from "src/app/common/base.component";
 })
 export class SetVocabEventComponent extends BaseComponent {
     @Input() public event: SetVocab;
+    public viewDataMapper: Record<string, { label: string; tooltip: string }> = {
+        offsetColumn: { label: "Offset column:", tooltip: "Name of the offset column." },
+        operationTypeColumn: { label: "Operation type column:", tooltip: "Name of the operation type column." },
+        systemTimeColumn: { label: "System time column:", tooltip: "Name of the system time column." },
+        eventTimeColumn: { label: "Event time column:", tooltip: "ame of the event time column." },
+    };
 }

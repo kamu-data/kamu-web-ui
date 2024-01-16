@@ -38,14 +38,6 @@ export const EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = 
         dataTestId: "execute-transform-data-slice-size",
     },
 
-    // "ExecuteTransform.string.inputCheckpoint": {
-    //     label: "Checkpoint:",
-    //     tooltip: ExecuteTransformTooltipsTexts.INPUT_CHECKPOINT,
-    //     presentationComponent: SimplePropertyComponent,
-    //     separateRowForValue: false,
-    //     dataTestId: "execute-transform-inputCheckpoint",
-    // },
-
     "ExecuteTransform.string.newWatermark": {
         label: "New watermark:",
         tooltip: ExecuteTransformTooltipsTexts.WATERMARK,
@@ -125,12 +117,4 @@ export const EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = 
         separateRowForValue: false,
         dataTestId: "execute-transform-input-slice-new-offset",
     },
-
-    // "ExecuteTransform.InputSlice.dataInterval": {
-    //     label: "Data interval:",
-    //     tooltip: ExecuteTransformTooltipsTexts.INPUT_SLICE_DATA_INTERVAL,
-    //     presentationComponent: OffsetIntervalPropertyComponent,
-    //     separateRowForValue: false,
-    //     dataTestId: "execute-transform-input-slice-data-interval",
-    // },
 };

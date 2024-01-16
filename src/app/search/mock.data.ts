@@ -44,6 +44,7 @@ import {
 import { GraphQLError } from "graphql";
 import { TEST_AVATAR_URL } from "../api/mock/auth.mock";
 import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
+import { OdfDefaultValues } from "../common/app-odf-default.values";
 
 export const mockPageBasedInfo: PageBasedInfo = {
     currentPage: 1,
@@ -1132,12 +1133,12 @@ export const mockParseAddPushSourceEventFromYamlToObject: AddPushSourceEditFormT
     read: {
         kind: ReadKind.CSV,
         schema: ["id INT"],
-        separator: ",",
-        encoding: "utf8",
-        quote: '"',
-        escape: "\\",
-        dateFormat: "rfc3339",
-        timestampFormat: "rfc3339",
+        separator: OdfDefaultValues.CSV_SEPARATOR,
+        encoding: OdfDefaultValues.CSV_ENCODING,
+        quote: OdfDefaultValues.CSV_QUOTE,
+        escape: OdfDefaultValues.CSV_ESCAPE,
+        dateFormat: OdfDefaultValues.CSV_DATE_FORMAT,
+        timestampFormat: OdfDefaultValues.CSV_TIMESTAMP_FORMAT,
     },
     merge: {
         kind: MergeKind.APPEND,
@@ -1420,9 +1421,9 @@ export const mockSetPollingSourceEditFormWithReadNdJsonFormat: AddPollingSourceE
     read: {
         kind: ReadKind.All_JSON,
         jsonKind: ReadKind.ND_JSON,
-        encoding: "utf8",
-        dateFormat: "rfc3339",
-        timestampFormat: "rfc3339",
+        encoding: OdfDefaultValues.CSV_ENCODING,
+        dateFormat: OdfDefaultValues.CSV_DATE_FORMAT,
+        timestampFormat: OdfDefaultValues.CSV_TIMESTAMP_FORMAT,
         subPath: "/test",
     },
     merge: {

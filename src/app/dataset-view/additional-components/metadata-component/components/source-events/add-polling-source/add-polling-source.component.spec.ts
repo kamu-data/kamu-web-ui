@@ -32,6 +32,7 @@ import { DatasetNavigationParams } from "src/app/interface/navigation.interface"
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { EditorModule } from "src/app/shared/editor/editor.module";
 import { EventTimeSourceKind, FetchKind, MergeKind, ReadKind } from "./add-polling-source-form.types";
+import { OdfDefaultValues } from "src/app/common/app-odf-default.values";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
@@ -111,15 +112,15 @@ describe("AddPollingSourceComponent", () => {
                         type: new FormControl("BIGINT"),
                     }),
                 ]),
-                header: new FormControl(false),
-                encoding: new FormControl("utf8"),
-                separator: new FormControl(","),
-                quote: new FormControl('"'),
-                escape: new FormControl("\\"),
-                nullValue: new FormControl(""),
-                dateFormat: new FormControl("rfc3339"),
-                timestampFormat: new FormControl("rfc3339"),
-                inferSchema: new FormControl(false),
+                header: new FormControl(OdfDefaultValues.CSV_HEADER),
+                encoding: new FormControl(OdfDefaultValues.CSV_ENCODING),
+                separator: new FormControl(OdfDefaultValues.CSV_SEPARATOR),
+                quote: new FormControl(OdfDefaultValues.CSV_QUOTE),
+                escape: new FormControl(OdfDefaultValues.CSV_ESCAPE),
+                nullValue: new FormControl(OdfDefaultValues.CSV_NULL_VALUE),
+                dateFormat: new FormControl(OdfDefaultValues.CSV_DATE_FORMAT),
+                timestampFormat: new FormControl(OdfDefaultValues.CSV_TIMESTAMP_FORMAT),
+                inferSchema: new FormControl(OdfDefaultValues.CSV_INFER_SCHEMA),
             }),
             merge: new FormGroup({
                 kind: new FormControl(MergeKind.APPEND),

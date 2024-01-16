@@ -19,6 +19,7 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
         newCheckpoint: "New checkpoint",
         newWatermark: "New watermark",
     };
+
     public buildEventSections(event: ExecuteTransform): EventSection[] {
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {

@@ -1,3 +1,4 @@
+import { OdfDefaultValues } from "src/app/common/app-odf-default.values";
 import { ControlType, JsonFormData, ReadKind } from "../../add-polling-source/add-polling-source-form.types";
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
 
@@ -15,7 +16,7 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "header",
                 label: "Header",
-                value: false,
+                value: OdfDefaultValues.CSV_HEADER,
                 type: ControlType.CHECKBOX,
                 tooltip: SourcesTooltipsTexts.HEADER,
                 validators: {},
@@ -24,7 +25,7 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "encoding",
                 label: "Encoding",
-                value: "utf8",
+                value: OdfDefaultValues.CSV_ENCODING,
                 type: ControlType.TEXT,
                 tooltip: SourcesTooltipsTexts.ENCODING,
                 placeholder: "Enter encoding type...",
@@ -33,7 +34,7 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "separator",
                 label: "Separator",
-                value: ",",
+                value: OdfDefaultValues.CSV_SEPARATOR,
                 type: ControlType.TYPEAHEAD,
                 placeholder: "--Select character--",
                 tooltip: SourcesTooltipsTexts.SEPARATOR,
@@ -46,7 +47,7 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "quote",
                 label: "Quote character",
-                value: '"',
+                value: OdfDefaultValues.CSV_QUOTE,
                 type: ControlType.TYPEAHEAD,
                 placeholder: "--Select character--",
                 tooltip: SourcesTooltipsTexts.QUOTE,
@@ -58,7 +59,7 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "escape",
                 label: "Escape character",
-                value: "\\",
+                value: OdfDefaultValues.CSV_ESCAPE,
                 type: ControlType.TYPEAHEAD,
                 placeholder: "Enter escape character...",
                 tooltip: SourcesTooltipsTexts.ESCAPE,
@@ -70,7 +71,7 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "nullValue",
                 label: "Null value",
-                value: "",
+                value: OdfDefaultValues.CSV_NULL_VALUE,
                 type: ControlType.TEXT,
                 tooltip: SourcesTooltipsTexts.NULL_VALUE,
                 placeholder: "Enter null value...",
@@ -79,7 +80,7 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "dateFormat",
                 label: "Date format",
-                value: "rfc3339",
+                value: OdfDefaultValues.CSV_DATE_FORMAT,
                 type: ControlType.TYPEAHEAD,
                 tooltip: SourcesTooltipsTexts.DATE_FORMAT,
                 placeholder: "--Select format--",
@@ -89,7 +90,7 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "timestampFormat",
                 label: "Timestamp format",
-                value: "rfc3339",
+                value: OdfDefaultValues.CSV_TIMESTAMP_FORMAT,
                 type: ControlType.TYPEAHEAD,
                 placeholder: "--Select format--",
                 tooltip: SourcesTooltipsTexts.TIMESTAMP_FORMAT,
@@ -99,7 +100,7 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "inferSchema",
                 label: "Infer schema",
-                value: false,
+                value: OdfDefaultValues.CSV_INFER_SCHEMA,
                 type: ControlType.CHECKBOX,
                 tooltip: SourcesTooltipsTexts.INFER_SCHEMA,
                 validators: {},
@@ -189,7 +190,7 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "encoding",
                 label: "Encoding",
-                value: "utf8",
+                value: OdfDefaultValues.CSV_ENCODING,
                 type: ControlType.TEXT,
                 tooltip: SourcesTooltipsTexts.ENCODING,
                 placeholder: "Enter encoding...",

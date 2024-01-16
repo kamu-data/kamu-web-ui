@@ -70,7 +70,7 @@ export class AddPushSourceComponent extends BaseSourceEventComponent {
     private getAllSourceNames(historyUpdate: DatasetHistoryUpdate): string[] {
         return historyUpdate.history
             .filter((item: MetadataBlockFragment) => item.event.__typename === SupportedEvents.AddPushSource)
-            .map((data: MetadataBlockFragment) => (data.event as AddPushSource).sourceName ?? "");
+            .map((data: MetadataBlockFragment) => (data.event as AddPushSource).sourceName);
     }
 
     private unsupportedSourceName(): boolean {

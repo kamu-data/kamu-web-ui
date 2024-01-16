@@ -35,7 +35,7 @@ describe("EditPollingSourceService", () => {
 
     it("should check parse event from yaml to json", () => {
         const mockEventYaml =
-            "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-06-02T08:44:54.984731027Z\n  prevBlockHash: zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u\n  sequenceNumber: 1\n  event:\n    kind: setPollingSource\n    fetch:\n      kind: filesGlob\n      path: path\n      eventTime:\n        kind: fromMetadata\n    read:\n      kind: csv\n      separator: ','\n      encoding: UTF-8\n      quote: '\"'\n      escape: \\\n      enforceSchema: true\n      nanValue: NaN\n      positiveInf: Inf\n      negativeInf: -Inf\n      dateFormat: yyyy-MM-dd\n      timestampFormat: yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]\n    merge:\n      kind: append\n";
+            "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-06-02T08:44:54.984731027Z\n  prevBlockHash: zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u\n  sequenceNumber: 1\n  event:\n    kind: SetPollingSource\n    fetch:\n      kind: FilesGlob\n      path: path\n      eventTime:\n        kind: FromMetadata\n    read:\n      kind: Csv\n      separator: ','\n      encoding: UTF-8\n      quote: '\"'\n      escape: \\\n      dateFormat: yyyy-MM-dd\n      timestampFormat: yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]\n    merge:\n      kind: Append\n";
         const result: AddPollingSourceEditFormType = mockParseSetPollingSourceEventFromYamlToObject;
         expect(service.parseEventFromYaml(mockEventYaml)).toEqual(result);
     });
@@ -55,7 +55,7 @@ describe("EditPollingSourceService", () => {
 
     it("should be check patch form with fetch url step and without headers", () => {
         const sectionFetchForm = new FormGroup({
-            kind: new FormControl("url"),
+            kind: new FormControl(FetchKind.URL),
             url: new FormControl("http://test.com"),
             eventTime: new FormGroup({}),
             headers: new FormArray([]),
@@ -71,10 +71,6 @@ describe("EditPollingSourceService", () => {
                 encoding: "UTF-8",
                 quote: '"',
                 escape: "\\",
-                enforceSchema: true,
-                nanValue: "NaN",
-                positiveInf: "Inf",
-                negativeInf: "-Inf",
                 dateFormat: "yyyy-MM-dd",
                 timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
             },
@@ -83,7 +79,7 @@ describe("EditPollingSourceService", () => {
             },
         };
         const result = {
-            kind: "url",
+            kind: FetchKind.URL,
             url: "http://test.com",
             eventTime: { pattern: null, timestampFormat: null },
             headers: [],
@@ -97,7 +93,7 @@ describe("EditPollingSourceService", () => {
 
     it("should be check patch form with fetch url and with headers", () => {
         const sectionFetchForm = new FormGroup({
-            kind: new FormControl("url"),
+            kind: new FormControl(FetchKind.URL),
             url: new FormControl(""),
             eventTime: new FormGroup({}),
             headers: new FormArray([]),
@@ -114,10 +110,6 @@ describe("EditPollingSourceService", () => {
                 encoding: "UTF-8",
                 quote: '"',
                 escape: "\\",
-                enforceSchema: true,
-                nanValue: "NaN",
-                positiveInf: "Inf",
-                negativeInf: "-Inf",
                 dateFormat: "yyyy-MM-dd",
                 timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
             },
@@ -127,7 +119,7 @@ describe("EditPollingSourceService", () => {
         };
         const groupName = SetPollingSourceSection.FETCH;
         const result = {
-            kind: "url",
+            kind: FetchKind.URL,
             url: "http://test.com",
             eventTime: { pattern: null, timestampFormat: null },
             headers: [{ name: "test_name", value: "test_value" }],
@@ -140,7 +132,7 @@ describe("EditPollingSourceService", () => {
 
     it("should be check patch form with fetch CONTAINER step", () => {
         const sectionFetchForm = new FormGroup({
-            kind: new FormControl("container"),
+            kind: new FormControl(FetchKind.CONTAINER),
             image: new FormControl(""),
             eventTime: new FormGroup({}),
             env: new FormArray([]),
@@ -161,10 +153,6 @@ describe("EditPollingSourceService", () => {
                 encoding: "UTF-8",
                 quote: '"',
                 escape: "\\",
-                enforceSchema: true,
-                nanValue: "NaN",
-                positiveInf: "Inf",
-                negativeInf: "-Inf",
                 dateFormat: "yyyy-MM-dd",
                 timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
             },
@@ -173,7 +161,7 @@ describe("EditPollingSourceService", () => {
             },
         };
         const result = {
-            kind: "container",
+            kind: FetchKind.CONTAINER,
             image: "test_image",
             eventTime: { pattern: null, timestampFormat: null },
             env: [],
@@ -189,7 +177,7 @@ describe("EditPollingSourceService", () => {
 
     it("should be check patch form with read CSV step with schema", () => {
         const sectionReadForm = new FormGroup({
-            kind: new FormControl("csv"),
+            kind: new FormControl(ReadKind.CSV),
             schema: new FormArray([]),
         });
         const editFormValue = {
@@ -215,7 +203,7 @@ describe("EditPollingSourceService", () => {
 
     it("should be check patch form with merge CSV step with schema", () => {
         const sectionMergeForm = new FormGroup({
-            kind: new FormControl("snapshot"),
+            kind: new FormControl(MergeKind.SNAPSHOT),
             primaryKey: new FormArray([]),
             compareColumns: new FormArray([]),
         });
@@ -239,7 +227,7 @@ describe("EditPollingSourceService", () => {
         };
         const groupName = SetPollingSourceSection.MERGE;
         const result = {
-            kind: "snapshot",
+            kind: MergeKind.SNAPSHOT,
             primaryKey: ["id", "test"],
             compareColumns: ["id"],
         };

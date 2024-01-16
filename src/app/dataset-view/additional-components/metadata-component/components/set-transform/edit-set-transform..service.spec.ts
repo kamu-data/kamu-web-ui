@@ -23,7 +23,7 @@ describe("EditSetTransformService", () => {
 
     it("should check #parseInputDatasets() method", () => {
         const inputDatasets = new Set<string>([
-            '{"id":"did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX","name":"account.tokens.portfolio.usd"}',
+            '{"datasetRef":"did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX","alias":"account.tokens.portfolio.usd"}',
         ]);
         const result = [
             {

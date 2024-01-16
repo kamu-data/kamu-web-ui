@@ -152,6 +152,7 @@ export const mockExecuteTransform: ExecuteTransformEventFragment = {
         },
         logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
         physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
+        size: 2323,
     },
     prevCheckpoint: null,
     newWatermark: "2022-08-01T00:00:00+00:00",

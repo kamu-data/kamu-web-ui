@@ -70,9 +70,6 @@ it("should check description for SetPollingSource block", () => {
                 encoding: null,
                 quote: null,
                 escape: null,
-                header: true,
-                inferSchema: false,
-                nullValue: null,
                 dateFormat: null,
                 timestampFormat: null,
             },
@@ -110,9 +107,6 @@ it("should check description for AddPushSource block", () => {
                 encoding: null,
                 quote: null,
                 escape: null,
-                header: true,
-                inferSchema: false,
-                nullValue: null,
                 dateFormat: null,
                 timestampFormat: null,
             },
@@ -281,10 +275,11 @@ it("should check description for ExecuteTransform block", () => {
                 offsetInterval: {
                     __typename: "OffsetInterval",
                     start: 0,
-                    end: 21,
+                    end: 596125,
                 },
                 logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
                 physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
+                size: 2323,
             },
             prevCheckpoint: null,
             newWatermark: "2022-08-01T00:00:00+00:00",
@@ -294,8 +289,8 @@ it("should check description for ExecuteTransform block", () => {
                     datasetId: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
                     prevBlockHash: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
                     newBlockHash: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
-                    prevOffset: 0,
-                    newOffset: 21,
+                    prevOffset: null,
+                    newOffset: 596125,
                 },
             ],
             newCheckpoint: {
@@ -306,7 +301,7 @@ it("should check description for ExecuteTransform block", () => {
         },
     };
 
-    expect(DataHelpers.descriptionForMetadataBlock(addDataBlock)).toEqual("Transformation produced 22 new records");
+    expect(DataHelpers.descriptionForMetadataBlock(addDataBlock)).toEqual("Transformation produced 596126 new records");
 });
 
 it("should check description for ExecuteTransform block (no data)", () => {

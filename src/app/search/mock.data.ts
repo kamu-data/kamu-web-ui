@@ -33,6 +33,7 @@ import {
     AddPollingSourceEditFormType,
     PrepareKind,
     PreprocessStepValue,
+    EventTimeSourceKind,
 } from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { DatasetHistoryUpdate } from "../dataset-view/dataset.subscriptions.interface";
 import {
@@ -247,13 +248,13 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                             "case_type STRING",
                         ],
                         separator: null,
+                        dateFormat: null,
                         encoding: null,
-                        quote: null,
                         escape: null,
                         header: true,
                         inferSchema: null,
                         nullValue: null,
-                        dateFormat: null,
+                        quote: null,
                         timestampFormat: null,
                     },
                     merge: {
@@ -346,6 +347,13 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                         physicalHash: "zW1bSq3dDJvAfuHJbVzH3TLKuWWCvXBdNqMrNNeRXuYj8WJ",
                                         size: 6585116,
                                     },
+                                    newSourceState: {
+                                        __typename: "SourceState",
+                                        kind: "odf/etag",
+                                        value: '"6aea77ea7eac41230154c2fea07d2711-6"',
+                                        sourceName: "default",
+                                    },
+                                    prevOffset: null,
                                     newCheckpoint: null,
                                 },
                             },
@@ -601,8 +609,9 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 },
                                 event: {
                                     __typename: "AddData",
-                                    prevCheckpoint: "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
-                                    newWatermark: "2022-08-05T21:17:30.613911358+00:00",
+                                    newWatermark: "2022-08-01T00:00:00+00:00",
+                                    prevCheckpoint: null,
+                                    prevOffset: null,
                                     newData: {
                                         __typename: "DataSlice",
                                         offsetInterval: {
@@ -612,14 +621,17 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                         },
                                         logicalHash: "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
                                         physicalHash: "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
-                                        size: 300,
+                                        size: 5993876,
                                     },
                                     newCheckpoint: {
-                                        physicalHash: "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
-                                        size: 11213,
+                                        __typename: "Checkpoint",
+                                        physicalHash: "zW1diFMSn97sDG4WMMKZ7pvM7vVenC5ytAesQK7V3qqALPv",
+                                        size: 2560,
                                     },
+                                    newSourceState: null,
                                 },
                             },
+
                             {
                                 __typename: "MetadataBlockExtended",
                                 blockHash: "zW1ioX6fdsM4so8MPw7wqF1uKsDC7n6FEkhahZKXNcgF5E1",
@@ -1092,12 +1104,12 @@ export const mockDataset403OperationError: GraphQLError = new GraphQLError("Data
 });
 
 export const mockParseSetPollingSourceEventFromYamlToObject: AddPollingSourceEditFormType = {
-    kind: "setPollingSource",
+    kind: "SetPollingSource",
     fetch: {
         kind: FetchKind.FILES_GLOB,
         path: "path",
         eventTime: {
-            kind: "fromMetadata",
+            kind: EventTimeSourceKind.FROM_METADATA,
         },
     },
     read: {
@@ -1106,10 +1118,6 @@ export const mockParseSetPollingSourceEventFromYamlToObject: AddPollingSourceEdi
         encoding: "UTF-8",
         quote: '"',
         escape: "\\",
-        enforceSchema: true,
-        nanValue: "NaN",
-        positiveInf: "Inf",
-        negativeInf: "-Inf",
         dateFormat: "yyyy-MM-dd",
         timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
     },
@@ -1119,7 +1127,7 @@ export const mockParseSetPollingSourceEventFromYamlToObject: AddPollingSourceEdi
 };
 
 export const mockParseAddPushSourceEventFromYamlToObject: AddPushSourceEditFormType = {
-    kind: "addPushSource",
+    kind: "AddPushSource",
     sourceName: "mockSource",
     read: {
         kind: ReadKind.CSV,
@@ -1128,10 +1136,6 @@ export const mockParseAddPushSourceEventFromYamlToObject: AddPushSourceEditFormT
         encoding: "utf8",
         quote: '"',
         escape: "\\",
-        enforceSchema: true,
-        nanValue: "NaN",
-        positiveInf: "Inf",
-        negativeInf: "-Inf",
         dateFormat: "rfc3339",
         timestampFormat: "rfc3339",
     },
@@ -1205,9 +1209,6 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
                     encoding: "UTF-8",
                     quote: '"',
                     escape: "\\",
-                    header: null,
-                    inferSchema: null,
-                    nullValue: null,
                     dateFormat: "yyyy-MM-dd",
                     timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
                 },
@@ -1302,9 +1303,6 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
                     encoding: "UTF-8",
                     quote: '"',
                     escape: "\\",
-                    header: null,
-                    inferSchema: null,
-                    nullValue: null,
                     dateFormat: "yyyy-MM-dd",
                     timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
                 },
@@ -1409,7 +1407,7 @@ export const mockSetPollingSourceEditFormWithReadNdJsonFormat: AddPollingSourceE
     fetch: {
         kind: FetchKind.URL,
         eventTime: {
-            kind: "fromMetadata",
+            kind: EventTimeSourceKind.FROM_METADATA,
         },
         url: "https://opendata.vancouver.ca/explore/dataset/block-outlines/download/?format=geojson&timezone=America/Los_Angeles&lang=en",
     },

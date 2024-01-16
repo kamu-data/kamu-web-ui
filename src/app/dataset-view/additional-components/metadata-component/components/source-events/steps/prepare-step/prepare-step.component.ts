@@ -22,6 +22,7 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
     @Input() public sectionName: SetPollingSourceSection;
     public parentForm: FormGroup;
     public setPollingSourceEvent: MaybeNull<AddPollingSourceEditFormType> = null;
+    public readonly prepareKind: typeof PrepareKind = PrepareKind;
 
     constructor(
         private rootFormGroupDirective: FormGroupDirective,

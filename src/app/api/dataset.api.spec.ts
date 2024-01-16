@@ -380,16 +380,16 @@ describe("DatasetApi", () => {
 
     [DatasetKind.Root, DatasetKind.Derivative].forEach((datasetKind: DatasetKind) => {
         it(`should create empty ${datasetKind} dataset`, fakeAsync(() => {
-            const mockDatasetName = "my-test";
+            const mockDatasetAlias = "my-test";
             const subscription$ = service
-                .createEmptyDataset(datasetKind, mockDatasetName)
+                .createEmptyDataset(datasetKind, mockDatasetAlias)
                 .pipe(first())
                 .subscribe((res: CreateEmptyDatasetMutation) => {
                     expect(res.datasets.createEmpty.__typename).toEqual("CreateDatasetResultSuccess");
                 });
 
             const op = controller.expectOne(CreateEmptyDatasetDocument);
-            expect(op.operation.variables.datasetName).toEqual(mockDatasetName);
+            expect(op.operation.variables.datasetAlias).toEqual(mockDatasetAlias);
             expect(op.operation.variables.datasetKind).toEqual(datasetKind);
             op.flush({
                 data: mockCreateEmptyDatasetResponse,

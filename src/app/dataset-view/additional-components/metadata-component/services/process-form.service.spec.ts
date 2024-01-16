@@ -2,7 +2,13 @@ import { TestBed } from "@angular/core/testing";
 import { ProcessFormService } from "./process-form.service";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { SchemaControlType } from "../components/source-events/add-polling-source/process-form.service.types";
-import { PrepareKind } from "../components/source-events/add-polling-source/add-polling-source-form.types";
+import {
+    EventTimeSourceKind,
+    FetchKind,
+    MergeKind,
+    PrepareKind,
+    ReadKind,
+} from "../components/source-events/add-polling-source/add-polling-source-form.types";
 
 describe("ProcessFormService", () => {
     let service: ProcessFormService;
@@ -10,13 +16,13 @@ describe("ProcessFormService", () => {
         fetch: new FormGroup({
             order: new FormControl("NONE"),
             eventTime: new FormGroup({
-                kind: new FormControl("fromMetadata"),
+                kind: new FormControl(EventTimeSourceKind.FROM_METADATA),
                 timestampFormat: new FormControl(""),
             }),
             cache: new FormControl(false),
         }),
         read: new FormGroup({
-            kind: new FormControl("csv"),
+            kind: new FormControl(ReadKind.CSV),
             schema: new FormArray([
                 new FormGroup({
                     name: new FormControl("id"),
@@ -25,7 +31,7 @@ describe("ProcessFormService", () => {
             ]),
         }),
         merge: new FormGroup({
-            kind: new FormControl("append"),
+            kind: new FormControl(MergeKind.APPEND),
         }),
     });
 
@@ -43,16 +49,16 @@ describe("ProcessFormService", () => {
         const initialResult = {
             fetch: {
                 order: "NONE",
-                eventTime: { kind: "fromMetadata", timestampFormat: "" },
+                eventTime: { kind: EventTimeSourceKind.FROM_METADATA, timestampFormat: "" },
                 cache: false,
             },
-            read: { kind: "csv", schema: [{ name: "id", type: "BIGINT" }] },
-            merge: { kind: "append" },
+            read: { kind: ReadKind.CSV, schema: [{ name: "id", type: "BIGINT" }] },
+            merge: { kind: MergeKind.APPEND },
         };
         const expectedResult = {
-            fetch: { eventTime: { kind: "fromMetadata" } },
-            read: { kind: "csv", schema: ["id BIGINT"] },
-            merge: { kind: "append" },
+            fetch: { eventTime: { kind: EventTimeSourceKind.FROM_METADATA } },
+            read: { kind: ReadKind.CSV, schema: ["id BIGINT"] },
+            merge: { kind: MergeKind.APPEND },
         };
         expect(formGroup.value).toEqual(initialResult);
         service.transformForm(formGroup);
@@ -63,14 +69,14 @@ describe("ProcessFormService", () => {
     it("should check remove eventTime when fetch type is container ", () => {
         const formGroupFetchContainer = new FormGroup({
             fetch: new FormGroup({
-                kind: new FormControl("container"),
+                kind: new FormControl(FetchKind.CONTAINER),
                 eventTime: new FormGroup({
-                    kind: new FormControl("fromMetadata"),
+                    kind: new FormControl(EventTimeSourceKind.FROM_METADATA),
                     timestampFormat: new FormControl(""),
                 }),
             }),
             read: new FormGroup({
-                kind: new FormControl("csv"),
+                kind: new FormControl(ReadKind.CSV),
                 schema: new FormArray([
                     new FormGroup({
                         name: new FormControl("id (A.M.)"),
@@ -79,25 +85,25 @@ describe("ProcessFormService", () => {
                 ]),
             }),
             merge: new FormGroup({
-                kind: new FormControl("append"),
+                kind: new FormControl(MergeKind.APPEND),
             }),
         });
 
         const initialResult = {
             fetch: {
-                kind: "container",
-                eventTime: { kind: "fromMetadata", timestampFormat: "" },
+                kind: FetchKind.CONTAINER,
+                eventTime: { kind: EventTimeSourceKind.FROM_METADATA, timestampFormat: "" },
             },
             read: {
-                kind: "csv",
+                kind: ReadKind.CSV,
                 schema: [{ name: "id (A.M.)", type: "BIGINT" }],
             },
-            merge: { kind: "append" },
+            merge: { kind: MergeKind.APPEND },
         };
         const expectedResult = {
-            fetch: { kind: "container" },
-            read: { kind: "csv", schema: ["`id (A.M.)` BIGINT"] },
-            merge: { kind: "append" },
+            fetch: { kind: FetchKind.CONTAINER },
+            read: { kind: ReadKind.CSV, schema: ["`id (A.M.)` BIGINT"] },
+            merge: { kind: MergeKind.APPEND },
         };
         expect(formGroupFetchContainer.value).toEqual(initialResult);
         service.transformForm(formGroupFetchContainer);
@@ -108,9 +114,9 @@ describe("ProcessFormService", () => {
     it("should check parse command correct on the PREPARE step. ", () => {
         const formGroupFetchContainer = new FormGroup({
             fetch: new FormGroup({
-                kind: new FormControl("container"),
+                kind: new FormControl(FetchKind.CONTAINER),
                 eventTime: new FormGroup({
-                    kind: new FormControl("fromMetadata"),
+                    kind: new FormControl(EventTimeSourceKind.FROM_METADATA),
                     timestampFormat: new FormControl(""),
                 }),
             }),
@@ -121,7 +127,7 @@ describe("ProcessFormService", () => {
                 }),
             ]),
             read: new FormGroup({
-                kind: new FormControl("csv"),
+                kind: new FormControl(ReadKind.CSV),
                 schema: new FormArray([
                     new FormGroup({
                         name: new FormControl("id (A.M.)"),
@@ -130,15 +136,15 @@ describe("ProcessFormService", () => {
                 ]),
             }),
             merge: new FormGroup({
-                kind: new FormControl("append"),
+                kind: new FormControl(MergeKind.APPEND),
             }),
         });
 
         const expectedResult = {
-            fetch: { kind: "container" },
-            read: { kind: "csv", schema: ["`id (A.M.)` BIGINT"] },
-            prepare: [{ kind: "pipe", command: ["i", "-c", "'1,/OBSERVATION/d'"] }],
-            merge: { kind: "append" },
+            fetch: { kind: FetchKind.CONTAINER },
+            read: { kind: ReadKind.CSV, schema: ["`id (A.M.)` BIGINT"] },
+            prepare: [{ kind: PrepareKind.PIPE, command: ["i", "-c", "'1,/OBSERVATION/d'"] }],
+            merge: { kind: MergeKind.APPEND },
         };
         service.transformForm(formGroupFetchContainer);
 

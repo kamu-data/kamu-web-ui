@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormBuilder, FormControl, FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
 import { BaseStepComponent } from "./base-step.component";
-import { FetchKind } from "../../add-polling-source/add-polling-source-form.types";
+import { EventTimeSourceKind, FetchKind } from "../../add-polling-source/add-polling-source-form.types";
 import { FETCH_FORM_DATA } from "../data/fetch-form-data";
 import { FETCH_STEP_RADIO_CONTROLS } from "../../add-polling-source/form-control.source";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
@@ -54,34 +54,34 @@ describe("BaseStepComponent", () => {
 
     it("should check update fetch step form", () => {
         const expectedUrlForm = {
-            kind: "url",
+            kind: FetchKind.URL,
             url: "",
-            eventTime: { kind: "fromMetadata" },
+            eventTime: { kind: EventTimeSourceKind.FROM_METADATA },
             headers: [],
             cache: "",
         };
         const expectedFilesGlobForm = {
-            kind: "filesGlob",
+            kind: FetchKind.FILES_GLOB,
             path: "",
-            eventTime: { kind: "fromMetadata" },
+            eventTime: { kind: EventTimeSourceKind.FROM_METADATA },
             order: "NONE",
             cache: "",
         };
         const expectedContainerForm = {
-            kind: "container",
+            kind: FetchKind.CONTAINER,
             image: "",
             command: [],
             args: [],
             env: [],
-            eventTime: { kind: "fromMetadata" },
+            eventTime: { kind: EventTimeSourceKind.FROM_METADATA },
         };
         expect(component.sectionForm.value).toEqual(expectedUrlForm);
 
-        emitClickOnElementByDataTestId(fixture, "radio-filesGlob-control");
+        emitClickOnElementByDataTestId(fixture, "radio-FilesGlob-control");
         fixture.detectChanges();
         expect(component.sectionForm.value).toEqual(expectedFilesGlobForm);
 
-        emitClickOnElementByDataTestId(fixture, "radio-container-control");
+        emitClickOnElementByDataTestId(fixture, "radio-Container-control");
         fixture.detectChanges();
         expect(component.sectionForm.value).toEqual(expectedContainerForm);
     });

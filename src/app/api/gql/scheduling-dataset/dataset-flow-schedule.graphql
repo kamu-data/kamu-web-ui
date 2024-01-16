@@ -1,9 +1,14 @@
-mutation setConfigSchedule($datasetId: DatasetID!, $paused: Boolean!, $schedule: ScheduleInput!) {
+mutation DatasetFlowSchedule(
+  $datasetId: DatasetID!
+  $datasetFlowType: DatasetFlowType!
+  $paused: Boolean!
+  $schedule: ScheduleInput!
+) {
   datasets {
     byId(datasetId: $datasetId) {
       flows {
         configs {
-          setConfigSchedule(datasetFlowType: INGEST, paused: $paused, schedule: $schedule) {
+          setConfigSchedule(datasetFlowType: $datasetFlowType, paused: $paused, schedule: $schedule) {
             __typename
             ... on SetFlowConfigSuccess {
               message

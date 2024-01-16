@@ -8,7 +8,7 @@ import { DatasetSettingsService } from "../../services/dataset-settings.service"
 import { Observable, shareReplay } from "rxjs";
 
 @Component({
-    selector: "app-general",
+    selector: "app-dataset-settings-general-tab",
     templateUrl: "./general.component.html",
     styleUrls: ["./general.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import moment from "moment";
 import cronParser from "cron-parser";
 
@@ -61,7 +60,7 @@ export function parseCurrentSchema(data: MaybeNullOrUndefined<DataSchema>): Mayb
     return data ? (JSON.parse(data.content) as DatasetSchema) : null;
 }
 
-export function nextTime(value: string): string {
-    const date = cronParser.parseExpression(value).next().toDate();
-    return moment(date).format(AppValues.CRON_EXPRESSION_DATE_FORMAT);
+export function cronExpressionNextTime(cronExpression: string): string {
+    const date = cronParser.parseExpression(cronExpression).next().toDate();
+    return moment(date).format(AppValues.CRON_EXPRESSION_DATE_FORMAT as string);
 }

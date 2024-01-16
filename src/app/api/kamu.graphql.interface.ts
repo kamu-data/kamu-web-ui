@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -2246,73 +2246,15 @@ export type RenameDatasetMutation = {
     };
 };
 
-export type GetDatasetBatchingQueryVariables = Exact<{
+export type DatasetFlowBatchingMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
-}>;
-
-export type GetDatasetBatchingQuery = {
-    __typename?: "Query";
-    datasets: {
-        __typename?: "Datasets";
-        byId?: {
-            __typename?: "Dataset";
-            flows: {
-                __typename?: "DatasetFlows";
-                configs: {
-                    __typename: "DatasetFlowConfigs";
-                    byType?: {
-                        __typename?: "FlowConfiguration";
-                        paused: boolean;
-                        batching?: {
-                            __typename?: "FlowConfigurationBatching";
-                            minimalDataBatch?: number | null;
-                            throttlingPeriod?: ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment) | null;
-                        } | null;
-                    } | null;
-                };
-            };
-        } | null;
-    };
-};
-
-export type TimeDeltaDataFragment = { __typename?: "TimeDelta"; every: number; unit: TimeUnit };
-
-export type GetDatasetIngestScheduleQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-}>;
-
-export type GetDatasetIngestScheduleQuery = {
-    __typename?: "Query";
-    datasets: {
-        __typename?: "Datasets";
-        byId?: {
-            __typename?: "Dataset";
-            flows: {
-                __typename?: "DatasetFlows";
-                configs: {
-                    __typename: "DatasetFlowConfigs";
-                    byType?: {
-                        __typename?: "FlowConfiguration";
-                        paused: boolean;
-                        schedule?:
-                            | { __typename?: "CronExpression"; cronExpression: string }
-                            | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
-                            | null;
-                    } | null;
-                };
-            };
-        } | null;
-    };
-};
-
-export type SetConfigBatchingMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
     paused: Scalars["Boolean"];
     throttlingPeriod?: InputMaybe<TimeDeltaInput>;
     minimalDataBatch?: InputMaybe<Scalars["Int"]>;
 }>;
 
-export type SetConfigBatchingMutation = {
+export type DatasetFlowBatchingMutation = {
     __typename?: "Mutation";
     datasets: {
         __typename?: "DatasetsMut";
@@ -2347,13 +2289,48 @@ export type SetConfigBatchingMutation = {
     };
 };
 
-export type SetConfigScheduleMutationVariables = Exact<{
+export type GetDatasetFlowConfigsQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
+}>;
+
+export type GetDatasetFlowConfigsQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            flows: {
+                __typename?: "DatasetFlows";
+                configs: {
+                    __typename: "DatasetFlowConfigs";
+                    byType?: {
+                        __typename?: "FlowConfiguration";
+                        paused: boolean;
+                        schedule?:
+                            | { __typename?: "CronExpression"; cronExpression: string }
+                            | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
+                            | null;
+                        batching?: {
+                            __typename?: "FlowConfigurationBatching";
+                            minimalDataBatch?: number | null;
+                            throttlingPeriod?: ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment) | null;
+                        } | null;
+                    } | null;
+                };
+            };
+        } | null;
+    };
+};
+
+export type DatasetFlowScheduleMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
     paused: Scalars["Boolean"];
     schedule: ScheduleInput;
 }>;
 
-export type SetConfigScheduleMutation = {
+export type DatasetFlowScheduleMutation = {
     __typename?: "Mutation";
     datasets: {
         __typename?: "DatasetsMut";
@@ -2386,6 +2363,8 @@ export type SetConfigScheduleMutation = {
         } | null;
     };
 };
+
+export type TimeDeltaDataFragment = { __typename?: "TimeDelta"; every: number; unit: TimeUnit };
 
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
     query: Scalars["String"];
@@ -3791,82 +3770,10 @@ export class RenameDatasetGQL extends Apollo.Mutation<RenameDatasetMutation, Ren
         super(apollo);
     }
 }
-export const GetDatasetBatchingDocument = gql`
-    query getDatasetBatching($datasetId: DatasetID!) {
-        datasets {
-            byId(datasetId: $datasetId) {
-                flows {
-                    configs {
-                        __typename
-                        byType(datasetFlowType: EXECUTE_QUERY) {
-                            paused
-                            batching {
-                                throttlingPeriod {
-                                    ...TimeDeltaData
-                                }
-                                minimalDataBatch
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    ${TimeDeltaDataFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class GetDatasetBatchingGQL extends Apollo.Query<GetDatasetBatchingQuery, GetDatasetBatchingQueryVariables> {
-    document = GetDatasetBatchingDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const GetDatasetIngestScheduleDocument = gql`
-    query getDatasetIngestSchedule($datasetId: DatasetID!) {
-        datasets {
-            byId(datasetId: $datasetId) {
-                flows {
-                    configs {
-                        __typename
-                        byType(datasetFlowType: INGEST) {
-                            paused
-                            schedule {
-                                ... on TimeDelta {
-                                    ...TimeDeltaData
-                                }
-                                ... on CronExpression {
-                                    cronExpression
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    ${TimeDeltaDataFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class GetDatasetIngestScheduleGQL extends Apollo.Query<
-    GetDatasetIngestScheduleQuery,
-    GetDatasetIngestScheduleQueryVariables
-> {
-    document = GetDatasetIngestScheduleDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const SetConfigBatchingDocument = gql`
-    mutation setConfigBatching(
+export const DatasetFlowBatchingDocument = gql`
+    mutation datasetFlowBatching(
         $datasetId: DatasetID!
+        $datasetFlowType: DatasetFlowType!
         $paused: Boolean!
         $throttlingPeriod: TimeDeltaInput
         $minimalDataBatch: Int
@@ -3876,7 +3783,7 @@ export const SetConfigBatchingDocument = gql`
                 flows {
                     configs {
                         setConfigBatching(
-                            datasetFlowType: EXECUTE_QUERY
+                            datasetFlowType: $datasetFlowType
                             paused: $paused
                             throttlingPeriod: $throttlingPeriod
                             minimalDataBatch: $minimalDataBatch
@@ -3910,23 +3817,73 @@ export const SetConfigBatchingDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class SetConfigBatchingGQL extends Apollo.Mutation<
-    SetConfigBatchingMutation,
-    SetConfigBatchingMutationVariables
+export class DatasetFlowBatchingGQL extends Apollo.Mutation<
+    DatasetFlowBatchingMutation,
+    DatasetFlowBatchingMutationVariables
 > {
-    document = SetConfigBatchingDocument;
+    document = DatasetFlowBatchingDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
     }
 }
-export const SetConfigScheduleDocument = gql`
-    mutation setConfigSchedule($datasetId: DatasetID!, $paused: Boolean!, $schedule: ScheduleInput!) {
+export const GetDatasetFlowConfigsDocument = gql`
+    query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
         datasets {
             byId(datasetId: $datasetId) {
                 flows {
                     configs {
-                        setConfigSchedule(datasetFlowType: INGEST, paused: $paused, schedule: $schedule) {
+                        __typename
+                        byType(datasetFlowType: $datasetFlowType) {
+                            paused
+                            schedule {
+                                ... on TimeDelta {
+                                    ...TimeDeltaData
+                                }
+                                ... on CronExpression {
+                                    cronExpression
+                                }
+                            }
+                            batching {
+                                throttlingPeriod {
+                                    ...TimeDeltaData
+                                }
+                                minimalDataBatch
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${TimeDeltaDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetDatasetFlowConfigsGQL extends Apollo.Query<
+    GetDatasetFlowConfigsQuery,
+    GetDatasetFlowConfigsQueryVariables
+> {
+    document = GetDatasetFlowConfigsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetFlowScheduleDocument = gql`
+    mutation DatasetFlowSchedule(
+        $datasetId: DatasetID!
+        $datasetFlowType: DatasetFlowType!
+        $paused: Boolean!
+        $schedule: ScheduleInput!
+    ) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    configs {
+                        setConfigSchedule(datasetFlowType: $datasetFlowType, paused: $paused, schedule: $schedule) {
                             __typename
                             ... on SetFlowConfigSuccess {
                                 message
@@ -3958,11 +3915,11 @@ export const SetConfigScheduleDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class SetConfigScheduleGQL extends Apollo.Mutation<
-    SetConfigScheduleMutation,
-    SetConfigScheduleMutationVariables
+export class DatasetFlowScheduleGQL extends Apollo.Mutation<
+    DatasetFlowScheduleMutation,
+    DatasetFlowScheduleMutationVariables
 > {
-    document = SetConfigScheduleDocument;
+    document = DatasetFlowScheduleDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

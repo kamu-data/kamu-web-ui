@@ -4,36 +4,28 @@
             <div>
                 <nav>
                     <ul role="list" class="action-list d-flex flex-column gap-1">
-                        <li
-                            [class.action-list-item--nav-active]="activeTab === settingsTabsEnum.GENERAL"
-                            class="action-list-item"
-                        >
-                            <a
-                                class="action-list-content align-items-center"
-                                (click)="navigateToSection(settingsTabsEnum.GENERAL)"
+                        <ng-container *ngFor="let navItem of sidePanelData">
+                            <li
+                                [class.action-list-item--nav-active]="activeTab === navItem.activeTab"
+                                class="action-list-item"
+                                *ngIf="
+                                    navItem.activeTab === settingsTabsEnum.SCHEDULING
+                                        ? isSchedulingAvailable
+                                        : navItem.visible
+                                "
                             >
-                                <span class="text-muted mr-2">
-                                    <svg-icon name="account"></svg-icon>
-                                </span>
-                                <span class="action-list-item-label"> General </span>
-                            </a>
-                        </li>
-                        <mat-divider class="my-1"></mat-divider>
-                        <li
-                            [class.action-list-item--nav-active]="activeTab === settingsTabsEnum.SCHEDULING"
-                            class="action-list-item"
-                            *ngIf="isSchedulingAvailable"
-                        >
-                            <a
-                                class="action-list-content align-items-center"
-                                (click)="navigateToSection(settingsTabsEnum.SCHEDULING)"
-                            >
-                                <span class="text-muted mr-1">
-                                    <svg-icon class="text-muted" name="clock"></svg-icon>
-                                </span>
-                                <span class="action-list-item-label"> Scheduling </span>
-                            </a>
-                        </li>
+                                <a
+                                    class="action-list-content align-items-center"
+                                    (click)="navigateToSection(navItem.activeTab)"
+                                >
+                                    <span class="text-muted" [class]="navItem.iconClassName">
+                                        <svg-icon [name]="navItem.iconName"></svg-icon>
+                                    </span>
+                                    <span class="action-list-item-label"> {{ navItem.name }} </span>
+                                </a>
+                            </li>
+                            <mat-divider *ngIf="navItem.showDivider" class="my-1"></mat-divider>
+                        </ng-container>
                     </ul>
                 </nav>
             </div>
@@ -41,10 +33,16 @@
     </div>
     <div class="content-container">
         <ng-container *ngIf="activeTab === settingsTabsEnum.GENERAL">
-            <app-general [datasetBasics]="datasetBasics" [datasetPermissions]="datasetPermissions"></app-general>
+            <app-dataset-settings-general-tab
+                [datasetBasics]="datasetBasics"
+                [datasetPermissions]="datasetPermissions"
+            ></app-dataset-settings-general-tab>
         </ng-container>
         <ng-container *ngIf="isSchedulingAvailable && activeTab === settingsTabsEnum.SCHEDULING">
-            <app-scheduling [datasetBasics]="datasetBasics" [datasetPermissions]="datasetPermissions"></app-scheduling>
+            <app-dataset-settings-scheduling-tab
+                [datasetBasics]="datasetBasics"
+                [datasetPermissions]="datasetPermissions"
+            ></app-dataset-settings-scheduling-tab>
         </ng-container>
     </div>
 </div>

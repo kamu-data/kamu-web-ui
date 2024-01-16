@@ -1,17 +1,17 @@
 import { TestBed } from "@angular/core/testing";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { SchedulingApi } from "./scheduling.api";
+import { DatasetFlowApi } from "./dataset-flow.api";
 
-describe("SchedulingApi", () => {
-    let service: SchedulingApi;
+describe("DatasetFlowApi", () => {
+    let service: DatasetFlowApi;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [SchedulingApi, Apollo],
+            providers: [DatasetFlowApi, Apollo],
             imports: [ApolloModule, ApolloTestingModule],
         });
-        service = TestBed.inject(SchedulingApi);
+        service = TestBed.inject(DatasetFlowApi);
     });
 
     it("should be created", () => {

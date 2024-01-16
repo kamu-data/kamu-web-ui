@@ -1,5 +1,6 @@
-mutation setConfigBatching(
+mutation datasetFlowBatching(
   $datasetId: DatasetID!
+  $datasetFlowType: DatasetFlowType!
   $paused: Boolean!
   $throttlingPeriod: TimeDeltaInput
   $minimalDataBatch: Int
@@ -9,7 +10,7 @@ mutation setConfigBatching(
       flows {
         configs {
           setConfigBatching(
-            datasetFlowType: EXECUTE_QUERY
+            datasetFlowType: $datasetFlowType
             paused: $paused
             throttlingPeriod: $throttlingPeriod
             minimalDataBatch: $minimalDataBatch

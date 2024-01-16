@@ -5,6 +5,7 @@ import { BaseComponent } from "../../../../../common/base.component";
 import { PollingGroupEnum, ThrottlingGroupEnum } from "../../dataset-settings.model";
 import {
     DatasetBasicsFragment,
+    DatasetFlowType,
     DatasetKind,
     DatasetPermissionsFragment,
     ScheduleInput,
@@ -12,10 +13,10 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { cronExpressionValidator } from "src/app/common/data.helpers";
-import { nextTime } from "src/app/common/app.helpers";
+import { cronExpressionNextTime, logError } from "src/app/common/app.helpers";
 
 @Component({
-    selector: "app-scheduling",
+    selector: "app-dataset-settings-scheduling-tab",
     templateUrl: "./scheduling.component.html",
     styleUrls: ["./scheduling.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -88,7 +89,7 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
     }
 
     public get nextTime(): string {
-        return nextTime(this.cronExpression.value as string);
+        return cronExpressionNextTime(this.cronExpression.value as string);
     }
 
     public ngOnInit() {
@@ -102,15 +103,22 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
     private pollingTypeChanges(): void {
         this.trackSubscriptions(
             this.pollingType.valueChanges.subscribe((value: PollingGroupEnum) => {
-                if (value === PollingGroupEnum.TIME_DELTA) {
-                    this.pollingEveryTime.enable();
-                    this.pollingUnitTime.enable();
-                    this.disableAndClearControl(this.cronExpression);
-                }
-                if (value === PollingGroupEnum.CRON_EXPRESSION) {
-                    this.cronExpression.enable();
-                    this.disableAndClearControl(this.pollingEveryTime);
-                    this.disableAndClearControl(this.pollingUnitTime);
+                switch (value) {
+                    case PollingGroupEnum.TIME_DELTA: {
+                        this.pollingEveryTime.enable();
+                        this.pollingUnitTime.enable();
+                        this.disableAndClearControl(this.cronExpression);
+                        break;
+                    }
+                    case PollingGroupEnum.CRON_EXPRESSION: {
+                        this.cronExpression.enable();
+                        this.disableAndClearControl(this.pollingEveryTime);
+                        this.disableAndClearControl(this.pollingUnitTime);
+                        break;
+                    }
+                    default: {
+                        logError("Unknown PollingGroupEnum key");
+                    }
                 }
             }),
         );
@@ -127,31 +135,35 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
             this.throttlingForm.disable();
             this.pollingGroup.enable();
             this.trackSubscription(
-                this.datasetSchedulingService.fetchDatasetIngestSchedule(this.datasetBasics.id).subscribe((data) => {
-                    const flowConfiguration = data.datasets.byId?.flows.configs.byType;
-                    if (flowConfiguration) {
-                        this.pollingForm.patchValue({ updatesState: flowConfiguration.paused });
-                        this.pollingGroup.patchValue({
-                            ...flowConfiguration.schedule,
-                        });
-                    }
-                }),
+                this.datasetSchedulingService
+                    .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.Ingest)
+                    .subscribe((data) => {
+                        const flowConfiguration = data.datasets.byId?.flows.configs.byType;
+                        if (flowConfiguration?.schedule) {
+                            this.pollingForm.patchValue({ updatesState: flowConfiguration.paused });
+                            this.pollingGroup.patchValue({
+                                ...flowConfiguration.schedule,
+                            });
+                        }
+                    }),
             );
         } else {
             this.pollingGroup.disable();
             this.throttlingForm.enable();
             this.trackSubscription(
-                this.datasetSchedulingService.fetchDatasetBatching(this.datasetBasics.id).subscribe((data) => {
-                    const flowConfiguration = data.datasets.byId?.flows.configs.byType;
-                    if (flowConfiguration) {
-                        const batchingConfig = flowConfiguration.batching;
-                        this.pollingForm.patchValue({ updatesState: flowConfiguration.paused });
-                        this.throttlingForm.patchValue({
-                            ...batchingConfig?.throttlingPeriod,
-                            minimalDataBatch: batchingConfig?.minimalDataBatch,
-                        });
-                    }
-                }),
+                this.datasetSchedulingService
+                    .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.ExecuteQuery)
+                    .subscribe((data) => {
+                        const flowConfiguration = data.datasets.byId?.flows.configs.byType;
+                        if (flowConfiguration?.batching) {
+                            const batchingConfig = flowConfiguration.batching;
+                            this.pollingForm.patchValue({ updatesState: flowConfiguration.paused });
+                            this.throttlingForm.patchValue({
+                                ...batchingConfig.throttlingPeriod,
+                                minimalDataBatch: batchingConfig.minimalDataBatch,
+                            });
+                        }
+                    }),
             );
         }
     }
@@ -161,8 +173,9 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
             this.setScheduleOptions();
             this.trackSubscription(
                 this.datasetSchedulingService
-                    .setConfigSchedule({
+                    .setDatasetFlowSchedule({
                         datasetId: this.datasetBasics.id,
+                        datasetFlowType: DatasetFlowType.Ingest,
                         paused: this.updateState.value as boolean,
                         schedule: this.scheduleOptions,
                     })
@@ -171,8 +184,9 @@ export class SchedulingComponent extends BaseComponent implements OnInit {
         } else {
             this.trackSubscription(
                 this.datasetSchedulingService
-                    .setConfigBatching({
+                    .setDatasetFlowBatching({
                         datasetId: this.datasetBasics.id,
+                        datasetFlowType: DatasetFlowType.ExecuteQuery,
                         paused: this.updateState.value as boolean,
                         throttlingPeriod: {
                             every: this.batchingEveryTime.value as number,

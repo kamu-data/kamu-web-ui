@@ -13,17 +13,29 @@ export enum ThrottlingGroupEnum {
     AWAIT_UNTIL = "awaitUntil",
 }
 
-export interface SchedulingSettings {
-    updatesState: boolean;
-    pollingGroup: {
-        pollingSource: PollingGroupEnum;
-        timeDelta?: number;
-        timeSegment?: string;
-        cronExpression?: string;
-    };
-    throttlingGroup: {
-        throttlingParameters: ThrottlingGroupEnum;
-        awaitFor?: number;
-        awaitUntil?: number;
-    };
+export interface DatasetSettingsSidePanelItem {
+    name: string;
+    iconName: string;
+    showDivider: boolean;
+    activeTab: SettingsTabsEnum;
+    visible?: boolean;
+    iconClassName?: string;
 }
+
+export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
+    {
+        name: "General",
+        iconName: "account",
+        showDivider: true,
+        activeTab: SettingsTabsEnum.GENERAL,
+        visible: true,
+        iconClassName: "mr-1",
+    },
+    {
+        name: "Scheduling",
+        iconName: "clock",
+        showDivider: false,
+        activeTab: SettingsTabsEnum.SCHEDULING,
+        iconClassName: "mr-2",
+    },
+];

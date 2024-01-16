@@ -1654,6 +1654,25 @@ export type UpdateReadmeMutation = {
     };
 };
 
+export type UpdateWatermarkMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    watermark: Scalars["DateTime"];
+}>;
+
+export type UpdateWatermarkMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            setWatermark:
+                | { __typename?: "SetWatermarkIsDerivative"; message: string }
+                | { __typename?: "SetWatermarkUpToDate"; dummy: string; message: string }
+                | { __typename?: "SetWatermarkUpdated"; newHead: string; message: string };
+        } | null;
+    };
+};
+
 export type GetDatasetBasicsWithPermissionsQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
@@ -3357,6 +3376,38 @@ export const UpdateReadmeDocument = gql`
 })
 export class UpdateReadmeGQL extends Apollo.Mutation<UpdateReadmeMutation, UpdateReadmeMutationVariables> {
     document = UpdateReadmeDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const UpdateWatermarkDocument = gql`
+    mutation updateWatermark($datasetId: DatasetID!, $watermark: DateTime!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                setWatermark(watermark: $watermark) {
+                    ... on SetWatermarkUpdated {
+                        newHead
+                        message
+                    }
+                    ... on SetWatermarkUpToDate {
+                        dummy
+                        message
+                    }
+                    ... on SetWatermarkIsDerivative {
+                        message
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class UpdateWatermarkGQL extends Apollo.Mutation<UpdateWatermarkMutation, UpdateWatermarkMutationVariables> {
+    document = UpdateWatermarkDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

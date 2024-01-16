@@ -6,12 +6,14 @@ import {
     CommitEventToDatasetMutation,
     DatasetByAccountAndDatasetNameQuery,
     UpdateReadmeMutation,
+    UpdateWatermarkMutation,
 } from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { MaybeUndefined } from "src/app/common/app.types";
 import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/errors";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 
 @Injectable({
@@ -105,6 +107,30 @@ export class DatasetCommitService {
                             throw new DatasetOperationError([
                                 new Error(data.datasets.byId.metadata.updateReadme.message),
                             ]);
+                        }
+                    } else {
+                        throw new DatasetNotFoundError();
+                    }
+                }),
+            );
+        } else {
+            throw new DatasetOperationError([new Error(DatasetCommitService.NOT_LOGGED_USER_ERROR)]);
+        }
+    }
+
+    public updateWatermark(params: {
+        datasetId: string;
+        watermark: string;
+        datasetInfo: DatasetInfo;
+    }): Observable<void> {
+        if (this.loggedUserService.isAuthenticated) {
+            return this.datasetApi.setWatermark({ datasetId: params.datasetId, watermark: params.watermark }).pipe(
+                map((data: UpdateWatermarkMutation) => {
+                    if (data.datasets.byId) {
+                        if (data.datasets.byId.setWatermark.__typename === "SetWatermarkUpdated") {
+                            this.updatePage(params.datasetInfo.accountName, params.datasetInfo.datasetName);
+                        } else {
+                            throw new DatasetOperationError([new Error(data.datasets.byId.setWatermark.message)]);
                         }
                     } else {
                         throw new DatasetNotFoundError();

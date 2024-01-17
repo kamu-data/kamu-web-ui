@@ -414,12 +414,30 @@ export class DatasetApi {
             );
     }
 
-    public setWatermark(params: { datasetId: string; watermark: string }): Observable<UpdateWatermarkMutation> {
+    public setWatermark(params: {
+        datasetId: string;
+        watermark: string;
+        accountName: string;
+    }): Observable<UpdateWatermarkMutation> {
         return this.updateWatermarkGQL
-            .mutate({
-                datasetId: params.datasetId,
-                watermark: params.watermark,
-            })
+            .mutate(
+                {
+                    datasetId: params.datasetId,
+                    watermark: params.watermark,
+                },
+                {
+                    update: (cache) => {
+                        const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
+                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountName)),
+                            params.datasetId,
+                        );
+                        cache.evict({
+                            id: cache.identify(datasetKeyFragment),
+                            fieldName: "metadata",
+                        });
+                    },
+                },
+            )
             .pipe(
                 first(),
                 map((result: MutationResult<UpdateWatermarkMutation>) => {

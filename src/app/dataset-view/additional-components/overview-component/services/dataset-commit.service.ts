@@ -124,19 +124,25 @@ export class DatasetCommitService {
         datasetInfo: DatasetInfo;
     }): Observable<void> {
         if (this.loggedUserService.isAuthenticated) {
-            return this.datasetApi.setWatermark({ datasetId: params.datasetId, watermark: params.watermark }).pipe(
-                map((data: UpdateWatermarkMutation) => {
-                    if (data.datasets.byId) {
-                        if (data.datasets.byId.setWatermark.__typename === "SetWatermarkUpdated") {
-                            this.updatePage(params.datasetInfo.accountName, params.datasetInfo.datasetName);
+            return this.datasetApi
+                .setWatermark({
+                    datasetId: params.datasetId,
+                    watermark: params.watermark,
+                    accountName: params.datasetInfo.accountName,
+                })
+                .pipe(
+                    map((data: UpdateWatermarkMutation) => {
+                        if (data.datasets.byId) {
+                            if (data.datasets.byId.setWatermark.__typename === "SetWatermarkUpdated") {
+                                this.updatePage(params.datasetInfo.accountName, params.datasetInfo.datasetName);
+                            } else {
+                                throw new DatasetOperationError([new Error(data.datasets.byId.setWatermark.message)]);
+                            }
                         } else {
-                            throw new DatasetOperationError([new Error(data.datasets.byId.setWatermark.message)]);
+                            throw new DatasetNotFoundError();
                         }
-                    } else {
-                        throw new DatasetNotFoundError();
-                    }
-                }),
-            );
+                    }),
+                );
         } else {
             throw new DatasetOperationError([new Error(DatasetCommitService.NOT_LOGGED_USER_ERROR)]);
         }

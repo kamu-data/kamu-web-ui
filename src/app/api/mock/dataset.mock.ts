@@ -25,6 +25,7 @@ export const TEST_DATASET_ID = "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8f
 export const TEST_DATASET_NAME = "test-dataset";
 export const TEST_ACCOUNT_NAME = "test-account-name";
 export const TEST_BLOCK_HASH = "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev";
+export const TEST_WATERMARK = "2023-06-02T08:44:28.324101693+00:00";
 
 export const mockDatasetDataSqlRunResponse: GetDatasetDataSqlRunQuery = {
     data: {

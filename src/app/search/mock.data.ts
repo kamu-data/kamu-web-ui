@@ -9,6 +9,7 @@ import {
     PageBasedInfo,
     RenameDatasetMutation,
     UpdateReadmeMutation,
+    UpdateWatermarkMutation,
 } from "../api/kamu.graphql.interface";
 import {
     DataBatchFormat,
@@ -989,6 +990,19 @@ export const mockCommitEventToDatasetMutation: CommitEventToDatasetMutation = {
                 __typename: "DatasetMetadataMut",
             },
             __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockUpdateWatermarkSuccessResponse: UpdateWatermarkMutation = {
+    datasets: {
+        byId: {
+            setWatermark: {
+                __typename: "SetWatermarkUpdated",
+                message: "Success",
+                newHead: "zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u",
+            },
         },
         __typename: "DatasetsMut",
     },

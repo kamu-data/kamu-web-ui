@@ -1,25 +1,27 @@
 import { DatasetApi } from "src/app/api/dataset.api";
 import { TestBed } from "@angular/core/testing";
-
 import { AccountService } from "./account.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { AccountApi } from "../api/account.api";
-import { TEST_LOGIN, mockAccountDetails } from "../api/mock/auth.mock";
+import { TEST_LOGIN, TEST_PAGE_NUMBER, mockAccountDetails } from "../api/mock/auth.mock";
 import { first, of } from "rxjs";
 import { MaybeNull } from "../common/app.types";
 import { AccountFragment } from "../api/kamu.graphql.interface";
+import { mockDatasetsByAccountNameQuery } from "../api/mock/dataset.mock";
+import { DatasetsAccountResponse } from "../interface/dataset.interface";
 
 describe("AccountService", () => {
     let service: AccountService;
     let accountApi: AccountApi;
+    let datasetApi: DatasetApi;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [ApolloTestingModule],
-            providers: [DatasetApi],
         });
         service = TestBed.inject(AccountService);
         accountApi = TestBed.inject(AccountApi);
+        datasetApi = TestBed.inject(DatasetApi);
     });
 
     it("should be created", () => {
@@ -57,4 +59,26 @@ describe("AccountService", () => {
         expect(apiAccountByNameSpy).toHaveBeenCalledTimes(2);
         expect(subscription$.closed).toBeTrue();
     });
+
+    it("check getDatasetsByAccountName", () => {
+        const fetchDatasetsByAccountNameSpy = spyOn(datasetApi, "fetchDatasetsByAccountName").and.returnValue(
+            of(mockDatasetsByAccountNameQuery),
+        );
+
+        const subscription$ = service
+            .getDatasetsByAccountName(TEST_LOGIN, TEST_PAGE_NUMBER)
+            .pipe(first())
+            .subscribe((data: DatasetsAccountResponse) => {
+                expect(data.datasetTotalCount).toEqual(
+                    mockDatasetsByAccountNameQuery.datasets.byAccountName.totalCount,
+                );
+                expect(data.pageInfo).toEqual(mockDatasetsByAccountNameQuery.datasets.byAccountName.pageInfo);
+                expect(data.datasets).toEqual(mockDatasetsByAccountNameQuery.datasets.byAccountName.nodes);
+            });
+
+        expect(fetchDatasetsByAccountNameSpy).toHaveBeenCalledTimes(1);
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    // mockDatasetsAccountResponse
 });

@@ -10,6 +10,7 @@ export const TEST_ACCOUNT_ID = "12345";
 export const TEST_LOGIN = "foo";
 export const TEST_PASSWORD = "bar";
 export const TEST_USER_NAME = "Test User";
+export const TEST_PAGE_NUMBER = 5;
 
 const mockPasswordLoginCredentials: PasswordLoginCredentials = {
     login: TEST_LOGIN,

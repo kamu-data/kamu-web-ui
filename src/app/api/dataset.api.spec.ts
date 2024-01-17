@@ -9,6 +9,7 @@ import {
     TEST_BLOCK_HASH,
     TEST_DATASET_ID,
     TEST_DATASET_NAME,
+    TEST_WATERMARK,
 } from "./mock/dataset.mock";
 import {
     MOCK_NEW_DATASET_NAME,
@@ -23,6 +24,7 @@ import {
     mockFullPowerDatasetPermissionsFragment,
     mockRenameSuccessResponse,
     mockUpdateReadmeSuccessResponse,
+    mockUpdateWatermarkSuccessResponse,
 } from "../search/mock.data";
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
@@ -62,6 +64,8 @@ import {
     RenameDatasetMutation,
     UpdateReadmeDocument,
     UpdateReadmeMutation,
+    UpdateWatermarkDocument,
+    UpdateWatermarkMutation,
 } from "./kamu.graphql.interface";
 import { TEST_LOGIN } from "./mock/auth.mock";
 import { first, Observable } from "rxjs";
@@ -489,6 +493,25 @@ describe("DatasetApi", () => {
         expect(op.operation.variables.newName).toEqual(MOCK_NEW_DATASET_NAME);
         op.flush({
             data: mockRenameSuccessResponse,
+        });
+    });
+
+    it("should successfully update watermark", () => {
+        service
+            .setWatermark({
+                datasetId: TEST_DATASET_ID,
+                watermark: TEST_WATERMARK,
+                accountName: TEST_ACCOUNT_NAME,
+            })
+            .subscribe((res: UpdateWatermarkMutation) => {
+                expect(res.datasets.byId?.setWatermark.message).toEqual("Success");
+            });
+
+        const op = controller.expectOne(UpdateWatermarkDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.watermark).toEqual(TEST_WATERMARK);
+        op.flush({
+            data: mockUpdateWatermarkSuccessResponse,
         });
     });
 

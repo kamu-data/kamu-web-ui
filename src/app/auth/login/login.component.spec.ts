@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { LoginComponent } from "./login.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
@@ -101,6 +100,7 @@ describe("LoginComponent", () => {
             appConfigService = TestBed.inject(AppConfigService);
             spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue({
                 enableLogout: true,
+                enableScheduling: true,
             });
             spyOnProperty(loginService, "loginMethods", "get").and.returnValue([
                 LoginMethod.GITHUB,
@@ -267,6 +267,7 @@ describe("LoginComponent", () => {
                 appConfigService = TestBed.inject(AppConfigService);
                 spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue({
                     enableLogout: true,
+                    enableScheduling: true,
                 });
                 spyOnProperty(loginService, "loginMethods", "get").and.returnValue([loginMethod]);
 
@@ -296,6 +297,7 @@ describe("LoginComponent", () => {
             appConfigService = TestBed.inject(AppConfigService);
             spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue({
                 enableLogout: true,
+                enableScheduling: true,
             });
             spyOnProperty(loginService, "loginMethods", "get").and.returnValue([]);
         });

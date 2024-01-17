@@ -1,5 +1,5 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { GeneralComponent } from "./general.component";
+import { DatasetSettingsGeneralTabComponent } from "./dataset-settings-general-tab.component";
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
 import { ModalService } from "../../../../../components/modal/modal.service";
 import { ApolloModule } from "apollo-angular";
@@ -22,15 +22,15 @@ import {
     getInputElememtByDataTestId,
 } from "../../../../../common/base-test.helpers.spec";
 
-describe("GeneralComponent", () => {
-    let component: GeneralComponent;
-    let fixture: ComponentFixture<GeneralComponent>;
+describe("DatasetSettingsGeneralTabComponent", () => {
+    let component: DatasetSettingsGeneralTabComponent;
+    let fixture: ComponentFixture<DatasetSettingsGeneralTabComponent>;
     let datasetSettingsService: DatasetSettingsService;
     let modalService: ModalService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [GeneralComponent],
+            declarations: [DatasetSettingsGeneralTabComponent],
             imports: [
                 ReactiveFormsModule,
                 HttpClientTestingModule,
@@ -42,7 +42,7 @@ describe("GeneralComponent", () => {
             ],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(GeneralComponent);
+        fixture = TestBed.createComponent(DatasetSettingsGeneralTabComponent);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);

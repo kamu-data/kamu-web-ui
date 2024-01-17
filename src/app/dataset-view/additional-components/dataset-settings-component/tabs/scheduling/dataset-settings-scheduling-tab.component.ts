@@ -1,4 +1,4 @@
-import { MaybeNull } from "./../../../../../common/app.types";
+import { MaybeNull } from "../../../../../common/app.types";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/forms";
 import { BaseComponent } from "../../../../../common/base.component";
@@ -17,11 +17,11 @@ import { cronExpressionNextTime, logError } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-dataset-settings-scheduling-tab",
-    templateUrl: "./scheduling.component.html",
-    styleUrls: ["./scheduling.component.scss"],
+    templateUrl: "./dataset-settings-scheduling-tab.component.html",
+    styleUrls: ["./dataset-settings-scheduling-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SchedulingComponent extends BaseComponent implements OnInit {
+export class DatasetSettingsSchedulingTabComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
     @Input() public datasetPermissions: DatasetPermissionsFragment;
     public readonly pollingGroupEnum: typeof PollingGroupEnum = PollingGroupEnum;

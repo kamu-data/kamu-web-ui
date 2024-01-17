@@ -9,11 +9,11 @@ import { Observable, shareReplay } from "rxjs";
 
 @Component({
     selector: "app-dataset-settings-general-tab",
-    templateUrl: "./general.component.html",
-    styleUrls: ["./general.component.scss"],
+    templateUrl: "./dataset-settings-general-tab.component.html",
+    styleUrls: ["./dataset-settings-general-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GeneralComponent extends BaseComponent implements OnInit {
+export class DatasetSettingsGeneralTabComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
     @Input() public datasetPermissions: DatasetPermissionsFragment;
 

@@ -18,6 +18,8 @@ import { AppConfigService } from "./app-config.service";
 import { LoggedUserService } from "./auth/logged-user.service";
 import { AppConfigFeatureFlags, LoginMethod } from "./app-config.model";
 import { LoginService } from "./auth/login/login.service";
+import { loadErrorMessages } from "@apollo/client/dev";
+import { isDevMode } from "@angular/core";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
 
@@ -62,6 +64,10 @@ export class AppComponent extends BaseComponent implements OnInit {
         private cdr: ChangeDetectorRef,
     ) {
         super();
+        // apollo client error messages
+        if (isDevMode()) {
+            loadErrorMessages();
+        }
     }
 
     public ngOnInit(): void {

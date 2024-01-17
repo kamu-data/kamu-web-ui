@@ -1,6 +1,9 @@
 query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
   datasets {
     byId(datasetId: $datasetId) {
+      #need for cache
+      ...DatasetBasics
+      #
       flows {
         configs {
           __typename

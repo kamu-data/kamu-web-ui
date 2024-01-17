@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "apollo-angular";
+import { gql } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -2298,28 +2298,30 @@ export type GetDatasetFlowConfigsQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
-        byId?: {
-            __typename?: "Dataset";
-            flows: {
-                __typename?: "DatasetFlows";
-                configs: {
-                    __typename: "DatasetFlowConfigs";
-                    byType?: {
-                        __typename?: "FlowConfiguration";
-                        paused: boolean;
-                        schedule?:
-                            | { __typename?: "CronExpression"; cronExpression: string }
-                            | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
-                            | null;
-                        batching?: {
-                            __typename?: "FlowConfigurationBatching";
-                            minimalDataBatch?: number | null;
-                            throttlingPeriod?: ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment) | null;
-                        } | null;
-                    } | null;
-                };
-            };
-        } | null;
+        byId?:
+            | ({
+                  __typename?: "Dataset";
+                  flows: {
+                      __typename?: "DatasetFlows";
+                      configs: {
+                          __typename: "DatasetFlowConfigs";
+                          byType?: {
+                              __typename?: "FlowConfiguration";
+                              paused: boolean;
+                              schedule?:
+                                  | { __typename?: "CronExpression"; cronExpression: string }
+                                  | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
+                                  | null;
+                              batching?: {
+                                  __typename?: "FlowConfigurationBatching";
+                                  minimalDataBatch?: number | null;
+                                  throttlingPeriod?: ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment) | null;
+                              } | null;
+                          } | null;
+                      };
+                  };
+              } & DatasetBasicsFragment)
+            | null;
     };
 };
 
@@ -3831,6 +3833,7 @@ export const GetDatasetFlowConfigsDocument = gql`
     query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
         datasets {
             byId(datasetId: $datasetId) {
+                ...DatasetBasics
                 flows {
                     configs {
                         __typename
@@ -3856,6 +3859,7 @@ export const GetDatasetFlowConfigsDocument = gql`
             }
         }
     }
+    ${DatasetBasicsFragmentDoc}
     ${TimeDeltaDataFragmentDoc}
 `;
 

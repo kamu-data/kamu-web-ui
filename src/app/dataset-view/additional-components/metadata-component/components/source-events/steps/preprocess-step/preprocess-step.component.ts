@@ -50,7 +50,6 @@ export class PreprocessStepComponent extends BaseComponent implements OnInit {
     private initDefaultQueriesSection(query = ""): void {
         if (!this.preprocessValue.queries.length) {
             this.preprocessValue.queries.push({
-                alias: this.getDatasetInfoFromUrl().datasetName,
                 query,
             });
         }

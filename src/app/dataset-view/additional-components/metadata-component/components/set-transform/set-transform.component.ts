@@ -53,6 +53,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
                     if (result) {
                         this.eventYamlByHash = result;
                         this.currentSetTransformEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
+
                         if (this.currentSetTransformEvent.transform.query) {
                             this.initDefaultQueriesSection(this.currentSetTransformEvent.transform.query);
                         } else {
@@ -69,7 +70,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     }
 
     private initDefaultQueriesSection(query = ""): void {
-        this.queries = [...this.queries, { alias: this.getDatasetInfoFromUrl().datasetName, query }];
+        this.queries = [...this.queries, { query }];
     }
 
     private getInputDatasetsInfo(): void {
@@ -95,7 +96,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
                         }),
                 );
             } else {
-                throw new Error("TransformInput without an 'id' is unexpected");
+                throw new Error("TransformInput without an 'datasetRef' is unexpected");
             }
         });
     }

@@ -55,8 +55,8 @@ export class SearchSectionComponent extends BaseComponent {
         const id = value.dataset.id;
         const name = value.dataset.name;
         const inputDataset = JSON.stringify({
-            id,
-            name,
+            datasetRef: id,
+            alias: name,
         });
         if (value.__typename !== TypeNames.allDataType && !this.inputDatasets.has(inputDataset)) {
             this.inputDatasets.add(inputDataset);

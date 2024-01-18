@@ -3,7 +3,6 @@ import { DatasetByIdQuery } from "../../../../../../../api/kamu.graphql.interfac
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { MaybeNull } from "src/app/common/app.types";
 
 @Component({
     selector: "app-block-interval-property",

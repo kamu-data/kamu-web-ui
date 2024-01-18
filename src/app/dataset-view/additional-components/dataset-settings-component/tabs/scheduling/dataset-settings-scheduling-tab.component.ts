@@ -152,7 +152,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
             this.throttlingForm.enable();
             this.trackSubscription(
                 this.datasetSchedulingService
-                    .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.ExecuteQuery)
+                    .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.ExecuteTransform)
                     .subscribe((data) => {
                         const flowConfiguration = data.datasets.byId?.flows.configs.byType;
                         if (flowConfiguration?.batching) {
@@ -186,7 +186,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                 this.datasetSchedulingService
                     .setDatasetFlowBatching({
                         datasetId: this.datasetBasics.id,
-                        datasetFlowType: DatasetFlowType.ExecuteQuery,
+                        datasetFlowType: DatasetFlowType.ExecuteTransform,
                         paused: this.updateState.value as boolean,
                         throttlingPeriod: {
                             every: this.batchingEveryTime.value as number,

@@ -6,7 +6,7 @@ import { MatTableModule } from "@angular/material/table";
 import { NgbTooltipModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { EventTimeSourceKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
-import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
+import { SetPollingSourceTooltipsTexts } from "src/app/common/tooltips/tooltips.text";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { ActivatedRoute } from "@angular/router";
 
@@ -56,8 +56,8 @@ describe("SelectDateFormatFieldComponent", () => {
         });
         component.controlName = "eventTime";
         (component.innerTooltips = {
-            fromMetadata: SetPollingSourceToolipsTexts.EVENT_TIME_FROM_METADATA,
-            fromPath: SetPollingSourceToolipsTexts.EVENT_TIME_FROM_PATH,
+            fromMetadata: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_METADATA,
+            fromPath: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_PATH,
         }),
             (component.currentSource = EventTimeSourceKind.FROM_METADATA);
         fixture.detectChanges();

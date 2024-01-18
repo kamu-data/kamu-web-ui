@@ -17,13 +17,8 @@ export interface AddPushSourceEditFormType {
         schema?: string[];
         separator?: string;
         encoding?: string;
-        comment?: string;
         quote?: string;
         escape?: string;
-        enforceSchema?: boolean;
-        nanValue?: string;
-        positiveInf?: string;
-        negativeInf?: string;
         dateFormat?: string;
         timestampFormat?: string;
     };

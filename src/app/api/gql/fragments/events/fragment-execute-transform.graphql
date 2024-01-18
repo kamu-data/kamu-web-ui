@@ -1,4 +1,11 @@
-fragment AddDataEvent on AddData {
+fragment ExecuteTransformEvent on ExecuteTransform {
+  queryInputs {
+    datasetId
+    prevBlockHash
+    newBlockHash
+    prevOffset
+    newOffset
+  }
   prevCheckpoint
   prevOffset
   newData {
@@ -15,9 +22,4 @@ fragment AddDataEvent on AddData {
     size
   }
   newWatermark
-  newSourceState {
-    sourceName
-    kind
-    value
-  }
 }

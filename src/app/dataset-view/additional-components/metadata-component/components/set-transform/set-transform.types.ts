@@ -4,11 +4,11 @@ export type TransformSelectedInput = Omit<TransformInput, "__typename" | "datase
 
 export interface EditSetTransformParseType {
     content: {
-        event: SetTransFormYamlType;
+        event: SetTransformYamlType;
     };
 }
 
-export type SetTransFormYamlType = Omit<SetTransform, "__typename"> & {
+export type SetTransformYamlType = Omit<SetTransform, "__typename"> & {
     kind: string;
     transform: {
         kind: string;

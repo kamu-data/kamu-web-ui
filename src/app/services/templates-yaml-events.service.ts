@@ -14,11 +14,11 @@ import { AddPushSourceEditFormType } from "../dataset-view/additional-components
     providedIn: "root",
 })
 export class TemplatesYamlEventsService {
-    private readonly initialSetInfoTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setInfo\n";
-    private readonly initialSetLicenseTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setLicense\n";
-    private readonly initialSetWatermarkTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: setWatermark\n";
+    private readonly initialSetInfoTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: SetInfo\n";
+    private readonly initialSetLicenseTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: SetLicense\n";
+    private readonly initialSetWatermarkTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: SetWatermark\n";
     private readonly initialDisablePollingSourceTemplate =
-        "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: disablePollingSource\n";
+        "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: DisablePollingSource\n";
 
     private readonly initialTemplate = {
         kind: "MetadataEvent",
@@ -57,7 +57,7 @@ export class TemplatesYamlEventsService {
             delete params.read.jsonKind;
         }
         this.initialTemplate.content = {
-            kind: "setPollingSource",
+            kind: "SetPollingSource",
             ...params,
         };
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
@@ -86,7 +86,7 @@ export class TemplatesYamlEventsService {
             delete params.read.jsonKind;
         }
         this.initialTemplate.content = {
-            kind: "addPushSource",
+            kind: "AddPushSource",
             ...params,
         };
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
@@ -105,7 +105,7 @@ export class TemplatesYamlEventsService {
 
     public buildYamlSetTransformEvent(params: Omit<SetTransform, "__typename">): string {
         this.initialTemplate.content = {
-            kind: "setTransform",
+            kind: "SetTransform",
             ...params,
         };
         return stringify(this.initialTemplate);

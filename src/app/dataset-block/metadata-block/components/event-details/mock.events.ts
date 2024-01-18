@@ -3,23 +3,22 @@ import {
     CompressionFormat,
     DataSchemaFormat,
     DatasetTransformFragment,
-    ExecuteQueryEventFragment,
+    ExecuteTransformEventFragment,
     SetAttachments,
     SetDataSchema,
     SetInfo,
     SetLicense,
     SetPollingSource,
     SetVocab,
-    SetWatermark,
 } from "../../../../api/kamu.graphql.interface";
 import { AddDataEventFragment, DatasetKind, Seed } from "src/app/api/kamu.graphql.interface";
 export const mockAddData: AddDataEventFragment = {
     __typename: "AddData",
-    addDataWatermark: "2022-08-01T00:00:00+00:00",
-    inputCheckpoint: null,
-    outputData: {
+    newWatermark: "2022-08-01T00:00:00+00:00",
+    prevCheckpoint: null,
+    newData: {
         __typename: "DataSlice",
-        interval: {
+        offsetInterval: {
             __typename: "OffsetInterval",
             start: 0,
             end: 596125,
@@ -28,7 +27,7 @@ export const mockAddData: AddDataEventFragment = {
         physicalHash: "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
         size: 5993876,
     },
-    outputCheckpoint: {
+    newCheckpoint: {
         __typename: "Checkpoint",
         physicalHash: "zW1diFMSn97sDG4WMMKZ7pvM7vVenC5ytAesQK7V3qqALPv",
         size: 2560,
@@ -57,20 +56,11 @@ export const mockSetPollingSourceEvent: SetPollingSource = {
         encoding: null,
         quote: null,
         escape: null,
-        comment: null,
         header: true,
-        enforceSchema: true,
         inferSchema: false,
-        ignoreLeadingWhiteSpace: null,
-        ignoreTrailingWhiteSpace: null,
         nullValue: null,
-        emptyValue: null,
-        nanValue: null,
-        positiveInf: null,
-        negativeInf: null,
         dateFormat: null,
         timestampFormat: null,
-        multiLine: null,
     },
     merge: {
         __typename: "MergeStrategyLedger",
@@ -109,7 +99,8 @@ export const mockSetTransform: DatasetTransformFragment = {
     inputs: [
         {
             __typename: "TransformInput",
-            name: "alberta.case-details",
+            datasetRef: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+            alias: "alberta.case-details",
             dataset: {
                 __typename: "Dataset",
                 id: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
@@ -150,37 +141,32 @@ export const mockSetTransform: DatasetTransformFragment = {
     },
 };
 
-export const mockExecuteQuery: ExecuteQueryEventFragment = {
-    __typename: "ExecuteQuery",
-    queryOutputData: {
+export const mockExecuteTransform: ExecuteTransformEventFragment = {
+    __typename: "ExecuteTransform",
+    newData: {
         __typename: "DataSlice",
-        interval: {
+        offsetInterval: {
             __typename: "OffsetInterval",
             start: 0,
             end: 596125,
         },
         logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
         physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
+        size: 2323,
     },
-    inputCheckpoint: null,
-    watermark: "2022-08-01T00:00:00+00:00",
-    inputSlices: [
+    prevCheckpoint: null,
+    newWatermark: "2022-08-01T00:00:00+00:00",
+    queryInputs: [
         {
-            __typename: "InputSlice",
+            __typename: "ExecuteTransformInput",
             datasetId: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
-            blockInterval: {
-                __typename: "BlockInterval",
-                start: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
-                end: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
-            },
-            dataInterval: {
-                __typename: "OffsetInterval",
-                start: 0,
-                end: 596125,
-            },
+            prevBlockHash: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
+            newBlockHash: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
+            prevOffset: null,
+            newOffset: 596125,
         },
     ],
-    outputCheckpoint: {
+    newCheckpoint: {
         __typename: "Checkpoint",
         physicalHash: "zW1otipGpjScUH8C2RfaF4s8RshReBbQVPDf2fPrp2R8Ft2",
         size: 2560,
@@ -230,11 +216,7 @@ export const mockSetVocab: SetVocab = {
     systemTimeColumn: null,
     eventTimeColumn: "case_reported_date",
     offsetColumn: null,
-};
-
-export const mockSetWatermark: SetWatermark = {
-    __typename: "SetWatermark",
-    outputWatermark: "2022-08-05T21:17:30.639588217+00:00",
+    operationTypeColumn: null,
 };
 
 export const mockSetDataSchema: SetDataSchema = {
@@ -265,20 +247,11 @@ export const mockAddPushSource: AddPushSource = {
         encoding: null,
         quote: null,
         escape: null,
-        comment: null,
         header: true,
-        enforceSchema: true,
         inferSchema: false,
-        ignoreLeadingWhiteSpace: null,
-        ignoreTrailingWhiteSpace: null,
         nullValue: null,
-        emptyValue: null,
-        nanValue: null,
-        positiveInf: null,
-        negativeInf: null,
         dateFormat: null,
         timestampFormat: null,
-        multiLine: null,
     },
     merge: {
         __typename: "MergeStrategyLedger",

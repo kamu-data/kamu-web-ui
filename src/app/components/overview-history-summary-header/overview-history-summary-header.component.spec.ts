@@ -4,7 +4,7 @@ import { OverviewHistorySummaryHeaderComponent } from "./overview-history-summar
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { TEST_DATASET_NAME, mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { DisplayTimeModule } from "../display-time/display-time.module";
-import { DisplayHashModule } from "../display-hash/dispaly-hash.module";
+import { DisplayHashModule } from "../display-hash/display-hash.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { ToastrModule } from "ngx-toastr";

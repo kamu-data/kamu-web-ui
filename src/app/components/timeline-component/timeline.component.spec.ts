@@ -10,7 +10,7 @@ import {
     findElementByDataTestId,
     getElementByDataTestId,
 } from "src/app/common/base-test.helpers.spec";
-import { DisplayHashModule } from "../display-hash/dispaly-hash.module";
+import { DisplayHashModule } from "../display-hash/display-hash.module";
 import { ToastrModule } from "ngx-toastr";
 import { DisplayTimeModule } from "../display-time/display-time.module";
 import { MatIconModule } from "@angular/material/icon";

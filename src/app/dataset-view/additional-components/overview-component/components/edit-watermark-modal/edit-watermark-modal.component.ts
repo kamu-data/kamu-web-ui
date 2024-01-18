@@ -57,11 +57,15 @@ export class EditWatermarkModalComponent extends BaseComponent implements OnInit
         const date = moment.utc(this.date).tz(this.timeZone).format();
         this.trackSubscription(
             this.datasetCommitService
-                .commitEventToDataset(
-                    this.datasetBasics.owner.accountName,
-                    this.datasetBasics.name,
-                    this.yamlEventService.buildYamlSetWatermarkEvent(date),
-                )
+                .updateWatermark({
+                    datasetId: this.datasetBasics.id,
+                    watermark: date,
+                    datasetInfo: {
+                        accountName: this.datasetBasics.owner.accountName,
+                        datasetName: this.datasetBasics.name,
+                    },
+                })
+
                 .subscribe(),
         );
     }

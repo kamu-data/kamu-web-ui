@@ -1,20 +1,17 @@
-<ng-container *ngIf="data.block; else noBlock">
-    <p>
-        start:&nbsp;
-        <app-display-hash
-            [value]="data.block.start"
-            [navigationTargetDataset]="datasetInfo"
-            [showCopyButton]="true"
-        ></app-display-hash>
-    </p>
-    <br />
-    <p>
-        end:&nbsp;
-        <app-display-hash
-            [value]="data.block.end"
-            [navigationTargetDataset]="datasetInfo"
-            [showCopyButton]="true"
-        ></app-display-hash>
-    </p>
-</ng-container>
-<ng-template #noBlock> - </ng-template>
+<p>
+    start:&nbsp;
+    <app-display-hash
+        [value]="data.prevBlockHash"
+        [navigationTargetDataset]="datasetInfo"
+        [showCopyButton]="true"
+    ></app-display-hash>
+</p>
+<br />
+<p>
+    end:&nbsp;
+    <app-display-hash
+        [value]="data.newBlockHash"
+        [navigationTargetDataset]="datasetInfo"
+        [showCopyButton]="true"
+    ></app-display-hash>
+</p>

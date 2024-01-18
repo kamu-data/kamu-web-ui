@@ -4,25 +4,30 @@ import { EventRow, EventSection } from "../dynamic-events.model";
 import { EventSectionBuilder } from "./event-section.builder";
 
 export enum AddDataSection {
-    ADD_DATA_WATERMARK = "addDataWatermark",
-    INPUT_CHECKPOINT = "inputCheckpoint",
-    OUTPUT_DATA = "outputData",
-    OUTPUT_CHECKPOINT = "outputCheckpoint",
+    PREV_CHECKPOINT = "prevCheckpoint",
+    NEW_DATA = "newData",
+    NEW_CHECKPOINT = "newCheckpoint",
+    NEW_WATERMARK = "newWatermark",
+    PREV_OFFSET = "prevOffset",
+    NEW_SOURCE_STATE = "newSourceState",
 }
 
 export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
     private sectionTitleMapper: Record<string, string> = {
-        addDataWatermark: "Output watermark",
-        inputCheckpoint: "Input checkpoint",
-        outputCheckpoint: "Output checkpoint",
-        outputData: "Output data",
+        prevCheckpoint: "Previous checkpoint",
+        newData: "New data",
+        newCheckpoint: "New checkpoint",
+        newWatermark: "New watermark",
+        prevOffset: "Previous offset",
+        newSourceState: "New source state",
     };
     public buildEventSections(event: AddData): EventSection[] {
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {
                 switch (section) {
-                    case AddDataSection.OUTPUT_CHECKPOINT: {
+                    case AddDataSection.NEW_SOURCE_STATE:
+                    case AddDataSection.NEW_CHECKPOINT: {
                         result.push({
                             title: this.sectionTitleMapper[section],
                             rows: this.buildEventRows(event, ADD_DATA_SOURCE_DESCRIPTORS, section, false),
@@ -30,7 +35,7 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
                         break;
                     }
 
-                    case AddDataSection.OUTPUT_DATA: {
+                    case AddDataSection.NEW_DATA: {
                         const rows: EventRow[] = [];
                         Object.entries(data as DataSlice).forEach(([key, value]) => {
                             if (event.__typename && key !== "__typename") {
@@ -53,8 +58,25 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
                         break;
                     }
 
-                    case AddDataSection.INPUT_CHECKPOINT:
-                    case AddDataSection.ADD_DATA_WATERMARK: {
+                    case AddDataSection.PREV_OFFSET: {
+                        if (event.__typename) {
+                            result.push({
+                                title: this.sectionTitleMapper[section],
+                                rows: [
+                                    this.buildSupportedRow(
+                                        event.__typename,
+                                        ADD_DATA_SOURCE_DESCRIPTORS,
+                                        "number",
+                                        section,
+                                        data,
+                                    ),
+                                ],
+                            });
+                        }
+                        break;
+                    }
+                    case AddDataSection.PREV_CHECKPOINT:
+                    case AddDataSection.NEW_WATERMARK: {
                         if (event.__typename) {
                             result.push({
                                 title: this.sectionTitleMapper[section],
@@ -86,7 +108,7 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
 
     private valueTransformMapper(key: keyof DataSlice, value: unknown): unknown {
         switch (key) {
-            case "interval":
+            case "offsetInterval":
                 return {
                     block: value,
                     datasetId: null,

@@ -7,7 +7,6 @@ export const eventsWithYamlView: SupportedEvents[] = [
     SupportedEvents.SetLicense,
     SupportedEvents.SetInfo,
     SupportedEvents.SetVocab,
-    SupportedEvents.SetWatermark,
     SupportedEvents.Seed,
     SupportedEvents.AddPushSource,
 ];

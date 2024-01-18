@@ -21,13 +21,13 @@ export type Scalars = {
     DatasetID: string;
     DatasetName: string;
     DatasetRef: string;
-    DatasetRefAny: string;
     /**
      * Implement the DateTime<Utc> scalar
      *
      * The input/output is a string in RFC3339 format.
      */
     DateTime: string;
+    EventID: string;
     FlowID: string;
     Multihash: string;
     TaskID: string;
@@ -43,8 +43,10 @@ export type Account = {
     avatarUrl?: Maybe<Scalars["String"]>;
     /** Account name to display */
     displayName: Scalars["AccountDisplayName"];
-    /** Unique and stable identitfier of this account */
+    /** Unique and stable identifier of this account */
     id: Scalars["AccountID"];
+    /** Indicates the administrator status */
+    isAdmin: Scalars["Boolean"];
 };
 
 export enum AccountType {
@@ -70,11 +72,12 @@ export type AccountsByNameArgs = {
 
 export type AddData = {
     __typename?: "AddData";
-    inputCheckpoint?: Maybe<Scalars["Multihash"]>;
-    outputCheckpoint?: Maybe<Checkpoint>;
-    outputData?: Maybe<DataSlice>;
-    outputWatermark?: Maybe<Scalars["DateTime"]>;
-    sourceState?: Maybe<SourceState>;
+    newCheckpoint?: Maybe<Checkpoint>;
+    newData?: Maybe<DataSlice>;
+    newSourceState?: Maybe<SourceState>;
+    newWatermark?: Maybe<Scalars["DateTime"]>;
+    prevCheckpoint?: Maybe<Scalars["Multihash"]>;
+    prevOffset?: Maybe<Scalars["Int"]>;
 };
 
 export type AddPushSource = {
@@ -82,7 +85,12 @@ export type AddPushSource = {
     merge: MergeStrategy;
     preprocess?: Maybe<Transform>;
     read: ReadStep;
-    sourceName?: Maybe<Scalars["String"]>;
+    sourceName: Scalars["String"];
+};
+
+export type Admin = {
+    __typename?: "Admin";
+    selfTest: Scalars["String"];
 };
 
 export type AttachmentEmbedded = {
@@ -116,12 +124,6 @@ export type AuthMutAccountDetailsArgs = {
 export type AuthMutLoginArgs = {
     loginCredentialsJson: Scalars["String"];
     loginMethod: Scalars["String"];
-};
-
-export type BlockInterval = {
-    __typename?: "BlockInterval";
-    end: Scalars["Multihash"];
-    start: Scalars["Multihash"];
 };
 
 export type BlockRef = {
@@ -273,8 +275,8 @@ export enum DataSchemaFormat {
 
 export type DataSlice = {
     __typename?: "DataSlice";
-    interval: OffsetInterval;
     logicalHash: Scalars["Multihash"];
+    offsetInterval: OffsetInterval;
     physicalHash: Scalars["Multihash"];
     size: Scalars["Int"];
 };
@@ -331,8 +333,19 @@ export type DatasetData = {
     numRecordsTotal: Scalars["Int"];
     /**
      * Returns the specified number of the latest records in the dataset
-     * This is equivalent to the SQL query: `SELECT * FROM dataset ORDER BY
-     * event_time DESC LIMIT N`
+     * This is equivalent to SQL query like:
+     *
+     * ```text
+     * select * from (
+     * select
+     * *
+     * from dataset
+     * order by offset desc
+     * limit lim
+     * offset skip
+     * )
+     * order by offset
+     * ```
      */
     tail: DataQueryResult;
 };
@@ -378,6 +391,21 @@ export type DatasetFlowConfigsMutSetConfigScheduleArgs = {
     schedule: ScheduleInput;
 };
 
+export type DatasetFlowRuns = {
+    __typename?: "DatasetFlowRuns";
+    getFlow: GetFlowResult;
+    listFlows: FlowConnection;
+};
+
+export type DatasetFlowRunsGetFlowArgs = {
+    flowId: Scalars["FlowID"];
+};
+
+export type DatasetFlowRunsListFlowsArgs = {
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+};
+
 export type DatasetFlowRunsMut = {
     __typename?: "DatasetFlowRunsMut";
     cancelScheduledTasks: CancelScheduledTasksResult;
@@ -394,7 +422,7 @@ export type DatasetFlowRunsMutTriggerFlowArgs = {
 
 export enum DatasetFlowType {
     Compaction = "COMPACTION",
-    ExecuteQuery = "EXECUTE_QUERY",
+    ExecuteTransform = "EXECUTE_TRANSFORM",
     Ingest = "INGEST",
 }
 
@@ -402,6 +430,8 @@ export type DatasetFlows = {
     __typename?: "DatasetFlows";
     /** Returns interface for flow configurations queries */
     configs: DatasetFlowConfigs;
+    /** Returns interface for flow runs queries */
+    runs: DatasetFlowRuns;
 };
 
 export type DatasetFlowsMut = {
@@ -436,8 +466,6 @@ export type DatasetMetadata = {
     currentReadme?: Maybe<Scalars["String"]>;
     /** Latest data schema */
     currentSchema?: Maybe<DataSchema>;
-    /** Deprecated - use `current_polling_source` instead */
-    currentSource?: Maybe<SetPollingSource>;
     /** Current transformation used by the derivative dataset */
     currentTransform?: Maybe<SetTransform>;
     /** Current upstream dependencies of a dataset */
@@ -474,10 +502,16 @@ export type DatasetMut = {
     metadata: DatasetMetadataMut;
     /** Rename the dataset */
     rename: RenameResult;
+    /** Manually advances the watermark of a root dataset */
+    setWatermark: SetWatermarkResult;
 };
 
 export type DatasetMutRenameArgs = {
     newName: Scalars["DatasetName"];
+};
+
+export type DatasetMutSetWatermarkArgs = {
+    watermark: Scalars["DateTime"];
 };
 
 export type DatasetPermissions = {
@@ -537,8 +571,8 @@ export type DatasetsMutByIdArgs = {
 };
 
 export type DatasetsMutCreateEmptyArgs = {
+    datasetAlias: Scalars["DatasetAlias"];
     datasetKind: DatasetKind;
-    datasetName: Scalars["DatasetName"];
 };
 
 export type DatasetsMutCreateFromSnapshotArgs = {
@@ -570,7 +604,7 @@ export type DisablePollingSource = {
 
 export type DisablePushSource = {
     __typename?: "DisablePushSource";
-    sourceName?: Maybe<Scalars["String"]>;
+    sourceName: Scalars["String"];
 };
 
 /** Describes */
@@ -578,7 +612,7 @@ export type EngineDesc = {
     __typename?: "EngineDesc";
     /**
      * Language and dialect this engine is using for queries
-     * Indended for configuring code highlighting and completions.
+     * Indented for configuring code highlighting and completions.
      */
     dialect: QueryDialect;
     /**
@@ -617,13 +651,23 @@ export type EventTimeSourceFromSystemTime = {
     dummy?: Maybe<Scalars["String"]>;
 };
 
-export type ExecuteQuery = {
-    __typename?: "ExecuteQuery";
-    inputCheckpoint?: Maybe<Scalars["Multihash"]>;
-    inputSlices: Array<InputSlice>;
-    outputCheckpoint?: Maybe<Checkpoint>;
-    outputData?: Maybe<DataSlice>;
-    outputWatermark?: Maybe<Scalars["DateTime"]>;
+export type ExecuteTransform = {
+    __typename?: "ExecuteTransform";
+    newCheckpoint?: Maybe<Checkpoint>;
+    newData?: Maybe<DataSlice>;
+    newWatermark?: Maybe<Scalars["DateTime"]>;
+    prevCheckpoint?: Maybe<Scalars["Multihash"]>;
+    prevOffset?: Maybe<Scalars["Int"]>;
+    queryInputs: Array<ExecuteTransformInput>;
+};
+
+export type ExecuteTransformInput = {
+    __typename?: "ExecuteTransformInput";
+    datasetId: Scalars["DatasetID"];
+    newBlockHash?: Maybe<Scalars["Multihash"]>;
+    newOffset?: Maybe<Scalars["Int"]>;
+    prevBlockHash?: Maybe<Scalars["Multihash"]>;
+    prevOffset?: Maybe<Scalars["Int"]>;
 };
 
 export type FetchStep = FetchStepContainer | FetchStepFilesGlob | FetchStepUrl;
@@ -654,9 +698,26 @@ export type FetchStepUrl = {
 
 export type Flow = {
     __typename?: "Flow";
+    /** Description of key flow parameters */
+    description: FlowDescription;
+    /** Unique identifier of the flow */
     flowId: Scalars["FlowID"];
+    /** History of flow events */
+    history: Array<FlowEvent>;
+    /** A user, who initiated the flow run. None for system-initiated flows */
+    initiator?: Maybe<Account>;
+    /** Outcome of the flow (Finished state only) */
     outcome?: Maybe<FlowOutcome>;
+    /** Primary flow trigger */
+    primaryTrigger: FlowTrigger;
+    /** Start condition */
+    startCondition?: Maybe<FlowStartCondition>;
+    /** Status of the flow */
     status: FlowStatus;
+    /** Associated tasks */
+    tasks: Array<Task>;
+    /** Timing records associated with the flow lifecycle */
+    timing: FlowTimingRecords;
 };
 
 export type FlowConfiguration = {
@@ -674,6 +735,109 @@ export type FlowConfigurationBatching = {
 
 export type FlowConfigurationSchedule = CronExpression | TimeDelta;
 
+export type FlowConnection = {
+    __typename?: "FlowConnection";
+    edges: Array<FlowEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<Flow>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount: Scalars["Int"];
+};
+
+export type FlowDescription =
+    | FlowDescriptionDatasetCompaction
+    | FlowDescriptionDatasetExecuteTransform
+    | FlowDescriptionDatasetPollingIngest
+    | FlowDescriptionDatasetPushIngest
+    | FlowDescriptionSystemGc;
+
+export type FlowDescriptionDatasetCompaction = {
+    __typename?: "FlowDescriptionDatasetCompaction";
+    datasetId: Scalars["DatasetID"];
+    originalBlocksCount: Scalars["Int"];
+    resultingBlocksCount?: Maybe<Scalars["Int"]>;
+};
+
+export type FlowDescriptionDatasetExecuteTransform = {
+    __typename?: "FlowDescriptionDatasetExecuteTransform";
+    datasetId: Scalars["DatasetID"];
+    transformedRecordsCount?: Maybe<Scalars["Int"]>;
+};
+
+export type FlowDescriptionDatasetPollingIngest = {
+    __typename?: "FlowDescriptionDatasetPollingIngest";
+    datasetId: Scalars["DatasetID"];
+    ingestedRecordsCount?: Maybe<Scalars["Int"]>;
+};
+
+export type FlowDescriptionDatasetPushIngest = {
+    __typename?: "FlowDescriptionDatasetPushIngest";
+    datasetId: Scalars["DatasetID"];
+    ingestedRecordsCount?: Maybe<Scalars["Int"]>;
+    inputRecordsCount: Scalars["Int"];
+    sourceName?: Maybe<Scalars["String"]>;
+};
+
+export type FlowDescriptionSystemGc = {
+    __typename?: "FlowDescriptionSystemGC";
+    dummy: Scalars["Boolean"];
+};
+
+export type FlowEdge = {
+    __typename?: "FlowEdge";
+    node: Flow;
+};
+
+export type FlowEvent = {
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+};
+
+export type FlowEventAborted = FlowEvent & {
+    __typename?: "FlowEventAborted";
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+};
+
+export type FlowEventInitiated = FlowEvent & {
+    __typename?: "FlowEventInitiated";
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+    trigger: FlowTrigger;
+};
+
+export type FlowEventQueued = FlowEvent & {
+    __typename?: "FlowEventQueued";
+    activateAt: Scalars["DateTime"];
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+};
+
+export type FlowEventStartConditionDefined = FlowEvent & {
+    __typename?: "FlowEventStartConditionDefined";
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+    startCondition: FlowStartCondition;
+};
+
+export type FlowEventTaskChanged = FlowEvent & {
+    __typename?: "FlowEventTaskChanged";
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+    task: Task;
+    taskId: Scalars["TaskID"];
+    taskStatus: TaskStatus;
+};
+
+export type FlowEventTriggerAdded = FlowEvent & {
+    __typename?: "FlowEventTriggerAdded";
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+    trigger: FlowTrigger;
+};
+
 export type FlowIncompatibleDatasetKind = SetFlowConfigResult &
     TriggerFlowResult & {
         __typename?: "FlowIncompatibleDatasetKind";
@@ -682,11 +846,12 @@ export type FlowIncompatibleDatasetKind = SetFlowConfigResult &
         message: Scalars["String"];
     };
 
-export type FlowNotFound = CancelScheduledTasksResult & {
-    __typename?: "FlowNotFound";
-    flowId: Scalars["FlowID"];
-    message: Scalars["String"];
-};
+export type FlowNotFound = CancelScheduledTasksResult &
+    GetFlowResult & {
+        __typename?: "FlowNotFound";
+        flowId: Scalars["FlowID"];
+        message: Scalars["String"];
+    };
 
 export type FlowNotScheduled = CancelScheduledTasksResult & {
     __typename?: "FlowNotScheduled";
@@ -701,18 +866,71 @@ export enum FlowOutcome {
     Success = "SUCCESS",
 }
 
+export type FlowStartCondition = FlowStartConditionBatching | FlowStartConditionThrottling;
+
+export type FlowStartConditionBatching = {
+    __typename?: "FlowStartConditionBatching";
+    thresholdNewRecords: Scalars["Int"];
+};
+
+export type FlowStartConditionThrottling = {
+    __typename?: "FlowStartConditionThrottling";
+    intervalSec: Scalars["Int"];
+};
+
 export enum FlowStatus {
-    Draft = "DRAFT",
     Finished = "FINISHED",
     Queued = "QUEUED",
+    Running = "RUNNING",
     Scheduled = "SCHEDULED",
+    Waiting = "WAITING",
 }
 
-export type InputSlice = {
-    __typename?: "InputSlice";
-    blockInterval?: Maybe<BlockInterval>;
-    dataInterval?: Maybe<OffsetInterval>;
+export type FlowTimingRecords = {
+    __typename?: "FlowTimingRecords";
+    /** Planned activation time (at least, Queued state) */
+    activateAt?: Maybe<Scalars["DateTime"]>;
+    /**
+     * Recorded time of finish (successful or failed after retry) or abortion
+     * (Finished state seen at least once)
+     */
+    finishedAt?: Maybe<Scalars["DateTime"]>;
+    /** Recorded start of running (Running state seen at least once) */
+    runningSince?: Maybe<Scalars["DateTime"]>;
+};
+
+export type FlowTrigger = FlowTriggerAutoPolling | FlowTriggerInputDatasetFlow | FlowTriggerManual | FlowTriggerPush;
+
+export type FlowTriggerAutoPolling = {
+    __typename?: "FlowTriggerAutoPolling";
+    dummy: Scalars["Boolean"];
+};
+
+export type FlowTriggerInputDatasetFlow = {
+    __typename?: "FlowTriggerInputDatasetFlow";
     datasetId: Scalars["DatasetID"];
+    flowId: Scalars["FlowID"];
+    flowType: DatasetFlowType;
+};
+
+export type FlowTriggerManual = {
+    __typename?: "FlowTriggerManual";
+    initiator: Account;
+};
+
+export type FlowTriggerPush = {
+    __typename?: "FlowTriggerPush";
+    dummy: Scalars["Boolean"];
+};
+
+export type GetFlowResult = {
+    message: Scalars["String"];
+};
+
+export type GetFlowSuccess = GetFlowResult & {
+    __typename?: "GetFlowSuccess";
+    flow: Flow;
+    message: Scalars["String"];
 };
 
 export type LoginResponse = {
@@ -736,10 +954,6 @@ export type MergeStrategyLedger = {
 export type MergeStrategySnapshot = {
     __typename?: "MergeStrategySnapshot";
     compareColumns?: Maybe<Array<Scalars["String"]>>;
-    observationColumn?: Maybe<Scalars["String"]>;
-    obsvAdded?: Maybe<Scalars["String"]>;
-    obsvChanged?: Maybe<Scalars["String"]>;
-    obsvRemoved?: Maybe<Scalars["String"]>;
     primaryKey: Array<Scalars["String"]>;
 };
 
@@ -814,7 +1028,7 @@ export type MetadataEvent =
     | AddPushSource
     | DisablePollingSource
     | DisablePushSource
-    | ExecuteQuery
+    | ExecuteTransform
     | Seed
     | SetAttachments
     | SetDataSchema
@@ -822,8 +1036,7 @@ export type MetadataEvent =
     | SetLicense
     | SetPollingSource
     | SetTransform
-    | SetVocab
-    | SetWatermark;
+    | SetVocab;
 
 export enum MetadataManifestFormat {
     Yaml = "YAML",
@@ -848,7 +1061,7 @@ export type Mutation = {
     /**
      * Dataset-related functionality group.
      *
-     * Datasets are historical streams of events recorded under a cetrain
+     * Datasets are historical streams of events recorded under a certain
      * schema.
      */
     datasets: DatasetsMut;
@@ -910,6 +1123,8 @@ export type Query = {
      * system. This groups deals with their identities and permissions.
      */
     accounts: Accounts;
+    /** Admin-related functionality group */
+    admin: Admin;
     /** Returns the version of the GQL API */
     apiVersion: Scalars["String"];
     /** Authentication and authorization-related functionality group */
@@ -919,11 +1134,11 @@ export type Query = {
     /**
      * Dataset-related functionality group.
      *
-     * Datasets are historical streams of events recorded under a cetrain
+     * Datasets are historical streams of events recorded under a certain
      * schema.
      */
     datasets: Datasets;
-    /** Search-related functionality group. */
+    /** Search-related functionality group */
     search: Search;
     /**
      * Task-related functionality group.
@@ -946,28 +1161,18 @@ export type ReadStep =
     | ReadStepEsriShapefile
     | ReadStepGeoJson
     | ReadStepJson
-    | ReadStepJsonLines
     | ReadStepNdGeoJson
     | ReadStepNdJson
     | ReadStepParquet;
 
 export type ReadStepCsv = {
     __typename?: "ReadStepCsv";
-    comment?: Maybe<Scalars["String"]>;
     dateFormat?: Maybe<Scalars["String"]>;
-    emptyValue?: Maybe<Scalars["String"]>;
     encoding?: Maybe<Scalars["String"]>;
-    enforceSchema?: Maybe<Scalars["Boolean"]>;
     escape?: Maybe<Scalars["String"]>;
     header?: Maybe<Scalars["Boolean"]>;
-    ignoreLeadingWhiteSpace?: Maybe<Scalars["Boolean"]>;
-    ignoreTrailingWhiteSpace?: Maybe<Scalars["Boolean"]>;
     inferSchema?: Maybe<Scalars["Boolean"]>;
-    multiLine?: Maybe<Scalars["Boolean"]>;
-    nanValue?: Maybe<Scalars["String"]>;
-    negativeInf?: Maybe<Scalars["String"]>;
     nullValue?: Maybe<Scalars["String"]>;
-    positiveInf?: Maybe<Scalars["String"]>;
     quote?: Maybe<Scalars["String"]>;
     schema?: Maybe<Array<Scalars["String"]>>;
     separator?: Maybe<Scalars["String"]>;
@@ -991,16 +1196,6 @@ export type ReadStepJson = {
     encoding?: Maybe<Scalars["String"]>;
     schema?: Maybe<Array<Scalars["String"]>>;
     subPath?: Maybe<Scalars["String"]>;
-    timestampFormat?: Maybe<Scalars["String"]>;
-};
-
-export type ReadStepJsonLines = {
-    __typename?: "ReadStepJsonLines";
-    dateFormat?: Maybe<Scalars["String"]>;
-    encoding?: Maybe<Scalars["String"]>;
-    multiLine?: Maybe<Scalars["Boolean"]>;
-    primitivesAsString?: Maybe<Scalars["Boolean"]>;
-    schema?: Maybe<Array<Scalars["String"]>>;
     timestampFormat?: Maybe<Scalars["String"]>;
 };
 
@@ -1144,12 +1339,29 @@ export type SetVocab = {
     __typename?: "SetVocab";
     eventTimeColumn?: Maybe<Scalars["String"]>;
     offsetColumn?: Maybe<Scalars["String"]>;
+    operationTypeColumn?: Maybe<Scalars["String"]>;
     systemTimeColumn?: Maybe<Scalars["String"]>;
 };
 
-export type SetWatermark = {
-    __typename?: "SetWatermark";
-    outputWatermark: Scalars["DateTime"];
+export type SetWatermarkIsDerivative = SetWatermarkResult & {
+    __typename?: "SetWatermarkIsDerivative";
+    message: Scalars["String"];
+};
+
+export type SetWatermarkResult = {
+    message: Scalars["String"];
+};
+
+export type SetWatermarkUpToDate = SetWatermarkResult & {
+    __typename?: "SetWatermarkUpToDate";
+    dummy: Scalars["String"];
+    message: Scalars["String"];
+};
+
+export type SetWatermarkUpdated = SetWatermarkResult & {
+    __typename?: "SetWatermarkUpdated";
+    message: Scalars["String"];
+    newHead: Scalars["Multihash"];
 };
 
 export type SourceCaching = SourceCachingForever;
@@ -1167,7 +1379,7 @@ export enum SourceOrdering {
 export type SourceState = {
     __typename?: "SourceState";
     kind: Scalars["String"];
-    source: Scalars["String"];
+    sourceName: Scalars["String"];
     value: Scalars["String"];
 };
 
@@ -1196,7 +1408,7 @@ export type Task = {
     ranAt?: Maybe<Scalars["DateTime"]>;
     /** Life-cycle status of a task */
     status: TaskStatus;
-    /** Unique and stable identitfier of this task */
+    /** Unique and stable identifier of this task */
     taskId: Scalars["TaskID"];
 };
 
@@ -1315,10 +1527,9 @@ export type Transform = TransformSql;
 
 export type TransformInput = {
     __typename?: "TransformInput";
+    alias: Scalars["String"];
     dataset: Dataset;
-    datasetRef?: Maybe<Scalars["DatasetRefAny"]>;
-    id?: Maybe<Scalars["DatasetID"]>;
-    name: Scalars["DatasetName"];
+    datasetRef: Scalars["DatasetRef"];
 };
 
 export type TransformSql = {
@@ -1386,7 +1597,7 @@ export type CommitEventToDatasetMutation = {
 
 export type CreateEmptyDatasetMutationVariables = Exact<{
     datasetKind: DatasetKind;
-    datasetName: Scalars["DatasetName"];
+    datasetAlias: Scalars["DatasetAlias"];
 }>;
 
 export type CreateEmptyDatasetMutation = {
@@ -1439,6 +1650,25 @@ export type UpdateReadmeMutation = {
                     | { __typename: "CommitResultSuccess"; oldHead?: string | null; message: string }
                     | { __typename: "NoChanges"; message: string };
             };
+        } | null;
+    };
+};
+
+export type UpdateWatermarkMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    watermark: Scalars["DateTime"];
+}>;
+
+export type UpdateWatermarkMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            setWatermark:
+                | { __typename?: "SetWatermarkIsDerivative"; message: string }
+                | { __typename?: "SetWatermarkUpToDate"; dummy: string; message: string }
+                | { __typename?: "SetWatermarkUpdated"; newHead: string; message: string };
         } | null;
     };
 };
@@ -1635,27 +1865,28 @@ export type EnginesQuery = {
 
 export type AddDataEventFragment = {
     __typename?: "AddData";
-    inputCheckpoint?: string | null;
-    addDataWatermark?: string | null;
-    outputData?: {
+    prevCheckpoint?: string | null;
+    prevOffset?: number | null;
+    newWatermark?: string | null;
+    newData?: {
         __typename?: "DataSlice";
         logicalHash: string;
         physicalHash: string;
         size: number;
-        interval: { __typename?: "OffsetInterval"; start: number; end: number };
+        offsetInterval: { __typename?: "OffsetInterval"; start: number; end: number };
     } | null;
-    outputCheckpoint?: { __typename?: "Checkpoint"; physicalHash: string; size: number } | null;
+    newCheckpoint?: { __typename?: "Checkpoint"; physicalHash: string; size: number } | null;
+    newSourceState?: { __typename?: "SourceState"; sourceName: string; kind: string; value: string } | null;
 };
 
 export type AddPushSourceEventFragment = {
     __typename?: "AddPushSource";
-    sourceName?: string | null;
+    sourceName: string;
     read:
         | ({ __typename?: "ReadStepCsv" } & ReadStepCsvDataFragment)
         | ({ __typename?: "ReadStepEsriShapefile" } & ReadStepEsriShapefileDataFragment)
         | ({ __typename?: "ReadStepGeoJson" } & ReadStepGeoJsonDataFragment)
         | ({ __typename?: "ReadStepJson" } & ReadStepJsonDataFragment)
-        | ({ __typename?: "ReadStepJsonLines" } & ReadStepJsonLinesDataFragment)
         | ({ __typename?: "ReadStepNdGeoJson" } & ReadStepNdGeoJsonDataFragment)
         | ({ __typename?: "ReadStepNdJson" } & ReadStepNdJsonDataFragment)
         | ({ __typename?: "ReadStepParquet" } & ReadStepParquetDataFragment);
@@ -1668,23 +1899,27 @@ export type AddPushSourceEventFragment = {
 
 export type DisablePollingSourceEventFragment = { __typename?: "DisablePollingSource"; dummy?: string | null };
 
-export type ExecuteQueryEventFragment = {
-    __typename?: "ExecuteQuery";
-    inputCheckpoint?: string | null;
-    watermark?: string | null;
-    queryOutputData?: {
+export type ExecuteTransformEventFragment = {
+    __typename?: "ExecuteTransform";
+    prevCheckpoint?: string | null;
+    prevOffset?: number | null;
+    newWatermark?: string | null;
+    queryInputs: Array<{
+        __typename?: "ExecuteTransformInput";
+        datasetId: string;
+        prevBlockHash?: string | null;
+        newBlockHash?: string | null;
+        prevOffset?: number | null;
+        newOffset?: number | null;
+    }>;
+    newData?: {
         __typename?: "DataSlice";
         logicalHash: string;
         physicalHash: string;
-        interval: { __typename?: "OffsetInterval"; start: number; end: number };
+        size: number;
+        offsetInterval: { __typename?: "OffsetInterval"; start: number; end: number };
     } | null;
-    inputSlices: Array<{
-        __typename?: "InputSlice";
-        datasetId: string;
-        blockInterval?: { __typename?: "BlockInterval"; start: string; end: string } | null;
-        dataInterval?: { __typename?: "OffsetInterval"; start: number; end: number } | null;
-    }>;
-    outputCheckpoint?: { __typename?: "Checkpoint"; physicalHash: string; size: number } | null;
+    newCheckpoint?: { __typename?: "Checkpoint"; physicalHash: string; size: number } | null;
 };
 
 export type SeedEventFragment = { __typename?: "Seed"; datasetId: string; datasetKind: DatasetKind };
@@ -1721,7 +1956,6 @@ export type SetPollingSourceEventFragment = {
         | ({ __typename?: "ReadStepEsriShapefile" } & ReadStepEsriShapefileDataFragment)
         | ({ __typename?: "ReadStepGeoJson" } & ReadStepGeoJsonDataFragment)
         | ({ __typename?: "ReadStepJson" } & ReadStepJsonDataFragment)
-        | ({ __typename?: "ReadStepJsonLines" } & ReadStepJsonLinesDataFragment)
         | ({ __typename?: "ReadStepNdGeoJson" } & ReadStepNdGeoJsonDataFragment)
         | ({ __typename?: "ReadStepNdJson" } & ReadStepNdJsonDataFragment)
         | ({ __typename?: "ReadStepParquet" } & ReadStepParquetDataFragment);
@@ -1738,12 +1972,11 @@ export type SetPollingSourceEventFragment = {
 
 export type SetVocabEventFragment = {
     __typename?: "SetVocab";
+    offsetColumn?: string | null;
+    operationTypeColumn?: string | null;
     systemTimeColumn?: string | null;
     eventTimeColumn?: string | null;
-    offsetColumn?: string | null;
 };
-
-export type SetWatermarkEventFragment = { __typename?: "SetWatermark"; outputWatermark: string };
 
 export type FetchStepContainerDataFragment = {
     __typename?: "FetchStepContainer";
@@ -1785,10 +2018,6 @@ export type MergeStrategySnapshotDataFragment = {
     __typename?: "MergeStrategySnapshot";
     primaryKey: Array<string>;
     compareColumns?: Array<string> | null;
-    observationColumn?: string | null;
-    obsvAdded?: string | null;
-    obsvChanged?: string | null;
-    obsvRemoved?: string | null;
 };
 
 export type PrepStepDecompressDataFragment = {
@@ -1814,20 +2043,11 @@ export type ReadStepCsvDataFragment = {
     encoding?: string | null;
     quote?: string | null;
     escape?: string | null;
-    comment?: string | null;
     header?: boolean | null;
-    enforceSchema?: boolean | null;
     inferSchema?: boolean | null;
-    ignoreLeadingWhiteSpace?: boolean | null;
-    ignoreTrailingWhiteSpace?: boolean | null;
     nullValue?: string | null;
-    emptyValue?: string | null;
-    nanValue?: string | null;
-    positiveInf?: string | null;
-    negativeInf?: string | null;
     dateFormat?: string | null;
     timestampFormat?: string | null;
-    multiLine?: boolean | null;
 };
 
 export type ReadStepEsriShapefileDataFragment = {
@@ -1837,16 +2057,6 @@ export type ReadStepEsriShapefileDataFragment = {
 };
 
 export type ReadStepGeoJsonDataFragment = { __typename?: "ReadStepGeoJson"; schema?: Array<string> | null };
-
-export type ReadStepJsonLinesDataFragment = {
-    __typename?: "ReadStepJsonLines";
-    schema?: Array<string> | null;
-    dateFormat?: string | null;
-    encoding?: string | null;
-    multiLine?: boolean | null;
-    primitivesAsString?: boolean | null;
-    timestampFormat?: string | null;
-};
 
 export type ReadStepJsonDataFragment = {
     __typename?: "ReadStepJson";
@@ -1885,6 +2095,7 @@ export type AccountFragment = {
     displayName: string;
     accountType: AccountType;
     avatarUrl?: string | null;
+    isAdmin: boolean;
 };
 
 export type CurrentSourceFetchUrlFragment = {
@@ -2136,8 +2347,8 @@ export type DatasetTransformFragment = {
     __typename?: "SetTransform";
     inputs: Array<{
         __typename?: "TransformInput";
-        name: string;
-        datasetRef?: string | null;
+        datasetRef: string;
+        alias: string;
         dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
     }>;
     transform: { __typename?: "TransformSql" } & DatasetTransformContentFragment;
@@ -2163,7 +2374,7 @@ export type MetadataBlockFragment = {
         | ({ __typename: "AddPushSource" } & AddPushSourceEventFragment)
         | ({ __typename: "DisablePollingSource" } & DisablePollingSourceEventFragment)
         | { __typename: "DisablePushSource" }
-        | ({ __typename: "ExecuteQuery" } & ExecuteQueryEventFragment)
+        | ({ __typename: "ExecuteTransform" } & ExecuteTransformEventFragment)
         | ({ __typename: "Seed" } & SeedEventFragment)
         | ({ __typename: "SetAttachments" } & SetAttachmentsEventFragment)
         | ({ __typename: "SetDataSchema" } & SetDataSchemaEventFragment)
@@ -2171,8 +2382,7 @@ export type MetadataBlockFragment = {
         | ({ __typename: "SetLicense" } & SetLicenseEventFragment)
         | ({ __typename: "SetPollingSource" } & SetPollingSourceEventFragment)
         | ({ __typename: "SetTransform" } & DatasetTransformFragment)
-        | ({ __typename: "SetVocab" } & SetVocabEventFragment)
-        | ({ __typename: "SetWatermark" } & SetWatermarkEventFragment);
+        | ({ __typename: "SetVocab" } & SetVocabEventFragment);
 };
 
 export type LoginMutationVariables = Exact<{
@@ -2411,6 +2621,7 @@ export const AccountFragmentDoc = gql`
         displayName
         accountType
         avatarUrl
+        isAdmin
     }
 `;
 export const DatasetDataSizeFragmentDoc = gql`
@@ -2645,46 +2856,11 @@ export const ReadStepCsvDataFragmentDoc = gql`
         encoding
         quote
         escape
-        comment
         header
-        enforceSchema
         inferSchema
-        ignoreLeadingWhiteSpace
-        ignoreTrailingWhiteSpace
         nullValue
-        emptyValue
-        nanValue
-        positiveInf
-        negativeInf
         dateFormat
         timestampFormat
-        multiLine
-    }
-`;
-export const ReadStepGeoJsonDataFragmentDoc = gql`
-    fragment ReadStepGeoJsonData on ReadStepGeoJson {
-        schema
-    }
-`;
-export const ReadStepParquetDataFragmentDoc = gql`
-    fragment ReadStepParquetData on ReadStepParquet {
-        schema
-    }
-`;
-export const ReadStepJsonLinesDataFragmentDoc = gql`
-    fragment ReadStepJsonLinesData on ReadStepJsonLines {
-        schema
-        dateFormat
-        encoding
-        multiLine
-        primitivesAsString
-        timestampFormat
-    }
-`;
-export const ReadStepEsriShapefileDataFragmentDoc = gql`
-    fragment ReadStepEsriShapefileData on ReadStepEsriShapefile {
-        schema
-        subPath
     }
 `;
 export const ReadStepJsonDataFragmentDoc = gql`
@@ -2696,11 +2872,6 @@ export const ReadStepJsonDataFragmentDoc = gql`
         timestampFormat
     }
 `;
-export const ReadStepNdGeoJsonDataFragmentDoc = gql`
-    fragment ReadStepNdGeoJsonData on ReadStepNdGeoJson {
-        schema
-    }
-`;
 export const ReadStepNdJsonDataFragmentDoc = gql`
     fragment ReadStepNdJsonData on ReadStepNdJson {
         dateFormat
@@ -2709,14 +2880,31 @@ export const ReadStepNdJsonDataFragmentDoc = gql`
         timestampFormat
     }
 `;
+export const ReadStepGeoJsonDataFragmentDoc = gql`
+    fragment ReadStepGeoJsonData on ReadStepGeoJson {
+        schema
+    }
+`;
+export const ReadStepNdGeoJsonDataFragmentDoc = gql`
+    fragment ReadStepNdGeoJsonData on ReadStepNdGeoJson {
+        schema
+    }
+`;
+export const ReadStepEsriShapefileDataFragmentDoc = gql`
+    fragment ReadStepEsriShapefileData on ReadStepEsriShapefile {
+        schema
+        subPath
+    }
+`;
+export const ReadStepParquetDataFragmentDoc = gql`
+    fragment ReadStepParquetData on ReadStepParquet {
+        schema
+    }
+`;
 export const MergeStrategySnapshotDataFragmentDoc = gql`
     fragment MergeStrategySnapshotData on MergeStrategySnapshot {
         primaryKey
         compareColumns
-        observationColumn
-        obsvAdded
-        obsvChanged
-        obsvRemoved
     }
 `;
 export const MergeStrategyLedgerDataFragmentDoc = gql`
@@ -2763,13 +2951,12 @@ export const SetPollingSourceEventFragmentDoc = gql`
         }
         read {
             ...ReadStepCsvData
-            ...ReadStepGeoJsonData
-            ...ReadStepParquetData
-            ...ReadStepJsonLinesData
-            ...ReadStepEsriShapefileData
             ...ReadStepJsonData
-            ...ReadStepNdGeoJsonData
             ...ReadStepNdJsonData
+            ...ReadStepGeoJsonData
+            ...ReadStepNdGeoJsonData
+            ...ReadStepEsriShapefileData
+            ...ReadStepParquetData
         }
         merge {
             ...MergeStrategySnapshotData
@@ -2788,13 +2975,12 @@ export const SetPollingSourceEventFragmentDoc = gql`
     ${FetchStepFilesGlobDataFragmentDoc}
     ${FetchStepContainerDataFragmentDoc}
     ${ReadStepCsvDataFragmentDoc}
-    ${ReadStepGeoJsonDataFragmentDoc}
-    ${ReadStepParquetDataFragmentDoc}
-    ${ReadStepJsonLinesDataFragmentDoc}
-    ${ReadStepEsriShapefileDataFragmentDoc}
     ${ReadStepJsonDataFragmentDoc}
-    ${ReadStepNdGeoJsonDataFragmentDoc}
     ${ReadStepNdJsonDataFragmentDoc}
+    ${ReadStepGeoJsonDataFragmentDoc}
+    ${ReadStepNdGeoJsonDataFragmentDoc}
+    ${ReadStepEsriShapefileDataFragmentDoc}
+    ${ReadStepParquetDataFragmentDoc}
     ${MergeStrategySnapshotDataFragmentDoc}
     ${MergeStrategyLedgerDataFragmentDoc}
     ${MergeStrategyAppendDataFragmentDoc}
@@ -2819,11 +3005,11 @@ export const DatasetTransformContentFragmentDoc = gql`
 export const DatasetTransformFragmentDoc = gql`
     fragment DatasetTransform on SetTransform {
         inputs {
-            name
+            datasetRef
+            alias
             dataset {
                 ...DatasetBasics
             }
-            datasetRef
         }
         transform {
             ...DatasetTransformContent
@@ -2834,9 +3020,10 @@ export const DatasetTransformFragmentDoc = gql`
 `;
 export const SetVocabEventFragmentDoc = gql`
     fragment SetVocabEvent on SetVocab {
+        offsetColumn
+        operationTypeColumn
         systemTimeColumn
         eventTimeColumn
-        offsetColumn
     }
 `;
 export const AddPushSourceEventFragmentDoc = gql`
@@ -2844,13 +3031,12 @@ export const AddPushSourceEventFragmentDoc = gql`
         sourceName
         read {
             ...ReadStepCsvData
-            ...ReadStepGeoJsonData
-            ...ReadStepParquetData
-            ...ReadStepJsonLinesData
-            ...ReadStepEsriShapefileData
             ...ReadStepJsonData
-            ...ReadStepNdGeoJsonData
             ...ReadStepNdJsonData
+            ...ReadStepGeoJsonData
+            ...ReadStepNdGeoJsonData
+            ...ReadStepEsriShapefileData
+            ...ReadStepParquetData
         }
         merge {
             ...MergeStrategySnapshotData
@@ -2862,13 +3048,12 @@ export const AddPushSourceEventFragmentDoc = gql`
         }
     }
     ${ReadStepCsvDataFragmentDoc}
-    ${ReadStepGeoJsonDataFragmentDoc}
-    ${ReadStepParquetDataFragmentDoc}
-    ${ReadStepJsonLinesDataFragmentDoc}
-    ${ReadStepEsriShapefileDataFragmentDoc}
     ${ReadStepJsonDataFragmentDoc}
-    ${ReadStepNdGeoJsonDataFragmentDoc}
     ${ReadStepNdJsonDataFragmentDoc}
+    ${ReadStepGeoJsonDataFragmentDoc}
+    ${ReadStepNdGeoJsonDataFragmentDoc}
+    ${ReadStepEsriShapefileDataFragmentDoc}
+    ${ReadStepParquetDataFragmentDoc}
     ${MergeStrategySnapshotDataFragmentDoc}
     ${MergeStrategyLedgerDataFragmentDoc}
     ${MergeStrategyAppendDataFragmentDoc}
@@ -2894,46 +3079,39 @@ export const SeedEventFragmentDoc = gql`
         datasetKind
     }
 `;
-export const SetWatermarkEventFragmentDoc = gql`
-    fragment SetWatermarkEvent on SetWatermark {
-        outputWatermark
-    }
-`;
-export const ExecuteQueryEventFragmentDoc = gql`
-    fragment ExecuteQueryEvent on ExecuteQuery {
-        queryOutputData: outputData {
-            interval {
+export const ExecuteTransformEventFragmentDoc = gql`
+    fragment ExecuteTransformEvent on ExecuteTransform {
+        queryInputs {
+            datasetId
+            prevBlockHash
+            newBlockHash
+            prevOffset
+            newOffset
+        }
+        prevCheckpoint
+        prevOffset
+        newData {
+            offsetInterval {
                 start
                 end
             }
             logicalHash
             physicalHash
+            size
         }
-        inputCheckpoint
-        watermark: outputWatermark
-        inputSlices {
-            datasetId
-            blockInterval {
-                start
-                end
-            }
-            dataInterval {
-                start
-                end
-            }
-        }
-        outputCheckpoint {
+        newCheckpoint {
             physicalHash
             size
         }
+        newWatermark
     }
 `;
 export const AddDataEventFragmentDoc = gql`
     fragment AddDataEvent on AddData {
-        addDataWatermark: outputWatermark
-        inputCheckpoint
-        outputData {
-            interval {
+        prevCheckpoint
+        prevOffset
+        newData {
+            offsetInterval {
                 start
                 end
             }
@@ -2941,9 +3119,15 @@ export const AddDataEventFragmentDoc = gql`
             physicalHash
             size
         }
-        outputCheckpoint {
+        newCheckpoint {
             physicalHash
             size
+        }
+        newWatermark
+        newSourceState {
+            sourceName
+            kind
+            value
         }
     }
 `;
@@ -2992,10 +3176,9 @@ export const MetadataBlockFragmentDoc = gql`
         event {
             __typename
             ...SeedEvent
-            ...SetWatermarkEvent
             ...SetVocabEvent
             ...DatasetTransform
-            ...ExecuteQueryEvent
+            ...ExecuteTransformEvent
             ...AddDataEvent
             ...SetAttachmentsEvent
             ...DatasetCurrentInfo
@@ -3008,10 +3191,9 @@ export const MetadataBlockFragmentDoc = gql`
     }
     ${AccountExtendedFragmentDoc}
     ${SeedEventFragmentDoc}
-    ${SetWatermarkEventFragmentDoc}
     ${SetVocabEventFragmentDoc}
     ${DatasetTransformFragmentDoc}
-    ${ExecuteQueryEventFragmentDoc}
+    ${ExecuteTransformEventFragmentDoc}
     ${AddDataEventFragmentDoc}
     ${SetAttachmentsEventFragmentDoc}
     ${DatasetCurrentInfoFragmentDoc}
@@ -3247,9 +3429,9 @@ export class CommitEventToDatasetGQL extends Apollo.Mutation<
     }
 }
 export const CreateEmptyDatasetDocument = gql`
-    mutation createEmptyDataset($datasetKind: DatasetKind!, $datasetName: DatasetName!) {
+    mutation createEmptyDataset($datasetKind: DatasetKind!, $datasetAlias: DatasetAlias!) {
         datasets {
-            createEmpty(datasetKind: $datasetKind, datasetName: $datasetName) {
+            createEmpty(datasetKind: $datasetKind, datasetAlias: $datasetAlias) {
                 message
             }
         }
@@ -3324,6 +3506,38 @@ export const UpdateReadmeDocument = gql`
 })
 export class UpdateReadmeGQL extends Apollo.Mutation<UpdateReadmeMutation, UpdateReadmeMutationVariables> {
     document = UpdateReadmeDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const UpdateWatermarkDocument = gql`
+    mutation updateWatermark($datasetId: DatasetID!, $watermark: DateTime!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                setWatermark(watermark: $watermark) {
+                    ... on SetWatermarkUpdated {
+                        newHead
+                        message
+                    }
+                    ... on SetWatermarkUpToDate {
+                        dummy
+                        message
+                    }
+                    ... on SetWatermarkIsDerivative {
+                        message
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class UpdateWatermarkGQL extends Apollo.Mutation<UpdateWatermarkMutation, UpdateWatermarkMutationVariables> {
+    document = UpdateWatermarkDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

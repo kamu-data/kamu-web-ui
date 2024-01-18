@@ -12,7 +12,7 @@ import { DatasetModule } from "src/app/dataset-view/dataset.module";
 import { BlockHeaderComponent } from "./components/block-header/block-header.component";
 import { BlockNavigationComponent } from "./components/block-navigation/block-navigation.component";
 import { MatMenuModule } from "@angular/material/menu";
-import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
+import { DisplayHashModule } from "src/app/components/display-hash/display-hash.module";
 import { AddDataEventComponent } from "./components/event-details/components/add-data-event/add-data-event.component";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { PaginationModule } from "src/app/components/pagination-component/pagination.module";
@@ -30,7 +30,7 @@ import { YamlEventViewerComponent } from "./components/event-details/components/
 import { SetTransformEventComponent } from "./components/event-details/components/set-transform-event/set-transform-event.component";
 import { BaseDynamicEventComponent } from "./components/event-details/components/base-dynamic-event/base-dynamic-event.component";
 import { YamlViewSectionComponent } from "./components/yaml-view-section/yaml-view-section.component";
-import { ExecuteQueryEventComponent } from "./components/event-details/components/execute-query-event/execute-query-event.component";
+import { ExecuteTransformEventComponent } from "./components/event-details/components/execute-transform-event/execute-transform-event.component";
 import { SizePropertyComponent } from "./components/event-details/components/common/size-property/size-property.component";
 import { HashPropertyComponent } from "./components/event-details/components/common/hash-property/hash-property.component";
 import { BlockIntervalPropertyComponent } from "./components/event-details/components/common/block-interval-property/block-interval-property.component";
@@ -38,7 +38,6 @@ import { SetLicenseEventComponent } from "./components/event-details/components/
 import { SetAttachmentsEventComponent } from "./components/event-details/components/set-attachments-event/set-attachments-event.component";
 import { SetInfoEventComponent } from "./components/event-details/components/set-info-event/set-info-event.component";
 import { SetVocabEventComponent } from "./components/event-details/components/set-vocab-event/set-vocab-event.component";
-import { SetWatermarkEventComponent } from "./components/event-details/components/set-watermark-event/set-watermark-event.component";
 import { TemporalTablesPropertyComponent } from "./components/event-details/components/common/temporal-tables-property/temporal-tables-property.component";
 import { OffsetIntervalPropertyComponent } from "./components/event-details/components/common/offset-interval-property/offset-interval-property.component";
 import { CachePropertyComponent } from "./components/event-details/components/common/cache-property/cache-property.component";
@@ -70,7 +69,7 @@ import { UnsupportedEventComponent } from "./components/event-details/components
         YamlEventViewerComponent,
         OffsetIntervalPropertyComponent,
         BaseDynamicEventComponent,
-        ExecuteQueryEventComponent,
+        ExecuteTransformEventComponent,
         YamlViewSectionComponent,
         SizePropertyComponent,
         HashPropertyComponent,
@@ -80,7 +79,6 @@ import { UnsupportedEventComponent } from "./components/event-details/components
         SetAttachmentsEventComponent,
         SetInfoEventComponent,
         SetVocabEventComponent,
-        SetWatermarkEventComponent,
         CachePropertyComponent,
         EventTimePropertyComponent,
         OrderPropertyComponent,

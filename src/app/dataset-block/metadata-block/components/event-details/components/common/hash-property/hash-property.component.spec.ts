@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { HashPropertyComponent } from "./hash-property.component";
-import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
+import { DisplayHashModule } from "src/app/components/display-hash/display-hash.module";
 import { ToastrModule } from "ngx-toastr";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 

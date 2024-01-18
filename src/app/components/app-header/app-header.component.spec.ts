@@ -80,6 +80,7 @@ describe("AppHeaderComponent", () => {
             accountName: "",
             displayName: AppValues.DEFAULT_USER_DISPLAY_NAME,
             accountType: AccountType.User,
+            isAdmin: false,
         };
         component.featureFlags = {
             enableLogout: true,

@@ -112,7 +112,7 @@ describe("AuthApi", () => {
 
     it("should check full login Github success", () => {
         service
-            .fetchAccountAndTokenFromGithubCallackCode({ code: TEST_GITHUB_CODE } as GithubLoginCredentials)
+            .fetchAccountAndTokenFromGithubCallbackCode({ code: TEST_GITHUB_CODE } as GithubLoginCredentials)
             .subscribe();
 
         const expectedCredentials: GithubLoginCredentials = { code: TEST_GITHUB_CODE };
@@ -128,7 +128,7 @@ describe("AuthApi", () => {
 
     it("should check full login Github failure", fakeAsync(() => {
         const subscription$ = service
-            .fetchAccountAndTokenFromGithubCallackCode({ code: TEST_GITHUB_CODE } as GithubLoginCredentials)
+            .fetchAccountAndTokenFromGithubCallbackCode({ code: TEST_GITHUB_CODE } as GithubLoginCredentials)
             .pipe(first())
             .subscribe({
                 next: () => fail("Unexpected success"),

@@ -1,4 +1,4 @@
-import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
+import { DisplayHashModule } from "src/app/components/display-hash/display-hash.module";
 import { DisplayTimeModule } from "../display-time/display-time.module";
 import { NgModule } from "@angular/core";
 import { MatMenuModule } from "@angular/material/menu";

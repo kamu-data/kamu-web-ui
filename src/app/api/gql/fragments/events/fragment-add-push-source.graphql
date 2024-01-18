@@ -2,13 +2,12 @@ fragment AddPushSourceEvent on AddPushSource {
   sourceName
   read {
     ...ReadStepCsvData
-    ...ReadStepGeoJsonData
-    ...ReadStepParquetData
-    ...ReadStepJsonLinesData
-    ...ReadStepEsriShapefileData
     ...ReadStepJsonData
-    ...ReadStepNdGeoJsonData
     ...ReadStepNdJsonData
+    ...ReadStepGeoJsonData
+    ...ReadStepNdGeoJsonData
+    ...ReadStepEsriShapefileData
+    ...ReadStepParquetData
   }
   merge {
     ...MergeStrategySnapshotData

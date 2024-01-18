@@ -23,6 +23,7 @@ import { SourceNameStepComponent } from "../steps/source-name-step/source-name-s
 import { PreprocessStepComponent } from "../steps/preprocess-step/preprocess-step.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NavigationService } from "src/app/services/navigation.service";
+import { MergeKind, ReadKind } from "../add-polling-source/add-polling-source-form.types";
 
 const providersSection = (name: string) => {
     return [
@@ -101,7 +102,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
         component.addPushSourceForm = new FormGroup({
             sourceName: new FormControl(""),
             read: new FormGroup({
-                kind: new FormControl("csv"),
+                kind: new FormControl(ReadKind.CSV),
                 schema: new FormArray([
                     new FormGroup({
                         name: new FormControl("id"),
@@ -110,7 +111,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
                 ]),
             }),
             merge: new FormGroup({
-                kind: new FormControl("append"),
+                kind: new FormControl(MergeKind.APPEND),
             }),
             prepare: new FormArray([]),
         });
@@ -129,7 +130,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
 
     it("should check eventYamlByHash is not null", () => {
         const mockEventYamlByHash =
-            "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-12-28T09:41:56.469218218Z\n  prevBlockHash: zW1jaUXuf1HLoKvdQhYNq1e3x6KCFrY7UCqXsgVMfJBJF77\n  sequenceNumber: 1\n  event:\n    kind: addPushSource\n    sourceName: mockSource\n    read:\n      kind: csv\n      schema:\n      - id INT\n      separator: ','\n      encoding: utf8\n      quote: '\"'\n      escape: \\\n      enforceSchema: true\n      nanValue: NaN\n      positiveInf: Inf\n      negativeInf: -Inf\n      dateFormat: rfc3339\n      timestampFormat: rfc3339\n    merge:\n      kind: append\n";
+            "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-12-28T09:41:56.469218218Z\n  prevBlockHash: zW1jaUXuf1HLoKvdQhYNq1e3x6KCFrY7UCqXsgVMfJBJF77\n  sequenceNumber: 1\n  event:\n    kind: AddPushSource\n    sourceName: mockSource\n    read:\n      kind: Csv\n      schema:\n      - id INT\n      separator: ','\n      encoding: utf8\n      quote: '\"'\n      escape: \\\n      dateFormat: rfc3339\n      timestampFormat: rfc3339\n    merge:\n      kind: Append\n";
         spyOn(editService, "getEventAsYaml").and.returnValue(of(mockEventYamlByHash));
         component.ngOnInit();
         expect(component.eventYamlByHash).toEqual(mockEventYamlByHash);
@@ -143,7 +144,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
         };
         const navigateToPageNotFoundSpy = spyOn(navigationService, "navigateToPageNotFound");
         const mockEventYamlByHash =
-            "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-12-28T09:41:56.469218218Z\n  prevBlockHash: zW1jaUXuf1HLoKvdQhYNq1e3x6KCFrY7UCqXsgVMfJBJF77\n  sequenceNumber: 1\n  event:\n    kind: addPushSource\n    sourceName: mockSource\n    read:\n      kind: csv\n      schema:\n      - id INT\n      separator: ','\n      encoding: utf8\n      quote: '\"'\n      escape: \\\n      enforceSchema: true\n      nanValue: NaN\n      positiveInf: Inf\n      negativeInf: -Inf\n      dateFormat: rfc3339\n      timestampFormat: rfc3339\n    merge:\n      kind: append\n";
+            "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-12-28T09:41:56.469218218Z\n  prevBlockHash: zW1jaUXuf1HLoKvdQhYNq1e3x6KCFrY7UCqXsgVMfJBJF77\n  sequenceNumber: 1\n  event:\n    kind: AddPushSource\n    sourceName: mockSource\n    read:\n      kind: Csv\n      schema:\n      - id INT\n      separator: ','\n      encoding: utf8\n      quote: '\"'\n      escape: \\\n      dateFormat: rfc3339\n      timestampFormat: rfc3339\n    merge:\n      kind: Append\n";
         spyOn(editService, "getEventAsYaml").and.returnValue(of(mockEventYamlByHash));
         component.ngOnInit();
         expect(navigateToPageNotFoundSpy).toHaveBeenCalledWith();
@@ -223,9 +224,9 @@ describe("AddPushSourceComponent without query parameter name", () => {
         editService = TestBed.inject(EditAddPushSourceService);
         component = fixture.componentInstance;
         component.addPushSourceForm = new FormGroup({
-            sourceName: new FormControl(""),
+            sourceName: new FormControl("mockName"),
             read: new FormGroup({
-                kind: new FormControl("csv"),
+                kind: new FormControl(ReadKind.CSV),
                 schema: new FormArray([
                     new FormGroup({
                         name: new FormControl("id"),
@@ -234,7 +235,7 @@ describe("AddPushSourceComponent without query parameter name", () => {
                 ]),
             }),
             merge: new FormGroup({
-                kind: new FormControl("append"),
+                kind: new FormControl(MergeKind.APPEND),
             }),
             prepare: new FormArray([]),
         });
@@ -248,7 +249,7 @@ describe("AddPushSourceComponent without query parameter name", () => {
         };
         const addValidatorSpy = spyOn(component.addPushSourceForm.controls.sourceName, "addValidators");
         const mockEventYamlByHash =
-            "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-12-28T09:41:56.469218218Z\n  prevBlockHash: zW1jaUXuf1HLoKvdQhYNq1e3x6KCFrY7UCqXsgVMfJBJF77\n  sequenceNumber: 1\n  event:\n    kind: addPushSource\n    sourceName: mockSource\n    read:\n      kind: csv\n      schema:\n      - id INT\n      separator: ','\n      encoding: utf8\n      quote: '\"'\n      escape: \\\n      enforceSchema: true\n      nanValue: NaN\n      positiveInf: Inf\n      negativeInf: -Inf\n      dateFormat: rfc3339\n      timestampFormat: rfc3339\n    merge:\n      kind: append\n";
+            "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-12-28T09:41:56.469218218Z\n  prevBlockHash: zW1jaUXuf1HLoKvdQhYNq1e3x6KCFrY7UCqXsgVMfJBJF77\n  sequenceNumber: 1\n  event:\n    kind: AddPushSource\n    sourceName: mockSource\n    read:\n      kind: Csv\n      schema:\n      - id INT\n      separator: ','\n      encoding: utf8\n      quote: '\"'\n      escape: \\\n      dateFormat: rfc3339\n      timestampFormat: rfc3339\n    merge:\n      kind: Append\n";
         spyOn(editService, "getEventAsYaml").and.returnValue(of(mockEventYamlByHash));
         component.ngOnInit();
         expect(addValidatorSpy).toHaveBeenCalledTimes(1);

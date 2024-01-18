@@ -34,6 +34,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         accountName: "",
         displayName: AppValues.DEFAULT_USER_DISPLAY_NAME,
         accountType: AccountType.User,
+        isAdmin: false,
     };
     public static readonly DEFAULT_FEATURE_FLAGS: AppConfigFeatureFlags = {
         enableLogout: true,

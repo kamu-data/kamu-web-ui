@@ -1,0 +1,21 @@
+mutation updateWatermark($datasetId: DatasetID!, $watermark: DateTime!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      setWatermark(watermark: $watermark) {
+        ... on SetWatermarkUpdated {
+          newHead
+          message
+        }
+
+        ... on SetWatermarkUpToDate {
+          dummy
+          message
+        }
+
+        ... on SetWatermarkIsDerivative {
+          message
+        }
+      }
+    }
+  }
+}

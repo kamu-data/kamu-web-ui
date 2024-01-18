@@ -1,12 +1,12 @@
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
-import { AddPushSourceToolipsTexts } from "src/app/common/tooltips/add-push-source.text";
+import { AddPushSourceTooltipsTexts } from "src/app/common/tooltips/add-push-source.text";
 import { getSourcesDescriptors } from "../common-sources/sources-event.source";
 
 export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "AddPushSource.string.sourceName": {
         label: "Source name:",
-        tooltip: AddPushSourceToolipsTexts.SOURCE_NAME,
+        tooltip: AddPushSourceTooltipsTexts.SOURCE_NAME,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "addPushSource-source-name",
@@ -24,35 +24,13 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.escape": getSourcesDescriptors("AddPushSource.ReadStepCsv.escape"),
 
-    "AddPushSource.ReadStepCsv.comment": getSourcesDescriptors("AddPushSource.ReadStepCsv.comment"),
-
-    "AddPushSource.ReadStepCsv.enforceSchema": getSourcesDescriptors("AddPushSource.ReadStepCsv.enforceSchema"),
-
     "AddPushSource.ReadStepCsv.inferSchema": getSourcesDescriptors("AddPushSource.ReadStepCsv.inferSchema"),
 
     "AddPushSource.ReadStepCsv.header": getSourcesDescriptors("AddPushSource.ReadStepCsv.header"),
 
-    "AddPushSource.ReadStepCsv.ignoreLeadingWhiteSpace": getSourcesDescriptors(
-        "AddPushSource.ReadStepCsv.ignoreLeadingWhiteSpace",
-    ),
-
-    "AddPushSource.ReadStepCsv.ignoreTrailingWhiteSpace": getSourcesDescriptors(
-        "AddPushSource.ReadStepCsv.ignoreTrailingWhiteSpace",
-    ),
-
     "AddPushSource.ReadStepCsv.nullValue": getSourcesDescriptors("AddPushSource.ReadStepCsv.nullValue"),
 
-    "AddPushSource.ReadStepCsv.emptyValue": getSourcesDescriptors("AddPushSource.ReadStepCsv.emptyValue"),
-
-    "AddPushSource.ReadStepCsv.nanValue": getSourcesDescriptors("AddPushSource.ReadStepCsv.nanValue"),
-
-    "AddPushSource.ReadStepCsv.positiveInf": getSourcesDescriptors("AddPushSource.ReadStepCsv.positiveInf"),
-
-    "AddPushSource.ReadStepCsv.negativeInf": getSourcesDescriptors("AddPushSource.ReadStepCsv.negativeInf"),
-
     "AddPushSource.ReadStepCsv.dateFormat": getSourcesDescriptors("AddPushSource.ReadStepCsv.dateFormat"),
-
-    "AddPushSource.ReadStepCsv.multiLine": getSourcesDescriptors("AddPushSource.ReadStepCsv.multiLine"),
 
     "AddPushSource.ReadStepCsv.timestampFormat": getSourcesDescriptors("AddPushSource.ReadStepCsv.timestampFormat"),
 
@@ -98,22 +76,6 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         "AddPushSource.MergeStrategySnapshot.compareColumns",
     ),
 
-    "AddPushSource.MergeStrategySnapshot.observationColumn": getSourcesDescriptors(
-        "AddPushSource.MergeStrategySnapshot.observationColumn",
-    ),
-
-    "AddPushSource.MergeStrategySnapshot.obsvAdded": getSourcesDescriptors(
-        "AddPushSource.MergeStrategySnapshot.obsvAdded",
-    ),
-
-    "AddPushSource.MergeStrategySnapshot.obsvChanged": getSourcesDescriptors(
-        "AddPushSource.MergeStrategySnapshot.obsvChanged",
-    ),
-
-    "AddPushSource.MergeStrategySnapshot.obsvRemoved": getSourcesDescriptors(
-        "AddPushSource.MergeStrategySnapshot.obsvRemoved",
-    ),
-
     "AddPushSource.ReadStepGeoJson.__typename": getSourcesDescriptors("AddPushSource.ReadStepGeoJson.__typename"),
 
     "AddPushSource.ReadStepGeoJson.schema": getSourcesDescriptors("AddPushSource.ReadStepGeoJson.schema"),
@@ -130,15 +92,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepParquet.schema": getSourcesDescriptors("AddPushSource.ReadStepParquet.schema"),
 
-    "AddPushSource.ReadStepJsonLines.__typename": getSourcesDescriptors("AddPushSource.ReadStepJsonLines.__typename"),
-
     "AddPushSource.ReadStepNdJson.__typename": getSourcesDescriptors("AddPushSource.ReadStepNdJson.__typename"),
-
-    "AddPushSource.ReadStepJsonLines.primitivesAsString": getSourcesDescriptors(
-        "AddPushSource.ReadStepJsonLines.primitivesAsString",
-    ),
-
-    "AddPushSource.ReadStepJsonLines.schema": getSourcesDescriptors("AddPushSource.ReadStepJsonLines.schema"),
 
     "AddPushSource.ReadStepNdGeoJson.schema": getSourcesDescriptors("AddPushSource.ReadStepNdGeoJson.schema"),
 
@@ -148,13 +102,5 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepNdJson.timestampFormat": getSourcesDescriptors(
         "AddPushSource.ReadStepNdJson.timestampFormat",
-    ),
-
-    "AddPushSource.ReadStepJsonLines.dateFormat": getSourcesDescriptors("AddPushSource.ReadStepJsonLines.dateFormat"),
-
-    "AddPushSource.ReadStepJsonLines.encoding": getSourcesDescriptors("AddPushSource.ReadStepJsonLines.encoding"),
-
-    "AddPushSource.ReadStepJsonLines.timestampFormat": getSourcesDescriptors(
-        "AddPushSource.ReadStepJsonLines.timestampFormat",
     ),
 };

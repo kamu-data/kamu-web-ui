@@ -1,3 +1,4 @@
+import { UpdateWatermarkGQL } from "./kamu.graphql.interface";
 import {
     CommitEventToDatasetGQL,
     CommitEventToDatasetMutation,
@@ -32,6 +33,7 @@ import {
     GetDatasetBasicsWithPermissionsQuery,
     GetDatasetLineageQuery,
     GetDatasetLineageGQL,
+    UpdateWatermarkMutation,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { ApolloQueryResult } from "@apollo/client/core";
@@ -64,6 +66,7 @@ export class DatasetApi {
         private deleteDatasetGQL: DeleteDatasetGQL,
         private renameDatasetGQL: RenameDatasetGQL,
         private datasetLineageGQL: GetDatasetLineageGQL,
+        private updateWatermarkGQL: UpdateWatermarkGQL,
     ) {}
 
     public getDatasetMainData(params: {
@@ -243,8 +246,8 @@ export class DatasetApi {
         );
     }
 
-    public createEmptyDataset(datasetKind: DatasetKind, datasetName: string): Observable<CreateEmptyDatasetMutation> {
-        return this.createEmptyDatasetGQL.mutate({ datasetKind, datasetName }).pipe(
+    public createEmptyDataset(datasetKind: DatasetKind, datasetAlias: string): Observable<CreateEmptyDatasetMutation> {
+        return this.createEmptyDatasetGQL.mutate({ datasetKind, datasetAlias }).pipe(
             first(),
             map((result: MutationResult<CreateEmptyDatasetMutation>) => {
                 /* istanbul ignore else */
@@ -401,6 +404,43 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<RenameDatasetMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
+                }),
+            );
+    }
+
+    public setWatermark(params: {
+        datasetId: string;
+        watermark: string;
+        accountName: string;
+    }): Observable<UpdateWatermarkMutation> {
+        return this.updateWatermarkGQL
+            .mutate(
+                {
+                    datasetId: params.datasetId,
+                    watermark: params.watermark,
+                },
+                {
+                    update: (cache) => {
+                        const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
+                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountName)),
+                            params.datasetId,
+                        );
+                        cache.evict({
+                            id: cache.identify(datasetKeyFragment),
+                            fieldName: "metadata",
+                        });
+                    },
+                },
+            )
+            .pipe(
+                first(),
+                map((result: MutationResult<UpdateWatermarkMutation>) => {
                     /* istanbul ignore else */
                     if (result.data) {
                         return result.data;

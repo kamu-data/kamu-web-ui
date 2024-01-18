@@ -31,6 +31,8 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetNavigationParams } from "src/app/interface/navigation.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { EditorModule } from "src/app/shared/editor/editor.module";
+import { EventTimeSourceKind, FetchKind, MergeKind, ReadKind } from "./add-polling-source-form.types";
+import { OdfDefaultValues } from "src/app/common/app-odf-default.values";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
@@ -92,26 +94,36 @@ describe("AddPollingSourceComponent", () => {
         };
         component.pollingSourceForm = new FormGroup({
             fetch: new FormGroup({
-                kind: new FormControl("url"),
+                kind: new FormControl(FetchKind.URL),
                 url: new FormControl(""),
                 order: new FormControl("NONE"),
                 eventTime: new FormGroup({
-                    kind: new FormControl("fromMetadata"),
+                    kind: new FormControl(EventTimeSourceKind.FROM_METADATA),
                     timestampFormat: new FormControl(""),
                 }),
                 cache: new FormControl(false),
+                headers: new FormArray([]),
             }),
             read: new FormGroup({
-                kind: new FormControl("csv"),
+                kind: new FormControl(ReadKind.CSV),
                 schema: new FormArray([
                     new FormGroup({
                         name: new FormControl("id"),
                         type: new FormControl("BIGINT"),
                     }),
                 ]),
+                header: new FormControl(OdfDefaultValues.CSV_HEADER),
+                encoding: new FormControl(OdfDefaultValues.CSV_ENCODING),
+                separator: new FormControl(OdfDefaultValues.CSV_SEPARATOR),
+                quote: new FormControl(OdfDefaultValues.CSV_QUOTE),
+                escape: new FormControl(OdfDefaultValues.CSV_ESCAPE),
+                nullValue: new FormControl(OdfDefaultValues.CSV_NULL_VALUE),
+                dateFormat: new FormControl(OdfDefaultValues.CSV_DATE_FORMAT),
+                timestampFormat: new FormControl(OdfDefaultValues.CSV_TIMESTAMP_FORMAT),
+                inferSchema: new FormControl(OdfDefaultValues.CSV_INFER_SCHEMA),
             }),
             merge: new FormGroup({
-                kind: new FormControl("append"),
+                kind: new FormControl(MergeKind.APPEND),
             }),
             prepare: new FormArray([]),
         });

@@ -55,47 +55,47 @@ export enum ControlType {
 }
 
 export enum FetchKind {
-    URL = "url",
-    FILES_GLOB = "filesGlob",
-    CONTAINER = "container",
+    URL = "Url",
+    FILES_GLOB = "FilesGlob",
+    CONTAINER = "Container",
 }
 
 export enum ReadKind {
-    CSV = "csv",
-    ALL_GEO = "allGeo",
-    GEO_JSON = "geoJson",
-    ND_GEO_JSON = "ndGeoJson",
-    ESRI_SHAPEFILE = "esriShapefile",
-    PARQUET = "parquet",
-    All_JSON = "allJson",
-    JSON = "json",
-    ND_JSON = "ndJson",
+    CSV = "Csv",
+    ALL_GEO = "AllGeo",
+    GEO_JSON = "GeoJson",
+    ND_GEO_JSON = "NdGeoJson",
+    ESRI_SHAPEFILE = "EsriShapefile",
+    PARQUET = "Parquet",
+    All_JSON = "AllJson",
+    JSON = "Json",
+    ND_JSON = "NdJson",
 }
 
 export enum MergeKind {
-    APPEND = "append",
-    LEDGER = "ledger",
-    SNAPSHOT = "snapshot",
+    APPEND = "Append",
+    LEDGER = "Ledger",
+    SNAPSHOT = "Snapshot",
 }
 
 export enum PrepareKind {
-    PIPE = "pipe",
-    DECOMPRESS = "decompress",
+    PIPE = "Pipe",
+    DECOMPRESS = "Decompress",
 }
 
 export enum DecompressFormat {
-    ZIP = "zip",
-    GZIP = "gzip",
+    ZIP = "Zip",
+    GZIP = "Gzip",
 }
 
 export enum PreprocessKind {
-    SQL = "sql",
+    SQL = "Sql",
 }
 
 export enum EventTimeSourceKind {
-    FROM_METADATA = "fromMetadata",
-    FROM_PATH = "fromPath",
-    FROM_SYSTEM_TIME = "fromSystemTime",
+    FROM_METADATA = "FromMetadata",
+    FROM_PATH = "FromPath",
+    FROM_SYSTEM_TIME = "FromSystemTime",
 }
 
 export interface AddPollingSourceEditFormType {
@@ -103,7 +103,7 @@ export interface AddPollingSourceEditFormType {
     fetch: {
         kind: FetchKind;
         eventTime?: {
-            kind: string;
+            kind: EventTimeSourceKind;
             pattern?: string;
             timestampFormat?: string;
         };
@@ -124,10 +124,6 @@ export interface AddPollingSourceEditFormType {
         encoding?: string;
         quote?: string;
         escape?: string;
-        enforceSchema?: boolean;
-        nanValue?: string;
-        positiveInf?: string;
-        negativeInf?: string;
         dateFormat?: string;
         timestampFormat?: string;
     };

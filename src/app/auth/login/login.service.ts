@@ -133,6 +133,8 @@ export class LoginService {
                 accessToken: loginResponse.accessToken,
                 backendUrl: this.appConfigService.apiServerUrl,
             };
+            this.accessToken$.next(loginResponse.accessToken);
+            this.account$.next(loginResponse.account);
             this.httpClient.post<LoginCallbackResponse>(callbackUrl, response).subscribe(() => {
                 this.navigationService.navigateToReturnToCli();
             });

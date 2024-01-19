@@ -17,6 +17,7 @@
                                 <a
                                     class="action-list-content align-items-center"
                                     (click)="navigateToSection(navItem.activeTab)"
+                                    attr.data-test-id="action-list-{{ navItem.activeTab }}-tab"
                                 >
                                     <span class="text-muted" [class]="navItem.iconClassName">
                                         <svg-icon [name]="navItem.iconName"></svg-icon>
@@ -36,12 +37,14 @@
             <app-dataset-settings-general-tab
                 [datasetBasics]="datasetBasics"
                 [datasetPermissions]="datasetPermissions"
+                data-test-id="settings-general-tab"
             ></app-dataset-settings-general-tab>
         </ng-container>
         <ng-container *ngIf="isSchedulingAvailable && activeTab === settingsTabsEnum.SCHEDULING">
             <app-dataset-settings-scheduling-tab
                 [datasetBasics]="datasetBasics"
                 [datasetPermissions]="datasetPermissions"
+                data-test-id="settings-scheduling-tab"
             ></app-dataset-settings-scheduling-tab>
         </ng-container>
     </div>

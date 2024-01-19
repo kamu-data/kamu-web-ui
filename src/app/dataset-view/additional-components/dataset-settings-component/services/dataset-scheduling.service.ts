@@ -21,7 +21,7 @@ export class DatasetSchedulingService {
         datasetId: string,
         datasetFlowType: DatasetFlowType,
     ): Observable<GetDatasetFlowConfigsQuery> {
-        return this.datasetFlowApi.getDatasetFlowConfigs(datasetId, datasetFlowType);
+        return this.datasetFlowApi.getDatasetFlowConfigs({ datasetId, datasetFlowType });
     }
 
     public setDatasetFlowSchedule(params: {

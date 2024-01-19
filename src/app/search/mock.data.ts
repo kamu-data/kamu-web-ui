@@ -197,6 +197,16 @@ export const mockFullPowerDatasetPermissionsFragment: DatasetPermissionsFragment
     },
 };
 
+export const mockNotScheduleDatasetPermissionsFragment: DatasetPermissionsFragment = {
+    permissions: {
+        canView: true,
+        canDelete: true,
+        canRename: true,
+        canCommit: true,
+        canSchedule: false,
+    },
+};
+
 export const mockReadonlyDatasetPermissionsFragment: DatasetPermissionsFragment = {
     permissions: {
         canView: true,

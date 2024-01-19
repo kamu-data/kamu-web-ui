@@ -95,9 +95,10 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     public ngOnInit() {
         if (!this.datasetPermissions.permissions.canSchedule) {
             this.pollingForm.disable();
+        } else {
+            this.checkStatusSection();
+            this.pollingTypeChanges();
         }
-        this.checkStatusSection();
-        this.pollingTypeChanges();
     }
 
     private pollingTypeChanges(): void {
@@ -134,6 +135,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         if (this.datasetBasics.kind === DatasetKind.Root) {
             this.throttlingForm.disable();
             this.pollingGroup.enable();
+            this.cronExpression.disable();
             this.trackSubscription(
                 this.datasetSchedulingService
                     .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.Ingest)
@@ -144,6 +146,12 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                             this.pollingGroup.patchValue({
                                 ...flowConfiguration.schedule,
                             });
+                            if (flowConfiguration.schedule.__typename === "CronExpression") {
+                                this.pollingGroup.patchValue({
+                                    // splice for sync with cron parser
+                                    cronExpression: flowConfiguration.schedule.cronExpression.slice(0, -2),
+                                });
+                            }
                         }
                     }),
             );
@@ -211,7 +219,8 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         }
         if (this.pollingGroup.controls.__typename.value === PollingGroupEnum.CRON_EXPRESSION) {
             this.scheduleOptions = {
-                cronExpression: this.cronExpression.value as string,
+                // sync with server validator
+                cronExpression: `${this.cronExpression.value as string} *`,
             };
         }
     }

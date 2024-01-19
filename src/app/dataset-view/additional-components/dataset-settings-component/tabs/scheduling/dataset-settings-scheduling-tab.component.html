@@ -19,15 +19,20 @@
                 color="primary"
             >
                 <mat-radio-button [value]="pollingGroupEnum.TIME_DELTA">
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center" data-test-id="button-time-delta">
                         <span class="form-control-label">Update every:</span>
                         <input
                             type="number"
                             min="1"
                             formControlName="every"
                             class="form-control form-control-width me-3"
+                            data-test-id="polling-group-every"
                         />
-                        <select formControlName="unit" class="form-select form-control-width">
+                        <select
+                            formControlName="unit"
+                            class="form-select form-control-width"
+                            data-test-id="polling-group-unit"
+                        >
                             <option [value]="timeUnit.Minutes">Minutes</option>
                             <option [value]="timeUnit.Hours">Hours</option>
                             <option [value]="timeUnit.Days">Days</option>
@@ -36,15 +41,17 @@
                     </div>
                 </mat-radio-button>
                 <mat-radio-button [value]="pollingGroupEnum.CRON_EXPRESSION">
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center" data-test-id="button-cron-expression">
                         <div class="d-flex align-middle">
                             <span class="form-control-label d-block"> Cron expression : </span>
                         </div>
                         <input
                             type="text"
                             formControlName="cronExpression"
-                            placeholder="Example: * * * * * ? *"
+                            placeholder="Example: * * * * * ?"
                             class="form-control form-control-expression"
+                            data-test-id="cron-expession-input"
+                            data-test-id="polling-group-cron-expression"
                         />
 
                         <ng-container
@@ -80,12 +87,22 @@
     </form>
     <form [formGroup]="throttlingForm">
         <div class="box p-4 mt-3">
-            <h4>Derived (throttling parameters)</h4>
+            <h4>Derivative (throttling parameters)</h4>
             <div class="d-flex flex-column gap-4">
                 <div class="d-flex align-items-center gap-3">
                     <span class="form-control-label">Throttling period:</span>
-                    <input type="number" min="1" formControlName="every" class="form-control form-control-width" />
-                    <select formControlName="unit" class="form-select form-control-width">
+                    <input
+                        type="number"
+                        min="1"
+                        formControlName="every"
+                        class="form-control form-control-width"
+                        data-test-id="throttling-group-every"
+                    />
+                    <select
+                        formControlName="unit"
+                        class="form-select form-control-width"
+                        data-test-id="throttling-group-unit"
+                    >
                         <option [value]="timeUnit.Minutes">Minutes</option>
                         <option [value]="timeUnit.Hours">Hours</option>
                         <option [value]="timeUnit.Days">Days</option>
@@ -99,6 +116,7 @@
                         min="0"
                         formControlName="minimalDataBatch"
                         class="form-control form-control-width"
+                        data-test-id="throttling-group-min-data-batch"
                     />
                 </div>
             </div>
@@ -110,6 +128,7 @@
             class="btn btn-success"
             [disabled]="pollingForm.invalid || throttlingForm.invalid"
             (click)="onSubmit()"
+            data-test-id="save-config-options"
         >
             Save
         </button>

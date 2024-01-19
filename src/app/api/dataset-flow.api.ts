@@ -23,15 +23,17 @@ export class DatasetFlowApi {
         private datasetFlowBatchingGQL: DatasetFlowBatchingGQL,
     ) {}
 
-    public getDatasetFlowConfigs(
-        datasetId: string,
-        datasetFlowType: DatasetFlowType,
-    ): Observable<GetDatasetFlowConfigsQuery> {
-        return this.getDatasetFlowConfigsGQL.watch({ datasetId, datasetFlowType }).valueChanges.pipe(
-            map((result: ApolloQueryResult<GetDatasetFlowConfigsQuery>) => {
-                return result.data;
-            }),
-        );
+    public getDatasetFlowConfigs(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+    }): Observable<GetDatasetFlowConfigsQuery> {
+        return this.getDatasetFlowConfigsGQL
+            .watch({ datasetId: params.datasetId, datasetFlowType: params.datasetFlowType })
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<GetDatasetFlowConfigsQuery>) => {
+                    return result.data;
+                }),
+            );
     }
 
     public setDatasetFlowSchedule(params: {

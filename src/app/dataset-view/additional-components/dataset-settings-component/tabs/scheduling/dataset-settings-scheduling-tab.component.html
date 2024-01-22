@@ -21,16 +21,9 @@
                 <mat-radio-button [value]="pollingGroupEnum.TIME_DELTA">
                     <div class="d-flex align-items-center" data-test-id="button-time-delta">
                         <span class="form-control-label">Update every:</span>
-                        <input
-                            type="number"
-                            min="1"
-                            formControlName="every"
-                            class="form-control form-control-width me-3"
-                            data-test-id="polling-group-every"
-                        />
                         <select
                             formControlName="unit"
-                            class="form-select form-control-width"
+                            class="form-select form-control-width me-3"
                             data-test-id="polling-group-unit"
                         >
                             <option [value]="timeUnit.Minutes">Minutes</option>
@@ -38,6 +31,23 @@
                             <option [value]="timeUnit.Days">Days</option>
                             <option [value]="timeUnit.Weeks">Weeks</option>
                         </select>
+                        <input
+                            type="number"
+                            formControlName="every"
+                            min="0"
+                            class="form-control form-control-width"
+                            data-test-id="polling-group-every"
+                        />
+                        <ng-container
+                            *ngIf="
+                                pollingGroup?.get('every')?.errors?.range &&
+                                (pollingGroup.get('every')?.touched || pollingGroup.get('every')?.dirty)
+                            "
+                        >
+                            <div class="text-danger fs-12 ms-4 text-break" data-test-id="range-error">
+                                {{ pollingGroup.get("every")?.errors?.range.message }}
+                            </div>
+                        </ng-container>
                     </div>
                 </mat-radio-button>
                 <mat-radio-button [value]="pollingGroupEnum.CRON_EXPRESSION">
@@ -48,7 +58,7 @@
                         <input
                             type="text"
                             formControlName="cronExpression"
-                            placeholder="Example: * * * * * ?"
+                            placeholder="Example: * * * * ?"
                             class="form-control form-control-expression"
                             data-test-id="cron-expession-input"
                             data-test-id="polling-group-cron-expression"
@@ -76,12 +86,11 @@
             </mat-radio-group>
             <div class="text-muted box fs-12 px-4 py-2 mt-4">
                 Cron exression accepted values
-                <div class="fs-12">1. seconds: 0-59 * , -</div>
-                <div class="fs-12">2. minutes: 0-59 * , -</div>
-                <div class="fs-12">3. hours: 0-23 * , -</div>
-                <div class="fs-12">4. day of month: 1-31 * , - ? L LW</div>
-                <div class="fs-12">5. months: (JAN-DEC or 1-12) * , -</div>
-                <div class="fs-12">6. day of week: (SUN-SAT or 1-7) * , L - ? #</div>
+                <div class="fs-12">1. minutes: 0-59 * , -</div>
+                <div class="fs-12">2. hours: 0-23 * , -</div>
+                <div class="fs-12">3. day of month: 1-31 * , - ? L LW</div>
+                <div class="fs-12">4. months: (JAN-DEC or 1-12) * , -</div>
+                <div class="fs-12">5. day of week: (SUN-SAT or 1-7) * , L - ? #</div>
             </div>
         </div>
     </form>
@@ -91,13 +100,6 @@
             <div class="d-flex flex-column gap-4">
                 <div class="d-flex align-items-center gap-3">
                     <span class="form-control-label">Throttling period:</span>
-                    <input
-                        type="number"
-                        min="1"
-                        formControlName="every"
-                        class="form-control form-control-width"
-                        data-test-id="throttling-group-every"
-                    />
                     <select
                         formControlName="unit"
                         class="form-select form-control-width"
@@ -108,6 +110,23 @@
                         <option [value]="timeUnit.Days">Days</option>
                         <option [value]="timeUnit.Weeks">Weeks</option>
                     </select>
+                    <input
+                        type="number"
+                        min="0"
+                        formControlName="every"
+                        class="form-control form-control-width"
+                        data-test-id="throttling-group-every"
+                    />
+                    <ng-container
+                        *ngIf="
+                            throttlingForm?.get('every')?.errors?.range &&
+                            (throttlingForm.get('every')?.touched || throttlingForm.get('every')?.dirty)
+                        "
+                    >
+                        <div class="text-danger fs-12 ms-4 text-break" data-test-id="range-error">
+                            {{ throttlingForm.get("every")?.errors?.range.message }}
+                        </div>
+                    </ng-container>
                 </div>
                 <div class="d-flex align-items-center gap-3">
                     <span class="form-control-label">Numder of records:</span>

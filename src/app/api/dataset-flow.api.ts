@@ -1,3 +1,4 @@
+import { MaybeNull } from "./../common/app.types";
 import { MutationResult } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import {
@@ -28,7 +29,13 @@ export class DatasetFlowApi {
         datasetFlowType: DatasetFlowType;
     }): Observable<GetDatasetFlowConfigsQuery> {
         return this.getDatasetFlowConfigsGQL
-            .watch({ datasetId: params.datasetId, datasetFlowType: params.datasetFlowType })
+            .watch(
+                { datasetId: params.datasetId, datasetFlowType: params.datasetFlowType },
+                {
+                    fetchPolicy: "no-cache",
+                    errorPolicy: "all",
+                },
+            )
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetDatasetFlowConfigsQuery>) => {
                     return result.data;
@@ -66,8 +73,8 @@ export class DatasetFlowApi {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;
-        throttlingPeriod: TimeDeltaInput;
-        minimalDataBatch: number;
+        throttlingPeriod: MaybeNull<TimeDeltaInput>;
+        minimalDataBatch: MaybeNull<number>;
     }): Observable<DatasetFlowBatchingMutation> {
         return this.datasetFlowBatchingGQL
             .mutate({

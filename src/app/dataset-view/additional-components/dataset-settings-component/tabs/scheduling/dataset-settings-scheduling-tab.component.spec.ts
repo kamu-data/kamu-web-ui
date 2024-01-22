@@ -34,7 +34,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     const MOCK_PARAM_EVERY = 10;
     const MOCK_PARAM_UNIT = TimeUnit.Days;
     const MOCK_PARAM_MIN_DATA_BATCH = 1000;
-    const MOCK_CRON_EXPRESSION = "* * * * * ?";
+    const MOCK_CRON_EXPRESSION = "* * * * ?";
     const MOCK_INALID_CRON_EXPRESSION = "* *";
     const MOCK_INPUT_TIME_DELTA: TimeDelta = {
         every: MOCK_PARAM_EVERY,
@@ -141,7 +141,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         expect(setDatasetFlowScheduleSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
                 schedule: {
-                    cronExpression: `${MOCK_CRON_EXPRESSION} *`,
+                    cronExpression: `* ${MOCK_CRON_EXPRESSION} *`,
                 },
             }),
         );

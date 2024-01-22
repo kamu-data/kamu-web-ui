@@ -1,3 +1,4 @@
+import { MaybeNull } from "./../../../../common/app.types";
 import { Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 import { Observable, map } from "rxjs";
@@ -44,8 +45,8 @@ export class DatasetSchedulingService {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;
-        throttlingPeriod: TimeDeltaInput;
-        minimalDataBatch: number;
+        throttlingPeriod: MaybeNull<TimeDeltaInput>;
+        minimalDataBatch: MaybeNull<number>;
     }): Observable<void> {
         return this.datasetFlowApi.setDatasetFlowBatching(params).pipe(
             map((data: DatasetFlowBatchingMutation) => {

@@ -1,6 +1,6 @@
 import { MaybeNull } from "../../../../../common/app.types";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
 import { BaseComponent } from "../../../../../common/base.component";
 import { PollingGroupEnum, ThrottlingGroupEnum } from "../../dataset-settings.model";
 import {
@@ -12,7 +12,7 @@ import {
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
-import { cronExpressionValidator } from "src/app/common/data.helpers";
+import { cronExpressionValidator, everyTimeMapperValidators } from "src/app/common/data.helpers";
 import { cronExpressionNextTime, logError } from "src/app/common/app.helpers";
 
 @Component({
@@ -28,14 +28,15 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     public readonly throttlingGroupEnum: typeof ThrottlingGroupEnum = ThrottlingGroupEnum;
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
     private scheduleOptions: ScheduleInput;
+    private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
 
     public pollingForm = new FormGroup({
         updatesState: new FormControl(false),
         pollingGroup: new FormGroup({
             __typename: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
-            every: new FormControl({ value: null, disabled: true }, [Validators.required]),
-            unit: new FormControl({ value: "", disabled: true }, [Validators.required]),
-            cronExpression: new FormControl({ value: "", disabled: true }, [
+            every: new FormControl<number | undefined>({ value: undefined, disabled: true }, [Validators.required]),
+            unit: new FormControl<TimeUnit | undefined>({ value: undefined, disabled: true }, [Validators.required]),
+            cronExpression: new FormControl<MaybeNull<string>>({ value: "", disabled: true }, [
                 Validators.required,
                 cronExpressionValidator(),
             ]),
@@ -43,8 +44,8 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     });
 
     public throttlingForm = new FormGroup({
-        every: new FormControl({ value: 1, disabled: true }, [Validators.required]),
-        unit: new FormControl({ value: TimeUnit.Minutes, disabled: true }, [Validators.required]),
+        every: new FormControl<number | undefined>({ value: undefined, disabled: true }),
+        unit: new FormControl<TimeUnit | undefined>({ value: undefined, disabled: true }),
         minimalDataBatch: new FormControl<MaybeNull<number>>({ value: null, disabled: true }),
     });
 
@@ -98,6 +99,8 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         } else {
             this.checkStatusSection();
             this.pollingTypeChanges();
+            this.setPollingEveryTimeValidator();
+            this.setBatchingEveryTimeValidator();
         }
     }
 
@@ -121,6 +124,22 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                         logError("Unknown PollingGroupEnum key");
                     }
                 }
+            }),
+        );
+    }
+
+    private setPollingEveryTimeValidator(): void {
+        this.trackSubscription(
+            this.pollingUnitTime.valueChanges.subscribe((data: TimeUnit) => {
+                this.pollingEveryTime.setValidators(this.everyTimeMapperValidators[data]);
+            }),
+        );
+    }
+
+    private setBatchingEveryTimeValidator(): void {
+        this.trackSubscription(
+            this.batchingUnitTime.valueChanges.subscribe((data: TimeUnit) => {
+                this.batchingEveryTime.setValidators(this.everyTimeMapperValidators[data]);
             }),
         );
     }
@@ -149,7 +168,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                             if (flowConfiguration.schedule.__typename === "CronExpression") {
                                 this.pollingGroup.patchValue({
                                     // splice for sync with cron parser
-                                    cronExpression: flowConfiguration.schedule.cronExpression.slice(0, -2),
+                                    cronExpression: flowConfiguration.schedule.cronExpression.slice(2, -2),
                                 });
                             }
                         }
@@ -162,6 +181,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                 this.datasetSchedulingService
                     .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.ExecuteTransform)
                     .subscribe((data) => {
+                        console.log("==>request", data);
                         const flowConfiguration = data.datasets.byId?.flows.configs.byType;
                         if (flowConfiguration?.batching) {
                             const batchingConfig = flowConfiguration.batching;
@@ -196,10 +216,13 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                         datasetId: this.datasetBasics.id,
                         datasetFlowType: DatasetFlowType.ExecuteTransform,
                         paused: this.updateState.value as boolean,
-                        throttlingPeriod: {
-                            every: this.batchingEveryTime.value as number,
-                            unit: this.batchingUnitTime.value as TimeUnit,
-                        },
+                        throttlingPeriod:
+                            this.batchingEveryTime.value && this.batchingUnitTime.value
+                                ? {
+                                      every: this.batchingEveryTime.value as number,
+                                      unit: this.batchingUnitTime.value as TimeUnit,
+                                  }
+                                : null,
 
                         minimalDataBatch: this.batchingMinimalDataBatch.value as number,
                     })
@@ -220,7 +243,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         if (this.pollingGroup.controls.__typename.value === PollingGroupEnum.CRON_EXPRESSION) {
             this.scheduleOptions = {
                 // sync with server validator
-                cronExpression: `${this.cronExpression.value as string} *`,
+                cronExpression: `* ${this.cronExpression.value as string} *`,
             };
         }
     }

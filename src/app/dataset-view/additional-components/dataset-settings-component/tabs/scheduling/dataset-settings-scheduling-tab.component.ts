@@ -181,7 +181,6 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                 this.datasetSchedulingService
                     .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.ExecuteTransform)
                     .subscribe((data) => {
-                        console.log("==>request", data);
                         const flowConfiguration = data.datasets.byId?.flows.configs.byType;
                         if (flowConfiguration?.batching) {
                             const batchingConfig = flowConfiguration.batching;

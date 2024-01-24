@@ -41,6 +41,7 @@ export const mockTasks: TaskElement[] = [
             avatarUrl: AppValues.DEFAULT_AVATAR_URL,
             displayName: "unknown",
             id: "1",
+            isAdmin: false,
         },
     },
     {
@@ -58,6 +59,7 @@ export const mockTasks: TaskElement[] = [
             avatarUrl: AppValues.DEFAULT_AVATAR_URL,
             displayName: "unknown",
             id: "2",
+            isAdmin: false,
         },
     },
     {
@@ -75,6 +77,7 @@ export const mockTasks: TaskElement[] = [
             avatarUrl: AppValues.DEFAULT_AVATAR_URL,
             displayName: "unknown",
             id: "2",
+            isAdmin: false,
         },
     },
 ];
@@ -92,6 +95,7 @@ export const updatedRunningTaskElement: TaskElement = {
         avatarUrl: AppValues.DEFAULT_AVATAR_URL,
         displayName: "unknown",
         id: "2",
+        isAdmin: false,
     },
 };
 
@@ -109,6 +113,7 @@ export const updatedFinishedTaskElement: TaskElement = {
         avatarUrl: AppValues.DEFAULT_AVATAR_URL,
         displayName: "unknown",
         id: "2",
+        isAdmin: false,
     },
 };
 

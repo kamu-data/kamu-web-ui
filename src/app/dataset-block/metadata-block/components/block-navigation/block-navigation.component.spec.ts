@@ -8,7 +8,7 @@ import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
 import { dispatchInputEvent, getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { PaginationModule } from "src/app/components/pagination-component/pagination.module";
 import { MatIconModule } from "@angular/material/icon";
-import { DisplayHashModule } from "src/app/components/display-hash/dispaly-hash.module";
+import { DisplayHashModule } from "src/app/components/display-hash/display-hash.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { ToastrModule } from "ngx-toastr";

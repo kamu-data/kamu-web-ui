@@ -21,13 +21,14 @@ export type Scalars = {
     DatasetID: string;
     DatasetName: string;
     DatasetRef: string;
-    DatasetRefAny: string;
     /**
      * Implement the DateTime<Utc> scalar
      *
      * The input/output is a string in RFC3339 format.
      */
     DateTime: string;
+    EventID: string;
+    FlowID: string;
     Multihash: string;
     TaskID: string;
 };
@@ -42,8 +43,10 @@ export type Account = {
     avatarUrl?: Maybe<Scalars["String"]>;
     /** Account name to display */
     displayName: Scalars["AccountDisplayName"];
-    /** Unique and stable identitfier of this account */
+    /** Unique and stable identifier of this account */
     id: Scalars["AccountID"];
+    /** Indicates the administrator status */
+    isAdmin: Scalars["Boolean"];
 };
 
 export enum AccountType {
@@ -69,11 +72,25 @@ export type AccountsByNameArgs = {
 
 export type AddData = {
     __typename?: "AddData";
-    inputCheckpoint?: Maybe<Scalars["Multihash"]>;
-    outputCheckpoint?: Maybe<Checkpoint>;
-    outputData?: Maybe<DataSlice>;
-    outputWatermark?: Maybe<Scalars["DateTime"]>;
-    sourceState?: Maybe<SourceState>;
+    newCheckpoint?: Maybe<Checkpoint>;
+    newData?: Maybe<DataSlice>;
+    newSourceState?: Maybe<SourceState>;
+    newWatermark?: Maybe<Scalars["DateTime"]>;
+    prevCheckpoint?: Maybe<Scalars["Multihash"]>;
+    prevOffset?: Maybe<Scalars["Int"]>;
+};
+
+export type AddPushSource = {
+    __typename?: "AddPushSource";
+    merge: MergeStrategy;
+    preprocess?: Maybe<Transform>;
+    read: ReadStep;
+    sourceName: Scalars["String"];
+};
+
+export type Admin = {
+    __typename?: "Admin";
+    selfTest: Scalars["String"];
 };
 
 export type AttachmentEmbedded = {
@@ -109,16 +126,20 @@ export type AuthMutLoginArgs = {
     loginMethod: Scalars["String"];
 };
 
-export type BlockInterval = {
-    __typename?: "BlockInterval";
-    end: Scalars["Multihash"];
-    start: Scalars["Multihash"];
-};
-
 export type BlockRef = {
     __typename?: "BlockRef";
     blockHash: Scalars["Multihash"];
     name: Scalars["String"];
+};
+
+export type CancelScheduledTasksResult = {
+    message: Scalars["String"];
+};
+
+export type CancelScheduledTasksSuccess = CancelScheduledTasksResult & {
+    __typename?: "CancelScheduledTasksSuccess";
+    flow: Flow;
+    message: Scalars["String"];
 };
 
 export type Checkpoint = {
@@ -183,6 +204,11 @@ export type CreateDatasetResultSuccess = CreateDatasetFromSnapshotResult &
         dataset: Dataset;
         message: Scalars["String"];
     };
+
+export type CronExpression = {
+    __typename?: "CronExpression";
+    cronExpression: Scalars["String"];
+};
 
 export type DataBatch = {
     __typename?: "DataBatch";
@@ -249,8 +275,8 @@ export enum DataSchemaFormat {
 
 export type DataSlice = {
     __typename?: "DataSlice";
-    interval: OffsetInterval;
     logicalHash: Scalars["Multihash"];
+    offsetInterval: OffsetInterval;
     physicalHash: Scalars["Multihash"];
     size: Scalars["Int"];
 };
@@ -263,6 +289,8 @@ export type Dataset = {
     createdAt: Scalars["DateTime"];
     /** Access to the data of the dataset */
     data: DatasetData;
+    /** Access to the flow configurations of this dataset */
+    flows: DatasetFlows;
     /** Unique identifier of the dataset */
     id: Scalars["DatasetID"];
     /** Returns the kind of a dataset (Root or Derivative) */
@@ -305,8 +333,19 @@ export type DatasetData = {
     numRecordsTotal: Scalars["Int"];
     /**
      * Returns the specified number of the latest records in the dataset
-     * This is equivalent to the SQL query: `SELECT * FROM dataset ORDER BY
-     * event_time DESC LIMIT N`
+     * This is equivalent to SQL query like:
+     *
+     * ```text
+     * select * from (
+     * select
+     * *
+     * from dataset
+     * order by offset desc
+     * limit lim
+     * offset skip
+     * )
+     * order by offset
+     * ```
      */
     tail: DataQueryResult;
 };
@@ -321,6 +360,84 @@ export type DatasetDataTailArgs = {
 export type DatasetEdge = {
     __typename?: "DatasetEdge";
     node: Dataset;
+};
+
+export type DatasetFlowConfigs = {
+    __typename?: "DatasetFlowConfigs";
+    /** Returns defined configuration for a flow of specified type */
+    byType?: Maybe<FlowConfiguration>;
+};
+
+export type DatasetFlowConfigsByTypeArgs = {
+    datasetFlowType: DatasetFlowType;
+};
+
+export type DatasetFlowConfigsMut = {
+    __typename?: "DatasetFlowConfigsMut";
+    setConfigBatching: SetFlowConfigResult;
+    setConfigSchedule: SetFlowConfigResult;
+};
+
+export type DatasetFlowConfigsMutSetConfigBatchingArgs = {
+    datasetFlowType: DatasetFlowType;
+    minimalDataBatch?: InputMaybe<Scalars["Int"]>;
+    paused: Scalars["Boolean"];
+    throttlingPeriod?: InputMaybe<TimeDeltaInput>;
+};
+
+export type DatasetFlowConfigsMutSetConfigScheduleArgs = {
+    datasetFlowType: DatasetFlowType;
+    paused: Scalars["Boolean"];
+    schedule: ScheduleInput;
+};
+
+export type DatasetFlowRuns = {
+    __typename?: "DatasetFlowRuns";
+    getFlow: GetFlowResult;
+    listFlows: FlowConnection;
+};
+
+export type DatasetFlowRunsGetFlowArgs = {
+    flowId: Scalars["FlowID"];
+};
+
+export type DatasetFlowRunsListFlowsArgs = {
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+};
+
+export type DatasetFlowRunsMut = {
+    __typename?: "DatasetFlowRunsMut";
+    cancelScheduledTasks: CancelScheduledTasksResult;
+    triggerFlow: TriggerFlowResult;
+};
+
+export type DatasetFlowRunsMutCancelScheduledTasksArgs = {
+    flowId: Scalars["FlowID"];
+};
+
+export type DatasetFlowRunsMutTriggerFlowArgs = {
+    datasetFlowType: DatasetFlowType;
+};
+
+export enum DatasetFlowType {
+    Compaction = "COMPACTION",
+    ExecuteTransform = "EXECUTE_TRANSFORM",
+    Ingest = "INGEST",
+}
+
+export type DatasetFlows = {
+    __typename?: "DatasetFlows";
+    /** Returns interface for flow configurations queries */
+    configs: DatasetFlowConfigs;
+    /** Returns interface for flow runs queries */
+    runs: DatasetFlowRuns;
+};
+
+export type DatasetFlowsMut = {
+    __typename?: "DatasetFlowsMut";
+    configs: DatasetFlowConfigsMut;
+    runs: DatasetFlowRunsMut;
 };
 
 export enum DatasetKind {
@@ -338,6 +455,10 @@ export type DatasetMetadata = {
     currentInfo: SetInfo;
     /** Current license associated with the dataset */
     currentLicense?: Maybe<SetLicense>;
+    /** Current polling source used by the root dataset */
+    currentPollingSource?: Maybe<SetPollingSource>;
+    /** Current push sources used by the root dataset */
+    currentPushSources: Array<AddPushSource>;
     /**
      * Current readme file as discovered from attachments associated with the
      * dataset
@@ -345,8 +466,6 @@ export type DatasetMetadata = {
     currentReadme?: Maybe<Scalars["String"]>;
     /** Latest data schema */
     currentSchema?: Maybe<DataSchema>;
-    /** Current source used by the root dataset */
-    currentSource?: Maybe<SetPollingSource>;
     /** Current transformation used by the derivative dataset */
     currentTransform?: Maybe<SetTransform>;
     /** Current upstream dependencies of a dataset */
@@ -377,14 +496,22 @@ export type DatasetMut = {
     __typename?: "DatasetMut";
     /** Delete the dataset */
     delete: DeleteResult;
+    /** Access to the mutable flow configurations of this dataset */
+    flows: DatasetFlowsMut;
     /** Access to the mutable metadata of the dataset */
     metadata: DatasetMetadataMut;
     /** Rename the dataset */
     rename: RenameResult;
+    /** Manually advances the watermark of a root dataset */
+    setWatermark: SetWatermarkResult;
 };
 
 export type DatasetMutRenameArgs = {
     newName: Scalars["DatasetName"];
+};
+
+export type DatasetMutSetWatermarkArgs = {
+    watermark: Scalars["DateTime"];
 };
 
 export type DatasetPermissions = {
@@ -392,6 +519,7 @@ export type DatasetPermissions = {
     canCommit: Scalars["Boolean"];
     canDelete: Scalars["Boolean"];
     canRename: Scalars["Boolean"];
+    canSchedule: Scalars["Boolean"];
     canView: Scalars["Boolean"];
 };
 
@@ -443,8 +571,8 @@ export type DatasetsMutByIdArgs = {
 };
 
 export type DatasetsMutCreateEmptyArgs = {
+    datasetAlias: Scalars["DatasetAlias"];
     datasetKind: DatasetKind;
-    datasetName: Scalars["DatasetName"];
 };
 
 export type DatasetsMutCreateFromSnapshotArgs = {
@@ -469,12 +597,22 @@ export type DeleteResultSuccess = DeleteResult & {
     message: Scalars["String"];
 };
 
+export type DisablePollingSource = {
+    __typename?: "DisablePollingSource";
+    dummy?: Maybe<Scalars["String"]>;
+};
+
+export type DisablePushSource = {
+    __typename?: "DisablePushSource";
+    sourceName: Scalars["String"];
+};
+
 /** Describes */
 export type EngineDesc = {
     __typename?: "EngineDesc";
     /**
      * Language and dialect this engine is using for queries
-     * Indended for configuring code highlighting and completions.
+     * Indented for configuring code highlighting and completions.
      */
     dialect: QueryDialect;
     /**
@@ -513,13 +651,23 @@ export type EventTimeSourceFromSystemTime = {
     dummy?: Maybe<Scalars["String"]>;
 };
 
-export type ExecuteQuery = {
-    __typename?: "ExecuteQuery";
-    inputCheckpoint?: Maybe<Scalars["Multihash"]>;
-    inputSlices: Array<InputSlice>;
-    outputCheckpoint?: Maybe<Checkpoint>;
-    outputData?: Maybe<DataSlice>;
-    outputWatermark?: Maybe<Scalars["DateTime"]>;
+export type ExecuteTransform = {
+    __typename?: "ExecuteTransform";
+    newCheckpoint?: Maybe<Checkpoint>;
+    newData?: Maybe<DataSlice>;
+    newWatermark?: Maybe<Scalars["DateTime"]>;
+    prevCheckpoint?: Maybe<Scalars["Multihash"]>;
+    prevOffset?: Maybe<Scalars["Int"]>;
+    queryInputs: Array<ExecuteTransformInput>;
+};
+
+export type ExecuteTransformInput = {
+    __typename?: "ExecuteTransformInput";
+    datasetId: Scalars["DatasetID"];
+    newBlockHash?: Maybe<Scalars["Multihash"]>;
+    newOffset?: Maybe<Scalars["Int"]>;
+    prevBlockHash?: Maybe<Scalars["Multihash"]>;
+    prevOffset?: Maybe<Scalars["Int"]>;
 };
 
 export type FetchStep = FetchStepContainer | FetchStepFilesGlob | FetchStepUrl;
@@ -548,11 +696,241 @@ export type FetchStepUrl = {
     url: Scalars["String"];
 };
 
-export type InputSlice = {
-    __typename?: "InputSlice";
-    blockInterval?: Maybe<BlockInterval>;
-    dataInterval?: Maybe<OffsetInterval>;
+export type Flow = {
+    __typename?: "Flow";
+    /** Description of key flow parameters */
+    description: FlowDescription;
+    /** Unique identifier of the flow */
+    flowId: Scalars["FlowID"];
+    /** History of flow events */
+    history: Array<FlowEvent>;
+    /** A user, who initiated the flow run. None for system-initiated flows */
+    initiator?: Maybe<Account>;
+    /** Outcome of the flow (Finished state only) */
+    outcome?: Maybe<FlowOutcome>;
+    /** Primary flow trigger */
+    primaryTrigger: FlowTrigger;
+    /** Start condition */
+    startCondition?: Maybe<FlowStartCondition>;
+    /** Status of the flow */
+    status: FlowStatus;
+    /** Associated tasks */
+    tasks: Array<Task>;
+    /** Timing records associated with the flow lifecycle */
+    timing: FlowTimingRecords;
+};
+
+export type FlowConfiguration = {
+    __typename?: "FlowConfiguration";
+    batching?: Maybe<FlowConfigurationBatching>;
+    paused: Scalars["Boolean"];
+    schedule?: Maybe<FlowConfigurationSchedule>;
+};
+
+export type FlowConfigurationBatching = {
+    __typename?: "FlowConfigurationBatching";
+    minimalDataBatch?: Maybe<Scalars["Int"]>;
+    throttlingPeriod?: Maybe<TimeDelta>;
+};
+
+export type FlowConfigurationSchedule = CronExpression | TimeDelta;
+
+export type FlowConnection = {
+    __typename?: "FlowConnection";
+    edges: Array<FlowEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<Flow>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount: Scalars["Int"];
+};
+
+export type FlowDescription =
+    | FlowDescriptionDatasetCompaction
+    | FlowDescriptionDatasetExecuteTransform
+    | FlowDescriptionDatasetPollingIngest
+    | FlowDescriptionDatasetPushIngest
+    | FlowDescriptionSystemGc;
+
+export type FlowDescriptionDatasetCompaction = {
+    __typename?: "FlowDescriptionDatasetCompaction";
     datasetId: Scalars["DatasetID"];
+    originalBlocksCount: Scalars["Int"];
+    resultingBlocksCount?: Maybe<Scalars["Int"]>;
+};
+
+export type FlowDescriptionDatasetExecuteTransform = {
+    __typename?: "FlowDescriptionDatasetExecuteTransform";
+    datasetId: Scalars["DatasetID"];
+    transformedRecordsCount?: Maybe<Scalars["Int"]>;
+};
+
+export type FlowDescriptionDatasetPollingIngest = {
+    __typename?: "FlowDescriptionDatasetPollingIngest";
+    datasetId: Scalars["DatasetID"];
+    ingestedRecordsCount?: Maybe<Scalars["Int"]>;
+};
+
+export type FlowDescriptionDatasetPushIngest = {
+    __typename?: "FlowDescriptionDatasetPushIngest";
+    datasetId: Scalars["DatasetID"];
+    ingestedRecordsCount?: Maybe<Scalars["Int"]>;
+    inputRecordsCount: Scalars["Int"];
+    sourceName?: Maybe<Scalars["String"]>;
+};
+
+export type FlowDescriptionSystemGc = {
+    __typename?: "FlowDescriptionSystemGC";
+    dummy: Scalars["Boolean"];
+};
+
+export type FlowEdge = {
+    __typename?: "FlowEdge";
+    node: Flow;
+};
+
+export type FlowEvent = {
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+};
+
+export type FlowEventAborted = FlowEvent & {
+    __typename?: "FlowEventAborted";
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+};
+
+export type FlowEventInitiated = FlowEvent & {
+    __typename?: "FlowEventInitiated";
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+    trigger: FlowTrigger;
+};
+
+export type FlowEventQueued = FlowEvent & {
+    __typename?: "FlowEventQueued";
+    activateAt: Scalars["DateTime"];
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+};
+
+export type FlowEventStartConditionDefined = FlowEvent & {
+    __typename?: "FlowEventStartConditionDefined";
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+    startCondition: FlowStartCondition;
+};
+
+export type FlowEventTaskChanged = FlowEvent & {
+    __typename?: "FlowEventTaskChanged";
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+    task: Task;
+    taskId: Scalars["TaskID"];
+    taskStatus: TaskStatus;
+};
+
+export type FlowEventTriggerAdded = FlowEvent & {
+    __typename?: "FlowEventTriggerAdded";
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+    trigger: FlowTrigger;
+};
+
+export type FlowIncompatibleDatasetKind = SetFlowConfigResult &
+    TriggerFlowResult & {
+        __typename?: "FlowIncompatibleDatasetKind";
+        actualDatasetKind: DatasetKind;
+        expectedDatasetKind: DatasetKind;
+        message: Scalars["String"];
+    };
+
+export type FlowNotFound = CancelScheduledTasksResult &
+    GetFlowResult & {
+        __typename?: "FlowNotFound";
+        flowId: Scalars["FlowID"];
+        message: Scalars["String"];
+    };
+
+export type FlowNotScheduled = CancelScheduledTasksResult & {
+    __typename?: "FlowNotScheduled";
+    flowId: Scalars["FlowID"];
+    message: Scalars["String"];
+};
+
+export enum FlowOutcome {
+    Aborted = "ABORTED",
+    Cancelled = "CANCELLED",
+    Failed = "FAILED",
+    Success = "SUCCESS",
+}
+
+export type FlowStartCondition = FlowStartConditionBatching | FlowStartConditionThrottling;
+
+export type FlowStartConditionBatching = {
+    __typename?: "FlowStartConditionBatching";
+    thresholdNewRecords: Scalars["Int"];
+};
+
+export type FlowStartConditionThrottling = {
+    __typename?: "FlowStartConditionThrottling";
+    intervalSec: Scalars["Int"];
+};
+
+export enum FlowStatus {
+    Finished = "FINISHED",
+    Queued = "QUEUED",
+    Running = "RUNNING",
+    Scheduled = "SCHEDULED",
+    Waiting = "WAITING",
+}
+
+export type FlowTimingRecords = {
+    __typename?: "FlowTimingRecords";
+    /** Planned activation time (at least, Queued state) */
+    activateAt?: Maybe<Scalars["DateTime"]>;
+    /**
+     * Recorded time of finish (succesfull or failed after retry) or abortion
+     * (Finished state seen at least once)
+     */
+    finishedAt?: Maybe<Scalars["DateTime"]>;
+    /** Recorded start of running (Running state seen at least once) */
+    runningSince?: Maybe<Scalars["DateTime"]>;
+};
+
+export type FlowTrigger = FlowTriggerAutoPolling | FlowTriggerInputDatasetFlow | FlowTriggerManual | FlowTriggerPush;
+
+export type FlowTriggerAutoPolling = {
+    __typename?: "FlowTriggerAutoPolling";
+    dummy: Scalars["Boolean"];
+};
+
+export type FlowTriggerInputDatasetFlow = {
+    __typename?: "FlowTriggerInputDatasetFlow";
+    datasetId: Scalars["DatasetID"];
+    flowId: Scalars["FlowID"];
+    flowType: DatasetFlowType;
+};
+
+export type FlowTriggerManual = {
+    __typename?: "FlowTriggerManual";
+    initiator: Account;
+};
+
+export type FlowTriggerPush = {
+    __typename?: "FlowTriggerPush";
+    dummy: Scalars["Boolean"];
+};
+
+export type GetFlowResult = {
+    message: Scalars["String"];
+};
+
+export type GetFlowSuccess = GetFlowResult & {
+    __typename?: "GetFlowSuccess";
+    flow: Flow;
+    message: Scalars["String"];
 };
 
 export type LoginResponse = {
@@ -576,10 +954,6 @@ export type MergeStrategyLedger = {
 export type MergeStrategySnapshot = {
     __typename?: "MergeStrategySnapshot";
     compareColumns?: Maybe<Array<Scalars["String"]>>;
-    observationColumn?: Maybe<Scalars["String"]>;
-    obsvAdded?: Maybe<Scalars["String"]>;
-    obsvChanged?: Maybe<Scalars["String"]>;
-    obsvRemoved?: Maybe<Scalars["String"]>;
     primaryKey: Array<Scalars["String"]>;
 };
 
@@ -651,15 +1025,18 @@ export type MetadataChainMutCommitEventArgs = {
 
 export type MetadataEvent =
     | AddData
-    | ExecuteQuery
+    | AddPushSource
+    | DisablePollingSource
+    | DisablePushSource
+    | ExecuteTransform
     | Seed
     | SetAttachments
+    | SetDataSchema
     | SetInfo
     | SetLicense
     | SetPollingSource
     | SetTransform
-    | SetVocab
-    | SetWatermark;
+    | SetVocab;
 
 export enum MetadataManifestFormat {
     Yaml = "YAML",
@@ -684,7 +1061,7 @@ export type Mutation = {
     /**
      * Dataset-related functionality group.
      *
-     * Datasets are historical streams of events recorded under a cetrain
+     * Datasets are historical streams of events recorded under a certain
      * schema.
      */
     datasets: DatasetsMut;
@@ -746,6 +1123,8 @@ export type Query = {
      * system. This groups deals with their identities and permissions.
      */
     accounts: Accounts;
+    /** Admin-related functionality group */
+    admin: Admin;
     /** Returns the version of the GQL API */
     apiVersion: Scalars["String"];
     /** Authentication and authorization-related functionality group */
@@ -755,11 +1134,11 @@ export type Query = {
     /**
      * Dataset-related functionality group.
      *
-     * Datasets are historical streams of events recorded under a cetrain
+     * Datasets are historical streams of events recorded under a certain
      * schema.
      */
     datasets: Datasets;
-    /** Search-related functionality group. */
+    /** Search-related functionality group */
     search: Search;
     /**
      * Task-related functionality group.
@@ -782,28 +1161,18 @@ export type ReadStep =
     | ReadStepEsriShapefile
     | ReadStepGeoJson
     | ReadStepJson
-    | ReadStepJsonLines
     | ReadStepNdGeoJson
     | ReadStepNdJson
     | ReadStepParquet;
 
 export type ReadStepCsv = {
     __typename?: "ReadStepCsv";
-    comment?: Maybe<Scalars["String"]>;
     dateFormat?: Maybe<Scalars["String"]>;
-    emptyValue?: Maybe<Scalars["String"]>;
     encoding?: Maybe<Scalars["String"]>;
-    enforceSchema?: Maybe<Scalars["Boolean"]>;
     escape?: Maybe<Scalars["String"]>;
     header?: Maybe<Scalars["Boolean"]>;
-    ignoreLeadingWhiteSpace?: Maybe<Scalars["Boolean"]>;
-    ignoreTrailingWhiteSpace?: Maybe<Scalars["Boolean"]>;
     inferSchema?: Maybe<Scalars["Boolean"]>;
-    multiLine?: Maybe<Scalars["Boolean"]>;
-    nanValue?: Maybe<Scalars["String"]>;
-    negativeInf?: Maybe<Scalars["String"]>;
     nullValue?: Maybe<Scalars["String"]>;
-    positiveInf?: Maybe<Scalars["String"]>;
     quote?: Maybe<Scalars["String"]>;
     schema?: Maybe<Array<Scalars["String"]>>;
     separator?: Maybe<Scalars["String"]>;
@@ -827,16 +1196,6 @@ export type ReadStepJson = {
     encoding?: Maybe<Scalars["String"]>;
     schema?: Maybe<Array<Scalars["String"]>>;
     subPath?: Maybe<Scalars["String"]>;
-    timestampFormat?: Maybe<Scalars["String"]>;
-};
-
-export type ReadStepJsonLines = {
-    __typename?: "ReadStepJsonLines";
-    dateFormat?: Maybe<Scalars["String"]>;
-    encoding?: Maybe<Scalars["String"]>;
-    multiLine?: Maybe<Scalars["Boolean"]>;
-    primitivesAsString?: Maybe<Scalars["Boolean"]>;
-    schema?: Maybe<Array<Scalars["String"]>>;
     timestampFormat?: Maybe<Scalars["String"]>;
 };
 
@@ -887,6 +1246,10 @@ export type RequestHeader = {
     value: Scalars["String"];
 };
 
+export type ScheduleInput =
+    | { cronExpression: Scalars["String"]; timeDelta?: never }
+    | { cronExpression?: never; timeDelta: TimeDeltaInput };
+
 export type Search = {
     __typename?: "Search";
     /** Perform search across all resources */
@@ -928,6 +1291,21 @@ export type SetAttachments = {
     attachments: Attachments;
 };
 
+export type SetDataSchema = {
+    __typename?: "SetDataSchema";
+    schema: DataSchema;
+};
+
+export type SetFlowConfigResult = {
+    message: Scalars["String"];
+};
+
+export type SetFlowConfigSuccess = SetFlowConfigResult & {
+    __typename?: "SetFlowConfigSuccess";
+    config: FlowConfiguration;
+    message: Scalars["String"];
+};
+
 export type SetInfo = {
     __typename?: "SetInfo";
     description?: Maybe<Scalars["String"]>;
@@ -961,12 +1339,29 @@ export type SetVocab = {
     __typename?: "SetVocab";
     eventTimeColumn?: Maybe<Scalars["String"]>;
     offsetColumn?: Maybe<Scalars["String"]>;
+    operationTypeColumn?: Maybe<Scalars["String"]>;
     systemTimeColumn?: Maybe<Scalars["String"]>;
 };
 
-export type SetWatermark = {
-    __typename?: "SetWatermark";
-    outputWatermark: Scalars["DateTime"];
+export type SetWatermarkIsDerivative = SetWatermarkResult & {
+    __typename?: "SetWatermarkIsDerivative";
+    message: Scalars["String"];
+};
+
+export type SetWatermarkResult = {
+    message: Scalars["String"];
+};
+
+export type SetWatermarkUpToDate = SetWatermarkResult & {
+    __typename?: "SetWatermarkUpToDate";
+    dummy: Scalars["String"];
+    message: Scalars["String"];
+};
+
+export type SetWatermarkUpdated = SetWatermarkResult & {
+    __typename?: "SetWatermarkUpdated";
+    message: Scalars["String"];
+    newHead: Scalars["Multihash"];
 };
 
 export type SourceCaching = SourceCachingForever;
@@ -984,7 +1379,7 @@ export enum SourceOrdering {
 export type SourceState = {
     __typename?: "SourceState";
     kind: Scalars["String"];
-    source: Scalars["String"];
+    sourceName: Scalars["String"];
     value: Scalars["String"];
 };
 
@@ -1013,7 +1408,7 @@ export type Task = {
     ranAt?: Maybe<Scalars["DateTime"]>;
     /** Life-cycle status of a task */
     status: TaskStatus;
-    /** Unique and stable identitfier of this task */
+    /** Unique and stable identifier of this task */
     taskId: Scalars["TaskID"];
 };
 
@@ -1110,14 +1505,31 @@ export type TemporalTable = {
     primaryKey: Array<Scalars["String"]>;
 };
 
+export type TimeDelta = {
+    __typename?: "TimeDelta";
+    every: Scalars["Int"];
+    unit: TimeUnit;
+};
+
+export type TimeDeltaInput = {
+    every: Scalars["Int"];
+    unit: TimeUnit;
+};
+
+export enum TimeUnit {
+    Days = "DAYS",
+    Hours = "HOURS",
+    Minutes = "MINUTES",
+    Weeks = "WEEKS",
+}
+
 export type Transform = TransformSql;
 
 export type TransformInput = {
     __typename?: "TransformInput";
+    alias: Scalars["String"];
     dataset: Dataset;
-    datasetRef?: Maybe<Scalars["DatasetRefAny"]>;
-    id?: Maybe<Scalars["DatasetID"]>;
-    name: Scalars["DatasetName"];
+    datasetRef: Scalars["DatasetRef"];
 };
 
 export type TransformSql = {
@@ -1126,6 +1538,16 @@ export type TransformSql = {
     queries: Array<SqlQueryStep>;
     temporalTables?: Maybe<Array<TemporalTable>>;
     version?: Maybe<Scalars["String"]>;
+};
+
+export type TriggerFlowResult = {
+    message: Scalars["String"];
+};
+
+export type TriggerFlowSuccess = TriggerFlowResult & {
+    __typename?: "TriggerFlowSuccess";
+    flow: Flow;
+    message: Scalars["String"];
 };
 
 export type UpdateReadmeResult = {
@@ -1175,7 +1597,7 @@ export type CommitEventToDatasetMutation = {
 
 export type CreateEmptyDatasetMutationVariables = Exact<{
     datasetKind: DatasetKind;
-    datasetName: Scalars["DatasetName"];
+    datasetAlias: Scalars["DatasetAlias"];
 }>;
 
 export type CreateEmptyDatasetMutation = {
@@ -1228,6 +1650,25 @@ export type UpdateReadmeMutation = {
                     | { __typename: "CommitResultSuccess"; oldHead?: string | null; message: string }
                     | { __typename: "NoChanges"; message: string };
             };
+        } | null;
+    };
+};
+
+export type UpdateWatermarkMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    watermark: Scalars["DateTime"];
+}>;
+
+export type UpdateWatermarkMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            setWatermark:
+                | { __typename?: "SetWatermarkIsDerivative"; message: string }
+                | { __typename?: "SetWatermarkUpToDate"; dummy: string; message: string }
+                | { __typename?: "SetWatermarkUpdated"; newHead: string; message: string };
         } | null;
     };
 };
@@ -1424,35 +1865,61 @@ export type EnginesQuery = {
 
 export type AddDataEventFragment = {
     __typename?: "AddData";
-    inputCheckpoint?: string | null;
-    addDataWatermark?: string | null;
-    outputData?: {
+    prevCheckpoint?: string | null;
+    prevOffset?: number | null;
+    newWatermark?: string | null;
+    newData?: {
         __typename?: "DataSlice";
         logicalHash: string;
         physicalHash: string;
         size: number;
-        interval: { __typename?: "OffsetInterval"; start: number; end: number };
+        offsetInterval: { __typename?: "OffsetInterval"; start: number; end: number };
     } | null;
-    outputCheckpoint?: { __typename?: "Checkpoint"; physicalHash: string; size: number } | null;
+    newCheckpoint?: { __typename?: "Checkpoint"; physicalHash: string; size: number } | null;
+    newSourceState?: { __typename?: "SourceState"; sourceName: string; kind: string; value: string } | null;
 };
 
-export type ExecuteQueryEventFragment = {
-    __typename?: "ExecuteQuery";
-    inputCheckpoint?: string | null;
-    watermark?: string | null;
-    queryOutputData?: {
+export type AddPushSourceEventFragment = {
+    __typename?: "AddPushSource";
+    sourceName: string;
+    read:
+        | ({ __typename?: "ReadStepCsv" } & ReadStepCsvDataFragment)
+        | ({ __typename?: "ReadStepEsriShapefile" } & ReadStepEsriShapefileDataFragment)
+        | ({ __typename?: "ReadStepGeoJson" } & ReadStepGeoJsonDataFragment)
+        | ({ __typename?: "ReadStepJson" } & ReadStepJsonDataFragment)
+        | ({ __typename?: "ReadStepNdGeoJson" } & ReadStepNdGeoJsonDataFragment)
+        | ({ __typename?: "ReadStepNdJson" } & ReadStepNdJsonDataFragment)
+        | ({ __typename?: "ReadStepParquet" } & ReadStepParquetDataFragment);
+    merge:
+        | ({ __typename?: "MergeStrategyAppend" } & MergeStrategyAppendDataFragment)
+        | ({ __typename?: "MergeStrategyLedger" } & MergeStrategyLedgerDataFragment)
+        | ({ __typename?: "MergeStrategySnapshot" } & MergeStrategySnapshotDataFragment);
+    preprocess?: ({ __typename?: "TransformSql" } & PreprocessStepDataFragment) | null;
+};
+
+export type DisablePollingSourceEventFragment = { __typename?: "DisablePollingSource"; dummy?: string | null };
+
+export type ExecuteTransformEventFragment = {
+    __typename?: "ExecuteTransform";
+    prevCheckpoint?: string | null;
+    prevOffset?: number | null;
+    newWatermark?: string | null;
+    queryInputs: Array<{
+        __typename?: "ExecuteTransformInput";
+        datasetId: string;
+        prevBlockHash?: string | null;
+        newBlockHash?: string | null;
+        prevOffset?: number | null;
+        newOffset?: number | null;
+    }>;
+    newData?: {
         __typename?: "DataSlice";
         logicalHash: string;
         physicalHash: string;
-        interval: { __typename?: "OffsetInterval"; start: number; end: number };
+        size: number;
+        offsetInterval: { __typename?: "OffsetInterval"; start: number; end: number };
     } | null;
-    inputSlices: Array<{
-        __typename?: "InputSlice";
-        datasetId: string;
-        blockInterval?: { __typename?: "BlockInterval"; start: string; end: string } | null;
-        dataInterval?: { __typename?: "OffsetInterval"; start: number; end: number } | null;
-    }>;
-    outputCheckpoint?: { __typename?: "Checkpoint"; physicalHash: string; size: number } | null;
+    newCheckpoint?: { __typename?: "Checkpoint"; physicalHash: string; size: number } | null;
 };
 
 export type SeedEventFragment = { __typename?: "Seed"; datasetId: string; datasetKind: DatasetKind };
@@ -1463,6 +1930,11 @@ export type SetAttachmentsEventFragment = {
         __typename?: "AttachmentsEmbedded";
         items: Array<{ __typename?: "AttachmentEmbedded"; path: string; content: string }>;
     };
+};
+
+export type SetDataSchemaEventFragment = {
+    __typename?: "SetDataSchema";
+    schema: { __typename?: "DataSchema"; format: DataSchemaFormat; content: string };
 };
 
 export type SetLicenseEventFragment = {
@@ -1476,119 +1948,136 @@ export type SetLicenseEventFragment = {
 export type SetPollingSourceEventFragment = {
     __typename?: "SetPollingSource";
     fetch:
-        | {
-              __typename?: "FetchStepContainer";
-              image: string;
-              command?: Array<string> | null;
-              args?: Array<string> | null;
-              env?: Array<{ __typename?: "EnvVar"; name: string; value?: string | null }> | null;
-          }
-        | {
-              __typename?: "FetchStepFilesGlob";
-              path: string;
-              order?: SourceOrdering | null;
-              eventTime?:
-                  | { __typename: "EventTimeSourceFromMetadata" }
-                  | { __typename?: "EventTimeSourceFromPath"; pattern: string; timestampFormat?: string | null }
-                  | { __typename: "EventTimeSourceFromSystemTime" }
-                  | null;
-              cache?: { __typename: "SourceCachingForever" } | null;
-          }
-        | {
-              __typename?: "FetchStepUrl";
-              url: string;
-              eventTime?:
-                  | { __typename: "EventTimeSourceFromMetadata" }
-                  | { __typename?: "EventTimeSourceFromPath"; pattern: string; timestampFormat?: string | null }
-                  | { __typename: "EventTimeSourceFromSystemTime" }
-                  | null;
-              headers?: Array<{ __typename?: "RequestHeader"; name: string; value: string }> | null;
-              cache?: { __typename: "SourceCachingForever" } | null;
-          };
+        | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
+        | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
+        | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
     read:
-        | {
-              __typename?: "ReadStepCsv";
-              schema?: Array<string> | null;
-              separator?: string | null;
-              encoding?: string | null;
-              quote?: string | null;
-              escape?: string | null;
-              comment?: string | null;
-              header?: boolean | null;
-              enforceSchema?: boolean | null;
-              inferSchema?: boolean | null;
-              ignoreLeadingWhiteSpace?: boolean | null;
-              ignoreTrailingWhiteSpace?: boolean | null;
-              nullValue?: string | null;
-              emptyValue?: string | null;
-              nanValue?: string | null;
-              positiveInf?: string | null;
-              negativeInf?: string | null;
-              dateFormat?: string | null;
-              timestampFormat?: string | null;
-              multiLine?: boolean | null;
-          }
-        | { __typename?: "ReadStepEsriShapefile"; schema?: Array<string> | null; subPath?: string | null }
-        | { __typename?: "ReadStepGeoJson"; schema?: Array<string> | null }
-        | {
-              __typename?: "ReadStepJson";
-              subPath?: string | null;
-              schema?: Array<string> | null;
-              dateFormat?: string | null;
-              encoding?: string | null;
-              timestampFormat?: string | null;
-          }
-        | {
-              __typename?: "ReadStepJsonLines";
-              schema?: Array<string> | null;
-              dateFormat?: string | null;
-              encoding?: string | null;
-              multiLine?: boolean | null;
-              primitivesAsString?: boolean | null;
-              timestampFormat?: string | null;
-          }
-        | { __typename?: "ReadStepNdGeoJson"; schema?: Array<string> | null }
-        | {
-              __typename?: "ReadStepNdJson";
-              dateFormat?: string | null;
-              encoding?: string | null;
-              schema?: Array<string> | null;
-              timestampFormat?: string | null;
-          }
-        | { __typename?: "ReadStepParquet"; schema?: Array<string> | null };
+        | ({ __typename?: "ReadStepCsv" } & ReadStepCsvDataFragment)
+        | ({ __typename?: "ReadStepEsriShapefile" } & ReadStepEsriShapefileDataFragment)
+        | ({ __typename?: "ReadStepGeoJson" } & ReadStepGeoJsonDataFragment)
+        | ({ __typename?: "ReadStepJson" } & ReadStepJsonDataFragment)
+        | ({ __typename?: "ReadStepNdGeoJson" } & ReadStepNdGeoJsonDataFragment)
+        | ({ __typename?: "ReadStepNdJson" } & ReadStepNdJsonDataFragment)
+        | ({ __typename?: "ReadStepParquet" } & ReadStepParquetDataFragment);
     merge:
-        | { __typename: "MergeStrategyAppend" }
-        | { __typename?: "MergeStrategyLedger"; primaryKey: Array<string> }
-        | {
-              __typename?: "MergeStrategySnapshot";
-              primaryKey: Array<string>;
-              compareColumns?: Array<string> | null;
-              observationColumn?: string | null;
-              obsvAdded?: string | null;
-              obsvChanged?: string | null;
-              obsvRemoved?: string | null;
-          };
+        | ({ __typename?: "MergeStrategyAppend" } & MergeStrategyAppendDataFragment)
+        | ({ __typename?: "MergeStrategyLedger" } & MergeStrategyLedgerDataFragment)
+        | ({ __typename?: "MergeStrategySnapshot" } & MergeStrategySnapshotDataFragment);
     prepare?: Array<
-        | { __typename?: "PrepStepDecompress"; format: CompressionFormat; subPath?: string | null }
-        | { __typename?: "PrepStepPipe"; command: Array<string> }
+        | ({ __typename?: "PrepStepDecompress" } & PrepStepDecompressDataFragment)
+        | ({ __typename?: "PrepStepPipe" } & PrepStepPipeDataFragment)
     > | null;
-    preprocess?: {
-        __typename?: "TransformSql";
-        engine: string;
-        version?: string | null;
-        queries: Array<{ __typename?: "SqlQueryStep"; query: string; alias?: string | null }>;
-        temporalTables?: Array<{ __typename?: "TemporalTable"; name: string; primaryKey: Array<string> }> | null;
-    } | null;
+    preprocess?: ({ __typename?: "TransformSql" } & PreprocessStepDataFragment) | null;
 };
 
 export type SetVocabEventFragment = {
     __typename?: "SetVocab";
+    offsetColumn?: string | null;
+    operationTypeColumn?: string | null;
     systemTimeColumn?: string | null;
     eventTimeColumn?: string | null;
-    offsetColumn?: string | null;
 };
 
-export type SetWatermarkEventFragment = { __typename?: "SetWatermark"; outputWatermark: string };
+export type FetchStepContainerDataFragment = {
+    __typename?: "FetchStepContainer";
+    image: string;
+    command?: Array<string> | null;
+    args?: Array<string> | null;
+    env?: Array<{ __typename?: "EnvVar"; name: string; value?: string | null }> | null;
+};
+
+export type FetchStepFilesGlobDataFragment = {
+    __typename?: "FetchStepFilesGlob";
+    path: string;
+    order?: SourceOrdering | null;
+    eventTime?:
+        | { __typename: "EventTimeSourceFromMetadata" }
+        | { __typename?: "EventTimeSourceFromPath"; pattern: string; timestampFormat?: string | null }
+        | { __typename: "EventTimeSourceFromSystemTime" }
+        | null;
+    cache?: { __typename: "SourceCachingForever" } | null;
+};
+
+export type FetchStepUrlDataFragment = {
+    __typename?: "FetchStepUrl";
+    url: string;
+    eventTime?:
+        | { __typename: "EventTimeSourceFromMetadata" }
+        | { __typename?: "EventTimeSourceFromPath"; pattern: string; timestampFormat?: string | null }
+        | { __typename: "EventTimeSourceFromSystemTime" }
+        | null;
+    headers?: Array<{ __typename?: "RequestHeader"; name: string; value: string }> | null;
+    cache?: { __typename: "SourceCachingForever" } | null;
+};
+
+export type MergeStrategyAppendDataFragment = { __typename: "MergeStrategyAppend" };
+
+export type MergeStrategyLedgerDataFragment = { __typename?: "MergeStrategyLedger"; primaryKey: Array<string> };
+
+export type MergeStrategySnapshotDataFragment = {
+    __typename?: "MergeStrategySnapshot";
+    primaryKey: Array<string>;
+    compareColumns?: Array<string> | null;
+};
+
+export type PrepStepDecompressDataFragment = {
+    __typename?: "PrepStepDecompress";
+    format: CompressionFormat;
+    subPath?: string | null;
+};
+
+export type PrepStepPipeDataFragment = { __typename?: "PrepStepPipe"; command: Array<string> };
+
+export type PreprocessStepDataFragment = {
+    __typename?: "TransformSql";
+    engine: string;
+    version?: string | null;
+    queries: Array<{ __typename?: "SqlQueryStep"; query: string; alias?: string | null }>;
+    temporalTables?: Array<{ __typename?: "TemporalTable"; name: string; primaryKey: Array<string> }> | null;
+};
+
+export type ReadStepCsvDataFragment = {
+    __typename?: "ReadStepCsv";
+    schema?: Array<string> | null;
+    separator?: string | null;
+    encoding?: string | null;
+    quote?: string | null;
+    escape?: string | null;
+    header?: boolean | null;
+    inferSchema?: boolean | null;
+    nullValue?: string | null;
+    dateFormat?: string | null;
+    timestampFormat?: string | null;
+};
+
+export type ReadStepEsriShapefileDataFragment = {
+    __typename?: "ReadStepEsriShapefile";
+    schema?: Array<string> | null;
+    subPath?: string | null;
+};
+
+export type ReadStepGeoJsonDataFragment = { __typename?: "ReadStepGeoJson"; schema?: Array<string> | null };
+
+export type ReadStepJsonDataFragment = {
+    __typename?: "ReadStepJson";
+    subPath?: string | null;
+    schema?: Array<string> | null;
+    dateFormat?: string | null;
+    encoding?: string | null;
+    timestampFormat?: string | null;
+};
+
+export type ReadStepNdGeoJsonDataFragment = { __typename?: "ReadStepNdGeoJson"; schema?: Array<string> | null };
+
+export type ReadStepNdJsonDataFragment = {
+    __typename?: "ReadStepNdJson";
+    dateFormat?: string | null;
+    encoding?: string | null;
+    schema?: Array<string> | null;
+    timestampFormat?: string | null;
+};
+
+export type ReadStepParquetDataFragment = { __typename?: "ReadStepParquet"; schema?: Array<string> | null };
 
 export type AccountBasicsFragment = { __typename?: "Account"; id: string; accountName: string };
 
@@ -1606,11 +2095,12 @@ export type AccountFragment = {
     displayName: string;
     accountType: AccountType;
     avatarUrl?: string | null;
+    isAdmin: boolean;
 };
 
 export type CurrentSourceFetchUrlFragment = {
     __typename?: "DatasetMetadata";
-    currentSource?: {
+    currentPollingSource?: {
         __typename?: "SetPollingSource";
         fetch:
             | { __typename?: "FetchStepContainer" }
@@ -1782,14 +2272,15 @@ export type DatasetLineageBasicsFragment = {
 export type DatasetMetadataSummaryFragment = {
     __typename?: "Dataset";
     metadata: {
-        __typename: "DatasetMetadata";
+        __typename?: "DatasetMetadata";
         currentWatermark?: string | null;
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
-        currentSource?: ({ __typename?: "SetPollingSource" } & SetPollingSourceEventFragment) | null;
+        currentPollingSource?: ({ __typename?: "SetPollingSource" } & SetPollingSourceEventFragment) | null;
         currentTransform?: ({ __typename?: "SetTransform" } & DatasetTransformFragment) | null;
-        currentSchema?: { __typename: "DataSchema"; format: DataSchemaFormat; content: string } | null;
+        currentSchema?: { __typename?: "DataSchema"; format: DataSchemaFormat; content: string } | null;
         currentVocab?: ({ __typename?: "SetVocab" } & SetVocabEventFragment) | null;
+        currentPushSources: Array<{ __typename?: "AddPushSource" } & AddPushSourceEventFragment>;
     };
 } & DatasetReadmeFragment &
     DatasetLastUpdateFragment;
@@ -1798,8 +2289,9 @@ export type DatasetOverviewFragment = {
     __typename?: "Dataset";
     metadata: {
         __typename?: "DatasetMetadata";
-        currentSource?: { __typename: "SetPollingSource" } | null;
+        currentPollingSource?: { __typename: "SetPollingSource" } | null;
         currentTransform?: { __typename: "SetTransform" } | null;
+        currentPushSources: Array<{ __typename: "AddPushSource" }>;
     };
 } & DatasetDescriptionFragment &
     DatasetDetailsFragment &
@@ -1838,7 +2330,7 @@ export type DatasetSearchOverviewFragment = {
         __typename?: "DatasetMetadata";
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
-        currentDownstreamDependencies: Array<{ __typename?: "Dataset"; id: string; kind: DatasetKind; alias: string }>;
+        currentDownstreamDependencies: Array<{ __typename?: "Dataset" } & DatasetBasicsFragment>;
     };
 } & DatasetBasicsFragment;
 
@@ -1854,8 +2346,8 @@ export type DatasetTransformFragment = {
     __typename?: "SetTransform";
     inputs: Array<{
         __typename?: "TransformInput";
-        name: string;
-        datasetRef?: string | null;
+        datasetRef: string;
+        alias: string;
         dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
     }>;
     transform: { __typename?: "TransformSql" } & DatasetTransformContentFragment;
@@ -1878,15 +2370,18 @@ export type MetadataBlockFragment = {
     author: { __typename?: "Account" } & AccountExtendedFragment;
     event:
         | ({ __typename: "AddData" } & AddDataEventFragment)
-        | ({ __typename: "ExecuteQuery" } & ExecuteQueryEventFragment)
+        | ({ __typename: "AddPushSource" } & AddPushSourceEventFragment)
+        | ({ __typename: "DisablePollingSource" } & DisablePollingSourceEventFragment)
+        | { __typename: "DisablePushSource" }
+        | ({ __typename: "ExecuteTransform" } & ExecuteTransformEventFragment)
         | ({ __typename: "Seed" } & SeedEventFragment)
         | ({ __typename: "SetAttachments" } & SetAttachmentsEventFragment)
+        | ({ __typename: "SetDataSchema" } & SetDataSchemaEventFragment)
         | ({ __typename: "SetInfo" } & DatasetCurrentInfoFragment)
         | ({ __typename: "SetLicense" } & SetLicenseEventFragment)
         | ({ __typename: "SetPollingSource" } & SetPollingSourceEventFragment)
         | ({ __typename: "SetTransform" } & DatasetTransformFragment)
-        | ({ __typename: "SetVocab" } & SetVocabEventFragment)
-        | ({ __typename: "SetWatermark" } & SetWatermarkEventFragment);
+        | ({ __typename: "SetVocab" } & SetVocabEventFragment);
 };
 
 export type LoginMutationVariables = Exact<{
@@ -2003,6 +2498,7 @@ export const AccountFragmentDoc = gql`
         displayName
         accountType
         avatarUrl
+        isAdmin
     }
 `;
 export const DatasetDataSizeFragmentDoc = gql`
@@ -2063,7 +2559,7 @@ export const DatasetBasicsFragmentDoc = gql`
 `;
 export const CurrentSourceFetchUrlFragmentDoc = gql`
     fragment CurrentSourceFetchUrl on DatasetMetadata {
-        currentSource {
+        currentPollingSource {
             fetch {
                 ... on FetchStepUrl {
                     url
@@ -2174,157 +2670,200 @@ export const DatasetCurrentInfoFragmentDoc = gql`
         keywords
     }
 `;
-export const SetPollingSourceEventFragmentDoc = gql`
-    fragment SetPollingSourceEvent on SetPollingSource {
-        fetch {
-            ... on FetchStepUrl {
-                url
-                eventTime {
-                    ... on EventTimeSourceFromPath {
-                        pattern
-                        timestampFormat
-                    }
-                    ... on EventTimeSourceFromMetadata {
-                        __typename
-                    }
-                    ... on EventTimeSourceFromSystemTime {
-                        __typename
-                    }
-                }
-                headers {
-                    name
-                    value
-                }
-                cache {
-                    __typename
-                }
-            }
-            ... on FetchStepFilesGlob {
-                path
-                eventTime {
-                    ... on EventTimeSourceFromPath {
-                        pattern
-                        timestampFormat
-                    }
-                    ... on EventTimeSourceFromMetadata {
-                        __typename
-                    }
-                    ... on EventTimeSourceFromSystemTime {
-                        __typename
-                    }
-                }
-                cache {
-                    __typename
-                }
-                order
-            }
-            ... on FetchStepContainer {
-                image
-                command
-                args
-                env {
-                    name
-                    value
-                }
-            }
-        }
-        read {
-            ... on ReadStepCsv {
-                schema
-                separator
-                encoding
-                quote
-                escape
-                comment
-                header
-                enforceSchema
-                inferSchema
-                ignoreLeadingWhiteSpace
-                ignoreTrailingWhiteSpace
-                nullValue
-                emptyValue
-                nanValue
-                positiveInf
-                negativeInf
-                dateFormat
-                timestampFormat
-                multiLine
-            }
-            ... on ReadStepGeoJson {
-                schema
-            }
-            ... on ReadStepParquet {
-                schema
-            }
-            ... on ReadStepJsonLines {
-                schema
-                dateFormat
-                encoding
-                multiLine
-                primitivesAsString
+export const FetchStepUrlDataFragmentDoc = gql`
+    fragment FetchStepUrlData on FetchStepUrl {
+        url
+        eventTime {
+            ... on EventTimeSourceFromPath {
+                pattern
                 timestampFormat
             }
-            ... on ReadStepEsriShapefile {
-                schema
-                subPath
+            ... on EventTimeSourceFromMetadata {
+                __typename
             }
-            ... on ReadStepJson {
-                subPath
-                schema
-                dateFormat
-                encoding
-                timestampFormat
-            }
-            ... on ReadStepNdGeoJson {
-                schema
-            }
-            ... on ReadStepNdJson {
-                dateFormat
-                encoding
-                schema
-                timestampFormat
-            }
-        }
-        merge {
-            ... on MergeStrategySnapshot {
-                primaryKey
-                compareColumns
-                observationColumn
-                obsvAdded
-                obsvChanged
-                obsvRemoved
-            }
-            ... on MergeStrategyLedger {
-                primaryKey
-            }
-            ... on MergeStrategyAppend {
+            ... on EventTimeSourceFromSystemTime {
                 __typename
             }
         }
-        prepare {
-            ... on PrepStepDecompress {
-                format
-                subPath
-            }
-            ... on PrepStepPipe {
-                command
-            }
+        headers {
+            name
+            value
         }
-        preprocess {
-            ... on TransformSql {
-                engine
-                version
-                queries {
-                    query
-                    alias
-                }
-                temporalTables {
-                    name
-                    primaryKey
-                }
-            }
+        cache {
+            __typename
         }
     }
+`;
+export const FetchStepFilesGlobDataFragmentDoc = gql`
+    fragment FetchStepFilesGlobData on FetchStepFilesGlob {
+        path
+        eventTime {
+            ... on EventTimeSourceFromPath {
+                pattern
+                timestampFormat
+            }
+            ... on EventTimeSourceFromMetadata {
+                __typename
+            }
+            ... on EventTimeSourceFromSystemTime {
+                __typename
+            }
+        }
+        cache {
+            __typename
+        }
+        order
+    }
+`;
+export const FetchStepContainerDataFragmentDoc = gql`
+    fragment FetchStepContainerData on FetchStepContainer {
+        image
+        command
+        args
+        env {
+            name
+            value
+        }
+    }
+`;
+export const ReadStepCsvDataFragmentDoc = gql`
+    fragment ReadStepCsvData on ReadStepCsv {
+        schema
+        separator
+        encoding
+        quote
+        escape
+        header
+        inferSchema
+        nullValue
+        dateFormat
+        timestampFormat
+    }
+`;
+export const ReadStepJsonDataFragmentDoc = gql`
+    fragment ReadStepJsonData on ReadStepJson {
+        subPath
+        schema
+        dateFormat
+        encoding
+        timestampFormat
+    }
+`;
+export const ReadStepNdJsonDataFragmentDoc = gql`
+    fragment ReadStepNdJsonData on ReadStepNdJson {
+        dateFormat
+        encoding
+        schema
+        timestampFormat
+    }
+`;
+export const ReadStepGeoJsonDataFragmentDoc = gql`
+    fragment ReadStepGeoJsonData on ReadStepGeoJson {
+        schema
+    }
+`;
+export const ReadStepNdGeoJsonDataFragmentDoc = gql`
+    fragment ReadStepNdGeoJsonData on ReadStepNdGeoJson {
+        schema
+    }
+`;
+export const ReadStepEsriShapefileDataFragmentDoc = gql`
+    fragment ReadStepEsriShapefileData on ReadStepEsriShapefile {
+        schema
+        subPath
+    }
+`;
+export const ReadStepParquetDataFragmentDoc = gql`
+    fragment ReadStepParquetData on ReadStepParquet {
+        schema
+    }
+`;
+export const MergeStrategySnapshotDataFragmentDoc = gql`
+    fragment MergeStrategySnapshotData on MergeStrategySnapshot {
+        primaryKey
+        compareColumns
+    }
+`;
+export const MergeStrategyLedgerDataFragmentDoc = gql`
+    fragment MergeStrategyLedgerData on MergeStrategyLedger {
+        primaryKey
+    }
+`;
+export const MergeStrategyAppendDataFragmentDoc = gql`
+    fragment MergeStrategyAppendData on MergeStrategyAppend {
+        __typename
+    }
+`;
+export const PrepStepDecompressDataFragmentDoc = gql`
+    fragment PrepStepDecompressData on PrepStepDecompress {
+        format
+        subPath
+    }
+`;
+export const PrepStepPipeDataFragmentDoc = gql`
+    fragment PrepStepPipeData on PrepStepPipe {
+        command
+    }
+`;
+export const PreprocessStepDataFragmentDoc = gql`
+    fragment PreprocessStepData on TransformSql {
+        engine
+        version
+        queries {
+            query
+            alias
+        }
+        temporalTables {
+            name
+            primaryKey
+        }
+    }
+`;
+export const SetPollingSourceEventFragmentDoc = gql`
+    fragment SetPollingSourceEvent on SetPollingSource {
+        fetch {
+            ...FetchStepUrlData
+            ...FetchStepFilesGlobData
+            ...FetchStepContainerData
+        }
+        read {
+            ...ReadStepCsvData
+            ...ReadStepJsonData
+            ...ReadStepNdJsonData
+            ...ReadStepGeoJsonData
+            ...ReadStepNdGeoJsonData
+            ...ReadStepEsriShapefileData
+            ...ReadStepParquetData
+        }
+        merge {
+            ...MergeStrategySnapshotData
+            ...MergeStrategyLedgerData
+            ...MergeStrategyAppendData
+        }
+        prepare {
+            ...PrepStepDecompressData
+            ...PrepStepPipeData
+        }
+        preprocess {
+            ...PreprocessStepData
+        }
+    }
+    ${FetchStepUrlDataFragmentDoc}
+    ${FetchStepFilesGlobDataFragmentDoc}
+    ${FetchStepContainerDataFragmentDoc}
+    ${ReadStepCsvDataFragmentDoc}
+    ${ReadStepJsonDataFragmentDoc}
+    ${ReadStepNdJsonDataFragmentDoc}
+    ${ReadStepGeoJsonDataFragmentDoc}
+    ${ReadStepNdGeoJsonDataFragmentDoc}
+    ${ReadStepEsriShapefileDataFragmentDoc}
+    ${ReadStepParquetDataFragmentDoc}
+    ${MergeStrategySnapshotDataFragmentDoc}
+    ${MergeStrategyLedgerDataFragmentDoc}
+    ${MergeStrategyAppendDataFragmentDoc}
+    ${PrepStepDecompressDataFragmentDoc}
+    ${PrepStepPipeDataFragmentDoc}
+    ${PreprocessStepDataFragmentDoc}
 `;
 export const DatasetTransformContentFragmentDoc = gql`
     fragment DatasetTransformContent on TransformSql {
@@ -2343,11 +2882,11 @@ export const DatasetTransformContentFragmentDoc = gql`
 export const DatasetTransformFragmentDoc = gql`
     fragment DatasetTransform on SetTransform {
         inputs {
-            name
+            datasetRef
+            alias
             dataset {
                 ...DatasetBasics
             }
-            datasetRef
         }
         transform {
             ...DatasetTransformContent
@@ -2358,10 +2897,44 @@ export const DatasetTransformFragmentDoc = gql`
 `;
 export const SetVocabEventFragmentDoc = gql`
     fragment SetVocabEvent on SetVocab {
+        offsetColumn
+        operationTypeColumn
         systemTimeColumn
         eventTimeColumn
-        offsetColumn
     }
+`;
+export const AddPushSourceEventFragmentDoc = gql`
+    fragment AddPushSourceEvent on AddPushSource {
+        sourceName
+        read {
+            ...ReadStepCsvData
+            ...ReadStepJsonData
+            ...ReadStepNdJsonData
+            ...ReadStepGeoJsonData
+            ...ReadStepNdGeoJsonData
+            ...ReadStepEsriShapefileData
+            ...ReadStepParquetData
+        }
+        merge {
+            ...MergeStrategySnapshotData
+            ...MergeStrategyLedgerData
+            ...MergeStrategyAppendData
+        }
+        preprocess {
+            ...PreprocessStepData
+        }
+    }
+    ${ReadStepCsvDataFragmentDoc}
+    ${ReadStepJsonDataFragmentDoc}
+    ${ReadStepNdJsonDataFragmentDoc}
+    ${ReadStepGeoJsonDataFragmentDoc}
+    ${ReadStepNdGeoJsonDataFragmentDoc}
+    ${ReadStepEsriShapefileDataFragmentDoc}
+    ${ReadStepParquetDataFragmentDoc}
+    ${MergeStrategySnapshotDataFragmentDoc}
+    ${MergeStrategyLedgerDataFragmentDoc}
+    ${MergeStrategyAppendDataFragmentDoc}
+    ${PreprocessStepDataFragmentDoc}
 `;
 export const DatasetReadmeFragmentDoc = gql`
     fragment DatasetReadme on Dataset {
@@ -2383,46 +2956,39 @@ export const SeedEventFragmentDoc = gql`
         datasetKind
     }
 `;
-export const SetWatermarkEventFragmentDoc = gql`
-    fragment SetWatermarkEvent on SetWatermark {
-        outputWatermark
-    }
-`;
-export const ExecuteQueryEventFragmentDoc = gql`
-    fragment ExecuteQueryEvent on ExecuteQuery {
-        queryOutputData: outputData {
-            interval {
+export const ExecuteTransformEventFragmentDoc = gql`
+    fragment ExecuteTransformEvent on ExecuteTransform {
+        queryInputs {
+            datasetId
+            prevBlockHash
+            newBlockHash
+            prevOffset
+            newOffset
+        }
+        prevCheckpoint
+        prevOffset
+        newData {
+            offsetInterval {
                 start
                 end
             }
             logicalHash
             physicalHash
+            size
         }
-        inputCheckpoint
-        watermark: outputWatermark
-        inputSlices {
-            datasetId
-            blockInterval {
-                start
-                end
-            }
-            dataInterval {
-                start
-                end
-            }
-        }
-        outputCheckpoint {
+        newCheckpoint {
             physicalHash
             size
         }
+        newWatermark
     }
 `;
 export const AddDataEventFragmentDoc = gql`
     fragment AddDataEvent on AddData {
-        addDataWatermark: outputWatermark
-        inputCheckpoint
-        outputData {
-            interval {
+        prevCheckpoint
+        prevOffset
+        newData {
+            offsetInterval {
                 start
                 end
             }
@@ -2430,9 +2996,15 @@ export const AddDataEventFragmentDoc = gql`
             physicalHash
             size
         }
-        outputCheckpoint {
+        newCheckpoint {
             physicalHash
             size
+        }
+        newWatermark
+        newSourceState {
+            sourceName
+            kind
+            value
         }
     }
 `;
@@ -2456,6 +3028,19 @@ export const SetLicenseEventFragmentDoc = gql`
         websiteUrl
     }
 `;
+export const SetDataSchemaEventFragmentDoc = gql`
+    fragment SetDataSchemaEvent on SetDataSchema {
+        schema {
+            format
+            content
+        }
+    }
+`;
+export const DisablePollingSourceEventFragmentDoc = gql`
+    fragment DisablePollingSourceEvent on DisablePollingSource {
+        dummy
+    }
+`;
 export const MetadataBlockFragmentDoc = gql`
     fragment MetadataBlock on MetadataBlockExtended {
         blockHash
@@ -2468,28 +3053,32 @@ export const MetadataBlockFragmentDoc = gql`
         event {
             __typename
             ...SeedEvent
-            ...SetWatermarkEvent
             ...SetVocabEvent
             ...DatasetTransform
-            ...ExecuteQueryEvent
+            ...ExecuteTransformEvent
             ...AddDataEvent
             ...SetAttachmentsEvent
             ...DatasetCurrentInfo
             ...SetLicenseEvent
             ...SetPollingSourceEvent
+            ...AddPushSourceEvent
+            ...SetDataSchemaEvent
+            ...DisablePollingSourceEvent
         }
     }
     ${AccountExtendedFragmentDoc}
     ${SeedEventFragmentDoc}
-    ${SetWatermarkEventFragmentDoc}
     ${SetVocabEventFragmentDoc}
     ${DatasetTransformFragmentDoc}
-    ${ExecuteQueryEventFragmentDoc}
+    ${ExecuteTransformEventFragmentDoc}
     ${AddDataEventFragmentDoc}
     ${SetAttachmentsEventFragmentDoc}
     ${DatasetCurrentInfoFragmentDoc}
     ${SetLicenseEventFragmentDoc}
     ${SetPollingSourceEventFragmentDoc}
+    ${AddPushSourceEventFragmentDoc}
+    ${SetDataSchemaEventFragmentDoc}
+    ${DisablePollingSourceEventFragmentDoc}
 `;
 export const DatasetPageInfoFragmentDoc = gql`
     fragment DatasetPageInfo on PageBasedInfo {
@@ -2527,7 +3116,7 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
             currentLicense {
                 ...License
             }
-            currentSource {
+            currentPollingSource {
                 ...SetPollingSourceEvent
             }
             currentWatermark
@@ -2537,12 +3126,13 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
             currentSchema(format: PARQUET_JSON) {
                 format
                 content
-                __typename
             }
             currentVocab {
                 ...SetVocabEvent
             }
-            __typename
+            currentPushSources {
+                ...AddPushSourceEvent
+            }
         }
         ...DatasetReadme
         ...DatasetLastUpdate
@@ -2552,6 +3142,7 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
     ${SetPollingSourceEventFragmentDoc}
     ${DatasetTransformFragmentDoc}
     ${SetVocabEventFragmentDoc}
+    ${AddPushSourceEventFragmentDoc}
     ${DatasetReadmeFragmentDoc}
     ${DatasetLastUpdateFragmentDoc}
 `;
@@ -2593,10 +3184,13 @@ export const DatasetOverviewFragmentDoc = gql`
         ...DatasetReadme
         ...DatasetLastUpdate
         metadata {
-            currentSource {
+            currentPollingSource {
                 __typename
             }
             currentTransform {
+                __typename
+            }
+            currentPushSources {
                 __typename
             }
         }
@@ -2629,9 +3223,7 @@ export const DatasetSearchOverviewFragmentDoc = gql`
                 ...License
             }
             currentDownstreamDependencies {
-                id
-                kind
-                alias
+                ...DatasetBasics
             }
         }
     }
@@ -2707,9 +3299,9 @@ export class CommitEventToDatasetGQL extends Apollo.Mutation<
     }
 }
 export const CreateEmptyDatasetDocument = gql`
-    mutation createEmptyDataset($datasetKind: DatasetKind!, $datasetName: DatasetName!) {
+    mutation createEmptyDataset($datasetKind: DatasetKind!, $datasetAlias: DatasetAlias!) {
         datasets {
-            createEmpty(datasetKind: $datasetKind, datasetName: $datasetName) {
+            createEmpty(datasetKind: $datasetKind, datasetAlias: $datasetAlias) {
                 message
             }
         }
@@ -2784,6 +3376,38 @@ export const UpdateReadmeDocument = gql`
 })
 export class UpdateReadmeGQL extends Apollo.Mutation<UpdateReadmeMutation, UpdateReadmeMutationVariables> {
     document = UpdateReadmeDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const UpdateWatermarkDocument = gql`
+    mutation updateWatermark($datasetId: DatasetID!, $watermark: DateTime!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                setWatermark(watermark: $watermark) {
+                    ... on SetWatermarkUpdated {
+                        newHead
+                        message
+                    }
+                    ... on SetWatermarkUpToDate {
+                        dummy
+                        message
+                    }
+                    ... on SetWatermarkIsDerivative {
+                        message
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class UpdateWatermarkGQL extends Apollo.Mutation<UpdateWatermarkMutation, UpdateWatermarkMutationVariables> {
+    document = UpdateWatermarkDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

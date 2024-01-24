@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { JsonKindFieldComponent } from "./json-kind-field.component";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { ReadKind } from "../../add-polling-source/add-polling-source-form.types";
+import { ReadKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";

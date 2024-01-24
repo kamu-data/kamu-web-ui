@@ -1,0 +1,4 @@
+fragment MergeStrategySnapshotData on MergeStrategySnapshot {
+  primaryKey
+  compareColumns
+}

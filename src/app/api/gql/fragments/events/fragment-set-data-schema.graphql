@@ -1,0 +1,6 @@
+fragment SetDataSchemaEvent on SetDataSchema {
+  schema {
+    format
+    content
+  }
+}

@@ -44,7 +44,7 @@ describe("LoginService", () => {
     });
 
     it("succesful Github login navigates to home", () => {
-        const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromGithubCallackCode").and.returnValue(
+        const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromGithubCallbackCode").and.returnValue(
             of(mockGithubLoginResponse.auth.login),
         );
         const navigateSpy = spyOn(navigationService, "navigateToHome");
@@ -66,7 +66,7 @@ describe("LoginService", () => {
         const errorText = "Unsupported login method";
         const exception = new AuthenticationError([new Error(errorText)]);
 
-        const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromGithubCallackCode").and.returnValue(
+        const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromGithubCallbackCode").and.returnValue(
             throwError(() => exception),
         );
         const navigateSpy = spyOn(navigationService, "navigateToHome");

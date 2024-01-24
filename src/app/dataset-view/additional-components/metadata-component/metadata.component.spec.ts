@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { mockMetadataDerivedUpdate, mockMetadataRootUpdate } from "../data-tabs.mock";
+import { mockMetadataDerivedUpdate, mockMetadataRootPushSourceUpdate, mockMetadataRootUpdate } from "../data-tabs.mock";
 import { MetadataComponent } from "./metadata.component";
 import { ChangeDetectionStrategy } from "@angular/core";
 import {
@@ -18,6 +18,8 @@ import { SharedTestModule } from "src/app/common/shared-test.module";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import _ from "lodash";
+import { AngularSvgIconModule } from "angular-svg-icon";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("MetadataComponent", () => {
     let component: MetadataComponent;
@@ -28,7 +30,14 @@ describe("MetadataComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [MetadataComponent, BlockRowDataComponent, TooltipIconComponent],
-            imports: [NgbTooltipModule, MatIconModule, MetadataBlockModule, SharedTestModule],
+            imports: [
+                NgbTooltipModule,
+                MatIconModule,
+                MetadataBlockModule,
+                SharedTestModule,
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
+            ],
             providers: [
                 {
                     provide: HIGHLIGHT_OPTIONS,
@@ -72,7 +81,7 @@ describe("MetadataComponent", () => {
         expect(component.currentLicense).toBeTruthy();
         expect(component.currentTransform).toBeTruthy();
         expect(component.currentWatermark).toBeTruthy();
-        expect(component.currentSource).toBeFalsy();
+        expect(component.currentPollingSource).toBeFalsy();
     });
 
     it("should check #ngOnInit and associated properties for root dataset", () => {
@@ -83,7 +92,7 @@ describe("MetadataComponent", () => {
         expect(component.currentLicense).toBeTruthy();
         expect(component.currentTransform).toBeFalsy();
         expect(component.currentWatermark).toBeTruthy();
-        expect(component.currentSource).toBeTruthy();
+        expect(component.currentPollingSource).toBeTruthy();
     });
 
     it("should check default values for properties and permissions when no state is defined yet", () => {
@@ -92,15 +101,16 @@ describe("MetadataComponent", () => {
 
         expect(component.currentPage).toEqual(1);
         expect(component.totalPages).toEqual(1);
-        expect(component.latestBlockhash).toEqual("");
+        expect(component.latestBlockHash).toEqual("");
         expect(component.latestBlockSystemTime).toEqual("");
         expect(component.currentLicense).toBeUndefined();
-        expect(component.currentSource).toBeUndefined();
+        expect(component.currentPollingSource).toBeUndefined();
         expect(component.currentTransform).toBeUndefined();
         expect(component.currentWatermark).toBeUndefined();
 
         expect(component.canEditSetPollingSource).toBeFalse();
         expect(component.canEditSetTransform).toBeFalse();
+        expect(component.canEditAddPushSource).toBeFalse();
     });
 
     it("should check page change", () => {
@@ -139,7 +149,7 @@ describe("MetadataComponent", () => {
         it("should not be possible to edit SetPollingSource for root dataset if no source is defined yet", () => {
             component.datasetBasics = mockDatasetBasicsRootFragment;
             component.currentState = _.cloneDeep(mockMetadataRootUpdate);
-            component.currentState.metadataSummary.metadata.currentSource = undefined;
+            component.currentState.metadataSummary.metadata.currentPollingSource = undefined;
             fixture.detectChanges();
 
             expect(component.canEditSetPollingSource).toEqual(false);
@@ -156,6 +166,44 @@ describe("MetadataComponent", () => {
                 accountName: mockDatasetBasicsRootFragment.owner.accountName,
                 datasetName: mockDatasetBasicsRootFragment.name,
             });
+        });
+    });
+
+    describe("AddPushSource", () => {
+        it("should be possible to edit AddPushSourceSource for root dataset with full permissions", () => {
+            // Full permissions by default
+            expect(component.datasetPermissions.permissions.canCommit).toEqual(true);
+            component.datasetBasics = mockDatasetBasicsRootFragment;
+            component.currentState = mockMetadataRootPushSourceUpdate;
+            fixture.detectChanges();
+
+            expect(component.canEditAddPushSource).toEqual(true);
+        });
+
+        it("should not be possible to edit AddPushSourceSource for root dataset without commit permissions", () => {
+            component.datasetPermissions.permissions.canCommit = false;
+            component.datasetBasics = mockDatasetBasicsRootFragment;
+            component.currentState = mockMetadataRootPushSourceUpdate;
+            fixture.detectChanges();
+
+            expect(component.canEditAddPushSource).toEqual(false);
+        });
+
+        it("should check navigate to edit AddPushSource event with source name", () => {
+            const navigateToAddPollingSourceSpy = spyOn(navigationService, "navigateToAddPushSource");
+            component.datasetBasics = mockDatasetBasicsRootFragment;
+            component.currentState = mockMetadataRootPushSourceUpdate;
+            const sourceName = "mockName";
+            fixture.detectChanges();
+
+            component.navigateToEditAddPushSource(sourceName);
+            expect(navigateToAddPollingSourceSpy).toHaveBeenCalledWith(
+                {
+                    accountName: mockDatasetBasicsRootFragment.owner.accountName,
+                    datasetName: mockDatasetBasicsRootFragment.name,
+                },
+                sourceName,
+            );
         });
     });
 

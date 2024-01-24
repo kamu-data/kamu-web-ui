@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { BaseField } from "../base-field";
-import { EventTimeSourceKind } from "../../add-polling-source/add-polling-source-form.types";
+import { EventTimeSourceKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 

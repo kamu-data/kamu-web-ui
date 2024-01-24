@@ -66,7 +66,7 @@ describe("EditWatermarkModalComponent", () => {
     it("should check commit SetWatermark event", () => {
         fixture.detectChanges();
         const commitSetWatermarkEventSpy = spyOn(component, "commitSetWatermarkEvent").and.callThrough();
-        spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
+        spyOn(datasetCommitService, "updateWatermark").and.returnValue(of());
         emitClickOnElementByDataTestId(fixture, "commit-setWatermark-event");
         expect(commitSetWatermarkEventSpy).toHaveBeenCalledTimes(1);
     });

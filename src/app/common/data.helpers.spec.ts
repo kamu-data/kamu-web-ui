@@ -1,8 +1,8 @@
-import { DatasetKind, MetadataBlockFragment } from "../api/kamu.graphql.interface";
+import { DataSchemaFormat, DatasetKind, MetadataBlockFragment } from "../api/kamu.graphql.interface";
 import { mockOwnerFields } from "../search/mock.data";
 import { DataHelpers } from "./data.helpers";
 
-const metadataBlockSetVocab: MetadataBlockFragment = {
+export const metadataBlockSetVocab: MetadataBlockFragment = {
     __typename: "MetadataBlockExtended",
     blockHash: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
     prevBlockHash: "zW1ioX6fdsM4so8MPw7wqF1uKsDC7n6FEkhahZKXNcgF5E1",
@@ -17,12 +17,31 @@ const metadataBlockSetVocab: MetadataBlockFragment = {
         systemTimeColumn: null,
         eventTimeColumn: "case_reported_date",
         offsetColumn: null,
+        operationTypeColumn: null,
     },
 };
 
 it("should check description for SetVocab block", () => {
     expect(DataHelpers.descriptionForMetadataBlock(metadataBlockSetVocab)).toEqual(
         DataHelpers.BLOCK_DESCRIBE_SET_VOCAB,
+    );
+});
+
+it("should check description for SetDataSchema block", () => {
+    const setDataSchemaBlock: MetadataBlockFragment = {
+        ...metadataBlockSetVocab,
+        event: {
+            __typename: "SetDataSchema",
+            schema: {
+                __typename: "DataSchema",
+                format: DataSchemaFormat.ParquetJson,
+                content:
+                    '{"name": "arrow_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT64", "logicalType": "TIMESTAMP(MILLIS,true)"}, {"name": "block_time", "repetition": "OPTIONAL", "type": "INT64", "logicalType": "TIMESTAMP(MILLIS,true)"}, {"name": "token_symbol", "repetition": "REQUIRED", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "event_name", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "amount", "repetition": "OPTIONAL", "type": "DOUBLE"}, {"name": "eth_amount", "repetition": "OPTIONAL", "type": "DOUBLE"}, {"name": "block_number", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "block_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "transaction_index", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "transaction_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "log_index", "repetition": "OPTIONAL", "type": "INT64"}]}',
+            },
+        },
+    };
+    expect(DataHelpers.descriptionForMetadataBlock(setDataSchemaBlock)).toEqual(
+        DataHelpers.BLOCK_DESCRIBE_SET_DATA_SCHEMA,
     );
 });
 
@@ -51,20 +70,8 @@ it("should check description for SetPollingSource block", () => {
                 encoding: null,
                 quote: null,
                 escape: null,
-                comment: null,
-                header: true,
-                enforceSchema: true,
-                inferSchema: false,
-                ignoreLeadingWhiteSpace: null,
-                ignoreTrailingWhiteSpace: null,
-                nullValue: null,
-                emptyValue: null,
-                nanValue: null,
-                positiveInf: null,
-                negativeInf: null,
                 dateFormat: null,
                 timestampFormat: null,
-                multiLine: null,
             },
             merge: {
                 __typename: "MergeStrategyLedger",
@@ -76,6 +83,42 @@ it("should check description for SetPollingSource block", () => {
     };
     expect(DataHelpers.descriptionForMetadataBlock(setPollingSourceBlock)).toEqual(
         DataHelpers.BLOCK_DESCRIBE_SET_POLLING_SOURCE,
+    );
+});
+
+it("should check description for AddPushSource block", () => {
+    const addPushSourceBlock: MetadataBlockFragment = {
+        ...metadataBlockSetVocab,
+        event: {
+            __typename: "AddPushSource",
+            sourceName: "name",
+            read: {
+                __typename: "ReadStepCsv",
+                schema: [
+                    "id BIGINT",
+                    "date_reported TIMESTAMP",
+                    "zone STRING",
+                    "gender STRING",
+                    "age_group STRING",
+                    "case_status STRING",
+                    "case_type STRING",
+                ],
+                separator: null,
+                encoding: null,
+                quote: null,
+                escape: null,
+                dateFormat: null,
+                timestampFormat: null,
+            },
+            merge: {
+                __typename: "MergeStrategyLedger",
+                primaryKey: ["id"],
+            },
+            preprocess: null,
+        },
+    };
+    expect(DataHelpers.descriptionForMetadataBlock(addPushSourceBlock)).toEqual(
+        DataHelpers.BLOCK_DESCRIBE_ADD_PUSH_SOURCE,
     );
 });
 
@@ -120,7 +163,8 @@ it("should check description for SetTransform block", () => {
             inputs: [
                 {
                     __typename: "TransformInput",
-                    name: "alias",
+                    datasetRef: "did:odf:z4k88e8uENDqbAKHbhZF2xXAQrAF19cnqGqArUB9RVStSZHQNeP",
+                    alias: "alias",
                     dataset: {
                         __typename: "Dataset",
                         id: "did:odf:z4k88e8uENDqbAKHbhZF2xXAQrAF19cnqGqArUB9RVStSZHQNeP",
@@ -181,26 +225,14 @@ it("should check description for SetLicense block", () => {
     expect(DataHelpers.descriptionForMetadataBlock(setLicenseBlock)).toEqual("License updated: GPL");
 });
 
-it("should check description for SetWatermark block", () => {
-    const watermarkTime = 1666303480;
-    const setWatermarkBlock: MetadataBlockFragment = {
-        ...metadataBlockSetVocab,
-        event: {
-            __typename: "SetWatermark",
-            outputWatermark: watermarkTime.toString(),
-        },
-    };
-    expect(DataHelpers.descriptionForMetadataBlock(setWatermarkBlock)).toEqual(`Watermark updated`);
-});
-
 it("should check description for AddData block", () => {
     const addDataBlock: MetadataBlockFragment = {
         ...metadataBlockSetVocab,
         event: {
             __typename: "AddData",
-            outputData: {
+            newData: {
                 __typename: "DataSlice",
-                interval: {
+                offsetInterval: {
                     __typename: "OffsetInterval",
                     start: 117,
                     end: 517,
@@ -214,79 +246,54 @@ it("should check description for AddData block", () => {
     expect(DataHelpers.descriptionForMetadataBlock(addDataBlock)).toEqual("Added 401 new records");
 });
 
-it("should check description for ExecuteQuery block", () => {
-    const addDataBlockEmpty: MetadataBlockFragment = {
+it("should check description for AddData block (watermark only)", () => {
+    const watermarkTime = 1666303480;
+    const addDataBlock: MetadataBlockFragment = {
         ...metadataBlockSetVocab,
         event: {
-            __typename: "ExecuteQuery",
-            queryOutputData: {
-                __typename: "DataSlice",
-                interval: {
-                    __typename: "OffsetInterval",
-                    start: 0,
-                    end: 0,
-                },
-                logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
-                physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
-            },
-            inputCheckpoint: null,
-            watermark: "2022-08-01T00:00:00+00:00",
-            inputSlices: [
-                {
-                    __typename: "InputSlice",
-                    datasetId: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
-                    blockInterval: {
-                        __typename: "BlockInterval",
-                        start: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
-                        end: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
-                    },
-                    dataInterval: {
-                        __typename: "OffsetInterval",
-                        start: 0,
-                        end: 0,
-                    },
-                },
-            ],
-            outputCheckpoint: {
-                __typename: "Checkpoint",
-                physicalHash: "zW1otipGpjScUH8C2RfaF4s8RshReBbQVPDf2fPrp2R8Ft2",
-                size: 2560,
+            __typename: "AddData",
+            newData: null,
+            newWatermark: watermarkTime.toString(),
+            newSourceState: {
+                __typename: "SourceState",
+                sourceName: "src",
+                kind: "odf/etag",
+                value: "123",
             },
         },
     };
-    const addDataBlockNonEmpty: MetadataBlockFragment = {
+    expect(DataHelpers.descriptionForMetadataBlock(addDataBlock)).toEqual(`Watermark updated`);
+});
+
+it("should check description for ExecuteTransform block", () => {
+    const addDataBlock: MetadataBlockFragment = {
         ...metadataBlockSetVocab,
         event: {
-            __typename: "ExecuteQuery",
-            queryOutputData: {
+            __typename: "ExecuteTransform",
+            newData: {
                 __typename: "DataSlice",
-                interval: {
+                offsetInterval: {
                     __typename: "OffsetInterval",
                     start: 0,
-                    end: 21,
+                    end: 596125,
                 },
                 logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
                 physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
+                size: 2323,
             },
-            inputCheckpoint: null,
-            watermark: "2022-08-01T00:00:00+00:00",
-            inputSlices: [
+            prevCheckpoint: null,
+            newWatermark: "2022-08-01T00:00:00+00:00",
+            queryInputs: [
                 {
-                    __typename: "InputSlice",
+                    __typename: "ExecuteTransformInput",
                     datasetId: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
-                    blockInterval: {
-                        __typename: "BlockInterval",
-                        start: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
-                        end: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
-                    },
-                    dataInterval: {
-                        __typename: "OffsetInterval",
-                        start: 0,
-                        end: 21,
-                    },
+                    prevBlockHash: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
+                    newBlockHash: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
+                    prevOffset: null,
+                    newOffset: 596125,
                 },
             ],
-            outputCheckpoint: {
+            newCheckpoint: {
                 __typename: "Checkpoint",
                 physicalHash: "zW1otipGpjScUH8C2RfaF4s8RshReBbQVPDf2fPrp2R8Ft2",
                 size: 2560,
@@ -294,19 +301,66 @@ it("should check description for ExecuteQuery block", () => {
         },
     };
 
-    expect(DataHelpers.descriptionForMetadataBlock(addDataBlockEmpty)).toEqual("Transformation produced 1 new records");
+    expect(DataHelpers.descriptionForMetadataBlock(addDataBlock)).toEqual("Transformation produced 596126 new records");
+});
 
-    expect(DataHelpers.descriptionForMetadataBlock(addDataBlockNonEmpty)).toEqual(
-        "Transformation produced 22 new records",
-    );
+it("should check description for ExecuteTransform block (no data)", () => {
+    const addDataBlock: MetadataBlockFragment = {
+        ...metadataBlockSetVocab,
+        event: {
+            __typename: "ExecuteTransform",
+            newData: null,
+            prevCheckpoint: null,
+            newWatermark: "2022-08-01T00:00:00+00:00",
+            queryInputs: [
+                {
+                    __typename: "ExecuteTransformInput",
+                    datasetId: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+                    prevBlockHash: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
+                    newBlockHash: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
+                    prevOffset: 0,
+                    newOffset: 0,
+                },
+            ],
+            newCheckpoint: {
+                __typename: "Checkpoint",
+                physicalHash: "zW1otipGpjScUH8C2RfaF4s8RshReBbQVPDf2fPrp2R8Ft2",
+                size: 2560,
+            },
+        },
+    };
+
+    expect(DataHelpers.descriptionForMetadataBlock(addDataBlock)).toEqual("Transformation advanced");
 });
 
 [
     { engine: "spark", label: "Apache Spark" },
     { engine: "flink", label: "Apache Flink" },
     { engine: "datafusion", label: "DataFusion" },
+    { engine: "unknown", label: "Unknown engine" },
 ].forEach((item: { engine: string; label: string }) => {
     it(`should check label for ${item.engine} engine`, () => {
         expect(DataHelpers.descriptionForEngine(item.engine).label).toEqual(item.label);
+    });
+});
+
+[
+    { type: "MergeStrategyLedger", description: "Ledger strategy" },
+    { type: "MergeStrategyAppend", description: "Append strategy" },
+    { type: "MergeStrategySnapshot", description: "Snapshot strategy" },
+    { type: "unknown", description: "Unknown strategy" },
+].forEach((item: { type: string; description: string }) => {
+    it(`should check description for ${item.type} strategy`, () => {
+        expect(DataHelpers.descriptionMergeStrategy(item.type).name).toEqual(item.description);
+    });
+});
+
+[
+    { key: "BY_NAME", description: "By name" },
+    { key: "BY_EVENT_TIME", description: "By event time" },
+    { key: "unknown", description: "Unknown order" },
+].forEach((item: { key: string; description: string }) => {
+    it(`should check description for ${item.key} order`, () => {
+        expect(DataHelpers.descriptionOrder(item.key)).toEqual(item.description);
     });
 });

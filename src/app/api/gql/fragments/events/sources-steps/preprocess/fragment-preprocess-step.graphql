@@ -1,0 +1,12 @@
+fragment PreprocessStepData on TransformSql {
+  engine
+  version
+  queries {
+    query
+    alias
+  }
+  temporalTables {
+    name
+    primaryKey
+  }
+}

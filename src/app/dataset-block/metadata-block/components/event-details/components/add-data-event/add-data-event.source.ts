@@ -3,28 +3,61 @@ import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.
 import { HashPropertyComponent } from "../common/hash-property/hash-property.component";
 import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
 import { SizePropertyComponent } from "../common/size-property/size-property.component";
-import { AddDataToolipsTexts } from "src/app/common/tooltips/add-data.text";
+import { AddDataTooltipsTexts } from "src/app/common/tooltips/add-data.text";
+import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 
 export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
-    "AddData.string.addDataWatermark": {
-        label: "Watermark:",
-        tooltip: AddDataToolipsTexts.WATERMARK,
+    "AddData.string.newWatermark": {
+        label: "New watermark:",
+        tooltip: AddDataTooltipsTexts.NEW_WATERMARK,
         presentationComponent: DisplayTimeComponent,
         separateRowForValue: false,
-        dataTestId: "add-data-watermark",
+        dataTestId: "add-data-new_watermark",
     },
 
-    "AddData.string.inputCheckpoint": {
-        label: "Input hash:",
-        tooltip: AddDataToolipsTexts.INPUT_HASH,
+    "AddData.string.prevCheckpoint": {
+        label: "Previous checkpoint:",
+        tooltip: AddDataTooltipsTexts.PREV_CHECKPOINT,
         presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "add-data-input-checkpoint",
+        dataTestId: "add-data-prev-checkpoint",
+    },
+
+    "AddData.number.prevOffset": {
+        label: "Previous offset:",
+        tooltip: AddDataTooltipsTexts.PREVIOUS_OFFSET,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "add-data-prev-offset",
+    },
+
+    "AddData.SourceState.sourceName": {
+        label: "Source name:",
+        tooltip: AddDataTooltipsTexts.SOURCE_NAME,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "add-data-source-state-source-name",
+    },
+
+    "AddData.SourceState.kind": {
+        label: "Kind:",
+        tooltip: AddDataTooltipsTexts.KIND,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "add-data-source-state-kind",
+    },
+
+    "AddData.SourceState.value": {
+        label: "Value:",
+        tooltip: AddDataTooltipsTexts.VALUE,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "add-data-source-state-value",
     },
 
     "AddData.DataSlice.logicalHash": {
         label: "Logical hash:",
-        tooltip: AddDataToolipsTexts.LOGICAL_HASH,
+        tooltip: AddDataTooltipsTexts.LOGICAL_HASH,
         presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-data-data-slice-logical-hash",
@@ -32,23 +65,23 @@ export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddData.DataSlice.physicalHash": {
         label: "Physical hash:",
-        tooltip: AddDataToolipsTexts.DATA_SLICE_PHYSICAL_HASH,
+        tooltip: AddDataTooltipsTexts.DATA_SLICE_PHYSICAL_HASH,
         presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-data-data-slice-physical-hash",
     },
 
-    "AddData.DataSlice.interval": {
-        label: "Interval:",
-        tooltip: AddDataToolipsTexts.DATA_SLICE_INTERVAL,
+    "AddData.DataSlice.offsetInterval": {
+        label: "Offset interval:",
+        tooltip: AddDataTooltipsTexts.DATA_SLICE_INTERVAL,
         presentationComponent: OffsetIntervalPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "add-data-data-slice-interval",
+        dataTestId: "add-data-data-slice-offset-interval",
     },
 
     "AddData.DataSlice.size": {
         label: "Size:",
-        tooltip: AddDataToolipsTexts.DATA_SLICE_SIZE,
+        tooltip: AddDataTooltipsTexts.DATA_SLICE_SIZE,
         presentationComponent: SizePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-data-data-slice-size",
@@ -56,7 +89,7 @@ export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddData.Checkpoint.physicalHash": {
         label: "Physical hash:",
-        tooltip: AddDataToolipsTexts.CHECKPOINT_PHYSICAL_HASH,
+        tooltip: AddDataTooltipsTexts.CHECKPOINT_PHYSICAL_HASH,
         presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-data-checkpoint-physical-hash",
@@ -64,7 +97,7 @@ export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddData.Checkpoint.size": {
         label: "Size:",
-        tooltip: AddDataToolipsTexts.CHECKPOINT_SIZE,
+        tooltip: AddDataTooltipsTexts.CHECKPOINT_SIZE,
         presentationComponent: SizePropertyComponent,
         separateRowForValue: false,
         dataTestId: "add-data-checkpoint-size",

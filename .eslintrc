@@ -27,7 +27,8 @@
       }
     ],
     "jasmine/new-line-before-expect": 0,
-    "jasmine/no-unsafe-spy": ["off"]
+    "jasmine/no-unsafe-spy": ["off"],
+    "no-console": "warn"
   },
   "ignorePatterns": ["node_modules", "dist", "kamu.graphql.interface.ts"]
 }

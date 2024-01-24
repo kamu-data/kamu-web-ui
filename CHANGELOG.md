@@ -5,18 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## Unreleased
+### Fixed
+- Fixed bug with authentification (Login vs CLI)
+
+## [0.15.0] - 2024-01-17
+### Changed
+- Implemented changes according to the latest ODF changes
+  - Removed `SetWatermark` event
+  - Renamed `ExecuteQuery` event to `ExecuteTransform`
+  - Extended `ExecuteTransform` event
+  - Extended `AddData` event
+
+## [0.14.0] - 2024-01-04
 ### Added
 - Added initial loading screen for app
 - Added a progress bar when initializing the editor on the Data 
 - Showing editor markers on SQL query errors
 - Displayed lineage graph for a single dataset
 - Added calculation of graph height on different screens
+- Added the ability to add AddPushSource event
+- Added support for the SetDataSchema,AddPushSource events on the metadata block page
+- Added edit functionality for AddPushSource event
 ### Changed
 - Separated main data query and lineage data 
 - Improve reporting of fatal errors from modal window to toaster window
 - Monaco-based editors isolated in `EditorModule`
 - Changed splash screen
+- Evicting dataset objects from Apollo GraphQL cache after signifficant mutations
 ### Fixed
 - GraphQL caching issues when switching between History and Lineage tabs
 - Correct author avatars on history tab

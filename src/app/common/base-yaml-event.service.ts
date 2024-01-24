@@ -2,7 +2,7 @@ import { inject } from "@angular/core";
 import { DatasetService } from "../dataset-view/dataset.service";
 import { Observable, EMPTY, iif, of, zip } from "rxjs";
 import { expand, last, map, switchMap } from "rxjs/operators";
-import { MetadataBlockFragment } from "../api/kamu.graphql.interface";
+import { AddPushSource, MetadataBlockFragment } from "../api/kamu.graphql.interface";
 import { BlockService } from "../dataset-block/metadata-block/block.service";
 import { SupportedEvents } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { DatasetHistoryUpdate } from "../dataset-view/dataset.subscriptions.interface";
@@ -11,19 +11,21 @@ import { MaybeNull, MaybeNullOrUndefined } from "./app.types";
 
 export abstract class BaseYamlEventService {
     private static readonly HISTORY_PAGE_SIZE = 100;
-
     private datasetService = inject(DatasetService);
     private blockService = inject(BlockService);
-
     private currentPage = 0;
-    public history: MaybeNull<DatasetHistoryUpdate> = null;
+    public history: DatasetHistoryUpdate;
 
-    public getEventAsYaml(info: DatasetInfo, typename: SupportedEvents): Observable<MaybeNullOrUndefined<string>> {
+    public getEventAsYaml(
+        info: DatasetInfo,
+        typename: SupportedEvents,
+        sourceName: MaybeNull<string> = null,
+    ): Observable<MaybeNullOrUndefined<string>> {
         return this.datasetService
             .getDatasetHistory(info, BaseYamlEventService.HISTORY_PAGE_SIZE, this.currentPage)
             .pipe(
                 expand((h: DatasetHistoryUpdate) => {
-                    const filteredHistory = this.filterHistoryByType(h.history, typename);
+                    const filteredHistory = this.filterHistoryByType(h.history, typename, sourceName);
                     return filteredHistory.length === 0 && h.pageInfo.hasNextPage
                         ? this.datasetService.getDatasetHistory(
                               info,
@@ -34,7 +36,7 @@ export abstract class BaseYamlEventService {
                 }),
                 map((h: DatasetHistoryUpdate) => {
                     this.history = h;
-                    const filteredHistory = this.filterHistoryByType(h.history, typename);
+                    const filteredHistory = this.filterHistoryByType(h.history, typename, sourceName);
                     return filteredHistory;
                 }),
                 switchMap((filteredHistory: MetadataBlockFragment[]) =>
@@ -55,7 +57,18 @@ export abstract class BaseYamlEventService {
             );
     }
 
-    private filterHistoryByType(history: MetadataBlockFragment[], typename: string): MetadataBlockFragment[] {
-        return history.filter((item: MetadataBlockFragment) => item.event.__typename === typename);
+    public filterHistoryByType(
+        history: MetadataBlockFragment[],
+        typename: SupportedEvents,
+        sourceName: MaybeNull<string>,
+    ): MetadataBlockFragment[] {
+        if (sourceName) {
+            return history.filter(
+                (item: MetadataBlockFragment) =>
+                    item.event.__typename === typename && (item.event as AddPushSource).sourceName === sourceName,
+            );
+        } else {
+            return history.filter((item: MetadataBlockFragment) => item.event.__typename === typename);
+        }
     }
 }

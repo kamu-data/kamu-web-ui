@@ -106,7 +106,7 @@ describe("DatasetSettingsComponent", () => {
     });
 
     it("should check init renameError", fakeAsync(() => {
-        const errorMessage = "Dataset is already exist.";
+        const errorMessage = "Dataset already exists.";
         datasetSettingsService.emitRenameDatasetErrorOccurred(errorMessage);
         fixture.detectChanges();
 
@@ -149,7 +149,7 @@ describe("DatasetSettingsComponent", () => {
     });
 
     it("should check renameError is empty after keyup", fakeAsync(() => {
-        const errorMessage = "Dataset is already exist.";
+        const errorMessage = "Dataset already exists.";
         datasetSettingsService.emitRenameDatasetErrorOccurred(errorMessage);
 
         const renameDatasetInput = getInputElememtByDataTestId(fixture, Elements.RenameDatasetInput);
@@ -175,7 +175,10 @@ describe("DatasetSettingsComponent", () => {
 
         tick();
 
-        expect(deleteDatasetSpy).toHaveBeenCalledOnceWith(component.datasetBasics.id);
+        expect(deleteDatasetSpy).toHaveBeenCalledOnceWith(
+            component.datasetBasics.owner.accountName,
+            component.datasetBasics.id,
+        );
 
         flush();
     }));

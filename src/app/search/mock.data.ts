@@ -9,6 +9,7 @@ import {
     PageBasedInfo,
     RenameDatasetMutation,
     UpdateReadmeMutation,
+    UpdateWatermarkMutation,
 } from "../api/kamu.graphql.interface";
 import {
     DataBatchFormat,
@@ -33,7 +34,8 @@ import {
     AddPollingSourceEditFormType,
     PrepareKind,
     PreprocessStepValue,
-} from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
+    EventTimeSourceKind,
+} from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { DatasetHistoryUpdate } from "../dataset-view/dataset.subscriptions.interface";
 import {
     LineageGraphDatasetNodeObject,
@@ -42,6 +44,8 @@ import {
 } from "../dataset-view/additional-components/lineage-component/lineage-model";
 import { GraphQLError } from "graphql";
 import { TEST_AVATAR_URL } from "../api/mock/auth.mock";
+import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
+import { OdfDefaultValues } from "../common/app-odf-default.values";
 
 export const mockPageBasedInfo: PageBasedInfo = {
     currentPage: 1,
@@ -225,7 +229,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
             alias: "kamu/alberta.case-details",
             metadata: {
                 __typename: "DatasetMetadata",
-                currentSource: {
+                currentPollingSource: {
                     __typename: "SetPollingSource",
                     fetch: {
                         __typename: "FetchStepUrl",
@@ -246,23 +250,14 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                             "case_type STRING",
                         ],
                         separator: null,
-                        encoding: null,
-                        quote: null,
-                        escape: null,
-                        comment: null,
-                        header: true,
-                        enforceSchema: null,
-                        inferSchema: null,
-                        ignoreLeadingWhiteSpace: null,
-                        ignoreTrailingWhiteSpace: null,
-                        nullValue: null,
-                        emptyValue: null,
-                        nanValue: null,
-                        positiveInf: null,
-                        negativeInf: null,
                         dateFormat: null,
+                        encoding: null,
+                        escape: null,
+                        header: true,
+                        inferSchema: null,
+                        nullValue: null,
+                        quote: null,
                         timestampFormat: null,
-                        multiLine: null,
                     },
                     merge: {
                         __typename: "MergeStrategyLedger",
@@ -284,6 +279,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                     },
                 },
                 currentTransform: null,
+                currentPushSources: [],
                 currentInfo: {
                     __typename: "SetInfo",
                     description: "Confirmed positive cases of COVID-19 in Alberta.",
@@ -317,6 +313,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                     systemTimeColumn: null,
                     eventTimeColumn: "date_reported",
                     offsetColumn: null,
+                    operationTypeColumn: null,
                 },
                 currentReadme:
                     "# Confirmed positive cases of COVID-19 in Alberta\n\nThis dataset compiles daily snapshots of publicly reported data on 2019 Novel Coronavirus (COVID-19) testing in Alberta.\n\nData includes:\n- approximation of onset date\n- age group\n- patient gender\n- case acquisition information\n- patient outcome\n- reporting Public Health Unit (PHU)\n- postal code, website, longitude, and latitude of PHU\n\nThis dataset is subject to change. Please review the daily epidemiologic summaries for information on variables, methodology, and technical considerations.\n\n**Related dataset(s)**:\n- [Daily aggregate count of confirmed positive cases of COVID-19 in Alberta](#todo)\n",
@@ -339,11 +336,11 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                 },
                                 event: {
                                     __typename: "AddData",
-                                    addDataWatermark: "2022-08-01T00:00:00+00:00",
-                                    inputCheckpoint: null,
-                                    outputData: {
+                                    newWatermark: "2022-08-01T00:00:00+00:00",
+                                    prevCheckpoint: null,
+                                    newData: {
                                         __typename: "DataSlice",
-                                        interval: {
+                                        offsetInterval: {
                                             __typename: "OffsetInterval",
                                             start: 0,
                                             end: 596125,
@@ -352,7 +349,14 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                         physicalHash: "zW1bSq3dDJvAfuHJbVzH3TLKuWWCvXBdNqMrNNeRXuYj8WJ",
                                         size: 6585116,
                                     },
-                                    outputCheckpoint: null,
+                                    newSourceState: {
+                                        __typename: "SourceState",
+                                        kind: "odf/etag",
+                                        value: '"6aea77ea7eac41230154c2fea07d2711-6"',
+                                        sourceName: "default",
+                                    },
+                                    prevOffset: null,
+                                    newCheckpoint: null,
                                 },
                             },
                         ],
@@ -434,7 +438,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                 metadata: {
                                                     __typename: "DatasetMetadata",
                                                     currentDownstreamDependencies: [],
-                                                    currentSource: null,
+                                                    currentPollingSource: null,
                                                     currentLicense: null,
                                                     currentWatermark: "2023-08-06T18:57:59+00:00",
                                                 },
@@ -467,7 +471,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                             metadata: {
                                                                 __typename: "DatasetMetadata",
                                                                 currentDownstreamDependencies: [],
-                                                                currentSource: null,
+                                                                currentPollingSource: null,
                                                                 currentLicense: null,
                                                                 currentWatermark: "2023-08-06T18:57:59+00:00",
                                                             },
@@ -491,7 +495,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                             alias: "account.whatif.reth-vs-snp500.market-value",
                                                         },
                                                     ],
-                                                    currentSource: null,
+                                                    currentPollingSource: null,
                                                     currentLicense: null,
                                                     currentWatermark: "2023-08-06T18:57:59+00:00",
                                                 },
@@ -515,7 +519,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                 alias: "account.whatif.reth-vs-snp500.portfolio",
                                             },
                                         ],
-                                        currentSource: null,
+                                        currentPollingSource: null,
                                         currentLicense: null,
                                         currentWatermark: "2023-08-06T18:57:59+00:00",
                                     },
@@ -538,7 +542,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                     alias: "account.tokens.portfolio.usd",
                                 },
                             ],
-                            currentSource: null,
+                            currentPollingSource: null,
                             currentLicense: null,
                             currentWatermark: "2023-08-06T18:57:59+00:00",
                         },
@@ -561,7 +565,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                         alias: "account.tokens.portfolio",
                     },
                 ],
-                currentSource: {
+                currentPollingSource: {
                     __typename: "SetPollingSource",
                     fetch: {
                         __typename: "FetchStepUrl",
@@ -607,26 +611,29 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 },
                                 event: {
                                     __typename: "AddData",
-                                    inputCheckpoint: "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
-                                    addDataWatermark: "2022-08-05T21:17:30.613911358+00:00",
-                                    outputData: {
+                                    newWatermark: "2022-08-01T00:00:00+00:00",
+                                    prevCheckpoint: null,
+                                    prevOffset: null,
+                                    newData: {
                                         __typename: "DataSlice",
-
-                                        interval: {
+                                        offsetInterval: {
                                             __typename: "OffsetInterval",
                                             start: 0,
                                             end: 596125,
                                         },
                                         logicalHash: "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
                                         physicalHash: "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
-                                        size: 300,
+                                        size: 5993876,
                                     },
-                                    outputCheckpoint: {
-                                        physicalHash: "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
-                                        size: 11213,
+                                    newCheckpoint: {
+                                        __typename: "Checkpoint",
+                                        physicalHash: "zW1diFMSn97sDG4WMMKZ7pvM7vVenC5ytAesQK7V3qqALPv",
+                                        size: 2560,
                                     },
+                                    newSourceState: null,
                                 },
                             },
+
                             {
                                 __typename: "MetadataBlockExtended",
                                 blockHash: "zW1ioX6fdsM4so8MPw7wqF1uKsDC7n6FEkhahZKXNcgF5E1",
@@ -710,6 +717,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     systemTimeColumn: null,
                                     eventTimeColumn: "case_reported_date",
                                     offsetColumn: null,
+                                    operationTypeColumn: null,
                                 },
                             },
                             {
@@ -737,6 +745,39 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                     ],
                                 },
                             },
+                            {
+                                __typename: "MetadataBlockExtended",
+                                blockHash: "zW1nqifmGW3NoCZXWyzPgrtmnGoC7wctsr93V9npsdTKbT4",
+                                prevBlockHash: "zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u",
+                                systemTime: "2023-06-02T08:44:54.984731027+00:00",
+                                sequenceNumber: 1,
+                                author: {
+                                    __typename: "Account",
+                                    ...mockOwnerFieldsWithAvatar,
+                                },
+                                event: {
+                                    __typename: "AddPushSource",
+                                    sourceName: "mockSourceName",
+                                    read: {
+                                        __typename: "ReadStepCsv",
+                                        schema: null,
+                                        separator: ",",
+                                        encoding: "UTF-8",
+                                        quote: '"',
+                                        escape: "\\",
+                                        header: null,
+                                        inferSchema: null,
+                                        nullValue: null,
+                                        dateFormat: "yyyy-MM-dd",
+                                        timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
+                                    },
+                                    merge: {
+                                        __typename: "MergeStrategyAppend",
+                                    },
+                                    preprocess: null,
+                                },
+                            },
+
                             {
                                 __typename: "MetadataBlockExtended",
                                 blockHash: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
@@ -954,6 +995,19 @@ export const mockCommitEventToDatasetMutation: CommitEventToDatasetMutation = {
     },
 };
 
+export const mockUpdateWatermarkSuccessResponse: UpdateWatermarkMutation = {
+    datasets: {
+        byId: {
+            setWatermark: {
+                __typename: "SetWatermarkUpdated",
+                message: "Success",
+                newHead: "zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u",
+            },
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
 export const mockUpdateReadmeSuccessResponse: UpdateReadmeMutation = {
     datasets: {
         byId: {
@@ -1064,13 +1118,13 @@ export const mockDataset403OperationError: GraphQLError = new GraphQLError("Data
     extensions: { alias: "someAccount/oldName" },
 });
 
-export const mockParseEventFromYamlToObject: AddPollingSourceEditFormType = {
-    kind: "setPollingSource",
+export const mockParseSetPollingSourceEventFromYamlToObject: AddPollingSourceEditFormType = {
+    kind: "SetPollingSource",
     fetch: {
         kind: FetchKind.FILES_GLOB,
         path: "path",
         eventTime: {
-            kind: "fromMetadata",
+            kind: EventTimeSourceKind.FROM_METADATA,
         },
     },
     read: {
@@ -1079,12 +1133,26 @@ export const mockParseEventFromYamlToObject: AddPollingSourceEditFormType = {
         encoding: "UTF-8",
         quote: '"',
         escape: "\\",
-        enforceSchema: true,
-        nanValue: "NaN",
-        positiveInf: "Inf",
-        negativeInf: "-Inf",
         dateFormat: "yyyy-MM-dd",
         timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
+    },
+    merge: {
+        kind: MergeKind.APPEND,
+    },
+};
+
+export const mockParseAddPushSourceEventFromYamlToObject: AddPushSourceEditFormType = {
+    kind: "AddPushSource",
+    sourceName: "mockSource",
+    read: {
+        kind: ReadKind.CSV,
+        schema: ["id INT"],
+        separator: OdfDefaultValues.CSV_SEPARATOR,
+        encoding: OdfDefaultValues.CSV_ENCODING,
+        quote: OdfDefaultValues.CSV_QUOTE,
+        escape: OdfDefaultValues.CSV_ESCAPE,
+        dateFormat: OdfDefaultValues.CSV_DATE_FORMAT,
+        timestampFormat: OdfDefaultValues.CSV_TIMESTAMP_FORMAT,
     },
     merge: {
         kind: MergeKind.APPEND,
@@ -1156,25 +1224,106 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
                     encoding: "UTF-8",
                     quote: '"',
                     escape: "\\",
-                    comment: null,
-                    header: null,
-                    enforceSchema: true,
-                    inferSchema: null,
-                    ignoreLeadingWhiteSpace: null,
-                    ignoreTrailingWhiteSpace: null,
-                    nullValue: null,
-                    emptyValue: null,
-                    nanValue: "NaN",
-                    positiveInf: "Inf",
-                    negativeInf: "-Inf",
                     dateFormat: "yyyy-MM-dd",
                     timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
-                    multiLine: null,
                 },
                 merge: {
                     __typename: "MergeStrategyAppend",
                 },
                 prepare: null,
+                preprocess: null,
+            },
+        },
+        {
+            __typename: "MetadataBlockExtended",
+            blockHash: "zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u",
+            prevBlockHash: null,
+            systemTime: "2023-06-02T08:44:28.324101693+00:00",
+            sequenceNumber: 0,
+            author: {
+                __typename: "Account",
+                id: "1",
+                accountName: "kamu",
+            },
+            event: {
+                __typename: "Seed",
+                datasetId: "did:odf:z4k88e8nBPEwSAHGs8pXfm39J3RijoXGtCcp24HhAt3t4VmX2fN",
+                datasetKind: DatasetKind.Root,
+            },
+        },
+    ],
+    pageInfo: {
+        __typename: "PageBasedInfo",
+        hasNextPage: true,
+        hasPreviousPage: false,
+        currentPage: 0,
+        totalPages: 4,
+    },
+};
+
+export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
+    history: [
+        {
+            __typename: "MetadataBlockExtended",
+            blockHash: "zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u",
+            prevBlockHash: null,
+            systemTime: "2023-06-02T08:44:28.324101693+00:00",
+            sequenceNumber: 0,
+            author: {
+                __typename: "Account",
+                id: "1",
+                accountName: "kamu",
+            },
+            event: {
+                __typename: "Seed",
+                datasetId: "did:odf:z4k88e8nBPEwSAHGs8pXfm39J3RijoXGtCcp24HhAt3t4VmX2fN",
+                datasetKind: DatasetKind.Root,
+            },
+        },
+        {
+            __typename: "MetadataBlockExtended",
+            blockHash: "zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u",
+            prevBlockHash: null,
+            systemTime: "2023-06-02T08:44:28.324101693+00:00",
+            sequenceNumber: 0,
+            author: {
+                __typename: "Account",
+                id: "1",
+                accountName: "kamu",
+            },
+            event: {
+                __typename: "Seed",
+                datasetId: "did:odf:z4k88e8nBPEwSAHGs8pXfm39J3RijoXGtCcp24HhAt3t4VmX2fN",
+                datasetKind: DatasetKind.Root,
+            },
+        },
+        {
+            __typename: "MetadataBlockExtended",
+            blockHash: "zW1nqifmGW3NoCZXWyzPgrtmnGoC7wctsr93V9npsdTKbT4",
+            prevBlockHash: "zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u",
+            systemTime: "2023-06-02T08:44:54.984731027+00:00",
+            sequenceNumber: 1,
+            author: {
+                __typename: "Account",
+                id: "1",
+                accountName: "kamu",
+            },
+            event: {
+                __typename: "AddPushSource",
+                sourceName: "mockSourceName",
+                read: {
+                    __typename: "ReadStepCsv",
+                    schema: null,
+                    separator: ",",
+                    encoding: "UTF-8",
+                    quote: '"',
+                    escape: "\\",
+                    dateFormat: "yyyy-MM-dd",
+                    timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
+                },
+                merge: {
+                    __typename: "MergeStrategyAppend",
+                },
                 preprocess: null,
             },
         },
@@ -1273,7 +1422,7 @@ export const mockSetPollingSourceEditFormWithReadNdJsonFormat: AddPollingSourceE
     fetch: {
         kind: FetchKind.URL,
         eventTime: {
-            kind: "fromMetadata",
+            kind: EventTimeSourceKind.FROM_METADATA,
         },
         url: "https://opendata.vancouver.ca/explore/dataset/block-outlines/download/?format=geojson&timezone=America/Los_Angeles&lang=en",
     },
@@ -1286,9 +1435,9 @@ export const mockSetPollingSourceEditFormWithReadNdJsonFormat: AddPollingSourceE
     read: {
         kind: ReadKind.All_JSON,
         jsonKind: ReadKind.ND_JSON,
-        encoding: "utf8",
-        dateFormat: "rfc3339",
-        timestampFormat: "rfc3339",
+        encoding: OdfDefaultValues.CSV_ENCODING,
+        dateFormat: OdfDefaultValues.CSV_DATE_FORMAT,
+        timestampFormat: OdfDefaultValues.CSV_TIMESTAMP_FORMAT,
         subPath: "/test",
     },
     merge: {

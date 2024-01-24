@@ -151,6 +151,7 @@ describe("DatasetCommitService", () => {
         expect(commitEventSpy).toHaveBeenCalledOnceWith({
             datasetId: TEST_DATASET_ID,
             event: TEST_EVENT_CONTENT,
+            accountName: TEST_ACCOUNT_NAME,
         });
         expectNavigatedToDatasetOverview();
         expectRequestedDatasetMainData();
@@ -176,6 +177,7 @@ describe("DatasetCommitService", () => {
                 expect(commitEventSpy).toHaveBeenCalledOnceWith({
                     datasetId: TEST_DATASET_ID,
                     event: TEST_EVENT_CONTENT,
+                    accountName: TEST_ACCOUNT_NAME,
                 });
                 expect(navigationServiceSpy).not.toHaveBeenCalled();
                 expect(requestDatasetMainDataSpy).not.toHaveBeenCalled();
@@ -234,7 +236,11 @@ describe("DatasetCommitService", () => {
         });
         flush();
 
-        expect(updateReadmeSpy).toHaveBeenCalledOnceWith(TEST_DATASET_ID, README_CONTENT);
+        expect(updateReadmeSpy).toHaveBeenCalledOnceWith({
+            accountName: TEST_ACCOUNT_NAME,
+            datasetId: TEST_DATASET_ID,
+            content: README_CONTENT,
+        });
         expectNavigatedToDatasetOverview();
         expectRequestedDatasetMainData();
     }));

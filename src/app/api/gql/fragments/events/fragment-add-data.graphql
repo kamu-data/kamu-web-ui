@@ -1,8 +1,8 @@
 fragment AddDataEvent on AddData {
-  addDataWatermark: outputWatermark
-  inputCheckpoint
-  outputData {
-    interval {
+  prevCheckpoint
+  prevOffset
+  newData {
+    offsetInterval {
       start
       end
     }
@@ -10,8 +10,14 @@ fragment AddDataEvent on AddData {
     physicalHash
     size
   }
-  outputCheckpoint {
+  newCheckpoint {
     physicalHash
     size
+  }
+  newWatermark
+  newSourceState {
+    sourceName
+    kind
+    value
   }
 }

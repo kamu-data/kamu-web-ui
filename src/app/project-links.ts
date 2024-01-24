@@ -32,9 +32,11 @@ export default class ProjectLinks {
     public static readonly URL_PARAM_BLOCK_HASH: string = "blockHash";
     public static readonly URL_PARAM_ADD_POLLING_SOURCE: string = "add-polling-source";
     public static readonly URL_PARAM_SET_TRANSFORM: string = "set-transform";
+    public static readonly URL_PARAM_ADD_PUSH_SOURCE: string = "add-push-source";
 
     public static readonly URL_QUERY_PARAM_TAB: string = "tab";
     public static readonly URL_QUERY_PARAM_PAGE: string = "page";
     public static readonly URL_QUERY_PARAM_QUERY: string = "query";
     public static readonly URL_QUERY_PARAM_CALLBACK_URL: string = "callbackUrl";
+    public static readonly URL_QUERY_PARAM_PUSH_SOURCE_NAME: string = "name";
 }

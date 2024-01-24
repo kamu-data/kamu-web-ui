@@ -9,14 +9,16 @@ fragment MetadataBlock on MetadataBlockExtended {
   event {
     __typename
     ...SeedEvent
-    ...SetWatermarkEvent
     ...SetVocabEvent
     ...DatasetTransform
-    ...ExecuteQueryEvent
+    ...ExecuteTransformEvent
     ...AddDataEvent
     ...SetAttachmentsEvent
     ...DatasetCurrentInfo
     ...SetLicenseEvent
     ...SetPollingSourceEvent
+    ...AddPushSourceEvent
+    ...SetDataSchemaEvent
+    ...DisablePollingSourceEvent
   }
 }

@@ -1,7 +1,7 @@
 import { ValidatorFn, Validators } from "@angular/forms";
 import { MetadataBlockFragment } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
-import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/add-polling-source/add-polling-source-form.types";
+import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { MaybeUndefined } from "./app.types";
 
 export class DataHelpers {
@@ -9,9 +9,12 @@ export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SET_TRANSFORM = "Query changed";
     public static readonly BLOCK_DESCRIBE_SET_VOCAB = "Vocabulary changed";
     public static readonly BLOCK_DESCRIBE_SET_POLLING_SOURCE = "Polling source changed";
+    public static readonly BLOCK_DESCRIBE_ADD_PUSH_SOURCE = "Push source updated";
+    public static readonly BLOCK_DESCRIBE_SET_DATA_SCHEMA = "Data schema updated";
+    public static readonly BLOCK_DESCRIBE_DISABLE_POLLING_SOURCE = "Polling source disabled";
+    public static readonly BLOCK_DESCRIBE_DISABLE_ADD_PUSH_SOURCE = "Push source disabled";
     public static readonly BLOCK_DESCRIBE_SET_INFO = "Basic information updated";
     public static readonly BLOCK_DESCRIBE_SET_ATTACHMENTS = "Attachments updated";
-    public static readonly BLOCK_DESCRIBE_SET_WATERMARK = "Watermark updated";
     private static readonly SHIFT_ATTACHMENTS_VIEW = "\u00A0".repeat(12);
 
     public static descriptionForEngine(name: string): EventPropertyLogo {
@@ -37,9 +40,9 @@ export class DataHelpers {
                     url_logo: "assets/images/datafusion-logo.png",
                 };
             default:
-                console.log("Engine is not defined");
                 return {
                     name: "Engine is not defined",
+                    label: "Unknown engine",
                 };
         }
     }
@@ -99,9 +102,6 @@ export class DataHelpers {
             case "ReadStepNdGeoJson": {
                 return "Newline-delimited Geo Json ";
             }
-            case "ReadStepJsonLines": {
-                return "Json Lines";
-            }
             case "ReadStepParquet": {
                 return "Parquet";
             }
@@ -132,23 +132,25 @@ export class DataHelpers {
         const event = block.event;
         switch (event.__typename) {
             case "AddData":
-                return `Added ${
-                    event.outputData ? event.outputData.interval.end - event.outputData.interval.start + 1 : 0
-                } new records`;
-            case "ExecuteQuery":
-                return `Transformation produced ${
-                    event.queryOutputData
-                        ? event.queryOutputData.interval.end - event.queryOutputData.interval.start + 1
-                        : 0
-                } new records`;
+                if (event.newData) {
+                    const iv = event.newData.offsetInterval;
+                    return `Added ${iv.end - iv.start + 1} new records`;
+                } else {
+                    return `Watermark updated`;
+                }
+            case "ExecuteTransform":
+                if (event.newData) {
+                    const iv = event.newData.offsetInterval;
+                    return `Transformation produced ${iv.end - iv.start + 1} new records`;
+                } else {
+                    return `Transformation advanced`;
+                }
             case "Seed":
                 return DataHelpers.BLOCK_DESCRIBE_SEED;
             case "SetTransform":
                 return DataHelpers.BLOCK_DESCRIBE_SET_TRANSFORM;
             case "SetVocab":
                 return DataHelpers.BLOCK_DESCRIBE_SET_VOCAB;
-            case "SetWatermark":
-                return DataHelpers.BLOCK_DESCRIBE_SET_WATERMARK;
             case "SetPollingSource":
                 return DataHelpers.BLOCK_DESCRIBE_SET_POLLING_SOURCE;
             case "SetInfo":
@@ -157,6 +159,16 @@ export class DataHelpers {
                 return `License updated: ${event.name}`;
             case "SetAttachments":
                 return DataHelpers.BLOCK_DESCRIBE_SET_ATTACHMENTS;
+            case "AddPushSource":
+                return DataHelpers.BLOCK_DESCRIBE_ADD_PUSH_SOURCE;
+            case "SetDataSchema":
+                return DataHelpers.BLOCK_DESCRIBE_SET_DATA_SCHEMA;
+            // case "DisablePollingSource":
+            //     return DataHelpers.BLOCK_DESCRIBE_DISABLE_POLLING_SOURCE;
+            // case "DisablePushSource":
+            //     return DataHelpers.BLOCK_DESCRIBE_DISABLE_ADD_PUSH_SOURCE;
+            default:
+                return "Unsupported event type";
         }
     }
 

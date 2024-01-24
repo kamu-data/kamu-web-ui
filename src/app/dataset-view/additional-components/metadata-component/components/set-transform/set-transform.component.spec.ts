@@ -5,12 +5,7 @@ import { ActivatedRoute } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { EditSetTransformService } from "./edit-set-transform..service";
 import { of } from "rxjs";
-import {
-    mockGetDatasetSchemaQuery,
-    mockParseSetTransFormYamlType,
-    mockSetTransformEventYaml,
-    mockSetTransformEventYamlWithQuery,
-} from "./mock.data";
+import { mockGetDatasetSchemaQuery, mockParseSetTransformYamlType, mockSetTransformEventYaml } from "./mock.data";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MatTreeModule, MatTreeNestedDataSource } from "@angular/material/tree";
 import { DatasetNode } from "./set-transform.types";
@@ -161,18 +156,8 @@ describe("SetTransformComponent", () => {
         spyOn(editService, "getEventAsYaml").and.callFake(() => of(mockSetTransformEventYaml));
         spyOn(datasetService, "requestDatasetSchema").and.callFake(() => of(mockGetDatasetSchemaQuery));
         component.ngOnInit();
-
-        expect(component.currentSetTransformEvent).toEqual(mockParseSetTransFormYamlType);
+        expect(component.currentSetTransformEvent).toEqual(mockParseSetTransformYamlType);
         expect(component.TREE_DATA.length).toBe(2);
-    });
-
-    it("should check init queries section with query", () => {
-        spyOn(editService, "getEventAsYaml").and.callFake(() => of(mockSetTransformEventYamlWithQuery));
-        spyOn(datasetService, "requestDatasetSchema").and.callFake(() => of(mockGetDatasetSchemaQuery));
-        component.ngOnInit();
-
-        expect(component.queries.length).toBe(1);
-        expect(component.queries[0].query).not.toBeNull();
     });
 
     it("should check init queries section when event is null", () => {

@@ -38,7 +38,7 @@ export class LineageGraphComponent implements OnInit, OnChanges {
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly INITIAL_GRAPH_VIEW_WIDTH: number = window.innerWidth - 120;
     public view: [number, number];
-    public showSidePanel = false;
+    public showSidePanel = true;
 
     @ViewChild("containerRef", { static: false }) element: MaybeUndefined<ElementRef>;
     @HostListener("window:resize")

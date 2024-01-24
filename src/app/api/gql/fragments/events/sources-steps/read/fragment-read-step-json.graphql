@@ -1,0 +1,7 @@
+fragment ReadStepJsonData on ReadStepJson {
+  subPath
+  schema
+  dateFormat
+  encoding
+  timestampFormat
+}

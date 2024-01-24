@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { BaseField } from "../base-field";
 import { FormControl } from "@angular/forms";
-import { ReadFormatControlType, ReadKind } from "../../add-polling-source/add-polling-source-form.types";
-import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.text";
+import { ReadFormatControlType, ReadKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
+import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
 
 @Component({
     selector: "app-json-kind-field",
@@ -12,7 +12,7 @@ import { SetPollingSourceToolipsTexts } from "src/app/common/tooltips/tooltips.t
 export class JsonKindFieldComponent extends BaseField implements OnInit {
     @Input() public controlDescriptors: ReadFormatControlType[];
     public ReadKind: typeof ReadKind = ReadKind;
-    public readonly TOOLTIP_SUB_PATH = SetPollingSourceToolipsTexts.SUB_PATH;
+    public readonly TOOLTIP_SUB_PATH = SourcesTooltipsTexts.SUB_PATH;
     public readonly READ_SUB_PATH_CONTROL = "subPath";
     public readonly READ_SUB_PATH_TOOLTIP = "Path";
     public readonly READ_SUB_PATH_PLACEHOLDER = "Enter path to data file...";

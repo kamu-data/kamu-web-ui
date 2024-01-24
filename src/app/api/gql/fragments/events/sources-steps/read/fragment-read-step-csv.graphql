@@ -1,0 +1,12 @@
+fragment ReadStepCsvData on ReadStepCsv {
+  schema
+  separator
+  encoding
+  quote
+  escape
+  header
+  inferSchema
+  nullValue
+  dateFormat
+  timestampFormat
+}

@@ -1,0 +1,18 @@
+<div>
+    <h2 class="text-center">Source</h2>
+    <p class="text-center mb-4">Identifies the source within this dataset</p>
+    <div class="col-md-8 offset-md-2 mt-4">
+        <app-input-field
+            [form]="form"
+            [controlName]="'sourceName'"
+            [label]="'Source name'"
+            [value]="''"
+            [placeholder]="'Enter name'"
+            [requiredField]="true"
+            [tooltip]="'Source name'"
+        ></app-input-field>
+        <div class="mt-1" *ngIf="form?.get('sourceName')?.errors?.noneOf">
+            <small class="text-danger ps-2"> {{ "Name already exists" }}</small>
+        </div>
+    </div>
+</div>

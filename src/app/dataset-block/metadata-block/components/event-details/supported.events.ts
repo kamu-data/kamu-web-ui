@@ -1,6 +1,6 @@
 export enum SupportedEvents {
     AddData = "AddData",
-    ExecuteQuery = "ExecuteQuery",
+    ExecuteTransform = "ExecuteTransform",
     Seed = "Seed",
     SetAttachments = "SetAttachments",
     SetInfo = "SetInfo",
@@ -8,7 +8,8 @@ export enum SupportedEvents {
     SetPollingSource = "SetPollingSource",
     SetTransform = "SetTransform",
     SetVocab = "SetVocab",
-    SetWatermark = "SetWatermark",
+    AddPushSource = "AddPushSource",
+    SetDataSchema = "SetDataSchema",
 }
 
 export interface EventPropertyLogo {
@@ -16,3 +17,5 @@ export interface EventPropertyLogo {
     label?: string;
     url_logo?: string;
 }
+
+export type SourcesEvents = SupportedEvents.AddPushSource | SupportedEvents.SetPollingSource;

@@ -78,7 +78,7 @@ export class LoginService {
     }
 
     public githubLogin(credentials: GithubLoginCredentials): void {
-        this.authApi.fetchAccountAndTokenFromGithubCallackCode(credentials).subscribe({
+        this.authApi.fetchAccountAndTokenFromGithubCallbackCode(credentials).subscribe({
             next: this.loginCallback,
             error: (e) => {
                 this.navigationService.navigateToHome();
@@ -133,6 +133,8 @@ export class LoginService {
                 accessToken: loginResponse.accessToken,
                 backendUrl: this.appConfigService.apiServerUrl,
             };
+            this.accessToken$.next(loginResponse.accessToken);
+            this.account$.next(loginResponse.account);
             this.httpClient.post<LoginCallbackResponse>(callbackUrl, response).subscribe(() => {
                 this.navigationService.navigateToReturnToCli();
             });

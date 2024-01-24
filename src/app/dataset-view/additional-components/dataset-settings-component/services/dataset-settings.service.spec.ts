@@ -47,7 +47,7 @@ describe("DatasetSettingsService", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
         const navigateToSearchSpy = spyOn(navigationService, "navigateToSearch");
 
-        service.deleteDataset(DATASET_ID).subscribe(() => {
+        service.deleteDataset(ACCOUNT_NAME, DATASET_ID).subscribe(() => {
             expect(deleteDatasetSpy).toHaveBeenCalledTimes(1);
             expect(navigateToSearchSpy).toHaveBeenCalledTimes(1);
         });
@@ -57,7 +57,7 @@ describe("DatasetSettingsService", () => {
         spyOn(datasetApi, "deleteDataset").and.returnValue(of(mockDeleteDanglingReferenceError));
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
 
-        const subscription$ = service.deleteDataset(DATASET_ID).subscribe({
+        const subscription$ = service.deleteDataset(ACCOUNT_NAME, DATASET_ID).subscribe({
             next: () => fail("unexpected success"),
             error: (e: unknown) => {
                 expect(e).toEqual(
@@ -75,7 +75,7 @@ describe("DatasetSettingsService", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
         spyOn(datasetApi, "deleteDataset").and.returnValue(of({ datasets: {} } as DeleteDatasetMutation));
 
-        const subscription$ = service.deleteDataset(DATASET_ID).subscribe({
+        const subscription$ = service.deleteDataset(ACCOUNT_NAME, DATASET_ID).subscribe({
             next: () => fail("unexpected success"),
             error: (e: unknown) => {
                 expect(e).toEqual(new DatasetNotFoundError());
@@ -88,7 +88,7 @@ describe("DatasetSettingsService", () => {
     it("deleting dataset without logged user results in exception", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
 
-        expect(() => service.deleteDataset(DATASET_ID)).toThrow(
+        expect(() => service.deleteDataset(ACCOUNT_NAME, DATASET_ID)).toThrow(
             new DatasetOperationError([new Error(DatasetSettingsService.NOT_LOGGED_USER_ERROR)]),
         );
     });

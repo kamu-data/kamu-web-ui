@@ -1,4 +1,4 @@
-export class SetTransformToolipsTexts {
+export class SetTransformTooltipsTexts {
     public static readonly ENGINE = "Identifier of the engine used for this transformation.";
     public static readonly QUERIES = "Queries use for specifying multi-step SQL transformations.";
     public static readonly TEMPORAL_TABLES =

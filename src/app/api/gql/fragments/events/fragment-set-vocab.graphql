@@ -1,5 +1,6 @@
 fragment SetVocabEvent on SetVocab {
+  offsetColumn
+  operationTypeColumn
   systemTimeColumn
   eventTimeColumn
-  offsetColumn
 }

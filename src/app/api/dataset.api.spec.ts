@@ -5,9 +5,11 @@ import {
     mockDatasetsByAccountNameQuery,
     mockDatassetByIdQuery,
     mockGetMetadataBlockQuery,
+    TEST_ACCOUNT_NAME,
     TEST_BLOCK_HASH,
     TEST_DATASET_ID,
     TEST_DATASET_NAME,
+    TEST_WATERMARK,
 } from "./mock/dataset.mock";
 import {
     MOCK_NEW_DATASET_NAME,
@@ -22,6 +24,7 @@ import {
     mockFullPowerDatasetPermissionsFragment,
     mockRenameSuccessResponse,
     mockUpdateReadmeSuccessResponse,
+    mockUpdateWatermarkSuccessResponse,
 } from "../search/mock.data";
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
@@ -61,6 +64,8 @@ import {
     RenameDatasetMutation,
     UpdateReadmeDocument,
     UpdateReadmeMutation,
+    UpdateWatermarkDocument,
+    UpdateWatermarkMutation,
 } from "./kamu.graphql.interface";
 import { TEST_LOGIN } from "./mock/auth.mock";
 import { first, Observable } from "rxjs";
@@ -379,16 +384,16 @@ describe("DatasetApi", () => {
 
     [DatasetKind.Root, DatasetKind.Derivative].forEach((datasetKind: DatasetKind) => {
         it(`should create empty ${datasetKind} dataset`, fakeAsync(() => {
-            const mockDatasetName = "my-test";
+            const mockDatasetAlias = "my-test";
             const subscription$ = service
-                .createEmptyDataset(datasetKind, mockDatasetName)
+                .createEmptyDataset(datasetKind, mockDatasetAlias)
                 .pipe(first())
                 .subscribe((res: CreateEmptyDatasetMutation) => {
                     expect(res.datasets.createEmpty.__typename).toEqual("CreateDatasetResultSuccess");
                 });
 
             const op = controller.expectOne(CreateEmptyDatasetDocument);
-            expect(op.operation.variables.datasetName).toEqual(mockDatasetName);
+            expect(op.operation.variables.datasetAlias).toEqual(mockDatasetAlias);
             expect(op.operation.variables.datasetKind).toEqual(datasetKind);
             op.flush({
                 data: mockCreateEmptyDatasetResponse,
@@ -422,10 +427,11 @@ describe("DatasetApi", () => {
         flush();
     }));
 
-    it("should succesfully commit event", () => {
+    it("should successfully commit event", () => {
         const mockEvent = "mock event";
         service
             .commitEvent({
+                accountName: TEST_DATASET_NAME,
                 datasetId: TEST_DATASET_ID,
                 event: mockEvent,
             })
@@ -441,11 +447,13 @@ describe("DatasetApi", () => {
         });
     });
 
-    it("should succesfully update dataset's readme", () => {
+    it("should successfully update dataset's readme", () => {
         const mockReadmeContent = "someReadme";
-        service.updateReadme(TEST_DATASET_ID, mockReadmeContent).subscribe((res: UpdateReadmeMutation) => {
-            expect(res.datasets.byId?.metadata.updateReadme.__typename).toEqual("CommitResultSuccess");
-        });
+        service
+            .updateReadme({ accountName: TEST_ACCOUNT_NAME, datasetId: TEST_DATASET_ID, content: mockReadmeContent })
+            .subscribe((res: UpdateReadmeMutation) => {
+                expect(res.datasets.byId?.metadata.updateReadme.__typename).toEqual("CommitResultSuccess");
+            });
 
         const op = controller.expectOne(UpdateReadmeDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
@@ -455,10 +463,12 @@ describe("DatasetApi", () => {
         });
     });
 
-    it("should succesfully delete dataset", () => {
-        service.deleteDataset(TEST_DATASET_ID).subscribe((res: DeleteDatasetMutation) => {
-            expect(res.datasets.byId?.delete.__typename).toEqual("DeleteResultSuccess");
-        });
+    it("should successfully delete dataset", () => {
+        service
+            .deleteDataset({ accountName: TEST_ACCOUNT_NAME, datasetId: TEST_DATASET_ID })
+            .subscribe((res: DeleteDatasetMutation) => {
+                expect(res.datasets.byId?.delete.message).toEqual("Success");
+            });
 
         const op = controller.expectOne(DeleteDatasetDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
@@ -467,16 +477,41 @@ describe("DatasetApi", () => {
         });
     });
 
-    it("should succesfully rename dataset", () => {
-        service.renameDataset(TEST_DATASET_ID, MOCK_NEW_DATASET_NAME).subscribe((res: RenameDatasetMutation) => {
-            expect(res.datasets.byId?.rename.__typename).toEqual("RenameResultSuccess");
-        });
+    it("should successfully rename dataset", () => {
+        service
+            .renameDataset({
+                accountName: TEST_ACCOUNT_NAME,
+                datasetId: TEST_DATASET_ID,
+                newName: MOCK_NEW_DATASET_NAME,
+            })
+            .subscribe((res: RenameDatasetMutation) => {
+                expect(res.datasets.byId?.rename.__typename).toEqual("RenameResultSuccess");
+            });
 
         const op = controller.expectOne(RenameDatasetDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
         expect(op.operation.variables.newName).toEqual(MOCK_NEW_DATASET_NAME);
         op.flush({
             data: mockRenameSuccessResponse,
+        });
+    });
+
+    it("should successfully update watermark", () => {
+        service
+            .setWatermark({
+                datasetId: TEST_DATASET_ID,
+                watermark: TEST_WATERMARK,
+                accountName: TEST_ACCOUNT_NAME,
+            })
+            .subscribe((res: UpdateWatermarkMutation) => {
+                expect(res.datasets.byId?.setWatermark.message).toEqual("Success");
+            });
+
+        const op = controller.expectOne(UpdateWatermarkDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.watermark).toEqual(TEST_WATERMARK);
+        op.flush({
+            data: mockUpdateWatermarkSuccessResponse,
         });
     });
 
@@ -505,23 +540,34 @@ describe("DatasetApi", () => {
             operationName: "rename",
             expectedGqlQuery: RenameDatasetDocument,
             action: (): Observable<unknown> => {
-                return service.renameDataset(TEST_DATASET_ID, MOCK_NEW_DATASET_NAME);
+                return service.renameDataset({
+                    accountName: TEST_ACCOUNT_NAME,
+                    datasetId: TEST_DATASET_ID,
+                    newName: MOCK_NEW_DATASET_NAME,
+                });
             },
         },
         {
             operationName: "delete",
             expectedGqlQuery: DeleteDatasetDocument,
-            action: (): Observable<unknown> => service.deleteDataset(TEST_DATASET_ID),
+            action: (): Observable<unknown> =>
+                service.deleteDataset({ accountName: TEST_ACCOUNT_NAME, datasetId: TEST_DATASET_ID }),
         },
         {
             operationName: "updateReadme",
             expectedGqlQuery: UpdateReadmeDocument,
-            action: (): Observable<unknown> => service.updateReadme(TEST_DATASET_ID, "someReadmeCntent"),
+            action: (): Observable<unknown> =>
+                service.updateReadme({
+                    accountName: TEST_ACCOUNT_NAME,
+                    datasetId: TEST_DATASET_ID,
+                    content: "someReadmeCntent",
+                }),
         },
         {
             operationName: "commitEvent",
             expectedGqlQuery: CommitEventToDatasetDocument,
-            action: (): Observable<unknown> => service.commitEvent({ datasetId: TEST_DATASET_ID, event: "someEvent" }),
+            action: (): Observable<unknown> =>
+                service.commitEvent({ accountName: TEST_DATASET_NAME, datasetId: TEST_DATASET_ID, event: "someEvent" }),
         },
     ].forEach((testCase: RuntimeFailureTestCase) => {
         it(`should check how operation #${testCase.operationName} is handling runtime error`, fakeAsync(() => {

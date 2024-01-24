@@ -4,8 +4,9 @@ import { BasePropertyComponent } from "../components/common/base-property/base-p
 export enum DynamicEventTypes {
     SetPollingSource = "SetPollingSource",
     SetTransform = "SetTransform",
-    ExecuteQuery = "ExecuteQuery",
+    ExecuteTransform = "ExecuteTransform",
     AddData = "AddData",
+    AddPushSource = "AddPushSource",
 }
 
 export type DynamicEventTypesScalar = `${DynamicEventTypes}`;

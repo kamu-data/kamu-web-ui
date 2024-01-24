@@ -49,12 +49,24 @@
                     </p>
                 </div>
             </ng-template>
-            <div class="my-4" *ngIf="canAddSetPollingSource" data-test-id="add-set-polling-source-block">
+            <div
+                class="my-4"
+                *ngIf="canAddSetPollingSource && canAddPushSource"
+                data-test-id="add-set-polling-source-block"
+            >
                 <p>
                     You can
-                    <a class="text-decoration-none" (click)="navigateToAddPollingSource()"> Add data source</a>
+                    <a class="text-decoration-none" (click)="navigateToAddPollingSource()"> Add data polling source</a>
                 </p>
             </div>
+            <!-- Changed to canAddPushSource -->
+            <div class="my-4" *ngIf="canAddSetPollingSource" data-test-id="add-push-source-block">
+                <p>
+                    You can
+                    <a class="text-decoration-none" (click)="navigateToAddPushSource()"> Add data push source</a>
+                </p>
+            </div>
+            <!-- end -->
             <div class="my-4" *ngIf="canAddSetTransform" data-test-id="add-set-transform-block">
                 <p>
                     You can

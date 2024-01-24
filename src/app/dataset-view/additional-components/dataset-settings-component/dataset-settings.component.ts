@@ -60,6 +60,7 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
 
     public deleteDataset(): void {
         const datasetId = this.datasetBasics.id;
+        const accountName = this.datasetBasics.owner.accountName;
         promiseWithCatch(
             this.modalService.error({
                 title: "Delete",
@@ -68,7 +69,9 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        this.trackSubscription(this.datasetSettingsService.deleteDataset(datasetId).subscribe());
+                        this.trackSubscription(
+                            this.datasetSettingsService.deleteDataset(accountName, datasetId).subscribe(),
+                        );
                     }
                 },
             }),

@@ -1,10 +1,10 @@
 fragment DatasetTransform on SetTransform {
   inputs {
-    name
+    datasetRef
+    alias
     dataset {
       ...DatasetBasics
     }
-    datasetRef
   }
   transform {
     ...DatasetTransformContent

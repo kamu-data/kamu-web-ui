@@ -23,7 +23,9 @@ import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 
 export const TEST_DATASET_ID = "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7";
 export const TEST_DATASET_NAME = "test-dataset";
+export const TEST_ACCOUNT_NAME = "test-account-name";
 export const TEST_BLOCK_HASH = "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev";
+export const TEST_WATERMARK = "2023-06-02T08:44:28.324101693+00:00";
 
 export const mockDatasetDataSqlRunResponse: GetDatasetDataSqlRunQuery = {
     data: {
@@ -78,6 +80,12 @@ export const mockDatasetListItem: DatasetSearchOverviewFragment = {
             {
                 __typename: "Dataset",
                 id: "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7",
+                name: "alberta.case-details.hm",
+                owner: {
+                    __typename: "Account",
+                    id: "1",
+                    accountName: "kamu",
+                },
                 kind: DatasetKind.Derivative,
                 alias: "kamu/alberta.case-details.hm",
             },
@@ -202,6 +210,12 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                                 id: "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7",
                                 kind: DatasetKind.Derivative,
                                 alias: "kamu/alberta.case-details.hm",
+                                name: "alberta.case-details.hm",
+                                owner: {
+                                    __typename: "Account",
+                                    id: "1",
+                                    accountName: "kamu",
+                                },
                             },
                         ],
                     },
@@ -252,36 +266,32 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                             avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                         },
                         event: {
-                            __typename: "ExecuteQuery",
-                            queryOutputData: {
+                            __typename: "ExecuteTransform",
+                            newData: {
                                 __typename: "DataSlice",
-                                interval: {
+                                offsetInterval: {
                                     __typename: "OffsetInterval",
                                     start: 0,
                                     end: 596125,
                                 },
                                 logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
                                 physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
+                                size: 2323,
                             },
-                            inputCheckpoint: null,
-                            watermark: "2022-08-01T00:00:00+00:00",
-                            inputSlices: [
+                            prevCheckpoint: null,
+                            prevOffset: null,
+                            newWatermark: "2022-08-01T00:00:00+00:00",
+                            queryInputs: [
                                 {
-                                    __typename: "InputSlice",
+                                    __typename: "ExecuteTransformInput",
                                     datasetId: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
-                                    blockInterval: {
-                                        __typename: "BlockInterval",
-                                        start: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
-                                        end: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
-                                    },
-                                    dataInterval: {
-                                        __typename: "OffsetInterval",
-                                        start: 0,
-                                        end: 596125,
-                                    },
+                                    prevBlockHash: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
+                                    newBlockHash: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
+                                    prevOffset: null,
+                                    newOffset: 596125,
                                 },
                             ],
-                            outputCheckpoint: {
+                            newCheckpoint: {
                                 __typename: "Checkpoint",
                                 physicalHash: "zW1otipGpjScUH8C2RfaF4s8RshReBbQVPDf2fPrp2R8Ft2",
                                 size: 2560,

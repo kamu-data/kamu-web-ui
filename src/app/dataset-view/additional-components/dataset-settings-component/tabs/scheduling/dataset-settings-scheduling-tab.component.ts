@@ -161,7 +161,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                     .subscribe((data) => {
                         const flowConfiguration = data.datasets.byId?.flows.configs.byType;
                         if (flowConfiguration?.schedule) {
-                            this.pollingForm.patchValue({ updatesState: flowConfiguration.paused });
+                            this.pollingForm.patchValue({ updatesState: !flowConfiguration.paused });
                             this.pollingGroup.patchValue({
                                 ...flowConfiguration.schedule,
                             });
@@ -184,7 +184,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                         const flowConfiguration = data.datasets.byId?.flows.configs.byType;
                         if (flowConfiguration?.batching) {
                             const batchingConfig = flowConfiguration.batching;
-                            this.pollingForm.patchValue({ updatesState: flowConfiguration.paused });
+                            this.pollingForm.patchValue({ updatesState: !flowConfiguration.paused });
                             this.throttlingForm.patchValue({
                                 ...batchingConfig.throttlingPeriod,
                                 minimalDataBatch: batchingConfig.minimalDataBatch,
@@ -203,7 +203,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                     .setDatasetFlowSchedule({
                         datasetId: this.datasetBasics.id,
                         datasetFlowType: DatasetFlowType.Ingest,
-                        paused: this.updateState.value as boolean,
+                        paused: !(this.updateState.value as boolean),
                         schedule: this.scheduleOptions,
                     })
                     .subscribe(),
@@ -214,7 +214,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                     .setDatasetFlowBatching({
                         datasetId: this.datasetBasics.id,
                         datasetFlowType: DatasetFlowType.ExecuteTransform,
-                        paused: this.updateState.value as boolean,
+                        paused: !(this.updateState.value as boolean),
                         throttlingPeriod:
                             this.batchingEveryTime.value && this.batchingUnitTime.value
                                 ? {

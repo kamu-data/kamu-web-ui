@@ -108,7 +108,6 @@ const Services = [
 
             return {
                 cache: apolloCache(),
-                // cache: new InMemoryCache(),
                 link: authorizationMiddleware.concat(httpMainLink),
             };
         },

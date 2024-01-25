@@ -1,6 +1,5 @@
 <div class="w-75 custom-container">
     <h2>Schedule</h2>
-    <pre>{{ pollingForm.value | json }}</pre>
     <mat-divider class="mt-1 mb-2"></mat-divider>
     <form [formGroup]="pollingForm">
         <div class="box p-4 mt-3">
@@ -89,9 +88,9 @@
                 Cron exression accepted values
                 <div class="fs-12">1. minutes: 0-59 * , -</div>
                 <div class="fs-12">2. hours: 0-23 * , -</div>
-                <div class="fs-12">3. day of month: 1-31 * , - ? L LW</div>
+                <div class="fs-12">3. day of month: 1-31 * , - ?</div>
                 <div class="fs-12">4. months: (JAN-DEC or 1-12) * , -</div>
-                <div class="fs-12">5. day of week: (SUN-SAT or 1-7) * , L - ? #</div>
+                <div class="fs-12">5. day of week: (SUN-SAT or 1-7) * , - ?</div>
             </div>
         </div>
     </form>

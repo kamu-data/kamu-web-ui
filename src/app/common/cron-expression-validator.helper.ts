@@ -2,6 +2,10 @@ export function isValidCronExpression(cronExpression: string): boolean {
     const MAX_MIN_SEC_VALUE = 59;
     const MAX_HOUR_VALUE = 23;
 
+    if (cronExpression === "* * * * *") {
+        return true;
+    }
+
     if (!/\s/g.test(cronExpression)) {
         return false;
     }
@@ -96,7 +100,6 @@ function isValidTimeValue(time: string, val: number): boolean {
 }
 
 function isValidDayOfMonthValue(dayOfMonth: string, dayOfWeek: string): boolean {
-    const isNotLastDays = !dayOfMonth.toLowerCase().includes("l") || dayOfMonth.toLowerCase() !== "lw";
     if ((dayOfMonth === "*" && dayOfWeek !== "*") || (dayOfMonth === "?" && dayOfWeek !== "?")) {
         return true;
     } else if (dayOfMonth.includes("/") && dayOfWeek === "?") {
@@ -109,18 +112,11 @@ function isValidDayOfMonthValue(dayOfMonth: string, dayOfWeek: string): boolean 
         return isValidElements || isValidFirstElem;
     } else if (dayOfMonth.includes("-") && dayOfWeek === "?") {
         const dayOfMonthRangeArr = dayOfMonth.split("-");
-        const isLastDayIncludes = dayOfMonthRangeArr[0] === "L" && isValidateMonthNo([dayOfMonthRangeArr[1]], 1, 30);
-        return isValidateMonthNo(dayOfMonthRangeArr, 1, 31) || isLastDayIncludes;
+        return isValidateMonthNo(dayOfMonthRangeArr, 1, 31);
     } else if (dayOfMonth.includes(",") && dayOfWeek === "?") {
         const multiDayOfMonthArr = dayOfMonth.split(",");
         return isValidateMonthNo(multiDayOfMonthArr, 1, 31);
-    } else if (
-        typeof dayOfMonth === "string" &&
-        dayOfWeek === "?" &&
-        (dayOfMonth.toLowerCase() === "l" || dayOfMonth.toLowerCase() === "lw")
-    ) {
-        return true;
-    } else if (typeof dayOfMonth === "string" && dayOfWeek === "?" && dayOfMonth !== "?" && isNotLastDays) {
+    } else if (typeof dayOfMonth === "string" && dayOfWeek === "?" && dayOfMonth !== "?") {
         return parseInt(dayOfMonth) >= 1 && parseInt(dayOfMonth) <= 31;
     } else {
         return false;
@@ -129,10 +125,7 @@ function isValidDayOfMonthValue(dayOfMonth: string, dayOfWeek: string): boolean 
 
 function isValidDayOfWeekValue(dayOfWeek: string, dayOfMonth: string): boolean {
     const WEEK_ARRRAY = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-    if ((dayOfWeek === "*" && dayOfMonth !== "*") || (dayOfWeek === "?" && dayOfMonth !== "?")) {
-        return true;
-    }
-    if (dayOfWeek.toLowerCase() === "l") {
+    if (dayOfWeek === "?" && dayOfMonth !== "?") {
         return true;
     }
     if (dayOfWeek === "*") {
@@ -154,8 +147,7 @@ function isValidDayOfWeekValue(dayOfWeek: string, dayOfMonth: string): boolean {
             ? isValidateMonthNo(multiDayOfWeekArr, 1, 7)
             : isValidateMonthStr(multiDayOfWeekArr, WEEK_ARRRAY);
     } else if (dayOfWeek.includes("#") && dayOfMonth === "?") {
-        const weekdayOfMonthArr = dayOfWeek.split("#");
-        return isValidateMonthNo([weekdayOfMonthArr[0]], 1, 7) && isValidateMonthNo([weekdayOfMonthArr[1]], 1, 5);
+        return false;
     } else if (typeof dayOfWeek === "string" && dayOfMonth === "?") {
         return !isNaN(parseInt(dayOfWeek))
             ? isValidateMonthNo([dayOfWeek], 1, 7)

@@ -85,7 +85,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "button-cron-expression");
-        expect(component.pollingType.value).toEqual(PollingGroupEnum.CRON_EXPRESSION);
+        expect(component.pollingType.value).toEqual(PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION);
         emitClickOnElementByDataTestId(fixture, "button-time-delta");
         expect(component.pollingType.value).toEqual(PollingGroupEnum.TIME_DELTA);
     });
@@ -141,7 +141,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         expect(setDatasetFlowScheduleSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
                 schedule: {
-                    cronExpression: `* ${MOCK_CRON_EXPRESSION} *`,
+                    cron5ComponentExpression: `${MOCK_CRON_EXPRESSION}`,
                 },
             }),
         );

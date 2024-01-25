@@ -4,8 +4,8 @@ import { MetadataBlockFragment, TimeUnit } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { MaybeUndefined } from "./app.types";
-import { isValidCronExpression } from "cron-expression-validator";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
+import { isValidCronExpression } from "./cron-expression-validator.helper";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -231,7 +231,7 @@ export function cronExpressionValidator(): ValidatorFn {
         if ((control.value as string) === "* * * * *") {
             return null;
         }
-        return !isValidCronExpression(`* ${control.value as string} *`) ? { invalidCronExpession: true } : null;
+        return !isValidCronExpression(control.value as string) ? { invalidCronExpession: true } : null;
     };
 }
 

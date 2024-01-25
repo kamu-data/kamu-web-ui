@@ -52,7 +52,6 @@
     "autoprefixer": "^10.4.5",
     "bootstrap": "^5.2.0-beta1",
     "bootstrap-icons": "^1.7.1",
-    "cron-expression-validator": "^1.0.20",
     "cron-parser": "^4.9.0",
     "d3-scale": "^4.0.2",
     "graphql": "^16.7.1",

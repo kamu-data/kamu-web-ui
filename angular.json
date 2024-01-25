@@ -26,7 +26,6 @@
               "fast-json-stable-stringify",
               "marked",
               "moment",
-              "cron-expression-validator",
               "cron-parser"
             ],
             "outputPath": "dist/kamu-platform",

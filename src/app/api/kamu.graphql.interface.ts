@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -205,9 +205,9 @@ export type CreateDatasetResultSuccess = CreateDatasetFromSnapshotResult &
         message: Scalars["String"];
     };
 
-export type CronExpression = {
-    __typename?: "CronExpression";
-    cronExpression: Scalars["String"];
+export type Cron5ComponentExpression = {
+    __typename?: "Cron5ComponentExpression";
+    cron5ComponentExpression: Scalars["String"];
 };
 
 export type DataBatch = {
@@ -733,7 +733,7 @@ export type FlowConfigurationBatching = {
     throttlingPeriod?: Maybe<TimeDelta>;
 };
 
-export type FlowConfigurationSchedule = CronExpression | TimeDelta;
+export type FlowConfigurationSchedule = Cron5ComponentExpression | TimeDelta;
 
 export type FlowConnection = {
     __typename?: "FlowConnection";
@@ -1247,8 +1247,8 @@ export type RequestHeader = {
 };
 
 export type ScheduleInput =
-    | { cronExpression: Scalars["String"]; timeDelta?: never }
-    | { cronExpression?: never; timeDelta: TimeDeltaInput };
+    | { cron5ComponentExpression: Scalars["String"]; timeDelta?: never }
+    | { cron5ComponentExpression?: never; timeDelta: TimeDeltaInput };
 
 export type Search = {
     __typename?: "Search";
@@ -2519,7 +2519,7 @@ export type GetDatasetFlowConfigsQuery = {
                               __typename?: "FlowConfiguration";
                               paused: boolean;
                               schedule?:
-                                  | { __typename?: "CronExpression"; cronExpression: string }
+                                  | { __typename?: "Cron5ComponentExpression"; cron5ComponentExpression: string }
                                   | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
                                   | null;
                               batching?: {
@@ -2565,7 +2565,7 @@ export type DatasetFlowScheduleMutation = {
                               config: {
                                   __typename?: "FlowConfiguration";
                                   schedule?:
-                                      | { __typename?: "CronExpression"; cronExpression: string }
+                                      | { __typename?: "Cron5ComponentExpression"; cron5ComponentExpression: string }
                                       | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
                                       | null;
                               };
@@ -4057,8 +4057,8 @@ export const GetDatasetFlowConfigsDocument = gql`
                                 ... on TimeDelta {
                                     ...TimeDeltaData
                                 }
-                                ... on CronExpression {
-                                    cronExpression
+                                ... on Cron5ComponentExpression {
+                                    cron5ComponentExpression
                                 }
                             }
                             batching {
@@ -4110,8 +4110,8 @@ export const DatasetFlowScheduleDocument = gql`
                                         ... on TimeDelta {
                                             ...TimeDeltaData
                                         }
-                                        ... on CronExpression {
-                                            cronExpression
+                                        ... on Cron5ComponentExpression {
+                                            cron5ComponentExpression
                                         }
                                     }
                                 }

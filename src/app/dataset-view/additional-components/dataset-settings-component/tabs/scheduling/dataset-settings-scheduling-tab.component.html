@@ -1,5 +1,6 @@
 <div class="w-75 custom-container">
     <h2>Schedule</h2>
+    <pre>{{ pollingForm.value | json }}</pre>
     <mat-divider class="mt-1 mb-2"></mat-divider>
     <form [formGroup]="pollingForm">
         <div class="box p-4 mt-3">
@@ -50,7 +51,7 @@
                         </ng-container>
                     </div>
                 </mat-radio-button>
-                <mat-radio-button [value]="pollingGroupEnum.CRON_EXPRESSION">
+                <mat-radio-button [value]="pollingGroupEnum.CRON_5_COMPONENT_EXPRESSION">
                     <div class="d-flex align-items-center" data-test-id="button-cron-expression">
                         <div class="d-flex align-middle">
                             <span class="form-control-label d-block"> Cron expression : </span>

@@ -5,7 +5,7 @@ export enum SettingsTabsEnum {
 
 export enum PollingGroupEnum {
     TIME_DELTA = "TimeDelta",
-    CRON_EXPRESSION = "CronExpression",
+    CRON_5_COMPONENT_EXPRESSION = "Cron5ComponentExpression",
 }
 
 export enum ThrottlingGroupEnum {

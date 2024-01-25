@@ -114,7 +114,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                         this.disableAndClearControl(this.cronExpression);
                         break;
                     }
-                    case PollingGroupEnum.CRON_EXPRESSION: {
+                    case PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION: {
                         this.cronExpression.enable();
                         this.disableAndClearControl(this.pollingEveryTime);
                         this.disableAndClearControl(this.pollingUnitTime);
@@ -165,10 +165,10 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                             this.pollingGroup.patchValue({
                                 ...flowConfiguration.schedule,
                             });
-                            if (flowConfiguration.schedule.__typename === "CronExpression") {
+                            if (flowConfiguration.schedule.__typename === "Cron5ComponentExpression") {
                                 this.pollingGroup.patchValue({
                                     // splice for sync with cron parser
-                                    cronExpression: flowConfiguration.schedule.cronExpression.slice(2, -2),
+                                    cronExpression: flowConfiguration.schedule.cron5ComponentExpression,
                                 });
                             }
                         }
@@ -239,10 +239,10 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                 },
             };
         }
-        if (this.pollingGroup.controls.__typename.value === PollingGroupEnum.CRON_EXPRESSION) {
+        if (this.pollingGroup.controls.__typename.value === PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION) {
             this.scheduleOptions = {
                 // sync with server validator
-                cronExpression: `* ${this.cronExpression.value as string} *`,
+                cron5ComponentExpression: this.cronExpression.value as string,
             };
         }
     }

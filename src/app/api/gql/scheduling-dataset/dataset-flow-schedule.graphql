@@ -17,8 +17,8 @@ mutation DatasetFlowSchedule(
                   ... on TimeDelta {
                     ...TimeDeltaData
                   }
-                  ... on CronExpression {
-                    cronExpression
+                  ... on Cron5ComponentExpression {
+                    cron5ComponentExpression
                   }
                 }
               }

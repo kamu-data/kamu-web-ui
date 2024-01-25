@@ -170,7 +170,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         );
     }
 
-    public initTasksTab(): void {
+    public initFlowsTab(): void {
         //console.log("init");
     }
 
@@ -224,7 +224,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
             [DatasetViewTypeEnum.History]: () => this.initHistoryTab(datasetInfo, currentPage),
             [DatasetViewTypeEnum.Lineage]: () => this.initLineageTab(datasetInfo),
             [DatasetViewTypeEnum.Discussions]: () => this.initDiscussionsTab(),
-            [DatasetViewTypeEnum.Tasks]: () => this.initTasksTab(),
+            [DatasetViewTypeEnum.Flows]: () => this.initFlowsTab(),
             [DatasetViewTypeEnum.Settings]: () => this.initSettingsTab(datasetInfo),
         };
 

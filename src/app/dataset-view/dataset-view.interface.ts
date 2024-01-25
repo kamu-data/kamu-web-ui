@@ -6,7 +6,7 @@ export enum DatasetViewTypeEnum {
     Discussions = "discussions",
     History = "history",
     Settings = "settings",
-    Tasks = "tasks",
+    Flows = "flows",
 }
 
 export interface DatasetNavigationInterface {
@@ -17,5 +17,5 @@ export interface DatasetNavigationInterface {
     navigateToLineage: () => void;
     navigateToDiscussions: () => void;
     navigateToSettings: () => void;
-    navigateToTasks: () => void;
+    navigateToFlows: () => void;
 }

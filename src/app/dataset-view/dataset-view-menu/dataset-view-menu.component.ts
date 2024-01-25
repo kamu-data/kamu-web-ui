@@ -103,8 +103,8 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
         return this.datasetViewType === DatasetViewTypeEnum.Discussions;
     }
 
-    public get isDatasetViewTypeTasks(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.Tasks;
+    public get isDatasetViewTypeFlows(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.Flows;
     }
 
     public get isDatasetViewTypeSettings(): boolean {
@@ -139,8 +139,8 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
         this.datasetNavigation.navigateToDiscussions();
     }
 
-    public onNavigateToTasks(): void {
-        this.datasetNavigation.navigateToTasks();
+    public onNavigateToFlows(): void {
+        this.datasetNavigation.navigateToFlows();
     }
 
     public onNavigateToSettings(): void {

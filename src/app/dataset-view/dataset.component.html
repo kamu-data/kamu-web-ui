@@ -52,7 +52,7 @@
                 (onClickNodeEmit)="onClickLineageNode($event)"
             ></app-lineage>
 
-            <app-tasks *ngIf="datasetViewType === DatasetViewTypeEnum.Tasks"></app-tasks>
+            <app-flows *ngIf="datasetViewType === DatasetViewTypeEnum.Flows"></app-flows>
 
             <app-dataset-settings
                 *ngIf="datasetViewType === DatasetViewTypeEnum.Settings"

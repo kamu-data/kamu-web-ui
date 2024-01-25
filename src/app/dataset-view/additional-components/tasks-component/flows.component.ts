@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { TasksService } from "./services/tasks.service";
 import { TaskOutcome, TaskStatus } from "src/app/api/kamu.graphql.interface";
-import { TaskElement, updatedFinishedTaskElement } from "./components/tasks-table/tasks-table.types";
+import { TaskElement } from "./components/flows-table/tasks-table.types";
 
 @Component({
-    selector: "app-tasks",
-    templateUrl: "./tasks.component.html",
-    styleUrls: ["./tasks.component.scss"],
+    selector: "app-flows",
+    templateUrl: "./flows.component.html",
+    styleUrls: ["./flows.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TasksComponent implements OnInit, OnDestroy {
+export class FlowsComponent implements OnInit, OnDestroy {
     public searchFilter = "";
     public tasks: TaskElement[];
     private t: any;

@@ -1,4 +1,4 @@
-import { MaybeNull } from "./../../../../../common/app.types";
+import { MaybeNull } from "../../../../../common/app.types";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { PageBasedInfo, Scalars, TaskOutcome, TaskStatus } from "src/app/api/kamu.graphql.interface";
 import { mockPageBasedInfo } from "src/app/search/mock.data";
@@ -6,12 +6,12 @@ import { TaskElement } from "./tasks-table.types";
 import moment from "moment";
 
 @Component({
-    selector: "app-tasks-table",
-    templateUrl: "./tasks-table.component.html",
-    styleUrls: ["./tasks-table.component.scss"],
+    selector: "app-flows-table",
+    templateUrl: "./flows-table.component.html",
+    styleUrls: ["./flows-table.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TasksTableComponent {
+export class FlowsTableComponent {
     @Input() tasks: MaybeNull<TaskElement[]>;
     public displayedColumns: string[] = ["description", "information", "creator", "options"];
 

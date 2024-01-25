@@ -64,10 +64,10 @@ import { MatInputModule } from "@angular/material/input";
 import { ReturnToCliComponent } from "../components/return-to-cli/return-to-cli.component";
 import { EditorModule } from "../shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { TasksComponent } from "./additional-components/tasks-component/tasks.component";
+import { FlowsComponent } from "./additional-components/tasks-component/flows.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TileBaseWidgetComponent } from "./additional-components/tasks-component/components/tile-base-widget/tile-base-widget.component";
-import { TasksTableComponent } from "./additional-components/tasks-component/components/tasks-table/tasks-table.component";
+import { FlowsTableComponent } from "./additional-components/tasks-component/components/flows-table/flows-table.component";
 import { MatTableModule } from "@angular/material/table";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { AddPushSourceComponent } from "./additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
@@ -168,9 +168,9 @@ import { SourceNameStepComponent } from "./additional-components/metadata-compon
         ReadmeSectionComponent,
         DatasetSettingsComponent,
         LoadMoreComponent,
-        TasksComponent,
+        FlowsComponent,
         TileBaseWidgetComponent,
-        TasksTableComponent,
+        FlowsTableComponent,
         AddPushSourceComponent,
         SourceNameStepComponent,
     ],

@@ -4,5 +4,6 @@ fragment DatasetPermissions on Dataset {
     canDelete
     canRename
     canCommit
+    canSchedule
   }
 }

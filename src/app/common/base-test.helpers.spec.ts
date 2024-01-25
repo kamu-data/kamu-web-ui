@@ -69,6 +69,12 @@ export function checkInputDisabled<T>(fixture: ComponentFixture<T>, dataTestId: 
     expect(element.disabled).toEqual(isDisabled);
 }
 
+export function checkButtonDisabled<T>(fixture: ComponentFixture<T>, dataTestId: string, isDisabled: boolean): void {
+    const element: HTMLButtonElement | null = getElementByDataTestId(fixture, dataTestId) as HTMLButtonElement;
+    expect(element).not.toBeNull();
+    expect(element.disabled).toEqual(isDisabled);
+}
+
 export const routerMockEventSubject = new ReplaySubject<RouterEvent>(1);
 
 export const routerMock = {

@@ -1,0 +1,37 @@
+mutation DatasetFlowSchedule(
+  $datasetId: DatasetID!
+  $datasetFlowType: DatasetFlowType!
+  $paused: Boolean!
+  $schedule: ScheduleInput!
+) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        configs {
+          setConfigSchedule(datasetFlowType: $datasetFlowType, paused: $paused, schedule: $schedule) {
+            __typename
+            ... on SetFlowConfigSuccess {
+              message
+              config {
+                schedule {
+                  ... on TimeDelta {
+                    ...TimeDeltaData
+                  }
+                  ... on Cron5ComponentExpression {
+                    cron5ComponentExpression
+                  }
+                }
+              }
+            }
+
+            ... on FlowIncompatibleDatasetKind {
+              message
+              expectedDatasetKind
+              actualDatasetKind
+            }
+          }
+        }
+      }
+    }
+  }
+}

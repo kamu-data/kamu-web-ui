@@ -162,8 +162,8 @@ type CreateDatasetResultSuccess implements CreateDatasetResult & CreateDatasetFr
   message: String!
 }
 
-type CronExpression {
-  cronExpression: String!
+type Cron5ComponentExpression {
+  cron5ComponentExpression: String!
 }
 
 type DataBatch {
@@ -688,7 +688,7 @@ type FlowConfigurationBatching {
   minimalDataBatch: Int
 }
 
-union FlowConfigurationSchedule = TimeDelta | CronExpression
+union FlowConfigurationSchedule = TimeDelta | Cron5ComponentExpression
 
 type FlowConnection {
   """
@@ -839,7 +839,7 @@ type FlowTimingRecords {
   """
   runningSince: DateTime
   """
-  Recorded time of finish (succesfull or failed after retry) or abortion
+  Recorded time of finish (successful or failed after retry) or abortion
   (Finished state seen at least once)
   """
   finishedAt: DateTime
@@ -1172,7 +1172,7 @@ type RequestHeader {
 
 input ScheduleInput @oneOf {
   timeDelta: TimeDeltaInput
-  cronExpression: String
+  cron5ComponentExpression: String
 }
 
 type Search {

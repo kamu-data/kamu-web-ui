@@ -42,6 +42,8 @@ import { DataComponent } from "./additional-components/data-component/data.compo
 import { MetadataComponent } from "./additional-components/metadata-component/metadata.component";
 import { HistoryComponent } from "./additional-components/history-component/history.component";
 import { LineageComponent } from "./additional-components/lineage-component/lineage.component";
+import { DatasetSettingsGeneralTabComponent } from "./additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
+import { DatasetSettingsSchedulingTabComponent } from "./additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.component";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -65,6 +67,8 @@ describe("DatasetComponent", () => {
                 DatasetViewHeaderComponent,
                 SearchAdditionalButtonsComponent,
                 SearchAdditionalButtonsNavComponent,
+                DatasetSettingsGeneralTabComponent,
+                DatasetSettingsSchedulingTabComponent,
             ],
             imports: [
                 AngularSvgIconModule.forRoot(),
@@ -125,6 +129,7 @@ describe("DatasetComponent", () => {
         // Note: for some reason this icon is not loaded when activating Settings tab, so stub it
         const iconRegistryService: SvgIconRegistryService = TestBed.inject(SvgIconRegistryService);
         iconRegistryService.addSvg("account", "");
+        iconRegistryService.addSvg("clock", "");
 
         datasetSubsServices = TestBed.inject(DatasetSubscriptionsService);
         datasetSubsServices.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);

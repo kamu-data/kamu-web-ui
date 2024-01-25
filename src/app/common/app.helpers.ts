@@ -1,7 +1,10 @@
 import moment from "moment";
+import cronParser from "cron-parser";
+
 import { MaybeNull, MaybeNullOrUndefined } from "./app.types";
 import { DataSchema } from "../api/kamu.graphql.interface";
 import { DatasetSchema } from "../interface/dataset.interface";
+import AppValues from "./app.values";
 
 export function requireValue<T>(input: MaybeNull<T>) {
     if (input === null) throw Error("value is required!");
@@ -55,4 +58,9 @@ export function momentConvertDatetoLocalWithFormat(dateParams: {
 
 export function parseCurrentSchema(data: MaybeNullOrUndefined<DataSchema>): MaybeNull<DatasetSchema> {
     return data ? (JSON.parse(data.content) as DatasetSchema) : null;
+}
+
+export function cronExpressionNextTime(cronExpression: string): string {
+    const date = cronParser.parseExpression(cronExpression).next().toDate();
+    return moment(date).format(AppValues.CRON_EXPRESSION_DATE_FORMAT as string);
 }

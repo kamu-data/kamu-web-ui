@@ -1,0 +1,31 @@
+query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      #need for cache
+      ...DatasetBasics
+      #
+      flows {
+        configs {
+          __typename
+          byType(datasetFlowType: $datasetFlowType) {
+            paused
+            schedule {
+              ... on TimeDelta {
+                ...TimeDeltaData
+              }
+              ... on Cron5ComponentExpression {
+                cron5ComponentExpression
+              }
+            }
+            batching {
+              throttlingPeriod {
+                ...TimeDeltaData
+              }
+              minimalDataBatch
+            }
+          }
+        }
+      }
+    }
+  }
+}

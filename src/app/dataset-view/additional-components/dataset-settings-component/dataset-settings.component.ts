@@ -1,11 +1,13 @@
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { DatasetSettingsService } from "./services/dataset-settings.service";
+import { MaybeNull } from "./../../../common/app.types";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
-import { promiseWithCatch } from "src/app/common/app.helpers";
 import { BaseComponent } from "src/app/common/base.component";
-import { ModalService } from "src/app/components/modal/modal.service";
-import { Observable, shareReplay } from "rxjs";
+import { DatasetSettingsSidePanelItem, SettingsTabsEnum, datasetSettingsSidePanelData } from "./dataset-settings.model";
+import { AppConfigService } from "src/app/app-config.service";
+import { ParamMap } from "@angular/router";
+import ProjectLinks from "src/app/project-links";
+import { NavigationService } from "src/app/services/navigation.service";
+import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 
 @Component({
     selector: "app-dataset-settings",
@@ -16,69 +18,34 @@ import { Observable, shareReplay } from "rxjs";
 export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
     @Input() public datasetPermissions: DatasetPermissionsFragment;
-    public renameError$: Observable<string>;
-    public renameDatasetForm: FormGroup;
+    public readonly settingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
+    public activeTab: SettingsTabsEnum;
+    public sidePanelData: DatasetSettingsSidePanelItem[] = datasetSettingsSidePanelData;
 
-    constructor(
-        private fb: FormBuilder,
-        private datasetSettingsService: DatasetSettingsService,
-        private modalService: ModalService,
-    ) {
+    constructor(private appConfigService: AppConfigService, private navigationService: NavigationService) {
         super();
-        this.renameError$ = this.datasetSettingsService.renameDatasetErrorOccurrences.pipe(shareReplay());
-        this.renameDatasetForm = this.fb.group({
-            datasetName: [
-                this.getDatasetInfoFromUrl().datasetName,
-                [Validators.required, Validators.pattern(/^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/)],
-            ],
+    }
+
+    public get isSchedulingAvailable(): boolean {
+        return this.appConfigService.featureFlags.enableScheduling;
+    }
+
+    ngOnInit(): void {
+        this.activeTab = this.getSectionFromUrl() ?? SettingsTabsEnum.GENERAL;
+    }
+
+    public getSectionFromUrl(): MaybeNull<SettingsTabsEnum> {
+        const paramMap: ParamMap = this.activatedRoute.snapshot.queryParamMap;
+        return paramMap.get(ProjectLinks.URL_QUERY_PARAM_SECTION) as SettingsTabsEnum;
+    }
+
+    public navigateToSection(section: SettingsTabsEnum): void {
+        this.navigationService.navigateToDatasetView({
+            accountName: this.getDatasetInfoFromUrl().accountName,
+            datasetName: this.getDatasetInfoFromUrl().datasetName,
+            tab: DatasetViewTypeEnum.Settings,
+            section: section === SettingsTabsEnum.GENERAL ? undefined : section,
         });
-    }
-
-    public ngOnInit(): void {
-        if (!this.datasetPermissions.permissions.canRename) {
-            this.renameDatasetForm.disable();
-        }
-    }
-
-    public get datasetNameControl(): AbstractControl {
-        return this.renameDatasetForm.controls.datasetName;
-    }
-
-    public get isDeleteDatasetDisabled(): boolean {
-        return !this.datasetPermissions.permissions.canDelete;
-    }
-
-    public renameDataset(): void {
-        const datasetId = this.datasetBasics.id;
-        const accountName = this.datasetBasics.owner.accountName;
-        this.trackSubscription(
-            this.datasetSettingsService
-                .renameDataset(accountName, datasetId, this.datasetNameControl.value as string)
-                .subscribe(),
-        );
-    }
-
-    public deleteDataset(): void {
-        const datasetId = this.datasetBasics.id;
-        const accountName = this.datasetBasics.owner.accountName;
-        promiseWithCatch(
-            this.modalService.error({
-                title: "Delete",
-                message: "Do you want to delete a dataset?",
-                yesButtonText: "Ok",
-                noButtonText: "Cancel",
-                handler: (ok) => {
-                    if (ok) {
-                        this.trackSubscription(
-                            this.datasetSettingsService.deleteDataset(accountName, datasetId).subscribe(),
-                        );
-                    }
-                },
-            }),
-        );
-    }
-
-    public changeName(): void {
-        this.datasetSettingsService.resetRenameError();
+        this.activeTab = section;
     }
 }

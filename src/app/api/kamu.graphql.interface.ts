@@ -1863,6 +1863,70 @@ export type EnginesQuery = {
     };
 };
 
+export type GetDatasetListFlowsQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type GetDatasetListFlowsQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            flows: {
+                __typename?: "DatasetFlows";
+                runs: {
+                    __typename?: "DatasetFlowRuns";
+                    listFlows: {
+                        __typename?: "FlowConnection";
+                        totalCount: number;
+                        nodes: Array<{
+                            __typename?: "Flow";
+                            flowId: string;
+                            status: FlowStatus;
+                            outcome?: FlowOutcome | null;
+                            description:
+                                | {
+                                      __typename?: "FlowDescriptionDatasetCompaction";
+                                      datasetId: string;
+                                      originalBlocksCount: number;
+                                      resultingBlocksCount?: number | null;
+                                  }
+                                | {
+                                      __typename?: "FlowDescriptionDatasetExecuteTransform";
+                                      datasetId: string;
+                                      transformedRecordsCount?: number | null;
+                                  }
+                                | {
+                                      __typename?: "FlowDescriptionDatasetPollingIngest";
+                                      datasetId: string;
+                                      ingestedRecordsCount?: number | null;
+                                  }
+                                | {
+                                      __typename?: "FlowDescriptionDatasetPushIngest";
+                                      datasetId: string;
+                                      sourceName?: string | null;
+                                      inputRecordsCount: number;
+                                  }
+                                | { __typename?: "FlowDescriptionSystemGC"; dummy: boolean };
+                            initiator?: { __typename?: "Account"; accountName: string } | null;
+                            timing: {
+                                __typename?: "FlowTimingRecords";
+                                activateAt?: string | null;
+                                runningSince?: string | null;
+                                finishedAt?: string | null;
+                            };
+                        }>;
+                        pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
+                    };
+                };
+            };
+        } | null;
+    };
+};
+
 export type AddDataEventFragment = {
     __typename?: "AddData";
     prevCheckpoint?: string | null;
@@ -3868,6 +3932,73 @@ export const EnginesDocument = gql`
 })
 export class EnginesGQL extends Apollo.Query<EnginesQuery, EnginesQueryVariables> {
     document = EnginesDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const GetDatasetListFlowsDocument = gql`
+    query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    runs {
+                        listFlows(page: $page, perPage: $perPage) {
+                            nodes {
+                                description {
+                                    ... on FlowDescriptionDatasetPollingIngest {
+                                        datasetId
+                                        ingestedRecordsCount
+                                    }
+                                    ... on FlowDescriptionDatasetPushIngest {
+                                        datasetId
+                                        sourceName
+                                        inputRecordsCount
+                                        inputRecordsCount
+                                    }
+                                    ... on FlowDescriptionDatasetExecuteTransform {
+                                        datasetId
+                                        transformedRecordsCount
+                                    }
+                                    ... on FlowDescriptionDatasetCompaction {
+                                        datasetId
+                                        originalBlocksCount
+                                        resultingBlocksCount
+                                    }
+                                    ... on FlowDescriptionSystemGC {
+                                        dummy
+                                    }
+                                }
+                                flowId
+                                status
+                                initiator {
+                                    accountName
+                                }
+                                outcome
+                                timing {
+                                    activateAt
+                                    runningSince
+                                    finishedAt
+                                }
+                            }
+                            totalCount
+                            pageInfo {
+                                ...DatasetPageInfo
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetPageInfoFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetDatasetListFlowsGQL extends Apollo.Query<GetDatasetListFlowsQuery, GetDatasetListFlowsQueryVariables> {
+    document = GetDatasetListFlowsDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

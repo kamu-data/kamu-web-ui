@@ -119,6 +119,10 @@
     {
       "iconName": "timer",
       "iconPath": "/assets/svg/timer.svg"
+    },
+    {
+      "iconName": "clock",
+      "iconPath": "/assets/svg/clock.svg"
     }
   ],
   "customIcons": []

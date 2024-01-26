@@ -205,9 +205,9 @@ export type CreateDatasetResultSuccess = CreateDatasetFromSnapshotResult &
         message: Scalars["String"];
     };
 
-export type CronExpression = {
-    __typename?: "CronExpression";
-    cronExpression: Scalars["String"];
+export type Cron5ComponentExpression = {
+    __typename?: "Cron5ComponentExpression";
+    cron5ComponentExpression: Scalars["String"];
 };
 
 export type DataBatch = {
@@ -733,7 +733,7 @@ export type FlowConfigurationBatching = {
     throttlingPeriod?: Maybe<TimeDelta>;
 };
 
-export type FlowConfigurationSchedule = CronExpression | TimeDelta;
+export type FlowConfigurationSchedule = Cron5ComponentExpression | TimeDelta;
 
 export type FlowConnection = {
     __typename?: "FlowConnection";
@@ -891,7 +891,7 @@ export type FlowTimingRecords = {
     /** Planned activation time (at least, Queued state) */
     activateAt?: Maybe<Scalars["DateTime"]>;
     /**
-     * Recorded time of finish (succesfull or failed after retry) or abortion
+     * Recorded time of finish (successful or failed after retry) or abortion
      * (Finished state seen at least once)
      */
     finishedAt?: Maybe<Scalars["DateTime"]>;
@@ -1247,8 +1247,8 @@ export type RequestHeader = {
 };
 
 export type ScheduleInput =
-    | { cronExpression: Scalars["String"]; timeDelta?: never }
-    | { cronExpression?: never; timeDelta: TimeDeltaInput };
+    | { cron5ComponentExpression: Scalars["String"]; timeDelta?: never }
+    | { cron5ComponentExpression?: never; timeDelta: TimeDeltaInput };
 
 export type Search = {
     __typename?: "Search";
@@ -2314,6 +2314,7 @@ export type DatasetPermissionsFragment = {
         canDelete: boolean;
         canRename: boolean;
         canCommit: boolean;
+        canSchedule: boolean;
     };
 };
 
@@ -2454,6 +2455,128 @@ export type RenameDatasetMutation = {
         } | null;
     };
 };
+
+export type DatasetFlowBatchingMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
+    paused: Scalars["Boolean"];
+    throttlingPeriod?: InputMaybe<TimeDeltaInput>;
+    minimalDataBatch?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type DatasetFlowBatchingMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                configs: {
+                    __typename?: "DatasetFlowConfigsMut";
+                    setConfigBatching:
+                        | {
+                              __typename: "FlowIncompatibleDatasetKind";
+                              message: string;
+                              expectedDatasetKind: DatasetKind;
+                              actualDatasetKind: DatasetKind;
+                          }
+                        | {
+                              __typename: "SetFlowConfigSuccess";
+                              message: string;
+                              config: {
+                                  __typename?: "FlowConfiguration";
+                                  batching?: {
+                                      __typename?: "FlowConfigurationBatching";
+                                      minimalDataBatch?: number | null;
+                                      throttlingPeriod?: ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment) | null;
+                                  } | null;
+                              };
+                          };
+                };
+            };
+        } | null;
+    };
+};
+
+export type GetDatasetFlowConfigsQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
+}>;
+
+export type GetDatasetFlowConfigsQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?:
+            | ({
+                  __typename?: "Dataset";
+                  flows: {
+                      __typename?: "DatasetFlows";
+                      configs: {
+                          __typename: "DatasetFlowConfigs";
+                          byType?: {
+                              __typename?: "FlowConfiguration";
+                              paused: boolean;
+                              schedule?:
+                                  | { __typename?: "Cron5ComponentExpression"; cron5ComponentExpression: string }
+                                  | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
+                                  | null;
+                              batching?: {
+                                  __typename?: "FlowConfigurationBatching";
+                                  minimalDataBatch?: number | null;
+                                  throttlingPeriod?: ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment) | null;
+                              } | null;
+                          } | null;
+                      };
+                  };
+              } & DatasetBasicsFragment)
+            | null;
+    };
+};
+
+export type DatasetFlowScheduleMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
+    paused: Scalars["Boolean"];
+    schedule: ScheduleInput;
+}>;
+
+export type DatasetFlowScheduleMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                configs: {
+                    __typename?: "DatasetFlowConfigsMut";
+                    setConfigSchedule:
+                        | {
+                              __typename: "FlowIncompatibleDatasetKind";
+                              message: string;
+                              expectedDatasetKind: DatasetKind;
+                              actualDatasetKind: DatasetKind;
+                          }
+                        | {
+                              __typename: "SetFlowConfigSuccess";
+                              message: string;
+                              config: {
+                                  __typename?: "FlowConfiguration";
+                                  schedule?:
+                                      | { __typename?: "Cron5ComponentExpression"; cron5ComponentExpression: string }
+                                      | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
+                                      | null;
+                              };
+                          };
+                };
+            };
+        } | null;
+    };
+};
+
+export type TimeDeltaDataFragment = { __typename?: "TimeDelta"; every: number; unit: TimeUnit };
 
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
     query: Scalars["String"];
@@ -3207,6 +3330,7 @@ export const DatasetPermissionsFragmentDoc = gql`
             canDelete
             canRename
             canCommit
+            canSchedule
         }
     }
 `;
@@ -3230,6 +3354,12 @@ export const DatasetSearchOverviewFragmentDoc = gql`
     ${DatasetBasicsFragmentDoc}
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
+`;
+export const TimeDeltaDataFragmentDoc = gql`
+    fragment TimeDeltaData on TimeDelta {
+        every
+        unit
+    }
 `;
 export const AccountByNameDocument = gql`
     query accountByName($accountName: AccountName!) {
@@ -3851,6 +3981,163 @@ export const RenameDatasetDocument = gql`
 })
 export class RenameDatasetGQL extends Apollo.Mutation<RenameDatasetMutation, RenameDatasetMutationVariables> {
     document = RenameDatasetDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetFlowBatchingDocument = gql`
+    mutation datasetFlowBatching(
+        $datasetId: DatasetID!
+        $datasetFlowType: DatasetFlowType!
+        $paused: Boolean!
+        $throttlingPeriod: TimeDeltaInput
+        $minimalDataBatch: Int
+    ) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    configs {
+                        setConfigBatching(
+                            datasetFlowType: $datasetFlowType
+                            paused: $paused
+                            throttlingPeriod: $throttlingPeriod
+                            minimalDataBatch: $minimalDataBatch
+                        ) {
+                            __typename
+                            ... on SetFlowConfigSuccess {
+                                message
+                                config {
+                                    batching {
+                                        throttlingPeriod {
+                                            ...TimeDeltaData
+                                        }
+                                        minimalDataBatch
+                                    }
+                                }
+                            }
+                            ... on FlowIncompatibleDatasetKind {
+                                message
+                                expectedDatasetKind
+                                actualDatasetKind
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${TimeDeltaDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetFlowBatchingGQL extends Apollo.Mutation<
+    DatasetFlowBatchingMutation,
+    DatasetFlowBatchingMutationVariables
+> {
+    document = DatasetFlowBatchingDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const GetDatasetFlowConfigsDocument = gql`
+    query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                ...DatasetBasics
+                flows {
+                    configs {
+                        __typename
+                        byType(datasetFlowType: $datasetFlowType) {
+                            paused
+                            schedule {
+                                ... on TimeDelta {
+                                    ...TimeDeltaData
+                                }
+                                ... on Cron5ComponentExpression {
+                                    cron5ComponentExpression
+                                }
+                            }
+                            batching {
+                                throttlingPeriod {
+                                    ...TimeDeltaData
+                                }
+                                minimalDataBatch
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${TimeDeltaDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetDatasetFlowConfigsGQL extends Apollo.Query<
+    GetDatasetFlowConfigsQuery,
+    GetDatasetFlowConfigsQueryVariables
+> {
+    document = GetDatasetFlowConfigsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetFlowScheduleDocument = gql`
+    mutation DatasetFlowSchedule(
+        $datasetId: DatasetID!
+        $datasetFlowType: DatasetFlowType!
+        $paused: Boolean!
+        $schedule: ScheduleInput!
+    ) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    configs {
+                        setConfigSchedule(datasetFlowType: $datasetFlowType, paused: $paused, schedule: $schedule) {
+                            __typename
+                            ... on SetFlowConfigSuccess {
+                                message
+                                config {
+                                    schedule {
+                                        ... on TimeDelta {
+                                            ...TimeDeltaData
+                                        }
+                                        ... on Cron5ComponentExpression {
+                                            cron5ComponentExpression
+                                        }
+                                    }
+                                }
+                            }
+                            ... on FlowIncompatibleDatasetKind {
+                                message
+                                expectedDatasetKind
+                                actualDatasetKind
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${TimeDeltaDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetFlowScheduleGQL extends Apollo.Mutation<
+    DatasetFlowScheduleMutation,
+    DatasetFlowScheduleMutationVariables
+> {
+    document = DatasetFlowScheduleDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

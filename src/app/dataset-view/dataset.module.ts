@@ -72,7 +72,10 @@ import { MatTableModule } from "@angular/material/table";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { AddPushSourceComponent } from "./additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
 import { SourceNameStepComponent } from "./additional-components/metadata-component/components/source-events/steps/source-name-step/source-name-step.component";
-
+import { DatasetSettingsGeneralTabComponent } from "./additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
+import { DatasetSettingsSchedulingTabComponent } from "./additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.component";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatRadioModule } from "@angular/material/radio";
 @NgModule({
     imports: [
         CommonModule,
@@ -120,6 +123,8 @@ import { SourceNameStepComponent } from "./additional-components/metadata-compon
         MatTableModule,
         MatIconModule,
         MatProgressSpinnerModule,
+        MatSlideToggleModule,
+        MatRadioModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -173,6 +178,8 @@ import { SourceNameStepComponent } from "./additional-components/metadata-compon
         FlowsTableComponent,
         AddPushSourceComponent,
         SourceNameStepComponent,
+        DatasetSettingsGeneralTabComponent,
+        DatasetSettingsSchedulingTabComponent,
     ],
 })
 export class DatasetModule {

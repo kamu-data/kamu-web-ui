@@ -1,0 +1,4 @@
+fragment TimeDeltaData on TimeDelta {
+  every
+  unit
+}

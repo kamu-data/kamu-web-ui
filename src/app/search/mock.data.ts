@@ -193,6 +193,17 @@ export const mockFullPowerDatasetPermissionsFragment: DatasetPermissionsFragment
         canDelete: true,
         canRename: true,
         canCommit: true,
+        canSchedule: true,
+    },
+};
+
+export const mockNotScheduleDatasetPermissionsFragment: DatasetPermissionsFragment = {
+    permissions: {
+        canView: true,
+        canDelete: true,
+        canRename: true,
+        canCommit: true,
+        canSchedule: false,
     },
 };
 
@@ -202,6 +213,7 @@ export const mockReadonlyDatasetPermissionsFragment: DatasetPermissionsFragment 
         canDelete: false,
         canRename: false,
         canCommit: false,
+        canSchedule: true,
     },
 };
 
@@ -397,6 +409,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                 canDelete: true,
                 canRename: true,
                 canCommit: true,
+                canSchedule: true,
             },
             createdAt: "2023-09-03T01:08:55.104604199+00:00",
             lastUpdatedAt: "2023-09-03T01:09:31.587025138+00:00",

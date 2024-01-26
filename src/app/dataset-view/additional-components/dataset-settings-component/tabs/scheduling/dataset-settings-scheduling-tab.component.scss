@@ -1,0 +1,43 @@
+:host {
+    ::ng-deep {
+        .mat-slide-toggle {
+            .mat-slide-toggle-ripple {
+                position: relative;
+            }
+        }
+
+        .mat-radio-button {
+            .mat-radio-ripple {
+                position: relative;
+            }
+        }
+
+        .mat-radio-label {
+            white-space: normal;
+        }
+    }
+}
+
+.custom-container {
+    padding-bottom: 100px;
+
+    h4 {
+        font-weight: 500;
+    }
+
+    .form-control-width {
+        width: 132px;
+    }
+
+    .form-control-expression {
+        width: 280px;
+    }
+
+    .form-control-label {
+        min-width: 140px;
+    }
+
+    .cron-expression-hint {
+        padding-left: 150px;
+    }
+}

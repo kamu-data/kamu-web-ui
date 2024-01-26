@@ -1,8 +1,11 @@
-import { ValidatorFn, Validators } from "@angular/forms";
-import { MetadataBlockFragment } from "../api/kamu.graphql.interface";
+import { MaybeNull } from "src/app/common/app.types";
+import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
+import { MetadataBlockFragment, TimeUnit } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { MaybeUndefined } from "./app.types";
+import { RxwebValidators } from "@rxweb/reactive-form-validators";
+import { isValidCronExpression } from "./cron-expression-validator.helper";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -221,4 +224,33 @@ export const MY_MOMENT_FORMATS = {
     monthYearLabel: "MMM YYYY",
     dateA11yLabel: "LL",
     monthYearA11yLabel: "MMMM YYYY",
+};
+
+export function cronExpressionValidator(): ValidatorFn {
+    return (control: AbstractControl): MaybeNull<ValidationErrors> => {
+        return !isValidCronExpression(control.value as string) ? { invalidCronExpession: true } : null;
+    };
+}
+
+export const everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = {
+    [TimeUnit.Minutes]: RxwebValidators.range({
+        minimumNumber: 0,
+        maximumNumber: 59,
+        message: "Value should be between 0 to 59",
+    }),
+    [TimeUnit.Hours]: RxwebValidators.range({
+        minimumNumber: 0,
+        maximumNumber: 23,
+        message: "Value should be between 0 to 23",
+    }),
+    [TimeUnit.Days]: RxwebValidators.range({
+        minimumNumber: 0,
+        maximumNumber: 31,
+        message: "Value should be between 0 to 31",
+    }),
+    [TimeUnit.Weeks]: RxwebValidators.range({
+        minimumNumber: 0,
+        maximumNumber: 51,
+        message: "Value should be between 0 to 51",
+    }),
 };

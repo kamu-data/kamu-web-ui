@@ -33,6 +33,15 @@ export function apolloCache(): InMemoryCache {
                     },
                 },
             },
+            Datasets: {
+                merge: true,
+            },
+            DatasetMetadata: {
+                merge: true,
+            },
+            Search: {
+                merge: true,
+            },
         },
     });
 }

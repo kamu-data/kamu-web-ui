@@ -101,11 +101,6 @@ $app-color-tooltip-border: #ced4da;
     border-width: 1px;
     border-radius: 6px;
 
-    &:focus,
-    &:hover {
-        background-color: $app-alice-blue;
-    }
-
     &--condensed {
         line-height: 1.25;
 

@@ -4,51 +4,7 @@ query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int) {
       flows {
         runs {
           listFlows(page: $page, perPage: $perPage) {
-            nodes {
-              description {
-                ... on FlowDescriptionDatasetPollingIngest {
-                  datasetId
-                  ingestedRecordsCount
-                }
-
-                ... on FlowDescriptionDatasetPushIngest {
-                  datasetId
-                  sourceName
-                  inputRecordsCount
-                  inputRecordsCount
-                }
-
-                ... on FlowDescriptionDatasetExecuteTransform {
-                  datasetId
-                  transformedRecordsCount
-                }
-
-                ... on FlowDescriptionDatasetCompaction {
-                  datasetId
-                  originalBlocksCount
-                  resultingBlocksCount
-                }
-
-                ... on FlowDescriptionSystemGC {
-                  dummy
-                }
-              }
-              flowId
-              status
-              initiator {
-                accountName
-              }
-              outcome
-              timing {
-                activateAt
-                runningSince
-                finishedAt
-              }
-            }
-            totalCount
-            pageInfo {
-              ...DatasetPageInfo
-            }
+            ...FlowConnectionData
           }
         }
       }

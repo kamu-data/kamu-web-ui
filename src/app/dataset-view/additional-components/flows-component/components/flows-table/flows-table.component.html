@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="tasks!">
+<table mat-table [dataSource]="nodes!">
     <!-- Description Column -->
     <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef>
@@ -16,21 +16,24 @@
         <td mat-cell *matCellDef="let element" style="width: 50%">
             <div class="d-flex py-1">
                 <mat-icon
-                    *ngIf="element.status === TaskStatus.Finished && element.outcome === TaskOutcome.Success"
+                    *ngIf="element.status === FlowStatus.Finished && element.outcome === FlowOutcome.Success"
                     class="icon-status margin-top-5 completed-status"
                     >check_circle</mat-icon
                 >
-                <mat-icon *ngIf="element.status === TaskStatus.Running" class="icon-status margin-top-5 running-status"
+                <mat-icon
+                    *ngIf="element.status === FlowStatus.Queued && !element.outcome"
+                    class="icon-status margin-top-5 running-status"
                     >radio_button_checked</mat-icon
                 >
                 <mat-icon
-                    *ngIf="element.status === TaskStatus.Finished && element.outcome === TaskOutcome.Failed"
+                    *ngIf="element.status === FlowStatus.Finished && element.outcome === FlowOutcome.Failed"
                     class="icon-status margin-top-5 failed-status"
                     >dangerous</mat-icon
                 >
                 <div class="ms-1 py-2">
-                    <span class="fw-500"> {{ element.description }} </span>
-                    <span class="d-block fs-10"> {{ element.information }}</span>
+                    <span class="fw-500"> {{ element.description.__typename }} </span>
+                    <span class="d-block fs-10"> {{ element.status }}</span>
+                    <span class="d-block fs-10"> {{ element.outcome }}</span>
                 </div>
             </div>
         </td>
@@ -46,14 +49,17 @@
                 <div class="d-flex align-items-center">
                     <mat-icon class="icon-status text-muted">calendar_today</mat-icon>
                     <span class="ms-1 pt-1 text-small">
-                        <app-display-time [data]="element.finishedAt" class="text-small no-wrap"></app-display-time
+                        <app-display-time
+                            [data]="element.timing.activateAt"
+                            class="text-small no-wrap"
+                        ></app-display-time
                     ></span>
                 </div>
 
-                <div class="d-flex align-items-center" *ngIf="element.status !== TaskStatus.Running">
+                <div class="d-flex align-items-center" *ngIf="element.status === FlowStatus.Finished">
                     <svg-icon name="timer" class="ps-1 pe-2 text-muted"></svg-icon>
                     <span class="text-small">
-                        {{ durationTask(element.createdAt, element.finishedAt) }}
+                        {{ durationTask(element.timing.runningSince, element.timing.finishedAt) }}
                     </span>
                 </div>
             </div>
@@ -76,8 +82,13 @@
         </th>
         <td mat-cell *matCellDef="let element" style="width: 20%">
             <div class="d-flex align-items-center ps-3">
-                <img class="img-creator" [src]="'https://avatars.githubusercontent.com/u/11951648?v=4'" />
-                <span class="ms-2 text-small"> {{ element.creator.accountName }}</span>
+                <ng-container *ngIf="element.initiator; else noInitiator">
+                    <img class="img-creator" [src]="element.initiator.avatarUrl || DEFAULT_AVATAR_URL" />
+                    <span class="ms-2 text-small"> {{ element.initiator.displayName }}</span>
+                </ng-container>
+                <ng-template #noInitiator>
+                    <span>system</span>
+                </ng-template>
             </div>
         </td>
     </ng-container>
@@ -100,7 +111,3 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
-
-<div class="mt-100">
-    <app-pagination [currentPage]="currentPage" [pageInfo]="pageInfo" data-test-id="pagination-tasks"></app-pagination>
-</div>

@@ -9,6 +9,8 @@ import {
     DatasetFlowType,
     GetDatasetFlowConfigsGQL,
     GetDatasetFlowConfigsQuery,
+    GetDatasetListFlowsGQL,
+    GetDatasetListFlowsQuery,
     ScheduleInput,
     TimeDeltaInput,
 } from "./kamu.graphql.interface";
@@ -22,6 +24,7 @@ export class DatasetFlowApi {
         private getDatasetFlowConfigsGQL: GetDatasetFlowConfigsGQL,
         private datasetFlowScheduleGQL: DatasetFlowScheduleGQL,
         private datasetFlowBatchingGQL: DatasetFlowBatchingGQL,
+        private getDatasetListFlowsGQL: GetDatasetListFlowsGQL,
     ) {}
 
     public getDatasetFlowConfigs(params: {
@@ -93,6 +96,26 @@ export class DatasetFlowApi {
                     } else {
                         throw new DatasetOperationError(result.errors ?? []);
                     }
+                }),
+            );
+    }
+
+    public getDatasetListFlows(params: {
+        datasetId: string;
+        page: number;
+        perPage: number;
+    }): Observable<GetDatasetListFlowsQuery> {
+        return this.getDatasetListFlowsGQL
+            .watch(
+                { datasetId: params.datasetId, page: params.page, perPage: params.perPage },
+                {
+                    fetchPolicy: "no-cache",
+                    errorPolicy: "all",
+                },
+            )
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<GetDatasetListFlowsQuery>) => {
+                    return result.data;
                 }),
             );
     }

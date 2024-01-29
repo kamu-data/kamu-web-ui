@@ -1,59 +1,75 @@
 <div class="search-result-container__content mb-20">
-    <div class="d-flex justify-content-between">
-        <div class="mt-4">
-            <h2 class="title">{{ tasks.length }} Dataset flow runs</h2>
-            <div>
-                <span class="text-muted"> Compute work associated with this dataset </span>
+    <ng-container *ngIf="flowConnection$ | async as flowConnection">
+        <ng-container *ngIf="flowConnection.nodes.length; else noRuns">
+            <div class="d-flex justify-content-between">
+                <div class="mt-4">
+                    <h2 class="title">{{ flowConnection.totalCount }} Dataset flow runs</h2>
+                    <div>
+                        <span class="text-muted"> Compute work associated with this dataset </span>
+                    </div>
+                </div>
+                <div class="d-flex flex-column">
+                    <div class="d-flex justify-content-end">
+                        <button
+                            class="btn-sm btn custom-edit"
+                            aria-label="Show tasks options"
+                            data-test-id="show-tasks-options"
+                            title="Show options"
+                            #menuTrigger="matMenuTrigger"
+                            [matMenuTriggerFor]="menu"
+                        >
+                            <svg-icon name="show-options"></svg-icon>
+                        </button>
+                        <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="true">
+                            <button mat-menu-item>Update now</button>
+                            <mat-divider></mat-divider>
+                            <button mat-menu-item>Upate settings</button>
+                            <mat-divider></mat-divider>
+                            <button mat-menu-item>Pause all updates</button>
+                        </mat-menu>
+                    </div>
+                    <div class="mt-4 position-relative">
+                        <input
+                            class="form-control placeholder-padding-left d-inline custom-border w-300"
+                            type="text"
+                            name="search"
+                            [(ngModel)]="searchFilter"
+                            autocomplete="off"
+                            placeholder="Search"
+                            data-test-id="searchHash"
+                            [disabled]="true"
+                        />
+                        <svg-icon name="search"></svg-icon>
+                        <mat-icon
+                            *ngIf="searchFilter"
+                            (click)="refreshFilter()"
+                            class="fs-5 d-inline position-absolute close-position"
+                            data-test-id="clearSearch"
+                            >close</mat-icon
+                        >
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="d-flex flex-column">
-            <div class="d-flex justify-content-end">
-                <button
-                    class="btn-sm btn custom-edit"
-                    aria-label="Show tasks options"
-                    data-test-id="show-tasks-options"
-                    title="Show options"
-                    #menuTrigger="matMenuTrigger"
-                    [matMenuTriggerFor]="menu"
-                >
-                    <svg-icon name="show-options"></svg-icon>
-                </button>
-                <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="true">
-                    <button mat-menu-item>Update now</button>
-                    <mat-divider></mat-divider>
-                    <button mat-menu-item>Upate settings</button>
-                    <mat-divider></mat-divider>
-                    <button mat-menu-item>Pause all updates</button>
-                </mat-menu>
-            </div>
-            <div class="mt-4 position-relative">
-                <input
-                    class="form-control placeholder-padding-left d-inline custom-border w-300"
-                    type="text"
-                    name="search"
-                    [(ngModel)]="searchFilter"
-                    autocomplete="off"
-                    placeholder="Search"
-                    data-test-id="searchHash"
-                    [disabled]="true"
-                />
-                <svg-icon name="search"></svg-icon>
-                <mat-icon
-                    *ngIf="searchFilter"
-                    (click)="refreshFilter()"
-                    class="fs-5 d-inline position-absolute close-position"
-                    data-test-id="clearSearch"
-                    >close</mat-icon
-                >
-            </div>
-        </div>
-    </div>
 
-    <div class="search-result-container__content my-4" *ngIf="tasks">
-        <app-tile-base-widget [tasks]="tasks"></app-tile-base-widget>
-    </div>
+            <div class="search-result-container__content my-4">
+                <app-tile-base-widget
+                    [nodes]="flowConnection.nodes"
+                    [lastRunsCount]="FLOW_RUNS_PER_PAGE"
+                ></app-tile-base-widget>
+            </div>
 
-    <div *ngIf="tasks">
-        <app-flows-table [tasks]="tasks"></app-flows-table>
-    </div>
+            <div class="mb-4">
+                <app-flows-table [nodes]="flowConnection.nodes"></app-flows-table>
+            </div>
+
+            <app-pagination
+                [currentPage]="flowConnection.pageInfo.currentPage + 1"
+                [pageInfo]="flowConnection.pageInfo"
+                (pageChangeEvent)="onPageChange($event)"
+            ></app-pagination>
+        </ng-container>
+        <ng-template #noRuns>
+            <p class="text-center">No flow runs</p>
+        </ng-template>
+    </ng-container>
 </div>

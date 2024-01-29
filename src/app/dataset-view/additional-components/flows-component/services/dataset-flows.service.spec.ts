@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TasksService } from './tasks.service';
+import { DatasetFlowsService } from './dataset-flows.service';
 
-describe('TasksService', () => {
-  let service: TasksService;
+describe('DatasetFlowsService', () => {
+  let service: DatasetFlowsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(TasksService);
+    service = TestBed.inject(DatasetFlowsService);
   });
 
   it('should be created', () => {

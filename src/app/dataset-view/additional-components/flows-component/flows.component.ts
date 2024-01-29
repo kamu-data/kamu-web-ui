@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { TasksService } from "./services/tasks.service";
-import { TaskOutcome, TaskStatus } from "src/app/api/kamu.graphql.interface";
-import { TaskElement } from "./components/flows-table/tasks-table.types";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { DatasetBasicsFragment, FlowConnectionDataFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetFlowsService } from "./services/dataset-flows.service";
+import { Observable } from "rxjs";
+import { MaybeUndefined } from "src/app/common/app.types";
 
 @Component({
     selector: "app-flows",
@@ -9,33 +10,28 @@ import { TaskElement } from "./components/flows-table/tasks-table.types";
     styleUrls: ["./flows.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlowsComponent implements OnInit, OnDestroy {
+export class FlowsComponent implements OnInit {
+    @Input() public datasetBasics: DatasetBasicsFragment;
+    @Output() onPageChangeEmit = new EventEmitter<number>();
     public searchFilter = "";
-    public tasks: TaskElement[];
-    private t: any;
-    private x: any;
-    private y: any;
-    private z: any;
-    public readonly TaskStatus = TaskStatus;
-    public readonly TaskOutcome = TaskOutcome;
+    public flowConnection$: Observable<MaybeUndefined<FlowConnectionDataFragment>>;
+    public readonly FLOW_RUNS_PER_PAGE = 150;
+    public currentPage = 0;
 
-    constructor(private tasksService: TasksService, private cdr: ChangeDetectorRef) {}
+    constructor(private flowsService: DatasetFlowsService) {}
 
     ngOnInit(): void {
-        this.tasksService
-            .datasetAllTasks()
-            // .pipe(shareReplay())
-            .subscribe((data) => {
-                this.tasks = data;
-            });
-
+        this.flowConnection$ = this.flowsService.datasetFlowsList({
+            datasetId: this.datasetBasics.id,
+            page: this.currentPage,
+            perPage: this.FLOW_RUNS_PER_PAGE,
+        });
         // this.t = setInterval(() => {
         //     if (this.tasks.length) {
         //         this.tasks[0].status = TaskStatus.Finished;
         //         this.tasks[0].outcome = TaskOutcome.Success;
         //         this.tasks[0].description = "Scheduled polling source updated";
         //         this.tasks[0].information = "Ingested 123 new records";
-
         //         this.tasks[1].status = TaskStatus.Running;
         //         this.tasks[1].outcome = undefined;
         //         this.tasks[1].description = "Manual polling source updating...";
@@ -50,7 +46,6 @@ export class FlowsComponent implements OnInit, OnDestroy {
         //         this.tasks[0].outcome = undefined;
         //         this.tasks[0].description = "Manual polling source updating...";
         //         this.tasks[0].information = "Polling data from http://example.com";
-
         //         this.tasks[1].status = TaskStatus.Finished;
         //         this.tasks[1].outcome = TaskOutcome.Success;
         //         this.tasks[1].description = "Scheduled polling source updated";
@@ -67,26 +62,11 @@ export class FlowsComponent implements OnInit, OnDestroy {
         // }, 8000);
     }
 
-    public refreshFilter(): void {
-        this.searchFilter = "";
+    public onPageChange(currentPage: number): void {
+        this.onPageChangeEmit.emit(currentPage);
     }
 
-    ngOnDestroy(): void {
-        if (this.t) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            clearInterval(this.t);
-        }
-        if (this.x) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            clearInterval(this.x);
-        }
-        if (this.y) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            clearInterval(this.y);
-        }
-        if (this.z) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            clearInterval(this.z);
-        }
+    public refreshFilter(): void {
+        this.searchFilter = "";
     }
 }

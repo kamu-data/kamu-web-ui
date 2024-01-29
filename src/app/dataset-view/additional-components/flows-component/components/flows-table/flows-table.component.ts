@@ -1,9 +1,7 @@
-import { MaybeNull } from "../../../../../common/app.types";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { PageBasedInfo, Scalars, TaskOutcome, TaskStatus } from "src/app/api/kamu.graphql.interface";
-import { mockPageBasedInfo } from "src/app/search/mock.data";
-import { TaskElement } from "./tasks-table.types";
+import { FlowDataFragment, FlowOutcome, FlowStatus, Scalars } from "src/app/api/kamu.graphql.interface";
 import moment from "moment";
+import AppValues from "src/app/common/app.values";
 
 @Component({
     selector: "app-flows-table",
@@ -12,19 +10,16 @@ import moment from "moment";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowsTableComponent {
-    @Input() tasks: MaybeNull<TaskElement[]>;
+    @Input() public nodes: FlowDataFragment[];
     public displayedColumns: string[] = ["description", "information", "creator", "options"];
-
-    public pageInfo: PageBasedInfo = mockPageBasedInfo;
-    public currentPage = 1;
-    public readonly TaskStatus = TaskStatus;
-    public readonly TaskOutcome = TaskOutcome;
+    public readonly FlowStatus = FlowStatus;
+    public readonly FlowOutcome = FlowOutcome;
+    public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
     public durationTask(d1: Scalars["DateTime"], d2: Scalars["DateTime"]) {
         const startDate = moment(d1);
         const endDate = moment(d2);
         const result = "for " + startDate.from(endDate).substring(0, startDate.from(endDate).lastIndexOf(" "));
-        //  const result = startDate.from(endDate);
         return result;
     }
 }

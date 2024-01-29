@@ -1,0 +1,14 @@
+fragment FlowConnectionData on FlowConnection {
+  nodes {
+    ...FlowData
+  }
+  totalCount
+  pageInfo {
+    ...DatasetPageInfo
+  }
+  edges {
+    node {
+      ...FlowData
+    }
+  }
+}

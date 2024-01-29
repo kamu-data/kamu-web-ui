@@ -19,15 +19,14 @@
 
 <div class="content">
     <div
-        *ngFor="let tile of arrTiles | slice: 0:lastRunsCount"
+        *ngFor="let node of nodes | slice: 0:lastRunsCount"
         class="tile-item"
-        [matTooltip]="tile ? 'Info about the action ' + tile?.taskId : 'No run'"
+        [matTooltip]="node.flowId"
         [matTooltipPosition]="'above'"
         [ngClass]="{
-            completed: tile?.status === TaskStatus.Finished && tile?.outcome === TaskOutcome.Success,
-            running: tile?.status === TaskStatus.Running,
-            failed: tile?.status === TaskStatus.Finished && tile?.outcome === TaskOutcome.Failed,
-            simple: !tile
+            completed: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Success,
+            running: node.status === (FlowStatus.Queued || FlowStatus.Running || FlowStatus.Scheduled),
+            failed: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Failed
         }"
     ></div>
 </div>

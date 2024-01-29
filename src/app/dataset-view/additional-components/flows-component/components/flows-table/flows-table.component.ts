@@ -1,3 +1,4 @@
+import { DataHelpers } from "src/app/common/data.helpers";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FlowDataFragment, FlowOutcome, FlowStatus, Scalars } from "src/app/api/kamu.graphql.interface";
 import moment from "moment";
@@ -21,5 +22,9 @@ export class FlowsTableComponent {
         const endDate = moment(d2);
         const result = "for " + startDate.from(endDate).substring(0, startDate.from(endDate).lastIndexOf(" "));
         return result;
+    }
+
+    public descriptionForDatasetFlow(flow: FlowDataFragment): string {
+        return DataHelpers.descriptionForDatasetFlow(flow);
     }
 }

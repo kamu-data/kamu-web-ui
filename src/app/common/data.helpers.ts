@@ -1,6 +1,6 @@
 import { MaybeNull } from "src/app/common/app.types";
 import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
-import { MetadataBlockFragment, TimeUnit } from "../api/kamu.graphql.interface";
+import { FlowDataFragment, MetadataBlockFragment, TimeUnit } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { MaybeUndefined } from "./app.types";
@@ -172,6 +172,40 @@ export class DataHelpers {
             //     return DataHelpers.BLOCK_DESCRIBE_DISABLE_ADD_PUSH_SOURCE;
             default:
                 return "Unsupported event type";
+        }
+    }
+
+    public static descriptionForDatasetFlow(flow: FlowDataFragment): string {
+        const decriptionFlow = flow.description;
+        switch (decriptionFlow.__typename) {
+            case "FlowDescriptionDatasetPollingIngest": {
+                return `Dataset polling ingest`;
+            }
+            case "FlowDescriptionDatasetPushIngest": {
+                if (decriptionFlow.sourceName) {
+                    return `Dataset push ingest updated from ${decriptionFlow.sourceName}`;
+                } else {
+                    return `Dataset push ingest updated`;
+                }
+            }
+            case "FlowDescriptionDatasetExecuteTransform": {
+                {
+                    if (decriptionFlow.transformedRecordsCount) {
+                        return `Dataset execute transform ${decriptionFlow.transformedRecordsCount} records updated`;
+                    } else {
+                        return `Dataset execute transform`;
+                    }
+                }
+            }
+            case "FlowDescriptionDatasetCompaction": {
+                return `Dataset compaction updated`;
+            }
+            case "FlowDescriptionSystemGC": {
+                return `SystemGC completed work`;
+            }
+
+            default:
+                return "Unsupported flow description";
         }
     }
 

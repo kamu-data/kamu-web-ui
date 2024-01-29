@@ -31,9 +31,10 @@
                     >dangerous</mat-icon
                 >
                 <div class="ms-1 py-2">
-                    <span class="fw-500"> {{ element.description.__typename }} </span>
-                    <span class="d-block fs-10"> {{ element.status }}</span>
-                    <span class="d-block fs-10"> {{ element.outcome }}</span>
+                    <span class="fw-500">
+                        {{ descriptionForDatasetFlow(element) }}
+                        {{ element.status === FlowStatus.Queued ? "queued" : "updated" }}
+                    </span>
                 </div>
             </div>
         </td>

@@ -9,7 +9,7 @@ import { FlowDataFragment, FlowStatus, FlowOutcome } from "src/app/api/kamu.grap
 })
 export class TileBaseWidgetComponent implements OnInit {
     @Input() public nodes: FlowDataFragment[];
-    @Input() public lastRunsCount: number;
+    public lastRunsCount = 150;
     public readonly FlowStatus = FlowStatus;
     public readonly FlowOutcome = FlowOutcome;
 

@@ -1,22 +1,3 @@
-<!-- 
-    <div class="container-grid">
-        <div
-            *ngFor="let tile of arrTiles | slice: 0:lastRunsCount"
-            class="tile-item"
-            [matTooltip]="tile ? 'Info about the action ' + tile?.taskId : 'No run'"
-            [matTooltipPosition]="'above'"
-            [ngClass]="{
-                completed: tile?.status === TaskStatus.Finished && tile?.outcome === TaskOutcome.Success,
-                running: tile?.status === TaskStatus.Running,
-                failed: tile?.status === TaskStatus.Finished && tile?.outcome === TaskOutcome.Failed,
-                simple: !tile
-            }"
-        ></div>
-    </div>
-    <div class="widget-hint">
-        <span class="fs-12 text-muted"> Show last {{ lastRunsCount }} runs</span>
-    </div> -->
-
 <div class="content">
     <div
         *ngFor="let node of nodes | slice: 0:lastRunsCount"

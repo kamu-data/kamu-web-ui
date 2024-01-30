@@ -7,7 +7,8 @@
         [ngClass]="{
             completed: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Success,
             running: node.status === (FlowStatus.Queued || FlowStatus.Running || FlowStatus.Scheduled),
-            failed: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Failed
+            failed: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Failed,
+            aborted: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Aborted
         }"
     ></div>
 </div>

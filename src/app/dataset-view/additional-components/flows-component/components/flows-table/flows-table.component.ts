@@ -17,11 +17,11 @@ export class FlowsTableComponent {
     public readonly FlowOutcome = FlowOutcome;
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
-    public durationTask(d1: Scalars["DateTime"], d2: Scalars["DateTime"]) {
+    public durationTask(d1: Scalars["DateTime"], d2: Scalars["DateTime"]): string {
         const startDate = moment(d1);
         const endDate = moment(d2);
-        const result = "for " + startDate.from(endDate).substring(0, startDate.from(endDate).lastIndexOf(" "));
-        return result;
+        const result = startDate.from(endDate).substring(0, startDate.from(endDate).lastIndexOf(" "));
+        return result === "Invalid" ? "-" : "for " + result;
     }
 
     public descriptionForDatasetFlow(flow: FlowDataFragment): string {

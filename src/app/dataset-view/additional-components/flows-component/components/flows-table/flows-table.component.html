@@ -30,10 +30,24 @@
                     class="icon-status margin-top-5 failed-status"
                     >dangerous</mat-icon
                 >
+                <mat-icon
+                    *ngIf="element.status === FlowStatus.Finished && element.outcome === FlowOutcome.Aborted"
+                    class="icon-status margin-top-5 aborted-outcome"
+                    >cancel</mat-icon
+                >
                 <div class="ms-1 py-2">
                     <span class="fw-500">
                         {{ descriptionForDatasetFlow(element) }}
-                        {{ element.status === FlowStatus.Queued ? "queued" : "updated" }}
+                        <span *ngIf="element.status === FlowStatus.Queued && !element.outcome">queued</span>
+                        <span *ngIf="element.status === FlowStatus.Finished && element.outcome === FlowOutcome.Success"
+                            >updated</span
+                        >
+                        <span *ngIf="element.status === FlowStatus.Finished && element.outcome === FlowOutcome.Aborted"
+                            >aborted</span
+                        >
+                        <span *ngIf="element.status === FlowStatus.Finished && element.outcome === FlowOutcome.Failed"
+                            >failed</span
+                        >
                     </span>
                 </div>
             </div>
@@ -59,7 +73,7 @@
 
                 <div class="d-flex align-items-center" *ngIf="element.status === FlowStatus.Finished">
                     <svg-icon name="timer" class="ps-1 pe-2 text-muted"></svg-icon>
-                    <span class="text-small">
+                    <span class="text-small ml-2px">
                         {{ durationTask(element.timing.runningSince, element.timing.finishedAt) }}
                     </span>
                 </div>
@@ -88,7 +102,7 @@
                     <span class="ms-2 text-small"> {{ element.initiator.displayName }}</span>
                 </ng-container>
                 <ng-template #noInitiator>
-                    <span>system</span>
+                    <span class="text-small">system process</span>
                 </ng-template>
             </div>
         </td>
@@ -103,7 +117,7 @@
                 <mat-menu #tableOptions="matMenu" xPosition="before" [hasBackdrop]="true">
                     <button mat-menu-item>Details</button>
                     <mat-divider></mat-divider>
-                    <button mat-menu-item>Cancel task</button>
+                    <button mat-menu-item>Cancel flow</button>
                 </mat-menu>
             </div>
         </td>

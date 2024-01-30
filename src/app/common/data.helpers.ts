@@ -182,10 +182,8 @@ export class DataHelpers {
                 return `Dataset polling ingest`;
             }
             case "FlowDescriptionDatasetPushIngest": {
-                if (decriptionFlow.sourceName) {
-                    return `Dataset push ingest updated from ${decriptionFlow.sourceName}`;
-                } else {
-                    return `Dataset push ingest updated`;
+                {
+                    return `Dataset push ingest`;
                 }
             }
             case "FlowDescriptionDatasetExecuteTransform": {
@@ -198,10 +196,10 @@ export class DataHelpers {
                 }
             }
             case "FlowDescriptionDatasetCompaction": {
-                return `Dataset compaction updated`;
+                return `Dataset compaction`;
             }
             case "FlowDescriptionSystemGC": {
-                return `SystemGC completed work`;
+                return `SystemGC work`;
             }
 
             default:

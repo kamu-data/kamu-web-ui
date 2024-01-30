@@ -64,8 +64,16 @@ table {
     color: #d13124;
 }
 
+.aborted-outcome {
+    color: rgba(181 175 175);
+}
+
 .mat-header-cell {
     background: #f6f8fa;
+}
+
+.ml-2px {
+    margin-left: 2px;
 }
 
 td.mat-cell {

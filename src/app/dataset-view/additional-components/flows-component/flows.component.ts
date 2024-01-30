@@ -7,6 +7,9 @@ import { BaseComponent } from "src/app/common/base.component";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { requireValue } from "src/app/common/app.helpers";
 import ProjectLinks from "src/app/project-links";
+import { NavigationService } from "src/app/services/navigation.service";
+import { DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 
 @Component({
     selector: "app-flows",
@@ -22,7 +25,11 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     public readonly FLOW_RUNS_PER_PAGE = 150;
     public currentPage = 1;
 
-    constructor(private flowsService: DatasetFlowsService, private router: Router) {
+    constructor(
+        private flowsService: DatasetFlowsService,
+        private router: Router,
+        private navigationService: NavigationService,
+    ) {
         super();
     }
 
@@ -62,5 +69,14 @@ export class FlowsComponent extends BaseComponent implements OnInit {
 
     public refreshFilter(): void {
         this.searchFilter = "";
+    }
+
+    public updateSettings(): void {
+        this.navigationService.navigateToDatasetView({
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
+            tab: DatasetViewTypeEnum.Settings,
+            section: SettingsTabsEnum.SCHEDULING,
+        });
     }
 }

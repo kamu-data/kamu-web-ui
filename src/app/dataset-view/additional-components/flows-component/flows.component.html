@@ -23,9 +23,9 @@
                         <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="true">
                             <button mat-menu-item (click)="getDatasetFlowList(1)">Update now</button>
                             <mat-divider></mat-divider>
-                            <button mat-menu-item>Upate settings</button>
+                            <button mat-menu-item (click)="updateSettings()">Update settings</button>
                             <mat-divider></mat-divider>
-                            <button mat-menu-item>Pause all updates</button>
+                            <button mat-menu-item>Pause dataset updates</button>
                         </mat-menu>
                     </div>
                     <div class="mt-4 position-relative">

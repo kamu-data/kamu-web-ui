@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="nodes!">
+<table mat-table [dataSource]="dataSource">
     <!-- Description Column -->
     <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef>
@@ -6,10 +6,27 @@
                 <button mat-button [matMenuTriggerFor]="statusMenu">
                     <span class="text-dark"> Status <span class="carpet"></span> </span>
                 </button>
-                <mat-menu #statusMenu="matMenu" xPosition="before" [hasBackdrop]="true">
-                    <button mat-menu-item>Item 1</button>
+                <mat-menu #statusMenu="matMenu" xPosition="after" [hasBackdrop]="true">
+                    <button
+                        mat-menu-item
+                        [class.selected-status]="filterByStatus === 'all'"
+                        (click)="changeFilterByStatus('all')"
+                    >
+                        <span> All </span>
+                    </button>
                     <mat-divider></mat-divider>
-                    <button mat-menu-item>Item 2</button>
+                    <ng-container *ngFor="let status of allFlowStatus">
+                        <button
+                            mat-menu-item
+                            [class.selected-status]="filterByStatus === status.toLowerCase()"
+                            (click)="changeFilterByStatus(status.toLowerCase())"
+                        >
+                            <span>
+                                {{ status | lowercase | titlecase }}
+                            </span>
+                        </button>
+                        <mat-divider></mat-divider>
+                    </ng-container>
                 </mat-menu>
             </div>
         </th>
@@ -85,7 +102,7 @@
     <ng-container matColumnDef="creator">
         <th mat-header-cell *matHeaderCellDef>
             <div class="d-inline-block">
-                <button mat-button [matMenuTriggerFor]="creatorMenu">
+                <button mat-button [matMenuTriggerFor]="creatorMenu" [disabled]="true">
                     <span class="text-dark"> Created By <span class="carpet"></span> </span>
                 </button>
                 <mat-menu #creatorMenu="matMenu" xPosition="before" [hasBackdrop]="true">
@@ -122,6 +139,11 @@
             </div>
         </td>
     </ng-container>
+
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell text-center" colspan="4">No data matching the filter</td>
+    </tr>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>

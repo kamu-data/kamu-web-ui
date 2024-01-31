@@ -1,7 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { DatasetBasicsFragment, FlowConnectionDataFragment } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    FlowConnectionDataFragment,
+    FlowDataFragment,
+} from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
-import { Observable, filter, map } from "rxjs";
+import { Observable, filter, map, of, switchMap } from "rxjs";
 import { MaybeUndefined } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
@@ -22,6 +26,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     @Output() onPageChangeEmit = new EventEmitter<number>();
     public searchFilter = "";
     public flowConnection$: Observable<MaybeUndefined<FlowConnectionDataFragment>>;
+    public tileWidgetData: FlowDataFragment[];
     public readonly FLOW_RUNS_PER_PAGE = 150;
     public currentPage = 1;
 
@@ -34,36 +39,53 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.getDatasetFlowList(this.currentPage);
+        this.datasetFlowListByPage();
         this.trackSubscriptions(
             this.router.events
                 .pipe(
                     filter((event) => event instanceof NavigationEnd),
                     map((event) => event as RouterEvent),
                 )
-                .subscribe(() => this.changePageByUrl()),
+                .subscribe(() => this.datasetFlowListByPage()),
         );
     }
 
     public getDatasetFlowList(page: number): void {
-        this.flowConnection$ = this.flowsService.datasetFlowsList({
-            datasetId: this.datasetBasics.id,
-            page: page - 1,
-            perPage: this.FLOW_RUNS_PER_PAGE,
-        });
+        this.flowConnection$ = this.flowsService
+            .datasetFlowsList({
+                datasetId: this.datasetBasics.id,
+                page: 0,
+                perPage: this.FLOW_RUNS_PER_PAGE,
+            })
+            .pipe(
+                switchMap((data: MaybeUndefined<FlowConnectionDataFragment>) => {
+                    if (data?.nodes.length) {
+                        this.tileWidgetData = data.nodes;
+                    }
+                    if (page > 1) {
+                        return this.flowsService.datasetFlowsList({
+                            datasetId: this.datasetBasics.id,
+                            page: page - 1,
+                            perPage: this.FLOW_RUNS_PER_PAGE,
+                        });
+                    }
+                    return of(data);
+                }),
+            );
     }
 
     public onPageChange(page: number): void {
         this.onPageChangeEmit.emit(page);
     }
 
-    public changePageByUrl(): void {
+    public datasetFlowListByPage(): void {
         const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
         if (pageParam) {
             this.currentPage = +requireValue(pageParam);
             this.getDatasetFlowList(this.currentPage);
         } else {
-            this.getDatasetFlowList(1);
+            this.currentPage = 1;
+            this.getDatasetFlowList(this.currentPage);
         }
     }
 

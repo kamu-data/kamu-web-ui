@@ -7,7 +7,8 @@
         [openDelay]="300"
         [ngClass]="{
             completed: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Success,
-            running: node.status === (FlowStatus.Queued || FlowStatus.Running || FlowStatus.Scheduled),
+            running:
+                node.status === (FlowStatus.Queued || FlowStatus.Running || FlowStatus.Scheduled || FlowStatus.Waiting),
             failed: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Failed,
             aborted: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Aborted
         }"
@@ -16,7 +17,7 @@
             <div class="fs-12 text-muted">
                 <span class="fs-12 fw-bold">Initiator:</span>
                 <span class="fs-12">
-                    {{ node.initiator ? node.initiator.accountName : "system proccess" }}
+                    {{ node.initiator ? node.initiator.accountName : "system process" }}
                 </span>
                 <br />
 
@@ -41,5 +42,5 @@
     </div>
 </div>
 <div class="mt-1">
-    <span class="fs-12 text-muted"> Show how flow runs</span>
+    <span class="fs-12 text-muted"> Show last {{ lastRunsCount }} runs</span>
 </div>

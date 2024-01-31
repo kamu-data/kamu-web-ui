@@ -1,16 +1,20 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
+import { DatasetFlowsService } from "./dataset-flows.service";
+import { Apollo } from "apollo-angular";
+import { ApolloTestingModule } from "apollo-angular/testing";
 
-import { DatasetFlowsService } from './dataset-flows.service';
+describe("DatasetFlowsService", () => {
+    let service: DatasetFlowsService;
 
-describe('DatasetFlowsService', () => {
-  let service: DatasetFlowsService;
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [Apollo],
+            imports: [ApolloTestingModule],
+        });
+        service = TestBed.inject(DatasetFlowsService);
+    });
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(DatasetFlowsService);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+    it("should be created", () => {
+        expect(service).toBeTruthy();
+    });
 });

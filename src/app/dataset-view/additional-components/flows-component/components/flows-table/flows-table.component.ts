@@ -4,6 +4,7 @@ import { FlowDataFragment, FlowOutcome, FlowStatus, Scalars } from "src/app/api/
 import moment from "moment";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
+import { convertSecondsToHumanReadableFormat } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-flows-table",
@@ -24,10 +25,8 @@ export class FlowsTableComponent implements OnInit {
         this.dataSource = new MatTableDataSource(this.nodes);
     }
     public durationTask(d1: Scalars["DateTime"], d2: Scalars["DateTime"]): string {
-        const startDate = moment(d1);
-        const endDate = moment(d2);
-        const result = startDate.from(endDate).substring(0, startDate.from(endDate).lastIndexOf(" "));
-        return result === "Invalid" ? "-" : "for " + result;
+        const result = moment(d2).seconds() - moment(d1).seconds();
+        return convertSecondsToHumanReadableFormat(result) ? convertSecondsToHumanReadableFormat(result) : "-";
     }
 
     public descriptionForDatasetFlow(flow: FlowDataFragment): string {

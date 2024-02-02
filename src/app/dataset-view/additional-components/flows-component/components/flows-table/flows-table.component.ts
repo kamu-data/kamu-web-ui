@@ -1,10 +1,11 @@
 import { DataHelpers } from "src/app/common/data.helpers";
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit, QueryList, ViewChildren } from "@angular/core";
 import { FlowDataFragment, FlowOutcome, FlowStatus, Scalars } from "src/app/api/kamu.graphql.interface";
 import moment from "moment";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
 import { convertSecondsToHumanReadableFormat } from "src/app/common/app.helpers";
+import { MatMenuTrigger } from "@angular/material/menu";
 
 @Component({
     selector: "app-flows-table",
@@ -19,7 +20,11 @@ export class FlowsTableComponent implements OnInit {
     public readonly FlowOutcome = FlowOutcome;
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public filterByStatus = "all";
+    public filterByInitiator = "All";
+    public searchByAccountName = "";
+    public initiators: string[] = ["All", "System", "Account name"];
     public dataSource: MatTableDataSource<FlowDataFragment>;
+    @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
 
     ngOnInit(): void {
         this.dataSource = new MatTableDataSource(this.nodes);
@@ -44,5 +49,9 @@ export class FlowsTableComponent implements OnInit {
         } else {
             this.dataSource = new MatTableDataSource(this.nodes);
         }
+    }
+
+    public onSearchCreator(): void {
+        this.triggersMatMenu.get(1)?.closeMenu();
     }
 }

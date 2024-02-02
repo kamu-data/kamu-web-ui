@@ -86,3 +86,28 @@ td.mat-cell {
     font-weight: 500;
     background: rgba(237 232 232);
 }
+
+.select-item {
+    padding: 16px;
+    height: 65px;
+}
+
+.search-creator {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow: none;
+    font-size: 12px;
+
+    &::placeholder {
+        font-size: 12px;
+    }
+}
+
+.search-creator-button {
+    border-top-right-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+
+    .search-creator-icon {
+        padding-top: 3px;
+    }
+}

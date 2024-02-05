@@ -348,11 +348,19 @@ type DatasetFlowConfigsMut {
     throttlingPeriod: TimeDeltaInput
     minimalDataBatch: Int
   ): SetFlowConfigResult!
+  pauseFlows(datasetFlowType: DatasetFlowType): Boolean!
+  resumeFlows(datasetFlowType: DatasetFlowType): Boolean!
+}
+
+input DatasetFlowFilters {
+  byFlowType: DatasetFlowType
+  byStatus: FlowStatus
+  byInitiator: InitiatorFilterInput
 }
 
 type DatasetFlowRuns {
   getFlow(flowId: FlowID!): GetFlowResult!
-  listFlows(page: Int, perPage: Int): FlowConnection!
+  listFlows(page: Int, perPage: Int, filters: DatasetFlowFilters): FlowConnection!
 }
 
 type DatasetFlowRunsMut {
@@ -872,6 +880,11 @@ interface GetFlowResult {
 type GetFlowSuccess implements GetFlowResult {
   flow: Flow!
   message: String!
+}
+
+input InitiatorFilterInput @oneOf {
+  system: Boolean
+  account: AccountName
 }
 
 type LoginResponse {

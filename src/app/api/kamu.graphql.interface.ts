@@ -1908,6 +1908,44 @@ export type GetDatasetListFlowsQuery = {
     };
 };
 
+export type DatasetPauseFlowsMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType?: InputMaybe<DatasetFlowType>;
+}>;
+
+export type DatasetPauseFlowsMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                configs: { __typename?: "DatasetFlowConfigsMut"; pauseFlows: boolean };
+            };
+        } | null;
+    };
+};
+
+export type DatasetResumeFlowsMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType?: InputMaybe<DatasetFlowType>;
+}>;
+
+export type DatasetResumeFlowsMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                configs: { __typename?: "DatasetFlowConfigsMut"; resumeFlows: boolean };
+            };
+        } | null;
+    };
+};
+
 export type FlowDataFragment = {
     __typename?: "Flow";
     flowId: string;
@@ -4043,6 +4081,60 @@ export const GetDatasetListFlowsDocument = gql`
 })
 export class GetDatasetListFlowsGQL extends Apollo.Query<GetDatasetListFlowsQuery, GetDatasetListFlowsQueryVariables> {
     document = GetDatasetListFlowsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetPauseFlowsDocument = gql`
+    mutation datasetPauseFlows($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    configs {
+                        pauseFlows(datasetFlowType: $datasetFlowType)
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetPauseFlowsGQL extends Apollo.Mutation<
+    DatasetPauseFlowsMutation,
+    DatasetPauseFlowsMutationVariables
+> {
+    document = DatasetPauseFlowsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetResumeFlowsDocument = gql`
+    mutation datasetResumeFlows($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    configs {
+                        resumeFlows(datasetFlowType: $datasetFlowType)
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetResumeFlowsGQL extends Apollo.Mutation<
+    DatasetResumeFlowsMutation,
+    DatasetResumeFlowsMutationVariables
+> {
+    document = DatasetResumeFlowsDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

@@ -59,7 +59,11 @@
                 <app-flows-table
                     [nodes]="flowConnectionData.nodes"
                     [filterByStatus]="filterByStatus"
+                    [filterByInitiator]="filterByInitiator"
+                    [searchByAccountName]="searchByAccountName"
                     (filterByStatusChange)="onChangeFilterByStatus($event)"
+                    (filterByInitiatorChange)="onChangeFilterByInitiator($event)"
+                    (searchByAccountNameChange)="onSearchByAccountName($event)"
                 ></app-flows-table>
                 <div class="mt-50px">
                     <app-pagination

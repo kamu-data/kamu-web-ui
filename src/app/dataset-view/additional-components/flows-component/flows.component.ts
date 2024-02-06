@@ -1,5 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { DatasetBasicsFragment, FlowConnectionDataFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    FlowConnectionDataFragment,
+    FlowStatus,
+    InitiatorFilterInput,
+} from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { Observable, filter, map } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
@@ -24,6 +29,8 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     public tileWidgetData$: Observable<MaybeUndefined<FlowConnectionDataFragment>>;
     public flowConnectionData$: Observable<MaybeUndefined<FlowConnectionDataFragment>>;
     public filterByStatus: MaybeNull<FlowStatus> = null;
+    public filterByInitiator = "All";
+    public searchByAccountName = "";
     public readonly FLOW_RUNS_PER_PAGE = 150;
     public currentPage = 1;
 
@@ -37,7 +44,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.getTileWidgetData();
-        this.getFlowConnectionData(this.currentPage, null);
+        this.datasetFlowListByPage();
         this.trackSubscriptions(
             this.router.events
                 .pipe(
@@ -48,12 +55,16 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         );
     }
 
-    public getFlowConnectionData(page: number, filter: MaybeNull<FlowStatus>): void {
+    public getFlowConnectionData(
+        page: number,
+        filterByStatus?: MaybeNull<FlowStatus>,
+        filterByInitiator?: MaybeNull<InitiatorFilterInput>,
+    ): void {
         this.flowConnectionData$ = this.flowsService.datasetFlowsList({
             datasetId: this.datasetBasics.id,
             page: page - 1,
             perPage: this.FLOW_RUNS_PER_PAGE,
-            filters: { byStatus: filter },
+            filters: { byStatus: filterByStatus, byInitiator: filterByInitiator },
         });
     }
 
@@ -102,5 +113,21 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     public onChangeFilterByStatus(status: MaybeNull<FlowStatus>): void {
         this.getFlowConnectionData(this.currentPage, status);
         this.filterByStatus = status;
+    }
+
+    public onChangeFilterByInitiator(initiator: string): void {
+        if (initiator !== "Account") {
+            let filterOptions: MaybeNull<InitiatorFilterInput> = null;
+            if (initiator === "System") {
+                filterOptions = { system: true };
+            }
+            this.getFlowConnectionData(this.currentPage, this.filterByStatus, filterOptions);
+        }
+        this.filterByInitiator = initiator;
+    }
+
+    public onSearchByAccountName(accountName: string): void {
+        this.getFlowConnectionData(this.currentPage, this.filterByStatus, { account: accountName });
+        this.searchByAccountName = accountName;
     }
 }

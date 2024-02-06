@@ -16,6 +16,7 @@ import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
 import { convertSecondsToHumanReadableFormat } from "src/app/common/app.helpers";
 import { MatMenuTrigger } from "@angular/material/menu";
+import { MatRadioChange } from "@angular/material/radio";
 
 @Component({
     selector: "app-flows-table",
@@ -26,14 +27,17 @@ import { MatMenuTrigger } from "@angular/material/menu";
 export class FlowsTableComponent implements OnInit {
     @Input() public nodes: FlowDataFragment[];
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
+    @Output() public filterByInitiatorChange = new EventEmitter<string>();
+    @Output() public searchByAccountNameChange = new EventEmitter<string>();
     @Input() public filterByStatus: MaybeNull<FlowStatus>;
+    @Input() public filterByInitiator: string;
+    @Input() public searchByAccountName: string;
     public displayedColumns: string[] = ["description", "information", "creator", "options"];
     public readonly FlowStatus = FlowStatus;
     public readonly FlowOutcome = FlowOutcome;
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
-    public filterByInitiator = "All";
-    public searchByAccountName = "";
-    public initiators: string[] = ["All", "System", "Account name"];
+
+    public initiators: string[] = ["All", "System", "Account"];
     public dataSource: MatTableDataSource<FlowDataFragment>;
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
 
@@ -54,7 +58,12 @@ export class FlowsTableComponent implements OnInit {
         this.filterByStatusChange.emit(this.filterByStatus);
     }
 
-    public onSearchCreator(): void {
+    public onSearchByAccountName(): void {
+        this.searchByAccountNameChange.emit(this.searchByAccountName);
         this.triggersMatMenu.get(1)?.closeMenu();
+    }
+
+    public changeFilterByInitiator(event: MatRadioChange): void {
+        this.filterByInitiatorChange.emit(event.value as string);
     }
 }

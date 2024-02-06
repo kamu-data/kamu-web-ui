@@ -113,6 +113,10 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         this.datasetViewType = DatasetViewTypeEnum.Metadata;
     }
 
+    private initFlowsTab(): void {
+        this.datasetViewType = DatasetViewTypeEnum.Flows;
+    }
+
     private initHistoryTab(datasetInfo: DatasetInfo, currentPage: number): void {
         this.datasetViewType = DatasetViewTypeEnum.History;
 
@@ -168,10 +172,6 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
                 yesButtonText: "Ok",
             }),
         );
-    }
-
-    public initFlowsTab(): void {
-        //console.log("init");
     }
 
     public initSettingsTab(datasetInfo: DatasetInfo): void {

@@ -1,12 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import {
-    DatasetBasicsFragment,
-    FlowConnectionDataFragment,
-    FlowDataFragment,
-} from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, FlowConnectionDataFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
-import { Observable, filter, map, of, switchMap } from "rxjs";
-import { MaybeUndefined } from "src/app/common/app.types";
+import { Observable, filter, map } from "rxjs";
+import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { requireValue } from "src/app/common/app.helpers";
@@ -25,8 +21,9 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
     @Output() onPageChangeEmit = new EventEmitter<number>();
     public searchFilter = "";
-    public flowConnection$: Observable<MaybeUndefined<FlowConnectionDataFragment>>;
-    public tileWidgetData: FlowDataFragment[];
+    public tileWidgetData$: Observable<MaybeUndefined<FlowConnectionDataFragment>>;
+    public flowConnectionData$: Observable<MaybeUndefined<FlowConnectionDataFragment>>;
+    public filterByStatus: MaybeNull<FlowStatus> = null;
     public readonly FLOW_RUNS_PER_PAGE = 150;
     public currentPage = 1;
 
@@ -39,7 +36,8 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.datasetFlowListByPage();
+        this.getTileWidgetData();
+        this.getFlowConnectionData(this.currentPage, null);
         this.trackSubscriptions(
             this.router.events
                 .pipe(
@@ -50,28 +48,22 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         );
     }
 
-    public getDatasetFlowList(page: number): void {
-        this.flowConnection$ = this.flowsService
-            .datasetFlowsList({
-                datasetId: this.datasetBasics.id,
-                page: 0,
-                perPage: this.FLOW_RUNS_PER_PAGE,
-            })
-            .pipe(
-                switchMap((data: MaybeUndefined<FlowConnectionDataFragment>) => {
-                    if (data?.nodes.length) {
-                        this.tileWidgetData = data.nodes;
-                    }
-                    if (page > 1) {
-                        return this.flowsService.datasetFlowsList({
-                            datasetId: this.datasetBasics.id,
-                            page: page - 1,
-                            perPage: this.FLOW_RUNS_PER_PAGE,
-                        });
-                    }
-                    return of(data);
-                }),
-            );
+    public getFlowConnectionData(page: number, filter: MaybeNull<FlowStatus>): void {
+        this.flowConnectionData$ = this.flowsService.datasetFlowsList({
+            datasetId: this.datasetBasics.id,
+            page: page - 1,
+            perPage: this.FLOW_RUNS_PER_PAGE,
+            filters: { byStatus: filter },
+        });
+    }
+
+    public getTileWidgetData(): void {
+        this.tileWidgetData$ = this.flowsService.datasetFlowsList({
+            datasetId: this.datasetBasics.id,
+            page: 0,
+            perPage: this.FLOW_RUNS_PER_PAGE,
+            filters: {},
+        });
     }
 
     public onPageChange(page: number): void {
@@ -82,10 +74,10 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
         if (pageParam) {
             this.currentPage = +requireValue(pageParam);
-            this.getDatasetFlowList(this.currentPage);
+            this.getFlowConnectionData(this.currentPage, this.filterByStatus);
         } else {
             this.currentPage = 1;
-            this.getDatasetFlowList(this.currentPage);
+            this.getFlowConnectionData(this.currentPage, this.filterByStatus);
         }
     }
 
@@ -100,5 +92,15 @@ export class FlowsComponent extends BaseComponent implements OnInit {
             tab: DatasetViewTypeEnum.Settings,
             section: SettingsTabsEnum.SCHEDULING,
         });
+    }
+
+    public updateNow(): void {
+        this.getTileWidgetData();
+        this.getFlowConnectionData(this.currentPage, this.filterByStatus);
+    }
+
+    public onChangeFilterByStatus(status: MaybeNull<FlowStatus>): void {
+        this.getFlowConnectionData(this.currentPage, status);
+        this.filterByStatus = status;
     }
 }

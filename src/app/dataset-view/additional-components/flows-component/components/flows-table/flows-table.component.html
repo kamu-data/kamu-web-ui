@@ -9,20 +9,21 @@
                 <mat-menu #statusMenu="matMenu" xPosition="after" [hasBackdrop]="true">
                     <button
                         mat-menu-item
-                        [class.selected-status]="filterByStatus === 'all'"
-                        (click)="changeFilterByStatus('all')"
+                        [class.selected-status]="!filterByStatus"
+                        (click)="changeFilterByStatus(null)"
                     >
                         <span class="text-small"> All </span>
                     </button>
                     <mat-divider></mat-divider>
-                    <ng-container *ngFor="let status of allFlowStatus">
+
+                    <ng-container *ngFor="let status of FlowStatus | keyvalue">
                         <button
                             mat-menu-item
-                            [class.selected-status]="filterByStatus === status.toLowerCase()"
-                            (click)="changeFilterByStatus(status.toLowerCase())"
+                            [class.selected-status]="filterByStatus === status.value"
+                            (click)="changeFilterByStatus(status.value)"
                         >
                             <span class="text-small">
-                                {{ status | lowercase | titlecase }}
+                                {{ status.value | lowercase | titlecase }}
                             </span>
                         </button>
                         <mat-divider></mat-divider>

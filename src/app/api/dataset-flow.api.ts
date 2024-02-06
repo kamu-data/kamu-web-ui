@@ -4,6 +4,7 @@ import { Injectable } from "@angular/core";
 import {
     DatasetFlowBatchingGQL,
     DatasetFlowBatchingMutation,
+    DatasetFlowFilters,
     DatasetFlowScheduleGQL,
     DatasetFlowScheduleMutation,
     DatasetFlowType,
@@ -104,10 +105,11 @@ export class DatasetFlowApi {
         datasetId: string;
         page: number;
         perPage: number;
+        filters: DatasetFlowFilters;
     }): Observable<GetDatasetListFlowsQuery> {
         return this.getDatasetListFlowsGQL
             .watch(
-                { datasetId: params.datasetId, page: params.page, perPage: params.perPage },
+                { datasetId: params.datasetId, page: params.page, perPage: params.perPage, filters: params.filters },
                 {
                     fetchPolicy: "no-cache",
                     errorPolicy: "all",

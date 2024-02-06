@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
+    DatasetFlowFilters,
     FlowConnection,
     FlowConnectionDataFragment,
     GetDatasetListFlowsQuery,
@@ -28,6 +29,7 @@ export class DatasetFlowsService {
         datasetId: string;
         page: number;
         perPage: number;
+        filters: DatasetFlowFilters;
     }): Observable<MaybeUndefined<FlowConnectionDataFragment>> {
         return this.datasetFlowApi.getDatasetListFlows(params).pipe(
             map((data: GetDatasetListFlowsQuery) => {

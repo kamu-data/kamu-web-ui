@@ -1,9 +1,9 @@
-query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int) {
+query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int, $filters: DatasetFlowFilters) {
   datasets {
     byId(datasetId: $datasetId) {
       flows {
         runs {
-          listFlows(page: $page, perPage: $perPage) {
+          listFlows(page: $page, perPage: $perPage, filters: $filters) {
             ...FlowConnectionData
           }
         }

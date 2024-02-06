@@ -1,5 +1,15 @@
+import { MaybeNull } from "./../../../../../common/app.types";
 import { DataHelpers } from "src/app/common/data.helpers";
-import { ChangeDetectionStrategy, Component, Input, OnInit, QueryList, ViewChildren } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    QueryList,
+    ViewChildren,
+} from "@angular/core";
 import { FlowDataFragment, FlowOutcome, FlowStatus, Scalars } from "src/app/api/kamu.graphql.interface";
 import moment from "moment";
 import AppValues from "src/app/common/app.values";
@@ -15,11 +25,12 @@ import { MatMenuTrigger } from "@angular/material/menu";
 })
 export class FlowsTableComponent implements OnInit {
     @Input() public nodes: FlowDataFragment[];
+    @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
+    @Input() public filterByStatus: MaybeNull<FlowStatus>;
     public displayedColumns: string[] = ["description", "information", "creator", "options"];
     public readonly FlowStatus = FlowStatus;
     public readonly FlowOutcome = FlowOutcome;
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
-    public filterByStatus = "all";
     public filterByInitiator = "All";
     public searchByAccountName = "";
     public initiators: string[] = ["All", "System", "Account name"];
@@ -38,17 +49,9 @@ export class FlowsTableComponent implements OnInit {
         return DataHelpers.descriptionForDatasetFlow(flow);
     }
 
-    public get allFlowStatus(): string[] {
-        return Object.values(FlowStatus);
-    }
-
-    public changeFilterByStatus(status: string): void {
+    public changeFilterByStatus(status: MaybeNull<FlowStatus>): void {
         this.filterByStatus = status;
-        if (status !== "all") {
-            this.dataSource.filter = status;
-        } else {
-            this.dataSource = new MatTableDataSource(this.nodes);
-        }
+        this.filterByStatusChange.emit(this.filterByStatus);
     }
 
     public onSearchCreator(): void {

@@ -1,4 +1,4 @@
-<ng-container *ngIf="flowConnection$ | async as flowConnection">
+<ng-container *ngIf="tileWidgetData$ | async as flowConnection">
     <div class="search-result-container__content mb-20">
         <ng-container *ngIf="flowConnection.nodes.length; else noRuns">
             <div class="d-flex justify-content-between">
@@ -21,7 +21,7 @@
                             <svg-icon name="show-options"></svg-icon>
                         </button>
                         <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="true">
-                            <button mat-menu-item (click)="getDatasetFlowList(1)">Update now</button>
+                            <button mat-menu-item (click)="updateNow()">Update now</button>
                             <mat-divider></mat-divider>
                             <button mat-menu-item (click)="updateSettings()">Update settings</button>
                             <mat-divider></mat-divider>
@@ -52,20 +52,23 @@
             </div>
 
             <div class="search-result-container__content my-4">
-                <app-tile-base-widget [nodes]="tileWidgetData"></app-tile-base-widget>
+                <app-tile-base-widget [nodes]="flowConnection.nodes"></app-tile-base-widget>
             </div>
 
-            <div class="mb-4">
-                <app-flows-table [nodes]="flowConnection.nodes"></app-flows-table>
-            </div>
-
-            <div class="mt-50px">
-                <app-pagination
-                    [currentPage]="flowConnection.pageInfo.currentPage + 1"
-                    [pageInfo]="flowConnection.pageInfo"
-                    (pageChangeEvent)="onPageChange($event)"
-                ></app-pagination>
-            </div>
+            <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
+                <app-flows-table
+                    [nodes]="flowConnectionData.nodes"
+                    [filterByStatus]="filterByStatus"
+                    (filterByStatusChange)="onChangeFilterByStatus($event)"
+                ></app-flows-table>
+                <div class="mt-50px">
+                    <app-pagination
+                        [currentPage]="flowConnectionData.pageInfo.currentPage + 1"
+                        [pageInfo]="flowConnectionData.pageInfo"
+                        (pageChangeEvent)="onPageChange($event)"
+                    ></app-pagination>
+                </div>
+            </ng-container>
         </ng-container>
         <ng-template #noRuns>
             <p class="text-center">No flow runs</p>

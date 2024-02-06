@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "apollo-angular";
+import { gql } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -374,8 +374,18 @@ export type DatasetFlowConfigsByTypeArgs = {
 
 export type DatasetFlowConfigsMut = {
     __typename?: "DatasetFlowConfigsMut";
+    pauseFlows: Scalars["Boolean"];
+    resumeFlows: Scalars["Boolean"];
     setConfigBatching: SetFlowConfigResult;
     setConfigSchedule: SetFlowConfigResult;
+};
+
+export type DatasetFlowConfigsMutPauseFlowsArgs = {
+    datasetFlowType?: InputMaybe<DatasetFlowType>;
+};
+
+export type DatasetFlowConfigsMutResumeFlowsArgs = {
+    datasetFlowType?: InputMaybe<DatasetFlowType>;
 };
 
 export type DatasetFlowConfigsMutSetConfigBatchingArgs = {
@@ -391,6 +401,12 @@ export type DatasetFlowConfigsMutSetConfigScheduleArgs = {
     schedule: ScheduleInput;
 };
 
+export type DatasetFlowFilters = {
+    byFlowType?: InputMaybe<DatasetFlowType>;
+    byInitiator?: InputMaybe<InitiatorFilterInput>;
+    byStatus?: InputMaybe<FlowStatus>;
+};
+
 export type DatasetFlowRuns = {
     __typename?: "DatasetFlowRuns";
     getFlow: GetFlowResult;
@@ -402,6 +418,7 @@ export type DatasetFlowRunsGetFlowArgs = {
 };
 
 export type DatasetFlowRunsListFlowsArgs = {
+    filters?: InputMaybe<DatasetFlowFilters>;
     page?: InputMaybe<Scalars["Int"]>;
     perPage?: InputMaybe<Scalars["Int"]>;
 };
@@ -932,6 +949,10 @@ export type GetFlowSuccess = GetFlowResult & {
     flow: Flow;
     message: Scalars["String"];
 };
+
+export type InitiatorFilterInput =
+    | { account: Scalars["AccountName"]; system?: never }
+    | { account?: never; system: Scalars["Boolean"] };
 
 export type LoginResponse = {
     __typename?: "LoginResponse";
@@ -1867,6 +1888,7 @@ export type GetDatasetListFlowsQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     page?: InputMaybe<Scalars["Int"]>;
     perPage?: InputMaybe<Scalars["Int"]>;
+    filters?: InputMaybe<DatasetFlowFilters>;
 }>;
 
 export type GetDatasetListFlowsQuery = {
@@ -4000,12 +4022,12 @@ export class EnginesGQL extends Apollo.Query<EnginesQuery, EnginesQueryVariables
     }
 }
 export const GetDatasetListFlowsDocument = gql`
-    query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int) {
+    query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int, $filters: DatasetFlowFilters) {
         datasets {
             byId(datasetId: $datasetId) {
                 flows {
                     runs {
-                        listFlows(page: $page, perPage: $perPage) {
+                        listFlows(page: $page, perPage: $perPage, filters: $filters) {
                             ...FlowConnectionData
                         }
                     }

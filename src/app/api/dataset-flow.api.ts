@@ -8,6 +8,10 @@ import {
     DatasetFlowScheduleGQL,
     DatasetFlowScheduleMutation,
     DatasetFlowType,
+    DatasetPauseFlowsGQL,
+    DatasetPauseFlowsMutation,
+    DatasetResumeFlowsGQL,
+    DatasetResumeFlowsMutation,
     GetDatasetFlowConfigsGQL,
     GetDatasetFlowConfigsQuery,
     GetDatasetListFlowsGQL,
@@ -26,6 +30,8 @@ export class DatasetFlowApi {
         private datasetFlowScheduleGQL: DatasetFlowScheduleGQL,
         private datasetFlowBatchingGQL: DatasetFlowBatchingGQL,
         private getDatasetListFlowsGQL: GetDatasetListFlowsGQL,
+        private datasetPauseFlowsGQL: DatasetPauseFlowsGQL,
+        private datasetResumeFlowsGQL: DatasetResumeFlowsGQL,
     ) {}
 
     public getDatasetFlowConfigs(params: {
@@ -118,6 +124,50 @@ export class DatasetFlowApi {
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetDatasetListFlowsQuery>) => {
                     return result.data;
+                }),
+            );
+    }
+
+    public datasetPauseFlows(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+    }): Observable<DatasetPauseFlowsMutation> {
+        return this.datasetPauseFlowsGQL
+            .mutate({
+                datasetId: params.datasetId,
+                datasetFlowType: params.datasetFlowType,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<DatasetPauseFlowsMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
+                }),
+            );
+    }
+
+    public datasetResumeFlows(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+    }): Observable<DatasetResumeFlowsMutation> {
+        return this.datasetResumeFlowsGQL
+            .mutate({
+                datasetId: params.datasetId,
+                datasetFlowType: params.datasetFlowType,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<DatasetResumeFlowsMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
                 }),
             );
     }

@@ -14,8 +14,14 @@
     background: #0db28d;
 }
 
-.running {
+.queued,
+.running,
+.waiting {
     background: #d3c22a;
+}
+
+.scheduled {
+    background: #2a8dd3;
 }
 
 .failed {

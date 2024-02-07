@@ -7,10 +7,13 @@
         [openDelay]="300"
         [ngClass]="{
             completed: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Success,
-            running:
-                node.status === (FlowStatus.Queued || FlowStatus.Running || FlowStatus.Scheduled || FlowStatus.Waiting),
+            queued: node.status === FlowStatus.Queued,
+            running:    node.status === FlowStatus.Running,
+            waiting: node.status === FlowStatus.Waiting,
             failed: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Failed,
-            aborted: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Aborted
+            aborted: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Aborted,
+            scheduled:
+                node.status === FlowStatus.Scheduled
         }"
     >
         <ng-template #popContent>

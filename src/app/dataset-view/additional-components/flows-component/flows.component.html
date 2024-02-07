@@ -25,7 +25,10 @@
                             <mat-divider></mat-divider>
                             <button mat-menu-item (click)="updateSettings()">Update settings</button>
                             <mat-divider></mat-divider>
-                            <button mat-menu-item [disabled]="true">Pause dataset updates</button>
+                            <button mat-menu-item (click)="pauseDatasetUpdates(flowConnection.nodes[0])">
+                                {{ flowConnection.nodes[0].status !== FlowStatus.Finished ? "Pause" : "Resume" }}
+                                dataset updates
+                            </button>
                         </mat-menu>
                     </div>
                     <div class="mt-4 position-relative">
@@ -67,8 +70,8 @@
                 ></app-flows-table>
                 <div class="mt-50px">
                     <app-pagination
-                        [currentPage]="flowConnectionData.pageInfo.currentPage + 1"
-                        [pageInfo]="flowConnectionData.pageInfo"
+                        [currentPage]="clientCurrentPage"
+                        [pageInfo]="customPageBasedInfo"
                         (pageChangeEvent)="onPageChange($event)"
                     ></app-pagination>
                 </div>

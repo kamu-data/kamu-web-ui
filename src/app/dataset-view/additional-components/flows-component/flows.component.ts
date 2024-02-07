@@ -1,9 +1,13 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import {
     DatasetBasicsFragment,
+    DatasetFlowType,
+    DatasetKind,
     FlowConnectionDataFragment,
+    FlowDataFragment,
     FlowStatus,
     InitiatorFilterInput,
+    PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { Observable, filter, map } from "rxjs";
@@ -31,8 +35,18 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     public filterByStatus: MaybeNull<FlowStatus> = null;
     public filterByInitiator = "All";
     public searchByAccountName = "";
-    public readonly FLOW_RUNS_PER_PAGE = 150;
+    public readonly FLOW_RUNS_PER_PAGE: number = 150;
+    public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public currentPage = 1;
+
+    public clientCurrentPage = 1;
+    public readonly CLENT_FLOW_RUNS_PER_PAGE: number = 15;
+    public customPageBasedInfo: PageBasedInfo = {
+        currentPage: this.clientCurrentPage,
+        hasNextPage: true,
+        hasPreviousPage: false,
+        totalPages: 450 / this.CLENT_FLOW_RUNS_PER_PAGE,
+    };
 
     constructor(
         private flowsService: DatasetFlowsService,
@@ -129,5 +143,33 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     public onSearchByAccountName(accountName: string): void {
         this.getFlowConnectionData(this.currentPage, this.filterByStatus, { account: accountName });
         this.searchByAccountName = accountName;
+    }
+
+    public pauseDatasetUpdates(flow: FlowDataFragment): void {
+        if (flow.status !== FlowStatus.Finished) {
+            this.trackSubscription(
+                this.flowsService
+                    .datasetPauseFlows({
+                        datasetId: this.datasetBasics.id,
+                        datasetFlowType:
+                            this.datasetBasics.kind === DatasetKind.Root
+                                ? DatasetFlowType.Ingest
+                                : DatasetFlowType.ExecuteTransform,
+                    })
+                    .subscribe(),
+            );
+        } else {
+            this.trackSubscription(
+                this.flowsService
+                    .datasetResumeFlows({
+                        datasetId: this.datasetBasics.id,
+                        datasetFlowType:
+                            this.datasetBasics.kind === DatasetKind.Root
+                                ? DatasetFlowType.Ingest
+                                : DatasetFlowType.ExecuteTransform,
+                    })
+                    .subscribe(),
+            );
+        }
     }
 }

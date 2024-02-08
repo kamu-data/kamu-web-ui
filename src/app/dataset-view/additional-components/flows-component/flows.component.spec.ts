@@ -4,6 +4,7 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ActivatedRoute } from "@angular/router";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { ToastrModule } from "ngx-toastr";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;
@@ -42,7 +43,7 @@ describe("FlowsComponent", () => {
                 },
             ],
             declarations: [FlowsComponent],
-            imports: [ApolloTestingModule],
+            imports: [ApolloTestingModule, ToastrModule.forRoot()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FlowsComponent);

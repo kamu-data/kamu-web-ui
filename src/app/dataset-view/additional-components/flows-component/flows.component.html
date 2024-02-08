@@ -35,17 +35,15 @@
                         <input
                             class="form-control placeholder-padding-left d-inline custom-border w-300"
                             type="text"
-                            name="search"
                             [(ngModel)]="searchFilter"
                             autocomplete="off"
                             placeholder="Search"
-                            data-test-id="searchHash"
+                            data-test-id="search"
                             [disabled]="true"
                         />
                         <svg-icon name="search"></svg-icon>
                         <mat-icon
                             *ngIf="searchFilter"
-                            (click)="refreshFilter()"
                             class="fs-5 d-inline position-absolute close-position"
                             data-test-id="clearSearch"
                             >close</mat-icon
@@ -70,8 +68,8 @@
                 ></app-flows-table>
                 <div class="mt-50px">
                     <app-pagination
-                        [currentPage]="clientCurrentPage"
-                        [pageInfo]="customPageBasedInfo"
+                        [currentPage]="flowConnectionData.pageInfo.currentPage+1"
+                        [pageInfo]="flowConnectionData.pageInfo"
                         (pageChangeEvent)="onPageChange($event)"
                     ></app-pagination>
                 </div>

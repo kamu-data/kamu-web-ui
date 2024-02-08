@@ -7,7 +7,6 @@ import {
     FlowDataFragment,
     FlowStatus,
     InitiatorFilterInput,
-    PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { Observable, filter, map } from "rxjs";
@@ -35,18 +34,10 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     public filterByStatus: MaybeNull<FlowStatus> = null;
     public filterByInitiator = "All";
     public searchByAccountName = "";
-    public readonly FLOW_RUNS_PER_PAGE: number = 150;
-    public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public currentPage = 1;
-
-    public clientCurrentPage = 1;
-    public readonly CLENT_FLOW_RUNS_PER_PAGE: number = 15;
-    public customPageBasedInfo: PageBasedInfo = {
-        currentPage: this.clientCurrentPage,
-        hasNextPage: true,
-        hasPreviousPage: false,
-        totalPages: 450 / this.CLENT_FLOW_RUNS_PER_PAGE,
-    };
+    public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
+    public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
+    public readonly FlowStatus: typeof FlowStatus = FlowStatus;
 
     constructor(
         private flowsService: DatasetFlowsService,
@@ -77,7 +68,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         this.flowConnectionData$ = this.flowsService.datasetFlowsList({
             datasetId: this.datasetBasics.id,
             page: page - 1,
-            perPage: this.FLOW_RUNS_PER_PAGE,
+            perPage: this.TABLE_FLOW_RUNS_PER_PAGE,
             filters: { byStatus: filterByStatus, byInitiator: filterByInitiator },
         });
     }
@@ -86,7 +77,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         this.tileWidgetData$ = this.flowsService.datasetFlowsList({
             datasetId: this.datasetBasics.id,
             page: 0,
-            perPage: this.FLOW_RUNS_PER_PAGE,
+            perPage: this.WIDGET_FLOW_RUNS_PER_PAGE,
             filters: {},
         });
     }
@@ -104,10 +95,6 @@ export class FlowsComponent extends BaseComponent implements OnInit {
             this.currentPage = 1;
             this.getFlowConnectionData(this.currentPage, this.filterByStatus);
         }
-    }
-
-    public refreshFilter(): void {
-        this.searchFilter = "";
     }
 
     public updateSettings(): void {

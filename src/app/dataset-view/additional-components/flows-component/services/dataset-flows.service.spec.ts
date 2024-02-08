@@ -2,6 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { DatasetFlowsService } from "./dataset-flows.service";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
+import { ToastrModule } from "ngx-toastr";
 
 describe("DatasetFlowsService", () => {
     let service: DatasetFlowsService;
@@ -9,7 +10,7 @@ describe("DatasetFlowsService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo],
-            imports: [ApolloTestingModule],
+            imports: [ApolloTestingModule, ToastrModule.forRoot()],
         });
         service = TestBed.inject(DatasetFlowsService);
     });

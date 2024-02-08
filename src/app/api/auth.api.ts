@@ -78,7 +78,6 @@ export class AuthApi {
         return this.fetchAccountDetailsGQL.mutate({ accessToken }).pipe(
             map((result: MutationResult<FetchAccountDetailsMutation>) => {
                 /* istanbul ignore else */
-
                 if (result.data) {
                     return result.data.auth.accountDetails;
                 } else {

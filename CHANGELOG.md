@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced dataset scheduling settings page to manage automatically launched ingest/transform flows
 ### Fixed
 - Fixed bug with authentification (Login vs CLI)
+- Settings tab is hidden after login
 
 ## [0.15.0] - 2024-01-17
 ### Changed

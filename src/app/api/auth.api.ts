@@ -48,24 +48,37 @@ export class AuthApi {
         loginMethod: string,
         loginCredentialsJson: string,
     ): Observable<LoginResponse> {
-        return this.loginGQL.mutate({ login_method: loginMethod, login_credentials_json: loginCredentialsJson }).pipe(
-            map((result: MutationResult<LoginMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data.auth.login;
-                } else {
-                    // Normally, this code should not be reachable
-                    throw new AuthenticationError(result.errors ?? []);
-                }
-            }),
-            catchError((e: Error) => throwError(() => new AuthenticationError([e]))),
-        );
+        return this.loginGQL
+            .mutate(
+                { login_method: loginMethod, login_credentials_json: loginCredentialsJson },
+                {
+                    update: (cache) => {
+                        cache.evict({
+                            id: "ROOT_QUERY",
+                            fieldName: "datasets",
+                        });
+                    },
+                },
+            )
+            .pipe(
+                map((result: MutationResult<LoginMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data.auth.login;
+                    } else {
+                        // Normally, this code should not be reachable
+                        throw new AuthenticationError(result.errors ?? []);
+                    }
+                }),
+                catchError((e: Error) => throwError(() => new AuthenticationError([e]))),
+            );
     }
 
     public fetchAccountFromAccessToken(accessToken: string): Observable<AccountFragment> {
         return this.fetchAccountDetailsGQL.mutate({ accessToken }).pipe(
             map((result: MutationResult<FetchAccountDetailsMutation>) => {
                 /* istanbul ignore else */
+
                 if (result.data) {
                     return result.data.auth.accountDetails;
                 } else {

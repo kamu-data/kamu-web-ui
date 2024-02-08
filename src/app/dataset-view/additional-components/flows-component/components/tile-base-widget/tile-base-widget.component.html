@@ -8,12 +8,11 @@
         [ngClass]="{
             completed: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Success,
             queued: node.status === FlowStatus.Queued,
-            running:    node.status === FlowStatus.Running,
+            running: node.status === FlowStatus.Running,
             waiting: node.status === FlowStatus.Waiting,
             failed: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Failed,
             aborted: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Aborted,
-            scheduled:
-                node.status === FlowStatus.Scheduled
+            scheduled: node.status === FlowStatus.Scheduled
         }"
     >
         <ng-template #popContent>

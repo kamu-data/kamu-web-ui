@@ -53,9 +53,15 @@ export class AuthApi {
                 { login_method: loginMethod, login_credentials_json: loginCredentialsJson },
                 {
                     update: (cache) => {
-                        cache.evict({
-                            id: "ROOT_QUERY",
-                            fieldName: "datasets",
+                        const cacheMap = cache.extract() as object[];
+                        const datasetCachedKeys = Object.keys(cacheMap).filter((item: string) =>
+                            item.includes("Dataset:"),
+                        );
+                        datasetCachedKeys.forEach((key) => {
+                            cache.evict({
+                                id: key,
+                                fieldName: "permissions",
+                            });
                         });
                     },
                 },

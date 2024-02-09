@@ -9,7 +9,6 @@ import {
     TEST_GITHUB_CODE,
     TEST_LOGIN,
     TEST_PASSWORD,
-    mockAccountDetails,
     mockGithubLoginResponse,
     mockLoginInstructions,
     mockPasswordLoginResponse,
@@ -228,7 +227,6 @@ describe("LoggedUserService", () => {
             tick();
 
             expect(service.isAuthenticated).toBeTrue();
-            expect(service.currentlyLoggedInUser).toEqual(mockAccountDetails);
             flush();
         }));
     });

@@ -1,6 +1,6 @@
 fragment FlowConnectionData on FlowConnection {
   nodes {
-    ...FlowData
+    ...FlowSummaryData
   }
   totalCount
   pageInfo {
@@ -8,7 +8,7 @@ fragment FlowConnectionData on FlowConnection {
   }
   edges {
     node {
-      ...FlowData
+      ...FlowSummaryData
     }
   }
 }

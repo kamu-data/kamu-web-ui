@@ -15,9 +15,12 @@
 }
 
 .queued,
-.running,
 .waiting {
     background: #d3c22a;
+}
+
+.running {
+    background: #8bdaaf;
 }
 
 .scheduled {

@@ -1,4 +1,4 @@
-fragment FlowData on Flow {
+fragment FlowSummaryData on Flow {
   description {
     ... on FlowDescriptionDatasetPollingIngest {
       datasetId

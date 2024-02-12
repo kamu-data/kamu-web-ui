@@ -10,13 +10,15 @@ import {
     QueryList,
     ViewChildren,
 } from "@angular/core";
-import { FlowDataFragment, FlowOutcome, FlowStatus, Scalars } from "src/app/api/kamu.graphql.interface";
+import { FlowSummaryDataFragment, FlowOutcome, FlowStatus, Scalars } from "src/app/api/kamu.graphql.interface";
 import moment from "moment";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
 import { convertSecondsToHumanReadableFormat } from "src/app/common/app.helpers";
 import { MatMenuTrigger } from "@angular/material/menu";
 import { MatRadioChange } from "@angular/material/radio";
+import { DatasetFlowTableHelpers } from "./flows-table.helpers";
+import { FilterByInitiatorEnum } from "./flows-table.types";
 
 @Component({
     selector: "app-flows-table",
@@ -25,37 +27,45 @@ import { MatRadioChange } from "@angular/material/radio";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowsTableComponent implements OnInit {
-    @Input() public nodes: FlowDataFragment[];
-    @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
-    @Output() public filterByInitiatorChange = new EventEmitter<string>();
-    @Output() public searchByAccountNameChange = new EventEmitter<string>();
+    @Input() public nodes: FlowSummaryDataFragment[];
     @Input() public filterByStatus: MaybeNull<FlowStatus>;
     @Input() public filterByInitiator: string;
     @Input() public searchByAccountName: string;
-    public displayedColumns: string[] = ["description", "information", "creator", "options"];
-    public readonly FlowStatus = FlowStatus;
-    public readonly FlowOutcome = FlowOutcome;
+    @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
+    @Output() public filterByInitiatorChange = new EventEmitter<FilterByInitiatorEnum>();
+    @Output() public searchByAccountNameChange = new EventEmitter<string>();
+    public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"];
+    public readonly INITIATORS: string[] = Object.keys(FilterByInitiatorEnum);
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
+    public readonly FlowStatus: typeof FlowStatus = FlowStatus;
+    public readonly FlowOutcome: typeof FlowOutcome = FlowOutcome;
 
-    public initiators: string[] = ["All", "System", "Account"];
-    public dataSource: MatTableDataSource<FlowDataFragment>;
+    public dataSource: MatTableDataSource<FlowSummaryDataFragment>;
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
 
     ngOnInit(): void {
         this.dataSource = new MatTableDataSource(this.nodes);
     }
+
     public durationTask(d1: Scalars["DateTime"], d2: Scalars["DateTime"]): string {
         const result = moment(d2).seconds() - moment(d1).seconds();
         return convertSecondsToHumanReadableFormat(result) ? convertSecondsToHumanReadableFormat(result) : "-";
     }
 
-    public descriptionForDatasetFlow(flow: FlowDataFragment): string {
+    public descriptionForDatasetFlow(flow: FlowSummaryDataFragment): string {
         return DataHelpers.descriptionForDatasetFlow(flow);
     }
 
+    public descriptionColumnOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
+        return DatasetFlowTableHelpers.descriptionColumnTableOptions(element);
+    }
+
+    public descriptionDatasetFlowEndOfMessage(element: FlowSummaryDataFragment): string {
+        return DatasetFlowTableHelpers.descriptionEndOfMessage(element);
+    }
+
     public changeFilterByStatus(status: MaybeNull<FlowStatus>): void {
-        this.filterByStatus = status;
-        this.filterByStatusChange.emit(this.filterByStatus);
+        this.filterByStatusChange.emit(status);
     }
 
     public onSearchByAccountName(): void {
@@ -64,6 +74,6 @@ export class FlowsTableComponent implements OnInit {
     }
 
     public changeFilterByInitiator(event: MatRadioChange): void {
-        this.filterByInitiatorChange.emit(event.value as string);
+        this.filterByInitiatorChange.emit(event.value as FilterByInitiatorEnum);
     }
 }

@@ -56,8 +56,16 @@ table {
     color: #239a59;
 }
 
-.running-status {
+.queued-status {
     color: #d3c22a;
+}
+
+.running-status {
+    color: #8bdaaf;
+}
+
+.scheduled-status {
+    color: #2a8dd3;
 }
 
 .failed-status {

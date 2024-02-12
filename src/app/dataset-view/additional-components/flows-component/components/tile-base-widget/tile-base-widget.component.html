@@ -1,19 +1,11 @@
 <div class="content">
     <div
-        *ngFor="let node of nodes | slice: 0:lastRunsCount"
+        *ngFor="let node of nodes | slice: 0:LAST_RUNS_COUNT"
         class="tile-item"
         [ngbPopover]="popContent"
         triggers="mouseenter:mouseleave"
         [openDelay]="300"
-        [ngClass]="{
-            completed: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Success,
-            queued: node.status === FlowStatus.Queued,
-            running: node.status === FlowStatus.Running,
-            waiting: node.status === FlowStatus.Waiting,
-            failed: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Failed,
-            aborted: node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Aborted,
-            scheduled: node.status === FlowStatus.Scheduled
-        }"
+        [ngClass]="tileWidgetClass(node)"
     >
         <ng-template #popContent>
             <div class="fs-12 text-muted">
@@ -45,5 +37,5 @@
     </div>
 </div>
 <div class="mt-1">
-    <span class="fs-12 text-muted"> Show last {{ lastRunsCount }} runs</span>
+    <span class="fs-12 text-muted"> Show last {{ LAST_RUNS_COUNT }} runs</span>
 </div>

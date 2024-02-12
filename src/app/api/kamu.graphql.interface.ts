@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -1946,7 +1946,7 @@ export type DatasetResumeFlowsMutation = {
     };
 };
 
-export type FlowDataFragment = {
+export type FlowSummaryDataFragment = {
     __typename?: "Flow";
     flowId: string;
     status: FlowStatus;
@@ -1987,9 +1987,9 @@ export type FlowDataFragment = {
 export type FlowConnectionDataFragment = {
     __typename?: "FlowConnection";
     totalCount: number;
-    nodes: Array<{ __typename?: "Flow" } & FlowDataFragment>;
+    nodes: Array<{ __typename?: "Flow" } & FlowSummaryDataFragment>;
     pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
-    edges: Array<{ __typename?: "FlowEdge"; node: { __typename?: "Flow" } & FlowDataFragment }>;
+    edges: Array<{ __typename?: "FlowEdge"; node: { __typename?: "Flow" } & FlowSummaryDataFragment }>;
 };
 
 export type AddDataEventFragment = {
@@ -2743,8 +2743,8 @@ export type SearchDatasetsOverviewQuery = {
     };
 };
 
-export const FlowDataFragmentDoc = gql`
-    fragment FlowData on Flow {
+export const FlowSummaryDataFragmentDoc = gql`
+    fragment FlowSummaryData on Flow {
         description {
             ... on FlowDescriptionDatasetPollingIngest {
                 datasetId
@@ -2793,7 +2793,7 @@ export const DatasetPageInfoFragmentDoc = gql`
 export const FlowConnectionDataFragmentDoc = gql`
     fragment FlowConnectionData on FlowConnection {
         nodes {
-            ...FlowData
+            ...FlowSummaryData
         }
         totalCount
         pageInfo {
@@ -2801,11 +2801,11 @@ export const FlowConnectionDataFragmentDoc = gql`
         }
         edges {
             node {
-                ...FlowData
+                ...FlowSummaryData
             }
         }
     }
-    ${FlowDataFragmentDoc}
+    ${FlowSummaryDataFragmentDoc}
     ${DatasetPageInfoFragmentDoc}
 `;
 export const AccountFragmentDoc = gql`

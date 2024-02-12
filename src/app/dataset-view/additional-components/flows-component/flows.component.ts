@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import {
     DatasetBasicsFragment,
-    DatasetFlowType,
-    DatasetKind,
     FlowConnectionDataFragment,
-    FlowDataFragment,
     FlowStatus,
     InitiatorFilterInput,
+    FlowSummaryDataFragment,
+    FlowOutcome,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { Observable, filter, map } from "rxjs";
@@ -18,6 +17,8 @@ import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
+import { FilterByInitiatorEnum } from "./components/flows-table/flows-table.types";
+import { DatasetSchedulingService } from "../dataset-settings-component/services/dataset-scheduling.service";
 
 @Component({
     selector: "app-flows",
@@ -32,7 +33,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     public tileWidgetData$: Observable<MaybeUndefined<FlowConnectionDataFragment>>;
     public flowConnectionData$: Observable<MaybeUndefined<FlowConnectionDataFragment>>;
     public filterByStatus: MaybeNull<FlowStatus> = null;
-    public filterByInitiator = "All";
+    public filterByInitiator = FilterByInitiatorEnum.All;
     public searchByAccountName = "";
     public currentPage = 1;
     public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
@@ -43,6 +44,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         private flowsService: DatasetFlowsService,
         private router: Router,
         private navigationService: NavigationService,
+        private datasetSchedulingService: DatasetSchedulingService,
     ) {
         super();
     }
@@ -116,13 +118,14 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         this.filterByStatus = status;
     }
 
-    public onChangeFilterByInitiator(initiator: string): void {
-        if (initiator !== "Account") {
+    public onChangeFilterByInitiator(initiator: FilterByInitiatorEnum): void {
+        if (initiator !== FilterByInitiatorEnum.Account) {
             let filterOptions: MaybeNull<InitiatorFilterInput> = null;
-            if (initiator === "System") {
+            if (initiator === FilterByInitiatorEnum.System) {
                 filterOptions = { system: true };
             }
             this.getFlowConnectionData(this.currentPage, this.filterByStatus, filterOptions);
+            this.resetSearchByAccountName();
         }
         this.filterByInitiator = initiator;
     }
@@ -132,16 +135,12 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         this.searchByAccountName = accountName;
     }
 
-    public pauseDatasetUpdates(flow: FlowDataFragment): void {
-        if (flow.status !== FlowStatus.Finished) {
+    public toggleDatasetUpdates(flow: FlowSummaryDataFragment): void {
+        if (flow.outcome !== FlowOutcome.Aborted) {
             this.trackSubscription(
                 this.flowsService
                     .datasetPauseFlows({
                         datasetId: this.datasetBasics.id,
-                        datasetFlowType:
-                            this.datasetBasics.kind === DatasetKind.Root
-                                ? DatasetFlowType.Ingest
-                                : DatasetFlowType.ExecuteTransform,
                     })
                     .subscribe(),
             );
@@ -150,13 +149,13 @@ export class FlowsComponent extends BaseComponent implements OnInit {
                 this.flowsService
                     .datasetResumeFlows({
                         datasetId: this.datasetBasics.id,
-                        datasetFlowType:
-                            this.datasetBasics.kind === DatasetKind.Root
-                                ? DatasetFlowType.Ingest
-                                : DatasetFlowType.ExecuteTransform,
                     })
                     .subscribe(),
             );
         }
+    }
+
+    private resetSearchByAccountName(): void {
+        this.searchByAccountName = "";
     }
 }

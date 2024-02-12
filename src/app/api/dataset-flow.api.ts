@@ -130,7 +130,7 @@ export class DatasetFlowApi {
 
     public datasetPauseFlows(params: {
         datasetId: string;
-        datasetFlowType: DatasetFlowType;
+        datasetFlowType?: DatasetFlowType;
     }): Observable<DatasetPauseFlowsMutation> {
         return this.datasetPauseFlowsGQL
             .mutate({
@@ -152,7 +152,7 @@ export class DatasetFlowApi {
 
     public datasetResumeFlows(params: {
         datasetId: string;
-        datasetFlowType: DatasetFlowType;
+        datasetFlowType?: DatasetFlowType;
     }): Observable<DatasetResumeFlowsMutation> {
         return this.datasetResumeFlowsGQL
             .mutate({

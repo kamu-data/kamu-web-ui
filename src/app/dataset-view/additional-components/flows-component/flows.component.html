@@ -21,11 +21,15 @@
                             <svg-icon name="show-options"></svg-icon>
                         </button>
                         <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="true">
-                            <button mat-menu-item (click)="updateNow()">Update now</button>
+                            <button mat-menu-item [disabled]="true" (click)="updateNow()">Update now</button>
                             <mat-divider></mat-divider>
-                            <button mat-menu-item (click)="updateSettings()">Update settings</button>
+                            <button mat-menu-item [disabled]="true" (click)="updateSettings()">Update settings</button>
                             <mat-divider></mat-divider>
-                            <button mat-menu-item (click)="pauseDatasetUpdates(flowConnection.nodes[0])">
+                            <button
+                                mat-menu-item
+                                [disabled]="true"
+                                (click)="toggleDatasetUpdates(flowConnection.nodes[0])"
+                            >
                                 {{ flowConnection.nodes[0].status !== FlowStatus.Finished ? "Pause" : "Resume" }}
                                 dataset updates
                             </button>

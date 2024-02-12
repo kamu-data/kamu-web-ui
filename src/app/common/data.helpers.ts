@@ -1,6 +1,6 @@
 import { MaybeNull } from "src/app/common/app.types";
 import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
-import { FlowDataFragment, MetadataBlockFragment, TimeUnit } from "../api/kamu.graphql.interface";
+import { FlowSummaryDataFragment, MetadataBlockFragment, TimeUnit } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { MaybeUndefined } from "./app.types";
@@ -175,7 +175,7 @@ export class DataHelpers {
         }
     }
 
-    public static descriptionForDatasetFlow(flow: FlowDataFragment): string {
+    public static descriptionForDatasetFlow(flow: FlowSummaryDataFragment): string {
         const decriptionFlow = flow.description;
         switch (decriptionFlow.__typename) {
             case "FlowDescriptionDatasetPollingIngest": {

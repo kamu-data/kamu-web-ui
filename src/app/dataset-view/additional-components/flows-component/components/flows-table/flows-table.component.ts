@@ -29,7 +29,7 @@ import { FilterByInitiatorEnum } from "./flows-table.types";
 export class FlowsTableComponent implements OnInit {
     @Input() public nodes: FlowSummaryDataFragment[];
     @Input() public filterByStatus: MaybeNull<FlowStatus>;
-    @Input() public filterByInitiator: string;
+    @Input() public filterByInitiator: FilterByInitiatorEnum;
     @Input() public searchByAccountName: string;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public filterByInitiatorChange = new EventEmitter<FilterByInitiatorEnum>();
@@ -39,6 +39,7 @@ export class FlowsTableComponent implements OnInit {
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly FlowOutcome: typeof FlowOutcome = FlowOutcome;
+    public readonly FilterByInitiatorEnum: typeof FilterByInitiatorEnum = FilterByInitiatorEnum;
 
     public dataSource: MatTableDataSource<FlowSummaryDataFragment>;
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
@@ -48,8 +49,8 @@ export class FlowsTableComponent implements OnInit {
     }
 
     public durationTask(d1: Scalars["DateTime"], d2: Scalars["DateTime"]): string {
-        const result = moment(d2).seconds() - moment(d1).seconds();
-        return convertSecondsToHumanReadableFormat(result) ? convertSecondsToHumanReadableFormat(result) : "-";
+        const result = convertSecondsToHumanReadableFormat(moment(d2).seconds() - moment(d1).seconds());
+        return result ? result : "-";
     }
 
     public descriptionForDatasetFlow(flow: FlowSummaryDataFragment): string {

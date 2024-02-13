@@ -10,7 +10,7 @@
     }
 }
 
-.completed {
+.success {
     background: #0db28d;
 }
 
@@ -33,6 +33,10 @@
 
 .aborted {
     background: rgba(181 175 175);
+}
+
+.cancelled {
+    background: #d6b7bc;
 }
 
 .tooltip-class {

@@ -2,9 +2,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FlowsComponent } from "./flows.component";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { ToastrModule } from "ngx-toastr";
+import { routerMock } from "src/app/common/base-test.helpers.spec";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;
@@ -14,6 +15,7 @@ describe("FlowsComponent", () => {
         await TestBed.configureTestingModule({
             providers: [
                 Apollo,
+                { provide: Router, useValue: routerMock },
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -23,8 +25,6 @@ describe("FlowsComponent", () => {
                                     switch (key) {
                                         case "tab":
                                             return "flows";
-                                        case "page":
-                                            return "2";
                                     }
                                 },
                             },

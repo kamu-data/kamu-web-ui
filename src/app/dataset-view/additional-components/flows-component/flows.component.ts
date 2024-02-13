@@ -18,7 +18,6 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { FilterByInitiatorEnum } from "./components/flows-table/flows-table.types";
-import { DatasetSchedulingService } from "../dataset-settings-component/services/dataset-scheduling.service";
 
 @Component({
     selector: "app-flows",
@@ -44,7 +43,6 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         private flowsService: DatasetFlowsService,
         private router: Router,
         private navigationService: NavigationService,
-        private datasetSchedulingService: DatasetSchedulingService,
     ) {
         super();
     }

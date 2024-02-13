@@ -2,21 +2,31 @@ import { FlowOutcome, FlowStatus, FlowSummaryDataFragment } from "src/app/api/ka
 
 export class TileBaseWidgetHelpers {
     public static tileWidgetClass(node: FlowSummaryDataFragment): string {
-        if (node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Success) {
-            return "completed";
-        } else if (node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Failed) {
-            return "failed";
-        } else if (node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Aborted) {
-            return "aborted";
-        } else if (node.status === FlowStatus.Queued) {
-            return "queued";
-        } else if (node.status === FlowStatus.Running) {
-            return "running";
-        } else if (node.status === FlowStatus.Waiting) {
-            return "waiting";
-        } else if (node.status === FlowStatus.Scheduled) {
-            return "scheduled";
+        switch (node.status) {
+            case FlowStatus.Finished: {
+                return node.outcome ? flowOutcomeMapperClass[node.outcome] : "";
+            }
+            case FlowStatus.Queued: {
+                return "queued";
+            }
+            case FlowStatus.Running: {
+                return "running";
+            }
+            case FlowStatus.Waiting: {
+                return "waiting";
+            }
+            case FlowStatus.Scheduled: {
+                return "scheduled";
+            }
+            default:
+                return "";
         }
-        return "";
     }
 }
+
+const flowOutcomeMapperClass: Record<FlowOutcome, string> = {
+    [FlowOutcome.Success]: "success",
+    [FlowOutcome.Failed]: "failed",
+    [FlowOutcome.Aborted]: "aborted",
+    [FlowOutcome.Cancelled]: "cancelled",
+};

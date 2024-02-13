@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import moment from "moment";
-import { FlowStatus, FlowOutcome, Scalars, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import { FlowStatus, FlowOutcome, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { convertSecondsToHumanReadableFormat } from "src/app/common/app.helpers";
 import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
+import { MaybeNullOrUndefined } from "src/app/common/app.types";
 
 @Component({
     selector: "app-tile-base-widget",
@@ -16,7 +17,7 @@ export class TileBaseWidgetComponent {
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly FlowOutcome: typeof FlowOutcome = FlowOutcome;
 
-    public durationTask(d1: Scalars["DateTime"], d2: Scalars["DateTime"]): string {
+    public durationTask(d1: MaybeNullOrUndefined<string>, d2: MaybeNullOrUndefined<string>): string {
         const result = convertSecondsToHumanReadableFormat(moment(d2).seconds() - moment(d1).seconds());
         return result ? result : "-";
     }

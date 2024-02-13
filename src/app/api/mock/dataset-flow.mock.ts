@@ -1,4 +1,10 @@
-import { DatasetFlowBatchingMutation, DatasetFlowScheduleMutation } from "./../kamu.graphql.interface";
+import {
+    DatasetFlowBatchingMutation,
+    DatasetFlowScheduleMutation,
+    FlowOutcome,
+    FlowStatus,
+    FlowSummaryDataFragment,
+} from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
 
 export const mockTimeDeltaInput: TimeDeltaInput = {
@@ -135,3 +141,60 @@ export const mockSetDatasetFlowBatchingSuccess: DatasetFlowBatchingMutation = {
         __typename: "DatasetsMut",
     },
 };
+
+export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
+    {
+        description: {
+            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+            ingestedRecordsCount: null,
+            __typename: "FlowDescriptionDatasetPollingIngest",
+        },
+        flowId: "415",
+        status: FlowStatus.Queued,
+        initiator: null,
+        outcome: null,
+        timing: {
+            activateAt: "2024-02-12T18:22:30+00:00",
+            runningSince: null,
+            finishedAt: null,
+            __typename: "FlowTimingRecords",
+        },
+        __typename: "Flow",
+    },
+    {
+        description: {
+            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+            ingestedRecordsCount: null,
+            __typename: "FlowDescriptionDatasetPollingIngest",
+        },
+        flowId: "414",
+        status: FlowStatus.Finished,
+        initiator: null,
+        outcome: FlowOutcome.Success,
+        timing: {
+            activateAt: "2024-02-12T18:21:26+00:00",
+            runningSince: "2024-02-12T18:21:27.477789591+00:00",
+            finishedAt: "2024-02-12T18:21:29.554197038+00:00",
+            __typename: "FlowTimingRecords",
+        },
+        __typename: "Flow",
+    },
+    {
+        description: {
+            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+            ingestedRecordsCount: null,
+            __typename: "FlowDescriptionDatasetPollingIngest",
+        },
+        flowId: "413",
+        status: FlowStatus.Finished,
+        initiator: null,
+        outcome: FlowOutcome.Success,
+        timing: {
+            activateAt: "2024-02-12T18:20:24+00:00",
+            runningSince: "2024-02-12T18:20:25.308435148+00:00",
+            finishedAt: "2024-02-12T18:20:26.401066641+00:00",
+            __typename: "FlowTimingRecords",
+        },
+        __typename: "Flow",
+    },
+];

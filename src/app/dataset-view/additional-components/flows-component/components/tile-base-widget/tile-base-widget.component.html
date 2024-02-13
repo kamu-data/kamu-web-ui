@@ -1,6 +1,6 @@
 <div class="content">
     <div
-        *ngFor="let node of nodes | slice: 0:LAST_RUNS_COUNT"
+        *ngFor="let node of nodes | slice: 0:LAST_RUNS_COUNT; let i = index"
         class="tile-item"
         [ngbPopover]="popContent"
         triggers="mouseenter:mouseleave"

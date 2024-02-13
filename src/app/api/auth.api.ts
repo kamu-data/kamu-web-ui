@@ -48,18 +48,36 @@ export class AuthApi {
         loginMethod: string,
         loginCredentialsJson: string,
     ): Observable<LoginResponse> {
-        return this.loginGQL.mutate({ login_method: loginMethod, login_credentials_json: loginCredentialsJson }).pipe(
-            map((result: MutationResult<LoginMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data.auth.login;
-                } else {
-                    // Normally, this code should not be reachable
-                    throw new AuthenticationError(result.errors ?? []);
-                }
-            }),
-            catchError((e: Error) => throwError(() => new AuthenticationError([e]))),
-        );
+        return this.loginGQL
+            .mutate(
+                { login_method: loginMethod, login_credentials_json: loginCredentialsJson },
+                {
+                    update: (cache) => {
+                        const cacheMap = cache.extract() as object[];
+                        const datasetCachedKeys = Object.keys(cacheMap).filter((item: string) =>
+                            item.includes("Dataset:"),
+                        );
+                        datasetCachedKeys.forEach((key) => {
+                            cache.evict({
+                                id: key,
+                                fieldName: "permissions",
+                            });
+                        });
+                    },
+                },
+            )
+            .pipe(
+                map((result: MutationResult<LoginMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data.auth.login;
+                    } else {
+                        // Normally, this code should not be reachable
+                        throw new AuthenticationError(result.errors ?? []);
+                    }
+                }),
+                catchError((e: Error) => throwError(() => new AuthenticationError([e]))),
+            );
     }
 
     public fetchAccountFromAccessToken(accessToken: string): Observable<AccountFragment> {

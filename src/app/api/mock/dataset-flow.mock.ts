@@ -1,9 +1,12 @@
 import {
     DatasetFlowBatchingMutation,
     DatasetFlowScheduleMutation,
+    DatasetPauseFlowsMutation,
+    DatasetResumeFlowsMutation,
     FlowOutcome,
     FlowStatus,
     FlowSummaryDataFragment,
+    GetDatasetListFlowsQuery,
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
 
@@ -111,6 +114,27 @@ export const mockSetDatasetFlowScheduleSuccess: DatasetFlowScheduleMutation = {
     },
 };
 
+export const mockSetDatasetFlowScheduleError: DatasetFlowScheduleMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                configs: {
+                    setConfigSchedule: {
+                        __typename: "FlowIncompatibleDatasetKind",
+                        message: "Error",
+                        expectedDatasetKind: DatasetKind.Root,
+                        actualDatasetKind: DatasetKind.Derivative,
+                    },
+                    __typename: "DatasetFlowConfigsMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
 export const mockSetDatasetFlowBatchingSuccess: DatasetFlowBatchingMutation = {
     datasets: {
         byId: {
@@ -131,6 +155,27 @@ export const mockSetDatasetFlowBatchingSuccess: DatasetFlowBatchingMutation = {
                             },
                             __typename: "FlowConfiguration",
                         },
+                    },
+                    __typename: "DatasetFlowConfigsMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockSetDatasetFlowBatchingError: DatasetFlowBatchingMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                configs: {
+                    setConfigBatching: {
+                        __typename: "FlowIncompatibleDatasetKind",
+                        message: "Error",
+                        expectedDatasetKind: DatasetKind.Derivative,
+                        actualDatasetKind: DatasetKind.Root,
                     },
                     __typename: "DatasetFlowConfigsMut",
                 },
@@ -198,3 +243,163 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         __typename: "Flow",
     },
 ];
+
+export const mockDatasetPauseFlowsMutationSuccess: DatasetPauseFlowsMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                configs: {
+                    pauseFlows: true,
+                },
+            },
+        },
+    },
+};
+
+export const mockDatasetPauseFlowsMutationError: DatasetPauseFlowsMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                configs: {
+                    pauseFlows: false,
+                },
+            },
+        },
+    },
+};
+
+export const mockDatasetResumeFlowsMutationSuccess: DatasetResumeFlowsMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                configs: {
+                    resumeFlows: true,
+                },
+            },
+        },
+    },
+};
+
+export const mockDatasetResumeFlowsMutationError: DatasetResumeFlowsMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                configs: {
+                    resumeFlows: false,
+                },
+            },
+        },
+    },
+};
+
+export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
+    datasets: {
+        byId: {
+            flows: {
+                runs: {
+                    listFlows: {
+                        nodes: [
+                            {
+                                description: {
+                                    datasetId:
+                                        "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8",
+                                    ingestedRecordsCount: null,
+                                    __typename: "FlowDescriptionDatasetPollingIngest",
+                                },
+                                flowId: "90",
+                                status: FlowStatus.Queued,
+                                initiator: null,
+                                outcome: null,
+                                timing: {
+                                    activateAt: "2024-02-13T10:11:25+00:00",
+                                    runningSince: null,
+                                    finishedAt: null,
+                                    __typename: "FlowTimingRecords",
+                                },
+                                __typename: "Flow",
+                            },
+                            {
+                                description: {
+                                    datasetId:
+                                        "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8",
+                                    ingestedRecordsCount: null,
+                                    __typename: "FlowDescriptionDatasetPollingIngest",
+                                },
+                                flowId: "88",
+                                status: FlowStatus.Finished,
+                                initiator: null,
+                                outcome: FlowOutcome.Success,
+                                timing: {
+                                    activateAt: "2024-02-13T10:10:25+00:00",
+                                    runningSince: "2024-02-13T10:10:25.468811294+00:00",
+                                    finishedAt: "2024-02-13T10:10:25.488660882+00:00",
+                                    __typename: "FlowTimingRecords",
+                                },
+                                __typename: "Flow",
+                            },
+                        ],
+                        totalCount: 2,
+                        pageInfo: {
+                            hasNextPage: false,
+                            hasPreviousPage: false,
+                            currentPage: 0,
+                            totalPages: 1,
+                            __typename: "PageBasedInfo",
+                        },
+                        edges: [
+                            {
+                                node: {
+                                    description: {
+                                        datasetId:
+                                            "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8",
+                                        ingestedRecordsCount: null,
+                                        __typename: "FlowDescriptionDatasetPollingIngest",
+                                    },
+                                    flowId: "90",
+                                    status: FlowStatus.Queued,
+                                    initiator: null,
+                                    outcome: null,
+                                    timing: {
+                                        activateAt: "2024-02-13T10:11:25+00:00",
+                                        runningSince: null,
+                                        finishedAt: null,
+                                        __typename: "FlowTimingRecords",
+                                    },
+                                    __typename: "Flow",
+                                },
+                                __typename: "FlowEdge",
+                            },
+                            {
+                                node: {
+                                    description: {
+                                        datasetId:
+                                            "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8",
+                                        ingestedRecordsCount: null,
+                                        __typename: "FlowDescriptionDatasetPollingIngest",
+                                    },
+                                    flowId: "88",
+                                    status: FlowStatus.Finished,
+                                    initiator: null,
+                                    outcome: FlowOutcome.Success,
+                                    timing: {
+                                        activateAt: "2024-02-13T10:10:25+00:00",
+                                        runningSince: "2024-02-13T10:10:25.468811294+00:00",
+                                        finishedAt: "2024-02-13T10:10:25.488660882+00:00",
+                                        __typename: "FlowTimingRecords",
+                                    },
+                                    __typename: "Flow",
+                                },
+                                __typename: "FlowEdge",
+                            },
+                        ],
+                        __typename: "FlowConnection",
+                    },
+                    __typename: "DatasetFlowRuns",
+                },
+                __typename: "DatasetFlows",
+            },
+            __typename: "Dataset",
+        },
+        __typename: "Datasets",
+    },
+};

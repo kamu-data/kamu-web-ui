@@ -1,0 +1,24 @@
+mutation datasetTriggerFlow($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        runs {
+          triggerFlow(datasetFlowType: $datasetFlowType) {
+            ... on TriggerFlowSuccess {
+              flow {
+                ...FlowSummaryData
+              }
+              message
+            }
+
+            ... on FlowIncompatibleDatasetKind {
+              expectedDatasetKind
+              actualDatasetKind
+              message
+            }
+          }
+        }
+      }
+    }
+  }
+}

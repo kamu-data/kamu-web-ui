@@ -1954,6 +1954,39 @@ export type DatasetResumeFlowsMutation = {
     };
 };
 
+export type DatasetTriggerFlowMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
+}>;
+
+export type DatasetTriggerFlowMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                runs: {
+                    __typename?: "DatasetFlowRunsMut";
+                    triggerFlow:
+                        | {
+                              __typename?: "FlowIncompatibleDatasetKind";
+                              expectedDatasetKind: DatasetKind;
+                              actualDatasetKind: DatasetKind;
+                              message: string;
+                          }
+                        | {
+                              __typename?: "TriggerFlowSuccess";
+                              message: string;
+                              flow: { __typename?: "Flow" } & FlowSummaryDataFragment;
+                          };
+                };
+            };
+        } | null;
+    };
+};
+
 export type FlowSummaryDataFragment = {
     __typename?: "Flow";
     flowId: string;
@@ -4166,6 +4199,46 @@ export class DatasetResumeFlowsGQL extends Apollo.Mutation<
     DatasetResumeFlowsMutationVariables
 > {
     document = DatasetResumeFlowsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetTriggerFlowDocument = gql`
+    mutation datasetTriggerFlow($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    runs {
+                        triggerFlow(datasetFlowType: $datasetFlowType) {
+                            ... on TriggerFlowSuccess {
+                                flow {
+                                    ...FlowSummaryData
+                                }
+                                message
+                            }
+                            ... on FlowIncompatibleDatasetKind {
+                                expectedDatasetKind
+                                actualDatasetKind
+                                message
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FlowSummaryDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetTriggerFlowGQL extends Apollo.Mutation<
+    DatasetTriggerFlowMutation,
+    DatasetTriggerFlowMutationVariables
+> {
+    document = DatasetTriggerFlowDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

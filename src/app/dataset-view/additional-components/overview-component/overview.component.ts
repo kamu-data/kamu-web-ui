@@ -2,10 +2,19 @@ import { EditLicenseModalComponent } from "./components/edit-license-modal/edit-
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
     DatasetCurrentInfoFragment,
+    DatasetFlowType,
     DatasetKind,
     DatasetPermissionsFragment,
 } from "../../../api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+} from "@angular/core";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import {
@@ -21,6 +30,8 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { EditDetailsModalComponent } from "./components/edit-details-modal/edit-details-modal.component";
 import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/edit-watermark-modal.component";
 import _ from "lodash";
+import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
+import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 
 @Component({
     selector: "app-overview",
@@ -46,6 +57,8 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         private datasetSubsService: DatasetSubscriptionsService,
         private navigationService: NavigationService,
         private modalService: NgbModal,
+        private datasetFlowsService: DatasetFlowsService,
+        private cdr: ChangeDetectorRef,
     ) {
         super();
     }
@@ -236,5 +249,27 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public onAddReadme(): void {
         this.editingReadme = true;
+    }
+
+    public refreshNow(): void {
+        this.trackSubscription(
+            this.datasetFlowsService
+                .datasetTriggerFlow({
+                    datasetId: this.datasetBasics.id,
+                    datasetFlowType:
+                        this.datasetBasics.kind === DatasetKind.Root
+                            ? DatasetFlowType.Ingest
+                            : DatasetFlowType.ExecuteTransform,
+                })
+                .subscribe((success: boolean) => {
+                    if (success) {
+                        this.navigationService.navigateToDatasetView({
+                            accountName: this.datasetBasics.owner.accountName,
+                            datasetName: this.datasetBasics.name,
+                            tab: DatasetViewTypeEnum.Flows,
+                        });
+                    }
+                }),
+        );
     }
 }

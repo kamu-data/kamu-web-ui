@@ -26,7 +26,7 @@ describe("DatasetNamePropertyComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check navigate to datset page", () => {
+    it("should check navigate to dataset page", () => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.navigateToDatasetView();
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({

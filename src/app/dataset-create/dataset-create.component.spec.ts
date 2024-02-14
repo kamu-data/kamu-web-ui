@@ -1,5 +1,5 @@
 import { of } from "rxjs";
-import { getInputElememtByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { getInputElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
@@ -50,7 +50,7 @@ describe("DatasetCreateComponent", () => {
         datasetCreateService.emitErrorMessageChanged(errorMessage);
         tick();
         fixture.detectChanges();
-        const element = getInputElememtByDataTestId(fixture, "create-error-message");
+        const element = getInputElementByDataTestId(fixture, "create-error-message");
         expect(element.textContent).toEqual(errorMessage);
         flush();
     }));
@@ -82,7 +82,7 @@ describe("DatasetCreateComponent", () => {
     });
 
     it("should check switch checkbox `Initialize from YAML snapshot`)", () => {
-        const checkboxInput = getInputElememtByDataTestId(fixture, "show-monaco-editor");
+        const checkboxInput = getInputElementByDataTestId(fixture, "show-monaco-editor");
         expect(checkboxInput.checked).toBeFalse();
         expect(component.showMonacoEditor).toBeFalse();
 
@@ -98,7 +98,7 @@ describe("DatasetCreateComponent", () => {
     });
 
     it("should check call uploadFile when file picked)", async () => {
-        const checkboxInput = getInputElememtByDataTestId(fixture, "show-monaco-editor");
+        const checkboxInput = getInputElementByDataTestId(fixture, "show-monaco-editor");
 
         checkboxInput.click();
         fixture.detectChanges();
@@ -116,7 +116,7 @@ describe("DatasetCreateComponent", () => {
     });
 
     it("should check call uploadFile when file not picked)", async () => {
-        const checkboxInput = getInputElememtByDataTestId(fixture, "show-monaco-editor");
+        const checkboxInput = getInputElementByDataTestId(fixture, "show-monaco-editor");
 
         checkboxInput.click();
         fixture.detectChanges();

@@ -31,7 +31,7 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
     }
 
     private displayTable(): void {
-        // Cornercase - schema is empty, nothing to display
+        // Corner case - schema is empty, nothing to display
         if (this.schemaFields.length === 0) {
             this.dataSource.data = [];
             this.displayedColumns = [];

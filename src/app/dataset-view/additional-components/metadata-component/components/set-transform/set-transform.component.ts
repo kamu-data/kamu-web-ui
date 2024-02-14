@@ -34,7 +34,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     public ngOnInit(): void {
         this.checkDatasetEditability(DatasetKind.Derivative);
         this.initQueriesSection();
-        this.subsribeErrorMessage();
+        this.subscribeErrorMessage();
     }
 
     public onSelectEngine(engine: string): void {

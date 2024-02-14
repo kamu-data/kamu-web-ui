@@ -105,7 +105,7 @@
                 [currentReadme]="currentState.overview.metadata.currentReadme"
                 [editingInProgress]="editingReadme"
                 [editable]="canEditReadme"
-                (editViewShowEmmiter)="editingReadme = $event"
+                (editViewShowEmitter)="editingReadme = $event"
             ></app-readme-section>
         </div>
     </div>
@@ -273,7 +273,7 @@
                                         class="signed-commit-badge verified signed-commit-badge-small"
                                         aria-label="Edit watermark details"
                                         data-test-id="edit-dataset-watermark"
-                                        title="Add watewrmark"
+                                        title="Add watermark"
                                         type="button"
                                         (click)="openWatermarkModal()"
                                     >

@@ -35,7 +35,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     const MOCK_PARAM_UNIT = TimeUnit.Days;
     const MOCK_PARAM_MIN_DATA_BATCH = 1000;
     const MOCK_CRON_EXPRESSION = "* * * * ?";
-    const MOCK_INALID_CRON_EXPRESSION = "* *";
+    const MOCK_INVALID_CRON_EXPRESSION = "* *";
     const MOCK_INPUT_TIME_DELTA: TimeDelta = {
         every: MOCK_PARAM_EVERY,
         unit: MOCK_PARAM_UNIT,
@@ -171,7 +171,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "button-cron-expression");
-        setFieldValue(fixture, "polling-group-cron-expression", MOCK_INALID_CRON_EXPRESSION);
+        setFieldValue(fixture, "polling-group-cron-expression", MOCK_INVALID_CRON_EXPRESSION);
         fixture.detectChanges();
         const errorMessageElem = findElementByDataTestId(fixture, "cronExpression-error");
         expect(errorMessageElem?.textContent?.trim()).toEqual("Invalid expression");

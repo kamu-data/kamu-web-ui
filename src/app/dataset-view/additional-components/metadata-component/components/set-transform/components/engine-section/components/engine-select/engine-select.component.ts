@@ -34,7 +34,7 @@ export class EngineSelectComponent implements OnInit {
     constructor(private render: Renderer2) {}
 
     @HostListener("document:click", ["$event"])
-    clickout(event: Event) {
+    clickOut(event: Event) {
         if (!this.dropdown.nativeElement.contains(event.target as Element)) {
             this.showDropdown = false;
         }

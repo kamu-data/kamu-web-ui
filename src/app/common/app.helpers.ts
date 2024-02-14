@@ -33,7 +33,7 @@ export function isMobileView(): boolean {
  * @param dateParams {boolean} isTextDate for example 'Today', 'Yesterday'
  * @return {string}
  */
-export function momentConvertDatetoLocalWithFormat(dateParams: {
+export function momentConvertDateToLocalWithFormat(dateParams: {
     date: Date | number;
     format?: string;
     isTextDate?: boolean;

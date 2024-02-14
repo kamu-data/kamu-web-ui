@@ -22,13 +22,13 @@ describe("EventTypeFilterPipe", () => {
 
     [
         { eventFilter: "ExecuteTransform", match: true },
-        { enventFilter: "SetLicense", match: false },
+        { eventFilter: "SetLicense", match: false },
     ].forEach(({ eventFilter, match }) => {
         it(`should check pipe when event filter is ${match ? "" : "not"}matches type of event`, () => {
             const block = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
                 .blockByHash as MetadataBlockFragment;
             const mockBlocks: MetadataBlockFragment[] = [block];
-            const defaultEventFilter: string[] = [eventFilter] as string[];
+            const defaultEventFilter: string[] = [eventFilter];
 
             const result: MetadataBlockFragment[] = pipe.transform(mockBlocks, defaultEventFilter);
 

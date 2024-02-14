@@ -42,7 +42,7 @@ describe("DatasetSettingsService", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should check detete dataset with success", () => {
+    it("should check delete dataset with success", () => {
         const deleteDatasetSpy = spyOn(datasetApi, "deleteDataset").and.returnValue(of(mockDeleteSuccessResponse));
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
         const navigateToSearchSpy = spyOn(navigationService, "navigateToSearch");

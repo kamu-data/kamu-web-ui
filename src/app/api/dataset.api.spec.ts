@@ -3,7 +3,7 @@ import {
     mockDatasetByAccountAndDatasetNameQuery,
     mockDatasetDataSqlRunResponse,
     mockDatasetsByAccountNameQuery,
-    mockDatassetByIdQuery,
+    mockDatasetByIdQuery,
     mockGetMetadataBlockQuery,
     TEST_ACCOUNT_NAME,
     TEST_BLOCK_HASH,
@@ -248,7 +248,7 @@ describe("DatasetApi", () => {
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
 
         op.flush({
-            data: mockDatassetByIdQuery,
+            data: mockDatasetByIdQuery,
         });
 
         tick();

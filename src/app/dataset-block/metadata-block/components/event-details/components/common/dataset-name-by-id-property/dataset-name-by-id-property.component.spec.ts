@@ -11,7 +11,7 @@ import { SharedTestModule } from "src/app/common/shared-test.module";
 describe("DatasetIdAndNamePropertyComponent", () => {
     let component: DatasetNameByIdPropertyComponent;
     let fixture: ComponentFixture<DatasetNameByIdPropertyComponent>;
-    let datasetSevice: DatasetService;
+    let datasetService: DatasetService;
     let navigationService: NavigationService;
 
     const testDatasetInfo: DatasetInfo = {
@@ -25,7 +25,7 @@ describe("DatasetIdAndNamePropertyComponent", () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetNameByIdPropertyComponent);
-        datasetSevice = TestBed.inject(DatasetService);
+        datasetService = TestBed.inject(DatasetService);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
         component.datasetInfo = testDatasetInfo;
@@ -36,8 +36,8 @@ describe("DatasetIdAndNamePropertyComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check call requestDatasetInfoById from datasetSevice in ngOnInit", () => {
-        const requestDatasetInfoByIdSpy = spyOn(datasetSevice, "requestDatasetInfoById").and.returnValue(
+    it("should check call requestDatasetInfoById from datasetService in ngOnInit", () => {
+        const requestDatasetInfoByIdSpy = spyOn(datasetService, "requestDatasetInfoById").and.returnValue(
             of({
                 __typename: "Query",
                 datasets: {

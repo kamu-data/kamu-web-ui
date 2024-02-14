@@ -22,7 +22,7 @@ export interface SchemaType {
 })
 export class SchemaFieldComponent extends BaseField implements AfterViewInit {
     @ViewChild(MatTable) table: MatTable<unknown>;
-    @ViewChildren("ngbTypeahed") ngbType: QueryList<NgbTypeahead>;
+    @ViewChildren("ngbTypeahead") ngbType: QueryList<NgbTypeahead>;
     public focus$ = new Subject<SchemaType>();
     public click$ = new Subject<SchemaType>();
     private focusObservableList = Array<Subject<SchemaType>>();

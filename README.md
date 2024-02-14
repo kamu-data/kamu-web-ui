@@ -151,4 +151,4 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 3. Checkout and pull master
 4. Run `npm version {patch,minor,major}` - this will increment the version in all places, commit the changes and crate a new git tag
 5. Push the version change and the tag: `git push`
-6. Github Actions will pick up the new tag and create a new GitHub release from it
+6. GitHub Actions will pick up the new tag and create a new GitHub release from it

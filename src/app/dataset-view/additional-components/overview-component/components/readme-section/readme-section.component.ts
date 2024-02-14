@@ -16,7 +16,7 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
     @Input() public currentReadme?: MaybeNull<string>;
     @Input() public editingInProgress = false;
     @Input() public editable = true;
-    @Output() public editViewShowEmmiter = new EventEmitter<boolean>();
+    @Output() public editViewShowEmitter = new EventEmitter<boolean>();
 
     public editMode: typeof EditMode = EditMode;
     public viewMode = EditMode.Edit;
@@ -50,7 +50,7 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
 
     public showEditTabs(): void {
         this.editingInProgress = !this.editingInProgress;
-        this.editViewShowEmmiter.emit(this.editingInProgress);
+        this.editViewShowEmitter.emit(this.editingInProgress);
     }
 
     public onCancelChanges(): void {
@@ -71,6 +71,6 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
     private reset(): void {
         this.viewMode = EditMode.Edit;
         this.editingInProgress = false;
-        this.editViewShowEmmiter.emit(this.editingInProgress);
+        this.editViewShowEmitter.emit(this.editingInProgress);
     }
 }

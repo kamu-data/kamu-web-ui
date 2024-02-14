@@ -132,7 +132,7 @@ export const mockDatasetByAccountAndDatasetNameQuery: DatasetByAccountAndDataset
     },
 };
 
-export const mockDatassetByIdQuery: DatasetByIdQuery = {
+export const mockDatasetByIdQuery: DatasetByIdQuery = {
     datasets: {
         __typename: "Datasets",
         byId: {

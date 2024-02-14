@@ -67,7 +67,7 @@ describe("MetadataBlockComponent", () => {
                     useValue: {
                         params: of({
                             accountName: "accountName",
-                            datasetName: "datsetName",
+                            datasetName: "datasetName",
                             blockHash: "ewrwe213123",
                         }),
                         snapshot: {

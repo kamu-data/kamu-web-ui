@@ -5,7 +5,7 @@ import { TypeaheadFieldComponent } from "./typeahead-field.component";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { getInputElememtByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { getInputElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { interval } from "rxjs";
 import { map, take } from "rxjs/operators";
 import AppValues from "src/app/common/app.values";
@@ -56,7 +56,7 @@ describe("TypeaheadFieldComponent", () => {
     });
 
     it("should check call search method", fakeAsync(() => {
-        const inputEl = getInputElememtByDataTestId(fixture, "typeahead");
+        const inputEl = getInputElementByDataTestId(fixture, "typeahead");
         inputEl.click();
         const textMock$ = interval(100).pipe(
             take(2),

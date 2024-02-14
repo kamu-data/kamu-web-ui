@@ -7,10 +7,10 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
     providedIn: "root",
 })
 export class AuthenticatedGuard implements CanActivate {
-    constructor(private navigationService: NavigationService, private logggedUserService: LoggedUserService) {}
+    constructor(private navigationService: NavigationService, private loggedUserService: LoggedUserService) {}
 
     public canActivate(): boolean {
-        if (!this.logggedUserService.isAuthenticated) {
+        if (!this.loggedUserService.isAuthenticated) {
             this.navigationService.navigateToHome();
             return false;
         }

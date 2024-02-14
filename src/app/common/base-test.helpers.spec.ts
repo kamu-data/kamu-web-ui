@@ -111,12 +111,12 @@ export const snapshotParamMapMock = {
     },
 };
 
-export function getInputElememtByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLInputElement {
+export function getInputElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLInputElement {
     return getElementByDataTestId(fixture, id) as HTMLInputElement;
 }
 
 export function dispatchInputEvent<T>(fixture: ComponentFixture<T>, id: string, value: string): void {
-    const element = getInputElememtByDataTestId(fixture, id);
+    const element = getInputElementByDataTestId(fixture, id);
     element.value = value;
     element.dispatchEvent(new Event("input"));
     fixture.detectChanges();

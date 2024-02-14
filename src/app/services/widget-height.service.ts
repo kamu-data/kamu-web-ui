@@ -12,7 +12,7 @@ export class WidgetHeightService {
         this.widgetOffsetTop = value;
     }
 
-    public get widgetHeigth(): number {
+    public get widgetHeight(): number {
         return window.innerHeight - this.widgetOffsetTop - 2 * this.WIDGET_MARGIN_Y;
     }
 }

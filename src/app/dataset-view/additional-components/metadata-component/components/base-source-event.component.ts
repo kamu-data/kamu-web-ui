@@ -43,7 +43,7 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
     public readonly MERGE_DEFAULT_KIND = MergeKind.APPEND;
 
     ngOnInit(): void {
-        this.subsribeErrorMessage();
+        this.subscribeErrorMessage();
         this.checkDatasetEditability(DatasetKind.Root);
     }
 

@@ -60,13 +60,13 @@
                             formControlName="cronExpression"
                             placeholder="Example: * * * * ?"
                             class="form-control form-control-expression"
-                            data-test-id="cron-expession-input"
+                            data-test-id="cron-expression-input"
                             data-test-id="polling-group-cron-expression"
                         />
 
                         <ng-container
                             *ngIf="
-                                pollingGroup?.get('cronExpression')?.errors?.invalidCronExpession &&
+                                pollingGroup?.get('cronExpression')?.errors?.invalidCronExpression &&
                                     (pollingGroup.get('cronExpression')?.touched ||
                                         pollingGroup.get('cronExpression')?.dirty);
                                 else nextTimeTemplate
@@ -85,7 +85,7 @@
                 </mat-radio-button>
             </mat-radio-group>
             <div class="text-muted box fs-12 px-4 py-2 mt-4">
-                Cron exression accepted values
+                Cron expression accepted values
                 <div class="fs-12">1. minutes: 0-59 * , -</div>
                 <div class="fs-12">2. hours: 0-23 * , -</div>
                 <div class="fs-12">3. day of month: 1-31 * , - ?</div>
@@ -129,7 +129,7 @@
                     </ng-container>
                 </div>
                 <div class="d-flex align-items-center gap-3">
-                    <span class="form-control-label">Numder of records:</span>
+                    <span class="form-control-label">Number of records:</span>
                     <input
                         type="number"
                         min="0"

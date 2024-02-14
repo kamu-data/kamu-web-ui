@@ -364,6 +364,8 @@ export type DatasetEdge = {
 
 export type DatasetFlowConfigs = {
     __typename?: "DatasetFlowConfigs";
+    /** Checks if all configs of this dataset are disabled */
+    allPaused: Scalars["Boolean"];
     /** Returns defined configuration for a flow of specified type */
     byType?: Maybe<FlowConfiguration>;
 };
@@ -780,19 +782,19 @@ export type FlowDescriptionDatasetCompaction = {
 export type FlowDescriptionDatasetExecuteTransform = {
     __typename?: "FlowDescriptionDatasetExecuteTransform";
     datasetId: Scalars["DatasetID"];
-    transformedRecordsCount?: Maybe<Scalars["Int"]>;
+    transformResult?: Maybe<FlowDescriptionUpdateResult>;
 };
 
 export type FlowDescriptionDatasetPollingIngest = {
     __typename?: "FlowDescriptionDatasetPollingIngest";
     datasetId: Scalars["DatasetID"];
-    ingestedRecordsCount?: Maybe<Scalars["Int"]>;
+    ingestResult?: Maybe<FlowDescriptionUpdateResult>;
 };
 
 export type FlowDescriptionDatasetPushIngest = {
     __typename?: "FlowDescriptionDatasetPushIngest";
     datasetId: Scalars["DatasetID"];
-    ingestedRecordsCount?: Maybe<Scalars["Int"]>;
+    ingestResult?: Maybe<FlowDescriptionUpdateResult>;
     inputRecordsCount: Scalars["Int"];
     sourceName?: Maybe<Scalars["String"]>;
 };
@@ -800,6 +802,12 @@ export type FlowDescriptionDatasetPushIngest = {
 export type FlowDescriptionSystemGc = {
     __typename?: "FlowDescriptionSystemGC";
     dummy: Scalars["Boolean"];
+};
+
+export type FlowDescriptionUpdateResult = {
+    __typename?: "FlowDescriptionUpdateResult";
+    numBlocks: Scalars["Int"];
+    numRecords: Scalars["Int"];
 };
 
 export type FlowEdge = {
@@ -1961,18 +1969,31 @@ export type FlowSummaryDataFragment = {
         | {
               __typename?: "FlowDescriptionDatasetExecuteTransform";
               datasetId: string;
-              transformedRecordsCount?: number | null;
+              transformResult?: {
+                  __typename?: "FlowDescriptionUpdateResult";
+                  numBlocks: number;
+                  numRecords: number;
+              } | null;
           }
         | {
               __typename?: "FlowDescriptionDatasetPollingIngest";
               datasetId: string;
-              ingestedRecordsCount?: number | null;
+              ingestResult?: {
+                  __typename?: "FlowDescriptionUpdateResult";
+                  numBlocks: number;
+                  numRecords: number;
+              } | null;
           }
         | {
               __typename?: "FlowDescriptionDatasetPushIngest";
               datasetId: string;
               sourceName?: string | null;
               inputRecordsCount: number;
+              ingestResult?: {
+                  __typename?: "FlowDescriptionUpdateResult";
+                  numBlocks: number;
+                  numRecords: number;
+              } | null;
           }
         | { __typename?: "FlowDescriptionSystemGC"; dummy: boolean };
     initiator?: { __typename?: "Account"; accountName: string } | null;
@@ -2748,17 +2769,26 @@ export const FlowSummaryDataFragmentDoc = gql`
         description {
             ... on FlowDescriptionDatasetPollingIngest {
                 datasetId
-                ingestedRecordsCount
+                ingestResult {
+                    numBlocks
+                    numRecords
+                }
             }
             ... on FlowDescriptionDatasetPushIngest {
                 datasetId
                 sourceName
                 inputRecordsCount
-                inputRecordsCount
+                ingestResult {
+                    numBlocks
+                    numRecords
+                }
             }
             ... on FlowDescriptionDatasetExecuteTransform {
                 datasetId
-                transformedRecordsCount
+                transformResult {
+                    numBlocks
+                    numRecords
+                }
             }
             ... on FlowDescriptionDatasetCompaction {
                 datasetId

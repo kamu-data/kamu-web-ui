@@ -188,8 +188,8 @@ export class DataHelpers {
             }
             case "FlowDescriptionDatasetExecuteTransform": {
                 {
-                    if (decriptionFlow.transformedRecordsCount) {
-                        return `Dataset execute transform ${decriptionFlow.transformedRecordsCount} records updated`;
+                    if (decriptionFlow.transformResult) {
+                        return `Dataset execute transform ${decriptionFlow.transformResult.numRecords} records`;
                     } else {
                         return `Dataset execute transform`;
                     }

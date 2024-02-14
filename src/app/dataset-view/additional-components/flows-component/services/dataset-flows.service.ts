@@ -3,6 +3,7 @@ import { ToastrService } from "ngx-toastr";
 import { Observable, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
+    DatasetAllFlowsPausedQuery,
     DatasetFlowFilters,
     DatasetFlowType,
     DatasetPauseFlowsMutation,
@@ -49,6 +50,14 @@ export class DatasetFlowsService {
                 result
                     ? this.toastrService.success("Flows resumed")
                     : this.toastrService.error("Error, flows not resumed");
+            }),
+        );
+    }
+
+    public allFlowsPaused(datasetId: string): Observable<MaybeUndefined<boolean>> {
+        return this.datasetFlowApi.allFlowsPaused(datasetId).pipe(
+            map((data: DatasetAllFlowsPausedQuery) => {
+                return data.datasets.byId?.flows.configs.allPaused;
             }),
         );
     }

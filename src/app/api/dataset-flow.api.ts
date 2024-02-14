@@ -2,6 +2,8 @@ import { MaybeNull } from "./../common/app.types";
 import { MutationResult } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import {
+    DatasetAllFlowsPausedGQL,
+    DatasetAllFlowsPausedQuery,
     DatasetFlowBatchingGQL,
     DatasetFlowBatchingMutation,
     DatasetFlowFilters,
@@ -32,6 +34,7 @@ export class DatasetFlowApi {
         private getDatasetListFlowsGQL: GetDatasetListFlowsGQL,
         private datasetPauseFlowsGQL: DatasetPauseFlowsGQL,
         private datasetResumeFlowsGQL: DatasetResumeFlowsGQL,
+        private datasetAllFlowsPausedGQL: DatasetAllFlowsPausedGQL,
     ) {}
 
     public getDatasetFlowConfigs(params: {
@@ -168,6 +171,22 @@ export class DatasetFlowApi {
                     } else {
                         throw new DatasetOperationError(result.errors ?? []);
                     }
+                }),
+            );
+    }
+
+    public allFlowsPaused(datasetId: string): Observable<DatasetAllFlowsPausedQuery> {
+        return this.datasetAllFlowsPausedGQL
+            .watch(
+                { datasetId },
+                {
+                    fetchPolicy: "no-cache",
+                    errorPolicy: "all",
+                },
+            )
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<DatasetAllFlowsPausedQuery>) => {
+                    return result.data;
                 }),
             );
     }

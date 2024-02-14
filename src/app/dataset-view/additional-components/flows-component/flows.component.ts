@@ -4,8 +4,6 @@ import {
     FlowConnectionDataFragment,
     FlowStatus,
     InitiatorFilterInput,
-    FlowSummaryDataFragment,
-    FlowOutcome,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { Observable, filter, map } from "rxjs";
@@ -31,6 +29,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     public searchFilter = "";
     public tileWidgetData$: Observable<MaybeUndefined<FlowConnectionDataFragment>>;
     public flowConnectionData$: Observable<MaybeUndefined<FlowConnectionDataFragment>>;
+    public allFlowsPaused$: Observable<MaybeUndefined<boolean>>;
     public filterByStatus: MaybeNull<FlowStatus> = null;
     public filterByInitiator = FilterByInitiatorEnum.All;
     public searchByAccountName = "";
@@ -50,6 +49,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
         this.getTileWidgetData();
         this.datasetFlowListByPage();
+        this.allFlowsPaused$ = this.flowsService.allFlowsPaused(this.datasetBasics.id);
         this.trackSubscriptions(
             this.router.events
                 .pipe(
@@ -133,8 +133,8 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         this.searchByAccountName = accountName;
     }
 
-    public toggleDatasetUpdates(flow: FlowSummaryDataFragment): void {
-        if (flow.outcome !== FlowOutcome.Aborted) {
+    public toggleStateDatasetFlowConfigs(paused: boolean): void {
+        if (!paused) {
             this.trackSubscription(
                 this.flowsService
                     .datasetPauseFlows({
@@ -151,6 +151,14 @@ export class FlowsComponent extends BaseComponent implements OnInit {
                     .subscribe(),
             );
         }
+
+        this.updateStateComponent();
+    }
+
+    private updateStateComponent(): void {
+        this.allFlowsPaused$ = this.flowsService.allFlowsPaused(this.datasetBasics.id);
+        this.getTileWidgetData();
+        this.getFlowConnectionData(this.currentPage, this.filterByStatus);
     }
 
     private resetSearchByAccountName(): void {

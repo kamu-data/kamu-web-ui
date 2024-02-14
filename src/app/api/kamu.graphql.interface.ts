@@ -1892,6 +1892,21 @@ export type EnginesQuery = {
     };
 };
 
+export type DatasetAllFlowsPausedQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type DatasetAllFlowsPausedQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            flows: { __typename?: "DatasetFlows"; configs: { __typename?: "DatasetFlowConfigs"; allPaused: boolean } };
+        } | null;
+    };
+};
+
 export type GetDatasetListFlowsQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     page?: InputMaybe<Scalars["Int"]>;
@@ -4084,6 +4099,33 @@ export const EnginesDocument = gql`
 })
 export class EnginesGQL extends Apollo.Query<EnginesQuery, EnginesQueryVariables> {
     document = EnginesDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetAllFlowsPausedDocument = gql`
+    query datasetAllFlowsPaused($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    configs {
+                        allPaused
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetAllFlowsPausedGQL extends Apollo.Query<
+    DatasetAllFlowsPausedQuery,
+    DatasetAllFlowsPausedQueryVariables
+> {
+    document = DatasetAllFlowsPausedDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

@@ -191,7 +191,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
     {
         description: {
             datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
-            ingestedRecordsCount: null,
+            ingestResult: null,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "415",
@@ -209,7 +209,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
     {
         description: {
             datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
-            ingestedRecordsCount: null,
+            ingestResult: null,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "414",
@@ -227,7 +227,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
     {
         description: {
             datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
-            ingestedRecordsCount: null,
+            ingestResult: null,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "413",
@@ -303,7 +303,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 description: {
                                     datasetId:
                                         "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8",
-                                    ingestedRecordsCount: null,
+                                    ingestResult: null,
                                     __typename: "FlowDescriptionDatasetPollingIngest",
                                 },
                                 flowId: "90",
@@ -322,7 +322,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 description: {
                                     datasetId:
                                         "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8",
-                                    ingestedRecordsCount: null,
+                                    ingestResult: null,
                                     __typename: "FlowDescriptionDatasetPollingIngest",
                                 },
                                 flowId: "88",
@@ -352,7 +352,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     description: {
                                         datasetId:
                                             "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8",
-                                        ingestedRecordsCount: null,
+                                        ingestResult: null,
                                         __typename: "FlowDescriptionDatasetPollingIngest",
                                     },
                                     flowId: "90",
@@ -374,7 +374,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     description: {
                                         datasetId:
                                             "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8",
-                                        ingestedRecordsCount: null,
+                                        ingestResult: null,
                                         __typename: "FlowDescriptionDatasetPollingIngest",
                                     },
                                     flowId: "88",

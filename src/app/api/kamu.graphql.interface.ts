@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "apollo-angular";
+import { gql } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -1996,7 +1996,7 @@ export type FlowSummaryDataFragment = {
               } | null;
           }
         | { __typename?: "FlowDescriptionSystemGC"; dummy: boolean };
-    initiator?: { __typename?: "Account"; accountName: string } | null;
+    initiator?: ({ __typename?: "Account" } & AccountFragment) | null;
     timing: {
         __typename?: "FlowTimingRecords";
         activateAt?: string | null;
@@ -2764,6 +2764,16 @@ export type SearchDatasetsOverviewQuery = {
     };
 };
 
+export const AccountFragmentDoc = gql`
+    fragment Account on Account {
+        id
+        accountName
+        displayName
+        accountType
+        avatarUrl
+        isAdmin
+    }
+`;
 export const FlowSummaryDataFragmentDoc = gql`
     fragment FlowSummaryData on Flow {
         description {
@@ -2802,7 +2812,7 @@ export const FlowSummaryDataFragmentDoc = gql`
         flowId
         status
         initiator {
-            accountName
+            ...Account
         }
         outcome
         timing {
@@ -2811,6 +2821,7 @@ export const FlowSummaryDataFragmentDoc = gql`
             finishedAt
         }
     }
+    ${AccountFragmentDoc}
 `;
 export const DatasetPageInfoFragmentDoc = gql`
     fragment DatasetPageInfo on PageBasedInfo {
@@ -2837,16 +2848,6 @@ export const FlowConnectionDataFragmentDoc = gql`
     }
     ${FlowSummaryDataFragmentDoc}
     ${DatasetPageInfoFragmentDoc}
-`;
-export const AccountFragmentDoc = gql`
-    fragment Account on Account {
-        id
-        accountName
-        displayName
-        accountType
-        avatarUrl
-        isAdmin
-    }
 `;
 export const DatasetDataSizeFragmentDoc = gql`
     fragment DatasetDataSize on DatasetData {

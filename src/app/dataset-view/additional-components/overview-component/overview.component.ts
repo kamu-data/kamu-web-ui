@@ -184,6 +184,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         }
     }
 
+    public get canScheduled(): boolean {
+        return this.datasetPermissions.permissions.canSchedule;
+    }
+
     private get hasWatermark(): boolean {
         return !_.isNil(this.currentState?.overview.metadata.currentWatermark);
     }

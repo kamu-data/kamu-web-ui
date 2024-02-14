@@ -127,7 +127,7 @@
             <div class="d-flex align-items-center ps-3">
                 <ng-container *ngIf="element.initiator; else noInitiator">
                     <img class="img-creator" [src]="element.initiator.avatarUrl || DEFAULT_AVATAR_URL" />
-                    <span class="ms-2 text-small"> {{ element.initiator.displayName }}</span>
+                    <span class="ms-2 text-small"> {{ element.initiator.accountName }}</span>
                 </ng-container>
                 <ng-template #noInitiator>
                     <span class="text-small">system process</span>

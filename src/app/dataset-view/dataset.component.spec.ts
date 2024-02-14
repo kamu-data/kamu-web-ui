@@ -1,3 +1,4 @@
+import { ToastrModule } from "ngx-toastr";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetInfo,
@@ -84,6 +85,7 @@ describe("DatasetComponent", () => {
                 FormsModule,
                 ReactiveFormsModule,
                 RouterTestingModule,
+                ToastrModule.forRoot(),
             ],
             providers: [
                 DatasetApi,

@@ -119,3 +119,10 @@ td.mat-cell {
         padding-top: 3px;
     }
 }
+
+.truncate-sub-message {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 350px;
+}

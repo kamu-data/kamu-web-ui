@@ -15,7 +15,7 @@ import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
-import { FilterByInitiatorEnum } from "./components/flows-table/flows-table.types";
+import { FilterByInitiatorEnum, FlowsTableData } from "./components/flows-table/flows-table.types";
 
 @Component({
     selector: "app-flows",
@@ -27,8 +27,8 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
     @Output() onPageChangeEmit = new EventEmitter<number>();
     public searchFilter = "";
-    public tileWidgetData$: Observable<MaybeUndefined<FlowConnectionDataFragment>>;
-    public flowConnectionData$: Observable<MaybeUndefined<FlowConnectionDataFragment>>;
+    public tileWidgetData$: Observable<MaybeUndefined<FlowsTableData>>;
+    public flowConnectionData$: Observable<MaybeUndefined<FlowsTableData>>;
     public allFlowsPaused$: Observable<MaybeUndefined<boolean>>;
     public filterByStatus: MaybeNull<FlowStatus> = null;
     public filterByInitiator = FilterByInitiatorEnum.All;

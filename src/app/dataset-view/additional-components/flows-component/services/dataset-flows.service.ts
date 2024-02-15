@@ -1,17 +1,22 @@
 import { Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
-import { Observable, map } from "rxjs";
+import { Observable, Subject, map, of } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
+    CurrentSourceFetchUrlFragment,
     DatasetAllFlowsPausedQuery,
     DatasetFlowFilters,
     DatasetFlowType,
+    DatasetMetadata,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
+    FetchStep,
+    FetchStepUrl,
     FlowConnectionDataFragment,
     GetDatasetListFlowsQuery,
 } from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/common/app.types";
+import { FlowsTableData } from "../components/flows-table/flows-table.types";
 
 @Injectable({
     providedIn: "root",
@@ -19,15 +24,29 @@ import { MaybeUndefined } from "src/app/common/app.types";
 export class DatasetFlowsService {
     constructor(private datasetFlowApi: DatasetFlowApi, private toastrService: ToastrService) {}
 
+    private fetchUrlChanges$: Subject<string> = new Subject<string>();
+
+    public get fetchUrlChanges(): Observable<string> {
+        return this.fetchUrlChanges$.asObservable();
+    }
+
+    public emitFetchUrlChanges(url: string): void {
+        this.fetchUrlChanges$.next(url);
+    }
+
     public datasetFlowsList(params: {
         datasetId: string;
         page: number;
         perPage: number;
         filters: DatasetFlowFilters;
-    }): Observable<MaybeUndefined<FlowConnectionDataFragment>> {
+    }): Observable<FlowsTableData> {
         return this.datasetFlowApi.getDatasetListFlows(params).pipe(
             map((data: GetDatasetListFlowsQuery) => {
-                return data.datasets.byId?.flows.runs.listFlows;
+                const metadata = data.datasets.byId?.metadata as DatasetMetadata;
+                return {
+                    connectionData: data.datasets.byId?.flows.runs.listFlows as FlowConnectionDataFragment,
+                    source: metadata.currentPollingSource?.fetch,
+                };
             }),
         );
     }

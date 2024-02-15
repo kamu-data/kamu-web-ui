@@ -179,24 +179,20 @@ export class DataHelpers {
         const decriptionFlow = flow.description;
         switch (decriptionFlow.__typename) {
             case "FlowDescriptionDatasetPollingIngest": {
-                return `Dataset polling ingest`;
+                return `Polling ingest`;
             }
             case "FlowDescriptionDatasetPushIngest": {
                 {
-                    return `Dataset push ingest`;
+                    return `Push ingest`;
                 }
             }
             case "FlowDescriptionDatasetExecuteTransform": {
                 {
-                    if (decriptionFlow.transformResult) {
-                        return `Dataset execute transform ${decriptionFlow.transformResult.numRecords} records`;
-                    } else {
-                        return `Dataset execute transform`;
-                    }
+                    return `Execute transformation`;
                 }
             }
             case "FlowDescriptionDatasetCompaction": {
-                return `Dataset compaction`;
+                return `Execute compaction`;
             }
             case "FlowDescriptionSystemGC": {
                 return `SystemGC work`;

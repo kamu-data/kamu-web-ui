@@ -1,4 +1,4 @@
-import { MaybeNull } from "./../../../../../common/app.types";
+import { MaybeNull, MaybeUndefined } from "./../../../../../common/app.types";
 import { DataHelpers } from "src/app/common/data.helpers";
 import {
     ChangeDetectionStrategy,
@@ -10,7 +10,13 @@ import {
     QueryList,
     ViewChildren,
 } from "@angular/core";
-import { FlowSummaryDataFragment, FlowOutcome, FlowStatus, Scalars } from "src/app/api/kamu.graphql.interface";
+import {
+    FlowSummaryDataFragment,
+    FlowOutcome,
+    FlowStatus,
+    Scalars,
+    FetchStep,
+} from "src/app/api/kamu.graphql.interface";
 import moment from "moment";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
@@ -31,6 +37,7 @@ export class FlowsTableComponent implements OnInit {
     @Input() public filterByStatus: MaybeNull<FlowStatus>;
     @Input() public filterByInitiator: FilterByInitiatorEnum;
     @Input() public searchByAccountName: string;
+    @Input() public fetchStep: MaybeUndefined<FetchStep>;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public filterByInitiatorChange = new EventEmitter<FilterByInitiatorEnum>();
     @Output() public searchByAccountNameChange = new EventEmitter<string>();
@@ -50,7 +57,7 @@ export class FlowsTableComponent implements OnInit {
 
     public durationTask(d1: Scalars["DateTime"], d2: Scalars["DateTime"]): string {
         const result = convertSecondsToHumanReadableFormat(moment(d2).seconds() - moment(d1).seconds());
-        return result ? result : "-";
+        return result ? result : "less than 1 second";
     }
 
     public descriptionForDatasetFlow(flow: FlowSummaryDataFragment): string {
@@ -65,6 +72,10 @@ export class FlowsTableComponent implements OnInit {
         return DatasetFlowTableHelpers.descriptionEndOfMessage(element);
     }
 
+    public descriptionDatasetFlowSubMessage(element: FlowSummaryDataFragment, fetchStep: FetchStep): string {
+        return DatasetFlowTableHelpers.descriptionSubMessage(element, fetchStep);
+    }
+
     public changeFilterByStatus(status: MaybeNull<FlowStatus>): void {
         this.filterByStatusChange.emit(status);
     }
@@ -76,5 +87,21 @@ export class FlowsTableComponent implements OnInit {
 
     public changeFilterByInitiator(event: MatRadioChange): void {
         this.filterByInitiatorChange.emit(event.value as FilterByInitiatorEnum);
+    }
+
+    public durationBlockVisible(node: FlowSummaryDataFragment): boolean {
+        return (
+            node.status === FlowStatus.Finished &&
+            ((node.description.__typename === "FlowDescriptionDatasetPollingIngest" &&
+                Boolean(node.description.ingestResult)) ||
+                (node.description.__typename === "FlowDescriptionDatasetPushIngest" &&
+                    Boolean(node.description.ingestResult)) ||
+                (node.description.__typename === "FlowDescriptionDatasetExecuteTransform" &&
+                    Boolean(node.description.transformResult)))
+        );
+    }
+
+    public tooltipTimeFormat(time: string): string {
+        return moment(time).format(AppValues.CRON_EXPRESSION_DATE_FORMAT);
     }
 }

@@ -1,9 +1,9 @@
 <ng-container *ngIf="{ flowConnection: tileWidgetData$ | async, allFlowsPaused: allFlowsPaused$ | async } as result">
     <div class="search-result-container__content mb-20">
-        <ng-container *ngIf="result.flowConnection?.nodes?.length; else noRuns">
+        <ng-container *ngIf="result.flowConnection?.connectionData?.nodes?.length; else noRuns">
             <div class="d-flex justify-content-between">
                 <div class="mt-4">
-                    <h2 class="title">{{ result.flowConnection?.totalCount }} Dataset flow runs</h2>
+                    <h2 class="title">{{ result.flowConnection?.connectionData?.totalCount }} Dataset flow runs</h2>
                     <div>
                         <span class="text-muted"> Compute work associated with this dataset </span>
                     </div>
@@ -53,23 +53,24 @@
             </div>
 
             <div class="search-result-container__content my-4">
-                <app-tile-base-widget [nodes]="result.flowConnection?.nodes!"></app-tile-base-widget>
+                <app-tile-base-widget [nodes]="result.flowConnection?.connectionData?.nodes!"></app-tile-base-widget>
             </div>
 
             <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
                 <app-flows-table
-                    [nodes]="flowConnectionData.nodes"
+                    [nodes]="flowConnectionData.connectionData.nodes"
                     [filterByStatus]="filterByStatus"
                     [filterByInitiator]="filterByInitiator"
                     [searchByAccountName]="searchByAccountName"
+                    [fetchStep]="flowConnectionData?.source!"
                     (filterByStatusChange)="onChangeFilterByStatus($event)"
                     (filterByInitiatorChange)="onChangeFilterByInitiator($event)"
                     (searchByAccountNameChange)="onSearchByAccountName($event)"
                 ></app-flows-table>
                 <div class="mt-50px">
                     <app-pagination
-                        [currentPage]="flowConnectionData.pageInfo.currentPage + 1"
-                        [pageInfo]="flowConnectionData.pageInfo"
+                        [currentPage]="flowConnectionData.connectionData.pageInfo.currentPage + 1"
+                        [pageInfo]="flowConnectionData.connectionData.pageInfo"
                         (pageChangeEvent)="onPageChange($event)"
                     ></app-pagination>
                 </div>

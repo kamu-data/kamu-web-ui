@@ -1920,6 +1920,16 @@ export type GetDatasetListFlowsQuery = {
         __typename?: "Datasets";
         byId?: {
             __typename?: "Dataset";
+            metadata: {
+                __typename?: "DatasetMetadata";
+                currentPollingSource?: {
+                    __typename?: "SetPollingSource";
+                    fetch:
+                        | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
+                        | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
+                        | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
+                } | null;
+            };
             flows: {
                 __typename?: "DatasetFlows";
                 runs: {
@@ -4135,6 +4145,15 @@ export const GetDatasetListFlowsDocument = gql`
     query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int, $filters: DatasetFlowFilters) {
         datasets {
             byId(datasetId: $datasetId) {
+                metadata {
+                    currentPollingSource {
+                        fetch {
+                            ...FetchStepUrlData
+                            ...FetchStepFilesGlobData
+                            ...FetchStepContainerData
+                        }
+                    }
+                }
                 flows {
                     runs {
                         listFlows(page: $page, perPage: $perPage, filters: $filters) {
@@ -4145,6 +4164,9 @@ export const GetDatasetListFlowsDocument = gql`
             }
         }
     }
+    ${FetchStepUrlDataFragmentDoc}
+    ${FetchStepFilesGlobDataFragmentDoc}
+    ${FetchStepContainerDataFragmentDoc}
     ${FlowConnectionDataFragmentDoc}
 `;
 

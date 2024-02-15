@@ -1,10 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import {
-    DatasetBasicsFragment,
-    FlowConnectionDataFragment,
-    FlowStatus,
-    InitiatorFilterInput,
-} from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { Observable, filter, map } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
@@ -163,5 +158,10 @@ export class FlowsComponent extends BaseComponent implements OnInit {
 
     private resetSearchByAccountName(): void {
         this.searchByAccountName = "";
+    }
+
+    public refreshFlow(): void {
+        this.getTileWidgetData();
+        this.getFlowConnectionData(this.currentPage, this.filterByStatus);
     }
 }

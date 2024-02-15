@@ -1,17 +1,14 @@
 import { Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
-import { Observable, Subject, map, of } from "rxjs";
+import { Observable, Subject, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
-    CurrentSourceFetchUrlFragment,
     DatasetAllFlowsPausedQuery,
     DatasetFlowFilters,
     DatasetFlowType,
     DatasetMetadata,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
-    FetchStep,
-    FetchStepUrl,
     FlowConnectionDataFragment,
     GetDatasetListFlowsQuery,
 } from "src/app/api/kamu.graphql.interface";

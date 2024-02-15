@@ -184,3 +184,10 @@ p {
 .error-border-color {
     border-color: #dc3545;
 }
+
+@media (width <=1052px) {
+    .custom-container {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+    }
+}

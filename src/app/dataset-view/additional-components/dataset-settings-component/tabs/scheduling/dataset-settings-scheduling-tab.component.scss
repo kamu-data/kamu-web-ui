@@ -30,7 +30,7 @@
     }
 
     .form-control-expression {
-        width: 280px;
+        width: 150px;
     }
 
     .form-control-label {
@@ -39,5 +39,13 @@
 
     .cron-expression-hint {
         padding-left: 150px;
+    }
+}
+
+@media (width <=952px) {
+    .custom-container {
+        .form-control-width {
+            width: 80px;
+        }
     }
 }

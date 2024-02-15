@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
-import { Observable, Subject, map } from "rxjs";
+import { Observable, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     DatasetAllFlowsPausedQuery,
@@ -20,16 +20,6 @@ import { FlowsTableData } from "../components/flows-table/flows-table.types";
 })
 export class DatasetFlowsService {
     constructor(private datasetFlowApi: DatasetFlowApi, private toastrService: ToastrService) {}
-
-    private fetchUrlChanges$: Subject<string> = new Subject<string>();
-
-    public get fetchUrlChanges(): Observable<string> {
-        return this.fetchUrlChanges$.asObservable();
-    }
-
-    public emitFetchUrlChanges(url: string): void {
-        this.fetchUrlChanges$.next(url);
-    }
 
     public datasetFlowsList(params: {
         datasetId: string;

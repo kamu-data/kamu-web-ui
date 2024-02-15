@@ -12,8 +12,8 @@ import {
     mockDatasetResumeFlowsMutationSuccess,
     mockGetDatasetListFlowsQuery,
 } from "src/app/api/mock/dataset-flow.mock";
-import { FlowConnectionDataFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/common/app.types";
+import { FlowsTableData } from "../components/flows-table/flows-table.types";
 
 describe("DatasetFlowsService", () => {
     let service: DatasetFlowsService;
@@ -48,8 +48,8 @@ describe("DatasetFlowsService", () => {
                 perPage: MOCK_PER_PAGE,
                 filters: MOCK_FILTERS,
             })
-            .subscribe((data: MaybeUndefined<FlowConnectionDataFragment>) => {
-                expect(data).toEqual(mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs.listFlows);
+            .subscribe((data: MaybeUndefined<FlowsTableData>) => {
+                expect(data?.connectionData).toEqual(mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs.listFlows);
             });
 
         expect(subscription$.closed).toBeTrue();

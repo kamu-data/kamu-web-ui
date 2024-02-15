@@ -295,6 +295,15 @@ export const mockDatasetResumeFlowsMutationError: DatasetResumeFlowsMutation = {
 export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
     datasets: {
         byId: {
+            metadata: {
+                currentPollingSource: {
+                    __typename: "SetPollingSource",
+                    fetch: {
+                        __typename: "FetchStepUrl",
+                        url: "http://test.com",
+                    },
+                },
+            },
             flows: {
                 runs: {
                     listFlows: {

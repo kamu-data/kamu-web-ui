@@ -6,7 +6,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatRadioChange, MatRadioModule } from "@angular/material/radio";
 import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
-import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
+import { mockFlowSummaryDataFragments, mockGetDatasetListFlowsQuery } from "src/app/api/mock/dataset-flow.mock";
 import { FilterByInitiatorEnum } from "./flows-table.types";
 import { DisplayTimeModule } from "src/app/components/display-time/display-time.module";
 import { FlowStatus } from "src/app/api/kamu.graphql.interface";
@@ -35,6 +35,7 @@ describe("FlowsTableComponent", () => {
         component.filterByStatus = null;
         component.filterByInitiator = FilterByInitiatorEnum.All;
         component.searchByAccountName = "";
+        component.fetchStep = mockGetDatasetListFlowsQuery.datasets.byId?.metadata.currentPollingSource?.fetch;
         fixture.detectChanges();
     });
 

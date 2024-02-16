@@ -6,6 +6,8 @@ import {
     InitiatorFilterInput,
     FlowSummaryDataFragment,
     FlowOutcome,
+    DatasetFlowType,
+    DatasetKind,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { Observable, filter, map } from "rxjs";
@@ -107,6 +109,25 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     }
 
     public updateNow(): void {
+        this.trackSubscription(
+            this.flowsService
+                .datasetTriggerFlow({
+                    datasetId: this.datasetBasics.id,
+                    datasetFlowType:
+                        this.datasetBasics.kind === DatasetKind.Root
+                            ? DatasetFlowType.Ingest
+                            : DatasetFlowType.ExecuteTransform,
+                })
+                .subscribe((success: boolean) => {
+                    if (success) {
+                        this.navigationService.navigateToDatasetView({
+                            accountName: this.datasetBasics.owner.accountName,
+                            datasetName: this.datasetBasics.name,
+                            tab: DatasetViewTypeEnum.Flows,
+                        });
+                    }
+                }),
+        );
         this.getTileWidgetData();
         this.getFlowConnectionData(this.currentPage, this.filterByStatus);
     }

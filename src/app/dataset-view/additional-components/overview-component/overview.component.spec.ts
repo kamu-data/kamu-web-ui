@@ -32,6 +32,10 @@ import { ChangeDetectionStrategy, SecurityContext } from "@angular/core";
 import { MarkdownModule } from "ngx-markdown";
 import { HttpClient } from "@angular/common/http";
 import { MatIconModule } from "@angular/material/icon";
+import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
+import { of } from "rxjs";
+import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;
@@ -39,6 +43,7 @@ describe("OverviewComponent", () => {
     let datasetSubsService: DatasetSubscriptionsService;
     let navigationService: NavigationService;
     let modalService: NgbModal;
+    let datasetFlowsService: DatasetFlowsService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -79,6 +84,7 @@ describe("OverviewComponent", () => {
             .compileComponents();
 
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
+        datasetFlowsService = TestBed.inject(DatasetFlowsService);
         datasetSubsService.emitOverviewChanged({
             schema: mockMetadataDerivedUpdate.schema,
             content: mockOverviewDataUpdate.content,
@@ -180,6 +186,29 @@ describe("OverviewComponent", () => {
         const openModalSpy = spyOn(modalService, "open").and.callThrough();
         component.openWatermarkModal();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check navigate to flows tab when 'refresh now' button was clicked", () => {
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const datasetTriggerFlowSpy = spyOn(datasetFlowsService, "datasetTriggerFlow").and.returnValue(of(true));
+
+        emitClickOnElementByDataTestId(fixture, "refresh-now-button");
+
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({ tab: DatasetViewTypeEnum.Flows }),
+        );
+        expect(datasetTriggerFlowSpy).toHaveBeenCalledTimes(1);
+    });
+
+    describe("AddPushSource", () => {
+        it("should navigate to create AddPushSource event page", () => {
+            const navigateToAddPushSourceSpy = spyOn(navigationService, "navigateToAddPushSource");
+            component.navigateToAddPushSource();
+            expect(navigateToAddPushSourceSpy).toHaveBeenCalledWith({
+                accountName: mockOverviewDataUpdate.overview.owner.accountName,
+                datasetName: mockOverviewDataUpdate.overview.name,
+            });
+        });
     });
 
     describe("SetPollingSource", () => {

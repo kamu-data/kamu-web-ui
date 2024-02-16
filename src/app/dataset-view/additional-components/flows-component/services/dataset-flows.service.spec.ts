@@ -10,9 +10,11 @@ import {
     mockDatasetPauseFlowsMutationSuccess,
     mockDatasetResumeFlowsMutationError,
     mockDatasetResumeFlowsMutationSuccess,
+    mockDatasetTriggerFlowMutation,
+    mockDatasetTriggerFlowMutationError,
     mockGetDatasetListFlowsQuery,
 } from "src/app/api/mock/dataset-flow.mock";
-import { FlowConnectionDataFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetFlowType, FlowConnectionDataFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/common/app.types";
 
 describe("DatasetFlowsService", () => {
@@ -23,6 +25,7 @@ describe("DatasetFlowsService", () => {
     const MOCK_PAGE = 1;
     const MOCK_PER_PAGE = 15;
     const MOCK_FILTERS = {};
+    const MOCK_DATASET_FLOW_TYPE = DatasetFlowType.Ingest;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -95,6 +98,31 @@ describe("DatasetFlowsService", () => {
         const subscription$ = service.datasetResumeFlows({ datasetId: MOCK_DATASET_ID }).subscribe(() => {
             expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error, flows not resumed");
         });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check trigger dataset flow", () => {
+        spyOn(datasetFlowApi, "datasetTriggerFlow").and.returnValue(of(mockDatasetTriggerFlowMutation));
+
+        const subscription$ = service
+            .datasetTriggerFlow({ datasetId: MOCK_DATASET_ID, datasetFlowType: MOCK_DATASET_FLOW_TYPE })
+            .subscribe((result: boolean) => {
+                expect(result).toBe(true);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check trigger dataset flow with error", () => {
+        spyOn(datasetFlowApi, "datasetTriggerFlow").and.returnValue(of(mockDatasetTriggerFlowMutationError));
+        const toastrServiceErrorSpy = spyOn(toastService, "error");
+
+        const subscription$ = service
+            .datasetTriggerFlow({ datasetId: MOCK_DATASET_ID, datasetFlowType: MOCK_DATASET_FLOW_TYPE })
+            .subscribe(() => {
+                expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
+            });
 
         expect(subscription$.closed).toBeTrue();
     });

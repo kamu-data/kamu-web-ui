@@ -293,7 +293,7 @@ export type Dataset = {
     flows: DatasetFlows;
     /** Unique identifier of the dataset */
     id: Scalars["DatasetID"];
-    /** Returns the kind of a dataset (Root or Derivative) */
+    /** Returns the kind of dataset (Root or Derivative) */
     kind: DatasetKind;
     /** Creation time of the most recent metadata block in the chain */
     lastUpdatedAt: Scalars["DateTime"];

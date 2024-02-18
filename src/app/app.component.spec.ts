@@ -126,13 +126,13 @@ describe("AppComponent", () => {
     });
 
     it("should check call onUserProfile", () => {
-        const navigationServicelSpy = spyOn(navigationService, "navigateToOwnerView").and.returnValue();
+        const navigationServiceSpy = spyOn(navigationService, "navigateToOwnerView").and.returnValue();
         const currentUserSpy = spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(
             mockAccountDetails,
         );
         component.onUserProfile();
         expect(currentUserSpy).toHaveBeenCalledWith();
-        expect(navigationServicelSpy).toHaveBeenCalledWith(mockAccountDetails.accountName, AccountTabs.OVERVIEW);
+        expect(navigationServiceSpy).toHaveBeenCalledWith(mockAccountDetails.accountName, AccountTabs.OVERVIEW);
     });
 
     ALL_URLS_WITHOUT_HEADER.forEach((url: string) => {

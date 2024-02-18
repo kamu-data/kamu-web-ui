@@ -14,7 +14,7 @@ import { DisplayTimeModule } from "../display-time/display-time.module";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import timekeeper from "timekeeper";
-import { WidgetHeightService } from "src/app/services/widget-heigth.service";
+import { WidgetHeightService } from "src/app/services/widget-height.service";
 
 describe("LineageGraphComponent", () => {
     let component: LineageGraphComponent;
@@ -117,11 +117,11 @@ describe("LineageGraphComponent", () => {
         expect(watermark?.textContent?.trim()).toEqual("a month ago");
     });
 
-    it("should check heigth for the lineage graph", () => {
-        const mockHeigth = 1000;
-        const widgetHeigthSpy = spyOnProperty(widgetHeightService, "widgetHeigth").and.returnValue(mockHeigth);
+    it("should check height for the lineage graph", () => {
+        const mockHeight = 1000;
+        const widgetHeightSpy = spyOnProperty(widgetHeightService, "widgetHeight").and.returnValue(mockHeight);
         component.ngOnInit();
-        expect(component.view[1]).toEqual(mockHeigth);
-        expect(widgetHeigthSpy).toHaveBeenCalledWith();
+        expect(component.view[1]).toEqual(mockHeight);
+        expect(widgetHeightSpy).toHaveBeenCalledWith();
     });
 });

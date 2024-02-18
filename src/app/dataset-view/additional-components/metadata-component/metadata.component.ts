@@ -17,7 +17,7 @@ import {
     DatasetMetadataSummaryFragment,
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
-import { momentConvertDatetoLocalWithFormat, promiseWithCatch } from "src/app/common/app.helpers";
+import { momentConvertDateToLocalWithFormat, promiseWithCatch } from "src/app/common/app.helpers";
 import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/common/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
 import _ from "lodash";
@@ -109,7 +109,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         const systemTimeAsString: MaybeUndefined<string> =
             this.currentState?.metadataSummary.metadata.chain.blocks.nodes[0].systemTime;
         return systemTimeAsString
-            ? momentConvertDatetoLocalWithFormat({
+            ? momentConvertDateToLocalWithFormat({
                   date: new Date(String(systemTimeAsString)),
                   format: AppValues.DISPLAY_DATE_FORMAT,
                   isTextDate: true,

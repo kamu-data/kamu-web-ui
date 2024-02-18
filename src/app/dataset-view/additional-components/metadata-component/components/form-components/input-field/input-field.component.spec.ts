@@ -3,7 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angula
 import { InputFieldComponent } from "./input-field.component";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { dispatchInputEvent, getInputElememtByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { dispatchInputEvent, getInputElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { ChangeDetectionStrategy } from "@angular/core";
 import AppValues from "src/app/common/app.values";
 import { SharedTestModule } from "src/app/common/shared-test.module";
@@ -40,7 +40,7 @@ describe("InputFieldComponent", () => {
         fixture.detectChanges();
         dispatchInputEvent(fixture, "input", "");
 
-        const requiredMessage = getInputElememtByDataTestId(fixture, "error-test-required");
+        const requiredMessage = getInputElementByDataTestId(fixture, "error-test-required");
         expect(requiredMessage.textContent?.trim()).toBe("Field is required");
     });
 
@@ -52,8 +52,8 @@ describe("InputFieldComponent", () => {
 
         dispatchInputEvent(fixture, "input", "mock");
 
-        const maxLengthdMessage = getInputElememtByDataTestId(fixture, "error-test-maxLength");
-        expect(maxLengthdMessage.textContent?.trim()).toBe("Field can be max 1 character");
+        const maxLengthMessage = getInputElementByDataTestId(fixture, "error-test-maxLength");
+        expect(maxLengthMessage.textContent?.trim()).toBe("Field can be max 1 character");
     });
 
     it("should check pattern validation error", () => {
@@ -61,7 +61,7 @@ describe("InputFieldComponent", () => {
 
         dispatchInputEvent(fixture, "input", "mock");
 
-        const patternMessage = getInputElememtByDataTestId(fixture, "error-test-pattern");
+        const patternMessage = getInputElementByDataTestId(fixture, "error-test-pattern");
         expect(patternMessage.textContent?.trim()).toBe("Field format is wrong");
     });
 });

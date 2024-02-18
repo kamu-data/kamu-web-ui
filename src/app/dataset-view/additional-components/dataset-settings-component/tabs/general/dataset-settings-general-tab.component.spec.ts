@@ -19,7 +19,7 @@ import {
     checkVisible,
     dispatchInputEvent,
     emitClickOnElementByDataTestId,
-    getInputElememtByDataTestId,
+    getInputElementByDataTestId,
 } from "../../../../../common/base-test.helpers.spec";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
@@ -112,7 +112,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         tick();
 
-        const elemInput = getInputElememtByDataTestId(fixture, "rename-dataset-input");
+        const elemInput = getInputElementByDataTestId(fixture, "rename-dataset-input");
         expect(elemInput).toHaveClass("error-border-color");
 
         checkVisible(fixture, Elements.RenameDatasetErrorNameRequired, false);
@@ -152,7 +152,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         const errorMessage = "Dataset is already exist.";
         datasetSettingsService.emitRenameDatasetErrorOccurred(errorMessage);
 
-        const renameDatasetInput = getInputElememtByDataTestId(fixture, Elements.RenameDatasetInput);
+        const renameDatasetInput = getInputElementByDataTestId(fixture, Elements.RenameDatasetInput);
         renameDatasetInput.dispatchEvent(new Event("keyup"));
         fixture.detectChanges();
 

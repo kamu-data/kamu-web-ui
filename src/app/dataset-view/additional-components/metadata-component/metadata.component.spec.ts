@@ -232,7 +232,7 @@ describe("MetadataComponent", () => {
             expect(component.canEditSetTransform).toEqual(false);
         });
 
-        it("should not be possible to edit SetTransform for derived dataset if no trasnform is defined yet", () => {
+        it("should not be possible to edit SetTransform for derived dataset if no transform is defined yet", () => {
             component.currentState = _.cloneDeep(mockMetadataDerivedUpdate);
             component.currentState.metadataSummary.metadata.currentTransform = undefined;
             fixture.detectChanges();

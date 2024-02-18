@@ -49,7 +49,7 @@ describe("DynamicTableComponent", () => {
     });
 
     it("should check table if schemaFields is exist", () => {
-        component.schemaFields = [{ name: "testName", repetition: "testRepetiton", type: "testType" }];
+        component.schemaFields = [{ name: "testName", repetition: "testRepetition", type: "testType" }];
         component.dataRows = [];
         fixture.detectChanges();
         expect(component.dataSource.data).toBeDefined();

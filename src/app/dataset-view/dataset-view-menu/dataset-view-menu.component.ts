@@ -1,4 +1,4 @@
-import { WidgetHeightService } from "./../../services/widget-heigth.service";
+import { WidgetHeightService } from "../../services/widget-height.service";
 import {
     AfterViewInit,
     ChangeDetectionStrategy,

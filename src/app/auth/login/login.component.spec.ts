@@ -209,8 +209,8 @@ describe("LoginComponent", () => {
                 checkVisible(fixture, Elements.PASSWORD_METHOD_ERROR, true);
             });
 
-            [Elements.INPUT_LOGIN, Elements.INPUT_PASSWORD].forEach((inputElemenName: Elements) => {
-                it(`Error is cleared after touching input ${inputElemenName}`, () => {
+            [Elements.INPUT_LOGIN, Elements.INPUT_PASSWORD].forEach((inputElementName: Elements) => {
+                it(`Error is cleared after touching input ${inputElementName}`, () => {
                     const errorMessage = "Bad credentials";
                     loginService.emitPasswordLoginErrorOccurred(errorMessage);
                     fixture.detectChanges();
@@ -219,7 +219,7 @@ describe("LoginComponent", () => {
 
                     const inputElement: HTMLInputElement = getElementByDataTestId(
                         fixture,
-                        inputElemenName,
+                        inputElementName,
                     ) as HTMLInputElement;
                     inputElement.dispatchEvent(new KeyboardEvent("keyup", { key: " " }));
 

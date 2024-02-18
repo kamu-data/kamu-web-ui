@@ -7,7 +7,7 @@ import { DatasetOverviewFragment, DatasetDataSizeFragment } from "src/app/api/ka
 import {
     emitClickOnElementByDataTestId,
     getElementByDataTestId,
-    getInputElememtByDataTestId,
+    getInputElementByDataTestId,
 } from "src/app/common/base-test.helpers.spec";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewWithSetLicense } from "../../../data-tabs.mock";
@@ -85,7 +85,7 @@ describe("EditLicenseModalComponent", () => {
         component.licenseForm.patchValue({
             websiteUrl: "bad url",
         });
-        const inputEl: HTMLInputElement = getInputElememtByDataTestId(fixture, `license-websiteUrl`);
+        const inputEl: HTMLInputElement = getInputElementByDataTestId(fixture, `license-websiteUrl`);
         const focusEvent = new InputEvent("focus");
         inputEl.dispatchEvent(focusEvent);
         fixture.detectChanges();
@@ -107,7 +107,7 @@ describe("EditLicenseModalComponent", () => {
         fixture.detectChanges();
 
         ["name", "shortName", "websiteUrl"].forEach((controlName: string) => {
-            const inputEl: HTMLInputElement = getInputElememtByDataTestId(fixture, `license-${controlName}`);
+            const inputEl: HTMLInputElement = getInputElementByDataTestId(fixture, `license-${controlName}`);
 
             const focusEvent = new InputEvent("focus");
             inputEl.dispatchEvent(focusEvent);

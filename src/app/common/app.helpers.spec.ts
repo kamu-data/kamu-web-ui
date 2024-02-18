@@ -1,6 +1,6 @@
 import { fakeAsync, flush, tick } from "@angular/core/testing";
 import moment from "moment";
-import { momentConvertDatetoLocalWithFormat, promiseWithCatch, requireValue } from "./app.helpers";
+import { momentConvertDateToLocalWithFormat, promiseWithCatch, requireValue } from "./app.helpers";
 import AppValues from "./app.values";
 
 describe("AppHelpers", () => {
@@ -42,7 +42,7 @@ describe("AppHelpers", () => {
 
     it("should convert data to local ", () => {
         const baseDate = new Date(String("2022-08-05T21:19:28.817281255"));
-        const result = momentConvertDatetoLocalWithFormat({
+        const result = momentConvertDateToLocalWithFormat({
             date: baseDate,
             format: AppValues.DISPLAY_DATE_FORMAT,
         });
@@ -50,7 +50,7 @@ describe("AppHelpers", () => {
     });
 
     it("should convert data to today ", () => {
-        const result = momentConvertDatetoLocalWithFormat({
+        const result = momentConvertDateToLocalWithFormat({
             date: Date.now(),
             format: AppValues.DISPLAY_DATE_FORMAT,
             isTextDate: true,
@@ -59,7 +59,7 @@ describe("AppHelpers", () => {
     });
 
     it("should convert data to yesterday ", () => {
-        const result = momentConvertDatetoLocalWithFormat({
+        const result = momentConvertDateToLocalWithFormat({
             date: moment().subtract(1, "day").toDate(),
             format: AppValues.DISPLAY_DATE_FORMAT,
             isTextDate: true,

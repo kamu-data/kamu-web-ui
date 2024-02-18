@@ -175,29 +175,19 @@ export class DataHelpers {
         }
     }
 
-    public static descriptionForDatasetFlow(flow: FlowSummaryDataFragment): string {
+    public static flowTypeDescription(flow: FlowSummaryDataFragment): string {
         const decriptionFlow = flow.description;
         switch (decriptionFlow.__typename) {
-            case "FlowDescriptionDatasetPollingIngest": {
+            case "FlowDescriptionDatasetPollingIngest":
                 return `Polling ingest`;
-            }
-            case "FlowDescriptionDatasetPushIngest": {
-                {
-                    return `Push ingest`;
-                }
-            }
-            case "FlowDescriptionDatasetExecuteTransform": {
-                {
-                    return `Execute transformation`;
-                }
-            }
-            case "FlowDescriptionDatasetCompaction": {
-                return `Execute compaction`;
-            }
-            case "FlowDescriptionSystemGC": {
-                return `SystemGC work`;
-            }
-
+            case "FlowDescriptionDatasetPushIngest":
+                return `Push ingest`;
+            case "FlowDescriptionDatasetExecuteTransform":
+                return `Execute transformation`;
+            case "FlowDescriptionDatasetCompaction":
+                return `Compacting`;
+            case "FlowDescriptionSystemGC":
+                return `Garbage collector`;
             default:
                 return "Unsupported flow description";
         }

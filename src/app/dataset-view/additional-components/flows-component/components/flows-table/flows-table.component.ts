@@ -60,8 +60,8 @@ export class FlowsTableComponent implements OnInit {
         return result ? result : "less than 1 second";
     }
 
-    public descriptionForDatasetFlow(flow: FlowSummaryDataFragment): string {
-        return DataHelpers.descriptionForDatasetFlow(flow);
+    public flowTypeDescription(flow: FlowSummaryDataFragment): string {
+        return DataHelpers.flowTypeDescription(flow);
     }
 
     public descriptionColumnOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
@@ -72,8 +72,8 @@ export class FlowsTableComponent implements OnInit {
         return DatasetFlowTableHelpers.descriptionEndOfMessage(element);
     }
 
-    public descriptionDatasetFlowSubMessage(element: FlowSummaryDataFragment, fetchStep: FetchStep): string {
-        return DatasetFlowTableHelpers.descriptionSubMessage(element, fetchStep);
+    public descriptionDatasetFlowSubMessage(element: FlowSummaryDataFragment): string {
+        return DatasetFlowTableHelpers.descriptionSubMessage(element, this.fetchStep);
     }
 
     public changeFilterByStatus(status: MaybeNull<FlowStatus>): void {
@@ -90,15 +90,7 @@ export class FlowsTableComponent implements OnInit {
     }
 
     public durationBlockVisible(node: FlowSummaryDataFragment): boolean {
-        return (
-            node.status === FlowStatus.Finished &&
-            ((node.description.__typename === "FlowDescriptionDatasetPollingIngest" &&
-                Boolean(node.description.ingestResult)) ||
-                (node.description.__typename === "FlowDescriptionDatasetPushIngest" &&
-                    Boolean(node.description.ingestResult)) ||
-                (node.description.__typename === "FlowDescriptionDatasetExecuteTransform" &&
-                    Boolean(node.description.transformResult)))
-        );
+        return node.status === FlowStatus.Finished;
     }
 
     public tooltipTimeFormat(time: string): string {

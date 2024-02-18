@@ -38,12 +38,12 @@
                 }}</mat-icon>
                 <div class="ms-1 py-2">
                     <span class="fw-500">
-                        {{ descriptionForDatasetFlow(element) }}
+                        {{ flowTypeDescription(element) }}
                         <span>{{ descriptionDatasetFlowEndOfMessage(element) }}</span>
                     </span>
                     <br />
                     <span class="text-small truncate-sub-message d-block">{{
-                        descriptionDatasetFlowSubMessage(element, fetchStep!)
+                        descriptionDatasetFlowSubMessage(element)
                     }}</span>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                 <div class="d-flex align-items-center">
                     <mat-icon
                         class="icon-status text-muted"
-                        [title]="'Activated time: ' + tooltipTimeFormat(element.timing.activateAt)"
+                        [title]="'Activation time: ' + tooltipTimeFormat(element.timing.activateAt)"
                         >calendar_today</mat-icon
                     >
                     <span class="ms-1 pt-1 text-small">

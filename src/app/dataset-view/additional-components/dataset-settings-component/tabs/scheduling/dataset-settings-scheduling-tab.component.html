@@ -21,7 +21,11 @@
                 <mat-radio-button [value]="pollingGroupEnum.TIME_DELTA">
                     <div class="d-flex align-items-center" data-test-id="button-time-delta">
                         <span class="form-control-label">Update every:</span>
-                        <select formControlName="unit" class="form-select me-3" data-test-id="polling-group-unit">
+                        <select
+                            formControlName="unit"
+                            class="form-select form-control-width me-3"
+                            data-test-id="polling-group-unit"
+                        >
                             <option [value]="timeUnit.Minutes">Minutes</option>
                             <option [value]="timeUnit.Hours">Hours</option>
                             <option [value]="timeUnit.Days">Days</option>
@@ -31,7 +35,7 @@
                             type="number"
                             formControlName="every"
                             min="1"
-                            class="form-control"
+                            class="form-control form-control-width"
                             data-test-id="polling-group-every"
                         />
                         <ng-container

@@ -76,6 +76,10 @@ table {
     color: rgba(181 175 175);
 }
 
+.canceled-outcome {
+    color: rgba(181 175 175);
+}
+
 .mat-header-cell {
     background: #f6f8fa;
 }
@@ -87,6 +91,11 @@ table {
 td.mat-cell {
     &:first-of-type {
         padding-left: 12px;
+        width: 35%;
+    }
+
+    &:nth-child(2) {
+        width: 28%;
     }
 }
 

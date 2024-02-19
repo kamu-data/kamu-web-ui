@@ -132,10 +132,12 @@ export class DatasetFlowTableHelpers {
 
                 break;
 
+            case FlowStatus.Scheduled:
+                return "Awaiting for a free executor";
+
             case FlowStatus.Waiting:
             case FlowStatus.Queued:
             case FlowStatus.Running:
-            case FlowStatus.Scheduled:
                 switch (element.description.__typename) {
                     case "FlowDescriptionDatasetPollingIngest":
                         if (_.isNil(fetchStep)) {
@@ -149,10 +151,12 @@ export class DatasetFlowTableHelpers {
                             case "FetchStepFilesGlob":
                                 return `Polling data from file: ${fetchStep.path}`;
                         }
-
+                        break;
+                    // TODO:
+                    case "FlowDescriptionDatasetExecuteTransform":
+                        return `Transform executing...`;
                     // TODO: consider what to display for other flow types
                     //  - push ingest
-                    //  - transform
                     //  - compacting
                     //  - GC
                 }

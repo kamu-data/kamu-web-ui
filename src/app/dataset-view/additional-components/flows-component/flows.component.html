@@ -87,7 +87,12 @@
             </ng-container>
         </ng-container>
         <ng-template #noRuns>
-            <p class="text-center">No flow runs</p>
+            <p class="ps-2 pt-2">
+                No flow runs. You can
+                <a class="text-decoration-none" href="javascript:void(0);" (click)="updateSettings()"
+                    >update configuration settings</a
+                >
+            </p>
         </ng-template>
     </div>
 </ng-container>

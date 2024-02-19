@@ -10,33 +10,33 @@
     }
 }
 
-.success {
+.success-class {
     background: #0db28d;
 }
 
-.queued,
-.waiting {
+.queued-class,
+.waiting-class {
     background: #d3c22a;
 }
 
-.running {
+.running-class {
     background: #8bdaaf;
 }
 
-.scheduled {
+.scheduled-class {
     background: #2a8dd3;
 }
 
-.failed {
+.failed-class {
     background: #d13124;
 }
 
-.aborted {
+.aborted-class {
     background: rgba(181 175 175);
 }
 
-.cancelled {
-    background: #d6b7bc;
+.cancelled-class {
+    background: #08cdeb;
 }
 
 .tooltip-class {

@@ -35,7 +35,10 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         pollingGroup: new FormGroup({
             __typename: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
             every: new FormControl<number | undefined>({ value: undefined, disabled: true }, [Validators.required]),
-            unit: new FormControl<TimeUnit | undefined>({ value: undefined, disabled: true }, [Validators.required]),
+            unit: new FormControl<TimeUnit | undefined>({ value: undefined, disabled: true }, [
+                Validators.required,
+                Validators.min(1),
+            ]),
             cronExpression: new FormControl<MaybeNull<string>>({ value: "", disabled: true }, [
                 Validators.required,
                 cronExpressionValidator(),
@@ -45,7 +48,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
 
     public throttlingForm = new FormGroup({
         every: new FormControl<number | undefined>({ value: undefined, disabled: true }),
-        unit: new FormControl<TimeUnit | undefined>({ value: undefined, disabled: true }),
+        unit: new FormControl<TimeUnit | undefined>({ value: undefined, disabled: true }, [Validators.min(1)]),
         minimalDataBatch: new FormControl<MaybeNull<number>>({ value: null, disabled: true }),
     });
 

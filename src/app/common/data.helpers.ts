@@ -252,23 +252,23 @@ export function cronExpressionValidator(): ValidatorFn {
 
 export const everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = {
     [TimeUnit.Minutes]: RxwebValidators.range({
-        minimumNumber: 0,
+        minimumNumber: 1,
         maximumNumber: 59,
-        message: "Value should be between 0 to 59",
+        message: "Value should be between 1 to 59",
     }),
     [TimeUnit.Hours]: RxwebValidators.range({
-        minimumNumber: 0,
+        minimumNumber: 1,
         maximumNumber: 23,
-        message: "Value should be between 0 to 23",
+        message: "Value should be between 1 to 23",
     }),
     [TimeUnit.Days]: RxwebValidators.range({
-        minimumNumber: 0,
+        minimumNumber: 1,
         maximumNumber: 31,
-        message: "Value should be between 0 to 31",
+        message: "Value should be between 1 to 31",
     }),
     [TimeUnit.Weeks]: RxwebValidators.range({
-        minimumNumber: 0,
+        minimumNumber: 1,
         maximumNumber: 51,
-        message: "Value should be between 0 to 51",
+        message: "Value should be between 1 to 51",
     }),
 };

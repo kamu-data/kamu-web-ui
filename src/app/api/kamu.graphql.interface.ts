@@ -1929,6 +1929,11 @@ export type GetDatasetListFlowsQuery = {
                         | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
                         | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
                 } | null;
+                currentTransform?: {
+                    __typename?: "SetTransform";
+                    inputs: Array<{ __typename: "TransformInput" }>;
+                    transform: { __typename?: "TransformSql"; engine: string };
+                } | null;
             };
             flows: {
                 __typename?: "DatasetFlows";
@@ -4151,6 +4156,16 @@ export const GetDatasetListFlowsDocument = gql`
                             ...FetchStepUrlData
                             ...FetchStepFilesGlobData
                             ...FetchStepContainerData
+                        }
+                    }
+                    currentTransform {
+                        inputs {
+                            __typename
+                        }
+                        transform {
+                            ... on TransformSql {
+                                engine
+                            }
                         }
                     }
                 }

@@ -33,6 +33,10 @@ export class DatasetFlowsService {
                 return {
                     connectionData: data.datasets.byId?.flows.runs.listFlows as FlowConnectionDataFragment,
                     source: metadata.currentPollingSource?.fetch,
+                    transformData: {
+                        numInputs: metadata.currentTransform?.inputs.length ?? 0,
+                        engine: metadata.currentTransform?.transform.engine ?? "",
+                    },
                 };
             }),
         );

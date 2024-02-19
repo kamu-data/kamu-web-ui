@@ -3,6 +3,8 @@ import moment from "moment";
 import { FetchStep, FlowOutcome, FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
+import { TransformDescriptionTableData } from "./flows-table.types";
+import { DataHelpers } from "src/app/common/data.helpers";
 
 export class DatasetFlowTableHelpers {
     public static descriptionColumnTableOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
@@ -78,6 +80,7 @@ export class DatasetFlowTableHelpers {
     public static descriptionSubMessage(
         element: FlowSummaryDataFragment,
         fetchStep: MaybeUndefined<FetchStep>,
+        transformData: TransformDescriptionTableData,
     ): string {
         switch (element.status) {
             case FlowStatus.Finished:
@@ -152,9 +155,10 @@ export class DatasetFlowTableHelpers {
                                 return `Polling data from file: ${fetchStep.path}`;
                         }
                         break;
-                    // TODO:
                     case "FlowDescriptionDatasetExecuteTransform":
-                        return `Transform executing...`;
+                        return `Transforming ${transformData.numInputs} input datasets using "${
+                            DataHelpers.descriptionForEngine(transformData.engine).label ?? "unknown"
+                        }" engine`;
                     // TODO: consider what to display for other flow types
                     //  - push ingest
                     //  - compacting

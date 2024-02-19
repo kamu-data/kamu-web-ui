@@ -24,7 +24,7 @@ import { convertSecondsToHumanReadableFormat } from "src/app/common/app.helpers"
 import { MatMenuTrigger } from "@angular/material/menu";
 import { MatRadioChange } from "@angular/material/radio";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
-import { FilterByInitiatorEnum } from "./flows-table.types";
+import { FilterByInitiatorEnum, TransformDescriptionTableData } from "./flows-table.types";
 
 @Component({
     selector: "app-flows-table",
@@ -38,6 +38,7 @@ export class FlowsTableComponent implements OnInit {
     @Input() public filterByInitiator: FilterByInitiatorEnum;
     @Input() public searchByAccountName: string;
     @Input() public fetchStep: MaybeUndefined<FetchStep>;
+    @Input() public transformData: TransformDescriptionTableData;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public filterByInitiatorChange = new EventEmitter<FilterByInitiatorEnum>();
     @Output() public searchByAccountNameChange = new EventEmitter<string>();
@@ -73,7 +74,7 @@ export class FlowsTableComponent implements OnInit {
     }
 
     public descriptionDatasetFlowSubMessage(element: FlowSummaryDataFragment): string {
-        return DatasetFlowTableHelpers.descriptionSubMessage(element, this.fetchStep);
+        return DatasetFlowTableHelpers.descriptionSubMessage(element, this.fetchStep, this.transformData);
     }
 
     public changeFilterByStatus(status: MaybeNull<FlowStatus>): void {

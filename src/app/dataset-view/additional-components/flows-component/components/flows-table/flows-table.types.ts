@@ -10,4 +10,10 @@ export enum FilterByInitiatorEnum {
 export interface FlowsTableData {
     connectionData: FlowConnectionDataFragment;
     source: MaybeUndefined<FetchStep>;
+    transformData: TransformDescriptionTableData;
+}
+
+export interface TransformDescriptionTableData {
+    numInputs: number;
+    engine: string;
 }

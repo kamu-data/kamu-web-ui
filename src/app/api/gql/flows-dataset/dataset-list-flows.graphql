@@ -9,6 +9,16 @@ query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int, $fi
             ...FetchStepContainerData
           }
         }
+        currentTransform {
+          inputs {
+            __typename
+          }
+          transform {
+            ... on TransformSql {
+              engine
+            }
+          }
+        }
       }
       flows {
         runs {

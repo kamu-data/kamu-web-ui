@@ -2033,6 +2033,10 @@ export type FlowSummaryDataFragment = {
         runningSince?: string | null;
         finishedAt?: string | null;
     };
+    startCondition?:
+        | { __typename: "FlowStartConditionBatching"; thresholdNewRecords: number }
+        | { __typename: "FlowStartConditionThrottling"; intervalSec: number }
+        | null;
 };
 
 export type FlowConnectionDataFragment = {
@@ -2839,6 +2843,15 @@ export const FlowSummaryDataFragmentDoc = gql`
             activateAt
             runningSince
             finishedAt
+        }
+        startCondition {
+            __typename
+            ... on FlowStartConditionThrottling {
+                intervalSec
+            }
+            ... on FlowStartConditionBatching {
+                thresholdNewRecords
+            }
         }
     }
 `;

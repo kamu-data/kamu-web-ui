@@ -77,6 +77,10 @@
                         {{ durationTask(element.timing.runningSince, element.timing.finishedAt) }}
                     </span>
                 </div>
+                <div class="d-flex align-items-center" *ngIf="waitingForBlockVisible(element)">
+                    <svg-icon name="hour-glass" class="ps-1 pe-2 text-muted" [title]="'Waiting message'"></svg-icon>
+                    <span class="text-small ml-2px pt-1"> {{ waitingBlockText(element.startCondition) }} </span>
+                </div>
             </div>
         </td>
     </ng-container>

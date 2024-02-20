@@ -16,6 +16,8 @@ import {
     FlowStatus,
     Scalars,
     FetchStep,
+    FlowStartCondition,
+    DatasetBasicsFragment,
 } from "src/app/api/kamu.graphql.interface";
 import moment from "moment";
 import AppValues from "src/app/common/app.values";
@@ -39,6 +41,7 @@ export class FlowsTableComponent implements OnInit {
     @Input() public searchByAccountName: string;
     @Input() public fetchStep: MaybeUndefined<FetchStep>;
     @Input() public transformData: TransformDescriptionTableData;
+    @Input() public datasetBasics: DatasetBasicsFragment;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public filterByInitiatorChange = new EventEmitter<FilterByInitiatorEnum>();
     @Output() public searchByAccountNameChange = new EventEmitter<string>();
@@ -91,10 +94,18 @@ export class FlowsTableComponent implements OnInit {
     }
 
     public durationBlockVisible(node: FlowSummaryDataFragment): boolean {
-        return node.status === FlowStatus.Finished;
+        return node.status === FlowStatus.Finished && node.outcome !== FlowOutcome.Failed;
     }
 
     public tooltipTimeFormat(time: string): string {
         return moment(time).format(AppValues.CRON_EXPRESSION_DATE_FORMAT);
+    }
+
+    public waitingForBlockVisible(node: FlowSummaryDataFragment): boolean {
+        return [FlowStatus.Queued, FlowStatus.Waiting].includes(node.status);
+    }
+
+    public waitingBlockText(startCondition: MaybeNull<FlowStartCondition>): string {
+        return DatasetFlowTableHelpers.waitingBlockText(startCondition, this.datasetBasics.kind);
     }
 }

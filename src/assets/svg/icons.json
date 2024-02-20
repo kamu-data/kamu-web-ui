@@ -123,6 +123,10 @@
     {
       "iconName": "clock",
       "iconPath": "/assets/svg/clock.svg"
+    },
+    {
+      "iconName": "hour-glass",
+      "iconPath": "/assets/svg/hour-glass.svg"
     }
   ],
   "customIcons": []

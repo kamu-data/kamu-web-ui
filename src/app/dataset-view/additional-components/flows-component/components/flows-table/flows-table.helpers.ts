@@ -1,7 +1,14 @@
 import _ from "lodash";
 import moment from "moment";
-import { FetchStep, FlowOutcome, FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
-import { MaybeUndefined } from "src/app/common/app.types";
+import {
+    DatasetKind,
+    FetchStep,
+    FlowOutcome,
+    FlowStartCondition,
+    FlowStatus,
+    FlowSummaryDataFragment,
+} from "src/app/api/kamu.graphql.interface";
+import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
 import { TransformDescriptionTableData } from "./flows-table.types";
 import { DataHelpers } from "src/app/common/data.helpers";
@@ -167,5 +174,18 @@ export class DatasetFlowTableHelpers {
         }
 
         return "";
+    }
+
+    public static waitingBlockText(startCondition: MaybeNull<FlowStartCondition>, datasetKind: DatasetKind): string {
+        switch (startCondition?.__typename) {
+            case "FlowStartConditionThrottling":
+                return "waiting for throttling execution";
+
+            case "FlowStartConditionBatching":
+                return "waiting for batching execution";
+
+            default:
+                return datasetKind === DatasetKind.Root ? "waiting for scheduled execution" : "";
+        }
     }
 }

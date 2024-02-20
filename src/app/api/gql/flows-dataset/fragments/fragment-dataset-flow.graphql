@@ -47,4 +47,14 @@ fragment FlowSummaryData on Flow {
     runningSince
     finishedAt
   }
+  startCondition {
+    __typename
+    ... on FlowStartConditionThrottling {
+      intervalSec
+    }
+
+    ... on FlowStartConditionBatching {
+      thresholdNewRecords
+    }
+  }
 }

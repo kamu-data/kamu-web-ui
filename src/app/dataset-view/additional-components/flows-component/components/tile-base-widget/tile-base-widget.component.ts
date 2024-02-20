@@ -18,7 +18,7 @@ export class TileBaseWidgetComponent {
     public readonly FlowOutcome: typeof FlowOutcome = FlowOutcome;
 
     public durationTask(d1: MaybeNull<Scalars["DateTime"]>, d2: MaybeNull<Scalars["DateTime"]>): string {
-        if (!d1 || !d2) return "-";
+        if (!d2) return "-";
         const result = convertSecondsToHumanReadableFormat(moment(d2).seconds() - moment(d1).seconds());
         return result ? result : "less than 1 second";
     }

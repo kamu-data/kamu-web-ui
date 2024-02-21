@@ -44,6 +44,7 @@ import { HistoryComponent } from "./additional-components/history-component/hist
 import { LineageComponent } from "./additional-components/lineage-component/lineage.component";
 import { DatasetSettingsGeneralTabComponent } from "./additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
 import { DatasetSettingsSchedulingTabComponent } from "./additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.component";
+import { ToastrModule } from "ngx-toastr";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -84,6 +85,7 @@ describe("DatasetComponent", () => {
                 FormsModule,
                 ReactiveFormsModule,
                 RouterTestingModule,
+                ToastrModule.forRoot(),
             ],
             providers: [
                 DatasetApi,

@@ -115,6 +115,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
 
     private initFlowsTab(): void {
         this.datasetViewType = DatasetViewTypeEnum.Flows;
+        this.cdr.detectChanges();
     }
 
     private initHistoryTab(datasetInfo: DatasetInfo, currentPage: number): void {

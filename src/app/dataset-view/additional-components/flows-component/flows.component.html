@@ -21,7 +21,7 @@
                             <svg-icon name="show-options"></svg-icon>
                         </button>
                         <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="true">
-                            <button mat-menu-item [disabled]="true" (click)="updateNow()">Update now</button>
+                            <button mat-menu-item [disabled]="false" (click)="updateNow()">Update now</button>
                             <mat-divider></mat-divider>
                             <button mat-menu-item (click)="updateSettings()">Update settings</button>
                             <mat-divider></mat-divider>

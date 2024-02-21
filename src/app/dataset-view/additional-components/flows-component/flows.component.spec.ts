@@ -162,4 +162,11 @@ describe("FlowsComponent", () => {
         expect(component.filterByInitiator).toEqual(changedFilterByInitiator);
         expect(getFlowConnectionDataSpy).toHaveBeenCalledTimes(1);
     });
+
+    it("should check update now button", () => {
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        spyOn(datasetFlowsService, "datasetTriggerFlow").and.returnValue(of(true));
+        component.updateNow();
+        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+    });
 });

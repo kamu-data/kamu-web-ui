@@ -7,6 +7,8 @@ import {
     DatasetFlowScheduleDocument,
     DatasetFlowScheduleMutation,
     DatasetFlowType,
+    DatasetTriggerFlowDocument,
+    DatasetTriggerFlowMutation,
     GetDatasetFlowConfigsDocument,
     GetDatasetFlowConfigsQuery,
 } from "./kamu.graphql.interface";
@@ -18,6 +20,7 @@ import {
     mockTimeDeltaInput,
     mockSetDatasetFlowScheduleSuccess,
     mockSetDatasetFlowBatchingSuccess,
+    mockDatasetTriggerFlowMutation,
 } from "./mock/dataset-flow.mock";
 
 describe("DatasetFlowApi", () => {
@@ -137,6 +140,24 @@ describe("DatasetFlowApi", () => {
         expect(op.operation.variables.minimalDataBatch).toEqual(MOCK_MINIMAL_DATA_BATCH);
         op.flush({
             data: mockSetDatasetFlowBatchingSuccess,
+        });
+    });
+
+    it("should check datasetTriggerFlow", () => {
+        service
+            .datasetTriggerFlow({
+                datasetId: TEST_DATASET_ID,
+                datasetFlowType: DatasetFlowType.Ingest,
+            })
+            .subscribe((res: DatasetTriggerFlowMutation) => {
+                expect(res.datasets.byId?.flows.runs.triggerFlow.message).toEqual("Success");
+            });
+
+        const op = controller.expectOne(DatasetTriggerFlowDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.Ingest);
+        op.flush({
+            data: mockDatasetTriggerFlowMutation,
         });
     });
 });

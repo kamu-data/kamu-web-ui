@@ -1,5 +1,19 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { DatasetBasicsFragment, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+} from "@angular/core";
+import {
+    DatasetBasicsFragment,
+    DatasetFlowType,
+    DatasetKind,
+    FlowStatus,
+    InitiatorFilterInput,
+} from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { Observable, filter, map } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
@@ -37,6 +51,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         private flowsService: DatasetFlowsService,
         private router: Router,
         private navigationService: NavigationService,
+        private cdr: ChangeDetectorRef,
     ) {
         super();
     }
@@ -102,8 +117,22 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     }
 
     public updateNow(): void {
-        this.getTileWidgetData();
-        this.getFlowConnectionData(this.currentPage, this.filterByStatus);
+        this.trackSubscription(
+            this.flowsService
+                .datasetTriggerFlow({
+                    datasetId: this.datasetBasics.id,
+                    datasetFlowType:
+                        this.datasetBasics.kind === DatasetKind.Root
+                            ? DatasetFlowType.Ingest
+                            : DatasetFlowType.ExecuteTransform,
+                })
+                .subscribe((success: boolean) => {
+                    if (success) {
+                        this.refreshFlow();
+                        this.cdr.detectChanges();
+                    }
+                }),
+        );
     }
 
     public onChangeFilterByStatus(status: MaybeNull<FlowStatus>): void {

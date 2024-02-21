@@ -39,7 +39,7 @@ fragment FlowSummaryData on Flow {
   flowId
   status
   initiator {
-    accountName
+    ...Account
   }
   outcome
   timing {

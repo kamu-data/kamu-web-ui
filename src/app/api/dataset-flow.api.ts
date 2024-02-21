@@ -14,6 +14,8 @@ import {
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsGQL,
     DatasetResumeFlowsMutation,
+    DatasetTriggerFlowGQL,
+    DatasetTriggerFlowMutation,
     GetDatasetFlowConfigsGQL,
     GetDatasetFlowConfigsQuery,
     GetDatasetListFlowsGQL,
@@ -35,7 +37,25 @@ export class DatasetFlowApi {
         private datasetPauseFlowsGQL: DatasetPauseFlowsGQL,
         private datasetResumeFlowsGQL: DatasetResumeFlowsGQL,
         private datasetAllFlowsPausedGQL: DatasetAllFlowsPausedGQL,
+        private datasetTriggerFlowGQL: DatasetTriggerFlowGQL,
     ) {}
+
+    public datasetTriggerFlow(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+    }): Observable<DatasetTriggerFlowMutation> {
+        return this.datasetTriggerFlowGQL.mutate({ ...params }).pipe(
+            first(),
+            map((result: MutationResult<DatasetTriggerFlowMutation>) => {
+                /* istanbul ignore else */
+                if (result.data) {
+                    return result.data;
+                } else {
+                    throw new DatasetOperationError(result.errors ?? []);
+                }
+            }),
+        );
+    }
 
     public getDatasetFlowConfigs(params: {
         datasetId: string;

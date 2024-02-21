@@ -1,8 +1,10 @@
 import {
+    AccountType,
     DatasetFlowBatchingMutation,
     DatasetFlowScheduleMutation,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
+    DatasetTriggerFlowMutation,
     FlowConnectionDataFragment,
     FlowOutcome,
     FlowStatus,
@@ -515,5 +517,73 @@ export const mockFlowsTableData: FlowsTableData = {
     transformData: {
         numInputs: 0,
         engine: "",
+    },
+};
+
+export const mockDatasetTriggerFlowMutation: DatasetTriggerFlowMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                runs: {
+                    triggerFlow: {
+                        flow: {
+                            description: {
+                                datasetId:
+                                    "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+                                ingestResult: null,
+                                __typename: "FlowDescriptionDatasetPollingIngest",
+                            },
+                            flowId: "0",
+                            status: FlowStatus.Queued,
+                            initiator: {
+                                id: "12345",
+                                accountName: "kamu",
+                                displayName: "kamu",
+                                accountType: AccountType.User,
+                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                isAdmin: true,
+                                __typename: "Account",
+                            },
+                            outcome: null,
+                            timing: {
+                                activateAt: "2024-02-16T09:26:04+00:00",
+                                runningSince: null,
+                                finishedAt: null,
+                                __typename: "FlowTimingRecords",
+                            },
+                            startCondition: null,
+                            __typename: "Flow",
+                        },
+                        message: "Success",
+                        __typename: "TriggerFlowSuccess",
+                    },
+                    __typename: "DatasetFlowRunsMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockDatasetTriggerFlowMutationError: DatasetTriggerFlowMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                runs: {
+                    triggerFlow: {
+                        __typename: "FlowIncompatibleDatasetKind",
+                        message: "Error",
+                        expectedDatasetKind: DatasetKind.Root,
+                        actualDatasetKind: DatasetKind.Derivative,
+                    },
+                    __typename: "DatasetFlowRunsMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
     },
 };

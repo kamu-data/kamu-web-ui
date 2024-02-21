@@ -9,6 +9,7 @@ import {
     DatasetMetadata,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
+    DatasetTriggerFlowMutation,
     FlowConnectionDataFragment,
     GetDatasetListFlowsQuery,
 } from "src/app/api/kamu.graphql.interface";
@@ -20,6 +21,24 @@ import { FlowsTableData } from "../components/flows-table/flows-table.types";
 })
 export class DatasetFlowsService {
     constructor(private datasetFlowApi: DatasetFlowApi, private toastrService: ToastrService) {}
+
+    public datasetTriggerFlow(params: { datasetId: string; datasetFlowType: DatasetFlowType }): Observable<boolean> {
+        return this.datasetFlowApi
+            .datasetTriggerFlow({
+                datasetId: params.datasetId,
+                datasetFlowType: params.datasetFlowType,
+            })
+            .pipe(
+                map((data: DatasetTriggerFlowMutation) => {
+                    if (data.datasets.byId?.flows.runs.triggerFlow.__typename === "TriggerFlowSuccess") {
+                        return true;
+                    } else {
+                        this.toastrService.error(data.datasets.byId?.flows.runs.triggerFlow.message);
+                        return false;
+                    }
+                }),
+            );
+    }
 
     public datasetFlowsList(params: {
         datasetId: string;

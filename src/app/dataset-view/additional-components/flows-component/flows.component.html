@@ -23,7 +23,7 @@
                         <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="true">
                             <button mat-menu-item [disabled]="true" (click)="updateNow()">Update now</button>
                             <mat-divider></mat-divider>
-                            <button mat-menu-item [disabled]="true" (click)="updateSettings()">Update settings</button>
+                            <button mat-menu-item (click)="updateSettings()">Update settings</button>
                             <mat-divider></mat-divider>
                             <button mat-menu-item (click)="toggleStateDatasetFlowConfigs(result.allFlowsPaused!)">
                                 {{ !result.allFlowsPaused ? "Pause" : "Resume" }}
@@ -89,7 +89,7 @@
             </ng-container>
         </ng-container>
         <ng-template #noRuns>
-            <p class="ps-2 pt-2">
+            <p class="ps-2 pt-2" data-test-id="empty-flow-runs-block">
                 No flow runs. You can
                 <a class="text-decoration-none" href="javascript:void(0);" (click)="updateSettings()"
                     >update configuration settings</a

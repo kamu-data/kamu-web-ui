@@ -10,6 +10,9 @@ import { mockFlowSummaryDataFragments, mockGetDatasetListFlowsQuery } from "src/
 import { FilterByInitiatorEnum } from "./flows-table.types";
 import { DisplayTimeModule } from "src/app/components/display-time/display-time.module";
 import { FlowStatus } from "src/app/api/kamu.graphql.interface";
+import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { AngularSvgIconModule } from "angular-svg-icon";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
@@ -26,6 +29,8 @@ describe("FlowsTableComponent", () => {
                 MatIconModule,
                 FormsModule,
                 DisplayTimeModule,
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
             ],
         }).compileComponents();
 
@@ -35,7 +40,12 @@ describe("FlowsTableComponent", () => {
         component.filterByStatus = null;
         component.filterByInitiator = FilterByInitiatorEnum.All;
         component.searchByAccountName = "";
+        component.datasetBasics = mockDatasetBasicsRootFragment;
         component.fetchStep = mockGetDatasetListFlowsQuery.datasets.byId?.metadata.currentPollingSource?.fetch;
+        component.transformData = {
+            numInputs: 0,
+            engine: "",
+        };
         fixture.detectChanges();
     });
 
@@ -55,7 +65,7 @@ describe("FlowsTableComponent", () => {
         expect(filterByInitiatorChangeSpy).toHaveBeenCalledWith(FilterByInitiatorEnum.System);
     });
 
-    it("should check search by accountName emits value ", () => {
+    it("should check search by accountName emits value", () => {
         const searchByAccountNameChangeSpy = spyOn(component.searchByAccountNameChange, "emit");
         component.onSearchByAccountName();
         expect(searchByAccountNameChangeSpy).toHaveBeenCalledWith("");

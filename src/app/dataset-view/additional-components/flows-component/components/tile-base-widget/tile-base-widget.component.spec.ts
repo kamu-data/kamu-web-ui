@@ -27,7 +27,7 @@ describe("TileBaseWidgetComponent", () => {
         const runningTime = mockFlowSummaryDataFragments[2].timing.runningSince;
         const finishedTime = mockFlowSummaryDataFragments[2].timing.finishedAt;
         const result = component.durationTask(runningTime, finishedTime);
-        expect(result).toEqual("1 second");
+        expect(result).toEqual("2 seconds");
     });
 
     it("should check flow's duration is null", () => {

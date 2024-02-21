@@ -3,12 +3,14 @@ import {
     DatasetFlowScheduleMutation,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
+    FlowConnectionDataFragment,
     FlowOutcome,
     FlowStatus,
     FlowSummaryDataFragment,
     GetDatasetListFlowsQuery,
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
+import { FlowsTableData } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
 
 export const mockTimeDeltaInput: TimeDeltaInput = {
     every: 10,
@@ -230,14 +232,104 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             ingestResult: null,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
-        flowId: "413",
+        flowId: "414",
+        status: FlowStatus.Running,
+        initiator: null,
+        outcome: null,
+        timing: {
+            activateAt: "2024-02-12T18:21:26+00:00",
+            runningSince: "2024-02-12T18:21:27.477789591+00:00",
+            finishedAt: "2024-02-12T18:21:29.554197038+00:00",
+            __typename: "FlowTimingRecords",
+        },
+        __typename: "Flow",
+    },
+    {
+        description: {
+            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+            ingestResult: null,
+            __typename: "FlowDescriptionDatasetPollingIngest",
+        },
+        flowId: "414",
+        status: FlowStatus.Waiting,
+        initiator: null,
+        outcome: null,
+        timing: {
+            activateAt: "2024-02-12T18:21:26+00:00",
+            runningSince: "2024-02-12T18:21:27.477789591+00:00",
+            finishedAt: "2024-02-12T18:21:29.554197038+00:00",
+            __typename: "FlowTimingRecords",
+        },
+        __typename: "Flow",
+    },
+    {
+        description: {
+            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+            ingestResult: null,
+            __typename: "FlowDescriptionDatasetPollingIngest",
+        },
+        flowId: "414",
+        status: FlowStatus.Scheduled,
+        initiator: null,
+        outcome: null,
+        timing: {
+            activateAt: "2024-02-12T18:21:26+00:00",
+            runningSince: "2024-02-12T18:21:27.477789591+00:00",
+            finishedAt: "2024-02-12T18:21:29.554197038+00:00",
+            __typename: "FlowTimingRecords",
+        },
+        __typename: "Flow",
+    },
+    {
+        description: {
+            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+            ingestResult: null,
+            __typename: "FlowDescriptionDatasetPollingIngest",
+        },
+        flowId: "414",
         status: FlowStatus.Finished,
         initiator: null,
-        outcome: FlowOutcome.Success,
+        outcome: FlowOutcome.Aborted,
         timing: {
-            activateAt: "2024-02-12T18:20:24+00:00",
-            runningSince: "2024-02-12T18:20:25.308435148+00:00",
-            finishedAt: "2024-02-12T18:20:26.401066641+00:00",
+            activateAt: "2024-02-12T18:21:26+00:00",
+            runningSince: null,
+            finishedAt: null,
+            __typename: "FlowTimingRecords",
+        },
+        __typename: "Flow",
+    },
+    {
+        description: {
+            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+            ingestResult: null,
+            __typename: "FlowDescriptionDatasetPollingIngest",
+        },
+        flowId: "414",
+        status: FlowStatus.Finished,
+        initiator: null,
+        outcome: FlowOutcome.Cancelled,
+        timing: {
+            activateAt: "2024-02-12T18:21:26+00:00",
+            runningSince: null,
+            finishedAt: null,
+            __typename: "FlowTimingRecords",
+        },
+        __typename: "Flow",
+    },
+    {
+        description: {
+            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+            ingestResult: null,
+            __typename: "FlowDescriptionDatasetPollingIngest",
+        },
+        flowId: "414",
+        status: FlowStatus.Finished,
+        initiator: null,
+        outcome: FlowOutcome.Failed,
+        timing: {
+            activateAt: "2024-02-12T18:21:26+00:00",
+            runningSince: null,
+            finishedAt: null,
             __typename: "FlowTimingRecords",
         },
         __typename: "Flow",
@@ -303,6 +395,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                         url: "http://test.com",
                     },
                 },
+                currentTransform: null,
             },
             flows: {
                 runs: {
@@ -410,5 +503,17 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
             __typename: "Dataset",
         },
         __typename: "Datasets",
+    },
+};
+
+export const mockFlowsTableData: FlowsTableData = {
+    connectionData: mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs.listFlows as FlowConnectionDataFragment,
+    source: {
+        __typename: "FetchStepUrl",
+        url: "http://mock.com",
+    },
+    transformData: {
+        numInputs: 0,
+        engine: "",
     },
 };

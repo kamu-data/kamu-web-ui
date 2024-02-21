@@ -42,7 +42,8 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Scheduled:
                 return { icon: "radio_button_checked", class: "scheduled-status" };
 
-            // TODO: Waiting status?
+            case FlowStatus.Waiting:
+                return { icon: "radio_button_checked", class: "waiting-status" };
         }
 
         return { icon: "question_mark", class: "" };
@@ -104,8 +105,7 @@ export class DatasetFlowTableHelpers {
                                 }
                                 return `Ingested ${element.description.ingestResult.numRecords} new ${
                                     element.description.ingestResult.numRecords == 1 ? "record" : "records"
-                                } in
-                                ${element.description.ingestResult.numBlocks} new ${
+                                } in ${element.description.ingestResult.numBlocks} new ${
                                     element.description.ingestResult.numBlocks == 1 ? "block" : "blocks"
                                 }`;
 
@@ -115,8 +115,7 @@ export class DatasetFlowTableHelpers {
                                 }
                                 return `Transformed ${element.description.transformResult.numRecords} new ${
                                     element.description.transformResult.numRecords == 1 ? "record" : "records"
-                                } in
-                                ${element.description.transformResult.numBlocks} new ${
+                                } in ${element.description.transformResult.numBlocks} new ${
                                     element.description.transformResult.numBlocks == 1 ? "block" : "blocks"
                                 }`;
 

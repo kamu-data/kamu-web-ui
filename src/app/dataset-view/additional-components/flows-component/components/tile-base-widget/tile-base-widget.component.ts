@@ -1,7 +1,7 @@
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNullOrUndefined } from "./../../../../../common/app.types";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import moment from "moment";
-import { FlowStatus, FlowOutcome, FlowSummaryDataFragment, Scalars } from "src/app/api/kamu.graphql.interface";
+import { FlowStatus, FlowOutcome, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { convertSecondsToHumanReadableFormat } from "src/app/common/app.helpers";
 import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
 
@@ -17,7 +17,7 @@ export class TileBaseWidgetComponent {
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly FlowOutcome: typeof FlowOutcome = FlowOutcome;
 
-    public durationTask(d1: MaybeNull<Scalars["DateTime"]>, d2: MaybeNull<Scalars["DateTime"]>): string {
+    public durationTask(d1: MaybeNullOrUndefined<string>, d2: MaybeNullOrUndefined<string>): string {
         if (!d2) return "-";
         const result = convertSecondsToHumanReadableFormat(moment(d2).seconds() - moment(d1).seconds());
         return result ? result : "less than 1 second";

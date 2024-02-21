@@ -1,0 +1,175 @@
+import { DatasetKind, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetFlowTableHelpers } from "./flows-table.helpers";
+import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
+import {
+    expectationsDescriptionEndOfMessage,
+    expectationsDesriptionColumnOptions,
+    mockTableFlowSummaryDataFragments,
+} from "./flows-table.helpers.mock";
+
+describe("DatasetFlowTableHelpers", () => {
+    it("should check waiting block text with FlowStartConditionThrottling typename", () => {
+        expect(
+            DatasetFlowTableHelpers.waitingBlockText(
+                { __typename: "FlowStartConditionThrottling", intervalSec: 120 },
+                DatasetKind.Root,
+            ),
+        ).toEqual("waiting for throttling execution");
+    });
+
+    it("should check waiting block text with FlowStartConditionBatching typename", () => {
+        expect(
+            DatasetFlowTableHelpers.waitingBlockText(
+                { __typename: "FlowStartConditionBatching", thresholdNewRecords: 10 },
+                DatasetKind.Root,
+            ),
+        ).toEqual("waiting for batching execution");
+    });
+
+    it("should check waiting block text with empty start condition for ROOT", () => {
+        expect(DatasetFlowTableHelpers.waitingBlockText(null, DatasetKind.Root)).toEqual(
+            "waiting for scheduled execution",
+        );
+    });
+
+    it("should check waiting block text with empty start condition for DERIVATIVE", () => {
+        expect(DatasetFlowTableHelpers.waitingBlockText(null, DatasetKind.Derivative)).toEqual("");
+    });
+
+    mockFlowSummaryDataFragments.forEach((item: FlowSummaryDataFragment, index: number) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        it(`should check description column options with status=${item.status} and outcome=${item.outcome!}`, () => {
+            expect(DatasetFlowTableHelpers.descriptionColumnTableOptions(item)).toEqual(
+                expectationsDesriptionColumnOptions[index],
+            );
+        });
+    });
+
+    mockFlowSummaryDataFragments.forEach((item: FlowSummaryDataFragment, index: number) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        it(`should check description end of message with status=${item.status} and outcome=${item.outcome!}`, () => {
+            expect(DatasetFlowTableHelpers.descriptionEndOfMessage(item)).toEqual(
+                expectationsDescriptionEndOfMessage[index],
+            );
+        });
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepUrl`, () => {
+        expect(
+            DatasetFlowTableHelpers.descriptionSubMessage(
+                mockTableFlowSummaryDataFragments[0],
+                { __typename: "FetchStepUrl", url: "http://test.com" },
+                { numInputs: 0, engine: "" },
+            ),
+        ).toEqual("Polling data from url: http://test.com");
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepContainer`, () => {
+        expect(
+            DatasetFlowTableHelpers.descriptionSubMessage(
+                mockTableFlowSummaryDataFragments[0],
+                { __typename: "FetchStepContainer", image: "mockImage" },
+                { numInputs: 0, engine: "" },
+            ),
+        ).toEqual("Polling data from image: mockImage");
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepFilesGlob`, () => {
+        expect(
+            DatasetFlowTableHelpers.descriptionSubMessage(
+                mockTableFlowSummaryDataFragments[0],
+                { __typename: "FetchStepFilesGlob", path: "c:/mock-path" },
+                { numInputs: 0, engine: "" },
+            ),
+        ).toEqual("Polling data from file: c:/mock-path");
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename `, () => {
+        expect(
+            DatasetFlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[1], undefined, {
+                numInputs: 10,
+                engine: "spark",
+            }),
+        ).toEqual(`Transforming 10 input datasets using "Apache Spark" engine`);
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename and scheduled status `, () => {
+        expect(
+            DatasetFlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[2], undefined, {
+                numInputs: 10,
+                engine: "spark",
+            }),
+        ).toEqual("Awaiting for a free executor");
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and waiting status `, () => {
+        expect(
+            DatasetFlowTableHelpers.descriptionSubMessage(
+                mockTableFlowSummaryDataFragments[3],
+                { __typename: "FetchStepFilesGlob", path: "c:/mock-path" },
+                { numInputs: 0, engine: "" },
+            ),
+        ).toEqual("Polling data from file: c:/mock-path");
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename and success outcome `, () => {
+        expect(
+            DatasetFlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[4], undefined, {
+                numInputs: 2,
+                engine: "spark",
+            }),
+        ).toEqual("Transformed 10 new records in 2 new blocks");
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and success outcome `, () => {
+        expect(
+            DatasetFlowTableHelpers.descriptionSubMessage(
+                mockTableFlowSummaryDataFragments[5],
+                { __typename: "FetchStepFilesGlob", path: "c:/mock-path" },
+                {
+                    numInputs: 0,
+                    engine: "",
+                },
+            ),
+        ).toEqual("Ingested 30 new records in 4 new blocks");
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and cancelled outcome `, () => {
+        expect(
+            DatasetFlowTableHelpers.descriptionSubMessage(
+                mockTableFlowSummaryDataFragments[6],
+                { __typename: "FetchStepFilesGlob", path: "c:/mock-path" },
+                {
+                    numInputs: 0,
+                    engine: "",
+                },
+            ),
+        ).toEqual("Cancelled at 12th Feb 2024, 8:22:32 PM");
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and aborted outcome `, () => {
+        expect(
+            DatasetFlowTableHelpers.descriptionSubMessage(
+                mockTableFlowSummaryDataFragments[7],
+                { __typename: "FetchStepFilesGlob", path: "c:/mock-path" },
+                {
+                    numInputs: 0,
+                    engine: "",
+                },
+            ),
+        ).toEqual("Aborted at 12th Feb 2024, 8:22:32 PM");
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and filed outcome `, () => {
+        expect(
+            DatasetFlowTableHelpers.descriptionSubMessage(
+                mockTableFlowSummaryDataFragments[8],
+                { __typename: "FetchStepFilesGlob", path: "c:/mock-path" },
+                {
+                    numInputs: 0,
+                    engine: "",
+                },
+            ),
+        ).toEqual("An error occurred, see logs for more details");
+    });
+});

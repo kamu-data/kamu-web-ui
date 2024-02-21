@@ -51,12 +51,13 @@ export class FlowsTableComponent implements OnInit {
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly FlowOutcome: typeof FlowOutcome = FlowOutcome;
     public readonly FilterByInitiatorEnum: typeof FilterByInitiatorEnum = FilterByInitiatorEnum;
-
-    public dataSource: MatTableDataSource<FlowSummaryDataFragment>;
+    public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>(
+        [],
+    );
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
 
     ngOnInit(): void {
-        this.dataSource = new MatTableDataSource(this.nodes);
+        this.dataSource.data = this.nodes;
     }
 
     public durationTask(d1: Scalars["DateTime"], d2: Scalars["DateTime"]): string {

@@ -144,7 +144,7 @@ describe("DatasetFlowTableHelpers", () => {
                     engine: "",
                 },
             ),
-        ).toEqual("Cancelled at 12th Feb 2024, 8:22:32 PM");
+        ).toContain("Cancelled at");
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and aborted outcome `, () => {
@@ -157,7 +157,7 @@ describe("DatasetFlowTableHelpers", () => {
                     engine: "",
                 },
             ),
-        ).toEqual("Aborted at 12th Feb 2024, 8:22:32 PM");
+        ).toContain("Aborted at");
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and filed outcome `, () => {

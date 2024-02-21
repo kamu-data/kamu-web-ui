@@ -251,7 +251,7 @@ export class DatasetService {
         lineage: DatasetLineageFragment,
     ): void {
         const lineageResponse: DatasetLineageNode = this.lineageResponseFromRawQuery(originDatasetBasics, lineage);
-        this.updatelineageGraph(lineageResponse);
+        this.updateLineageGraph(lineageResponse);
     }
 
     private lineageResponseFromRawQuery(
@@ -343,7 +343,7 @@ export class DatasetService {
         };
     }
 
-    private updatelineageGraph(origin: DatasetLineageNode) {
+    private updateLineageGraph(origin: DatasetLineageNode) {
         const lineageGraphEdges: DatasetLineageBasicsFragment[][] = [];
         const lineageGraphNodes: DatasetLineageBasicsFragment[] = [];
 

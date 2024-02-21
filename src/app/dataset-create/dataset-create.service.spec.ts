@@ -88,7 +88,7 @@ describe("DatasetCreateService", () => {
         });
     });
 
-    it("should be create dataset using shapshot with success", () => {
+    it("should be create dataset using snapshot with success", () => {
         const mockResponseSuccess: CreateDatasetFromSnapshotMutation = {
             datasets: {
                 createFromSnapshot: {
@@ -121,7 +121,7 @@ describe("DatasetCreateService", () => {
         );
     });
 
-    it("should be create dataset using shapshot with a name collision error", () => {
+    it("should be create dataset using snapshot with a name collision error", () => {
         const mockResponseError: CreateDatasetFromSnapshotMutation = {
             datasets: {
                 createFromSnapshot: {

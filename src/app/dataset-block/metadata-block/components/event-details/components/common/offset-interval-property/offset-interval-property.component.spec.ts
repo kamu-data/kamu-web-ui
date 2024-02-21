@@ -11,7 +11,7 @@ import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 describe("OffsetIntervalPropertyComponent", () => {
     let component: OffsetIntervalPropertyComponent;
     let fixture: ComponentFixture<OffsetIntervalPropertyComponent>;
-    let datasetSevice: DatasetService;
+    let datasetService: DatasetService;
     let navigationService: NavigationService;
 
     beforeEach(async () => {
@@ -22,7 +22,7 @@ describe("OffsetIntervalPropertyComponent", () => {
 
         fixture = TestBed.createComponent(OffsetIntervalPropertyComponent);
         component = fixture.componentInstance;
-        datasetSevice = TestBed.inject(DatasetService);
+        datasetService = TestBed.inject(DatasetService);
         navigationService = TestBed.inject(NavigationService);
         component.data = {
             block: { __typename: "OffsetInterval", start: 0, end: 596125 },
@@ -34,9 +34,9 @@ describe("OffsetIntervalPropertyComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check call requestDatasetInfoById from datasetSevice in ngOnInit", () => {
+    it("should check call requestDatasetInfoById from datasetService in ngOnInit", () => {
         fixture.detectChanges();
-        const requestDatasetInfoByIdSpy = spyOn(datasetSevice, "requestDatasetInfoById").and.returnValue(
+        const requestDatasetInfoByIdSpy = spyOn(datasetService, "requestDatasetInfoById").and.returnValue(
             of({
                 __typename: "Query",
                 datasets: {

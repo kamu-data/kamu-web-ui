@@ -26,7 +26,7 @@ export abstract class BaseMainEventComponent extends BaseComponent {
     public errorMessage = "";
     public changedEventYamlByHash: MaybeNull<string> = null;
 
-    protected subsribeErrorMessage(): void {
+    protected subscribeErrorMessage(): void {
         this.trackSubscription(
             this.datasetCommitService.commitEventErrorOccurrences.subscribe((message: string) => {
                 this.errorMessage = message;

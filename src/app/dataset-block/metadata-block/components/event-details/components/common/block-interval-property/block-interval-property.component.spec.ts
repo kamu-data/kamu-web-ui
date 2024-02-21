@@ -13,7 +13,7 @@ import { SharedTestModule } from "src/app/common/shared-test.module";
 describe("BlockIntervalPropertyComponent", () => {
     let component: BlockIntervalPropertyComponent;
     let fixture: ComponentFixture<BlockIntervalPropertyComponent>;
-    let datasetSevice: DatasetService;
+    let datasetService: DatasetService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -29,7 +29,7 @@ describe("BlockIntervalPropertyComponent", () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(BlockIntervalPropertyComponent);
-        datasetSevice = TestBed.inject(DatasetService);
+        datasetService = TestBed.inject(DatasetService);
         component = fixture.componentInstance;
         component.data = {
             prevBlockHash: "f1620a798caf694d544a7ad590fa2230e4c518de1acce010789d0056c61a1fa69d95a",
@@ -44,8 +44,8 @@ describe("BlockIntervalPropertyComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should sheck call requestDatasetInfoById from datasetSevice in ngOnInit", () => {
-        const requestDatasetInfoByIdSpy = spyOn(datasetSevice, "requestDatasetInfoById").and.returnValue(
+    it("should check call requestDatasetInfoById from datasetService in ngOnInit", () => {
+        const requestDatasetInfoByIdSpy = spyOn(datasetService, "requestDatasetInfoById").and.returnValue(
             of({
                 __typename: "Query",
                 datasets: {

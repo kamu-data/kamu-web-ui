@@ -213,7 +213,7 @@ describe("OverviewComponent", () => {
 
     describe("SetPollingSource", () => {
         it("should be possible to add polling source for root dataset and commit permissions", () => {
-            // By default we have a root dataset and commit permissions, and a ready polling source, swe reset it here
+            // By default, we have a root dataset and commit permissions, and a ready polling source, swe reset it here
             currentOverview().metadata.currentPollingSource = undefined;
             expect(component.datasetPermissions.permissions.canCommit).toBeTrue();
 
@@ -271,14 +271,14 @@ describe("OverviewComponent", () => {
             expect(component.canAddSetTransform).toBeFalse();
         });
 
-        it("cannot add set trasnform source when having a root dataset", () => {
+        it("cannot add set transform source when having a root dataset", () => {
             component.datasetBasics.kind = DatasetKind.Root;
             fixture.detectChanges();
 
             expect(component.canAddSetTransform).toBeFalse();
         });
 
-        it("cannot add set trasnform  if transfarm already exists", () => {
+        it("cannot add set transform if transform already exists", () => {
             currentOverview().metadata.currentTransform = { __typename: "SetTransform" };
             fixture.detectChanges();
 
@@ -334,7 +334,7 @@ describe("OverviewComponent", () => {
             expect(component.canEditDatasetInfo).toBeTrue();
         });
 
-        it("cannod add dataset info, if a keyword is defined, but can edit", () => {
+        it("cannot add dataset info, if a keyword is defined, but can edit", () => {
             currentInfo().keywords = ["keyword"];
             fixture.detectChanges();
 

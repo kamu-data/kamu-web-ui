@@ -3,7 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { CheckboxFieldComponent } from "./checkbox-field.component";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { getInputElememtByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { getInputElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("CheckboxFieldComponent", () => {
@@ -31,7 +31,7 @@ describe("CheckboxFieldComponent", () => {
     });
 
     it("should check state control", () => {
-        const element = getInputElememtByDataTestId(fixture, "checkbox");
+        const element = getInputElementByDataTestId(fixture, "checkbox");
         expect(element.checked).toBe(false);
         expect(component.form.controls.test.value).toBe(false);
 

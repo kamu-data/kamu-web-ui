@@ -246,7 +246,7 @@ export const MY_MOMENT_FORMATS = {
 
 export function cronExpressionValidator(): ValidatorFn {
     return (control: AbstractControl): MaybeNull<ValidationErrors> => {
-        return !isValidCronExpression(control.value as string) ? { invalidCronExpession: true } : null;
+        return !isValidCronExpression(control.value as string) ? { invalidCronExpression: true } : null;
     };
 }
 

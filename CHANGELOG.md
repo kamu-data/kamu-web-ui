@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added new flows tab 
 - Added refresh now button on the overveiw tab to start the flow
 ### Fixed
-- Fixed bug with authentification (Login vs CLI)
+- Fixed bug with authentication (Login vs CLI)
 - Settings tab is hidden after login
 
 ## [0.15.0] - 2024-01-17
@@ -37,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve reporting of fatal errors from modal window to toaster window
 - Monaco-based editors isolated in `EditorModule`
 - Changed splash screen
-- Evicting dataset objects from Apollo GraphQL cache after signifficant mutations
+- Evicting dataset objects from Apollo GraphQL cache after significant mutations
 ### Fixed
 - GraphQL caching issues when switching between History and Lineage tabs
 - Correct author avatars on history tab
@@ -66,7 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - support new kind of EventTimeSource: FromSystemTime (Fetch section of SetPollingSource wizard)
   - JSON, NdJSON, NdGeoJSON are the new supported read formats
 ### Changed
-- GitHub Client ID is now a part of runtime configuration rathern than Angular environment
+- GitHub Client ID is now a part of runtime configuration rather than Angular environment
 
 ## [0.12.0] - 2023-10-09
 ### Added
@@ -77,7 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Established a naming convention for service event subjects, public observables, and emit methods 
 ### Fixed
 - GraphQL runtime errors are not wrapped into application-specific exceptions
-- Unexpected swithing to Settings tab while surfing over Lineage graph
+- Unexpected switching to Settings tab while surfing over Lineage graph
 - Datasets are not switching in the lineage graph, when names are identical, only accounts are different
 - Adding a watermark prints crash log in console
 - Refactoring styles and removed all ViewEncapsulation.None strategies
@@ -97,7 +97,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implemented authentication and authorization components:
   - runtime configuration allows disabling logout and setting predefined login instructions
   - dynamic endpoint to find out on available login methods on the API server
-  - supporting Github and login/password login methods
+  - supporting GitHub and login/password login methods
   - GraphQL: added Authorization Bearer header
   - added routing guards related to authentication
   - Settings tab is hidden if no permissions
@@ -109,10 +109,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - profile page working normally without account mocks
   - lineage graph shows user avatars (dataset owners)
 - Showing dataset owners in search autocompletes
-- Clipboard command line comands now include real dataset alias.
+- Clipboard command line commands now include real dataset alias.
 ### Changed:
-- Cleanup of heade menu content (depending on whether user is logged in or not)
-- Signifficant extension of unit test coverage
+- Cleanup of header menu content (depending on whether user is logged in or not)
+- Significant extension of unit test coverage
 - Specialized dataset fragment for Lineage - extracts avatarUrl additionally from the account
 - Query for account datasets only when it's necessary
 - Reworked error handling in dataset operations
@@ -126,11 +126,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Started using `stylelint` CSS linting tool
 - Added source url for root dataset on the lineage graph
 ### Changed
-- Upgraded to Node.JS generation 16.x
+- Upgraded to Node.js generation 16.x
 - Upgraded to Angular 14.3
 - Switched to different Angular wrapper for Monaco editor (ngx-monaco-editor-v2)
 - Switched from SASS to SCSS stylesheets
-- Selected library updates/downgrades to align with Angular 14.3 and Node.JS 16.x
+- Selected library updates/downgrades to align with Angular 14.3 and Node.js 16.x
 - GraphQL code generator tuned to produce string type by default for scalars
 - Fixed bug with disabled state for "Run" button after error
 - Refactored redundant selectors and cast class names to lowercase

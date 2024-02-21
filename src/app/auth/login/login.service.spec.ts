@@ -43,7 +43,7 @@ describe("LoginService", () => {
         expect(service).toBeTruthy();
     });
 
-    it("succesful Github login navigates to home", () => {
+    it("successful Github login navigates to home", () => {
         const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromGithubCallbackCode").and.returnValue(
             of(mockGithubLoginResponse.auth.login),
         );
@@ -89,7 +89,7 @@ describe("LoginService", () => {
         accountSubscription$.unsubscribe();
     }));
 
-    it("succesful password login navigates to home", () => {
+    it("successful password login navigates to home", () => {
         const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin").and.returnValue(
             of(mockPasswordLoginResponse.auth.login),
         );
@@ -136,7 +136,7 @@ describe("LoginService", () => {
         accountSubscription$.unsubscribe();
     });
 
-    it("reseting password login error emits empty error", () => {
+    it("resetting password login error emits empty error", () => {
         const errorSubscription$: Subscription = service.passwordLoginErrorOccurrences
             .pipe(first())
             .subscribe((e: string) => {

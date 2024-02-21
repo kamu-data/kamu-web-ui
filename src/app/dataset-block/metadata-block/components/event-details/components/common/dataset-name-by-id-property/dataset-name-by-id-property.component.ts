@@ -17,7 +17,7 @@ export class DatasetNameByIdPropertyComponent extends BasePropertyComponent impl
     public datasetInfo: DatasetInfo = { accountName: "", datasetName: "" };
 
     constructor(
-        private datasetSevice: DatasetService,
+        private datasetService: DatasetService,
         private navigationService: NavigationService,
         private cdr: ChangeDetectorRef,
     ) {
@@ -26,7 +26,7 @@ export class DatasetNameByIdPropertyComponent extends BasePropertyComponent impl
 
     ngOnInit(): void {
         this.trackSubscription(
-            this.datasetSevice.requestDatasetInfoById(this.data).subscribe((dataset: DatasetByIdQuery) => {
+            this.datasetService.requestDatasetInfoById(this.data).subscribe((dataset: DatasetByIdQuery) => {
                 if (dataset.datasets.byId) {
                     this.datasetInfo.accountName = dataset.datasets.byId.owner.accountName;
                     this.datasetInfo.datasetName = dataset.datasets.byId.name;

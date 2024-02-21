@@ -14,13 +14,13 @@ export class BlockIntervalPropertyComponent extends BasePropertyComponent implem
     @Input() public data: { prevBlockHash: string; newBlockHash: string; datasetId: string };
     public datasetInfo: DatasetInfo = { accountName: "", datasetName: "" };
 
-    constructor(private datasetSevice: DatasetService) {
+    constructor(private datasetService: DatasetService) {
         super();
     }
 
     ngOnInit(): void {
         this.trackSubscription(
-            this.datasetSevice.requestDatasetInfoById(this.data.datasetId).subscribe((dataset: DatasetByIdQuery) => {
+            this.datasetService.requestDatasetInfoById(this.data.datasetId).subscribe((dataset: DatasetByIdQuery) => {
                 if (dataset.datasets.byId) {
                     this.datasetInfo.accountName = dataset.datasets.byId.owner.accountName;
                     this.datasetInfo.datasetName = dataset.datasets.byId.name;

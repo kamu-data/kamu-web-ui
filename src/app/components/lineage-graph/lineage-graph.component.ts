@@ -1,4 +1,4 @@
-import { WidgetHeightService } from "./../../services/widget-heigth.service";
+import { WidgetHeightService } from "../../services/widget-height.service";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -87,6 +87,6 @@ export class LineageGraphComponent implements OnInit, OnChanges {
     }
 
     private lineageGraphHeight(): number {
-        return this.widgetHeightService.widgetHeigth;
+        return this.widgetHeightService.widgetHeight;
     }
 }

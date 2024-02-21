@@ -312,7 +312,7 @@ export class DatasetApi {
                 },
                 {
                     update: (cache) => {
-                        // Note: dropping readme on it's own via `cache.modify` could have been an option,
+                        // Note: dropping readme on its own via `cache.modify` could have been an option,
                         // but any change to readme affects the state of the metadata chain nodes,
                         // so dropping metadata field completely is a valid and safe option
                         const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(

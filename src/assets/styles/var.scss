@@ -436,10 +436,6 @@ $app-color-tooltip-border: #ced4da;
     }
 }
 
-.cdk-overlay-pane {
-    box-shadow: $app-color-shadow-large;
-}
-
 .mat-menu-content {
     &:not(:empty) {
         padding-top: 0 !important;

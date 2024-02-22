@@ -1,0 +1,32 @@
+query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int, $filters: DatasetFlowFilters) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      metadata {
+        currentPollingSource {
+          fetch {
+            ...FetchStepUrlData
+            ...FetchStepFilesGlobData
+            ...FetchStepContainerData
+          }
+        }
+        currentTransform {
+          inputs {
+            __typename
+          }
+          transform {
+            ... on TransformSql {
+              engine
+            }
+          }
+        }
+      }
+      flows {
+        runs {
+          listFlows(page: $page, perPage: $perPage, filters: $filters) {
+            ...FlowConnectionData
+          }
+        }
+      }
+    }
+  }
+}

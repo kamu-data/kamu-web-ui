@@ -113,6 +113,11 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         this.datasetViewType = DatasetViewTypeEnum.Metadata;
     }
 
+    private initFlowsTab(): void {
+        this.datasetViewType = DatasetViewTypeEnum.Flows;
+        this.cdr.detectChanges();
+    }
+
     private initHistoryTab(datasetInfo: DatasetInfo, currentPage: number): void {
         this.datasetViewType = DatasetViewTypeEnum.History;
 
@@ -220,6 +225,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
             [DatasetViewTypeEnum.History]: () => this.initHistoryTab(datasetInfo, currentPage),
             [DatasetViewTypeEnum.Lineage]: () => this.initLineageTab(datasetInfo),
             [DatasetViewTypeEnum.Discussions]: () => this.initDiscussionsTab(),
+            [DatasetViewTypeEnum.Flows]: () => this.initFlowsTab(),
             [DatasetViewTypeEnum.Settings]: () => this.initSettingsTab(datasetInfo),
         };
 

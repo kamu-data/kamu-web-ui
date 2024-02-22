@@ -338,6 +338,10 @@ type DatasetFlowConfigs {
   Returns defined configuration for a flow of specified type
   """
   byType(datasetFlowType: DatasetFlowType!): FlowConfiguration
+  """
+  Checks if all configs of this dataset are disabled
+  """
+  allPaused: Boolean!
 }
 
 type DatasetFlowConfigsMut {
@@ -348,11 +352,19 @@ type DatasetFlowConfigsMut {
     throttlingPeriod: TimeDeltaInput
     minimalDataBatch: Int
   ): SetFlowConfigResult!
+  pauseFlows(datasetFlowType: DatasetFlowType): Boolean!
+  resumeFlows(datasetFlowType: DatasetFlowType): Boolean!
+}
+
+input DatasetFlowFilters {
+  byFlowType: DatasetFlowType
+  byStatus: FlowStatus
+  byInitiator: InitiatorFilterInput
 }
 
 type DatasetFlowRuns {
   getFlow(flowId: FlowID!): GetFlowResult!
-  listFlows(page: Int, perPage: Int): FlowConnection!
+  listFlows(page: Int, perPage: Int, filters: DatasetFlowFilters): FlowConnection!
 }
 
 type DatasetFlowRunsMut {
@@ -721,23 +733,28 @@ type FlowDescriptionDatasetCompaction {
 
 type FlowDescriptionDatasetExecuteTransform {
   datasetId: DatasetID!
-  transformedRecordsCount: Int
+  transformResult: FlowDescriptionUpdateResult
 }
 
 type FlowDescriptionDatasetPollingIngest {
   datasetId: DatasetID!
-  ingestedRecordsCount: Int
+  ingestResult: FlowDescriptionUpdateResult
 }
 
 type FlowDescriptionDatasetPushIngest {
   datasetId: DatasetID!
   sourceName: String
   inputRecordsCount: Int!
-  ingestedRecordsCount: Int
+  ingestResult: FlowDescriptionUpdateResult
 }
 
 type FlowDescriptionSystemGC {
   dummy: Boolean!
+}
+
+type FlowDescriptionUpdateResult {
+  numBlocks: Int!
+  numRecords: Int!
 }
 
 type FlowEdge {
@@ -872,6 +889,11 @@ interface GetFlowResult {
 type GetFlowSuccess implements GetFlowResult {
   flow: Flow!
   message: String!
+}
+
+input InitiatorFilterInput @oneOf {
+  system: Boolean
+  account: AccountName
 }
 
 type LoginResponse {

@@ -1,0 +1,11 @@
+mutation datasetResumeFlows($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        configs {
+          resumeFlows(datasetFlowType: $datasetFlowType)
+        }
+      }
+    }
+  }
+}

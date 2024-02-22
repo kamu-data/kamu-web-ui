@@ -64,6 +64,12 @@ import { MatInputModule } from "@angular/material/input";
 import { ReturnToCliComponent } from "../components/return-to-cli/return-to-cli.component";
 import { EditorModule } from "../shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { FlowsComponent } from "./additional-components/flows-component/flows.component";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TileBaseWidgetComponent } from "./additional-components/flows-component/components/tile-base-widget/tile-base-widget.component";
+import { FlowsTableComponent } from "./additional-components/flows-component/components/flows-table/flows-table.component";
+import { MatTableModule } from "@angular/material/table";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { AddPushSourceComponent } from "./additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
 import { SourceNameStepComponent } from "./additional-components/metadata-component/components/source-events/steps/source-name-step/source-name-step.component";
 import { DatasetSettingsGeneralTabComponent } from "./additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
@@ -113,6 +119,10 @@ import { MatRadioModule } from "@angular/material/radio";
         MatInputModule,
         EditorModule,
         MatProgressBarModule,
+        MatTooltipModule,
+        MatTableModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
         MatSlideToggleModule,
         MatRadioModule,
     ],
@@ -132,6 +142,7 @@ import { MatRadioModule } from "@angular/material/radio";
         HistoryComponent,
         DisplayHashModule,
         MatTreeModule,
+        MatTooltipModule,
     ],
     declarations: [
         DatasetViewHeaderComponent,
@@ -162,6 +173,9 @@ import { MatRadioModule } from "@angular/material/radio";
         ReadmeSectionComponent,
         DatasetSettingsComponent,
         LoadMoreComponent,
+        FlowsComponent,
+        TileBaseWidgetComponent,
+        FlowsTableComponent,
         AddPushSourceComponent,
         SourceNameStepComponent,
         DatasetSettingsGeneralTabComponent,

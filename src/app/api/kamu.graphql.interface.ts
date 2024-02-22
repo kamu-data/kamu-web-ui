@@ -364,6 +364,8 @@ export type DatasetEdge = {
 
 export type DatasetFlowConfigs = {
     __typename?: "DatasetFlowConfigs";
+    /** Checks if all configs of this dataset are disabled */
+    allPaused: Scalars["Boolean"];
     /** Returns defined configuration for a flow of specified type */
     byType?: Maybe<FlowConfiguration>;
 };
@@ -374,8 +376,18 @@ export type DatasetFlowConfigsByTypeArgs = {
 
 export type DatasetFlowConfigsMut = {
     __typename?: "DatasetFlowConfigsMut";
+    pauseFlows: Scalars["Boolean"];
+    resumeFlows: Scalars["Boolean"];
     setConfigBatching: SetFlowConfigResult;
     setConfigSchedule: SetFlowConfigResult;
+};
+
+export type DatasetFlowConfigsMutPauseFlowsArgs = {
+    datasetFlowType?: InputMaybe<DatasetFlowType>;
+};
+
+export type DatasetFlowConfigsMutResumeFlowsArgs = {
+    datasetFlowType?: InputMaybe<DatasetFlowType>;
 };
 
 export type DatasetFlowConfigsMutSetConfigBatchingArgs = {
@@ -391,6 +403,12 @@ export type DatasetFlowConfigsMutSetConfigScheduleArgs = {
     schedule: ScheduleInput;
 };
 
+export type DatasetFlowFilters = {
+    byFlowType?: InputMaybe<DatasetFlowType>;
+    byInitiator?: InputMaybe<InitiatorFilterInput>;
+    byStatus?: InputMaybe<FlowStatus>;
+};
+
 export type DatasetFlowRuns = {
     __typename?: "DatasetFlowRuns";
     getFlow: GetFlowResult;
@@ -402,6 +420,7 @@ export type DatasetFlowRunsGetFlowArgs = {
 };
 
 export type DatasetFlowRunsListFlowsArgs = {
+    filters?: InputMaybe<DatasetFlowFilters>;
     page?: InputMaybe<Scalars["Int"]>;
     perPage?: InputMaybe<Scalars["Int"]>;
 };
@@ -763,19 +782,19 @@ export type FlowDescriptionDatasetCompaction = {
 export type FlowDescriptionDatasetExecuteTransform = {
     __typename?: "FlowDescriptionDatasetExecuteTransform";
     datasetId: Scalars["DatasetID"];
-    transformedRecordsCount?: Maybe<Scalars["Int"]>;
+    transformResult?: Maybe<FlowDescriptionUpdateResult>;
 };
 
 export type FlowDescriptionDatasetPollingIngest = {
     __typename?: "FlowDescriptionDatasetPollingIngest";
     datasetId: Scalars["DatasetID"];
-    ingestedRecordsCount?: Maybe<Scalars["Int"]>;
+    ingestResult?: Maybe<FlowDescriptionUpdateResult>;
 };
 
 export type FlowDescriptionDatasetPushIngest = {
     __typename?: "FlowDescriptionDatasetPushIngest";
     datasetId: Scalars["DatasetID"];
-    ingestedRecordsCount?: Maybe<Scalars["Int"]>;
+    ingestResult?: Maybe<FlowDescriptionUpdateResult>;
     inputRecordsCount: Scalars["Int"];
     sourceName?: Maybe<Scalars["String"]>;
 };
@@ -783,6 +802,12 @@ export type FlowDescriptionDatasetPushIngest = {
 export type FlowDescriptionSystemGc = {
     __typename?: "FlowDescriptionSystemGC";
     dummy: Scalars["Boolean"];
+};
+
+export type FlowDescriptionUpdateResult = {
+    __typename?: "FlowDescriptionUpdateResult";
+    numBlocks: Scalars["Int"];
+    numRecords: Scalars["Int"];
 };
 
 export type FlowEdge = {
@@ -932,6 +957,10 @@ export type GetFlowSuccess = GetFlowResult & {
     flow: Flow;
     message: Scalars["String"];
 };
+
+export type InitiatorFilterInput =
+    | { account: Scalars["AccountName"]; system?: never }
+    | { account?: never; system: Scalars["Boolean"] };
 
 export type LoginResponse = {
     __typename?: "LoginResponse";
@@ -1863,6 +1892,194 @@ export type EnginesQuery = {
     };
 };
 
+export type DatasetAllFlowsPausedQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type DatasetAllFlowsPausedQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            flows: { __typename?: "DatasetFlows"; configs: { __typename?: "DatasetFlowConfigs"; allPaused: boolean } };
+        } | null;
+    };
+};
+
+export type GetDatasetListFlowsQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+    filters?: InputMaybe<DatasetFlowFilters>;
+}>;
+
+export type GetDatasetListFlowsQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            metadata: {
+                __typename?: "DatasetMetadata";
+                currentPollingSource?: {
+                    __typename?: "SetPollingSource";
+                    fetch:
+                        | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
+                        | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
+                        | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
+                } | null;
+                currentTransform?: {
+                    __typename?: "SetTransform";
+                    inputs: Array<{ __typename: "TransformInput" }>;
+                    transform: { __typename?: "TransformSql"; engine: string };
+                } | null;
+            };
+            flows: {
+                __typename?: "DatasetFlows";
+                runs: {
+                    __typename?: "DatasetFlowRuns";
+                    listFlows: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
+                };
+            };
+        } | null;
+    };
+};
+
+export type DatasetPauseFlowsMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType?: InputMaybe<DatasetFlowType>;
+}>;
+
+export type DatasetPauseFlowsMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                configs: { __typename?: "DatasetFlowConfigsMut"; pauseFlows: boolean };
+            };
+        } | null;
+    };
+};
+
+export type DatasetResumeFlowsMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType?: InputMaybe<DatasetFlowType>;
+}>;
+
+export type DatasetResumeFlowsMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                configs: { __typename?: "DatasetFlowConfigsMut"; resumeFlows: boolean };
+            };
+        } | null;
+    };
+};
+
+export type DatasetTriggerFlowMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
+}>;
+
+export type DatasetTriggerFlowMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                runs: {
+                    __typename?: "DatasetFlowRunsMut";
+                    triggerFlow:
+                        | {
+                              __typename?: "FlowIncompatibleDatasetKind";
+                              expectedDatasetKind: DatasetKind;
+                              actualDatasetKind: DatasetKind;
+                              message: string;
+                          }
+                        | {
+                              __typename?: "TriggerFlowSuccess";
+                              message: string;
+                              flow: { __typename?: "Flow" } & FlowSummaryDataFragment;
+                          };
+                };
+            };
+        } | null;
+    };
+};
+
+export type FlowSummaryDataFragment = {
+    __typename?: "Flow";
+    flowId: string;
+    status: FlowStatus;
+    outcome?: FlowOutcome | null;
+    description:
+        | {
+              __typename?: "FlowDescriptionDatasetCompaction";
+              datasetId: string;
+              originalBlocksCount: number;
+              resultingBlocksCount?: number | null;
+          }
+        | {
+              __typename?: "FlowDescriptionDatasetExecuteTransform";
+              datasetId: string;
+              transformResult?: {
+                  __typename?: "FlowDescriptionUpdateResult";
+                  numBlocks: number;
+                  numRecords: number;
+              } | null;
+          }
+        | {
+              __typename?: "FlowDescriptionDatasetPollingIngest";
+              datasetId: string;
+              ingestResult?: {
+                  __typename?: "FlowDescriptionUpdateResult";
+                  numBlocks: number;
+                  numRecords: number;
+              } | null;
+          }
+        | {
+              __typename?: "FlowDescriptionDatasetPushIngest";
+              datasetId: string;
+              sourceName?: string | null;
+              inputRecordsCount: number;
+              ingestResult?: {
+                  __typename?: "FlowDescriptionUpdateResult";
+                  numBlocks: number;
+                  numRecords: number;
+              } | null;
+          }
+        | { __typename?: "FlowDescriptionSystemGC"; dummy: boolean };
+    initiator?: ({ __typename?: "Account" } & AccountFragment) | null;
+    timing: {
+        __typename?: "FlowTimingRecords";
+        activateAt?: string | null;
+        runningSince?: string | null;
+        finishedAt?: string | null;
+    };
+    startCondition?:
+        | { __typename: "FlowStartConditionBatching"; thresholdNewRecords: number }
+        | { __typename: "FlowStartConditionThrottling"; intervalSec: number }
+        | null;
+};
+
+export type FlowConnectionDataFragment = {
+    __typename?: "FlowConnection";
+    totalCount: number;
+    nodes: Array<{ __typename?: "Flow" } & FlowSummaryDataFragment>;
+    pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
+    edges: Array<{ __typename?: "FlowEdge"; node: { __typename?: "Flow" } & FlowSummaryDataFragment }>;
+};
+
 export type AddDataEventFragment = {
     __typename?: "AddData";
     prevCheckpoint?: string | null;
@@ -2624,6 +2841,90 @@ export const AccountFragmentDoc = gql`
         isAdmin
     }
 `;
+export const FlowSummaryDataFragmentDoc = gql`
+    fragment FlowSummaryData on Flow {
+        description {
+            ... on FlowDescriptionDatasetPollingIngest {
+                datasetId
+                ingestResult {
+                    numBlocks
+                    numRecords
+                }
+            }
+            ... on FlowDescriptionDatasetPushIngest {
+                datasetId
+                sourceName
+                inputRecordsCount
+                ingestResult {
+                    numBlocks
+                    numRecords
+                }
+            }
+            ... on FlowDescriptionDatasetExecuteTransform {
+                datasetId
+                transformResult {
+                    numBlocks
+                    numRecords
+                }
+            }
+            ... on FlowDescriptionDatasetCompaction {
+                datasetId
+                originalBlocksCount
+                resultingBlocksCount
+            }
+            ... on FlowDescriptionSystemGC {
+                dummy
+            }
+        }
+        flowId
+        status
+        initiator {
+            ...Account
+        }
+        outcome
+        timing {
+            activateAt
+            runningSince
+            finishedAt
+        }
+        startCondition {
+            __typename
+            ... on FlowStartConditionThrottling {
+                intervalSec
+            }
+            ... on FlowStartConditionBatching {
+                thresholdNewRecords
+            }
+        }
+    }
+    ${AccountFragmentDoc}
+`;
+export const DatasetPageInfoFragmentDoc = gql`
+    fragment DatasetPageInfo on PageBasedInfo {
+        hasNextPage
+        hasPreviousPage
+        currentPage
+        totalPages
+    }
+`;
+export const FlowConnectionDataFragmentDoc = gql`
+    fragment FlowConnectionData on FlowConnection {
+        nodes {
+            ...FlowSummaryData
+        }
+        totalCount
+        pageInfo {
+            ...DatasetPageInfo
+        }
+        edges {
+            node {
+                ...FlowSummaryData
+            }
+        }
+    }
+    ${FlowSummaryDataFragmentDoc}
+    ${DatasetPageInfoFragmentDoc}
+`;
 export const DatasetDataSizeFragmentDoc = gql`
     fragment DatasetDataSize on DatasetData {
         numRecordsTotal
@@ -3202,14 +3503,6 @@ export const MetadataBlockFragmentDoc = gql`
     ${AddPushSourceEventFragmentDoc}
     ${SetDataSchemaEventFragmentDoc}
     ${DisablePollingSourceEventFragmentDoc}
-`;
-export const DatasetPageInfoFragmentDoc = gql`
-    fragment DatasetPageInfo on PageBasedInfo {
-        hasNextPage
-        hasPreviousPage
-        currentPage
-        totalPages
-    }
 `;
 export const DatasetLastUpdateFragmentDoc = gql`
     fragment DatasetLastUpdate on Dataset {
@@ -3868,6 +4161,176 @@ export const EnginesDocument = gql`
 })
 export class EnginesGQL extends Apollo.Query<EnginesQuery, EnginesQueryVariables> {
     document = EnginesDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetAllFlowsPausedDocument = gql`
+    query datasetAllFlowsPaused($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    configs {
+                        allPaused
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetAllFlowsPausedGQL extends Apollo.Query<
+    DatasetAllFlowsPausedQuery,
+    DatasetAllFlowsPausedQueryVariables
+> {
+    document = DatasetAllFlowsPausedDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const GetDatasetListFlowsDocument = gql`
+    query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int, $filters: DatasetFlowFilters) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                metadata {
+                    currentPollingSource {
+                        fetch {
+                            ...FetchStepUrlData
+                            ...FetchStepFilesGlobData
+                            ...FetchStepContainerData
+                        }
+                    }
+                    currentTransform {
+                        inputs {
+                            __typename
+                        }
+                        transform {
+                            ... on TransformSql {
+                                engine
+                            }
+                        }
+                    }
+                }
+                flows {
+                    runs {
+                        listFlows(page: $page, perPage: $perPage, filters: $filters) {
+                            ...FlowConnectionData
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FetchStepUrlDataFragmentDoc}
+    ${FetchStepFilesGlobDataFragmentDoc}
+    ${FetchStepContainerDataFragmentDoc}
+    ${FlowConnectionDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetDatasetListFlowsGQL extends Apollo.Query<GetDatasetListFlowsQuery, GetDatasetListFlowsQueryVariables> {
+    document = GetDatasetListFlowsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetPauseFlowsDocument = gql`
+    mutation datasetPauseFlows($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    configs {
+                        pauseFlows(datasetFlowType: $datasetFlowType)
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetPauseFlowsGQL extends Apollo.Mutation<
+    DatasetPauseFlowsMutation,
+    DatasetPauseFlowsMutationVariables
+> {
+    document = DatasetPauseFlowsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetResumeFlowsDocument = gql`
+    mutation datasetResumeFlows($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    configs {
+                        resumeFlows(datasetFlowType: $datasetFlowType)
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetResumeFlowsGQL extends Apollo.Mutation<
+    DatasetResumeFlowsMutation,
+    DatasetResumeFlowsMutationVariables
+> {
+    document = DatasetResumeFlowsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetTriggerFlowDocument = gql`
+    mutation datasetTriggerFlow($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    runs {
+                        triggerFlow(datasetFlowType: $datasetFlowType) {
+                            ... on TriggerFlowSuccess {
+                                flow {
+                                    ...FlowSummaryData
+                                }
+                                message
+                            }
+                            ... on FlowIncompatibleDatasetKind {
+                                expectedDatasetKind
+                                actualDatasetKind
+                                message
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FlowSummaryDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetTriggerFlowGQL extends Apollo.Mutation<
+    DatasetTriggerFlowMutation,
+    DatasetTriggerFlowMutationVariables
+> {
+    document = DatasetTriggerFlowDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

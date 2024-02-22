@@ -1,6 +1,6 @@
 import { MaybeNull } from "src/app/common/app.types";
 import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
-import { MetadataBlockFragment, TimeUnit } from "../api/kamu.graphql.interface";
+import { FlowSummaryDataFragment, MetadataBlockFragment, TimeUnit } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { MaybeUndefined } from "./app.types";
@@ -175,6 +175,24 @@ export class DataHelpers {
         }
     }
 
+    public static flowTypeDescription(flow: FlowSummaryDataFragment): string {
+        const decriptionFlow = flow.description;
+        switch (decriptionFlow.__typename) {
+            case "FlowDescriptionDatasetPollingIngest":
+                return `Polling ingest`;
+            case "FlowDescriptionDatasetPushIngest":
+                return `Push ingest`;
+            case "FlowDescriptionDatasetExecuteTransform":
+                return `Execute transformation`;
+            case "FlowDescriptionDatasetCompaction":
+                return `Compacting`;
+            case "FlowDescriptionSystemGC":
+                return `Garbage collector`;
+            default:
+                return "Unsupported flow description";
+        }
+    }
+
     public static escapeText(text: string): string {
         const htmlEscapes: Record<string, string> = {
             "#": "#",
@@ -234,23 +252,23 @@ export function cronExpressionValidator(): ValidatorFn {
 
 export const everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = {
     [TimeUnit.Minutes]: RxwebValidators.range({
-        minimumNumber: 0,
+        minimumNumber: 1,
         maximumNumber: 59,
-        message: "Value should be between 0 to 59",
+        message: "Value should be between 1 to 59",
     }),
     [TimeUnit.Hours]: RxwebValidators.range({
-        minimumNumber: 0,
+        minimumNumber: 1,
         maximumNumber: 23,
-        message: "Value should be between 0 to 23",
+        message: "Value should be between 1 to 23",
     }),
     [TimeUnit.Days]: RxwebValidators.range({
-        minimumNumber: 0,
+        minimumNumber: 1,
         maximumNumber: 31,
-        message: "Value should be between 0 to 31",
+        message: "Value should be between 1 to 31",
     }),
     [TimeUnit.Weeks]: RxwebValidators.range({
-        minimumNumber: 0,
+        minimumNumber: 1,
         maximumNumber: 51,
-        message: "Value should be between 0 to 51",
+        message: "Value should be between 1 to 51",
     }),
 };

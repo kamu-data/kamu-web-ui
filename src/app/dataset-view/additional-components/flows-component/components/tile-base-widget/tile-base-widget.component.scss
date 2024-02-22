@@ -1,0 +1,44 @@
+.content {
+    display: flex;
+    gap: 4px;
+    flex-flow: row wrap;
+
+    .tile-item {
+        width: 15px;
+        height: 15px;
+        border-radius: 2px;
+    }
+}
+
+.success-class {
+    background: #0db28d;
+}
+
+.queued-class,
+.waiting-class {
+    background: #d3c22a;
+}
+
+.running-class {
+    background: #8bdaaf;
+}
+
+.scheduled-class {
+    background: #2a8dd3;
+}
+
+.failed-class {
+    background: #d13124;
+}
+
+.aborted-class {
+    background: rgba(181 175 175);
+}
+
+.cancelled-class {
+    background: #08cdeb;
+}
+
+.tooltip-class {
+    white-space: pre-line;
+}

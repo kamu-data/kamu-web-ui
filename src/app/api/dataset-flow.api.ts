@@ -2,13 +2,24 @@ import { MaybeNull } from "./../common/app.types";
 import { MutationResult } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import {
+    DatasetAllFlowsPausedGQL,
+    DatasetAllFlowsPausedQuery,
     DatasetFlowBatchingGQL,
     DatasetFlowBatchingMutation,
+    DatasetFlowFilters,
     DatasetFlowScheduleGQL,
     DatasetFlowScheduleMutation,
     DatasetFlowType,
+    DatasetPauseFlowsGQL,
+    DatasetPauseFlowsMutation,
+    DatasetResumeFlowsGQL,
+    DatasetResumeFlowsMutation,
+    DatasetTriggerFlowGQL,
+    DatasetTriggerFlowMutation,
     GetDatasetFlowConfigsGQL,
     GetDatasetFlowConfigsQuery,
+    GetDatasetListFlowsGQL,
+    GetDatasetListFlowsQuery,
     ScheduleInput,
     TimeDeltaInput,
 } from "./kamu.graphql.interface";
@@ -22,7 +33,29 @@ export class DatasetFlowApi {
         private getDatasetFlowConfigsGQL: GetDatasetFlowConfigsGQL,
         private datasetFlowScheduleGQL: DatasetFlowScheduleGQL,
         private datasetFlowBatchingGQL: DatasetFlowBatchingGQL,
+        private getDatasetListFlowsGQL: GetDatasetListFlowsGQL,
+        private datasetPauseFlowsGQL: DatasetPauseFlowsGQL,
+        private datasetResumeFlowsGQL: DatasetResumeFlowsGQL,
+        private datasetAllFlowsPausedGQL: DatasetAllFlowsPausedGQL,
+        private datasetTriggerFlowGQL: DatasetTriggerFlowGQL,
     ) {}
+
+    public datasetTriggerFlow(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+    }): Observable<DatasetTriggerFlowMutation> {
+        return this.datasetTriggerFlowGQL.mutate({ ...params }).pipe(
+            first(),
+            map((result: MutationResult<DatasetTriggerFlowMutation>) => {
+                /* istanbul ignore else */
+                if (result.data) {
+                    return result.data;
+                } else {
+                    throw new DatasetOperationError(result.errors ?? []);
+                }
+            }),
+        );
+    }
 
     public getDatasetFlowConfigs(params: {
         datasetId: string;
@@ -93,6 +126,87 @@ export class DatasetFlowApi {
                     } else {
                         throw new DatasetOperationError(result.errors ?? []);
                     }
+                }),
+            );
+    }
+
+    public getDatasetListFlows(params: {
+        datasetId: string;
+        page: number;
+        perPage: number;
+        filters: DatasetFlowFilters;
+    }): Observable<GetDatasetListFlowsQuery> {
+        return this.getDatasetListFlowsGQL
+            .watch(
+                { datasetId: params.datasetId, page: params.page, perPage: params.perPage, filters: params.filters },
+                {
+                    fetchPolicy: "no-cache",
+                    errorPolicy: "all",
+                },
+            )
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<GetDatasetListFlowsQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public datasetPauseFlows(params: {
+        datasetId: string;
+        datasetFlowType?: DatasetFlowType;
+    }): Observable<DatasetPauseFlowsMutation> {
+        return this.datasetPauseFlowsGQL
+            .mutate({
+                datasetId: params.datasetId,
+                datasetFlowType: params.datasetFlowType,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<DatasetPauseFlowsMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
+                }),
+            );
+    }
+
+    public datasetResumeFlows(params: {
+        datasetId: string;
+        datasetFlowType?: DatasetFlowType;
+    }): Observable<DatasetResumeFlowsMutation> {
+        return this.datasetResumeFlowsGQL
+            .mutate({
+                datasetId: params.datasetId,
+                datasetFlowType: params.datasetFlowType,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<DatasetResumeFlowsMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
+                }),
+            );
+    }
+
+    public allFlowsPaused(datasetId: string): Observable<DatasetAllFlowsPausedQuery> {
+        return this.datasetAllFlowsPausedGQL
+            .watch(
+                { datasetId },
+                {
+                    fetchPolicy: "no-cache",
+                    errorPolicy: "all",
+                },
+            )
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<DatasetAllFlowsPausedQuery>) => {
+                    return result.data;
                 }),
             );
     }

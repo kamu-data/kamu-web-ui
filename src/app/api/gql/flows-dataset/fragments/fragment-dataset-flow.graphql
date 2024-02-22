@@ -1,0 +1,60 @@
+fragment FlowSummaryData on Flow {
+  description {
+    ... on FlowDescriptionDatasetPollingIngest {
+      datasetId
+      ingestResult {
+        numBlocks
+        numRecords
+      }
+    }
+
+    ... on FlowDescriptionDatasetPushIngest {
+      datasetId
+      sourceName
+      inputRecordsCount
+      ingestResult {
+        numBlocks
+        numRecords
+      }
+    }
+
+    ... on FlowDescriptionDatasetExecuteTransform {
+      datasetId
+      transformResult {
+        numBlocks
+        numRecords
+      }
+    }
+
+    ... on FlowDescriptionDatasetCompaction {
+      datasetId
+      originalBlocksCount
+      resultingBlocksCount
+    }
+
+    ... on FlowDescriptionSystemGC {
+      dummy
+    }
+  }
+  flowId
+  status
+  initiator {
+    ...Account
+  }
+  outcome
+  timing {
+    activateAt
+    runningSince
+    finishedAt
+  }
+  startCondition {
+    __typename
+    ... on FlowStartConditionThrottling {
+      intervalSec
+    }
+
+    ... on FlowStartConditionBatching {
+      thresholdNewRecords
+    }
+  }
+}

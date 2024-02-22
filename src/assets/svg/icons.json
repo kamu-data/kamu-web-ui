@@ -113,8 +113,20 @@
       "iconPath": "/assets/svg/git-hub.svg"
     },
     {
+      "iconName": "show-options",
+      "iconPath": "/assets/svg/show-options.svg"
+    },
+    {
+      "iconName": "timer",
+      "iconPath": "/assets/svg/timer.svg"
+    },
+    {
       "iconName": "clock",
       "iconPath": "/assets/svg/clock.svg"
+    },
+    {
+      "iconName": "hour-glass",
+      "iconPath": "/assets/svg/hour-glass.svg"
     }
   ],
   "customIcons": []

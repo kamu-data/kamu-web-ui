@@ -67,6 +67,15 @@
                 Discussions
             </mat-button-toggle>
             <mat-button-toggle
+                data-test-id="navigateToFlows"
+                value="flows"
+                [checked]="isDatasetViewTypeFlows"
+                (click)="onNavigateToFlows()"
+                *ngIf="shouldAllowSettingsTab"
+            >
+                <mat-icon class="fs-4 me-1">add_task</mat-icon>Flows
+            </mat-button-toggle>
+            <mat-button-toggle
                 data-test-id="navigateToSettings"
                 value="settings"
                 [checked]="isDatasetViewTypeSettings"

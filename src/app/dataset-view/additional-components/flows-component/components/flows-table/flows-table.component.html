@@ -1,0 +1,172 @@
+<table mat-table [dataSource]="dataSource">
+    <!-- Description Column -->
+    <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>
+            <div class="d-inline-block text-muted">
+                <button mat-button [matMenuTriggerFor]="statusMenu">
+                    <span class="text-dark"> Status <span class="carpet"></span> </span>
+                </button>
+                <mat-menu #statusMenu="matMenu" xPosition="after" [hasBackdrop]="true">
+                    <button
+                        mat-menu-item
+                        [class.selected-status]="!filterByStatus"
+                        (click)="changeFilterByStatus(null)"
+                    >
+                        <span class="text-small"> All </span>
+                    </button>
+                    <mat-divider></mat-divider>
+
+                    <ng-container *ngFor="let status of FlowStatus | keyvalue">
+                        <button
+                            mat-menu-item
+                            [class.selected-status]="filterByStatus === status.value"
+                            (click)="changeFilterByStatus(status.value)"
+                        >
+                            <span class="text-small">
+                                {{ status.value | lowercase | titlecase }}
+                            </span>
+                        </button>
+                        <mat-divider></mat-divider>
+                    </ng-container>
+                </mat-menu>
+            </div>
+        </th>
+        <td mat-cell *matCellDef="let element" style="height: 62px">
+            <div class="d-flex py-1">
+                <mat-icon class="icon-status margin-top-5" [ngClass]="descriptionColumnOptions(element).class">{{
+                    descriptionColumnOptions(element).icon
+                }}</mat-icon>
+                <div class="ms-1 py-2">
+                    <span class="fw-500">
+                        {{ flowTypeDescription(element) }}
+                        <span>{{ descriptionDatasetFlowEndOfMessage(element) }}</span>
+                    </span>
+                    <br />
+                    <span class="text-small truncate-sub-message d-block">{{
+                        descriptionDatasetFlowSubMessage(element)
+                    }}</span>
+                </div>
+            </div>
+        </td>
+    </ng-container>
+
+    <!-- Information Column -->
+    <ng-container matColumnDef="information">
+        <th mat-header-cell *matHeaderCellDef>
+            <div class="text-dark mt-1 ps-4">Duration</div>
+        </th>
+        <td mat-cell *matCellDef="let element">
+            <div class="d-flex flex-column py-1">
+                <div class="d-flex align-items-center">
+                    <mat-icon
+                        class="icon-status text-muted"
+                        [title]="'Activation time: ' + tooltipTimeFormat(element.timing.activateAt)"
+                        >calendar_today</mat-icon
+                    >
+                    <span class="ms-1 pt-1 text-small">
+                        <app-display-time
+                            [data]="element.timing.activateAt"
+                            class="text-small no-wrap"
+                        ></app-display-time
+                    ></span>
+                </div>
+                <div class="d-flex align-items-center" *ngIf="durationBlockVisible(element)">
+                    <svg-icon name="timer" class="ps-1 pe-2 text-muted" [title]="'Duration'"></svg-icon>
+                    <span class="text-small ml-2px pt-1">
+                        {{ durationTask(element.timing.runningSince, element.timing.finishedAt) }}
+                    </span>
+                </div>
+                <div class="d-flex align-items-center" *ngIf="waitingForBlockVisible(element)">
+                    <svg-icon name="hour-glass" class="ps-1 pe-2 text-muted" [title]="'Waiting message'"></svg-icon>
+                    <span class="text-small ml-2px pt-1"> {{ waitingBlockText(element.startCondition) }} </span>
+                </div>
+            </div>
+        </td>
+    </ng-container>
+
+    <!-- Creator Column -->
+    <ng-container matColumnDef="creator">
+        <th mat-header-cell *matHeaderCellDef>
+            <div class="d-inline-block">
+                <button mat-button [matMenuTriggerFor]="creatorByMenu">
+                    <span class="text-dark"> Initiated By <span class="carpet"></span> </span>
+                </button>
+
+                <mat-menu #creatorByMenu="matMenu" xPosition="after" [hasBackdrop]="true">
+                    <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" class="test">
+                        <div class="px-4 py-2 border-bottom d-flex align-items-center">
+                            <mat-radio-group
+                                color="primary"
+                                class="example-radio-group d-flex flex-column gap-2"
+                                [(ngModel)]="filterByInitiator"
+                                (change)="changeFilterByInitiator($event)"
+                            >
+                                <mat-radio-button
+                                    [disableRipple]="true"
+                                    class="example-radio-button"
+                                    *ngFor="let initiator of INITIATORS"
+                                    [value]="initiator"
+                                >
+                                    <span class="text-small">
+                                        {{ initiator }}
+                                    </span>
+                                </mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                        <div class="select-item d-flex">
+                            <input
+                                class="form-control search-creator color-bg-subtle"
+                                type="text"
+                                [(ngModel)]="searchByAccountName"
+                                placeholder="Enter name..."
+                                data-test-id="searchByAccountName"
+                                [disabled]="filterByInitiator !== FilterByInitiatorEnum.Account"
+                            />
+                            <button
+                                (click)="onSearchByAccountName()"
+                                [disabled]="!searchByAccountName"
+                                class="btn btn-sm btn-gray rounded-0 search-creator-button position-relative"
+                            >
+                                <mat-icon class="text-muted fs-4 search-creator-icon">search</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </mat-menu>
+            </div>
+        </th>
+        <td mat-cell *matCellDef="let element">
+            <div class="d-flex align-items-center ps-3">
+                <ng-container *ngIf="element.initiator; else noInitiator">
+                    <img class="img-creator" [src]="element.initiator.avatarUrl || DEFAULT_AVATAR_URL" />
+                    <span class="ms-2 text-small"> {{ element.initiator.displayName }}</span>
+                </ng-container>
+                <ng-template #noInitiator>
+                    <span class="text-small">system process</span>
+                </ng-template>
+            </div>
+        </td>
+    </ng-container>
+
+    <!-- Options Column -->
+    <ng-container matColumnDef="options">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+            <div class="pe-2">
+                <button mat-button [matMenuTriggerFor]="tableOptions"><svg-icon name="show-options"></svg-icon></button>
+                <mat-menu #tableOptions="matMenu" xPosition="before" [hasBackdrop]="true">
+                    <button mat-menu-item disabled="true">Details</button>
+                    <mat-divider></mat-divider>
+                    <button mat-menu-item disabled="true">Cancel flow</button>
+                </mat-menu>
+            </div>
+        </td>
+    </ng-container>
+
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell text-center" colspan="4">No data matching the filter</td>
+    </tr>
+
+    <tr mat-header-row *matHeaderRowDef="DISPLAY_COLUMNS"></tr>
+    <tr mat-row *matRowDef="let row; columns: DISPLAY_COLUMNS"></tr>
+</table>

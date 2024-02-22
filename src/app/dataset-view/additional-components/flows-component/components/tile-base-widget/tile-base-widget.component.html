@@ -1,0 +1,41 @@
+<div class="content">
+    <div
+        *ngFor="let node of nodes | slice: 0:LAST_RUNS_COUNT; let i = index"
+        class="tile-item"
+        [ngbPopover]="popContent"
+        triggers="mouseenter:mouseleave"
+        [openDelay]="300"
+        [ngClass]="tileWidgetClass(node)"
+    >
+        <ng-template #popContent>
+            <div class="fs-12 text-muted">
+                <span class="fs-12 fw-bold">Initiator:</span>
+                <span class="fs-12">
+                    {{ node.initiator ? node.initiator.accountName : "system process" }}
+                </span>
+                <br />
+
+                <span class="fs-12 fw-bold">Duration:</span>
+                <span class="fs-12">
+                    {{ durationTask(node.timing.runningSince!, node.timing.finishedAt!) }}
+                </span>
+                <br />
+
+                <span class="fs-12 fw-bold">Outcome:</span>
+                <span class="fs-12">
+                    {{ node.outcome ? (node.outcome | lowercase) : "-" }}
+                </span>
+                <br />
+
+                <span class="fs-12 fw-bold">Activation time:</span>
+                <span class="fs-12 no-wrap">
+                    {{ node.timing.activateAt | date: "M/d/yy, h:mm:ss a" }}
+                </span>
+                <br />
+            </div>
+        </ng-template>
+    </div>
+</div>
+<div class="mt-1">
+    <span class="fs-12 text-muted"> Show last {{ LAST_RUNS_COUNT }} runs</span>
+</div>

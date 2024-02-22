@@ -51,9 +51,7 @@ export class FlowsTableComponent implements OnInit {
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly FlowOutcome: typeof FlowOutcome = FlowOutcome;
     public readonly FilterByInitiatorEnum: typeof FilterByInitiatorEnum = FilterByInitiatorEnum;
-    public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>(
-        [],
-    );
+    public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
 
     ngOnInit(): void {

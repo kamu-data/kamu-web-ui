@@ -100,30 +100,28 @@ export class DatasetFlowTableHelpers {
                         switch (element.description.__typename) {
                             case "FlowDescriptionDatasetPollingIngest":
                             case "FlowDescriptionDatasetPushIngest":
-                                if (_.isNil(element.description.ingestResult)) {
-                                    throw new Error("Expected to have injest result");
-                                }
-                                return `Ingested ${element.description.ingestResult.numRecords} new ${
-                                    element.description.ingestResult.numRecords == 1 ? "record" : "records"
-                                } in ${element.description.ingestResult.numBlocks} new ${
-                                    element.description.ingestResult.numBlocks == 1 ? "block" : "blocks"
-                                }`;
+                                return element.description.ingestResult
+                                    ? `Ingested ${element.description.ingestResult.numRecords} new ${
+                                          element.description.ingestResult.numRecords == 1 ? "record" : "records"
+                                      } in ${element.description.ingestResult.numBlocks} new ${
+                                          element.description.ingestResult.numBlocks == 1 ? "block" : "blocks"
+                                      }`
+                                    : "Expected to have injest result";
 
                             case "FlowDescriptionDatasetExecuteTransform":
-                                if (_.isNil(element.description.transformResult)) {
-                                    throw new Error("Expected to have transform result");
-                                }
-                                return `Transformed ${element.description.transformResult.numRecords} new ${
-                                    element.description.transformResult.numRecords == 1 ? "record" : "records"
-                                } in ${element.description.transformResult.numBlocks} new ${
-                                    element.description.transformResult.numBlocks == 1 ? "block" : "blocks"
-                                }`;
-
+                                return element.description.transformResult
+                                    ? `Transformed ${element.description.transformResult.numRecords} new ${
+                                          element.description.transformResult.numRecords == 1 ? "record" : "records"
+                                      } in ${element.description.transformResult.numBlocks} new ${
+                                          element.description.transformResult.numBlocks == 1 ? "block" : "blocks"
+                                      }`
+                                    : "Expected to have transform result";
                             // TODO
                             //  - Compacting
                             //  - GC
+                            default:
+                                return "Unknown description typename";
                         }
-                        break;
 
                     case FlowOutcome.Cancelled:
                         return `Cancelled at ${moment(element.timing.finishedAt).format(

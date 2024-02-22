@@ -12,11 +12,16 @@ import { DisplayTimeModule } from "src/app/components/display-time/display-time.
 import { FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { AngularSvgIconModule } from "angular-svg-icon";
+import { AngularSvgIconModule, SvgIconRegistryService } from "angular-svg-icon";
+import { HarnessLoader } from "@angular/cdk/testing";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { MatTableHarness } from "@angular/material/table/testing";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
     let fixture: ComponentFixture<FlowsTableComponent>;
+    let loader: HarnessLoader;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -31,11 +36,19 @@ describe("FlowsTableComponent", () => {
                 DisplayTimeModule,
                 AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
+                SharedTestModule,
             ],
         }).compileComponents();
 
+        // Note: for some reason this icon is not loaded
+        const iconRegistryService: SvgIconRegistryService = TestBed.inject(SvgIconRegistryService);
+        iconRegistryService.addSvg("show-options", "");
+        iconRegistryService.addSvg("hour-glass", "");
+        iconRegistryService.addSvg("timer", "");
+
         fixture = TestBed.createComponent(FlowsTableComponent);
         component = fixture.componentInstance;
+        loader = TestbedHarnessEnvironment.loader(fixture);
         component.nodes = mockFlowSummaryDataFragments;
         component.filterByStatus = null;
         component.filterByInitiator = FilterByInitiatorEnum.All;
@@ -69,5 +82,10 @@ describe("FlowsTableComponent", () => {
         const searchByAccountNameChangeSpy = spyOn(component.searchByAccountNameChange, "emit");
         component.onSearchByAccountName();
         expect(searchByAccountNameChangeSpy).toHaveBeenCalledWith("");
+    });
+
+    it("should check table rows length", async () => {
+        const table = await loader.getHarness<MatTableHarness>(MatTableHarness);
+        expect((await table.getRows()).length).toBe(8);
     });
 });

@@ -14,7 +14,7 @@ describe("DatasetFlowTableHelpers", () => {
                 { __typename: "FlowStartConditionThrottling", intervalSec: 120 },
                 DatasetKind.Root,
             ),
-        ).toEqual("waiting for throttling execution");
+        ).toEqual("waiting for throttling condition");
     });
 
     it("should check waiting block text with FlowStartConditionBatching typename", () => {
@@ -23,7 +23,7 @@ describe("DatasetFlowTableHelpers", () => {
                 { __typename: "FlowStartConditionBatching", thresholdNewRecords: 10 },
                 DatasetKind.Root,
             ),
-        ).toEqual("waiting for batching execution");
+        ).toEqual("waiting for batching condition");
     });
 
     it("should check waiting block text with empty start condition for ROOT", () => {

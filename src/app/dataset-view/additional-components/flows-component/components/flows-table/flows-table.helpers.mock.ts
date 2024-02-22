@@ -13,7 +13,7 @@ export const expectationsDesriptionColumnOptions = [
     { icon: "radio_button_checked", class: "waiting-status" },
     { icon: "radio_button_checked", class: "scheduled-status" },
     { icon: "cancel", class: "aborted-outcome" },
-    { icon: "cancel", class: "aborted-outcome" },
+    { icon: "cancel", class: "cancelled-outcome" },
     { icon: "dangerous", class: "failed-status" },
 ];
 

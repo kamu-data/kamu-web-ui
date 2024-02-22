@@ -26,8 +26,9 @@ export class DatasetFlowTableHelpers {
                     case FlowOutcome.Failed:
                         return { icon: "dangerous", class: "failed-status" };
                     case FlowOutcome.Aborted:
-                    case FlowOutcome.Cancelled:
                         return { icon: "cancel", class: "aborted-outcome" };
+                    case FlowOutcome.Cancelled:
+                        return { icon: "cancel", class: "cancelled-outcome" };
 
                     default:
                         throw new Error("Unsupported flow outcome");
@@ -176,10 +177,10 @@ export class DatasetFlowTableHelpers {
     public static waitingBlockText(startCondition: MaybeNull<FlowStartCondition>, datasetKind: DatasetKind): string {
         switch (startCondition?.__typename) {
             case "FlowStartConditionThrottling":
-                return "waiting for throttling execution";
+                return "waiting for throttling condition";
 
             case "FlowStartConditionBatching":
-                return "waiting for batching execution";
+                return "waiting for batching condition";
 
             default:
                 return datasetKind === DatasetKind.Root ? "waiting for scheduled execution" : "";

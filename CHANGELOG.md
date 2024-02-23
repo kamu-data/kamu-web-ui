@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed bug with authentication (Login vs CLI)
 - Settings tab is hidden after login
+- Fixed bug with `prevOffset` on the block metadata page
 
 ## [0.15.0] - 2024-01-17
 ### Changed

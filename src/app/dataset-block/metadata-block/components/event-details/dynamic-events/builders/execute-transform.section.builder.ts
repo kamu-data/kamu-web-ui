@@ -6,6 +6,7 @@ import { EventSectionBuilder } from "./event-section.builder";
 export enum ExecuteTransformSection {
     QUERY_INPUTS = "queryInputs",
     PREV_CHECKPOINT = "prevCheckpoint",
+    PREV_OFFSET = "prevOffset",
     NEW_DATA = "newData",
     NEW_CHECKPOINT = "newCheckpoint",
     NEW_WATERMARK = "newWatermark",
@@ -15,6 +16,7 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
     private sectionTitleMapper: Record<string, string> = {
         queryInputs: "Query inputs",
         prevCheckpoint: "Previous checkpoint",
+        prevOffset: "Previous offset",
         newData: "New data",
         newCheckpoint: "New checkpoint",
         newWatermark: "New watermark",
@@ -59,6 +61,24 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
 
                         break;
                     }
+                    case ExecuteTransformSection.PREV_OFFSET: {
+                        if (event.__typename) {
+                            result.push({
+                                title: this.sectionTitleMapper[section],
+                                rows: [
+                                    this.buildSupportedRow(
+                                        event.__typename,
+                                        EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS,
+                                        "number",
+                                        section,
+                                        data,
+                                    ),
+                                ],
+                            });
+                        }
+                        break;
+                    }
+
                     case ExecuteTransformSection.PREV_CHECKPOINT:
                     case ExecuteTransformSection.NEW_WATERMARK: {
                         if (event.__typename) {

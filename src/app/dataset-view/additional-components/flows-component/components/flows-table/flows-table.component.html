@@ -154,7 +154,7 @@
             <div class="pe-2">
                 <button mat-button [matMenuTriggerFor]="tableOptions"><svg-icon name="show-options"></svg-icon></button>
                 <mat-menu #tableOptions="matMenu" xPosition="before" [hasBackdrop]="true">
-                    <button mat-menu-item disabled="true">Details</button>
+                    <button mat-menu-item (click)="navigateToFlowDetaisView(element.flowId)">Details</button>
                     <mat-divider></mat-divider>
                     <button mat-menu-item disabled="true">Cancel flow</button>
                 </mat-menu>

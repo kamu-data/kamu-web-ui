@@ -1,3 +1,4 @@
+import { NavigationService } from "src/app/services/navigation.service";
 import { MaybeNull, MaybeUndefined } from "./../../../../../common/app.types";
 import { DataHelpers } from "src/app/common/data.helpers";
 import {
@@ -54,6 +55,8 @@ export class FlowsTableComponent implements OnInit {
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
 
+    constructor(private navigationService: NavigationService) {}
+
     ngOnInit(): void {
         this.dataSource.data = this.nodes;
     }
@@ -106,5 +109,13 @@ export class FlowsTableComponent implements OnInit {
 
     public waitingBlockText(startCondition: MaybeNull<FlowStartCondition>): string {
         return DatasetFlowTableHelpers.waitingBlockText(startCondition, this.datasetBasics.kind);
+    }
+
+    public navigateToFlowDetaisView(flowId: string): void {
+        this.navigationService.navigateToFlowDetails({
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
+            flowId,
+        });
     }
 }

@@ -16,6 +16,7 @@ import { SetTransformComponent } from "./dataset-view/additional-components/meta
 import { LoginGuard } from "./auth/guards/login.guard";
 import { ReturnToCliComponent } from "./components/return-to-cli/return-to-cli.component";
 import { AddPushSourceComponent } from "./dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
+import { DatasetFlowDetailsComponent } from "./dataset-flow/dataset-flow-details/dataset-flow-details.component";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -43,6 +44,13 @@ export const routes: Routes = [
             `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
             `/${ProjectLinks.URL_BLOCK}/:${ProjectLinks.URL_PARAM_BLOCK_HASH}`,
         component: MetadataBlockComponent,
+    },
+    {
+        canActivate: [AuthenticatedGuard],
+        path:
+            `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
+            `/${ProjectLinks.URL_FLOW_DETAILS}/:${ProjectLinks.URL_PARAM_FLOW_ID}/:${ProjectLinks.URL_PARAM_CATEGORY}`,
+        component: DatasetFlowDetailsComponent,
     },
     {
         path: ProjectLinks.URL_PAGE_NOT_FOUND,

@@ -16,3 +16,9 @@ export interface MetadataBlockNavigationParams {
     datasetName: string;
     blockHash: string;
 }
+
+export interface FlowDetailsNavigationParams {
+    accountName: string;
+    datasetName: string;
+    flowId: string;
+}

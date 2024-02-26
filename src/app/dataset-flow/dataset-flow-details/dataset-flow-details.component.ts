@@ -1,8 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { FlowDetailsTabs } from "./dataset-flow-details.types";
+import { DatasetFlowByIdResponse, FlowDetailsTabs, ViewMenuData } from "./dataset-flow-details.types";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { Observable, Subscription, combineLatest, filter, map } from "rxjs";
-import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
+import { Observable, Subscription, combineLatest, filter, map, shareReplay, switchMap } from "rxjs";
+import {
+    DatasetBasicsFragment,
+    DatasetPermissionsFragment,
+    FlowSummaryDataFragment,
+} from "src/app/api/kamu.graphql.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -10,6 +14,9 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 import { MaybeUndefined } from "src/app/common/app.types";
 import ProjectLinks from "src/app/project-links";
 import { BaseProcessingComponent } from "src/app/common/base.processing.component";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { DataHelpers } from "src/app/common/data.helpers";
+import { DatasetFlowTableHelpers } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.helpers";
 
 @Component({
     selector: "app-dataset-flow-details",
@@ -26,16 +33,15 @@ export class DatasetFlowDetailsComponent extends BaseProcessingComponent impleme
     public datasetInfo$: Observable<DatasetInfo>;
     public datasetBasics$: Observable<DatasetBasicsFragment>;
     public datasetPermissions$: Observable<DatasetPermissionsFragment>;
-    public datasetViewMenuData$: Observable<{
-        datasetBasics: DatasetBasicsFragment;
-        datasetPermissions: DatasetPermissionsFragment;
-    }>;
+    public datasetViewMenuData$: Observable<ViewMenuData>;
+    public datasetFlowDetails$: Observable<MaybeUndefined<DatasetFlowByIdResponse>>;
 
     constructor(
         private router: Router,
         private route: ActivatedRoute,
         private datasetService: DatasetService,
         private datasetSubsService: DatasetSubscriptionsService,
+        private datasetFlowsService: DatasetFlowsService,
     ) {
         super();
     }
@@ -47,6 +53,7 @@ export class DatasetFlowDetailsComponent extends BaseProcessingComponent impleme
             map(([datasetBasics, datasetPermissions]) => {
                 return { datasetBasics, datasetPermissions };
             }),
+            shareReplay(),
         );
         this.datasetInfo$ = this.datasetInfoFromUrlChanges;
         this.trackSubscription(
@@ -54,9 +61,18 @@ export class DatasetFlowDetailsComponent extends BaseProcessingComponent impleme
                 this.extractActiveTabFromRoute();
             }),
         );
+
         this.extractActiveTabFromRoute();
         this.extractFlowIdFromRoute();
         this.trackSubscriptions(this.loadDatasetBasicDataWithPermissions());
+        this.datasetFlowDetails$ = this.datasetViewMenuData$.pipe(
+            switchMap((data: ViewMenuData) => {
+                return this.datasetFlowsService.datasetFlowById({
+                    datasetId: data.datasetBasics.id,
+                    flowId: this.flowId,
+                });
+            }),
+        );
     }
 
     public getRouteLink(tab: FlowDetailsTabs): string {
@@ -90,5 +106,17 @@ export class DatasetFlowDetailsComponent extends BaseProcessingComponent impleme
 
     private loadDatasetBasicDataWithPermissions(): Subscription {
         return this.datasetService.requestDatasetBasicDataWithPermissions(this.getDatasetInfoFromUrl()).subscribe();
+    }
+
+    public flowTypeDescription(flow: FlowSummaryDataFragment): string {
+        return DataHelpers.flowTypeDescription(flow);
+    }
+
+    public descriptionDatasetFlowEndOfMessage(element: FlowSummaryDataFragment): string {
+        return DatasetFlowTableHelpers.descriptionEndOfMessage(element);
+    }
+
+    public descriptionColumnOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
+        return DatasetFlowTableHelpers.descriptionColumnTableOptions(element);
     }
 }

@@ -24,13 +24,18 @@
         </div>
     </div>
 
-    <div class="task-details-container mx-4 mb-4">
+    <div class="task-details-container mx-4 mb-4" *ngIf="datasetFlowDetails$ | async as flowDetails">
         <div class="d-flex justify-content-between px-4">
             <div class="d-flex py-1 align-items-start">
-                <mat-icon class="icon-status mt-2 completed-status">check_circle</mat-icon>
+                <mat-icon class="icon-status mt-2" [ngClass]="descriptionColumnOptions(flowDetails.flow).class">{{
+                    descriptionColumnOptions(flowDetails.flow).icon
+                }}</mat-icon>
                 <div class="ms-1 py-2">
-                    <span class="fw-500">Flow # {{ flowId }}</span>
-                    <span class="d-block fw-bold"> Cascading derivative transformation</span>
+                    <span class="fw-500">Flow # {{ flowDetails.flow.flowId }}</span>
+                    <span class="d-block text-muted">
+                        {{ flowTypeDescription(flowDetails.flow) }}
+                        <span>{{ descriptionDatasetFlowEndOfMessage(flowDetails.flow) }}</span>
+                    </span>
                 </div>
             </div>
 

@@ -293,7 +293,7 @@ export type Dataset = {
     flows: DatasetFlows;
     /** Unique identifier of the dataset */
     id: Scalars["DatasetID"];
-    /** Returns the kind of dataset (Root or Derivative) */
+    /** Returns the kind of a dataset (Root or Derivative) */
     kind: DatasetKind;
     /** Creation time of the most recent metadata block in the chain */
     lastUpdatedAt: Scalars["DateTime"];
@@ -1903,6 +1903,95 @@ export type DatasetAllFlowsPausedQuery = {
         byId?: {
             __typename?: "Dataset";
             flows: { __typename?: "DatasetFlows"; configs: { __typename?: "DatasetFlowConfigs"; allPaused: boolean } };
+        } | null;
+    };
+};
+
+export type GetFlowByIdQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    flowId: Scalars["FlowID"];
+}>;
+
+export type GetFlowByIdQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            flows: {
+                __typename?: "DatasetFlows";
+                runs: {
+                    __typename?: "DatasetFlowRuns";
+                    getFlow:
+                        | { __typename?: "FlowNotFound"; message: string; flowId: string }
+                        | {
+                              __typename?: "GetFlowSuccess";
+                              flow: {
+                                  __typename?: "Flow";
+                                  history: Array<
+                                      | { __typename?: "FlowEventAborted"; eventId: string; eventTime: string }
+                                      | {
+                                            __typename: "FlowEventInitiated";
+                                            eventTime: string;
+                                            eventId: string;
+                                            trigger:
+                                                | { __typename: "FlowTriggerAutoPolling" }
+                                                | {
+                                                      __typename?: "FlowTriggerInputDatasetFlow";
+                                                      datasetId: string;
+                                                      flowId: string;
+                                                      flowType: DatasetFlowType;
+                                                  }
+                                                | { __typename: "FlowTriggerManual" }
+                                                | { __typename: "FlowTriggerPush" };
+                                        }
+                                      | {
+                                            __typename: "FlowEventQueued";
+                                            eventId: string;
+                                            eventTime: string;
+                                            activateAt: string;
+                                        }
+                                      | {
+                                            __typename?: "FlowEventStartConditionDefined";
+                                            eventId: string;
+                                            eventTime: string;
+                                            startCondition:
+                                                | {
+                                                      __typename?: "FlowStartConditionBatching";
+                                                      thresholdNewRecords: number;
+                                                  }
+                                                | { __typename?: "FlowStartConditionThrottling"; intervalSec: number };
+                                        }
+                                      | {
+                                            __typename: "FlowEventTaskChanged";
+                                            eventId: string;
+                                            eventTime: string;
+                                            taskId: string;
+                                            taskStatus: TaskStatus;
+                                        }
+                                      | {
+                                            __typename?: "FlowEventTriggerAdded";
+                                            eventId: string;
+                                            eventTime: string;
+                                            trigger:
+                                                | { __typename: "FlowTriggerAutoPolling" }
+                                                | {
+                                                      __typename?: "FlowTriggerInputDatasetFlow";
+                                                      datasetId: string;
+                                                      flowId: string;
+                                                      flowType: DatasetFlowType;
+                                                  }
+                                                | {
+                                                      __typename?: "FlowTriggerManual";
+                                                      initiator: { __typename?: "Account" } & AccountFragment;
+                                                  }
+                                                | { __typename: "FlowTriggerPush" };
+                                        }
+                                  >;
+                              } & FlowSummaryDataFragment;
+                          };
+                };
+            };
         } | null;
     };
 };
@@ -4188,6 +4277,116 @@ export class DatasetAllFlowsPausedGQL extends Apollo.Query<
     DatasetAllFlowsPausedQueryVariables
 > {
     document = DatasetAllFlowsPausedDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const GetFlowByIdDocument = gql`
+    query getFlowById($datasetId: DatasetID!, $flowId: FlowID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    runs {
+                        getFlow(flowId: $flowId) {
+                            ... on GetFlowSuccess {
+                                flow {
+                                    ...FlowSummaryData
+                                    history {
+                                        ... on FlowEventAborted {
+                                            eventId
+                                            eventTime
+                                        }
+                                        ... on FlowEventInitiated {
+                                            __typename
+                                            eventTime
+                                            eventId
+                                            trigger {
+                                                ... on FlowTriggerAutoPolling {
+                                                    __typename
+                                                }
+                                                ... on FlowTriggerManual {
+                                                    __typename
+                                                }
+                                                ... on FlowTriggerPush {
+                                                    __typename
+                                                }
+                                                ... on FlowTriggerInputDatasetFlow {
+                                                    datasetId
+                                                    flowId
+                                                    flowType
+                                                }
+                                            }
+                                        }
+                                        ... on FlowEventQueued {
+                                            __typename
+                                            eventId
+                                            eventTime
+                                            activateAt
+                                        }
+                                        ... on FlowEventStartConditionDefined {
+                                            eventId
+                                            eventTime
+                                            startCondition {
+                                                ... on FlowStartConditionThrottling {
+                                                    intervalSec
+                                                }
+                                                ... on FlowStartConditionBatching {
+                                                    thresholdNewRecords
+                                                }
+                                            }
+                                        }
+                                        ... on FlowEventTaskChanged {
+                                            __typename
+                                            eventId
+                                            eventTime
+                                            taskId
+                                            taskStatus
+                                        }
+                                        ... on FlowEventTriggerAdded {
+                                            eventId
+                                            eventTime
+                                            trigger {
+                                                ... on FlowTriggerAutoPolling {
+                                                    __typename
+                                                }
+                                                ... on FlowTriggerManual {
+                                                    initiator {
+                                                        ...Account
+                                                    }
+                                                }
+                                                ... on FlowTriggerPush {
+                                                    __typename
+                                                }
+                                                ... on FlowTriggerInputDatasetFlow {
+                                                    datasetId
+                                                    flowId
+                                                    flowType
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            ... on FlowNotFound {
+                                message
+                                flowId
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FlowSummaryDataFragmentDoc}
+    ${AccountFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetFlowByIdGQL extends Apollo.Query<GetFlowByIdQuery, GetFlowByIdQueryVariables> {
+    document = GetFlowByIdDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

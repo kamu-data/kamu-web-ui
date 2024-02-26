@@ -1,0 +1,95 @@
+query getFlowById($datasetId: DatasetID!, $flowId: FlowID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        runs {
+          getFlow(flowId: $flowId) {
+            ... on GetFlowSuccess {
+              flow {
+                ...FlowSummaryData
+                history {
+                  ... on FlowEventAborted {
+                    eventId
+                    eventTime
+                  }
+                  ... on FlowEventInitiated {
+                    __typename
+                    eventTime
+                    eventId
+                    trigger {
+                      ... on FlowTriggerAutoPolling {
+                        __typename
+                      }
+                      ... on FlowTriggerManual {
+                        __typename
+                      }
+                      ... on FlowTriggerPush {
+                        __typename
+                      }
+                      ... on FlowTriggerInputDatasetFlow {
+                        datasetId
+                        flowId
+                        flowType
+                      }
+                    }
+                  }
+                  ... on FlowEventQueued {
+                    __typename
+                    eventId
+                    eventTime
+                    activateAt
+                  }
+                  ... on FlowEventStartConditionDefined {
+                    eventId
+                    eventTime
+                    startCondition {
+                      ... on FlowStartConditionThrottling {
+                        intervalSec
+                      }
+                      ... on FlowStartConditionBatching {
+                        thresholdNewRecords
+                      }
+                    }
+                  }
+                  ... on FlowEventTaskChanged {
+                    __typename
+                    eventId
+                    eventTime
+                    taskId
+                    taskStatus
+                  }
+                  ... on FlowEventTriggerAdded {
+                    eventId
+                    eventTime
+                    trigger {
+                      ... on FlowTriggerAutoPolling {
+                        __typename
+                      }
+                      ... on FlowTriggerManual {
+                        initiator {
+                          ...Account
+                        }
+                      }
+                      ... on FlowTriggerPush {
+                        __typename
+                      }
+                      ... on FlowTriggerInputDatasetFlow {
+                        datasetId
+                        flowId
+                        flowType
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            ... on FlowNotFound {
+              message
+              flowId
+            }
+          }
+        }
+      }
+    }
+  }
+}

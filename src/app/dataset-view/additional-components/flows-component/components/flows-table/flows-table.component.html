@@ -73,7 +73,7 @@
                 <div class="d-flex align-items-center" *ngIf="durationBlockVisible(element)">
                     <svg-icon name="timer" class="ps-1 pe-2 text-muted" [title]="'Duration'"></svg-icon>
                     <span class="text-small ml-2px pt-1">
-                        {{ durationTask(element.timing.runningSince, element.timing.finishedAt) }}
+                        {{ durationTask(element.timing.activateAt, element.timing.finishedAt) }}
                     </span>
                 </div>
                 <div class="d-flex align-items-center" *ngIf="waitingForBlockVisible(element)">

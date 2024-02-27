@@ -127,13 +127,12 @@
             </div>
             <div class="content sidebar my-4">
                 <div class="my-3 pl-40">
-                    <ng-container *ngIf="activeTab === FlowDetailsTabs.SUMMARY">
-                        Summary tab coming soon
-                        <!-- <app-task-details-summary-tab></app-task-details-summary-tab> -->
-                    </ng-container>
+                    <ng-container *ngIf="activeTab === FlowDetailsTabs.SUMMARY"> Summary tab coming soon </ng-container>
                     <ng-container *ngIf="activeTab === FlowDetailsTabs.HISTORY">
-                        History tab coming soon
-                        <!-- <app-task-details-history-tab></app-task-details-history-tab> -->
+                        <app-flow-details-history-tab
+                            [flowDetails]="flowDetails.flow"
+                            [flowHistory]="flowDetails.flowHistory"
+                        ></app-flow-details-history-tab>
                     </ng-container>
                     <div *ngIf="activeTab === FlowDetailsTabs.LOGS">Logs tab coming soon</div>
                     <div *ngIf="activeTab === FlowDetailsTabs.USAGE">Usage tab coming soon</div>

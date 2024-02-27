@@ -1,7 +1,7 @@
 import {
     DatasetBasicsFragment,
     DatasetPermissionsFragment,
-    FlowEvent,
+    FlowHistoryDataFragment,
     FlowSummaryDataFragment,
 } from "src/app/api/kamu.graphql.interface";
 
@@ -15,7 +15,7 @@ export enum FlowDetailsTabs {
 
 export interface DatasetFlowByIdResponse {
     flow: FlowSummaryDataFragment;
-    flowHistory: FlowEvent[];
+    flowHistory: FlowHistoryDataFragment[];
 }
 export interface ViewMenuData {
     datasetBasics: DatasetBasicsFragment;

@@ -7,9 +7,10 @@ import { RouterModule } from "@angular/router";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { DatasetModule } from "src/app/dataset-view/dataset.module";
 import { DatasetFlowDetailsComponent } from "./dataset-flow-details.component";
+import { FlowDetailsHistoryTabComponent } from './tabs/flow-details-history-tab/flow-details-history-tab.component';
 
 @NgModule({
-    declarations: [DatasetFlowDetailsComponent],
+    declarations: [DatasetFlowDetailsComponent, FlowDetailsHistoryTabComponent],
     imports: [
         CommonModule,
         MatIconModule,

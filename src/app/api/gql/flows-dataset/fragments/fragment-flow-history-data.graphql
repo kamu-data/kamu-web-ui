@@ -1,0 +1,79 @@
+fragment FlowHistoryData on FlowEvent {
+  __typename
+  ... on FlowEventAborted {
+    eventId
+    eventTime
+  }
+  ... on FlowEventInitiated {
+    eventTime
+    eventId
+    trigger {
+      __typename
+      ... on FlowTriggerAutoPolling {
+        dummy
+      }
+      ... on FlowTriggerManual {
+        initiator {
+          ...Account
+        }
+      }
+      ... on FlowTriggerPush {
+        dummy
+      }
+      ... on FlowTriggerInputDatasetFlow {
+        datasetId
+        flowId
+        flowType
+      }
+    }
+  }
+  ... on FlowEventQueued {
+    __typename
+    eventId
+    eventTime
+    activateAt
+  }
+  ... on FlowEventStartConditionDefined {
+    eventId
+    eventTime
+    startCondition {
+      __typename
+      ... on FlowStartConditionThrottling {
+        intervalSec
+      }
+      ... on FlowStartConditionBatching {
+        thresholdNewRecords
+      }
+    }
+  }
+  ... on FlowEventTaskChanged {
+    __typename
+    eventId
+    eventTime
+    taskId
+    taskStatus
+  }
+  ... on FlowEventTriggerAdded {
+    eventId
+    eventTime
+    trigger {
+      __typename
+      ... on FlowTriggerAutoPolling {
+        dummy
+      }
+      ... on FlowTriggerManual {
+        initiator {
+          ...Account
+        }
+      }
+      ... on FlowTriggerPush {
+        dummy
+      }
+      ... on FlowTriggerInputDatasetFlow {
+        datasetId
+        flowId
+        flowType
+      }
+    }
+  }
+}

@@ -46,8 +46,6 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Waiting:
                 return { icon: "radio_button_checked", class: "waiting-status" };
         }
-
-        return { icon: "question_mark", class: "" };
     }
 
     public static descriptionEndOfMessage(element: FlowSummaryDataFragment): string {

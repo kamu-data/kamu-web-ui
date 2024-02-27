@@ -1,10 +1,4 @@
-<div
-    class="app-main-container"
-    role="main"
-    data-test-id="task-details-view"
-    id="task-details-view"
-    *ngIf="datasetInfo$ | async as datasetInfo"
->
+<div class="app-main-container" role="main" data-test-id="task-details-view" id="task-details-view">
     <div class="app-content mt-4">
         <app-dataset-view-header
             [datasetInfo]="datasetInfo"

@@ -29,8 +29,6 @@ export class DatasetFlowDetailsComponent extends BaseProcessingComponent impleme
     public readonly FLOWS_TYPE = DatasetViewTypeEnum.Flows;
     public activeTab: FlowDetailsTabs = FlowDetailsTabs.SUMMARY;
     public flowId = "";
-
-    public datasetInfo$: Observable<DatasetInfo>;
     public datasetBasics$: Observable<DatasetBasicsFragment>;
     public datasetPermissions$: Observable<DatasetPermissionsFragment>;
     public datasetViewMenuData$: Observable<ViewMenuData>;
@@ -55,7 +53,6 @@ export class DatasetFlowDetailsComponent extends BaseProcessingComponent impleme
             }),
             shareReplay(),
         );
-        this.datasetInfo$ = this.datasetInfoFromUrlChanges;
         this.trackSubscription(
             this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
                 this.extractActiveTabFromRoute();
@@ -79,6 +76,10 @@ export class DatasetFlowDetailsComponent extends BaseProcessingComponent impleme
         return `/${this.getDatasetInfoFromUrl().accountName}/${this.getDatasetInfoFromUrl().datasetName}/${
             ProjectLinks.URL_FLOW_DETAILS
         }/${this.flowId}/${tab}`;
+    }
+
+    public get datasetInfo(): DatasetInfo {
+        return this.getDatasetInfoFromUrl();
     }
 
     private extractActiveTabFromRoute(): void {

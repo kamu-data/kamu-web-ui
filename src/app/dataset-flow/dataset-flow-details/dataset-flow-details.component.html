@@ -45,9 +45,9 @@
                     <svg-icon name="show-options"></svg-icon>
                 </button>
                 <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="true">
-                    <button mat-menu-item>Pause task</button>
+                    <button mat-menu-item [disabled]="true">Pause task</button>
                     <mat-divider></mat-divider>
-                    <button mat-menu-item>Cancel task</button>
+                    <button mat-menu-item [disabled]="true">Cancel task</button>
                 </mat-menu>
             </div>
         </div>

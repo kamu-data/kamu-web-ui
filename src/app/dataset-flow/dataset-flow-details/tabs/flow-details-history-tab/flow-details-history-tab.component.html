@@ -12,8 +12,10 @@
                         {{ flowEventIconOptions(flowEvent, flowDetails).icon }}
                     </mat-icon>
                     <div class="d-flex flex-column">
-                        <div class="mt-2px ps-2 fw-500">{{ flowEventDescription(flowEvent) }}</div>
-                        <div class="fs-12 ps-2">{{ flowEventSubMessage(flowEvent, flowDetails) }}</div>
+                        <div class="mt-2px ps-2 fw-500">{{ flowEventDescription(flowEvent, flowDetails) }}</div>
+                        <span class="fs-12 ps-2 word-break">{{
+                            flowEventSubMessage(flowEvent, flowDetails, inputDatasetInfo)
+                        }}</span>
                     </div>
                 </div>
                 <div class="col-md-6">{{ flowEvent.eventTime | date: "y-MM-dd, h:mm:ss a" }}</div>

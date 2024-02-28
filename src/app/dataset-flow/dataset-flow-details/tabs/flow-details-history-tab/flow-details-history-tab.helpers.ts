@@ -11,9 +11,14 @@ import {
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
+import { DataHelpers } from "src/app/common/data.helpers";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 export class DatasetFlowDetailsHelpers {
-    public static flowEventDescription(flowEvent: FlowHistoryDataFragment): string {
+    public static flowEventDescription(
+        flowEvent: FlowHistoryDataFragment,
+        flowDetails: FlowSummaryDataFragment,
+    ): string {
         const eventTypename = flowEvent.__typename;
         switch (eventTypename) {
             case "FlowEventInitiated": {
@@ -35,8 +40,12 @@ export class DatasetFlowDetailsHelpers {
                 return "Event was aborted";
             case "FlowEventQueued":
                 return `Event is in queue`;
-            case "FlowEventTaskChanged":
-                return `The event changed status`;
+            case "FlowEventTaskChanged": {
+                const event = flowEvent as FlowEventTaskChanged;
+                return `${DataHelpers.flowTypeDescription(
+                    flowDetails,
+                )} ${DatasetFlowDetailsHelpers.descriptionEndOfMessage(event)}`;
+            }
             case "FlowEventTriggerAdded": {
                 const triggerTypename = (flowEvent as FlowEventTriggerAdded).trigger.__typename;
                 switch (triggerTypename) {
@@ -118,6 +127,7 @@ export class DatasetFlowDetailsHelpers {
     public static flowEventSubMessage(
         flowEvent: FlowHistoryDataFragment,
         flowDetails: FlowSummaryDataFragment,
+        inputDatasetInfo: DatasetInfo,
     ): string {
         const eventTypename = flowEvent.__typename;
         switch (eventTypename) {
@@ -132,8 +142,9 @@ export class DatasetFlowDetailsHelpers {
                         }`;
                     case "FlowTriggerPush":
                         return `Initiated by push trigger`;
-                    case "FlowTriggerInputDatasetFlow":
-                        return `Initiated by input dataset`;
+                    case "FlowTriggerInputDatasetFlow": {
+                        return `Input dataset: ${inputDatasetInfo.accountName}/${inputDatasetInfo.datasetName}`;
+                    }
                     default:
                         throw new Error("Unknown trigger typename");
                 }
@@ -146,7 +157,55 @@ export class DatasetFlowDetailsHelpers {
             }
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
-                return `Status changed to ${event.taskStatus}`;
+                switch (event.taskStatus) {
+                    case TaskStatus.Queued:
+                    case TaskStatus.Running:
+                        return `Status changed`;
+                    case TaskStatus.Finished:
+                        switch (flowDetails.outcome) {
+                            case FlowOutcome.Failed:
+                                return `An error occurred, see logs for more details`;
+                            case FlowOutcome.Success:
+                                switch (flowDetails.description.__typename) {
+                                    case "FlowDescriptionDatasetPollingIngest":
+                                    case "FlowDescriptionDatasetPushIngest":
+                                        return flowDetails.description.ingestResult
+                                            ? `Ingested ${flowDetails.description.ingestResult.numRecords} new ${
+                                                  flowDetails.description.ingestResult.numRecords == 1
+                                                      ? "record"
+                                                      : "records"
+                                              } in ${flowDetails.description.ingestResult.numBlocks} new ${
+                                                  flowDetails.description.ingestResult.numBlocks == 1
+                                                      ? "block"
+                                                      : "blocks"
+                                              }`
+                                            : "Expected to have injest result";
+
+                                    case "FlowDescriptionDatasetExecuteTransform":
+                                        return flowDetails.description.transformResult
+                                            ? `Transformed ${flowDetails.description.transformResult.numRecords} new ${
+                                                  flowDetails.description.transformResult.numRecords == 1
+                                                      ? "record"
+                                                      : "records"
+                                              } in ${flowDetails.description.transformResult.numBlocks} new ${
+                                                  flowDetails.description.transformResult.numBlocks == 1
+                                                      ? "block"
+                                                      : "blocks"
+                                              }`
+                                            : "Expected to have transform result";
+                                    // TODO
+                                    //  - Compacting
+                                    //  - GC
+                                    default:
+                                        return "Unknown description typename";
+                                }
+
+                            default:
+                                throw new Error("Unknown flow outcome");
+                        }
+                    default:
+                        throw new Error("Unknown task status");
+                }
             }
             case "FlowEventTriggerAdded": {
                 const triggerTypename = (flowEvent as FlowEventTriggerAdded).trigger.__typename;
@@ -167,15 +226,28 @@ export class DatasetFlowDetailsHelpers {
                 const startConditionEvent = flowEvent as FlowEventStartConditionDefined;
                 switch (startConditionEvent.startCondition.__typename) {
                     case "FlowStartConditionThrottling":
-                        return `Throttling interval:${startConditionEvent.startCondition.intervalSec} sec`;
+                        return `Throttling interval: ${startConditionEvent.startCondition.intervalSec} sec`;
                     case "FlowStartConditionBatching":
-                        return `Threhold new record(s):${startConditionEvent.startCondition.thresholdNewRecords} record(s)`;
+                        return `Threhold new record(s): ${startConditionEvent.startCondition.thresholdNewRecords} record(s)`;
                     default:
                         return "Unknown start condition typename";
                 }
             }
             default:
                 throw new Error("Unknown event typename");
+        }
+    }
+
+    public static descriptionEndOfMessage(element: FlowEventTaskChanged): string {
+        switch (element.taskStatus) {
+            case TaskStatus.Finished:
+                return "finished";
+            case TaskStatus.Queued:
+                return "queued";
+            case TaskStatus.Running:
+                return "running";
+            default:
+                throw new Error(`Unsupported task status`);
         }
     }
 }

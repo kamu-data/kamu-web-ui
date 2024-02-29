@@ -51,6 +51,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     @Output() public onClickedBilling = new EventEmitter<null>();
     @Output() public onClickedUserDatasets = new EventEmitter<null>();
     @Output() public onClickedUserProfile = new EventEmitter<null>();
+    @Output() public onClickedDashboard = new EventEmitter<null>();
 
     @ViewChild("appHeaderMenuButton")
     private appHeaderMenuButton: ElementRef<HTMLElement>;
@@ -223,5 +224,9 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
 
     public onUserProfile(): void {
         this.onClickedUserProfile.emit();
+    }
+
+    public onDashboard(): void {
+        this.onClickedDashboard.emit();
     }
 }

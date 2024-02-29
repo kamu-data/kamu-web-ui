@@ -117,6 +117,14 @@
                     </a>
 
                     <a
+                        class="header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
+                        (click)="onDashboard()"
+                        *ngIf="isAdmin"
+                    >
+                        Dashboard
+                    </a>
+
+                    <a
                         class="header-link d-block d-md-none py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         (click)="onAddNew()"
                         data-test-id="addNewDatasetHeader"

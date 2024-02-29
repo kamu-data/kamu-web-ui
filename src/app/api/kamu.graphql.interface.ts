@@ -126,6 +126,11 @@ export type AuthMutLoginArgs = {
     loginMethod: Scalars["String"];
 };
 
+export type BatchingConditionInput = {
+    maxBatchingInterval: TimeDeltaInput;
+    minRecordsToAwait: Scalars["Int"];
+};
+
 export type BlockRef = {
     __typename?: "BlockRef";
     blockHash: Scalars["Multihash"];
@@ -293,7 +298,7 @@ export type Dataset = {
     flows: DatasetFlows;
     /** Unique identifier of the dataset */
     id: Scalars["DatasetID"];
-    /** Returns the kind of dataset (Root or Derivative) */
+    /** Returns the kind of a dataset (Root or Derivative) */
     kind: DatasetKind;
     /** Creation time of the most recent metadata block in the chain */
     lastUpdatedAt: Scalars["DateTime"];
@@ -391,10 +396,9 @@ export type DatasetFlowConfigsMutResumeFlowsArgs = {
 };
 
 export type DatasetFlowConfigsMutSetConfigBatchingArgs = {
+    batching: BatchingConditionInput;
     datasetFlowType: DatasetFlowType;
-    minimalDataBatch?: InputMaybe<Scalars["Int"]>;
     paused: Scalars["Boolean"];
-    throttlingPeriod?: InputMaybe<TimeDeltaInput>;
 };
 
 export type DatasetFlowConfigsMutSetConfigScheduleArgs = {
@@ -748,8 +752,8 @@ export type FlowConfiguration = {
 
 export type FlowConfigurationBatching = {
     __typename?: "FlowConfigurationBatching";
-    minimalDataBatch?: Maybe<Scalars["Int"]>;
-    throttlingPeriod?: Maybe<TimeDelta>;
+    maxBatchingInterval: TimeDelta;
+    minRecordsToAwait: Scalars["Int"];
 };
 
 export type FlowConfigurationSchedule = Cron5ComponentExpression | TimeDelta;
@@ -808,6 +812,7 @@ export type FlowDescriptionUpdateResult = {
     __typename?: "FlowDescriptionUpdateResult";
     numBlocks: Scalars["Int"];
     numRecords: Scalars["Int"];
+    updatedWatermark?: Maybe<Scalars["DateTime"]>;
 };
 
 export type FlowEdge = {
@@ -840,11 +845,11 @@ export type FlowEventQueued = FlowEvent & {
     eventTime: Scalars["DateTime"];
 };
 
-export type FlowEventStartConditionDefined = FlowEvent & {
-    __typename?: "FlowEventStartConditionDefined";
+export type FlowEventStartConditionUpdated = FlowEvent & {
+    __typename?: "FlowEventStartConditionUpdated";
     eventId: Scalars["EventID"];
     eventTime: Scalars["DateTime"];
-    startCondition: FlowStartCondition;
+    startConditionKind?: Maybe<FlowStartConditionKind>;
 };
 
 export type FlowEventTaskChanged = FlowEvent & {
@@ -871,6 +876,12 @@ export type FlowIncompatibleDatasetKind = SetFlowConfigResult &
         message: Scalars["String"];
     };
 
+export type FlowInvalidBatchingConfig = SetFlowConfigResult & {
+    __typename?: "FlowInvalidBatchingConfig";
+    message: Scalars["String"];
+    reason: Scalars["String"];
+};
+
 export type FlowNotFound = CancelScheduledTasksResult &
     GetFlowResult & {
         __typename?: "FlowNotFound";
@@ -895,8 +906,16 @@ export type FlowStartCondition = FlowStartConditionBatching | FlowStartCondition
 
 export type FlowStartConditionBatching = {
     __typename?: "FlowStartConditionBatching";
-    thresholdNewRecords: Scalars["Int"];
+    accumulatedRecordsCount: Scalars["Int"];
+    activeBatchingRule: FlowConfigurationBatching;
+    batchingDeadline: Scalars["DateTime"];
+    watermarkModified: Scalars["Boolean"];
 };
+
+export enum FlowStartConditionKind {
+    Batching = "BATCHING",
+    Throttling = "THROTTLING",
+}
 
 export type FlowStartConditionThrottling = {
     __typename?: "FlowStartConditionThrottling";
@@ -2067,7 +2086,17 @@ export type FlowSummaryDataFragment = {
         finishedAt?: string | null;
     };
     startCondition?:
-        | { __typename: "FlowStartConditionBatching"; thresholdNewRecords: number }
+        | {
+              __typename: "FlowStartConditionBatching";
+              batchingDeadline: string;
+              accumulatedRecordsCount: number;
+              watermarkModified: boolean;
+              activeBatchingRule: {
+                  __typename?: "FlowConfigurationBatching";
+                  minRecordsToAwait: number;
+                  maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
+              };
+          }
         | { __typename: "FlowStartConditionThrottling"; intervalSec: number }
         | null;
 };
@@ -2677,8 +2706,7 @@ export type DatasetFlowBatchingMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     datasetFlowType: DatasetFlowType;
     paused: Scalars["Boolean"];
-    throttlingPeriod?: InputMaybe<TimeDeltaInput>;
-    minimalDataBatch?: InputMaybe<Scalars["Int"]>;
+    batching: BatchingConditionInput;
 }>;
 
 export type DatasetFlowBatchingMutation = {
@@ -2698,6 +2726,7 @@ export type DatasetFlowBatchingMutation = {
                               expectedDatasetKind: DatasetKind;
                               actualDatasetKind: DatasetKind;
                           }
+                        | { __typename: "FlowInvalidBatchingConfig"; message: string; reason: string }
                         | {
                               __typename: "SetFlowConfigSuccess";
                               message: string;
@@ -2705,8 +2734,8 @@ export type DatasetFlowBatchingMutation = {
                                   __typename?: "FlowConfiguration";
                                   batching?: {
                                       __typename?: "FlowConfigurationBatching";
-                                      minimalDataBatch?: number | null;
-                                      throttlingPeriod?: ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment) | null;
+                                      minRecordsToAwait: number;
+                                      maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
                                   } | null;
                               };
                           };
@@ -2741,8 +2770,8 @@ export type GetDatasetFlowConfigsQuery = {
                                   | null;
                               batching?: {
                                   __typename?: "FlowConfigurationBatching";
-                                  minimalDataBatch?: number | null;
-                                  throttlingPeriod?: ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment) | null;
+                                  minRecordsToAwait: number;
+                                  maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
                               } | null;
                           } | null;
                       };
@@ -2776,6 +2805,7 @@ export type DatasetFlowScheduleMutation = {
                               expectedDatasetKind: DatasetKind;
                               actualDatasetKind: DatasetKind;
                           }
+                        | { __typename: "FlowInvalidBatchingConfig" }
                         | {
                               __typename: "SetFlowConfigSuccess";
                               message: string;
@@ -2841,6 +2871,12 @@ export const AccountFragmentDoc = gql`
         isAdmin
     }
 `;
+export const TimeDeltaDataFragmentDoc = gql`
+    fragment TimeDeltaData on TimeDelta {
+        every
+        unit
+    }
+`;
 export const FlowSummaryDataFragmentDoc = gql`
     fragment FlowSummaryData on Flow {
         description {
@@ -2893,11 +2929,20 @@ export const FlowSummaryDataFragmentDoc = gql`
                 intervalSec
             }
             ... on FlowStartConditionBatching {
-                thresholdNewRecords
+                activeBatchingRule {
+                    minRecordsToAwait
+                    maxBatchingInterval {
+                        ...TimeDeltaData
+                    }
+                }
+                batchingDeadline
+                accumulatedRecordsCount
+                watermarkModified
             }
         }
     }
     ${AccountFragmentDoc}
+    ${TimeDeltaDataFragmentDoc}
 `;
 export const DatasetPageInfoFragmentDoc = gql`
     fragment DatasetPageInfo on PageBasedInfo {
@@ -3647,12 +3692,6 @@ export const DatasetSearchOverviewFragmentDoc = gql`
     ${DatasetBasicsFragmentDoc}
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
-`;
-export const TimeDeltaDataFragmentDoc = gql`
-    fragment TimeDeltaData on TimeDelta {
-        every
-        unit
-    }
 `;
 export const AccountByNameDocument = gql`
     query accountByName($accountName: AccountName!) {
@@ -4454,28 +4493,22 @@ export const DatasetFlowBatchingDocument = gql`
         $datasetId: DatasetID!
         $datasetFlowType: DatasetFlowType!
         $paused: Boolean!
-        $throttlingPeriod: TimeDeltaInput
-        $minimalDataBatch: Int
+        $batching: BatchingConditionInput!
     ) {
         datasets {
             byId(datasetId: $datasetId) {
                 flows {
                     configs {
-                        setConfigBatching(
-                            datasetFlowType: $datasetFlowType
-                            paused: $paused
-                            throttlingPeriod: $throttlingPeriod
-                            minimalDataBatch: $minimalDataBatch
-                        ) {
+                        setConfigBatching(datasetFlowType: $datasetFlowType, paused: $paused, batching: $batching) {
                             __typename
                             ... on SetFlowConfigSuccess {
                                 message
                                 config {
                                     batching {
-                                        throttlingPeriod {
+                                        maxBatchingInterval {
                                             ...TimeDeltaData
                                         }
-                                        minimalDataBatch
+                                        minRecordsToAwait
                                     }
                                 }
                             }
@@ -4483,6 +4516,10 @@ export const DatasetFlowBatchingDocument = gql`
                                 message
                                 expectedDatasetKind
                                 actualDatasetKind
+                            }
+                            ... on FlowInvalidBatchingConfig {
+                                message
+                                reason
                             }
                         }
                     }
@@ -4525,10 +4562,10 @@ export const GetDatasetFlowConfigsDocument = gql`
                                 }
                             }
                             batching {
-                                throttlingPeriod {
+                                maxBatchingInterval {
                                     ...TimeDeltaData
                                 }
-                                minimalDataBatch
+                                minRecordsToAwait
                             }
                         }
                     }

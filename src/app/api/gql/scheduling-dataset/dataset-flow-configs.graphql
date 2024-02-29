@@ -18,10 +18,10 @@ query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlo
               }
             }
             batching {
-              throttlingPeriod {
+              maxBatchingInterval {
                 ...TimeDeltaData
               }
-              minimalDataBatch
+              minRecordsToAwait
             }
           }
         }

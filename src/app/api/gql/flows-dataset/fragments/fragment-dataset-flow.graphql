@@ -54,7 +54,15 @@ fragment FlowSummaryData on Flow {
     }
 
     ... on FlowStartConditionBatching {
-      thresholdNewRecords
+      activeBatchingRule {
+        minRecordsToAwait
+        maxBatchingInterval {
+          ...TimeDeltaData
+        }
+      }
+      batchingDeadline
+      accumulatedRecordsCount
+      watermarkModified
     }
   }
 }

@@ -26,6 +26,7 @@ import { AppConfigFeatureFlags, LoginMethod } from "src/app/app-config.model";
 @Component({
     selector: "app-header",
     templateUrl: "./app-header.component.html",
+    styleUrls: ["./app-header.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppHeaderComponent extends BaseComponent implements OnInit {
@@ -97,6 +98,10 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
 
     public isUserLoggedIn(): boolean {
         return this.loggedAccount.accountName.length > 0;
+    }
+
+    public get isAdmin(): boolean {
+        return this.loggedAccount.isAdmin;
     }
 
     public search: OperatorFunction<string, readonly DatasetAutocompleteItem[]> = (text$: Observable<string>) => {

@@ -1,0 +1,12 @@
+.admin-icon {
+    position: absolute;
+    left: 53px;
+    bottom: 4px;
+    color: #ffff;
+}
+
+@media (width <=768px) {
+    .admin-icon {
+        display: none;
+    }
+}

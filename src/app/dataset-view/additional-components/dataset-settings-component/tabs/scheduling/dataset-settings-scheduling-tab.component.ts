@@ -34,11 +34,11 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         updatesState: new FormControl(false),
         pollingGroup: new FormGroup({
             __typename: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
-            every: new FormControl<number | undefined>({ value: undefined, disabled: true }, [Validators.required]),
-            unit: new FormControl<TimeUnit | undefined>({ value: undefined, disabled: true }, [
+            every: new FormControl<number | undefined>({ value: undefined, disabled: true }, [
                 Validators.required,
                 Validators.min(1),
             ]),
+            unit: new FormControl<TimeUnit | undefined>({ value: undefined, disabled: true }, [Validators.required]),
             cronExpression: new FormControl<MaybeNull<string>>({ value: "", disabled: true }, [
                 Validators.required,
                 cronExpressionValidator(),
@@ -46,10 +46,16 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         }),
     });
 
-    public throttlingForm = new FormGroup({
-        every: new FormControl<number | undefined>({ value: undefined, disabled: true }),
-        unit: new FormControl<TimeUnit | undefined>({ value: undefined, disabled: true }, [Validators.min(1)]),
-        minimalDataBatch: new FormControl<MaybeNull<number>>({ value: null, disabled: true }),
+    public batchingForm = new FormGroup({
+        every: new FormControl<number | undefined>({ value: undefined, disabled: true }, [
+            Validators.required,
+            Validators.min(1),
+        ]),
+        unit: new FormControl<TimeUnit | undefined>({ value: undefined, disabled: true }, [Validators.required]),
+        minRecordsToAwait: new FormControl<MaybeNull<number>>({ value: null, disabled: true }, [
+            Validators.required,
+            Validators.min(1),
+        ]),
     });
 
     constructor(private datasetSchedulingService: DatasetSchedulingService) {
@@ -69,15 +75,15 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     }
 
     public get batchingEveryTime(): AbstractControl {
-        return this.throttlingForm.controls.every;
+        return this.batchingForm.controls.every;
     }
 
     public get batchingUnitTime(): AbstractControl {
-        return this.throttlingForm.controls.unit;
+        return this.batchingForm.controls.unit;
     }
 
-    public get batchingMinimalDataBatch(): AbstractControl {
-        return this.throttlingForm.controls.minimalDataBatch;
+    public get batchingMinRecordsToAwait(): AbstractControl {
+        return this.batchingForm.controls.minRecordsToAwait;
     }
 
     public get pollingEveryTime(): AbstractControl {
@@ -134,7 +140,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     private setPollingEveryTimeValidator(): void {
         this.trackSubscription(
             this.pollingUnitTime.valueChanges.subscribe((data: TimeUnit) => {
-                this.pollingEveryTime.setValidators(this.everyTimeMapperValidators[data]);
+                this.pollingEveryTime.setValidators([this.everyTimeMapperValidators[data], Validators.required]);
             }),
         );
     }
@@ -142,7 +148,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     private setBatchingEveryTimeValidator(): void {
         this.trackSubscription(
             this.batchingUnitTime.valueChanges.subscribe((data: TimeUnit) => {
-                this.batchingEveryTime.setValidators(this.everyTimeMapperValidators[data]);
+                this.batchingEveryTime.setValidators([this.everyTimeMapperValidators[data], Validators.required]);
             }),
         );
     }
@@ -155,7 +161,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
 
     private checkStatusSection(): void {
         if (this.datasetBasics.kind === DatasetKind.Root) {
-            this.throttlingForm.disable();
+            this.batchingForm.disable();
             this.pollingGroup.enable();
             this.cronExpression.disable();
             this.trackSubscription(
@@ -179,7 +185,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
             );
         } else {
             this.pollingGroup.disable();
-            this.throttlingForm.enable();
+            this.batchingForm.enable();
             this.trackSubscription(
                 this.datasetSchedulingService
                     .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.ExecuteTransform)
@@ -188,9 +194,9 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                         if (flowConfiguration?.batching) {
                             const batchingConfig = flowConfiguration.batching;
                             this.pollingForm.patchValue({ updatesState: !flowConfiguration.paused });
-                            this.throttlingForm.patchValue({
-                                ...batchingConfig.throttlingPeriod,
-                                minimalDataBatch: batchingConfig.minimalDataBatch,
+                            this.batchingForm.patchValue({
+                                ...batchingConfig.maxBatchingInterval,
+                                minRecordsToAwait: batchingConfig.minRecordsToAwait,
                             });
                         }
                     }),
@@ -218,15 +224,13 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                         datasetId: this.datasetBasics.id,
                         datasetFlowType: DatasetFlowType.ExecuteTransform,
                         paused: !(this.updateState.value as boolean),
-                        throttlingPeriod:
-                            this.batchingEveryTime.value && this.batchingUnitTime.value
-                                ? {
-                                      every: this.batchingEveryTime.value as number,
-                                      unit: this.batchingUnitTime.value as TimeUnit,
-                                  }
-                                : null,
-
-                        minimalDataBatch: this.batchingMinimalDataBatch.value as number,
+                        batching: {
+                            minRecordsToAwait: this.batchingMinRecordsToAwait.value as number,
+                            maxBatchingInterval: {
+                                every: this.batchingEveryTime.value as number,
+                                unit: this.batchingUnitTime.value as TimeUnit,
+                            },
+                        },
                     })
                     .subscribe(),
             );

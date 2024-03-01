@@ -4,6 +4,7 @@ import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock
 import {
     expectationsDescriptionEndOfMessage,
     expectationsDesriptionColumnOptions,
+    mockDatasetExecuteTransformFlowSummaryData,
     mockTableFlowSummaryDataFragments,
 } from "./flows-table.helpers.mock";
 
@@ -11,7 +12,12 @@ describe("DatasetFlowTableHelpers", () => {
     it("should check waiting block text with FlowStartConditionThrottling typename", () => {
         expect(
             DatasetFlowTableHelpers.waitingBlockText(
-                { __typename: "FlowStartConditionThrottling", intervalSec: 120 },
+                {
+                    __typename: "FlowStartConditionThrottling",
+                    intervalSec: 120,
+                    wakeUpAt: "2024-02-12T18:22:30+00:00",
+                    shiftedFrom: "2024-02-12T18:22:29+00:00",
+                },
                 DatasetKind.Root,
             ),
         ).toEqual("waiting for throttling condition");
@@ -98,20 +104,11 @@ describe("DatasetFlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename `, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[1], undefined, {
+            DatasetFlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[4], undefined, {
                 numInputs: 10,
                 engine: "spark",
             }),
         ).toEqual(`Transforming 10 input datasets using "Apache Spark" engine`);
-    });
-
-    it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename and scheduled status `, () => {
-        expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[2], undefined, {
-                numInputs: 10,
-                engine: "spark",
-            }),
-        ).toEqual("Awaiting for a free executor");
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and waiting status `, () => {
@@ -126,11 +123,11 @@ describe("DatasetFlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename and success outcome `, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[4], undefined, {
+            DatasetFlowTableHelpers.descriptionSubMessage(mockDatasetExecuteTransformFlowSummaryData, undefined, {
                 numInputs: 2,
                 engine: "spark",
             }),
-        ).toEqual("Transformed 10 new records in 2 new blocks");
+        ).toEqual(`Transformed 10 new records in 2 new blocks`);
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and success outcome `, () => {

@@ -11,7 +11,13 @@ import {
     mockSetDatasetFlowScheduleError,
     mockSetDatasetFlowScheduleSuccess,
 } from "src/app/api/mock/dataset-flow.mock";
-import { DatasetFlowType, ScheduleInput, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetFlowType,
+    FlowIncompatibleDatasetKind,
+    ScheduleInput,
+    SetFlowConfigSuccess,
+    TimeUnit,
+} from "src/app/api/kamu.graphql.interface";
 
 describe("DatasetSchedulingService", () => {
     let service: DatasetSchedulingService;
@@ -22,6 +28,13 @@ describe("DatasetSchedulingService", () => {
     const MOCK_PAUSED = false;
     const MOCK_SCHEDULE: ScheduleInput = {
         timeDelta: {
+            every: 1,
+            unit: TimeUnit.Minutes,
+        },
+    };
+    const MOCK_BATCHING_CONFIG = {
+        minRecordsToAwait: 100,
+        maxBatchingInterval: {
             every: 1,
             unit: TimeUnit.Minutes,
         },
@@ -42,7 +55,9 @@ describe("DatasetSchedulingService", () => {
     });
 
     it("should check set dataset flow schedule with success", () => {
-        const successMessage = mockSetDatasetFlowScheduleSuccess.datasets.byId?.flows.configs.setConfigSchedule.message;
+        const successMessage = (
+            mockSetDatasetFlowScheduleSuccess.datasets.byId?.flows.configs.setConfigSchedule as SetFlowConfigSuccess
+        ).message;
         spyOn(datasetFlowApi, "setDatasetFlowSchedule").and.returnValue(of(mockSetDatasetFlowScheduleSuccess));
         const toastrServiceSuccessSpy = spyOn(toastService, "success");
 
@@ -61,7 +76,10 @@ describe("DatasetSchedulingService", () => {
     });
 
     it("should check set dataset flow schedule with error", () => {
-        const errorMessage = mockSetDatasetFlowScheduleError.datasets.byId?.flows.configs.setConfigSchedule.message;
+        const errorMessage = (
+            mockSetDatasetFlowScheduleError.datasets.byId?.flows.configs
+                .setConfigSchedule as FlowIncompatibleDatasetKind
+        ).message;
         spyOn(datasetFlowApi, "setDatasetFlowSchedule").and.returnValue(of(mockSetDatasetFlowScheduleError));
         const toastrServiceErrorSpy = spyOn(toastService, "error");
 
@@ -89,8 +107,7 @@ describe("DatasetSchedulingService", () => {
                 datasetId: MOCK_DATASET_ID,
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
                 paused: false,
-                minimalDataBatch: null,
-                throttlingPeriod: null,
+                batching: MOCK_BATCHING_CONFIG,
             })
             .subscribe(() => {
                 expect(toastrServiceSuccessSpy).toHaveBeenCalledWith(successMessage);
@@ -109,8 +126,7 @@ describe("DatasetSchedulingService", () => {
                 datasetId: MOCK_DATASET_ID,
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
                 paused: false,
-                minimalDataBatch: null,
-                throttlingPeriod: null,
+                batching: MOCK_BATCHING_CONFIG,
             })
             .subscribe(() => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledWith(errorMessage);

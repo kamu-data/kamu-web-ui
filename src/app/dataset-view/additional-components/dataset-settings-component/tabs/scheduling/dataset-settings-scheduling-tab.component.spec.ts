@@ -32,8 +32,8 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     let datasetSchedulingService: DatasetSchedulingService;
 
     const MOCK_PARAM_EVERY = 10;
-    const MOCK_PARAM_UNIT = TimeUnit.Days;
-    const MOCK_PARAM_MIN_DATA_BATCH = 1000;
+    const MOCK_PARAM_UNIT = TimeUnit.Minutes;
+    const MOCK_MIN_RECORDS_TO_AWAIT = 40;
     const MOCK_CRON_EXPRESSION = "* * * * ?";
     const MOCK_INVALID_CRON_EXPRESSION = "* *";
     const MOCK_INPUT_TIME_DELTA: TimeDelta = {
@@ -152,17 +152,22 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         fixture.detectChanges();
-        setFieldValue(fixture, "throttling-group-every", MOCK_PARAM_EVERY.toString());
-        setFieldValue(fixture, "throttling-group-unit", MOCK_PARAM_UNIT);
-        setFieldValue(fixture, "throttling-group-min-data-batch", MOCK_PARAM_MIN_DATA_BATCH.toString());
+        setFieldValue(fixture, "batching-interval-every", MOCK_PARAM_EVERY.toString());
+        setFieldValue(fixture, "batching-interval-unit", MOCK_PARAM_UNIT);
+        setFieldValue(fixture, "batching-min-records", MOCK_MIN_RECORDS_TO_AWAIT.toString());
         fixture.detectChanges();
 
         emitClickOnElementByDataTestId(fixture, "save-config-options");
 
         expect(setDatasetFlowBatchingSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
-                throttlingPeriod: MOCK_INPUT_TIME_DELTA,
-                minimalDataBatch: MOCK_PARAM_MIN_DATA_BATCH,
+                batching: {
+                    minRecordsToAwait: MOCK_MIN_RECORDS_TO_AWAIT,
+                    maxBatchingInterval: {
+                        every: MOCK_PARAM_EVERY,
+                        unit: MOCK_PARAM_UNIT,
+                    },
+                },
             }),
         );
     });

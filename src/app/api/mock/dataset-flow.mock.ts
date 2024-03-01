@@ -73,12 +73,12 @@ export const mockBatchingGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuer
                         paused: true,
                         schedule: null,
                         batching: {
-                            throttlingPeriod: {
+                            maxBatchingInterval: {
                                 every: 4,
                                 unit: TimeUnit.Minutes,
                                 __typename: "TimeDelta",
                             },
-                            minimalDataBatch: null,
+                            minRecordsToAwait: 10,
                             __typename: "FlowConfigurationBatching",
                         },
                         __typename: "FlowConfiguration",
@@ -149,12 +149,12 @@ export const mockSetDatasetFlowBatchingSuccess: DatasetFlowBatchingMutation = {
                         message: "Success",
                         config: {
                             batching: {
-                                throttlingPeriod: {
+                                maxBatchingInterval: {
                                     every: 5,
                                     unit: TimeUnit.Minutes,
                                     __typename: "TimeDelta",
                                 },
-                                minimalDataBatch: 123,
+                                minRecordsToAwait: 123,
                                 __typename: "FlowConfigurationBatching",
                             },
                             __typename: "FlowConfiguration",

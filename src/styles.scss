@@ -1489,16 +1489,8 @@ input {
     color: #239a59;
 }
 
-.queued-status {
-    color: #d3c22a;
-}
-
 .running-status {
     color: #8bdaaf;
-}
-
-.scheduled-status {
-    color: #2a8dd3;
 }
 
 .failed-status {
@@ -1506,7 +1498,7 @@ input {
 }
 
 .waiting-status {
-    color: #c024d1;
+    color: #d3c22a;
 }
 
 .aborted-outcome {

@@ -6,17 +6,11 @@ export class TileBaseWidgetHelpers {
             case FlowStatus.Finished: {
                 return node.outcome ? flowOutcomeMapperClass[node.outcome] : "";
             }
-            case FlowStatus.Queued: {
-                return "queued-class";
-            }
             case FlowStatus.Running: {
                 return "running-class";
             }
             case FlowStatus.Waiting: {
                 return "waiting-class";
-            }
-            case FlowStatus.Scheduled: {
-                return "scheduled-class";
             }
             default:
                 return "";

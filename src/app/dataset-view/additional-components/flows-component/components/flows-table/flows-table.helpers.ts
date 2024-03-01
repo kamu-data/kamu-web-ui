@@ -34,14 +34,8 @@ export class DatasetFlowTableHelpers {
                         throw new Error("Unsupported flow outcome");
                 }
 
-            case FlowStatus.Queued:
-                return { icon: "radio_button_checked", class: "queued-status" };
-
             case FlowStatus.Running:
                 return { icon: "radio_button_checked", class: "running-status" };
-
-            case FlowStatus.Scheduled:
-                return { icon: "radio_button_checked", class: "scheduled-status" };
 
             case FlowStatus.Waiting:
                 return { icon: "radio_button_checked", class: "waiting-status" };
@@ -67,14 +61,8 @@ export class DatasetFlowTableHelpers {
                         throw new Error("Unsupported flow outcome");
                 }
 
-            case FlowStatus.Queued:
-                return "queued";
-
             case FlowStatus.Running:
                 return "running";
-
-            case FlowStatus.Scheduled:
-                return "scheduled";
 
             case FlowStatus.Waiting:
                 return "waiting";
@@ -134,15 +122,11 @@ export class DatasetFlowTableHelpers {
 
                     case FlowOutcome.Failed:
                         return `An error occurred, see logs for more details`;
+                    default:
+                        throw new Error("Unsupported flow outcome");
                 }
 
-                break;
-
-            case FlowStatus.Scheduled:
-                return "Awaiting for a free executor";
-
             case FlowStatus.Waiting:
-            case FlowStatus.Queued:
             case FlowStatus.Running:
                 switch (element.description.__typename) {
                     case "FlowDescriptionDatasetPollingIngest":

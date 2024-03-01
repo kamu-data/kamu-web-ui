@@ -1,16 +1,14 @@
-import moment from "moment";
 import {
     FlowEventInitiated,
-    FlowEventQueued,
-    FlowEventStartConditionDefined,
+    FlowEventStartConditionUpdated,
     FlowEventTaskChanged,
     FlowEventTriggerAdded,
     FlowHistoryDataFragment,
     FlowOutcome,
+    FlowStartConditionKind,
     FlowSummaryDataFragment,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 
@@ -38,8 +36,6 @@ export class DatasetFlowDetailsHelpers {
             }
             case "FlowEventAborted":
                 return "Event was aborted";
-            case "FlowEventQueued":
-                return `Event is in queue`;
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
                 return `${DataHelpers.flowTypeDescription(
@@ -61,13 +57,17 @@ export class DatasetFlowDetailsHelpers {
                         throw new Error("Unknown trigger typename");
                 }
             }
-            case "FlowEventStartConditionDefined": {
-                const startConditionEvent = flowEvent as FlowEventStartConditionDefined;
-                switch (startConditionEvent.startCondition.__typename) {
-                    case "FlowStartConditionThrottling":
+            case "FlowEventStartConditionUpdated": {
+                const startConditionEvent = flowEvent as FlowEventStartConditionUpdated;
+                switch (startConditionEvent.startConditionKind) {
+                    case FlowStartConditionKind.Throttling:
                         return `Waiting for throttling condition`;
-                    case "FlowStartConditionBatching":
+                    case FlowStartConditionKind.Batching:
                         return `Waiting for batching condition`;
+                    case FlowStartConditionKind.Executor:
+                        return `Waiting for executor`;
+                    case FlowStartConditionKind.Schedule:
+                        return `Waiting for schedule`;
                     default:
                         return "Unknown start condition typename";
                 }
@@ -85,14 +85,14 @@ export class DatasetFlowDetailsHelpers {
         switch (eventTypename) {
             case "FlowEventInitiated":
                 return { icon: "flag_circle", class: "completed-status" };
-            case "FlowEventQueued":
-                return { icon: "radio_button_checked", class: "queued-status" };
+            // case "FlowEventQueued":
+            //     return { icon: "radio_button_checked", class: "queued-status" };
 
             case "FlowEventAborted":
                 return { icon: "cancel", class: "aborted-outcome" };
             case "FlowEventTriggerAdded":
                 return { icon: "add_circle", class: "text-muted" };
-            case "FlowEventStartConditionDefined":
+            case "FlowEventStartConditionUpdated":
                 return { icon: "downloading", class: "text-muted" };
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
@@ -151,10 +151,6 @@ export class DatasetFlowDetailsHelpers {
             }
             case "FlowEventAborted":
                 return "Event was aborted";
-            case "FlowEventQueued": {
-                const event = flowEvent as FlowEventQueued;
-                return `Activation time at ${moment(event.activateAt).format(AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
-            }
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
@@ -222,13 +218,18 @@ export class DatasetFlowDetailsHelpers {
                         throw new Error("Unknown trigger typename");
                 }
             }
-            case "FlowEventStartConditionDefined": {
-                const startConditionEvent = flowEvent as FlowEventStartConditionDefined;
-                switch (startConditionEvent.startCondition.__typename) {
-                    case "FlowStartConditionThrottling":
-                        return `Throttling interval: ${startConditionEvent.startCondition.intervalSec} sec`;
-                    case "FlowStartConditionBatching":
-                        return `Threhold new record(s): ${startConditionEvent.startCondition.thresholdNewRecords} record(s)`;
+            case "FlowEventStartConditionUpdated": {
+                const startConditionEvent = flowEvent as FlowEventStartConditionUpdated;
+                switch (startConditionEvent.startConditionKind) {
+                    case FlowStartConditionKind.Throttling:
+                        return `Throttling interval: TODO sec`;
+                    case FlowStartConditionKind.Batching:
+                        return `Threhold new record(s): TODO record(s)`;
+                    // TODO:
+                    case FlowStartConditionKind.Executor:
+                        return "executor";
+                    case FlowStartConditionKind.Schedule:
+                        return "schedule";
                     default:
                         return "Unknown start condition typename";
                 }

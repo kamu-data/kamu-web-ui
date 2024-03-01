@@ -1,3 +1,4 @@
+import moment from "moment";
 import {
     FlowEventInitiated,
     FlowEventStartConditionUpdated,
@@ -5,10 +6,13 @@ import {
     FlowEventTriggerAdded,
     FlowHistoryDataFragment,
     FlowOutcome,
+    FlowStartConditionBatching,
     FlowStartConditionKind,
+    FlowStartConditionThrottling,
     FlowSummaryDataFragment,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
+import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 
@@ -221,10 +225,16 @@ export class DatasetFlowDetailsHelpers {
             case "FlowEventStartConditionUpdated": {
                 const startConditionEvent = flowEvent as FlowEventStartConditionUpdated;
                 switch (startConditionEvent.startConditionKind) {
-                    case FlowStartConditionKind.Throttling:
-                        return `Throttling interval: TODO sec`;
-                    case FlowStartConditionKind.Batching:
-                        return `Threhold new record(s): TODO record(s)`;
+                    case FlowStartConditionKind.Throttling: {
+                        const startCondition = flowDetails.startCondition as FlowStartConditionThrottling;
+                        return `Throttling interval: ${startCondition.intervalSec} sec`;
+                    }
+                    case FlowStartConditionKind.Batching: {
+                        const startCondition = flowDetails.startCondition as FlowStartConditionBatching;
+                        return `Batching deadline ${moment(startCondition.batchingDeadline).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    }
                     // TODO:
                     case FlowStartConditionKind.Executor:
                         return "executor";

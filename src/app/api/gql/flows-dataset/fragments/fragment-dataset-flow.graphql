@@ -43,7 +43,7 @@ fragment FlowSummaryData on Flow {
   }
   outcome
   timing {
-    activateAt
+    awaitingExecutorSince
     runningSince
     finishedAt
   }
@@ -63,6 +63,14 @@ fragment FlowSummaryData on Flow {
       batchingDeadline
       accumulatedRecordsCount
       watermarkModified
+    }
+
+    ... on FlowStartConditionSchedule {
+      wakeUpAt
+    }
+
+    ... on FlowStartConditionExecutor {
+      taskId
     }
   }
 }

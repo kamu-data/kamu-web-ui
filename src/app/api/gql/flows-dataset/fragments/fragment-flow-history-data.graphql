@@ -27,24 +27,10 @@ fragment FlowHistoryData on FlowEvent {
       }
     }
   }
-  ... on FlowEventQueued {
-    __typename
+  ... on FlowEventStartConditionUpdated {
     eventId
     eventTime
-    activateAt
-  }
-  ... on FlowEventStartConditionDefined {
-    eventId
-    eventTime
-    startCondition {
-      __typename
-      ... on FlowStartConditionThrottling {
-        intervalSec
-      }
-      ... on FlowStartConditionBatching {
-        thresholdNewRecords
-      }
-    }
+    startConditionKind
   }
   ... on FlowEventTaskChanged {
     __typename

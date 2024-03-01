@@ -838,18 +838,11 @@ export type FlowEventInitiated = FlowEvent & {
     trigger: FlowTrigger;
 };
 
-export type FlowEventQueued = FlowEvent & {
-    __typename?: "FlowEventQueued";
-    activateAt: Scalars["DateTime"];
-    eventId: Scalars["EventID"];
-    eventTime: Scalars["DateTime"];
-};
-
 export type FlowEventStartConditionUpdated = FlowEvent & {
     __typename?: "FlowEventStartConditionUpdated";
     eventId: Scalars["EventID"];
     eventTime: Scalars["DateTime"];
-    startConditionKind?: Maybe<FlowStartConditionKind>;
+    startConditionKind: FlowStartConditionKind;
 };
 
 export type FlowEventTaskChanged = FlowEvent & {
@@ -889,12 +882,6 @@ export type FlowNotFound = CancelScheduledTasksResult &
         message: Scalars["String"];
     };
 
-export type FlowNotScheduled = CancelScheduledTasksResult & {
-    __typename?: "FlowNotScheduled";
-    flowId: Scalars["FlowID"];
-    message: Scalars["String"];
-};
-
 export enum FlowOutcome {
     Aborted = "ABORTED",
     Cancelled = "CANCELLED",
@@ -902,7 +889,11 @@ export enum FlowOutcome {
     Success = "SUCCESS",
 }
 
-export type FlowStartCondition = FlowStartConditionBatching | FlowStartConditionThrottling;
+export type FlowStartCondition =
+    | FlowStartConditionBatching
+    | FlowStartConditionExecutor
+    | FlowStartConditionSchedule
+    | FlowStartConditionThrottling;
 
 export type FlowStartConditionBatching = {
     __typename?: "FlowStartConditionBatching";
@@ -912,28 +903,40 @@ export type FlowStartConditionBatching = {
     watermarkModified: Scalars["Boolean"];
 };
 
+export type FlowStartConditionExecutor = {
+    __typename?: "FlowStartConditionExecutor";
+    taskId: Scalars["TaskID"];
+};
+
 export enum FlowStartConditionKind {
     Batching = "BATCHING",
+    Executor = "EXECUTOR",
+    Schedule = "SCHEDULE",
     Throttling = "THROTTLING",
 }
+
+export type FlowStartConditionSchedule = {
+    __typename?: "FlowStartConditionSchedule";
+    wakeUpAt: Scalars["DateTime"];
+};
 
 export type FlowStartConditionThrottling = {
     __typename?: "FlowStartConditionThrottling";
     intervalSec: Scalars["Int"];
+    shiftedFrom: Scalars["DateTime"];
+    wakeUpAt: Scalars["DateTime"];
 };
 
 export enum FlowStatus {
     Finished = "FINISHED",
-    Queued = "QUEUED",
     Running = "RUNNING",
-    Scheduled = "SCHEDULED",
     Waiting = "WAITING",
 }
 
 export type FlowTimingRecords = {
     __typename?: "FlowTimingRecords";
-    /** Planned activation time (at least, Queued state) */
-    activateAt?: Maybe<Scalars["DateTime"]>;
+    /** Recorded time of last task scheduling */
+    awaitingExecutorSince?: Maybe<Scalars["DateTime"]>;
     /**
      * Recorded time of finish (successful or failed after retry) or abortion
      * (Finished state seen at least once)
@@ -2081,7 +2084,7 @@ export type FlowSummaryDataFragment = {
     initiator?: ({ __typename?: "Account" } & AccountFragment) | null;
     timing: {
         __typename?: "FlowTimingRecords";
-        activateAt?: string | null;
+        awaitingExecutorSince?: string | null;
         runningSince?: string | null;
         finishedAt?: string | null;
     };
@@ -2097,6 +2100,8 @@ export type FlowSummaryDataFragment = {
                   maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
               };
           }
+        | { __typename: "FlowStartConditionExecutor"; taskId: string }
+        | { __typename: "FlowStartConditionSchedule"; wakeUpAt: string }
         | { __typename: "FlowStartConditionThrottling"; intervalSec: number }
         | null;
 };
@@ -2919,7 +2924,7 @@ export const FlowSummaryDataFragmentDoc = gql`
         }
         outcome
         timing {
-            activateAt
+            awaitingExecutorSince
             runningSince
             finishedAt
         }
@@ -2938,6 +2943,12 @@ export const FlowSummaryDataFragmentDoc = gql`
                 batchingDeadline
                 accumulatedRecordsCount
                 watermarkModified
+            }
+            ... on FlowStartConditionSchedule {
+                wakeUpAt
+            }
+            ... on FlowStartConditionExecutor {
+                taskId
             }
         }
     }

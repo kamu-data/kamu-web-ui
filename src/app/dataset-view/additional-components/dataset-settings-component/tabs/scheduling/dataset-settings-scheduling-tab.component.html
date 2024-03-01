@@ -103,7 +103,7 @@
                     <select
                         formControlName="unit"
                         class="form-select form-control-width"
-                        data-test-id="throttling-group-unit"
+                        data-test-id="batching-interval-unit"
                     >
                         <option [value]="timeUnit.Minutes">Minutes</option>
                         <option [value]="timeUnit.Hours">Hours</option>
@@ -113,7 +113,7 @@
                         min="1"
                         formControlName="every"
                         class="form-control form-control-width"
-                        data-test-id="throttling-group-every"
+                        data-test-id="batching-interval-every"
                     />
                     <ng-container
                         *ngIf="
@@ -133,7 +133,7 @@
                         min="1"
                         formControlName="minRecordsToAwait"
                         class="form-control form-control-width"
-                        data-test-id="throttling-group-min-data-batch"
+                        data-test-id="batching-min-records"
                     />
                     <ng-container
                         *ngIf="

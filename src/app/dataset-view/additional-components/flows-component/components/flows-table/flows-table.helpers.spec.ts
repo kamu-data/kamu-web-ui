@@ -1,4 +1,4 @@
-import { DatasetKind, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetKind, FlowSummaryDataFragment, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import {
@@ -20,7 +20,19 @@ describe("DatasetFlowTableHelpers", () => {
     it("should check waiting block text with FlowStartConditionBatching typename", () => {
         expect(
             DatasetFlowTableHelpers.waitingBlockText(
-                { __typename: "FlowStartConditionBatching", thresholdNewRecords: 10 },
+                {
+                    __typename: "FlowStartConditionBatching",
+                    activeBatchingRule: {
+                        minRecordsToAwait: 500,
+                        maxBatchingInterval: {
+                            every: 5,
+                            unit: TimeUnit.Hours,
+                        },
+                    },
+                    batchingDeadline: "2022-08-05T21:17:30.613911358+00:00",
+                    accumulatedRecordsCount: 100,
+                    watermarkModified: true,
+                },
                 DatasetKind.Root,
             ),
         ).toEqual("waiting for batching condition");

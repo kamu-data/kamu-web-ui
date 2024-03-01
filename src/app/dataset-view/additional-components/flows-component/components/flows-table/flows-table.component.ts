@@ -101,10 +101,10 @@ export class FlowsTableComponent implements OnInit {
     }
 
     public waitingForBlockVisible(node: FlowSummaryDataFragment): boolean {
-        return [FlowStatus.Queued, FlowStatus.Waiting].includes(node.status);
+        return [FlowStatus.Waiting].includes(node.status);
     }
 
     public waitingBlockText(startCondition: MaybeNull<FlowStartCondition>): string {
-        return DatasetFlowTableHelpers.waitingBlockText(startCondition, this.datasetBasics.kind);
+        return DatasetFlowTableHelpers.waitingBlockText(startCondition);
     }
 }

@@ -782,16 +782,10 @@ type FlowEventInitiated implements FlowEvent {
   trigger: FlowTrigger!
 }
 
-type FlowEventQueued implements FlowEvent {
-  eventId: EventID!
-  eventTime: DateTime!
-  activateAt: DateTime!
-}
-
 type FlowEventStartConditionUpdated implements FlowEvent {
   eventId: EventID!
   eventTime: DateTime!
-  startConditionKind: FlowStartConditionKind
+  startConditionKind: FlowStartConditionKind!
 }
 
 type FlowEventTaskChanged implements FlowEvent {
@@ -826,11 +820,6 @@ type FlowNotFound implements GetFlowResult & CancelScheduledTasksResult {
   message: String!
 }
 
-type FlowNotScheduled implements CancelScheduledTasksResult {
-  flowId: FlowID!
-  message: String!
-}
-
 enum FlowOutcome {
   SUCCESS
   FAILED
@@ -838,7 +827,11 @@ enum FlowOutcome {
   ABORTED
 }
 
-union FlowStartCondition = FlowStartConditionThrottling | FlowStartConditionBatching
+union FlowStartCondition =
+    FlowStartConditionSchedule
+  | FlowStartConditionThrottling
+  | FlowStartConditionBatching
+  | FlowStartConditionExecutor
 
 type FlowStartConditionBatching {
   activeBatchingRule: FlowConfigurationBatching!
@@ -847,28 +840,38 @@ type FlowStartConditionBatching {
   watermarkModified: Boolean!
 }
 
+type FlowStartConditionExecutor {
+  taskId: TaskID!
+}
+
 enum FlowStartConditionKind {
+  SCHEDULE
   THROTTLING
   BATCHING
+  EXECUTOR
+}
+
+type FlowStartConditionSchedule {
+  wakeUpAt: DateTime!
 }
 
 type FlowStartConditionThrottling {
   intervalSec: Int!
+  wakeUpAt: DateTime!
+  shiftedFrom: DateTime!
 }
 
 enum FlowStatus {
   WAITING
-  QUEUED
-  SCHEDULED
   RUNNING
   FINISHED
 }
 
 type FlowTimingRecords {
   """
-  Planned activation time (at least, Queued state)
+  Recorded time of last task scheduling
   """
-  activateAt: DateTime
+  awaitingExecutorSince: DateTime
   """
   Recorded start of running (Running state seen at least once)
   """

@@ -1,7 +1,7 @@
-import { MaybeNull } from "./../common/app.types";
 import { MutationResult } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import {
+    BatchingConditionInput,
     DatasetAllFlowsPausedGQL,
     DatasetAllFlowsPausedQuery,
     DatasetFlowBatchingGQL,
@@ -21,7 +21,6 @@ import {
     GetDatasetListFlowsGQL,
     GetDatasetListFlowsQuery,
     ScheduleInput,
-    TimeDeltaInput,
 } from "./kamu.graphql.interface";
 import { Observable, first, map } from "rxjs";
 import { ApolloQueryResult } from "@apollo/client";
@@ -106,16 +105,14 @@ export class DatasetFlowApi {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;
-        throttlingPeriod: MaybeNull<TimeDeltaInput>;
-        minimalDataBatch: MaybeNull<number>;
+        batching: BatchingConditionInput;
     }): Observable<DatasetFlowBatchingMutation> {
         return this.datasetFlowBatchingGQL
             .mutate({
                 datasetId: params.datasetId,
                 datasetFlowType: params.datasetFlowType,
                 paused: params.paused,
-                throttlingPeriod: params.throttlingPeriod,
-                minimalDataBatch: params.minimalDataBatch,
+                batching: params.batching,
             })
             .pipe(
                 first(),

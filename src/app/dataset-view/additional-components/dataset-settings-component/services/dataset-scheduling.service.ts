@@ -1,15 +1,14 @@
-import { MaybeNull } from "./../../../../common/app.types";
 import { Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 import { Observable, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
+    BatchingConditionInput,
     DatasetFlowBatchingMutation,
     DatasetFlowScheduleMutation,
     DatasetFlowType,
     GetDatasetFlowConfigsQuery,
     ScheduleInput,
-    TimeDeltaInput,
 } from "src/app/api/kamu.graphql.interface";
 
 @Injectable({
@@ -34,9 +33,11 @@ export class DatasetSchedulingService {
         return this.datasetFlowApi.setDatasetFlowSchedule(params).pipe(
             map((data: DatasetFlowScheduleMutation) => {
                 const setConfigSchedule = data.datasets.byId?.flows.configs.setConfigSchedule;
-                setConfigSchedule?.__typename === "SetFlowConfigSuccess"
-                    ? this.toastrService.success(setConfigSchedule.message)
-                    : this.toastrService.error(setConfigSchedule?.message);
+                if (setConfigSchedule?.__typename === "SetFlowConfigSuccess") {
+                    this.toastrService.success(setConfigSchedule.message);
+                } else if (setConfigSchedule?.__typename === "FlowIncompatibleDatasetKind") {
+                    this.toastrService.error(setConfigSchedule.message);
+                }
             }),
         );
     }
@@ -45,8 +46,7 @@ export class DatasetSchedulingService {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;
-        throttlingPeriod: MaybeNull<TimeDeltaInput>;
-        minimalDataBatch: MaybeNull<number>;
+        batching: BatchingConditionInput;
     }): Observable<void> {
         return this.datasetFlowApi.setDatasetFlowBatching(params).pipe(
             map((data: DatasetFlowBatchingMutation) => {

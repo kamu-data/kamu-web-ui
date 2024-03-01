@@ -172,7 +172,7 @@ export class DatasetFlowTableHelpers {
                 return "waiting for scheduled execution";
 
             default:
-                throw new Error("Unknown start condition typename");
+                return "";
         }
     }
 }

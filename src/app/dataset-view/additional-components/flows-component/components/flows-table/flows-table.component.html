@@ -60,25 +60,29 @@
                 <div class="d-flex align-items-center">
                     <mat-icon
                         class="icon-status text-muted"
-                        [title]="'Activation time: ' + tooltipTimeFormat(element.timing.activateAt)"
+                        [title]="'Start running time: ' + tooltipTimeFormat(element.timing.runningSince)"
                         >calendar_today</mat-icon
                     >
-                    <span class="ms-1 pt-1 text-small">
+                    <span class="ml-2px pt-1 text-small">
                         <app-display-time
+                            *ngIf="element.status !== FlowStatus.Waiting"
                             [data]="element.timing.activateAt"
                             class="text-small no-wrap"
-                        ></app-display-time
-                    ></span>
+                        ></app-display-time>
+                        <ng-container *ngIf="element.status === FlowStatus.Waiting">
+                            <span class="text-small"> {{ durationBlockText(element) }}</span>
+                        </ng-container>
+                    </span>
                 </div>
                 <div class="d-flex align-items-center" *ngIf="durationBlockVisible(element)">
                     <svg-icon name="timer" class="ps-1 pe-2 text-muted" [title]="'Duration'"></svg-icon>
-                    <span class="text-small ml-2px pt-1">
+                    <span class="text-small pt-1">
                         {{ durationTask(element.timing.runningSince, element.timing.finishedAt) }}
                     </span>
                 </div>
                 <div class="d-flex align-items-center" *ngIf="waitingForBlockVisible(element)">
                     <svg-icon name="hour-glass" class="ps-1 pe-2 text-muted" [title]="'Waiting message'"></svg-icon>
-                    <span class="text-small ml-2px pt-1"> {{ waitingBlockText(element.startCondition) }} </span>
+                    <span class="text-small pt-1"> {{ waitingBlockText(element.startCondition) }} </span>
                 </div>
             </div>
         </td>

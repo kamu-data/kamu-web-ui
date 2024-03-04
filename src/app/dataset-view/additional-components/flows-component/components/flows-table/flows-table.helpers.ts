@@ -94,7 +94,7 @@ export class DatasetFlowTableHelpers {
                                       } in ${element.description.ingestResult.numBlocks} new ${
                                           element.description.ingestResult.numBlocks == 1 ? "block" : "blocks"
                                       }`
-                                    : "Expected to have injest result";
+                                    : "Dataset is up-to-date";
 
                             case "FlowDescriptionDatasetExecuteTransform":
                                 return element.description.transformResult
@@ -103,7 +103,7 @@ export class DatasetFlowTableHelpers {
                                       } in ${element.description.transformResult.numBlocks} new ${
                                           element.description.transformResult.numBlocks == 1 ? "block" : "blocks"
                                       }`
-                                    : "Expected to have transform result";
+                                    : "Dataset is up-to-date";
                             // TODO
                             //  - Compacting
                             //  - GC
@@ -166,7 +166,7 @@ export class DatasetFlowTableHelpers {
                 return "waiting for batching condition";
 
             case "FlowStartConditionExecutor": {
-                return `waiting for another task`;
+                return "waiting for a free executor";
             }
             case "FlowStartConditionSchedule":
                 return "waiting for scheduled execution";

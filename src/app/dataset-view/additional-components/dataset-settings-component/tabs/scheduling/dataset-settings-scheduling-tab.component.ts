@@ -214,6 +214,10 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                         datasetFlowType: DatasetFlowType.Ingest,
                         paused: !(this.updateState.value as boolean),
                         schedule: this.scheduleOptions,
+                        datasetInfo: {
+                            accountName: this.datasetBasics.owner.accountName,
+                            datasetName: this.datasetBasics.name,
+                        },
                     })
                     .subscribe(),
             );
@@ -230,6 +234,10 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                                 every: this.batchingEveryTime.value as number,
                                 unit: this.batchingUnitTime.value as TimeUnit,
                             },
+                        },
+                        datasetInfo: {
+                            accountName: this.datasetBasics.owner.accountName,
+                            datasetName: this.datasetBasics.name,
                         },
                     })
                     .subscribe(),

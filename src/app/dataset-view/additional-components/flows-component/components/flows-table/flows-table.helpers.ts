@@ -4,6 +4,8 @@ import {
     FetchStep,
     FlowOutcome,
     FlowStartCondition,
+    FlowStartConditionBatching,
+    FlowStartConditionSchedule,
     FlowStatus,
     FlowSummaryDataFragment,
 } from "src/app/api/kamu.graphql.interface";
@@ -155,6 +157,38 @@ export class DatasetFlowTableHelpers {
         }
 
         return "";
+    }
+
+    public static durationBlockText(node: FlowSummaryDataFragment): string {
+        const descriptionTypename = node.description.__typename;
+        switch (descriptionTypename) {
+            case "FlowDescriptionDatasetPollingIngest":
+            case "FlowDescriptionDatasetPushIngest": {
+                const startCondition = node.startCondition as FlowStartConditionSchedule;
+                return `wake up time: ${moment(startCondition.wakeUpAt).format(AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
+            }
+            case "FlowDescriptionDatasetExecuteTransform": {
+                const startCondition = node.startCondition as FlowStartConditionBatching;
+                switch (node.startCondition?.__typename) {
+                    case "FlowStartConditionExecutor":
+                        return `await since: ${moment(node.timing.awaitingExecutorSince ?? "").format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    case "FlowStartConditionSchedule": {
+                        return `deadline time: ${moment(startCondition.batchingDeadline).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    }
+                    default:
+                        throw new Error("Unknown start condition type");
+                }
+            }
+            // TODO
+            //  - Compacting
+            //  - GC
+            default:
+                return "Unknown typename";
+        }
     }
 
     public static waitingBlockText(startCondition: MaybeNull<FlowStartCondition>): string {

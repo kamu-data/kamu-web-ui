@@ -128,8 +128,10 @@ export class FlowsComponent extends BaseComponent implements OnInit {
                 })
                 .subscribe((success: boolean) => {
                     if (success) {
-                        this.refreshFlow();
-                        this.cdr.detectChanges();
+                        setTimeout(() => {
+                            this.refreshFlow();
+                            this.cdr.detectChanges();
+                        }, 800);
                     }
                 }),
         );

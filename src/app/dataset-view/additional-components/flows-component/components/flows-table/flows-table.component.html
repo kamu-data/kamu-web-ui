@@ -69,7 +69,7 @@
                             [data]="element.timing.activateAt"
                             class="text-small no-wrap"
                         ></app-display-time>
-                        <ng-container *ngIf="element.status === FlowStatus.Waiting">
+                        <ng-container *ngIf="element.status === FlowStatus.Waiting && element.startCondition">
                             <span class="text-small"> {{ durationBlockText(element) }}</span>
                         </ng-container>
                     </span>

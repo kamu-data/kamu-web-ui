@@ -18,8 +18,6 @@ import {
     FetchStep,
     FlowStartCondition,
     DatasetBasicsFragment,
-    FlowStartConditionSchedule,
-    FlowStartConditionBatching,
 } from "src/app/api/kamu.graphql.interface";
 import moment from "moment";
 import AppValues from "src/app/common/app.values";

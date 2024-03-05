@@ -46,6 +46,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
     public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
+    public readonly TIMEOUT_REFRESH_FLOW = 800;
 
     constructor(
         private flowsService: DatasetFlowsService,
@@ -131,7 +132,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
                         setTimeout(() => {
                             this.refreshFlow();
                             this.cdr.detectChanges();
-                        }, 800);
+                        }, this.TIMEOUT_REFRESH_FLOW);
                     }
                 }),
         );

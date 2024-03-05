@@ -167,7 +167,7 @@ describe("FlowsComponent", () => {
         const refreshFlowSpy = spyOn(component, "refreshFlow");
         spyOn(datasetFlowsService, "datasetTriggerFlow").and.returnValue(of(true));
         component.updateNow();
-        tick(1000);
+        tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
         flush();
     }));

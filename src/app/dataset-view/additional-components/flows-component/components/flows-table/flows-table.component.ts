@@ -93,15 +93,15 @@ export class FlowsTableComponent implements OnInit {
     }
 
     public durationBlockVisible(node: FlowSummaryDataFragment): boolean {
-        return node.status === FlowStatus.Finished && node.outcome !== FlowOutcome.Failed;
+        return node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Success;
     }
 
     public durationBlockText(node: FlowSummaryDataFragment): string {
         return DatasetFlowTableHelpers.durationBlockText(node);
     }
 
-    public tooltipTimeFormat(time: string): string {
-        return moment(time).format(AppValues.CRON_EXPRESSION_DATE_FORMAT);
+    public tooltipText(node: FlowSummaryDataFragment): string {
+        return DatasetFlowTableHelpers.tooltipText(node);
     }
 
     public waitingForBlockVisible(node: FlowSummaryDataFragment): boolean {
@@ -110,5 +110,9 @@ export class FlowsTableComponent implements OnInit {
 
     public waitingBlockText(startCondition: MaybeNull<FlowStartCondition>): string {
         return DatasetFlowTableHelpers.waitingBlockText(startCondition);
+    }
+
+    public durationValue(time: string): string {
+        return moment(time).fromNow();
     }
 }

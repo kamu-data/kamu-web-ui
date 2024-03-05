@@ -160,19 +160,13 @@ export class DatasetFlowTableHelpers {
     public static durationBlockText(node: FlowSummaryDataFragment): string {
         switch (node.startCondition?.__typename) {
             case "FlowStartConditionExecutor":
-                return `await since: ${moment(node.timing.awaitingExecutorSince ?? "").format(
-                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                )}`;
+                return `await since: ${moment(node.timing.awaitingExecutorSince ?? "").fromNow()}`;
             case "FlowStartConditionThrottling":
             case "FlowStartConditionSchedule": {
-                return `wake up time: ${moment(node.startCondition.wakeUpAt).format(
-                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                )}`;
+                return `wake up time: ${moment(node.startCondition.wakeUpAt).fromNow()}`;
             }
             case "FlowStartConditionBatching":
-                return `deadline time: ${moment(node.startCondition.batchingDeadline).format(
-                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                )}`;
+                return `deadline time: ${moment(node.startCondition.batchingDeadline).fromNow()}`;
             default:
                 throw new Error("Unknown flow start condition");
         }
@@ -194,6 +188,60 @@ export class DatasetFlowTableHelpers {
 
             default:
                 return "";
+        }
+    }
+
+    public static tooltipText(node: FlowSummaryDataFragment): string {
+        switch (node.status) {
+            case FlowStatus.Waiting:
+                switch (node.startCondition?.__typename) {
+                    case "FlowStartConditionExecutor":
+                        return `await since: ${moment(node.timing.awaitingExecutorSince ?? "").format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    case "FlowStartConditionThrottling":
+                    case "FlowStartConditionSchedule": {
+                        return `wake up time: ${moment(node.startCondition.wakeUpAt).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    }
+                    case "FlowStartConditionBatching":
+                        return `deadline time: ${moment(node.startCondition.batchingDeadline).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    default:
+                        throw new Error("Unknown flow start condition");
+                }
+            case FlowStatus.Finished:
+                switch (node.outcome) {
+                    case FlowOutcome.Success:
+                        return `Completed time: ${moment(node.timing.finishedAt).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    case FlowOutcome.Aborted:
+                        return `Aborted time: ${moment(node.timing.finishedAt).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    case FlowOutcome.Cancelled:
+                        return `Cancelled time: ${moment(node.timing.finishedAt).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    case FlowOutcome.Failed:
+                        return `Start running time: ${moment(node.timing.runningSince).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+
+                    default:
+                        throw new Error("Unknown flow outcome");
+                }
+
+            case FlowStatus.Running:
+                return `Start running time: ${moment(node.timing.runningSince).format(
+                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                )}`;
+
+            default:
+                throw new Error("Unknown flow status");
         }
     }
 }

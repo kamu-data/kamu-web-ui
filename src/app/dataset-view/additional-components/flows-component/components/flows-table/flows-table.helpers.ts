@@ -4,8 +4,6 @@ import {
     FetchStep,
     FlowOutcome,
     FlowStartCondition,
-    FlowStartConditionBatching,
-    FlowStartConditionSchedule,
     FlowStatus,
     FlowSummaryDataFragment,
 } from "src/app/api/kamu.graphql.interface";
@@ -160,34 +158,27 @@ export class DatasetFlowTableHelpers {
     }
 
     public static durationBlockText(node: FlowSummaryDataFragment): string {
-        const descriptionTypename = node.description.__typename;
-        switch (descriptionTypename) {
-            case "FlowDescriptionDatasetPollingIngest":
-            case "FlowDescriptionDatasetPushIngest": {
-                const startCondition = node.startCondition as FlowStartConditionSchedule;
-                return `wake up time: ${moment(startCondition.wakeUpAt).format(AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
+        switch (node.startCondition?.__typename) {
+            case "FlowStartConditionExecutor":
+                return `await since: ${moment(node.timing.awaitingExecutorSince ?? "").format(
+                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                )}`;
+            case "FlowStartConditionThrottling": {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                return `wake up time: ${moment(node.startCondition.wakeUpAt).format(
+                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                )}`;
             }
-            case "FlowDescriptionDatasetExecuteTransform": {
-                const startCondition = node.startCondition as FlowStartConditionBatching;
-                switch (node.startCondition?.__typename) {
-                    case "FlowStartConditionExecutor":
-                        return `await since: ${moment(node.timing.awaitingExecutorSince ?? "").format(
-                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                        )}`;
-                    case "FlowStartConditionSchedule": {
-                        return `deadline time: ${moment(startCondition.batchingDeadline).format(
-                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                        )}`;
-                    }
-                    default:
-                        throw new Error("Unknown start condition type");
-                }
-            }
-            // TODO
-            //  - Compacting
-            //  - GC
+            case "FlowStartConditionSchedule":
+                return `wake up time: ${moment(node.startCondition.wakeUpAt).format(
+                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                )}`;
+            case "FlowStartConditionBatching":
+                return `deadline time: ${moment(node.startCondition.batchingDeadline).format(
+                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                )}`;
             default:
-                return "Unknown typename";
+                throw new Error("Unknown flow start condition");
         }
     }
 

@@ -2102,7 +2102,7 @@ export type FlowSummaryDataFragment = {
           }
         | { __typename: "FlowStartConditionExecutor"; taskId: string }
         | { __typename: "FlowStartConditionSchedule"; wakeUpAt: string }
-        | { __typename: "FlowStartConditionThrottling"; intervalSec: number }
+        | { __typename: "FlowStartConditionThrottling"; intervalSec: number; wakeUpAt: string; shiftedFrom: string }
         | null;
 };
 
@@ -2932,6 +2932,8 @@ export const FlowSummaryDataFragmentDoc = gql`
             __typename
             ... on FlowStartConditionThrottling {
                 intervalSec
+                wakeUpAt
+                shiftedFrom
             }
             ... on FlowStartConditionBatching {
                 activeBatchingRule {

@@ -162,7 +162,7 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Waiting:
                 switch (node.startCondition?.__typename) {
                     case "FlowStartConditionExecutor":
-                        return `await since: ${moment(node.timing.awaitingExecutorSince ?? "").fromNow()}`;
+                        return `awaiting since ${moment(node.timing.awaitingExecutorSince ?? "").fromNow()}`;
                     case "FlowStartConditionThrottling":
                     case "FlowStartConditionSchedule": {
                         return `wake up time: ${moment(node.startCondition.wakeUpAt).fromNow()}`;
@@ -173,18 +173,9 @@ export class DatasetFlowTableHelpers {
                         throw new Error("Unknown flow start condition");
                 }
             case FlowStatus.Running:
-                return moment(node.timing.runningSince).fromNow();
+                return "running since " + moment(node.timing.runningSince).fromNow();
             case FlowStatus.Finished:
-                switch (node.outcome) {
-                    case FlowOutcome.Failed:
-                        return moment(node.timing.runningSince).fromNow();
-                    case FlowOutcome.Aborted:
-                    case FlowOutcome.Cancelled:
-                    case FlowOutcome.Success:
-                        return moment(node.timing.finishedAt).fromNow();
-                    default:
-                        throw new Error("Unknown flow outcome");
-                }
+                return "finished " + moment(node.timing.finishedAt).fromNow();
             default:
                 throw new Error("Unknown flow status");
         }
@@ -193,10 +184,10 @@ export class DatasetFlowTableHelpers {
     public static waitingBlockText(startCondition: MaybeNull<FlowStartCondition>): string {
         switch (startCondition?.__typename) {
             case "FlowStartConditionThrottling":
-                return "waiting for throttling condition";
+                return "waiting for a throttling condition";
 
             case "FlowStartConditionBatching":
-                return "waiting for batching condition";
+                return "waiting for a batching condition";
 
             case "FlowStartConditionExecutor": {
                 return "waiting for a free executor";
@@ -214,7 +205,7 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Waiting:
                 switch (node.startCondition?.__typename) {
                     case "FlowStartConditionExecutor":
-                        return `Await since: ${moment(node.timing.awaitingExecutorSince ?? "").format(
+                        return `awaiting since: ${moment(node.timing.awaitingExecutorSince ?? "").format(
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     case "FlowStartConditionThrottling":

@@ -16,7 +16,7 @@ describe("DatasetFlowTableHelpers", () => {
                 wakeUpAt: "2024-02-12T18:22:30+00:00",
                 shiftedFrom: "2024-02-12T18:22:29+00:00",
             }),
-        ).toEqual("waiting for throttling condition");
+        ).toEqual("waiting for a throttling condition");
     });
 
     it("should check waiting block text with FlowStartConditionBatching typename", () => {
@@ -34,7 +34,7 @@ describe("DatasetFlowTableHelpers", () => {
                 accumulatedRecordsCount: 100,
                 watermarkModified: true,
             }),
-        ).toEqual("waiting for batching condition");
+        ).toEqual("waiting for a batching condition");
     });
 
     mockFlowSummaryDataFragments.forEach((item: FlowSummaryDataFragment, index: number) => {

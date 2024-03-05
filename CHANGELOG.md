@@ -11,10 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added new flows tab 
 - Added refresh now button on the overveiw tab to start the flow
 - Added support for new batching configuration
+- Added new start condition for the flow
 ### Fixed
 - Fixed bug with authentication (Login vs CLI)
 - Settings tab is hidden after login
 - Fixed bug with `prevOffset` on the block metadata page
+- Reduced flow status types
 
 ## [0.15.0] - 2024-01-17
 ### Changed

@@ -1,7 +1,7 @@
 import { TileBaseWidgetComponent } from "./components/tile-base-widget/tile-base-widget.component";
 import { MatRadioModule } from "@angular/material/radio";
 import { PaginationModule } from "./../../../components/pagination-component/pagination.module";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { FlowsComponent } from "./flows.component";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
@@ -163,10 +163,12 @@ describe("FlowsComponent", () => {
         expect(getFlowConnectionDataSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check update now button", () => {
+    it("should check update now button", fakeAsync(() => {
         const refreshFlowSpy = spyOn(component, "refreshFlow");
         spyOn(datasetFlowsService, "datasetTriggerFlow").and.returnValue(of(true));
         component.updateNow();
+        tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
-    });
+        flush();
+    }));
 });

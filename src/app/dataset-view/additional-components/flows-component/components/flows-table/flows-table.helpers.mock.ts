@@ -2,31 +2,17 @@ import { FlowOutcome, FlowStatus, FlowSummaryDataFragment } from "src/app/api/ka
 
 export const expectationsDesriptionColumnOptions = [
     {
-        icon: "radio_button_checked",
-        class: "queued-status",
-    },
-    {
         icon: "check_circle",
         class: "completed-status",
     },
     { icon: "radio_button_checked", class: "running-status" },
     { icon: "radio_button_checked", class: "waiting-status" },
-    { icon: "radio_button_checked", class: "scheduled-status" },
     { icon: "cancel", class: "aborted-outcome" },
     { icon: "cancel", class: "cancelled-outcome" },
     { icon: "dangerous", class: "failed-status" },
 ];
 
-export const expectationsDescriptionEndOfMessage = [
-    "queued",
-    "finished",
-    "running",
-    "waiting",
-    "scheduled",
-    "aborted",
-    "cancelled",
-    "failed",
-];
+export const expectationsDescriptionEndOfMessage = ["finished", "running", "waiting", "aborted", "cancelled", "failed"];
 
 export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
     {
@@ -36,11 +22,11 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "415",
-        status: FlowStatus.Queued,
+        status: FlowStatus.Running,
         initiator: null,
         outcome: null,
         timing: {
-            activateAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
             finishedAt: null,
             __typename: "FlowTimingRecords",
@@ -54,11 +40,11 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             __typename: "FlowDescriptionDatasetExecuteTransform",
         },
         flowId: "415",
-        status: FlowStatus.Queued,
+        status: FlowStatus.Running,
         initiator: null,
         outcome: null,
         timing: {
-            activateAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
             finishedAt: null,
             __typename: "FlowTimingRecords",
@@ -72,11 +58,11 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             __typename: "FlowDescriptionDatasetExecuteTransform",
         },
         flowId: "415",
-        status: FlowStatus.Scheduled,
+        status: FlowStatus.Running,
         initiator: null,
         outcome: null,
         timing: {
-            activateAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
             finishedAt: null,
             __typename: "FlowTimingRecords",
@@ -94,7 +80,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: null,
         timing: {
-            activateAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
             finishedAt: null,
             __typename: "FlowTimingRecords",
@@ -116,7 +102,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: FlowOutcome.Success,
         timing: {
-            activateAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
             finishedAt: null,
             __typename: "FlowTimingRecords",
@@ -137,7 +123,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: FlowOutcome.Success,
         timing: {
-            activateAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: "2024-02-12T18:22:31+00:00",
             finishedAt: "2024-02-12T18:22:32+00:00",
             __typename: "FlowTimingRecords",
@@ -158,7 +144,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: FlowOutcome.Cancelled,
         timing: {
-            activateAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: "2024-02-12T18:22:31+00:00",
             finishedAt: "2024-02-12T18:22:32+00:00",
             __typename: "FlowTimingRecords",
@@ -179,7 +165,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: FlowOutcome.Aborted,
         timing: {
-            activateAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: "2024-02-12T18:22:31+00:00",
             finishedAt: "2024-02-12T18:22:32+00:00",
             __typename: "FlowTimingRecords",
@@ -200,7 +186,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: FlowOutcome.Failed,
         timing: {
-            activateAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
             finishedAt: null,
             __typename: "FlowTimingRecords",

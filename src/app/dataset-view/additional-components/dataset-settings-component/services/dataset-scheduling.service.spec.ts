@@ -1,4 +1,5 @@
-import { TestBed } from "@angular/core/testing";
+import { NavigationService } from "./../../../../services/navigation.service";
+import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { DatasetSchedulingService } from "./dataset-scheduling.service";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
@@ -15,14 +16,15 @@ import {
     DatasetFlowType,
     FlowIncompatibleDatasetKind,
     ScheduleInput,
-    SetFlowConfigSuccess,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
+import { mockDatasetInfo } from "src/app/search/mock.data";
 
 describe("DatasetSchedulingService", () => {
     let service: DatasetSchedulingService;
     let datasetFlowApi: DatasetFlowApi;
     let toastService: ToastrService;
+    let navigationService: NavigationService;
     const MOCK_DATASET_ID = "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8";
     const MOCK_DATASET_FLOW_TYPE = DatasetFlowType.Ingest;
     const MOCK_PAUSED = false;
@@ -48,18 +50,16 @@ describe("DatasetSchedulingService", () => {
         service = TestBed.inject(DatasetSchedulingService);
         datasetFlowApi = TestBed.inject(DatasetFlowApi);
         toastService = TestBed.inject(ToastrService);
+        navigationService = TestBed.inject(NavigationService);
     });
 
     it("should be created", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should check set dataset flow schedule with success", () => {
-        const successMessage = (
-            mockSetDatasetFlowScheduleSuccess.datasets.byId?.flows.configs.setConfigSchedule as SetFlowConfigSuccess
-        ).message;
+    it("should check set dataset flow schedule with success", fakeAsync(() => {
         spyOn(datasetFlowApi, "setDatasetFlowSchedule").and.returnValue(of(mockSetDatasetFlowScheduleSuccess));
-        const toastrServiceSuccessSpy = spyOn(toastService, "success");
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
 
         const subscription$ = service
             .setDatasetFlowSchedule({
@@ -67,13 +67,16 @@ describe("DatasetSchedulingService", () => {
                 datasetFlowType: MOCK_DATASET_FLOW_TYPE,
                 paused: MOCK_PAUSED,
                 schedule: MOCK_SCHEDULE,
+                datasetInfo: mockDatasetInfo,
             })
             .subscribe(() => {
-                expect(toastrServiceSuccessSpy).toHaveBeenCalledWith(successMessage);
+                tick(1000);
+                expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+                flush();
             });
 
         expect(subscription$.closed).toBeTrue();
-    });
+    }));
 
     it("should check set dataset flow schedule with error", () => {
         const errorMessage = (
@@ -89,6 +92,7 @@ describe("DatasetSchedulingService", () => {
                 datasetFlowType: MOCK_DATASET_FLOW_TYPE,
                 paused: MOCK_PAUSED,
                 schedule: MOCK_SCHEDULE,
+                datasetInfo: mockDatasetInfo,
             })
             .subscribe(() => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledWith(errorMessage);
@@ -97,10 +101,9 @@ describe("DatasetSchedulingService", () => {
         expect(subscription$.closed).toBeTrue();
     });
 
-    it("should check set dataset flow batching with success", () => {
-        const successMessage = mockSetDatasetFlowBatchingSuccess.datasets.byId?.flows.configs.setConfigBatching.message;
+    it("should check set dataset flow batching with success", fakeAsync(() => {
         spyOn(datasetFlowApi, "setDatasetFlowBatching").and.returnValue(of(mockSetDatasetFlowBatchingSuccess));
-        const toastrServiceSuccessSpy = spyOn(toastService, "success");
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
 
         const subscription$ = service
             .setDatasetFlowBatching({
@@ -108,13 +111,16 @@ describe("DatasetSchedulingService", () => {
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
                 paused: false,
                 batching: MOCK_BATCHING_CONFIG,
+                datasetInfo: mockDatasetInfo,
             })
             .subscribe(() => {
-                expect(toastrServiceSuccessSpy).toHaveBeenCalledWith(successMessage);
+                tick(1000);
+                expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+                flush();
             });
 
         expect(subscription$.closed).toBeTrue();
-    });
+    }));
 
     it("should check set dataset flow batching with error", () => {
         const errorMessage = mockSetDatasetFlowBatchingError.datasets.byId?.flows.configs.setConfigBatching.message;
@@ -127,6 +133,7 @@ describe("DatasetSchedulingService", () => {
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
                 paused: false,
                 batching: MOCK_BATCHING_CONFIG,
+                datasetInfo: mockDatasetInfo,
             })
             .subscribe(() => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledWith(errorMessage);

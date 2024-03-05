@@ -3,11 +3,9 @@ import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock
 import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
 
 const resultsClassName = [
-    "queued-class",
     "success-class",
     "running-class",
     "waiting-class",
-    "scheduled-class",
     "aborted-class",
     "cancelled-class",
     "failed-class",

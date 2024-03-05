@@ -93,18 +93,22 @@ export class FlowsTableComponent implements OnInit {
     }
 
     public durationBlockVisible(node: FlowSummaryDataFragment): boolean {
-        return node.status === FlowStatus.Finished && node.outcome !== FlowOutcome.Failed;
+        return node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Success;
     }
 
-    public tooltipTimeFormat(time: string): string {
-        return moment(time).format(AppValues.CRON_EXPRESSION_DATE_FORMAT);
+    public durationBlockText(node: FlowSummaryDataFragment): string {
+        return DatasetFlowTableHelpers.durationBlockText(node);
+    }
+
+    public tooltipText(node: FlowSummaryDataFragment): string {
+        return DatasetFlowTableHelpers.tooltipText(node);
     }
 
     public waitingForBlockVisible(node: FlowSummaryDataFragment): boolean {
-        return [FlowStatus.Queued, FlowStatus.Waiting].includes(node.status);
+        return [FlowStatus.Waiting].includes(node.status);
     }
 
     public waitingBlockText(startCondition: MaybeNull<FlowStartCondition>): string {
-        return DatasetFlowTableHelpers.waitingBlockText(startCondition, this.datasetBasics.kind);
+        return DatasetFlowTableHelpers.waitingBlockText(startCondition);
     }
 }

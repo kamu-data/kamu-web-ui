@@ -163,16 +163,12 @@ export class DatasetFlowTableHelpers {
                 return `await since: ${moment(node.timing.awaitingExecutorSince ?? "").format(
                     AppValues.CRON_EXPRESSION_DATE_FORMAT,
                 )}`;
-            case "FlowStartConditionThrottling": {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            case "FlowStartConditionThrottling":
+            case "FlowStartConditionSchedule": {
                 return `wake up time: ${moment(node.startCondition.wakeUpAt).format(
                     AppValues.CRON_EXPRESSION_DATE_FORMAT,
                 )}`;
             }
-            case "FlowStartConditionSchedule":
-                return `wake up time: ${moment(node.startCondition.wakeUpAt).format(
-                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                )}`;
             case "FlowStartConditionBatching":
                 return `deadline time: ${moment(node.startCondition.batchingDeadline).format(
                     AppValues.CRON_EXPRESSION_DATE_FORMAT,

@@ -111,8 +111,4 @@ export class FlowsTableComponent implements OnInit {
     public waitingBlockText(startCondition: MaybeNull<FlowStartCondition>): string {
         return DatasetFlowTableHelpers.waitingBlockText(startCondition);
     }
-
-    public durationValue(time: string): string {
-        return moment(time).fromNow();
-    }
 }

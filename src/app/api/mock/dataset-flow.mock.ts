@@ -202,6 +202,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         status: FlowStatus.Finished,
         initiator: null,
         outcome: FlowOutcome.Success,
+        startCondition: null,
         timing: {
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: "2024-02-12T18:21:27.477789591+00:00",
@@ -238,6 +239,10 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         status: FlowStatus.Waiting,
         initiator: null,
         outcome: null,
+        startCondition: {
+            __typename: "FlowStartConditionSchedule",
+            wakeUpAt: "2024-03-05T19:35:46+00:00",
+        },
         timing: {
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: "2024-02-12T18:21:27.477789591+00:00",
@@ -256,6 +261,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         status: FlowStatus.Finished,
         initiator: null,
         outcome: FlowOutcome.Aborted,
+        startCondition: null,
         timing: {
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: null,
@@ -274,6 +280,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         status: FlowStatus.Finished,
         initiator: null,
         outcome: FlowOutcome.Cancelled,
+        startCondition: null,
         timing: {
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: null,
@@ -292,6 +299,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         status: FlowStatus.Finished,
         initiator: null,
         outcome: FlowOutcome.Failed,
+        startCondition: null,
         timing: {
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: null,

@@ -158,17 +158,35 @@ export class DatasetFlowTableHelpers {
     }
 
     public static durationBlockText(node: FlowSummaryDataFragment): string {
-        switch (node.startCondition?.__typename) {
-            case "FlowStartConditionExecutor":
-                return `await since: ${moment(node.timing.awaitingExecutorSince ?? "").fromNow()}`;
-            case "FlowStartConditionThrottling":
-            case "FlowStartConditionSchedule": {
-                return `wake up time: ${moment(node.startCondition.wakeUpAt).fromNow()}`;
-            }
-            case "FlowStartConditionBatching":
-                return `deadline time: ${moment(node.startCondition.batchingDeadline).fromNow()}`;
+        switch (node.status) {
+            case FlowStatus.Waiting:
+                switch (node.startCondition?.__typename) {
+                    case "FlowStartConditionExecutor":
+                        return `await since: ${moment(node.timing.awaitingExecutorSince ?? "").fromNow()}`;
+                    case "FlowStartConditionThrottling":
+                    case "FlowStartConditionSchedule": {
+                        return `wake up time: ${moment(node.startCondition.wakeUpAt).fromNow()}`;
+                    }
+                    case "FlowStartConditionBatching":
+                        return `deadline time: ${moment(node.startCondition.batchingDeadline).fromNow()}`;
+                    default:
+                        throw new Error("Unknown flow start condition");
+                }
+            case FlowStatus.Running:
+                return moment(node.timing.runningSince).fromNow();
+            case FlowStatus.Finished:
+                switch (node.outcome) {
+                    case FlowOutcome.Failed:
+                        return moment(node.timing.runningSince).fromNow();
+                    case FlowOutcome.Aborted:
+                    case FlowOutcome.Cancelled:
+                    case FlowOutcome.Success:
+                        return moment(node.timing.finishedAt).fromNow();
+                    default:
+                        throw new Error("Unknown flow outcome");
+                }
             default:
-                throw new Error("Unknown flow start condition");
+                throw new Error("Unknown flow status");
         }
     }
 
@@ -196,17 +214,17 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Waiting:
                 switch (node.startCondition?.__typename) {
                     case "FlowStartConditionExecutor":
-                        return `await since: ${moment(node.timing.awaitingExecutorSince ?? "").format(
+                        return `Await since: ${moment(node.timing.awaitingExecutorSince ?? "").format(
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     case "FlowStartConditionThrottling":
                     case "FlowStartConditionSchedule": {
-                        return `wake up time: ${moment(node.startCondition.wakeUpAt).format(
+                        return `Wake up time: ${moment(node.startCondition.wakeUpAt).format(
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     }
                     case "FlowStartConditionBatching":
-                        return `deadline time: ${moment(node.startCondition.batchingDeadline).format(
+                        return `Deadline time: ${moment(node.startCondition.batchingDeadline).format(
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     default:

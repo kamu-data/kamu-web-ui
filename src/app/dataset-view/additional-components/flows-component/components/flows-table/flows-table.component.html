@@ -153,7 +153,7 @@
                     <button
                         (click)="cancelFlow(element.flowId)"
                         mat-menu-item
-                        [disabled]="element.status !== FlowStatus.Waiting"
+                        [disabled]="element.status === FlowStatus.Finished"
                     >
                         Cancel flow
                     </button>

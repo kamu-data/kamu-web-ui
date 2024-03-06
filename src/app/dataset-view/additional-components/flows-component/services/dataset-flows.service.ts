@@ -3,6 +3,7 @@ import { ToastrService } from "ngx-toastr";
 import { Observable, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
+    CancelScheduledTasksMutation,
     DatasetAllFlowsPausedQuery,
     DatasetFlowFilters,
     DatasetFlowType,
@@ -38,6 +39,19 @@ export class DatasetFlowsService {
                     }
                 }),
             );
+    }
+
+    public cancelScheduledTasks(params: { datasetId: string; flowId: string }): Observable<boolean> {
+        return this.datasetFlowApi.cancelScheduledTasks(params).pipe(
+            map((data: CancelScheduledTasksMutation) => {
+                if (data.datasets.byId?.flows.runs.cancelScheduledTasks.__typename === "CancelScheduledTasksSuccess") {
+                    return true;
+                } else {
+                    this.toastrService.error(data.datasets.byId?.flows.runs.cancelScheduledTasks.message);
+                    return false;
+                }
+            }),
+        );
     }
 
     public datasetFlowsList(params: {

@@ -2,6 +2,8 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 import {
+    CancelScheduledTasksDocument,
+    CancelScheduledTasksMutation,
     DatasetFlowBatchingDocument,
     DatasetFlowBatchingMutation,
     DatasetFlowScheduleDocument,
@@ -21,6 +23,7 @@ import {
     mockSetDatasetFlowScheduleSuccess,
     mockSetDatasetFlowBatchingSuccess,
     mockDatasetTriggerFlowMutation,
+    mockCancelScheduledTasksMutationSuccess,
 } from "./mock/dataset-flow.mock";
 
 describe("DatasetFlowApi", () => {
@@ -28,6 +31,7 @@ describe("DatasetFlowApi", () => {
     let controller: ApolloTestingController;
     const MOCK_PAUSED = true;
     const MOCK_MIN_RECORDS_TO_AWAIT = 12;
+    const MOCK_FLOW_ID = "10";
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -161,6 +165,24 @@ describe("DatasetFlowApi", () => {
         expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.Ingest);
         op.flush({
             data: mockDatasetTriggerFlowMutation,
+        });
+    });
+
+    it("should check cancel scheduled tasks", () => {
+        service
+            .cancelScheduledTasks({
+                datasetId: TEST_DATASET_ID,
+                flowId: MOCK_FLOW_ID,
+            })
+            .subscribe((res: CancelScheduledTasksMutation) => {
+                expect(res.datasets.byId?.flows.runs.cancelScheduledTasks.message).toEqual("Success");
+            });
+
+        const op = controller.expectOne(CancelScheduledTasksDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.flowId).toEqual(MOCK_FLOW_ID);
+        op.flush({
+            data: mockCancelScheduledTasksMutationSuccess,
         });
     });
 });

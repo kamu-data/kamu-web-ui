@@ -1,5 +1,6 @@
 import {
     AccountType,
+    CancelScheduledTasksMutation,
     DatasetFlowBatchingMutation,
     DatasetFlowScheduleMutation,
     DatasetPauseFlowsMutation,
@@ -549,6 +550,65 @@ export const mockDatasetTriggerFlowMutationError: DatasetTriggerFlowMutation = {
                         message: "Error",
                         expectedDatasetKind: DatasetKind.Root,
                         actualDatasetKind: DatasetKind.Derivative,
+                    },
+                    __typename: "DatasetFlowRunsMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                runs: {
+                    cancelScheduledTasks: {
+                        message: "Success",
+                        flow: {
+                            description: {
+                                datasetId:
+                                    "did:odf:fed01162400e9e5fb02d78805f48580f25589e8c3c21738999e28845f7c9d6818bec7",
+                                ingestResult: null,
+                                __typename: "FlowDescriptionDatasetPollingIngest",
+                            },
+                            flowId: "17",
+                            status: FlowStatus.Finished,
+                            initiator: null,
+                            outcome: FlowOutcome.Aborted,
+                            timing: {
+                                awaitingExecutorSince: null,
+                                runningSince: null,
+                                finishedAt: "2024-03-06T15:21:32.117446697+00:00",
+                                __typename: "FlowTimingRecords",
+                            },
+                            startCondition: null,
+                            __typename: "Flow",
+                        },
+                        __typename: "CancelScheduledTasksSuccess",
+                    },
+                    __typename: "DatasetFlowRunsMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockCancelScheduledTasksMutationError: CancelScheduledTasksMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                runs: {
+                    cancelScheduledTasks: {
+                        __typename: "FlowNotFound",
+                        flowId: "230",
+                        message: "Flow '230' was not found",
                     },
                     __typename: "DatasetFlowRunsMut",
                 },

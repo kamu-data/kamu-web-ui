@@ -196,4 +196,22 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         this.getTileWidgetData();
         this.getFlowConnectionData(this.currentPage, this.filterByStatus);
     }
+
+    public onCancelFlow(flowId: string): void {
+        this.trackSubscription(
+            this.flowsService
+                .cancelScheduledTasks({
+                    datasetId: this.datasetBasics.id,
+                    flowId,
+                })
+                .subscribe((success: boolean) => {
+                    if (success) {
+                        setTimeout(() => {
+                            this.refreshFlow();
+                            this.cdr.detectChanges();
+                        }, this.TIMEOUT_REFRESH_FLOW);
+                    }
+                }),
+        );
+    }
 }

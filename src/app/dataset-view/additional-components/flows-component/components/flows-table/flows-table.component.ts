@@ -45,6 +45,7 @@ export class FlowsTableComponent implements OnInit {
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public filterByInitiatorChange = new EventEmitter<FilterByInitiatorEnum>();
     @Output() public searchByAccountNameChange = new EventEmitter<string>();
+    @Output() public cancelFlowChange = new EventEmitter<string>();
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"];
     public readonly INITIATORS: string[] = Object.keys(FilterByInitiatorEnum);
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
@@ -110,5 +111,9 @@ export class FlowsTableComponent implements OnInit {
 
     public waitingBlockText(startCondition: MaybeNull<FlowStartCondition>): string {
         return DatasetFlowTableHelpers.waitingBlockText(startCondition);
+    }
+
+    public cancelFlow(flowId: string): void {
+        this.cancelFlowChange.emit(flowId);
     }
 }

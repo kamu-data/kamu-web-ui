@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added refresh now button on the overveiw tab to start the flow
 - Added support for new batching configuration
 - Added new start condition for the flow
+- Added the ability to cancel a scheduled flow
 ### Fixed
 - Fixed bug with authentication (Login vs CLI)
 - Settings tab is hidden after login

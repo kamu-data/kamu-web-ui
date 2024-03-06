@@ -150,7 +150,13 @@
                 <mat-menu #tableOptions="matMenu" xPosition="before" [hasBackdrop]="true">
                     <button mat-menu-item disabled="true">Details</button>
                     <mat-divider></mat-divider>
-                    <button mat-menu-item disabled="true">Cancel flow</button>
+                    <button
+                        (click)="cancelFlow(element.flowId)"
+                        mat-menu-item
+                        [disabled]="element.status === FlowStatus.Finished"
+                    >
+                        Cancel flow
+                    </button>
                 </mat-menu>
             </div>
         </td>

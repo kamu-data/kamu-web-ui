@@ -1,0 +1,22 @@
+mutation cancelScheduledTasks($datasetId: DatasetID!, $flowId: FlowID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        runs {
+          cancelScheduledTasks(flowId: $flowId) {
+            ... on FlowNotFound {
+              flowId
+              message
+            }
+            ... on CancelScheduledTasksSuccess {
+              message
+              flow {
+                ...FlowSummaryData
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -34,6 +34,7 @@ describe("FlowsComponent", () => {
     let datasetFlowsService: DatasetFlowsService;
     let navigationService: NavigationService;
     const MOCK_PAGE_NUNBER = 1;
+    const MOCK_FLOW_ID = "2";
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -167,6 +168,15 @@ describe("FlowsComponent", () => {
         const refreshFlowSpy = spyOn(component, "refreshFlow");
         spyOn(datasetFlowsService, "datasetTriggerFlow").and.returnValue(of(true));
         component.updateNow();
+        tick(component.TIMEOUT_REFRESH_FLOW);
+        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+        flush();
+    }));
+
+    it("should check cancel flow button", fakeAsync(() => {
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        spyOn(datasetFlowsService, "cancelScheduledTasks").and.returnValue(of(true));
+        component.onCancelFlow(MOCK_FLOW_ID);
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
         flush();

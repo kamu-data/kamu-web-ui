@@ -1929,6 +1929,34 @@ export type DatasetAllFlowsPausedQuery = {
     };
 };
 
+export type CancelScheduledTasksMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    flowId: Scalars["FlowID"];
+}>;
+
+export type CancelScheduledTasksMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                runs: {
+                    __typename?: "DatasetFlowRunsMut";
+                    cancelScheduledTasks:
+                        | {
+                              __typename?: "CancelScheduledTasksSuccess";
+                              message: string;
+                              flow: { __typename?: "Flow" } & FlowSummaryDataFragment;
+                          }
+                        | { __typename?: "FlowNotFound"; flowId: string; message: string };
+                };
+            };
+        } | null;
+    };
+};
+
 export type GetDatasetListFlowsQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     page?: InputMaybe<Scalars["Int"]>;
@@ -4240,6 +4268,45 @@ export class DatasetAllFlowsPausedGQL extends Apollo.Query<
     DatasetAllFlowsPausedQueryVariables
 > {
     document = DatasetAllFlowsPausedDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const CancelScheduledTasksDocument = gql`
+    mutation cancelScheduledTasks($datasetId: DatasetID!, $flowId: FlowID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    runs {
+                        cancelScheduledTasks(flowId: $flowId) {
+                            ... on FlowNotFound {
+                                flowId
+                                message
+                            }
+                            ... on CancelScheduledTasksSuccess {
+                                message
+                                flow {
+                                    ...FlowSummaryData
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FlowSummaryDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class CancelScheduledTasksGQL extends Apollo.Mutation<
+    CancelScheduledTasksMutation,
+    CancelScheduledTasksMutationVariables
+> {
+    document = CancelScheduledTasksDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

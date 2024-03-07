@@ -173,7 +173,16 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Running:
                 return "running since " + moment(node.timing.runningSince).fromNow();
             case FlowStatus.Finished:
-                return "finished " + moment(node.timing.finishedAt).fromNow();
+                switch (node.outcome) {
+                    case FlowOutcome.Success:
+                        return "finished " + moment(node.timing.finishedAt).fromNow();
+                    case FlowOutcome.Aborted:
+                        return "aborted " + moment(node.timing.finishedAt).fromNow();
+                    case FlowOutcome.Failed:
+                        return "failed " + moment(node.timing.finishedAt).fromNow();
+                    default:
+                        throw new Error("Unknown flow outsome");
+                }
             default:
                 throw new Error("Unknown flow status");
         }

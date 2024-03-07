@@ -23,11 +23,12 @@ import {
 import moment from "moment";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
-import { convertSecondsToHumanReadableFormat } from "src/app/common/app.helpers";
+import { convertSecondsToHumanReadableFormat, promiseWithCatch } from "src/app/common/app.helpers";
 import { MatMenuTrigger } from "@angular/material/menu";
 import { MatRadioChange } from "@angular/material/radio";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import { FilterByInitiatorEnum, TransformDescriptionTableData } from "./flows-table.types";
+import { ModalService } from "src/app/components/modal/modal.service";
 
 @Component({
     selector: "app-flows-table",
@@ -56,7 +57,7 @@ export class FlowsTableComponent implements OnInit {
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
 
-    constructor(private navigationService: NavigationService) {}
+    constructor(private navigationService: NavigationService, private modalService: ModalService) {}
 
     ngOnInit(): void {
         this.dataSource.data = this.nodes;
@@ -117,7 +118,19 @@ export class FlowsTableComponent implements OnInit {
     }
 
     public cancelFlow(flowId: string): void {
-        this.cancelFlowChange.emit(flowId);
+        promiseWithCatch(
+            this.modalService.error({
+                title: "Cancel flow",
+                message: "Do you want to cancel a flow?",
+                yesButtonText: "Ok",
+                noButtonText: "Cancel",
+                handler: (ok) => {
+                    if (ok) {
+                        this.cancelFlowChange.emit(flowId);
+                    }
+                },
+            }),
+        );
     }
 
     public navigateToFlowDetaisView(flowId: string): void {

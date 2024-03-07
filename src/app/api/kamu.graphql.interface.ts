@@ -884,7 +884,6 @@ export type FlowNotFound = CancelScheduledTasksResult &
 
 export enum FlowOutcome {
     Aborted = "ABORTED",
-    Cancelled = "CANCELLED",
     Failed = "FAILED",
     Success = "SUCCESS",
 }

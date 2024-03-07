@@ -26,8 +26,6 @@ export class DatasetFlowTableHelpers {
                         return { icon: "dangerous", class: "failed-status" };
                     case FlowOutcome.Aborted:
                         return { icon: "cancel", class: "aborted-outcome" };
-                    case FlowOutcome.Cancelled:
-                        return { icon: "cancel", class: "cancelled-outcome" };
 
                     default:
                         throw new Error("Unsupported flow outcome");
@@ -54,8 +52,6 @@ export class DatasetFlowTableHelpers {
                         return "aborted";
                     case FlowOutcome.Failed:
                         return "failed";
-                    case FlowOutcome.Cancelled:
-                        return "cancelled";
                     default:
                         throw new Error("Unsupported flow outcome");
                 }
@@ -108,11 +104,6 @@ export class DatasetFlowTableHelpers {
                             default:
                                 return "Unknown description typename";
                         }
-
-                    case FlowOutcome.Cancelled:
-                        return `Cancelled at ${moment(element.timing.finishedAt).format(
-                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                        )}`;
 
                     case FlowOutcome.Aborted:
                         return `Aborted at ${moment(element.timing.finishedAt).format(
@@ -236,10 +227,6 @@ export class DatasetFlowTableHelpers {
                         )}`;
                     case FlowOutcome.Aborted:
                         return `Aborted time: ${moment(node.timing.finishedAt).format(
-                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                        )}`;
-                    case FlowOutcome.Cancelled:
-                        return `Cancelled time: ${moment(node.timing.finishedAt).format(
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     case FlowOutcome.Failed:

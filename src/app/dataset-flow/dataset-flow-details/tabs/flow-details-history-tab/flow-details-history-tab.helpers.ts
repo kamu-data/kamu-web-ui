@@ -109,8 +109,6 @@ export class DatasetFlowDetailsHelpers {
                                 return { icon: "dangerous", class: "failed-status" };
                             case FlowOutcome.Aborted:
                                 return { icon: "cancel", class: "aborted-outcome" };
-                            case FlowOutcome.Cancelled:
-                                return { icon: "cancel", class: "cancelled-outcome" };
 
                             default:
                                 throw new Error("Unsupported flow outcome");

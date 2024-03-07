@@ -280,25 +280,6 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         flowId: "414",
         status: FlowStatus.Finished,
         initiator: null,
-        outcome: FlowOutcome.Cancelled,
-        startCondition: null,
-        timing: {
-            awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
-            runningSince: null,
-            finishedAt: null,
-            __typename: "FlowTimingRecords",
-        },
-        __typename: "Flow",
-    },
-    {
-        description: {
-            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
-            ingestResult: null,
-            __typename: "FlowDescriptionDatasetPollingIngest",
-        },
-        flowId: "414",
-        status: FlowStatus.Finished,
-        initiator: null,
         outcome: FlowOutcome.Failed,
         startCondition: null,
         timing: {

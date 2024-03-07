@@ -86,6 +86,6 @@ describe("FlowsTableComponent", () => {
 
     it("should check table rows length", async () => {
         const table = await loader.getHarness<MatTableHarness>(MatTableHarness);
-        expect((await table.getRows()).length).toBe(6);
+        expect((await table.getRows()).length).toBe(5);
     });
 });

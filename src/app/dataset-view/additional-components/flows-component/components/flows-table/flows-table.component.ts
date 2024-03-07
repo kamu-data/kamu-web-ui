@@ -121,7 +121,7 @@ export class FlowsTableComponent implements OnInit {
         promiseWithCatch(
             this.modalService.error({
                 title: "Cancel flow",
-                message: "Do you want to cancel a flow?",
+                message: "Do you want to cancel the flow?",
                 yesButtonText: "Ok",
                 noButtonText: "Cancel",
                 handler: (ok) => {

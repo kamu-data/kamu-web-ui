@@ -64,7 +64,8 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         if (
             _.isNil(this.datasetBasics) ||
             this.datasetBasics.name !== urlDatasetInfo.datasetName ||
-            this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName
+            this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName ||
+            this.datasetViewType === DatasetViewTypeEnum.Flows
         ) {
             this.requestMainData(urlDatasetInfo);
         }
@@ -115,7 +116,6 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
 
     private initFlowsTab(): void {
         this.datasetViewType = DatasetViewTypeEnum.Flows;
-        this.cdr.detectChanges();
     }
 
     private initHistoryTab(datasetInfo: DatasetInfo, currentPage: number): void {

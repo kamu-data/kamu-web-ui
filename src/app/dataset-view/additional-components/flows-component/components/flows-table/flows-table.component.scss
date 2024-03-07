@@ -52,6 +52,30 @@ table {
     transform: scale(0.7);
 }
 
+.completed-status {
+    color: #239a59;
+}
+
+.running-status {
+    color: #8bdaaf;
+}
+
+.failed-status {
+    color: #d13124;
+}
+
+.waiting-status {
+    color: #9d9d9d;
+}
+
+.aborted-outcome {
+    color: rgba(181 175 175);
+}
+
+.canceled-outcome {
+    color: rgba(181 175 175);
+}
+
 .mat-header-cell {
     background: #f6f8fa;
 }

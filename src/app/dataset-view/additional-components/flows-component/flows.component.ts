@@ -46,6 +46,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
     public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
+    public readonly TIMEOUT_REFRESH_FLOW = 800;
 
     constructor(
         private flowsService: DatasetFlowsService,
@@ -128,8 +129,10 @@ export class FlowsComponent extends BaseComponent implements OnInit {
                 })
                 .subscribe((success: boolean) => {
                     if (success) {
-                        this.refreshFlow();
-                        this.cdr.detectChanges();
+                        setTimeout(() => {
+                            this.refreshFlow();
+                            this.cdr.detectChanges();
+                        }, this.TIMEOUT_REFRESH_FLOW);
                     }
                 }),
         );
@@ -192,5 +195,23 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     public refreshFlow(): void {
         this.getTileWidgetData();
         this.getFlowConnectionData(this.currentPage, this.filterByStatus);
+    }
+
+    public onCancelFlow(flowId: string): void {
+        this.trackSubscription(
+            this.flowsService
+                .cancelScheduledTasks({
+                    datasetId: this.datasetBasics.id,
+                    flowId,
+                })
+                .subscribe((success: boolean) => {
+                    if (success) {
+                        setTimeout(() => {
+                            this.refreshFlow();
+                            this.cdr.detectChanges();
+                        }, this.TIMEOUT_REFRESH_FLOW);
+                    }
+                }),
+        );
     }
 }

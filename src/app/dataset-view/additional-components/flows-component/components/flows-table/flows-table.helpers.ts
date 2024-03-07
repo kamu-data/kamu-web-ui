@@ -1,7 +1,6 @@
 import _ from "lodash";
 import moment from "moment";
 import {
-    DatasetKind,
     FetchStep,
     FlowOutcome,
     FlowStartCondition,
@@ -93,7 +92,7 @@ export class DatasetFlowTableHelpers {
                                       } in ${element.description.ingestResult.numBlocks} new ${
                                           element.description.ingestResult.numBlocks == 1 ? "block" : "blocks"
                                       }`
-                                    : "Expected to have injest result";
+                                    : "Dataset is up-to-date";
 
                             case "FlowDescriptionDatasetExecuteTransform":
                                 return element.description.transformResult
@@ -102,7 +101,7 @@ export class DatasetFlowTableHelpers {
                                       } in ${element.description.transformResult.numBlocks} new ${
                                           element.description.transformResult.numBlocks == 1 ? "block" : "blocks"
                                       }`
-                                    : "Expected to have transform result";
+                                    : "Dataset is up-to-date";
                             // TODO
                             //  - Compacting
                             //  - GC
@@ -156,16 +155,100 @@ export class DatasetFlowTableHelpers {
         return "";
     }
 
-    public static waitingBlockText(startCondition: MaybeNull<FlowStartCondition>, datasetKind: DatasetKind): string {
+    public static durationBlockText(node: FlowSummaryDataFragment): string {
+        switch (node.status) {
+            case FlowStatus.Waiting:
+                switch (node.startCondition?.__typename) {
+                    case "FlowStartConditionExecutor":
+                        return `awaiting since ${moment(node.timing.awaitingExecutorSince ?? "").fromNow()}`;
+                    case "FlowStartConditionThrottling":
+                    case "FlowStartConditionSchedule": {
+                        return `wake up time: ${moment(node.startCondition.wakeUpAt).fromNow()}`;
+                    }
+                    case "FlowStartConditionBatching":
+                        return `deadline time: ${moment(node.startCondition.batchingDeadline).fromNow()}`;
+                    default:
+                        throw new Error("Unknown flow start condition");
+                }
+            case FlowStatus.Running:
+                return "running since " + moment(node.timing.runningSince).fromNow();
+            case FlowStatus.Finished:
+                return "finished " + moment(node.timing.finishedAt).fromNow();
+            default:
+                throw new Error("Unknown flow status");
+        }
+    }
+
+    public static waitingBlockText(startCondition: MaybeNull<FlowStartCondition>): string {
         switch (startCondition?.__typename) {
             case "FlowStartConditionThrottling":
-                return "waiting for throttling condition";
+                return "waiting for a throttling condition";
 
             case "FlowStartConditionBatching":
-                return "waiting for batching condition";
+                return "waiting for a batching condition";
+
+            case "FlowStartConditionExecutor": {
+                return "waiting for a free executor";
+            }
+            case "FlowStartConditionSchedule":
+                return "waiting for scheduled execution";
 
             default:
-                return datasetKind === DatasetKind.Root ? "waiting for scheduled execution" : "";
+                return "";
+        }
+    }
+
+    public static tooltipText(node: FlowSummaryDataFragment): string {
+        switch (node.status) {
+            case FlowStatus.Waiting:
+                switch (node.startCondition?.__typename) {
+                    case "FlowStartConditionExecutor":
+                        return `awaiting since: ${moment(node.timing.awaitingExecutorSince ?? "").format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    case "FlowStartConditionThrottling":
+                    case "FlowStartConditionSchedule": {
+                        return `Wake up time: ${moment(node.startCondition.wakeUpAt).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    }
+                    case "FlowStartConditionBatching":
+                        return `Deadline time: ${moment(node.startCondition.batchingDeadline).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    default:
+                        throw new Error("Unknown flow start condition");
+                }
+            case FlowStatus.Finished:
+                switch (node.outcome) {
+                    case FlowOutcome.Success:
+                        return `Completed time: ${moment(node.timing.finishedAt).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    case FlowOutcome.Aborted:
+                        return `Aborted time: ${moment(node.timing.finishedAt).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    case FlowOutcome.Cancelled:
+                        return `Cancelled time: ${moment(node.timing.finishedAt).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    case FlowOutcome.Failed:
+                        return `Start running time: ${moment(node.timing.runningSince).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+
+                    default:
+                        throw new Error("Unknown flow outcome");
+                }
+
+            case FlowStatus.Running:
+                return `Start running time: ${moment(node.timing.runningSince).format(
+                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                )}`;
+
+            default:
+                throw new Error("Unknown flow status");
         }
     }
 }

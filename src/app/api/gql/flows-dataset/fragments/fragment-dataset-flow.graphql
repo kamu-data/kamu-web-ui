@@ -51,6 +51,8 @@ fragment FlowSummaryData on Flow {
     __typename
     ... on FlowStartConditionThrottling {
       intervalSec
+      wakeUpAt
+      shiftedFrom
     }
 
     ... on FlowStartConditionBatching {

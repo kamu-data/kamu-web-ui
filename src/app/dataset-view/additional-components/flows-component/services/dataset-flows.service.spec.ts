@@ -6,6 +6,8 @@ import { ToastrModule, ToastrService } from "ngx-toastr";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import { of } from "rxjs";
 import {
+    mockCancelScheduledTasksMutationError,
+    mockCancelScheduledTasksMutationSuccess,
     mockDatasetPauseFlowsMutationError,
     mockDatasetPauseFlowsMutationSuccess,
     mockDatasetResumeFlowsMutationError,
@@ -27,6 +29,7 @@ describe("DatasetFlowsService", () => {
     const MOCK_PER_PAGE = 15;
     const MOCK_FILTERS = {};
     const MOCK_DATASET_FLOW_TYPE = DatasetFlowType.Ingest;
+    const MOCK_FLOW_ID = "10";
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -123,6 +126,34 @@ describe("DatasetFlowsService", () => {
             .datasetTriggerFlow({ datasetId: MOCK_DATASET_ID, datasetFlowType: MOCK_DATASET_FLOW_TYPE })
             .subscribe(() => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check cancel scheduled tasks", () => {
+        spyOn(datasetFlowApi, "cancelScheduledTasks").and.returnValue(of(mockCancelScheduledTasksMutationSuccess));
+
+        const subscription$ = service
+            .cancelScheduledTasks({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID })
+            .subscribe((result: boolean) => {
+                expect(result).toEqual(true);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check cancel scheduled tasks with error", () => {
+        spyOn(datasetFlowApi, "cancelScheduledTasks").and.returnValue(of(mockCancelScheduledTasksMutationError));
+        const toastrServiceErrorSpy = spyOn(toastService, "error");
+
+        const subscription$ = service
+            .cancelScheduledTasks({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID })
+            .subscribe((result: boolean) => {
+                expect(result).toEqual(false);
+                expect(toastrServiceErrorSpy).toHaveBeenCalledWith(
+                    mockCancelScheduledTasksMutationError.datasets.byId?.flows.runs.cancelScheduledTasks.message,
+                );
             });
 
         expect(subscription$.closed).toBeTrue();

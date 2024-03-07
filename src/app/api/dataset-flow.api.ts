@@ -2,6 +2,8 @@ import { MutationResult } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import {
     BatchingConditionInput,
+    CancelScheduledTasksGQL,
+    CancelScheduledTasksMutation,
     DatasetAllFlowsPausedGQL,
     DatasetAllFlowsPausedQuery,
     DatasetFlowBatchingGQL,
@@ -40,6 +42,7 @@ export class DatasetFlowApi {
         private datasetAllFlowsPausedGQL: DatasetAllFlowsPausedGQL,
         private datasetTriggerFlowGQL: DatasetTriggerFlowGQL,
         private datasetFlowByIdGQL: GetFlowByIdGQL,
+        private cancelScheduledTasksGQL: CancelScheduledTasksGQL,
     ) {}
 
     public datasetTriggerFlow(params: {
@@ -223,6 +226,28 @@ export class DatasetFlowApi {
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetFlowByIdQuery>) => {
                     return result.data;
+                }),
+            );
+    }
+
+    public cancelScheduledTasks(params: {
+        datasetId: string;
+        flowId: string;
+    }): Observable<CancelScheduledTasksMutation> {
+        return this.cancelScheduledTasksGQL
+            .mutate({
+                datasetId: params.datasetId,
+                flowId: params.flowId,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<CancelScheduledTasksMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
                 }),
             );
     }

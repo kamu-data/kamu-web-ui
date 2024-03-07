@@ -1,4 +1,4 @@
-import { DatasetKind, FlowSummaryDataFragment, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { FlowSummaryDataFragment, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import {
@@ -11,47 +11,31 @@ import {
 describe("DatasetFlowTableHelpers", () => {
     it("should check waiting block text with FlowStartConditionThrottling typename", () => {
         expect(
-            DatasetFlowTableHelpers.waitingBlockText(
-                {
-                    __typename: "FlowStartConditionThrottling",
-                    intervalSec: 120,
-                    wakeUpAt: "2024-02-12T18:22:30+00:00",
-                    shiftedFrom: "2024-02-12T18:22:29+00:00",
-                },
-                DatasetKind.Root,
-            ),
-        ).toEqual("waiting for throttling condition");
+            DatasetFlowTableHelpers.waitingBlockText({
+                __typename: "FlowStartConditionThrottling",
+                intervalSec: 120,
+                wakeUpAt: "2024-02-12T18:22:30+00:00",
+                shiftedFrom: "2024-02-12T18:22:29+00:00",
+            }),
+        ).toEqual("waiting for a throttling condition");
     });
 
     it("should check waiting block text with FlowStartConditionBatching typename", () => {
         expect(
-            DatasetFlowTableHelpers.waitingBlockText(
-                {
-                    __typename: "FlowStartConditionBatching",
-                    activeBatchingRule: {
-                        minRecordsToAwait: 500,
-                        maxBatchingInterval: {
-                            every: 5,
-                            unit: TimeUnit.Hours,
-                        },
+            DatasetFlowTableHelpers.waitingBlockText({
+                __typename: "FlowStartConditionBatching",
+                activeBatchingRule: {
+                    minRecordsToAwait: 500,
+                    maxBatchingInterval: {
+                        every: 5,
+                        unit: TimeUnit.Hours,
                     },
-                    batchingDeadline: "2022-08-05T21:17:30.613911358+00:00",
-                    accumulatedRecordsCount: 100,
-                    watermarkModified: true,
                 },
-                DatasetKind.Root,
-            ),
-        ).toEqual("waiting for batching condition");
-    });
-
-    it("should check waiting block text with empty start condition for ROOT", () => {
-        expect(DatasetFlowTableHelpers.waitingBlockText(null, DatasetKind.Root)).toEqual(
-            "waiting for scheduled execution",
-        );
-    });
-
-    it("should check waiting block text with empty start condition for DERIVATIVE", () => {
-        expect(DatasetFlowTableHelpers.waitingBlockText(null, DatasetKind.Derivative)).toEqual("");
+                batchingDeadline: "2022-08-05T21:17:30.613911358+00:00",
+                accumulatedRecordsCount: 100,
+                watermarkModified: true,
+            }),
+        ).toEqual("waiting for a batching condition");
     });
 
     mockFlowSummaryDataFragments.forEach((item: FlowSummaryDataFragment, index: number) => {

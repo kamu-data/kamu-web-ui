@@ -1,16 +1,15 @@
 fragment FlowHistoryData on FlowEvent {
   __typename
+  eventId
+  eventTime
   ... on FlowEventAborted {
-    eventId
-    eventTime
+    __typename
   }
   ... on FlowEventInitiated {
-    eventTime
-    eventId
     trigger {
       __typename
       ... on FlowTriggerAutoPolling {
-        dummy
+        __typename
       }
       ... on FlowTriggerManual {
         initiator {
@@ -18,7 +17,7 @@ fragment FlowHistoryData on FlowEvent {
         }
       }
       ... on FlowTriggerPush {
-        dummy
+        __typename
       }
       ... on FlowTriggerInputDatasetFlow {
         datasetId
@@ -28,24 +27,18 @@ fragment FlowHistoryData on FlowEvent {
     }
   }
   ... on FlowEventStartConditionUpdated {
-    eventId
-    eventTime
     startConditionKind
   }
   ... on FlowEventTaskChanged {
     __typename
-    eventId
-    eventTime
     taskId
     taskStatus
   }
   ... on FlowEventTriggerAdded {
-    eventId
-    eventTime
     trigger {
       __typename
       ... on FlowTriggerAutoPolling {
-        dummy
+        __typename
       }
       ... on FlowTriggerManual {
         initiator {
@@ -53,7 +46,7 @@ fragment FlowHistoryData on FlowEvent {
         }
       }
       ... on FlowTriggerPush {
-        dummy
+        __typename
       }
       ... on FlowTriggerInputDatasetFlow {
         datasetId

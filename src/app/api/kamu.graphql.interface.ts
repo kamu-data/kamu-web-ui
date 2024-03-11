@@ -2191,10 +2191,10 @@ type FlowHistoryData_FlowEventAborted_Fragment = { __typename: "FlowEventAborted
 
 type FlowHistoryData_FlowEventInitiated_Fragment = {
     __typename: "FlowEventInitiated";
-    eventTime: string;
     eventId: string;
+    eventTime: string;
     trigger:
-        | { __typename: "FlowTriggerAutoPolling"; dummy: boolean }
+        | { __typename: "FlowTriggerAutoPolling" }
         | { __typename: "FlowTriggerInputDatasetFlow"; datasetId: string; flowId: string; flowType: DatasetFlowType }
         | { __typename: "FlowTriggerManual"; initiator: { __typename?: "Account" } & AccountFragment }
         | { __typename: "FlowTriggerPush"; dummy: boolean };
@@ -2202,17 +2202,17 @@ type FlowHistoryData_FlowEventInitiated_Fragment = {
 
 type FlowHistoryData_FlowEventStartConditionUpdated_Fragment = {
     __typename: "FlowEventStartConditionUpdated";
+    startConditionKind: FlowStartConditionKind;
     eventId: string;
     eventTime: string;
-    startConditionKind: FlowStartConditionKind;
 };
 
 type FlowHistoryData_FlowEventTaskChanged_Fragment = {
     __typename: "FlowEventTaskChanged";
-    eventId: string;
-    eventTime: string;
     taskId: string;
     taskStatus: TaskStatus;
+    eventId: string;
+    eventTime: string;
 };
 
 type FlowHistoryData_FlowEventTriggerAdded_Fragment = {
@@ -2220,10 +2220,10 @@ type FlowHistoryData_FlowEventTriggerAdded_Fragment = {
     eventId: string;
     eventTime: string;
     trigger:
-        | { __typename: "FlowTriggerAutoPolling"; dummy: boolean }
+        | { __typename: "FlowTriggerAutoPolling" }
         | { __typename: "FlowTriggerInputDatasetFlow"; datasetId: string; flowId: string; flowType: DatasetFlowType }
         | { __typename: "FlowTriggerManual"; initiator: { __typename?: "Account" } & AccountFragment }
-        | { __typename: "FlowTriggerPush"; dummy: boolean };
+        | { __typename: "FlowTriggerPush" };
 };
 
 export type FlowHistoryDataFragment =
@@ -3105,17 +3105,16 @@ export const FlowConnectionDataFragmentDoc = gql`
 export const FlowHistoryDataFragmentDoc = gql`
     fragment FlowHistoryData on FlowEvent {
         __typename
+        eventId
+        eventTime
         ... on FlowEventAborted {
-            eventId
-            eventTime
+            __typename
         }
         ... on FlowEventInitiated {
-            eventTime
-            eventId
             trigger {
                 __typename
                 ... on FlowTriggerAutoPolling {
-                    dummy
+                    __typename
                 }
                 ... on FlowTriggerManual {
                     initiator {
@@ -3133,24 +3132,18 @@ export const FlowHistoryDataFragmentDoc = gql`
             }
         }
         ... on FlowEventStartConditionUpdated {
-            eventId
-            eventTime
             startConditionKind
         }
         ... on FlowEventTaskChanged {
             __typename
-            eventId
-            eventTime
             taskId
             taskStatus
         }
         ... on FlowEventTriggerAdded {
-            eventId
-            eventTime
             trigger {
                 __typename
                 ... on FlowTriggerAutoPolling {
-                    dummy
+                    __typename
                 }
                 ... on FlowTriggerManual {
                     initiator {
@@ -3158,7 +3151,7 @@ export const FlowHistoryDataFragmentDoc = gql`
                     }
                 }
                 ... on FlowTriggerPush {
-                    dummy
+                    __typename
                 }
                 ... on FlowTriggerInputDatasetFlow {
                     datasetId

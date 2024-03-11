@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { DatasetFlowByIdResponse, FlowDetailsTabs, ViewMenuData } from "./dataset-flow-details.types";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { Observable, Subscription, combineLatest, filter, map, shareReplay, switchMap } from "rxjs";
+import { Observable, Subscription, combineLatest, filter, interval, map, shareReplay, switchMap } from "rxjs";
 import {
     DatasetBasicsFragment,
     DatasetPermissionsFragment,
@@ -17,6 +17,7 @@ import { BaseProcessingComponent } from "src/app/common/base.processing.componen
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DataHelpers } from "src/app/common/data.helpers";
 import { DatasetFlowTableHelpers } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.helpers";
+import { takeWhile } from "lodash";
 
 @Component({
     selector: "app-dataset-flow-details",
@@ -40,6 +41,7 @@ export class DatasetFlowDetailsComponent extends BaseProcessingComponent impleme
         private datasetService: DatasetService,
         private datasetSubsService: DatasetSubscriptionsService,
         private datasetFlowsService: DatasetFlowsService,
+        private cdr: ChangeDetectorRef,
     ) {
         super();
     }
@@ -62,14 +64,7 @@ export class DatasetFlowDetailsComponent extends BaseProcessingComponent impleme
         this.extractActiveTabFromRoute();
         this.extractFlowIdFromRoute();
         this.trackSubscriptions(this.loadDatasetBasicDataWithPermissions());
-        this.datasetFlowDetails$ = this.datasetViewMenuData$.pipe(
-            switchMap((data: ViewMenuData) => {
-                return this.datasetFlowsService.datasetFlowById({
-                    datasetId: data.datasetBasics.id,
-                    flowId: this.flowId,
-                });
-            }),
-        );
+        this.refreshNow();
     }
 
     public getRouteLink(tab: FlowDetailsTabs): string {
@@ -119,5 +114,16 @@ export class DatasetFlowDetailsComponent extends BaseProcessingComponent impleme
 
     public descriptionColumnOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
         return DatasetFlowTableHelpers.descriptionColumnTableOptions(element);
+    }
+
+    public refreshNow(): void {
+        this.datasetFlowDetails$ = this.datasetViewMenuData$.pipe(
+            switchMap((data: ViewMenuData) => {
+                return this.datasetFlowsService.datasetFlowById({
+                    datasetId: data.datasetBasics.id,
+                    flowId: this.flowId,
+                });
+            }),
+        );
     }
 }

@@ -1498,18 +1498,17 @@ input {
 }
 
 .waiting-status,
-.scheduled-status {
-    color: #d3c22a;
-}
-
+.scheduled-status,
 .aborted-outcome {
-    color: rgba(181 175 175);
-}
-
-.canceled-outcome {
     color: rgba(181 175 175);
 }
 
 .icon-status {
     transform: scale(0.8);
+}
+
+.hourglass-img {
+    position: absolute;
+    left: -5px;
+    top: 3px;
 }

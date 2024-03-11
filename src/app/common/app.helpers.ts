@@ -72,7 +72,7 @@ export function convertSecondsToHumanReadableFormat(seconds: number): string {
 
     const hourString = hours > 0 ? `${hours} hour${hours > 1 ? "s" : ""}` : "";
     const minuteString = minutes > 0 ? `${minutes} minute${minutes > 1 ? "s" : ""}` : "";
-    const secondString = remainingSeconds > 0 ? `${remainingSeconds} second${remainingSeconds > 1 ? "s" : ""}` : "";
+    const secondString = remainingSeconds >= 1 ? `${remainingSeconds} second${remainingSeconds > 1 ? "s" : ""}` : "";
 
     if (hours > 0) {
         return `${hourString}   ${minuteString || "0 minute"} ${secondString && `  ${secondString}`}`;

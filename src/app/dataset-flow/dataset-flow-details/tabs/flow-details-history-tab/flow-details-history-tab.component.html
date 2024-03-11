@@ -1,25 +1,47 @@
 <div class="container">
-    <div class="row">
+    <div class="row fw-500">
         <div class="col-md-6">Event</div>
-        <div class="col-md-6">Time</div>
+        <div class="col-md-3">Time</div>
+        <div class="col-md-3">Duration</div>
     </div>
     <mat-divider class="my-2"></mat-divider>
-    <ng-container *ngFor="let flowEvent of flowHistory">
-        <div class="mt-4">
-            <div class="row">
-                <div class="col-md-6 d-flex">
-                    <mat-icon class="icon-status" [ngClass]="flowEventIconOptions(flowEvent, flowDetails).class">
-                        {{ flowEventIconOptions(flowEvent, flowDetails).icon }}
-                    </mat-icon>
-                    <div class="d-flex flex-column">
-                        <div class="mt-2px ps-2 fw-500">{{ flowEventDescription(flowEvent, flowDetails) }}</div>
-                        <span class="fs-12 ps-2 word-break">{{
-                            flowEventSubMessage(flowEvent, flowDetails, inputDatasetInfo)
-                        }}</span>
+    <ul>
+        <li *ngFor="let flowEvent of flowHistory; let lastIndex = last; let i = index">
+            <div class="mt-4">
+                <div class="row">
+                    <div class="col-md-6 d-flex position-relative">
+                        <div class="history-item">
+                            <img
+                                *ngIf="lastIndex && flowDetails.status !== FlowStatus.Finished"
+                                src="assets/images/hourglass.gif"
+                                alt="hourglass"
+                                style="width: 15px"
+                                class="hourglass-img text-muted"
+                            />
+                            <mat-icon
+                                class="icon-status d-block"
+                                [ngClass]="flowEventIconOptions(flowEvent, flowDetails).class"
+                            >
+                                {{ flowEventIconOptions(flowEvent, flowDetails).icon }}
+                            </mat-icon>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <div class="mt-2px ms-2 fw-500">{{ flowEventDescription(flowEvent, flowDetails) }}</div>
+                            <span class="fs-12 ms-2 word-break">{{
+                                flowEventSubMessage(flowEvent, flowDetails, inputDatasetInfo)
+                            }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="fs-12">{{ flowEvent.eventTime | date: "y-MM-dd, h:mm:ss a" }}</span>
+                    </div>
+                    <div class="col-md-3" *ngIf="!lastIndex">
+                        <span class="fs-12">
+                            {{ durationFlowEvent(flowHistory[i].eventTime, flowHistory[i + 1].eventTime) }}
+                        </span>
                     </div>
                 </div>
-                <div class="col-md-6">{{ flowEvent.eventTime | date: "y-MM-dd, h:mm:ss a" }}</div>
             </div>
-        </div>
-    </ng-container>
+        </li>
+    </ul>
 </div>

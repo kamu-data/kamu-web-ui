@@ -29,6 +29,7 @@ import {
 import { Observable, first, map } from "rxjs";
 import { ApolloQueryResult } from "@apollo/client";
 import { DatasetOperationError } from "../common/errors";
+import { noCacheFetchPolicy } from "../common/data.helpers";
 
 @Injectable({ providedIn: "root" })
 export class DatasetFlowApi {
@@ -67,13 +68,7 @@ export class DatasetFlowApi {
         datasetFlowType: DatasetFlowType;
     }): Observable<GetDatasetFlowConfigsQuery> {
         return this.getDatasetFlowConfigsGQL
-            .watch(
-                { datasetId: params.datasetId, datasetFlowType: params.datasetFlowType },
-                {
-                    fetchPolicy: "no-cache",
-                    errorPolicy: "all",
-                },
-            )
+            .watch({ datasetId: params.datasetId, datasetFlowType: params.datasetFlowType }, noCacheFetchPolicy)
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetDatasetFlowConfigsQuery>) => {
                     return result.data;
@@ -142,10 +137,7 @@ export class DatasetFlowApi {
         return this.getDatasetListFlowsGQL
             .watch(
                 { datasetId: params.datasetId, page: params.page, perPage: params.perPage, filters: params.filters },
-                {
-                    fetchPolicy: "no-cache",
-                    errorPolicy: "all",
-                },
+                noCacheFetchPolicy,
             )
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetDatasetListFlowsQuery>) => {
@@ -199,30 +191,16 @@ export class DatasetFlowApi {
     }
 
     public allFlowsPaused(datasetId: string): Observable<DatasetAllFlowsPausedQuery> {
-        return this.datasetAllFlowsPausedGQL
-            .watch(
-                { datasetId },
-                {
-                    fetchPolicy: "no-cache",
-                    errorPolicy: "all",
-                },
-            )
-            .valueChanges.pipe(
-                map((result: ApolloQueryResult<DatasetAllFlowsPausedQuery>) => {
-                    return result.data;
-                }),
-            );
+        return this.datasetAllFlowsPausedGQL.watch({ datasetId }, noCacheFetchPolicy).valueChanges.pipe(
+            map((result: ApolloQueryResult<DatasetAllFlowsPausedQuery>) => {
+                return result.data;
+            }),
+        );
     }
 
     public getFlowById(params: { datasetId: string; flowId: string }): Observable<GetFlowByIdQuery> {
         return this.datasetFlowByIdGQL
-            .watch(
-                { datasetId: params.datasetId, flowId: params.flowId },
-                {
-                    fetchPolicy: "no-cache",
-                    errorPolicy: "all",
-                },
-            )
+            .watch({ datasetId: params.datasetId, flowId: params.flowId }, noCacheFetchPolicy)
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetFlowByIdQuery>) => {
                     return result.data;

@@ -64,7 +64,8 @@ export class FlowsTableComponent implements OnInit {
     }
 
     public durationTask(d1: Scalars["DateTime"], d2: Scalars["DateTime"]): string {
-        const result = convertSecondsToHumanReadableFormat(moment(d2).seconds() - moment(d1).seconds());
+        const durationSeconds = Math.round(moment.duration(moment(d2).diff(moment(d1))).asSeconds());
+        const result = convertSecondsToHumanReadableFormat(durationSeconds);
         return result ? result : "less than 1 second";
     }
 

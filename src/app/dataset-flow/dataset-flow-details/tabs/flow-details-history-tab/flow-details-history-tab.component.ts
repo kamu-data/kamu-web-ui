@@ -3,6 +3,7 @@ import {
     DatasetByIdQuery,
     FlowEventInitiated,
     FlowHistoryDataFragment,
+    FlowStatus,
     FlowSummaryDataFragment,
     FlowTriggerInputDatasetFlow,
 } from "src/app/api/kamu.graphql.interface";
@@ -10,6 +11,8 @@ import { DatasetFlowDetailsHelpers } from "./flow-details-history-tab.helpers";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
+import moment from "moment";
+import { convertSecondsToHumanReadableFormat } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-flow-details-history-tab",
@@ -21,6 +24,7 @@ export class FlowDetailsHistoryTabComponent extends BaseComponent implements OnI
     @Input() flowHistory: FlowHistoryDataFragment[];
     @Input() flowDetails: FlowSummaryDataFragment;
     public inputDatasetInfo: DatasetInfo = { accountName: "", datasetName: "" };
+    public readonly FlowStatus: typeof FlowStatus = FlowStatus;
 
     constructor(private datasetService: DatasetService, private cdr: ChangeDetectorRef) {
         super();
@@ -39,6 +43,14 @@ export class FlowDetailsHistoryTabComponent extends BaseComponent implements OnI
         flowDetails: FlowSummaryDataFragment,
     ): { icon: string; class: string } {
         return DatasetFlowDetailsHelpers.flowEventIconOptions(flowEvent, flowDetails);
+    }
+
+    public durationFlowEvent(startEventTime: string, endEventTime: string): string {
+        const durationSeconds = Math.round(
+            moment.duration(moment(endEventTime).diff(moment(startEventTime))).asSeconds(),
+        );
+        const result = convertSecondsToHumanReadableFormat(durationSeconds);
+        return result ? result : "less than 1 second";
     }
 
     public flowEventSubMessage(

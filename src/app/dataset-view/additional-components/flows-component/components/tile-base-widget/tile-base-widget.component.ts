@@ -19,7 +19,8 @@ export class TileBaseWidgetComponent {
 
     public durationTask(d1: MaybeNullOrUndefined<string>, d2: MaybeNullOrUndefined<string>): string {
         if (!d2 || !d1) return "-";
-        const result = convertSecondsToHumanReadableFormat(moment(d2).seconds() - moment(d1).seconds());
+        const durationSeconds = Math.round(moment.duration(moment(d2).diff(moment(d1))).asSeconds());
+        const result = convertSecondsToHumanReadableFormat(durationSeconds);
         return result ? result : "less than 1 second";
     }
 

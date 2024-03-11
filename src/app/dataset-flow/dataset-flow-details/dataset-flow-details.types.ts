@@ -17,6 +17,7 @@ export interface DatasetFlowByIdResponse {
     flow: FlowSummaryDataFragment;
     flowHistory: FlowHistoryDataFragment[];
 }
+
 export interface ViewMenuData {
     datasetBasics: DatasetBasicsFragment;
     datasetPermissions: DatasetPermissionsFragment;

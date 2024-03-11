@@ -6,6 +6,7 @@ import { JsonFormValidators } from "../dataset-view/additional-components/metada
 import { MaybeUndefined } from "./app.types";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { isValidCronExpression } from "./cron-expression-validator.helper";
+import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -271,4 +272,12 @@ export const everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = {
         maximumNumber: 51,
         message: "Value should be between 1 to 51",
     }),
+};
+
+export const noCacheFetchPolicy: {
+    fetchPolicy?: MaybeUndefined<WatchQueryFetchPolicy>;
+    errorPolicy?: MaybeUndefined<ErrorPolicy>;
+} = {
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
 };

@@ -20,7 +20,9 @@ fragment FlowHistoryData on FlowEvent {
         __typename
       }
       ... on FlowTriggerInputDatasetFlow {
-        datasetId
+        dataset {
+          ...DatasetBasics
+        }
         flowId
         flowType
       }
@@ -76,7 +78,9 @@ fragment FlowHistoryData on FlowEvent {
         __typename
       }
       ... on FlowTriggerInputDatasetFlow {
-        datasetId
+        dataset {
+          ...DatasetBasics
+        }
         flowId
         flowType
       }

@@ -947,7 +947,7 @@ export type FlowTriggerAutoPolling = {
 
 export type FlowTriggerInputDatasetFlow = {
     __typename?: "FlowTriggerInputDatasetFlow";
-    datasetId: Scalars["DatasetID"];
+    dataset: Dataset;
     flowId: Scalars["FlowID"];
     flowType: DatasetFlowType;
 };
@@ -2188,7 +2188,12 @@ type FlowHistoryData_FlowEventInitiated_Fragment = {
     eventTime: string;
     trigger:
         | { __typename: "FlowTriggerAutoPolling" }
-        | { __typename: "FlowTriggerInputDatasetFlow"; datasetId: string; flowId: string; flowType: DatasetFlowType }
+        | {
+              __typename: "FlowTriggerInputDatasetFlow";
+              flowId: string;
+              flowType: DatasetFlowType;
+              dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+          }
         | { __typename: "FlowTriggerManual"; initiator: { __typename?: "Account" } & AccountFragment }
         | { __typename: "FlowTriggerPush" };
 };
@@ -2228,7 +2233,12 @@ type FlowHistoryData_FlowEventTriggerAdded_Fragment = {
     eventTime: string;
     trigger:
         | { __typename: "FlowTriggerAutoPolling" }
-        | { __typename: "FlowTriggerInputDatasetFlow"; datasetId: string; flowId: string; flowType: DatasetFlowType }
+        | {
+              __typename: "FlowTriggerInputDatasetFlow";
+              flowId: string;
+              flowType: DatasetFlowType;
+              dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+          }
         | { __typename: "FlowTriggerManual"; initiator: { __typename?: "Account" } & AccountFragment }
         | { __typename: "FlowTriggerPush" };
 };
@@ -3109,6 +3119,24 @@ export const FlowConnectionDataFragmentDoc = gql`
     ${FlowSummaryDataFragmentDoc}
     ${DatasetPageInfoFragmentDoc}
 `;
+export const AccountBasicsFragmentDoc = gql`
+    fragment AccountBasics on Account {
+        id
+        accountName
+    }
+`;
+export const DatasetBasicsFragmentDoc = gql`
+    fragment DatasetBasics on Dataset {
+        id
+        kind
+        name
+        owner {
+            ...AccountBasics
+        }
+        alias
+    }
+    ${AccountBasicsFragmentDoc}
+`;
 export const FlowHistoryDataFragmentDoc = gql`
     fragment FlowHistoryData on FlowEvent {
         __typename
@@ -3132,7 +3160,9 @@ export const FlowHistoryDataFragmentDoc = gql`
                     __typename
                 }
                 ... on FlowTriggerInputDatasetFlow {
-                    datasetId
+                    dataset {
+                        ...DatasetBasics
+                    }
                     flowId
                     flowType
                 }
@@ -3185,7 +3215,9 @@ export const FlowHistoryDataFragmentDoc = gql`
                     __typename
                 }
                 ... on FlowTriggerInputDatasetFlow {
-                    datasetId
+                    dataset {
+                        ...DatasetBasics
+                    }
                     flowId
                     flowType
                 }
@@ -3193,6 +3225,7 @@ export const FlowHistoryDataFragmentDoc = gql`
         }
     }
     ${AccountFragmentDoc}
+    ${DatasetBasicsFragmentDoc}
     ${TimeDeltaDataFragmentDoc}
 `;
 export const DatasetDataSizeFragmentDoc = gql`
@@ -3232,24 +3265,6 @@ export const DatasetDataFragmentDoc = gql`
     }
     ${DatasetDataSizeFragmentDoc}
     ${DataQueryResultSuccessViewFragmentDoc}
-`;
-export const AccountBasicsFragmentDoc = gql`
-    fragment AccountBasics on Account {
-        id
-        accountName
-    }
-`;
-export const DatasetBasicsFragmentDoc = gql`
-    fragment DatasetBasics on Dataset {
-        id
-        kind
-        name
-        owner {
-            ...AccountBasics
-        }
-        alias
-    }
-    ${AccountBasicsFragmentDoc}
 `;
 export const CurrentSourceFetchUrlFragmentDoc = gql`
     fragment CurrentSourceFetchUrl on DatasetMetadata {

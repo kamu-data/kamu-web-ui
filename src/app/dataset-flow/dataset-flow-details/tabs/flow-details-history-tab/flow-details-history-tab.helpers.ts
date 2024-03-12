@@ -13,7 +13,6 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 export class DatasetFlowDetailsHelpers {
     public static flowEventDescription(
@@ -88,13 +87,12 @@ export class DatasetFlowDetailsHelpers {
     public static flowEventSubMessage(
         flowEvent: FlowHistoryDataFragment,
         flowDetails: FlowSummaryDataFragment,
-        inputDatasetInfo: DatasetInfo,
     ): string {
         const eventTypename = flowEvent.__typename;
         switch (eventTypename) {
             case "FlowEventInitiated":
             case "FlowEventTriggerAdded":
-                return this.describeTriggerDetails((flowEvent as FlowEventInitiated).trigger, inputDatasetInfo);
+                return this.describeTriggerDetails((flowEvent as FlowEventInitiated).trigger);
             case "FlowEventAborted":
                 return "";
             case "FlowEventTaskChanged": {
@@ -186,7 +184,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeTriggerDetails(trigger: FlowTrigger, inputDatasetInfo: DatasetInfo): string {
+    private static describeTriggerDetails(trigger: FlowTrigger): string {
         switch (trigger.__typename) {
             case "FlowTriggerAutoPolling":
                 return "";
@@ -195,7 +193,7 @@ export class DatasetFlowDetailsHelpers {
             case "FlowTriggerPush":
                 return "";
             case "FlowTriggerInputDatasetFlow":
-                return `Input dataset: ${inputDatasetInfo.accountName}/${inputDatasetInfo.datasetName}`;
+                return `Input dataset: ${trigger.dataset.owner.accountName}/${trigger.dataset.name}`;
             default:
                 throw new Error("Unknown trigger typename");
         }

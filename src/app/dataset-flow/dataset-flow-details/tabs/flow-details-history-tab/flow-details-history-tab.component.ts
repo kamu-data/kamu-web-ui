@@ -1,17 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
 import {
-    DatasetByIdQuery,
-    FlowEventInitiated,
     FlowHistoryDataFragment,
     FlowStatus,
     FlowSummaryDataFragment,
-    FlowTriggerInputDatasetFlow,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowDetailsHelpers } from "./flow-details-history-tab.helpers";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DataHelpers } from "src/app/common/data.helpers";
 
 @Component({
@@ -20,18 +16,13 @@ import { DataHelpers } from "src/app/common/data.helpers";
     styleUrls: ["./flow-details-history-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlowDetailsHistoryTabComponent extends BaseComponent implements OnInit {
+export class FlowDetailsHistoryTabComponent extends BaseComponent {
     @Input() flowHistory: FlowHistoryDataFragment[];
     @Input() flowDetails: FlowSummaryDataFragment;
-    public inputDatasetInfo: DatasetInfo = { accountName: "", datasetName: "" };
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
 
     constructor(private datasetService: DatasetService, private cdr: ChangeDetectorRef) {
         super();
-    }
-
-    ngOnInit(): void {
-        this.setInputDatasetInfo();
     }
 
     public get history(): FlowHistoryDataFragment[] {
@@ -55,33 +46,7 @@ export class FlowDetailsHistoryTabComponent extends BaseComponent implements OnI
         return DataHelpers.durationTask(startEventTime, endEventTime);
     }
 
-    public flowEventSubMessage(
-        flowEvent: FlowHistoryDataFragment,
-        flowDetails: FlowSummaryDataFragment,
-        inputDatasetInfo: DatasetInfo,
-    ): string {
-        return DatasetFlowDetailsHelpers.flowEventSubMessage(flowEvent, flowDetails, inputDatasetInfo);
-    }
-
-    private setInputDatasetInfo(): void {
-        const inputDatasetFlow = this.flowHistory.filter(
-            (item: FlowHistoryDataFragment) =>
-                item.__typename === "FlowEventInitiated" && item.trigger.__typename === "FlowTriggerInputDatasetFlow",
-        );
-        if (inputDatasetFlow.length) {
-            const eventInitiated = inputDatasetFlow[0] as FlowEventInitiated;
-            const datasetId = (eventInitiated.trigger as FlowTriggerInputDatasetFlow).datasetId;
-            this.trackSubscription(
-                this.datasetService.requestDatasetInfoById(datasetId).subscribe((dataset: DatasetByIdQuery) => {
-                    if (dataset.datasets.byId) {
-                        this.inputDatasetInfo = {
-                            accountName: dataset.datasets.byId.owner.accountName,
-                            datasetName: dataset.datasets.byId.name,
-                        };
-                        this.cdr.detectChanges();
-                    }
-                }),
-            );
-        }
+    public flowEventSubMessage(flowEvent: FlowHistoryDataFragment, flowDetails: FlowSummaryDataFragment): string {
+        return DatasetFlowDetailsHelpers.flowEventSubMessage(flowEvent, flowDetails);
     }
 }

@@ -38,34 +38,6 @@
                     </span>
                 </div>
             </div>
-
-            <div>
-                <button
-                    class="btn-sm btn custom-edit"
-                    aria-label="Show tasks options"
-                    data-test-id="show-flow-detail-options"
-                    title="Show options"
-                    #menuTrigger="matMenuTrigger"
-                    [matMenuTriggerFor]="menu"
-                >
-                    <svg-icon name="show-options"></svg-icon>
-                </button>
-                <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="true">
-                    <button mat-menu-item [disabled]="false" (click)="updateNow(values.datasetBasics)">
-                        Update now
-                    </button>
-                    <mat-divider></mat-divider>
-                    <button mat-menu-item (click)="updateSettings(values.datasetBasics)">Update settings</button>
-                    <mat-divider></mat-divider>
-                    <button
-                        mat-menu-item
-                        (click)="toggleStateDatasetFlowConfigs(values.allFlowsPaused!, values.datasetBasics)"
-                    >
-                        {{ !values.allFlowsPaused ? "Pause" : "Resume" }}
-                        dataset flows
-                    </button>
-                </mat-menu>
-            </div>
         </div>
         <div class="d-flex justify-content-end mx-4">
             <button

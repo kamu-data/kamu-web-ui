@@ -1,10 +1,9 @@
-import { DatasetFlowType, DatasetKind, FlowStatus } from "./../../api/kamu.graphql.interface";
+import { FlowStatus } from "./../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { DatasetFlowByIdResponse, FlowDetailsTabs, ViewMenuData } from "./dataset-flow-details.types";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import {
     Observable,
-    Subject,
     Subscription,
     combineLatest,
     filter,
@@ -15,7 +14,7 @@ import {
     tap,
     timer,
 } from "rxjs";
-import { DatasetBasicsFragment, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import { FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 import { MaybeUndefined } from "src/app/common/app.types";
@@ -23,7 +22,6 @@ import ProjectLinks from "src/app/project-links";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DataHelpers } from "src/app/common/data.helpers";
 import { DatasetFlowTableHelpers } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.helpers";
-import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { BaseDatasetDataComponent } from "src/app/common/base-dataset-data.component";
 
 @Component({
@@ -39,15 +37,12 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
     public flowId = "";
     public datasetViewMenuData$: Observable<ViewMenuData>;
     public datasetFlowDetails$: Observable<MaybeUndefined<DatasetFlowByIdResponse>>;
-    public allFlowsPaused$: Observable<MaybeUndefined<boolean>>;
     public readonly TIMEOUT_REFRESH_FLOW = 800;
-    public timerDone$ = new Subject<boolean>();
 
     constructor(
         private router: Router,
         private route: ActivatedRoute,
         private datasetFlowsService: DatasetFlowsService,
-        private flowsService: DatasetFlowsService,
         private cdr: ChangeDetectorRef,
     ) {
         super();
@@ -56,16 +51,9 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
     ngOnInit(): void {
         this.datasetBasics$ = this.datasetService.datasetChanges.pipe(shareReplay());
         this.datasetPermissions$ = this.datasetSubsService.permissionsChanges;
-        this.allFlowsPaused$ = this.datasetBasics$.pipe(
-            switchMap((data: DatasetBasicsFragment) => this.flowsService.allFlowsPaused(data.id)),
-        );
-        this.datasetViewMenuData$ = combineLatest([
-            this.datasetBasics$,
-            this.datasetPermissions$,
-            this.allFlowsPaused$,
-        ]).pipe(
-            map(([datasetBasics, datasetPermissions, allFlowsPaused]) => {
-                return { datasetBasics, datasetPermissions, allFlowsPaused };
+        this.datasetViewMenuData$ = combineLatest([this.datasetBasics$, this.datasetPermissions$]).pipe(
+            map(([datasetBasics, datasetPermissions]) => {
+                return { datasetBasics, datasetPermissions };
             }),
             shareReplay(),
         );
@@ -154,52 +142,5 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
                 });
             }),
         );
-    }
-
-    public updateNow(datasetBasics: DatasetBasicsFragment): void {
-        this.trackSubscription(
-            this.flowsService
-                .datasetTriggerFlow({
-                    datasetId: datasetBasics.id,
-                    datasetFlowType:
-                        datasetBasics.kind === DatasetKind.Root
-                            ? DatasetFlowType.Ingest
-                            : DatasetFlowType.ExecuteTransform,
-                })
-                .subscribe((success: boolean) => {
-                    if (success) {
-                        this.getDatasetNavigation(this.getDatasetInfoFromUrl()).navigateToFlows();
-                    }
-                }),
-        );
-    }
-
-    public updateSettings(datasetBasics: DatasetBasicsFragment): void {
-        this.navigationService.navigateToDatasetView({
-            accountName: datasetBasics.owner.accountName,
-            datasetName: datasetBasics.name,
-            tab: DatasetViewTypeEnum.Settings,
-            section: SettingsTabsEnum.SCHEDULING,
-        });
-    }
-
-    public toggleStateDatasetFlowConfigs(paused: boolean, datasetBasics: DatasetBasicsFragment): void {
-        if (!paused) {
-            this.trackSubscription(
-                this.flowsService
-                    .datasetPauseFlows({
-                        datasetId: datasetBasics.id,
-                    })
-                    .subscribe(() => this.getDatasetNavigation(this.getDatasetInfoFromUrl()).navigateToFlows()),
-            );
-        } else {
-            this.trackSubscription(
-                this.flowsService
-                    .datasetResumeFlows({
-                        datasetId: datasetBasics.id,
-                    })
-                    .subscribe(() => this.getDatasetNavigation(this.getDatasetInfoFromUrl()).navigateToFlows()),
-            );
-        }
     }
 }

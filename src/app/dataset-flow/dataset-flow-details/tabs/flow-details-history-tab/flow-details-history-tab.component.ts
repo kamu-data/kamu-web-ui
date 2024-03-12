@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import {
     FlowHistoryDataFragment,
     FlowStatus,
@@ -7,7 +7,6 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowDetailsHelpers } from "./flow-details-history-tab.helpers";
 import { BaseComponent } from "src/app/common/base.component";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DataHelpers } from "src/app/common/data.helpers";
 
 @Component({
@@ -20,10 +19,6 @@ export class FlowDetailsHistoryTabComponent extends BaseComponent {
     @Input() flowHistory: FlowHistoryDataFragment[];
     @Input() flowDetails: FlowSummaryDataFragment;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
-
-    constructor(private datasetService: DatasetService, private cdr: ChangeDetectorRef) {
-        super();
-    }
 
     public get history(): FlowHistoryDataFragment[] {
         return this.flowHistory.filter(

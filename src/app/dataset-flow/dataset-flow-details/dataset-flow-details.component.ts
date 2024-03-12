@@ -1,8 +1,20 @@
-import { DatasetFlowType, DatasetKind } from "./../../api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { DatasetFlowType, DatasetKind, FlowStatus } from "./../../api/kamu.graphql.interface";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { DatasetFlowByIdResponse, FlowDetailsTabs, ViewMenuData } from "./dataset-flow-details.types";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { Observable, Subscription, combineLatest, filter, map, shareReplay, switchMap, timer } from "rxjs";
+import {
+    Observable,
+    Subject,
+    Subscription,
+    combineLatest,
+    filter,
+    map,
+    shareReplay,
+    switchMap,
+    takeWhile,
+    tap,
+    timer,
+} from "rxjs";
 import { DatasetBasicsFragment, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
@@ -29,12 +41,14 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
     public datasetFlowDetails$: Observable<MaybeUndefined<DatasetFlowByIdResponse>>;
     public allFlowsPaused$: Observable<MaybeUndefined<boolean>>;
     public readonly TIMEOUT_REFRESH_FLOW = 800;
+    public timerDone$ = new Subject<boolean>();
 
     constructor(
         private router: Router,
         private route: ActivatedRoute,
         private datasetFlowsService: DatasetFlowsService,
         private flowsService: DatasetFlowsService,
+        private cdr: ChangeDetectorRef,
     ) {
         super();
     }
@@ -64,7 +78,7 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
         this.extractActiveTabFromRoute();
         this.extractFlowIdFromRoute();
         this.trackSubscriptions(this.loadDatasetBasicDataWithPermissions());
-        this.datasetFlowDetails$ = timer(0, 10000).pipe(
+        this.datasetFlowDetails$ = timer(0, 5000).pipe(
             switchMap(() => this.datasetViewMenuData$),
             switchMap((data: ViewMenuData) => {
                 return this.datasetFlowsService.datasetFlowById({
@@ -72,6 +86,13 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
                     flowId: this.flowId,
                 });
             }),
+            tap((response: MaybeUndefined<DatasetFlowByIdResponse>) => {
+                if (response?.flow.status === FlowStatus.Finished) {
+                    this.refreshNow();
+                    this.cdr.detectChanges();
+                }
+            }),
+            takeWhile((result: MaybeUndefined<DatasetFlowByIdResponse>) => result?.flow.status !== FlowStatus.Finished),
         );
     }
 

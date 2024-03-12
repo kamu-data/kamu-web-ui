@@ -1,3 +1,4 @@
+import moment from "moment";
 import {
     FlowEventInitiated,
     FlowEventStartConditionUpdated,
@@ -5,11 +6,12 @@ import {
     FlowEventTriggerAdded,
     FlowHistoryDataFragment,
     FlowOutcome,
-    FlowStartConditionKind,
+    FlowStartCondition,
     FlowSummaryDataFragment,
     FlowTrigger,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
+import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 
@@ -200,14 +202,14 @@ export class DatasetFlowDetailsHelpers {
     }
 
     private static describeStartCondition(startConditionEvent: FlowEventStartConditionUpdated): string {
-        switch (startConditionEvent.startConditionKind) {
-            case FlowStartConditionKind.Throttling:
+        switch (startConditionEvent.startCondition.__typename) {
+            case "FlowStartConditionThrottling":
                 return "throttling condition";
-            case FlowStartConditionKind.Batching:
+            case "FlowStartConditionBatching":
                 return "batching condition";
-            case FlowStartConditionKind.Executor:
+            case "FlowStartConditionExecutor":
                 return "free executor";
-            case FlowStartConditionKind.Schedule:
+            case "FlowStartConditionSchedule":
                 return "scheduled execution";
             default:
                 throw new Error("Unknown start condition typename");
@@ -215,16 +217,26 @@ export class DatasetFlowDetailsHelpers {
     }
 
     private static describeStartConditionDetails(startConditionEvent: FlowEventStartConditionUpdated): string {
-        // TODO
-        switch (startConditionEvent.startConditionKind) {
-            case FlowStartConditionKind.Throttling:
-                return "";
-            case FlowStartConditionKind.Batching:
-                return "";
-            case FlowStartConditionKind.Executor:
-                return "";
-            case FlowStartConditionKind.Schedule:
-                return "";
+        const startCondition: FlowStartCondition = startConditionEvent.startCondition;
+        switch (startCondition.__typename) {
+            case "FlowStartConditionThrottling":
+                return `Wake up time at ${moment(startCondition.wakeUpAt).format(
+                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                )}, shifted from ${moment(startCondition.shiftedFrom).format(AppValues.TIME_FORMAT)}`;
+            case "FlowStartConditionBatching":
+                return `Accumulated ${startCondition.accumulatedRecordsCount}/${
+                    startCondition.activeBatchingRule.minRecordsToAwait
+                } records. Watermark ${
+                    startCondition.watermarkModified ? "modified" : "unchanged"
+                }. Deadline at ${moment(startCondition.batchingDeadline).format(
+                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                )}`;
+            case "FlowStartConditionExecutor":
+                return `Task #${startCondition.taskId}`;
+            case "FlowStartConditionSchedule":
+                return `Wake up time at ${moment(startCondition.wakeUpAt).format(
+                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                )}`;
             default:
                 throw new Error("Unknown start condition typename");
         }

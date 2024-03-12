@@ -842,7 +842,7 @@ export type FlowEventStartConditionUpdated = FlowEvent & {
     __typename?: "FlowEventStartConditionUpdated";
     eventId: Scalars["EventID"];
     eventTime: Scalars["DateTime"];
-    startConditionKind: FlowStartConditionKind;
+    startCondition: FlowStartCondition;
 };
 
 export type FlowEventTaskChanged = FlowEvent & {
@@ -906,13 +906,6 @@ export type FlowStartConditionExecutor = {
     __typename?: "FlowStartConditionExecutor";
     taskId: Scalars["TaskID"];
 };
-
-export enum FlowStartConditionKind {
-    Batching = "BATCHING",
-    Executor = "EXECUTOR",
-    Schedule = "SCHEDULE",
-    Throttling = "THROTTLING",
-}
 
 export type FlowStartConditionSchedule = {
     __typename?: "FlowStartConditionSchedule";
@@ -2197,14 +2190,28 @@ type FlowHistoryData_FlowEventInitiated_Fragment = {
         | { __typename: "FlowTriggerAutoPolling" }
         | { __typename: "FlowTriggerInputDatasetFlow"; datasetId: string; flowId: string; flowType: DatasetFlowType }
         | { __typename: "FlowTriggerManual"; initiator: { __typename?: "Account" } & AccountFragment }
-        | { __typename: "FlowTriggerPush"; dummy: boolean };
+        | { __typename: "FlowTriggerPush" };
 };
 
 type FlowHistoryData_FlowEventStartConditionUpdated_Fragment = {
     __typename: "FlowEventStartConditionUpdated";
-    startConditionKind: FlowStartConditionKind;
     eventId: string;
     eventTime: string;
+    startCondition:
+        | {
+              __typename: "FlowStartConditionBatching";
+              batchingDeadline: string;
+              accumulatedRecordsCount: number;
+              watermarkModified: boolean;
+              activeBatchingRule: {
+                  __typename?: "FlowConfigurationBatching";
+                  minRecordsToAwait: number;
+                  maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
+              };
+          }
+        | { __typename: "FlowStartConditionExecutor"; taskId: string }
+        | { __typename: "FlowStartConditionSchedule"; wakeUpAt: string }
+        | { __typename: "FlowStartConditionThrottling"; intervalSec: number; wakeUpAt: string; shiftedFrom: string };
 };
 
 type FlowHistoryData_FlowEventTaskChanged_Fragment = {
@@ -3122,7 +3129,7 @@ export const FlowHistoryDataFragmentDoc = gql`
                     }
                 }
                 ... on FlowTriggerPush {
-                    dummy
+                    __typename
                 }
                 ... on FlowTriggerInputDatasetFlow {
                     datasetId
@@ -3132,7 +3139,31 @@ export const FlowHistoryDataFragmentDoc = gql`
             }
         }
         ... on FlowEventStartConditionUpdated {
-            startConditionKind
+            startCondition {
+                __typename
+                ... on FlowStartConditionThrottling {
+                    intervalSec
+                    wakeUpAt
+                    shiftedFrom
+                }
+                ... on FlowStartConditionBatching {
+                    activeBatchingRule {
+                        minRecordsToAwait
+                        maxBatchingInterval {
+                            ...TimeDeltaData
+                        }
+                    }
+                    batchingDeadline
+                    accumulatedRecordsCount
+                    watermarkModified
+                }
+                ... on FlowStartConditionSchedule {
+                    wakeUpAt
+                }
+                ... on FlowStartConditionExecutor {
+                    taskId
+                }
+            }
         }
         ... on FlowEventTaskChanged {
             __typename
@@ -3162,6 +3193,7 @@ export const FlowHistoryDataFragmentDoc = gql`
         }
     }
     ${AccountFragmentDoc}
+    ${TimeDeltaDataFragmentDoc}
 `;
 export const DatasetDataSizeFragmentDoc = gql`
     fragment DatasetDataSize on DatasetData {

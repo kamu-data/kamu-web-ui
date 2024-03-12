@@ -27,7 +27,34 @@ fragment FlowHistoryData on FlowEvent {
     }
   }
   ... on FlowEventStartConditionUpdated {
-    startConditionKind
+    startCondition {
+      __typename
+      ... on FlowStartConditionThrottling {
+        intervalSec
+        wakeUpAt
+        shiftedFrom
+      }
+
+      ... on FlowStartConditionBatching {
+        activeBatchingRule {
+          minRecordsToAwait
+          maxBatchingInterval {
+            ...TimeDeltaData
+          }
+        }
+        batchingDeadline
+        accumulatedRecordsCount
+        watermarkModified
+      }
+
+      ... on FlowStartConditionSchedule {
+        wakeUpAt
+      }
+
+      ... on FlowStartConditionExecutor {
+        taskId
+      }
+    }
   }
   ... on FlowEventTaskChanged {
     __typename

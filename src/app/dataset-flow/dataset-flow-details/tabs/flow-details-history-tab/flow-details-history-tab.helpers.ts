@@ -7,6 +7,7 @@ import {
     FlowOutcome,
     FlowStartConditionKind,
     FlowSummaryDataFragment,
+    FlowTrigger,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
 import { DataHelpers } from "src/app/common/data.helpers";
@@ -19,58 +20,21 @@ export class DatasetFlowDetailsHelpers {
     ): string {
         const eventTypename = flowEvent.__typename;
         switch (eventTypename) {
-            case "FlowEventInitiated": {
-                const triggerTypename = (flowEvent as FlowEventInitiated).trigger.__typename;
-                switch (triggerTypename) {
-                    case "FlowTriggerAutoPolling":
-                        return `Event initiated by auto polling trigger`;
-                    case "FlowTriggerManual":
-                        return `Event initiated by manual trigger`;
-                    case "FlowTriggerPush":
-                        return `Event initiated by push trigger`;
-                    case "FlowTriggerInputDatasetFlow":
-                        return `Event initiated by input dataset`;
-                    default:
-                        throw new Error("Unknown trigger typename");
-                }
-            }
+            case "FlowEventInitiated":
+                return `Flow initiated ${this.describeTrigger((flowEvent as FlowEventInitiated).trigger)}`;
             case "FlowEventAborted":
-                return "Event was aborted";
+                return "Flow was aborted";
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
                 return `${DataHelpers.flowTypeDescription(
                     flowDetails,
-                )} ${DatasetFlowDetailsHelpers.descriptionEndOfMessage(event)}`;
+                )} task ${DatasetFlowDetailsHelpers.descriptionEndOfMessage(event)}`;
             }
-            case "FlowEventTriggerAdded": {
-                const triggerTypename = (flowEvent as FlowEventTriggerAdded).trigger.__typename;
-                switch (triggerTypename) {
-                    case "FlowTriggerAutoPolling":
-                        return `Event initiated by auto polling trigger`;
-                    case "FlowTriggerManual":
-                        return `Event initiated by manual trigger`;
-                    case "FlowTriggerPush":
-                        return `Event initiated by push trigger`;
-                    case "FlowTriggerInputDatasetFlow":
-                        return `Event initiated by input dataset`;
-                    default:
-                        throw new Error("Unknown trigger typename");
-                }
-            }
+            case "FlowEventTriggerAdded":
+                return `Additionally triggered ${this.describeTrigger((flowEvent as FlowEventTriggerAdded).trigger)}`;
             case "FlowEventStartConditionUpdated": {
                 const startConditionEvent = flowEvent as FlowEventStartConditionUpdated;
-                switch (startConditionEvent.startConditionKind) {
-                    case FlowStartConditionKind.Throttling:
-                        return `Waiting for throttling condition`;
-                    case FlowStartConditionKind.Batching:
-                        return `Waiting for batching condition`;
-                    case FlowStartConditionKind.Executor:
-                        return `Waiting for executor`;
-                    case FlowStartConditionKind.Schedule:
-                        return `Waiting for schedule`;
-                    default:
-                        return "Unknown start condition typename";
-                }
+                return `Waiting for ${this.describeStartCondition(startConditionEvent)}`;
             }
             default:
                 throw new Error("Unknown event typename");
@@ -85,9 +49,6 @@ export class DatasetFlowDetailsHelpers {
         switch (eventTypename) {
             case "FlowEventInitiated":
                 return { icon: "flag_circle", class: "completed-status" };
-            // case "FlowEventQueued":
-            //     return { icon: "radio_button_checked", class: "queued-status" };
-
             case "FlowEventAborted":
                 return { icon: "cancel", class: "aborted-outcome" };
             case "FlowEventTriggerAdded":
@@ -129,32 +90,17 @@ export class DatasetFlowDetailsHelpers {
     ): string {
         const eventTypename = flowEvent.__typename;
         switch (eventTypename) {
-            case "FlowEventInitiated": {
-                const triggerTypename = (flowEvent as FlowEventInitiated).trigger.__typename;
-                switch (triggerTypename) {
-                    case "FlowTriggerAutoPolling":
-                        return `Initiated by system process`;
-                    case "FlowTriggerManual":
-                        return `Initiated by account name: ${
-                            flowDetails.initiator?.accountName ?? "unknown account name"
-                        }`;
-                    case "FlowTriggerPush":
-                        return `Initiated by push trigger`;
-                    case "FlowTriggerInputDatasetFlow": {
-                        return `Input dataset: ${inputDatasetInfo.accountName}/${inputDatasetInfo.datasetName}`;
-                    }
-                    default:
-                        throw new Error("Unknown trigger typename");
-                }
-            }
+            case "FlowEventInitiated":
+            case "FlowEventTriggerAdded":
+                return this.describeTriggerDetails((flowEvent as FlowEventInitiated).trigger, inputDatasetInfo);
             case "FlowEventAborted":
-                return "Event was aborted";
+                return "";
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
                     case TaskStatus.Queued:
                     case TaskStatus.Running:
-                        return `Status changed`;
+                        return `Task #${flowEvent.taskId}`;
                     case TaskStatus.Finished:
                         switch (flowDetails.outcome) {
                             case FlowOutcome.Failed:
@@ -201,38 +147,9 @@ export class DatasetFlowDetailsHelpers {
                         throw new Error("Unknown task status");
                 }
             }
-            case "FlowEventTriggerAdded": {
-                const triggerTypename = (flowEvent as FlowEventTriggerAdded).trigger.__typename;
-                switch (triggerTypename) {
-                    case "FlowTriggerAutoPolling":
-                        return `Event initiated by auto polling trigger`;
-                    case "FlowTriggerManual":
-                        return `Event initiated by manual trigger`;
-                    case "FlowTriggerPush":
-                        return `Event initiated by push trigger`;
-                    case "FlowTriggerInputDatasetFlow":
-                        return `Event initiated by input dataset`;
-                    default:
-                        throw new Error("Unknown trigger typename");
-                }
-            }
             case "FlowEventStartConditionUpdated": {
                 const startConditionEvent = flowEvent as FlowEventStartConditionUpdated;
-                switch (startConditionEvent.startConditionKind) {
-                    case FlowStartConditionKind.Throttling: {
-                        return `Throttling interval works`;
-                    }
-                    case FlowStartConditionKind.Batching: {
-                        return `Batching configuration works`;
-                    }
-                    // TODO:
-                    case FlowStartConditionKind.Executor:
-                        return "Executor is busy";
-                    case FlowStartConditionKind.Schedule:
-                        return "Schedule";
-                    default:
-                        return "Unknown start condition typename";
-                }
+                return this.describeStartConditionDetails(startConditionEvent);
             }
             default:
                 throw new Error("Unknown event typename");
@@ -249,6 +166,67 @@ export class DatasetFlowDetailsHelpers {
                 return "running";
             default:
                 throw new Error(`Unsupported task status`);
+        }
+    }
+
+    private static describeTrigger(trigger: FlowTrigger): string {
+        switch (trigger.__typename) {
+            case "FlowTriggerAutoPolling":
+                return "automatically";
+            case "FlowTriggerManual":
+                return "manually";
+            case "FlowTriggerPush":
+                return "after push event";
+            case "FlowTriggerInputDatasetFlow":
+                return "after input dataset event";
+            default:
+                throw new Error("Unknown trigger typename");
+        }
+    }
+
+    private static describeTriggerDetails(trigger: FlowTrigger, inputDatasetInfo: DatasetInfo): string {
+        switch (trigger.__typename) {
+            case "FlowTriggerAutoPolling":
+                return "";
+            case "FlowTriggerManual":
+                return `Triggered by ${trigger.initiator.accountName}`;
+            case "FlowTriggerPush":
+                return "";
+            case "FlowTriggerInputDatasetFlow":
+                return `Input dataset: ${inputDatasetInfo.accountName}/${inputDatasetInfo.datasetName}`;
+            default:
+                throw new Error("Unknown trigger typename");
+        }
+    }
+
+    private static describeStartCondition(startConditionEvent: FlowEventStartConditionUpdated): string {
+        switch (startConditionEvent.startConditionKind) {
+            case FlowStartConditionKind.Throttling:
+                return "throttling condition";
+            case FlowStartConditionKind.Batching:
+                return "batching condition";
+            case FlowStartConditionKind.Executor:
+                return "free executor";
+            case FlowStartConditionKind.Schedule:
+                return "scheduled execution";
+            default:
+                throw new Error("Unknown start condition typename");
+        }
+    }
+
+    private static describeStartConditionDetails(startConditionEvent: FlowEventStartConditionUpdated): string {
+        // TODO
+        switch (startConditionEvent.startConditionKind) {
+            case FlowStartConditionKind.Throttling:
+                return "";
+            case FlowStartConditionKind.Batching:
+                return "";
+            case FlowStartConditionKind.Executor:
+                return "";
+            case FlowStartConditionKind.Schedule:
+                return "";
+            default:
+                throw new Error("Unknown start condition typename");
         }
     }
 }

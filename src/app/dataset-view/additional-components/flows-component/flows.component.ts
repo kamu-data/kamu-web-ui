@@ -178,8 +178,10 @@ export class FlowsComponent extends BaseComponent implements OnInit {
                     .subscribe(),
             );
         }
-
-        this.updateStateComponent();
+        setTimeout(() => {
+            this.updateStateComponent();
+            this.cdr.detectChanges();
+        }, this.TIMEOUT_REFRESH_FLOW);
     }
 
     private updateStateComponent(): void {

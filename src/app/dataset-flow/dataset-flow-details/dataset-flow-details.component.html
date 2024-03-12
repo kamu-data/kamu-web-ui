@@ -1,4 +1,10 @@
-<div class="app-main-container" role="main" data-test-id="task-details-view" id="task-details-view">
+<div
+    class="app-main-container"
+    role="main"
+    data-test-id="task-details-view"
+    id="task-details-view"
+    *ngIf="datasetViewMenuData$ | async as values"
+>
     <div class="app-content mt-4">
         <app-dataset-view-header
             [datasetInfo]="datasetInfo"
@@ -7,7 +13,7 @@
         ></app-dataset-view-header>
     </div>
 
-    <div class="app-content" *ngIf="datasetViewMenuData$ | async as values">
+    <div class="app-content">
         <div id="dataset-viewer">
             <app-dataset-view-menu
                 [datasetViewType]="FLOWS_TYPE"
@@ -37,7 +43,7 @@
                 <button
                     class="btn-sm btn custom-edit"
                     aria-label="Show tasks options"
-                    data-test-id="show-tasks-options"
+                    data-test-id="show-flow-detail-options"
                     title="Show options"
                     #menuTrigger="matMenuTrigger"
                     [matMenuTriggerFor]="menu"
@@ -45,9 +51,19 @@
                     <svg-icon name="show-options"></svg-icon>
                 </button>
                 <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="true">
-                    <button mat-menu-item [disabled]="true">Pause task</button>
+                    <button mat-menu-item [disabled]="false" (click)="updateNow(values.datasetBasics)">
+                        Update now
+                    </button>
                     <mat-divider></mat-divider>
-                    <button mat-menu-item [disabled]="true">Cancel task</button>
+                    <button mat-menu-item (click)="updateSettings(values.datasetBasics)">Update settings</button>
+                    <mat-divider></mat-divider>
+                    <button
+                        mat-menu-item
+                        (click)="toggleStateDatasetFlowConfigs(values.allFlowsPaused!, values.datasetBasics)"
+                    >
+                        {{ !values.allFlowsPaused ? "Pause" : "Resume" }}
+                        dataset flows
+                    </button>
                 </mat-menu>
             </div>
         </div>

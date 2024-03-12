@@ -11,8 +11,7 @@ import { DatasetFlowDetailsHelpers } from "./flow-details-history-tab.helpers";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import moment from "moment";
-import { convertSecondsToHumanReadableFormat } from "src/app/common/app.helpers";
+import { DataHelpers } from "src/app/common/data.helpers";
 
 @Component({
     selector: "app-flow-details-history-tab",
@@ -46,11 +45,7 @@ export class FlowDetailsHistoryTabComponent extends BaseComponent implements OnI
     }
 
     public durationFlowEvent(startEventTime: string, endEventTime: string): string {
-        const durationSeconds = Math.round(
-            moment.duration(moment(endEventTime).diff(moment(startEventTime))).asSeconds(),
-        );
-        const result = convertSecondsToHumanReadableFormat(durationSeconds);
-        return result ? result : "less than 1 second";
+        return DataHelpers.durationTask(startEventTime, endEventTime);
     }
 
     public flowEventSubMessage(

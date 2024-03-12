@@ -1,4 +1,3 @@
-import moment from "moment";
 import {
     FlowEventInitiated,
     FlowEventStartConditionUpdated,
@@ -6,13 +5,10 @@ import {
     FlowEventTriggerAdded,
     FlowHistoryDataFragment,
     FlowOutcome,
-    FlowStartConditionBatching,
     FlowStartConditionKind,
-    FlowStartConditionThrottling,
     FlowSummaryDataFragment,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 
@@ -177,7 +173,7 @@ export class DatasetFlowDetailsHelpers {
                                                       ? "block"
                                                       : "blocks"
                                               }`
-                                            : "Expected to have injest result";
+                                            : "Dataset is up-to-date";
 
                                     case "FlowDescriptionDatasetExecuteTransform":
                                         return flowDetails.description.transformResult
@@ -190,7 +186,7 @@ export class DatasetFlowDetailsHelpers {
                                                       ? "block"
                                                       : "blocks"
                                               }`
-                                            : "Expected to have transform result";
+                                            : "Dataset is up-to-date";
                                     // TODO
                                     //  - Compacting
                                     //  - GC
@@ -224,20 +220,16 @@ export class DatasetFlowDetailsHelpers {
                 const startConditionEvent = flowEvent as FlowEventStartConditionUpdated;
                 switch (startConditionEvent.startConditionKind) {
                     case FlowStartConditionKind.Throttling: {
-                        const startCondition = flowDetails.startCondition as FlowStartConditionThrottling;
-                        return `Throttling interval: ${startCondition.intervalSec} sec`;
+                        return `Throttling interval works`;
                     }
                     case FlowStartConditionKind.Batching: {
-                        const startCondition = flowDetails.startCondition as FlowStartConditionBatching;
-                        return `Batching deadline ${moment(startCondition.batchingDeadline).format(
-                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                        )}`;
+                        return `Batching configuration works`;
                     }
                     // TODO:
                     case FlowStartConditionKind.Executor:
-                        return "executor";
+                        return "Executor is busy";
                     case FlowStartConditionKind.Schedule:
-                        return "schedule";
+                        return "Schedule";
                     default:
                         return "Unknown start condition typename";
                 }

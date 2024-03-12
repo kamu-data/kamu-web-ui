@@ -15,15 +15,13 @@ import {
     FlowSummaryDataFragment,
     FlowOutcome,
     FlowStatus,
-    Scalars,
     FetchStep,
     FlowStartCondition,
     DatasetBasicsFragment,
 } from "src/app/api/kamu.graphql.interface";
-import moment from "moment";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
-import { convertSecondsToHumanReadableFormat, promiseWithCatch } from "src/app/common/app.helpers";
+import { promiseWithCatch } from "src/app/common/app.helpers";
 import { MatMenuTrigger } from "@angular/material/menu";
 import { MatRadioChange } from "@angular/material/radio";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
@@ -63,10 +61,8 @@ export class FlowsTableComponent implements OnInit {
         this.dataSource.data = this.nodes;
     }
 
-    public durationTask(d1: Scalars["DateTime"], d2: Scalars["DateTime"]): string {
-        const durationSeconds = Math.round(moment.duration(moment(d2).diff(moment(d1))).asSeconds());
-        const result = convertSecondsToHumanReadableFormat(durationSeconds);
-        return result ? result : "less than 1 second";
+    public durationTask(d1: string, d2: string): string {
+        return DataHelpers.durationTask(d1, d2);
     }
 
     public flowTypeDescription(flow: FlowSummaryDataFragment): string {

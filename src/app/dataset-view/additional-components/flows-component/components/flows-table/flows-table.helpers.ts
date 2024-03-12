@@ -170,7 +170,7 @@ export class DatasetFlowTableHelpers {
                     case FlowOutcome.Aborted:
                         return "aborted " + moment(node.timing.finishedAt).fromNow();
                     case FlowOutcome.Failed:
-                        return "failed " + moment(node.timing.finishedAt).fromNow();
+                        return "failed " + moment(node.timing.runningSince).fromNow();
                     default:
                         throw new Error("Unknown flow outsome");
                 }

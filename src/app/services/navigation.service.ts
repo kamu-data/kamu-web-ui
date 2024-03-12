@@ -105,7 +105,7 @@ export class NavigationService {
                 params.datasetName,
                 ProjectLinks.URL_FLOW_DETAILS,
                 params.flowId,
-                FlowDetailsTabs.SUMMARY,
+                FlowDetailsTabs.HISTORY,
             ]),
         );
     }

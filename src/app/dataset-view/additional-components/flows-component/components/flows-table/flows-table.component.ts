@@ -6,9 +6,11 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnChanges,
     OnInit,
     Output,
     QueryList,
+    SimpleChanges,
     ViewChildren,
 } from "@angular/core";
 import {
@@ -27,6 +29,7 @@ import { MatRadioChange } from "@angular/material/radio";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import { FilterByInitiatorEnum, TransformDescriptionTableData } from "./flows-table.types";
 import { ModalService } from "src/app/components/modal/modal.service";
+import { isEqual } from "lodash";
 
 @Component({
     selector: "app-flows-table",
@@ -34,7 +37,7 @@ import { ModalService } from "src/app/components/modal/modal.service";
     styleUrls: ["./flows-table.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlowsTableComponent implements OnInit {
+export class FlowsTableComponent implements OnInit, OnChanges {
     @Input() public nodes: FlowSummaryDataFragment[];
     @Input() public filterByStatus: MaybeNull<FlowStatus>;
     @Input() public filterByInitiator: FilterByInitiatorEnum;
@@ -56,6 +59,12 @@ export class FlowsTableComponent implements OnInit {
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
 
     constructor(private navigationService: NavigationService, private modalService: ModalService) {}
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (!isEqual(changes.nodes.previousValue, changes.nodes.currentValue)) {
+            this.dataSource.data = changes.nodes.currentValue as FlowSummaryDataFragment[];
+        }
+    }
 
     ngOnInit(): void {
         this.dataSource.data = this.nodes;

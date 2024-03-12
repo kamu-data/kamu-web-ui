@@ -6,6 +6,7 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
     FlowTriggerInputDatasetFlow,
+    TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowDetailsHelpers } from "./flow-details-history-tab.helpers";
 import { BaseComponent } from "src/app/common/base.component";
@@ -31,6 +32,12 @@ export class FlowDetailsHistoryTabComponent extends BaseComponent implements OnI
 
     ngOnInit(): void {
         this.setInputDatasetInfo();
+    }
+
+    public get history(): FlowHistoryDataFragment[] {
+        return this.flowHistory.filter(
+            (item) => !(item.__typename === "FlowEventTaskChanged" && item.taskStatus === TaskStatus.Queued),
+        );
     }
 
     public flowEventDescription(flowEvent: FlowHistoryDataFragment, flowDetails: FlowSummaryDataFragment): string {

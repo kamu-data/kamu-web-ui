@@ -15,7 +15,7 @@ import {
     InitiatorFilterInput,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
-import { Observable, filter, map, switchMap, timer } from "rxjs";
+import { Observable, Subject, filter, map, switchMap, tap, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
@@ -47,6 +47,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly TIMEOUT_REFRESH_FLOW = 800;
+    private readonly loadingFlowsList = new Subject<boolean>();
 
     constructor(
         private flowsService: DatasetFlowsService,
@@ -55,6 +56,10 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         private cdr: ChangeDetectorRef,
     ) {
         super();
+    }
+
+    public get loadingFlowsList$(): Observable<boolean> {
+        return this.loadingFlowsList;
     }
 
     ngOnInit(): void {
@@ -90,6 +95,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
 
     public getTileWidgetData(): void {
         this.tileWidgetData$ = timer(0, 10000).pipe(
+            tap(() => this.loadingFlowsList.next(false)),
             switchMap(() =>
                 this.flowsService.datasetFlowsList({
                     datasetId: this.datasetBasics.id,
@@ -98,6 +104,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
                     filters: {},
                 }),
             ),
+            tap(() => this.loadingFlowsList.next(true)),
         );
     }
 

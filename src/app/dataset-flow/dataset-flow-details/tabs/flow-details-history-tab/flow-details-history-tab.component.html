@@ -6,7 +6,7 @@
     </div>
     <mat-divider class="my-2"></mat-divider>
     <ul>
-        <li *ngFor="let flowEvent of flowHistory; let lastIndex = last; let i = index">
+        <li *ngFor="let flowEvent of history; let lastIndex = last; let i = index">
             <div class="mt-4">
                 <div class="row">
                     <div class="col-md-6 d-flex position-relative">
@@ -37,7 +37,7 @@
                     </div>
                     <div class="col-md-3" *ngIf="!lastIndex">
                         <span class="fs-12">
-                            {{ durationFlowEvent(flowHistory[i].eventTime, flowHistory[i + 1].eventTime) }}
+                            {{ durationFlowEvent(history[i].eventTime, history[i + 1].eventTime) }}
                         </span>
                     </div>
                 </div>

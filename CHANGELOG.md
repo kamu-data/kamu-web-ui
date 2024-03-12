@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for new batching configuration
 - Added new start condition for the flow
 - Added the ability to cancel a scheduled flow
+- Added a history tab for the flow details page
 ### Fixed
 - Fixed bug with authentication (Login vs CLI)
 - Settings tab is hidden after login

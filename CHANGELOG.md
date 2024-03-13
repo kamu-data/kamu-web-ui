@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings tab is hidden after login
 - Fixed bug with `prevOffset` on the block metadata page
 - Reduced flow status types
+- Fixed dispay format for a previous checkpoint
 
 ## [0.15.0] - 2024-01-17
 ### Changed

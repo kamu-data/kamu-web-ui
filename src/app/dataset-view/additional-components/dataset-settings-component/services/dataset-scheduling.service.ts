@@ -11,6 +11,7 @@ import {
     GetDatasetFlowConfigsQuery,
     ScheduleInput,
 } from "src/app/api/kamu.graphql.interface";
+import AppValues from "src/app/common/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 
@@ -48,7 +49,7 @@ export class DatasetSchedulingService {
                             datasetName: params.datasetInfo.datasetName,
                             tab: DatasetViewTypeEnum.Flows,
                         });
-                    }, 1200);
+                    }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
                 } else if (setConfigSchedule?.__typename === "FlowIncompatibleDatasetKind") {
                     this.toastrService.error(setConfigSchedule.message);
                 }
@@ -73,7 +74,7 @@ export class DatasetSchedulingService {
                               datasetName: params.datasetInfo.datasetName,
                               tab: DatasetViewTypeEnum.Flows,
                           });
-                      }, 1200)
+                      }, AppValues.SIMULATION_START_CONDITION_DELAY_MS)
                     : this.toastrService.error(setConfigBatching?.message);
             }),
         );

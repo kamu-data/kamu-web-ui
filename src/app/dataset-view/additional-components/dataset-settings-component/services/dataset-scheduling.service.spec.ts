@@ -1,3 +1,4 @@
+import AppValues from "src/app/common/app.values";
 import { NavigationService } from "./../../../../services/navigation.service";
 import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { DatasetSchedulingService } from "./dataset-scheduling.service";
@@ -70,7 +71,7 @@ describe("DatasetSchedulingService", () => {
                 datasetInfo: mockDatasetInfo,
             })
             .subscribe(() => {
-                tick(1200);
+                tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
                 expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
                 flush();
             });
@@ -114,7 +115,7 @@ describe("DatasetSchedulingService", () => {
                 datasetInfo: mockDatasetInfo,
             })
             .subscribe(() => {
-                tick(1200);
+                tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
                 expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
                 flush();
             });

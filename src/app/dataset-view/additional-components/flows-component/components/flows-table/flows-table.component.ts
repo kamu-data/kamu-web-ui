@@ -30,6 +30,7 @@ import { MatRadioChange } from "@angular/material/radio";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import { FilterByInitiatorEnum, TransformDescriptionTableData } from "./flows-table.types";
 import { ModalService } from "src/app/components/modal/modal.service";
+import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
 
 @Component({
     selector: "app-flows-table",
@@ -147,5 +148,9 @@ export class FlowsTableComponent implements OnInit, OnChanges {
             datasetName: this.datasetBasics.name,
             flowId,
         });
+    }
+
+    public dynamicImgSrc(status: FlowStatus): string {
+        return DatasetFlowDetailsHelpers.dynamicImgSrc(status);
     }
 }

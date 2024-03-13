@@ -44,4 +44,8 @@ export class FlowDetailsHistoryTabComponent extends BaseComponent {
     public flowEventSubMessage(flowEvent: FlowHistoryDataFragment, flowDetails: FlowSummaryDataFragment): string {
         return DatasetFlowDetailsHelpers.flowEventSubMessage(flowEvent, flowDetails);
     }
+
+    public dynamicImgSrc(status: FlowStatus): string {
+        return DatasetFlowDetailsHelpers.dynamicImgSrc(status);
+    }
 }

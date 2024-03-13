@@ -7,6 +7,7 @@ import {
     FlowHistoryDataFragment,
     FlowOutcome,
     FlowStartCondition,
+    FlowStatus,
     FlowSummaryDataFragment,
     FlowTrigger,
     TaskStatus,
@@ -237,6 +238,17 @@ export class DatasetFlowDetailsHelpers {
                 )}`;
             default:
                 throw new Error("Unknown start condition typename");
+        }
+    }
+
+    public static dynamicImgSrc(status: FlowStatus): string {
+        switch (status) {
+            case FlowStatus.Running:
+                return "assets/images/gear.gif";
+            case FlowStatus.Waiting:
+                return "assets/images/hourglass.gif";
+            default:
+                return "";
         }
     }
 }

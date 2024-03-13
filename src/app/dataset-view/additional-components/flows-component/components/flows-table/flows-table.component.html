@@ -38,15 +38,8 @@
                 }}</mat-icon>
                 <div class="ms-1 py-2 position-relative">
                     <img
-                        *ngIf="element.status === FlowStatus.Waiting"
-                        src="assets/images/hourglass.gif"
-                        alt="hourglass"
-                        class="dynamic-icon"
-                    />
-                    <img
-                        *ngIf="element.status === FlowStatus.Running"
-                        src="assets/images/gear.gif"
-                        alt="gear"
+                        *ngIf="element.status !== FlowStatus.Finished"
+                        [src]="dynamicImgSrc(element.status)"
                         class="dynamic-icon"
                     />
                     <span class="fw-500">

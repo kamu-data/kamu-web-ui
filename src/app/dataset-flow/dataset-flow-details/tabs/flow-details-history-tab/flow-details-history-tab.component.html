@@ -12,19 +12,12 @@
                     <div class="col-md-6 d-flex position-relative">
                         <div class="history-item">
                             <img
-                                *ngIf="lastIndex && flowDetails.status === FlowStatus.Waiting"
-                                src="assets/images/hourglass.gif"
-                                alt="hourglass"
+                                *ngIf="lastIndex && flowDetails.status !== FlowStatus.Finished"
+                                [src]="dynamicImgSrc(flowDetails.status)"
                                 style="width: 15px"
-                                class="hourglass-img"
+                                class="dynamic-img"
                             />
-                            <img
-                                *ngIf="lastIndex && flowDetails.status === FlowStatus.Running"
-                                src="assets/images/gear.gif"
-                                alt="gear"
-                                style="width: 15px"
-                                class="gear-img"
-                            />
+
                             <mat-icon
                                 class="icon-status d-block"
                                 [ngClass]="flowEventIconOptions(flowEvent, flowDetails).class"

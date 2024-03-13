@@ -23,7 +23,10 @@ import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-detai
     providedIn: "root",
 })
 export class DatasetFlowsService {
-    constructor(private datasetFlowApi: DatasetFlowApi, private toastrService: ToastrService) {}
+    constructor(
+        private datasetFlowApi: DatasetFlowApi,
+        private toastrService: ToastrService,
+    ) {}
 
     public datasetTriggerFlow(params: { datasetId: string; datasetFlowType: DatasetFlowType }): Observable<boolean> {
         return this.datasetFlowApi

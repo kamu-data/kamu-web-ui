@@ -22,7 +22,10 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     public activeTab: SettingsTabsEnum;
     public sidePanelData: DatasetSettingsSidePanelItem[] = datasetSettingsSidePanelData;
 
-    constructor(private appConfigService: AppConfigService, private navigationService: NavigationService) {
+    constructor(
+        private appConfigService: AppConfigService,
+        private navigationService: NavigationService,
+    ) {
         super();
     }
 

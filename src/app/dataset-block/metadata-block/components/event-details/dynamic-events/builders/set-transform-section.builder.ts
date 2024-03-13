@@ -18,7 +18,12 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                     case SetTransformSection.TRANSFORM: {
                         result.push({
                             title: section,
-                            rows: this.buildEventRows(event, SET_TRANSFORM_SOURCE_DESCRIPTORS, section as keyof SetTransform, false),
+                            rows: this.buildEventRows(
+                                event,
+                                SET_TRANSFORM_SOURCE_DESCRIPTORS,
+                                section as keyof SetTransform,
+                                false,
+                            ),
                         });
                         break;
                     }

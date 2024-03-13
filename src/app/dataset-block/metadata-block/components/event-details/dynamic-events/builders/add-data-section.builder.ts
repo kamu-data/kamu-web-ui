@@ -30,7 +30,12 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
                     case AddDataSection.NEW_CHECKPOINT: {
                         result.push({
                             title: this.sectionTitleMapper[section],
-                            rows: this.buildEventRows(event, ADD_DATA_SOURCE_DESCRIPTORS, section as keyof AddData, false),
+                            rows: this.buildEventRows(
+                                event,
+                                ADD_DATA_SOURCE_DESCRIPTORS,
+                                section as keyof AddData,
+                                false,
+                            ),
                         });
                         break;
                     }

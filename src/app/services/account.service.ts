@@ -12,7 +12,10 @@ import { MaybeNull } from "../common/app.types";
     providedIn: "root",
 })
 export class AccountService {
-    constructor(private datasetApi: DatasetApi, private accountApi: AccountApi) {}
+    constructor(
+        private datasetApi: DatasetApi,
+        private accountApi: AccountApi,
+    ) {}
 
     public getDatasetsByAccountName(name: string, page: number): Observable<DatasetsAccountResponse> {
         return this.datasetApi.fetchDatasetsByAccountName(name, page).pipe(

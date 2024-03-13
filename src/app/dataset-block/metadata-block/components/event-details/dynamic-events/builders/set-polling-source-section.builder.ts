@@ -21,7 +21,12 @@ export class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPolli
                             section_enum === SetPollingSourceSection.FETCH;
                         result.push({
                             title: section,
-                            rows: this.buildEventRows(event, SET_POLLING_SOURCE_DESCRIPTORS, section as keyof SetPollingSource, allowTypenameKey),
+                            rows: this.buildEventRows(
+                                event,
+                                SET_POLLING_SOURCE_DESCRIPTORS,
+                                section as keyof SetPollingSource,
+                                allowTypenameKey,
+                            ),
                         });
                         break;
                     }

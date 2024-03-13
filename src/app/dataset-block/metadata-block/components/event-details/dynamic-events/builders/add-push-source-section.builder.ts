@@ -37,10 +37,15 @@ export class AddPushSourceSectionBuilder extends EventSectionBuilder<AddPushSour
                     case AddPushSourceSection.MERGE:
                     case AddPushSourceSection.PREPROCESS: {
                         const allowTypenameKey =
-                        section_enum === AddPushSourceSection.MERGE || section_enum === AddPushSourceSection.READ;
+                            section_enum === AddPushSourceSection.MERGE || section_enum === AddPushSourceSection.READ;
                         result.push({
                             title: section,
-                            rows: this.buildEventRows(event, ADD_PUSH_SOURCE_DESCRIPTORS, section as keyof AddPushSource, allowTypenameKey),
+                            rows: this.buildEventRows(
+                                event,
+                                ADD_PUSH_SOURCE_DESCRIPTORS,
+                                section as keyof AddPushSource,
+                                allowTypenameKey,
+                            ),
                         });
                         break;
                     }

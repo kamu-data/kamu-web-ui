@@ -143,6 +143,8 @@ describe("AccountComponent", () => {
 
         expect(() => tick()).toThrow(new AccountNotFoundError());
         expect(() => flush()).toThrow(new AccountNotFoundError());
+
+        flush();
     }));
 
     it("should check activeTab when URL not exist query param tab", () => {

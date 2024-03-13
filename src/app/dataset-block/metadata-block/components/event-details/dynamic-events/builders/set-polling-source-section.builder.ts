@@ -9,18 +9,19 @@ export class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPolli
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {
-                switch (section) {
+                const section_enum: SetPollingSourceSection = section as SetPollingSourceSection;
+                switch (section_enum) {
                     case SetPollingSourceSection.READ:
                     case SetPollingSourceSection.FETCH:
                     case SetPollingSourceSection.MERGE:
                     case SetPollingSourceSection.PREPROCESS: {
                         const allowTypenameKey =
-                            section === SetPollingSourceSection.MERGE ||
-                            section === SetPollingSourceSection.READ ||
-                            section === SetPollingSourceSection.FETCH;
+                            section_enum === SetPollingSourceSection.MERGE ||
+                            section_enum === SetPollingSourceSection.READ ||
+                            section_enum === SetPollingSourceSection.FETCH;
                         result.push({
                             title: section,
-                            rows: this.buildEventRows(event, SET_POLLING_SOURCE_DESCRIPTORS, section, allowTypenameKey),
+                            rows: this.buildEventRows(event, SET_POLLING_SOURCE_DESCRIPTORS, section as keyof SetPollingSource, allowTypenameKey),
                         });
                         break;
                     }

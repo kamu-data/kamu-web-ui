@@ -1236,8 +1236,7 @@ app-account .dropdown-menu {
 
 .underline-nav {
     display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: auto hidden;
     justify-content: space-between;
 
     .mat-icon {

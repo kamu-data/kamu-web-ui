@@ -25,12 +25,12 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {
-                switch (section) {
+                switch (section as AddDataSection) {
                     case AddDataSection.NEW_SOURCE_STATE:
                     case AddDataSection.NEW_CHECKPOINT: {
                         result.push({
                             title: this.sectionTitleMapper[section],
-                            rows: this.buildEventRows(event, ADD_DATA_SOURCE_DESCRIPTORS, section, false),
+                            rows: this.buildEventRows(event, ADD_DATA_SOURCE_DESCRIPTORS, section as keyof AddData, false),
                         });
                         break;
                     }

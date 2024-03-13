@@ -503,8 +503,7 @@ $app-color-tooltip-border: #ced4da;
     margin: 0;
     margin-bottom: -1px;
     flex: auto;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden auto;
     background-color: $app-color-canvas-overlay;
     -webkit-overflow-scrolling: touch;
 }

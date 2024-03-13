@@ -13,7 +13,8 @@ export class AddPushSourceSectionBuilder extends EventSectionBuilder<AddPushSour
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {
-                switch (section) {
+                const section_enum: AddPushSourceSection = section as AddPushSourceSection;
+                switch (section_enum) {
                     case AddPushSourceSection.SOURCE_NAME: {
                         if (event.__typename) {
                             result.push({
@@ -36,10 +37,10 @@ export class AddPushSourceSectionBuilder extends EventSectionBuilder<AddPushSour
                     case AddPushSourceSection.MERGE:
                     case AddPushSourceSection.PREPROCESS: {
                         const allowTypenameKey =
-                            section === AddPushSourceSection.MERGE || section === AddPushSourceSection.READ;
+                        section_enum === AddPushSourceSection.MERGE || section_enum === AddPushSourceSection.READ;
                         result.push({
                             title: section,
-                            rows: this.buildEventRows(event, ADD_PUSH_SOURCE_DESCRIPTORS, section, allowTypenameKey),
+                            rows: this.buildEventRows(event, ADD_PUSH_SOURCE_DESCRIPTORS, section as keyof AddPushSource, allowTypenameKey),
                         });
                         break;
                     }

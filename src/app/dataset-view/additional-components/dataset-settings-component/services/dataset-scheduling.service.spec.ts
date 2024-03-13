@@ -70,7 +70,7 @@ describe("DatasetSchedulingService", () => {
                 datasetInfo: mockDatasetInfo,
             })
             .subscribe(() => {
-                tick(1000);
+                tick(1200);
                 expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
                 flush();
             });
@@ -114,7 +114,7 @@ describe("DatasetSchedulingService", () => {
                 datasetInfo: mockDatasetInfo,
             })
             .subscribe(() => {
-                tick(1000);
+                tick(1200);
                 expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
                 flush();
             });

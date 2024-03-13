@@ -92,6 +92,7 @@ describe("FlowsComponent", () => {
         component.datasetBasics = mockDatasetBasicsRootFragment;
         spyOn(datasetFlowsService, "allFlowsPaused").and.returnValue(of(false));
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of());
+        spyOnProperty(component, "loadingFlowsList$", "get").and.returnValue(of(true));
         fixture.detectChanges();
     });
 

@@ -2,6 +2,13 @@
     margin-top: 2px;
 }
 
+.hourglass-img,
+.gear-img {
+    position: absolute;
+    left: -5px;
+    top: 3px;
+}
+
 .word-break {
     word-break: break-all;
 }
@@ -19,7 +26,7 @@ ul {
                 width: 2px;
                 top: 23px;
                 left: 21px;
-                height: 41px;
+                height: 36px;
                 content: "";
                 background-color: #d8dee4;
             }
@@ -28,9 +35,9 @@ ul {
                 position: absolute;
                 display: block;
                 width: 2px;
-                top: -41px;
+                top: -23px;
                 left: 21px;
-                height: 41px;
+                height: 24px;
                 content: "";
                 background-color: #d8dee4;
             }

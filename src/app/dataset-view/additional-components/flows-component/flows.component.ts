@@ -225,7 +225,6 @@ export class FlowsComponent extends BaseComponent implements OnInit {
                     if (success) {
                         setTimeout(() => {
                             this.refreshFlow();
-                            this.cdr.detectChanges();
                         }, this.TIMEOUT_REFRESH_FLOW);
                     }
                 }),

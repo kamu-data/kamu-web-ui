@@ -48,7 +48,7 @@ export class DatasetSchedulingService {
                             datasetName: params.datasetInfo.datasetName,
                             tab: DatasetViewTypeEnum.Flows,
                         });
-                    }, 1000);
+                    }, 1200);
                 } else if (setConfigSchedule?.__typename === "FlowIncompatibleDatasetKind") {
                     this.toastrService.error(setConfigSchedule.message);
                 }
@@ -73,7 +73,7 @@ export class DatasetSchedulingService {
                               datasetName: params.datasetInfo.datasetName,
                               tab: DatasetViewTypeEnum.Flows,
                           });
-                      }, 1000)
+                      }, 1200)
                     : this.toastrService.error(setConfigBatching?.message);
             }),
         );

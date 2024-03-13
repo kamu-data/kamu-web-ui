@@ -1498,17 +1498,15 @@ input {
 }
 
 .waiting-status,
-.scheduled-status,
-.aborted-outcome {
+.scheduled-status {
     color: rgba(181 175 175);
+}
+
+.aborted-outcome {
+    color: rgb(188 123 123);
 }
 
 .icon-status {
     transform: scale(0.8);
-}
-
-.hourglass-img {
-    position: absolute;
-    left: -5px;
-    top: 3px;
+    background: #ffff;
 }

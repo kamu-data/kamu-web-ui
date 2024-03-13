@@ -159,7 +159,7 @@ export class DatasetFlowTableHelpers {
                     case "FlowStartConditionBatching":
                         return `deadline time: ${moment(node.startCondition.batchingDeadline).fromNow()}`;
                     default:
-                        throw new Error("Unknown flow start condition");
+                        return "Unknown flow start condition";
                 }
             case FlowStatus.Running:
                 return "running since " + moment(node.timing.runningSince).fromNow();
@@ -194,7 +194,7 @@ export class DatasetFlowTableHelpers {
                 return "waiting for scheduled execution";
 
             default:
-                return "";
+                return "Unknown flow start condition";
         }
     }
 
@@ -217,7 +217,7 @@ export class DatasetFlowTableHelpers {
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     default:
-                        throw new Error("Unknown flow start condition");
+                        return "Unknown flow start condition";
                 }
             case FlowStatus.Finished:
                 switch (node.outcome) {

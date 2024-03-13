@@ -10,6 +10,7 @@ import {
     OnInit,
     Output,
     QueryList,
+    SimpleChange,
     SimpleChanges,
     ViewChildren,
 } from "@angular/core";
@@ -29,7 +30,6 @@ import { MatRadioChange } from "@angular/material/radio";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import { FilterByInitiatorEnum, TransformDescriptionTableData } from "./flows-table.types";
 import { ModalService } from "src/app/components/modal/modal.service";
-import { isEqual } from "lodash";
 
 @Component({
     selector: "app-flows-table",
@@ -61,8 +61,10 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     constructor(private navigationService: NavigationService, private modalService: ModalService) {}
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (!isEqual(changes.nodes.previousValue, changes.nodes.currentValue)) {
-            this.dataSource.data = changes.nodes.currentValue as FlowSummaryDataFragment[];
+        const nodes: SimpleChange = changes.nodes;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (nodes && nodes.currentValue !== nodes.previousValue) {
+            this.dataSource.data = nodes.currentValue as FlowSummaryDataFragment[];
         }
     }
 

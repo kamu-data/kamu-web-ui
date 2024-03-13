@@ -1,38 +1,29 @@
 import { DatasetHistoryUpdate } from "../../dataset-view/dataset.subscriptions.interface";
-import { DatasetService } from "../../dataset-view/dataset.service";
 import { Observable, Subscription, combineLatest } from "rxjs";
 import ProjectLinks from "src/app/project-links";
-import { BaseProcessingComponent } from "../../common/base.processing.component";
 import { DatasetViewTypeEnum } from "../../dataset-view/dataset-view.interface";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { map } from "rxjs/operators";
 import { Params } from "@angular/router";
 import { BlockService } from "./block.service";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
+import { BaseDatasetDataComponent } from "src/app/common/base-dataset-data.component";
 
 @Component({
     selector: "app-metadata-block",
     templateUrl: "./metadata-block.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MetadataBlockComponent extends BaseProcessingComponent implements OnInit {
+export class MetadataBlockComponent extends BaseDatasetDataComponent implements OnInit {
     public readonly HISTORY_TYPE = DatasetViewTypeEnum.History;
     private static readonly BLOCKS_PER_PAGE = 10;
 
     public datasetInfo$: Observable<DatasetInfo>;
     public blockHash$: Observable<string>;
     public datasetHistoryUpdate$: Observable<MaybeNull<DatasetHistoryUpdate>>;
-    public datasetBasics$: Observable<DatasetBasicsFragment>;
-    public datasetPermissions$: Observable<DatasetPermissionsFragment>;
 
-    constructor(
-        private blockService: BlockService,
-        private datasetService: DatasetService,
-        private datasetSubsService: DatasetSubscriptionsService,
-    ) {
+    constructor(private blockService: BlockService) {
         super();
     }
 

@@ -6,6 +6,9 @@ import { JsonFormValidators } from "../dataset-view/additional-components/metada
 import { MaybeUndefined } from "./app.types";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { isValidCronExpression } from "./cron-expression-validator.helper";
+import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
+import moment from "moment";
+import { convertSecondsToHumanReadableFormat } from "./app.helpers";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -207,6 +210,12 @@ export class DataHelpers {
                   .replace(/(\r\n|\n|\r)/gm, "\n" + this.SHIFT_ATTACHMENTS_VIEW)}`
             : text;
     }
+
+    public static durationTask(startTime: string, endTime: string): string {
+        const durationSeconds = Math.round(moment.duration(moment(endTime).diff(moment(startTime))).asSeconds());
+        const result = convertSecondsToHumanReadableFormat(durationSeconds);
+        return result ? result : "less than 1 second";
+    }
 }
 export const getValidators = (validators: JsonFormValidators): ValidatorFn[] => {
     const validatorsToAdd: ValidatorFn[] = [];
@@ -271,4 +280,12 @@ export const everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = {
         maximumNumber: 51,
         message: "Value should be between 1 to 51",
     }),
+};
+
+export const noCacheFetchPolicy: {
+    fetchPolicy?: MaybeUndefined<WatchQueryFetchPolicy>;
+    errorPolicy?: MaybeUndefined<ErrorPolicy>;
+} = {
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
 };

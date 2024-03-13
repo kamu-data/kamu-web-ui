@@ -15,7 +15,7 @@ import {
     InitiatorFilterInput,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
-import { Observable, filter, map } from "rxjs";
+import { Observable, Subject, filter, map, switchMap, tap, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
@@ -47,6 +47,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly TIMEOUT_REFRESH_FLOW = 800;
+    private readonly loadingFlowsList = new Subject<boolean>();
 
     constructor(
         private flowsService: DatasetFlowsService,
@@ -55,6 +56,10 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         private cdr: ChangeDetectorRef,
     ) {
         super();
+    }
+
+    public get loadingFlowsList$(): Observable<boolean> {
+        return this.loadingFlowsList;
     }
 
     ngOnInit(): void {
@@ -76,21 +81,31 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         filterByStatus?: MaybeNull<FlowStatus>,
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
     ): void {
-        this.flowConnectionData$ = this.flowsService.datasetFlowsList({
-            datasetId: this.datasetBasics.id,
-            page: page - 1,
-            perPage: this.TABLE_FLOW_RUNS_PER_PAGE,
-            filters: { byStatus: filterByStatus, byInitiator: filterByInitiator },
-        });
+        this.flowConnectionData$ = timer(0, 10000).pipe(
+            switchMap(() =>
+                this.flowsService.datasetFlowsList({
+                    datasetId: this.datasetBasics.id,
+                    page: page - 1,
+                    perPage: this.TABLE_FLOW_RUNS_PER_PAGE,
+                    filters: { byStatus: filterByStatus, byInitiator: filterByInitiator },
+                }),
+            ),
+        );
     }
 
     public getTileWidgetData(): void {
-        this.tileWidgetData$ = this.flowsService.datasetFlowsList({
-            datasetId: this.datasetBasics.id,
-            page: 0,
-            perPage: this.WIDGET_FLOW_RUNS_PER_PAGE,
-            filters: {},
-        });
+        this.tileWidgetData$ = timer(0, 10000).pipe(
+            tap(() => this.loadingFlowsList.next(false)),
+            switchMap(() =>
+                this.flowsService.datasetFlowsList({
+                    datasetId: this.datasetBasics.id,
+                    page: 0,
+                    perPage: this.WIDGET_FLOW_RUNS_PER_PAGE,
+                    filters: {},
+                }),
+            ),
+            tap(() => this.loadingFlowsList.next(true)),
+        );
     }
 
     public onPageChange(page: number): void {
@@ -178,8 +193,10 @@ export class FlowsComponent extends BaseComponent implements OnInit {
                     .subscribe(),
             );
         }
-
-        this.updateStateComponent();
+        setTimeout(() => {
+            this.updateStateComponent();
+            this.cdr.detectChanges();
+        }, this.TIMEOUT_REFRESH_FLOW);
     }
 
     private updateStateComponent(): void {
@@ -208,7 +225,6 @@ export class FlowsComponent extends BaseComponent implements OnInit {
                     if (success) {
                         setTimeout(() => {
                             this.refreshFlow();
-                            this.cdr.detectChanges();
                         }, this.TIMEOUT_REFRESH_FLOW);
                     }
                 }),

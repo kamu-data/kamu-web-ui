@@ -842,7 +842,7 @@ export type FlowEventStartConditionUpdated = FlowEvent & {
     __typename?: "FlowEventStartConditionUpdated";
     eventId: Scalars["EventID"];
     eventTime: Scalars["DateTime"];
-    startConditionKind: FlowStartConditionKind;
+    startCondition: FlowStartCondition;
 };
 
 export type FlowEventTaskChanged = FlowEvent & {
@@ -884,7 +884,6 @@ export type FlowNotFound = CancelScheduledTasksResult &
 
 export enum FlowOutcome {
     Aborted = "ABORTED",
-    Cancelled = "CANCELLED",
     Failed = "FAILED",
     Success = "SUCCESS",
 }
@@ -907,13 +906,6 @@ export type FlowStartConditionExecutor = {
     __typename?: "FlowStartConditionExecutor";
     taskId: Scalars["TaskID"];
 };
-
-export enum FlowStartConditionKind {
-    Batching = "BATCHING",
-    Executor = "EXECUTOR",
-    Schedule = "SCHEDULE",
-    Throttling = "THROTTLING",
-}
 
 export type FlowStartConditionSchedule = {
     __typename?: "FlowStartConditionSchedule";
@@ -955,7 +947,7 @@ export type FlowTriggerAutoPolling = {
 
 export type FlowTriggerInputDatasetFlow = {
     __typename?: "FlowTriggerInputDatasetFlow";
-    datasetId: Scalars["DatasetID"];
+    dataset: Dataset;
     flowId: Scalars["FlowID"];
     flowType: DatasetFlowType;
 };
@@ -1957,6 +1949,52 @@ export type CancelScheduledTasksMutation = {
     };
 };
 
+export type GetFlowByIdQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    flowId: Scalars["FlowID"];
+}>;
+
+export type GetFlowByIdQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            flows: {
+                __typename?: "DatasetFlows";
+                runs: {
+                    __typename?: "DatasetFlowRuns";
+                    getFlow:
+                        | { __typename?: "FlowNotFound"; message: string; flowId: string }
+                        | {
+                              __typename?: "GetFlowSuccess";
+                              flow: {
+                                  __typename?: "Flow";
+                                  history: Array<
+                                      | ({
+                                            __typename?: "FlowEventAborted";
+                                        } & FlowHistoryData_FlowEventAborted_Fragment)
+                                      | ({
+                                            __typename?: "FlowEventInitiated";
+                                        } & FlowHistoryData_FlowEventInitiated_Fragment)
+                                      | ({
+                                            __typename?: "FlowEventStartConditionUpdated";
+                                        } & FlowHistoryData_FlowEventStartConditionUpdated_Fragment)
+                                      | ({
+                                            __typename?: "FlowEventTaskChanged";
+                                        } & FlowHistoryData_FlowEventTaskChanged_Fragment)
+                                      | ({
+                                            __typename?: "FlowEventTriggerAdded";
+                                        } & FlowHistoryData_FlowEventTriggerAdded_Fragment)
+                                  >;
+                              } & FlowSummaryDataFragment;
+                          };
+                };
+            };
+        } | null;
+    };
+};
+
 export type GetDatasetListFlowsQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     page?: InputMaybe<Scalars["Int"]>;
@@ -2141,6 +2179,76 @@ export type FlowConnectionDataFragment = {
     pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
     edges: Array<{ __typename?: "FlowEdge"; node: { __typename?: "Flow" } & FlowSummaryDataFragment }>;
 };
+
+type FlowHistoryData_FlowEventAborted_Fragment = { __typename: "FlowEventAborted"; eventId: string; eventTime: string };
+
+type FlowHistoryData_FlowEventInitiated_Fragment = {
+    __typename: "FlowEventInitiated";
+    eventId: string;
+    eventTime: string;
+    trigger:
+        | { __typename: "FlowTriggerAutoPolling" }
+        | {
+              __typename: "FlowTriggerInputDatasetFlow";
+              flowId: string;
+              flowType: DatasetFlowType;
+              dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+          }
+        | { __typename: "FlowTriggerManual"; initiator: { __typename?: "Account" } & AccountFragment }
+        | { __typename: "FlowTriggerPush" };
+};
+
+type FlowHistoryData_FlowEventStartConditionUpdated_Fragment = {
+    __typename: "FlowEventStartConditionUpdated";
+    eventId: string;
+    eventTime: string;
+    startCondition:
+        | {
+              __typename: "FlowStartConditionBatching";
+              batchingDeadline: string;
+              accumulatedRecordsCount: number;
+              watermarkModified: boolean;
+              activeBatchingRule: {
+                  __typename?: "FlowConfigurationBatching";
+                  minRecordsToAwait: number;
+                  maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
+              };
+          }
+        | { __typename: "FlowStartConditionExecutor"; taskId: string }
+        | { __typename: "FlowStartConditionSchedule"; wakeUpAt: string }
+        | { __typename: "FlowStartConditionThrottling"; intervalSec: number; wakeUpAt: string; shiftedFrom: string };
+};
+
+type FlowHistoryData_FlowEventTaskChanged_Fragment = {
+    __typename: "FlowEventTaskChanged";
+    taskId: string;
+    taskStatus: TaskStatus;
+    eventId: string;
+    eventTime: string;
+};
+
+type FlowHistoryData_FlowEventTriggerAdded_Fragment = {
+    __typename: "FlowEventTriggerAdded";
+    eventId: string;
+    eventTime: string;
+    trigger:
+        | { __typename: "FlowTriggerAutoPolling" }
+        | {
+              __typename: "FlowTriggerInputDatasetFlow";
+              flowId: string;
+              flowType: DatasetFlowType;
+              dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+          }
+        | { __typename: "FlowTriggerManual"; initiator: { __typename?: "Account" } & AccountFragment }
+        | { __typename: "FlowTriggerPush" };
+};
+
+export type FlowHistoryDataFragment =
+    | FlowHistoryData_FlowEventAborted_Fragment
+    | FlowHistoryData_FlowEventInitiated_Fragment
+    | FlowHistoryData_FlowEventStartConditionUpdated_Fragment
+    | FlowHistoryData_FlowEventTaskChanged_Fragment
+    | FlowHistoryData_FlowEventTriggerAdded_Fragment;
 
 export type AddDataEventFragment = {
     __typename?: "AddData";
@@ -3011,6 +3119,115 @@ export const FlowConnectionDataFragmentDoc = gql`
     ${FlowSummaryDataFragmentDoc}
     ${DatasetPageInfoFragmentDoc}
 `;
+export const AccountBasicsFragmentDoc = gql`
+    fragment AccountBasics on Account {
+        id
+        accountName
+    }
+`;
+export const DatasetBasicsFragmentDoc = gql`
+    fragment DatasetBasics on Dataset {
+        id
+        kind
+        name
+        owner {
+            ...AccountBasics
+        }
+        alias
+    }
+    ${AccountBasicsFragmentDoc}
+`;
+export const FlowHistoryDataFragmentDoc = gql`
+    fragment FlowHistoryData on FlowEvent {
+        __typename
+        eventId
+        eventTime
+        ... on FlowEventAborted {
+            __typename
+        }
+        ... on FlowEventInitiated {
+            trigger {
+                __typename
+                ... on FlowTriggerAutoPolling {
+                    __typename
+                }
+                ... on FlowTriggerManual {
+                    initiator {
+                        ...Account
+                    }
+                }
+                ... on FlowTriggerPush {
+                    __typename
+                }
+                ... on FlowTriggerInputDatasetFlow {
+                    dataset {
+                        ...DatasetBasics
+                    }
+                    flowId
+                    flowType
+                }
+            }
+        }
+        ... on FlowEventStartConditionUpdated {
+            startCondition {
+                __typename
+                ... on FlowStartConditionThrottling {
+                    intervalSec
+                    wakeUpAt
+                    shiftedFrom
+                }
+                ... on FlowStartConditionBatching {
+                    activeBatchingRule {
+                        minRecordsToAwait
+                        maxBatchingInterval {
+                            ...TimeDeltaData
+                        }
+                    }
+                    batchingDeadline
+                    accumulatedRecordsCount
+                    watermarkModified
+                }
+                ... on FlowStartConditionSchedule {
+                    wakeUpAt
+                }
+                ... on FlowStartConditionExecutor {
+                    taskId
+                }
+            }
+        }
+        ... on FlowEventTaskChanged {
+            __typename
+            taskId
+            taskStatus
+        }
+        ... on FlowEventTriggerAdded {
+            trigger {
+                __typename
+                ... on FlowTriggerAutoPolling {
+                    __typename
+                }
+                ... on FlowTriggerManual {
+                    initiator {
+                        ...Account
+                    }
+                }
+                ... on FlowTriggerPush {
+                    __typename
+                }
+                ... on FlowTriggerInputDatasetFlow {
+                    dataset {
+                        ...DatasetBasics
+                    }
+                    flowId
+                    flowType
+                }
+            }
+        }
+    }
+    ${AccountFragmentDoc}
+    ${DatasetBasicsFragmentDoc}
+    ${TimeDeltaDataFragmentDoc}
+`;
 export const DatasetDataSizeFragmentDoc = gql`
     fragment DatasetDataSize on DatasetData {
         numRecordsTotal
@@ -3048,24 +3265,6 @@ export const DatasetDataFragmentDoc = gql`
     }
     ${DatasetDataSizeFragmentDoc}
     ${DataQueryResultSuccessViewFragmentDoc}
-`;
-export const AccountBasicsFragmentDoc = gql`
-    fragment AccountBasics on Account {
-        id
-        accountName
-    }
-`;
-export const DatasetBasicsFragmentDoc = gql`
-    fragment DatasetBasics on Dataset {
-        id
-        kind
-        name
-        owner {
-            ...AccountBasics
-        }
-        alias
-    }
-    ${AccountBasicsFragmentDoc}
 `;
 export const CurrentSourceFetchUrlFragmentDoc = gql`
     fragment CurrentSourceFetchUrl on DatasetMetadata {
@@ -4307,6 +4506,45 @@ export class CancelScheduledTasksGQL extends Apollo.Mutation<
     CancelScheduledTasksMutationVariables
 > {
     document = CancelScheduledTasksDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const GetFlowByIdDocument = gql`
+    query getFlowById($datasetId: DatasetID!, $flowId: FlowID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    runs {
+                        getFlow(flowId: $flowId) {
+                            ... on GetFlowSuccess {
+                                flow {
+                                    ...FlowSummaryData
+                                    history {
+                                        ...FlowHistoryData
+                                    }
+                                }
+                            }
+                            ... on FlowNotFound {
+                                message
+                                flowId
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FlowSummaryDataFragmentDoc}
+    ${FlowHistoryDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetFlowByIdGQL extends Apollo.Query<GetFlowByIdQuery, GetFlowByIdQueryVariables> {
+    document = GetFlowByIdDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

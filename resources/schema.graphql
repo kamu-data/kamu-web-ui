@@ -785,7 +785,7 @@ type FlowEventInitiated implements FlowEvent {
 type FlowEventStartConditionUpdated implements FlowEvent {
   eventId: EventID!
   eventTime: DateTime!
-  startConditionKind: FlowStartConditionKind!
+  startCondition: FlowStartCondition!
 }
 
 type FlowEventTaskChanged implements FlowEvent {
@@ -823,7 +823,6 @@ type FlowNotFound implements GetFlowResult & CancelScheduledTasksResult {
 enum FlowOutcome {
   SUCCESS
   FAILED
-  CANCELLED
   ABORTED
 }
 
@@ -842,13 +841,6 @@ type FlowStartConditionBatching {
 
 type FlowStartConditionExecutor {
   taskId: TaskID!
-}
-
-enum FlowStartConditionKind {
-  SCHEDULE
-  THROTTLING
-  BATCHING
-  EXECUTOR
 }
 
 type FlowStartConditionSchedule {
@@ -890,7 +882,7 @@ type FlowTriggerAutoPolling {
 }
 
 type FlowTriggerInputDatasetFlow {
-  datasetId: DatasetID!
+  dataset: Dataset!
   flowType: DatasetFlowType!
   flowId: FlowID!
 }

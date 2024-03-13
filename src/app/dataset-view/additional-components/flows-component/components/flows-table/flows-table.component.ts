@@ -1,3 +1,4 @@
+import { NavigationService } from "src/app/services/navigation.service";
 import { MaybeNull, MaybeUndefined } from "./../../../../../common/app.types";
 import { DataHelpers } from "src/app/common/data.helpers";
 import {
@@ -5,28 +6,31 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnChanges,
     OnInit,
     Output,
     QueryList,
+    SimpleChange,
+    SimpleChanges,
     ViewChildren,
 } from "@angular/core";
 import {
     FlowSummaryDataFragment,
     FlowOutcome,
     FlowStatus,
-    Scalars,
     FetchStep,
     FlowStartCondition,
     DatasetBasicsFragment,
 } from "src/app/api/kamu.graphql.interface";
-import moment from "moment";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
-import { convertSecondsToHumanReadableFormat } from "src/app/common/app.helpers";
+import { promiseWithCatch } from "src/app/common/app.helpers";
 import { MatMenuTrigger } from "@angular/material/menu";
 import { MatRadioChange } from "@angular/material/radio";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import { FilterByInitiatorEnum, TransformDescriptionTableData } from "./flows-table.types";
+import { ModalService } from "src/app/components/modal/modal.service";
+import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
 
 @Component({
     selector: "app-flows-table",
@@ -34,7 +38,7 @@ import { FilterByInitiatorEnum, TransformDescriptionTableData } from "./flows-ta
     styleUrls: ["./flows-table.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlowsTableComponent implements OnInit {
+export class FlowsTableComponent implements OnInit, OnChanges {
     @Input() public nodes: FlowSummaryDataFragment[];
     @Input() public filterByStatus: MaybeNull<FlowStatus>;
     @Input() public filterByInitiator: FilterByInitiatorEnum;
@@ -55,13 +59,22 @@ export class FlowsTableComponent implements OnInit {
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
 
+    constructor(private navigationService: NavigationService, private modalService: ModalService) {}
+
+    ngOnChanges(changes: SimpleChanges): void {
+        const nodes: SimpleChange = changes.nodes;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (nodes && nodes.currentValue !== nodes.previousValue) {
+            this.dataSource.data = nodes.currentValue as FlowSummaryDataFragment[];
+        }
+    }
+
     ngOnInit(): void {
         this.dataSource.data = this.nodes;
     }
 
-    public durationTask(d1: Scalars["DateTime"], d2: Scalars["DateTime"]): string {
-        const result = convertSecondsToHumanReadableFormat(moment(d2).seconds() - moment(d1).seconds());
-        return result ? result : "less than 1 second";
+    public durationTask(d1: string, d2: string): string {
+        return DataHelpers.durationTask(d1, d2);
     }
 
     public flowTypeDescription(flow: FlowSummaryDataFragment): string {
@@ -114,6 +127,30 @@ export class FlowsTableComponent implements OnInit {
     }
 
     public cancelFlow(flowId: string): void {
-        this.cancelFlowChange.emit(flowId);
+        promiseWithCatch(
+            this.modalService.error({
+                title: "Cancel flow",
+                message: "Do you want to cancel the flow?",
+                yesButtonText: "Ok",
+                noButtonText: "Cancel",
+                handler: (ok) => {
+                    if (ok) {
+                        this.cancelFlowChange.emit(flowId);
+                    }
+                },
+            }),
+        );
+    }
+
+    public navigateToFlowDetaisView(flowId: string): void {
+        this.navigationService.navigateToFlowDetails({
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
+            flowId,
+        });
+    }
+
+    public dynamicImgSrc(status: FlowStatus): string {
+        return DatasetFlowDetailsHelpers.dynamicImgSrc(status);
     }
 }

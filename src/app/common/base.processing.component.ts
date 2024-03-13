@@ -7,7 +7,7 @@ import { promiseWithCatch } from "./app.helpers";
 import { BaseComponent } from "./base.component";
 import { inject } from "@angular/core";
 
-export class BaseProcessingComponent extends BaseComponent {
+export abstract class BaseProcessingComponent extends BaseComponent {
     protected navigationService = inject(NavigationService);
     protected modalService = inject(ModalService);
 

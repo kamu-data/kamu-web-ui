@@ -69,11 +69,7 @@ table {
 }
 
 .aborted-outcome {
-    color: rgba(181 175 175);
-}
-
-.canceled-outcome {
-    color: rgba(181 175 175);
+    color: rgb(188 123 123);
 }
 
 .mat-header-cell {
@@ -130,4 +126,11 @@ td.mat-cell {
     white-space: nowrap;
     text-overflow: ellipsis;
     width: 350px;
+}
+
+.dynamic-icon {
+    position: absolute;
+    left: -42px;
+    top: 10px;
+    width: 15px;
 }

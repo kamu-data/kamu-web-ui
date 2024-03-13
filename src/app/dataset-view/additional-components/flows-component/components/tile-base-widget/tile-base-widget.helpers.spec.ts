@@ -2,14 +2,7 @@ import { FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
 
-const resultsClassName = [
-    "success-class",
-    "running-class",
-    "waiting-class",
-    "aborted-class",
-    "cancelled-class",
-    "failed-class",
-];
+const resultsClassName = ["success-class", "running-class", "waiting-class", "aborted-class", "failed-class"];
 
 describe("TileBaseWidgetHelpers", () => {
     mockFlowSummaryDataFragments.forEach((item: FlowSummaryDataFragment, index: number) => {

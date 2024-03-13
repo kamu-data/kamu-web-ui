@@ -4,6 +4,7 @@ import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock
 import {
     expectationsDescriptionEndOfMessage,
     expectationsDesriptionColumnOptions,
+    mockDatasetExecuteTransformFlowSummaryData,
     mockTableFlowSummaryDataFragments,
 } from "./flows-table.helpers.mock";
 
@@ -87,7 +88,7 @@ describe("DatasetFlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename `, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[1], undefined, {
+            DatasetFlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[4], undefined, {
                 numInputs: 10,
                 engine: "spark",
             }),
@@ -106,11 +107,11 @@ describe("DatasetFlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename and success outcome `, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[4], undefined, {
+            DatasetFlowTableHelpers.descriptionSubMessage(mockDatasetExecuteTransformFlowSummaryData, undefined, {
                 numInputs: 2,
                 engine: "spark",
             }),
-        ).toEqual("Transformed 10 new records in 2 new blocks");
+        ).toEqual(`Transformed 10 new records in 2 new blocks`);
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and success outcome `, () => {
@@ -126,7 +127,7 @@ describe("DatasetFlowTableHelpers", () => {
         ).toEqual("Ingested 30 new records in 4 new blocks");
     });
 
-    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and cancelled outcome `, () => {
+    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and aborted outcome `, () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[6],
@@ -136,26 +137,13 @@ describe("DatasetFlowTableHelpers", () => {
                     engine: "",
                 },
             ),
-        ).toContain("Cancelled at");
-    });
-
-    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and aborted outcome `, () => {
-        expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(
-                mockTableFlowSummaryDataFragments[7],
-                { __typename: "FetchStepFilesGlob", path: "c:/mock-path" },
-                {
-                    numInputs: 0,
-                    engine: "",
-                },
-            ),
         ).toContain("Aborted at");
     });
 
-    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and filed outcome `, () => {
+    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and failed outcome `, () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
-                mockTableFlowSummaryDataFragments[8],
+                mockTableFlowSummaryDataFragments[7],
                 { __typename: "FetchStepFilesGlob", path: "c:/mock-path" },
                 {
                     numInputs: 0,

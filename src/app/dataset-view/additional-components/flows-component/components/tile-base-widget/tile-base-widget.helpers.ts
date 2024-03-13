@@ -22,5 +22,4 @@ const flowOutcomeMapperClass: Record<FlowOutcome, string> = {
     [FlowOutcome.Success]: "success-class",
     [FlowOutcome.Failed]: "failed-class",
     [FlowOutcome.Aborted]: "aborted-class",
-    [FlowOutcome.Cancelled]: "cancelled-class",
 };

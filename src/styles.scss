@@ -1484,3 +1484,29 @@ input {
 .text-normal {
     text-transform: none;
 }
+
+.completed-status {
+    color: #239a59;
+}
+
+.running-status {
+    color: #8bdaaf;
+}
+
+.failed-status {
+    color: #d13124;
+}
+
+.waiting-status,
+.scheduled-status {
+    color: rgba(181 175 175);
+}
+
+.aborted-outcome {
+    color: rgb(188 123 123);
+}
+
+.icon-status {
+    transform: scale(0.8);
+    background: #ffff;
+}

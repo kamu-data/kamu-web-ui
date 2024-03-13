@@ -26,8 +26,6 @@ export class DatasetFlowTableHelpers {
                         return { icon: "dangerous", class: "failed-status" };
                     case FlowOutcome.Aborted:
                         return { icon: "cancel", class: "aborted-outcome" };
-                    case FlowOutcome.Cancelled:
-                        return { icon: "cancel", class: "cancelled-outcome" };
 
                     default:
                         throw new Error("Unsupported flow outcome");
@@ -39,8 +37,6 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Waiting:
                 return { icon: "radio_button_checked", class: "waiting-status" };
         }
-
-        return { icon: "question_mark", class: "" };
     }
 
     public static descriptionEndOfMessage(element: FlowSummaryDataFragment): string {
@@ -56,8 +52,6 @@ export class DatasetFlowTableHelpers {
                         return "aborted";
                     case FlowOutcome.Failed:
                         return "failed";
-                    case FlowOutcome.Cancelled:
-                        return "cancelled";
                     default:
                         throw new Error("Unsupported flow outcome");
                 }
@@ -111,11 +105,6 @@ export class DatasetFlowTableHelpers {
                                 return "Unknown description typename";
                         }
 
-                    case FlowOutcome.Cancelled:
-                        return `Cancelled at ${moment(element.timing.finishedAt).format(
-                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                        )}`;
-
                     case FlowOutcome.Aborted:
                         return `Aborted at ${moment(element.timing.finishedAt).format(
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
@@ -124,7 +113,7 @@ export class DatasetFlowTableHelpers {
                     case FlowOutcome.Failed:
                         return `An error occurred, see logs for more details`;
                     default:
-                        throw new Error("Unknown flow outcome");
+                        throw new Error("Unsupported flow outcome");
                 }
 
             case FlowStatus.Waiting:
@@ -170,12 +159,21 @@ export class DatasetFlowTableHelpers {
                     case "FlowStartConditionBatching":
                         return `deadline time: ${moment(node.startCondition.batchingDeadline).fromNow()}`;
                     default:
-                        throw new Error("Unknown flow start condition");
+                        return "";
                 }
             case FlowStatus.Running:
                 return "running since " + moment(node.timing.runningSince).fromNow();
             case FlowStatus.Finished:
-                return "finished " + moment(node.timing.finishedAt).fromNow();
+                switch (node.outcome) {
+                    case FlowOutcome.Success:
+                        return "finished " + moment(node.timing.finishedAt).fromNow();
+                    case FlowOutcome.Aborted:
+                        return "aborted " + moment(node.timing.finishedAt).fromNow();
+                    case FlowOutcome.Failed:
+                        return "failed " + moment(node.timing.runningSince).fromNow();
+                    default:
+                        throw new Error("Unknown flow outsome");
+                }
             default:
                 throw new Error("Unknown flow status");
         }
@@ -219,7 +217,7 @@ export class DatasetFlowTableHelpers {
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     default:
-                        throw new Error("Unknown flow start condition");
+                        return "";
                 }
             case FlowStatus.Finished:
                 switch (node.outcome) {
@@ -229,10 +227,6 @@ export class DatasetFlowTableHelpers {
                         )}`;
                     case FlowOutcome.Aborted:
                         return `Aborted time: ${moment(node.timing.finishedAt).format(
-                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                        )}`;
-                    case FlowOutcome.Cancelled:
-                        return `Cancelled time: ${moment(node.timing.finishedAt).format(
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     case FlowOutcome.Failed:

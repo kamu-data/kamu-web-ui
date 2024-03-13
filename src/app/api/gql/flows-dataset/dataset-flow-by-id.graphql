@@ -1,0 +1,24 @@
+query getFlowById($datasetId: DatasetID!, $flowId: FlowID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        runs {
+          getFlow(flowId: $flowId) {
+            ... on GetFlowSuccess {
+              flow {
+                ...FlowSummaryData
+                history {
+                  ...FlowHistoryData
+                }
+              }
+            }
+            ... on FlowNotFound {
+              message
+              flowId
+            }
+          }
+        }
+      }
+    }
+  }
+}

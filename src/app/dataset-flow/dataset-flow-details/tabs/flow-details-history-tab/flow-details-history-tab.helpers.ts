@@ -72,8 +72,6 @@ export class DatasetFlowDetailsHelpers {
                             default:
                                 throw new Error("Unsupported flow outcome");
                         }
-                    case TaskStatus.Queued:
-                        return { icon: "radio_button_checked", class: "scheduled-status" };
                     case TaskStatus.Running:
                         return { icon: "radio_button_checked", class: "running-status" };
                     default:
@@ -99,7 +97,6 @@ export class DatasetFlowDetailsHelpers {
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
-                    case TaskStatus.Queued:
                     case TaskStatus.Running:
                         return `Task #${flowEvent.taskId}`;
                     case TaskStatus.Finished:
@@ -161,8 +158,6 @@ export class DatasetFlowDetailsHelpers {
         switch (element.taskStatus) {
             case TaskStatus.Finished:
                 return "finished";
-            case TaskStatus.Queued:
-                return "queued";
             case TaskStatus.Running:
                 return "running";
             default:

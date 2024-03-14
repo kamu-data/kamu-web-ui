@@ -1,0 +1,308 @@
+import {
+    AccountType,
+    DatasetFlowType,
+    FlowHistoryDataFragment,
+    FlowOutcome,
+    FlowStatus,
+    FlowSummaryDataFragment,
+    TaskStatus,
+    TimeUnit,
+} from "src/app/api/kamu.graphql.interface";
+import { mockDatasetSearchResult } from "src/app/search/mock.data";
+
+export const mockHistoryFragmentWithFinishedStatus: FlowHistoryDataFragment = {
+    __typename: "FlowEventTaskChanged",
+    eventId: "2",
+    eventTime: "2024-03-13T13:54:30.656488373+00:00",
+    taskId: "1",
+    taskStatus: TaskStatus.Finished,
+};
+
+export const mockFlowSummaryDataFragmentIngestResult: FlowSummaryDataFragment = {
+    description: {
+        datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+        ingestResult: {
+            __typename: "FlowDescriptionUpdateResult",
+            numBlocks: 10,
+            numRecords: 100,
+        },
+        __typename: "FlowDescriptionDatasetPollingIngest",
+    },
+    flowId: "414",
+    status: FlowStatus.Finished,
+    initiator: null,
+    outcome: FlowOutcome.Success,
+    startCondition: null,
+    timing: {
+        awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
+        runningSince: "2024-02-12T18:21:27.477789591+00:00",
+        finishedAt: "2024-02-12T18:21:29.554197038+00:00",
+        __typename: "FlowTimingRecords",
+    },
+    __typename: "Flow",
+};
+
+export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment[] = [
+    {
+        __typename: "FlowEventInitiated",
+        eventId: "0",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        trigger: {
+            __typename: "FlowTriggerAutoPolling",
+        },
+    },
+    {
+        __typename: "FlowEventAborted",
+        eventId: "1",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+    },
+    {
+        __typename: "FlowEventTaskChanged",
+        eventId: "2",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        taskId: "1",
+        taskStatus: TaskStatus.Running,
+    },
+    {
+        __typename: "FlowEventTaskChanged",
+        eventId: "3",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        taskId: "2",
+        taskStatus: TaskStatus.Finished,
+    },
+    {
+        __typename: "FlowEventTriggerAdded",
+        eventId: "4",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        trigger: {
+            __typename: "FlowTriggerManual",
+            initiator: {
+                id: "12345",
+                accountName: "kamu",
+                displayName: "kamu",
+                accountType: AccountType.User,
+                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                isAdmin: true,
+                __typename: "Account",
+            },
+        },
+    },
+    {
+        __typename: "FlowEventTriggerAdded",
+        eventId: "5",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        trigger: {
+            __typename: "FlowTriggerInputDatasetFlow",
+            flowId: "1",
+            flowType: DatasetFlowType.ExecuteTransform,
+            dataset: mockDatasetSearchResult.datasets[0],
+        },
+    },
+    {
+        __typename: "FlowEventTriggerAdded",
+        eventId: "6",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        trigger: {
+            __typename: "FlowTriggerPush",
+        },
+    },
+    {
+        __typename: "FlowEventStartConditionUpdated",
+        eventId: "7",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        startCondition: {
+            __typename: "FlowStartConditionSchedule",
+            wakeUpAt: "2024-03-13T13:58:30.656488373+00:00",
+        },
+    },
+    {
+        __typename: "FlowEventStartConditionUpdated",
+        eventId: "8",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        startCondition: {
+            __typename: "FlowStartConditionExecutor",
+            taskId: "1",
+        },
+    },
+    {
+        __typename: "FlowEventStartConditionUpdated",
+        eventId: "9",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        startCondition: {
+            __typename: "FlowStartConditionBatching",
+            activeBatchingRule: {
+                minRecordsToAwait: 500,
+                maxBatchingInterval: {
+                    every: 5,
+                    unit: TimeUnit.Hours,
+                },
+            },
+            batchingDeadline: "2022-08-05T21:17:30.613911358+00:00",
+            accumulatedRecordsCount: 100,
+            watermarkModified: true,
+        },
+    },
+    {
+        __typename: "FlowEventStartConditionUpdated",
+        eventId: "8",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        startCondition: {
+            __typename: "FlowStartConditionThrottling",
+            intervalSec: 120,
+            wakeUpAt: "2024-02-12T18:22:30+00:00",
+            shiftedFrom: "2024-02-12T18:22:29+00:00",
+        },
+    },
+];
+
+export const eventFlowDescriptionsResultHistoryTab: string[] = [
+    "Flow initiated automatically",
+    "Flow was aborted",
+    "Polling ingest task running",
+    "Polling ingest task finished",
+    "Additionally triggered manually",
+    "Additionally triggered after input dataset event",
+    "Additionally triggered after push event",
+    "Waiting for scheduled execution",
+    "Waiting for free executor",
+    "Waiting for batching condition",
+    "Waiting for throttling condition",
+];
+
+export const mockFlowHistoryDataFragmentForIconOptions: FlowHistoryDataFragment[] = [
+    {
+        __typename: "FlowEventInitiated",
+        eventId: "0",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        trigger: {
+            __typename: "FlowTriggerAutoPolling",
+        },
+    },
+    {
+        __typename: "FlowEventAborted",
+        eventId: "1",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+    },
+    {
+        __typename: "FlowEventTaskChanged",
+        eventId: "2",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        taskId: "1",
+        taskStatus: TaskStatus.Running,
+    },
+    {
+        __typename: "FlowEventTriggerAdded",
+        eventId: "3",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        trigger: {
+            __typename: "FlowTriggerPush",
+        },
+    },
+    {
+        __typename: "FlowEventStartConditionUpdated",
+        eventId: "4",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        startCondition: {
+            __typename: "FlowStartConditionThrottling",
+            intervalSec: 120,
+            wakeUpAt: "2024-02-12T18:22:30+00:00",
+            shiftedFrom: "2024-02-12T18:22:29+00:00",
+        },
+    },
+];
+
+export const flowEventIconOptionsResults: { icon: string; class: string }[] = [
+    { icon: "flag_circle", class: "completed-status" },
+    { icon: "cancel", class: "aborted-outcome" },
+    { icon: "radio_button_checked", class: "running-status" },
+    { icon: "add_circle", class: "text-muted" },
+    { icon: "downloading", class: "text-muted" },
+    { icon: "check_circle", class: "completed-status" },
+    { icon: "dangerous", class: "failed-status" },
+    { icon: "cancel", class: "aborted-outcome" },
+];
+
+export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[] = [
+    ...mockFlowHistoryDataFragmentForIconOptions,
+    {
+        __typename: "FlowEventInitiated",
+        eventId: "0",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        trigger: {
+            __typename: "FlowTriggerManual",
+            initiator: {
+                id: "12345",
+                accountName: "kamu",
+                displayName: "kamu",
+                accountType: AccountType.User,
+                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                isAdmin: true,
+                __typename: "Account",
+            },
+        },
+    },
+    {
+        __typename: "FlowEventInitiated",
+        eventId: "0",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        trigger: {
+            __typename: "FlowTriggerInputDatasetFlow",
+            flowId: "1",
+            flowType: DatasetFlowType.ExecuteTransform,
+            dataset: mockDatasetSearchResult.datasets[0],
+        },
+    },
+    {
+        __typename: "FlowEventStartConditionUpdated",
+        eventId: "4",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        startCondition: {
+            __typename: "FlowStartConditionBatching",
+            activeBatchingRule: {
+                minRecordsToAwait: 500,
+                maxBatchingInterval: {
+                    every: 5,
+                    unit: TimeUnit.Hours,
+                },
+            },
+            batchingDeadline: "2022-08-05T21:17:30.613911358+00:00",
+            accumulatedRecordsCount: 100,
+            watermarkModified: true,
+        },
+    },
+    {
+        __typename: "FlowEventStartConditionUpdated",
+        eventId: "4",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        startCondition: {
+            __typename: "FlowStartConditionExecutor",
+            taskId: "5",
+        },
+    },
+    {
+        __typename: "FlowEventStartConditionUpdated",
+        eventId: "4",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        startCondition: {
+            __typename: "FlowStartConditionSchedule",
+            wakeUpAt: "2024-03-13T15:54:30.656488373+00:00",
+        },
+    },
+];
+
+export const flowEventSubMessageResults: string[] = [
+    "",
+    "",
+    "Task #1",
+    "",
+    "Wake up time at Feb 12th 2024, 8:22:30 PM, shifted from 8:22:29 PM",
+    "Triggered by kamu",
+    "Input dataset: kamu/alberta.case-details",
+    "Accumulated 100/500 records. Watermark modified. Deadline at Aug 6th 2022, 12:17:30 AM", //1
+    "Task #5",
+    "Wake up time at Mar 13th 2024, 5:54:30 PM",
+    "An error occurred, see logs for more details",
+    "Dataset is up-to-date",
+    "Ingested 100 new records in 10 new blocks",
+    "Transformed 10 new records in 2 new blocks",
+];

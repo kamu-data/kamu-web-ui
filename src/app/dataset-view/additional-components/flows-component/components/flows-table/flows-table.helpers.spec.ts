@@ -2,19 +2,31 @@ import { FlowSummaryDataFragment, TimeUnit } from "src/app/api/kamu.graphql.inte
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import {
+    durationBlockTextResults,
     expectationsDescriptionEndOfMessage,
     expectationsDesriptionColumnOptions,
     mockDatasetExecuteTransformFlowSummaryData,
+    mockFlowSummaryDataFragmentTooltipAndDurationText,
     mockTableFlowSummaryDataFragments,
+    tooltipTextResults,
 } from "./flows-table.helpers.mock";
+import timekeeper from "timekeeper";
+import moment from "moment";
 
 describe("DatasetFlowTableHelpers", () => {
+    beforeAll(() => {
+        timekeeper.freeze("2024-03-14T11:22:29+00:00");
+        moment.relativeTimeThreshold("s", 59);
+        moment.relativeTimeThreshold("m", 59);
+        moment.relativeTimeThreshold("h", 23);
+    });
+
     it("should check waiting block text with FlowStartConditionThrottling typename", () => {
         expect(
             DatasetFlowTableHelpers.waitingBlockText({
                 __typename: "FlowStartConditionThrottling",
                 intervalSec: 120,
-                wakeUpAt: "2024-02-12T18:22:30+00:00",
+                wakeUpAt: "2024-03-14T18:22:29+00:00",
                 shiftedFrom: "2024-02-12T18:22:29+00:00",
             }),
         ).toEqual("waiting for a throttling condition");
@@ -38,6 +50,24 @@ describe("DatasetFlowTableHelpers", () => {
         ).toEqual("waiting for a batching condition");
     });
 
+    it("should check waiting block text with FlowStartConditionExecutor typename", () => {
+        expect(
+            DatasetFlowTableHelpers.waitingBlockText({
+                __typename: "FlowStartConditionExecutor",
+                taskId: "4",
+            }),
+        ).toEqual("waiting for a free executor");
+    });
+
+    it("should check waiting block text with FlowStartConditionSchedule typename", () => {
+        expect(
+            DatasetFlowTableHelpers.waitingBlockText({
+                __typename: "FlowStartConditionSchedule",
+                wakeUpAt: "2022-08-05T21:17:30.613911358+00:00",
+            }),
+        ).toEqual("waiting for scheduled execution");
+    });
+
     mockFlowSummaryDataFragments.forEach((item: FlowSummaryDataFragment, index: number) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         it(`should check description column options with status=${item.status} and outcome=${item.outcome!}`, () => {
@@ -53,6 +83,20 @@ describe("DatasetFlowTableHelpers", () => {
             expect(DatasetFlowTableHelpers.descriptionEndOfMessage(item)).toEqual(
                 expectationsDescriptionEndOfMessage[index],
             );
+        });
+    });
+
+    mockFlowSummaryDataFragmentTooltipAndDurationText.forEach((item: FlowSummaryDataFragment, index: number) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        it(`should check duration block text with status=${item.status} and outcome=${item.outcome!}`, () => {
+            expect(DatasetFlowTableHelpers.durationBlockText(item)).toEqual(durationBlockTextResults[index]);
+        });
+    });
+
+    mockFlowSummaryDataFragmentTooltipAndDurationText.forEach((item: FlowSummaryDataFragment, index: number) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        it(`should check tooltip text with status=${item.status} and outcome=${item.outcome!}`, () => {
+            expect(DatasetFlowTableHelpers.tooltipText(item)).toEqual(tooltipTextResults[index]);
         });
     });
 

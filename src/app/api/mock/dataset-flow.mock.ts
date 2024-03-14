@@ -7,10 +7,12 @@ import {
     DatasetResumeFlowsMutation,
     DatasetTriggerFlowMutation,
     FlowConnectionDataFragment,
+    FlowHistoryDataFragment,
     FlowOutcome,
     FlowStatus,
     FlowSummaryDataFragment,
     GetDatasetListFlowsQuery,
+    TaskStatus,
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
 import { FlowsTableData } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
@@ -600,3 +602,30 @@ export const mockCancelScheduledTasksMutationError: CancelScheduledTasksMutation
         __typename: "DatasetsMut",
     },
 };
+
+export const mockFlowHistoryDataFragment: FlowHistoryDataFragment[] = [
+    {
+        __typename: "FlowEventInitiated",
+        eventId: "0",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        trigger: {
+            __typename: "FlowTriggerAutoPolling",
+        },
+    },
+    {
+        __typename: "FlowEventStartConditionUpdated",
+        eventId: "1",
+        eventTime: "2024-03-13T13:54:31+00:00",
+        startCondition: {
+            __typename: "FlowStartConditionExecutor",
+            taskId: "0",
+        },
+    },
+    {
+        __typename: "FlowEventTaskChanged",
+        eventId: "3",
+        eventTime: "2024-03-13T13:54:32.269040795+00:00",
+        taskId: "0",
+        taskStatus: TaskStatus.Running,
+    },
+];

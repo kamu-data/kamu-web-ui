@@ -41,7 +41,10 @@ import { parseCurrentSchema } from "../common/app.helpers";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {
-    constructor(private datasetApi: DatasetApi, private datasetSubsService: DatasetSubscriptionsService) {}
+    constructor(
+        private datasetApi: DatasetApi,
+        private datasetSubsService: DatasetSubscriptionsService,
+    ) {}
 
     private currentSetVocab: SetVocab;
 

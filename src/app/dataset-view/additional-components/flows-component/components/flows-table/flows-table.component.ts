@@ -59,7 +59,10 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
 
-    constructor(private navigationService: NavigationService, private modalService: ModalService) {}
+    constructor(
+        private navigationService: NavigationService,
+        private modalService: ModalService,
+    ) {}
 
     ngOnChanges(changes: SimpleChanges): void {
         const nodes: SimpleChange = changes.nodes;

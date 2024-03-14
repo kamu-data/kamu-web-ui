@@ -503,8 +503,7 @@ $app-color-tooltip-border: #ced4da;
     margin: 0;
     margin-bottom: -1px;
     flex: auto;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden auto;
     background-color: $app-color-canvas-overlay;
     -webkit-overflow-scrolling: touch;
 }
@@ -530,7 +529,9 @@ $app-color-tooltip-border: #ced4da;
 
     &--check {
         visibility: hidden;
-        transition: transform 0.12s cubic-bezier(0.5, 0.1, 1, 0.5), visibility 0s 0.12s linear;
+        transition:
+            transform 0.12s cubic-bezier(0.5, 0.1, 1, 0.5),
+            visibility 0s 0.12s linear;
         transform: scale(0);
     }
 }
@@ -538,7 +539,9 @@ $app-color-tooltip-border: #ced4da;
 .select-menu-item[aria-checked="true"] {
     .select-menu-icon--check {
         visibility: visible;
-        transition: transform 0.12s cubic-bezier(0, 0, 0.2, 1), visibility 0s linear;
+        transition:
+            transform 0.12s cubic-bezier(0, 0, 0.2, 1),
+            visibility 0s linear;
         transform: scale(1);
     }
 }

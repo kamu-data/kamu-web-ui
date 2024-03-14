@@ -26,7 +26,7 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {
-                switch (section) {
+                switch (section as ExecuteTransformSection) {
                     case ExecuteTransformSection.NEW_CHECKPOINT: {
                         result.push({
                             title: this.sectionTitleMapper[section],

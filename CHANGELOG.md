@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.16.0] - 2024-03-13
 ### Added
 - Introduced dataset scheduling settings page to manage automatically launched ingest/transform flows
 - Added new flows tab 
@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added new start condition for the flow
 - Added the ability to cancel a scheduled flow
 - Added a history tab for the flow details page
+### Changed
+- Minor dependency updates
 ### Fixed
 - Fixed bug with authentication (Login vs CLI)
 - Settings tab is hidden after login

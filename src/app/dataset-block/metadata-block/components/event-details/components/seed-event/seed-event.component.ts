@@ -12,7 +12,10 @@ import { BaseComponent } from "src/app/common/base.component";
 export class SeedEventComponent extends BaseComponent {
     @Input() public event: Seed;
 
-    constructor(private clipboard: Clipboard, private toastService: ToastrService) {
+    constructor(
+        private clipboard: Clipboard,
+        private toastService: ToastrService,
+    ) {
         super();
     }
 

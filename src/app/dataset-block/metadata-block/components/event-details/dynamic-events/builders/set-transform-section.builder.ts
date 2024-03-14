@@ -14,11 +14,16 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (section !== "__typename") {
-                switch (section) {
+                switch (section as SetTransformSection) {
                     case SetTransformSection.TRANSFORM: {
                         result.push({
                             title: section,
-                            rows: this.buildEventRows(event, SET_TRANSFORM_SOURCE_DESCRIPTORS, section, false),
+                            rows: this.buildEventRows(
+                                event,
+                                SET_TRANSFORM_SOURCE_DESCRIPTORS,
+                                section as keyof SetTransform,
+                                false,
+                            ),
                         });
                         break;
                     }

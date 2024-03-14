@@ -22,6 +22,10 @@ describe("DatasetFlowTableHelpers", () => {
         moment.tz.setDefault("Europe/Kiev");
     });
 
+    afterAll(() => {
+        moment.tz.setDefault();
+    });
+
     it("should check waiting block text with FlowStartConditionThrottling typename", () => {
         expect(
             DatasetFlowTableHelpers.waitingBlockText({

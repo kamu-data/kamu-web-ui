@@ -18,6 +18,10 @@ describe("DatasetFlowDetailsHelpers", () => {
         moment.tz.setDefault("Europe/Kiev");
     });
 
+    afterAll(() => {
+        moment.tz.setDefault();
+    });
+
     mockFlowHistoryDataFragmentForDescriptions.forEach((item, index) => {
         it(`should check flow event description with typename = ${item.__typename}`, () => {
             expect(DatasetFlowDetailsHelpers.flowEventDescription(item, mockFlowSummaryDataFragments[2])).toEqual(

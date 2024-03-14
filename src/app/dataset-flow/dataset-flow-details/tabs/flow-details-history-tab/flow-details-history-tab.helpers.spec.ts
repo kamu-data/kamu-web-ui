@@ -11,8 +11,12 @@ import {
     mockHistoryFragmentWithFinishedStatus,
 } from "./flow-details-history-tab.helpers.mock";
 import { mockDatasetExecuteTransformFlowSummaryData } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.helpers.mock";
+import moment from "moment";
 
 describe("DatasetFlowDetailsHelpers", () => {
+    beforeAll(() => {
+        moment().tz("Europe/Kiev");
+    });
     mockFlowHistoryDataFragmentForDescriptions.forEach((item, index) => {
         it(`should check flow event description with typename = ${item.__typename}`, () => {
             expect(DatasetFlowDetailsHelpers.flowEventDescription(item, mockFlowSummaryDataFragments[2])).toEqual(

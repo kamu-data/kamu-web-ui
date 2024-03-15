@@ -53,6 +53,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"];
     public readonly INITIATORS: string[] = Object.keys(FilterByInitiatorEnum);
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
+    public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly FlowOutcome: typeof FlowOutcome = FlowOutcome;
     public readonly FilterByInitiatorEnum: typeof FilterByInitiatorEnum = FilterByInitiatorEnum;

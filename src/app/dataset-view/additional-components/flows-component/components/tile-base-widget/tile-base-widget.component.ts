@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FlowStatus, FlowOutcome, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
 import { DataHelpers } from "src/app/common/data.helpers";
+import AppValues from "src/app/common/app.values";
 
 @Component({
     selector: "app-tile-base-widget",
@@ -15,6 +16,7 @@ export class TileBaseWidgetComponent {
     public readonly LAST_RUNS_COUNT = 150;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly FlowOutcome: typeof FlowOutcome = FlowOutcome;
+    public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
 
     public durationTask(d1: MaybeNullOrUndefined<string>, d2: MaybeNullOrUndefined<string>): string {
         if (!d2 || !d1) return "-";

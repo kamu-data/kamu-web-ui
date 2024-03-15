@@ -8,9 +8,10 @@ import { AngularSvgIconModule } from "angular-svg-icon";
 import { DatasetModule } from "src/app/dataset-view/dataset.module";
 import { DatasetFlowDetailsComponent } from "./dataset-flow-details.component";
 import { FlowDetailsHistoryTabComponent } from "./tabs/flow-details-history-tab/flow-details-history-tab.component";
+import { FlowDetailsSummaryTabComponent } from "./tabs/flow-details-summary-tab/flow-details-summary-tab.component";
 
 @NgModule({
-    declarations: [DatasetFlowDetailsComponent, FlowDetailsHistoryTabComponent],
+    declarations: [DatasetFlowDetailsComponent, FlowDetailsHistoryTabComponent, FlowDetailsSummaryTabComponent],
     imports: [
         CommonModule,
         MatIconModule,

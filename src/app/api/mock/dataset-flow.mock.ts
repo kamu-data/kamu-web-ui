@@ -1,6 +1,7 @@
 import {
     AccountType,
     CancelScheduledTasksMutation,
+    DatasetAllFlowsPausedQuery,
     DatasetFlowBatchingMutation,
     DatasetFlowScheduleMutation,
     DatasetPauseFlowsMutation,
@@ -12,10 +13,12 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
     GetDatasetListFlowsQuery,
+    GetFlowByIdQuery,
     TaskStatus,
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
 import { FlowsTableData } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
+import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 
 export const mockTimeDeltaInput: TimeDeltaInput = {
     every: 10,
@@ -629,3 +632,108 @@ export const mockFlowHistoryDataFragment: FlowHistoryDataFragment[] = [
         taskStatus: TaskStatus.Running,
     },
 ];
+
+export const mockDatasetFlowByIdResponse: DatasetFlowByIdResponse = {
+    flow: mockFlowSummaryDataFragments[0],
+    flowHistory: mockFlowHistoryDataFragment,
+};
+
+export const mockDatasetAllFlowsPausedQuery: DatasetAllFlowsPausedQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byId: {
+            __typename: "Dataset",
+            flows: { __typename: "DatasetFlows", configs: { __typename: "DatasetFlowConfigs", allPaused: true } },
+        },
+    },
+};
+
+export const mockGetFlowByIdQueryError: GetFlowByIdQuery = {
+    datasets: {
+        byId: {
+            flows: {
+                runs: {
+                    getFlow: {
+                        __typename: "FlowNotFound",
+                        flowId: "3",
+                        message: "Error",
+                    },
+                },
+            },
+        },
+    },
+};
+
+export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
+    datasets: {
+        byId: {
+            flows: {
+                runs: {
+                    getFlow: {
+                        flow: {
+                            description: {
+                                datasetId:
+                                    "did:odf:fed016c0070664336545c0f49dc6a7a860c6862ab3336b630c2d7e779394a26da2e1e",
+                                transformResult: null,
+                                __typename: "FlowDescriptionDatasetExecuteTransform",
+                            },
+                            flowId: "595",
+                            status: FlowStatus.Finished,
+                            initiator: null,
+                            outcome: FlowOutcome.Success,
+                            timing: {
+                                awaitingExecutorSince: "2024-03-15T19:43:38+00:00",
+                                runningSince: "2024-03-15T19:43:39.414651763+00:00",
+                                finishedAt: "2024-03-15T19:43:39.538294176+00:00",
+                                __typename: "FlowTimingRecords",
+                            },
+                            startCondition: null,
+                            __typename: "Flow",
+                            history: [
+                                {
+                                    __typename: "FlowEventInitiated",
+                                    eventId: "3565",
+                                    eventTime: "2024-03-15T19:43:37.844613373+00:00",
+                                    trigger: {
+                                        __typename: "FlowTriggerAutoPolling",
+                                    },
+                                },
+                                {
+                                    __typename: "FlowEventStartConditionUpdated",
+                                    eventId: "3566",
+                                    eventTime: "2024-03-15T19:43:38+00:00",
+                                    startCondition: {
+                                        __typename: "FlowStartConditionExecutor",
+                                        taskId: "594",
+                                    },
+                                },
+                                {
+                                    __typename: "FlowEventTaskChanged",
+                                    eventId: "3567",
+                                    eventTime: "2024-03-15T19:43:38+00:00",
+                                    taskId: "594",
+                                    taskStatus: TaskStatus.Queued,
+                                },
+                                {
+                                    __typename: "FlowEventTaskChanged",
+                                    eventId: "3568",
+                                    eventTime: "2024-03-15T19:43:39.414651763+00:00",
+                                    taskId: "594",
+                                    taskStatus: TaskStatus.Running,
+                                },
+                                {
+                                    __typename: "FlowEventTaskChanged",
+                                    eventId: "3569",
+                                    eventTime: "2024-03-15T19:43:39.538294176+00:00",
+                                    taskId: "594",
+                                    taskStatus: TaskStatus.Finished,
+                                },
+                            ],
+                        },
+                        __typename: "GetFlowSuccess",
+                    },
+                },
+            },
+        },
+    },
+};

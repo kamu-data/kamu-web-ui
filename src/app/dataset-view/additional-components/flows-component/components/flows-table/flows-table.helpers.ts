@@ -16,6 +16,7 @@ export class DatasetFlowTableHelpers {
     public static descriptionColumnTableOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
         switch (element.status) {
             case FlowStatus.Finished:
+                /* istanbul ignore next */
                 if (_.isNil(element.outcome)) {
                     throw new Error("Expected to have flow outcome in Finished state");
                 }
@@ -26,7 +27,7 @@ export class DatasetFlowTableHelpers {
                         return { icon: "dangerous", class: "failed-status" };
                     case FlowOutcome.Aborted:
                         return { icon: "cancel", class: "aborted-outcome" };
-
+                    /* istanbul ignore next */
                     default:
                         throw new Error("Unsupported flow outcome");
                 }
@@ -42,6 +43,7 @@ export class DatasetFlowTableHelpers {
     public static descriptionEndOfMessage(element: FlowSummaryDataFragment): string {
         switch (element.status) {
             case FlowStatus.Finished:
+                /* istanbul ignore next */
                 if (_.isNil(element.outcome)) {
                     throw new Error("Expected to have flow outcome in Finished state");
                 }
@@ -52,6 +54,7 @@ export class DatasetFlowTableHelpers {
                         return "aborted";
                     case FlowOutcome.Failed:
                         return "failed";
+                    /* istanbul ignore next */
                     default:
                         throw new Error("Unsupported flow outcome");
                 }
@@ -61,7 +64,7 @@ export class DatasetFlowTableHelpers {
 
             case FlowStatus.Waiting:
                 return "waiting";
-
+            /* istanbul ignore next */
             default:
                 throw new Error(`Unsupported flow status`);
         }
@@ -74,6 +77,7 @@ export class DatasetFlowTableHelpers {
     ): string {
         switch (element.status) {
             case FlowStatus.Finished:
+                /* istanbul ignore next */
                 if (_.isNil(element.outcome)) {
                     throw new Error("Expected to have flow outcome in Finished state");
                 }
@@ -112,6 +116,7 @@ export class DatasetFlowTableHelpers {
 
                     case FlowOutcome.Failed:
                         return `An error occurred, see logs for more details`;
+                    /* istanbul ignore next */
                     default:
                         throw new Error("Unsupported flow outcome");
                 }
@@ -120,6 +125,7 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Running:
                 switch (element.description.__typename) {
                     case "FlowDescriptionDatasetPollingIngest":
+                        /* istanbul ignore next */
                         if (_.isNil(fetchStep)) {
                             throw new Error("FetchStep expected for polling ingest flow");
                         }
@@ -171,9 +177,11 @@ export class DatasetFlowTableHelpers {
                         return "aborted " + moment(node.timing.finishedAt).fromNow();
                     case FlowOutcome.Failed:
                         return "failed " + moment(node.timing.runningSince).fromNow();
+                    /* istanbul ignore next */
                     default:
                         throw new Error("Unknown flow outsome");
                 }
+            /* istanbul ignore next */
             default:
                 throw new Error("Unknown flow status");
         }
@@ -233,7 +241,7 @@ export class DatasetFlowTableHelpers {
                         return `Start running time: ${moment(node.timing.runningSince).format(
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
-
+                    /* istanbul ignore next */
                     default:
                         throw new Error("Unknown flow outcome");
                 }
@@ -242,7 +250,7 @@ export class DatasetFlowTableHelpers {
                 return `Start running time: ${moment(node.timing.runningSince).format(
                     AppValues.CRON_EXPRESSION_DATE_FORMAT,
                 )}`;
-
+            /* istanbul ignore next */
             default:
                 throw new Error("Unknown flow status");
         }

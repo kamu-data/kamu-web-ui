@@ -12,6 +12,7 @@ import {
 } from "./flow-details-history-tab.helpers.mock";
 import { mockDatasetExecuteTransformFlowSummaryData } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.helpers.mock";
 import moment from "moment";
+import { FlowStatus } from "src/app/api/kamu.graphql.interface";
 
 describe("DatasetFlowDetailsHelpers", () => {
     beforeAll(() => {
@@ -107,5 +108,10 @@ describe("DatasetFlowDetailsHelpers", () => {
                 mockDatasetExecuteTransformFlowSummaryData,
             ),
         ).toEqual(flowEventSubMessageResults[13]);
+    });
+
+    it(`should check don't show dynamic image`, () => {
+        const expectedResult = "";
+        expect(DatasetFlowDetailsHelpers.dynamicImgSrc(FlowStatus.Finished)).toEqual(expectedResult);
     });
 });

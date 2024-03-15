@@ -39,6 +39,7 @@ export class DatasetFlowDetailsHelpers {
                 const startConditionEvent = flowEvent as FlowEventStartConditionUpdated;
                 return `Waiting for ${this.describeStartCondition(startConditionEvent)}`;
             }
+            /* istanbul ignore next */
             default:
                 throw new Error("Unknown event typename");
         }
@@ -67,10 +68,12 @@ export class DatasetFlowDetailsHelpers {
                         return { icon: "radio_button_checked", class: "scheduled-status" };
                     case TaskStatus.Running:
                         return { icon: "radio_button_checked", class: "running-status" };
+                    /* istanbul ignore next */
                     default:
                         throw new Error("Unsupported flow event typename");
                 }
             }
+            /* istanbul ignore next */
             default:
                 throw new Error("Unsupported flow event typename");
         }
@@ -84,7 +87,7 @@ export class DatasetFlowDetailsHelpers {
                 return { icon: "dangerous", class: "failed-status" };
             case FlowOutcome.Aborted:
                 return { icon: "cancel", class: "aborted-outcome" };
-
+            /* istanbul ignore next */
             default:
                 throw new Error("Unsupported flow outcome");
         }
@@ -141,13 +144,15 @@ export class DatasetFlowDetailsHelpers {
                                     // TODO
                                     //  - Compacting
                                     //  - GC
+                                    /* istanbul ignore next */
                                     default:
                                         return "Unknown description typename";
                                 }
-
+                            /* istanbul ignore next */
                             default:
                                 throw new Error("Unknown flow outcome");
                         }
+                    /* istanbul ignore next */
                     default:
                         throw new Error("Unknown task status");
                 }
@@ -156,6 +161,7 @@ export class DatasetFlowDetailsHelpers {
                 const startConditionEvent = flowEvent as FlowEventStartConditionUpdated;
                 return this.describeStartConditionDetails(startConditionEvent);
             }
+            /* istanbul ignore next */
             default:
                 throw new Error("Unknown event typename");
         }
@@ -167,6 +173,7 @@ export class DatasetFlowDetailsHelpers {
                 return "finished";
             case TaskStatus.Running:
                 return "running";
+            /* istanbul ignore next */
             default:
                 throw new Error(`Unsupported task status`);
         }
@@ -182,6 +189,7 @@ export class DatasetFlowDetailsHelpers {
                 return "after push event";
             case "FlowTriggerInputDatasetFlow":
                 return "after input dataset event";
+            /* istanbul ignore next */
             default:
                 throw new Error("Unknown trigger typename");
         }
@@ -197,6 +205,7 @@ export class DatasetFlowDetailsHelpers {
                 return "";
             case "FlowTriggerInputDatasetFlow":
                 return `Input dataset: ${trigger.dataset.owner.accountName}/${trigger.dataset.name}`;
+            /* istanbul ignore next */
             default:
                 throw new Error("Unknown trigger typename");
         }
@@ -212,6 +221,7 @@ export class DatasetFlowDetailsHelpers {
                 return "free executor";
             case "FlowStartConditionSchedule":
                 return "scheduled execution";
+            /* istanbul ignore next */
             default:
                 throw new Error("Unknown start condition typename");
         }
@@ -238,6 +248,7 @@ export class DatasetFlowDetailsHelpers {
                 return `Wake up time at ${moment(startCondition.wakeUpAt).format(
                     AppValues.CRON_EXPRESSION_DATE_FORMAT,
                 )}`;
+            /* istanbul ignore next */
             default:
                 throw new Error("Unknown start condition typename");
         }

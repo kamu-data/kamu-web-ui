@@ -3,10 +3,23 @@ import { FlowDetailsSummaryTabComponent } from "./flow-details-summary-tab.compo
 import { mockTableFlowSummaryDataFragments } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.helpers.mock";
 import moment from "moment";
 import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import timekeeper from "timekeeper";
 
 describe("FlowDetailsSummaryTabComponent", () => {
     let component: FlowDetailsSummaryTabComponent;
     let fixture: ComponentFixture<FlowDetailsSummaryTabComponent>;
+
+    beforeAll(() => {
+        timekeeper.freeze("2024-03-14T11:22:29+00:00");
+        moment.relativeTimeThreshold("s", 59);
+        moment.relativeTimeThreshold("m", 59);
+        moment.relativeTimeThreshold("h", 23);
+        moment.tz.setDefault("Europe/Kiev");
+    });
+
+    afterAll(() => {
+        moment.tz.setDefault();
+    });
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -17,14 +30,6 @@ describe("FlowDetailsSummaryTabComponent", () => {
         component = fixture.componentInstance;
         component.flowDetails = mockTableFlowSummaryDataFragments[5];
         fixture.detectChanges();
-    });
-
-    beforeAll(() => {
-        moment.tz.setDefault("Europe/Kiev");
-    });
-
-    afterAll(() => {
-        moment.tz.setDefault();
     });
 
     it("should create", () => {

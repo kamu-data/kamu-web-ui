@@ -1489,6 +1489,7 @@ input {
     text-transform: none;
 }
 
+.finished-outcome,
 .completed-status {
     color: #239a59;
 }
@@ -1497,6 +1498,7 @@ input {
     color: #8bdaaf;
 }
 
+.failed-outcome,
 .failed-status {
     color: #d13124;
 }

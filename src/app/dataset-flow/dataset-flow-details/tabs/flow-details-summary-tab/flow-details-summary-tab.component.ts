@@ -15,7 +15,7 @@ export class FlowDetailsSummaryTabComponent {
     public outcomeClass(flowOutcome: MaybeNullOrUndefined<FlowOutcome>): string {
         switch (flowOutcome) {
             case FlowOutcome.Success:
-                return "finished-outcome";
+                return "success-outcome";
             case FlowOutcome.Aborted:
                 return "aborted-outcome";
             case FlowOutcome.Failed:

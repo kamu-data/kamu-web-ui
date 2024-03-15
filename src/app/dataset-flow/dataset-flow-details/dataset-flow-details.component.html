@@ -118,7 +118,9 @@
             </div>
             <div class="content sidebar my-4">
                 <div class="my-3 pl-40">
-                    <ng-container *ngIf="activeTab === FlowDetailsTabs.SUMMARY"> Summary tab coming soon </ng-container>
+                    <ng-container *ngIf="activeTab === FlowDetailsTabs.SUMMARY">
+                        <app-flow-details-summary-tab [flowDetails]="flowDetails.flow"> </app-flow-details-summary-tab>
+                    </ng-container>
                     <ng-container *ngIf="activeTab === FlowDetailsTabs.HISTORY">
                         <app-flow-details-history-tab
                             [flowDetails]="flowDetails.flow"

@@ -1,3 +1,4 @@
+import { MaybeNullOrUndefined } from "./../../../../common/app.types";
 import moment from "moment";
 import {
     FlowEventInitiated,
@@ -61,17 +62,9 @@ export class DatasetFlowDetailsHelpers {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
                     case TaskStatus.Finished:
-                        switch (flowDetails.outcome) {
-                            case FlowOutcome.Success:
-                                return { icon: "check_circle", class: "completed-status" };
-                            case FlowOutcome.Failed:
-                                return { icon: "dangerous", class: "failed-status" };
-                            case FlowOutcome.Aborted:
-                                return { icon: "cancel", class: "aborted-outcome" };
-
-                            default:
-                                throw new Error("Unsupported flow outcome");
-                        }
+                        return DatasetFlowDetailsHelpers.flowOutcomeOptions(flowDetails.outcome);
+                    case TaskStatus.Queued:
+                        return { icon: "radio_button_checked", class: "scheduled-status" };
                     case TaskStatus.Running:
                         return { icon: "radio_button_checked", class: "running-status" };
                     default:
@@ -80,6 +73,20 @@ export class DatasetFlowDetailsHelpers {
             }
             default:
                 throw new Error("Unsupported flow event typename");
+        }
+    }
+
+    public static flowOutcomeOptions(outcome: MaybeNullOrUndefined<FlowOutcome>): { icon: string; class: string } {
+        switch (outcome) {
+            case FlowOutcome.Success:
+                return { icon: "check_circle", class: "completed-status" };
+            case FlowOutcome.Failed:
+                return { icon: "dangerous", class: "failed-status" };
+            case FlowOutcome.Aborted:
+                return { icon: "cancel", class: "aborted-outcome" };
+
+            default:
+                throw new Error("Unsupported flow outcome");
         }
     }
 

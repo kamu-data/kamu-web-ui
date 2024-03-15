@@ -12,8 +12,9 @@ export class TileBaseWidgetHelpers {
             case FlowStatus.Waiting: {
                 return "waiting-class";
             }
+            /* istanbul ignore next */
             default:
-                return "";
+                throw new Error("Unknown flow status");
         }
     }
 }

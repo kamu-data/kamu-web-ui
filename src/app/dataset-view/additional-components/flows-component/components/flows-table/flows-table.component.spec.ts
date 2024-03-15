@@ -17,11 +17,17 @@ import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { MatTableHarness } from "@angular/material/table/testing";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SimpleChanges } from "@angular/core";
+import { NavigationService } from "src/app/services/navigation.service";
+import { ModalService } from "src/app/components/modal/modal.service";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
     let fixture: ComponentFixture<FlowsTableComponent>;
     let loader: HarnessLoader;
+    let navigationService: NavigationService;
+    let modalService: ModalService;
+    const MOCK_FLOW_ID = "1";
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -47,6 +53,8 @@ describe("FlowsTableComponent", () => {
         iconRegistryService.addSvg("timer", "");
 
         fixture = TestBed.createComponent(FlowsTableComponent);
+        navigationService = TestBed.inject(NavigationService);
+        modalService = TestBed.inject(ModalService);
         component = fixture.componentInstance;
         loader = TestbedHarnessEnvironment.loader(fixture);
         component.nodes = mockFlowSummaryDataFragments;
@@ -87,5 +95,33 @@ describe("FlowsTableComponent", () => {
     it("should check table rows length", async () => {
         const table = await loader.getHarness<MatTableHarness>(MatTableHarness);
         expect((await table.getRows()).length).toBe(5);
+    });
+
+    it("should check ngOnChanges", () => {
+        const nodesSimpleChanges: SimpleChanges = {
+            nodes: {
+                previousValue: undefined,
+                currentValue: mockFlowSummaryDataFragments,
+                firstChange: true,
+                isFirstChange: () => true,
+            },
+        };
+        component.ngOnChanges(nodesSimpleChanges);
+        expect(component.dataSource.data).toEqual(mockFlowSummaryDataFragments);
+    });
+
+    it("should check show modal window with warning", () => {
+        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options) => {
+            options.handler?.call(undefined, false);
+            return Promise.resolve("");
+        });
+        component.cancelFlow(MOCK_FLOW_ID);
+        expect(modalWindowSpy).toHaveBeenCalledWith(jasmine.objectContaining({ title: "Cancel flow" }));
+    });
+
+    it("should check navigate to flow details view", () => {
+        const navigateToFlowDetailsSpy = spyOn(navigationService, "navigateToFlowDetails");
+        component.navigateToFlowDetaisView(MOCK_FLOW_ID);
+        expect(navigateToFlowDetailsSpy).toHaveBeenCalledWith(jasmine.objectContaining({ flowId: MOCK_FLOW_ID }));
     });
 });

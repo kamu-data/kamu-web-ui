@@ -8,6 +8,7 @@ import { of } from "rxjs";
 import {
     mockCancelScheduledTasksMutationError,
     mockCancelScheduledTasksMutationSuccess,
+    mockDatasetAllFlowsPausedQuery,
     mockDatasetPauseFlowsMutationError,
     mockDatasetPauseFlowsMutationSuccess,
     mockDatasetResumeFlowsMutationError,
@@ -15,6 +16,8 @@ import {
     mockDatasetTriggerFlowMutation,
     mockDatasetTriggerFlowMutationError,
     mockGetDatasetListFlowsQuery,
+    mockGetFlowByIdQueryError,
+    mockGetFlowByIdQuerySuccess,
 } from "src/app/api/mock/dataset-flow.mock";
 import { MaybeUndefined } from "src/app/common/app.types";
 import { FlowsTableData } from "../components/flows-table/flows-table.types";
@@ -154,6 +157,51 @@ describe("DatasetFlowsService", () => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledWith(
                     mockCancelScheduledTasksMutationError.datasets.byId?.flows.runs.cancelScheduledTasks.message,
                 );
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check all flows paused", () => {
+        spyOn(datasetFlowApi, "allFlowsPaused").and.returnValue(of(mockDatasetAllFlowsPausedQuery));
+
+        const subscription$ = service.allFlowsPaused(MOCK_DATASET_ID).subscribe((result) => {
+            expect(result).toEqual(mockDatasetAllFlowsPausedQuery.datasets.byId?.flows.configs.allPaused);
+        });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check get flow by id", () => {
+        spyOn(datasetFlowApi, "allFlowsPaused").and.returnValue(of(mockDatasetAllFlowsPausedQuery));
+
+        const subscription$ = service.allFlowsPaused(MOCK_DATASET_ID).subscribe((result) => {
+            expect(result).toEqual(mockDatasetAllFlowsPausedQuery.datasets.byId?.flows.configs.allPaused);
+        });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check get flow by id with success", () => {
+        spyOn(datasetFlowApi, "getFlowById").and.returnValue(of(mockGetFlowByIdQuerySuccess));
+        const expectedFlowId = "595";
+        const subscription$ = service
+            .datasetFlowById({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID })
+            .subscribe((result) => {
+                expect(result?.flow.flowId).toEqual(expectedFlowId);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check get flow by id with error", () => {
+        spyOn(datasetFlowApi, "getFlowById").and.returnValue(of(mockGetFlowByIdQueryError));
+        const toastrServiceErrorSpy = spyOn(toastService, "error");
+
+        const subscription$ = service
+            .datasetFlowById({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID })
+            .subscribe(() => {
+                expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
             });
 
         expect(subscription$.closed).toBeTrue();

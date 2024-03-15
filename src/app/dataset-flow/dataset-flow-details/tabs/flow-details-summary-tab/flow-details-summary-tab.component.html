@@ -14,7 +14,7 @@
                     <span class="fw-bold">Initiator</span>
                 </div>
                 <div class="col-md-9" data-test-id="flow-initiator">
-                    {{ flowDetails.initiator?.accountName ?? "System" }}
+                    {{ flowDetails.initiator?.accountName ?? DEFAULT_FLOW_INITIATOR }}
                 </div>
             </div>
             <div class="row mb-4">
@@ -39,7 +39,7 @@
                         data-test-id="flow-created-time"
                         *ngIf="flowDetails.timing.awaitingExecutorSince; else emptyBlock"
                     >
-                        {{ flowDetails.timing.awaitingExecutorSince | date: "y-MM-dd, h:mm:ss a" }}</span
+                        {{ flowDetails.timing.awaitingExecutorSince | date: DATE_FORMAT }}</span
                     >&nbsp;
                     <span
                         class="text-muted"
@@ -60,7 +60,7 @@
                 </div>
                 <div class="col-md-9">
                     <span data-test-id="flow-running-time" *ngIf="flowDetails.timing.runningSince; else emptyBlock">{{
-                        flowDetails.timing.runningSince | date: "y-MM-dd, h:mm:ss a"
+                        flowDetails.timing.runningSince | date: DATE_FORMAT
                     }}</span
                     >&nbsp;
                     <span class="text-muted" *ngIf="flowDetails.timing.runningSince && flowDetails.timing.finishedAt"
@@ -75,7 +75,7 @@
                 </div>
                 <div class="col-md-9">
                     <span data-test-id="flow-finished-time" *ngIf="flowDetails.timing.finishedAt; else emptyBlock"
-                        >{{ flowDetails.timing.finishedAt | date: "y-MM-dd, h:mm:ss a" }}
+                        >{{ flowDetails.timing.finishedAt | date: DATE_FORMAT }}
                     </span>
                 </div>
             </div>

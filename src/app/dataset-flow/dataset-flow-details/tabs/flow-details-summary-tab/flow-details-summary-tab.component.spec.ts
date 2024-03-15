@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FlowDetailsSummaryTabComponent } from "./flow-details-summary-tab.component";
 import { mockTableFlowSummaryDataFragments } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.helpers.mock";
 import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import AppValues from "src/app/common/app.values";
 
 describe("FlowDetailsSummaryTabComponent", () => {
     let component: FlowDetailsSummaryTabComponent;
@@ -30,10 +31,10 @@ describe("FlowDetailsSummaryTabComponent", () => {
         expect(flowStatusElement?.textContent?.trim()).toEqual("Finished");
 
         const flowInitiatorElement = findElementByDataTestId(fixture, "flow-initiator");
-        expect(flowInitiatorElement?.textContent?.trim()).toEqual("System");
+        expect(flowInitiatorElement?.textContent?.trim()).toEqual(AppValues.DEFAULT_FLOW_INITIATOR);
 
         const flowOutcomeElement = findElementByDataTestId(fixture, "flow-outcome") as HTMLSpanElement;
         expect(flowOutcomeElement?.textContent?.trim()).toEqual("SUCCESS");
-        expect(flowOutcomeElement).toHaveClass("success-outcome");
+        expect(flowOutcomeElement).toHaveClass("completed-status");
     });
 });

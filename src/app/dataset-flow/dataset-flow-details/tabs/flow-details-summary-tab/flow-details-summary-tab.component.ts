@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FlowOutcome, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "src/app/common/app.types";
+import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
+import { DatasetFlowDetailsHelpers } from "../flow-details-history-tab/flow-details-history-tab.helpers";
 
 @Component({
     selector: "app-flow-details-summary-tab",
@@ -11,18 +13,11 @@ import { DataHelpers } from "src/app/common/data.helpers";
 export class FlowDetailsSummaryTabComponent {
     @Input() flowDetails: FlowSummaryDataFragment;
     public readonly FlowOutcome: typeof FlowOutcome = FlowOutcome;
+    public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
+    public readonly DATE_FORMAT = AppValues.CRON_EXPRESSION_DATE_FORMAT;
 
     public outcomeClass(flowOutcome: MaybeNullOrUndefined<FlowOutcome>): string {
-        switch (flowOutcome) {
-            case FlowOutcome.Success:
-                return "success-outcome";
-            case FlowOutcome.Aborted:
-                return "aborted-outcome";
-            case FlowOutcome.Failed:
-                return "failed-outcome";
-            default:
-                return "";
-        }
+        return DatasetFlowDetailsHelpers.flowOutcomeOptions(flowOutcome).class;
     }
 
     public flowTypeDescription(flow: FlowSummaryDataFragment): string {

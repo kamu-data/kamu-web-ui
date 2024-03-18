@@ -7,7 +7,10 @@ import { LoggedUserService } from "../logged-user.service";
     providedIn: "root",
 })
 export class AdminGuard implements CanActivate {
-    constructor(private navigationService: NavigationService, private loggedUserService: LoggedUserService) {}
+    constructor(
+        private navigationService: NavigationService,
+        private loggedUserService: LoggedUserService,
+    ) {}
 
     public canActivate(): boolean {
         if (!this.isAdmin()) {
@@ -18,6 +21,6 @@ export class AdminGuard implements CanActivate {
     }
 
     private isAdmin(): boolean {
-        return this.loggedUserService.currentlyLoggedInUser?.isAdmin ?? false;
+        return this.loggedUserService.isAdmin;
     }
 }

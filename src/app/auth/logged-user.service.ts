@@ -60,6 +60,10 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
         return !isNull(this.loggedInUser);
     }
 
+    public get isAdmin(): boolean {
+        return this.currentlyLoggedInUser?.isAdmin ?? false;
+    }
+
     public logout(): void {
         this.terminateSession();
         this.navigationService.navigateToHome();

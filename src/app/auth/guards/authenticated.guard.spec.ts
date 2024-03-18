@@ -1,6 +1,5 @@
 import { TestBed } from "@angular/core/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
-
 import { AuthenticatedGuard } from "./authenticated.guard";
 import { LoggedUserService } from "../logged-user.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";

@@ -23,7 +23,11 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
     public activeTab: AccountSettingsTabs = AccountSettingsTabs.PROFILE;
     public user$: Observable<MaybeNull<AccountFragment>>;
 
-    constructor(private router: Router, private route: ActivatedRoute, private loggedUserService: LoggedUserService) {
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+        private loggedUserService: LoggedUserService,
+    ) {
         super();
     }
 

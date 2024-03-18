@@ -3,6 +3,7 @@ import { ToastrService } from "ngx-toastr";
 import { Observable, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
+    CancelScheduledTasksMutation,
     DatasetAllFlowsPausedQuery,
     DatasetFlowFilters,
     DatasetFlowType,
@@ -12,15 +13,20 @@ import {
     DatasetTriggerFlowMutation,
     FlowConnectionDataFragment,
     GetDatasetListFlowsQuery,
+    GetFlowByIdQuery,
 } from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/common/app.types";
 import { FlowsTableData } from "../components/flows-table/flows-table.types";
+import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 
 @Injectable({
     providedIn: "root",
 })
 export class DatasetFlowsService {
-    constructor(private datasetFlowApi: DatasetFlowApi, private toastrService: ToastrService) {}
+    constructor(
+        private datasetFlowApi: DatasetFlowApi,
+        private toastrService: ToastrService,
+    ) {}
 
     public datasetTriggerFlow(params: { datasetId: string; datasetFlowType: DatasetFlowType }): Observable<boolean> {
         return this.datasetFlowApi
@@ -38,6 +44,19 @@ export class DatasetFlowsService {
                     }
                 }),
             );
+    }
+
+    public cancelScheduledTasks(params: { datasetId: string; flowId: string }): Observable<boolean> {
+        return this.datasetFlowApi.cancelScheduledTasks(params).pipe(
+            map((data: CancelScheduledTasksMutation) => {
+                if (data.datasets.byId?.flows.runs.cancelScheduledTasks.__typename === "CancelScheduledTasksSuccess") {
+                    return true;
+                } else {
+                    this.toastrService.error(data.datasets.byId?.flows.runs.cancelScheduledTasks.message);
+                    return false;
+                }
+            }),
+        );
     }
 
     public datasetFlowsList(params: {
@@ -87,6 +106,24 @@ export class DatasetFlowsService {
         return this.datasetFlowApi.allFlowsPaused(datasetId).pipe(
             map((data: DatasetAllFlowsPausedQuery) => {
                 return data.datasets.byId?.flows.configs.allPaused;
+            }),
+        );
+    }
+
+    public datasetFlowById(params: {
+        datasetId: string;
+        flowId: string;
+    }): Observable<MaybeUndefined<DatasetFlowByIdResponse>> {
+        return this.datasetFlowApi.getFlowById(params).pipe(
+            map((data: GetFlowByIdQuery) => {
+                if (data.datasets.byId?.flows.runs.getFlow.__typename === "GetFlowSuccess") {
+                    return {
+                        flow: data.datasets.byId.flows.runs.getFlow.flow,
+                        flowHistory: data.datasets.byId.flows.runs.getFlow.flow.history,
+                    };
+                } else if (data.datasets.byId?.flows.runs.getFlow.__typename === "FlowNotFound") {
+                    this.toastrService.error(data.datasets.byId.flows.runs.getFlow.message);
+                }
             }),
         );
     }

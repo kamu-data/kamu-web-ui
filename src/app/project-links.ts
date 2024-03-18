@@ -12,6 +12,7 @@ export default class ProjectLinks {
     public static readonly URL_RETURN_TO_CLI: string = "v/return-to-cli";
     public static readonly URL_SETTINGS: string = "v/settings";
     public static readonly URL_ADMIN_DASHBOARD: string = "v/admin-dashboard";
+    public static readonly URL_FLOW_DETAILS: string = "flow-details";
 
     public static readonly ALL_URLS: string[] = [
         ProjectLinks.URL_HOME,
@@ -34,6 +35,7 @@ export default class ProjectLinks {
     public static readonly URL_PARAM_ADD_POLLING_SOURCE: string = "add-polling-source";
     public static readonly URL_PARAM_SET_TRANSFORM: string = "set-transform";
     public static readonly URL_PARAM_ADD_PUSH_SOURCE: string = "add-push-source";
+    public static readonly URL_PARAM_FLOW_ID: string = "flow-id";
 
     public static readonly URL_QUERY_PARAM_TAB: string = "tab";
     public static readonly URL_QUERY_PARAM_PAGE: string = "page";

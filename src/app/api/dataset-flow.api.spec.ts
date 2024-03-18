@@ -2,6 +2,8 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 import {
+    CancelScheduledTasksDocument,
+    CancelScheduledTasksMutation,
     DatasetFlowBatchingDocument,
     DatasetFlowBatchingMutation,
     DatasetFlowScheduleDocument,
@@ -21,13 +23,15 @@ import {
     mockSetDatasetFlowScheduleSuccess,
     mockSetDatasetFlowBatchingSuccess,
     mockDatasetTriggerFlowMutation,
+    mockCancelScheduledTasksMutationSuccess,
 } from "./mock/dataset-flow.mock";
 
 describe("DatasetFlowApi", () => {
     let service: DatasetFlowApi;
     let controller: ApolloTestingController;
     const MOCK_PAUSED = true;
-    const MOCK_MINIMAL_DATA_BATCH = 12;
+    const MOCK_MIN_RECORDS_TO_AWAIT = 12;
+    const MOCK_FLOW_ID = "10";
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -79,13 +83,10 @@ describe("DatasetFlowApi", () => {
                 const mockConfigType = mockBatchingGetDatasetFlowConfigsSuccess.datasets.byId?.flows.configs.byType;
                 expect(configType?.paused).toEqual(mockConfigType?.paused);
                 expect(configType?.schedule).toEqual(null);
-                if (
-                    configType?.batching?.throttlingPeriod?.__typename === "TimeDelta" &&
-                    mockConfigType?.batching?.throttlingPeriod?.__typename === "TimeDelta"
-                ) {
-                    expect(configType.batching.throttlingPeriod).toEqual(mockConfigType.batching.throttlingPeriod);
-                }
-                expect(configType?.batching?.minimalDataBatch).toEqual(mockConfigType?.batching?.minimalDataBatch);
+                expect(configType?.batching?.maxBatchingInterval).toEqual(
+                    mockConfigType?.batching?.maxBatchingInterval,
+                );
+                expect(configType?.batching?.minRecordsToAwait).toEqual(mockConfigType?.batching?.minRecordsToAwait);
             });
 
         const op = controller.expectOne(GetDatasetFlowConfigsDocument);
@@ -106,7 +107,9 @@ describe("DatasetFlowApi", () => {
                 schedule: { timeDelta: mockTimeDeltaInput },
             })
             .subscribe((res: DatasetFlowScheduleMutation) => {
-                expect(res.datasets.byId?.flows.configs.setConfigSchedule.message).toEqual("Success");
+                if (res.datasets.byId?.flows.configs.setConfigSchedule.__typename === "SetFlowConfigSuccess") {
+                    expect(res.datasets.byId.flows.configs.setConfigSchedule.message).toEqual("Success");
+                }
             });
 
         const op = controller.expectOne(DatasetFlowScheduleDocument);
@@ -125,8 +128,10 @@ describe("DatasetFlowApi", () => {
                 datasetId: TEST_DATASET_ID,
                 datasetFlowType: DatasetFlowType.Ingest,
                 paused: MOCK_PAUSED,
-                throttlingPeriod: mockTimeDeltaInput,
-                minimalDataBatch: MOCK_MINIMAL_DATA_BATCH,
+                batching: {
+                    maxBatchingInterval: mockTimeDeltaInput,
+                    minRecordsToAwait: MOCK_MIN_RECORDS_TO_AWAIT,
+                },
             })
             .subscribe((res: DatasetFlowBatchingMutation) => {
                 expect(res.datasets.byId?.flows.configs.setConfigBatching.message).toEqual("Success");
@@ -136,8 +141,10 @@ describe("DatasetFlowApi", () => {
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
         expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.Ingest);
         expect(op.operation.variables.paused).toEqual(MOCK_PAUSED);
-        expect(op.operation.variables.throttlingPeriod).toEqual(mockTimeDeltaInput);
-        expect(op.operation.variables.minimalDataBatch).toEqual(MOCK_MINIMAL_DATA_BATCH);
+        expect(op.operation.variables.batching).toEqual({
+            maxBatchingInterval: mockTimeDeltaInput,
+            minRecordsToAwait: MOCK_MIN_RECORDS_TO_AWAIT,
+        });
         op.flush({
             data: mockSetDatasetFlowBatchingSuccess,
         });
@@ -158,6 +165,24 @@ describe("DatasetFlowApi", () => {
         expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.Ingest);
         op.flush({
             data: mockDatasetTriggerFlowMutation,
+        });
+    });
+
+    it("should check cancel scheduled tasks", () => {
+        service
+            .cancelScheduledTasks({
+                datasetId: TEST_DATASET_ID,
+                flowId: MOCK_FLOW_ID,
+            })
+            .subscribe((res: CancelScheduledTasksMutation) => {
+                expect(res.datasets.byId?.flows.runs.cancelScheduledTasks.message).toEqual("Success");
+            });
+
+        const op = controller.expectOne(CancelScheduledTasksDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.flowId).toEqual(MOCK_FLOW_ID);
+        op.flush({
+            data: mockCancelScheduledTasksMutationSuccess,
         });
     });
 });

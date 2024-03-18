@@ -66,6 +66,7 @@ import { DatasetPermissionsService } from "./dataset-view/dataset.permissions.se
 import { LocalStorageService } from "./services/local-storage.service";
 import { apolloCache } from "./apollo-cache.helper";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
+import { DatasetFlowDetailsModule } from "./dataset-flow/dataset-flow-details/dataset-flow-details.module";
 
 const Services = [
     {
@@ -216,6 +217,7 @@ const MatModules = [
             newestOnTop: false,
             preventDuplicates: true,
         }), // ToastrModule added
+        DatasetFlowDetailsModule,
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

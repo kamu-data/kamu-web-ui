@@ -14,13 +14,16 @@ export default class AppValues {
 
     public static readonly DISPLAY_DATE_FORMAT = "DD MMM YYYY";
     public static readonly DISPLAY_TOOLTIP_DATE_FORMAT = "MMM D, YYYY, HH:mm A";
-    public static readonly CRON_EXPRESSION_DATE_FORMAT = "Do MMM YYYY, h:mm:ss A";
+    public static readonly CRON_EXPRESSION_DATE_FORMAT = "MMM Do YYYY, h:mm:ss A";
+    public static readonly TIME_FORMAT = "h:mm:ss A";
     public static readonly UNIMPLEMENTED_MESSAGE = "Feature coming soon";
     public static readonly SAMPLE_DATA_LIMIT = 10;
     public static readonly SQL_QUERY_LIMIT = 50;
     public static readonly SHORT_DELAY_MS = 200;
     public static readonly LONG_DELAY_MS = 2000;
+    public static readonly SIMULATION_START_CONDITION_DELAY_MS = 1200;
     public static readonly DEFAULT_OFFSET_COLUMN_NAME = "offset";
+    public static readonly DEFAULT_FLOW_INITIATOR = "system process";
     public static readonly MARKDOWN_CONTAIN = `## Markdown __rulez__!
 ---
 

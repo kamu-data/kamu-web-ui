@@ -1,39 +1,76 @@
-import { DatasetKind, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import { FlowSummaryDataFragment, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import {
+    durationBlockTextResults,
     expectationsDescriptionEndOfMessage,
     expectationsDesriptionColumnOptions,
+    mockDatasetExecuteTransformFlowSummaryData,
+    mockFlowSummaryDataFragmentTooltipAndDurationText,
     mockTableFlowSummaryDataFragments,
+    tooltipTextResults,
 } from "./flows-table.helpers.mock";
+import timekeeper from "timekeeper";
+import moment from "moment";
 
 describe("DatasetFlowTableHelpers", () => {
+    beforeAll(() => {
+        timekeeper.freeze("2024-03-14T11:22:29+00:00");
+        moment.relativeTimeThreshold("s", 59);
+        moment.relativeTimeThreshold("m", 59);
+        moment.relativeTimeThreshold("h", 23);
+        moment.tz.setDefault("Europe/Kiev");
+    });
+
+    afterAll(() => {
+        moment.tz.setDefault();
+    });
+
     it("should check waiting block text with FlowStartConditionThrottling typename", () => {
         expect(
-            DatasetFlowTableHelpers.waitingBlockText(
-                { __typename: "FlowStartConditionThrottling", intervalSec: 120 },
-                DatasetKind.Root,
-            ),
-        ).toEqual("waiting for throttling condition");
+            DatasetFlowTableHelpers.waitingBlockText({
+                __typename: "FlowStartConditionThrottling",
+                intervalSec: 120,
+                wakeUpAt: "2024-03-14T18:22:29+00:00",
+                shiftedFrom: "2024-02-12T18:22:29+00:00",
+            }),
+        ).toEqual("waiting for a throttling condition");
     });
 
     it("should check waiting block text with FlowStartConditionBatching typename", () => {
         expect(
-            DatasetFlowTableHelpers.waitingBlockText(
-                { __typename: "FlowStartConditionBatching", thresholdNewRecords: 10 },
-                DatasetKind.Root,
-            ),
-        ).toEqual("waiting for batching condition");
+            DatasetFlowTableHelpers.waitingBlockText({
+                __typename: "FlowStartConditionBatching",
+                activeBatchingRule: {
+                    minRecordsToAwait: 500,
+                    maxBatchingInterval: {
+                        every: 5,
+                        unit: TimeUnit.Hours,
+                    },
+                },
+                batchingDeadline: "2022-08-05T21:17:30.613911358+00:00",
+                accumulatedRecordsCount: 100,
+                watermarkModified: true,
+            }),
+        ).toEqual("waiting for a batching condition");
     });
 
-    it("should check waiting block text with empty start condition for ROOT", () => {
-        expect(DatasetFlowTableHelpers.waitingBlockText(null, DatasetKind.Root)).toEqual(
-            "waiting for scheduled execution",
-        );
+    it("should check waiting block text with FlowStartConditionExecutor typename", () => {
+        expect(
+            DatasetFlowTableHelpers.waitingBlockText({
+                __typename: "FlowStartConditionExecutor",
+                taskId: "4",
+            }),
+        ).toEqual("waiting for a free executor");
     });
 
-    it("should check waiting block text with empty start condition for DERIVATIVE", () => {
-        expect(DatasetFlowTableHelpers.waitingBlockText(null, DatasetKind.Derivative)).toEqual("");
+    it("should check waiting block text with FlowStartConditionSchedule typename", () => {
+        expect(
+            DatasetFlowTableHelpers.waitingBlockText({
+                __typename: "FlowStartConditionSchedule",
+                wakeUpAt: "2022-08-05T21:17:30.613911358+00:00",
+            }),
+        ).toEqual("waiting for scheduled execution");
     });
 
     mockFlowSummaryDataFragments.forEach((item: FlowSummaryDataFragment, index: number) => {
@@ -51,6 +88,20 @@ describe("DatasetFlowTableHelpers", () => {
             expect(DatasetFlowTableHelpers.descriptionEndOfMessage(item)).toEqual(
                 expectationsDescriptionEndOfMessage[index],
             );
+        });
+    });
+
+    mockFlowSummaryDataFragmentTooltipAndDurationText.forEach((item: FlowSummaryDataFragment, index: number) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        it(`should check duration block text with status=${item.status} and outcome=${item.outcome!}`, () => {
+            expect(DatasetFlowTableHelpers.durationBlockText(item)).toEqual(durationBlockTextResults[index]);
+        });
+    });
+
+    mockFlowSummaryDataFragmentTooltipAndDurationText.forEach((item: FlowSummaryDataFragment, index: number) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        it(`should check tooltip text with status=${item.status} and outcome=${item.outcome!}`, () => {
+            expect(DatasetFlowTableHelpers.tooltipText(item)).toEqual(tooltipTextResults[index]);
         });
     });
 
@@ -86,20 +137,11 @@ describe("DatasetFlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename `, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[1], undefined, {
+            DatasetFlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[4], undefined, {
                 numInputs: 10,
                 engine: "spark",
             }),
         ).toEqual(`Transforming 10 input datasets using "Apache Spark" engine`);
-    });
-
-    it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename and scheduled status `, () => {
-        expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[2], undefined, {
-                numInputs: 10,
-                engine: "spark",
-            }),
-        ).toEqual("Awaiting for a free executor");
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and waiting status `, () => {
@@ -114,11 +156,11 @@ describe("DatasetFlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename and success outcome `, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[4], undefined, {
+            DatasetFlowTableHelpers.descriptionSubMessage(mockDatasetExecuteTransformFlowSummaryData, undefined, {
                 numInputs: 2,
                 engine: "spark",
             }),
-        ).toEqual("Transformed 10 new records in 2 new blocks");
+        ).toEqual(`Transformed 10 new records in 2 new blocks`);
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and success outcome `, () => {
@@ -134,7 +176,7 @@ describe("DatasetFlowTableHelpers", () => {
         ).toEqual("Ingested 30 new records in 4 new blocks");
     });
 
-    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and cancelled outcome `, () => {
+    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and aborted outcome `, () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[6],
@@ -144,26 +186,13 @@ describe("DatasetFlowTableHelpers", () => {
                     engine: "",
                 },
             ),
-        ).toContain("Cancelled at");
-    });
-
-    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and aborted outcome `, () => {
-        expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(
-                mockTableFlowSummaryDataFragments[7],
-                { __typename: "FetchStepFilesGlob", path: "c:/mock-path" },
-                {
-                    numInputs: 0,
-                    engine: "",
-                },
-            ),
         ).toContain("Aborted at");
     });
 
-    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and filed outcome `, () => {
+    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and failed outcome `, () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
-                mockTableFlowSummaryDataFragments[8],
+                mockTableFlowSummaryDataFragments[7],
                 { __typename: "FetchStepFilesGlob", path: "c:/mock-path" },
                 {
                     numInputs: 0,

@@ -43,7 +43,7 @@ fragment FlowSummaryData on Flow {
   }
   outcome
   timing {
-    activateAt
+    awaitingExecutorSince
     runningSince
     finishedAt
   }
@@ -51,10 +51,28 @@ fragment FlowSummaryData on Flow {
     __typename
     ... on FlowStartConditionThrottling {
       intervalSec
+      wakeUpAt
+      shiftedFrom
     }
 
     ... on FlowStartConditionBatching {
-      thresholdNewRecords
+      activeBatchingRule {
+        minRecordsToAwait
+        maxBatchingInterval {
+          ...TimeDeltaData
+        }
+      }
+      batchingDeadline
+      accumulatedRecordsCount
+      watermarkModified
+    }
+
+    ... on FlowStartConditionSchedule {
+      wakeUpAt
+    }
+
+    ... on FlowStartConditionExecutor {
+      taskId
     }
   }
 }

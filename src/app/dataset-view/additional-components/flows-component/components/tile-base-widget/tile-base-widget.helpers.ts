@@ -6,20 +6,15 @@ export class TileBaseWidgetHelpers {
             case FlowStatus.Finished: {
                 return node.outcome ? flowOutcomeMapperClass[node.outcome] : "";
             }
-            case FlowStatus.Queued: {
-                return "queued-class";
-            }
             case FlowStatus.Running: {
                 return "running-class";
             }
             case FlowStatus.Waiting: {
                 return "waiting-class";
             }
-            case FlowStatus.Scheduled: {
-                return "scheduled-class";
-            }
+            /* istanbul ignore next */
             default:
-                return "";
+                throw new Error("Unknown flow status");
         }
     }
 }
@@ -28,5 +23,4 @@ const flowOutcomeMapperClass: Record<FlowOutcome, string> = {
     [FlowOutcome.Success]: "success-class",
     [FlowOutcome.Failed]: "failed-class",
     [FlowOutcome.Aborted]: "aborted-class",
-    [FlowOutcome.Cancelled]: "cancelled-class",
 };

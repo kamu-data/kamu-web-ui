@@ -20,6 +20,7 @@ import { AppConfigFeatureFlags, LoginMethod } from "./app-config.model";
 import { LoginService } from "./auth/login/login.service";
 import { loadErrorMessages } from "@apollo/client/dev";
 import { isDevMode } from "@angular/core";
+import moment from "moment";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
 
@@ -69,6 +70,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         if (isDevMode()) {
             loadErrorMessages();
         }
+        this.setMomentOptions();
     }
 
     public ngOnInit(): void {
@@ -90,6 +92,12 @@ export class AppComponent extends BaseComponent implements OnInit {
                 this.cdr.detectChanges();
             }),
         );
+    }
+
+    private setMomentOptions(): void {
+        moment.relativeTimeThreshold("s", 59);
+        moment.relativeTimeThreshold("m", 59);
+        moment.relativeTimeThreshold("h", 23);
     }
 
     private readConfiguration(): void {

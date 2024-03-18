@@ -6,6 +6,9 @@ import { ToastrModule, ToastrService } from "ngx-toastr";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import { of } from "rxjs";
 import {
+    mockCancelScheduledTasksMutationError,
+    mockCancelScheduledTasksMutationSuccess,
+    mockDatasetAllFlowsPausedQuery,
     mockDatasetPauseFlowsMutationError,
     mockDatasetPauseFlowsMutationSuccess,
     mockDatasetResumeFlowsMutationError,
@@ -13,6 +16,8 @@ import {
     mockDatasetTriggerFlowMutation,
     mockDatasetTriggerFlowMutationError,
     mockGetDatasetListFlowsQuery,
+    mockGetFlowByIdQueryError,
+    mockGetFlowByIdQuerySuccess,
 } from "src/app/api/mock/dataset-flow.mock";
 import { MaybeUndefined } from "src/app/common/app.types";
 import { FlowsTableData } from "../components/flows-table/flows-table.types";
@@ -27,6 +32,7 @@ describe("DatasetFlowsService", () => {
     const MOCK_PER_PAGE = 15;
     const MOCK_FILTERS = {};
     const MOCK_DATASET_FLOW_TYPE = DatasetFlowType.Ingest;
+    const MOCK_FLOW_ID = "10";
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -123,6 +129,79 @@ describe("DatasetFlowsService", () => {
             .datasetTriggerFlow({ datasetId: MOCK_DATASET_ID, datasetFlowType: MOCK_DATASET_FLOW_TYPE })
             .subscribe(() => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check cancel scheduled tasks", () => {
+        spyOn(datasetFlowApi, "cancelScheduledTasks").and.returnValue(of(mockCancelScheduledTasksMutationSuccess));
+
+        const subscription$ = service
+            .cancelScheduledTasks({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID })
+            .subscribe((result: boolean) => {
+                expect(result).toEqual(true);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check cancel scheduled tasks with error", () => {
+        spyOn(datasetFlowApi, "cancelScheduledTasks").and.returnValue(of(mockCancelScheduledTasksMutationError));
+        const toastrServiceErrorSpy = spyOn(toastService, "error");
+
+        const subscription$ = service
+            .cancelScheduledTasks({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID })
+            .subscribe((result: boolean) => {
+                expect(result).toEqual(false);
+                expect(toastrServiceErrorSpy).toHaveBeenCalledWith(
+                    mockCancelScheduledTasksMutationError.datasets.byId?.flows.runs.cancelScheduledTasks.message,
+                );
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check all flows paused", () => {
+        spyOn(datasetFlowApi, "allFlowsPaused").and.returnValue(of(mockDatasetAllFlowsPausedQuery));
+
+        const subscription$ = service.allFlowsPaused(MOCK_DATASET_ID).subscribe((result) => {
+            expect(result).toEqual(mockDatasetAllFlowsPausedQuery.datasets.byId?.flows.configs.allPaused);
+        });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check get flow by id", () => {
+        spyOn(datasetFlowApi, "allFlowsPaused").and.returnValue(of(mockDatasetAllFlowsPausedQuery));
+
+        const subscription$ = service.allFlowsPaused(MOCK_DATASET_ID).subscribe((result) => {
+            expect(result).toEqual(mockDatasetAllFlowsPausedQuery.datasets.byId?.flows.configs.allPaused);
+        });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check get flow by id with success", () => {
+        spyOn(datasetFlowApi, "getFlowById").and.returnValue(of(mockGetFlowByIdQuerySuccess));
+        const expectedFlowId = "595";
+        const subscription$ = service
+            .datasetFlowById({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID })
+            .subscribe((result) => {
+                expect(result?.flow.flowId).toEqual(expectedFlowId);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check get flow by id with error", () => {
+        spyOn(datasetFlowApi, "getFlowById").and.returnValue(of(mockGetFlowByIdQueryError));
+        const toastrServiceErrorSpy = spyOn(toastService, "error");
+
+        const subscription$ = service
+            .datasetFlowById({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID })
+            .subscribe(() => {
+                expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
             });
 
         expect(subscription$.closed).toBeTrue();

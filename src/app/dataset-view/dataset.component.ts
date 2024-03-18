@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
-import { DatasetService } from "./dataset.service";
 import { NavigationEnd, Router } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter, first, switchMap, tap } from "rxjs/operators";
@@ -8,32 +7,28 @@ import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.g
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { promiseWithCatch } from "../common/app.helpers";
-import { BaseProcessingComponent } from "../common/base.processing.component";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { MaybeNull, MaybeUndefined } from "../common/app.types";
-import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import { DatasetPermissionsService } from "./dataset.permissions.service";
-import { Observable, ReplaySubject, Subject, of } from "rxjs";
+import { ReplaySubject, Subject, of } from "rxjs";
 import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-components/lineage-component/lineage-model";
 import _ from "lodash";
+import { BaseDatasetDataComponent } from "../common/base-dataset-data.component";
 
 @Component({
     selector: "app-dataset",
     templateUrl: "./dataset.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetComponent extends BaseProcessingComponent implements OnInit, OnDestroy {
+export class DatasetComponent extends BaseDatasetDataComponent implements OnInit, OnDestroy {
     public datasetBasics: MaybeUndefined<DatasetBasicsFragment>;
-    public datasetPermissions$: Observable<DatasetPermissionsFragment>;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
 
     constructor(
-        private datasetService: DatasetService,
         private datasetPermissionsServices: DatasetPermissionsService,
-        private datasetSubsServices: DatasetSubscriptionsService,
         private router: Router,
         private cdr: ChangeDetectorRef,
     ) {
@@ -56,7 +51,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
             }),
         );
 
-        this.datasetPermissions$ = this.datasetSubsServices.permissionsChanges;
+        this.datasetPermissions$ = this.datasetSubsService.permissionsChanges;
     }
 
     private requestMainDataIfChanged(): void {
@@ -64,7 +59,8 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         if (
             _.isNil(this.datasetBasics) ||
             this.datasetBasics.name !== urlDatasetInfo.datasetName ||
-            this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName
+            this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName ||
+            this.datasetViewType === DatasetViewTypeEnum.Flows
         ) {
             this.requestMainData(urlDatasetInfo);
         }
@@ -113,9 +109,27 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
         this.datasetViewType = DatasetViewTypeEnum.Metadata;
     }
 
-    private initFlowsTab(): void {
-        this.datasetViewType = DatasetViewTypeEnum.Flows;
-        this.cdr.detectChanges();
+    private initFlowsTab(datasetInfo: DatasetInfo): void {
+        this.trackSubscription(
+            this.mainDatasetQueryComplete$
+                .pipe(
+                    filter(
+                        (info: DatasetInfo) =>
+                            info.accountName === datasetInfo.accountName &&
+                            info.datasetName === datasetInfo.datasetName,
+                    ),
+                    first(),
+                    switchMap(() => this.datasetPermissions$.pipe(first())),
+                )
+                .subscribe((datasetPermissions: DatasetPermissionsFragment) => {
+                    if (this.datasetPermissionsServices.shouldAllowFlowsTab(datasetPermissions)) {
+                        this.datasetViewType = DatasetViewTypeEnum.Flows;
+                    } else {
+                        this.datasetViewType = DatasetViewTypeEnum.Overview;
+                    }
+                    this.cdr.detectChanges();
+                }),
+        );
     }
 
     private initHistoryTab(datasetInfo: DatasetInfo, currentPage: number): void {
@@ -225,7 +239,7 @@ export class DatasetComponent extends BaseProcessingComponent implements OnInit,
             [DatasetViewTypeEnum.History]: () => this.initHistoryTab(datasetInfo, currentPage),
             [DatasetViewTypeEnum.Lineage]: () => this.initLineageTab(datasetInfo),
             [DatasetViewTypeEnum.Discussions]: () => this.initDiscussionsTab(),
-            [DatasetViewTypeEnum.Flows]: () => this.initFlowsTab(),
+            [DatasetViewTypeEnum.Flows]: () => this.initFlowsTab(datasetInfo),
             [DatasetViewTypeEnum.Settings]: () => this.initSettingsTab(datasetInfo),
         };
 

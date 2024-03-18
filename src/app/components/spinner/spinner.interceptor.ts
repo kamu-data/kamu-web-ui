@@ -8,7 +8,10 @@ export class SpinnerInterceptor implements HttpInterceptor {
     constructor(private spinnerService: SpinnerService) {}
     timer: NodeJS.Timer;
     intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-        if (req.url.includes("/assets")) {
+        if (
+            req.url.includes("/assets") ||
+            (req.body as { operationName: string }).operationName === "getDatasetListFlows"
+        ) {
             return next.handle(req);
         }
         clearTimeout(this.timer);

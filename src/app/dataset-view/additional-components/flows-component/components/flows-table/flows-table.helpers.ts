@@ -1,7 +1,6 @@
 import _ from "lodash";
 import moment from "moment";
 import {
-    DatasetKind,
     FetchStep,
     FlowOutcome,
     FlowStartCondition,
@@ -17,6 +16,7 @@ export class DatasetFlowTableHelpers {
     public static descriptionColumnTableOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
         switch (element.status) {
             case FlowStatus.Finished:
+                /* istanbul ignore next */
                 if (_.isNil(element.outcome)) {
                     throw new Error("Expected to have flow outcome in Finished state");
                 }
@@ -27,32 +27,23 @@ export class DatasetFlowTableHelpers {
                         return { icon: "dangerous", class: "failed-status" };
                     case FlowOutcome.Aborted:
                         return { icon: "cancel", class: "aborted-outcome" };
-                    case FlowOutcome.Cancelled:
-                        return { icon: "cancel", class: "cancelled-outcome" };
-
+                    /* istanbul ignore next */
                     default:
                         throw new Error("Unsupported flow outcome");
                 }
 
-            case FlowStatus.Queued:
-                return { icon: "radio_button_checked", class: "queued-status" };
-
             case FlowStatus.Running:
                 return { icon: "radio_button_checked", class: "running-status" };
-
-            case FlowStatus.Scheduled:
-                return { icon: "radio_button_checked", class: "scheduled-status" };
 
             case FlowStatus.Waiting:
                 return { icon: "radio_button_checked", class: "waiting-status" };
         }
-
-        return { icon: "question_mark", class: "" };
     }
 
     public static descriptionEndOfMessage(element: FlowSummaryDataFragment): string {
         switch (element.status) {
             case FlowStatus.Finished:
+                /* istanbul ignore next */
                 if (_.isNil(element.outcome)) {
                     throw new Error("Expected to have flow outcome in Finished state");
                 }
@@ -63,24 +54,17 @@ export class DatasetFlowTableHelpers {
                         return "aborted";
                     case FlowOutcome.Failed:
                         return "failed";
-                    case FlowOutcome.Cancelled:
-                        return "cancelled";
+                    /* istanbul ignore next */
                     default:
                         throw new Error("Unsupported flow outcome");
                 }
 
-            case FlowStatus.Queued:
-                return "queued";
-
             case FlowStatus.Running:
                 return "running";
 
-            case FlowStatus.Scheduled:
-                return "scheduled";
-
             case FlowStatus.Waiting:
                 return "waiting";
-
+            /* istanbul ignore next */
             default:
                 throw new Error(`Unsupported flow status`);
         }
@@ -93,6 +77,7 @@ export class DatasetFlowTableHelpers {
     ): string {
         switch (element.status) {
             case FlowStatus.Finished:
+                /* istanbul ignore next */
                 if (_.isNil(element.outcome)) {
                     throw new Error("Expected to have flow outcome in Finished state");
                 }
@@ -107,7 +92,7 @@ export class DatasetFlowTableHelpers {
                                       } in ${element.description.ingestResult.numBlocks} new ${
                                           element.description.ingestResult.numBlocks == 1 ? "block" : "blocks"
                                       }`
-                                    : "Expected to have injest result";
+                                    : "Dataset is up-to-date";
 
                             case "FlowDescriptionDatasetExecuteTransform":
                                 return element.description.transformResult
@@ -116,18 +101,13 @@ export class DatasetFlowTableHelpers {
                                       } in ${element.description.transformResult.numBlocks} new ${
                                           element.description.transformResult.numBlocks == 1 ? "block" : "blocks"
                                       }`
-                                    : "Expected to have transform result";
+                                    : "Dataset is up-to-date";
                             // TODO
                             //  - Compacting
                             //  - GC
                             default:
                                 return "Unknown description typename";
                         }
-
-                    case FlowOutcome.Cancelled:
-                        return `Cancelled at ${moment(element.timing.finishedAt).format(
-                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                        )}`;
 
                     case FlowOutcome.Aborted:
                         return `Aborted at ${moment(element.timing.finishedAt).format(
@@ -136,18 +116,16 @@ export class DatasetFlowTableHelpers {
 
                     case FlowOutcome.Failed:
                         return `An error occurred, see logs for more details`;
+                    /* istanbul ignore next */
+                    default:
+                        throw new Error("Unsupported flow outcome");
                 }
 
-                break;
-
-            case FlowStatus.Scheduled:
-                return "Awaiting for a free executor";
-
             case FlowStatus.Waiting:
-            case FlowStatus.Queued:
             case FlowStatus.Running:
                 switch (element.description.__typename) {
                     case "FlowDescriptionDatasetPollingIngest":
+                        /* istanbul ignore next */
                         if (_.isNil(fetchStep)) {
                             throw new Error("FetchStep expected for polling ingest flow");
                         }
@@ -174,16 +152,107 @@ export class DatasetFlowTableHelpers {
         return "";
     }
 
-    public static waitingBlockText(startCondition: MaybeNull<FlowStartCondition>, datasetKind: DatasetKind): string {
+    public static durationBlockText(node: FlowSummaryDataFragment): string {
+        switch (node.status) {
+            case FlowStatus.Waiting:
+                switch (node.startCondition?.__typename) {
+                    case "FlowStartConditionExecutor":
+                        return `awaiting since ${moment(node.timing.awaitingExecutorSince ?? "").fromNow()}`;
+                    case "FlowStartConditionThrottling":
+                    case "FlowStartConditionSchedule": {
+                        return `wake up time: ${moment(node.startCondition.wakeUpAt).fromNow()}`;
+                    }
+                    case "FlowStartConditionBatching":
+                        return `deadline time: ${moment(node.startCondition.batchingDeadline).fromNow()}`;
+                    default:
+                        return "";
+                }
+            case FlowStatus.Running:
+                return "running since " + moment(node.timing.runningSince).fromNow();
+            case FlowStatus.Finished:
+                switch (node.outcome) {
+                    case FlowOutcome.Success:
+                        return "finished " + moment(node.timing.finishedAt).fromNow();
+                    case FlowOutcome.Aborted:
+                        return "aborted " + moment(node.timing.finishedAt).fromNow();
+                    case FlowOutcome.Failed:
+                        return "failed " + moment(node.timing.runningSince).fromNow();
+                    /* istanbul ignore next */
+                    default:
+                        throw new Error("Unknown flow outsome");
+                }
+            /* istanbul ignore next */
+            default:
+                throw new Error("Unknown flow status");
+        }
+    }
+
+    public static waitingBlockText(startCondition: MaybeNull<FlowStartCondition>): string {
         switch (startCondition?.__typename) {
             case "FlowStartConditionThrottling":
-                return "waiting for throttling condition";
+                return "waiting for a throttling condition";
 
             case "FlowStartConditionBatching":
-                return "waiting for batching condition";
+                return "waiting for a batching condition";
+
+            case "FlowStartConditionExecutor": {
+                return "waiting for a free executor";
+            }
+            case "FlowStartConditionSchedule":
+                return "waiting for scheduled execution";
 
             default:
-                return datasetKind === DatasetKind.Root ? "waiting for scheduled execution" : "";
+                return "";
+        }
+    }
+
+    public static tooltipText(node: FlowSummaryDataFragment): string {
+        switch (node.status) {
+            case FlowStatus.Waiting:
+                switch (node.startCondition?.__typename) {
+                    case "FlowStartConditionExecutor":
+                        return `awaiting since: ${moment(node.timing.awaitingExecutorSince ?? "").format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    case "FlowStartConditionThrottling":
+                    case "FlowStartConditionSchedule": {
+                        return `Wake up time: ${moment(node.startCondition.wakeUpAt).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    }
+                    case "FlowStartConditionBatching":
+                        return `Deadline time: ${moment(node.startCondition.batchingDeadline).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    default:
+                        return "";
+                }
+            case FlowStatus.Finished:
+                switch (node.outcome) {
+                    case FlowOutcome.Success:
+                        return `Completed time: ${moment(node.timing.finishedAt).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    case FlowOutcome.Aborted:
+                        return `Aborted time: ${moment(node.timing.finishedAt).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    case FlowOutcome.Failed:
+                        return `Start running time: ${moment(node.timing.runningSince).format(
+                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        )}`;
+                    /* istanbul ignore next */
+                    default:
+                        throw new Error("Unknown flow outcome");
+                }
+
+            case FlowStatus.Running:
+                return `Start running time: ${moment(node.timing.runningSince).format(
+                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                )}`;
+            /* istanbul ignore next */
+            default:
+                throw new Error("Unknown flow status");
         }
     }
 }

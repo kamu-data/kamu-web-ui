@@ -1,10 +1,11 @@
-import { DatasetInfo } from "../interface/navigation.interface";
+import { DatasetInfo, FlowDetailsNavigationParams } from "../interface/navigation.interface";
 import { AccountTabs } from "../auth/account/account.constants";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { DatasetNavigationParams, MetadataBlockNavigationParams } from "../interface/navigation.interface";
 import ProjectLinks from "../project-links";
+import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
 
 @Injectable({ providedIn: "root" })
 export class NavigationService {
@@ -98,6 +99,18 @@ export class NavigationService {
             this.router.navigate([ProjectLinks.URL_RETURN_TO_CLI], {
                 skipLocationChange: true,
             }),
+        );
+    }
+
+    public navigateToFlowDetails(params: FlowDetailsNavigationParams): void {
+        promiseWithCatch(
+            this.router.navigate([
+                params.accountName,
+                params.datasetName,
+                ProjectLinks.URL_FLOW_DETAILS,
+                params.flowId,
+                FlowDetailsTabs.HISTORY,
+            ]),
         );
     }
 }

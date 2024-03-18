@@ -14,7 +14,10 @@ export class FinalYamlModalComponent extends BaseComponent {
     @Input() public datasetInfo: DatasetInfo;
     @Input() public enabledSaveBtn = true;
 
-    constructor(public activeModal: NgbActiveModal, private datasetCommitService: DatasetCommitService) {
+    constructor(
+        public activeModal: NgbActiveModal,
+        private datasetCommitService: DatasetCommitService,
+    ) {
         super();
     }
 

@@ -49,7 +49,7 @@ export const EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = 
     "ExecuteTransform.string.prevCheckpoint": {
         label: "Previous checkpoint:",
         tooltip: ExecuteTransformTooltipsTexts.PREVIOUS_CHECKPOINT,
-        presentationComponent: SimplePropertyComponent,
+        presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-transform-prev-checkpoint",
     },

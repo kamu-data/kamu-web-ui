@@ -1,0 +1,85 @@
+<div class="container">
+    <div class="row">
+        <div class="col pl-40">
+            <div class="row mb-4">
+                <div class="col-md-3"><span class="fw-bold">Flow type</span></div>
+                <div class="col-md-9" data-test-id="flow-type">{{ flowTypeDescription(flowDetails) }}</div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-3"><span class="fw-bold">Status</span></div>
+                <div class="col-md-9" data-test-id="flow-status">{{ flowDetails.status | titlecase }}</div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <span class="fw-bold">Initiator</span>
+                </div>
+                <div class="col-md-9" data-test-id="flow-initiator">
+                    {{ flowDetails.initiator?.accountName ?? DEFAULT_FLOW_INITIATOR }}
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <span class="fw-bold">Outcome</span>
+                </div>
+                <div class="col-md-9">
+                    <span
+                        [class]="outcomeClass(flowDetails.outcome)"
+                        *ngIf="flowDetails.outcome; else emptyBlock"
+                        data-test-id="flow-outcome"
+                        >{{ flowDetails.outcome | uppercase }}</span
+                    >
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <span class="fw-bold">Created time</span>
+                </div>
+                <div class="col-md-9">
+                    <span
+                        data-test-id="flow-created-time"
+                        *ngIf="flowDetails.timing.awaitingExecutorSince; else emptyBlock"
+                    >
+                        {{ flowDetails.timing.awaitingExecutorSince | date: DATE_FORMAT }}</span
+                    >&nbsp;
+                    <span
+                        class="text-muted"
+                        *ngIf="flowDetails.timing.awaitingExecutorSince && flowDetails.timing.runningSince"
+                        >(
+                        {{
+                            durationFlowEvent(
+                                flowDetails.timing.awaitingExecutorSince,
+                                flowDetails.timing.runningSince
+                            )
+                        }})</span
+                    >
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <span class="fw-bold">Run time</span>
+                </div>
+                <div class="col-md-9">
+                    <span data-test-id="flow-running-time" *ngIf="flowDetails.timing.runningSince; else emptyBlock">{{
+                        flowDetails.timing.runningSince | date: DATE_FORMAT
+                    }}</span
+                    >&nbsp;
+                    <span class="text-muted" *ngIf="flowDetails.timing.runningSince && flowDetails.timing.finishedAt"
+                        >(
+                        {{ durationFlowEvent(flowDetails.timing.runningSince, flowDetails.timing.finishedAt) }})</span
+                    >
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <span class="fw-bold">Finished time</span>
+                </div>
+                <div class="col-md-9">
+                    <span data-test-id="flow-finished-time" *ngIf="flowDetails.timing.finishedAt; else emptyBlock"
+                        >{{ flowDetails.timing.finishedAt | date: DATE_FORMAT }}
+                    </span>
+                </div>
+            </div>
+            <ng-template #emptyBlock>-</ng-template>
+        </div>
+    </div>
+</div>

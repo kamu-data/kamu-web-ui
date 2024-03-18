@@ -1,9 +1,9 @@
 import { MaybeNullOrUndefined } from "./../../../../../common/app.types";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import moment from "moment";
 import { FlowStatus, FlowOutcome, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
-import { convertSecondsToHumanReadableFormat } from "src/app/common/app.helpers";
 import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
+import { DataHelpers } from "src/app/common/data.helpers";
+import AppValues from "src/app/common/app.values";
 
 @Component({
     selector: "app-tile-base-widget",
@@ -16,11 +16,11 @@ export class TileBaseWidgetComponent {
     public readonly LAST_RUNS_COUNT = 150;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly FlowOutcome: typeof FlowOutcome = FlowOutcome;
+    public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
 
     public durationTask(d1: MaybeNullOrUndefined<string>, d2: MaybeNullOrUndefined<string>): string {
-        if (!d2) return "-";
-        const result = convertSecondsToHumanReadableFormat(moment(d2).seconds() - moment(d1).seconds());
-        return result ? result : "less than 1 second";
+        if (!d2 || !d1) return "-";
+        return DataHelpers.durationTask(d1, d2);
     }
 
     public tileWidgetClass(node: FlowSummaryDataFragment): string {

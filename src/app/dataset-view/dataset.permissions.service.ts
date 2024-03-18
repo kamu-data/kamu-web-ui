@@ -6,4 +6,8 @@ export class DatasetPermissionsService {
     public shouldAllowSettingsTab(datasetPermissions: DatasetPermissionsFragment): boolean {
         return datasetPermissions.permissions.canDelete || datasetPermissions.permissions.canRename;
     }
+
+    public shouldAllowFlowsTab(datasetPermissions: DatasetPermissionsFragment): boolean {
+        return datasetPermissions.permissions.canSchedule;
+    }
 }

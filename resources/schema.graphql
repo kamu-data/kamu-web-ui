@@ -96,6 +96,11 @@ type AuthMut {
   accountDetails(accessToken: String!): Account!
 }
 
+input BatchingConditionInput {
+  minRecordsToAwait: Int!
+  maxBatchingInterval: TimeDeltaInput!
+}
+
 type BlockRef {
   name: String!
   blockHash: Multihash!
@@ -349,8 +354,7 @@ type DatasetFlowConfigsMut {
   setConfigBatching(
     datasetFlowType: DatasetFlowType!
     paused: Boolean!
-    throttlingPeriod: TimeDeltaInput
-    minimalDataBatch: Int
+    batching: BatchingConditionInput!
   ): SetFlowConfigResult!
   pauseFlows(datasetFlowType: DatasetFlowType): Boolean!
   resumeFlows(datasetFlowType: DatasetFlowType): Boolean!
@@ -696,8 +700,8 @@ type FlowConfiguration {
 }
 
 type FlowConfigurationBatching {
-  throttlingPeriod: TimeDelta
-  minimalDataBatch: Int
+  minRecordsToAwait: Int!
+  maxBatchingInterval: TimeDelta!
 }
 
 union FlowConfigurationSchedule = TimeDelta | Cron5ComponentExpression
@@ -755,6 +759,7 @@ type FlowDescriptionSystemGC {
 type FlowDescriptionUpdateResult {
   numBlocks: Int!
   numRecords: Int!
+  updatedWatermark: DateTime
 }
 
 type FlowEdge {
@@ -777,13 +782,7 @@ type FlowEventInitiated implements FlowEvent {
   trigger: FlowTrigger!
 }
 
-type FlowEventQueued implements FlowEvent {
-  eventId: EventID!
-  eventTime: DateTime!
-  activateAt: DateTime!
-}
-
-type FlowEventStartConditionDefined implements FlowEvent {
+type FlowEventStartConditionUpdated implements FlowEvent {
   eventId: EventID!
   eventTime: DateTime!
   startCondition: FlowStartCondition!
@@ -811,12 +810,12 @@ type FlowIncompatibleDatasetKind implements SetFlowConfigResult & TriggerFlowRes
   message: String!
 }
 
-type FlowNotFound implements GetFlowResult & CancelScheduledTasksResult {
-  flowId: FlowID!
+type FlowInvalidBatchingConfig implements SetFlowConfigResult {
+  reason: String!
   message: String!
 }
 
-type FlowNotScheduled implements CancelScheduledTasksResult {
+type FlowNotFound implements GetFlowResult & CancelScheduledTasksResult {
   flowId: FlowID!
   message: String!
 }
@@ -824,33 +823,47 @@ type FlowNotScheduled implements CancelScheduledTasksResult {
 enum FlowOutcome {
   SUCCESS
   FAILED
-  CANCELLED
   ABORTED
 }
 
-union FlowStartCondition = FlowStartConditionThrottling | FlowStartConditionBatching
+union FlowStartCondition =
+    FlowStartConditionSchedule
+  | FlowStartConditionThrottling
+  | FlowStartConditionBatching
+  | FlowStartConditionExecutor
 
 type FlowStartConditionBatching {
-  thresholdNewRecords: Int!
+  activeBatchingRule: FlowConfigurationBatching!
+  batchingDeadline: DateTime!
+  accumulatedRecordsCount: Int!
+  watermarkModified: Boolean!
+}
+
+type FlowStartConditionExecutor {
+  taskId: TaskID!
+}
+
+type FlowStartConditionSchedule {
+  wakeUpAt: DateTime!
 }
 
 type FlowStartConditionThrottling {
   intervalSec: Int!
+  wakeUpAt: DateTime!
+  shiftedFrom: DateTime!
 }
 
 enum FlowStatus {
   WAITING
-  QUEUED
-  SCHEDULED
   RUNNING
   FINISHED
 }
 
 type FlowTimingRecords {
   """
-  Planned activation time (at least, Queued state)
+  Recorded time of last task scheduling
   """
-  activateAt: DateTime
+  awaitingExecutorSince: DateTime
   """
   Recorded start of running (Running state seen at least once)
   """
@@ -869,7 +882,7 @@ type FlowTriggerAutoPolling {
 }
 
 type FlowTriggerInputDatasetFlow {
-  datasetId: DatasetID!
+  dataset: Dataset!
   flowType: DatasetFlowType!
   flowId: FlowID!
 }

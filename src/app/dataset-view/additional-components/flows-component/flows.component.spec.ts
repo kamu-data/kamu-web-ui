@@ -1,7 +1,7 @@
 import { TileBaseWidgetComponent } from "./components/tile-base-widget/tile-base-widget.component";
 import { MatRadioModule } from "@angular/material/radio";
 import { PaginationModule } from "./../../../components/pagination-component/pagination.module";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { FlowsComponent } from "./flows.component";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
@@ -34,6 +34,7 @@ describe("FlowsComponent", () => {
     let datasetFlowsService: DatasetFlowsService;
     let navigationService: NavigationService;
     const MOCK_PAGE_NUNBER = 1;
+    const MOCK_FLOW_ID = "2";
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -91,6 +92,7 @@ describe("FlowsComponent", () => {
         component.datasetBasics = mockDatasetBasicsRootFragment;
         spyOn(datasetFlowsService, "allFlowsPaused").and.returnValue(of(false));
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of());
+        spyOnProperty(component, "loadingFlowsList$", "get").and.returnValue(of(true));
         fixture.detectChanges();
     });
 
@@ -163,10 +165,21 @@ describe("FlowsComponent", () => {
         expect(getFlowConnectionDataSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check update now button", () => {
+    it("should check update now button", fakeAsync(() => {
         const refreshFlowSpy = spyOn(component, "refreshFlow");
         spyOn(datasetFlowsService, "datasetTriggerFlow").and.returnValue(of(true));
         component.updateNow();
+        tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
-    });
+        flush();
+    }));
+
+    it("should check cancel flow button", fakeAsync(() => {
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        spyOn(datasetFlowsService, "cancelScheduledTasks").and.returnValue(of(true));
+        component.onCancelFlow(MOCK_FLOW_ID);
+        tick(component.TIMEOUT_REFRESH_FLOW);
+        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+        flush();
+    }));
 });

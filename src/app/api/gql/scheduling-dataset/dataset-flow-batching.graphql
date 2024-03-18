@@ -2,28 +2,22 @@ mutation datasetFlowBatching(
   $datasetId: DatasetID!
   $datasetFlowType: DatasetFlowType!
   $paused: Boolean!
-  $throttlingPeriod: TimeDeltaInput
-  $minimalDataBatch: Int
+  $batching: BatchingConditionInput!
 ) {
   datasets {
     byId(datasetId: $datasetId) {
       flows {
         configs {
-          setConfigBatching(
-            datasetFlowType: $datasetFlowType
-            paused: $paused
-            throttlingPeriod: $throttlingPeriod
-            minimalDataBatch: $minimalDataBatch
-          ) {
+          setConfigBatching(datasetFlowType: $datasetFlowType, paused: $paused, batching: $batching) {
             __typename
             ... on SetFlowConfigSuccess {
               message
               config {
                 batching {
-                  throttlingPeriod {
+                  maxBatchingInterval {
                     ...TimeDeltaData
                   }
-                  minimalDataBatch
+                  minRecordsToAwait
                 }
               }
             }
@@ -32,6 +26,11 @@ mutation datasetFlowBatching(
               message
               expectedDatasetKind
               actualDatasetKind
+            }
+
+            ... on FlowInvalidBatchingConfig {
+              message
+              reason
             }
           }
         }

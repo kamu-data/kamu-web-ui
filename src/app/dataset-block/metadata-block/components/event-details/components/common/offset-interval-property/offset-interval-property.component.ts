@@ -20,7 +20,10 @@ export class OffsetIntervalPropertyComponent extends BasePropertyComponent imple
         datasetId: MaybeNull<string>;
     };
     private datasetInfo: DatasetInfo = { accountName: "", datasetName: "" };
-    constructor(private navigationService: NavigationService, private datasetService: DatasetService) {
+    constructor(
+        private navigationService: NavigationService,
+        private datasetService: DatasetService,
+    ) {
         super();
     }
     ngOnInit(): void {

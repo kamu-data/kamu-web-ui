@@ -1,0 +1,137 @@
+<div
+    class="app-main-container"
+    role="main"
+    data-test-id="task-details-view"
+    id="task-details-view"
+    *ngIf="datasetViewMenuData$ | async as values"
+>
+    <div class="app-content mt-4">
+        <app-dataset-view-header
+            [datasetInfo]="datasetInfo"
+            (showOwnerPageEmit)="showOwnerPage(datasetInfo.accountName)"
+            (onClickSearchAdditionalButtonEmit)="onClickSearchAdditionalButton($event)"
+        ></app-dataset-view-header>
+    </div>
+
+    <div class="app-content">
+        <div id="dataset-viewer">
+            <app-dataset-view-menu
+                [datasetViewType]="FLOWS_TYPE"
+                [datasetBasics]="values.datasetBasics"
+                [datasetPermissions]="values.datasetPermissions"
+                [datasetNavigation]="getDatasetNavigation(datasetInfo)"
+            ></app-dataset-view-menu>
+        </div>
+    </div>
+
+    <div class="task-details-container mx-4 mb-4" *ngIf="datasetFlowDetails$ | async as flowDetails">
+        <div class="d-flex justify-content-between px-4">
+            <div class="d-flex py-1 align-items-start">
+                <mat-icon class="icon-status mt-2" [ngClass]="descriptionColumnOptions(flowDetails.flow).class">{{
+                    descriptionColumnOptions(flowDetails.flow).icon
+                }}</mat-icon>
+                <div class="ms-1 py-2">
+                    <span class="fw-500">Flow # {{ flowDetails.flow.flowId }}</span>
+                    <span class="d-block text-muted">
+                        {{ flowTypeDescription(flowDetails.flow) }}
+                        <span>{{ descriptionDatasetFlowEndOfMessage(flowDetails.flow) }}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end mx-4">
+            <button
+                (click)="refreshNow()"
+                class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+            >
+                <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
+                <span class="fs-12 me-2 d-block"> Refresh now</span>
+            </button>
+        </div>
+        <div class="container-details px-4">
+            <div class="sidebar my-4">
+                <ul class="action-list">
+                    <li
+                        class="action-list-item"
+                        [ngClass]="{
+                            'action-list-item__nav-active': activeTab === FlowDetailsTabs.SUMMARY
+                        }"
+                    >
+                        <a routerLinkActive="active" [routerLink]="getRouteLink(FlowDetailsTabs.SUMMARY)">
+                            <span class="action-list-item__label d-flex align-items-center">
+                                <mat-icon class="text-muted me-2">info_outline</mat-icon>
+
+                                Summary</span
+                            ></a
+                        >
+                    </li>
+                    <li
+                        class="action-list-item"
+                        [ngClass]="{
+                            'action-list-item__nav-active': activeTab === FlowDetailsTabs.HISTORY
+                        }"
+                    >
+                        <a routerLinkActive="active" [routerLink]="getRouteLink(FlowDetailsTabs.HISTORY)">
+                            <span class="action-list-item__label d-flex align-items-center">
+                                <mat-icon class="text-muted me-2">manage_history</mat-icon> History</span
+                            ></a
+                        >
+                    </li>
+                    <li
+                        class="action-list-item"
+                        [ngClass]="{
+                            'action-list-item__nav-active': activeTab === FlowDetailsTabs.LOGS
+                        }"
+                    >
+                        <a routerLinkActive="active" [routerLink]="getRouteLink(FlowDetailsTabs.LOGS)">
+                            <span class="action-list-item__label d-flex align-items-center">
+                                <mat-icon class="text-muted me-2">description</mat-icon>
+                                Logs</span
+                            ></a
+                        >
+                    </li>
+                    <li
+                        class="action-list-item"
+                        [ngClass]="{
+                            'action-list-item__nav-active': activeTab === FlowDetailsTabs.USAGE
+                        }"
+                    >
+                        <a routerLinkActive="active" [routerLink]="getRouteLink(FlowDetailsTabs.USAGE)">
+                            <span class="action-list-item__label d-flex align-items-center">
+                                <mat-icon class="text-muted me-2">bar_chart</mat-icon>Usage</span
+                            ></a
+                        >
+                    </li>
+                    <li
+                        class="action-list-item"
+                        [ngClass]="{
+                            'action-list-item__nav-active': activeTab === FlowDetailsTabs.ADMIN
+                        }"
+                    >
+                        <a routerLinkActive="active" [routerLink]="getRouteLink(FlowDetailsTabs.ADMIN)">
+                            <span class="action-list-item__label d-flex align-items-center">
+                                <mat-icon class="text-muted me-2">admin_panel_settings</mat-icon>Admin</span
+                            ></a
+                        >
+                    </li>
+                </ul>
+            </div>
+            <div class="content sidebar my-4">
+                <div class="my-3 pl-40">
+                    <ng-container *ngIf="activeTab === FlowDetailsTabs.SUMMARY">
+                        <app-flow-details-summary-tab [flowDetails]="flowDetails.flow"> </app-flow-details-summary-tab>
+                    </ng-container>
+                    <ng-container *ngIf="activeTab === FlowDetailsTabs.HISTORY">
+                        <app-flow-details-history-tab
+                            [flowDetails]="flowDetails.flow"
+                            [flowHistory]="flowDetails.flowHistory"
+                        ></app-flow-details-history-tab>
+                    </ng-container>
+                    <div *ngIf="activeTab === FlowDetailsTabs.LOGS">Logs tab coming soon</div>
+                    <div *ngIf="activeTab === FlowDetailsTabs.USAGE">Usage tab coming soon</div>
+                    <div *ngIf="activeTab === FlowDetailsTabs.ADMIN">Admin tab coming soon</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

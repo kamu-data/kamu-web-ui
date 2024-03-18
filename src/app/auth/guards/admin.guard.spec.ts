@@ -1,17 +1,20 @@
 import { TestBed } from "@angular/core/testing";
+import { AdminGuard } from "./admin.guard";
+import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { AuthenticatedGuard } from "./authenticated.guard";
-import { LoggedUserService } from "../logged-user.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { LoggedUserService } from "../logged-user.service";
 
-describe("AuthenticatedGuard", () => {
-    let guard: AuthenticatedGuard;
+describe("AdminGuard", () => {
+    let guard: AdminGuard;
     let loggedUserService: LoggedUserService;
+
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ApolloTestingModule, HttpClientTestingModule],
+            providers: [Apollo],
+            imports: [ApolloModule, ApolloTestingModule, HttpClientTestingModule],
         });
-        guard = TestBed.inject(AuthenticatedGuard);
+        guard = TestBed.inject(AdminGuard);
         loggedUserService = TestBed.inject(LoggedUserService);
     });
 
@@ -20,17 +23,17 @@ describe("AuthenticatedGuard", () => {
     });
 
     interface TestCase {
-        authenticated: boolean;
+        isAdmin: boolean;
         expectedResult: boolean;
     }
 
     [
-        { authenticated: true, expectedResult: true },
-        { authenticated: false, expectedResult: false },
+        { isAdmin: true, expectedResult: true },
+        { isAdmin: false, expectedResult: false },
     ].forEach((testCase: TestCase) => {
-        it(`should check canActivate method when user is${testCase.authenticated ? "" : "not"} authenticated`, () => {
-            const isAuthenticatedSpy = spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(
-                testCase.authenticated,
+        it(`should check canActivate method when user is${testCase.isAdmin ? "" : "not"} admin`, () => {
+            const isAuthenticatedSpy = spyOnProperty(loggedUserService, "isAdmin", "get").and.returnValue(
+                testCase.isAdmin,
             );
             const result = guard.canActivate();
             expect(result).toEqual(testCase.expectedResult);

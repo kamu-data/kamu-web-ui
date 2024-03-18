@@ -19,6 +19,10 @@ export class NavigationService {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_HOME]));
     }
 
+    public navigateToAdminDashBoard(): void {
+        promiseWithCatch(this.router.navigate([ProjectLinks.URL_ADMIN_DASHBOARD]));
+    }
+
     public navigateToSearch(query?: string, page?: number): void {
         const queryParams = query ? (page ? { query, page } : { query }) : page ? { page } : {};
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_SEARCH], { queryParams }));

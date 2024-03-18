@@ -200,4 +200,15 @@ export class AppComponent extends BaseComponent implements OnInit {
             }),
         );
     }
+
+    public onDashboard(): void {
+        promiseWithCatch(
+            this.modalService.warning({
+                message: AppValues.UNIMPLEMENTED_MESSAGE,
+                yesButtonText: "Ok",
+            }),
+        );
+        //TODO: Implement AdminDashBoardComponent
+        //  this.navigationService.navigateToAdminDashBoard();
+    }
 }

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Added a summary tab for the flow details page
+- Added admin guard
 
 ## [0.16.0] - 2024-03-13
 ### Added

@@ -65,6 +65,7 @@ import { logError } from "./common/app.helpers";
 import { DatasetPermissionsService } from "./dataset-view/dataset.permissions.service";
 import { LocalStorageService } from "./services/local-storage.service";
 import { apolloCache } from "./apollo-cache.helper";
+import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
 import { DatasetFlowDetailsModule } from "./dataset-flow/dataset-flow-details/dataset-flow-details.module";
 
 const Services = [
@@ -176,6 +177,7 @@ const MatModules = [
         NotificationIndicatorComponent,
         AccountSettingsComponent,
         DatasetsTabComponent,
+        AdminDashboardComponent,
     ],
     imports: [
         AppRoutingModule,

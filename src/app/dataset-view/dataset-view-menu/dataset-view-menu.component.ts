@@ -35,14 +35,18 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     @Input() datasetViewType: DatasetViewTypeEnum;
     @Input() isMinimizeSearchAdditionalButtons: boolean;
 
-    public clipboardKamuCli = "";
+    public clipboardKamuCliPull = "";
+    public clipboardKamuCliPush = "";
     public clipboardReference = "";
     public clipboardKafka = "";
-    public clipboardRestUrl = "";
-    public clipboardRestUrlWithPush = "";
+    public clipboardRestUrlTail = "";
+    public clipboardRestUrlQuery = "";
+    public clipboardRestUrlPush = "";
     public clipboardFlightSQL = "";
     public clipboardJdbcURL = "";
-    public clipboardODataURL = "";
+    public clipboardPostgresURL = "";
+    public clipboardODataURLService = "";
+    public clipboardODataURLCollection = "";
     public clipboardWebsocketURL = "";
 
     private sideNavHelper: SideNavHelper;
@@ -175,13 +179,17 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
 
     private initClipboardHints(): void {
         this.clipboardReference = `https://kamu.dev/${this.datasetBasics.alias}`;
-        this.clipboardKamuCli = `kamu pull kamu.dev/${this.datasetBasics.alias}`;
-        this.clipboardKafka = `https://kafka.node.demo.kamu.dev/${this.datasetBasics.alias}`;
-        this.clipboardRestUrl = `https://node.demo.kamu.dev/kamu/${this.datasetBasics.alias}/tail?limit=10`;
-        this.clipboardRestUrlWithPush = `https://node.demo.kamu.dev/${this.datasetBasics.alias}/push`;
+        this.clipboardKamuCliPull = `kamu pull kamu.dev/${this.datasetBasics.alias}`;
+        this.clipboardKamuCliPush = `kamu push kamu.dev/${this.datasetBasics.alias}`;
+        this.clipboardKafka = `- coming soon -`;
+        this.clipboardRestUrlTail = `https://node.demo.kamu.dev/kamu/${this.datasetBasics.alias}/tail?limit=10`;
+        this.clipboardRestUrlQuery = `https://node.demo.kamu.dev/query?query=select%201`;
+        this.clipboardRestUrlPush = `https://node.demo.kamu.dev/${this.datasetBasics.alias}/push`;
         this.clipboardFlightSQL = `datafusion+flightsql://node.demo.kamu.dev:50050`;
-        this.clipboardJdbcURL = `jdbc:arrow-flight-sql://{host}:{port}`;
-        this.clipboardODataURL = `https://node.demo.kamu.dev/odata/${this.datasetBasics.alias}`;
-        this.clipboardWebsocketURL = `ws://node.demo.kamu.dev/${this.datasetBasics.alias}`;
+        this.clipboardJdbcURL = `jdbc:arrow-flight-sql://node.demo.kamu.dev:50050`;
+        this.clipboardPostgresURL = `- coming soon -`;
+        this.clipboardODataURLService = `https://node.demo.kamu.dev/odata/${this.datasetBasics.owner.accountName}`;
+        this.clipboardODataURLCollection = `https://node.demo.kamu.dev/odata/${this.datasetBasics.alias}`;
+        this.clipboardWebsocketURL = `- coming soon -`;
     }
 }

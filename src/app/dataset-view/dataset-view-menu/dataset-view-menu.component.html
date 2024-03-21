@@ -90,19 +90,14 @@
         <li class="nav-item mr-2">
             <div class="btn-group-parent">
                 <button
-                    class="border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
-                >
-                    <span class="d-inline mr-2">Download</span>
-                </button>
-                <button
-                    class="starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
-                    mat-icon-button
+                    class="get-data-button border rounded btn-group-item d-flex justify-content-center align-items-center"
                     mat-button
                     #menuTrigger="matMenuTrigger"
                     [matMenuTriggerFor]="menu2"
-                    aria-label="Example icon-button with a menu"
                     data-test-id="searchAdditionalButtons"
                 >
+                    <mat-icon class="fs-5 pt-1" style="color: #1a7f37">system_update_alt</mat-icon>
+                    <span class="mr-2 get-data-text">Get Data</span>
                     <mat-icon>arrow_drop_down</mat-icon>
                 </button>
 
@@ -144,6 +139,7 @@
                                                     class="form-control fs-12 rounded"
                                                     data-autoselect=""
                                                     [(ngModel)]="clipboardReference"
+                                                    readonly
                                                 />
                                                 <div class="input-group-button ms-1">
                                                     <button
@@ -233,6 +229,7 @@
                                                     class="form-control fs-12 rounded"
                                                     data-autoselect=""
                                                     [(ngModel)]="clipboardKamuCliPull"
+                                                    readonly
                                                 />
                                                 <div class="input-group-button ms-1">
                                                     <button
@@ -264,6 +261,7 @@
                                                     class="form-control fs-12 rounded"
                                                     data-autoselect=""
                                                     [(ngModel)]="clipboardKamuCliPush"
+                                                    readonly
                                                 />
                                                 <div class="input-group-button ms-1">
                                                     <button
@@ -319,6 +317,7 @@
                                                     class="form-control fs-12 rounded"
                                                     data-autoselect=""
                                                     [(ngModel)]="clipboardRestUrlTail"
+                                                    readonly
                                                 />
                                                 <div class="input-group-button ms-1">
                                                     <button
@@ -350,6 +349,7 @@
                                                     class="form-control fs-12 rounded"
                                                     data-autoselect=""
                                                     [(ngModel)]="clipboardRestUrlQuery"
+                                                    readonly
                                                 />
                                                 <div class="input-group-button ms-1">
                                                     <button
@@ -383,6 +383,7 @@
                                                     class="form-control fs-12 rounded"
                                                     data-autoselect=""
                                                     [(ngModel)]="clipboardRestUrlPush"
+                                                    readonly
                                                 />
                                                 <div class="input-group-button ms-1">
                                                     <button
@@ -441,6 +442,7 @@
                                                         class="form-control fs-12 rounded"
                                                         data-autoselect=""
                                                         [(ngModel)]="clipboardFlightSQL"
+                                                        readonly
                                                     />
                                                     <div class="input-group-button ms-1">
                                                         <button
@@ -489,6 +491,7 @@
                                                         class="form-control fs-12 rounded"
                                                         data-autoselect=""
                                                         [(ngModel)]="clipboardJdbcURL"
+                                                        readonly
                                                     />
                                                     <div class="input-group-button ms-1">
                                                         <button
@@ -539,6 +542,7 @@
                                                         class="form-control fs-12 rounded"
                                                         data-autoselect=""
                                                         [(ngModel)]="clipboardPostgresURL"
+                                                        readonly
                                                     />
                                                     <div class="input-group-button ms-1">
                                                         <button
@@ -596,6 +600,7 @@
                                                         class="form-control fs-12 rounded"
                                                         data-autoselect=""
                                                         [(ngModel)]="clipboardWebsocketURL"
+                                                        readonly
                                                     />
                                                     <div class="input-group-button ms-1">
                                                         <button
@@ -644,6 +649,7 @@
                                                         class="form-control fs-12 rounded"
                                                         data-autoselect=""
                                                         [(ngModel)]="clipboardKafka"
+                                                        readonly
                                                     />
                                                     <div class="input-group-button ms-1">
                                                         <button
@@ -708,6 +714,7 @@
                                                     class="form-control fs-12 rounded"
                                                     data-autoselect=""
                                                     [(ngModel)]="clipboardODataURLService"
+                                                    readonly
                                                 />
                                                 <div class="input-group-button ms-1">
                                                     <button
@@ -739,6 +746,7 @@
                                                     class="form-control fs-12 rounded"
                                                     data-autoselect=""
                                                     [(ngModel)]="clipboardODataURLCollection"
+                                                    readonly
                                                 />
                                                 <div class="input-group-button ms-1">
                                                     <button
@@ -784,11 +792,18 @@
                                             Export
                                         </div>
                                     </ng-template>
-                                    <button mat-menu-item class="select-menu-item" [disabled]="true">as Parquet</button>
-                                    <mat-divider></mat-divider>
-                                    <button mat-menu-item class="select-menu-item" [disabled]="true">as CSV</button>
-                                    <mat-divider></mat-divider>
-                                    <button mat-menu-item class="select-menu-item" [disabled]="true">as Excel</button>
+                                    <div class="select-menu-item flex-column w-100">
+                                        <div class="input-group mb-1 d-flex justify-content-center">
+                                            <button
+                                                class="border rounded download-button btn-group-item d-flex justify-content-center align-items-center"
+                                                mat-button
+                                                disabled="true"
+                                            >
+                                                <span class="mr-2 fs-12">Download</span>
+                                                <mat-icon>arrow_drop_down</mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </mat-tab>
                             </mat-tab-group>
                         </div>

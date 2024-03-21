@@ -17,6 +17,7 @@ import { SideNavHelper } from "../../common/sidenav.helper";
 import { isMobileView, promiseWithCatch } from "src/app/common/app.helpers";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetPermissionsService } from "../dataset.permissions.service";
+import { AppConfigService } from "src/app/app-config.service";
 
 @Component({
     selector: "app-dataset-view-menu",
@@ -55,6 +56,7 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
         private clipboard: Clipboard,
         private datasetPermissionsServices: DatasetPermissionsService,
         private widgetHeightService: WidgetHeightService,
+        private appConfigService: AppConfigService,
     ) {}
 
     public ngAfterViewInit(): void {
@@ -178,18 +180,18 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     }
 
     private initClipboardHints(): void {
-        this.clipboardReference = `https://kamu.dev/${this.datasetBasics.alias}`;
+        this.clipboardReference = `https://${location.host}/${this.datasetBasics.alias}`;
         this.clipboardKamuCliPull = `kamu pull kamu.dev/${this.datasetBasics.alias}`;
         this.clipboardKamuCliPush = `kamu push kamu.dev/${this.datasetBasics.alias}`;
         this.clipboardKafka = `- coming soon -`;
-        this.clipboardRestUrlTail = `https://node.demo.kamu.dev/kamu/${this.datasetBasics.alias}/tail?limit=10`;
-        this.clipboardRestUrlQuery = `https://node.demo.kamu.dev/query?query=select%201`;
-        this.clipboardRestUrlPush = `https://node.demo.kamu.dev/${this.datasetBasics.alias}/push`;
+        this.clipboardRestUrlTail = `${this.appConfigService.apiServerGqlUrl}/${this.datasetBasics.alias}/tail?limit=10`;
+        this.clipboardRestUrlQuery = `${this.appConfigService.apiServerGqlUrl}/query?query=select%201`;
+        this.clipboardRestUrlPush = `${this.appConfigService.apiServerGqlUrl}/${this.datasetBasics.alias}/push`;
         this.clipboardFlightSQL = `datafusion+flightsql://node.demo.kamu.dev:50050`;
         this.clipboardJdbcURL = `jdbc:arrow-flight-sql://node.demo.kamu.dev:50050`;
         this.clipboardPostgresURL = `- coming soon -`;
-        this.clipboardODataURLService = `https://node.demo.kamu.dev/odata/${this.datasetBasics.owner.accountName}`;
-        this.clipboardODataURLCollection = `https://node.demo.kamu.dev/odata/${this.datasetBasics.alias}`;
+        this.clipboardODataURLService = `${this.appConfigService.apiServerGqlUrl}/odata/${this.datasetBasics.owner.accountName}`;
+        this.clipboardODataURLCollection = `${this.appConfigService.apiServerGqlUrl}/odata/${this.datasetBasics.alias}`;
         this.clipboardWebsocketURL = `- coming soon -`;
     }
 }

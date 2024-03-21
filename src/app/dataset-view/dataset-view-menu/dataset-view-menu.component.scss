@@ -5,6 +5,23 @@
     border-radius: inherit;
 }
 
+.get-data-button {
+    padding: 0 12px;
+
+    &:hover {
+        background-color: transparent;
+    }
+
+    .get-data-text {
+        color: #1a7f37;
+        font-weight: 700;
+    }
+}
+
+.download-button {
+    height: 28px;
+}
+
 a {
     color: $app-navy-blue;
 }
@@ -69,6 +86,7 @@ a {
 .form-control {
     &:focus {
         box-shadow: none;
+        border-color: #dee2e6;
     }
 }
 

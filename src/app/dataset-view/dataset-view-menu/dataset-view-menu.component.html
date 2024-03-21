@@ -90,12 +90,12 @@
         <li class="nav-item mr-2">
             <div class="btn-group-parent">
                 <button
-                    class="dataset-download-button starred rounded-left-2 border-1 border-right-0 btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
+                    class="border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
                 >
                     <span class="d-inline mr-2">Download</span>
                 </button>
                 <button
-                    class="starred rounded-right-2 border-1 border btn-sm btn btn-roup-item d-flex justify-content-center align-items-center"
+                    class="starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
                     mat-icon-button
                     mat-button
                     #menuTrigger="matMenuTrigger"
@@ -106,60 +106,119 @@
                     <mat-icon>arrow_drop_down</mat-icon>
                 </button>
 
-                <mat-menu #menu2="matMenu" [hasBackdrop]="false" data-test-id="menu">
+                <mat-menu
+                    #menu2="matMenu"
+                    class="custom-wrapper-for-menu mat-menu-panel-custom"
+                    [hasBackdrop]="true"
+                    data-test-id="menu"
+                >
                     <div class="select-menu-modal notifications-component-menu-modal">
                         <header class="select-menu-header">
-                            <div class="select-menu-title text-bold">
-                                <svg-icon name="terminal"></svg-icon>
-                                Download / Cite
+                            <div class="select-menu-title text-bold d-flex align-item-center d-flex align-items-center">
+                                Protocols
+                                <mat-icon
+                                    class="text-muted fs-5 help-icon"
+                                    matTooltip="Which protocol should I use?"
+                                    [matTooltipPosition]="'right'"
+                                    >help_outline</mat-icon
+                                >
                             </div>
-                            <button
-                                class="select-menu-close-btn"
-                                type="button"
-                                aria-label="Close menu"
-                                data-action="click:notifications-list-subscription-form#closeMenu"
-                            >
-                                <svg-icon name="close"></svg-icon>
-                            </button>
+                            <a class="fs-12">Manage API tokens</a>
                         </header>
                         <div
                             class="select-menu-list"
                             (click)="$event.stopPropagation()"
                             (keydown)="$event.stopPropagation()"
                         >
-                            <mat-tab-group>
-                                <mat-tab label="Download">
-                                    <div class="select-menu-item flex-column">
-                                        <div
-                                            class="select-menu-item align-items-start p-0 border-0"
-                                            (click)="$event.stopPropagation()"
-                                            (keydown)="$event.stopPropagation()"
-                                        >
-                                            <p>Using kamu-cli:</p>
+                            <mat-tab-group [animationDuration]="0">
+                                <mat-tab>
+                                    <ng-template mat-tab-label>
+                                        <div class="d-flex align-items-center">
+                                            <mat-icon class="text-muted fs-5 mt-2">link</mat-icon>
+                                            Ref
                                         </div>
-                                        <div
-                                            class="select-menu-item align-items-start p-0 border-0"
-                                            (click)="$event.stopPropagation()"
-                                            (keydown)="$event.stopPropagation()"
-                                        >
+                                    </ng-template>
+                                    <div class="select-menu-item flex-column">
+                                        <div class="input-group mb-1">
+                                            <span class="fs-12 text-muted"> Clone using the web URL with ID:</span>
+                                        </div>
+
+                                        <div class="select-menu-item align-items-start p-0 border-0 mb-2">
                                             <div class="input-group">
                                                 <input
                                                     type="text"
-                                                    class="form-control input-monospace input-sm color-bg-subtle"
+                                                    class="form-control fs-12 rounded"
+                                                    data-autoselect=""
+                                                    [(ngModel)]="clipboardReference"
+                                                />
+                                                <div class="input-group-button ms-1">
+                                                    <button
+                                                        (click)="copyToClipboard($event, clipboardReference)"
+                                                        data-test-id="copyToClipboard"
+                                                        aria-label="Copy to clipboard"
+                                                        class="copy-button ms-1"
+                                                        data-copy-feedback="Copied!"
+                                                        tabindex="0"
+                                                        role="button"
+                                                    >
+                                                        <div style="position: relative; display: inline-block">
+                                                            <svg-icon name="copy"></svg-icon>
+                                                        </div>
+                                                        <div style="position: relative; display: none">
+                                                            <svg-icon name="checked"></svg-icon>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="input-group mt-1">
+                                            <mat-radio-button color="primary" disabled="true">
+                                                <span class="fs-12">Stable</span>
+                                            </mat-radio-button>
+                                        </div>
+                                        <div class="input-group">
+                                            <mat-radio-button color="primary" disabled="true">
+                                                <span class="fs-12">Frozen</span>
+                                            </mat-radio-button>
+                                        </div>
+                                        <div class="w-100">
+                                            <mat-divider class="my-2"></mat-divider>
+                                            <div class="d-flex align-items-center">
+                                                <mat-icon class="text-muted fs-5">info</mat-icon>
+                                                <span class="fs-12">
+                                                    <a class="fs-12">See more details</a> about this protocol
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-tab>
+                                <mat-tab>
+                                    <ng-template mat-tab-label>
+                                        <div class="d-flex align-items-center">
+                                            <mat-icon class="text-muted fs-5 mt-2">terminal</mat-icon>
+                                            Kamu CLI
+                                        </div>
+                                    </ng-template>
+                                    <div class="select-menu-item flex-column w-100">
+                                        <div class="input-group mb-1">
+                                            <span class="fs-12 text-muted"> Clone using CLI:</span>
+                                        </div>
+                                        <div class="select-menu-item align-items-start p-0 border-0 mb-2">
+                                            <div class="input-group">
+                                                <input
+                                                    type="text"
+                                                    class="form-control fs-12 rounded"
                                                     data-autoselect=""
                                                     [(ngModel)]="clipboardKamuCli"
-                                                    readonly=""
                                                 />
-                                                <div class="input-group-button">
+                                                <div class="input-group-button ms-1">
                                                     <button
                                                         (click)="copyToClipboard($event, clipboardKamuCli)"
                                                         data-test-id="copyToClipboard"
                                                         aria-label="Copy to clipboard"
-                                                        class="btn btn-sm btn-gray clipboard-btn"
+                                                        class="copy-button ms-1"
                                                         data-copy-feedback="Copied!"
-                                                        data-tooltip-direction="n"
-                                                        data-hydro-click='{"event_type":"clone_or_download.click","payload":{"feature_clicked":"COPY_URL","git_repository_type":"REPOSITORY","repository_id":438796440,"originating_url":"https://github.com/kamu-data/kamu-web-ui","user_id":87068546}}'
-                                                        data-hydro-click-hmac="ba6892cc9a34fb462286b03347d845fd8b6d059f3433fdcc2719ccd72b1b896d"
                                                         tabindex="0"
                                                         role="button"
                                                     >
@@ -173,37 +232,45 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="select-menu-item flex-column">
-                                        <div
-                                            class="select-menu-item align-items-start p-0 border-0"
-                                            (click)="$event.stopPropagation()"
-                                            (keydown)="$event.stopPropagation()"
-                                        >
-                                            <p>Using Kafka:</p>
+                                        <div class="w-100">
+                                            <mat-divider class="my-2"></mat-divider>
+                                            <div class="d-flex align-items-center">
+                                                <mat-icon class="text-muted fs-5">info</mat-icon>
+                                                <span class="fs-12">
+                                                    <a class="fs-12">See more details</a> about this protocol
+                                                </span>
+                                            </div>
                                         </div>
-                                        <div
-                                            class="select-menu-item align-items-start p-0 border-0"
-                                            (click)="$event.stopPropagation()"
-                                            (keydown)="$event.stopPropagation()"
-                                        >
+                                    </div>
+                                </mat-tab>
+                                <mat-tab>
+                                    <ng-template mat-tab-label>
+                                        <div class="d-flex align-items-center">
+                                            <mat-icon class="text-muted fs-5 mt-2">public</mat-icon>
+                                            REST
+                                        </div>
+                                    </ng-template>
+                                    <div class="select-menu-item flex-column w-100">
+                                        <div class="input-group mb-1">
+                                            <span class="fs-12 text-muted">
+                                                Clone using URL for accessing last few events:</span
+                                            >
+                                        </div>
+                                        <div class="select-menu-item align-items-start p-0 border-0 mb-2">
                                             <div class="input-group">
                                                 <input
                                                     type="text"
-                                                    class="form-control input-monospace input-sm color-bg-subtle"
+                                                    class="form-control fs-12 rounded"
                                                     data-autoselect=""
-                                                    [(ngModel)]="clipboardKafka"
-                                                    readonly=""
+                                                    [(ngModel)]="clipboardRestUrl"
                                                 />
-                                                <div class="input-group-button">
+                                                <div class="input-group-button ms-1">
                                                     <button
-                                                        (click)="copyToClipboard($event, clipboardKamuCli)"
+                                                        (click)="copyToClipboard($event, clipboardRestUrl)"
+                                                        data-test-id="copyToClipboard"
                                                         aria-label="Copy to clipboard"
-                                                        class="btn btn-sm btn-gray clipboard-btn"
+                                                        class="copy-button ms-1"
                                                         data-copy-feedback="Copied!"
-                                                        data-tooltip-direction="n"
-                                                        data-hydro-click='{"event_type":"clone_or_download.click","payload":{"feature_clicked":"COPY_URL","git_repository_type":"REPOSITORY","repository_id":438796440,"originating_url":"https://github.com/kamu-data/kamu-web-ui","user_id":87068546}}'
-                                                        data-hydro-click-hmac="ba6892cc9a34fb462286b03347d845fd8b6d059f3433fdcc2719ccd72b1b896d"
                                                         tabindex="0"
                                                         role="button"
                                                     >
@@ -217,13 +284,308 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="w-100 mt-3">
+                                            <div class="input-group mb-1">
+                                                <span class="fs-12 text-muted">
+                                                    Clone using URL for pushing data (only for root datasets with push
+                                                    sources):</span
+                                                >
+                                            </div>
+                                            <div class="select-menu-item align-items-start p-0 border-0 mb-2">
+                                                <div class="input-group">
+                                                    <input
+                                                        type="text"
+                                                        class="form-control fs-12 rounded"
+                                                        data-autoselect=""
+                                                        [(ngModel)]="clipboardRestUrlWithPush"
+                                                    />
+                                                    <div class="input-group-button ms-1">
+                                                        <button
+                                                            (click)="copyToClipboard($event, clipboardRestUrlWithPush)"
+                                                            data-test-id="copyToClipboard"
+                                                            aria-label="Copy to clipboard"
+                                                            class="copy-button ms-1"
+                                                            data-copy-feedback="Copied!"
+                                                            tabindex="0"
+                                                            role="button"
+                                                        >
+                                                            <div style="position: relative; display: inline-block">
+                                                                <svg-icon name="copy"></svg-icon>
+                                                            </div>
+                                                            <div style="position: relative; display: none">
+                                                                <svg-icon name="checked"></svg-icon>
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="w-100">
+                                            <mat-divider class="my-2"></mat-divider>
+                                            <div class="d-flex align-items-center">
+                                                <mat-icon class="text-muted fs-5">info</mat-icon>
+                                                <span class="fs-12">
+                                                    For more ways to access data
+                                                    <a class="fs-12"> see REST API documentation</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <mat-divider class="my-2"></mat-divider>
                                     </div>
-                                    <button class="select-menu-item">As Parquet</button>
-                                    <button class="select-menu-item">As CSV</button>
                                 </mat-tab>
-                                <mat-tab label="Cite">
-                                    <button class="select-menu-item">DOI</button>
-                                    <button class="select-menu-item">Bibtech</button>
+                                <mat-tab>
+                                    <ng-template mat-tab-label>
+                                        <div class="d-flex align-items-center">
+                                            <mat-icon class="text-muted fs-5 mt-2">table</mat-icon>
+                                            SQL
+                                        </div>
+                                    </ng-template>
+                                    <div class="select-menu-item flex-column">
+                                        <fieldset class="fieldset-border w-100 mb-4">
+                                            <legend class="fieldset-border">FlightSQL</legend>
+                                            <div class="input-group mb-1">
+                                                <span class="fs-12 text-muted"> Clone using FlightSQL URL:</span>
+                                            </div>
+                                            <div class="select-menu-item align-items-start p-0 border-0 mb-2">
+                                                <div class="input-group">
+                                                    <input
+                                                        type="text"
+                                                        class="form-control fs-12 rounded"
+                                                        data-autoselect=""
+                                                        [(ngModel)]="clipboardFlightSQL"
+                                                    />
+                                                    <div class="input-group-button ms-1">
+                                                        <button
+                                                            (click)="copyToClipboard($event, clipboardFlightSQL)"
+                                                            data-test-id="copyToClipboard"
+                                                            aria-label="Copy to clipboard"
+                                                            class="copy-button ms-1"
+                                                            data-copy-feedback="Copied!"
+                                                            tabindex="0"
+                                                            role="button"
+                                                        >
+                                                            <div style="position: relative; display: inline-block">
+                                                                <svg-icon name="copy"></svg-icon>
+                                                            </div>
+                                                            <div style="position: relative; display: none">
+                                                                <svg-icon name="checked"></svg-icon>
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-100 mt-3">
+                                                <div class="d-flex align-items-center">
+                                                    <mat-icon class="text-muted fs-5">info</mat-icon>
+                                                    <span class="fs-12">
+                                                        <a class="fs-12">See more details</a> about FlightSQL protocol
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+
+                                        <fieldset class="fieldset-border w-100">
+                                            <legend class="fieldset-border">JDBC</legend>
+                                            <div class="input-group mb-1">
+                                                <span class="fs-12 text-muted"> Clone using JDBC URL:</span>
+                                            </div>
+                                            <div class="select-menu-item align-items-start p-0 border-0 mb-2">
+                                                <div class="input-group">
+                                                    <input
+                                                        type="text"
+                                                        class="form-control fs-12 rounded"
+                                                        data-autoselect=""
+                                                        [(ngModel)]="clipboardJdbcURL"
+                                                    />
+                                                    <div class="input-group-button ms-1">
+                                                        <button
+                                                            (click)="copyToClipboard($event, clipboardJdbcURL)"
+                                                            data-test-id="copyToClipboard"
+                                                            aria-label="Copy to clipboard"
+                                                            class="copy-button ms-1"
+                                                            data-copy-feedback="Copied!"
+                                                            tabindex="0"
+                                                            role="button"
+                                                        >
+                                                            <div style="position: relative; display: inline-block">
+                                                                <svg-icon name="copy"></svg-icon>
+                                                            </div>
+                                                            <div style="position: relative; display: none">
+                                                                <svg-icon name="checked"></svg-icon>
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-100 mt-3">
+                                                <div class="d-flex align-items-center">
+                                                    <mat-icon class="text-muted fs-5">info</mat-icon>
+                                                    <span class="fs-12">
+                                                        <a class="fs-12">See more details</a> about JDBC protocol
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </mat-tab>
+                                <mat-tab>
+                                    <ng-template mat-tab-label>
+                                        <div class="d-flex align-items-center">
+                                            <mat-icon class="text-muted fs-5 mt-2">post_add</mat-icon>
+                                            OData
+                                        </div>
+                                    </ng-template>
+                                    <div class="select-menu-item flex-column w-100">
+                                        <div class="input-group mb-1">
+                                            <span class="fs-12 text-muted"> Clone using collection URL:</span>
+                                        </div>
+                                        <div class="select-menu-item align-items-start p-0 border-0 mb-2">
+                                            <div class="input-group">
+                                                <input
+                                                    type="text"
+                                                    class="form-control fs-12 rounded"
+                                                    data-autoselect=""
+                                                    [(ngModel)]="clipboardODataURL"
+                                                />
+                                                <div class="input-group-button ms-1">
+                                                    <button
+                                                        (click)="copyToClipboard($event, clipboardODataURL)"
+                                                        data-test-id="copyToClipboard"
+                                                        aria-label="Copy to clipboard"
+                                                        class="copy-button ms-1"
+                                                        data-copy-feedback="Copied!"
+                                                        tabindex="0"
+                                                        role="button"
+                                                    >
+                                                        <div style="position: relative; display: inline-block">
+                                                            <svg-icon name="copy"></svg-icon>
+                                                        </div>
+                                                        <div style="position: relative; display: none">
+                                                            <svg-icon name="checked"></svg-icon>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="w-100">
+                                            <mat-divider class="my-2"></mat-divider>
+                                            <div class="d-flex align-items-center">
+                                                <mat-icon class="text-muted fs-5">info</mat-icon>
+                                                <span class="fs-12">
+                                                    <a class="fs-12">See more details</a>
+                                                    about this protocol
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-tab>
+                                <mat-tab>
+                                    <ng-template mat-tab-label>
+                                        <div class="d-flex align-items-center">
+                                            <mat-icon class="text-muted fs-5 mt-2">code</mat-icon>
+                                            Code
+                                        </div>
+                                    </ng-template>
+                                    <div class="select-menu-item flex-column">Feature comming soon</div>
+                                </mat-tab>
+                                <mat-tab>
+                                    <ng-template mat-tab-label>
+                                        <div class="d-flex align-items-center">
+                                            <mat-icon class="text-muted fs-5 mt-2">stream</mat-icon>
+                                            Stream
+                                        </div>
+                                    </ng-template>
+                                    <div class="select-menu-item flex-column w-100">
+                                        <div class="input-group mb-1">
+                                            <span class="fs-12 text-muted"> Clone using Kafka URL:</span>
+                                        </div>
+                                        <div class="select-menu-item align-items-start p-0 border-0 mb-2">
+                                            <div class="input-group">
+                                                <input
+                                                    type="text"
+                                                    class="form-control fs-12 rounded"
+                                                    data-autoselect=""
+                                                    [(ngModel)]="clipboardKafka"
+                                                />
+                                                <div class="input-group-button ms-1">
+                                                    <button
+                                                        (click)="copyToClipboard($event, clipboardKafka)"
+                                                        data-test-id="copyToClipboard"
+                                                        aria-label="Copy to clipboard"
+                                                        class="copy-button ms-1"
+                                                        data-copy-feedback="Copied!"
+                                                        tabindex="0"
+                                                        role="button"
+                                                    >
+                                                        <div style="position: relative; display: inline-block">
+                                                            <svg-icon name="copy"></svg-icon>
+                                                        </div>
+                                                        <div style="position: relative; display: none">
+                                                            <svg-icon name="checked"></svg-icon>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="w-100 mt-3">
+                                            <div class="input-group mb-1">
+                                                <span class="fs-12 text-muted"> Clone using Websockets URL:</span>
+                                            </div>
+                                            <div class="select-menu-item align-items-start p-0 border-0 mb-2">
+                                                <div class="input-group">
+                                                    <input
+                                                        type="text"
+                                                        class="form-control fs-12 rounded"
+                                                        data-autoselect=""
+                                                        [(ngModel)]="clipboardWebsocketURL"
+                                                    />
+                                                    <div class="input-group-button ms-1">
+                                                        <button
+                                                            (click)="copyToClipboard($event, clipboardWebsocketURL)"
+                                                            data-test-id="copyToClipboard"
+                                                            aria-label="Copy to clipboard"
+                                                            class="copy-button ms-1"
+                                                            data-copy-feedback="Copied!"
+                                                            tabindex="0"
+                                                            role="button"
+                                                        >
+                                                            <div style="position: relative; display: inline-block">
+                                                                <svg-icon name="copy"></svg-icon>
+                                                            </div>
+                                                            <div style="position: relative; display: none">
+                                                                <svg-icon name="checked"></svg-icon>
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="w-100">
+                                            <mat-divider class="my-2"></mat-divider>
+                                            <div class="d-flex align-items-center">
+                                                <mat-icon class="text-muted fs-5">info</mat-icon>
+                                                <span class="fs-12">
+                                                    <a class="fs-12">See more details</a> about this protocol
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-tab>
+                                <mat-tab>
+                                    <ng-template mat-tab-label>
+                                        <div class="d-flex align-items-center">
+                                            <mat-icon class="text-muted fs-5 mt-2">ios_share</mat-icon>
+                                            Export
+                                        </div>
+                                    </ng-template>
+                                    <button mat-menu-item class="select-menu-item" [disabled]="true">as Parquet</button>
+                                    <mat-divider></mat-divider>
+                                    <button mat-menu-item class="select-menu-item" [disabled]="true">as CSV</button>
+                                    <mat-divider></mat-divider>
+                                    <button mat-menu-item class="select-menu-item" [disabled]="true">as Excel</button>
                                 </mat-tab>
                             </mat-tab-group>
                         </div>

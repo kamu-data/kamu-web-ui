@@ -230,6 +230,9 @@ $app-color-tooltip-border: #ced4da;
         background: $app-alice-blue;
 
         &:first-child {
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+
             &:active,
             &:disabled {
                 border-color: $app-color-border-default;
@@ -244,6 +247,7 @@ $app-color-tooltip-border: #ced4da;
 
         span {
             font-size: 12px;
+            padding-left: 3px;
         }
 
         &:hover {

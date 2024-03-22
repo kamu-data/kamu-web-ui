@@ -95,7 +95,9 @@ const Services = [
     {
         provide: APOLLO_OPTIONS,
         useFactory: (httpLink: HttpLink, appConfig: AppConfigService, localStorageService: LocalStorageService) => {
-            const httpMainLink: ApolloLink = httpLink.create({ uri: appConfig.apiServerGqlUrl });
+            const httpMainLink: ApolloLink = httpLink.create({
+                uri: appConfig.apiServerGqlUrl,
+            });
 
             const authorizationMiddleware: ApolloLink = new ApolloLink((operation: Operation, forward: NextLink) => {
                 const accessToken: string | null = localStorageService.accessToken;
@@ -104,13 +106,22 @@ const Services = [
                         headers: new HttpHeaders().set("Authorization", `Bearer ${accessToken}`),
                     });
                 }
+                return forward(operation);
+            });
 
+            const globalLoaderMiddleware: ApolloLink = new ApolloLink((operation: Operation, forward: NextLink) => {
+                const context = operation.getContext();
+                const skipLoading = Boolean(context.skipLoading);
+                const headers = context.headers as HttpHeaders;
+                operation.setContext({
+                    headers: headers.append("skip-loading", `${skipLoading}`),
+                });
                 return forward(operation);
             });
 
             return {
                 cache: apolloCache(),
-                link: authorizationMiddleware.concat(httpMainLink),
+                link: ApolloLink.from([authorizationMiddleware, globalLoaderMiddleware, httpMainLink]),
             };
         },
         deps: [HttpLink, AppConfigService, LocalStorageService],

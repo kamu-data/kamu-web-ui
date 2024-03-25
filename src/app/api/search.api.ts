@@ -56,32 +56,34 @@ export class SearchApi {
         if (id === "") {
             return of([]);
         }
-        return this.searchDatasetsAutocompleteGQL.watch({ query: id, perPage }).valueChanges.pipe(
-            first(),
-            map((result: ApolloQueryResult<SearchDatasetsAutocompleteQuery>) => {
-                const nodesList: DatasetAutocompleteItem[] = result.data.search.query.nodes.map((node) => ({
-                    dataset: node as DatasetBasicsFragment,
-                    dummy: false,
-                    __typename: node.__typename as TypeNames,
-                }));
-                // Add dummy result that opens search view
-                nodesList.unshift({
-                    __typename: TypeNames.allDataType,
-                    dataset: {
-                        id,
-                        name: id,
-                        kind: DatasetKind.Root,
-                        owner: {
-                            id: "",
-                            accountName: "",
+        return this.searchDatasetsAutocompleteGQL
+            .watch({ query: id, perPage }, { context: { skipLoading: true } })
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<SearchDatasetsAutocompleteQuery>) => {
+                    const nodesList: DatasetAutocompleteItem[] = result.data.search.query.nodes.map((node) => ({
+                        dataset: node as DatasetBasicsFragment,
+                        dummy: false,
+                        __typename: node.__typename as TypeNames,
+                    }));
+                    // Add dummy result that opens search view
+                    nodesList.unshift({
+                        __typename: TypeNames.allDataType,
+                        dataset: {
+                            id,
+                            name: id,
+                            kind: DatasetKind.Root,
+                            owner: {
+                                id: "",
+                                accountName: "",
+                            },
+                            alias: "",
                         },
-                        alias: "",
-                    },
-                    dummy: true,
-                });
+                        dummy: true,
+                    });
 
-                return nodesList;
-            }),
-        );
+                    return nodesList;
+                }),
+            );
     }
 }

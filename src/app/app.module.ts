@@ -1,3 +1,4 @@
+import AppValues from "src/app/common/app.values";
 import { MetadataBlockModule } from "./dataset-block/metadata-block/metadata-block.module";
 import { SpinnerService } from "./components/spinner/spinner.service";
 import { SpinnerInterceptor } from "./components/spinner/spinner.interceptor";
@@ -103,7 +104,7 @@ const Services = [
                 const accessToken: string | null = localStorageService.accessToken;
                 if (accessToken) {
                     operation.setContext({
-                        headers: new HttpHeaders().set("Authorization", `Bearer ${accessToken}`),
+                        headers: new HttpHeaders().set(AppValues.HEADERS_AUTHORIZATION_KEY, `Bearer ${accessToken}`),
                     });
                 }
                 return forward(operation);
@@ -113,9 +114,14 @@ const Services = [
                 const context = operation.getContext();
                 const skipLoading = Boolean(context.skipLoading);
                 const headers = context.headers as HttpHeaders;
-                operation.setContext({
-                    headers: headers.append("skip-loading", `${skipLoading}`),
-                });
+                const headersExist = headers && headers.keys().length;
+                if (skipLoading) {
+                    operation.setContext({
+                        headers: headersExist
+                            ? headers.append(AppValues.HEADERS_SKIP_LOADING_KEY, `${skipLoading}`)
+                            : new HttpHeaders().set(AppValues.HEADERS_SKIP_LOADING_KEY, `${skipLoading}`),
+                    });
+                }
                 return forward(operation);
             });
 

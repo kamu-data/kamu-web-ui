@@ -24,6 +24,9 @@ export default class AppValues {
     public static readonly SIMULATION_START_CONDITION_DELAY_MS = 1200;
     public static readonly DEFAULT_OFFSET_COLUMN_NAME = "offset";
     public static readonly DEFAULT_FLOW_INITIATOR = "system process";
+    public static readonly HEADERS_SKIP_LOADING_KEY = "Skip-loading";
+    public static readonly HEADERS_AUTHORIZATION_KEY = "Authorization";
+
     public static readonly MARKDOWN_CONTAIN = `## Markdown __rulez__!
 ---
 

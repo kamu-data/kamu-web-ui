@@ -77,6 +77,7 @@ import { DatasetSettingsSchedulingTabComponent } from "./additional-components/d
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { DataAccessPanelModule } from "../components/data-access-panel/data-access-panel.module";
 @NgModule({
     imports: [
         CommonModule,
@@ -128,6 +129,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
         MatRadioModule,
         MatCheckboxModule,
         MatDividerModule,
+        DataAccessPanelModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -146,6 +148,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
         DisplayHashModule,
         MatTreeModule,
         MatTooltipModule,
+        DataAccessPanelModule,
     ],
     declarations: [
         DatasetViewHeaderComponent,

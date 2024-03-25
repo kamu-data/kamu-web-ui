@@ -11,13 +11,10 @@ import {
 } from "@angular/core";
 import { MatSidenav } from "@angular/material/sidenav";
 import { DatasetNavigationInterface, DatasetViewTypeEnum } from "../dataset-view.interface";
-import { Clipboard } from "@angular/cdk/clipboard";
-import AppValues from "../../common/app.values";
 import { SideNavHelper } from "../../common/sidenav.helper";
 import { isMobileView, promiseWithCatch } from "src/app/common/app.helpers";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetPermissionsService } from "../dataset.permissions.service";
-import { AppConfigService } from "src/app/app-config.service";
 
 @Component({
     selector: "app-dataset-view-menu",
@@ -36,27 +33,11 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     @Input() datasetViewType: DatasetViewTypeEnum;
     @Input() isMinimizeSearchAdditionalButtons: boolean;
 
-    public clipboardKamuCliPull = "";
-    public clipboardKamuCliPush = "";
-    public clipboardReference = "";
-    public clipboardKafka = "";
-    public clipboardRestUrlTail = "";
-    public clipboardRestUrlQuery = "";
-    public clipboardRestUrlPush = "";
-    public clipboardFlightSQL = "";
-    public clipboardJdbcURL = "";
-    public clipboardPostgresURL = "";
-    public clipboardODataURLService = "";
-    public clipboardODataURLCollection = "";
-    public clipboardWebsocketURL = "";
-
     private sideNavHelper: SideNavHelper;
 
     constructor(
-        private clipboard: Clipboard,
         private datasetPermissionsServices: DatasetPermissionsService,
         private widgetHeightService: WidgetHeightService,
-        private appConfigService: AppConfigService,
     ) {}
 
     public ngAfterViewInit(): void {
@@ -69,26 +50,6 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     public ngOnInit(): void {
         if (this.sidenav) {
             this.sideNavHelper = new SideNavHelper(this.sidenav);
-        }
-        this.initClipboardHints();
-    }
-
-    public copyToClipboard(event: MouseEvent, text: string): void {
-        this.clipboard.copy(text);
-
-        if (event.currentTarget !== null) {
-            const currentElement: HTMLButtonElement = event.currentTarget as HTMLButtonElement;
-            const currentElementChildren: HTMLCollectionOf<HTMLElement> =
-                currentElement.children as HTMLCollectionOf<HTMLElement>;
-            setTimeout(() => {
-                currentElementChildren[0].style.display = "inline-block";
-                currentElementChildren[1].style.display = "none";
-                currentElement.classList.remove("clipboard-btn--success");
-            }, AppValues.LONG_DELAY_MS);
-
-            currentElementChildren[0].style.display = "none";
-            currentElementChildren[1].style.display = "inline-block";
-            currentElement.classList.add("clipboard-btn--success");
         }
     }
 
@@ -177,21 +138,5 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
                 this.datasetViewMenuComponent.nativeElement.offsetHeight +
                     this.datasetViewMenuComponent.nativeElement.offsetTop,
             );
-    }
-
-    private initClipboardHints(): void {
-        this.clipboardReference = `https://${location.host}/${this.datasetBasics.alias}`;
-        this.clipboardKamuCliPull = `kamu pull kamu.dev/${this.datasetBasics.alias}`;
-        this.clipboardKamuCliPush = `kamu push kamu.dev/${this.datasetBasics.alias}`;
-        this.clipboardKafka = `- coming soon -`;
-        this.clipboardRestUrlTail = `${this.appConfigService.apiServerGqlUrl}/${this.datasetBasics.alias}/tail?limit=10`;
-        this.clipboardRestUrlQuery = `${this.appConfigService.apiServerGqlUrl}/query?query=select%201`;
-        this.clipboardRestUrlPush = `${this.appConfigService.apiServerGqlUrl}/${this.datasetBasics.alias}/push`;
-        this.clipboardFlightSQL = `datafusion+flightsql://node.demo.kamu.dev:50050`;
-        this.clipboardJdbcURL = `jdbc:arrow-flight-sql://node.demo.kamu.dev:50050`;
-        this.clipboardPostgresURL = `- coming soon -`;
-        this.clipboardODataURLService = `${this.appConfigService.apiServerGqlUrl}/odata/${this.datasetBasics.owner.accountName}`;
-        this.clipboardODataURLCollection = `${this.appConfigService.apiServerGqlUrl}/odata/${this.datasetBasics.alias}`;
-        this.clipboardWebsocketURL = `- coming soon -`;
     }
 }

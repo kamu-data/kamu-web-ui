@@ -41,6 +41,9 @@
                                 class="input-group flex-nowrap flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 js-jump-to"
                                 id="search-input"
                             >
+                                <div *ngIf="searching" class="container-spinner">
+                                    <mat-spinner [diameter]="20" color="warn" mode="indeterminate"></mat-spinner>
+                                </div>
                                 <input
                                     type="text"
                                     data-test-id="searchInput"
@@ -60,7 +63,6 @@
                                     (focusin)="onFocus($event)"
                                 />
                             </div>
-
                             <ng-template #rt let-r="result" let-t="term">
                                 <div>
                                     <i class="bi bi-journal-album mr-2"></i>

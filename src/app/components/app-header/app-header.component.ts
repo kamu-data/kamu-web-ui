@@ -12,7 +12,7 @@ import {
     ViewChild,
 } from "@angular/core";
 import { Observable, OperatorFunction } from "rxjs";
-import { debounceTime, distinctUntilChanged, filter, map, switchMap } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from "rxjs/operators";
 import { DatasetAutocompleteItem, TypeNames } from "../../interface/search.interface";
 import { SearchApi } from "../../api/search.api";
 import AppValues from "../../common/app.values";
@@ -61,6 +61,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     public isSearchActive = false;
     public isCollapsedAppHeaderMenu = false;
     public searchQuery = "";
+    public searching = false;
 
     public constructor(
         private appSearchAPI: SearchApi,
@@ -109,7 +110,11 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
         return text$.pipe(
             debounceTime(AppValues.SHORT_DELAY_MS),
             distinctUntilChanged(),
+            tap(() => (this.searching = true)),
             switchMap((term: string) => this.appSearchAPI.autocompleteDatasetSearch(term)),
+            tap(() => {
+                this.searching = false;
+            }),
         );
     };
 

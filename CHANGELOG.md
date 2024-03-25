@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added a summary tab for the flow details page
 - Added admin guard
+- Added a local loader for search in the header
+### Changed
+- Changed the appearance of the global loader
 
 ## [0.16.0] - 2024-03-13
 ### Added

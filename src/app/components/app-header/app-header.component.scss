@@ -5,6 +5,13 @@
     color: #ffff;
 }
 
+.container-spinner {
+    position: absolute;
+    z-index: 100;
+    top: 6px;
+    right: 7px;
+}
+
 @media (width <=768px) {
     .admin-icon {
         display: none;

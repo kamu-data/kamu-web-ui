@@ -3,15 +3,14 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/c
 import { Observable } from "rxjs";
 import { finalize } from "rxjs/operators";
 import { environment } from "../../../environments/environment";
+import AppValues from "src/app/common/app.values";
 
 export class SpinnerInterceptor implements HttpInterceptor {
     constructor(private spinnerService: SpinnerService) {}
     timer: NodeJS.Timer;
     intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-        if (
-            req.url.includes("/assets") ||
-            (req.body as { operationName: string }).operationName === "getDatasetListFlows"
-        ) {
+        const skipGlobalLoader = Boolean(req.headers.get(AppValues.HEADERS_SKIP_LOADING_KEY));
+        if (req.url.includes("/assets") || skipGlobalLoader) {
             return next.handle(req);
         }
         clearTimeout(this.timer);

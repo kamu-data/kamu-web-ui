@@ -137,7 +137,12 @@ export class DatasetFlowApi {
         return this.getDatasetListFlowsGQL
             .watch(
                 { datasetId: params.datasetId, page: params.page, perPage: params.perPage, filters: params.filters },
-                noCacheFetchPolicy,
+                {
+                    ...noCacheFetchPolicy,
+                    context: {
+                        skipLoading: true,
+                    },
+                },
             )
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetDatasetListFlowsQuery>) => {

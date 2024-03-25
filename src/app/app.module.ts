@@ -1,3 +1,4 @@
+import AppValues from "src/app/common/app.values";
 import { MetadataBlockModule } from "./dataset-block/metadata-block/metadata-block.module";
 import { SpinnerService } from "./components/spinner/spinner.service";
 import { SpinnerInterceptor } from "./components/spinner/spinner.interceptor";
@@ -95,22 +96,38 @@ const Services = [
     {
         provide: APOLLO_OPTIONS,
         useFactory: (httpLink: HttpLink, appConfig: AppConfigService, localStorageService: LocalStorageService) => {
-            const httpMainLink: ApolloLink = httpLink.create({ uri: appConfig.apiServerGqlUrl });
+            const httpMainLink: ApolloLink = httpLink.create({
+                uri: appConfig.apiServerGqlUrl,
+            });
 
             const authorizationMiddleware: ApolloLink = new ApolloLink((operation: Operation, forward: NextLink) => {
                 const accessToken: string | null = localStorageService.accessToken;
                 if (accessToken) {
                     operation.setContext({
-                        headers: new HttpHeaders().set("Authorization", `Bearer ${accessToken}`),
+                        headers: new HttpHeaders().set(AppValues.HEADERS_AUTHORIZATION_KEY, `Bearer ${accessToken}`),
                     });
                 }
+                return forward(operation);
+            });
 
+            const globalLoaderMiddleware: ApolloLink = new ApolloLink((operation: Operation, forward: NextLink) => {
+                const context = operation.getContext();
+                const skipLoading = Boolean(context.skipLoading);
+                const headers = context.headers as HttpHeaders;
+                const headersExist = headers && headers.keys().length;
+                if (skipLoading) {
+                    operation.setContext({
+                        headers: headersExist
+                            ? headers.append(AppValues.HEADERS_SKIP_LOADING_KEY, `${skipLoading}`)
+                            : new HttpHeaders().set(AppValues.HEADERS_SKIP_LOADING_KEY, `${skipLoading}`),
+                    });
+                }
                 return forward(operation);
             });
 
             return {
                 cache: apolloCache(),
-                link: authorizationMiddleware.concat(httpMainLink),
+                link: ApolloLink.from([authorizationMiddleware, globalLoaderMiddleware, httpMainLink]),
             };
         },
         deps: [HttpLink, AppConfigService, LocalStorageService],

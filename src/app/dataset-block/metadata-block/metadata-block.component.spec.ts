@@ -24,6 +24,7 @@ import { AngularSvgIconModule } from "angular-svg-icon";
 import { MatTabsModule } from "@angular/material/tabs";
 import { YamlViewSectionComponent } from "./components/yaml-view-section/yaml-view-section.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { DataAccessPanelModule } from "src/app/components/data-access-panel/data-access-panel.module";
 
 describe("MetadataBlockComponent", () => {
     let component: MetadataBlockComponent;
@@ -55,6 +56,7 @@ describe("MetadataBlockComponent", () => {
                 HttpClientTestingModule,
                 MatTabsModule,
                 BrowserAnimationsModule,
+                DataAccessPanelModule,
             ],
             providers: [
                 DatasetApi,

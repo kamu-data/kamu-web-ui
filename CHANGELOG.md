@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a local loader for search in the header
 ### Changed
 - Changed the appearance of the global loader
+- Redesigned data access panel("Get Data" button)
 
 ## [0.16.0] - 2024-03-13
 ### Added

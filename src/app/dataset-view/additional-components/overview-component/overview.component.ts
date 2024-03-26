@@ -75,6 +75,14 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         this.selectTopicEmit.emit(topicName);
     }
 
+    public get hasSetPollingSource(): boolean {
+        return Boolean(this.currentState?.overview.metadata.currentPollingSource);
+    }
+
+    public get hasCurrentTransform(): boolean {
+        return Boolean(this.currentState?.overview.metadata.currentTransform);
+    }
+
     public get metadataFragmentBlock(): MaybeUndefined<MetadataBlockFragment> {
         return this.currentState ? this.currentState.overview.metadata.chain.blocks.nodes[0] : undefined;
     }

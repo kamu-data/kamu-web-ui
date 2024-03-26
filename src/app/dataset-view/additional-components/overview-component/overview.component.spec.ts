@@ -34,7 +34,7 @@ import { HttpClient } from "@angular/common/http";
 import { MatIconModule } from "@angular/material/icon";
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
 import { of } from "rxjs";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 
 describe("OverviewComponent", () => {
@@ -249,6 +249,14 @@ describe("OverviewComponent", () => {
                 datasetName: mockOverviewDataUpdate.overview.name,
             });
         });
+
+        it("should check refresh button is disabled when currentPollingSource=undefined=null ", () => {
+            currentOverview().metadata.currentPollingSource = null;
+            fixture.detectChanges();
+
+            const refreshButton = findElementByDataTestId(fixture, "refresh-now-button") as HTMLButtonElement;
+            expect(refreshButton.disabled).toBeTrue();
+        });
     });
 
     describe("SetTransform", () => {
@@ -283,6 +291,14 @@ describe("OverviewComponent", () => {
             fixture.detectChanges();
 
             expect(component.canAddSetTransform).toBeFalse();
+        });
+
+        it("should check refresh button is disabled when currentTransform=null", () => {
+            currentOverview().metadata.currentTransform = null;
+            fixture.detectChanges();
+
+            const refreshButton = findElementByDataTestId(fixture, "refresh-now-button") as HTMLButtonElement;
+            expect(refreshButton.disabled).toBeTrue();
         });
 
         it("should navigate to create SetTransform event page", () => {

@@ -74,11 +74,11 @@
                 </p>
             </div>
 
-            <div *ngIf="canScheduled" class="d-flex justify-content-end mb-3">
+            <div *ngIf="canSchedule" class="d-flex justify-content-end mb-3">
                 <button
                     class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
                     data-test-id="refresh-now-button"
-                    [disabled]="!hasSetPollingSource && !hasCurrentTransform"
+                    [disabled]="!canRefresh"
                     (click)="refreshNow()"
                 >
                     <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>

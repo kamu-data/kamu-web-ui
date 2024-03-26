@@ -75,14 +75,6 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         this.selectTopicEmit.emit(topicName);
     }
 
-    public get hasSetPollingSource(): boolean {
-        return Boolean(this.currentState?.overview.metadata.currentPollingSource);
-    }
-
-    public get hasCurrentTransform(): boolean {
-        return Boolean(this.currentState?.overview.metadata.currentTransform);
-    }
-
     public get metadataFragmentBlock(): MaybeUndefined<MetadataBlockFragment> {
         return this.currentState ? this.currentState.overview.metadata.chain.blocks.nodes[0] : undefined;
     }
@@ -196,8 +188,20 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         }
     }
 
-    public get canScheduled(): boolean {
+    public get canSchedule(): boolean {
         return this.datasetPermissions.permissions.canSchedule;
+    }
+
+    public get canRefresh(): boolean {
+        return this.hasSetPollingSource || this.hasCurrentTransform;
+    }
+
+    public get hasSetPollingSource(): boolean {
+        return !_.isNil(this.currentState?.overview.metadata.currentPollingSource);
+    }
+
+    public get hasCurrentTransform(): boolean {
+        return !_.isNil(this.currentState?.overview.metadata.currentTransform);
     }
 
     private get hasWatermark(): boolean {

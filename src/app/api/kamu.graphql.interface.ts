@@ -153,6 +153,12 @@ export type Checkpoint = {
     size: Scalars["Int"];
 };
 
+export type CliProtocolDesc = {
+    __typename?: "CliProtocolDesc";
+    pullCommand: Scalars["String"];
+    pushCommand: Scalars["String"];
+};
+
 export type CommitResult = {
     message: Scalars["String"];
 };
@@ -294,6 +300,8 @@ export type Dataset = {
     createdAt: Scalars["DateTime"];
     /** Access to the data of the dataset */
     data: DatasetData;
+    /** Various endpoints for interacting with data */
+    endpoints: DatasetEndpoints;
     /** Access to the flow configurations of this dataset */
     flows: DatasetFlows;
     /** Unique identifier of the dataset */
@@ -365,6 +373,19 @@ export type DatasetDataTailArgs = {
 export type DatasetEdge = {
     __typename?: "DatasetEdge";
     node: Dataset;
+};
+
+export type DatasetEndpoints = {
+    __typename?: "DatasetEndpoints";
+    cli: CliProtocolDesc;
+    flightsql: FlightSqlDesc;
+    jdbc: JdbcDesc;
+    kafka: KafkaProtocolDesc;
+    odata: OdataProtocolDesc;
+    postgresql: PostgreSqlDesl;
+    rest: RestProtocolDesc;
+    webLink: LinkProtocolDesc;
+    websocket: WebSocketProtocolDesc;
 };
 
 export type DatasetFlowConfigs = {
@@ -630,7 +651,6 @@ export type DisablePushSource = {
     sourceName: Scalars["String"];
 };
 
-/** Describes */
 export type EngineDesc = {
     __typename?: "EngineDesc";
     /**
@@ -716,6 +736,11 @@ export type FetchStepUrl = {
     cache?: Maybe<SourceCaching>;
     eventTime?: Maybe<EventTimeSource>;
     headers?: Maybe<Array<RequestHeader>>;
+    url: Scalars["String"];
+};
+
+export type FlightSqlDesc = {
+    __typename?: "FlightSqlDesc";
     url: Scalars["String"];
 };
 
@@ -976,6 +1001,21 @@ export type InitiatorFilterInput =
     | { account: Scalars["AccountName"]; system?: never }
     | { account?: never; system: Scalars["Boolean"] };
 
+export type JdbcDesc = {
+    __typename?: "JdbcDesc";
+    url: Scalars["String"];
+};
+
+export type KafkaProtocolDesc = {
+    __typename?: "KafkaProtocolDesc";
+    url: Scalars["String"];
+};
+
+export type LinkProtocolDesc = {
+    __typename?: "LinkProtocolDesc";
+    url: Scalars["String"];
+};
+
 export type LoginResponse = {
     __typename?: "LoginResponse";
     accessToken: Scalars["String"];
@@ -1123,6 +1163,12 @@ export type NoChanges = CommitResult &
         message: Scalars["String"];
     };
 
+export type OdataProtocolDesc = {
+    __typename?: "OdataProtocolDesc";
+    collectionUrl: Scalars["String"];
+    serviceUrl: Scalars["String"];
+};
+
 export type OffsetInterval = {
     __typename?: "OffsetInterval";
     end: Scalars["Int"];
@@ -1142,6 +1188,11 @@ export type PageBasedInfo = {
      * stays the same
      */
     totalPages?: Maybe<Scalars["Int"]>;
+};
+
+export type PostgreSqlDesl = {
+    __typename?: "PostgreSqlDesl";
+    url: Scalars["String"];
 };
 
 export type PrepStep = PrepStepDecompress | PrepStepPipe;
@@ -1287,6 +1338,13 @@ export type RequestHeader = {
     __typename?: "RequestHeader";
     name: Scalars["String"];
     value: Scalars["String"];
+};
+
+export type RestProtocolDesc = {
+    __typename?: "RestProtocolDesc";
+    pushUrl: Scalars["String"];
+    queryUrl: Scalars["String"];
+    tailUrl: Scalars["String"];
 };
 
 export type ScheduleInput =
@@ -1597,6 +1655,11 @@ export type UpdateReadmeResult = {
     message: Scalars["String"];
 };
 
+export type WebSocketProtocolDesc = {
+    __typename?: "WebSocketProtocolDesc";
+    url: Scalars["String"];
+};
+
 export type AccountByNameQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
 }>;
@@ -1825,6 +1888,33 @@ export type GetDatasetMainDataQuery = {
                   DatasetMetadataSummaryFragment &
                   DatasetPermissionsFragment)
             | null;
+    };
+};
+
+export type DatasetProtocolsQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
+}>;
+
+export type DatasetProtocolsQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byOwnerAndName?: {
+            __typename?: "Dataset";
+            endpoints: {
+                __typename?: "DatasetEndpoints";
+                cli: { __typename?: "CliProtocolDesc"; pullCommand: string; pushCommand: string };
+                webLink: { __typename?: "LinkProtocolDesc"; url: string };
+                rest: { __typename?: "RestProtocolDesc"; tailUrl: string; queryUrl: string; pushUrl: string };
+                flightsql: { __typename?: "FlightSqlDesc"; url: string };
+                jdbc: { __typename?: "JdbcDesc"; url: string };
+                postgresql: { __typename?: "PostgreSqlDesl"; url: string };
+                kafka: { __typename?: "KafkaProtocolDesc"; url: string };
+                websocket: { __typename?: "WebSocketProtocolDesc"; url: string };
+                odata: { __typename?: "OdataProtocolDesc"; serviceUrl: string; collectionUrl: string };
+            };
+        } | null;
     };
 };
 
@@ -4308,6 +4398,58 @@ export const GetDatasetMainDataDocument = gql`
 })
 export class GetDatasetMainDataGQL extends Apollo.Query<GetDatasetMainDataQuery, GetDatasetMainDataQueryVariables> {
     document = GetDatasetMainDataDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetProtocolsDocument = gql`
+    query datasetProtocols($accountName: AccountName!, $datasetName: DatasetName!) {
+        datasets {
+            byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+                endpoints {
+                    cli {
+                        pullCommand
+                        pushCommand
+                    }
+                    webLink {
+                        url
+                    }
+                    rest {
+                        tailUrl
+                        queryUrl
+                        pushUrl
+                    }
+                    flightsql {
+                        url
+                    }
+                    jdbc {
+                        url
+                    }
+                    postgresql {
+                        url
+                    }
+                    kafka {
+                        url
+                    }
+                    websocket {
+                        url
+                    }
+                    odata {
+                        serviceUrl
+                        collectionUrl
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetProtocolsGQL extends Apollo.Query<DatasetProtocolsQuery, DatasetProtocolsQueryVariables> {
+    document = DatasetProtocolsDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

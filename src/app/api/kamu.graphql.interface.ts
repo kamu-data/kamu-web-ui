@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -1900,21 +1900,23 @@ export type DatasetProtocolsQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
-        byOwnerAndName?: {
-            __typename?: "Dataset";
-            endpoints: {
-                __typename?: "DatasetEndpoints";
-                cli: { __typename?: "CliProtocolDesc"; pullCommand: string; pushCommand: string };
-                webLink: { __typename?: "LinkProtocolDesc"; url: string };
-                rest: { __typename?: "RestProtocolDesc"; tailUrl: string; queryUrl: string; pushUrl: string };
-                flightsql: { __typename?: "FlightSqlDesc"; url: string };
-                jdbc: { __typename?: "JdbcDesc"; url: string };
-                postgresql: { __typename?: "PostgreSqlDesl"; url: string };
-                kafka: { __typename?: "KafkaProtocolDesc"; url: string };
-                websocket: { __typename?: "WebSocketProtocolDesc"; url: string };
-                odata: { __typename?: "OdataProtocolDesc"; serviceUrl: string; collectionUrl: string };
-            };
-        } | null;
+        byOwnerAndName?:
+            | ({
+                  __typename?: "Dataset";
+                  endpoints: {
+                      __typename?: "DatasetEndpoints";
+                      cli: { __typename?: "CliProtocolDesc"; pullCommand: string; pushCommand: string };
+                      webLink: { __typename?: "LinkProtocolDesc"; url: string };
+                      rest: { __typename?: "RestProtocolDesc"; tailUrl: string; queryUrl: string; pushUrl: string };
+                      flightsql: { __typename?: "FlightSqlDesc"; url: string };
+                      jdbc: { __typename?: "JdbcDesc"; url: string };
+                      postgresql: { __typename?: "PostgreSqlDesl"; url: string };
+                      kafka: { __typename?: "KafkaProtocolDesc"; url: string };
+                      websocket: { __typename?: "WebSocketProtocolDesc"; url: string };
+                      odata: { __typename?: "OdataProtocolDesc"; serviceUrl: string; collectionUrl: string };
+                  };
+              } & DatasetBasicsFragment)
+            | null;
     };
 };
 
@@ -4407,6 +4409,7 @@ export const DatasetProtocolsDocument = gql`
     query datasetProtocols($accountName: AccountName!, $datasetName: DatasetName!) {
         datasets {
             byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+                ...DatasetBasics
                 endpoints {
                     cli {
                         pullCommand
@@ -4443,6 +4446,7 @@ export const DatasetProtocolsDocument = gql`
             }
         }
     }
+    ${DatasetBasicsFragmentDoc}
 `;
 
 @Injectable({

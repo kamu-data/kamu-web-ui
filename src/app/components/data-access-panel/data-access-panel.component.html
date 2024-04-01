@@ -19,7 +19,10 @@
                 [hasBackdrop]="true"
                 data-test-id="menu"
             >
-                <div class="select-menu-modal notifications-component-menu-modal">
+                <div
+                    class="select-menu-modal notifications-component-menu-modal"
+                    *ngIf="protocols$ | async as protocols"
+                >
                     <header class="select-menu-header">
                         <div class="select-menu-title text-bold d-flex align-item-center d-flex align-items-center">
                             Protocols
@@ -50,12 +53,13 @@
                                                 type="text"
                                                 class="form-control fs-12 rounded"
                                                 data-autoselect=""
-                                                [ngModel]="clipboardReference"
+                                                [value]="protocols.webLink.url"
+                                                #clipboardReference
                                                 readonly
                                             />
                                             <div class="input-group-button ms-1">
                                                 <button
-                                                    (click)="copyToClipboard($event, clipboardReference)"
+                                                    (click)="copyToClipboard($event, clipboardReference.value)"
                                                     data-test-id="copyToClipboard"
                                                     aria-label="Copy to clipboard"
                                                     class="copy-button ms-1"
@@ -140,12 +144,13 @@
                                                 type="text"
                                                 class="form-control fs-12 rounded"
                                                 data-autoselect=""
-                                                [(ngModel)]="clipboardKamuCliPull"
+                                                [value]="protocols.cli.pullCommand"
+                                                #clipboardKamuCliPull
                                                 readonly
                                             />
                                             <div class="input-group-button ms-1">
                                                 <button
-                                                    (click)="copyToClipboard($event, clipboardKamuCliPull)"
+                                                    (click)="copyToClipboard($event, clipboardKamuCliPull.value)"
                                                     data-test-id="copyToClipboard"
                                                     aria-label="Copy to clipboard"
                                                     class="copy-button ms-1"
@@ -172,12 +177,13 @@
                                                 type="text"
                                                 class="form-control fs-12 rounded"
                                                 data-autoselect=""
-                                                [(ngModel)]="clipboardKamuCliPush"
+                                                [value]="protocols.cli.pushCommand"
+                                                #clipboardKamuCliPush
                                                 readonly
                                             />
                                             <div class="input-group-button ms-1">
                                                 <button
-                                                    (click)="copyToClipboard($event, clipboardKamuCliPush)"
+                                                    (click)="copyToClipboard($event, clipboardKamuCliPush.value)"
                                                     data-test-id="copyToClipboard"
                                                     aria-label="Copy to clipboard"
                                                     class="copy-button ms-1"
@@ -228,12 +234,13 @@
                                                 type="text"
                                                 class="form-control fs-12 rounded"
                                                 data-autoselect=""
-                                                [(ngModel)]="clipboardRestUrlTail"
+                                                [value]="protocols.rest.tailUrl"
+                                                #clipboardRestUrlTail
                                                 readonly
                                             />
                                             <div class="input-group-button ms-1">
                                                 <button
-                                                    (click)="copyToClipboard($event, clipboardRestUrlTail)"
+                                                    (click)="copyToClipboard($event, clipboardRestUrlTail.value)"
                                                     data-test-id="copyToClipboard"
                                                     aria-label="Copy to clipboard"
                                                     class="copy-button ms-1"
@@ -260,12 +267,13 @@
                                                 type="text"
                                                 class="form-control fs-12 rounded"
                                                 data-autoselect=""
-                                                [(ngModel)]="clipboardRestUrlQuery"
+                                                [value]="protocols.rest.queryUrl"
+                                                #clipboardRestUrlQuery
                                                 readonly
                                             />
                                             <div class="input-group-button ms-1">
                                                 <button
-                                                    (click)="copyToClipboard($event, clipboardRestUrlQuery)"
+                                                    (click)="copyToClipboard($event, clipboardRestUrlQuery.value)"
                                                     data-test-id="copyToClipboard"
                                                     aria-label="Copy to clipboard"
                                                     class="copy-button ms-1"
@@ -294,12 +302,13 @@
                                                 type="text"
                                                 class="form-control fs-12 rounded"
                                                 data-autoselect=""
-                                                [(ngModel)]="clipboardRestUrlPush"
+                                                [value]="protocols.rest.pushUrl"
+                                                #clipboardRestUrlPush
                                                 readonly
                                             />
                                             <div class="input-group-button ms-1">
                                                 <button
-                                                    (click)="copyToClipboard($event, clipboardRestUrlPush)"
+                                                    (click)="copyToClipboard($event, clipboardRestUrlPush.value)"
                                                     data-test-id="copyToClipboard"
                                                     aria-label="Copy to clipboard"
                                                     class="copy-button ms-1"
@@ -353,12 +362,13 @@
                                                     type="text"
                                                     class="form-control fs-12 rounded"
                                                     data-autoselect=""
-                                                    [(ngModel)]="clipboardFlightSQL"
+                                                    [value]="protocols.flightsql.url"
+                                                    #clipboardFlightSQL
                                                     readonly
                                                 />
                                                 <div class="input-group-button ms-1">
                                                     <button
-                                                        (click)="copyToClipboard($event, clipboardFlightSQL)"
+                                                        (click)="copyToClipboard($event, clipboardFlightSQL.value)"
                                                         data-test-id="copyToClipboard"
                                                         aria-label="Copy to clipboard"
                                                         class="copy-button ms-1"
@@ -402,12 +412,13 @@
                                                     type="text"
                                                     class="form-control fs-12 rounded"
                                                     data-autoselect=""
-                                                    [(ngModel)]="clipboardJdbcURL"
+                                                    [value]="protocols.jdbc.url"
+                                                    #clipboardJdbcURL
                                                     readonly
                                                 />
                                                 <div class="input-group-button ms-1">
                                                     <button
-                                                        (click)="copyToClipboard($event, clipboardJdbcURL)"
+                                                        (click)="copyToClipboard($event, clipboardJdbcURL.value)"
                                                         data-test-id="copyToClipboard"
                                                         aria-label="Copy to clipboard"
                                                         class="copy-button ms-1"
@@ -451,12 +462,13 @@
                                                     type="text"
                                                     class="form-control fs-12 rounded"
                                                     data-autoselect=""
-                                                    [(ngModel)]="clipboardPostgresURL"
+                                                    [value]="protocols.postgresql.url"
+                                                    #clipboardPostgresURL
                                                     readonly
                                                 />
                                                 <div class="input-group-button ms-1">
                                                     <button
-                                                        (click)="copyToClipboard($event, clipboardPostgresURL)"
+                                                        (click)="copyToClipboard($event, clipboardPostgresURL.value)"
                                                         data-test-id="copyToClipboard"
                                                         aria-label="Copy to clipboard"
                                                         class="copy-button ms-1"
@@ -509,12 +521,13 @@
                                                     type="text"
                                                     class="form-control fs-12 rounded"
                                                     data-autoselect=""
-                                                    [(ngModel)]="clipboardWebsocketURL"
+                                                    [value]="protocols.websocket.url"
+                                                    #clipboardWebsocketURL
                                                     readonly
                                                 />
                                                 <div class="input-group-button ms-1">
                                                     <button
-                                                        (click)="copyToClipboard($event, clipboardWebsocketURL)"
+                                                        (click)="copyToClipboard($event, clipboardWebsocketURL.value)"
                                                         data-test-id="copyToClipboard"
                                                         aria-label="Copy to clipboard"
                                                         class="copy-button ms-1"
@@ -558,12 +571,13 @@
                                                     type="text"
                                                     class="form-control fs-12 rounded"
                                                     data-autoselect=""
-                                                    [(ngModel)]="clipboardKafka"
+                                                    [value]="protocols.kafka.url"
+                                                    #clipboardKafka
                                                     readonly
                                                 />
                                                 <div class="input-group-button ms-1">
                                                     <button
-                                                        (click)="copyToClipboard($event, clipboardKafka)"
+                                                        (click)="copyToClipboard($event, clipboardKafka.value)"
                                                         data-test-id="copyToClipboard"
                                                         aria-label="Copy to clipboard"
                                                         class="copy-button ms-1"
@@ -623,12 +637,13 @@
                                                 type="text"
                                                 class="form-control fs-12 rounded"
                                                 data-autoselect=""
-                                                [(ngModel)]="clipboardODataURLService"
+                                                [value]="protocols.odata.serviceUrl"
+                                                #clipboardODataURLService
                                                 readonly
                                             />
                                             <div class="input-group-button ms-1">
                                                 <button
-                                                    (click)="copyToClipboard($event, clipboardODataURLService)"
+                                                    (click)="copyToClipboard($event, clipboardODataURLService.value)"
                                                     data-test-id="copyToClipboard"
                                                     aria-label="Copy to clipboard"
                                                     class="copy-button ms-1"
@@ -655,12 +670,13 @@
                                                 type="text"
                                                 class="form-control fs-12 rounded"
                                                 data-autoselect=""
-                                                [(ngModel)]="clipboardODataURLCollection"
+                                                [value]="protocols.odata.collectionUrl"
+                                                #clipboardODataURLCollection
                                                 readonly
                                             />
                                             <div class="input-group-button ms-1">
                                                 <button
-                                                    (click)="copyToClipboard($event, clipboardODataURLCollection)"
+                                                    (click)="copyToClipboard($event, clipboardODataURLCollection.value)"
                                                     data-test-id="copyToClipboard"
                                                     aria-label="Copy to clipboard"
                                                     class="copy-button ms-1"

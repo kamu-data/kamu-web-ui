@@ -1,6 +1,7 @@
 query datasetProtocols($accountName: AccountName!, $datasetName: DatasetName!) {
   datasets {
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      ...DatasetBasics
       endpoints {
         cli {
           pullCommand

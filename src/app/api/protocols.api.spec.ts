@@ -1,6 +1,9 @@
-import { TestBed } from "@angular/core/testing";
+import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 import { ProtocolsApi } from "./protocols.api";
+import { mockDatasetInfo } from "../search/mock.data";
+import { DatasetProtocolsDocument, DatasetProtocolsQuery } from "./kamu.graphql.interface";
+import { mockDatasetProtocolsQuery } from "../components/data-access-panel/data-access-panel-mock.data";
 
 describe("ProtocolsApi", () => {
     let service: ProtocolsApi;
@@ -22,4 +25,30 @@ describe("ProtocolsApi", () => {
     it("should be created", () => {
         expect(service).toBeTruthy();
     });
+
+    it("should get all supported protocols", fakeAsync(() => {
+        expect(service).toBeTruthy();
+        const subscription$ = service.getProtocols(mockDatasetInfo).subscribe((result: DatasetProtocolsQuery) => {
+            expect(result.datasets.byOwnerAndName?.endpoints.webLink.url).toEqual(
+                mockDatasetProtocolsQuery.datasets.byOwnerAndName?.endpoints.webLink.url,
+            );
+            expect(result.datasets.byOwnerAndName?.endpoints.cli.pullCommand).toEqual(
+                mockDatasetProtocolsQuery.datasets.byOwnerAndName?.endpoints.cli.pullCommand,
+            );
+            expect(result.datasets.byOwnerAndName?.endpoints.cli.pushCommand).toEqual(
+                mockDatasetProtocolsQuery.datasets.byOwnerAndName?.endpoints.cli.pushCommand,
+            );
+        });
+
+        const op = controller.expectOne(DatasetProtocolsDocument);
+        expect(op.operation.variables.accountName).toEqual(mockDatasetInfo.accountName);
+        expect(op.operation.variables.datasetName).toEqual(mockDatasetInfo.datasetName);
+
+        op.flush({
+            data: mockDatasetProtocolsQuery,
+        });
+        tick();
+        expect(subscription$.closed).toEqual(true);
+        flush();
+    }));
 });

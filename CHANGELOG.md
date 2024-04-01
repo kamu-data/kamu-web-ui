@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Fixed
 - Fixed disabled state for the `Refresh now` button
+### Added
+- Added data access panel with supported protocols
 
 ## [0.17.0] - 2024-03-26
 ### Added

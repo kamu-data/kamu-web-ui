@@ -4,8 +4,14 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { TestBed } from "@angular/core/testing";
 import { NavigationService } from "./navigation.service";
 import ProjectLinks from "../project-links";
-import { DatasetNavigationParams, MetadataBlockNavigationParams } from "../interface/navigation.interface";
+import {
+    DatasetNavigationParams,
+    FlowDetailsNavigationParams,
+    MetadataBlockNavigationParams,
+} from "../interface/navigation.interface";
 import { Router } from "@angular/router";
+import { mockDatasetInfo } from "../search/mock.data";
+import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
 
 describe("NavigationService", () => {
     let service: NavigationService;
@@ -178,5 +184,58 @@ describe("NavigationService", () => {
         expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_RETURN_TO_CLI], {
             skipLocationChange: true,
         });
+    });
+
+    it("should test navigate to admin dashboard", () => {
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        service.navigateToAdminDashBoard();
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_ADMIN_DASHBOARD]);
+    });
+
+    it("should test navigate to AddPollingSource view", () => {
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        service.navigateToAddPollingSource(mockDatasetInfo);
+        expect(routerSpy).toHaveBeenCalledWith([
+            mockDatasetInfo.accountName,
+            mockDatasetInfo.datasetName,
+            ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE,
+        ]);
+    });
+
+    it("should test navigate to AddPushSource view", () => {
+        const MOCK_SOURCE_NAME = "Mock-name";
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        service.navigateToAddPushSource(mockDatasetInfo, MOCK_SOURCE_NAME);
+        expect(routerSpy).toHaveBeenCalledWith(
+            [mockDatasetInfo.accountName, mockDatasetInfo.datasetName, ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE],
+            { queryParams: { name: MOCK_SOURCE_NAME } },
+        );
+    });
+
+    it("should test navigate to SetTransform view", () => {
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        service.navigateToSetTransform(mockDatasetInfo);
+        expect(routerSpy).toHaveBeenCalledWith([
+            mockDatasetInfo.accountName,
+            mockDatasetInfo.datasetName,
+            ProjectLinks.URL_PARAM_SET_TRANSFORM,
+        ]);
+    });
+
+    it("should test navigate to flow details view", () => {
+        const mockParams: FlowDetailsNavigationParams = {
+            accountName: "mockAccountName",
+            datasetName: "mockDatasetName",
+            flowId: "5",
+        };
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        service.navigateToFlowDetails(mockParams);
+        expect(routerSpy).toHaveBeenCalledWith([
+            mockParams.accountName,
+            mockParams.datasetName,
+            ProjectLinks.URL_FLOW_DETAILS,
+            mockParams.flowId,
+            FlowDetailsTabs.HISTORY,
+        ]);
     });
 });

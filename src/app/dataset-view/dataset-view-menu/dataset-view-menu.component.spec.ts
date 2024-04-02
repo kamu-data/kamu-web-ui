@@ -15,6 +15,8 @@ import { DataAccessPanelComponent } from "src/app/components/data-access-panel/d
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { Apollo, ApolloModule } from "apollo-angular";
+import { ApolloTestingModule } from "apollo-angular/testing";
 
 describe("DatasetViewMenuComponent", () => {
     let component: DatasetViewMenuComponent;
@@ -33,6 +35,7 @@ describe("DatasetViewMenuComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            providers: [Apollo],
             imports: [
                 MatMenuModule,
                 FormsModule,
@@ -45,6 +48,8 @@ describe("DatasetViewMenuComponent", () => {
                 MatDividerModule,
                 MatCheckboxModule,
                 MatTooltipModule,
+                ApolloModule,
+                ApolloTestingModule,
             ],
             declarations: [DatasetViewMenuComponent, DataAccessPanelComponent],
         }).compileComponents();

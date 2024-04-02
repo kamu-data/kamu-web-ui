@@ -13,13 +13,20 @@ import { MatMenuModule } from "@angular/material/menu";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatTabsModule } from "@angular/material/tabs";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { Apollo, ApolloModule } from "apollo-angular";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { ProtocolsService } from "src/app/services/protocols.service";
+import { of } from "rxjs";
+import { mockDatasetEndPoints } from "./data-access-panel-mock.data";
 
 describe("DataAccessPanelComponent", () => {
     let component: DataAccessPanelComponent;
     let fixture: ComponentFixture<DataAccessPanelComponent>;
+    let protocolsService: ProtocolsService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            providers: [Apollo],
             declarations: [DataAccessPanelComponent],
             imports: [
                 FormsModule,
@@ -32,12 +39,16 @@ describe("DataAccessPanelComponent", () => {
                 MatMenuModule,
                 MatTabsModule,
                 BrowserAnimationsModule,
+                ApolloModule,
+                ApolloTestingModule,
             ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DataAccessPanelComponent);
+        protocolsService = TestBed.inject(ProtocolsService);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
+        spyOn(protocolsService, "getProtocols").and.returnValue(of(mockDatasetEndPoints));
         fixture.detectChanges();
     });
 
@@ -51,8 +62,8 @@ describe("DataAccessPanelComponent", () => {
         const menu = getElementByDataTestId(fixture, "menu");
         expect(menu).toBeDefined();
 
-        const copyToClipboardButton = getElementByDataTestId(fixture, "copyToClipboard");
-        emitClickOnElementByDataTestId(fixture, "copyToClipboard");
+        const copyToClipboardButton = getElementByDataTestId(fixture, "copyToClipboard-clipboardReference");
+        emitClickOnElementByDataTestId(fixture, "copyToClipboard-clipboardReference");
         expect(copyToClipboardButton.classList.contains("clipboard-btn--success")).toEqual(true);
 
         tick(AppValues.LONG_DELAY_MS);

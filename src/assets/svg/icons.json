@@ -127,6 +127,10 @@
     {
       "iconName": "hour-glass",
       "iconPath": "/assets/svg/hour-glass.svg"
+    },
+    {
+      "iconName": "access-token",
+      "iconPath": "/assets/svg/access-token.svg"
     }
   ],
   "customIcons": []

@@ -68,6 +68,8 @@ import { LocalStorageService } from "./services/local-storage.service";
 import { apolloCache } from "./apollo-cache.helper";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
 import { DatasetFlowDetailsModule } from "./dataset-flow/dataset-flow-details/dataset-flow-details.module";
+import { MatSortModule } from "@angular/material/sort";
+import { AceessTokensTabComponent } from './auth/settings/tabs/aceess-tokens-tab/aceess-tokens-tab.component';
 
 const Services = [
     {
@@ -182,6 +184,7 @@ const MatModules = [
     MatAutocompleteModule,
     MatProgressSpinnerModule,
     MatButtonToggleModule,
+    MatSortModule,
 ];
 
 @NgModule({
@@ -195,6 +198,7 @@ const MatModules = [
         AccountSettingsComponent,
         DatasetsTabComponent,
         AdminDashboardComponent,
+        AceessTokensTabComponent,
     ],
     imports: [
         AppRoutingModule,

@@ -5,7 +5,7 @@ import { MatMenuModule } from "@angular/material/menu";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTabsModule } from "@angular/material/tabs";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDividerModule } from "@angular/material/divider";
@@ -26,6 +26,7 @@ import { ClipboardModule } from "@angular/cdk/clipboard";
         MatDividerModule,
         MatTooltipModule,
         ClipboardModule,
+        ReactiveFormsModule,
     ],
     exports: [DataAccessPanelComponent],
 })

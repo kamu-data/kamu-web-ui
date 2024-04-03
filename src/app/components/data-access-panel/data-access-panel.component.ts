@@ -1,8 +1,10 @@
+import { MaybeUndefined } from "./../../common/app.types";
+import { ProtocolsService } from "./../../services/protocols.service";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import { AppConfigService } from "src/app/app-config.service";
+import { DatasetBasicsFragment, DatasetEndpoints } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { Clipboard } from "@angular/cdk/clipboard";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "app-data-access-panel",
@@ -12,23 +14,11 @@ import { Clipboard } from "@angular/cdk/clipboard";
 })
 export class DataAccessPanelComponent implements OnInit {
     @Input() datasetBasics: DatasetBasicsFragment;
-    public clipboardKamuCliPull = "";
-    public clipboardKamuCliPush = "";
-    public clipboardReference = "";
-    public clipboardKafka = "";
-    public clipboardRestUrlTail = "";
-    public clipboardRestUrlQuery = "";
-    public clipboardRestUrlPush = "";
-    public clipboardFlightSQL = "";
-    public clipboardJdbcURL = "";
-    public clipboardPostgresURL = "";
-    public clipboardODataURLService = "";
-    public clipboardODataURLCollection = "";
-    public clipboardWebsocketURL = "";
+    public protocols$: Observable<MaybeUndefined<DatasetEndpoints>>;
 
     constructor(
         private clipboard: Clipboard,
-        private appConfigService: AppConfigService,
+        private protocolsService: ProtocolsService,
     ) {}
 
     ngOnInit(): void {
@@ -53,18 +43,9 @@ export class DataAccessPanelComponent implements OnInit {
     }
 
     private initClipboardHints(): void {
-        this.clipboardReference = `https://${location.host}/${this.datasetBasics.alias}`;
-        this.clipboardKamuCliPull = `kamu pull kamu.dev/${this.datasetBasics.alias}`;
-        this.clipboardKamuCliPush = `kamu push kamu.dev/${this.datasetBasics.alias}`;
-        this.clipboardKafka = `- coming soon -`;
-        this.clipboardRestUrlTail = `${this.appConfigService.apiServerGqlUrl}/${this.datasetBasics.alias}/tail?limit=10`;
-        this.clipboardRestUrlQuery = `${this.appConfigService.apiServerGqlUrl}/query?query=select%201`;
-        this.clipboardRestUrlPush = `${this.appConfigService.apiServerGqlUrl}/${this.datasetBasics.alias}/push`;
-        this.clipboardFlightSQL = `datafusion+flightsql://node.demo.kamu.dev:50050`;
-        this.clipboardJdbcURL = `jdbc:arrow-flight-sql://node.demo.kamu.dev:50050`;
-        this.clipboardPostgresURL = `- coming soon -`;
-        this.clipboardODataURLService = `${this.appConfigService.apiServerGqlUrl}/odata/${this.datasetBasics.owner.accountName}`;
-        this.clipboardODataURLCollection = `${this.appConfigService.apiServerGqlUrl}/odata/${this.datasetBasics.alias}`;
-        this.clipboardWebsocketURL = `- coming soon -`;
+        this.protocols$ = this.protocolsService.getProtocols({
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
+        });
     }
 }

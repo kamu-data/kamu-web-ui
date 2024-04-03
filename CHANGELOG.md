@@ -5,9 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [0.17.1] - 2024-04-02
 ### Fixed
 - Fixed disabled state for the `Refresh now` button
+### Added
+- Added data access panel with supported protocols
 
 ## [0.17.0] - 2024-03-26
 ### Added

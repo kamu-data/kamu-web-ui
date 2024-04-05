@@ -78,6 +78,8 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DataAccessPanelModule } from "../components/data-access-panel/data-access-panel.module";
+import { DatasetSettingsSecretsManagerTabComponent } from "./additional-components/dataset-settings-component/tabs/secrets-manager/dataset-settings-secrets-manager-tab.component";
+import { MatSortModule } from "@angular/material/sort";
 @NgModule({
     imports: [
         CommonModule,
@@ -130,6 +132,7 @@ import { DataAccessPanelModule } from "../components/data-access-panel/data-acce
         MatCheckboxModule,
         MatDividerModule,
         DataAccessPanelModule,
+        MatSortModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -186,6 +189,7 @@ import { DataAccessPanelModule } from "../components/data-access-panel/data-acce
         SourceNameStepComponent,
         DatasetSettingsGeneralTabComponent,
         DatasetSettingsSchedulingTabComponent,
+        DatasetSettingsSecretsManagerTabComponent,
     ],
 })
 export class DatasetModule {

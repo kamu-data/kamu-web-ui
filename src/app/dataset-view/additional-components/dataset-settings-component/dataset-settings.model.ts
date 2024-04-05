@@ -1,6 +1,7 @@
 export enum SettingsTabsEnum {
     GENERAL = "general",
     SCHEDULING = "scheduling",
+    SECRETS_MANAGER = "secrets-manager",
 }
 
 export enum PollingGroupEnum {
@@ -37,5 +38,12 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
         showDivider: false,
         activeTab: SettingsTabsEnum.SCHEDULING,
         iconClassName: "mr-2",
+    },
+    {
+        name: "Secrets manager",
+        iconName: "security",
+        showDivider: false,
+        activeTab: SettingsTabsEnum.SECRETS_MANAGER,
+        iconClassName: "mr-2 ms-3px",
     },
 ];

@@ -1,6 +1,6 @@
 import { MaybeNull } from "./../../../common/app.types";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetKind, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetSettingsSidePanelItem, SettingsTabsEnum, datasetSettingsSidePanelData } from "./dataset-settings.model";
 import { AppConfigService } from "src/app/app-config.service";
@@ -21,6 +21,7 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     public readonly settingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
     public activeTab: SettingsTabsEnum;
     public sidePanelData: DatasetSettingsSidePanelItem[] = datasetSettingsSidePanelData;
+    public readonly DatasetKind: typeof DatasetKind = DatasetKind;
 
     constructor(
         private appConfigService: AppConfigService,

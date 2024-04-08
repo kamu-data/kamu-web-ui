@@ -1,0 +1,9 @@
+:host {
+    ::ng-deep {
+        .mat-checkbox {
+            .mat-checkbox-ripple {
+                position: relative;
+            }
+        }
+    }
+}

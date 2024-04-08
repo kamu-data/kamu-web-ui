@@ -80,6 +80,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DataAccessPanelModule } from "../components/data-access-panel/data-access-panel.module";
 import { DatasetSettingsSecretsManagerTabComponent } from "./additional-components/dataset-settings-component/tabs/secrets-manager/dataset-settings-secrets-manager-tab.component";
 import { MatSortModule } from "@angular/material/sort";
+import { EditKeyValueModalComponent } from './additional-components/dataset-settings-component/tabs/secrets-manager/components/edit-key-value-modal/edit-key-value-modal.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -190,6 +191,7 @@ import { MatSortModule } from "@angular/material/sort";
         DatasetSettingsGeneralTabComponent,
         DatasetSettingsSchedulingTabComponent,
         DatasetSettingsSecretsManagerTabComponent,
+        EditKeyValueModalComponent,
     ],
 })
 export class DatasetModule {

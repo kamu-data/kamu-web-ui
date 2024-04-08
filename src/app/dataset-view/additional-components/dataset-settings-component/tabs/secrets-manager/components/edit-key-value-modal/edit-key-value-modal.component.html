@@ -1,0 +1,51 @@
+<div class="d-flex p-4">
+    <div class="flex-grow-1 ms-2 text-center">
+        <span class="fs-5 fw-bold">Add key-value pair</span>
+    </div>
+    <div>
+        <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()"></button>
+    </div>
+</div>
+<div class="px-4">
+    <mat-divider></mat-divider>
+</div>
+
+<div class="body p-4">
+    <form [formGroup]="keyValueForm" (ngSubmit)="onEditRow()">
+        <div class="mt-4">
+            <label for="key" class="form-label">Key <span class="text-danger">*</span></label>
+            <input
+                class="form-control"
+                id="key"
+                placeholder="Please enter key..."
+                formControlName="key"
+                data-test-id="key"
+            />
+        </div>
+        <div class="mt-4">
+            <label for="value" class="form-label">Value <span class="text-danger">*</span></label>
+            <input
+                class="form-control"
+                id="value"
+                placeholder="Please enter value..."
+                formControlName="value"
+                data-test-id="value"
+            />
+        </div>
+        <div class="mt-4">
+            <mat-checkbox color="primary" class="example-margin" formControlName="secretKey">Secret value</mat-checkbox>
+        </div>
+    </form>
+</div>
+
+<div class="p-4 d-flex justify-content-end">
+    <button
+        type="button"
+        class="btn btn-success"
+        data-test-id="save-row"
+        (click)="onEditRow(); activeModal.close()"
+        [disabled]="!keyValueForm.valid"
+    >
+        Save
+    </button>
+</div>

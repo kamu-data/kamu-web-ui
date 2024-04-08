@@ -22,6 +22,7 @@ import { BaseDatasetDataComponent } from "../common/base-dataset-data.component"
 })
 export class DatasetComponent extends BaseDatasetDataComponent implements OnInit, OnDestroy {
     public datasetBasics: MaybeUndefined<DatasetBasicsFragment>;
+    public datasetInfo: DatasetInfo;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
 
@@ -47,6 +48,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             }),
             this.datasetService.datasetChanges.subscribe((basics: DatasetBasicsFragment) => {
                 this.datasetBasics = basics;
+                this.datasetInfo = { accountName: basics.owner.accountName, datasetName: basics.name };
                 this.cdr.markForCheck();
             }),
         );

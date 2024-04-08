@@ -1,7 +1,7 @@
 <div class="app-main-container" role="main" data-test-id="dataset-view" id="dataset-view">
     <div class="app-content mt-4">
         <app-dataset-view-header
-            [datasetInfo]="getDatasetInfoFromUrl()"
+            [datasetInfo]="datasetInfo"
             (showOwnerPageEmit)="showOwnerPage(getDatasetInfoFromUrl().accountName)"
             (onClickSearchAdditionalButtonEmit)="onClickSearchAdditionalButton($event)"
         ></app-dataset-view-header>

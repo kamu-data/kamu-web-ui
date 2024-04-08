@@ -29,6 +29,10 @@ mutation DatasetFlowSchedule(
               expectedDatasetKind
               actualDatasetKind
             }
+
+            ... on FlowPreconditionsNotMet {
+              message
+            }
           }
         }
       }

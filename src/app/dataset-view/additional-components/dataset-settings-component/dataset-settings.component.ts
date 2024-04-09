@@ -28,7 +28,7 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     public readonly settingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
     public activeTab: SettingsTabsEnum;
     public sidePanelData: DatasetSettingsSidePanelItem[] = datasetSettingsSidePanelData;
-    public overview: DatasetOverviewFragment;
+    public overview: MaybeNull<DatasetOverviewFragment>;
 
     constructor(
         private appConfigService: AppConfigService,
@@ -47,11 +47,11 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     }
 
     public get isSetPollingSourceEmpty(): boolean {
-        return !this.overview.metadata.currentPollingSource && this.datasetBasics.kind === DatasetKind.Root;
+        return !this.overview?.metadata.currentPollingSource && this.datasetBasics.kind === DatasetKind.Root;
     }
 
     public get isSetTransformEmpty(): boolean {
-        return !this.overview.metadata.currentTransform && this.datasetBasics.kind === DatasetKind.Derivative;
+        return !this.overview?.metadata.currentTransform && this.datasetBasics.kind === DatasetKind.Derivative;
     }
 
     ngOnInit(): void {

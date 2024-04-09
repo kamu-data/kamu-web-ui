@@ -27,12 +27,17 @@ import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { FilterByInitiatorEnum } from "./components/flows-table/flows-table.types";
+import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import _ from "lodash";
+import { OverviewUpdate } from "../../dataset.subscriptions.interface";
+import { mockMetadataDerivedUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;
     let fixture: ComponentFixture<FlowsComponent>;
     let datasetFlowsService: DatasetFlowsService;
     let navigationService: NavigationService;
+    let datasetSubsService: DatasetSubscriptionsService;
     const MOCK_PAGE_NUNBER = 1;
     const MOCK_FLOW_ID = "2";
 
@@ -88,8 +93,15 @@ describe("FlowsComponent", () => {
         fixture = TestBed.createComponent(FlowsComponent);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
         navigationService = TestBed.inject(NavigationService);
+        datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsRootFragment;
+        datasetSubsService.emitOverviewChanged({
+            schema: mockMetadataDerivedUpdate.schema,
+            content: mockOverviewDataUpdate.content,
+            overview: _.cloneDeep(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
+            size: mockOverviewDataUpdate.size,
+        } as OverviewUpdate);
         spyOn(datasetFlowsService, "allFlowsPaused").and.returnValue(of(false));
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of());
         spyOnProperty(component, "loadingFlowsList$", "get").and.returnValue(of(true));

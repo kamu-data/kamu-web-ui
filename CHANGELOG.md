@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Fixed
-- Hide the Scheduling tab when `SetPollingSource` or `Settransform` undefined
+- Hide the Scheduling tab when `SetPollingSource` or `SetTransform` undefined
 ### Changed
 - Dataset Overview: adding a small indentation to block history icon
 

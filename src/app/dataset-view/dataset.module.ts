@@ -78,9 +78,9 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DataAccessPanelModule } from "../components/data-access-panel/data-access-panel.module";
-import { DatasetSettingsSecretsManagerTabComponent } from "./additional-components/dataset-settings-component/tabs/secrets-manager/dataset-settings-secrets-manager-tab.component";
+import { DatasetSettingsSecretsManagerTabComponent } from "./additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-settings-secrets-manager-tab.component";
 import { MatSortModule } from "@angular/material/sort";
-import { EditKeyValueModalComponent } from './additional-components/dataset-settings-component/tabs/secrets-manager/components/edit-key-value-modal/edit-key-value-modal.component';
+import { EditKeyValueModalComponent } from "./additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.component";
 @NgModule({
     imports: [
         CommonModule,

@@ -12,7 +12,7 @@
                                     navItem.activeTab === settingsTabsEnum.SCHEDULING
                                         ? isSchedulingAvailable
                                         : navItem.visible ||
-                                          (navItem.activeTab === settingsTabsEnum.SECRETS_MANAGER &&
+                                          (navItem.activeTab === settingsTabsEnum.VARIABLES_AND_SECRETS &&
                                               datasetBasics.kind === DatasetKind.Root)
                                 "
                             >
@@ -49,7 +49,7 @@
                 data-test-id="settings-scheduling-tab"
             ></app-dataset-settings-scheduling-tab>
         </ng-container>
-        <ng-container *ngIf="activeTab === settingsTabsEnum.SECRETS_MANAGER">
+        <ng-container *ngIf="activeTab === settingsTabsEnum.VARIABLES_AND_SECRETS">
             <app-dataset-settings-secrets-manager-tab></app-dataset-settings-secrets-manager-tab>
         </ng-container>
     </div>

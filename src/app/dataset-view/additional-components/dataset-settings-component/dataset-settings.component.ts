@@ -12,9 +12,9 @@ import { AppConfigService } from "src/app/app-config.service";
 import { ParamMap } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
+import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 
 @Component({
     selector: "app-dataset-settings",

@@ -1,3 +1,4 @@
+import { MaybeNull } from "../../../../../../../common/app.types";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
@@ -10,7 +11,7 @@ import { EnvVariableElement } from "../../dataset-settings-secrets-manager-tab.c
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditKeyValueModalComponent implements OnInit {
-    @Input() public row: EnvVariableElement;
+    @Input() public row: MaybeNull<EnvVariableElement>;
     public keyValueForm: FormGroup = this.fb.group({
         key: ["", [Validators.required]],
         value: ["", [Validators.required]],
@@ -23,11 +24,13 @@ export class EditKeyValueModalComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.keyValueForm.patchValue({
-            key: this.row.key,
-            value: this.row.value,
-            secretKey: this.row.secret,
-        });
+        if (this.row) {
+            this.keyValueForm.patchValue({
+                key: this.row.key,
+                value: this.row.value,
+                secretKey: this.row.secret,
+            });
+        }
     }
 
     public onEditRow(): void {

@@ -1,6 +1,6 @@
 <div class="d-flex p-4">
     <div class="flex-grow-1 ms-2 text-center">
-        <span class="fs-5 fw-bold">Add key-value pair</span>
+        <span class="fs-5 fw-bold">Add variable</span>
     </div>
     <div>
         <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()"></button>
@@ -12,6 +12,9 @@
 
 <div class="body p-4">
     <form [formGroup]="keyValueForm" (ngSubmit)="onEditRow()">
+        <div class="mt-4">
+            <mat-checkbox color="primary" class="example-margin" formControlName="secretKey">Secret value</mat-checkbox>
+        </div>
         <div class="mt-4">
             <label for="key" class="form-label">Key <span class="text-danger">*</span></label>
             <input
@@ -25,15 +28,13 @@
         <div class="mt-4">
             <label for="value" class="form-label">Value <span class="text-danger">*</span></label>
             <input
+                [type]="!!keyValueForm.controls.secretKey.value ? 'password' : 'text'"
                 class="form-control"
                 id="value"
                 placeholder="Please enter value..."
                 formControlName="value"
                 data-test-id="value"
             />
-        </div>
-        <div class="mt-4">
-            <mat-checkbox color="primary" class="example-margin" formControlName="secretKey">Secret value</mat-checkbox>
         </div>
     </form>
 </div>

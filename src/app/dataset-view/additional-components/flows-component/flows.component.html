@@ -91,10 +91,24 @@
         </ng-container>
         <ng-template #noRuns>
             <p class="ps-2 pt-2" data-test-id="empty-flow-runs-block" *ngIf="loadingFlowsList$ | async">
-                No flow runs. You can
-                <a class="text-decoration-none" href="javascript:void(0);" (click)="updateSettings()"
-                    >update configuration settings</a
-                >
+                <ng-container *ngIf="!isSetTransformEmpty && !isSetPollingSourceEmpty">
+                    No flow runs. You can
+                    <a class="text-decoration-none" href="javascript:void(0);" (click)="updateSettings()"
+                        >update configuration settings</a
+                    >
+                </ng-container>
+                <ng-container *ngIf="isSetPollingSourceEmpty">
+                    No flow runs.To set the configuration you first need to
+                    <a class="text-decoration-none" href="javascript:void(0);" (click)="navigateToAddPollingSource()"
+                        >add data polling source
+                    </a>
+                </ng-container>
+                <ng-container *ngIf="isSetTransformEmpty">
+                    No flow runs.To set the configuration you first need to
+                    <a class="text-decoration-none" href="javascript:void(0);" (click)="navigateToSetTransform()"
+                        >add transformation
+                    </a>
+                </ng-container>
             </p>
         </ng-template>
     </div>

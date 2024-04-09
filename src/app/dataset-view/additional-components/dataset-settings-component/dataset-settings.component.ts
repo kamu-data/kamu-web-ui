@@ -1,6 +1,11 @@
 import { MaybeNull } from "./../../../common/app.types";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    DatasetKind,
+    DatasetOverviewFragment,
+    DatasetPermissionsFragment,
+} from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetSettingsSidePanelItem, SettingsTabsEnum, datasetSettingsSidePanelData } from "./dataset-settings.model";
 import { AppConfigService } from "src/app/app-config.service";
@@ -8,6 +13,8 @@ import { ParamMap } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 
 @Component({
     selector: "app-dataset-settings",
@@ -21,20 +28,39 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     public readonly settingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
     public activeTab: SettingsTabsEnum;
     public sidePanelData: DatasetSettingsSidePanelItem[] = datasetSettingsSidePanelData;
+    public overview: MaybeNull<DatasetOverviewFragment>;
 
     constructor(
         private appConfigService: AppConfigService,
         private navigationService: NavigationService,
+        private datasetSubsService: DatasetSubscriptionsService,
     ) {
         super();
     }
 
     public get isSchedulingAvailable(): boolean {
-        return this.appConfigService.featureFlags.enableScheduling;
+        return (
+            this.appConfigService.featureFlags.enableScheduling &&
+            !this.isSetTransformEmpty &&
+            !this.isSetPollingSourceEmpty
+        );
+    }
+
+    public get isSetPollingSourceEmpty(): boolean {
+        return !this.overview?.metadata.currentPollingSource && this.datasetBasics.kind === DatasetKind.Root;
+    }
+
+    public get isSetTransformEmpty(): boolean {
+        return !this.overview?.metadata.currentTransform && this.datasetBasics.kind === DatasetKind.Derivative;
     }
 
     ngOnInit(): void {
         this.activeTab = this.getSectionFromUrl() ?? SettingsTabsEnum.GENERAL;
+        this.trackSubscription(
+            this.datasetSubsService.overviewChanges.subscribe((overviewUpdate: OverviewUpdate) => {
+                this.overview = overviewUpdate.overview;
+            }),
+        );
     }
 
     public getSectionFromUrl(): MaybeNull<SettingsTabsEnum> {

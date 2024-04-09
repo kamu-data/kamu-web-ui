@@ -848,6 +848,11 @@ enum FlowOutcome {
   ABORTED
 }
 
+type FlowPreconditionsNotMet implements SetFlowConfigResult & TriggerFlowResult {
+	preconditions: String!
+	message: String!
+}
+
 union FlowStartCondition =
   | FlowStartConditionSchedule
   | FlowStartConditionThrottling

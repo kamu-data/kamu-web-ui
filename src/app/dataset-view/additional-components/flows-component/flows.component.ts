@@ -11,6 +11,7 @@ import {
     DatasetBasicsFragment,
     DatasetFlowType,
     DatasetKind,
+    DatasetOverviewFragment,
     FlowStatus,
     InitiatorFilterInput,
 } from "src/app/api/kamu.graphql.interface";
@@ -25,6 +26,8 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { FilterByInitiatorEnum, FlowsTableData } from "./components/flows-table/flows-table.types";
+import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 
 @Component({
     selector: "app-flows",
@@ -43,6 +46,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     public filterByInitiator = FilterByInitiatorEnum.All;
     public searchByAccountName = "";
     public currentPage = 1;
+    public overview: DatasetOverviewFragment;
     public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
     public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
@@ -54,6 +58,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         private router: Router,
         private navigationService: NavigationService,
         private cdr: ChangeDetectorRef,
+        private datasetSubsService: DatasetSubscriptionsService,
     ) {
         super();
     }
@@ -73,7 +78,32 @@ export class FlowsComponent extends BaseComponent implements OnInit {
                     map((event) => event as RouterEvent),
                 )
                 .subscribe(() => this.datasetFlowListByPage()),
+            this.datasetSubsService.overviewChanges.subscribe((overviewUpdate: OverviewUpdate) => {
+                this.overview = overviewUpdate.overview;
+            }),
         );
+    }
+
+    public get isSetPollingSourceEmpty(): boolean {
+        return !this.overview.metadata.currentPollingSource && this.datasetBasics.kind === DatasetKind.Root;
+    }
+
+    public get isSetTransformEmpty(): boolean {
+        return !this.overview.metadata.currentTransform && this.datasetBasics.kind === DatasetKind.Derivative;
+    }
+
+    public navigateToAddPollingSource(): void {
+        this.navigationService.navigateToAddPollingSource({
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
+        });
+    }
+
+    public navigateToSetTransform(): void {
+        this.navigationService.navigateToSetTransform({
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
+        });
     }
 
     public getFlowConnectionData(

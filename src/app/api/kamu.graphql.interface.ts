@@ -913,6 +913,13 @@ export enum FlowOutcome {
     Success = "SUCCESS",
 }
 
+export type FlowPreconditionsNotMet = SetFlowConfigResult &
+    TriggerFlowResult & {
+        __typename?: "FlowPreconditionsNotMet";
+        message: Scalars["String"];
+        preconditions: Scalars["String"];
+    };
+
 export type FlowStartCondition =
     | FlowStartConditionBatching
     | FlowStartConditionExecutor
@@ -2186,6 +2193,7 @@ export type DatasetTriggerFlowMutation = {
                               actualDatasetKind: DatasetKind;
                               message: string;
                           }
+                        | { __typename?: "FlowPreconditionsNotMet"; message: string }
                         | {
                               __typename?: "TriggerFlowSuccess";
                               message: string;
@@ -2960,6 +2968,7 @@ export type DatasetFlowBatchingMutation = {
                               actualDatasetKind: DatasetKind;
                           }
                         | { __typename: "FlowInvalidBatchingConfig"; message: string; reason: string }
+                        | { __typename: "FlowPreconditionsNotMet"; message: string }
                         | {
                               __typename: "SetFlowConfigSuccess";
                               message: string;
@@ -3039,6 +3048,7 @@ export type DatasetFlowScheduleMutation = {
                               actualDatasetKind: DatasetKind;
                           }
                         | { __typename: "FlowInvalidBatchingConfig" }
+                        | { __typename: "FlowPreconditionsNotMet"; message: string }
                         | {
                               __typename: "SetFlowConfigSuccess";
                               message: string;
@@ -4817,6 +4827,9 @@ export const DatasetTriggerFlowDocument = gql`
                                 actualDatasetKind
                                 message
                             }
+                            ... on FlowPreconditionsNotMet {
+                                message
+                            }
                         }
                     }
                 }
@@ -4985,6 +4998,9 @@ export const DatasetFlowBatchingDocument = gql`
                                 message
                                 reason
                             }
+                            ... on FlowPreconditionsNotMet {
+                                message
+                            }
                         }
                     }
                 }
@@ -5084,6 +5100,9 @@ export const DatasetFlowScheduleDocument = gql`
                                 message
                                 expectedDatasetKind
                                 actualDatasetKind
+                            }
+                            ... on FlowPreconditionsNotMet {
+                                message
                             }
                         }
                     }

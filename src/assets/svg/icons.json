@@ -127,6 +127,10 @@
     {
       "iconName": "hour-glass",
       "iconPath": "/assets/svg/hour-glass.svg"
+    },
+    {
+      "iconName": "compress",
+      "iconPath": "/assets/svg/compress.svg"
     }
   ],
   "customIcons": []

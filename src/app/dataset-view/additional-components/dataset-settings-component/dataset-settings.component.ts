@@ -26,6 +26,7 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
     @Input() public datasetPermissions: DatasetPermissionsFragment;
     public readonly settingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
+    public readonly DatasetKind: typeof DatasetKind = DatasetKind;
     public activeTab: SettingsTabsEnum;
     public sidePanelData: DatasetSettingsSidePanelItem[] = datasetSettingsSidePanelData;
     public overview: MaybeNull<DatasetOverviewFragment>;
@@ -44,6 +45,10 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
             !this.isSetTransformEmpty &&
             !this.isSetPollingSourceEmpty
         );
+    }
+
+    public get isRootDataset(): boolean {
+        return this.datasetBasics.kind === DatasetKind.Root;
     }
 
     public get isSetPollingSourceEmpty(): boolean {

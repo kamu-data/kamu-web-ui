@@ -11,7 +11,9 @@
                                 *ngIf="
                                     navItem.activeTab === settingsTabsEnum.SCHEDULING
                                         ? isSchedulingAvailable
-                                        : navItem.visible
+                                        : navItem.visible ||
+                                          (navItem.activeTab === settingsTabsEnum.COMPACTING &&
+                                              datasetBasics.kind === DatasetKind.Root)
                                 "
                             >
                                 <a
@@ -46,6 +48,9 @@
                 [datasetPermissions]="datasetPermissions"
                 data-test-id="settings-scheduling-tab"
             ></app-dataset-settings-scheduling-tab>
+        </ng-container>
+        <ng-container *ngIf="activeTab === settingsTabsEnum.COMPACTING && datasetBasics.kind === DatasetKind.Root">
+            <app-dataset-settings-compacting-tab [datasetBasics]="datasetBasics"></app-dataset-settings-compacting-tab>
         </ng-container>
     </div>
 </div>
